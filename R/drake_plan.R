@@ -209,7 +209,7 @@ drake_plan <- function(
 }
 
 #' @title Row-bind together drake plans
-#' @description combine drake plans together in a way that
+#' @description Combine drake plans together in a way that
 #'   correctly fills in missing entries.
 #' @export
 #' @seealso [drake_plan()], [make()]
@@ -418,7 +418,7 @@ knitr_in <- file_in
 #'   deciding which target are out of date.
 #' @export
 #' @seealso [file_in()], [file_out()], [knitr_in()]
-#' @return the argument
+#' @return The argument.
 #' @param x code to ignore
 #' @examples
 #' \dontrun{
