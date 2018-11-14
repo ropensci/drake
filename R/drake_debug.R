@@ -1,7 +1,7 @@
 #' @title Run a single target's command in debug mode.
 #' @description Also load the target's dependencies beforehand.
 #' @export
-#' @seealso drake_build
+#' @seealso [drake_build()]
 #' @return The value of the target right after it is built.
 #' @inheritParams drake_build
 #' @param verbose logical, whether to print out the target
@@ -81,7 +81,7 @@ debug_command_char <- function(command) {
 #' @title Run a function in debug mode.
 #' @description Internal function for [drake_debug()]. Not for general use.
 #' @keywords internal
-#' @seealso drake_debug
+#' @seealso [drake_debug()]
 #' @export
 #' @return The return value of `f`.
 #' @param f a function

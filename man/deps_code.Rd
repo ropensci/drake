@@ -84,5 +84,5 @@ deps_code(file_store("report.Rmd"))
 }
 }
 \seealso{
-deps_target deps_files make drake_plan drake_config
+\code{\link[=deps_target]{deps_target()}} \code{\link[=deps_files]{deps_files()}} \code{\link[=make]{make()}} \code{\link[=drake_plan]{drake_plan()}} \code{\link[=drake_config]{drake_config()}}
 }

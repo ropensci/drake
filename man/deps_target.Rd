@@ -34,5 +34,5 @@ deps_target("regression1_small", config = config)
 }
 }
 \seealso{
-deps_code
+\code{\link[=deps_code]{deps_code()}}
 }
