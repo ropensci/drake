@@ -96,7 +96,6 @@ readd <- function(
 #' @rdname readd
 #' @seealso [cached()], [built()], [imported()], [drake_plan()], [make()]
 #' @export
-#' @return `NULL`
 #'
 #' @inheritParams cached
 #' @inheritParams readd

@@ -113,8 +113,6 @@ will not be replaced.}
 }
 \value{
 The cached value of the \code{target}.
-
-\code{NULL}
 }
 \description{
 \code{\link[=readd]{readd()}} returns an object from the cache,
