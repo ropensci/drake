@@ -7,7 +7,7 @@
 #' @export
 #' @return Either a named logical indicating whether the given
 #'   targets or cached or a character vector listing all cached
-#'   items, depending on whether any targets are specified
+#'   items, depending on whether any targets are specified.
 #'
 #' @inheritParams drake_config
 #'
