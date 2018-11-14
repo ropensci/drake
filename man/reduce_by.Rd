@@ -49,7 +49,7 @@ in the output. See the examples for a demonstration.}
 of new targets}
 }
 \value{
-a workflow plan data frame
+A workflow plan data frame.
 }
 \description{
 Perform several calls to \code{\link[=reduce_plan]{reduce_plan()}}
@@ -85,6 +85,6 @@ reduce_by(
 )
 }
 \seealso{
-drake_plan, map_plan, gather_by, reduce_plan,
-gather_plan, evaluate_plan, expand_plan
+\code{\link[=drake_plan]{drake_plan()}}, \code{\link[=map_plan]{map_plan()}}, \code{\link[=gather_by]{gather_by()}}, \code{\link[=reduce_plan]{reduce_plan()}},
+\code{\link[=gather_plan]{gather_plan()}}, \code{\link[=evaluate_plan]{evaluate_plan()}}, \code{\link[=expand_plan]{expand_plan()}}
 }

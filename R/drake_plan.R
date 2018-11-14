@@ -212,7 +212,7 @@ drake_plan <- function(
 #' @description combine drake plans together in a way that
 #'   correctly fills in missing entries.
 #' @export
-#' @seealso drake_plan, make
+#' @seealso [drake_plan()], [make()]
 #' @param ... workflow plan data frames (see [drake_plan()])
 #' @examples
 #' # You might need to refresh your data regularly (see ?triggers).

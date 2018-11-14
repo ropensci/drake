@@ -32,5 +32,5 @@ your_plan
 # make(your_plan) # nolint
 }
 \seealso{
-drake_plan, make
+\code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
 }
