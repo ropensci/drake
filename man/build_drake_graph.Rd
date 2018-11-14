@@ -83,7 +83,7 @@ See \code{\link[=trigger]{trigger()}} for details.}
 See also \code{\link[=get_cache]{get_cache()}} and \code{\link[=this_cache]{this_cache()}}.}
 }
 \value{
-an \code{igraph} object
+An \code{igraph} object.
 }
 \description{
 Use \code{\link[=drake_config]{drake_config()}} instead.

@@ -13,7 +13,7 @@ test_with_dir(desc, ...)
 \item{...}{code to test}
 }
 \value{
-nothing
+Nothing.
 }
 \description{
 Typical users of drake should not need this function.

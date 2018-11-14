@@ -83,7 +83,7 @@ debug_command_char <- function(command) {
 #' @keywords internal
 #' @seealso drake_debug
 #' @export
-#' @return the return value of `f`
+#' @return The return value of `f`.
 #' @param f a function
 debug_and_run <- function(f) {
   # Tested in tests/testthat/test-always-skipped.R.

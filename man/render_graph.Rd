@@ -31,7 +31,7 @@ render_graph(graph_info, file = character(0),
 \item{...}{deprecated}
 }
 \value{
-a \code{visNetwork} graph.
+A \code{visNetwork} graph.
 }
 \description{
 Use \code{\link[=render_drake_graph]{render_drake_graph()}} instead.

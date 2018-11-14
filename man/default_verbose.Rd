@@ -7,7 +7,7 @@
 default_verbose()
 }
 \value{
-a logical or integer with the value of
+A logical or integer with the value of
 the default \code{verbose} argument to \code{drake} functions.
 }
 \description{

@@ -23,7 +23,7 @@
 #'   into memory before evaluating these triggers.
 #' @export
 #' @seealso [drake_plan()], [make()]
-#' @return a list of trigger specification details that
+#' @return A list of trigger specification details that
 #'   `drake` processes internally when it comes time to decide
 #'   whether to build the target.
 #' @param command logical, whether to rebuild the target if the
