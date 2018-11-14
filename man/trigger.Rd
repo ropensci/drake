@@ -45,7 +45,7 @@ evaluates to \code{FALSE}.
 }}
 }
 \value{
-a list of trigger specification details that
+A list of trigger specification details that
 \code{drake} processes internally when it comes time to decide
 whether to build the target.
 }

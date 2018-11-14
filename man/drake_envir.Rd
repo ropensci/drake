@@ -7,7 +7,7 @@
 drake_envir()
 }
 \value{
-the environment where \code{drake} builds targets
+The environment where \code{drake} builds targets.
 }
 \description{
 Call this function inside the commands in your plan

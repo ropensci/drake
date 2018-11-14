@@ -32,7 +32,7 @@ help "trace back" the original settings that went into building
 each target. Similar to the \code{trace} argument of \code{\link[=evaluate_plan]{evaluate_plan()}}.}
 }
 \value{
-A workflow plan data frame
+A workflow plan data frame.
 }
 \description{
 \code{map_plan()} is like \code{pmap_df()} from the \code{purrr} package.
@@ -65,6 +65,6 @@ make(plan, verbose = FALSE, cache = cache)
 readd(fit_cyl_disp, cache = cache)
 }
 \seealso{
-drake_plan, reduce_by, gather_by, reduce_plan, gather_plan,
-evaluate_plan, expand_plan
+\code{\link[=drake_plan]{drake_plan()}}, \code{\link[=reduce_by]{reduce_by()}}, \code{\link[=gather_by]{gather_by()}}, \code{\link[=reduce_plan]{reduce_plan()}}, \code{\link[=gather_plan]{gather_plan()}},
+\code{\link[=evaluate_plan]{evaluate_plan()}}, \code{\link[=expand_plan]{expand_plan()}}
 }

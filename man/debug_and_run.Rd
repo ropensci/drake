@@ -10,12 +10,12 @@ debug_and_run(f)
 \item{f}{a function}
 }
 \value{
-the return value of \code{f}
+The return value of \code{f}.
 }
 \description{
 Internal function for \code{\link[=drake_debug]{drake_debug()}}. Not for general use.
 }
 \seealso{
-drake_debug
+\code{\link[=drake_debug]{drake_debug()}}
 }
 \keyword{internal}

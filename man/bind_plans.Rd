@@ -10,7 +10,7 @@ bind_plans(...)
 \item{...}{workflow plan data frames (see \code{\link[=drake_plan]{drake_plan()}})}
 }
 \description{
-combine drake plans together in a way that
+Combine drake plans together in a way that
 correctly fills in missing entries.
 }
 \examples{
@@ -32,5 +32,5 @@ your_plan
 # make(your_plan) # nolint
 }
 \seealso{
-drake_plan, make
+\code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
 }

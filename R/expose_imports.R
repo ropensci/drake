@@ -20,7 +20,7 @@
 #' @details Thanks to [Jasper Clarkberg](https://github.com/dapperjapper)
 #'   for the idea that makes this function work.
 #' @export
-#' @return the environment that the exposed imports are loaded into.
+#' @return The environment that the exposed imports are loaded into.
 #'   Defaults to your R workspace.
 #' @param package name of the package, either a symbol or a string,
 #'   depending on `character_only`.

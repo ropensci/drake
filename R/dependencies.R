@@ -30,7 +30,7 @@
 #'   this conflict and runs as expected. In other words, [make()]
 #'   automatically removes all self-referential loops in the dependency
 #'   network.
-#' @seealso deps_target deps_files make drake_plan drake_config
+#' @seealso [deps_target()] [make()] [drake_plan()] [drake_config()]
 #' @export
 #' @param x a language object (code), character string (code as text),
 #'   or imported function to analyze for dependencies.
@@ -87,7 +87,7 @@ deps_code <- function(x) {
 #' @description Intended for debugging and checking your project.
 #'   The dependency structure of the components of your analysis
 #'   decides which targets are built and when.
-#' @seealso deps_code
+#' @seealso [deps_code()]
 #' @export
 #' @param target a symbol denoting a target name, or if `character_only`
 #'   is TRUE, a character scalar denoting a target name.

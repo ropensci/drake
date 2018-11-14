@@ -4,9 +4,9 @@
 #'   writes out all the commands calls to apply the function to
 #'   each row of arguments.
 #' @export
-#' @seealso drake_plan, reduce_by, gather_by, reduce_plan, gather_plan,
-#'   evaluate_plan, expand_plan
-#' @return A workflow plan data frame
+#' @seealso [drake_plan()], [reduce_by()], [gather_by()], [reduce_plan()], [gather_plan()],
+#'   [evaluate_plan()], [expand_plan()]
+#' @return A workflow plan data frame.
 #' @param args a data frame (or better yet, a `tibble`)
 #'   of function arguments to `fun`.
 #'   Here, the column names should be the names of the arguments
@@ -90,8 +90,8 @@ map_plan <- function(
 #' @description Creates a new workflow plan to aggregate
 #'   existing targets in the supplied plan.
 #' @export
-#' @seealso drake_plan, map_plan, reduce_by, gather_by, reduce_plan,
-#'   evaluate_plan, expand_plan
+#' @seealso [drake_plan(), [map_plan()], [reduce_by()], [gather_by()], [reduce_plan()],
+#'   [evaluate_plan()], [expand_plan()]
 #' @return A workflow plan data frame that aggregates multiple
 #'   prespecified targets into one additional target downstream.
 #' @param plan workflow plan data frame of prespecified targets
@@ -151,9 +151,9 @@ gather_plan <- function(
 #'   based on groupings from columns in the plan,
 #'   and then row-bind the new targets to the plan.
 #' @export
-#' @seealso drake_plan, map_plan, reduce_by, reduce_plan,
-#'   gather_plan, evaluate_plan, expand_plan
-#' @return a workflow plan data frame
+#' @seealso [drake_plan()], [map_plan()], [reduce_by()], [reduce_plan()],
+#'   [gather_plan()], [evaluate_plan()], [expand_plan()]
+#' @return A workflow plan data frame.
 #' @inheritParams gather_plan
 #' @param ... Symbols, columns of `plan` to define target groupings
 #'   passed to `dplyr::group_by()`.
@@ -240,8 +240,8 @@ gather_by <- function(
 #'   commands to do a reduction (i.e. to repeatedly apply a binary
 #'   operator to pairs of targets to produce one target).
 #' @export
-#' @seealso drake_plan, map_plan, reduce_by, gather_by,
-#'   gather_plan, evaluate_plan, expand_plan
+#' @seealso [drake_plan()], [map_plan()], [reduce_by()], [gather_by()],
+#'   [gather_plan()], [evaluate_plan()], [expand_plan()]
 #' @return A workflow plan data frame that aggregates multiple
 #'   prespecified targets into one additional target downstream.
 #' @param plan workflow plan data frame of prespecified targets
@@ -327,9 +327,9 @@ reduce_plan <- function(
 #'   based on groupings from columns in the plan,
 #'   and then row-bind the new targets to the plan.
 #' @export
-#' @seealso drake_plan, map_plan, gather_by, reduce_plan,
-#'   gather_plan, evaluate_plan, expand_plan
-#' @return a workflow plan data frame
+#' @seealso [drake_plan()], [map_plan()], [gather_by()], [reduce_plan()],
+#'   [gather_plan()], [evaluate_plan()], [expand_plan()]
+#' @return A workflow plan data frame.
 #' @inheritParams reduce_plan
 #' @param ... Symbols, columns of `plan` to define target groupings
 #'   passed to `dplyr::group_by()`.

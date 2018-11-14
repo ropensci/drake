@@ -110,7 +110,7 @@ drake_examples <- function(quiet = TRUE) {
 #' the file, `report.Rmd`.
 #' @export
 #' @seealso [clean_mtcars_example()]
-#' @return nothing
+#' @return Nothing.
 #' @inheritParams drake_config
 #' @param envir The environment to load the example into.
 #'   Defaults to your workspace.

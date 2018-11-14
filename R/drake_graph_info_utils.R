@@ -175,7 +175,7 @@ insert_file_outs <- function(config) {
 #' @description For internal use only.
 #' @export
 #' @keywords internal
-#' @return a character scalar with the default graph title
+#' @return A character scalar with the default graph title.
 #' @param split_columns deprecated
 #' @examples
 #' default_graph_title()

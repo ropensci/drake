@@ -10,7 +10,7 @@ ignore(x = NULL)
 \item{x}{code to ignore}
 }
 \value{
-the argument
+The argument.
 }
 \description{
 In a command in the workflow plan

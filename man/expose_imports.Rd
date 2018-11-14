@@ -22,7 +22,7 @@ You will later pass this \code{envir} to \code{\link[=make]{make()}}.}
 of the imports.}
 }
 \value{
-the environment that the exposed imports are loaded into.
+The environment that the exposed imports are loaded into.
 Defaults to your R workspace.
 }
 \description{

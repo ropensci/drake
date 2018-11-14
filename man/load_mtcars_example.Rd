@@ -24,7 +24,7 @@ existing file \code{report.Rmd}}
 \item{force}{deprecated}
 }
 \value{
-nothing
+Nothing.
 }
 \description{
 Is there an association between

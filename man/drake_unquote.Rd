@@ -13,9 +13,9 @@ drake_unquote(x = NULL, deep = FALSE)
 \item{deep}{deprecated logical.}
 }
 \value{
-character vector without leading
+Character vector without leading
 or trailing escaped quotes around
-the elements
+the elements.
 }
 \description{
 Quotes are important in drake.

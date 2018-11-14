@@ -37,8 +37,8 @@ dataset_wildcard <- function() {
 #' not `NULL`. Here, `rules` should be a list with wildcards
 #' as names and vectors of possible values as list elements.
 #' @export
-#' @seealso drake_plan, map_plan, reduce_by, gather_by, reduce_plan,
-#'   gather_plan, evaluate_plan, expand_plan
+#' @seealso [drake_plan()], [map_plan()], [reduce_by()], [gather_by()], [reduce_plan()],
+#'   [gather_plan()], [evaluate_plan()], [expand_plan()]
 #' @return A workflow plan data frame with the wildcards evaluated.
 #'
 #' @param plan workflow plan data frame, similar to one produced by
@@ -321,8 +321,8 @@ check_wildcard_rules <- function(rules) {
 #' Prefixes are appended to the new target names
 #' so targets still have unique names.
 #' @export
-#' @seealso drake_plan, map_plan, reduce_by, gather_by, reduce_plan,
-#'   gather_plan, evaluate_plan, expand_plan
+#' @seealso [drake_plan()], [map_plan()], [reduce_by()], [gather_by()], [reduce_plan()],
+#'   [gather_plan()], [evaluate_plan()], [expand_plan()]
 #' @return An expanded workflow plan data frame (with replicated targets).
 #' @param plan workflow plan data frame
 #' @param values values to expand over. These will be appended to
@@ -363,8 +363,8 @@ expand_plan <- function(plan, values = NULL, rename = TRUE, sep = "_") {
 #'   analyze multiple datasets using multiple methods of analysis.
 #' @description Uses wildcards to create a new
 #' workflow plan data frame from a template data frame.
-#' @seealso drake_plan, map_plan, reduce_by, gather_by, reduce_plan,
-#'   gather_plan, evaluate_plan, expand_plan, plan_summaries
+#' @seealso [drake_plan()], [map_plan()], [reduce_by()], [gather_by()], [reduce_plan()],
+#'   [gather_plan()], [evaluate_plan()], [expand_plan()], [plan_summaries()]
 #' @export
 #' @return An evaluated workflow plan data frame of analysis targets.
 #' @param plan workflow plan data frame of analysis methods.
@@ -411,8 +411,8 @@ plan_analyses <- function(plan, datasets, sep = "_") {
 #'   multiple analyses of multiple datasets multiple ways.
 #' @description Uses wildcards to create a new
 #' workflow plan data frame from a template data frame.
-#' @seealso drake_plan, map_plan, reduce_by, gather_by, reduce_plan,
-#'   gather_plan, evaluate_plan, expand_plan, plan_analyses
+#' @seealso [drake_plan()], [map_plan()], [reduce_by()], [gather_by()], [reduce_plan()],
+#'   [gather_plan()], [evaluate_plan()], [expand_plan()], [plan_analyses()]
 #' @export
 #' @return An evaluated workflow plan data frame of instructions
 #'   for computing summaries of analyses and datasets.

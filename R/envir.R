@@ -17,7 +17,7 @@ assign_to_envir <- function(target, value, config) {
 #'   internal reasons.
 #' @export
 #' @keywords internal
-#' @return nothing
+#' @return Nothing.
 #' @param targets character vector of targets
 #' @param config [drake_config()] list
 #' @param downstream optional, character vector of any targets
@@ -144,7 +144,7 @@ exclude_unloadable <- function(targets, config, jobs = jobs) {
 #'   amount of computer memory you use.
 #' @export
 #' @seealso [make()], [drake_plan()], [target()]
-#' @return the environment where `drake` builds targets
+#' @return The environment where `drake` builds targets.
 #' @examples
 #' plan <- drake_plan(
 #'   large_data_1 = sample.int(1e4),
