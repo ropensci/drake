@@ -4,9 +4,9 @@
 \alias{target}
 \title{Define custom columns in a \code{\link[=drake_plan]{drake_plan()}}.}
 \usage{
-target(command = NULL, trigger = NULL, retries = NULL,
-  timeout = NULL, cpu = NULL, elapsed = NULL, priority = NULL,
-  worker = NULL, evaluator = NULL, ...)
+target(command = NULL, trigger = NULL, retries = NULL, timeout = NULL,
+  cpu = NULL, elapsed = NULL, priority = NULL, worker = NULL,
+  evaluator = NULL, ...)
 }
 \arguments{
 \item{command}{the command to build the target}
@@ -43,7 +43,9 @@ arguments as columns.
 The \code{target()} function lets you define
 custom columns in a workflow plan data frame, both
 inside and outside calls to \code{\link[=drake_plan]{drake_plan()}}.
-@details Tidy evaluation is applied to the arguments,
+}
+\details{
+Tidy evaluation is applied to the arguments,
 and the \code{!!} operator is evaluated immediately
 for expressions and language objects.
 }

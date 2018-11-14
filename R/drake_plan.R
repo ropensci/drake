@@ -494,7 +494,7 @@ detect_arrow <- function(command) {
 #' @description The `target()` function lets you define
 #'   custom columns in a workflow plan data frame, both
 #'   inside and outside calls to [drake_plan()].
-#'  @details Tidy evaluation is applied to the arguments,
+#' @details Tidy evaluation is applied to the arguments,
 #'    and the `!!` operator is evaluated immediately
 #'    for expressions and language objects.
 #' @export
