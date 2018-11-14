@@ -14,12 +14,12 @@
 #' drake_quotes("abcd", single = TRUE) # "'abcd'"
 #' # Double-quote this string.
 #' drake_quotes("abcd") # "\"abcd\""
-drake_quotes <- function(x = NULL, single = FALSE){
+drake_quotes <- function(x = NULL, single = FALSE) {
   stopifnot(is.logical(single))
-  if (!length(x)){
+  if (!length(x)) {
     return(character(0))
   }
-  if (single){
+  if (single) {
     paste0("'", x, "'")
   } else {
     paste0("\"", x, "\"")
@@ -43,8 +43,8 @@ drake_quotes <- function(x = NULL, single = FALSE){
 #' x <- "'abcd'"
 #' # Remove the literal quotes around x.
 #' drake_unquote(x) # "abcd"
-drake_unquote <- function(x = NULL, deep = FALSE){
-  if (deep){
+drake_unquote <- function(x = NULL, deep = FALSE) {
+  if (deep) {
     warning(
       "The `deep` argument to `drake_unquote()` is deprecated",
       call. = FALSE
@@ -63,7 +63,7 @@ drake_unquote <- function(x = NULL, deep = FALSE){
 #' @examples
 #' # Turn symbols into strings.
 #' drake_strings(a, b, c, d) # [1] "a" "b" "c" "d"
-drake_strings <- function(...){
+drake_strings <- function(...) {
   args <- structure(as.list(match.call()[-1]), class = "uneval")
   keys <- names(args)
   out <- as.character(args)
@@ -108,11 +108,11 @@ drake_strings <- function(...){
 #'   get(file_store("report.md"))
 #'   })
 #'   }
-file_store <- function(x){
+file_store <- function(x) {
   drake::drake_quotes(x, single = FALSE)
 }
 
-wide_deparse <- function(x){
+wide_deparse <- function(x) {
   paste(deparse(x), collapse = "\n")
 }
 

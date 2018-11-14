@@ -6,7 +6,7 @@
 #' @return A character vector of names of available hash algorithms.
 #' @examples
 #' available_hash_algos()
-available_hash_algos <- function(){
+available_hash_algos <- function() {
   eval(formals(digest::digest)$algo)
 }
 
@@ -34,8 +34,8 @@ available_hash_algos <- function(){
 long_hash <- function(
   cache = drake::get_cache(verbose = verbose),
   verbose = drake::default_verbose()
-){
-  if (!cache$exists(key = "long_hash_algo", namespace = "config")){
+) {
+  if (!cache$exists(key = "long_hash_algo", namespace = "config")) {
     return(NULL)
   }
   cache$get("long_hash_algo", namespace = "config")
@@ -65,8 +65,8 @@ long_hash <- function(
 short_hash <- function(
   cache = drake::get_cache(verbose = verbose),
   verbose = drake::default_verbose()
-){
-  if (!cache$exists(key = "short_hash_algo", namespace = "config")){
+) {
+  if (!cache$exists(key = "short_hash_algo", namespace = "config")) {
     return(NULL)
   }
   chosen_algo <- cache$get("short_hash_algo", namespace = "config")
@@ -127,16 +127,16 @@ short_hash <- function(
 #' }
 default_short_hash_algo <- function(cache = NULL) {
   out <- "xxhash64"
-  if (is.null(cache)){
+  if (is.null(cache)) {
     return(out)
   }
-  if (cache$exists(key = "short_hash_algo", namespace = "config")){
+  if (cache$exists(key = "short_hash_algo", namespace = "config")) {
     out <- cache$get(
       key = "short_hash_algo",
       namespace = "config"
     )
   }
-  if ("storr" %in% class(cache)){
+  if ("storr" %in% class(cache)) {
     out <- cache$driver$hash_algorithm
   }
   out
@@ -195,10 +195,10 @@ default_short_hash_algo <- function(cache = NULL) {
 #' }
 default_long_hash_algo <- function(cache = NULL) {
   out <- "sha256"
-  if (is.null(cache)){
+  if (is.null(cache)) {
     return(out)
   }
-  if (cache$exists(key = "long_hash_algo", namespace = "config")){
+  if (cache$exists(key = "long_hash_algo", namespace = "config")) {
     out <- cache$get(
       key = "long_hash_algo",
       namespace = "config"
@@ -207,12 +207,12 @@ default_long_hash_algo <- function(cache = NULL) {
   out
 }
 
-check_storr_short_hash <- function(cache, chosen_algo){
-  if (!inherits(cache, "storr")){
+check_storr_short_hash <- function(cache, chosen_algo) {
+  if (!inherits(cache, "storr")) {
     return()
   }
   true_algo <- cache$driver$hash_algorithm
-  if (!identical(true_algo, chosen_algo)){
+  if (!identical(true_algo, chosen_algo)) {
     warning(
       "The storr-based cache actually uses ", true_algo,
       " for the short hash algorithm, but ", chosen_algo,

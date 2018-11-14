@@ -6,7 +6,7 @@ shapes <- c(
   other = "dot"
 )
 
-shape_of <- Vectorize(function(x){
+shape_of <- Vectorize(function(x) {
   available <- x %in% names(shapes)
   if (!available) {
     x <- "other"

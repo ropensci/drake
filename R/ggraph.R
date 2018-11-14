@@ -35,7 +35,7 @@ drake_ggraph <- function(
   group = NULL,
   clusters = NULL,
   show_output_files = TRUE
-){
+) {
   assert_pkg("ggplot2")
   assert_pkg("ggraph")
   graph_info <- drake_graph_info(
@@ -55,7 +55,7 @@ drake_ggraph <- function(
     clusters = clusters,
     show_output_files = show_output_files
   )
-  if (is.null(main)){
+  if (is.null(main)) {
     main <- graph_info$default_title
   }
   render_drake_ggraph(graph_info, main = main)
@@ -91,7 +91,7 @@ drake_ggraph <- function(
 render_drake_ggraph <- function(
   graph_info,
   main = graph_info$default_title
-){
+) {
   assert_pkg("ggplot2")
   assert_pkg("ggraph")
   graph <- igraph::graph_from_data_frame(

@@ -13,7 +13,7 @@ test_with_dir("responses to imported objects and functions", {
   )
 
   # change nested function trivially
-  eval(parse(text = "g <- function(y){
+  eval(parse(text = "g <- function(y) {
 
       h(  y)+b # comment
     }"),
@@ -23,7 +23,7 @@ test_with_dir("responses to imported objects and functions", {
   nobuild(config)
 
   # change nested function so that it gives the same answer
-  eval(parse(text = "g <- function(y){
+  eval(parse(text = "g <- function(y) {
       h(y)+b + 1-1 - 0
     }"),
     envir = config$envir
@@ -32,7 +32,7 @@ test_with_dir("responses to imported objects and functions", {
   expect_equal(justbuilt(config), sort(c("nextone", "yourinput")))
 
   # nested function gives different answer
-  eval(parse(text = "g <- function(y){
+  eval(parse(text = "g <- function(y) {
       h(y)+b + 16
     }"),
     envir = config$envir
@@ -41,7 +41,7 @@ test_with_dir("responses to imported objects and functions", {
   expect_true("final" %in% justbuilt(config))
 
   # test a deeper nested function
-  eval(parse(text = "i <- function(x){
+  eval(parse(text = "i <- function(x) {
       2*x + sqrt(13)
     }"),
     envir = config$envir
@@ -82,7 +82,7 @@ test_with_dir("add a new import", {
   config <- make(plan, cache = cache, session_info = FALSE)
   expect_equal(justbuilt(config), "a")
   expect_equal(readd(a, cache = cache), 2L)
-  sqrt <- function(x){
+  sqrt <- function(x) {
     x + 1L
   }
   config <- make(plan, cache = cache, session_info = FALSE)

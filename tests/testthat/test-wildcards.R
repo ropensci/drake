@@ -483,7 +483,7 @@ test_with_dir("make() with wildcard columns", {
     trace = TRUE
   )
   expect_equal(nrow(plan), 2)
-  for (col in c("n__", "n___from")){
+  for (col in c("n__", "n___from")) {
     expect_true(col %in% colnames(plan))
   }
   con <- make(plan, cache = storr::storr_environment(), session_info = FALSE)

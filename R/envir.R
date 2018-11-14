@@ -1,9 +1,9 @@
-assign_to_envir <- function(target, value, config){
+assign_to_envir <- function(target, value, config) {
   if (
     identical(config$lazy_load, "eager") &&
     !is_file(target) &&
     target %in% config$plan$target
-  ){
+  ) {
     assign(x = target, value = value, envir = config$envir)
   }
   invisible()
@@ -25,9 +25,9 @@ assign_to_envir <- function(target, value, config){
 #' @param jobs number of jobs for local parallel computing
 #' @examples
 #' # Users should use make().
-manage_memory <- function(targets, config, downstream = NULL, jobs = 1){
-  if (identical(config$memory_strategy, "lookahead")){
-    if (is.null(downstream)){
+manage_memory <- function(targets, config, downstream = NULL, jobs = 1) {
+  if (identical(config$memory_strategy, "lookahead")) {
+    if (is.null(downstream)) {
       downstream <- downstream_nodes(
         from = targets,
         graph = config$graph,
@@ -49,7 +49,7 @@ manage_memory <- function(targets, config, downstream = NULL, jobs = 1){
     config = config,
     jobs = jobs
   )
-  if (!identical(config$memory_strategy, "speed")){
+  if (!identical(config$memory_strategy, "speed")) {
     keep_these <- c(target_deps, downstream_deps)
     discard_these <- setdiff(x = config$plan$target, y = keep_these)
     discard_these <- parallel_filter(
@@ -58,7 +58,7 @@ manage_memory <- function(targets, config, downstream = NULL, jobs = 1){
       jobs = jobs
     )
     discard_these <- intersect(discard_these, already_loaded)
-    if (length(discard_these)){
+    if (length(discard_these)) {
       console_many_targets(
         discard_these,
         pattern = "unload",
@@ -72,11 +72,11 @@ manage_memory <- function(targets, config, downstream = NULL, jobs = 1){
   safe_load(targets = targets, config = config, jobs = jobs)
 }
 
-safe_load <- function(targets, config, jobs = 1){
+safe_load <- function(targets, config, jobs = 1) {
   targets <- exclude_unloadable(
     targets = targets, config = config, jobs = jobs)
-  if (length(targets)){
-    if (config$lazy_load == "eager"){
+  if (length(targets)) {
+    if (config$lazy_load == "eager") {
       console_many_targets(
         targets,
         pattern = "load",
@@ -94,7 +94,7 @@ safe_load <- function(targets, config, jobs = 1){
   invisible()
 }
 
-ensure_loaded <- function(targets, config){
+ensure_loaded <- function(targets, config) {
   already_loaded <- ls(envir = config$envir, all.names = TRUE)
   already_loaded <- intersect(already_loaded, config$plan$target)
   targets <- setdiff(targets, already_loaded)
@@ -109,7 +109,7 @@ flexible_get <- function(target, envir) {
   parsed <- as.list(parsed)
   lang <- parsed[[1]]
   is_namespaced <- length(lang) > 1
-  if (!is_namespaced){
+  if (!is_namespaced) {
     return(get(x = target, envir = envir, inherits = FALSE))
   }
   stopifnot(deparse(lang[[1]]) %in% c("::", ":::"))
@@ -118,15 +118,15 @@ flexible_get <- function(target, envir) {
   get(fun, envir = getNamespace(pkg))
 }
 
-exclude_unloadable <- function(targets, config, jobs = jobs){
+exclude_unloadable <- function(targets, config, jobs = jobs) {
   unloadable <- parallel_filter(
     x = targets,
-    f = function(target){
+    f = function(target) {
       !config$cache$exists(key = target)
     },
     jobs = jobs
   )
-  if (length(unloadable)){
+  if (length(unloadable)) {
     warning(
       "unable to load required dependencies:\n",
       multiline_message(targets),
@@ -160,13 +160,13 @@ exclude_unloadable <- function(targets, config, jobs = jobs){
 #'   strings_in_dots = "literals"
 #' )
 #' make(plan, cache = storr::storr_environment(), session_info = FALSE)
-drake_envir <- function(){
+drake_envir <- function() {
   envir <- environment()
-  for (i in seq_len(getOption("expressions"))){
-    if (identical(envir[[drake_envir_marker]], TRUE)){
+  for (i in seq_len(getOption("expressions"))) {
+    if (identical(envir[[drake_envir_marker]], TRUE)) {
       return(envir)
     }
-    if (identical(envir, globalenv())){
+    if (identical(envir, globalenv())) {
       break # nocov
     }
     envir <- parent.frame(n = i)

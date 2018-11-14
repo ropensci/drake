@@ -43,7 +43,7 @@ each row of arguments.
 \examples{
 # For the full tutorial, visit
 # https://ropenscilabs.github.io/drake-manual/plans.html#map_plan.
-my_model_fit <- function(x1, x2, data){
+my_model_fit <- function(x1, x2, data) {
   lm(as.formula(paste("mpg ~", x1, "+", x1)), data = data)
 }
 covariates <- setdiff(colnames(mtcars), "mpg")

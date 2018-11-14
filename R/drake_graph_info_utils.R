@@ -39,11 +39,11 @@ categorize_nodes <- function(config) {
   })
 }
 
-cluster_nodes <- function(config){
-  for (cluster in config$clusters){
+cluster_nodes <- function(config) {
+  for (cluster in config$clusters) {
     index <- config$nodes[[config$group]] == cluster
     index[is.na(index)] <- FALSE
-    if (!any(index)){
+    if (!any(index)) {
       next
     }
     new_node <- config$nodes[index, ]
@@ -68,7 +68,7 @@ cluster_nodes <- function(config){
   config
 }
 
-cluster_status <- function(statuses){
+cluster_status <- function(statuses) {
   precedence <- c(
     "other",
     "imported",
@@ -79,28 +79,28 @@ cluster_status <- function(statuses){
     "failed"
   )
   out <- "other"
-  for (status in precedence){
-    if (status %in% statuses){
+  for (status in precedence) {
+    if (status %in% statuses) {
       out <- status
     }
   }
   out
 }
 
-configure_nodes <- function(config){
+configure_nodes <- function(config) {
   rownames(config$nodes) <- config$nodes$label
   config$nodes <- categorize_nodes(config = config)
   config$nodes <- style_nodes(config = config)
   config$nodes <- resolve_levels(config = config)
-  if (config$build_times != "none"){
+  if (config$build_times != "none") {
     config$nodes <- append_build_times(config = config)
   }
   hover_text(config = config)
 }
 
-insert_file_out_edges <- function(edges, file_in_list, file_out_list){
+insert_file_out_edges <- function(edges, file_in_list, file_out_list) {
   file_in_edges <- file_out_edges <- NULL
-  if (length(file_in_list)){
+  if (length(file_in_list)) {
     file_in_edges <- utils::stack(file_in_list)
     file_in_edges$from <- as.character(file_in_edges$values)
     file_in_edges$to <- as.character(file_in_edges$ind)
@@ -108,7 +108,7 @@ insert_file_out_edges <- function(edges, file_in_list, file_out_list){
       file_in_edges$from %in% clean_dependency_list(file_out_list), ]
     file_in_edges$values <- file_in_edges$ind <- NULL
   }
-  if (length(file_out_list)){
+  if (length(file_out_list)) {
     file_out_edges <- utils::stack(file_out_list)
     file_out_edges$from <- as.character(file_out_edges$ind)
     file_out_edges$to <- as.character(file_out_edges$values)
@@ -119,8 +119,8 @@ insert_file_out_edges <- function(edges, file_in_list, file_out_list){
   edges[!duplicated(edges), ]
 }
 
-insert_file_out_nodes <- function(nodes, file_out_list){
-  out <- lapply(seq_along(file_out_list), function(index){
+insert_file_out_nodes <- function(nodes, file_out_list) {
+  out <- lapply(seq_along(file_out_list), function(index) {
     old_nodes <- nodes[names(file_out_list)[index], ]
     files <- file_out_list[[index]]
     new_nodes <- old_nodes[rep(1, length(files)), ]
@@ -130,16 +130,16 @@ insert_file_out_nodes <- function(nodes, file_out_list){
     new_nodes$shape <- shape_of("file")
     new_nodes
   })
-  out <- do.call(out, what = dplyr::bind_rows)
+  out <- dplyr::bind_rows(out)
   dplyr::bind_rows(out, nodes)
 }
 
-insert_file_outs <- function(config){
+insert_file_outs <- function(config) {
   within(config, {
     file_in_list <- lapply(
       nodes$deps,
-      function(deps){
-        if (is.null(deps)){
+      function(deps) {
+        if (is.null(deps)) {
           return(character(0))
         }
         out <- c(
@@ -155,8 +155,8 @@ insert_file_outs <- function(config){
     file_in_list <- select_nonempty(file_in_list)
     file_out_list <- lapply(
       nodes$deps,
-      function(deps){
-        if (is.null(deps)){
+      function(deps) {
+        if (is.null(deps)) {
           return(character(0))
         }
         deps$file_out
@@ -179,13 +179,13 @@ insert_file_outs <- function(config){
 #' @param split_columns deprecated
 #' @examples
 #' default_graph_title()
-default_graph_title <- function(split_columns = FALSE){
+default_graph_title <- function(split_columns = FALSE) {
   "Dependency graph"
 }
 
-file_hover_text <- Vectorize(function(quoted_file, targets){
+file_hover_text <- Vectorize(function(quoted_file, targets) {
   unquoted_file <- drake_unquote(quoted_file)
-  if (quoted_file %in% targets || !file.exists(unquoted_file)){
+  if (quoted_file %in% targets || !file.exists(unquoted_file)) {
     return(quoted_file)
   }
   tryCatch({
@@ -200,23 +200,23 @@ file_hover_text <- Vectorize(function(quoted_file, targets){
 },
 "quoted_file")
 
-filter_legend_nodes <- function(legend_nodes, all_nodes){
+filter_legend_nodes <- function(legend_nodes, all_nodes) {
   colors <- c(unique(all_nodes$color), color_of("object"))
   shapes <- unique(all_nodes$shape)
   ln <- legend_nodes
   ln[ln$color %in% colors & ln$shape %in% shapes, , drop = FALSE] # nolint
 }
 
-filtered_legend_nodes <- function(all_nodes, full_legend, font_size){
+filtered_legend_nodes <- function(all_nodes, full_legend, font_size) {
   legend_nodes <- legend_nodes(font_size = font_size)
-  if (full_legend){
+  if (full_legend) {
     legend_nodes
   } else {
     filter_legend_nodes(legend_nodes = legend_nodes, all_nodes = all_nodes)
   }
 }
 
-function_hover_text <- Vectorize(function(function_name, envir){
+function_hover_text <- Vectorize(function(function_name, envir) {
   x <- tryCatch(
     eval(parse(text = function_name), envir = envir),
     error = function(e) function_name
@@ -227,7 +227,7 @@ function_hover_text <- Vectorize(function(function_name, envir){
 },
 "function_name")
 
-get_raw_node_category_data <- function(config){
+get_raw_node_category_data <- function(config) {
   all_labels <- V(config$graph)$name
   config$outdated <- resolve_graph_outdated(config = config)
   config$imports <- setdiff(all_labels, config$plan$target)
@@ -336,22 +336,22 @@ null_graph <- function() {
 # I would use styler for indentation here,
 # but it adds a lot of processing time
 # for large functions.
-style_hover_text <- function(lines){
+style_hover_text <- function(lines) {
   x <- crop_lines(lines, n = hover_lines)
   x <- crop_text(x, width = hover_width)
   x <- gsub(pattern = " ", replacement = "&nbsp;", x = x)
   paste0(x, collapse = "<br>")
 }
 
-resolve_build_times <- function(build_times){
-  if (is.logical(build_times)){
+resolve_build_times <- function(build_times) {
+  if (is.logical(build_times)) {
     warning(
       "The build_times argument to the visualization functions ",
       "should be a character string: \"build\", \"command\", or \"none\". ",
       "The change will be forced in a later version of `drake`. ",
       "see the `build_times()` function for details."
     )
-    if (build_times){
+    if (build_times) {
       build_times <- "build"
     } else {
       build_times <- "none"
@@ -360,8 +360,8 @@ resolve_build_times <- function(build_times){
   build_times
 }
 
-resolve_graph_outdated <- function(config){
-  if (config$from_scratch){
+resolve_graph_outdated <- function(config) {
+  if (config$from_scratch) {
     config$outdated <- config$plan$target
   } else {
     config$outdated <- outdated(
@@ -371,10 +371,10 @@ resolve_graph_outdated <- function(config){
   }
 }
 
-resolve_levels <- function(config){
+resolve_levels <- function(config) {
   config$nodes$level <- level <- 0
   graph <- config$graph
-  while (length(V(graph))){
+  while (length(V(graph))) {
     level <- level + 1
     leaves <- leaf_nodes(graph)
     leaves <- intersect(leaves, config$nodes$id)
@@ -410,12 +410,12 @@ target_hover_text <- function(targets, plan) {
   )
 }
 
-trim_node_categories <- function(config){
+trim_node_categories <- function(config) {
   elts <- c(
     "failed", "files", "functions", "in_progress", "missing",
     "outdated", "targets"
   )
-  for (elt in elts){
+  for (elt in elts) {
     config[[elt]] <- intersect(config[[elt]], config$nodes$id)
   }
   config

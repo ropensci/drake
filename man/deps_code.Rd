@@ -51,7 +51,7 @@ network.
 }
 \examples{
 # Your workflow likely depends on functions in your workspace.
-f <- function(x, y){
+f <- function(x, y) {
   out <- x + y + g(x)
   saveRDS(out, "out.rds")
 }

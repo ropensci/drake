@@ -33,7 +33,7 @@
 #' test_with_dir("Quarantine side effects.", {
 #' diagnose() # List all the targets with recorded error logs.
 #' # Define a function doomed to failure.
-#' f <- function(){
+#' f <- function() {
 #'   stop("unusual error")
 #' }
 #' # Create a workflow plan doomed to failure.
@@ -76,17 +76,17 @@ diagnose <- function(
   search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
   verbose = drake::default_verbose()
-){
-  if (is.null(cache)){
+) {
+  if (is.null(cache)) {
     return(character(0))
   }
-  if (!character_only){
+  if (!character_only) {
     target <- as.character(substitute(target))
   }
-  if (!length(target)){
+  if (!length(target)) {
     return(cache$list(namespace = "meta"))
   }
-  if (!cache$exists(key = target, namespace = "meta")){
+  if (!cache$exists(key = target, namespace = "meta")) {
     stop("No diagnostic information for target ", target, ".")
   }
   cache$get(

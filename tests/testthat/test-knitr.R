@@ -69,7 +69,7 @@ test_with_dir("empty cases", {
 test_with_dir("unparsable pieces of commands are handled correctly", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- "bluh$"
-  expect_false(is_parsable(x))
+  expect_error(parse(text = x))
   expect_equal(find_knitr_doc(x), character(0))
 })
 
@@ -135,7 +135,7 @@ test_with_dir("find_knitr_doc() works", {
     "knit('file.Rmd')",
     "knitr::knit(input = 'file.Rmd')",
     "knitr:::knit('file.Rmd')",
-    function(x){
+    function(x) {
       knit("file.Rmd")
     },
     "f(g(knit('file.Rmd', output = 'file.md', quiet = TRUE)))",
@@ -144,17 +144,17 @@ test_with_dir("find_knitr_doc() works", {
     "render(input = 'file.Rmd')",
     "rmarkdown::render('file.Rmd')",
     "rmarkdown:::render('file.Rmd')",
-    function(x){
+    function(x) {
       render("file.Rmd")
     },
     "f(g(render('file.Rmd', output_file = 'file.md', quiet = TRUE)))",
     "f(g(render(output_file = 'file.md', quiet = TRUE, input = 'file.Rmd') + 5))", # nolint
     "f(g(render(output_file = 'file.md', quiet = TRUE, 'file.Rmd') + 5))"
   )
-  for (cmd in false){
+  for (cmd in false) {
     expect_equal(find_knitr_doc(cmd), character(0))
   }
-  for (cmd in true){
+  for (cmd in true) {
     expect_equal(find_knitr_doc(cmd), "file.Rmd")
   }
 })
@@ -174,7 +174,7 @@ test_with_dir("knitr file deps from commands and functions", {
     clean_dependency_list(deps_code("'report.Rmd'"))), sort(c(
     "coef_regression2_small", "large", "small"
   )))
-  f <- function(x){
+  f <- function(x) {
     knit(x)
   }
   expect_equal(clean_dependency_list(deps_code(f)), "knit")
@@ -184,7 +184,7 @@ test_with_dir("misc knitr", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   f <- function()
   expect_silent(o <- doc_of_function_call(knit))
-  f <- function(x){
+  f <- function(x) {
     knitr::knit("file.Rmd")
   }
   doc_of_function_call(f)

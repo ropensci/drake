@@ -37,10 +37,10 @@
 #' # which computes the hash of an object.
 #'
 #' library(digest) # Has the digest() function.
-#' g <- function(x){
+#' g <- function(x) {
 #'   digest(x)
 #' }
-#' f <- function(x){
+#' f <- function(x) {
 #'   g(x)
 #' }
 #' plan <- drake_plan(x = f(1))
@@ -80,7 +80,7 @@
 #'
 #' # Note: if you use `digest::digest()`` instead of just `digest()`,
 #' # `drake` does not dive into the function body anymore.
-#' g <- function(x){
+#' g <- function(x) {
 #'   digest::digest(x) # Was previously just digest()
 #' }
 #' config <- drake_config(plan)
@@ -92,20 +92,20 @@ expose_imports <- function(
   character_only = FALSE,
   envir = parent.frame(),
   jobs = 1
-){
+) {
   force(envir)
-  if (!character_only){
+  if (!character_only) {
     package <- as.character(substitute(package))
   }
   expose_envir(from = getNamespace(package), to = envir, jobs = jobs)
 }
 
-expose_envir <- function(from, to, jobs, keep = ls(from, all.names = TRUE)){
+expose_envir <- function(from, to, jobs, keep = ls(from, all.names = TRUE)) {
   from <- as.list(from, all.names = TRUE)[keep]
   from <- list2env(from, parent = globalenv())
   lightly_parallelize(
     X = ls(from, all.names = TRUE),
-    FUN = function(name){
+    FUN = function(name) {
       assign(
         x = name,
         envir = to,

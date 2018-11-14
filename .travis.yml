@@ -3,6 +3,8 @@
 language: R
 sudo: false
 cache: packages
+repos:
+  CRAN: https://cloud.r-project.org
 
 bioc_packages:
   - graph

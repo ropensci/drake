@@ -191,7 +191,7 @@ test_with_dir("in_progress() works and errors are handled correctly", {
 test_with_dir("warnings and messages are caught", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(in_progress(), character(0))
-  f <- function(x){
+  f <- function(x) {
     warning("my first warn")
     message("my first mess")
     warning("my second warn")

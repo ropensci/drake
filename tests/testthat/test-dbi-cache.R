@@ -53,7 +53,7 @@ test_with_dir("storr_dbi is usable", {
   )
   testrun(config)
 
-  if (parallelism %in% parallelism_choices(distributed_only = TRUE)){
+  if (parallelism %in% parallelism_choices(distributed_only = TRUE)) {
     expect_true(file.exists(default_cache_path()))
   } else {
     expect_false(file.exists(default_cache_path()))

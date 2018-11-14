@@ -1,5 +1,5 @@
-handle_build_exceptions <- function(target, meta, config){
-  if (length(meta$warnings) && config$verbose){
+handle_build_exceptions <- function(target, meta, config) {
+  if (length(meta$warnings) && config$verbose) {
     warn_opt <- max(1, getOption("warn"))
     withr::with_options(
       new = list(warn = warn_opt),
@@ -10,20 +10,20 @@ handle_build_exceptions <- function(target, meta, config){
       )
     )
   }
-  if (length(meta$messages) && config$verbose){
+  if (length(meta$messages) && config$verbose) {
     drake_message(
       "Target ", target, " messages:\n",
       multiline_message(meta$messages),
       config = config
     )
   }
-  if (inherits(meta$error, "error")){
-    if (config$verbose){
+  if (inherits(meta$error, "error")) {
+    if (config$verbose) {
       text <- paste("fail", target)
       finish_console(text = text, pattern = "fail", config = config)
     }
     store_failure(target = target, meta = meta, config = config)
-    if (!config$keep_going){
+    if (!config$keep_going) {
       drake_error(
         "Target `", target, "` failed. Call `diagnose(", target,
         ")` for details. Error message:\n  ",
@@ -34,23 +34,23 @@ handle_build_exceptions <- function(target, meta, config){
   }
 }
 
-error_character0 <- function(e){
+error_character0 <- function(e) {
   character(0)
 }
 
-error_false <- function(e){
+error_false <- function(e) {
   FALSE
 }
 
-error_na <- function(e){
+error_na <- function(e) {
   NA
 }
 
-error_null <- function(e){
+error_null <- function(e) {
   NULL
 }
 
-error_tibble_times <- function(e){
+error_tibble_times <- function(e) {
   stop(
     "Failed converting a data frame of times to a tibble. ",
     "Please install version 1.2.1 or greater of the pillar package.",
@@ -58,7 +58,7 @@ error_tibble_times <- function(e){
   )
 }
 
-error_process <- function(e, id, config){
+error_process <- function(e, id, config) {
   stack <- sys.calls()
   drake_warning("Error: ", e$message, config = config)
   drake_warning("Call: ", e$call, config = config)
@@ -71,6 +71,6 @@ error_process <- function(e, id, config){
 }
 
 # Should be used as sparingly as possible.
-just_try <- function(code){
+just_try <- function(code) {
   try(suppressWarnings(code), silent = TRUE)
 }

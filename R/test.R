@@ -1,4 +1,4 @@
-drake_context <- function(x){
+drake_context <- function(x) {
   assert_pkg("testthat")
   ctx <- paste0(get_testing_scenario_name(), ": ", x)
   testthat::context(ctx)
@@ -24,7 +24,7 @@ justbuilt <- function(config) {
   recorded <- config$cache$list(namespace = "progress")
   all <- lightly_parallelize(
     X = recorded,
-    FUN = function(target){
+    FUN = function(target) {
       config$cache$get(
         key = target, namespace = "progress", use_cache = FALSE)
     },
@@ -34,7 +34,7 @@ justbuilt <- function(config) {
   all <- unlist(all)
   out <- Filter(
     all,
-    f = function(x){
+    f = function(x) {
       x == "finished"
     }
   )
@@ -64,9 +64,9 @@ nobuild <- function(config) {
 #' )
 #' file.exists("world.txt") # FALSE
 #' }
-test_with_dir <- function(desc, ...){
+test_with_dir <- function(desc, ...) {
   assert_pkg("testthat")
-  while (file.exists(new <- tempfile())){
+  while (file.exists(new <- tempfile())) {
     # Should not reach this part of the loop.
     Sys.sleep(0.01) # nocov
   }
@@ -78,7 +78,7 @@ test_with_dir <- function(desc, ...){
   invisible()
 }
 
-restore_options <- function(old){
+restore_options <- function(old) {
   current <- options()
   remove_these <- setdiff(names(current), names(old))
   removal_list <- as.list(old[remove_these])
@@ -87,11 +87,11 @@ restore_options <- function(old){
   options(old)
 }
 
-set_test_backend <- function(){
+set_test_backend <- function() {
   eval(parse(text = get_testing_scenario()$backend))
 }
 
-unit_test_files <- function(path = getwd()){
+unit_test_files <- function(path = getwd()) {
   assert_pkg("rprojroot")
   root <- rprojroot::find_root(criterion = "DESCRIPTION", path = path)
   file.path(root, "tests", "testthat")
@@ -103,7 +103,7 @@ with_all_options <- function(code) {
   force(code)
 }
 
-write_v4.3.0_project <- function(){ # nolint
+write_v4.3.0_project <- function() { # nolint
   zip <- system.file(
     file.path("testing", "built_mtcars_example_v4.3.0.zip"),
     package = "drake",

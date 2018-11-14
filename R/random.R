@@ -1,10 +1,10 @@
-choose_seed <- function(supplied, cache){
+choose_seed <- function(supplied, cache) {
   previous <- get_previous_seed(cache = cache)
   seed_conflict <-
     !is.null(previous) &&
     !is.null(supplied) &&
     !identical(previous, supplied)
-  if (seed_conflict){
+  if (seed_conflict) {
     stop(
       "You supplied a seed of ", supplied,
       " to either make() or drake_config(). ",
@@ -19,8 +19,8 @@ choose_seed <- function(supplied, cache){
   (previous %||% supplied) %||% 0
 }
 
-get_previous_seed <- function(cache){
-  if (cache$exists(key = "seed", namespace = "config")){
+get_previous_seed <- function(cache) {
+  if (cache$exists(key = "seed", namespace = "config")) {
     cache$get(key = "seed", namespace = "config")
   } else {
     NULL

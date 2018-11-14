@@ -6,7 +6,7 @@
 #' @return The analysis wildcard used in [plan_summaries()].
 #' @examples
 #' # See ?plan_analyses for examples
-analysis_wildcard <- function(){
+analysis_wildcard <- function() {
   "analysis__"
 }
 
@@ -19,7 +19,7 @@ analysis_wildcard <- function(){
 #'   [plan_analyses()] and [plan_summaries()].
 #' @examples
 #' # See ?plan_analyses for examples
-dataset_wildcard <- function(){
+dataset_wildcard <- function() {
   "dataset__"
 }
 
@@ -173,8 +173,8 @@ evaluate_plan <- function(
   trace = FALSE,
   columns = "command",
   sep = "_"
-){
-  if (!is.null(rules)){
+) {
+  if (!is.null(rules)) {
     check_wildcard_rules(rules)
     evaluate_wildcard_rules(
       plan = plan,
@@ -185,7 +185,7 @@ evaluate_plan <- function(
       columns = columns,
       sep = sep
     )
-  } else if (!is.null(wildcard) && !is.null(values)){
+  } else if (!is.null(wildcard) && !is.null(values)) {
     evaluate_single_wildcard(
       plan = plan,
       wildcard = wildcard,
@@ -210,18 +210,18 @@ evaluate_single_wildcard <- function(
   trace,
   columns,
   sep
-){
-  if (!length(columns)){
+) {
+  if (!length(columns)) {
     return(plan)
   }
-  if ("target" %in% columns){
+  if ("target" %in% columns) {
     stop(
       "'target' cannot be in the `columns` argument of evaluate_plan().",
       call = FALSE
     )
   }
   missing_cols <- setdiff(columns, colnames(plan))
-  if (length(missing_cols)){
+  if (length(missing_cols)) {
     stop(
       "some columns you selected for evaluate_plan() are not in the plan:\n",
       multiline_message(missing_cols),
@@ -230,10 +230,10 @@ evaluate_single_wildcard <- function(
   }
   values <- as.character(values)
   matches <- rep(FALSE, nrow(plan))
-  for (col in columns){
+  for (col in columns) {
     matches <- matches | grepl(wildcard, plan[[col]], fixed = TRUE)
   }
-  if (!any(matches)){
+  if (!any(matches)) {
     return(plan)
   }
   major <- make.names(tempfile())
@@ -241,22 +241,22 @@ evaluate_single_wildcard <- function(
   plan[[major]] <- seq_len(nrow(plan))
   plan[[minor]] <- plan[[major]]
   matching <- plan[matches, ]
-  if (expand){
+  if (expand) {
     matching <- expand_plan(matching, values, rename = FALSE)
   }
   matched_targets <- matching$target
-  if (rename){
+  if (rename) {
     matching$target <- paste(matching$target, values, sep = sep)
   }
   values <- rep(values, length.out = nrow(matching))
-  for (col in columns){
+  for (col in columns) {
     matching[[col]] <- Vectorize(
-      function(value, command){
+      function(value, command) {
         gsub(wildcard, value, command, fixed = TRUE)
       }
     )(values, matching[[col]])
   }
-  if (trace){
+  if (trace) {
     matching[[wildcard]] <- values
     matching[[paste0(wildcard, "_from")]] <- matched_targets
   }
@@ -273,8 +273,8 @@ evaluate_single_wildcard <- function(
 
 evaluate_wildcard_rules <- function(
   plan, rules, expand, rename, trace, columns, sep
-){
-  for (index in seq_len(length(rules))){
+) {
+  for (index in seq_len(length(rules))) {
     plan <- evaluate_single_wildcard(
       plan,
       wildcard = names(rules)[index],
@@ -289,13 +289,13 @@ evaluate_wildcard_rules <- function(
   plan
 }
 
-check_wildcard_rules <- function(rules){
+check_wildcard_rules <- function(rules) {
   stopifnot(is.list(rules))
   wildcards <- names(rules)
   all_values <- unlist(rules)
-  for (i in seq_along(wildcards)){
+  for (i in seq_along(wildcards)) {
     matches <- grep(wildcards[i], all_values, fixed = TRUE, value = TRUE)
-    if (length(matches)){
+    if (length(matches)) {
       stop(
         "No wildcard name can match the name of any replacement value. ",
         "Conflicts: \"", wildcards[i], "\" with:\n",
@@ -304,7 +304,7 @@ check_wildcard_rules <- function(rules){
       )
     }
     matches <- grep(wildcards[i], wildcards[-i], fixed = TRUE, value = TRUE)
-    if (length(matches)){
+    if (length(matches)) {
       stop(
         "The name of a wildcard cannot be a substring ",
         "of any other wildcard name. ",
@@ -343,8 +343,8 @@ check_wildcard_rules <- function(rules){
 #' # Choose whether to rename the targets based on the values.
 #' expand_plan(datasets, values = 1:3, rename = TRUE)
 #' expand_plan(datasets, values = 1:3, rename = FALSE)
-expand_plan <- function(plan, values = NULL, rename = TRUE, sep = "_"){
-  if (!length(values)){
+expand_plan <- function(plan, values = NULL, rename = TRUE, sep = "_") {
+  if (!length(values)) {
     return(plan)
   }
   nrows <- nrow(plan)
@@ -352,7 +352,7 @@ expand_plan <- function(plan, values = NULL, rename = TRUE, sep = "_"){
   plan <- plan[repeat_targets, ]
   values <- as.character(values)
   values <- rep(values, times = nrows)
-  if (rename){
+  if (rename) {
     plan$target <- paste(plan$target, values, sep = sep)
   }
   rownames(plan) <- NULL
@@ -393,7 +393,7 @@ expand_plan <- function(plan, values = NULL, rename = TRUE, sep = "_"){
 #' # For the final workflow plan, row bind the pieces together.
 #' my_plan <- rbind(datasets, ans)
 #' my_plan
-plan_analyses <- function(plan, datasets, sep = "_"){
+plan_analyses <- function(plan, datasets, sep = "_") {
   plan <- deprecate_wildcard(
     plan = plan,
     old = "..dataset..",
@@ -460,7 +460,7 @@ plan_summaries <- function(
   datasets,
   gather = rep("list", nrow(plan)),
   sep = "_"
-){
+) {
   plan <- deprecate_wildcard(
     plan = plan,
     old = "..analysis..",
@@ -475,7 +475,7 @@ plan_summaries <- function(
   out <- plan
   group <- paste(colnames(out), collapse = sep)
   out[[group]] <- out$target
-  if (!any(grepl(analysis_wildcard(), out$command, fixed = TRUE))){
+  if (!any(grepl(analysis_wildcard(), out$command, fixed = TRUE))) {
     stop(
       "no 'analysis__' wildcard found in plan$command. ",
       "Use plan_analyses() instead."
@@ -494,13 +494,13 @@ plan_summaries <- function(
     expand = FALSE,
     sep = sep
   )
-  if (!length(gather)){
+  if (!length(gather)) {
     return(out[setdiff(names(out), group)])
   }
-  if (length(gather) == 1){
+  if (length(gather) == 1) {
     gather <- rep(gather, dim(plan)[1])
   }
-  if (!(length(gather) == dim(plan)[1])){
+  if (!(length(gather) == dim(plan)[1])) {
     stop("gather must be NULL or have length 1 or nrow(plan)")
   }
   . <- group_sym <- as.symbol(group)
@@ -520,9 +520,9 @@ plan_summaries <- function(
   dplyr::select(out, target, command)
 }
 
-with_analyses_only <- function(plan){
+with_analyses_only <- function(plan) {
   has_analysis <- grepl(analysis_wildcard(), plan$command, fixed = TRUE)
-  if (any(!has_analysis)){
+  if (any(!has_analysis)) {
     warning(
       "removing ",
       sum(has_analysis),

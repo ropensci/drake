@@ -9,10 +9,14 @@
 ## Enhancements
 
 - Remove strict dependencies on packages `evaluate`, `formatR`, `fs`, `future`, `parallel`, `R.utils`, `stats`, and `stringi`.
+- **Large speed boost**: reduce repeated calls to `parse()` in `code_dependencies()`.
+- **Large speed boost**: change the default value of `memory_strategy` (previously `pruning_strategy`) to `"speed"` (previously `"lookahead"`).
+- Use the `label` argument to `future()` inside `make(parallelism = "future")`. That way , job names are target names by default if `job.name` is used correctly in the `batchtools` template file.
+- Remove strict dependencies on packages `evaluate`, `fs`, `future`, `magrittr`, `parallel`, `R.utils`, `stats`, and `stringi`.
 - Deprecate the `force` argument to `make()` and related functions.
 - Change the name of `prune_envir()` to `manage_memory()`.
 - Deprecate and rename the `pruning_strategy` argument to `memory_strategy` (`make()` and `drake_config()`).
-- Change the default value of `memory_strategy` (previously `pruning_strategy`) to `"speed"` (previously `"lookahead"`).
+
 
 # Version 6.1.0
 

@@ -143,10 +143,10 @@ drake_graph_info <- function(
   show_output_files = TRUE
 ) {
   assert_pkg("visNetwork")
-  if (!length(V(config$graph)$name)){
+  if (!length(V(config$graph)$name)) {
     return(null_graph())
   }
-  if (!is.null(split_columns)){
+  if (!is.null(split_columns)) {
     warning("Argument split_columns is deprecated.", call. = FALSE)
   }
   config$build_times <- resolve_build_times(build_times)
@@ -164,7 +164,7 @@ drake_graph_info <- function(
     order = order
   )
   config$graph <- subset_graph(graph = config$graph, subset = subset)
-  if (targets_only){
+  if (targets_only) {
     config$graph <- subset_graph(
       graph = config$graph,
       subset = config$plan$target
@@ -181,14 +181,14 @@ drake_graph_info <- function(
   config <- trim_node_categories(config)
   config$nodes <- configure_nodes(config = config)
   config$edges <- network_data$edges
-  if (show_output_files){
+  if (show_output_files) {
     config <- insert_file_outs(config)
   }
-  if (nrow(config$edges)){
+  if (nrow(config$edges)) {
     config$edges$arrows <- "to"
     config$edges$smooth <- TRUE
   }
-  if (length(config$group)){
+  if (length(config$group)) {
     config <- cluster_nodes(config)
   }
   list(

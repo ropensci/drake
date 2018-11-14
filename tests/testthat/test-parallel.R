@@ -155,7 +155,7 @@ test_with_dir("lightly_parallelize_atomic() is correct", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   withr::with_seed(seed = 2017, code = {
     x <- sample(LETTERS[1:3], size = 1e3, replace = TRUE)
-    append <- function(x){
+    append <- function(x) {
       paste0(x, "_text")
     }
     out0 <- lightly_parallelize(X = x, FUN = append, jobs = 2)

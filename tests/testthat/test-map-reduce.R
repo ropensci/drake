@@ -2,7 +2,7 @@ drake_context("map reduce")
 
 test_with_dir("map_plan()", {
   skip_on_cran()
-  f <- function(a, b){
+  f <- function(a, b) {
     a + b
   }
   args <- expand.grid(a = 1:2, b = 3:5)
@@ -31,7 +31,7 @@ test_with_dir("map_plan()", {
 
 test_with_dir("map_plan() onto a matrix", {
   skip_on_cran()
-  my_model_fit <- function(x1, x2){
+  my_model_fit <- function(x1, x2) {
     lm(as.formula(paste("mpg ~", x1, "+", x2)), data = mtcars)
   }
   covariates <- setdiff(colnames(mtcars), "mpg")
@@ -46,7 +46,7 @@ test_with_dir("map_plan() onto a matrix", {
 
 test_with_dir("map_plan() with symbols", {
   skip_on_cran()
-  my_model_fit <- function(x1, x2, data){
+  my_model_fit <- function(x1, x2, data) {
     formula <- as.formula(paste("mpg ~", x1, "+", x1))
     lm(formula, data = data)
   }
@@ -174,7 +174,7 @@ test_with_dir("reduce_plan()", {
     wildcard = "VALUE",
     values = 1:8
   )
-  fun <- function(x, y){
+  fun <- function(x, y) {
     x ^ 2 - 3 * y
   }
   x <- reduce_plan(x_plan, target = "x_sum", pairwise = TRUE,

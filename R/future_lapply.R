@@ -1,4 +1,4 @@
-run_future_lapply <- function(config){
+run_future_lapply <- function(config) {
   assert_pkg("future")
   assert_pkg("future.apply")
   assert_pkg("txtq")
@@ -33,19 +33,19 @@ run_future_lapply <- function(config){
 #' @param cache_path path to the drake cache
 #' @examples
 #' # No examples here. This function is not for end users.
-fl_master <- function(cache_path){
+fl_master <- function(cache_path) {
   config <- recover_drake_config(cache_path)
   drake::mc_process(id = mc_worker_id(0), config = config)
 }
 
-fl_worker <- function(worker, cache_path){
+fl_worker <- function(worker, cache_path) {
   withCallingHandlers(
     expr = {
       config <- recover_drake_config(cache_path = cache_path)
       do_prework(config = config, verbose_packages = FALSE)
       mc_worker(worker = worker, config = config)
     },
-    error = function(e){
+    error = function(e) {
       error_process(e = e, id = worker, config = config) # nocov
     }
   )

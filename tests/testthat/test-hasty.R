@@ -8,11 +8,11 @@ test_with_dir("hasty parallelism", {
   e$my_plan$command[e$my_plan$target == "report"] <-
     "utils::write.csv(coef_regression2_large, file = file_out(\"coef.csv\"))"
   options(clustermq.scheduler = "multicore")
-  for (jobs in 1:2){
-    if (jobs > 1){
+  for (jobs in 1:2) {
+    if (jobs > 1) {
       skip_on_os("windows")
       skip_if_not_installed("clustermq")
-      if ("package:clustermq" %in% search()){
+      if ("package:clustermq" %in% search()) {
         eval(parse(text = "detach('package:clustermq', unload = TRUE)"))
       }
     }
@@ -28,7 +28,7 @@ test_with_dir("hasty parallelism", {
     expect_false(file.exists("coef.csv"))
     # custom build function
     expect_false(file.exists("small"))
-    hasty_write <- function(target, config){
+    hasty_write <- function(target, config) {
       file.create(target)
     }
     expect_warning(
@@ -46,7 +46,7 @@ test_with_dir("hasty parallelism", {
     expect_equal(length(intersect(e$my_plan$target, cached())), 0)
     expect_false(file.exists("coef.csv"))
   }
-  if ("package:clustermq" %in% search()){
+  if ("package:clustermq" %in% search()) {
     eval(parse(text = "detach('package:clustermq', unload = TRUE)"))
   }
 })

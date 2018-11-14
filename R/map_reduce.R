@@ -29,7 +29,7 @@
 #' @examples
 #' # For the full tutorial, visit
 #' # https://ropenscilabs.github.io/drake-manual/plans.html#map_plan.
-#' my_model_fit <- function(x1, x2, data){
+#' my_model_fit <- function(x1, x2, data) {
 #'   lm(as.formula(paste("mpg ~", x1, "+", x1)), data = data)
 #' }
 #' covariates <- setdiff(colnames(mtcars), "mpg")
@@ -55,14 +55,14 @@ map_plan <- function(
   id = "id",
   character_only = FALSE,
   trace = FALSE
-){
+) {
   args <- tibble::as_tibble(args)
-  if (!character_only){
+  if (!character_only) {
     fun <- as.character(substitute(fun))
     id <- as.character(substitute(id))
   }
   cols <- setdiff(colnames(args), id)
-  if (id %in% colnames(args)){
+  if (id %in% colnames(args)) {
     target <- args[[id]]
   } else {
     target <- paste0(
@@ -72,14 +72,14 @@ map_plan <- function(
   }
   command <- purrr::pmap_chr(
     .l = args[, cols],
-    .f = function(...){
+    .f = function(...) {
       out <- list(as.name(fun), ...)
       out <- as.call(out)
       rlang::expr_text(out)
     }
   )
   out <- tibble::tibble(target = target, command = command)
-  if (trace){
+  if (trace) {
     out <- dplyr::bind_cols(out, args)
   }
   sanitize_plan(out)
@@ -134,12 +134,12 @@ gather_plan <- function(
   target = "target",
   gather = "list",
   append = FALSE
-){
+) {
   command <- paste(plan$target, "=", plan$target)
   command <- paste(command, collapse = ", ")
   command <- paste0(gather, "(", command, ")")
   new_plan <- tibble(target = target, command = command)
-  if (append){
+  if (append) {
     bind_plans(plan, new_plan)
   } else {
     new_plan
@@ -204,9 +204,9 @@ gather_by <- function(
   append = TRUE,
   filter = NULL,
   sep = "_"
-){
+) {
   . <- NULL
-  if (is.null(substitute(filter))){
+  if (is.null(substitute(filter))) {
     gathered <- plan
   } else {
     filter <- rlang::enquo(filter)
@@ -224,10 +224,10 @@ gather_by <- function(
   )
   cols <- dplyr::select(gathered, ...)
   suffix <- apply(X = cols, MARGIN = 1, FUN = paste, collapse = sep)
-  if (length(suffix) && nzchar(suffix)){
+  if (length(suffix) && nzchar(suffix)) {
     gathered$target <- paste(gathered$target, suffix, sep = sep)
   }
-  if (append){
+  if (append) {
     out <- bind_plans(plan, gathered)
   } else {
     out <- gathered
@@ -295,8 +295,8 @@ reduce_plan <- function(
   pairwise = TRUE,
   append = FALSE,
   sep = "_"
-){
-  if (pairwise){
+) {
+  if (pairwise) {
     pairs <- reduction_pairs(
       x = plan$target,
       base_name = paste0(target, sep)
@@ -309,13 +309,13 @@ reduce_plan <- function(
   } else {
     command <- Reduce(
       x = plan$target,
-      f = function(x, y){
+      f = function(x, y) {
         paste0(begin, x, op, y, end)
       }
     )
     out <- tibble(target = target, command = command)
   }
-  if (append){
+  if (append) {
     bind_plans(plan, out)
   } else{
     out
@@ -385,9 +385,9 @@ reduce_by <- function(
   append = TRUE,
   filter = NULL,
   sep = "_"
-){
+) {
   . <- NULL
-  if (is.null(substitute(filter))){
+  if (is.null(substitute(filter))) {
     reduced <- plan
   } else {
     filter <- rlang::enquo(filter)
@@ -409,10 +409,10 @@ reduce_by <- function(
   )
   cols <- dplyr::select(reduced, ...)
   suffix <- apply(X = cols, MARGIN = 1, FUN = paste, collapse = sep)
-  if (length(suffix) && nzchar(suffix)){
+  if (length(suffix) && nzchar(suffix)) {
     reduced$target <- paste(reduced$target, suffix, sep = sep)
   }
-  if (append){
+  if (append) {
     out <- bind_plans(plan, reduced)
   } else {
     out <- reduced
@@ -420,14 +420,14 @@ reduce_by <- function(
   arrange_plan_cols(out)
 }
 
-reduction_pairs <- function(x, pairs = NULL, base_name = "reduced_"){
-  if (length(x) < 2){
+reduction_pairs <- function(x, pairs = NULL, base_name = "reduced_") {
+  if (length(x) < 2) {
     return(pairs)
   }
   evens <- x[seq(from = 2, to = length(x), by = 2)]
   odds <- x[seq(from = 1, to = length(x), by = 2)]
   names <- new_x <- paste0(base_name, seq_along(odds) + (nrow(pairs) %||% 0))
-  if (length(odds) > length(evens)){
+  if (length(odds) > length(evens)) {
     evens[length(evens) + 1] <- names[1]
     new_x <- new_x[-1]
   }

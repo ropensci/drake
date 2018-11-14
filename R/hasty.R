@@ -1,7 +1,7 @@
-run_hasty <- function(config){
+run_hasty <- function(config) {
   warn_hasty(config)
   config$graph <- config$schedule <- targets_graph(config = config)
-  if (config$jobs_targets > 1L){
+  if (config$jobs_targets > 1L) {
     hasty_parallel(config)
   } else{
     hasty_loop(config)
@@ -9,9 +9,9 @@ run_hasty <- function(config){
   invisible()
 }
 
-hasty_loop <- function(config){
+hasty_loop <- function(config) {
   targets <- igraph::topo_sort(config$schedule)$name
-  for (target in targets){
+  for (target in targets) {
     console_target(target = target, config = config)
     config$envir[[target]] <- config$hasty_build(
       target = target,
@@ -26,20 +26,20 @@ hasty_loop <- function(config){
 #' @export
 #' @keywords internal
 #' @inheritParams drake_build
-default_hasty_build <- function(target, config){
+default_hasty_build <- function(target, config) {
   eval(
     expr = preprocess_command(target, config),
     envir = config$envir
   )
 }
 
-hasty_parallel <- function(config){
+hasty_parallel <- function(config) {
   assert_pkg("clustermq", version = "0.8.5")
   config$queue <- new_priority_queue(
     config = config,
     jobs = config$jobs_imports
   )
-  if (!config$queue$empty()){
+  if (!config$queue$empty()) {
     config$workers <- clustermq::workers(
       n_jobs = config$jobs_targets,
       template = config$template
@@ -52,27 +52,27 @@ hasty_parallel <- function(config){
   invisible()
 }
 
-hasty_master <- function(config){
+hasty_master <- function(config) {
   on.exit(config$workers$finalize())
-  while (config$counter$remaining > 0){
+  while (config$counter$remaining > 0) {
     msg <- config$workers$receive_data()
     conclude_hasty_build(msg = msg, config = config)
-    if (!identical(msg$token, "set_common_data_token")){
+    if (!identical(msg$token, "set_common_data_token")) {
       config$workers$send_common_data()
-    } else if (!config$queue$empty()){
+    } else if (!config$queue$empty()) {
       hasty_send_target(config)
     } else {
       config$workers$send_shutdown_worker()
     }
   }
-  if (config$workers$cleanup()){
+  if (config$workers$cleanup()) {
     on.exit()
   }
 }
 
-hasty_send_target <- function(config){
+hasty_send_target <- function(config) {
   target <- config$queue$pop0()
-  if (!length(target)){
+  if (!length(target)) {
     config$workers$send_wait() # nocov
     return() # nocov
   }
@@ -94,17 +94,17 @@ hasty_send_target <- function(config){
 #' @keywords internal
 #' @inheritParams drake_build
 #' @param deps named list of dependencies
-remote_hasty_build <- function(target, deps = NULL, config){
+remote_hasty_build <- function(target, deps = NULL, config) {
   do_prework(config = config, verbose_packages = FALSE)
-  for (dep in names(deps)){
+  for (dep in names(deps)) {
     config$envir[[dep]] <- deps[[dep]]
   }
   value <- config$hasty_build(target = target, config = config)
   invisible(list(target = target, value = value))
 }
 
-conclude_hasty_build <- function(msg, config){
-  if (is.null(msg$result)){
+conclude_hasty_build <- function(msg, config) {
+  if (is.null(msg$result)) {
     return()
   }
   config$envir[[msg$result$target]] <- msg$result$value
@@ -118,7 +118,7 @@ conclude_hasty_build <- function(msg, config){
   config$counter$remaining <- config$counter$remaining - 1
 }
 
-warn_hasty <- function(config){
+warn_hasty <- function(config) {
   msg <- paste(
     "Hasty mode THROWS AWAY REPRODUCIBILITY to gain speed.",
     "drake's scientific claims at",
@@ -130,7 +130,7 @@ warn_hasty <- function(config){
     "Details: https://ropenscilabs.github.io/drake-manual/hpc.html#hasty-mode", # nolint
     sep = "\n"
   )
-  if (requireNamespace("crayon")){
+  if (requireNamespace("crayon")) {
     msg <- crayon::red(msg)
   }
   drake_warning(msg, config = config)

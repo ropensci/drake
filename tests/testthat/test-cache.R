@@ -178,7 +178,7 @@ test_with_dir("cache functions work", {
   cache_dir <- basename(default_cache_path())
   first_wd <- getwd()
   scratch <- file.path(first_wd, "scratch")
-  if (!file.exists(scratch)){
+  if (!file.exists(scratch)) {
     dir.create(scratch) # Will move up a level later.
   }
   withr::local_dir(scratch)
@@ -191,7 +191,7 @@ test_with_dir("cache functions work", {
   expect_error(readd(search = FALSE))
   config <- dbug()
   using_global <- identical(config$envir, globalenv())
-  if (using_global){
+  if (using_global) {
     envir <- globalenv()
   } else {
     envir <- environment()

@@ -1,6 +1,6 @@
-run_loop <- function(config){
+run_loop <- function(config) {
   targets <- igraph::topo_sort(config$schedule)$name
-  for (i in seq_along(targets)){
+  for (i in seq_along(targets)) {
     check_build_store(
       target = targets[i],
       config = config,

@@ -37,10 +37,10 @@ test_with_dir("the priority queue works", {
   expect_null(x$peek0())
   expect_null(x$pop0())
   expect_equal(x$data, y)
-  for (i in 1:2){
+  for (i in 1:2) {
     x$decrease_key(c("bar", "spren"))
   }
-  for (i in 1:3){
+  for (i in 1:3) {
     x$decrease_key("spren")
   }
   y <- data.frame(
@@ -66,10 +66,10 @@ test_with_dir("the priority queue works", {
   priorities[targets == "spren"] <- 2
   x <- R6_priority_queue$new(
     targets = targets, ndeps = ndeps, priorities = priorities)
-  for (i in 1:2){
+  for (i in 1:2) {
     x$decrease_key(c("bar", "spren"))
   }
-  for (i in 1:3){
+  for (i in 1:3) {
     x$decrease_key("spren")
   }
   y <- data.frame(

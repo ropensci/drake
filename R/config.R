@@ -49,17 +49,14 @@
 #'   Use `pkgconfig` to set the default value of `verbose` 
 #'   for your R session:
 #'   for example, `pkgconfig::set_config("drake::verbose" = 2)`.
-#'   \describe{
-#'     \item{0 or `FALSE`:}{print nothing.}
-#'     \item{1 or `TRUE`:}{print only targets to build.}
-#'     \item{2:}{+ checks and cache info.}
-#'     \item{3:}{+ any potentially missing items.}
-#'     \item{4:}{+ imports and writes to the cache.}
-#'   }
 #'
-#' @param hook Deprecated. A future release may support
-#'   individual hooks for specific build phases.
-#'   See <https://github.com/ropensci/drake/issues/558>.
+#'   - `0` or `FALSE`: print nothing.
+#'   - `1` or `TRUE`: print only targets to build.
+#'   - `2`: also print checks and cache info.
+#'   - `3`: also print any potentially missing items.
+#'   - `4`: also print imports and writes to the cache.
+#'
+#' @param hook Deprecated.
 #'
 #' @param skip_targets logical, whether to skip building the targets
 #'   in `plan` and just import objects and files.
@@ -470,22 +467,22 @@ drake_config <- function(
   sleep = function(i) 0.01,
   hasty_build = drake::default_hasty_build,
   memory_strategy = c("speed", "memory", "lookahead")
-){
+) {
   force(envir)
   unlink(console_log_file)
-  if (!is.null(imports_only)){
+  if (!is.null(imports_only)) {
     warning(
       "Argument `imports_only` is deprecated. Use `skip_targets` instead.",
       call. = FALSE
     ) # 2018-05-04 # nolint
   }
-  if (!is.null(hook)){
+  if (!is.null(hook)) {
     warning(
       "Argument `hook` is deprecated.",
       call. = FALSE
     ) # 2018-10-25 # nolint
   }
-  if (!is.null(pruning_strategy)){
+  if (!is.null(pruning_strategy)) {
     warning(
       "Argument `pruning_strategy` is deprecated. ",
       "Use `memory_strategy` instead.",
@@ -494,7 +491,7 @@ drake_config <- function(
   }
   deprecate_force(force)
   plan <- sanitize_plan(plan)
-  if (is.null(targets)){
+  if (is.null(targets)) {
     targets <- plan$target
   } else {
     targets <- sanitize_targets(plan, targets)
@@ -522,7 +519,7 @@ drake_config <- function(
   )
   seed <- choose_seed(supplied = seed, cache = cache)
   trigger <- convert_old_trigger(trigger)
-  if (is.null(graph)){
+  if (is.null(graph)) {
     graph <- create_drake_graph(
       plan = plan,
       targets = targets,
@@ -651,7 +648,7 @@ store_drake_config <- function(config) {
   save_these <- setdiff(names(config), "envir")  # envir could get massive.
   lightly_parallelize(
     save_these,
-    function(item){
+    function(item) {
       config$cache$set(
         key = item,
         value = config[[item]],
@@ -663,26 +660,26 @@ store_drake_config <- function(config) {
   invisible()
 }
 
-parse_jobs <- function(jobs){
+parse_jobs <- function(jobs) {
   check_jobs(jobs)
   mode(jobs) <- "integer"
-  if (length(jobs) < 2L){
+  if (length(jobs) < 2L) {
     c(imports = 1L, targets = jobs)
   } else {
     jobs
   }
 }
 
-parse_parallelism <- function(parallelism){
+parse_parallelism <- function(parallelism) {
   check_parallelism(parallelism)
-  for (i in seq_along(parallelism)){
+  for (i in seq_along(parallelism)) {
     parallelism[i] <- match.arg(
       arg = parallelism[i],
       choices = parallelism_choices(distributed_only = FALSE)
     )
   }
-  if (length(parallelism) < 2){
-    if (parallelism %in% parallelism_choices(distributed_only = TRUE)){
+  if (length(parallelism) < 2) {
+    if (parallelism %in% parallelism_choices(distributed_only = TRUE)) {
       c(imports = default_parallelism(), targets = parallelism)
     } else {
       c(imports = parallelism, targets = parallelism)

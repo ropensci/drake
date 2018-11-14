@@ -36,16 +36,16 @@ drake_debug <- function(
   jobs = 1,
   replace = FALSE,
   verbose = TRUE
-){
+) {
   # Tested in tests/testthat/test-always-skipped.R.
   # nocov start
-  if (!character_only){
+  if (!character_only) {
     target <- as.character(substitute(target))
   }
-  if (!length(target)){
+  if (!length(target)) {
     target <- utils::head(drake::failed(cache = config$cache), n = 1)
   }
-  if (verbose){
+  if (verbose) {
     message("Building target `", target, "` in debug mode.")
   }
   loadd(
@@ -63,8 +63,8 @@ drake_debug <- function(
   # nocov end
 }
 
-debug_command <- function(command){
-  if (is.character(command)){
+debug_command <- function(command) {
+  if (is.character(command)) {
     debug_command_char(command)
   } else {
     . <- NULL
@@ -74,7 +74,7 @@ debug_command <- function(command){
   }
 }
 
-debug_command_char <- function(command){
+debug_command_char <- function(command) {
   paste0("drake::debug_and_run(function() {\n", command, "\n})")
 }
 
@@ -85,7 +85,7 @@ debug_command_char <- function(command){
 #' @export
 #' @return the return value of `f`
 #' @param f a function
-debug_and_run <- function(f){
+debug_and_run <- function(f) {
   # Tested in tests/testthat/test-always-skipped.R.
   # nocov start
   debug(f)

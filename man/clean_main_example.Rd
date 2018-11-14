@@ -19,7 +19,7 @@ in the current working directory. Your working directory
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-if (requireNamespace("downloader")){
+if (requireNamespace("downloader")) {
 # Populate your workspace and write 'report.Rmd' and 'raw_data.xlsx'.
 load_main_example() # Get the code: drake_example("main")
 make(plan)

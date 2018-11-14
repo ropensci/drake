@@ -53,7 +53,7 @@ vis_drake_graph <- function(
   show_output_files = TRUE,
   collapse = TRUE,
   ...
-){
+) {
   assert_pkg("visNetwork")
   graph_info <- drake_graph_info(
     config = config,
@@ -73,7 +73,7 @@ vis_drake_graph <- function(
     clusters = clusters,
     show_output_files = show_output_files
   )
-  if (is.null(main)){
+  if (is.null(main)) {
     main <- graph_info$default_title
   }
   render_drake_graph(
@@ -194,9 +194,9 @@ render_drake_graph <- function(
   ncol_legend = 1,
   collapse = TRUE,
   ...
-){
+) {
   assert_pkg("visNetwork")
-  if (!hover){
+  if (!hover) {
     graph_info$nodes$title <- NULL
   }
   out <- visNetwork::visNetwork(
@@ -206,10 +206,10 @@ render_drake_graph <- function(
     ...
   )
   out <- visNetwork::visHierarchicalLayout(out, direction = direction)
-  if (collapse){
+  if (collapse) {
     out <- visNetwork::visOptions(out, collapse = TRUE)
   }
-  if (length(ncol_legend) && ncol_legend > 0){
+  if (length(ncol_legend) && ncol_legend > 0) {
     out <- visNetwork::visLegend(
       graph = out,
       useGroups = FALSE,
@@ -217,7 +217,7 @@ render_drake_graph <- function(
       ncol = ncol_legend
     )
   }
-  if (nrow(graph_info$edges)){
+  if (nrow(graph_info$edges)) {
     out <- visNetwork::visIgraphLayout(
       graph = out,
       physics = FALSE,
@@ -225,12 +225,12 @@ render_drake_graph <- function(
       layout = layout
     )
   }
-  if (navigationButtons){ # nolint
+  if (navigationButtons) { # nolint
     out <- visNetwork::visInteraction(out, navigationButtons = TRUE) # nolint
   }
   if (length(file)) {
     file <- path.expand(file)
-    if (is_image_filename(file)){
+    if (is_image_filename(file)) {
       assert_pkg("webshot")
       url <- file.path(random_tempdir(), "tmp.html")
       visNetwork::visSave(graph = out, file = url, selfcontained = FALSE)

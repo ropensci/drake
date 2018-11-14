@@ -3,7 +3,6 @@ drake_context("dependencies")
 test_with_dir("unparsable commands are handled correctly", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- "bluh$"
-  expect_false(is_parsable(x))
   expect_error(deps_code(x))
 })
 
@@ -23,7 +22,7 @@ test_with_dir("dot symbol is ignored", {
 test_with_dir("file_out() and knitr_in(): commands vs imports", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   cmd <- "file_in(\"x\"); file_out(\"y\"); knitr_in(\"report.Rmd\")"
-  f <- function(){
+  f <- function() {
     file_in("x")
     file_out("y")
     knitr_in("report.Rmd")
@@ -43,7 +42,7 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
     readd = c("small", "coef_regression2_small"),
     knitr_in = "\"report.Rmd\"")
   expect_equal(length(x), length(x0))
-  for (i in names(x)){
+  for (i in names(x)) {
     expect_equal(sort(x[[i]]), sort(x0[[i]]) )
   }
   y <- import_dependencies(f)
@@ -54,7 +53,7 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
     readd = c("small", "coef_regression2_small")
   )
   expect_equal(length(y), length(y0))
-  for (i in names(y)){
+  for (i in names(y)) {
     expect_equal(sort(y[[i]]), sort(y0[[i]]) )
   }
   expect_equal(
@@ -108,10 +107,14 @@ test_with_dir(
     clean_dependency_list(deps_code(my_plan$command[2]))),
     sort(c("\"tracked_input_file.rds\"", "x", "readRDS")))
   expect_equal(sort(
-    clean_dependency_list(deps_code(my_plan$command[3]))), sort(c("f", "g", "w",
-    "x", "y", "z")))
+    clean_dependency_list(deps_code(my_plan$command[3]))),
+    sort(c("f", "g", "w", "x", "y", "z"))
+  )
   expect_equal(sort(
-    clean_dependency_list(deps_code(my_plan$command[4]))), sort(c("read.csv")))
+    clean_dependency_list(
+      deps_code(my_plan$command[4]))),
+    sort(c("read.csv"))
+  )
   expect_equal(
     sort(clean_dependency_list(deps_code(my_plan$command[5]))),
     sort(c("read.table", "\"file_in\"")))
@@ -167,7 +170,7 @@ test_with_dir("Vectorized nested functions work", {
   expect_equal(clean_dependency_list(deps_code(e$g)), sort(c("y")))
 
   config <- testrun(config)
-  if ("a" %in% ls(config$envir)){
+  if ("a" %in% ls(config$envir)) {
     rm(a, envir = config$envir)
   }
   expect_equal(readd(a), 8:17)
@@ -183,7 +186,7 @@ test_with_dir("Vectorized nested functions work", {
   expect_equal(readd(a), 9:18)
 
   # Change a vectorized function and see target "a" react.
-  eval(parse(text = "f <- Vectorize(function(x){g(x) + 3}, \"x\")"),
+  eval(parse(text = "f <- Vectorize(function(x) {g(x) + 3}, \"x\")"),
        envir = e)
   config <- testrun(config)
   expect_equal(justbuilt(config), "a")
@@ -207,7 +210,7 @@ test_with_dir("deps_target()", {
     loadd = "large"
   )
   expect_equal(length(d1), length(d2))
-  for (n in names(d2)){
+  for (n in names(d2)) {
     expect_equal(d1[[n]], d2[[n]])
   }
   d <- deps_target(regression1_small, config = config)
@@ -216,7 +219,7 @@ test_with_dir("deps_target()", {
 })
 
 test_with_dir("self-referential commands and imports", {
-  f <- function(x, ...){
+  f <- function(x, ...) {
     dplyr::select(x, f)
   }
   x <- data.frame(f = 123)
@@ -232,10 +235,10 @@ test_with_dir("self-referential commands and imports", {
 })
 
 test_with_dir("._drake_envir and drake_envir() are not dependencies", {
-  deps1 <- deps_code(quote(drake_envir(x)))$globals
+  deps1 <- deps_code(quote(drake_envir()))$globals
   deps2 <- deps_code(quote(rm(x, envir = ._drake_envir)))$globals
-  deps3 <- deps_code(quote(drake_envir(x)))$globals
-  expect_equal(deps1, NULL)
-  expect_equal(sort(deps2), sort(c("rm", "x")))
-  expect_equal(deps3, NULL)
+  expect_false("drake_envir" %in% deps1)
+  expect_false("drake_envir" %in% deps2)
+  expect_false("._drake_envir" %in% deps1)
+  expect_false("._drake_envir" %in% deps2)
 })
