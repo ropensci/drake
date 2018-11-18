@@ -26,9 +26,9 @@
 #'   and then treat those loaded targets as dependencies.
 #'   That way, [make()] will automatically (re)run the report if those
 #'   dependencies change.
-#' Please do not put calls to [loadd()] or [readd()] inside
+#' @note Please do not put calls to [loadd()] or [readd()] inside
 #' your custom (imported) functions or the commands in your [drake_plan()].
-#' This create confusion inside [make()], which has its own ways of
+#' This creates confusion inside [make()], which has its own ways of
 #' interacting with the cache.
 #' @seealso [cached()], [built()], [imported()], [drake_plan()], [make()]
 #' @export
