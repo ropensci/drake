@@ -84,7 +84,7 @@ need to know how to load the cache.}
 \item{parallelism}{character, type of parallelism to use.
 To list the options, call \code{\link[=parallelism_choices]{parallelism_choices()}}.
 For detailed explanations, see the
-\href{https://ropenscilabs.github.io/drake-manual/store.html}{high-performance computing chapter} # nolint
+\href{https://ropenscilabs.github.io/drake-manual/store.html}{high-performance computing chapter}
 of the user manual.}
 
 \item{jobs}{maximum number of parallel workers for processing the targets.
@@ -132,7 +132,7 @@ is run once before any targets are built. If \code{parallelism} is
 and then once again for each target right before that target is built.}
 
 \item{prepend}{lines to prepend to the Makefile if \code{parallelism}
-is \code{"Makefile"}. See the \href{https://ropenscilabs.github.io/drake-manual/store.html}{high-performance computing guide} # nolint
+is \code{"Makefile"}. See the \href{https://ropenscilabs.github.io/drake-manual/store.html}{high-performance computing guide}
 to learn how to use \code{prepend}
 to take advantage of multiple nodes of a supercomputer.}
 
@@ -335,7 +335,7 @@ with the last few targets it builds.}
 \code{make(parallelism = "Makefile")}. If you set this argument to a
 non-default value, you are responsible for supplying this same
 path to the \code{args} argument so \code{make} knows where to find it.
-Example: \code{make(parallelism = "Makefile", makefile_path = ".drake/.makefile", command = "make", args = "--file=.drake/.makefile")} # nolint}
+Example: \code{make(parallelism = "Makefile", makefile_path = ".drake/.makefile", command = "make", args = "--file=.drake/.makefile")}}
 
 \item{console_log_file}{character scalar or \code{NULL}.
 If \code{NULL}, console output will be printed

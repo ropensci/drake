@@ -2,7 +2,7 @@
 % Please edit documentation in R/examples.R
 \name{load_main_example}
 \alias{load_main_example}
-\title{Load the main example from \code{drake_example("main")}}
+\title{Load the main example.}
 \usage{
 load_main_example(envir = parent.frame(), report_file = "report.Rmd",
   overwrite = FALSE, force = FALSE)
@@ -24,11 +24,11 @@ existing file \code{report.Rmd}}
 A \code{\link[=drake_config]{drake_config()}} configuration list.
 }
 \description{
-The main example itself lives at
-\url{https://github.com/wlandau/drake-examples/tree/master/main}. # nolint
-Use \code{drake_example("main")} to download the code.
+The main example lives at
+\url{https://github.com/wlandau/drake-examples/tree/master/main}.
+Use \code{drake_example("main")} to download its code.
 The chapter of the user manual at
-\url{https://ropenscilabs.github.io/drake-manual/main.html} # nolint
+\url{https://ropenscilabs.github.io/drake-manual/main.html}
 also walks through the main example.
 This function also writes/overwrites
 the files \code{report.Rmd} and \code{raw_data.xlsx}.
