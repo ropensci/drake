@@ -63,5 +63,5 @@ head(result)
 }
 }
 \seealso{
-\code{\link[=drake_build]{drake_build()}}
+\code{\link[=drake_debug]{drake_debug()}}
 }
