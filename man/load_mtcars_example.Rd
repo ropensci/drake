@@ -2,7 +2,7 @@
 % Please edit documentation in R/examples.R
 \name{load_mtcars_example}
 \alias{load_mtcars_example}
-\title{Load the mtcars example from \code{drake_example("mtcars")}}
+\title{Load the mtcars example.}
 \usage{
 load_mtcars_example(envir = parent.frame(), report_file = NULL,
   overwrite = FALSE, force = FALSE)
@@ -29,7 +29,7 @@ Nothing.
 \description{
 Is there an association between
 the weight and the fuel efficiency of cars?
-To find out, we use the mtcars dataset.
+To find out, we use the mtcars example from \code{drake_example("mtcars")}.
 The mtcars dataset itself only has 32 rows,
 so we generate two larger bootstrapped datasets
 and then analyze them with regression models.
@@ -71,5 +71,5 @@ clean_mtcars_example()
 }
 }
 \seealso{
-\code{\link[=clean_mtcars_example]{clean_mtcars_example()}}
+\code{\link[=clean_mtcars_example]{clean_mtcars_example()}} \code{\link[=drake_examples]{drake_examples()}}
 }

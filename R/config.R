@@ -66,7 +66,7 @@
 #' @param parallelism character, type of parallelism to use.
 #'   To list the options, call [parallelism_choices()].
 #'   For detailed explanations, see the
-#'   [high-performance computing chapter](https://ropenscilabs.github.io/drake-manual/store.html) # nolint
+#'   [high-performance computing chapter](https://ropenscilabs.github.io/drake-manual/store.html)
 #'   of the user manual.
 #'
 #' @param jobs maximum number of parallel workers for processing the targets.
@@ -114,7 +114,7 @@
 #'   and then once again for each target right before that target is built.
 #'
 #' @param prepend lines to prepend to the Makefile if `parallelism`
-#'   is `"Makefile"`. See the [high-performance computing guide](https://ropenscilabs.github.io/drake-manual/store.html) # nolint
+#'   is `"Makefile"`. See the [high-performance computing guide](https://ropenscilabs.github.io/drake-manual/store.html)
 #'   to learn how to use `prepend`
 #'   to take advantage of multiple nodes of a supercomputer.
 #'
@@ -340,7 +340,7 @@
 #'   `make(parallelism = "Makefile")`. If you set this argument to a
 #'   non-default value, you are responsible for supplying this same
 #'   path to the `args` argument so `make` knows where to find it.
-#'   Example: `make(parallelism = "Makefile", makefile_path = ".drake/.makefile", command = "make", args = "--file=.drake/.makefile")` # nolint
+#'   Example: `make(parallelism = "Makefile", makefile_path = ".drake/.makefile", command = "make", args = "--file=.drake/.makefile")`
 #'
 #' @param console_log_file character scalar or `NULL`.
 #'   If `NULL`, console output will be printed
