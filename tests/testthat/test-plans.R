@@ -575,6 +575,7 @@ test_with_dir("'columns' argument to evaluate_plan()", {
 
 test_with_dir("drake_plan_call() produces the correct calls", {
   skip_on_cran()
+  skip_if_not_installed("styler")
   load_mtcars_example()
   my_plan$trigger <- NA
   my_plan$trigger[4] <- "trigger(condition = is_tuesday(), file = FALSE)"
