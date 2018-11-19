@@ -1,3 +1,5 @@
 linters: with_defaults(
   camel_case_linter = NULL,
-  object_usage_linter = NULL)
+  object_name_linter = NULL,
+  object_usage_linter = NULL,
+  snake_case_linter = NULL)
