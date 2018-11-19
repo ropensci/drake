@@ -43,7 +43,7 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
     knitr_in = "\"report.Rmd\"")
   expect_equal(length(x), length(x0))
   for (i in names(x)) {
-    expect_equal(sort(x[[i]]), sort(x0[[i]]) )
+    expect_equal(sort(x[[i]]), sort(x0[[i]]))
   }
   y <- import_dependencies(f)
   y0 <- list(
@@ -54,7 +54,7 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
   )
   expect_equal(length(y), length(y0))
   for (i in names(y)) {
-    expect_equal(sort(y[[i]]), sort(y0[[i]]) )
+    expect_equal(sort(y[[i]]), sort(y0[[i]]))
   }
   expect_equal(
     sort(clean_dependency_list(deps_code(f))), sort(unname(unlist(y))))

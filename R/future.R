@@ -127,15 +127,17 @@ future_globals <- function(target, meta, config, protect) {
     )
   )
   if (identical(config$envir, globalenv())) {
-    # Unit tests should not modify global env # nocov
-    if (exists("DRAKE_GLOBALS__", config$envir)) { # nocov # nolint
-      warning( # nocov
-        "Do not define an object named `DRAKE_GLOBALS__` ", # nocov
-        "in the global environment", # nocov
-        call. = FALSE # nocov
-      ) # nocov
-    } # nocov
-    globals <- c(globals, as.list(config$envir, all.names = TRUE)) # nocov
+    # nocov start
+    # Unit tests should not modify global env
+    if (exists("DRAKE_GLOBALS__", config$envir)) {
+      warning(
+        "Do not define an object named `DRAKE_GLOBALS__` ",
+        "in the global environment",
+        call. = FALSE
+      )
+    }
+    globals <- c(globals, as.list(config$envir, all.names = TRUE))
+    # nocov end
   }
   globals
 }

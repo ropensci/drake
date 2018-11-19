@@ -307,7 +307,7 @@ test_with_dir("ignore() suppresses updates", {
 
   # With ignore()
   con <- make(
-    plan = drake_plan(x = sqrt( ignore(arg) + 123)),
+    plan = drake_plan(x = sqrt( ignore(arg) + 123)), # nolint
     envir = envir,
     cache = cache
   )
@@ -317,7 +317,7 @@ test_with_dir("ignore() suppresses updates", {
   expect_equal(justbuilt(con), character(0))
 
   con$envir$arg2 <- con$envir$arg + 1234
-  con$plan <- drake_plan(x = sqrt( ignore  (arg2 ) + 123))
+  con$plan <- drake_plan(x = sqrt( ignore  (arg2 ) + 123)) # nolint
   con <- make_with_config(con)
   expect_equal(justbuilt(con), character(0))
 })
@@ -354,7 +354,7 @@ test_with_dir("standardized commands with ignore()", {
     "{\n function(x) {\n    (sqrt(ignore() + 123))\n} \n}"
   )
   f <- function(x) {
-    (sqrt( ignore(fun(arg) + 7) + 123))
+    (sqrt( ignore(fun(arg) + 7) + 123)) # nolint
   }
   b <- body(ignore_ignore(f))
   for (a in names(attributes(b))) {
@@ -373,7 +373,7 @@ test_with_dir("can standardize command with other ignored symbols", {
 test_with_dir("ignore() in imported functions", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   f <- function(x) {
-    (sqrt( ignore(sqrt(x) + 7) + 123))
+    (sqrt( ignore(sqrt(x) + 7) + 123)) # nolint
   }
   plan <- drake_plan(x = f(1))
   cache <- storr::storr_environment()
@@ -385,12 +385,12 @@ test_with_dir("ignore() in imported functions", {
     "    (sqrt(ignore() + 123))"
   )
   f <- function(x) {
-    (sqrt( ignore(sqrt(x) + 8) + 123))
+    (sqrt( ignore(sqrt(x) + 8) + 123)) # nolint
   }
   config <- make(plan, cache = cache)
   expect_equal(justbuilt(config), character(0))
   f <- function(x) {
-    (sqrt( ignore(sqrt(x) + 8) + 124))
+    (sqrt( ignore(sqrt(x) + 8) + 124)) # nolint
   }
   config <- make(plan, cache = cache)
   expect_equal(justbuilt(config), "x")
@@ -588,6 +588,7 @@ test_with_dir("drake_plan_call() produces the correct calls", {
 test_with_dir("drake_plan_source()", {
   skip_on_cran()
   skip_if_not_installed("styler")
+  skip_if_not_installed("prettycode")
   plan <- drake::drake_plan(
     small_data = download_data("https://some_website.com"),
     large_data_raw = target(
@@ -603,8 +604,8 @@ test_with_dir("drake_plan_source()", {
   )
   x <- drake_plan_source(plan)
   y <- capture.output(print(x))
-  expect_true(grepl("^drake_plan", x[1]))
-  expect_true(grepl("^drake_plan", y[1]))
+  expect_true(grepl("drake_plan", x[1]))
+  expect_true(grepl("drake_plan", y[1]))
   writeLines(x, "script.R")
   plan2 <- source("script.R")$value
   expect_equal(plan, plan2)
