@@ -51,8 +51,9 @@ test_with_dir("map_plan() with symbols", {
     lm(formula, data = data)
   }
   covariates <- setdiff(colnames(mtcars), "mpg")
-  args <- tibble::as_tibble(t(combn(covariates, 2)))
+  args <- t(combn(covariates, 2))
   colnames(args) <- c("x1", "x2")
+  args <- tibble::as_tibble(args)
   args$data <- rlang::syms(rep("mtcars", nrow(args)))
   plan <- map_plan(args, my_model_fit)
   cache <- storr::storr_environment()
