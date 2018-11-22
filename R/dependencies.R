@@ -111,7 +111,7 @@ deps_target <- function(
   if (!character_only) {
     target <- as.character(substitute(target))
   }
-  config$ordinances[[target]]$deps_build
+  config$layout[[target]]$deps_build
 }
 
 #' @title Find out why a target is out of date.
@@ -183,7 +183,7 @@ dependency_profile <- function(
     algo = config$long_hash_algo,
     serialize = FALSE
   )
-  ordinance <- config$ordinances[[target]]
+  ordinance <- config$layout[[target]]
   new_hashes <- c(
     digest::digest(
       paste(ordinance$command_standardized, collapse = ""),
@@ -204,7 +204,7 @@ dependency_profile <- function(
 
 #' @title List the targets and imports
 #'   that are reproducibly tracked.
-#' @description In other words, list all the ordinances
+#' @description In other words, list all the layout
 #' in your project's dependency network.
 #' @export
 #' @return A character vector with the names of reproducibly-tracked targets.
@@ -222,7 +222,7 @@ tracked <- function(config) {
   out <- lightly_parallelize(
     X = V(config$graph)$name,
     FUN = function(target) {
-      out <- config$ordinances[[target]]$deps_build
+      out <- config$layout[[target]]$deps_build
       out <- as.list(out)
       out <- unlist(out)
       c(out, target)

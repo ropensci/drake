@@ -7,7 +7,7 @@ store_outputs <- function(target, value, meta, config) {
   if (!meta$imported) {
     console_store(target = target, config = config)
   }
-  ordinance <- config$ordinances[[target]]
+  ordinance <- config$layout[[target]]
   if (is.null(meta$command)) {
     meta$command <- ordinance$command_standardized
   }

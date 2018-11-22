@@ -157,12 +157,12 @@ drake_graph_info <- function(
   config$group <- group
   config$clusters <- clusters
   config$file_out <- lapply(config$plan$target, function(target) {
-    config$ordinances[[target]]$deps_build$file_out
+    config$layout[[target]]$deps_build$file_out
   })
   names(config$file_out) <- config$plan$target
   if (show_output_files) {
     config$graph <- create_drake_graph(
-      ordinances = config$ordinances,
+      layout = config$layout,
       targets = config$targets,
       cache = NULL,
       jobs = config$jobs,

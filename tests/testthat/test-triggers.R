@@ -478,12 +478,12 @@ test_with_dir("trigger components react appropriately", {
     saveRDS(out, file_out(\"out_", plan$target, ".rds\"))
     out
   ")
-  config$ordinances <- create_drake_ordinances(
+  config$layout <- create_drake_layout(
     plan = config$plan,
     envir = config$envir,
     cache = config$cache
   )
-  simple_config$ordinances <- create_drake_ordinances(
+  simple_config$layout <- create_drake_layout(
     plan = simple_config$plan,
     envir = simple_config$envir,
     cache = simple_config$cache

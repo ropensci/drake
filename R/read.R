@@ -521,10 +521,10 @@ read_drake_plan <- function(
 
 # TODO: the other read_drake_*() functions should be as minimal
 # as this one and probably not exported.
-read_drake_ordinances <- function(cache){
-  if (cache$exists(key = "ordinances", namespace = "config")) {
+read_drake_layout <- function(cache){
+  if (cache$exists(key = "layout", namespace = "config")) {
     cache$get(
-      key = "ordinances",
+      key = "layout",
       namespace = "config",
       use_cache = FALSE
     )

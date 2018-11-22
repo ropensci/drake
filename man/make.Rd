@@ -24,8 +24,7 @@ make(plan = drake::read_drake_plan(), targets = NULL,
   ensure_workers = TRUE, garbage_collection = FALSE,
   template = list(), sleep = function(i) 0.01,
   hasty_build = drake::default_hasty_build,
-  memory_strategy = c("speed", "memory", "lookahead"),
-  ordinances = NULL)
+  memory_strategy = c("speed", "memory", "lookahead"), layout = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -430,9 +429,9 @@ traversing the entire dependency graph on every \code{\link[=make]{make()}}. For
 compromise and more control, see the examples in the help file
 of \code{\link[=drake_envir]{drake_envir()}}.}
 
-\item{ordinances}{\code{config$ordinances}, where \code{config} is the return value
+\item{layout}{\code{config$layout}, where \code{config} is the return value
 from a prior call to \code{drake_config()}. If your plan or environment
-have changed since the last \code{make()}, do not supply a \code{ordinances} argument.
+have changed since the last \code{make()}, do not supply a \code{layout} argument.
 Otherwise, supplying one could save time.}
 }
 \value{

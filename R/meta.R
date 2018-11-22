@@ -46,7 +46,7 @@
 #' })
 #' }
 drake_meta <- function(target, config = drake::read_drake_config()) {
-  ordinance <- config$ordinances[[target]]
+  ordinance <- config$layout[[target]]
   meta <- list(
     name = target,
     target = target,
@@ -82,7 +82,7 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
 }
 
 dependency_hash <- function(target, config) {
-  x <- config$ordinances[[target]]$deps_build
+  x <- config$layout[[target]]$deps_build
   deps <- c(x$globals, x$namespaced, x$loadd, x$readd)
   if (!(target %in% config$plan$target)) {
     deps <- c(deps, x$file_in, x$knitr_in)
@@ -100,7 +100,7 @@ input_file_hash <- function(
   config,
   size_cutoff = rehash_file_size_cutoff
 ) {
-  deps <- config$ordinances[[target]]$deps_build
+  deps <- config$layout[[target]]$deps_build
   files <- sort(unique(as.character(c(deps$file_in, deps$knitr_in))))
   out <- vapply(
     X = files,
@@ -118,7 +118,7 @@ output_file_hash <- function(
   config,
   size_cutoff = rehash_file_size_cutoff
 ) {
-  deps <- config$ordinances[[target]]$deps_build
+  deps <- config$layout[[target]]$deps_build
   files <- sort(unique(as.character(deps$file_out)))
   out <- vapply(
     X = files,

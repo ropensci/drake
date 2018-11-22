@@ -127,7 +127,7 @@ clean <- function(
     namespaces <- cleaned_namespaces(default = cache$default_namespace)
   }
   graph <- read_drake_graph(cache = cache)
-  ordinances <- read_drake_ordinances(cache = cache)
+  layout <- read_drake_layout(cache = cache)
   lightly_parallelize(
     X = targets,
     FUN = clean_single_target,
@@ -135,7 +135,7 @@ clean <- function(
     cache = cache,
     namespaces = namespaces,
     graph = graph,
-    ordinances = ordinances
+    layout = layout
   )
   if (destroy) {
     cache$destroy()
@@ -151,7 +151,7 @@ clean_single_target <- function(
   cache,
   namespaces,
   graph,
-  ordinances
+  layout
 ) {
   files <- character(0)
   if (is_file(target)) {
@@ -162,7 +162,7 @@ clean_single_target <- function(
     }
   }
   if (target %in% igraph::V(graph)$name) {
-    deps <- ordinances[[target]]$deps_build
+    deps <- layout[[target]]$deps_build
     files <- sort(unique(as.character(deps$file_out)))
   }
   unlink(drake_unquote(files))

@@ -56,7 +56,7 @@ with_call_stack <- function (target, config) {
     e$calls <- head(sys.calls()[-seq_len(frame + 7)], -2)
     signalCondition(e)
   }
-  expr <- config$ordinances[[target]]$command_build
+  expr <- config$layout[[target]]$command_build
   tidy_expr <- eval(expr = expr, envir = config$envir) # tidy eval prep
   frame <- sys.nframe()
   tryCatch(

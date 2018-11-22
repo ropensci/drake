@@ -1,4 +1,4 @@
-create_drake_ordinances <- function(
+create_drake_layout <- function(
   plan = read_drake_plan(),
   targets = plan$target,
   envir = parent.frame(),
@@ -22,20 +22,20 @@ create_drake_ordinances <- function(
   )
   imports <- cdo_prepare_imports(config)
   imports_kernel <- cdo_imports_kernel(config, imports)
-  import_ordinances <- memo_expr(
+  import_layout <- memo_expr(
     cdo_analyze_imports(config, imports),
     config$cache,
     imports_kernel
   )
-  command_ordinances <- memo_expr(
+  command_layout <- memo_expr(
     cdo_analyze_commands(config),
     config$cache,
     config$plan,
     config$trigger,
     config$globals,
-    import_ordinances
+    import_layout
   )
-  c(import_ordinances, command_ordinances)
+  c(import_layout, command_layout)
 }
 
 cdo_prepare_imports <- function(config) {
@@ -119,8 +119,8 @@ cdo_analyze_commands <- function(config) {
       envir = config$envir
     )
   }
-  ordinances <- purrr::pmap(.l = config$plan, .f = list)
-  names(ordinances) <- config$plan$target
+  layout <- purrr::pmap(.l = config$plan, .f = list)
+  names(layout) <- config$plan$target
   config$default_condition_deps <- import_dependencies(
     config$trigger$condition,
     globals = config$globals
@@ -130,7 +130,7 @@ cdo_analyze_commands <- function(config) {
     globals = config$globals
   )
   out <- lightly_parallelize(
-    X = ordinances,
+    X = layout,
     FUN = cdo_prepare_ordinance,
     jobs = config$jobs,
     config = config
