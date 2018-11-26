@@ -24,7 +24,7 @@ make(plan = drake::read_drake_plan(), targets = NULL,
   ensure_workers = TRUE, garbage_collection = FALSE,
   template = list(), sleep = function(i) 0.01,
   hasty_build = drake::default_hasty_build,
-  memory_strategy = c("speed", "memory", "lookahead"))
+  memory_strategy = c("speed", "memory", "lookahead"), layout = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -134,7 +134,7 @@ and then once again for each target right before that target is built.}
 \item{prepend}{lines to prepend to the Makefile if \code{parallelism}
 is \code{"Makefile"}. See the \href{https://ropenscilabs.github.io/drake-manual/store.html}{high-performance computing guide}
 to learn how to use \code{prepend}
-to take advantage of multiple nodes of a supercomputer.}
+to distribute work on a cluster.}
 
 \item{command}{character scalar, command to call the Makefile
 generated for distributed computing.
@@ -428,6 +428,11 @@ targets from storage, and \code{"lookahead"} wastes time
 traversing the entire dependency graph on every \code{\link[=make]{make()}}. For a better
 compromise and more control, see the examples in the help file
 of \code{\link[=drake_envir]{drake_envir()}}.}
+
+\item{layout}{\code{config$layout}, where \code{config} is the return value
+from a prior call to \code{drake_config()}. If your plan or environment
+have changed since the last \code{make()}, do not supply a \code{layout} argument.
+Otherwise, supplying one could save time.}
 }
 \value{
 The master internal configuration list, mostly

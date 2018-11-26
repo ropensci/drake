@@ -7,8 +7,9 @@ store_outputs <- function(target, value, meta, config) {
   if (!meta$imported) {
     console_store(target = target, config = config)
   }
+  ordinance <- config$layout[[target]]
   if (is.null(meta$command)) {
-    meta$command <- get_standardized_command(target = target, config = config)
+    meta$command <- ordinance$command_standardized
   }
   if (is.null(meta$dependency_hash)) {
     meta$dependency_hash <- dependency_hash(target = target, config = config)
@@ -22,11 +23,7 @@ store_outputs <- function(target, value, meta, config) {
     )
     meta$trigger$value <- NULL
   }
-  file_out <- vertex_attr(
-    graph = config$graph,
-    name = "deps",
-    index = target
-  )[[1]]$file_out
+  file_out <- ordinance$deps_build$file_out
   for (file in file_out) {
     meta$name <- file
     meta$mtime <- file.mtime(drake::drake_unquote(file))

@@ -118,7 +118,8 @@ make <- function(
   template = list(),
   sleep = function(i) 0.01,
   hasty_build = drake::default_hasty_build,
-  memory_strategy = c("speed", "memory", "lookahead")
+  memory_strategy = c("speed", "memory", "lookahead"),
+  layout = NULL
 ) {
   force(envir)
   if (!is.null(return_config)) {
@@ -172,7 +173,8 @@ make <- function(
       template = template,
       sleep = sleep,
       hasty_build = hasty_build,
-      memory_strategy = memory_strategy
+      memory_strategy = memory_strategy,
+      layout = layout
     )
   }
   make_with_config(config = config)

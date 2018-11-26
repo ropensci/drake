@@ -38,12 +38,10 @@ test_with_dir("drake_plan tidy eval can be disabled", {
 # From Kendon Bell: https://github.com/ropensci/drake/issues/200
 test_with_dir("make() does tidy eval in commands", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  con <- dbug()
-  con$plan <- drake_plan(list = c(
+  plan <- drake_plan(list = c(
     little_b = "\"b\"",
     letter = "!!little_b"
   ))
-  con$targets <- con$plan$target
-  testrun(con)
+  make(plan)
   expect_equal(readd(letter), "b")
 })

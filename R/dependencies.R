@@ -111,12 +111,7 @@ deps_target <- function(
   if (!character_only) {
     target <- as.character(substitute(target))
   }
-  out <- vertex_attr(
-    graph = config$graph,
-    name = "deps",
-    index = target
-  )[[1]]
-  as.list(out)
+  config$layout[[target]]$deps_build
 }
 
 #' @title Find out why a target is out of date.
@@ -188,9 +183,10 @@ dependency_profile <- function(
     algo = config$long_hash_algo,
     serialize = FALSE
   )
+  ordinance <- config$layout[[target]]
   new_hashes <- c(
     digest::digest(
-      paste(get_standardized_command(target, config), collapse = ""),
+      paste(ordinance$command_standardized, collapse = ""),
       algo = config$long_hash_algo,
       serialize = FALSE
     ),
@@ -208,7 +204,7 @@ dependency_profile <- function(
 
 #' @title List the targets and imports
 #'   that are reproducibly tracked.
-#' @description In other words, list all the nodes
+#' @description In other words, list all the layout
 #' in your project's dependency network.
 #' @export
 #' @return A character vector with the names of reproducibly-tracked targets.
@@ -226,11 +222,7 @@ tracked <- function(config) {
   out <- lightly_parallelize(
     X = V(config$graph)$name,
     FUN = function(target) {
-      out <- vertex_attr(
-        graph = config$graph,
-        name = "deps",
-        index = target
-      )[[1]]
+      out <- config$layout[[target]]$deps_build
       out <- as.list(out)
       out <- unlist(out)
       c(out, target)
@@ -280,9 +272,12 @@ command_dependencies <- function(
   if (!length(command)) {
     return()
   }
-  command <- as.character(command)
+  expr <- command
+  if (is.character(command)){
+    expr <- parse(text = command, keep.source = FALSE)
+  }
   deps <- code_dependencies(
-    parse(text = command),
+    expr,
     exclude = exclude,
     globals = globals
   )
@@ -298,6 +293,9 @@ command_dependencies <- function(
   if (use_new_file_api) {
     files <- character(0)
   } else {
+    if (!is.character(command)){
+      command <- wide_deparse(command)
+    }
     files <- extract_filenames(command)
   }
   if (length(files)) {

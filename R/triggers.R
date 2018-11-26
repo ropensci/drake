@@ -143,11 +143,7 @@ file_trigger <- function(target, meta, config) {
   if (!length(target) || !length(config) || !length(meta)) {
     return(FALSE)
   }
-  file_out <- vertex_attr(
-    graph = config$graph,
-    name = "deps",
-    index = target
-  )[[1]]$file_out
+  file_out <- config$layout[[target]]$deps_build$file_out
   for (file in file_out) {
     if (!file.exists(drake_unquote(file))) {
       return(TRUE)
@@ -172,11 +168,7 @@ condition_trigger <- function(target, meta, config) {
     return(FALSE)
   }
   if (is.language(meta$trigger$condition)) {
-    deps <- vertex_attr(
-      graph = config$graph,
-      name = "deps",
-      index = target
-    )[[1]]$condition
+    deps <- config$layout[[target]]$deps_condition
     deps <- ensure_loaded(deps, config = config)
     value <- eval(meta$trigger$condition, envir = config$envir)
     value <- as.logical(value)

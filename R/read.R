@@ -518,6 +518,20 @@ read_drake_plan <- function(
   }
 }
 
+# TODO: the other read_drake_*() functions should be as minimal
+# as this one and probably not exported.
+read_drake_layout <- function(cache){
+  if (cache$exists(key = "layout", namespace = "config")) {
+    cache$get(
+      key = "layout",
+      namespace = "config",
+      use_cache = FALSE
+    )
+  } else {
+    list()
+  }
+}
+
 #' @title Read the pseudo-random number generator seed of the project.
 #' @description When a project is created with [make()]
 #' or [drake_config()], the project's pseudo-random number generator

@@ -27,10 +27,11 @@ hasty_loop <- function(config) {
 #' @keywords internal
 #' @inheritParams drake_build
 default_hasty_build <- function(target, config) {
-  eval(
-    expr = preprocess_command(target, config),
+  tidy_expr <- eval(
+    expr = config$layout[[target]]$command_build,
     envir = config$envir
   )
+  eval(expr = tidy_expr, envir = config$envir)
 }
 
 hasty_parallel <- function(config) {
