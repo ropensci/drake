@@ -98,7 +98,11 @@ test_with_dir("drake_debug()", {
     clean(destroy = TRUE)
     load_mtcars_example()
     config <- make(my_plan)
+    expect_true(config$cache$exists("small"))
+    clean(small)
+    expect_false(config$cache$exists("small"))
     out <- drake_debug(small, config = config)
+    expect_false(config$cache$exists("small"))
     expect_true(is.data.frame(out))
   }
 })
