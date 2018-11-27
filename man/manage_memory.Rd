@@ -17,7 +17,7 @@ assumed to be downstream.}
 \item{jobs}{number of jobs for local parallel computing}
 }
 \value{
-nothing
+Nothing.
 }
 \description{
 Load targets that you need to build the targets

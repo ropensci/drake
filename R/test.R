@@ -53,7 +53,7 @@ nobuild <- function(config) {
 #' of the examples in the help files.
 #' @export
 #' @keywords internal
-#' @return nothing
+#' @return Nothing.
 #' @param desc character, description of the test
 #' @param ... code to test
 #' @examples

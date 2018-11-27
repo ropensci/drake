@@ -1,8 +1,8 @@
-#' drake is a pipeline toolkit
-#' (<https://github.com/pditommaso/awesome-pipeline>)
-#' and a scalable, R-focused solution for reproducibility
-#' and high-performance computing.
+#' drake: A pipeline toolkit for reproducible computation at scale.
 #' @docType package
+#' @description drake is a pipeline toolkit
+#' (<https://github.com/pditommaso/awesome-pipeline>)
+#' and a scalable, R-focused solution for reproducibility and high-performance computing.
 #' @name drake-package
 #' @aliases drake
 #' @author William Michael Landau \email{will.landau@@gmail.com}

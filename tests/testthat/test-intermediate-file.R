@@ -45,7 +45,6 @@ test_with_dir("responses to intermediate file", {
       expect_equal(val, readRDS("intermediatefile.rds"))
       expect_equal(val2, readRDS("out2.rds"))
     }
-
     # break a file
     for (file in c("intermediatefile.rds", "out2.rds")) {
       unlink(file, force = TRUE)

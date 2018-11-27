@@ -10,7 +10,7 @@ drake_strings(...)
 \item{...}{unquoted symbols to turn into character strings.}
 }
 \value{
-a character vector
+A character vector.
 }
 \description{
 This function may be useful for

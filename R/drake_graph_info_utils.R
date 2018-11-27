@@ -17,6 +17,21 @@ append_build_times <- function(config) {
   })
 }
 
+append_output_file_nodes <- function(config) {
+  with(config, {
+    cols <- setdiff(colnames(nodes), c("id", "label", "level", "shape"))
+    for (target in intersect(names(file_out), nodes$id)) {
+      files <- intersect(file_out[[target]], nodes$id)
+      if (length(files)){
+        for (col in cols) {
+          nodes[files, col] <- nodes[target, col]
+        }
+      }
+    }
+    nodes
+  })
+}
+
 can_get_function <- function(x, envir) {
   tryCatch({
     is.function(eval(parse(text = x), envir = envir))
@@ -98,84 +113,11 @@ configure_nodes <- function(config) {
   hover_text(config = config)
 }
 
-insert_file_out_edges <- function(edges, file_in_list, file_out_list) {
-  file_in_edges <- file_out_edges <- NULL
-  if (length(file_in_list)) {
-    file_in_edges <- utils::stack(file_in_list)
-    file_in_edges$from <- as.character(file_in_edges$values)
-    file_in_edges$to <- as.character(file_in_edges$ind)
-    file_in_edges <- file_in_edges[
-      file_in_edges$from %in% clean_dependency_list(file_out_list), ]
-    file_in_edges$values <- file_in_edges$ind <- NULL
-  }
-  if (length(file_out_list)) {
-    file_out_edges <- utils::stack(file_out_list)
-    file_out_edges$from <- as.character(file_out_edges$ind)
-    file_out_edges$to <- as.character(file_out_edges$values)
-    file_out_edges$values <- file_out_edges$ind <- NULL
-  }
-  edges <- edges[edges$file < 0.5, ]
-  edges <- dplyr::bind_rows(edges, file_in_edges, file_out_edges)
-  edges[!duplicated(edges), ]
-}
-
-insert_file_out_nodes <- function(nodes, file_out_list) {
-  out <- lapply(seq_along(file_out_list), function(index) {
-    old_nodes <- nodes[names(file_out_list)[index], ]
-    files <- file_out_list[[index]]
-    new_nodes <- old_nodes[rep(1, length(files)), ]
-    new_nodes$level <- new_nodes$level + 0.5
-    new_nodes$id <- new_nodes$label <- files
-    new_nodes$type <- "file"
-    new_nodes$shape <- shape_of("file")
-    new_nodes
-  })
-  out <- dplyr::bind_rows(out)
-  dplyr::bind_rows(out, nodes)
-}
-
-insert_file_outs <- function(config) {
-  within(config, {
-    file_in_list <- lapply(
-      nodes$deps,
-      function(deps) {
-        if (is.null(deps)) {
-          return(character(0))
-        }
-        out <- c(
-          deps$file_in,
-          deps$knitr_in,
-          Filter(x = deps$change, f = is_file),
-          Filter(x = deps$condition, f = is_file)
-        )
-        unique(out)
-      }
-    )
-    names(file_in_list) <- nodes$id
-    file_in_list <- select_nonempty(file_in_list)
-    file_out_list <- lapply(
-      nodes$deps,
-      function(deps) {
-        if (is.null(deps)) {
-          return(character(0))
-        }
-        deps$file_out
-      }
-    )
-    names(file_out_list) <- nodes$id
-    file_out_list <- select_nonempty(file_out_list)
-    nodes <- insert_file_out_nodes(nodes, file_out_list)
-    nodes$level <- as.integer(ordered(nodes$level))
-    edges <- insert_file_out_edges(edges, file_in_list, file_out_list)
-    config
-  })
-}
-
 #' @title Return the default title for graph visualizations
 #' @description For internal use only.
 #' @export
 #' @keywords internal
-#' @return a character scalar with the default graph title
+#' @return A character scalar with the default graph title.
 #' @param split_columns deprecated
 #' @examples
 #' default_graph_title()
@@ -230,7 +172,6 @@ function_hover_text <- Vectorize(function(function_name, envir) {
 get_raw_node_category_data <- function(config) {
   all_labels <- V(config$graph)$name
   config$outdated <- resolve_graph_outdated(config = config)
-  config$imports <- setdiff(all_labels, config$plan$target)
   config$in_progress <- in_progress(cache = config$cache)
   config$failed <- failed(cache = config$cache)
   config$files <- parallel_filter(

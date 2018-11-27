@@ -1,5 +1,30 @@
 drake_context("cache")
 
+test_with_dir("clean() removes the correct files", {
+  cache <- storr::storr_environment()
+  writeLines("123", "a.txt")
+  writeLines("123", "b.txt")
+  plan <- drake_plan(
+    a = file_in("a.txt"),
+    b = knitr_in("b.txt"),
+    d = writeLines("123", file_out("d.rds")),
+    strings_in_dots = "literals"
+  )
+  config <- drake_config(plan, session_info = FALSE)
+  make_imports(config)
+  clean()
+  expect_true(file.exists("a.txt"))
+  expect_true(file.exists("b.txt"))
+  expect_false(file.exists("d.txt"))
+})
+
+test_with_dir("empty read_drake_plan()", {
+  expect_equal(
+    read_drake_plan(cache = storr::storr_environment()),
+    drake_plan()
+  )
+})
+
 test_with_dir("dependency profile", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   b <- 1
@@ -17,27 +42,14 @@ test_with_dir("dependency profile", {
   expect_true(as.logical(dp[dp$hash == "depend", "changed"]))
   expect_equal(sum(dp$changed), 1)
   config$plan$command <- "b + c"
+  config$layout <- create_drake_layout(
+    plan = config$plan,
+    envir = config$envir,
+    cache = config$cache
+  )
   dp <- dependency_profile(target = a, config = config)
   expect_true(as.logical(dp[dp$hash == "command", "changed"]))
   expect_equal(sum(dp$changed), 2)
-})
-
-test_with_dir("clean() removes the correct files", {
-  cache <- storr::storr_environment()
-  writeLines("123", "a.txt")
-  writeLines("123", "b.txt")
-  plan <- drake_plan(
-    a = file_in("a.txt"),
-    b = knitr_in("b.txt"),
-    c = writeLines("123", file_out("c.rds")),
-    strings_in_dots = "literals"
-  )
-  config <- drake_config(plan, session_info = FALSE)
-  make_imports(config)
-  clean()
-  expect_true(file.exists("a.txt"))
-  expect_true(file.exists("b.txt"))
-  expect_false(file.exists("c.txt"))
 })
 
 test_with_dir("Missing cache", {

@@ -14,11 +14,7 @@ mc_get_checksum <- function(target, config) {
 }
 
 mc_get_outfile_checksum <- function(target, config) {
-  deps <- vertex_attr(
-    graph = config$graph,
-    name = "deps",
-    index = target
-  )[[1]]
+  deps <- config$layout[[target]]$deps_build
   files <- sort(unique(as.character(deps$file_out)))
   out <- vapply(
     X = files,

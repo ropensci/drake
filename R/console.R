@@ -239,7 +239,7 @@ multiline_message <- function(x) {
 #'   `pkgconfig::set_config("drake::verbose" = 2)`.
 #' @export
 #' @keywords internal
-#' @return a logical or integer with the value of
+#' @return A logical or integer with the value of
 #'   the default `verbose` argument to `drake` functions.
 default_verbose <- function() {
   default <- pkgconfig::get_config("drake::verbose")

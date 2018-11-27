@@ -46,15 +46,11 @@
 #' })
 #' }
 drake_meta <- function(target, config = drake::read_drake_config()) {
-  deps <- vertex_attr(
-    graph = config$graph,
-    name = "deps",
-    index = target
-  )[[1]]
+  ordinance <- config$layout[[target]]
   meta <- list(
     name = target,
     target = target,
-    imported = !(target %in% config$plan$target),
+    imported = ordinance$imported %||% TRUE,
     foreign = !exists(x = target, envir = config$envir, inherits = FALSE),
     missing = !target_exists(target = target, config = config),
     seed = seed_from_basic_types(config$seed, target)
@@ -66,15 +62,10 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
   if (meta$imported) {
     meta$trigger <- trigger(condition = TRUE)
   } else {
-    meta$trigger <- vertex_attr(
-      graph = config$graph,
-      name = "trigger",
-      index = target
-    )[[1]]
-    meta$trigger <- as.list(meta$trigger)
+    meta$trigger <- as.list(ordinance$trigger)
   }
   if (meta$trigger$command) {
-    meta$command <- get_standardized_command(target = target, config = config)
+    meta$command <- ordinance$command_standardized
   }
   if (meta$trigger$depend) {
     meta$dependency_hash <- dependency_hash(target = target, config = config)
@@ -84,23 +75,14 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
     meta$output_file_hash <- output_file_hash(target = target, config = config)
   }
   if (!is.null(meta$trigger$change)) {
-    deps <- vertex_attr(
-      graph = config$graph,
-      name = "deps",
-      index = target
-    )[[1]]$change
-    ensure_loaded(deps, config = config)
+    ensure_loaded(ordinance$deps_change, config = config)
     meta$trigger$value <- eval(meta$trigger$change, config$envir)
   }
   meta
 }
 
 dependency_hash <- function(target, config) {
-  x <- vertex_attr(
-    graph = config$graph,
-    name = "deps",
-    index = target
-  )[[1]]
+  x <- config$layout[[target]]$deps_build
   deps <- c(x$globals, x$namespaced, x$loadd, x$readd)
   if (!(target %in% config$plan$target)) {
     deps <- c(deps, x$file_in, x$knitr_in)
@@ -118,11 +100,7 @@ input_file_hash <- function(
   config,
   size_cutoff = rehash_file_size_cutoff
 ) {
-  deps <- vertex_attr(
-    graph = config$graph,
-    name = "deps",
-    index = target
-  )[[1]]
+  deps <- config$layout[[target]]$deps_build
   files <- sort(unique(as.character(c(deps$file_in, deps$knitr_in))))
   out <- vapply(
     X = files,
@@ -140,11 +118,7 @@ output_file_hash <- function(
   config,
   size_cutoff = rehash_file_size_cutoff
 ) {
-  deps <- vertex_attr(
-    graph = config$graph,
-    name = "deps",
-    index = target
-  )[[1]]
+  deps <- config$layout[[target]]$deps_build
   files <- sort(unique(as.character(deps$file_out)))
   out <- vapply(
     X = files,

@@ -4,15 +4,11 @@
 \name{drake-package}
 \alias{drake-package}
 \alias{drake}
-\title{drake is a pipeline toolkit
-(\url{https://github.com/pditommaso/awesome-pipeline})
-and a scalable, R-focused solution for reproducibility
-and high-performance computing.}
+\title{drake: A pipeline toolkit for reproducible computation at scale.}
 \description{
 drake is a pipeline toolkit
 (\url{https://github.com/pditommaso/awesome-pipeline})
-and a scalable, R-focused solution for reproducibility
-and high-performance computing.
+and a scalable, R-focused solution for reproducibility and high-performance computing.
 }
 \examples{
 \dontrun{

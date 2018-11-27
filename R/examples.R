@@ -92,10 +92,10 @@ drake_examples <- function(quiet = TRUE) {
   sort(out)
 }
 
-#' @title Load the mtcars example from `drake_example("mtcars")`
+#' @title Load the mtcars example. 
 #' @description Is there an association between
 #' the weight and the fuel efficiency of cars?
-#' To find out, we use the mtcars dataset.
+#' To find out, we use the mtcars example from `drake_example("mtcars")`.
 #' The mtcars dataset itself only has 32 rows,
 #' so we generate two larger bootstrapped datasets
 #' and then analyze them with regression models.
@@ -109,8 +109,8 @@ drake_examples <- function(quiet = TRUE) {
 #' This function also writes/overwrites
 #' the file, `report.Rmd`.
 #' @export
-#' @seealso [clean_mtcars_example()]
-#' @return nothing
+#' @seealso [clean_mtcars_example()] [drake_examples()]
+#' @return Nothing.
 #' @inheritParams drake_config
 #' @param envir The environment to load the example into.
 #'   Defaults to your workspace.
@@ -274,12 +274,12 @@ clean_mtcars_example <- function() {
   invisible()
 }
 
-#' @title Load the main example from `drake_example("main")`
-#' @description The main example itself lives at
-#' <https://github.com/wlandau/drake-examples/tree/master/main>. # nolint
-#' Use `drake_example("main")` to download the code.
+#' @title Load the main example.
+#' @description The main example lives at
+#' <https://github.com/wlandau/drake-examples/tree/master/main>.
+#' Use `drake_example("main")` to download its code.
 #' The chapter of the user manual at
-#' <https://ropenscilabs.github.io/drake-manual/main.html> # nolint
+#' <https://ropenscilabs.github.io/drake-manual/main.html>
 #' also walks through the main example.
 #' This function also writes/overwrites
 #' the files `report.Rmd` and `raw_data.xlsx`.

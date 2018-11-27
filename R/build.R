@@ -1,7 +1,7 @@
 #' @title Build/process a single target or import.
 #' @description Also load the target's dependencies beforehand.
 #' @export
-#' @seealso drake_build
+#' @seealso [drake_debug()]
 #' @return The value of the target right after it is built.
 #' @param target name of the target
 #' @param meta list of metadata that tell which
@@ -75,11 +75,13 @@ check_build_store <- function(
     return()
   }
   meta$start <- proc.time()
-  manage_memory(
-    targets = target,
-    config = config,
-    downstream = downstream
-  )
+  if (!meta$imported) {
+    manage_memory(
+      targets = target,
+      config = config,
+      downstream = downstream
+    )
+  }
   value <- build_store(target = target, meta = meta, config = config)
   assign_to_envir(target = target, value = value, config = config)
   if (flag_attempt && target %in% config$plan$target) {
@@ -138,11 +140,7 @@ conclude_build <- function(target, value, meta, config) {
 }
 
 assert_output_files <- function(target, meta, config) {
-  deps <- vertex_attr(
-    graph = config$graph,
-    name = "deps",
-    index = target
-  )[[1]]
+  deps <- config$layout[[target]]$deps_build
   files <- sort(unique(as.character(deps$file_out)))
   missing_files <- Filter(x = files, f = function(x) {
     !file.exists(drake::drake_unquote(x))

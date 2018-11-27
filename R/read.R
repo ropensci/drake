@@ -26,9 +26,9 @@
 #'   and then treat those loaded targets as dependencies.
 #'   That way, [make()] will automatically (re)run the report if those
 #'   dependencies change.
-#' Please do not put calls to [loadd()] or [readd()] inside
+#' @note Please do not put calls to [loadd()] or [readd()] inside
 #' your custom (imported) functions or the commands in your [drake_plan()].
-#' This create confusion inside [make()], which has its own ways of
+#' This creates confusion inside [make()], which has its own ways of
 #' interacting with the cache.
 #' @seealso [cached()], [built()], [imported()], [drake_plan()], [make()]
 #' @export
@@ -96,7 +96,6 @@ readd <- function(
 #' @rdname readd
 #' @seealso [cached()], [built()], [imported()], [drake_plan()], [make()]
 #' @export
-#' @return `NULL`
 #'
 #' @inheritParams cached
 #' @inheritParams readd
@@ -516,6 +515,20 @@ read_drake_plan <- function(
     cache$get(key = "plan", namespace = "config", use_cache = FALSE)
   } else {
     drake_plan()
+  }
+}
+
+# TODO: the other read_drake_*() functions should be as minimal
+# as this one and probably not exported.
+read_drake_layout <- function(cache){
+  if (cache$exists(key = "layout", namespace = "config")) {
+    cache$get(
+      key = "layout",
+      namespace = "config",
+      use_cache = FALSE
+    )
+  } else {
+    list()
   }
 }
 

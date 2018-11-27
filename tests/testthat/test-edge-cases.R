@@ -222,7 +222,7 @@ test_with_dir("warning when file_out() files not produced", {
   skip_on_cran()
   plan <- drake_plan(
     x = {
-      fs::file_create(file_out("a"))
+      file.create(file_out("a"))
       file_out("b", "c")
     },
     strings_in_dots = "literals"

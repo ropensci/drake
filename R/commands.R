@@ -8,23 +8,15 @@ extract_filenames <- function(command) {
   splits[seq(from = 2, to = length(splits), by = 2)]
 }
 
-# This is the version of the command that is
-# actually run in make(), not the version
-# that is cached and treated as a dependency.
-# It needs to (1) wrap the command in a function
-# to protect the user's environment from side effects,
-# and (2) call rlang::expr() to enable tidy evaluation
-# features such as quasiquotation.
-preprocess_command <- function(target, config) {
-  text <- config$plan$command[config$plan$target == target]
-  text <- wrap_command(text)
-  expr <- parse(text = text, keep.source = FALSE)
-  eval(expr, envir = config$envir)
-}
-
-# Use tidy evaluation to complete the contents of a command.
-wrap_command <- function(command) {
-  paste0("rlang::expr(local({\n", command, "\n}))")
+# Get the command ready for tidy eval prep
+# and then pure eval (no side effects).
+preprocess_command <- function(command, config) {
+  if (is.character(command)){
+    command <- parse(text = command)
+  }
+  command <- as.call(c(quote(`{`), command))
+  command <- as.call(c(quote(local), command))
+  as.call(c(quote(rlang::expr), command))
 }
 
 # Can remove once we remove fetch_cache.
@@ -34,25 +26,16 @@ localize <- function(command) {
   paste0("local({\n", command, "\n})")
 }
 
-# This version of the command will be hashed and cached
-# as a dependency. When the command changes nontrivially,
-# drake will react. Otherwise, changes to whitespace or
-# comments are just standardized away, and drake
-# ignores them. Thus, superfluous builds are not triggered.
-get_standardized_command <- function(target, config) {
-  out <- config$plan$command[config$plan$target == target]
-  standardize_command(out)
-}
-
 standardize_command <- function(x) {
   x <- ignore_ignore(x)
   x <- language_to_text(x)
   standardize_code(x)
 }
 
+# We won't need this function after #563.
 language_to_text <- function(x) {
   if (length(x) < 1) {
-    return(character(0))
+    return(character(0)) # nocov
   }
   if (is.expression(x)) {
     # TODO: remove the if () clause in some major version bump.

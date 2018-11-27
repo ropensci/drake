@@ -42,8 +42,8 @@
 #'   for each worker in `make(..., parallelism = "future")`.
 #'
 #' @export
-#' @seealso map_plan, reduce_by, gather_by, reduce_plan, gather_plan,
-#'   evaluate_plan, expand_plan
+#' @seealso [map_plan()], [reduce_by()], [gather_by()], [reduce_plan()], [gather_plan()],
+#'   [evaluate_plan()], [expand_plan()]
 #' @return A data frame of targets and commands. See the details
 #' for optional columns you can append manually post-hoc.
 #' @param ... A collection of symbols/targets
@@ -209,10 +209,10 @@ drake_plan <- function(
 }
 
 #' @title Row-bind together drake plans
-#' @description combine drake plans together in a way that
+#' @description Combine drake plans together in a way that
 #'   correctly fills in missing entries.
 #' @export
-#' @seealso drake_plan, make
+#' @seealso [drake_plan()], [make()]
 #' @param ... workflow plan data frames (see [drake_plan()])
 #' @examples
 #' # You might need to refresh your data regularly (see ?triggers).
@@ -418,7 +418,7 @@ knitr_in <- file_in
 #'   deciding which target are out of date.
 #' @export
 #' @seealso [file_in()], [file_out()], [knitr_in()]
-#' @return the argument
+#' @return The argument.
 #' @param x code to ignore
 #' @examples
 #' \dontrun{
@@ -494,7 +494,7 @@ detect_arrow <- function(command) {
 #' @description The `target()` function lets you define
 #'   custom columns in a workflow plan data frame, both
 #'   inside and outside calls to [drake_plan()].
-#'  @details Tidy evaluation is applied to the arguments,
+#' @details Tidy evaluation is applied to the arguments,
 #'    and the `!!` operator is evaluated immediately
 #'    for expressions and language objects.
 #' @export

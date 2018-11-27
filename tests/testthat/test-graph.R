@@ -256,14 +256,14 @@ test_with_dir("show_output_files", {
     target1 = {
       file_in("in1.txt", "in2.txt")
       file_out("out1.txt", "out2.txt")
-      fs::file_create("out1.txt")
-      fs::file_create("out2.txt")
+      file.create("out1.txt")
+      file.create("out2.txt")
     },
     target2 = {
       file_in("out1.txt", "out2.txt")
       file_out("out3.txt", "out4.txt")
-      fs::file_create("out3.txt")
-      fs::file_create("out4.txt")
+      file.create("out3.txt")
+      file.create("out4.txt")
     },
     strings_in_dots = "literals"
   )
@@ -342,14 +342,14 @@ test_with_dir("same, but with an extra edge not due to files", {
     target1 = {
       file_in("in1.txt", "in2.txt")
       file_out("out1.txt", "out2.txt")
-      fs::file_create("out1.txt")
-      fs::file_create("out2.txt")
+      file.create("out1.txt")
+      file.create("out2.txt")
     },
     target2 = {
       file_in("out1.txt", "out2.txt")
       file_out("out3.txt", "out4.txt")
-      fs::file_create("out3.txt")
-      fs::file_create("out4.txt")
+      file.create("out3.txt")
+      file.create("out4.txt")
       target1
     },
     strings_in_dots = "literals"

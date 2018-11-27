@@ -13,7 +13,7 @@ drake_quotes(x = NULL, single = FALSE)
 and double quotes otherwise.}
 }
 \value{
-character vector with quotes around it
+Character vector with quotes around it.
 }
 \description{
 Quotes are important in drake.

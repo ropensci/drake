@@ -75,7 +75,7 @@ plot_graph(plan = read_drake_plan(), targets = plan$target,
 \item{...}{deprecated}
 }
 \value{
-a \code{visNetwork} graph
+A \code{visNetwork} graph.
 }
 \description{
 Use \code{\link[=vis_drake_graph]{vis_drake_graph()}} instead.

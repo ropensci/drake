@@ -113,8 +113,6 @@ will not be replaced.}
 }
 \value{
 The cached value of the \code{target}.
-
-\code{NULL}
 }
 \description{
 \code{\link[=readd]{readd()}} returns an object from the cache,
@@ -147,11 +145,13 @@ calls to \code{loadd()} and \code{readd()} in active code chunks,
 and then treat those loaded targets as dependencies.
 That way, \code{\link[=make]{make()}} will automatically (re)run the report if those
 dependencies change.
+}
+}
+\note{
 Please do not put calls to \code{\link[=loadd]{loadd()}} or \code{\link[=readd]{readd()}} inside
 your custom (imported) functions or the commands in your \code{\link[=drake_plan]{drake_plan()}}.
-This create confusion inside \code{\link[=make]{make()}}, which has its own ways of
+This creates confusion inside \code{\link[=make]{make()}}, which has its own ways of
 interacting with the cache.
-}
 }
 \examples{
 \dontrun{

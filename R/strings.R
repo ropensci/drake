@@ -5,7 +5,7 @@
 #' and double-quoted strings are treated as ordinary string literals.
 #' @seealso [drake_unquote()], [drake_strings()]
 #' @export
-#' @return character vector with quotes around it
+#' @return Character vector with quotes around it.
 #' @param x character vector or object to be coerced to character.
 #' @param single Add single quotes if `TRUE`
 #'   and double quotes otherwise.
@@ -34,9 +34,9 @@ drake_quotes <- function(x = NULL, single = FALSE) {
 #' and double-quoted strings are treated as ordinary string literals.
 #' @seealso [drake_quotes()], [drake_strings()]
 #' @export
-#' @return character vector without leading
+#' @return Character vector without leading
 #'   or trailing escaped quotes around
-#'   the elements
+#'   the elements.
 #' @param x character vector
 #' @param deep deprecated logical.
 #' @examples
@@ -58,7 +58,7 @@ drake_unquote <- function(x = NULL, deep = FALSE) {
 #'   constructing workflow plan data frames.
 #' @seealso [drake_quotes()], [drake_unquote()]
 #' @export
-#' @return a character vector
+#' @return A character vector.
 #' @param ... unquoted symbols to turn into character strings.
 #' @examples
 #' # Turn symbols into strings.

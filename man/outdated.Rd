@@ -31,7 +31,7 @@ Outdated targets will be rebuilt in the next
 \details{
 \code{outdated()} is sensitive to the alternative triggers
 described at
-\url{https://ropenscilabs.github.io/drake-manual/debug.html}. # nolint
+\url{https://ropenscilabs.github.io/drake-manual/debug.html}.
 For example, even if \code{outdated(...)} shows everything up to date,
 \code{outdated(..., trigger = "always")} will show
 all targets out of date.

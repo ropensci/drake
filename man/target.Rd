@@ -43,7 +43,9 @@ arguments as columns.
 The \code{target()} function lets you define
 custom columns in a workflow plan data frame, both
 inside and outside calls to \code{\link[=drake_plan]{drake_plan()}}.
-@details Tidy evaluation is applied to the arguments,
+}
+\details{
+Tidy evaluation is applied to the arguments,
 and the \code{!!} operator is evaluated immediately
 for expressions and language objects.
 }

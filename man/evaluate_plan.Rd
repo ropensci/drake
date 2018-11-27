@@ -152,6 +152,6 @@ vis_drake_graph(config, group = "status", clusters = "up to date")
 }
 }
 \seealso{
-drake_plan, map_plan, reduce_by, gather_by, reduce_plan,
-gather_plan, evaluate_plan, expand_plan
+\code{\link[=drake_plan]{drake_plan()}}, \code{\link[=map_plan]{map_plan()}}, \code{\link[=reduce_by]{reduce_by()}}, \code{\link[=gather_by]{gather_by()}}, \code{\link[=reduce_plan]{reduce_plan()}},
+\code{\link[=gather_plan]{gather_plan()}}, \code{\link[=evaluate_plan]{evaluate_plan()}}, \code{\link[=expand_plan]{expand_plan()}}
 }

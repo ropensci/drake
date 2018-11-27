@@ -10,7 +10,7 @@ default_graph_title(split_columns = FALSE)
 \item{split_columns}{deprecated}
 }
 \value{
-a character scalar with the default graph title
+A character scalar with the default graph title.
 }
 \description{
 For internal use only.

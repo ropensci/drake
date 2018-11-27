@@ -97,7 +97,7 @@ backend <- function(...) {
 #' @details Deprecated on 2018-11-02.
 #' @export
 #' @keywords internal
-#' @return an `igraph` object
+#' @return An `igraph` object.
 #' @inheritParams drake_config
 #' @param sanitize_plan deprecated
 #' @examples
@@ -1057,7 +1057,7 @@ plan_drake <- function(
 #' @details Deprecated on 2017-10.
 #' @export
 #' @keywords internal
-#' @return a `visNetwork` graph
+#' @return A `visNetwork` graph.
 #' @param plan deprecated
 #' @param envir deprecated
 #' @param hook deprecated
@@ -1128,16 +1128,20 @@ plot_graph <- function(
       "Use vis_drake_graph() instead."
     )
   )
+  if (is.null(config)){
+    config <- drake_config(
+      plan = plan,
+      envir = envir,
+      verbose = verbose,
+      hook = hook,
+      cache = cache,
+      jobs = jobs,
+      parallelism = parallelism,
+      packages = packages,
+      prework = prework
+    )
+  }
   vis_drake_graph(
-    plan = plan,
-    envir = envir,
-    verbose = verbose,
-    hook = hook,
-    cache = cache,
-    jobs = jobs,
-    parallelism = parallelism,
-    packages = packages,
-    prework = prework,
     config = config,
     file = file,
     selfcontained = selfcontained,
@@ -1390,7 +1394,7 @@ read_plan <- function(
 #' @details Deprecated on 2017-10.
 #' @export
 #' @keywords internal
-#' @return a `visNetwork` graph.
+#' @return A `visNetwork` graph.
 #' @param graph_info deprecated
 #' @param file deprecated
 #' @param layout deprecated
