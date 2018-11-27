@@ -1,56 +1,5 @@
 drake_context("other features")
 
-test_with_dir("Can standardize commands", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  x <- parse(text = c("f(x +2) + 2", "!!y"))
-  y <- standardize_command(x[[1]])
-  x <- parse(text = "f(x +2) + 2")
-  z <- standardize_command(x)
-  w <- standardize_command(x[[1]])
-  s <- standardize_command("f(x + 2) + 2")
-  a <- standardize_command("f(x + 1 - 1) + 2")
-  expect_identical(y, s)
-  expect_identical(z, s)
-  expect_identical(w, s)
-  expect_false(identical(a, s))
-  expect_identical(
-    standardize_command("b->a"),
-    standardize_command("a <- b")
-  )
-  expect_identical(
-    standardize_command("y=sqrt(x=1)"),
-    standardize_command("y <- sqrt(x = 1)")
-  )
-  expect_identical(
-    standardize_command("abcdefg = hijklmnop = qrstuvwxyz\n\n"),
-    standardize_command("abcdefg <- hijklmnop <- qrstuvwxyz")
-  )
-  a <- standardize_command("z = {f('#') # comment
-    x <- 5
-
-    y <- 'test'
-    z <- 4
-
-    x2 <- 'test2'
-  }")
-  b <- standardize_command("z = {f('#') # comment X
-  x = 5
-
-  y <- 'test'
-  z = 4
-  'test2' -> x2
-  }")
-  c <- standardize_command("z = {f('#') # comment X
-  x = 5
-
-  y <- 'test3'
-    z = 4
-  'test2' -> x2
-  }")
-  expect_identical(a, b)
-  expect_false(identical(b, c))
-})
-
 test_with_dir("debug_command()", {
   skip_on_cran()
   txt <- "    f(x + 2) + 2"

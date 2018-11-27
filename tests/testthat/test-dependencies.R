@@ -247,3 +247,161 @@ test_with_dir("._drake_envir and drake_envir() are not dependencies", {
   expect_false("._drake_envir" %in% deps1)
   expect_false("._drake_envir" %in% deps2)
 })
+
+test_with_dir("ignore() suppresses updates", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  cache <- storr::storr_environment()
+  envir <- new.env(parent = globalenv())
+  envir$arg <- 4
+
+  # Without ignore()
+  con <- make(
+    plan = drake_plan(x = sqrt(arg)),
+    envir = envir,
+    cache = cache
+  )
+  expect_equal(justbuilt(con), "x")
+  con$envir$arg <- con$envir$arg + 1
+  con <- make_with_config(con)
+  expect_equal(justbuilt(con), "x")
+
+  # With ignore()
+  con <- make(
+    plan = drake_plan(x = sqrt( ignore(arg) + 123)), # nolint
+    envir = envir,
+    cache = cache
+  )
+  expect_equal(justbuilt(con), "x")
+  con$envir$arg <- con$envir$arg + 1
+  con <- make_with_config(con)
+  expect_equal(justbuilt(con), character(0))
+
+  con$envir$arg2 <- con$envir$arg + 1234
+  con$plan <- drake_plan(x = sqrt( ignore  (arg2 ) + 123)) # nolint
+  con <- make_with_config(con)
+  expect_equal(justbuilt(con), character(0))
+})
+
+test_with_dir("ignore() works on its own", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  expect_equal(ignore(), NULL)
+  expect_equal(ignore(1234), 1234)
+  expect_identical(ignore_ignore(digest::digest), digest::digest)
+})
+
+test_with_dir("Can standardize commands", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  x <- parse(text = c("f(x +2) + 2", "!!y"))
+  y <- standardize_command(x[[1]])
+  x <- parse(text = "f(x +2) + 2")
+  z <- standardize_command(x)
+  w <- standardize_command(x[[1]])
+  s <- standardize_command("f(x + 2) + 2")
+  a <- standardize_command("f(x + 1 - 1) + 2")
+  expect_identical(y, s)
+  expect_identical(z, s)
+  expect_identical(w, s)
+  expect_false(identical(a, s))
+  expect_identical(
+    standardize_command("b->a"),
+    standardize_command("a <- b")
+  )
+  expect_identical(
+    standardize_command("y=sqrt(x=1)"),
+    standardize_command("y <- sqrt(x = 1)")
+  )
+  expect_identical(
+    standardize_command("abcdefg = hijklmnop = qrstuvwxyz\n\n"),
+    standardize_command("abcdefg <- hijklmnop <- qrstuvwxyz")
+  )
+  a <- standardize_command("z = {f('#') # comment
+    x <- 5
+
+    y <- 'test'
+    z <- 4
+
+    x2 <- 'test2'
+  }")
+  b <- standardize_command("z = {f('#') # comment X
+  x = 5
+
+  y <- 'test'
+  z = 4
+  'test2' -> x2
+  }")
+  c <- standardize_command("z = {f('#') # comment X
+  x = 5
+
+  y <- 'test3'
+    z = 4
+  'test2' -> x2
+  }")
+  expect_identical(a, b)
+  expect_false(identical(b, c))
+})
+
+test_with_dir("standardized commands with ignore()", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  expect_equal(
+    standardize_command("f(sqrt( ignore(fun(arg) + 7) + 123))"),
+    standardize_command("f(sqrt(ignore() + 123))")
+  )
+  expect_equal(
+    standardize_command("f(sqrt( ignore  (fun(arg) + 7) + 123) )"),
+    standardize_command("f(sqrt(ignore() + 123))")
+  )
+
+  expect_equal(
+    standardize_command(" f (sqrt( drake::ignore(fun(arg) + 7) + 123 ))"),
+    standardize_command("f(sqrt(ignore() + 123))")
+  )
+  expect_equal(
+    standardize_command("\tf(sqrt( drake ::: ignore  (fun(arg) + 7) + 123))"),
+    standardize_command("f(sqrt(ignore() + 123))")
+  )
+  expect_equal(
+    standardize_command("function(x){(sqrt( ignore(fun(arg) + 7) + 123))}"),
+    standardize_command("function(x) {\n    (sqrt(ignore() + 123))\n}")
+  )
+  f <- function(x) {
+    (sqrt( ignore(fun(arg) + 7) + 123)) # nolint
+  }
+  b <- body(ignore_ignore(f))
+  for (a in names(attributes(b))) {
+    attr(b, a) <- NULL
+  }
+  expect_equal(b, quote({  (sqrt(ignore() + 123)) })) # nolint
+})
+
+test_with_dir("can standardize command with other ignored symbols", {
+  expect_equal(
+    standardize_command("function(x){(sqrt( drake_envir(arg) + 123))}"),
+    standardize_command("function(x) {\n    (sqrt(ignore() + 123))\n}")
+  )
+})
+
+test_with_dir("ignore() in imported functions", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  f <- function(x) {
+    (sqrt( ignore(sqrt(x) + 7) + 123)) # nolint
+  }
+  plan <- drake_plan(x = f(1))
+  cache <- storr::storr_environment()
+  config <- make(plan, cache = cache)
+  expect_equal(justbuilt(config), "x")
+  expect_equal(readd(f, cache = cache), f)
+  expect_equal(
+    readd(f, cache = cache, namespace = "kernels")[3],
+    "    (sqrt(ignore() + 123))"
+  )
+  f <- function(x) {
+    (sqrt( ignore(sqrt(x) + 8) + 123)) # nolint
+  }
+  config <- make(plan, cache = cache)
+  expect_equal(justbuilt(config), character(0))
+  f <- function(x) {
+    (sqrt( ignore(sqrt(x) + 8) + 124)) # nolint
+  }
+  config <- make(plan, cache = cache)
+  expect_equal(justbuilt(config), "x")
+})
