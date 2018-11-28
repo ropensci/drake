@@ -184,10 +184,10 @@ dependency_profile <- function(
     algo = config$long_hash_algo,
     serialize = FALSE
   )
-  ordinance <- config$layout[[target]]
+  layout <- config$layout[[target]]
   new_hashes <- c(
     digest::digest(
-      paste(ordinance$command_standardized, collapse = ""),
+      paste(layout$command_standardized, collapse = ""),
       algo = config$long_hash_algo,
       serialize = FALSE
     ),

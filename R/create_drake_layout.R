@@ -131,7 +131,7 @@ cdl_analyze_commands <- function(config) {
   )
   out <- lightly_parallelize(
     X = layout,
-    FUN = cdl_prepare_ordinance,
+    FUN = cdl_prepare_layout,
     jobs = config$jobs,
     config = config
   )
@@ -139,32 +139,32 @@ cdl_analyze_commands <- function(config) {
   out
 }
 
-cdl_prepare_ordinance <- function(ordinance, config){
-  ordinance$deps_build <- command_dependencies(
-    command = ordinance$command,
-    exclude = ordinance$target,
+cdl_prepare_layout <- function(layout, config){
+  layout$deps_build <- command_dependencies(
+    command = layout$command,
+    exclude = layout$target,
     globals = config$globals
   )
-  ordinance$command_standardized <- standardize_command(ordinance$command)
-  ordinance$command_build <- preprocess_command(
-    ordinance$command,
+  layout$command_standardized <- standardize_command(layout$command)
+  layout$command_build <- preprocess_command(
+    layout$command,
     config = config
   )
-  if (is.null(ordinance$trigger) || is.na(ordinance$trigger)){
-    ordinance$trigger <- config$trigger
-    ordinance$deps_condition <- config$default_condition_deps
-    ordinance$deps_change <- config$default_change_deps
+  if (is.null(layout$trigger) || is.na(layout$trigger)){
+    layout$trigger <- config$trigger
+    layout$deps_condition <- config$default_condition_deps
+    layout$deps_change <- config$default_change_deps
   } else {
-    ordinance$deps_condition <- import_dependencies(
-      ordinance$trigger$condition,
-      exclude = ordinance$target,
+    layout$deps_condition <- import_dependencies(
+      layout$trigger$condition,
+      exclude = layout$target,
       globals = config$globals
     )
-    ordinance$deps_change <- import_dependencies(
-      ordinance$trigger$change,
-      exclude = ordinance$target,
+    layout$deps_change <- import_dependencies(
+      layout$trigger$change,
+      exclude = layout$target,
       globals = config$globals
     )
   }
-  ordinance
+  layout
 }
