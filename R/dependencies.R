@@ -167,9 +167,10 @@ dependency_profile <- function(
   if (!config$cache$exists(key = target, namespace = "meta")) {
     stop("no recorded metadata for target ", target, ".")
   }
-  meta <- config$cache$get(
-    key = target, namespace = "meta")
-  deps <- dependencies(target, config)
+  meta <- config$cache$get(key = target, namespace = "meta")
+  if (!length(meta$command)) {
+    meta$command <- NA
+  }
   old_hashes <- meta[c(
     "command",
     "dependency_hash",

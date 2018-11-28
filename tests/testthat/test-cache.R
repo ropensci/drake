@@ -50,6 +50,20 @@ test_with_dir("dependency profile", {
   dp <- dependency_profile(target = a, config = config)
   expect_true(as.logical(dp[dp$hash == "command", "changed"]))
   expect_equal(sum(dp$changed), 2)
+  load_mtcars_example()
+  config <- drake_config(
+    my_plan,
+    cache = storr::storr_environment(),
+    skip_targets = TRUE,
+    session_info = FALSE
+  )
+  make(config = config)
+  out <- dependency_profile(
+    file_store("report.Rmd"),
+    character_only = TRUE,
+    config
+  )
+  expect_equal(nrow(out), 4)
 })
 
 test_with_dir("Missing cache", {
