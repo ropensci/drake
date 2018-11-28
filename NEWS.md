@@ -17,6 +17,7 @@
 - Deprecate the `force` argument to `make()` and related functions.
 - Change the name of `prune_envir()` to `manage_memory()`.
 - Deprecate and rename the `pruning_strategy` argument to `memory_strategy` (`make()` and `drake_config()`).
+- Print warnings and messages to the `console_log_file` in real time ([#588](https://github.com/ropensci/drake/issues/588)).
 
 
 # Version 6.1.0

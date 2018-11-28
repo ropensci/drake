@@ -47,11 +47,19 @@ and distributed parallelism (\code{parallelism = "future_lapply"}
 or \code{"Makefile"}) because the distributed R sessions
 need to know how to load the cache.}
 
-\item{console_log_file}{character scalar or \code{NULL}.
+\item{console_log_file}{character scalar,
+connection object (such as \code{stdout()}) or \code{NULL}.
 If \code{NULL}, console output will be printed
 to the R console using \code{message()}.
-Otherwise, \code{console_log_file} should be the name of a flat file.
-Console output will be appended to that file.}
+If a character scalar, \code{console_log_file}
+should be the name of a flat file, and
+console output will be appended to that file.
+If a connection object (e.g. \code{stdout()})
+warnings and messages will be sent to the connection.
+For example, if \code{console_log_file} is \code{stdout()},
+warnings and messages are printed to the console in real time
+(in addition to the usual in-bulk printing
+after each target finishes).}
 }
 \value{
 A drake/storr cache.
