@@ -3,18 +3,17 @@ handle_build_exceptions <- function(target, meta, config) {
     warn_opt <- max(1, getOption("warn"))
     withr::with_options(
       new = list(warn = warn_opt),
-      drake_warning(
+      warning(
         "target ", target, " warnings:\n",
         multiline_message(meta$warnings),
-        config = config
+        call. = FALSE
       )
     )
   }
   if (length(meta$messages) && config$verbose) {
-    drake_message(
+    message(
       "Target ", target, " messages:\n",
-      multiline_message(meta$messages),
-      config = config
+      multiline_message(meta$messages)
     )
   }
   if (inherits(meta$error, "error")) {
