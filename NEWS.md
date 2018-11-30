@@ -18,6 +18,7 @@
 - Change the name of `prune_envir()` to `manage_memory()`.
 - Deprecate and rename the `pruning_strategy` argument to `memory_strategy` (`make()` and `drake_config()`).
 - Print warnings and messages to the `console_log_file` in real time ([#588](https://github.com/ropensci/drake/issues/588)).
+- Use HTML line breaks in `vis_drake_graph()` hover text to display commands in the `drake` plan more elegantly.
 
 
 # Version 6.1.0

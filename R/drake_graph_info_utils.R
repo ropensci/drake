@@ -281,6 +281,7 @@ style_hover_text <- function(lines) {
   x <- crop_lines(lines, n = hover_lines)
   x <- crop_text(x, width = hover_width)
   x <- gsub(pattern = " ", replacement = "&nbsp;", x = x)
+  x <- gsub(pattern = "\n", replacement = "<br>", x = x)
   paste0(x, collapse = "<br>")
 }
 
