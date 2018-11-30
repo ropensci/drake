@@ -81,6 +81,10 @@ is_image_filename <- function(x) {
   tolower(file_extn(x)) %in% c("jpg", "jpeg", "pdf", "png")
 }
 
+is_imported <- function(target, config) {
+  config$layout[[target]]$imported %||% TRUE
+}
+
 is_not_file <- function(x) {
   !is_file(x)
 }

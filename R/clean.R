@@ -156,7 +156,7 @@ clean_single_target <- function(
   files <- character(0)
   if (is_file(target)) {
     if (cache$exists(target, namespace = "meta")) {
-      if (!is_imported(target, cache)) {
+      if (!is_imported_cache(target, cache)) {
         files <- target
       }
     }

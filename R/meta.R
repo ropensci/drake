@@ -84,7 +84,7 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
 dependency_hash <- function(target, config) {
   x <- config$layout[[target]]$deps_build
   deps <- c(x$globals, x$namespaced, x$loadd, x$readd)
-  if (!(target %in% config$plan$target)) {
+  if (is_imported(target, config)) {
     deps <- c(deps, x$file_in, x$knitr_in)
   }
   deps <- as.character(deps)
