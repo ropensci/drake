@@ -118,7 +118,7 @@ test_with_dir("mtcars example works", {
     )
     expect_error(loadd(not_a_target, envir = e))
     expect_equal(ls(envir = e), character(0))
-    loadd(starts_with("coef"), envir = e)
+    loadd(tidyselect::starts_with("coef"), envir = e)
     expect_equal(sort(ls(envir = e)), coefs)
   }
 
