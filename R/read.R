@@ -100,9 +100,10 @@ readd <- function(
 #' @inheritParams cached
 #' @inheritParams readd
 #'
-#' @param ... targets to load from the cache: as names (symbols),
-#'   character strings, or `dplyr`-style `tidyselect`
-#'   commands such as `starts_with()`.
+#' @param ... targets to load from the cache: as names (symbols) or
+#'   character strings. If the `tidyselect` package is installed,
+#'   you can also supply `dplyr`-style `tidyselect`
+#'   commands such as `starts_with()`, `ends_with()`, and `one_of()`.
 #'
 #' @param list character vector naming targets to be loaded from the
 #'   cache. Similar to the `list` argument of [remove()].

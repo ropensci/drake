@@ -102,20 +102,25 @@ test_with_dir("mtcars example works", {
   config <- drake_config(
     my_plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = FALSE)
-  expect_equal(sort(outdated(config = config)),
-               character(0))
+  expect_equal(sort(outdated(config = config)), character(0))
 
   # Take this opportunity to test tidyselect API. Saves test time that way.
   # loadd() # nolint
-  e <- new.env(parent = globalenv())
-  coefs <- sort(c("coef_regression1_large", "coef_regression1_small",
-                  "coef_regression2_large", "coef_regression2_small"))
-
-  expect_error(loadd(not_a_target, envir = e))
-  expect_equal(ls(envir = e), character(0))
-
-  loadd(starts_with("coef"), envir = e)
-  expect_equal(sort(ls(envir = e)), coefs)
+  if (requireNamespace("tidyselect")) {
+    e <- new.env(parent = globalenv())
+    coefs <- sort(
+      c(
+        "coef_regression1_large",
+        "coef_regression1_small",
+        "coef_regression2_large",
+        "coef_regression2_small"
+      )
+    )
+    expect_error(loadd(not_a_target, envir = e))
+    expect_equal(ls(envir = e), character(0))
+    loadd(starts_with("coef"), envir = e)
+    expect_equal(sort(ls(envir = e)), coefs)
+  }
 
   # build_times() # nolint
   skip_if_not_installed("lubridate")

@@ -7,9 +7,10 @@
 #' @export
 #' @return A data frame of times, each from [system.time()].
 #' @inheritParams cached
-#' @param ... targets to load from the cache: as names (symbols),
-#'   character strings, or `dplyr`-style `tidyselect`
-#'   commands such as `starts_with()`.
+#' @param ... targets to load from the cache: as names (symbols) or
+#'   character strings. If the `tidyselect` package is installed,
+#'   you can also supply `dplyr`-style `tidyselect`
+#'   commands such as `starts_with()`, `ends_with()`, and `one_of()`.
 #' @param targets_only logical, whether to only return the
 #'   build times of the targets (exclude the imports).
 #' @param digits How many digits to round the times to.

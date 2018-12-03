@@ -46,15 +46,21 @@ clean_dependency_list <- function(x) {
 }
 
 drake_select <- function(
-  cache, ..., namespaces = cache$default_namespace, list = character(0)
+  cache, ...,
+  namespaces = cache$default_namespace,
+  list = character(0)
 ) {
-  out <- tidyselect::vars_select(
-    .vars = list_multiple_namespaces(cache = cache, namespaces = namespaces),
-    ...,
-    .strict = FALSE
-  )
-  out <- unname(out)
-  union(out, list)
+  if (requireNamespace("tidyselect")) {
+    out <- tidyselect::vars_select(
+      .vars = list_multiple_namespaces(cache = cache, namespaces = namespaces),
+      ...,
+      .strict = FALSE
+    )
+    out <- unname(out)
+    union(out, list)
+  } else {
+    parse_dots(..., list = list) # nocov
+  }
 }
 
 factor_to_character <- function(x) {
@@ -117,6 +123,13 @@ padded_scale <- function(x) {
   r <- range(x)
   pad <- 0.2 * (r[2] - r[1])
   c(r[1] - pad, r[2] + pad)
+}
+
+parse_dots <- function(..., list = character(0)){
+  dots <- match.call(expand.dots = FALSE)$...
+  dots <- unlist(dots)
+  dots <- as.character(dots)
+  c(dots, list)
 }
 
 random_tempdir <- function() {

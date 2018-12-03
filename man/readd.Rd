@@ -59,9 +59,10 @@ for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 that produced the target or indicate that the object
 was imported (using \code{\link[=show_source]{show_source()}}).}
 
-\item{...}{targets to load from the cache: as names (symbols),
-character strings, or \code{dplyr}-style \code{tidyselect}
-commands such as \code{starts_with()}.}
+\item{...}{targets to load from the cache: as names (symbols) or
+character strings. If the \code{tidyselect} package is installed,
+you can also supply \code{dplyr}-style \code{tidyselect}
+commands such as \code{starts_with()}, \code{ends_with()}, and \code{one_of()}.}
 
 \item{list}{character vector naming targets to be loaded from the
 cache. Similar to the \code{list} argument of \code{\link[=remove]{remove()}}.}

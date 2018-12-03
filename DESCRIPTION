@@ -70,7 +70,6 @@ Imports:
   rlang (>= 0.2.0),
   storr (>= 1.1.0),
   tibble,
-  tidyselect (>= 0.2.4),
   utils,
   withr
 Suggests:
@@ -99,6 +98,7 @@ Suggests:
   rprojroot,
   stats,
   testthat,
+  tidyselect (>= 0.2.4),
   txtq,
   rmarkdown,
   styler,

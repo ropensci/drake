@@ -22,9 +22,10 @@
 #'
 #' @inheritParams cached
 #'
-#' @param ... targets to remove from the cache: as names (symbols),
-#'   character strings, or `dplyr`-style `tidyselect`
-#'   commands such as `starts_with()`.
+#' @param ... targets to remove from the cache: as names (symbols) or
+#'   character strings. If the `tidyselect` package is installed,
+#'   you can also supply `dplyr`-style `tidyselect`
+#'   commands such as `starts_with()`, `ends_with()`, and `one_of()`.
 #'
 #' @param list character vector naming targets to be removed from the
 #'   cache. Similar to the `list` argument of [remove()].

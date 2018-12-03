@@ -51,7 +51,6 @@
 #' @importFrom rlang enexpr enexprs enquo expr expr_text exprs
 #' @importFrom storr storr_environment storr_rds
 #' @importFrom tibble as_tibble tibble
-#' @importFrom tidyselect vars_select
 #' @importFrom utils capture.output compareVersion head packageVersion
 #'   read.csv sessionInfo stack type.convert unzip write.table
 #' @importFrom withr local_dir with_options with_output_sink with_seed
