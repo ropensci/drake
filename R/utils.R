@@ -165,6 +165,15 @@ select_valid <- function(x) {
   x[index]
 }
 
+split_by <- function(x, cols = character(0)) {
+  if (!length(cols)) {
+    return(list(x))
+  }
+  f <- lapply(x[, cols], factor, exclude = c())
+  x <- split(x = x, f = f)
+  Filter(x = x, f = nrow)
+}
+
 standardize_filename <- function(text) {
   text[is_file(text)] <-  gsub("^'|'$", "\"", text[is_file(text)])
   text

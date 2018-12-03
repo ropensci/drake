@@ -212,22 +212,17 @@ gather_by <- function(
     filter <- rlang::enquo(filter)
     gathered <- dplyr::filter(plan, !!filter)
   }
-  cols <- parse_dots(dots = match.call(expand.dots = FALSE)$..., list = list)
-  
-  
-  browser()
-  
-  gathered <- dplyr::group_by(gathered, ...)
-  gathered <- dplyr::do(
-    gathered,
-    gather_plan(
-      plan = .,
-      target = prefix,
-      gather = gather,
-      append = FALSE
-    )
+  col_names <- as.character(match.call(expand.dots = FALSE)$...)
+  gathered <- split_by(x = gathered, cols = col_names)
+  gathered <- lapply(
+    X = gathered,
+    FUN = gather_plan,
+    target = prefix,
+    gather = gather,
+    append = FALSE
   )
-  cols <- dplyr::select(gathered, ...)
+  gathered <- do.call(gathered, what = "rbind")
+  cols <- plan[, col_names]
   suffix <- apply(X = cols, MARGIN = 1, FUN = paste, collapse = sep)
   if (length(suffix) && nzchar(suffix)) {
     gathered$target <- paste(gathered$target, suffix, sep = sep)
