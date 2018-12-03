@@ -212,6 +212,11 @@ gather_by <- function(
     filter <- rlang::enquo(filter)
     gathered <- dplyr::filter(plan, !!filter)
   }
+  cols <- parse_dots(dots = match.call(expand.dots = FALSE)$..., list = list)
+  
+  
+  browser()
+  
   gathered <- dplyr::group_by(gathered, ...)
   gathered <- dplyr::do(
     gathered,
