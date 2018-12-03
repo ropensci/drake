@@ -216,13 +216,13 @@ gather_by <- function(
   gathered <- split_by(x = gathered, cols = col_names)
   gathered <- lapply(
     X = gathered,
-    FUN = gather_plan,
+    FUN = gather_plan, # KEEP COLUMNS IN col_names!
     target = prefix,
     gather = gather,
     append = FALSE
   )
   gathered <- do.call(gathered, what = "rbind")
-  cols <- plan[, col_names] # nope. The cols need to be attached to the split vars.
+  cols <- gathered[, col_names]
   suffix <- apply(X = cols, MARGIN = 1, FUN = paste, collapse = sep)
   if (length(suffix) && nzchar(suffix)) {
     gathered$target <- paste(gathered$target, suffix, sep = sep)
