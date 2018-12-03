@@ -205,7 +205,7 @@ gather_by <- function(
   filter = NULL,
   sep = "_"
 ) {
-  . <- NULL
+  browser()
   if (is.null(substitute(filter))) {
     gathered <- plan
   } else {
@@ -222,7 +222,7 @@ gather_by <- function(
     append = FALSE
   )
   gathered <- do.call(gathered, what = "rbind")
-  cols <- plan[, col_names]
+  cols <- plan[, col_names] # nope. The cols need to be attached to the split vars.
   suffix <- apply(X = cols, MARGIN = 1, FUN = paste, collapse = sep)
   if (length(suffix) && nzchar(suffix)) {
     gathered$target <- paste(gathered$target, suffix, sep = sep)
