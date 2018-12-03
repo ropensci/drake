@@ -156,8 +156,7 @@ gather_plan <- function(
 #'   [gather_plan()], [evaluate_plan()], [expand_plan()]
 #' @return A workflow plan data frame.
 #' @inheritParams gather_plan
-#' @param ... Symbols, columns of `plan` to define target groupings
-#'   passed to `dplyr::group_by()`.
+#' @param ... Symbols, columns of `plan` to define target groupings.
 #'   A [gather_plan()] call is applied for each grouping.
 #'   Groupings with all `NA`s in the selector variables are ignored.
 #' @param prefix character, prefix for naming the new targets.
@@ -332,8 +331,7 @@ reduce_plan <- function(
 #'   [gather_plan()], [evaluate_plan()], [expand_plan()]
 #' @return A workflow plan data frame.
 #' @inheritParams reduce_plan
-#' @param ... Symbols, columns of `plan` to define target groupings
-#'   passed to `dplyr::group_by()`.
+#' @param ... Symbols, columns of `plan` to define target groupings.
 #'   A [reduce_plan()] call is applied for each grouping.
 #'   Groupings with all `NA`s in the selector variables are ignored.
 #' @param prefix character, prefix for naming the new targets.
