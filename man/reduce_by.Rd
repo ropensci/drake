@@ -11,8 +11,7 @@ reduce_by(plan, ..., prefix = "target", begin = "", op = " + ",
 \arguments{
 \item{plan}{workflow plan data frame of prespecified targets}
 
-\item{...}{Symbols, columns of \code{plan} to define target groupings
-passed to \code{dplyr::group_by()}.
+\item{...}{Symbols, columns of \code{plan} to define target groupings.
 A \code{\link[=reduce_plan]{reduce_plan()}} call is applied for each grouping.
 Groupings with all \code{NA}s in the selector variables are ignored.}
 

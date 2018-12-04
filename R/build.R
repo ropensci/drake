@@ -57,7 +57,8 @@ drake_build <- function(
     cache = config$cache,
     graph = config$graph,
     jobs = jobs,
-    replace = replace
+    replace = replace,
+    tidyselect = FALSE
   )
   build_store(target = target, config = config)
 }
@@ -84,7 +85,7 @@ check_build_store <- function(
   }
   value <- build_store(target = target, meta = meta, config = config)
   assign_to_envir(target = target, value = value, config = config)
-  if (flag_attempt && target %in% config$plan$target) {
+  if (flag_attempt && !is_imported(target, config)) {
     set_attempt_flag(key = target, config = config)
   }
   invisible()
@@ -183,7 +184,7 @@ build_target <- function(target, meta, config) {
 process_import <- function(target, meta, config) {
   if (is_file(target)) {
     value <- NA
-  } else if (target %in% ls(config$envir, all.names = TRUE)) {
+  } else if (exists(x = target, envir = config$envir, inherits = FALSE)) {
     value <- config$envir[[target]]
   } else {
     value <- tryCatch(

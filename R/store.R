@@ -7,9 +7,9 @@ store_outputs <- function(target, value, meta, config) {
   if (!meta$imported) {
     console_store(target = target, config = config)
   }
-  ordinance <- config$layout[[target]]
+  layout <- config$layout[[target]]
   if (is.null(meta$command)) {
-    meta$command <- ordinance$command_standardized
+    meta$command <- layout$command_standardized
   }
   if (is.null(meta$dependency_hash)) {
     meta$dependency_hash <- dependency_hash(target = target, config = config)
@@ -23,7 +23,7 @@ store_outputs <- function(target, value, meta, config) {
     )
     meta$trigger$value <- NULL
   }
-  file_out <- ordinance$deps_build$file_out
+  file_out <- layout$deps_build$file_out
   for (file in file_out) {
     meta$name <- file
     meta$mtime <- file.mtime(drake::drake_unquote(file))

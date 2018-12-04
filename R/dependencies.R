@@ -167,9 +167,10 @@ dependency_profile <- function(
   if (!config$cache$exists(key = target, namespace = "meta")) {
     stop("no recorded metadata for target ", target, ".")
   }
-  meta <- config$cache$get(
-    key = target, namespace = "meta")
-  deps <- dependencies(target, config)
+  meta <- config$cache$get(key = target, namespace = "meta")
+  if (!length(meta$command)) {
+    meta$command <- NA
+  }
   old_hashes <- meta[c(
     "command",
     "dependency_hash",
@@ -183,10 +184,10 @@ dependency_profile <- function(
     algo = config$long_hash_algo,
     serialize = FALSE
   )
-  ordinance <- config$layout[[target]]
+  layout <- config$layout[[target]]
   new_hashes <- c(
     digest::digest(
-      paste(ordinance$command_standardized, collapse = ""),
+      paste(layout$command_standardized, collapse = ""),
       algo = config$long_hash_algo,
       serialize = FALSE
     ),

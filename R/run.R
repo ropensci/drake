@@ -1,7 +1,7 @@
 with_seed_timeout <- function(target, meta, config) {
   timeouts <- resolve_timeouts(target = target, config = config)
   with_timeout(
-    withr::with_seed(
+    with_seed(
       meta$seed,
       with_handling(
         target = target,
@@ -23,10 +23,12 @@ with_handling <- function(target, meta, config) {
       withCallingHandlers(
         value <- with_call_stack(target = target, config = config),
         warning = function(w) {
+          drake_log_warning(w$message, config = config)
           warnings <<- c(warnings, w$message)
         },
         message = function(m) {
           msg <- gsub(pattern = "\n$", replacement = "", x = m$message)
+          drake_log_message(msg, config = config)
           messages <<- c(messages, msg)
         }
       ),

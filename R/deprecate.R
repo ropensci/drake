@@ -861,13 +861,8 @@ max_useful_jobs <- function(
   if (!nrow(nodes)) {
     return(0)
   }
-  . <- level <- NULL
-  n_per_level <- group_by(nodes, level)
-  n_per_level <- dplyr::do(n_per_level, {
-    .$nrow <- nrow(.)
-    .
-  })
-  max(n_per_level$nrow)
+  per_level <- split(x = nodes, f = nodes$level)
+  max(vapply(per_level, nrow, FUN.VALUE = integer(1)))
   # nocov end
 }
 

@@ -155,7 +155,7 @@ built <- function(
   parallel_filter(
     out,
     f = function(target) {
-      !is_imported(target = target, cache = cache)
+      !is_imported_cache(target = target, cache = cache)
     },
     jobs = jobs
   )
@@ -202,7 +202,7 @@ imported <- function(
   targets <- parallel_filter(
     targets,
     f = function(target) {
-      is_imported(target = target, cache = cache)
+      is_imported_cache(target = target, cache = cache)
     },
     jobs = jobs
   )
@@ -226,7 +226,7 @@ imported_only <- function(targets, cache, jobs) {
   parallel_filter(
     x = targets,
     f = function(target) {
-      is_imported(target = target, cache = cache)
+      is_imported_cache(target = target, cache = cache)
     },
     jobs = jobs
   )
@@ -242,7 +242,7 @@ no_imported_objects <- function(targets, cache, jobs) {
   )
 }
 
-is_imported <- Vectorize(function(target, cache) {
+is_imported_cache <- Vectorize(function(target, cache) {
   cache$exists(key = target) &&
   diagnose(
     target = target,
@@ -253,7 +253,7 @@ is_imported <- Vectorize(function(target, cache) {
 "target", SIMPLIFY = TRUE)
 
 is_built_or_imported_file <- Vectorize(function(target, cache) {
-  imported <- is_imported(target = target, cache = cache)
+  imported <- is_imported_cache(target = target, cache = cache)
   !imported | (imported & is_file(target))
 },
 "target", SIMPLIFY = TRUE)

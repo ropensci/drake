@@ -158,33 +158,20 @@ test_with_dir("Makefile stuff in globalenv()", {
 test_with_dir("packages are loaded in prework", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("abind")
-  skip_if_not_installed("MASS")
 
   original <- getOption("test_drake_option_12345")
   options(test_drake_option_12345 = "unset")
   expect_equal(getOption("test_drake_option_12345"), "unset")
   config <- dbug()
-  try(
-    # Suppress goodpractice::gp(): legitimate need for detach(). # nolint
-    eval(parse(text = "detach('package:abind', unload = TRUE)")),
-    silent = TRUE
-  )
-  try(
-    # Suppress goodpractice::gp(): legitimate need for detach(). # nolint
-    suppressWarnings(
-      eval(parse(text = "detach('package:MASS', unload = TRUE)"))
-    ),
-    silent = TRUE
-  )
+  try(detach("package:abind", unload = TRUE), silent = TRUE) # nolint
   expect_error(abind(1))
-  expect_error(deparse(body(lda)))
 
   # Load packages with the 'packages' argument
-  config$packages <- c("abind", "MASS")
+  config$packages <- "abind"
   config$prework <- "options(test_drake_option_12345 = 'set')"
   config$plan <- drake_plan(
     x = getOption("test_drake_option_12345"),
-    y = c(deparse(body(abind)), deparse(body(lda)), x),
+    y = c(deparse(body(abind)), x),
     strings_in_dots = "literals"
   )
   config$targets <- config$plan$target
@@ -199,22 +186,9 @@ test_with_dir("packages are loaded in prework", {
   # load packages the usual way
   options(test_drake_option_12345 = "unset")
   expect_equal(getOption("test_drake_option_12345"), "unset")
-  try(
-    # Suppress goodpractice::gp(): legitimate need for detach()
-    eval(parse(text = "detach('package:abind', unload = TRUE)")),
-    silent = TRUE
-  )
-  try(
-    # Suppress goodpractice::gp(): legitimate need for detach()
-    suppressWarnings(
-      eval(parse(text = "detach('package:MASS', unload = TRUE)"))
-    ),
-    silent = TRUE
-  )
+  try(detach("package:abind", unload = TRUE), silent = TRUE) # nolint
   expect_error(abind(1))
-  expect_error(deparse(body(lda)))
-  library(abind)
-  library(MASS)
+  library(abind) # nolint
   config$packages <- NULL
   expect_false(any(c("x", "y") %in% config$cache$list()))
 

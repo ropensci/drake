@@ -20,15 +20,15 @@ create_drake_layout <- function(
     trigger = parse_trigger(trigger = trigger, envir = envir),
     globals = sort(c(plan$target, ls(envir = envir, all.names = TRUE)))
   )
-  imports <- cdo_prepare_imports(config)
-  imports_kernel <- cdo_imports_kernel(config, imports)
+  imports <- cdl_prepare_imports(config)
+  imports_kernel <- cdl_imports_kernel(config, imports)
   import_layout <- memo_expr(
-    cdo_analyze_imports(config, imports),
+    cdl_analyze_imports(config, imports),
     config$cache,
     imports_kernel
   )
   command_layout <- memo_expr(
-    cdo_analyze_commands(config),
+    cdl_analyze_commands(config),
     config$cache,
     config$plan,
     config$trigger,
@@ -38,10 +38,10 @@ create_drake_layout <- function(
   c(import_layout, command_layout)
 }
 
-cdo_prepare_imports <- function(config) {
+cdl_prepare_imports <- function(config) {
   console_preprocess(text = "analyze environment", config = config)
   imports <- as.list(config$envir)
-  cdo_unload_conflicts(
+  cdl_unload_conflicts(
     imports = names(imports),
     targets = config$plan$target,
     envir = config$envir,
@@ -51,7 +51,7 @@ cdo_prepare_imports <- function(config) {
   imports[import_names]
 }
 
-cdo_unload_conflicts <- function(imports, targets, envir, verbose) {
+cdl_unload_conflicts <- function(imports, targets, envir, verbose) {
   common <- intersect(imports, targets)
   if (verbose & length(common)) {
     message(
@@ -62,7 +62,7 @@ cdo_unload_conflicts <- function(imports, targets, envir, verbose) {
   remove(list = common, envir = envir)
 }
 
-cdo_imports_kernel <- function(config, imports) {
+cdl_imports_kernel <- function(config, imports) {
   out <- lightly_parallelize(
     X = imports,
     FUN = function(x) {
@@ -77,7 +77,7 @@ cdo_imports_kernel <- function(config, imports) {
   out[sort(names(out))]
 }
 
-cdo_analyze_imports <- function(config, imports) {
+cdl_analyze_imports <- function(config, imports) {
   names <-  names(imports)
   console_many_targets(
     targets = names,
@@ -104,7 +104,7 @@ cdo_analyze_imports <- function(config, imports) {
   out
 }
 
-cdo_analyze_commands <- function(config) {
+cdl_analyze_commands <- function(config) {
   console_many_targets(
     targets = config$plan$target,
     pattern = "analyze",
@@ -131,7 +131,7 @@ cdo_analyze_commands <- function(config) {
   )
   out <- lightly_parallelize(
     X = layout,
-    FUN = cdo_prepare_ordinance,
+    FUN = cdl_prepare_layout,
     jobs = config$jobs,
     config = config
   )
@@ -139,32 +139,32 @@ cdo_analyze_commands <- function(config) {
   out
 }
 
-cdo_prepare_ordinance <- function(ordinance, config){
-  ordinance$deps_build <- command_dependencies(
-    command = ordinance$command,
-    exclude = ordinance$target,
+cdl_prepare_layout <- function(layout, config){
+  layout$deps_build <- command_dependencies(
+    command = layout$command,
+    exclude = layout$target,
     globals = config$globals
   )
-  ordinance$command_standardized <- standardize_command(ordinance$command)
-  ordinance$command_build <- preprocess_command(
-    ordinance$command,
+  layout$command_standardized <- standardize_command(layout$command)
+  layout$command_build <- preprocess_command(
+    layout$command,
     config = config
   )
-  if (is.null(ordinance$trigger) || is.na(ordinance$trigger)){
-    ordinance$trigger <- config$trigger
-    ordinance$deps_condition <- config$default_condition_deps
-    ordinance$deps_change <- config$default_change_deps
+  if (is.null(layout$trigger) || is.na(layout$trigger)){
+    layout$trigger <- config$trigger
+    layout$deps_condition <- config$default_condition_deps
+    layout$deps_change <- config$default_change_deps
   } else {
-    ordinance$deps_condition <- import_dependencies(
-      ordinance$trigger$condition,
-      exclude = ordinance$target,
+    layout$deps_condition <- import_dependencies(
+      layout$trigger$condition,
+      exclude = layout$target,
       globals = config$globals
     )
-    ordinance$deps_change <- import_dependencies(
-      ordinance$trigger$change,
-      exclude = ordinance$target,
+    layout$deps_change <- import_dependencies(
+      layout$trigger$change,
+      exclude = layout$target,
       globals = config$globals
     )
   }
-  ordinance
+  layout
 }

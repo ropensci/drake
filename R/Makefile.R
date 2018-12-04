@@ -19,13 +19,10 @@ run_Makefile <- function( #nolint: we want Makefile capitalized.
 
 write_makefile <- function(config) {
   assert_no_conflicting_makefile(config)
-  with_output_sink(
-    new = config$makefile_path,
-    code = {
-      makefile_head(config)
-      makefile_rules(config)
-    }
-  )
+  sink(file = config$makefile_path, type = "output")
+  on.exit(sink(type = "output"))
+  makefile_head(config)
+  makefile_rules(config)
 }
 
 assert_no_conflicting_makefile <- function(config) {

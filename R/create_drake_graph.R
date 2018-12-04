@@ -34,7 +34,7 @@ cdg_create_edges <- function(config, layout, collapse) {
     FUN = node_to_edges,
     jobs = config$jobs
   )
-  edges <- dplyr::bind_rows(edges)
+  edges <- do.call(rbind, edges)
   if (collapse) {
     edges <- collapse_edges(edges)
   }
@@ -52,7 +52,7 @@ node_to_edges <- function(node) {
     out <- tibble::tibble(from = inputs, to = node$target, collapse = FALSE)
   }
   if (length(file_out)) {
-    out <- dplyr::bind_rows(
+    out <- rbind(
       out,
       tibble::tibble(from = node$target, to = file_out, collapse = TRUE)
     )

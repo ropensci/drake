@@ -46,11 +46,11 @@
 #' })
 #' }
 drake_meta <- function(target, config = drake::read_drake_config()) {
-  ordinance <- config$layout[[target]]
+  layout <- config$layout[[target]]
   meta <- list(
     name = target,
     target = target,
-    imported = ordinance$imported %||% TRUE,
+    imported = layout$imported %||% TRUE,
     foreign = !exists(x = target, envir = config$envir, inherits = FALSE),
     missing = !target_exists(target = target, config = config),
     seed = seed_from_basic_types(config$seed, target)
@@ -62,10 +62,10 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
   if (meta$imported) {
     meta$trigger <- trigger(condition = TRUE)
   } else {
-    meta$trigger <- as.list(ordinance$trigger)
+    meta$trigger <- as.list(layout$trigger)
   }
   if (meta$trigger$command) {
-    meta$command <- ordinance$command_standardized
+    meta$command <- layout$command_standardized
   }
   if (meta$trigger$depend) {
     meta$dependency_hash <- dependency_hash(target = target, config = config)
@@ -75,7 +75,7 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
     meta$output_file_hash <- output_file_hash(target = target, config = config)
   }
   if (!is.null(meta$trigger$change)) {
-    ensure_loaded(ordinance$deps_change, config = config)
+    ensure_loaded(layout$deps_change, config = config)
     meta$trigger$value <- eval(meta$trigger$change, config$envir)
   }
   meta
@@ -84,7 +84,7 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
 dependency_hash <- function(target, config) {
   x <- config$layout[[target]]$deps_build
   deps <- c(x$globals, x$namespaced, x$loadd, x$readd)
-  if (!(target %in% config$plan$target)) {
+  if (is_imported(target, config)) {
     deps <- c(deps, x$file_in, x$knitr_in)
   }
   deps <- as.character(deps)

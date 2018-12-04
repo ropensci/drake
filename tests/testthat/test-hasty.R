@@ -13,7 +13,7 @@ test_with_dir("hasty parallelism", {
       skip_on_os("windows")
       skip_if_not_installed("clustermq")
       if ("package:clustermq" %in% search()) {
-        eval(parse(text = "detach('package:clustermq', unload = TRUE)"))
+        detach("package:clustermq", unload = TRUE) # nolint
       }
     }
     # default build function
@@ -47,6 +47,6 @@ test_with_dir("hasty parallelism", {
     expect_false(file.exists("coef.csv"))
   }
   if ("package:clustermq" %in% search()) {
-    eval(parse(text = "detach('package:clustermq', unload = TRUE)"))
+    detach("package:clustermq", unload = TRUE) # nolint
   }
 })

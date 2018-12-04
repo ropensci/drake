@@ -342,11 +342,19 @@
 #'   path to the `args` argument so `make` knows where to find it.
 #'   Example: `make(parallelism = "Makefile", makefile_path = ".drake/.makefile", command = "make", args = "--file=.drake/.makefile")`
 #'
-#' @param console_log_file character scalar or `NULL`.
+#' @param console_log_file character scalar,
+#'   connection object (such as `stdout()`) or `NULL`.
 #'   If `NULL`, console output will be printed
 #'   to the R console using `message()`.
-#'   Otherwise, `console_log_file` should be the name of a flat file.
-#'   Console output will be appended to that file.
+#'   If a character scalar, `console_log_file`
+#'   should be the name of a flat file, and
+#'   console output will be appended to that file.
+#'   If a connection object (e.g. `stdout()`)
+#'   warnings and messages will be sent to the connection.
+#'   For example, if `console_log_file` is `stdout()`,
+#'   warnings and messages are printed to the console in real time
+#'   (in addition to the usual in-bulk printing
+#'   after each target finishes).
 #'
 #' @param ensure_workers logical, whether the master process
 #'   should wait for the workers to post before assigning them

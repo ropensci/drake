@@ -50,6 +50,20 @@ test_with_dir("dependency profile", {
   dp <- dependency_profile(target = a, config = config)
   expect_true(as.logical(dp[dp$hash == "command", "changed"]))
   expect_equal(sum(dp$changed), 2)
+  load_mtcars_example()
+  config <- drake_config(
+    my_plan,
+    cache = storr::storr_environment(),
+    skip_targets = TRUE,
+    session_info = FALSE
+  )
+  make(config = config)
+  out <- dependency_profile(
+    file_store("report.Rmd"),
+    character_only = TRUE,
+    config
+  )
+  expect_equal(nrow(out), 4)
 })
 
 test_with_dir("Missing cache", {
@@ -193,7 +207,7 @@ test_with_dir("cache functions work", {
   if (!file.exists(scratch)) {
     dir.create(scratch) # Will move up a level later.
   }
-  withr::local_dir(scratch)
+  setwd(scratch) # nolint
   owd <- getwd()
   expect_equal(character(0), cached(search = FALSE), imported(search = FALSE),
     built(search = FALSE))
@@ -340,7 +354,7 @@ test_with_dir("cache functions work", {
     dir.create("searchfrom")
     dir.create(file.path("searchfrom", "here"))
   }
-  withr::local_dir("..")
+  setwd("..") # nolint
   expect_equal(getwd(), first_wd)
   s <- normalizePath(file.path(scratch, "searchfrom", "here"))
 
@@ -409,7 +423,7 @@ test_with_dir("cache functions work", {
   tmp <- capture.output(dev.off())
   unlink("Rplots.pdf", force = TRUE)
 
-  withr::local_dir(scratch)
+  setwd(scratch) # nolint
   pdf(NULL)
   tmp <- read_drake_graph(search = FALSE)
   tmp <- capture.output(dev.off())
@@ -417,7 +431,7 @@ test_with_dir("cache functions work", {
   pdf(NULL)
   tmp <- capture.output(dev.off())
   unlink("Rplots.pdf", force = TRUE)
-  withr::local_dir("..")
+  setwd("..") # nolint
 
   # clean using search = TRUE or FALSE
   expect_true(all(all %in% cached(path = s, search = T)))
@@ -447,7 +461,7 @@ test_with_dir("cache functions work", {
   expect_false(file.exists(where))
   expect_silent(drake_gc()) # Cache does not exist
 
-  withr::local_dir(scratch)
+  setwd(scratch) # nolint
   unlink("searchfrom", recursive = TRUE, force = TRUE)
 })
 

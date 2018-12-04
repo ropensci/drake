@@ -15,7 +15,8 @@ loadd(..., list = character(0), imported_only = FALSE,
   path, search = search, verbose = verbose), namespace = NULL,
   envir = parent.frame(), jobs = 1,
   verbose = drake::default_verbose(), deps = FALSE, lazy = "eager",
-  graph = NULL, replace = TRUE, show_source = FALSE)
+  graph = NULL, replace = TRUE, show_source = FALSE,
+  tidyselect = TRUE)
 }
 \arguments{
 \item{target}{If \code{character_only} is \code{TRUE}, then
@@ -59,9 +60,10 @@ for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 that produced the target or indicate that the object
 was imported (using \code{\link[=show_source]{show_source()}}).}
 
-\item{...}{targets to load from the cache: as names (symbols),
-character strings, or \code{dplyr}-style \code{tidyselect}
-commands such as \code{starts_with()}.}
+\item{...}{targets to load from the cache: as names (symbols) or
+character strings. If the \code{tidyselect} package is installed,
+you can also supply \code{dplyr}-style \code{tidyselect}
+commands such as \code{starts_with()}, \code{ends_with()}, and \code{one_of()}.}
 
 \item{list}{character vector naming targets to be loaded from the
 cache. Similar to the \code{list} argument of \code{\link[=remove]{remove()}}.}
@@ -110,6 +112,10 @@ it will be read from the cache.}
 \item{replace}{logical. If \code{FALSE},
 items already in your environment
 will not be replaced.}
+
+\item{tidyselect}{logical, whether to enable
+\code{tidyselect} expressions in \code{...} like
+\code{starts_with("prefix")} and \code{ends_with("suffix")}.}
 }
 \value{
 The cached value of the \code{target}.
@@ -174,9 +180,6 @@ small
 # For many targets, you can parallelize loadd()
 # using the 'jobs' argument.
 loadd(list = c("small", "large"), jobs = 2)
-ls()
-# How about tidyselect?
-loadd(starts_with("summ"))
 ls()
 # Load the dependencies of the target, coef_regression2_small
 loadd(coef_regression2_small, deps = TRUE)

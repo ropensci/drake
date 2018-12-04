@@ -3,7 +3,7 @@ drake_context("clustermq")
 test_with_dir("clustermq parallelism", {
   skip_on_cran()
   if ("package:clustermq" %in% search()) {
-    eval(parse(text = "detach('package:clustermq', unload = TRUE)"))
+    detach("package:clustermq", unload = TRUE) # nolint
   }
   options(clustermq.scheduler = "multicore")
   skip_if_not_installed("clustermq")
@@ -39,6 +39,6 @@ test_with_dir("clustermq parallelism", {
     }
   }
   if ("package:clustermq" %in% search()) {
-    eval(parse(text = "detach('package:clustermq', unload = TRUE)"))
+    detach("package:clustermq", unload = TRUE) # nolint
   }
 })

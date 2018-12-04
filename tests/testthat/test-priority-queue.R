@@ -33,10 +33,10 @@ test_with_dir("the priority queue works", {
     priority = c(1, 2, 2, 1, 1, 1, 2, 2),
     stringsAsFactors = FALSE
   )
-  expect_equal(x$data, y)
+  expect_equivalent(x$data, y)
   expect_null(x$peek0())
   expect_null(x$pop0())
-  expect_equal(x$data, y)
+  expect_equivalent(x$data, y)
   for (i in 1:2) {
     x$decrease_key(c("bar", "spren"))
   }
@@ -49,18 +49,18 @@ test_with_dir("the priority queue works", {
     priority = c(1, 2, 1, 2, 1, 1, 2, 2),
     stringsAsFactors = FALSE
   )
-  expect_equal(x$data, y)
+  expect_equivalent(x$data, y)
   expect_equal(x$peek0(), "spren")
   expect_equal(sort(x$list0()), sort(c("bar", "spren")))
-  expect_equal(x$data, y)
+  expect_equivalent(x$data, y)
   expect_equal(x$pop0(), "spren")
   expect_equal(x$peek0(), "bar")
-  expect_equal(x$data, y[-1, ])
+  expect_equivalent(x$data, y[-1, ])
   expect_equal(x$pop0(), "bar")
-  expect_equal(x$data, y[-1:-2, ])
+  expect_equivalent(x$data, y[-1:-2, ])
   expect_null(x$peek0())
   expect_null(x$pop0())
-  expect_equal(x$data, y[-1:-2, ])
+  expect_equivalent(x$data, y[-1:-2, ])
 
   priorities[targets == "bar"] <- 1
   priorities[targets == "spren"] <- 2
@@ -78,17 +78,17 @@ test_with_dir("the priority queue works", {
     priority = c(1, 2, 1, 2, 1, 1, 2, 2),
     stringsAsFactors = FALSE
   )
-  expect_equal(x$data, y)
+  expect_equivalent(x$data, y)
   expect_equal(x$peek0(), "bar")
-  expect_equal(x$data, y)
+  expect_equivalent(x$data, y)
   expect_equal(x$pop0(), "bar")
   expect_equal(x$peek0(), "spren")
-  expect_equal(x$data, y[-1, ])
+  expect_equivalent(x$data, y[-1, ])
   expect_equal(x$pop0(), "spren")
-  expect_equal(x$data, y[-1:-2, ])
+  expect_equivalent(x$data, y[-1:-2, ])
   expect_null(x$peek0())
   expect_null(x$pop0())
-  expect_equal(x$data, y[-1:-2, ])
+  expect_equivalent(x$data, y[-1:-2, ])
 
   expect_null(x$list0())
   z <- y[-1:-2, ]
@@ -97,9 +97,9 @@ test_with_dir("the priority queue works", {
   x$remove(c("soup", "Bob"))
   expect_false(all(c("soup", "Bob") %in% x$data$target))
   expect_equal(nrow(x$data), 4)
-  expect_equal(x$data, z[-4:-5, ])
+  expect_equivalent(x$data, z[-4:-5, ])
   x$remove(c("soup", "Bob"))
-  expect_equal(x$data, z[-4:-5, ])
+  expect_equivalent(x$data, z[-4:-5, ])
 })
 
 test_with_dir("queues with priorities", {

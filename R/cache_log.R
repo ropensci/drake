@@ -174,7 +174,7 @@ drake_cache_log <- function(
     jobs = jobs,
     cache = cache
   )
-  out <- tibble::as_tibble(dplyr::bind_rows(out))
+  out <- tibble::as_tibble(do.call(rbind, out))
   if (targets_only) {
     out <- out[out$type == "target", ]
   }

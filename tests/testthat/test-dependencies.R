@@ -225,7 +225,7 @@ test_with_dir("deps_target()", {
 
 test_with_dir("self-referential commands and imports", {
   f <- function(x, ...) {
-    dplyr::select(x, f)
+    x <- f
   }
   x <- data.frame(f = 123)
   plan <- drake_plan(y = f(x, y))

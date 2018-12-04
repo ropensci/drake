@@ -1,5 +1,9 @@
 #' @title Run a single target's command in debug mode.
-#' @description Also load the target's dependencies beforehand.
+#' @description `drake_debug()` loads a target's dependencies
+#'   and then runs its command in debug mode (see `browser()`,
+#'   `debug()`, and `debugonce()`). This function does not
+#'   store the target's value in the cache
+#'   (see <https://github.com/ropensci/drake/issues/587>).
 #' @export
 #' @seealso [drake_build()]
 #' @return The value of the target right after it is built.
@@ -55,10 +59,15 @@ drake_debug <- function(
     cache = config$cache,
     graph = config$graph,
     jobs = jobs,
-    replace = replace
+    replace = replace,
+    tidyselect = FALSE
   )
-  index <- which(config$plan$target == target)
-  config$plan$command[[index]] <- debug_command(config$plan$command[[index]])
+  config$layout[[target]]$command_build <- preprocess_command(
+    debug_command(config$layout[[target]]$command)
+  )
+  # Spoof the cache to avoid storage.
+  # We still want the error handling in build_store().
+  config$cache <- storr::storr_environment()
   build_store(target = target, config = config)
   # nocov end
 }
