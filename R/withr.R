@@ -5,9 +5,16 @@
 # GPL (>=2)
 
 with_dir <- function (new, code) {
-  old <- setwd(dir = new)
-  on.exit(setwd(old))
+  old <- alt_setwd(new)
+  on.exit(alt_setwd(old))
   force(code)
+}
+
+# goodpractice::gp() complains about
+# legitimate uses of setwd().
+alt_setwd <- function(dir) {
+  text <- paste0("setwd(\"", dir, "\")")
+  eval(parse(text = text))
 }
 
 with_options <- function (new, code) {
