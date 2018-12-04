@@ -283,10 +283,10 @@ command_dependencies <- function(
     globals = globals
   )
   deps$strings <- NULL
-
+  
   # TODO: this block can go away when `drake`
   # stops supporting single-quoted file names.
-
+  
   use_new_file_api <- identical(
     pkgconfig::get_config("drake::strings_in_dots"),
     "literals"
@@ -306,7 +306,7 @@ command_dependencies <- function(
     files <- setdiff(files, deps$file_out)
     deps$file_in <- base::union(deps$file_in, files)
   }
-
+  
   # TODO: remove this bit when we're confident
   # users have totally switched to `knitr_in()`.
   # Turn it off right away if users elect for the new file API.
@@ -319,9 +319,9 @@ command_dependencies <- function(
     )
     deps$loadd <- unique(deps$loadd)
   }
-
+  
   # This bit stays the same.
-  deps[purrr::map_int(deps, length) > 0]
+  deps[unlist(lapply(deps, length)) > 0]
 }
 
 # TODO: this function can go away when drake
@@ -443,7 +443,7 @@ code_dependencies <- function(expr, exclude = character(0), globals = NULL) {
       setdiff(x, exclude)
     }
   )
-  results[purrr::map_int(results, length) > 0]
+  results[unlist(lapply(results, length)) > 0]
 }
 
 find_non_locals <- function(fun) {

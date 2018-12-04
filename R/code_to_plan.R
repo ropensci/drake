@@ -156,7 +156,7 @@ plan_to_text <- function(plan) {
   order <- match(order, table = plan$target)
   plan <- plan[order, ]
   if (!is.character(plan$command)) {
-    plan$command <- purrr::map_chr(plan$command, rlang::expr_text)
+    plan$command <- unlist(lapply(plan$command, rlang::expr_text))
   }
   text <- paste(plan$target, "<-", plan$command)
   if (requireNamespace("styler")) {

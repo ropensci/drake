@@ -470,9 +470,7 @@ warn_arrows <- function(dots) {
     # Probably not possible, but good to have:
     names(dots) <- rep("", length(dots)) # nocov
   }
-  check_these <- purrr::map_lgl(names(dots), function(x) {
-    !nzchar(x)
-  })
+  check_these <- unlist(lapply(names(dots), function(x) !nzchar(x)))
   check_these <- which(check_these)
   offending_commands <- lapply(dots[check_these], detect_arrow)
   offending_commands <- Filter(
