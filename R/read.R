@@ -163,8 +163,10 @@ readd <- function(
 #' loadd(list = c("small", "large"), jobs = 2)
 #' ls()
 #' # How about tidyselect?
-#' loadd(starts_with("summ"))
-#' ls()
+#' if (requireNamespace("tidyselect")) {
+#'   loadd(starts_with("summ"))
+#'   ls()
+#' }
 #' # Load the dependencies of the target, coef_regression2_small
 #' loadd(coef_regression2_small, deps = TRUE)
 #' ls()

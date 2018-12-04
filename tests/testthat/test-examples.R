@@ -25,6 +25,8 @@ test_with_dir("example template files", {
 test_with_dir("main example", {
   skip_on_cran()
   skip_if_not_installed("downloader")
+  skip_if_not_installed("dplyr")
+  skip_if_not_installed("ggplot2")
   for (file in c("raw_data.xlsx", "report.Rmd")) {
     expect_false(file.exists(file))
   }

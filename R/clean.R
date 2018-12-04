@@ -67,8 +67,10 @@
 #' # Those objects should be gone.
 #' cached(no_imported_objects = TRUE)
 #' # How about `tidyselect`?
-#' clean(starts_with("coef"))
-#' cached(no_imported_objects = TRUE)
+#' if (requireNamespace("tidyselect")) {
+#'   clean(starts_with("coef")) # `dplyr`-style `tidyselect`
+#'   print(cached(no_imported_objects = TRUE))
+#' }
 #' # Rebuild the missing targets.
 #' make(my_plan)
 #' # Remove all the targets and imports.

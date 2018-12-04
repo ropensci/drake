@@ -39,7 +39,6 @@
 #' @references <https://github.com/ropensci/drake>
 #' @importFrom codetools findGlobals
 #' @importFrom digest digest
-#' @importFrom dplyr bind_rows
 #' @importFrom formatR tidy_source
 #' @importFrom igraph adjacent_vertices components delete_vertices
 #'   degree igraph_opt igraph_options induced_subgraph is_dag

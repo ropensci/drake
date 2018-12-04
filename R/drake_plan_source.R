@@ -43,7 +43,7 @@ drake_plan_source <- function(plan) {
 drake_plan_call <- function(plan) {
   # TODO: when we remove the old file API, remove
   # this hack that converts to the new file API.
-  plan <- dplyr::bind_rows(
+  plan <- bind_plans(
     plan,
     data.frame(
       target = "strings_in_dots",

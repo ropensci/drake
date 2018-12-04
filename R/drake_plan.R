@@ -232,8 +232,20 @@ drake_plan <- function(
 #' your_plan
 #' # make(your_plan) # nolint
 bind_plans <- function(...) {
-  plan <- dplyr::bind_rows(...)
+  plans <- list(...)
+  plans <- Filter(f = nrow, x = plans)
+  plans <- Filter(f = ncol, x = plans)
+  cols <- lapply(plans, colnames)
+  cols <- Reduce(f = union, x = cols)
+  plans <- lapply(plans, fill_cols, cols = cols)
+  plan <- do.call(rbind, plans)
   sanitize_plan(plan)
+}
+
+fill_cols <- function(x, cols) {
+  na_cols <- setdiff(cols, colnames(x))
+  x[, na_cols] <- NA
+  x
 }
 
 handle_duplicated_targets <- function(plan) {

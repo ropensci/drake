@@ -46,7 +46,23 @@ clean_dependency_list <- function(x) {
 }
 
 drake_select <- function(
-  cache, ...,
+  cache,
+  ...,
+  namespaces = cache$default_namespace,
+  list = character(0)
+) {
+  tryCatch(
+    drake_select_(cache = cache, ..., namespaces = namespaces, list = list),
+    error = function(e){
+      eval(parse(text = "require(tidyselect)"))
+      drake_select_(cache = cache, ..., namespaces = namespaces, list = list)
+    }
+  )
+}
+
+drake_select_ <- function(
+  cache,
+  ...,
   namespaces = cache$default_namespace,
   list = character(0)
 ) {

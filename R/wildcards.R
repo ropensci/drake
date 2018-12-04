@@ -263,7 +263,7 @@ evaluate_single_wildcard <- function(
   rownames(matching) <- NULL
   rownames(plan) <- NULL
   matching[[minor]] <- seq_len(nrow(matching))
-  out <- dplyr::bind_rows(matching, plan[!matches, ])
+  out <- bind_plans(matching, plan[!matches, ])
   out <- out[order(out[[major]], out[[minor]]), ]
   out[[minor]] <- NULL
   out[[major]] <- NULL

@@ -53,7 +53,7 @@ plan <- drake_plan(
 )
 plan <- evaluate_plan(plan, rules = list(mu__ = 1:2), trace = TRUE)
 plan
-gather_by(plan, mu___from, gather = "dplyr::bind_rows")
+gather_by(plan, mu___from, gather = "rbind")
 gather_by(plan, mu___from, append = TRUE)
 gather_by(plan, mu___from, append = FALSE)
 gather_by(plan, mu__, mu___from, prefix = "x")

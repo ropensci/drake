@@ -81,7 +81,7 @@ map_plan <- function(
   )
   out <- tibble::tibble(target = target, command = command)
   if (trace) {
-    out <- cbind(out, args)
+    out <- tibble::as_tibble(cbind(out, args))
   }
   sanitize_plan(out)
 }
@@ -179,7 +179,7 @@ gather_plan <- function(
 #' )
 #' plan <- evaluate_plan(plan, rules = list(mu__ = 1:2), trace = TRUE)
 #' plan
-#' gather_by(plan, mu___from, gather = "dplyr::bind_rows")
+#' gather_by(plan, mu___from, gather = "rbind")
 #' gather_by(plan, mu___from, append = TRUE)
 #' gather_by(plan, mu___from, append = FALSE)
 #' gather_by(plan, mu__, mu___from, prefix = "x")

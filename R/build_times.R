@@ -25,7 +25,9 @@
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Build all the targets.
 #' build_times() # Show how long it took to build each target.
-#' build_times(starts_with("coef")) # `dplyr`-style `tidyselect`
+#' if (requireNamespace("tidyselect")) {
+#'   build_times(starts_with("coef")) # `dplyr`-style `tidyselect`
+#' }
 #' })
 #' }
 build_times <- function(
@@ -56,7 +58,7 @@ build_times <- function(
     type = type
   )
   out <- parallel_filter(out, f = is.data.frame, jobs = jobs)
-  out <- dplyr::bind_rows(out)
+  out <- do.call(rbind, out)
   out <- rbind(out, empty_times())
   out <- round_times(out, digits = digits)
   out <- to_build_duration_df(out)
