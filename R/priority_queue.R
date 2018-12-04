@@ -78,7 +78,8 @@ R6_priority_queue <- R6::R6Class(
     },
     sort = function() {
       ndeps <- priority <- NULL
-      self$data <- dplyr::arrange(self$data, ndeps, priority)
+      precedence <- with(self$data, order(ndeps, priority))
+      self$data <- self$data[precedence, ]
     },
     # Peek at the head node of the queue
     # if and only if its ndeps is 0.
