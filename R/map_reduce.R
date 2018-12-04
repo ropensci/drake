@@ -81,7 +81,7 @@ map_plan <- function(
   )
   out <- tibble::tibble(target = target, command = command)
   if (trace) {
-    out <- dplyr::bind_cols(out, args)
+    out <- cbind(out, args)
   }
   sanitize_plan(out)
 }
@@ -205,23 +205,22 @@ gather_by <- function(
   filter = NULL,
   sep = "_"
 ) {
-  browser()
-  if (is.null(substitute(filter))) {
-    gathered <- plan
-  } else {
+  gathered <- plan
+  if (!is.null(substitute(filter))) {
     filter <- rlang::enquo(filter)
-    gathered <- dplyr::filter(plan, !!filter)
+    selection <- rlang::eval_tidy(expr = filter, data = gathered)
+    selection[is.na(selection)] <- FALSE
+    gathered <- gathered[selection, ]
   }
   col_names <- as.character(match.call(expand.dots = FALSE)$...)
-  gathered <- split_by(x = gathered, cols = col_names)
-  gathered <- lapply(
-    X = gathered,
-    FUN = gather_plan, # KEEP COLUMNS IN col_names!
+  gathered <- map_by(
+    .x = gathered,
+    .by = col_names,
+    .f = gather_plan,
     target = prefix,
     gather = gather,
     append = FALSE
   )
-  gathered <- do.call(gathered, what = "rbind")
   cols <- gathered[, col_names]
   suffix <- apply(X = cols, MARGIN = 1, FUN = paste, collapse = sep)
   if (length(suffix) && nzchar(suffix)) {
@@ -385,28 +384,27 @@ reduce_by <- function(
   filter = NULL,
   sep = "_"
 ) {
-  . <- NULL
-  if (is.null(substitute(filter))) {
-    reduced <- plan
-  } else {
+  reduced <- plan
+  if (!is.null(substitute(filter))) {
     filter <- rlang::enquo(filter)
-    reduced <- dplyr::filter(plan, !!filter)
+    selection <- rlang::eval_tidy(expr = filter, data = reduced)
+    selection[is.na(selection)] <- FALSE
+    reduced <- reduced[selection, ]
   }
-  reduced <- dplyr::group_by(reduced, ...)
-  reduced <- dplyr::do(
-    reduced,
-    reduce_plan(
-      plan = .,
-      target = prefix,
-      begin = begin,
-      op = op,
-      end = end,
-      pairwise = pairwise,
-      append = FALSE,
-      sep = sep
-    )
+  col_names <- as.character(match.call(expand.dots = FALSE)$...)
+  reduced <- map_by(
+    .x = reduced,
+    .by = col_names,
+    .f = reduce_plan,
+    target = prefix,
+    begin = begin,
+    op = op,
+    end = end,
+    pairwise = pairwise,
+    append = FALSE,
+    sep = sep
   )
-  cols <- dplyr::select(reduced, ...)
+  cols <- reduced[, col_names]
   suffix <- apply(X = cols, MARGIN = 1, FUN = paste, collapse = sep)
   if (length(suffix) && nzchar(suffix)) {
     reduced$target <- paste(reduced$target, suffix, sep = sep)

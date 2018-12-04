@@ -95,24 +95,27 @@ is_not_file <- function(x) {
   !is_file(x)
 }
 
+map_by <- function(.x, .by, .f, ...) {
+  splits <- split_by(.x, .by = .by)
+  out <- lapply(
+    X = splits,
+    FUN = function(split){
+      out <- .f(split, ...)
+      if (nrow(out)) {
+        out[, .by] <- split[replicate(nrow(out), 1), .by]
+      }
+      out
+    }
+  )
+  do.call(what = rbind, args = out)
+}
+
 merge_lists <- function(x, y) {
   names <- base::union(names(x), names(y))
   x <- lapply(
     X = names,
     function(name) {
       base::union(x[[name]], y[[name]])
-    }
-  )
-  names(x) <- names
-  x
-}
-
-zip_lists <- function(x, y) {
-  names <- base::union(names(x), names(y))
-  x <- lapply(
-    X = names,
-    function(name) {
-      c(x[[name]], y[[name]])
     }
   )
   names(x) <- names
@@ -165,16 +168,28 @@ select_valid <- function(x) {
   x[index]
 }
 
-split_by <- function(x, cols = character(0)) {
-  if (!length(cols)) {
-    return(list(x))
+split_by <- function(.x, .by = character(0)) {
+  if (!length(.by)) {
+    return(list(.x))
   }
-  f <- lapply(x[, cols], factor, exclude = c())
-  x <- split(x = x, f = f)
-  Filter(x = x, f = nrow)
+  f <- lapply(.x[, .by], factor, exclude = c())
+  splits <- split(x = .x, f = f)
+  Filter(x = splits, f = nrow)
 }
 
 standardize_filename <- function(text) {
   text[is_file(text)] <-  gsub("^'|'$", "\"", text[is_file(text)])
   text
+}
+
+zip_lists <- function(x, y) {
+  names <- base::union(names(x), names(y))
+  x <- lapply(
+    X = names,
+    function(name) {
+      c(x[[name]], y[[name]])
+    }
+  )
+  names(x) <- names
+  x
 }

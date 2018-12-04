@@ -204,7 +204,7 @@ drake_plan <- function(
       plan$command[from_dots] <- gsub("\"", "'", plan$command[from_dots])
     }
   }
-  plan <- parse_custom_columns(plan)
+  plan <- parse_custom_plan_columns(plan)
   sanitize_plan(plan)
 }
 
@@ -249,21 +249,17 @@ handle_duplicated_targets <- function(plan) {
   plan
 }
 
-parse_custom_columns <- function(plan) {
-  . <- NULL # For warnings about undefined global symbols.
-  out <- dplyr::group_by(plan, seq_len(n()))
-  out <- dplyr::do(out, parse_custom_colums_row(.))
-  out[["seq_len(n())"]] <- NULL
-  out
+parse_custom_plan_columns <- function(plan) {
+  purrr::pmap_df(.l = plan, .f = parse_custom_plan_row)
 }
 
-parse_custom_colums_row <- function(row) {
-  expr <- parse(text = row$command, keep.source = FALSE)
+parse_custom_plan_row <- function(target, command) {
+  expr <- parse(text = command, keep.source = FALSE)
   if (!length(expr) || !is_target_call(expr[[1]])) {
-    return(row)
+    return(tibble::tibble(target = target, command = command))
   }
   out <- eval(expr[[1]])
-  out$target <- row$target
+  out$target <- target
   out
 }
 
