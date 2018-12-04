@@ -525,7 +525,7 @@ recurse_ignore <- function(x) {
     if (is_ignored_call(x)) {
       x <- quote(ignore())
     } else {
-      x[] <- purrr::map(as.list(x), recurse_ignore)
+      x[] <- lapply(as.list(x), recurse_ignore)
     }
   }
   x
