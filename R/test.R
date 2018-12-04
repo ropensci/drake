@@ -71,10 +71,12 @@ test_with_dir <- function(desc, ...) {
     Sys.sleep(0.01) # nocov
   }
   dir.create(new)
-  withr::local_dir(new)
-  withr::local_options(new = list(clustermq.scheduler = "multicore"))
-  set_test_backend()
-  testthat::test_that(desc = desc, ...)
+  withr::with_dir(new = new, {
+    withr::with_options(new = list(clustermq.scheduler = "multicore"), {
+      set_test_backend()
+      testthat::test_that(desc = desc, ...)
+    })
+  })
   invisible()
 }
 
