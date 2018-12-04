@@ -108,21 +108,21 @@ test_with_dir("mtcars example works", {
 
   # Take this opportunity to test tidyselect API. Saves test time that way.
   # loadd() # nolint
-  if (requireNamespace("tidyselect")) {
+  coefs <- sort(
+    c(
+      "coef_regression1_large",
+      "coef_regression1_small",
+      "coef_regression2_large",
+      "coef_regression2_small"
+    )
+  )
+  if (exists_tidyselect()) {
     try(
       # Suppress goodpractice::gp(): legitimate need for detach(). # nolint
       eval(parse(text = "detach('package:tidyselect', unload = TRUE)")),
       silent = TRUE
     )
     e <- new.env(parent = globalenv())
-    coefs <- sort(
-      c(
-        "coef_regression1_large",
-        "coef_regression1_small",
-        "coef_regression2_large",
-        "coef_regression2_small"
-      )
-    )
     expect_error(loadd(not_a_target, envir = e))
     expect_equal(ls(envir = e), character(0))
     for (i in 1:2) {
@@ -130,19 +130,21 @@ test_with_dir("mtcars example works", {
       expect_equal(sort(ls(envir = e)), coefs)
       rm(list = coefs, envir = e)
     }
+
+    # build_times() # nolint
+    skip_if_not_installed("lubridate")
+    all_times <- build_times()
+    expect_true(nrow(all_times) >= nrow(config$plan))
+    some_times <- build_times(starts_with("coef"))
+    expect_equal(sort(some_times$item), coefs)
+    
+    # clean() # nolint
+    x <- sort(cached())
+    expect_true(all(coefs %in% x))
+    clean(starts_with("coef"))
+    expect_equal(sort(cached()), setdiff(x, coefs))
   }
-
-  # build_times() # nolint
-  skip_if_not_installed("lubridate")
-  all_times <- build_times()
-  expect_true(nrow(all_times) >= nrow(config$plan))
-
-  # clean() # nolint
-  x <- sort(cached())
-  expect_true(all(coefs %in% x))
-  clean(starts_with("coef"))
-  expect_equal(sort(cached()), setdiff(x, coefs))
-
+    
   # knitr file deps
   # Included here instead of test-knitr.R because report.md already exists.
   # Saves time that way.

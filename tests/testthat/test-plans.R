@@ -403,8 +403,8 @@ test_with_dir("custom column interface", {
     stop(!!tidyvar), worker = !!tidyvar, cpu = 4, custom = stop(), c2 = 5)
   y <- tibble::tibble(
     command = "stop(2)",
-    worker = 2,
     cpu = 4,
+    worker = 2,
     custom = "stop()",
     c2 = 5
   )
@@ -414,8 +414,8 @@ test_with_dir("custom column interface", {
   y <- tibble::tibble(
     target = "x",
     command = "stop(2)",
-    worker = 2,
     cpu = 4,
+    worker = 2,
     custom = "stop()",
     c2 = 5
   )
@@ -583,7 +583,10 @@ test_with_dir("drake_plan_call() produces the correct calls", {
   pkgconfig::set_config("drake::strings_in_dots" = "literals")
   new_plan <- eval(drake_plan_call(my_plan))
   expected <- my_plan
-  expect_equal(new_plan, expected)
+  expect_equal(
+    new_plan[, sort(colnames(new_plan))],
+    expected[, sort(colnames(expected))]
+  )
 })
 
 test_with_dir("drake_plan_source()", {
