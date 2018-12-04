@@ -13,8 +13,10 @@ with_dir <- function (new, code) {
 # goodpractice::gp() complains about
 # legitimate uses of setwd().
 alt_setwd <- function(dir) {
-  text <- paste0("setwd(\"", dir, "\")")
-  eval(parse(text = text))
+  # Fails on Appveyor, and I do not know why.
+  # text <- paste0("setwd(\"", dir, "\")") # nolint
+  # eval(parse(text = text)) # nolint
+  setwd(dir)
 }
 
 with_options <- function (new, code) {
