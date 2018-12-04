@@ -21,6 +21,7 @@ test_with_dir("Supplied graph is not an igraph.", {
 
 test_with_dir("null graph", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_if_not_installed("lubridate")
   skip_if_not_installed("visNetwork")
   x <- drake_graph_info(config = list(graph = igraph::make_empty_graph()))
   expect_equal(x, null_graph())
@@ -134,6 +135,7 @@ test_with_dir("clusters", {
   plan <- evaluate_plan(plan, wildcard = "n__", values = 1:2, trace = TRUE)
   cache <- storr::storr_environment()
   config <- drake_config(plan, cache = cache)
+  skip_if_not_installed("lubridate")
   skip_if_not_installed("visNetwork")
   o1 <- drake_graph_info(config)
   o1$nodes$level <- as.integer(o1$nodes$level)
@@ -196,6 +198,7 @@ test_with_dir("can get the graph info when a file is missing", {
       session_info = FALSE
     )
   )
+  skip_if_not_installed("lubridate")
   skip_if_not_installed("visNetwork")
   suppressWarnings(o <- drake_graph_info(config))
   expect_true("missing" %in% o$nodes$status)
@@ -276,6 +279,7 @@ test_with_dir("show_output_files", {
   )
   writeLines("abcdefg", "out3.txt")
   expect_equal(outdated(config), "target2")
+  skip_if_not_installed("lubridate")
   skip_if_not_installed("visNetwork")
   info <- drake_graph_info(
     config,
@@ -363,6 +367,7 @@ test_with_dir("same, but with an extra edge not due to files", {
   )
   writeLines("abcdefg", "out3.txt")
   expect_equal(outdated(config), "target2")
+  skip_if_not_installed("lubridate")
   skip_if_not_installed("visNetwork")
   info <- drake_graph_info(
     config,
