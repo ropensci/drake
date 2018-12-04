@@ -117,11 +117,6 @@ test_with_dir("mtcars example works", {
     )
   )
   if (exists_tidyselect()) {
-    try(
-      # Suppress goodpractice::gp(): legitimate need for detach(). # nolint
-      eval(parse(text = "detach('package:tidyselect', unload = TRUE)")),
-      silent = TRUE
-    )
     e <- new.env(parent = globalenv())
     expect_error(loadd(not_a_target, envir = e))
     expect_equal(ls(envir = e), character(0))

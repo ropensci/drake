@@ -62,12 +62,14 @@ drake_tidyselect <- function(
     drake_tidyselect_attempt(
       cache = cache, ..., namespaces = namespaces, list = list
     ),
+    # nocov start
     error = function(e){
       eval(parse(text = "require(tidyselect)"))
       drake_tidyselect_attempt(
         cache = cache, ..., namespaces = namespaces, list = list
       )
     }
+    # nocov end
   )
 }
 
@@ -83,7 +85,7 @@ drake_tidyselect_attempt <- function(
     .strict = FALSE
   )
   out <- unname(out)
-  c(out, list) 
+  c(out, list)
 }
 
 factor_to_character <- function(x) {

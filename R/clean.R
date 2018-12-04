@@ -113,7 +113,7 @@ clean <- function(
   targets <- c(as.character(match.call(expand.dots = FALSE)$...), list)
   if (exists_tidyselect()) {
     targets <- drake_tidyselect(
-      cache = cache, ..., 
+      cache = cache, ...,
       namespaces = target_namespaces(),
       list = list
     )

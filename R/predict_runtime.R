@@ -212,7 +212,7 @@ predict_load_balancing <- function(
     )
   }
   times <- build_times(
-    config = config,
+    cache = config$cache,
     targets_only = targets_only
   )
   if (targets_only) {
