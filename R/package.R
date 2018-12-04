@@ -45,7 +45,6 @@
 #'   make_empty_graph set_vertex_attr simplify subcomponent
 #'   topo_sort V vertex_attr
 #' @importFrom pkgconfig get_config
-#' @importFrom purrr map_int pmap pmap_chr
 #' @importFrom R6 R6Class
 #' @importFrom rlang enexpr enexprs enquo eval_tidy expr expr_text exprs
 #' @importFrom storr storr_environment storr_rds
