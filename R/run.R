@@ -1,7 +1,7 @@
 with_seed_timeout <- function(target, meta, config) {
   timeouts <- resolve_timeouts(target = target, config = config)
   with_timeout(
-    withr::with_seed(
+    with_seed(
       meta$seed,
       with_handling(
         target = target,

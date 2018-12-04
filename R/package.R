@@ -52,5 +52,4 @@
 #' @importFrom tibble as_tibble tibble
 #' @importFrom utils capture.output compareVersion head packageVersion
 #'   read.csv sessionInfo stack type.convert unzip write.table
-#' @importFrom withr with_dir with_options with_output_sink with_seed
 NULL
