@@ -45,38 +45,45 @@ clean_dependency_list <- function(x) {
   sort(x)
 }
 
-drake_select <- function(
+exists_tidyselect <- function() {
+  suppressWarnings(
+    eval(parse(text = "require('tidyselect', quietly = TRUE)"))
+  )
+}
+
+
+drake_tidyselect <- function(
   cache,
   ...,
   namespaces = cache$default_namespace,
   list = character(0)
 ) {
   tryCatch(
-    drake_select_(cache = cache, ..., namespaces = namespaces, list = list),
+    drake_tidyselect_attempt(
+      cache = cache, ..., namespaces = namespaces, list = list
+    ),
     error = function(e){
       eval(parse(text = "require(tidyselect)"))
-      drake_select_(cache = cache, ..., namespaces = namespaces, list = list)
+      drake_tidyselect_attempt(
+        cache = cache, ..., namespaces = namespaces, list = list
+      )
     }
   )
 }
 
-drake_select_ <- function(
+drake_tidyselect_attempt <- function(
   cache,
   ...,
   namespaces = cache$default_namespace,
   list = character(0)
 ) {
-  if (requireNamespace("tidyselect")) {
-    out <- tidyselect::vars_select(
-      .vars = list_multiple_namespaces(cache = cache, namespaces = namespaces),
-      ...,
-      .strict = FALSE
-    )
-    out <- unname(out)
-    c(out, list)
-  } else {
-    c(as.character(match.call(expand.dots = FALSE)$...), list) # nocov
-  }
+  out <- tidyselect::vars_select(
+    .vars = list_multiple_namespaces(cache = cache, namespaces = namespaces),
+    ...,
+    .strict = FALSE
+  )
+  out <- unname(out)
+  c(out, list) 
 }
 
 factor_to_character <- function(x) {

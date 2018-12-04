@@ -102,11 +102,6 @@ cached(no_imported_objects = TRUE)
 clean(summ_regression1_large, small)
 # Those objects should be gone.
 cached(no_imported_objects = TRUE)
-# How about `tidyselect`?
-if (requireNamespace("tidyselect")) {
-  clean(starts_with("coef")) # `dplyr`-style `tidyselect`
-  print(cached(no_imported_objects = TRUE))
-}
 # Rebuild the missing targets.
 make(my_plan)
 # Remove all the targets and imports.

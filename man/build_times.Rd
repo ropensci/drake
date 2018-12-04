@@ -68,9 +68,6 @@ test_with_dir("Quarantine side effects.", {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 make(my_plan) # Build all the targets.
 build_times() # Show how long it took to build each target.
-if (requireNamespace("tidyselect")) {
-  build_times(starts_with("coef")) # `dplyr`-style `tidyselect`
-}
 })
 }
 }

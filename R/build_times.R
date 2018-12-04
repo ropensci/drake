@@ -25,9 +25,6 @@
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Build all the targets.
 #' build_times() # Show how long it took to build each target.
-#' if (requireNamespace("tidyselect")) {
-#'   build_times(starts_with("coef")) # `dplyr`-style `tidyselect`
-#' }
 #' })
 #' }
 build_times <- function(
@@ -45,7 +42,10 @@ build_times <- function(
   if (is.null(cache)) {
     return(empty_times())
   }
-  targets <- drake_select(cache = cache, ..., namespace = "meta")
+  targets <- as.character(match.call(expand.dots = FALSE)$...)
+  if (exists_tidyselect()) {
+    targets <- drake_tidyselect(cache, ..., "meta")
+  }
   if (!length(targets)) {
     targets <- cache$list(namespace = "meta")
   }

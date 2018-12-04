@@ -109,6 +109,11 @@ test_with_dir("mtcars example works", {
   # Take this opportunity to test tidyselect API. Saves test time that way.
   # loadd() # nolint
   if (requireNamespace("tidyselect")) {
+    try(
+      # Suppress goodpractice::gp(): legitimate need for detach(). # nolint
+      eval(parse(text = "detach('package:tidyselect', unload = TRUE)")),
+      silent = TRUE
+    )
     e <- new.env(parent = globalenv())
     coefs <- sort(
       c(
@@ -120,8 +125,11 @@ test_with_dir("mtcars example works", {
     )
     expect_error(loadd(not_a_target, envir = e))
     expect_equal(ls(envir = e), character(0))
-    loadd(tidyselect::starts_with("coef"), envir = e)
-    expect_equal(sort(ls(envir = e)), coefs)
+    for (i in 1:2) {
+      loadd(starts_with("coef"), envir = e)
+      expect_equal(sort(ls(envir = e)), coefs)
+      rm(list = coefs, envir = e)
+    }
   }
 
   # build_times() # nolint

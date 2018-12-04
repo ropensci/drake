@@ -262,16 +262,18 @@ handle_duplicated_targets <- function(plan) {
 }
 
 parse_custom_plan_columns <- function(plan) {
-  purrr::pmap_df(.l = plan, .f = parse_custom_plan_row)
+  splits <- split(plan, seq_len(nrow(plan)))
+  out <- lapply(splits, parse_custom_plan_row)
+  do.call(bind_plans, out)
 }
 
-parse_custom_plan_row <- function(target, command) {
-  expr <- parse(text = command, keep.source = FALSE)
+parse_custom_plan_row <- function(row) {
+  expr <- parse(text = row$command, keep.source = FALSE)
   if (!length(expr) || !is_target_call(expr[[1]])) {
-    return(tibble::tibble(target = target, command = command))
+    return(row)
   }
   out <- eval(expr[[1]])
-  out$target <- target
+  out$target <- row$target
   out
 }
 

@@ -150,6 +150,10 @@ readd <- function(
 #' @param replace logical. If `FALSE`,
 #'   items already in your environment
 #'   will not be replaced.
+#'  
+#' @param tidyselect logical, whether to enable
+#'   `tidyselect` expressions in `...` like
+#'   `starts_with("prefix")` and `ends_with("suffix")`.
 #'
 #' @examples
 #' \dontrun{
@@ -162,11 +166,6 @@ readd <- function(
 #' # using the 'jobs' argument.
 #' loadd(list = c("small", "large"), jobs = 2)
 #' ls()
-#' # How about tidyselect?
-#' if (requireNamespace("tidyselect")) {
-#'   loadd(starts_with("summ"))
-#'   ls()
-#' }
 #' # Load the dependencies of the target, coef_regression2_small
 #' loadd(coef_regression2_small, deps = TRUE)
 #' ls()
@@ -202,7 +201,8 @@ loadd <- function(
   lazy = "eager",
   graph = NULL,
   replace = TRUE,
-  show_source = FALSE
+  show_source = FALSE,
+  tidyselect = TRUE
 ) {
   force(envir)
   if (is.null(cache)) {
@@ -211,8 +211,12 @@ loadd <- function(
   if (is.null(namespace)) {
     namespace <- cache$default_namespace
   }
-  targets <- drake_select(
-    cache = cache, ..., namespaces = namespace, list = list)
+  targets <- c(as.character(match.call(expand.dots = FALSE)$...), list)
+  if (tidyselect) {
+    if (exists_tidyselect()) {
+      targets <- drake_tidyselect(cache, ..., namespace, list)
+    }
+  }
   if (!length(targets) && !length(list(...))) {
     targets <- cache$list()
   }

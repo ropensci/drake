@@ -57,7 +57,8 @@ drake_build <- function(
     cache = config$cache,
     graph = config$graph,
     jobs = jobs,
-    replace = replace
+    replace = replace,
+    tidyselect = FALSE
   )
   build_store(target = target, config = config)
 }

@@ -66,11 +66,6 @@
 #' clean(summ_regression1_large, small)
 #' # Those objects should be gone.
 #' cached(no_imported_objects = TRUE)
-#' # How about `tidyselect`?
-#' if (requireNamespace("tidyselect")) {
-#'   clean(starts_with("coef")) # `dplyr`-style `tidyselect`
-#'   print(cached(no_imported_objects = TRUE))
-#' }
 #' # Rebuild the missing targets.
 #' make(my_plan)
 #' # Remove all the targets and imports.
@@ -115,12 +110,10 @@ clean <- function(
   if (is.null(cache)) {
     return(invisible())
   }
-  targets <- drake_select(
-    cache = cache,
-    ...,
-    namespaces = target_namespaces(),
-    list = list
-  )
+  targets <- c(as.character(match.call(expand.dots = FALSE)$...), list)
+  if (exists_tidyselect()) {
+    targets <- drake_tidyselect(cache, ..., target_namespaces(), list)
+  }
   if (!length(targets) && is.null(c(...))) {
     targets <- cache$list()
   }
