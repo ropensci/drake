@@ -160,6 +160,18 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "dplyr",
+      "name": "dplyr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=dplyr"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "downloader",
       "name": "downloader",
       "provider": {
@@ -336,6 +348,19 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "tidyselect",
+      "name": "tidyselect",
+      "version": ">= 0.2.4",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=tidyselect"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "txtq",
       "name": "txtq",
       "provider": {
@@ -425,18 +450,6 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=digest"
-    },
-    {
-      "@type": "SoftwareApplication",
-      "identifier": "dplyr",
-      "name": "dplyr",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=dplyr"
     },
     {
       "@type": "SoftwareApplication",
@@ -538,38 +551,13 @@
     },
     {
       "@type": "SoftwareApplication",
-      "identifier": "tidyselect",
-      "name": "tidyselect",
-      "version": ">= 0.2.4",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=tidyselect"
-    },
-    {
-      "@type": "SoftwareApplication",
       "identifier": "utils",
       "name": "utils"
-    },
-    {
-      "@type": "SoftwareApplication",
-      "identifier": "withr",
-      "name": "withr",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=withr"
     }
   ],
   "releaseNotes": "https://github.com/ropensci/drake/blob/master/NEWS.md",
   "readme": "https://github.com/ropensci/drake/blob/master/README.md",
-  "fileSize": "396.244KB",
+  "fileSize": "398.023KB",
   "contIntegration": [
     "https://ci.appveyor.com/project/ropensci/drake",
     "https://travis-ci.org/ropensci/drake",
