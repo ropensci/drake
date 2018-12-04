@@ -298,7 +298,7 @@ test_with_dir("show_output_files", {
       "outdated"
     )
   }
-  e <- dplyr::arrange(info$edges, from, to)
+  e <- info$edges[with(info$edges, order(from, to)), ]
   expect_equal(
     e$from,
     c(
@@ -385,7 +385,7 @@ test_with_dir("same, but with an extra edge not due to files", {
       "outdated"
     )
   }
-  e <- dplyr::arrange(info$edges, from, to)
+  e <- info$edges[with(info$edges, order(from, to)), ]
   expect_equal(
     e$from,
     c(

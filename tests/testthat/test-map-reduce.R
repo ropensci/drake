@@ -17,7 +17,7 @@ test_with_dir("map_plan()", {
   expect_equal(plan1$command, plan2$command)
   expect_equal(plan2, plan3)
   expect_equal(plan3, plan4)
-  expect_equal(dplyr::bind_cols(plan3, args), plan5)
+  expect_equal(cbind(plan3, args), plan5)
   cache <- storr::storr_environment()
   make(plan2, session_info = FALSE, cache = cache)
   expect_equal(

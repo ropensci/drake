@@ -633,7 +633,7 @@ test_with_dir("plan_to_code()", {
   expect_true(file.exists("report.md"))
   skip_if_not_installed("CodeDepends")
   plan <- code_to_plan(path)
-  expect_equal(dplyr::arrange(plan, target), dplyr::arrange(plan0, target))
+  expect_equal(plan[order(plan$target), ], plan0[order(plan0$target), ])
 })
 
 test_with_dir("plan_to_notebook()", {
@@ -649,5 +649,5 @@ test_with_dir("plan_to_notebook()", {
   expect_true(file.exists("report.md"))
   skip_if_not_installed("CodeDepends")
   plan <- code_to_plan(path)
-  expect_equal(dplyr::arrange(plan, target), dplyr::arrange(plan0, target))
+  expect_equal(plan[order(plan$target), ], plan0[order(plan0$target), ])
 })

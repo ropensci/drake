@@ -44,7 +44,7 @@ build_times <- function(
   }
   targets <- as.character(match.call(expand.dots = FALSE)$...)
   if (exists_tidyselect()) {
-    targets <- drake_tidyselect(cache, ..., "meta")
+    targets <- drake_tidyselect(cache = cache, ..., namespaces = "meta")
   }
   if (!length(targets)) {
     targets <- cache$list(namespace = "meta")

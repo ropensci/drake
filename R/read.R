@@ -214,7 +214,12 @@ loadd <- function(
   targets <- c(as.character(match.call(expand.dots = FALSE)$...), list)
   if (tidyselect) {
     if (exists_tidyselect()) {
-      targets <- drake_tidyselect(cache, ..., namespace, list)
+      targets <- drake_tidyselect(
+        cache = cache,
+        ...,
+        namespaces = namespace,
+        list = list
+      )
     }
   }
   if (!length(targets) && !length(list(...))) {
