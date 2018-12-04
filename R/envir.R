@@ -88,7 +88,8 @@ safe_load <- function(targets, config, jobs = 1) {
       envir = config$envir,
       cache = config$cache,
       verbose = FALSE,
-      lazy = config$lazy_load
+      lazy = config$lazy_load,
+      tidyselect = FALSE
     )
   }
   invisible()

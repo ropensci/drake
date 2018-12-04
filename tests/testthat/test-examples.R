@@ -25,6 +25,8 @@ test_with_dir("example template files", {
 test_with_dir("main example", {
   skip_on_cran()
   skip_if_not_installed("downloader")
+  skip_if_not_installed("dplyr")
+  skip_if_not_installed("ggplot2")
   for (file in c("raw_data.xlsx", "report.Rmd")) {
     expect_false(file.exists(file))
   }
@@ -102,33 +104,41 @@ test_with_dir("mtcars example works", {
   config <- drake_config(
     my_plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = FALSE)
-  expect_equal(sort(outdated(config = config)),
-               character(0))
+  expect_equal(sort(outdated(config = config)), character(0))
 
   # Take this opportunity to test tidyselect API. Saves test time that way.
   # loadd() # nolint
-  e <- new.env(parent = globalenv())
-  coefs <- sort(c("coef_regression1_large", "coef_regression1_small",
-                  "coef_regression2_large", "coef_regression2_small"))
+  coefs <- sort(
+    c(
+      "coef_regression1_large",
+      "coef_regression1_small",
+      "coef_regression2_large",
+      "coef_regression2_small"
+    )
+  )
+  if (exists_tidyselect()) {
+    e <- new.env(parent = globalenv())
+    expect_error(loadd(not_a_target, envir = e))
+    expect_equal(ls(envir = e), character(0))
+    for (i in 1:2) {
+      loadd(starts_with("coef"), envir = e)
+      expect_equal(sort(ls(envir = e)), coefs)
+      rm(list = coefs, envir = e)
+    }
 
-  expect_error(loadd(not_a_target, envir = e))
-  expect_equal(ls(envir = e), character(0))
+    # build_times() # nolint
+    skip_if_not_installed("lubridate")
+    all_times <- build_times()
+    expect_true(nrow(all_times) >= nrow(config$plan))
+    some_times <- build_times(starts_with("coef"))
+    expect_equal(sort(some_times$item), coefs)
 
-  loadd(starts_with("coef"), envir = e)
-  expect_equal(sort(ls(envir = e)), coefs)
-
-  # build_times() # nolint
-  skip_if_not_installed("lubridate")
-  all_times <- build_times()
-  expect_true(nrow(all_times) >= nrow(config$plan))
-  some_times <- build_times(starts_with("coef"))
-  expect_equal(sort(some_times$item), coefs)
-
-  # clean() # nolint
-  x <- sort(cached())
-  expect_true(all(coefs %in% x))
-  clean(starts_with("coef"))
-  expect_equal(sort(cached()), setdiff(x, coefs))
+    # clean() # nolint
+    x <- sort(cached())
+    expect_true(all(coefs %in% x))
+    clean(starts_with("coef"))
+    expect_equal(sort(cached()), setdiff(x, coefs))
+  }
 
   # knitr file deps
   # Included here instead of test-knitr.R because report.md already exists.

@@ -403,8 +403,8 @@ test_with_dir("custom column interface", {
     stop(!!tidyvar), worker = !!tidyvar, cpu = 4, custom = stop(), c2 = 5)
   y <- tibble::tibble(
     command = "stop(2)",
-    worker = 2,
     cpu = 4,
+    worker = 2,
     custom = "stop()",
     c2 = 5
   )
@@ -414,8 +414,8 @@ test_with_dir("custom column interface", {
   y <- tibble::tibble(
     target = "x",
     command = "stop(2)",
-    worker = 2,
     cpu = 4,
+    worker = 2,
     custom = "stop()",
     c2 = 5
   )
@@ -583,7 +583,10 @@ test_with_dir("drake_plan_call() produces the correct calls", {
   pkgconfig::set_config("drake::strings_in_dots" = "literals")
   new_plan <- eval(drake_plan_call(my_plan))
   expected <- my_plan
-  expect_equal(new_plan, expected)
+  expect_equal(
+    new_plan[, sort(colnames(new_plan))],
+    expected[, sort(colnames(expected))]
+  )
 })
 
 test_with_dir("drake_plan_source()", {
@@ -633,7 +636,7 @@ test_with_dir("plan_to_code()", {
   expect_true(file.exists("report.md"))
   skip_if_not_installed("CodeDepends")
   plan <- code_to_plan(path)
-  expect_equal(dplyr::arrange(plan, target), dplyr::arrange(plan0, target))
+  expect_equal(plan[order(plan$target), ], plan0[order(plan0$target), ])
 })
 
 test_with_dir("plan_to_notebook()", {
@@ -649,5 +652,5 @@ test_with_dir("plan_to_notebook()", {
   expect_true(file.exists("report.md"))
   skip_if_not_installed("CodeDepends")
   plan <- code_to_plan(path)
-  expect_equal(dplyr::arrange(plan, target), dplyr::arrange(plan0, target))
+  expect_equal(plan[order(plan$target), ], plan0[order(plan0$target), ])
 })

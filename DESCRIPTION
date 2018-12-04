@@ -61,7 +61,6 @@ Depends:
 Imports:
   codetools,
   digest,
-  dplyr,
   formatR,
   igraph,
   pkgconfig,
@@ -70,9 +69,7 @@ Imports:
   rlang (>= 0.2.0),
   storr (>= 1.1.0),
   tibble,
-  tidyselect (>= 0.2.4),
-  utils,
-  withr
+  utils
 Suggests:
   abind,
   bindr,
@@ -82,6 +79,7 @@ Suggests:
   crayon,
   datasets,
   DBI,
+  dplyr,
   downloader,
   future,
   future.apply,
@@ -99,6 +97,7 @@ Suggests:
   rprojroot,
   stats,
   testthat,
+  tidyselect (>= 0.2.4),
   txtq,
   rmarkdown,
   styler,

@@ -100,9 +100,10 @@ readd <- function(
 #' @inheritParams cached
 #' @inheritParams readd
 #'
-#' @param ... targets to load from the cache: as names (symbols),
-#'   character strings, or `dplyr`-style `tidyselect`
-#'   commands such as `starts_with()`.
+#' @param ... targets to load from the cache: as names (symbols) or
+#'   character strings. If the `tidyselect` package is installed,
+#'   you can also supply `dplyr`-style `tidyselect`
+#'   commands such as `starts_with()`, `ends_with()`, and `one_of()`.
 #'
 #' @param list character vector naming targets to be loaded from the
 #'   cache. Similar to the `list` argument of [remove()].
@@ -149,6 +150,10 @@ readd <- function(
 #' @param replace logical. If `FALSE`,
 #'   items already in your environment
 #'   will not be replaced.
+#'  
+#' @param tidyselect logical, whether to enable
+#'   `tidyselect` expressions in `...` like
+#'   `starts_with("prefix")` and `ends_with("suffix")`.
 #'
 #' @examples
 #' \dontrun{
@@ -160,9 +165,6 @@ readd <- function(
 #' # For many targets, you can parallelize loadd()
 #' # using the 'jobs' argument.
 #' loadd(list = c("small", "large"), jobs = 2)
-#' ls()
-#' # How about tidyselect?
-#' loadd(starts_with("summ"))
 #' ls()
 #' # Load the dependencies of the target, coef_regression2_small
 #' loadd(coef_regression2_small, deps = TRUE)
@@ -199,7 +201,8 @@ loadd <- function(
   lazy = "eager",
   graph = NULL,
   replace = TRUE,
-  show_source = FALSE
+  show_source = FALSE,
+  tidyselect = TRUE
 ) {
   force(envir)
   if (is.null(cache)) {
@@ -208,8 +211,17 @@ loadd <- function(
   if (is.null(namespace)) {
     namespace <- cache$default_namespace
   }
-  targets <- drake_select(
-    cache = cache, ..., namespaces = namespace, list = list)
+  targets <- c(as.character(match.call(expand.dots = FALSE)$...), list)
+  if (tidyselect) {
+    if (exists_tidyselect()) {
+      targets <- drake_tidyselect(
+        cache = cache,
+        ...,
+        namespaces = namespace,
+        list = list
+      )
+    }
+  }
   if (!length(targets) && !length(list(...))) {
     targets <- cache$list()
   }

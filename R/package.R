@@ -39,7 +39,6 @@
 #' @references <https://github.com/ropensci/drake>
 #' @importFrom codetools findGlobals
 #' @importFrom digest digest
-#' @importFrom dplyr bind_rows do group_by n select ungroup
 #' @importFrom formatR tidy_source
 #' @importFrom igraph adjacent_vertices components delete_vertices
 #'   degree igraph_opt igraph_options induced_subgraph is_dag
@@ -48,11 +47,9 @@
 #' @importFrom pkgconfig get_config
 #' @importFrom purrr map_int pmap pmap_chr
 #' @importFrom R6 R6Class
-#' @importFrom rlang enexpr enexprs enquo expr expr_text exprs
+#' @importFrom rlang enexpr enexprs enquo eval_tidy expr expr_text exprs
 #' @importFrom storr storr_environment storr_rds
 #' @importFrom tibble as_tibble tibble
-#' @importFrom tidyselect vars_select
 #' @importFrom utils capture.output compareVersion head packageVersion
 #'   read.csv sessionInfo stack type.convert unzip write.table
-#' @importFrom withr local_dir with_options with_output_sink with_seed
 NULL

@@ -81,7 +81,7 @@ map_plan <- function(
   )
   out <- tibble::tibble(target = target, command = command)
   if (trace) {
-    out <- dplyr::bind_cols(out, args)
+    out <- tibble::as_tibble(cbind(out, args))
   }
   sanitize_plan(out)
 }
@@ -156,8 +156,7 @@ gather_plan <- function(
 #'   [gather_plan()], [evaluate_plan()], [expand_plan()]
 #' @return A workflow plan data frame.
 #' @inheritParams gather_plan
-#' @param ... Symbols, columns of `plan` to define target groupings
-#'   passed to `dplyr::group_by()`.
+#' @param ... Symbols, columns of `plan` to define target groupings.
 #'   A [gather_plan()] call is applied for each grouping.
 #'   Groupings with all `NA`s in the selector variables are ignored.
 #' @param prefix character, prefix for naming the new targets.
@@ -180,7 +179,7 @@ gather_plan <- function(
 #' )
 #' plan <- evaluate_plan(plan, rules = list(mu__ = 1:2), trace = TRUE)
 #' plan
-#' gather_by(plan, mu___from, gather = "dplyr::bind_rows")
+#' gather_by(plan, mu___from, gather = "rbind")
 #' gather_by(plan, mu___from, append = TRUE)
 #' gather_by(plan, mu___from, append = FALSE)
 #' gather_by(plan, mu__, mu___from, prefix = "x")
@@ -206,24 +205,23 @@ gather_by <- function(
   filter = NULL,
   sep = "_"
 ) {
-  . <- NULL
-  if (is.null(substitute(filter))) {
-    gathered <- plan
-  } else {
+  gathered <- plan
+  if (!is.null(substitute(filter))) {
     filter <- rlang::enquo(filter)
-    gathered <- dplyr::filter(plan, !!filter)
+    selection <- rlang::eval_tidy(expr = filter, data = gathered)
+    selection[is.na(selection)] <- FALSE
+    gathered <- gathered[selection, ]
   }
-  gathered <- dplyr::group_by(gathered, ...)
-  gathered <- dplyr::do(
-    gathered,
-    gather_plan(
-      plan = .,
-      target = prefix,
-      gather = gather,
-      append = FALSE
-    )
+  col_names <- as.character(match.call(expand.dots = FALSE)$...)
+  gathered <- map_by(
+    .x = gathered,
+    .by = col_names,
+    .f = gather_plan,
+    target = prefix,
+    gather = gather,
+    append = FALSE
   )
-  cols <- dplyr::select(gathered, ...)
+  cols <- gathered[, col_names]
   suffix <- apply(X = cols, MARGIN = 1, FUN = paste, collapse = sep)
   if (length(suffix) && nzchar(suffix)) {
     gathered$target <- paste(gathered$target, suffix, sep = sep)
@@ -332,8 +330,7 @@ reduce_plan <- function(
 #'   [gather_plan()], [evaluate_plan()], [expand_plan()]
 #' @return A workflow plan data frame.
 #' @inheritParams reduce_plan
-#' @param ... Symbols, columns of `plan` to define target groupings
-#'   passed to `dplyr::group_by()`.
+#' @param ... Symbols, columns of `plan` to define target groupings.
 #'   A [reduce_plan()] call is applied for each grouping.
 #'   Groupings with all `NA`s in the selector variables are ignored.
 #' @param prefix character, prefix for naming the new targets.
@@ -387,28 +384,27 @@ reduce_by <- function(
   filter = NULL,
   sep = "_"
 ) {
-  . <- NULL
-  if (is.null(substitute(filter))) {
-    reduced <- plan
-  } else {
+  reduced <- plan
+  if (!is.null(substitute(filter))) {
     filter <- rlang::enquo(filter)
-    reduced <- dplyr::filter(plan, !!filter)
+    selection <- rlang::eval_tidy(expr = filter, data = reduced)
+    selection[is.na(selection)] <- FALSE
+    reduced <- reduced[selection, ]
   }
-  reduced <- dplyr::group_by(reduced, ...)
-  reduced <- dplyr::do(
-    reduced,
-    reduce_plan(
-      plan = .,
-      target = prefix,
-      begin = begin,
-      op = op,
-      end = end,
-      pairwise = pairwise,
-      append = FALSE,
-      sep = sep
-    )
+  col_names <- as.character(match.call(expand.dots = FALSE)$...)
+  reduced <- map_by(
+    .x = reduced,
+    .by = col_names,
+    .f = reduce_plan,
+    target = prefix,
+    begin = begin,
+    op = op,
+    end = end,
+    pairwise = pairwise,
+    append = FALSE,
+    sep = sep
   )
-  cols <- dplyr::select(reduced, ...)
+  cols <- reduced[, col_names]
   suffix <- apply(X = cols, MARGIN = 1, FUN = paste, collapse = sep)
   if (length(suffix) && nzchar(suffix)) {
     reduced$target <- paste(reduced$target, suffix, sep = sep)

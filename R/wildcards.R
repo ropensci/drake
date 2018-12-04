@@ -263,7 +263,7 @@ evaluate_single_wildcard <- function(
   rownames(matching) <- NULL
   rownames(plan) <- NULL
   matching[[minor]] <- seq_len(nrow(matching))
-  out <- dplyr::bind_rows(matching, plan[!matches, ])
+  out <- bind_plans(matching, plan[!matches, ])
   out <- out[order(out[[major]], out[[minor]]), ]
   out[[minor]] <- NULL
   out[[major]] <- NULL
@@ -503,21 +503,22 @@ plan_summaries <- function(
   if (!(length(gather) == dim(plan)[1])) {
     stop("gather must be NULL or have length 1 or nrow(plan)")
   }
-  . <- group_sym <- as.symbol(group)
-  gathered <- dplyr::group_by(out, !!!group_sym)
-  gathered <- dplyr::do(gathered, {
-    summary_type <- .[[group]][1]
-    gather_plan(
-      .,
-      target = summary_type,
-      gather = gather[which(summary_type == plan$target)],
-      append = FALSE
-    )
-  })
+  gathered <- map_by(
+    .x = out,
+    .by = group,
+    .f = function(x) {
+      summary_type <- x[[group]][1]
+      gather_plan(
+        x,
+        target = summary_type,
+        gather = gather[which(summary_type == plan$target)],
+        append = FALSE
+      )
+    }
+  )
   target <- command <- NULL
   out <- bind_plans(gathered, out)
-  out <- dplyr::ungroup(out)
-  dplyr::select(out, target, command)
+  out[, c("target", "command")]
 }
 
 with_analyses_only <- function(plan) {

@@ -204,7 +204,7 @@ drake_plan <- function(
       plan$command[from_dots] <- gsub("\"", "'", plan$command[from_dots])
     }
   }
-  plan <- parse_custom_columns(plan)
+  plan <- parse_custom_plan_columns(plan)
   sanitize_plan(plan)
 }
 
@@ -232,8 +232,20 @@ drake_plan <- function(
 #' your_plan
 #' # make(your_plan) # nolint
 bind_plans <- function(...) {
-  plan <- dplyr::bind_rows(...)
+  plans <- list(...)
+  plans <- Filter(f = nrow, x = plans)
+  plans <- Filter(f = ncol, x = plans)
+  cols <- lapply(plans, colnames)
+  cols <- Reduce(f = union, x = cols)
+  plans <- lapply(plans, fill_cols, cols = cols)
+  plan <- do.call(rbind, plans)
   sanitize_plan(plan)
+}
+
+fill_cols <- function(x, cols) {
+  na_cols <- setdiff(cols, colnames(x))
+  x[, na_cols] <- NA
+  x
 }
 
 handle_duplicated_targets <- function(plan) {
@@ -249,15 +261,13 @@ handle_duplicated_targets <- function(plan) {
   plan
 }
 
-parse_custom_columns <- function(plan) {
-  . <- NULL # For warnings about undefined global symbols.
-  out <- dplyr::group_by(plan, seq_len(n()))
-  out <- dplyr::do(out, parse_custom_colums_row(.))
-  out[["seq_len(n())"]] <- NULL
-  out
+parse_custom_plan_columns <- function(plan) {
+  splits <- split(plan, seq_len(nrow(plan)))
+  out <- lapply(splits, parse_custom_plan_row)
+  do.call(bind_plans, out)
 }
 
-parse_custom_colums_row <- function(row) {
+parse_custom_plan_row <- function(row) {
   expr <- parse(text = row$command, keep.source = FALSE)
   if (!length(expr) || !is_target_call(expr[[1]])) {
     return(row)

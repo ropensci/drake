@@ -45,8 +45,39 @@ clean_dependency_list <- function(x) {
   sort(x)
 }
 
-drake_select <- function(
-  cache, ..., namespaces = cache$default_namespace, list = character(0)
+exists_tidyselect <- function() {
+  suppressWarnings(
+    eval(parse(text = "require('tidyselect', quietly = TRUE)"))
+  )
+}
+
+
+drake_tidyselect <- function(
+  cache,
+  ...,
+  namespaces = cache$default_namespace,
+  list = character(0)
+) {
+  tryCatch(
+    drake_tidyselect_attempt(
+      cache = cache, ..., namespaces = namespaces, list = list
+    ),
+    error = function(e){
+      # nocov start
+      eval(parse(text = "require(tidyselect)"))
+      drake_tidyselect_attempt(
+        cache = cache, ..., namespaces = namespaces, list = list
+      )
+      # nocov end
+    }
+  )
+}
+
+drake_tidyselect_attempt <- function(
+  cache,
+  ...,
+  namespaces = cache$default_namespace,
+  list = character(0)
 ) {
   out <- tidyselect::vars_select(
     .vars = list_multiple_namespaces(cache = cache, namespaces = namespaces),
@@ -54,7 +85,7 @@ drake_select <- function(
     .strict = FALSE
   )
   out <- unname(out)
-  union(out, list)
+  c(out, list)
 }
 
 factor_to_character <- function(x) {
@@ -89,24 +120,27 @@ is_not_file <- function(x) {
   !is_file(x)
 }
 
+map_by <- function(.x, .by, .f, ...) {
+  splits <- split_by(.x, .by = .by)
+  out <- lapply(
+    X = splits,
+    FUN = function(split){
+      out <- .f(split, ...)
+      if (nrow(out)) {
+        out[, .by] <- split[replicate(nrow(out), 1), .by]
+      }
+      out
+    }
+  )
+  do.call(what = rbind, args = out)
+}
+
 merge_lists <- function(x, y) {
   names <- base::union(names(x), names(y))
   x <- lapply(
     X = names,
     function(name) {
       base::union(x[[name]], y[[name]])
-    }
-  )
-  names(x) <- names
-  x
-}
-
-zip_lists <- function(x, y) {
-  names <- base::union(names(x), names(y))
-  x <- lapply(
-    X = names,
-    function(name) {
-      c(x[[name]], y[[name]])
     }
   )
   names(x) <- names
@@ -159,7 +193,28 @@ select_valid <- function(x) {
   x[index]
 }
 
+split_by <- function(.x, .by = character(0)) {
+  if (!length(.by)) {
+    return(list(.x))
+  }
+  f <- lapply(.x[, .by], factor, exclude = c())
+  splits <- split(x = .x, f = f)
+  Filter(x = splits, f = nrow)
+}
+
 standardize_filename <- function(text) {
   text[is_file(text)] <-  gsub("^'|'$", "\"", text[is_file(text)])
   text
+}
+
+zip_lists <- function(x, y) {
+  names <- base::union(names(x), names(y))
+  x <- lapply(
+    X = names,
+    function(name) {
+      c(x[[name]], y[[name]])
+    }
+  )
+  names(x) <- names
+  x
 }

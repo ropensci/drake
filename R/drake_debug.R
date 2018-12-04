@@ -59,7 +59,8 @@ drake_debug <- function(
     cache = config$cache,
     graph = config$graph,
     jobs = jobs,
-    replace = replace
+    replace = replace,
+    tidyselect = FALSE
   )
   config$layout[[target]]$command_build <- preprocess_command(
     debug_command(config$layout[[target]]$command)

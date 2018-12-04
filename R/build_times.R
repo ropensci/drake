@@ -7,9 +7,10 @@
 #' @export
 #' @return A data frame of times, each from [system.time()].
 #' @inheritParams cached
-#' @param ... targets to load from the cache: as names (symbols),
-#'   character strings, or `dplyr`-style `tidyselect`
-#'   commands such as `starts_with()`.
+#' @param ... targets to load from the cache: as names (symbols) or
+#'   character strings. If the `tidyselect` package is installed,
+#'   you can also supply `dplyr`-style `tidyselect`
+#'   commands such as `starts_with()`, `ends_with()`, and `one_of()`.
 #' @param targets_only logical, whether to only return the
 #'   build times of the targets (exclude the imports).
 #' @param digits How many digits to round the times to.
@@ -24,7 +25,6 @@
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Build all the targets.
 #' build_times() # Show how long it took to build each target.
-#' build_times(starts_with("coef")) # `dplyr`-style `tidyselect`
 #' })
 #' }
 build_times <- function(
@@ -42,7 +42,10 @@ build_times <- function(
   if (is.null(cache)) {
     return(empty_times())
   }
-  targets <- drake_select(cache = cache, ..., namespace = "meta")
+  targets <- as.character(match.call(expand.dots = FALSE)$...)
+  if (exists_tidyselect()) {
+    targets <- drake_tidyselect(cache = cache, ..., namespaces = "meta")
+  }
   if (!length(targets)) {
     targets <- cache$list(namespace = "meta")
   }
@@ -55,7 +58,7 @@ build_times <- function(
     type = type
   )
   out <- parallel_filter(out, f = is.data.frame, jobs = jobs)
-  out <- dplyr::bind_rows(out)
+  out <- do.call(rbind, out)
   out <- rbind(out, empty_times())
   out <- round_times(out, digits = digits)
   out <- to_build_duration_df(out)

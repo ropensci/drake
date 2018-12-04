@@ -10,8 +10,7 @@ gather_by(plan, ..., prefix = "target", gather = "list",
 \arguments{
 \item{plan}{workflow plan data frame of prespecified targets}
 
-\item{...}{Symbols, columns of \code{plan} to define target groupings
-passed to \code{dplyr::group_by()}.
+\item{...}{Symbols, columns of \code{plan} to define target groupings.
 A \code{\link[=gather_plan]{gather_plan()}} call is applied for each grouping.
 Groupings with all \code{NA}s in the selector variables are ignored.}
 
@@ -54,7 +53,7 @@ plan <- drake_plan(
 )
 plan <- evaluate_plan(plan, rules = list(mu__ = 1:2), trace = TRUE)
 plan
-gather_by(plan, mu___from, gather = "dplyr::bind_rows")
+gather_by(plan, mu___from, gather = "rbind")
 gather_by(plan, mu___from, append = TRUE)
 gather_by(plan, mu___from, append = FALSE)
 gather_by(plan, mu__, mu___from, prefix = "x")

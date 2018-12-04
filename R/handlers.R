@@ -1,7 +1,7 @@
 handle_build_exceptions <- function(target, meta, config) {
   if (length(meta$warnings) && config$verbose) {
     warn_opt <- max(1, getOption("warn"))
-    withr::with_options(
+    with_options(
       new = list(warn = warn_opt),
       warning(
         "target ", target, " warnings:\n",

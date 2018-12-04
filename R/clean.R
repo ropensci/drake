@@ -22,9 +22,10 @@
 #'
 #' @inheritParams cached
 #'
-#' @param ... targets to remove from the cache: as names (symbols),
-#'   character strings, or `dplyr`-style `tidyselect`
-#'   commands such as `starts_with()`.
+#' @param ... targets to remove from the cache: as names (symbols) or
+#'   character strings. If the `tidyselect` package is installed,
+#'   you can also supply `dplyr`-style `tidyselect`
+#'   commands such as `starts_with()`, `ends_with()`, and `one_of()`.
 #'
 #' @param list character vector naming targets to be removed from the
 #'   cache. Similar to the `list` argument of [remove()].
@@ -64,9 +65,6 @@
 #' # Remove 'summ_regression1_large' and 'small' from the cache.
 #' clean(summ_regression1_large, small)
 #' # Those objects should be gone.
-#' cached(no_imported_objects = TRUE)
-#' # How about `tidyselect`?
-#' clean(starts_with("coef"))
 #' cached(no_imported_objects = TRUE)
 #' # Rebuild the missing targets.
 #' make(my_plan)
@@ -112,12 +110,14 @@ clean <- function(
   if (is.null(cache)) {
     return(invisible())
   }
-  targets <- drake_select(
-    cache = cache,
-    ...,
-    namespaces = target_namespaces(),
-    list = list
-  )
+  targets <- c(as.character(match.call(expand.dots = FALSE)$...), list)
+  if (exists_tidyselect()) {
+    targets <- drake_tidyselect(
+      cache = cache, ...,
+      namespaces = target_namespaces(),
+      list = list
+    )
+  }
   if (!length(targets) && is.null(c(...))) {
     targets <- cache$list()
   }
