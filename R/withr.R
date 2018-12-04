@@ -38,8 +38,8 @@ get_valid_seed <- function() {
   seed <- get_seed()
   if (is.null(seed)) {
     # Trigger initialisation of RNG
-    sample.int(1L)
-    seed <- get_seed()
+    sample.int(1L) # nocov
+    seed <- get_seed() # nocov
   }
   seed
 }
