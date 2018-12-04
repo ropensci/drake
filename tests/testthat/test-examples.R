@@ -132,14 +132,14 @@ test_with_dir("mtcars example works", {
     expect_true(nrow(all_times) >= nrow(config$plan))
     some_times <- build_times(starts_with("coef"))
     expect_equal(sort(some_times$item), coefs)
-    
+
     # clean() # nolint
     x <- sort(cached())
     expect_true(all(coefs %in% x))
     clean(starts_with("coef"))
     expect_equal(sort(cached()), setdiff(x, coefs))
   }
-    
+
   # knitr file deps
   # Included here instead of test-knitr.R because report.md already exists.
   # Saves time that way.

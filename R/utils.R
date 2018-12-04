@@ -62,14 +62,14 @@ drake_tidyselect <- function(
     drake_tidyselect_attempt(
       cache = cache, ..., namespaces = namespaces, list = list
     ),
-    # nocov start
     error = function(e){
+      # nocov start
       eval(parse(text = "require(tidyselect)"))
       drake_tidyselect_attempt(
         cache = cache, ..., namespaces = namespaces, list = list
       )
+      # nocov end
     }
-    # nocov end
   )
 }
 
