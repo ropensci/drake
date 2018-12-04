@@ -71,7 +71,7 @@ map_plan <- function(
       apply(X = args, MARGIN = 1, FUN = digest::digest, algo = "murmur32")
     )
   }
-  command <- purrr::pmap_chr(
+  command <- drake_pmap(
     .l = args[, cols],
     .f = function(...) {
       out <- list(as.name(fun), ...)
