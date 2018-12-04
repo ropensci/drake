@@ -56,7 +56,7 @@ test_with_dir("ggraphs", {
   gg <- drake_ggraph(config)
   expect_true(inherits(gg, "ggplot"))
   if ("package:ggraph" %in% search()) {
-    eval(parse(text = "detach('package:ggraph', unload = TRUE)"))
+    suppressWarnings(detach("package:ggraph", unload = TRUE)) # nolint
   }
 })
 

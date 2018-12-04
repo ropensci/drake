@@ -261,18 +261,6 @@
     },
     {
       "@type": "SoftwareApplication",
-      "identifier": "MASS",
-      "name": "MASS",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=MASS"
-    },
-    {
-      "@type": "SoftwareApplication",
       "identifier": "methods",
       "name": "methods"
     },
@@ -557,7 +545,7 @@
   ],
   "releaseNotes": "https://github.com/ropensci/drake/blob/master/NEWS.md",
   "readme": "https://github.com/ropensci/drake/blob/master/README.md",
-  "fileSize": "398.023KB",
+  "fileSize": "398.517KB",
   "contIntegration": [
     "https://ci.appveyor.com/project/ropensci/drake",
     "https://travis-ci.org/ropensci/drake",
