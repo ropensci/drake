@@ -71,14 +71,14 @@ map_plan <- function(
       apply(X = args, MARGIN = 1, FUN = digest::digest, algo = "murmur32")
     )
   }
-  command <- drake_pmap(
+  command <- as.character(unlist(drake_pmap(
     .l = args[, cols],
     .f = function(...) {
       out <- list(as.name(fun), ...)
       out <- as.call(out)
       rlang::expr_text(out)
     }
-  )
+  )))
   out <- tibble::tibble(target = target, command = command)
   if (trace) {
     out <- tibble::as_tibble(cbind(out, args))
