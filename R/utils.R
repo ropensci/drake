@@ -231,8 +231,9 @@ drake_pmap <- function(.l, .f, ...) {
   stopifnot(length(len) == 1)
 
   out <- list()
-  for(i in seq_len(len)) {
-    listi <- lapply(.l, function(x) x[[i]]) # extract ith element in each sublist
+  for (i in seq_len(len)) {
+    # extract ith element in each sublist
+    listi <- lapply(.l, function(x) x[[i]])
     out[[i]] <- do.call(.f, args = c(listi, ...), quote = TRUE)
   }
   out
