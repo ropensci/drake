@@ -34,7 +34,7 @@ test_with_dir("drake_pmap", {
   # Passes dots to function
   x[2] <- NA
   ans[[2]] <- sum(x[[2]], y[[2]], z[[2]], na.rm = TRUE)
-  expect_identical(list(), drake_pmap(list(), sum, na.rm = TRUE))
+  expect_identical(ans, drake_pmap(list(x, y, z), sum, na.rm = TRUE))
   
   # Catches unequally-lengthed sublists
   x[[2]] <- NULL
