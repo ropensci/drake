@@ -35,8 +35,8 @@ each target. Similar to the \code{trace} argument of \code{\link[=evaluate_plan]
 A workflow plan data frame.
 }
 \description{
-\code{map_plan()} is like \code{pmap_df()} from the \code{purrr} package.
-It takes a function name and a grid of arguments, and it
+\code{map_plan()} is like \code{base::Map()}:
+it takes a function name and a grid of arguments, and
 writes out all the commands calls to apply the function to
 each row of arguments.
 }

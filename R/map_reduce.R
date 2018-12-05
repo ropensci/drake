@@ -1,6 +1,6 @@
 #' @title Create a plan that maps a function to a grid of arguments.
-#' @description `map_plan()` is like `pmap_df()` from the `purrr` package.
-#'   It takes a function name and a grid of arguments, and it
+#' @description `map_plan()` is like `base::Map()`:
+#'   it takes a function name and a grid of arguments, and 
 #'   writes out all the commands calls to apply the function to
 #'   each row of arguments.
 #' @export
