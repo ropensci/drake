@@ -226,8 +226,8 @@ zip_lists <- function(x, y) {
 drake_pmap <- function(.l, .f, ...) {
   stopifnot(is.list(.l))
   stopifnot(is.function(.f))
-  if(length(.l) == 0) return(list()) # empty input
-  
+  if (length(.l) == 0) return(list()) # empty input
+
   # Ensure identically-lengthed sublists in .l
   len <- unique(unlist(lapply(.l, length)))
   stopifnot(length(len) == 1)
