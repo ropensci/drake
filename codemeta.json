@@ -14,10 +14,10 @@
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
-    "version": "3.5.1",
+    "version": "3.4.3",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 3.5.1 (2018-07-02)",
+  "runtimePlatform": "R version 3.4.3 (2017-11-30)",
   "provider": {
     "@id": "https://cran.r-project.org",
     "@type": "Organization",
@@ -51,6 +51,13 @@
       "givenName": "Kirill",
       "familyName": "Müller",
       "email": "krlmlr+r@mailbox.org"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Ben",
+      "familyName": "Bond-Lamberty",
+      "email": "bondlamberty@pnnl.gov",
+      "@id": "https://orcid.org/0000-0001-9525-4633"
     }
   ],
   "copyrightHolder": [
@@ -477,18 +484,6 @@
     },
     {
       "@type": "SoftwareApplication",
-      "identifier": "purrr",
-      "name": "purrr",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=purrr"
-    },
-    {
-      "@type": "SoftwareApplication",
       "identifier": "R6",
       "name": "R6",
       "provider": {
@@ -543,9 +538,9 @@
       "name": "utils"
     }
   ],
-  "releaseNotes": "https://github.com/ropensci/drake/blob/master/NEWS.md",
-  "readme": "https://github.com/ropensci/drake/blob/master/README.md",
-  "fileSize": "398.517KB",
+  "releaseNotes": "https://github.com/bpbond/drake/blob/master/NEWS.md",
+  "readme": "https://github.com/bpbond/drake/blob/master/README.md",
+  "fileSize": "398.422KB",
   "contIntegration": [
     "https://ci.appveyor.com/project/ropensci/drake",
     "https://travis-ci.org/ropensci/drake",
