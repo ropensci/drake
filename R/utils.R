@@ -223,7 +223,7 @@ zip_lists <- function(x, y) {
 # Applies function .f to list .l elements in parallel, i.e.
 # .f(.l[[1]][1], .l[[2]][1], ..., .l[[n]][1]) and then
 # .f(.l[[1]][2], .l[[2]][2], ..., .l[[n]][2]) etc.
-drake_pmap <- function(.l, .f) {
+drake_pmap <- function(.l, .f, ...) {
   stopifnot(is.list(.l))
   stopifnot(is.function(.f))
   # Ensure identically-lengthed sublists in .l
@@ -233,7 +233,7 @@ drake_pmap <- function(.l, .f) {
   out <- list()
   for(i in seq_len(len)) {
     listi <- lapply(.l, function(x) x[[i]]) # extract ith element in each sublist
-    out[[i]] <- do.call(.f, listi)
+    out[[i]] <- do.call(.f, args = c(listi, ...), quote = TRUE)
   }
   out
 }
