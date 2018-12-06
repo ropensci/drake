@@ -14,10 +14,10 @@
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
-    "version": "3.5.1",
+    "version": "3.5.0",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 3.5.1 (2018-07-02)",
+  "runtimePlatform": "R version 3.5.0 (2018-04-23)",
   "provider": {
     "@id": "https://cran.r-project.org",
     "@type": "Organization",
@@ -261,11 +261,6 @@
     },
     {
       "@type": "SoftwareApplication",
-      "identifier": "methods",
-      "name": "methods"
-    },
-    {
-      "@type": "SoftwareApplication",
       "identifier": "networkD3",
       "name": "networkD3",
       "provider": {
@@ -465,6 +460,11 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "methods",
+      "name": "methods"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "pkgconfig",
       "name": "pkgconfig",
       "provider": {
@@ -486,18 +486,6 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=purrr"
-    },
-    {
-      "@type": "SoftwareApplication",
-      "identifier": "R6",
-      "name": "R6",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=R6"
     },
     {
       "@type": "SoftwareApplication",
@@ -545,7 +533,7 @@
   ],
   "releaseNotes": "https://github.com/ropensci/drake/blob/master/NEWS.md",
   "readme": "https://github.com/ropensci/drake/blob/master/README.md",
-  "fileSize": "398.517KB",
+  "fileSize": "398.746KB",
   "contIntegration": [
     "https://ci.appveyor.com/project/ropensci/drake",
     "https://travis-ci.org/ropensci/drake",

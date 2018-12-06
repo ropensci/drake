@@ -372,32 +372,6 @@ make_imports_targets <- function(config) {
   invisible(config)
 }
 
-initialize_session <- function(config) {
-  init_common_values(config$cache)
-  mark_envir(config$envir)
-  if (config$log_progress) {
-    clear_tmp_namespace(
-      cache = config$cache,
-      jobs = imports_setting(config$jobs),
-      namespace = "progress"
-    )
-  }
-  for (namespace in c("attempt", "session")) {
-    clear_tmp_namespace(
-      cache = config$cache,
-      jobs = imports_setting(config$jobs),
-      namespace = namespace
-    )
-  }
-  if (config$session_info) {
-    config$cache$set(
-      key = "sessionInfo",
-      value = sessionInfo(),
-      namespace = "session"
-    )
-  }
-}
-
 conclude_session <- function(config) {
   unmark_envir(config$envir)
   suppressWarnings(remove(list = config$plan$target, envir = config$envir))

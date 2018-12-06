@@ -104,6 +104,7 @@ get_cache <- function(
 #' @inheritParams drake_config
 #' @param path file path of the cache
 #' @param force deprecated
+#'   is compatible with your current version of drake.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -124,11 +125,11 @@ this_cache <- function(
   fetch_cache = NULL,
   console_log_file = NULL
 ) {
+  deprecate_force(force)
   usual_path_missing <- is.null(path) || !file.exists(path)
   if (usual_path_missing & is.null(fetch_cache)) {
     return(NULL)
   }
-  deprecate_force(force)
   if (!is.null(path)) {
     console_cache(
       config = list(
@@ -150,7 +151,7 @@ this_cache <- function(
     overwrite_hash_algos = FALSE,
     init_common_values = FALSE
   )
-  check_compatible_cache(cache = cache)
+  cache_vers_warn(cache = cache)
   cache
 }
 
@@ -265,6 +266,7 @@ new_cache <- function(
 #' in-memory caches such as [storr_environment()].
 #' @return A drake/storr cache.
 #' @inheritParams cached
+#' @inheritParams this_cache
 #' @inheritParams drake_config
 #' @param path file path of the cache
 #' @param short_hash_algo short hash algorithm for the cache.
@@ -294,9 +296,12 @@ recover_cache <- function(
   fetch_cache = NULL,
   console_log_file = NULL
 ) {
+  deprecate_force(force)
   cache <- this_cache(
-    path = path, verbose = verbose,
-    fetch_cache = fetch_cache, console_log_file = console_log_file
+    path = path,
+    verbose = verbose,
+    fetch_cache = fetch_cache,
+    console_log_file = console_log_file
   )
   if (is.null(cache)) {
     cache <- new_cache(
@@ -459,7 +464,7 @@ set_initial_drake_version <- function(cache) {
     key = "sessionInfo",
     namespace = "session"
   )) {
-    last_session <- drake_session(cache = cache)
+    last_session <- drake_get_session_info(cache = cache)
   } else {
     last_session <- NULL
   }
@@ -509,35 +514,44 @@ kernel_exists <- function(target, config) {
 
 target_exists <- kernel_exists
 
-check_compatible_cache <- function(cache) {
+cache_vers_check <- function(cache) {
   if (is.null(cache)) {
-    return()
+    return(character(0))
   }
   err <- try(
-    old <- drake_version(session_info = drake_session(cache = cache)), # nolint
+    old <- drake_version(session_info = drake_get_session_info(cache = cache)), # nolint
     silent = TRUE
   )
   if (inherits(err, "try-error")) {
     return(invisible())
   }
   if (compareVersion(old, "5.4.0") < 0) {
-    warning(
-      "The improvements to speed and reproducibility in drake version 6.0.0 ",
-      "put all targets out of date in projects previously built ",
-      "with drake version 5.4.0 or earlier. Sorry for the inconvenience.",
-      call. = FALSE
+    paste0(
+      "This project was last run with drake version ",
+      old, ".\nYour cache is not compatible with the current ",
+      "version of drake (",
+      packageVersion("drake"), ").\nTo run your project with version ",
+      packageVersion("drake"), ", use make(force = TRUE).\n",
+      "But be warned: if you do that, ",
+      "all you targets will run from scratch.\nYou may instead wish to ",
+      "downgrade drake to version ", old, "."
     )
+  } else {
+    character(0)
   }
-  if (compareVersion(old, "4.4.0") <= 0) {
-    warning(
-      "The project at '", cache$driver$path,
-      "' was previously built by drake ", old, ". ",
-      "You are running drake ", packageVersion("drake"),
-      ", which is not back-compatible. ",
-      "All targets are out of date in the new version. ",
-      "Sorry for the inconvenience.",
-      call. = FALSE
-    )
+}
+
+cache_vers_stop <- function(cache){
+  msg <- cache_vers_check(cache)
+  if (length(msg)) {
+    stop(msg, call. = FALSE)
+  }
+}
+
+cache_vers_warn <- function(cache){
+  msg <- cache_vers_check(cache)
+  if (length(msg)) {
+    warning(msg, call. = FALSE)
   }
 }
 

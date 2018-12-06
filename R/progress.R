@@ -1,37 +1,8 @@
-#' @title Return the [sessionInfo()]
-#'   of the last call to [make()].
-#' @description By default, session info is saved
-#' during [make()] to ensure reproducibility.
-#' Your loaded packages and their versions are recorded, for example.
-#' @seealso [diagnose()], [built()], [imported()],
-#'   [readd()], [drake_plan()], [make()]
-#' @export
-#' @return [sessionInfo()] of the last
-#'   call to [make()]
-#' @inheritParams cached
-#' @examples
-#' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' make(my_plan) # Run the project, build the targets.
-#' drake_session() # Retrieve the cached sessionInfo() of the last make().
-#' })
-#' }
-drake_session <- function(path = getwd(), search = TRUE,
-  cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = drake::default_verbose()
-) {
-  if (is.null(cache)) {
-    stop("No drake::make() session detected.")
-  }
-  return(cache$get("sessionInfo", namespace = "session"))
-}
-
 #' @title List the targets that either
 #'   (1) are currently being built during a [make()], or
 #'   (2) were being built if the last [make()] quit unexpectedly.
 #' @description Similar to [progress()].
-#' @seealso [diagnose()], [drake_session()],
+#' @seealso [diagnose()], [drake_get_session_info()],
 #'   [built()], [imported()],
 #'   [readd()], [drake_plan()], [make()]
 #' @export
@@ -59,7 +30,7 @@ in_progress <- function(path = getwd(), search = TRUE,
 #' @description Together, functions `failed` and
 #' [diagnose()] should eliminate the strict need
 #' for ordinary error messages printed to the console.
-#' @seealso [diagnose()], [drake_session()],
+#' @seealso [diagnose()], [drake_get_session_info()],
 #'   [built()], [imported()],
 #'   [readd()], [drake_plan()], [make()]
 #' @export
@@ -100,7 +71,7 @@ failed <- function(path = getwd(), search = TRUE,
 #' @description Objects that drake imported, built, or attempted
 #' to build are listed as `"finished"` or `"in progress"`.
 #' Skipped objects are not listed.
-#' @seealso [diagnose()], [drake_session()],
+#' @seealso [diagnose()], [drake_get_session_info()],
 #'   [built()], [imported()],
 #'   [readd()], [drake_plan()], [make()]
 #' @export

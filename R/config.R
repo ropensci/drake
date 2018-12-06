@@ -503,7 +503,6 @@ drake_config <- function(
       call. = FALSE
     ) # 2018-11-01 # nolint
   }
-  deprecate_force(force)
   plan <- sanitize_plan(plan)
   if (is.null(targets)) {
     targets <- plan$target
@@ -522,9 +521,11 @@ drake_config <- function(
       fetch_cache = fetch_cache,
       console_log_file = console_log_file
     )
-  } else {
-    check_compatible_cache(cache)
   }
+  if (force) {
+    drake_set_session_info(cache = cache)
+  }
+  cache_vers_stop(cache)
   # A storr_rds() cache should already have the right hash algorithms.
   cache <- configure_cache(
     cache = cache,

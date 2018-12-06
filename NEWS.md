@@ -18,7 +18,7 @@
 - Improve memoized preprocessing: deparse all the functions in the environment so the memoization does not react so spurious changes in R internals. Related: #345.
 - Use the `label` argument to `future()` inside `make(parallelism = "future")`. That way , job names are target names by default if `job.name` is used correctly in the `batchtools` template file.
 - Remove strict dependencies on packages `dplyr`, `evaluate`, `fs`, `future`, `magrittr`, `parallel`, `R6`, `R.utils`, `stats`, `stringi`, `tidyselect`, and `withr`.
-- Deprecate the `force` argument to `make()` and related functions.
+- Deprecate the `force` argument in all functions except `make()` and `drake_config()`.
 - Change the name of `prune_envir()` to `manage_memory()`.
 - Deprecate and rename the `pruning_strategy` argument to `memory_strategy` (`make()` and `drake_config()`).
 - Print warnings and messages to the `console_log_file` in real time ([#588](https://github.com/ropensci/drake/issues/588)).
@@ -27,7 +27,7 @@
 - Remove support for the `worker` column of `config$plan` in `predict_runtime()` and `predict_load_balancing()`. This functionality will go away in 2019 via [#561](https://github.com/ropensci/drake/issues/561).
 - Change the names of the return value of `predict_load_balancing()` to `time` and `workers`.
 - Bring the documentation of `predict_runtime()` and `predict_load_balancing()` up to date.
-
+- Deprecate `drake_session()` and rename to `drake_get_session_info()`.
 
 # Version 6.1.0
 

@@ -11,7 +11,8 @@ this_cache(path = drake::default_cache_path(), force = FALSE,
 \arguments{
 \item{path}{file path of the cache}
 
-\item{force}{deprecated}
+\item{force}{deprecated
+is compatible with your current version of drake.}
 
 \item{verbose}{logical or numeric, control printing to the console.
 Use \code{pkgconfig} to set the default value of \code{verbose}
