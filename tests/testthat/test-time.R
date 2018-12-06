@@ -140,19 +140,8 @@ test_with_dir("runtime predictions", {
     targets = targets
   )
   p7 <- as.numeric(p7)
-  con$plan$worker <- 1
-  p8 <- predict_runtime(
-    config = con,
-    jobs = 2,
-    default_time = Inf,
-    from_scratch = TRUE,
-    known_times = known_times,
-    targets = targets
-  )
-  p8 <- as.numeric(p8)
   expect_true(all(is.finite(c(p1, p2, p3, p4))))
   expect_equal(p5, 0, tolerance = 1e-6)
   expect_equal(p6, 70, tolerance = 1e-6)
   expect_equal(p7, 43, tolerance = 1e-6)
-  expect_equal(p8, 70, tolerance = 1e-6)
 })

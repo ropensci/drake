@@ -23,7 +23,8 @@
 - Deprecate and rename the `pruning_strategy` argument to `memory_strategy` (`make()` and `drake_config()`).
 - Print warnings and messages to the `console_log_file` in real time ([#588](https://github.com/ropensci/drake/issues/588)).
 - Use HTML line breaks in `vis_drake_graph()` hover text to display commands in the `drake` plan more elegantly.
-- Speed up `predict_load_balancing()` and remove its reliance on internals that will go away next year via [#561](https://github.com/ropensci/drake/issues/561).
+- Speed up `predict_load_balancing()` and remove its reliance on internals that will go away in 2019 via [#561](https://github.com/ropensci/drake/issues/561).
+- Remove support for the `worker` column of `config$plan` in `predict_runtime()` and `predict_load_balancing()`. This functionality will go away in 2019 via [#561](https://github.com/ropensci/drake/issues/561).
 - Change the names of the return value of `predict_load_balancing()` to `time` and `workers`.
 - Bring the documentation of `predict_runtime()` and `predict_load_balancing()` up to date.
 

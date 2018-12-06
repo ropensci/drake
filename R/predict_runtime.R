@@ -260,6 +260,9 @@ timing_assumptions <- function(
   if (targets_only) {
     config$graph <- targets_graph(config)
   }
+  if (!is.null(targets)) {
+    config$graph <- prune_drake_graph(config$graph, to = targets)
+  }
   times <- times[times$item %in% V(config$graph)$name, ]
   untimed <- setdiff(V(config$graph)$name, times$item)
   untimed <- setdiff(untimed, names(known_times))
