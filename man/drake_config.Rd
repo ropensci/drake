@@ -85,7 +85,7 @@ need to know how to load the cache.}
 \item{parallelism}{character, type of parallelism to use.
 To list the options, call \code{\link[=parallelism_choices]{parallelism_choices()}}.
 For detailed explanations, see the
-\href{https://ropenscilabs.github.io/drake-manual/store.html}{high-performance computing chapter}
+\href{https://ropenscilabs.github.io/drake-manual/hpc.html}{high-performance computing chapter}
 of the user manual.}
 
 \item{jobs}{maximum number of parallel workers for processing the targets.
