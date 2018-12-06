@@ -186,7 +186,14 @@
 #'   Assign target-level retries with an optional `retries`
 #'   column in `plan`.
 #'
-#' @param force deprecated
+#' @param force Logical. If `FALSE` (default) then `drake` will stop you
+#'   if the cache was created with an old
+#'   and incompatible version of drake.
+#'   This gives you an opportunity to
+#'   downgrade `drake` to a compatible version
+#'   rather than rerun all your targets from scratch.
+#'   If `force` is `TRUE`, then `make()` executes your workflow
+#'   regardless of the version of `drake` that last ran `make()` on the cache.
 #'
 #' @param graph An `igraph` object from the previous `make()`.
 #'   Supplying a pre-built graph could save time.

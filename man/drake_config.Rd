@@ -184,7 +184,14 @@ column in \code{plan}.}
 Assign target-level retries with an optional \code{retries}
 column in \code{plan}.}
 
-\item{force}{deprecated}
+\item{force}{Logical. If \code{FALSE} (default) then \code{drake} will stop you
+if the cache was created with an old
+and incompatible version of drake.
+This gives you an opportunity to
+downgrade \code{drake} to a compatible version
+rather than rerun all your targets from scratch.
+If \code{force} is \code{TRUE}, then \code{make()} executes your workflow
+regardless of the version of \code{drake} that last ran \code{make()} on the cache.}
 
 \item{log_progress}{logical, whether to log the progress
 of individual targets as they are being built. Progress logging
