@@ -470,8 +470,10 @@ warn_arrows <- function(dots) {
     # Probably not possible, but good to have:
     names(dots) <- rep("", length(dots)) # nocov
   }
-  check_these <- unlist(lapply(names(dots), function(x) !nzchar(x)))
+  check_these <- vapply(names(dots), function(x) !nzchar(x), FUN.VALUE = logical(1))
   check_these <- which(check_these)
+  # Here we use lapply, not vapply, because don't know whether there any
+  # offending commands (and thus don't know size of function return)
   offending_commands <- lapply(dots[check_these], detect_arrow)
   offending_commands <- Filter(
     offending_commands,
