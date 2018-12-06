@@ -103,6 +103,10 @@ file_extn <- function(x) {
   x[1]
 }
 
+in_hash_table <- function(x, table) {
+  exists(x, envir = table, inherits = FALSE)
+}
+
 is_file <- function(x) {
   x <- substr(x = x, start = 0, stop = 1)
   x == "\"" | x == "'" # TODO: get rid fo the single quote next major release
@@ -145,6 +149,12 @@ merge_lists <- function(x, y) {
   )
   names(x) <- names
   x
+}
+
+new_hash_table <- function(x){
+  out <- new.env(hash = TRUE, parent = emptyenv())
+  lapply(x, assign, value = TRUE, envir = out)
+  out
 }
 
 padded_scale <- function(x) {

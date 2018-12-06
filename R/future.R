@@ -216,7 +216,7 @@ ft_decrease_revdep_keys <- function(worker, config, queue) {
 }
 
 conclude_worker <- function(worker, config, queue) {
-  decrease_revdep_keys(
+  ft_decrease_revdep_keys(
     worker = worker,
     queue = queue,
     config = config

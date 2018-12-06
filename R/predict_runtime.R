@@ -214,7 +214,10 @@ predict_load_balancing <- function(
     default_time = default_time,
     warn = warn
   )
-  config$schedule <- config$graph
+  config$schedule <- igraph::induced_subgraph(
+    config$graph,
+    v = names(assumptions)
+  )
   queue <- new_priority_queue(config, jobs = 1)
   running <- data.frame(
     target = character(0),
@@ -224,6 +227,11 @@ predict_load_balancing <- function(
   )
   time <- 0
   workers <- replicate(jobs, character(0))
+  outdated <- config$plan$target
+  if (!from_scratch) {
+    outdated <- outdated(config)
+  }
+  outdated_hash <- new_hash_table(x = outdated)
   while (!queue$empty() || nrow(running)) {
     while (length(queue$peek0()) && nrow(running) < jobs) {
       new_target <- queue$pop0()
@@ -235,8 +243,12 @@ predict_load_balancing <- function(
       ))
     }
     running <- running[order(running$time), ]
-    time <- time + running$time[1]
-    running$time <- running$time - running$time[1]
+    do_build <- is_imported(running$target[1], config = config) ||
+      in_hash_table(x = running$target[1], table = outdated_hash)
+    if (do_build) {
+      time <- time + running$time[1]
+      running$time <- running$time - running$time[1]
+    }
     workers[[running$worker[1]]] <- c(
       workers[[running$worker[1]]],
       running$target[1]
