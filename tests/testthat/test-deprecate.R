@@ -220,7 +220,7 @@ test_with_dir("plan set 1", {
 
 test_with_dir("force loading a non-back-compatible cache", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_null(assert_compatible_cache(NULL))
+  expect_null(check_compatible_cache(NULL))
   expect_null(get_cache())
   expect_null(this_cache())
   expect_true(inherits(recover_cache(), "storr"))

@@ -150,7 +150,7 @@ this_cache <- function(
     overwrite_hash_algos = FALSE,
     init_common_values = FALSE
   )
-  assert_compatible_cache(cache = cache)
+  check_compatible_cache(cache = cache)
   cache
 }
 
@@ -509,7 +509,7 @@ kernel_exists <- function(target, config) {
 
 target_exists <- kernel_exists
 
-assert_compatible_cache <- function(cache) {
+check_compatible_cache <- function(cache) {
   if (is.null(cache)) {
     return()
   }

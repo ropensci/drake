@@ -523,7 +523,7 @@ drake_config <- function(
       console_log_file = console_log_file
     )
   } else {
-    assert_compatible_cache(cache)
+    check_compatible_cache(cache)
   }
   # A storr_rds() cache should already have the right hash algorithms.
   cache <- configure_cache(
