@@ -45,7 +45,7 @@ new_priority_queue <- function(config, jobs = config$jobs_imports) {
 # This is not actually a serious O(log n) priority queue
 # based on a binary heap. It is a naive placeholder.
 # I we can drop down to C if we need something faster.
-refclass_priority_queue <- setRefClass(
+refclass_priority_queue <- methods::setRefClass(
   Class = "refclass_priority_queue",
   fields = list(data = "data.frame"),
   methods = list(

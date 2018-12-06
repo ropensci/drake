@@ -38,7 +38,7 @@ build_times <- function(
   jobs = 1,
   type = c("build", "command")
 ) {
-  eval(parse(text = "require(methods, quietly = TRUE)")) # needed for lubridate
+  require(methods, quietly = TRUE) # needed for lubridate # nolint
   if (is.null(cache)) {
     return(empty_times())
   }
@@ -120,7 +120,7 @@ runtime_entry <- function(runtime, target, imported) {
 }
 
 to_build_duration_df <- function(times) {
-  eval(parse(text = "require(methods, quietly = TRUE)")) # needed for lubridate
+  require(methods, quietly = TRUE) # needed for lubridate # nolint
   for (col in time_columns) {
     times[[col]] <- to_build_duration(times[[col]])
   }

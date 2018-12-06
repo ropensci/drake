@@ -228,6 +228,7 @@ test_with_dir("force loading a non-back-compatible cache", {
   expect_warning(get_cache(), regexp = "compatible")
   expect_warning(this_cache(), regexp = "compatible")
   expect_warning(recover_cache(), regexp = "compatible")
+  expect_warning(drake_config(drake_plan(x = 1)), regexp = "compatible")
   expect_warning(
     expect_true(inherits(get_cache(force = TRUE), "storr")),
     regexp = "deprecated"
