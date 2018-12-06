@@ -6,6 +6,10 @@
 - Add a new `drake_envir()` function that returns the environment where `drake` builds targets. Can only be accessed from inside the commands in the workflow plan data frame. The primary use case is to allow users to remove individual targets from memory at predetermined build steps.
 - Add a `sep` argument to `gather_by()`, `reduce_by()`, `reduce_plan()`, `evaluate_plan()`, `expand_plan()`, `plan_analyses()`, and `plan_summaries()`. Allows the user to set the delimiter for generating new target names.
 
+## Bug fixes
+
+- Stop returning `0s` from `predict_runtime(targets_only = TRUE)` when some targets are outdated and others are not.
+
 ## Enhancements
 
 - **Large speed boost**: reduce repeated calls to `parse()` in `code_dependencies()`.
@@ -19,6 +23,9 @@
 - Deprecate and rename the `pruning_strategy` argument to `memory_strategy` (`make()` and `drake_config()`).
 - Print warnings and messages to the `console_log_file` in real time ([#588](https://github.com/ropensci/drake/issues/588)).
 - Use HTML line breaks in `vis_drake_graph()` hover text to display commands in the `drake` plan more elegantly.
+- Speed up `predict_load_balancing()` and remove its reliance on internals that will go away next year via [#561](https://github.com/ropensci/drake/issues/561).
+- Change the names of the return value of `predict_load_balancing()` to `time` and `workers`.
+- Bring the documentation of `predict_runtime()` and `predict_load_balancing()` up to date.
 
 
 # Version 6.1.0

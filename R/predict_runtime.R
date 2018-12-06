@@ -28,9 +28,6 @@
 #' test_with_dir("Quarantine side effects.", {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' config <- make(my_plan) # Run the project, build the targets.
-#' # The predictions use the cached build times of the targets,
-#' # but if you expect your target runtimes
-#' # to be different, you can specify them (in seconds).
 #' known_times <- c(5, rep(7200, nrow(my_plan) - 1))
 #' names(known_times) <- c(file_store("report.md"), my_plan$target[-1])
 #' known_times
@@ -47,10 +44,6 @@
 #'   from_scratch = TRUE,
 #'   known_times = known_times
 #' )
-#' # Why isn't 8 jobs any better?
-#' # 8 would be a good guess based on the layout of the workflow graph.
-#' # It's because of load balancing.
-#' # Below, each row is a persistent worker.
 #' balance <- predict_load_balancing(
 #'   config,
 #'   jobs = 7,
@@ -59,11 +52,6 @@
 #'   targets_only = TRUE
 #' )
 #' balance
-#' max(balance$time)
-#' # Each worker gets 2 rate-limiting targets.
-#' balance$time
-#' # Even if you add another worker, there will be still be workers
-#' # with two heavy targets.
 #' })
 #' }
 predict_runtime <- function(
@@ -119,9 +107,6 @@ predict_runtime <- function(
 #' test_with_dir("Quarantine side effects.", {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' config <- make(my_plan) # Run the project, build the targets.
-#' # The predictions use the cached build times of the targets,
-#' # but if you expect your target runtimes
-#' # to be different, you can specify them (in seconds).
 #' known_times <- c(5, rep(7200, nrow(my_plan) - 1))
 #' names(known_times) <- c(file_store("report.md"), my_plan$target[-1])
 #' known_times
@@ -138,10 +123,6 @@ predict_runtime <- function(
 #'   from_scratch = TRUE,
 #'   known_times = known_times
 #' )
-#' # Why isn't 8 jobs any better?
-#' # 8 would be a good guess based on the layout of the workflow graph.
-#' # It's because of load balancing.
-#' # Below, each row is a persistent worker.
 #' balance <- predict_load_balancing(
 #'   config,
 #'   jobs = 7,
@@ -150,11 +131,6 @@ predict_runtime <- function(
 #'   targets_only = TRUE
 #' )
 #' balance
-#' max(balance$time)
-#' # Each worker gets 2 rate-limiting targets.
-#' balance$time
-#' # Even if you add another worker, there will be still be workers
-#' # with two heavy targets.
 #' })
 #' }
 #' @return A list with (1) the total runtime and (2) a list
@@ -227,11 +203,6 @@ predict_load_balancing <- function(
   )
   time <- 0
   workers <- replicate(jobs, character(0))
-  outdated <- config$plan$target
-  if (!from_scratch) {
-    outdated <- outdated(config)
-  }
-  outdated_hash <- new_hash_table(x = outdated)
   while (!queue$empty() || nrow(running)) {
     while (length(queue$peek0()) && nrow(running) < jobs) {
       new_target <- queue$pop0()
@@ -243,12 +214,8 @@ predict_load_balancing <- function(
       ))
     }
     running <- running[order(running$time), ]
-    do_build <- is_imported(running$target[1], config = config) ||
-      in_hash_table(x = running$target[1], table = outdated_hash)
-    if (do_build) {
-      time <- time + running$time[1]
-      running$time <- running$time - running$time[1]
-    }
+    time <- time + running$time[1]
+    running$time <- running$time - running$time[1]
     workers[[running$worker[1]]] <- c(
       workers[[running$worker[1]]],
       running$target[1]
@@ -276,6 +243,9 @@ timing_assumptions <- function(
   warn
 ) {
   assert_pkg("lubridate")
+  if (!from_scratch) {
+    outdated <- outdated(config)
+  }
   if (!is.null(future_jobs) || !is.null(digits)) {
     warning(
       "The `future_jobs` and `digits` arguments ",
@@ -310,5 +280,9 @@ timing_assumptions <- function(
   names(assumptions) <- names
   assumptions[times$item] <- times$elapsed
   assumptions[names(known_times)] <- known_times
+  if (!from_scratch) {
+    skip <- setdiff(config$plan$target, outdated)
+    assumptions[skip] <- 0
+  }
   assumptions
 }
