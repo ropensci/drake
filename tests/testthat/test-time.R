@@ -157,26 +157,3 @@ test_with_dir("runtime predictions", {
   expect_equal(p7, 43, tolerance = 1e-6)
   expect_equal(p8, 70, tolerance = 1e-6)
 })
-
-test_with_dir("load balancing with custom worker assignemnts", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  skip_if_not_installed("lubridate")
-  load_mtcars_example()
-  config <- drake_config(my_plan)
-  config$plan$worker <- 1
-  config$plan$worker[grepl("large", config$plan$target)] <- 2
-  suppressWarnings(
-    x <- predict_load_balancing(config, default_time = 2, jobs = 2))
-  expect_false(any(grep("large", x$targets[[1]])))
-  expect_true(any(grep("large", x$targets[[2]])))
-  expect_false(any(grep("small", x$targets[[2]])))
-  expect_true(any(grep("small", x$targets[[1]])))
-  config$plan$worker <- 1
-  config$plan$worker[grepl("small", config$plan$target)] <- 2
-  suppressWarnings(
-    x <- predict_load_balancing(config, default_time = 2, jobs = 2))
-  expect_false(any(grep("large", x$targets[[2]])))
-  expect_true(any(grep("large", x$targets[[1]])))
-  expect_false(any(grep("small", x$targets[[1]])))
-  expect_true(any(grep("small", x$targets[[2]])))
-})
