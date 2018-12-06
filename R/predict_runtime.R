@@ -192,7 +192,7 @@ predict_load_balancing <- function(
   )
   config$schedule <- igraph::induced_subgraph(
     config$graph,
-    v = names(assumptions)
+    vids = names(assumptions)
   )
   queue <- new_priority_queue(config, jobs = 1)
   running <- data.frame(
