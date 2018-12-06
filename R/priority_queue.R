@@ -116,3 +116,15 @@ R6_priority_queue <- R6::R6Class(
     }
   )
 )
+
+# Very specific to drake, does not belong inside
+# a generic priority queue.
+decrease_revdep_keys <- function(queue, target, config) {
+  revdeps <- dependencies(
+    targets = target,
+    config = config,
+    reverse = TRUE
+  )
+  revdeps <- intersect(revdeps, queue$list())
+  queue$decrease_key(targets = revdeps)
+}

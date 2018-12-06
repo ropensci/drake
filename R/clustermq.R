@@ -168,12 +168,6 @@ cmq_conclude_build <- function(msg, config) {
 }
 
 cmq_conclude_target <- function(target, config) {
-  revdeps <- dependencies(
-    targets = target,
-    config = config,
-    reverse = TRUE
-  )
-  revdeps <- intersect(revdeps, y = config$queue$list())
-  config$queue$decrease_key(targets = revdeps)
+  decrease_revdep_keys(queue = config$queue, target = target, config = config)
   config$counter$remaining <- config$counter$remaining - 1
 }
