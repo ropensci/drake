@@ -94,7 +94,7 @@ mc_preferred_queue <- function(target, config) {
       config$plan[["worker"]][config$plan$target == target]
     )
     if (worker %in% names(config$mc_ready_queues)) {
-      return(config$mc_ready_queues[[worker]])
+      return(config$mc_ready_queues[[worker]]) # nocov
     } else {
       drake_warning(
         "Preferred worker for target `",
