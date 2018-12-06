@@ -44,7 +44,7 @@
 #'   degree igraph_opt igraph_options induced_subgraph is_dag
 #'   make_empty_graph set_vertex_attr simplify subcomponent
 #'   topo_sort V vertex_attr
-#' @importFrom methods setRefClass
+#' @importFrom methods new setRefClass
 #' @importFrom pkgconfig get_config
 #' @importFrom purrr map_int pmap pmap_chr
 #' @importFrom rlang enexpr enexprs enquo eval_tidy expr expr_text exprs
