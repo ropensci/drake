@@ -156,6 +156,7 @@ test_with_dir("non-existent caches", {
   expect_error(tmp <- read_drake_graph(search = FALSE))
   expect_error(tmp <- read_drake_seed(search = FALSE))
   expect_error(tmp <- drake_get_session_info(search = FALSE))
+  expect_error(tmp <- drake_set_session_info(search = FALSE))
   dummy <- new_cache()
   expect_silent(read_drake_graph(cache = dummy))
 })
