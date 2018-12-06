@@ -48,6 +48,6 @@ Deprecated on 2018-12-06.
 # See ?drake_get_session_info for examples.
 }
 \seealso{
-\code{\link[=drake_set_session_info]{drake_set_session_info()}}, \code{\link[=diagnose]{diagnose()}}, \code{\link[=built]{built()}}, \code{\link[=imported]{imported()}},
+\code{\link[=diagnose]{diagnose()}}, \code{\link[=built]{built()}}, \code{\link[=imported]{imported()}},
 \code{\link[=readd]{readd()}}, \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
 }

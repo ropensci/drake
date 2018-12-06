@@ -54,6 +54,6 @@ drake_get_session_info() # Get the cached sessionInfo() of the last make().
 }
 }
 \seealso{
-\code{\link[=drake_set_session_info]{drake_set_session_info()}}, \code{\link[=diagnose]{diagnose()}}, \code{\link[=built]{built()}}, \code{\link[=imported]{imported()}},
+\code{\link[=diagnose]{diagnose()}}, \code{\link[=built]{built()}}, \code{\link[=imported]{imported()}},
 \code{\link[=readd]{readd()}}, \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
 }

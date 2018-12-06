@@ -547,7 +547,7 @@ drake_batchtools_tmpl_file <- function(
 #'   of the last call to [make()].
 #' @description Deprecated. Use [drake_get_session_info()] instead.
 #' @details Deprecated on 2018-12-06.
-#' @seealso [drake_set_session_info()], [diagnose()], [built()], [imported()],
+#' @seealso [diagnose()], [built()], [imported()],
 #'   [readd()], [drake_plan()], [make()]
 #' @export
 #' @return [sessionInfo()] of the last call to [make()]
