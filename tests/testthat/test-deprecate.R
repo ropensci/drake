@@ -81,6 +81,8 @@ test_with_dir("drake version checks in previous caches", {
   expect_false("initial_drake_version" %in% x$list(namespace = "session"))
   set_initial_drake_version(cache = x)
   expect_true("initial_drake_version" %in% x$list(namespace = "session"))
+  suppressWarnings(expect_error(drake_session(cache = NULL), regexp = "make"))
+  expect_warning(drake_session(cache = x), regexp = "deprecated")
 })
 
 test_with_dir("generative templating deprecation", {
@@ -218,9 +220,9 @@ test_with_dir("plan set 1", {
   }
 })
 
-test_with_dir("force loading a non-back-compatible cache", {
+test_with_dir("force with a non-back-compatible cache", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_null(assert_compatible_cache(NULL))
+  expect_equal(cache_vers_check(NULL), character(0))
   expect_null(get_cache())
   expect_null(this_cache())
   expect_true(inherits(recover_cache(), "storr"))
@@ -228,24 +230,23 @@ test_with_dir("force loading a non-back-compatible cache", {
   expect_warning(get_cache(), regexp = "compatible")
   expect_warning(this_cache(), regexp = "compatible")
   expect_warning(recover_cache(), regexp = "compatible")
-  expect_warning(
-    expect_true(inherits(get_cache(force = TRUE), "storr")),
-    regexp = "deprecated"
+  suppressWarnings(
+    expect_error(drake_config(drake_plan(x = 1)), regexp = "compatible")
   )
-  expect_warning(
-    expect_true(inherits(this_cache(force = TRUE), "storr")),
-    regexp = "deprecated"
+  suppressWarnings(
+    expect_error(make(drake_plan(x = 1)), regexp = "compatible")
   )
-  expect_warning(
-    expect_true(inherits(recover_cache(force = TRUE), "storr")),
-    regexp = "compatible"
-  )
+  expect_warning(make(drake_plan(x = 1), force = TRUE), regexp = "compatible")
+  expect_silent(tmp <- get_cache())
+  expect_silent(tmp <- this_cache())
+  expect_silent(tmp <- recover_cache())
+})
+
+test_with_dir("deprecate the `force` argument", {
+  expect_warning(tmp <- get_cache(force = TRUE), regexp = "deprecated")
+  expect_warning(tmp <- this_cache(force = TRUE), regexp = "deprecated")
+  expect_warning(tmp <- recover_cache(force = TRUE), regexp = "deprecated")
   expect_warning(load_mtcars_example(force = TRUE), regexp = "deprecated")
-  expect_warning(
-    config <- drake_config(my_plan, force = TRUE),
-    regexp = "deprecated"
-  )
-  expect_true(length(outdated(config)) > 0)
 })
 
 test_with_dir("old trigger interface", {

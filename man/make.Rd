@@ -84,7 +84,7 @@ need to know how to load the cache.}
 \item{parallelism}{character, type of parallelism to use.
 To list the options, call \code{\link[=parallelism_choices]{parallelism_choices()}}.
 For detailed explanations, see the
-\href{https://ropenscilabs.github.io/drake-manual/store.html}{high-performance computing chapter}
+\href{https://ropenscilabs.github.io/drake-manual/hpc.html}{high-performance computing chapter}
 of the user manual.}
 
 \item{jobs}{maximum number of parallel workers for processing the targets.
@@ -195,7 +195,14 @@ column in \code{plan}.}
 Assign target-level retries with an optional \code{retries}
 column in \code{plan}.}
 
-\item{force}{deprecated}
+\item{force}{Logical. If \code{FALSE} (default) then \code{drake} will stop you
+if the cache was created with an old
+and incompatible version of drake.
+This gives you an opportunity to
+downgrade \code{drake} to a compatible version
+rather than rerun all your targets from scratch.
+If \code{force} is \code{TRUE}, then \code{make()} executes your workflow
+regardless of the version of \code{drake} that last ran \code{make()} on the cache.}
 
 \item{return_config}{Logical, whether to return the internal list
 of runtime configuration parameters used by \code{make()}.

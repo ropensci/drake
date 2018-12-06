@@ -25,7 +25,7 @@ Use \code{\link[=summaries]{summaries()}} instead
 Deprecated on 2017-11-12.
 }
 \examples{
-# See ?drake_session for examples.
+# See ?drake_get_session_info for examples.
 }
 \seealso{
 \code{\link[=summaries]{summaries()}}

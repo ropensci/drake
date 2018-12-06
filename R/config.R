@@ -66,7 +66,7 @@
 #' @param parallelism character, type of parallelism to use.
 #'   To list the options, call [parallelism_choices()].
 #'   For detailed explanations, see the
-#'   [high-performance computing chapter](https://ropenscilabs.github.io/drake-manual/store.html)
+#'   [high-performance computing chapter](https://ropenscilabs.github.io/drake-manual/hpc.html)
 #'   of the user manual.
 #'
 #' @param jobs maximum number of parallel workers for processing the targets.
@@ -186,7 +186,14 @@
 #'   Assign target-level retries with an optional `retries`
 #'   column in `plan`.
 #'
-#' @param force deprecated
+#' @param force Logical. If `FALSE` (default) then `drake` will stop you
+#'   if the cache was created with an old
+#'   and incompatible version of drake.
+#'   This gives you an opportunity to
+#'   downgrade `drake` to a compatible version
+#'   rather than rerun all your targets from scratch.
+#'   If `force` is `TRUE`, then `make()` executes your workflow
+#'   regardless of the version of `drake` that last ran `make()` on the cache.
 #'
 #' @param graph An `igraph` object from the previous `make()`.
 #'   Supplying a pre-built graph could save time.
@@ -503,7 +510,6 @@ drake_config <- function(
       call. = FALSE
     ) # 2018-11-01 # nolint
   }
-  deprecate_force(force)
   plan <- sanitize_plan(plan)
   if (is.null(targets)) {
     targets <- plan$target
@@ -523,7 +529,10 @@ drake_config <- function(
       console_log_file = console_log_file
     )
   }
-  assert_compatible_cache(cache = cache)
+  if (force) {
+    drake_set_session_info(cache = cache)
+  }
+  cache_vers_stop(cache)
   # A storr_rds() cache should already have the right hash algorithms.
   cache <- configure_cache(
     cache = cache,

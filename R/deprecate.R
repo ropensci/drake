@@ -543,6 +543,37 @@ drake_batchtools_tmpl_file <- function(
   drake_hpc_template_file(file = example, to = to, overwrite = overwrite)
 }
 
+#' @title Deprecated. Return the [sessionInfo()]
+#'   of the last call to [make()].
+#' @description Deprecated. Use [drake_get_session_info()] instead.
+#' @details Deprecated on 2018-12-06.
+#' @seealso [diagnose()], [built()], [imported()],
+#'   [readd()], [drake_plan()], [make()]
+#' @export
+#' @return [sessionInfo()] of the last call to [make()]
+#' @inheritParams cached
+#' @examples
+#' # See ?drake_get_session_info for examples.
+drake_session <- function(
+  path = getwd(),
+  search = TRUE,
+  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  verbose = drake::default_verbose()
+) {
+  .Deprecated(
+    "drake_session",
+    package = "drake",
+    msg = paste(
+      "drake_session() is deprecated.",
+      "Use drake_get_session_info() instead."
+    )
+  )
+  if (is.null(cache)) {
+    stop("No drake::make() session detected.")
+  }
+  return(cache$get("sessionInfo", namespace = "session"))
+}
+
 #' @title Deprecated.
 #' @description Deprecated on 2018-10-24.
 #' @export
@@ -1465,18 +1496,18 @@ render_static_drake_graph <- function(
 }
 
 #' @title Deprecated function `session`
-#' @description Use [drake_session()] instead
+#' @description Use [drake_get_session_info()] instead
 #' @details Deprecated on 2017-11-12.
-#' @seealso [drake_session()]
+#' @seealso [drake_get_session_info()]
 #' @export
 #' @keywords internal
-#' @return Same as for [drake_session()].
-#' @param cache Same as for [drake_session()].
-#' @param path Same as for [drake_session()].
-#' @param search Same as for [drake_session()].
-#' @param verbose Same as for [drake_session()].
+#' @return Same as for [drake_get_session_info()].
+#' @param cache Same as for [drake_get_session_info()].
+#' @param path Same as for [drake_get_session_info()].
+#' @param search Same as for [drake_get_session_info()].
+#' @param verbose Same as for [drake_get_session_info()].
 #' @examples
-#' # See ?drake_session for examples.
+#' # See ?drake_get_session_info for examples.
 session <- function(
   path = getwd(),
   search = TRUE,
@@ -1489,10 +1520,10 @@ session <- function(
     msg = paste(
       "drake::session() is deprecated",
       "due to a possible conlict with the R/shiny lexicon.",
-      "Use drake_session() instead."
+      "Use drake_get_session_info() instead."
     )
   )
-  drake_session(
+  drake_get_session_info(
     path = path,
     search = search,
     cache = cache,
@@ -1618,7 +1649,7 @@ static_drake_graph <- function(
 #' @param datasets Same as for [plan_summaries()].
 #' @param gather Same as for [plan_summaries()].
 #' @examples
-#' # See ?drake_session for examples.
+#' # See ?drake_get_session_info for examples.
 summaries <- function(
   plan,
   analyses,

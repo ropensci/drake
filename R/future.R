@@ -207,22 +207,16 @@ initialize_workers <- function(config) {
   out
 }
 
-decrease_revdep_keys <- function(worker, config, queue) {
+ft_decrease_revdep_keys <- function(worker, config, queue) {
   target <- attr(worker, "target")
   if (!length(target) || safe_is_na(target) || !is.character(target)) {
     return()
   }
-  revdeps <- dependencies(
-    targets = target,
-    config = config,
-    reverse = TRUE
-  )
-  revdeps <- intersect(revdeps, queue$list())
-  queue$decrease_key(targets = revdeps)
+  decrease_revdep_keys(queue, target, config)
 }
 
 conclude_worker <- function(worker, config, queue) {
-  decrease_revdep_keys(
+  ft_decrease_revdep_keys(
     worker = worker,
     queue = queue,
     config = config

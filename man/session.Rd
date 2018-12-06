@@ -8,27 +8,27 @@ session(path = getwd(), search = TRUE, cache = drake::get_cache(path
   = path, search = search, verbose = verbose), verbose = TRUE)
 }
 \arguments{
-\item{path}{Same as for \code{\link[=drake_session]{drake_session()}}.}
+\item{path}{Same as for \code{\link[=drake_get_session_info]{drake_get_session_info()}}.}
 
-\item{search}{Same as for \code{\link[=drake_session]{drake_session()}}.}
+\item{search}{Same as for \code{\link[=drake_get_session_info]{drake_get_session_info()}}.}
 
-\item{cache}{Same as for \code{\link[=drake_session]{drake_session()}}.}
+\item{cache}{Same as for \code{\link[=drake_get_session_info]{drake_get_session_info()}}.}
 
-\item{verbose}{Same as for \code{\link[=drake_session]{drake_session()}}.}
+\item{verbose}{Same as for \code{\link[=drake_get_session_info]{drake_get_session_info()}}.}
 }
 \value{
-Same as for \code{\link[=drake_session]{drake_session()}}.
+Same as for \code{\link[=drake_get_session_info]{drake_get_session_info()}}.
 }
 \description{
-Use \code{\link[=drake_session]{drake_session()}} instead
+Use \code{\link[=drake_get_session_info]{drake_get_session_info()}} instead
 }
 \details{
 Deprecated on 2017-11-12.
 }
 \examples{
-# See ?drake_session for examples.
+# See ?drake_get_session_info for examples.
 }
 \seealso{
-\code{\link[=drake_session]{drake_session()}}
+\code{\link[=drake_get_session_info]{drake_get_session_info()}}
 }
 \keyword{internal}

@@ -83,9 +83,6 @@ to adjust the assumptions as needed.
 test_with_dir("Quarantine side effects.", {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 config <- make(my_plan) # Run the project, build the targets.
-# The predictions use the cached build times of the targets,
-# but if you expect your target runtimes
-# to be different, you can specify them (in seconds).
 known_times <- c(5, rep(7200, nrow(my_plan) - 1))
 names(known_times) <- c(file_store("report.md"), my_plan$target[-1])
 known_times
@@ -102,10 +99,6 @@ predict_runtime(
   from_scratch = TRUE,
   known_times = known_times
 )
-# Why isn't 8 jobs any better?
-# 8 would be a good guess based on the layout of the workflow graph.
-# It's because of load balancing.
-# Below, each row is a persistent worker.
 balance <- predict_load_balancing(
   config,
   jobs = 7,
@@ -114,11 +107,6 @@ balance <- predict_load_balancing(
   targets_only = TRUE
 )
 balance
-max(balance$time)
-# Each worker gets 2 rate-limiting targets.
-balance$time
-# Even if you add another worker, there will be still be workers
-# with two heavy targets.
 })
 }
 }
