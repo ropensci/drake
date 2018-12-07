@@ -321,7 +321,7 @@ command_dependencies <- function(
   }
 
   # This bit stays the same.
-  deps[purrr::map_int(deps, length) > 0]
+  select_nonempty(deps)
 }
 
 # TODO: this function can go away when drake
@@ -443,7 +443,7 @@ code_dependencies <- function(expr, exclude = character(0), globals = NULL) {
       setdiff(x, exclude)
     }
   )
-  results[purrr::map_int(results, length) > 0]
+  select_nonempty(results)
 }
 
 find_non_locals <- function(fun) {
@@ -525,7 +525,7 @@ recurse_ignore <- function(x) {
     if (is_ignored_call(x)) {
       x <- quote(ignore())
     } else {
-      x[] <- purrr::map(as.list(x), recurse_ignore)
+      x[] <- lapply(as.list(x), recurse_ignore)
     }
   }
   x

@@ -628,7 +628,7 @@ test_with_dir("plan_to_code()", {
   expect_false(file.exists("report.md"))
   load_mtcars_example()
   plan0 <- my_plan
-  my_plan$command <- purrr::map(my_plan$command, rlang::parse_expr)
+  my_plan$command <- lapply(my_plan$command, rlang::parse_expr)
   path <- tempfile()
   plan_to_code(my_plan, path)
   source(path, local = TRUE)
@@ -644,7 +644,7 @@ test_with_dir("plan_to_notebook()", {
   expect_false(file.exists("report.md"))
   load_mtcars_example()
   plan0 <- my_plan
-  my_plan$command <- purrr::map(my_plan$command, rlang::parse_expr)
+  my_plan$command <- lapply(my_plan$command, rlang::parse_expr)
   path <- "my_notebook.Rmd"
   plan_to_notebook(my_plan, path)
   knitr::knit(path, quiet = TRUE)

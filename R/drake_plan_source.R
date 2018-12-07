@@ -51,7 +51,7 @@ drake_plan_call <- function(plan) {
       stringsAsFactors = FALSE
     )
   )
-  target_calls <- purrr::pmap(plan, drake_target_call)
+  target_calls <- drake_pmap(plan, drake_target_call)
   names(target_calls) <- plan$target
   as.call(c(quote(drake_plan), target_calls))
 }

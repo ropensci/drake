@@ -470,16 +470,18 @@ warn_arrows <- function(dots) {
     # Probably not possible, but good to have:
     names(dots) <- rep("", length(dots)) # nocov
   }
-  check_these <- purrr::map_lgl(names(dots), function(x) {
-    !nzchar(x)
-  })
+  check_these <- vapply(names(dots),
+                        function(x) !nzchar(x),
+                        FUN.VALUE = logical(1))
   check_these <- which(check_these)
+  # Here we use lapply, not vapply, because don't know whether there any
+  # offending commands (and thus don't know size of function return)
   offending_commands <- lapply(dots[check_these], detect_arrow)
   offending_commands <- Filter(
     offending_commands,
     f = function(x) {
-    !is.null(x)
-  })
+      !is.null(x)
+    })
   if (length(offending_commands)) {
     warning(
       "Use `=` instead of `<-` or `->` ",
@@ -573,15 +575,14 @@ target <- function(
   out <- c(out, rlang::enexprs(...))
   out <- select_nonempty(out)
   out[nzchar(names(out))]
-  out <- purrr::map(
-    .x = out,
-    .f = function(x) {
-      if (is.language(x)) {
-        wide_deparse(x)
-      } else {
-        x
-      }
-    }
+  out <- lapply(out,
+                FUN = function(x) {
+                  if (is.language(x)) {
+                    wide_deparse(x)
+                  } else {
+                    x
+                  }
+                }
   )
   tibble::as_tibble(out)
 }

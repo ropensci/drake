@@ -1,6 +1,6 @@
 #' @title Create a plan that maps a function to a grid of arguments.
-#' @description `map_plan()` is like `pmap_df()` from the `purrr` package.
-#'   It takes a function name and a grid of arguments, and it
+#' @description `map_plan()` is like `base::Map()`:
+#'   it takes a function name and a grid of arguments, and 
 #'   writes out all the commands calls to apply the function to
 #'   each row of arguments.
 #' @export
@@ -71,14 +71,14 @@ map_plan <- function(
       apply(X = args, MARGIN = 1, FUN = digest::digest, algo = "murmur32")
     )
   }
-  command <- purrr::pmap_chr(
+  command <- as.character(unlist(drake_pmap(
     .l = args[, cols],
     .f = function(...) {
       out <- list(as.name(fun), ...)
       out <- as.call(out)
       rlang::expr_text(out)
     }
-  )
+  )))
   out <- tibble::tibble(target = target, command = command)
   if (trace) {
     out <- tibble::as_tibble(cbind(out, args))
