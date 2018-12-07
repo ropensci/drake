@@ -107,7 +107,7 @@ column in \code{plan}.
 \code{resources} is a list column. Each element is a named list,
 same as the \code{resources} argument to \code{batchtools_slurm()}
 and related \code{future.bachtools} functions. See also
-\url{https://github.com/HenrikBengtsson/future.batchtools#examples}.
+\url{https://github.com/HenrikBengtsson/future.batchtools#examples}. # nolint
 \code{resources[[target_name]]} is a list of
 computing resource parameters for the target.
 Each element is a value passed to a \code{brew} placeholder of a

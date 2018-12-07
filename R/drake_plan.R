@@ -41,7 +41,7 @@
 #'   `resources` is a list column. Each element is a named list,
 #'   same as the `resources` argument to `batchtools_slurm()`
 #'   and related `future.bachtools` functions. See also
-#'   <https://github.com/HenrikBengtsson/future.batchtools#examples>.
+#'   <https://github.com/HenrikBengtsson/future.batchtools#examples>. # nolint
 #'   `resources[[target_name]]` is a list of
 #'   computing resource parameters for the target.
 #'   Each element is a value passed to a `brew` placeholder of a
@@ -536,7 +536,7 @@ detect_arrow <- function(command) {
 #' @param resources Experimental, no guarantees that this works all the time.
 #'   Same as the `resources` argument to `batchtools_slurm()`
 #'   and related `future.bachtools` functions.
-#'   See also <https://github.com/HenrikBengtsson/future.batchtools#examples>.
+#'   See also <https://github.com/HenrikBengtsson/future.batchtools#examples>. # nolint
 #'   `resources` is a list of computing resource parameters for the target.
 #'   Each element is a value passed to a `brew` placeholder of a
 #'   `batchtools` template file. The list names of `resources`

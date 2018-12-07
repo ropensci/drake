@@ -32,7 +32,7 @@ will be built first.}
 \item{resources}{Experimental, no guarantees that this works all the time.
 Same as the \code{resources} argument to \code{batchtools_slurm()}
 and related \code{future.bachtools} functions.
-See also \url{https://github.com/HenrikBengtsson/future.batchtools#examples}.
+See also \url{https://github.com/HenrikBengtsson/future.batchtools#examples}. # nolint
 \code{resources} is a list of computing resource parameters for the target.
 Each element is a value passed to a \code{brew} placeholder of a
 \code{batchtools} template file. The list names of \code{resources}
