@@ -94,13 +94,13 @@ set_test_backend <- function() {
 }
 
 unit_test_files <- function(path = getwd()) {
-  # find the package root 
+  # find the package root
   p <- normalizePath(dirname(path))
   MAX_DEPTH <- 100
   CRITERION <- "DESCRIPTION"
   for (i in seq_len(MAX_DEPTH)) {
     if (length(list.files(p, pattern = CRITERION))) {
-      # found criterion file; make sure it's ours 
+      # found criterion file; make sure it's ours
       if (grepl("drake", readLines(file.path(p, CRITERION), n = 1))) {
         return(file.path(p, "tests", "testthat"))
       }

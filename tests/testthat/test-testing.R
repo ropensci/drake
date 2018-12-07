@@ -115,12 +115,12 @@ test_with_dir("test_scenarios()", {
 
 test_with_dir("unit_test_files works", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  
+
   # Find package root
   path <- system.file("DESCRIPTION", package = "drake")
   testfiles <- unit_test_files(path = path)
   expect_equal(basename(testfiles), "testthat")
-  
+
   # Does unit_test_files find a root with DESCRIPTION?
   wd <- getwd()
   writeLines(
@@ -132,14 +132,14 @@ test_with_dir("unit_test_files works", {
     dir.create(subdir)
   }
   expect_equal(basename(unit_test_files(subdir)), "testthat")
-  
+
   # DESCRIPTION without 'drake' in first line
   writeLines(
     text = "ekard",
     con = "DESCRIPTION"
   )
   expect_error(unit_test_files(wd))
-  
+
   # Shouldn't find anything if there's no DESCRIPTION
   unlink("DESCRIPTION")
   expect_error(unit_test_files(wd))
