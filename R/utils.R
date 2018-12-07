@@ -228,7 +228,7 @@ drake_pmap <- function(.l, .f, jobs = 1, ...) {
   stopifnot(is.function(.f))
   stopifnot(is.numeric(jobs))
 
-  if (length(.l) == 0) { 
+  if (length(.l) == 0) {
     return(list())  # empty input
   }
 
