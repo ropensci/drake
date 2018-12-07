@@ -124,7 +124,7 @@ test_with_dir("unit_test_files works", {
   # Does unit_test_files find a root with DESCRIPTION?
   wd <- getwd()
   writeLines(
-    text = "drake",
+    text = "Package: drake",
     con = "DESCRIPTION"
   )
   subdir <- "subdir"
@@ -135,7 +135,7 @@ test_with_dir("unit_test_files works", {
 
   # DESCRIPTION without 'drake' in first line
   writeLines(
-    text = "ekard",
+    text = "Package: drakebutnotdrake",
     con = "DESCRIPTION"
   )
   expect_error(unit_test_files(wd))

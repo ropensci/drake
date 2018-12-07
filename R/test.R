@@ -101,7 +101,7 @@ unit_test_files <- function(path = getwd()) {
   for (i in seq_len(MAX_DEPTH)) {
     if (length(list.files(p, pattern = CRITERION))) {
       # found criterion file; make sure it's ours
-      if (grepl("drake", readLines(file.path(p, CRITERION), n = 1))) {
+      if (any(grepl("^Package: drake$", readLines(file.path(p, CRITERION))))) {
         return(file.path(p, "tests", "testthat"))
       }
     }
