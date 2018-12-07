@@ -46,7 +46,6 @@ test_with_dir("visNetwork dep graph does not fail if input file is binary", {
 
 test_with_dir("ggraphs", {
   skip_on_cran()
-  skip_if_not_installed("ggplot2")
   skip_if_not_installed("ggraph")
   skip_if_not_installed("lubridate")
   skip_if_not_installed("visNetwork")
