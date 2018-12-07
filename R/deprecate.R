@@ -1842,3 +1842,70 @@ workplan <- function(
   }
   sanitize_plan(plan)
 }
+
+#' @title Load the main example.
+#' @description The main example lives at
+#' <https://github.com/wlandau/drake-examples/tree/master/main>.
+#' Use `drake_example("main")` to download its code.
+#' The chapter of the user manual at
+#' <https://ropenscilabs.github.io/drake-manual/main.html>
+#' also walks through the main example.
+#' This function also writes/overwrites
+#' the files `report.Rmd` and `raw_data.xlsx`.
+#' @export
+#' @seealso [clean_main_example()]
+#' @return A [drake_config()] configuration list.
+#' @inheritParams drake_config
+#' @param envir The environment to load the example into.
+#'   Defaults to your workspace.
+#'   For an insulated workspace,
+#'   set `envir = new.env(parent = globalenv())`.
+#' @param report_file where to write the report file `report.Rmd`.
+#' @param overwrite logical, whether to overwrite an
+#'   existing file `report.Rmd`
+#' @param force deprecated
+#' @keywords internal
+#' @details Deprecated December 2019.
+#' @examples
+#' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
+#' # Populate your workspace and write 'report.Rmd' and 'raw_data.xlsx'.
+#' load_main_example() # Get the code: drake_example("main")
+#' # Run the project with make(plan).
+#' make(plan) # Build the targets.
+#' # Clean up the example.
+#' clean_main_example()
+#' })
+#' }
+load_main_example <- function(
+  envir = parent.frame(),
+  report_file = "report.Rmd",
+  overwrite = FALSE,
+  force = FALSE
+) {
+  deprecate_force(force)
+  .Deprecated(
+    "drake_plan",
+    package = "drake",
+    msg = 'load_main_example() is deprecated. Use drake_example("main") instead.'
+  )
+
+  dir <- tempfile()
+  drake_example(example = "main", to = dir)
+  source(file.path(dir, "main", "R", "setup.R"), local = envir)
+  envir$plan <- source(
+    file.path(dir, "main", "R", "plan.R"),
+    local = TRUE
+  )$value
+  for (file in c("report.Rmd", "raw_data.xlsx")) {
+    if (file.exists(file) & overwrite) {
+      warning("Overwriting file ", file, call. = FALSE)
+    }
+    file.copy(
+      from = file.path(dir, "main", file),
+      to = file,
+      overwrite = overwrite
+    )
+  }
+  invisible()
+}
