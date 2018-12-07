@@ -98,7 +98,6 @@ Suggests:
   parallel,
   prettycode,
   RSQLite,
-  rprojroot,
   stats,
   testthat,
   tidyselect (>= 0.2.4),

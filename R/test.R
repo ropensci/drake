@@ -8,14 +8,14 @@ testrun <- function(config) {
   set_test_backend()
   invisible(
     make(plan = config$plan, targets = config$targets, envir = config$envir,
-      verbose = config$verbose, parallelism = config$parallelism,
-      jobs = config$jobs,
-      packages = config$packages, prework = config$prework,
-      prepend = config$prepend, command = config$command,
-      cache = config$cache, lazy_load = config$lazy_load,
-      session_info = config$session_info,
-      fetch_cache = config$fetch_cache,
-      caching = config$caching
+         verbose = config$verbose, parallelism = config$parallelism,
+         jobs = config$jobs,
+         packages = config$packages, prework = config$prework,
+         prepend = config$prepend, command = config$command,
+         cache = config$cache, lazy_load = config$lazy_load,
+         session_info = config$session_info,
+         fetch_cache = config$fetch_cache,
+         caching = config$caching
     )
   )
 }
@@ -94,9 +94,20 @@ set_test_backend <- function() {
 }
 
 unit_test_files <- function(path = getwd()) {
-  assert_pkg("rprojroot")
-  root <- rprojroot::find_root(criterion = "DESCRIPTION", path = path)
-  file.path(root, "tests", "testthat")
+  # find the package root 
+  p <- normalizePath(dirname(path))
+  MAX_DEPTH <- 100
+  CRITERION <- "DESCRIPTION"
+  for (i in seq_len(MAX_DEPTH)) {
+    if (length(list.files(p, pattern = CRITERION))) {
+      # found criterion file; make sure it's ours 
+      if (grepl("drake", readLines(file.path(p, CRITERION), n = 1))) {
+        return(file.path(p, "tests", "testthat"))
+      }
+    }
+    p <- dirname(p)
+  }
+  stop("Maximum search of ", MAX_DEPTH, " exceeded for ", path)
 }
 
 with_all_options <- function(code) {
