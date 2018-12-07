@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecate.R
 \name{load_main_example}
 \alias{load_main_example}
-\title{Load the main example.}
+\title{Deprecated: load the main example.}
 \usage{
 load_main_example(envir = parent.frame(), report_file = "report.Rmd",
   overwrite = FALSE, force = FALSE)

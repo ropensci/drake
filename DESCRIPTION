@@ -89,6 +89,7 @@ Suggests:
   future,
   future.apply,
   grDevices,
+  ggplot2,
   ggraph,
   knitr,
   lubridate,

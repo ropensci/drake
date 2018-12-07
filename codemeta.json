@@ -208,6 +208,18 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "ggplot2",
+      "name": "ggplot2",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=ggplot2"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "ggraph",
       "name": "ggraph",
       "provider": {
@@ -504,7 +516,7 @@
   ],
   "releaseNotes": "https://github.com/bpbond/drake/blob/master/NEWS.md",
   "readme": "https://github.com/bpbond/drake/blob/master/README.md",
-  "fileSize": "399.392KB",
+  "fileSize": "399.403KB",
   "contIntegration": [
     "https://ci.appveyor.com/project/ropensci/drake",
     "https://travis-ci.org/ropensci/drake",

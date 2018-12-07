@@ -1843,7 +1843,7 @@ workplan <- function(
   sanitize_plan(plan)
 }
 
-#' @title Load the main example.
+#' @title Deprecated: load the main example.
 #' @description The main example lives at
 #' <https://github.com/wlandau/drake-examples/tree/master/main>.
 #' Use `drake_example("main")` to download its code.
