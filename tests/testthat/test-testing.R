@@ -32,9 +32,6 @@ test_with_dir("set_testing_scenario", {
 
 test_with_dir("testing utils", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  path <- system.file("DESCRIPTION", package = "drake")
-  testfiles <- unit_test_files(path = path)
-  expect_equal(basename(testfiles), "testthat")
   expect_true(is.character(this_os()))
   scenario <- default_testing_scenario
   expect_true(is.data.frame(get_testing_scenario()))
@@ -114,4 +111,38 @@ test_with_dir("test_scenarios()", {
   loggings <- grepl("logged scenario", log, fixed = TRUE)
   expect_false(any(loggings))
   expect_true(any(grepl("skip", log, fixed = TRUE)))
+})
+
+test_with_dir("unit_test_files works", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+
+  # Find package root
+  path <- system.file("DESCRIPTION", package = "drake")
+  testfiles <- unit_test_files(path = path)
+  expect_equal(basename(testfiles), "testthat")
+
+  # Does unit_test_files find a root with DESCRIPTION?
+  wd <- getwd()
+  writeLines(
+    text = "Package: drake",
+    con = "DESCRIPTION"
+  )
+  subdir <- "subdir"
+  if (!file.exists(subdir)) {
+    dir.create(subdir)
+  }
+  expect_equal(basename(unit_test_files(subdir, max_depth = 2)), "testthat")
+
+  # DESCRIPTION without 'drake' in first line.  For this and next test,
+  # max_depth = 1 so we don't accidentally find a DESCRIPTION left over
+  # in temp directory directory above us
+  writeLines(
+    text = "Package: drakebutnotdrake",
+    con = "DESCRIPTION"
+  )
+  expect_error(unit_test_files(wd, max_depth = 1))
+
+  # Shouldn't find anything if there's no DESCRIPTION
+  unlink("DESCRIPTION")
+  expect_error(unit_test_files(wd, max_depth = 1))
 })
