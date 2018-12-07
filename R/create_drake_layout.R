@@ -119,7 +119,7 @@ cdl_analyze_commands <- function(config) {
       envir = config$envir
     )
   }
-  layout <- drake_pmap(.l = config$plan, .f = list)
+  layout <- drake_pmap(.l = config$plan, .f = list, jobs = config$jobs)
   names(layout) <- config$plan$target
   config$default_condition_deps <- import_dependencies(
     config$trigger$condition,
