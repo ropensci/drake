@@ -103,23 +103,17 @@ column in \code{plan}.
 a timeout on a target.
 Assign target-level elapsed timeout times with an optional \code{elapsed}
 column in \code{plan}.
-\item template Experimental list column,
-no guarantees that this works all the time.
-Analogous to \code{future.bachtools} functions
-like \code{batchtools_slurm()}.
-\code{template} gives the template file/string
-of a specific target in \code{make(parallelism = "future")}.
-See the help file of
-\code{future.batchtools::batchtools_slurm()} for details.
-\item resources Experimental list column,
-no guarantees that this works all the time.
-Analogous to \code{future.bachtools} functions
-like \code{batchtools_slurm()}.
-\code{resources} gives the list of \code{brew} patterns specifying
-computing resources in the \code{batchtools} template file.
-In principle, the resources given are specific to the target.
-See the help file of
-\code{future.batchtools::batchtools_slurm()} for details.
+\item \code{resources}: Experimental, no guarantees that this works all the time.
+\code{resources} is a list column. Each element is a named list,
+same as the \code{resources} argument to \code{batchtools_slurm()}
+and related \code{future.bachtools} functions. See also
+\url{https://github.com/HenrikBengtsson/future.batchtools#examples}.
+\code{resources[[target_name]]} is a list of
+computing resource parameters for the target.
+Each element is a value passed to a \code{brew} placeholder of a
+\code{batchtools} template file.
+The list names of \code{resources[[target_name]]}
+should be the brew patterns.
 }
 }
 \examples{

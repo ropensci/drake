@@ -106,7 +106,6 @@ new_worker <- function(id, target, config, protect) {
       packages = "drake",
       globals = globals,
       label = target,
-      template = layout$template,
       resources = as.list(layout$resources)
     ),
     target = target
