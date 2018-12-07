@@ -103,9 +103,17 @@ column in \code{plan}.
 a timeout on a target.
 Assign target-level elapsed timeout times with an optional \code{elapsed}
 column in \code{plan}.
-\item \code{evaluator}: An experimental column. Each entry is a function
-passed to the \code{evaluator} argument of \code{future::future()}
-for each worker in \code{make(..., parallelism = "future")}.
+\item \code{resources}: Experimental, no guarantees that this works all the time.
+\code{resources} is a list column. Each element is a named list,
+same as the \code{resources} argument to \code{batchtools_slurm()}
+and related \code{future.bachtools} functions. See also
+\url{https://github.com/HenrikBengtsson/future.batchtools#examples}. # nolint
+\code{resources[[target_name]]} is a list of
+computing resource parameters for the target.
+Each element is a value passed to a \code{brew} placeholder of a
+\code{batchtools} template file.
+The list names of \code{resources[[target_name]]}
+should be the brew patterns.
 }
 }
 \examples{
