@@ -131,16 +131,18 @@ test_with_dir("unit_test_files works", {
   if (!file.exists(subdir)) {
     dir.create(subdir)
   }
-  expect_equal(basename(unit_test_files(subdir)), "testthat")
+  expect_equal(basename(unit_test_files(subdir, max_depth = 2)), "testthat")
 
-  # DESCRIPTION without 'drake' in first line
+  # DESCRIPTION without 'drake' in first line.  For this and next test,
+  # max_depth = 1 so we don't accidentally find a DESCRIPTION left over
+  # in temp directory directory above us
   writeLines(
     text = "Package: drakebutnotdrake",
     con = "DESCRIPTION"
   )
-  expect_error(unit_test_files(wd))
+  expect_error(unit_test_files(wd, max_depth = 1))
 
   # Shouldn't find anything if there's no DESCRIPTION
   unlink("DESCRIPTION")
-  expect_error(unit_test_files(wd))
+  expect_error(unit_test_files(wd, max_depth = 1))
 })
