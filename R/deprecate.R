@@ -1887,7 +1887,8 @@ load_main_example <- function(
   .Deprecated(
     "drake_example",
     package = "drake",
-    msg = 'load_main_example() is deprecated. Use drake_example("main") instead.'
+    msg = paste("load_main_example() is deprecated.",
+                'Use drake_example("main") instead.')
   )
 
   dir <- tempfile()

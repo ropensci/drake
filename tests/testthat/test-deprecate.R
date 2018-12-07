@@ -329,10 +329,10 @@ test_with_dir("main example", {
   for (file in c("raw_data.xlsx", "report.Rmd")) {
     expect_false(file.exists(file))
   }
-  
+
   # load_main_example() is now deprecated so should get a warning
   expect_warning(load_main_example())
-  
+
   for (file in c("raw_data.xlsx", "report.Rmd")) {
     expect_true(file.exists(file))
   }
