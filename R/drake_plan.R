@@ -37,9 +37,23 @@
 #'   a timeout on a target.
 #'   Assign target-level elapsed timeout times with an optional `elapsed`
 #'   column in `plan`.
-#' - `evaluator`: An experimental column. Each entry is a function
-#'   passed to the `evaluator` argument of `future::future()`
-#'   for each worker in `make(..., parallelism = "future")`.
+#' - template Experimental list column,
+#'   no guarantees that this works all the time.
+#'   Analogous to `future.bachtools` functions
+#'   like `batchtools_slurm()`.
+#'   `template` gives the template file/string
+#'   of a specific target in `make(parallelism = "future")`.
+#'   See the help file of
+#'   `future.batchtools::batchtools_slurm()` for details.
+#' - resources Experimental list column,
+#'   no guarantees that this works all the time.
+#'   Analogous to `future.bachtools` functions
+#'   like `batchtools_slurm()`.
+#'   `resources` gives the list of `brew` patterns specifying
+#'   computing resources in the `batchtools` template file.
+#'   In principle, the resources given are specific to the target.
+#'   See the help file of
+#'   `future.batchtools::batchtools_slurm()` for details.
 #'
 #' @export
 #' @seealso [map_plan()], [reduce_by()], [gather_by()], [reduce_plan()], [gather_plan()],
@@ -525,8 +539,21 @@ detect_arrow <- function(command) {
 #'   will be built first.
 #' @param worker the preferred worker to be assigned the target
 #'   (in parallel computing).
-#' @param evaluator the `future` evaluator of the target.
-#'   Not yet supported.
+#' @param template Experimental, no guarantees that this works all the time.
+#'   Analogous to `future.bachtools` functions
+#'   like `batchtools_slurm()`.
+#'   `template` gives the template file/string
+#'   of a specific target in `make(parallelism = "future")`.
+#'   See the help file of
+#'   `future.batchtools::batchtools_slurm()` for details.
+#' @param resources Experimental, no guarantees that this works all the time.
+#'   Analogous to `future.bachtools` functions
+#'   like `batchtools_slurm()`.
+#'   `resources` gives the list of `brew` patterns specifying
+#'   computing resources in the `batchtools` template file.
+#'   In principle, the resources given are specific to the target.
+#'   See the help file of
+#'   `future.batchtools::batchtools_slurm()` for details.
 #' @param ... named arguments specifying non-standard
 #'   fields of the workflow plan.
 #' @examples
@@ -558,7 +585,8 @@ target <- function(
   elapsed = NULL,
   priority = NULL,
   worker = NULL,
-  evaluator = NULL,
+  template = NULL,
+  resources = NULL,
   ...
 ) {
   out <- list(
@@ -570,19 +598,21 @@ target <- function(
     elapsed   = rlang::enexpr(elapsed),
     priority  = rlang::enexpr(priority),
     worker    = rlang::enexpr(worker),
-    evaluator = rlang::enexpr(evaluator)
+    template  = rlang::enexpr(template),
+    resources = rlang::enexpr(resources)
   )
   out <- c(out, rlang::enexprs(...))
   out <- select_nonempty(out)
   out[nzchar(names(out))]
-  out <- lapply(out,
-                FUN = function(x) {
-                  if (is.language(x)) {
-                    wide_deparse(x)
-                  } else {
-                    x
-                  }
-                }
+  out <- lapply(
+    X = out,
+    FUN = function(x) {
+      if (is.language(x)) {
+        wide_deparse(x)
+      } else {
+        x
+      }
+    }
   )
   tibble::as_tibble(out)
 }

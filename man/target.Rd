@@ -6,7 +6,7 @@
 \usage{
 target(command = NULL, trigger = NULL, retries = NULL,
   timeout = NULL, cpu = NULL, elapsed = NULL, priority = NULL,
-  worker = NULL, evaluator = NULL, ...)
+  worker = NULL, template = NULL, resources = NULL, ...)
 }
 \arguments{
 \item{command}{the command to build the target}
@@ -29,8 +29,22 @@ will be built first.}
 \item{worker}{the preferred worker to be assigned the target
 (in parallel computing).}
 
-\item{evaluator}{the \code{future} evaluator of the target.
-Not yet supported.}
+\item{template}{Experimental, no guarantees that this works all the time.
+Analogous to \code{future.bachtools} functions
+like \code{batchtools_slurm()}.
+\code{template} gives the template file/string
+of a specific target in \code{make(parallelism = "future")}.
+See the help file of
+\code{future.batchtools::batchtools_slurm()} for details.}
+
+\item{resources}{Experimental, no guarantees that this works all the time.
+Analogous to \code{future.bachtools} functions
+like \code{batchtools_slurm()}.
+\code{resources} gives the list of \code{brew} patterns specifying
+computing resources in the \code{batchtools} template file.
+In principle, the resources given are specific to the target.
+See the help file of
+\code{future.batchtools::batchtools_slurm()} for details.}
 
 \item{...}{named arguments specifying non-standard
 fields of the workflow plan.}

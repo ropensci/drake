@@ -85,7 +85,7 @@ new_worker <- function(id, target, config, protect) {
   config$cache$flush_cache() # Less data to pass this way.
   DRAKE_GLOBALS__ <- NULL # Fixes warning about undefined globals.
   # Avoid potential name conflicts with other globals.
-  # When we solve #296, the need for such a clumsy workaround
+  # When we solve #296, need for such a clumsy workaround
   # should go away.
   globals <- future_globals(
     target = target,
@@ -93,13 +93,8 @@ new_worker <- function(id, target, config, protect) {
     config = config,
     protect = protect
   )
-  evaluator <- drake_plan_override(
-    target = target,
-    field = "evaluator",
-    config = config
-  ) %||%
-    future::plan("next")
   announce_build(target = target, meta = meta, config = config)
+  layout <- config$layout[[target]]
   structure(
     future::future(
       expr = drake_future_task(
@@ -110,8 +105,9 @@ new_worker <- function(id, target, config, protect) {
       ),
       packages = "drake",
       globals = globals,
-      evaluator = evaluator,
-      label = target
+      label = target,
+      template = layout$template,
+      resources = as.list(layout$resources)
     ),
     target = target
   )
