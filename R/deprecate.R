@@ -1885,7 +1885,7 @@ load_main_example <- function(
 ) {
   deprecate_force(force)
   .Deprecated(
-    "drake_plan",
+    "drake_example",
     package = "drake",
     msg = 'load_main_example() is deprecated. Use drake_example("main") instead.'
   )
