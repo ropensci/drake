@@ -1,5 +1,8 @@
 {
-  "@context": ["https://doi.org/10.5063/schema/codemeta-2.0", "http://schema.org"],
+  "@context": [
+    "https://doi.org/10.5063/schema/codemeta-2.0",
+    "http://schema.org"
+  ],
   "@type": "SoftwareSourceCode",
   "identifier": "drake",
   "description": "A general-purpose computational engine for data analysis,\n  drake rebuilds intermediate data objects when their dependencies change,\n  and it skips work when the results are already up to date.\n  Not every execution starts from scratch,\n  and completed projects have tangible evidence\n  that they are reproducible.\n  Extensive documentation, from beginner-friendly tutorials\n  to practical examples and more, is available at the reference website\n  <https://ropensci.github.io/drake/> and the online manual\n  <https://ropenscilabs.github.io/drake-manual/>.",
@@ -164,18 +167,6 @@
     },
     {
       "@type": "SoftwareApplication",
-      "identifier": "dplyr",
-      "name": "dplyr",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=dplyr"
-    },
-    {
-      "@type": "SoftwareApplication",
       "identifier": "downloader",
       "name": "downloader",
       "provider": {
@@ -214,18 +205,6 @@
       "@type": "SoftwareApplication",
       "identifier": "grDevices",
       "name": "grDevices"
-    },
-    {
-      "@type": "SoftwareApplication",
-      "identifier": "ggplot2",
-      "name": "ggplot2",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=ggplot2"
     },
     {
       "@type": "SoftwareApplication",
@@ -525,14 +504,32 @@
   ],
   "releaseNotes": "https://github.com/bpbond/drake/blob/master/NEWS.md",
   "readme": "https://github.com/bpbond/drake/blob/master/README.md",
-  "fileSize": "399.059KB",
-  "contIntegration": ["https://ci.appveyor.com/project/ropensci/drake", "https://travis-ci.org/ropensci/drake", "https://codecov.io/github/ropensci/drake?branch=master"],
+  "fileSize": "399.392KB",
+  "contIntegration": [
+    "https://ci.appveyor.com/project/ropensci/drake",
+    "https://travis-ci.org/ropensci/drake",
+    "https://codecov.io/github/ropensci/drake?branch=master"
+  ],
   "developmentStatus": "http://www.repostatus.org/#active",
   "review": {
     "@type": "Review",
     "url": "https://github.com/ropensci/onboarding/issues/156",
     "provider": "http://ropensci.org"
   },
-  "keywords": ["reproducibility", "high-performance-computing", "r", "data-science", "drake", "makefile", "pipeline", "workflow", "reproducible-research", "rstats", "r-package", "ropensci", "peer-reviewed"],
+  "keywords": [
+    "reproducibility",
+    "high-performance-computing",
+    "r",
+    "data-science",
+    "drake",
+    "makefile",
+    "pipeline",
+    "workflow",
+    "reproducible-research",
+    "rstats",
+    "r-package",
+    "ropensci",
+    "peer-reviewed"
+  ],
   "relatedLink": "https://CRAN.R-project.org/package=drake"
 }
