@@ -1936,7 +1936,7 @@ clean_main_example <- function() {
     package = "drake",
     msg = paste("clean_main_example() is deprecated.")
   )
-  
+
   clean(destroy = TRUE, search = FALSE)
   unlink(c("report.Rmd", "raw_data.xlsx"))
   invisible()
