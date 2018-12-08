@@ -89,7 +89,7 @@ test_with_dir("timeouts", {
         pl,
         envir = e,
         verbose = FALSE,
-        timeout = 1e-3,
+        elapsed = 1e-3,
         retries = 2,
         session_info = FALSE
       )
@@ -100,7 +100,7 @@ test_with_dir("timeouts", {
   # Should time out too. The workflow plan should override
   # the arguments to make().
   # CPU time should be similar, but testing it is elusive.
-  for (field in c("timeout", "elapsed")) {
+  for (field in c("elapsed")) {
     clean()
     pl2 <- pl
     pl2[[field]] <- 1e-3

@@ -9,8 +9,8 @@ with_seed_timeout <- function(target, meta, config) {
         config = config
       )
     ),
-    cpu = timeouts$cpu,
-    elapsed = timeouts$elapsed
+    cpu = timeouts[["cpu"]],
+    elapsed = timeouts[["elapsed"]]
   )
 }
 
@@ -82,23 +82,12 @@ with_timeout <- function(expr, cpu, elapsed) {
 }
 
 resolve_timeouts <- function(target, config) {
-  keys <- c("timeout", "cpu", "elapsed")
-  timeouts <- lapply(
-    X = keys,
-    FUN = function(field) {
-      out <- drake_plan_override(
-        target = target,
-        field = field,
-        config = config
-      )
-      as.numeric(out)
-    }
+  layout <- config$layout[[target]] %||% list()
+  vapply(
+    X = c("cpu", "elapsed"),
+    FUN = function(key) {
+      layout[[key]] %||NA% config[[key]]
+    },
+    FUN.VALUE = numeric(1)
   )
-  names(timeouts) <- keys
-  for (field in c("cpu", "elapsed")) {
-    if (!length(timeouts[[field]])) {
-      timeouts[[field]] <- timeouts$timeout
-    }
-  }
-  timeouts
 }

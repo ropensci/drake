@@ -84,16 +84,6 @@ test_with_dir("failed targets do not become up to date", {
   expect_equal(sort(outdated(con)), sort(c("a", "c")))
 })
 
-test_with_dir("drake_plan_override() quits correctly in error", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  con <- dbug()
-  con$plan$missing <- "nope"
-  expect_error(
-    drake_plan_override(target = "missing", field = "missing", config = con),
-    regexp = "not in the workflow plan"
-  )
-})
-
 test_with_dir("config and make without safety checks", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- drake_plan(

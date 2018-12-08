@@ -295,25 +295,6 @@ complete_target_names <- function(commands_list) {
   commands_list
 }
 
-drake_plan_override <- function(target, field, config) {
-  in_plan <- config$plan[[field]]
-  if (is.null(in_plan)) {
-    return(config[[field]])
-  } else {
-    # Should be length 0 or 1 because sanitize_plan()
-    # already screens for duplicate target names.
-    index <- which(config$plan$target == target)
-    if (!length(index)) {
-      stop("target ", target, " is not in the workflow plan.")
-    }
-    out <- in_plan[[index]]
-    if (safe_is_na(out)) {
-      out <- config[[field]]
-    }
-    out
-  }
-}
-
 #' @title Declare the file inputs of a workflow plan command.
 #' @description Use this function to help write the commands
 #'   in your workflow plan data frame. See the examples
