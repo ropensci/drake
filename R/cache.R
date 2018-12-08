@@ -140,11 +140,7 @@ this_cache <- function(
     )
   }
   fetch_cache <- as.character(fetch_cache)
-  if (length(fetch_cache) && nzchar(fetch_cache)) {
-    cache <- eval(parse(text = localize(fetch_cache)))
-  } else {
-    cache <- drake_try_fetch_rds(path = path)
-  }
+  cache <- drake_try_fetch_rds(path = path)
   configure_cache(
     cache = cache,
     long_hash_algo = "md5",
