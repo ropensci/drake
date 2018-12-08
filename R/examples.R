@@ -273,31 +273,3 @@ clean_mtcars_example <- function() {
   unlink("report.Rmd")
   invisible()
 }
-
-#' @title Clean the main example from `drake_example("main")`
-#' @description This function deletes files. Use at your own risk.
-#'   Destroys the `.drake/` cache and the `report.Rmd` file
-#'   in the current working directory. Your working directory
-#'   (`getcwd()`) must be the folder from which you first ran
-#'   `load_main_example()` and `make(my_plan)`.
-#' @export
-#' @return Nothing.
-#' @seealso [load_main_example()], [clean()]
-#' @examples
-#' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' if (requireNamespace("downloader")) {
-#' # Populate your workspace and write 'report.Rmd' and 'raw_data.xlsx'.
-#' load_main_example() # Get the code: drake_example("main")
-#' make(plan)
-#' readd(hist) # Show the ggplot2 histogram.
-#' # Clean up the example.
-#' clean_main_example()
-#' }
-#' })
-#' }
-clean_main_example <- function() {
-  clean(destroy = TRUE, search = FALSE)
-  unlink(c("report.Rmd", "raw_data.xlsx"))
-  invisible()
-}

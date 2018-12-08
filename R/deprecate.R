@@ -1910,3 +1910,34 @@ load_main_example <- function(
   }
   invisible()
 }
+
+#' @title Deprecated: clean the main example from `drake_example("main")`
+#' @description This function deletes files. Use at your own risk.
+#'   Destroys the `.drake/` cache and the `report.Rmd` file
+#'   in the current working directory. Your working directory
+#'   (`getcwd()`) must be the folder from which you first ran
+#'   `load_main_example()` and `make(my_plan)`.
+#' @export
+#' @return Nothing.
+#' @seealso [load_main_example()], [clean()]
+#' @examples
+#' \dontrun{
+#' # The code for this example is hosted at
+#' # https://github.com/wlandau/drake-examples/tree/master/main
+#' # You can download it with drake_example("main")
+#' # or watch a video tutorial about it at
+#' # https://ropenscilabs.github.io/drake-manual/.
+#' }
+clean_main_example <- function() {
+  deprecate_force(force)
+  .Deprecated(
+    "clean",
+    package = "drake",
+    msg = paste("clean_main_example() is deprecated.",
+                'Use clean("main") instead.')
+  )
+  
+  clean(destroy = TRUE, search = FALSE)
+  unlink(c("report.Rmd", "raw_data.xlsx"))
+  invisible()
+}
