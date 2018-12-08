@@ -167,18 +167,15 @@
 #'   or `"Makefile"`) because the distributed R sessions
 #'   need to know how to load the cache.
 #'
-#' @param timeout Seconds of overall time to allow before imposing
-#'   a timeout on a target.
-#'   Assign target-level timeout times with an optional `timeout`
-#'   column in `plan`.
+#' @param timeout `deprecated`. Use `elapsed` and `cpu` instead.
 #'
-#' @param cpu Seconds of cpu time to allow before imposing
-#'   a timeout on a target.
+#' @param cpu Same as the `cpu` argument of `setTimeLimit()`.
+#'   Seconds of cpu time before a target times out.
 #'   Assign target-level cpu timeout times with an optional `cpu`
 #'   column in `plan`.
 #'
-#' @param elapsed Seconds of elapsed time to allow before imposing
-#'   a timeout on a target.
+#' @param elapsed Same as the `elapsed` argument of `setTimeLimit()`.
+#'   Seconds of elapsed time before a target times out.
 #'   Assign target-level elapsed timeout times with an optional `elapsed`
 #'   column in `plan`.
 #'
@@ -459,9 +456,9 @@ drake_config <- function(
     verbose = verbose
   ),
   recipe_command = drake::default_recipe_command(),
-  timeout = Inf,
-  cpu = timeout,
-  elapsed = timeout,
+  timeout = NULL,
+  cpu = Inf,
+  elapsed = Inf,
   retries = 0,
   force = FALSE,
   log_progress = FALSE,
@@ -509,6 +506,14 @@ drake_config <- function(
       "Use `memory_strategy` instead.",
       call. = FALSE
     ) # 2018-11-01 # nolint
+  }
+  if (!is.null(timeout)) {
+    warning(
+      "Argument `timeout` is deprecated. ",
+      "Use `elapsed` and/or `cpu` instead.",
+      call. = FALSE
+      # 2018-12-07 # nolint
+    )
   }
   plan <- sanitize_plan(plan)
   if (is.null(targets)) {

@@ -249,6 +249,17 @@ test_with_dir("deprecate the `force` argument", {
   expect_warning(load_mtcars_example(force = TRUE), regexp = "deprecated")
 })
 
+test_with_dir("timeout argument", {
+  expect_warning(
+    make(
+      drake_plan(x = 1),
+      timeout = 5,
+      session_info = FALSE,
+      cache = storr::storr_environment()
+    )
+  )
+})
+
 test_with_dir("old trigger interface", {
   skip_on_cran()
   for (old_trigger in suppressWarnings(triggers())) {

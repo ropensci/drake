@@ -13,8 +13,8 @@ make(plan = drake::read_drake_plan(), targets = NULL,
   prepend = character(0), command = drake::default_Makefile_command(),
   args = drake::default_Makefile_args(jobs = jobs, verbose = verbose),
   recipe_command = drake::default_recipe_command(),
-  log_progress = TRUE, skip_targets = FALSE, timeout = Inf,
-  cpu = NULL, elapsed = NULL, retries = 0, force = FALSE,
+  log_progress = TRUE, skip_targets = FALSE, timeout = NULL,
+  cpu = Inf, elapsed = Inf, retries = 0, force = FALSE,
   return_config = NULL, graph = NULL, trigger = drake::trigger(),
   skip_imports = FALSE, skip_safety_checks = FALSE, config = NULL,
   lazy_load = "eager", session_info = TRUE, cache_log_file = NULL,
@@ -176,18 +176,15 @@ will no longer work if you do that.}
 \item{skip_targets}{logical, whether to skip building the targets
 in \code{plan} and just import objects and files.}
 
-\item{timeout}{Seconds of overall time to allow before imposing
-a timeout on a target.
-Assign target-level timeout times with an optional \code{timeout}
-column in \code{plan}.}
+\item{timeout}{\code{deprecated}. Use \code{elapsed} and \code{cpu} instead.}
 
-\item{cpu}{Seconds of cpu time to allow before imposing
-a timeout on a target.
+\item{cpu}{Same as the \code{cpu} argument of \code{setTimeLimit()}.
+Seconds of cpu time before a target times out.
 Assign target-level cpu timeout times with an optional \code{cpu}
 column in \code{plan}.}
 
-\item{elapsed}{Seconds of elapsed time to allow before imposing
-a timeout on a target.
+\item{elapsed}{Same as the \code{elapsed} argument of \code{setTimeLimit()}.
+Seconds of elapsed time before a target times out.
 Assign target-level elapsed timeout times with an optional \code{elapsed}
 column in \code{plan}.}
 

@@ -29,6 +29,7 @@
 - Change the names of the return value of `predict_load_balancing()` to `time` and `workers`.
 - Bring the documentation of `predict_runtime()` and `predict_load_balancing()` up to date.
 - Deprecate `drake_session()` and rename to `drake_get_session_info()`.
+- Deprecate the `timeout` argument in the API of `make()` and `drake_config()`. A value of `timeout` can be still passed to these functions without error, but only the `elapsed` and `cpu` arguments impose actual timeouts now.
 
 # Version 6.1.0
 

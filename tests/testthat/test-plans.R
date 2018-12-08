@@ -602,7 +602,7 @@ test_with_dir("drake_plan_source()", {
         command = FALSE,
         depend = FALSE
       ),
-      timeout = 1e3
+      elapsed = 1e3
     ),
     strings_in_dots = "literals"
   )

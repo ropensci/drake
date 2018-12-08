@@ -7,6 +7,14 @@
   }
 }
 
+`%||NA%` <- function(x, y) {
+  if (is.null(x) || length(x) < 1 || is.na(x)) {
+    y
+  } else {
+    x
+  }
+}
+
 assert_pkg <- function(pkg, version = NULL, install = "install.packages") {
   if (!requireNamespace(pkg, quietly = TRUE)) {
     stop(
