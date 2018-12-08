@@ -58,6 +58,7 @@ test_with_dir("lazy loading is actually lazy", {
 
 test_with_dir("active bindings", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_if_not_installed("bindr")
   config <- dbug()
   if (identical(globalenv(), config$envir)) {
     skip("Testing active bindings on a global environment mangles other tests.") # nolint

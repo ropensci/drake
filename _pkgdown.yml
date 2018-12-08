@@ -30,9 +30,7 @@ reference:
   contents:
   - '`drake_example`'
   - '`drake_examples`'
-  - '`load_main_example`'
   - '`load_mtcars_example`'
-  - '`clean_main_example`'
   - '`clean_mtcars_example`'
 - title: Basic
   contents:

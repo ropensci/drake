@@ -38,14 +38,11 @@ Deprecated December 2018.
 }
 \examples{
 \dontrun{
-test_with_dir("Quarantine side effects.", {
-# Populate your workspace and write 'report.Rmd' and 'raw_data.xlsx'.
-load_main_example() # Get the code: drake_example("main")
-# Run the project with make(plan).
-make(plan) # Build the targets.
-# Clean up the example.
-clean_main_example()
-})
+# The code for this example is hosted at
+# https://github.com/wlandau/drake-examples/tree/master/main
+# You can download it iwth drake_example("main")
+# or watch a video tutorial about it at
+# https://ropenscilabs.github.io/drake-manual/.
 }
 }
 \seealso{

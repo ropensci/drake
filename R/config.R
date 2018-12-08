@@ -213,7 +213,7 @@
 #'     with [assign()].
 #'   - `"promise"`: lazy loading with [delayedAssign()]
 #'   - `"bind"`: lazy loading with active bindings:
-#'     [bindr::populate_env()].
+#'     `bindr::populate_env()`.
 #'   - `TRUE`: same as `"promise"`.
 #'   - `FALSE`: same as `"eager"`.
 #'

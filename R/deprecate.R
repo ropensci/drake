@@ -1868,14 +1868,11 @@ workplan <- function(
 #' @details Deprecated December 2018.
 #' @examples
 #' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' # Populate your workspace and write 'report.Rmd' and 'raw_data.xlsx'.
-#' load_main_example() # Get the code: drake_example("main")
-#' # Run the project with make(plan).
-#' make(plan) # Build the targets.
-#' # Clean up the example.
-#' clean_main_example()
-#' })
+#' # The code for this example is hosted at
+#' # https://github.com/wlandau/drake-examples/tree/master/main
+#' # You can download it iwth drake_example("main")
+#' # or watch a video tutorial about it at
+#' # https://ropenscilabs.github.io/drake-manual/.
 #' }
 load_main_example <- function(
   envir = parent.frame(),
@@ -1919,8 +1916,8 @@ load_main_example <- function(
 #'   `load_main_example()` and `make(my_plan)`.
 #' @export
 #' @return Nothing.
+#' @keywords internal
 #' @details Deprecated December 2018.
-#' @seealso [load_main_example()], [clean()]
 #' @examples
 #' \dontrun{
 #' # The code for this example is hosted at

@@ -28,6 +28,4 @@ Deprecated December 2018.
 # https://ropenscilabs.github.io/drake-manual/.
 }
 }
-\seealso{
-\code{\link[=load_main_example]{load_main_example()}}, \code{\link[=clean]{clean()}}
-}
+\keyword{internal}

@@ -99,7 +99,7 @@ if you set \code{deps} to \code{TRUE}.}
 with \code{\link[=assign]{assign()}}.
 \item \code{"promise"}: lazy loading with \code{\link[=delayedAssign]{delayedAssign()}}
 \item \code{"bind"}: lazy loading with active bindings:
-\code{\link[bindr:populate_env]{bindr::populate_env()}}.
+\code{bindr::populate_env()}.
 \item \code{TRUE}: same as \code{"promise"}.
 \item \code{FALSE}: same as \code{"eager"}.
 }}
