@@ -14,8 +14,8 @@ test_with_dir("dot symbol is ignored", {
   )
   expect_equal(
     sort(clean_dependency_list(
-      deps_code("dplyr::filter(complete.cases(.))"))),
-    sort(c("complete.cases", "dplyr::filter"))
+      deps_code("subset(complete.cases(.))"))),
+    sort(c("complete.cases", "subset"))
   )
 })
 

@@ -332,3 +332,24 @@ test_with_dir("pruning_strategy", {
     regexp = "deprecated"
   )
 })
+
+test_with_dir("main example", {
+  skip_on_cran()
+  skip_if_not_installed("downloader")
+  skip_if_not_installed("ggplot2")
+  for (file in c("raw_data.xlsx", "report.Rmd")) {
+    expect_false(file.exists(file))
+  }
+
+  # load_main_example() is now deprecated so should get a warning
+  expect_warning(load_main_example())
+
+  for (file in c("raw_data.xlsx", "report.Rmd")) {
+    expect_true(file.exists(file))
+  }
+  expect_warning(load_main_example(overwrite = TRUE), regexp = "Overwriting")
+  expect_warning(clean_main_example())
+  for (file in c("raw_data.xlsx", "report.Rmd")) {
+    expect_false(file.exists(file))
+  }
+})
