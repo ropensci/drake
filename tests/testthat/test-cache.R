@@ -470,3 +470,18 @@ test_with_dir("memo_expr() works without a cache", {
   x <- "x"
   expect_equal(memo_expr(x, cache = NULL), x)
 })
+
+test_with_dir("master caching, environment caches and parallelism", {
+  skip_on_cran()
+  skip_if_not_installed("future")
+  load_mtcars_example()
+  future::plan(future::multiprocess)
+  config <- make(
+    my_plan,
+    cache = storr::storr_environment(), # not thread-safe
+    caching = "master",
+    parallelism = "future",
+    jobs = 2
+  )
+  expect_true("report" %in% justbuilt(config))
+})
