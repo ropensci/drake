@@ -16,6 +16,9 @@ in the current working directory. Your working directory
 (\code{getcwd()}) must be the folder from which you first ran
 \code{load_main_example()} and \code{make(my_plan)}.
 }
+\details{
+Deprecated December 2018.
+}
 \examples{
 \dontrun{
 # The code for this example is hosted at

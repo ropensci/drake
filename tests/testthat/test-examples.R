@@ -22,24 +22,6 @@ test_with_dir("example template files", {
   expect_true(file.exists("slurm_batchtools.tmpl"))
 })
 
-test_with_dir("main example", {
-  skip_on_cran()
-  skip_if_not_installed("downloader")
-  skip_if_not_installed("ggplot2")
-  for (file in c("raw_data.xlsx", "report.Rmd")) {
-    expect_false(file.exists(file))
-  }
-  drake_example("main")
-  for (file in c("raw_data.xlsx", "report.Rmd")) {
-    expect_true(file.exists(file))
-  }
-  expect_warning(load_main_example(overwrite = TRUE), regexp = "Overwriting")
-  clean("main")
-  for (file in c("raw_data.xlsx", "report.Rmd")) {
-    expect_false(file.exists(file))
-  }
-})
-
 test_with_dir("mtcars example works", {
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))

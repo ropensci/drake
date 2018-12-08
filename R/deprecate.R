@@ -1865,7 +1865,7 @@ workplan <- function(
 #'   existing file `report.Rmd`
 #' @param force deprecated
 #' @keywords internal
-#' @details Deprecated December 2019.
+#' @details Deprecated December 2018.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -1919,6 +1919,7 @@ load_main_example <- function(
 #'   `load_main_example()` and `make(my_plan)`.
 #' @export
 #' @return Nothing.
+#' @details Deprecated December 2018.
 #' @seealso [load_main_example()], [clean()]
 #' @examples
 #' \dontrun{
@@ -1933,8 +1934,7 @@ clean_main_example <- function() {
   .Deprecated(
     "clean",
     package = "drake",
-    msg = paste("clean_main_example() is deprecated.",
-                'Use clean("main") instead.')
+    msg = paste("clean_main_example() is deprecated.")
   )
   
   clean(destroy = TRUE, search = FALSE)
