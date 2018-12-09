@@ -64,7 +64,7 @@ recurse_ignore <- function(x) {
   if (is.function(x) && !is.primitive(x) && !is.null(body(x))) {
     body(x) <- recurse_ignore(body(x))
   } else if (is_callish(x)) {
-    if (is_ignored_call(x)) {
+    if (wide_deparse(x[[1]]) %in% ignored_fns) {
       x <- quote(ignore())
     } else {
       x[] <- lapply(as.list(x), recurse_ignore)

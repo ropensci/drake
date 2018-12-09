@@ -15,28 +15,28 @@ code_dependencies <- function(expr, exclude = character(0), globals = NULL) {
       return()
     } else if (is.function(expr)) {
       expr <- unwrap_function(expr)
-      if (typeof(expr) != "closure") {
-        expr <- function() {} # nolint: curly braces are necessary
+      if (typeof(expr) == "closure") {
+        walk(body(expr))
       }
-      walk(body(expr))
     } else if (is.name(expr)) {
       results$globals <<- c(results$globals, expr)
     } else if (is.character(expr)) {
       results$strings <<- c(results$strings, expr)
     } else if (is.language(expr) && (is.call(expr) || is.recursive(expr))) {
+      name <- wide_deparse(expr[[1]])
       new_results <- list()
-      if (is_loadd_call(expr)) {
+      if (name %in% loadd_fns) {
         new_results <- analyze_loadd(expr)
-      } else if (is_readd_call(expr)) {
+      } else if (name %in% readd_fns) {
         new_results <- analyze_readd(expr)
-      } else if (is_knitr_in_call(expr)) {
+      } else if (name %in% c(knitr_in_fns)) {
         new_results <- analyze_knitr_in(expr)
-      } else if (is_file_in_call(expr)) {
+      } else if (name %in% file_in_fns) {
         new_results <- analyze_file_in(expr)
-      } else if (is_file_out_call(expr)) {
+      } else if (name %in% file_out_fns) {
         new_results <- analyze_file_out(expr)
-      } else if (!is_ignored_call(expr)) {
-        if (wide_deparse(expr[[1]]) %in% c("::", ":::")) {
+      } else if (!(name %in% ignored_fns)) {
+        if (name %in% c("::", ":::")) {
           new_results <- list(
             namespaced = setdiff(wide_deparse(expr), drake_symbols)
           )
@@ -63,19 +63,6 @@ code_dependencies <- function(expr, exclude = character(0), globals = NULL) {
     }
   )
   select_nonempty(results)
-}
-
-# Walk through function f and find `pkg::fun()` and `pkg:::fun()` calls.
-find_namespaced_functions <- function(f, found = character(0)) {
-  if (is.function(f)) {
-    return(find_namespaced_functions(body(f), found))
-  } else if (is.call(f) && wide_deparse(f[[1]]) %in% c("::", ":::")) {
-    found <- c(found, wide_deparse(f))
-  } else if (is.recursive(f)) {
-    v <- lapply(as.list(f), find_namespaced_functions, found)
-    found <- unique(c(found, unlist(v)))
-  }
-  found
 }
 
 is_vectorized <- function(funct) {
@@ -216,30 +203,6 @@ base_symbols <- sort(
   )
 )
 ignored_symbols <- sort(c(drake_symbols, base_symbols))
-
-is_ignored_call <- function(expr) {
-  wide_deparse(expr[[1]]) %in% ignored_fns
-}
-
-is_file_in_call <- function(expr) {
-  wide_deparse(expr[[1]]) %in% file_in_fns
-}
-
-is_file_out_call <- function(expr) {
-  wide_deparse(expr[[1]]) %in% file_out_fns
-}
-
-is_knitr_in_call <- function(expr) {
-  wide_deparse(expr[[1]]) %in% c(knitr_in_fns)
-}
-
-is_loadd_call <- function(expr) {
-  wide_deparse(expr[[1]]) %in% loadd_fns
-}
-
-is_readd_call <- function(expr) {
-  wide_deparse(expr[[1]]) %in% readd_fns
-}
 
 is_target_call <- function(expr) {
   tryCatch(
