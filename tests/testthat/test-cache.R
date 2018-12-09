@@ -155,7 +155,8 @@ test_with_dir("non-existent caches", {
   expect_error(tmp <- read_drake_plan(search = FALSE))
   expect_error(tmp <- read_drake_graph(search = FALSE))
   expect_error(tmp <- read_drake_seed(search = FALSE))
-  expect_error(tmp <- drake_session(search = FALSE))
+  expect_error(tmp <- drake_get_session_info(search = FALSE))
+  expect_error(tmp <- drake_set_session_info(search = FALSE))
   dummy <- new_cache()
   expect_silent(read_drake_graph(cache = dummy))
 })
@@ -264,7 +265,7 @@ test_with_dir("cache functions work", {
   expect_true(n1 > n2 & n2 > 0)
 
   # find stuff in current directory session, progress
-  expect_true(is.list(drake_session(search = FALSE)))
+  expect_true(is.list(drake_get_session_info(search = FALSE)))
   expect_true(all(progress(search = FALSE) == "finished"))
   expect_equal(in_progress(search = FALSE), character(0))
   expect_warning(tmp <- progress(imported_files_only = TRUE))
@@ -359,7 +360,7 @@ test_with_dir("cache functions work", {
   s <- normalizePath(file.path(scratch, "searchfrom", "here"))
 
   # progress, session
-  expect_true(is.list(drake_session(search = TRUE, path = s)))
+  expect_true(is.list(drake_get_session_info(search = TRUE, path = s)))
   expect_equal(sort(names(progress(search = TRUE, path = s))),
     sort(all))
   expect_equal(sort(names(progress(no_imported_objects = TRUE,

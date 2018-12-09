@@ -91,9 +91,9 @@ make <- function(
   recipe_command = drake::default_recipe_command(),
   log_progress = TRUE,
   skip_targets = FALSE,
-  timeout = Inf,
-  cpu = NULL,
-  elapsed = NULL,
+  timeout = NULL,
+  cpu = Inf,
+  elapsed = Inf,
   retries = 0,
   force = FALSE,
   return_config = NULL,
@@ -127,6 +127,14 @@ make <- function(
       "The return_config argument to make() is deprecated. ",
       "Now, an internal configuration list is always invisibly returned.",
       call. = FALSE
+    )
+  }
+  if (!is.null(timeout)) {
+    warning(
+      "Argument `timeout` is deprecated. ",
+      "Use `elapsed` and/or `cpu` instead.",
+      call. = FALSE
+      # 2018-12-07 # nolint
     )
   }
   if (is.null(config)) {
@@ -370,32 +378,6 @@ make_imports_targets <- function(config) {
   run_parallel_backend(config = config)
   console_up_to_date(config = config)
   invisible(config)
-}
-
-initialize_session <- function(config) {
-  init_common_values(config$cache)
-  mark_envir(config$envir)
-  if (config$log_progress) {
-    clear_tmp_namespace(
-      cache = config$cache,
-      jobs = imports_setting(config$jobs),
-      namespace = "progress"
-    )
-  }
-  for (namespace in c("attempt", "session")) {
-    clear_tmp_namespace(
-      cache = config$cache,
-      jobs = imports_setting(config$jobs),
-      namespace = namespace
-    )
-  }
-  if (config$session_info) {
-    config$cache$set(
-      key = "sessionInfo",
-      value = sessionInfo(),
-      namespace = "session"
-    )
-  }
 }
 
 conclude_session <- function(config) {

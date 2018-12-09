@@ -37,9 +37,17 @@
 #'   a timeout on a target.
 #'   Assign target-level elapsed timeout times with an optional `elapsed`
 #'   column in `plan`.
-#' - `evaluator`: An experimental column. Each entry is a function
-#'   passed to the `evaluator` argument of `future::future()`
-#'   for each worker in `make(..., parallelism = "future")`.
+#' - `resources`: Experimental, no guarantees that this works all the time.
+#'   `resources` is a list column. Each element is a named list,
+#'   same as the `resources` argument to `batchtools_slurm()`
+#'   and related `future.bachtools` functions. See also
+#'   <https://github.com/HenrikBengtsson/future.batchtools#examples>. # nolint
+#'   `resources[[target_name]]` is a list of
+#'   computing resource parameters for the target.
+#'   Each element is a value passed to a `brew` placeholder of a
+#'   `batchtools` template file.
+#'   The list names of `resources[[target_name]]`
+#'   should be the brew patterns.
 #'
 #' @export
 #' @seealso [map_plan()], [reduce_by()], [gather_by()], [reduce_plan()], [gather_plan()],
@@ -287,25 +295,6 @@ complete_target_names <- function(commands_list) {
   commands_list
 }
 
-drake_plan_override <- function(target, field, config) {
-  in_plan <- config$plan[[field]]
-  if (is.null(in_plan)) {
-    return(config[[field]])
-  } else {
-    # Should be length 0 or 1 because sanitize_plan()
-    # already screens for duplicate target names.
-    index <- which(config$plan$target == target)
-    if (!length(index)) {
-      stop("target ", target, " is not in the workflow plan.")
-    }
-    out <- in_plan[[index]]
-    if (safe_is_na(out)) {
-      out <- config[[field]]
-    }
-    out
-  }
-}
-
 #' @title Declare the file inputs of a workflow plan command.
 #' @description Use this function to help write the commands
 #'   in your workflow plan data frame. See the examples
@@ -470,16 +459,18 @@ warn_arrows <- function(dots) {
     # Probably not possible, but good to have:
     names(dots) <- rep("", length(dots)) # nocov
   }
-  check_these <- purrr::map_lgl(names(dots), function(x) {
-    !nzchar(x)
-  })
+  check_these <- vapply(names(dots),
+                        function(x) !nzchar(x),
+                        FUN.VALUE = logical(1))
   check_these <- which(check_these)
+  # Here we use lapply, not vapply, because don't know whether there any
+  # offending commands (and thus don't know size of function return)
   offending_commands <- lapply(dots[check_these], detect_arrow)
   offending_commands <- Filter(
     offending_commands,
     f = function(x) {
-    !is.null(x)
-  })
+      !is.null(x)
+    })
   if (length(offending_commands)) {
     warning(
       "Use `=` instead of `<-` or `->` ",
@@ -523,8 +514,14 @@ detect_arrow <- function(command) {
 #'   will be built first.
 #' @param worker the preferred worker to be assigned the target
 #'   (in parallel computing).
-#' @param evaluator the `future` evaluator of the target.
-#'   Not yet supported.
+#' @param resources Experimental, no guarantees that this works all the time.
+#'   Same as the `resources` argument to `batchtools_slurm()`
+#'   and related `future.bachtools` functions.
+#'   See also <https://github.com/HenrikBengtsson/future.batchtools#examples>. # nolint
+#'   `resources` is a list of computing resource parameters for the target.
+#'   Each element is a value passed to a `brew` placeholder of a
+#'   `batchtools` template file. The list names of `resources`
+#'   should be the brew patterns.
 #' @param ... named arguments specifying non-standard
 #'   fields of the workflow plan.
 #' @examples
@@ -556,7 +553,7 @@ target <- function(
   elapsed = NULL,
   priority = NULL,
   worker = NULL,
-  evaluator = NULL,
+  resources = NULL,
   ...
 ) {
   out <- list(
@@ -568,14 +565,14 @@ target <- function(
     elapsed   = rlang::enexpr(elapsed),
     priority  = rlang::enexpr(priority),
     worker    = rlang::enexpr(worker),
-    evaluator = rlang::enexpr(evaluator)
+    resources = rlang::enexpr(resources)
   )
   out <- c(out, rlang::enexprs(...))
   out <- select_nonempty(out)
   out[nzchar(names(out))]
-  out <- purrr::map(
-    .x = out,
-    .f = function(x) {
+  out <- lapply(
+    X = out,
+    FUN = function(x) {
       if (is.language(x)) {
         wide_deparse(x)
       } else {

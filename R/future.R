@@ -85,7 +85,7 @@ new_worker <- function(id, target, config, protect) {
   config$cache$flush_cache() # Less data to pass this way.
   DRAKE_GLOBALS__ <- NULL # Fixes warning about undefined globals.
   # Avoid potential name conflicts with other globals.
-  # When we solve #296, the need for such a clumsy workaround
+  # When we solve #296, need for such a clumsy workaround
   # should go away.
   globals <- future_globals(
     target = target,
@@ -93,13 +93,8 @@ new_worker <- function(id, target, config, protect) {
     config = config,
     protect = protect
   )
-  evaluator <- drake_plan_override(
-    target = target,
-    field = "evaluator",
-    config = config
-  ) %||%
-    future::plan("next")
   announce_build(target = target, meta = meta, config = config)
+  layout <- config$layout[[target]]
   structure(
     future::future(
       expr = drake_future_task(
@@ -110,8 +105,8 @@ new_worker <- function(id, target, config, protect) {
       ),
       packages = "drake",
       globals = globals,
-      evaluator = evaluator,
-      label = target
+      label = target,
+      resources = as.list(layout$resources)
     ),
     target = target
   )
@@ -207,22 +202,16 @@ initialize_workers <- function(config) {
   out
 }
 
-decrease_revdep_keys <- function(worker, config, queue) {
+ft_decrease_revdep_keys <- function(worker, config, queue) {
   target <- attr(worker, "target")
   if (!length(target) || safe_is_na(target) || !is.character(target)) {
     return()
   }
-  revdeps <- dependencies(
-    targets = target,
-    config = config,
-    reverse = TRUE
-  )
-  revdeps <- intersect(revdeps, queue$list())
-  queue$decrease_key(targets = revdeps)
+  decrease_revdep_keys(queue, target, config)
 }
 
 conclude_worker <- function(worker, config, queue) {
-  decrease_revdep_keys(
+  ft_decrease_revdep_keys(
     worker = worker,
     queue = queue,
     config = config

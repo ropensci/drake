@@ -160,12 +160,8 @@ build_target <- function(target, meta, config) {
     on.exit(gc())
   }
   retries <- 0
-  max_retries <- drake_plan_override(
-    target = target,
-    field = "retries",
-    config = config
-  )
-  max_retries <- as.numeric(max_retries)
+  layout <- config$layout[[target]] %||% list()
+  max_retries <- as.numeric(layout$retries %||NA% config$retries)
   while (retries <= max_retries) {
     build <- with_seed_timeout(
       target = target,

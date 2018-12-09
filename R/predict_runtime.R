@@ -28,9 +28,6 @@
 #' test_with_dir("Quarantine side effects.", {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' config <- make(my_plan) # Run the project, build the targets.
-#' # The predictions use the cached build times of the targets,
-#' # but if you expect your target runtimes
-#' # to be different, you can specify them (in seconds).
 #' known_times <- c(5, rep(7200, nrow(my_plan) - 1))
 #' names(known_times) <- c(file_store("report.md"), my_plan$target[-1])
 #' known_times
@@ -47,10 +44,6 @@
 #'   from_scratch = TRUE,
 #'   known_times = known_times
 #' )
-#' # Why isn't 8 jobs any better?
-#' # 8 would be a good guess based on the layout of the workflow graph.
-#' # It's because of load balancing.
-#' # Below, each row is a persistent worker.
 #' balance <- predict_load_balancing(
 #'   config,
 #'   jobs = 7,
@@ -59,11 +52,6 @@
 #'   targets_only = TRUE
 #' )
 #' balance
-#' max(balance$time)
-#' # Each worker gets 2 rate-limiting targets.
-#' balance$time
-#' # Even if you add another worker, there will be still be workers
-#' # with two heavy targets.
 #' })
 #' }
 predict_runtime <- function(
@@ -78,7 +66,7 @@ predict_runtime <- function(
   default_time = 0,
   warn = TRUE
 ) {
-  balance <- predict_load_balancing(
+  predict_load_balancing(
     config = config,
     targets = targets,
     from_scratch = from_scratch,
@@ -89,8 +77,7 @@ predict_runtime <- function(
     known_times = known_times,
     default_time = default_time,
     warn = warn
-  )
-  balance$total_runtime
+  )$time
 }
 
 #' @title Predict the load balancing of the next call to `make()`
@@ -120,9 +107,6 @@ predict_runtime <- function(
 #' test_with_dir("Quarantine side effects.", {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' config <- make(my_plan) # Run the project, build the targets.
-#' # The predictions use the cached build times of the targets,
-#' # but if you expect your target runtimes
-#' # to be different, you can specify them (in seconds).
 #' known_times <- c(5, rep(7200, nrow(my_plan) - 1))
 #' names(known_times) <- c(file_store("report.md"), my_plan$target[-1])
 #' known_times
@@ -139,10 +123,6 @@ predict_runtime <- function(
 #'   from_scratch = TRUE,
 #'   known_times = known_times
 #' )
-#' # Why isn't 8 jobs any better?
-#' # 8 would be a good guess based on the layout of the workflow graph.
-#' # It's because of load balancing.
-#' # Below, each row is a persistent worker.
 #' balance <- predict_load_balancing(
 #'   config,
 #'   jobs = 7,
@@ -151,11 +131,6 @@ predict_runtime <- function(
 #'   targets_only = TRUE
 #' )
 #' balance
-#' max(balance$time)
-#' # Each worker gets 2 rate-limiting targets.
-#' balance$time
-#' # Even if you add another worker, there will be still be workers
-#' # with two heavy targets.
 #' })
 #' }
 #' @return A list with (1) the total runtime and (2) a list
@@ -203,7 +178,74 @@ predict_load_balancing <- function(
   default_time = 0,
   warn = TRUE
 ) {
+  assumptions <- timing_assumptions(
+    config = config,
+    targets = targets,
+    from_scratch = from_scratch,
+    targets_only = targets_only,
+    future_jobs = future_jobs,
+    digits = digits,
+    jobs = jobs,
+    known_times = known_times,
+    default_time = default_time,
+    warn = warn
+  )
+  config$schedule <- igraph::induced_subgraph(
+    config$graph,
+    vids = names(assumptions)
+  )
+  queue <- new_priority_queue(config, jobs = 1)
+  running <- data.frame(
+    target = character(0),
+    time = numeric(0),
+    worker = integer(0),
+    stringsAsFactors = FALSE
+  )
+  time <- 0
+  workers <- replicate(jobs, character(0))
+  while (!queue$empty() || nrow(running)) {
+    while (length(queue$peek0()) && nrow(running) < jobs) {
+      new_target <- queue$pop0()
+      running <- rbind(running, data.frame(
+        target = new_target,
+        time = assumptions[new_target],
+        worker = min(which(!(seq_len(jobs) %in% running$worker))),
+        stringsAsFactors = FALSE
+      ))
+    }
+    running <- running[order(running$time), ]
+    time <- time + running$time[1]
+    running$time <- running$time - running$time[1]
+    workers[[running$worker[1]]] <- c(
+      workers[[running$worker[1]]],
+      running$target[1]
+    )
+    decrease_revdep_keys(
+      queue = queue,
+      target = running$target[1],
+      config = config
+    )
+    running <- running[-1, ]
+  }
+  list(time = lubridate::dseconds(time), workers = workers)
+}
+
+timing_assumptions <- function(
+  config,
+  targets,
+  from_scratch,
+  targets_only,
+  future_jobs,
+  digits,
+  jobs,
+  known_times,
+  default_time,
+  warn
+) {
   assert_pkg("lubridate")
+  if (!from_scratch) {
+    outdated <- outdated(config)
+  }
   if (!is.null(future_jobs) || !is.null(digits)) {
     warning(
       "The `future_jobs` and `digits` arguments ",
@@ -217,6 +259,9 @@ predict_load_balancing <- function(
   )
   if (targets_only) {
     config$graph <- targets_graph(config)
+  }
+  if (!is.null(targets)) {
+    config$graph <- prune_drake_graph(config$graph, to = targets)
   }
   times <- times[times$item %in% V(config$graph)$name, ]
   untimed <- setdiff(V(config$graph)$name, times$item)
@@ -233,120 +278,14 @@ predict_load_balancing <- function(
   }
   keep_known_times <- intersect(names(known_times), V(config$graph)$name)
   known_times <- known_times[keep_known_times]
-  config$graph <- igraph::set_vertex_attr(
-    config$graph,
-    name = "time",
-    value = default_time
-  )
-  config$graph <- igraph::set_vertex_attr(
-    config$graph,
-    name = "time",
-    index = times$item,
-    value = times$elapsed
-  )
-  config$graph <- igraph::set_vertex_attr(
-    config$graph,
-    name = "time",
-    index = names(known_times),
-    value = known_times
-  )
+  names <- igraph::V(config$graph)$name
+  assumptions <- rep(default_time, length(names))
+  names(assumptions) <- names
+  assumptions[times$item] <- times$elapsed
+  assumptions[names(known_times)] <- known_times
   if (!from_scratch) {
-    skip <- setdiff(config$plan$target, outdated(config))
-    config$graph <- igraph::set_vertex_attr(
-      config$graph,
-      name = "time",
-      index = skip,
-      value = 0
-    )
+    skip <- setdiff(config$plan$target, outdated)
+    assumptions[skip] <- 0
   }
-  if (!is.null(targets)) {
-    config$graph <- prune_drake_graph(config$graph, to = targets)
-  }
-  balance_load(config = config, jobs = jobs)
-}
-
-# Taken directly from mc_master()
-# and modified to simulate the workers.
-balance_load <- function(config, jobs) {
-  # Mostly the same setup for mc_master().
-  config$cache <- configure_cache(
-    cache = storr::storr_environment(),
-    init_common_values = TRUE
-  )
-  config$jobs <- jobs
-  config$schedule <- config$graph
-  config$queue <- new_priority_queue(config = config)
-  mc_init_worker_cache(config)
-  workers <- config$cache$list("mc_ready_db")
-  targets <- lapply(workers, function(worker) {
-    character(0)
-  })
-  total_runtime <- 0
-  time_remaining <- rep(0, length(workers))
-  old_targets <- rep("", length(workers))
-  names(time_remaining) <- names(targets) <- names(old_targets) <- workers
-  lapply(workers, mc_get_ready_queue, config = config)
-  lapply(workers, mc_get_done_queue, config = config)
-  while (TRUE) {
-    # Run one iteration of mc_master()
-    config <- mc_refresh_queue_lists(config)
-    mc_conclude_done_targets(config, wait_for_checksums = FALSE)
-    mc_assign_ready_targets(config)
-    # List the running targets and their runtimes
-    current_targets <- vapply(
-      config$mc_ready_queues,
-      function(queue) {
-        messages <- queue$list(1)
-        if (nrow(messages)) {
-          messages$title[1]
-        } else {
-          ""
-        }
-      },
-      FUN.VALUE = character(1)
-    )
-    is_running <- nzchar(current_targets)
-    if (!any(is_running)) {
-      break
-    }
-    times <- vapply(
-      current_targets,
-      function(target) {
-        if (identical(target, "")) {
-          0
-        } else {
-          igraph::vertex_attr(
-            graph = config$graph,
-            name = "time",
-            index = target
-          )
-        }
-      },
-      FUN.VALUE = numeric(1)
-    )
-    # For the workers that just got new targets,
-    # increment the time they will remain running.
-    index <- current_targets != old_targets
-    time_remaining[index] <- time_remaining[index] + times[index]
-    old_targets <- current_targets
-    # Move time forward until soonest target finishes.
-    step <- min(time_remaining[is_running])
-    worker <- names(which.min(time_remaining[is_running]))
-    time_remaining[is_running] <- time_remaining[is_running] - step
-    total_runtime <- total_runtime + step
-    # Finish the target.
-    ready_queue <- config$mc_ready_queues[[worker]]
-    done_queue <- config$mc_done_queues[[worker]]
-    msg <- ready_queue$pop(1)
-    if (nrow(msg) > 0) {
-      target <- msg$title
-      targets[[worker]] <- c(targets[[worker]], target)
-      done_queue$push(title = target, message = "target")
-    }
-  }
-  eval(parse(text = "require(methods, quietly = TRUE)")) # needed for lubridate
-  list(
-    total_runtime = lubridate::dseconds(total_runtime),
-    targets = targets
-  )
+  assumptions
 }

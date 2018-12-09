@@ -4,7 +4,7 @@
 # Copyright RStudio, Inc.
 # GPL (>=2)
 
-with_dir <- function (new, code) {
+with_dir <- function(new, code) {
   old <- alt_setwd(new)
   on.exit(alt_setwd(old))
   force(code)
@@ -16,7 +16,7 @@ alt_setwd <- function(dir) {
   setwd(dir) # nolint
 }
 
-with_options <- function (new, code) {
+with_options <- function(new, code) {
   old <- set_options(new_options = new)
   on.exit(set_options(new_options = old))
   force(code)

@@ -52,6 +52,13 @@ Authors@R: c(
     email = "slaughter@nceas.ucsb.edu",
     role = "rev"
   ),
+    person(
+    family = "Bond-Lamberty",
+    given = "Ben",
+    email = "bondlamberty@pnnl.gov",
+    role = "ctb",
+    comment = c(ORCID = "0000-0001-9525-4633")
+  ),
   person(
     family = "Eli Lilly and Company",
     role = "cph"
@@ -62,9 +69,8 @@ Imports:
   codetools,
   digest,
   igraph,
+  methods,
   pkgconfig,
-  purrr,
-  R6,
   rlang (>= 0.2.0),
   storr (>= 1.1.0),
   tibble,
@@ -78,7 +84,6 @@ Suggests:
   crayon,
   datasets,
   DBI,
-  dplyr,
   downloader,
   future,
   future.apply,
@@ -87,12 +92,10 @@ Suggests:
   ggraph,
   knitr,
   lubridate,
-  methods,
   networkD3,
   parallel,
   prettycode,
   RSQLite,
-  rprojroot,
   stats,
   testthat,
   tidyselect (>= 0.2.4),

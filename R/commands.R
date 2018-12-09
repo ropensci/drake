@@ -32,6 +32,26 @@ standardize_command <- function(x) {
   standardize_code(x)
 }
 
+ignore_ignore <- function(expr) {
+  if (is.character(expr)) {
+    expr <- parse(text = expr)
+  }
+  recurse_ignore(expr)
+}
+
+recurse_ignore <- function(x) {
+  if (is.function(x) && !is.primitive(x) && !is.null(body(x))) {
+    body(x) <- recurse_ignore(body(x))
+  } else if (is_callish(x)) {
+    if (is_ignored_call(x)) {
+      x <- quote(ignore())
+    } else {
+      x[] <- lapply(as.list(x), recurse_ignore)
+    }
+  }
+  x
+}
+
 # We won't need this function after #563.
 language_to_text <- function(x) {
   if (length(x) < 1) {

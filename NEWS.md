@@ -2,9 +2,13 @@
 
 ## New features
 
+- Add a `sep` argument to `gather_by()`, `reduce_by()`, `reduce_plan()`, `evaluate_plan()`, `expand_plan()`, `plan_analyses()`, and `plan_summaries()`. Allows the user to set the delimiter for generating new target names.
 - Expose a `hasty_build` argument to `make()` and `drake_config()`. Here, the user can set the function that builds targets in "hasty mode" (`make(parallelism = "hasty")`).
 - Add a new `drake_envir()` function that returns the environment where `drake` builds targets. Can only be accessed from inside the commands in the workflow plan data frame. The primary use case is to allow users to remove individual targets from memory at predetermined build steps.
-- Add a `sep` argument to `gather_by()`, `reduce_by()`, `reduce_plan()`, `evaluate_plan()`, `expand_plan()`, `plan_analyses()`, and `plan_summaries()`. Allows the user to set the delimiter for generating new target names.
+
+## Bug fixes
+
+- Stop returning `0s` from `predict_runtime(targets_only = TRUE)` when some targets are outdated and others are not.
 
 ## Enhancements
 
@@ -15,12 +19,18 @@
 - Improve memoized preprocessing: deparse all the functions in the environment so the memoization does not react so spurious changes in R internals. Related: #345.
 - Use the `label` argument to `future()` inside `make(parallelism = "future")`. That way , job names are target names by default if `job.name` is used correctly in the `batchtools` template file.
 - Remove strict dependencies on packages `dplyr`, `evaluate`, `fs`, `future`, `magrittr`, `parallel`, `R.utils`, `stats`, `stringi`, `tidyselect`, and `withr`.
-- Deprecate the `force` argument to `make()` and related functions.
+- Remove package `rprojroot` from "Suggests".
+- Deprecate the `force` argument in all functions except `make()` and `drake_config()`.
 - Change the name of `prune_envir()` to `manage_memory()`.
 - Deprecate and rename the `pruning_strategy` argument to `memory_strategy` (`make()` and `drake_config()`).
 - Print warnings and messages to the `console_log_file` in real time ([#588](https://github.com/ropensci/drake/issues/588)).
 - Use HTML line breaks in `vis_drake_graph()` hover text to display commands in the `drake` plan more elegantly.
-
+- Speed up `predict_load_balancing()` and remove its reliance on internals that will go away in 2019 via [#561](https://github.com/ropensci/drake/issues/561).
+- Remove support for the `worker` column of `config$plan` in `predict_runtime()` and `predict_load_balancing()`. This functionality will go away in 2019 via [#561](https://github.com/ropensci/drake/issues/561).
+- Change the names of the return value of `predict_load_balancing()` to `time` and `workers`.
+- Bring the documentation of `predict_runtime()` and `predict_load_balancing()` up to date.
+- Deprecate `drake_session()` and rename to `drake_get_session_info()`.
+- Deprecate the `timeout` argument in the API of `make()` and `drake_config()`. A value of `timeout` can be still passed to these functions without error, but only the `elapsed` and `cpu` arguments impose actual timeouts now.
 
 # Version 6.1.0
 

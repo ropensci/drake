@@ -66,7 +66,7 @@
 #' @param parallelism character, type of parallelism to use.
 #'   To list the options, call [parallelism_choices()].
 #'   For detailed explanations, see the
-#'   [high-performance computing chapter](https://ropenscilabs.github.io/drake-manual/store.html)
+#'   [high-performance computing chapter](https://ropenscilabs.github.io/drake-manual/hpc.html)
 #'   of the user manual.
 #'
 #' @param jobs maximum number of parallel workers for processing the targets.
@@ -167,18 +167,15 @@
 #'   or `"Makefile"`) because the distributed R sessions
 #'   need to know how to load the cache.
 #'
-#' @param timeout Seconds of overall time to allow before imposing
-#'   a timeout on a target.
-#'   Assign target-level timeout times with an optional `timeout`
-#'   column in `plan`.
+#' @param timeout `deprecated`. Use `elapsed` and `cpu` instead.
 #'
-#' @param cpu Seconds of cpu time to allow before imposing
-#'   a timeout on a target.
+#' @param cpu Same as the `cpu` argument of `setTimeLimit()`.
+#'   Seconds of cpu time before a target times out.
 #'   Assign target-level cpu timeout times with an optional `cpu`
 #'   column in `plan`.
 #'
-#' @param elapsed Seconds of elapsed time to allow before imposing
-#'   a timeout on a target.
+#' @param elapsed Same as the `elapsed` argument of `setTimeLimit()`.
+#'   Seconds of elapsed time before a target times out.
 #'   Assign target-level elapsed timeout times with an optional `elapsed`
 #'   column in `plan`.
 #'
@@ -186,7 +183,14 @@
 #'   Assign target-level retries with an optional `retries`
 #'   column in `plan`.
 #'
-#' @param force deprecated
+#' @param force Logical. If `FALSE` (default) then `drake` will stop you
+#'   if the cache was created with an old
+#'   and incompatible version of drake.
+#'   This gives you an opportunity to
+#'   downgrade `drake` to a compatible version
+#'   rather than rerun all your targets from scratch.
+#'   If `force` is `TRUE`, then `make()` executes your workflow
+#'   regardless of the version of `drake` that last ran `make()` on the cache.
 #'
 #' @param graph An `igraph` object from the previous `make()`.
 #'   Supplying a pre-built graph could save time.
@@ -209,7 +213,7 @@
 #'     with [assign()].
 #'   - `"promise"`: lazy loading with [delayedAssign()]
 #'   - `"bind"`: lazy loading with active bindings:
-#'     [bindr::populate_env()].
+#'     `bindr::populate_env()`.
 #'   - `TRUE`: same as `"promise"`.
 #'   - `FALSE`: same as `"eager"`.
 #'
@@ -452,9 +456,9 @@ drake_config <- function(
     verbose = verbose
   ),
   recipe_command = drake::default_recipe_command(),
-  timeout = Inf,
-  cpu = timeout,
-  elapsed = timeout,
+  timeout = NULL,
+  cpu = Inf,
+  elapsed = Inf,
   retries = 0,
   force = FALSE,
   log_progress = FALSE,
@@ -503,7 +507,14 @@ drake_config <- function(
       call. = FALSE
     ) # 2018-11-01 # nolint
   }
-  deprecate_force(force)
+  if (!is.null(timeout)) {
+    warning(
+      "Argument `timeout` is deprecated. ",
+      "Use `elapsed` and/or `cpu` instead.",
+      call. = FALSE
+      # 2018-12-07 # nolint
+    )
+  }
   plan <- sanitize_plan(plan)
   if (is.null(targets)) {
     targets <- plan$target
@@ -523,7 +534,10 @@ drake_config <- function(
       console_log_file = console_log_file
     )
   }
-  assert_compatible_cache(cache = cache)
+  if (force) {
+    drake_set_session_info(cache = cache)
+  }
+  cache_vers_stop(cache)
   # A storr_rds() cache should already have the right hash algorithms.
   cache <- configure_cache(
     cache = cache,

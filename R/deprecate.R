@@ -543,6 +543,37 @@ drake_batchtools_tmpl_file <- function(
   drake_hpc_template_file(file = example, to = to, overwrite = overwrite)
 }
 
+#' @title Deprecated. Return the [sessionInfo()]
+#'   of the last call to [make()].
+#' @description Deprecated. Use [drake_get_session_info()] instead.
+#' @details Deprecated on 2018-12-06.
+#' @seealso [diagnose()], [built()], [imported()],
+#'   [readd()], [drake_plan()], [make()]
+#' @export
+#' @return [sessionInfo()] of the last call to [make()]
+#' @inheritParams cached
+#' @examples
+#' # See ?drake_get_session_info for examples.
+drake_session <- function(
+  path = getwd(),
+  search = TRUE,
+  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  verbose = drake::default_verbose()
+) {
+  .Deprecated(
+    "drake_session",
+    package = "drake",
+    msg = paste(
+      "drake_session() is deprecated.",
+      "Use drake_get_session_info() instead."
+    )
+  )
+  if (is.null(cache)) {
+    stop("No drake::make() session detected.")
+  }
+  return(cache$get("sessionInfo", namespace = "session"))
+}
+
 #' @title Deprecated.
 #' @description Deprecated on 2018-10-24.
 #' @export
@@ -1465,18 +1496,18 @@ render_static_drake_graph <- function(
 }
 
 #' @title Deprecated function `session`
-#' @description Use [drake_session()] instead
+#' @description Use [drake_get_session_info()] instead
 #' @details Deprecated on 2017-11-12.
-#' @seealso [drake_session()]
+#' @seealso [drake_get_session_info()]
 #' @export
 #' @keywords internal
-#' @return Same as for [drake_session()].
-#' @param cache Same as for [drake_session()].
-#' @param path Same as for [drake_session()].
-#' @param search Same as for [drake_session()].
-#' @param verbose Same as for [drake_session()].
+#' @return Same as for [drake_get_session_info()].
+#' @param cache Same as for [drake_get_session_info()].
+#' @param path Same as for [drake_get_session_info()].
+#' @param search Same as for [drake_get_session_info()].
+#' @param verbose Same as for [drake_get_session_info()].
 #' @examples
-#' # See ?drake_session for examples.
+#' # See ?drake_get_session_info for examples.
 session <- function(
   path = getwd(),
   search = TRUE,
@@ -1489,10 +1520,10 @@ session <- function(
     msg = paste(
       "drake::session() is deprecated",
       "due to a possible conlict with the R/shiny lexicon.",
-      "Use drake_session() instead."
+      "Use drake_get_session_info() instead."
     )
   )
-  drake_session(
+  drake_get_session_info(
     path = path,
     search = search,
     cache = cache,
@@ -1618,7 +1649,7 @@ static_drake_graph <- function(
 #' @param datasets Same as for [plan_summaries()].
 #' @param gather Same as for [plan_summaries()].
 #' @examples
-#' # See ?drake_session for examples.
+#' # See ?drake_get_session_info for examples.
 summaries <- function(
   plan,
   analyses,
@@ -1810,4 +1841,100 @@ workplan <- function(
     plan$command[from_dots] <- gsub("\"", "'", plan$command[from_dots])
   }
   sanitize_plan(plan)
+}
+
+#' @title Deprecated: load the main example.
+#' @description The main example lives at
+#' <https://github.com/wlandau/drake-examples/tree/master/main>.
+#' Use `drake_example("main")` to download its code.
+#' The chapter of the user manual at
+#' <https://ropenscilabs.github.io/drake-manual/main.html>
+#' also walks through the main example.
+#' This function also writes/overwrites
+#' the files `report.Rmd` and `raw_data.xlsx`.
+#' @export
+#' @seealso [clean_main_example()]
+#' @return A [drake_config()] configuration list.
+#' @inheritParams drake_config
+#' @param envir The environment to load the example into.
+#'   Defaults to your workspace.
+#'   For an insulated workspace,
+#'   set `envir = new.env(parent = globalenv())`.
+#' @param report_file where to write the report file `report.Rmd`.
+#' @param overwrite logical, whether to overwrite an
+#'   existing file `report.Rmd`
+#' @param force deprecated
+#' @keywords internal
+#' @details Deprecated December 2018.
+#' @examples
+#' \dontrun{
+#' # The code for this example is hosted at
+#' # https://github.com/wlandau/drake-examples/tree/master/main
+#' # You can download it iwth drake_example("main")
+#' # or watch a video tutorial about it at
+#' # https://ropenscilabs.github.io/drake-manual/.
+#' }
+load_main_example <- function(
+  envir = parent.frame(),
+  report_file = "report.Rmd",
+  overwrite = FALSE,
+  force = FALSE
+) {
+  deprecate_force(force)
+  .Deprecated(
+    "drake_example",
+    package = "drake",
+    msg = paste("load_main_example() is deprecated.",
+                'Use drake_example("main") instead.')
+  )
+
+  dir <- tempfile()
+  drake_example(example = "main", to = dir)
+  source(file.path(dir, "main", "R", "setup.R"), local = envir)
+  envir$plan <- source(
+    file.path(dir, "main", "R", "plan.R"),
+    local = TRUE
+  )$value
+  for (file in c("report.Rmd", "raw_data.xlsx")) {
+    if (file.exists(file) & overwrite) {
+      warning("Overwriting file ", file, call. = FALSE)
+    }
+    file.copy(
+      from = file.path(dir, "main", file),
+      to = file,
+      overwrite = overwrite
+    )
+  }
+  invisible()
+}
+
+#' @title Deprecated: clean the main example from `drake_example("main")`
+#' @description This function deletes files. Use at your own risk.
+#'   Destroys the `.drake/` cache and the `report.Rmd` file
+#'   in the current working directory. Your working directory
+#'   (`getcwd()`) must be the folder from which you first ran
+#'   `load_main_example()` and `make(my_plan)`.
+#' @export
+#' @return Nothing.
+#' @keywords internal
+#' @details Deprecated December 2018.
+#' @examples
+#' \dontrun{
+#' # The code for this example is hosted at
+#' # https://github.com/wlandau/drake-examples/tree/master/main
+#' # You can download it with drake_example("main")
+#' # or watch a video tutorial about it at
+#' # https://ropenscilabs.github.io/drake-manual/.
+#' }
+clean_main_example <- function() {
+  deprecate_force(force)
+  .Deprecated(
+    "clean",
+    package = "drake",
+    msg = paste("clean_main_example() is deprecated.")
+  )
+
+  clean(destroy = TRUE, search = FALSE)
+  unlink(c("report.Rmd", "raw_data.xlsx"))
+  invisible()
 }

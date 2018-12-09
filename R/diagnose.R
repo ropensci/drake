@@ -50,7 +50,6 @@
 #' error <- diagnose(my_target)$error # See also warnings and messages.
 #' str(error) # See what's inside the error log.
 #' error$calls # View the traceback. (See the traceback() function).
-#' # Use purrr to recover all the warnings.
 #' suppressWarnings(
 #'   make(
 #'     drake_plan(
@@ -64,8 +63,6 @@
 #' targets <- built(verbose = FALSE)
 #' out <- lapply(targets, diagnose, character_only = TRUE, verbose = FALSE)
 #' names(out) <- targets
-#' out <- purrr::map(out, "warnings")
-#' out <- purrr::compact(out)
 #' unlist(out)
 #' })
 #' }

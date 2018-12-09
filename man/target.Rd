@@ -6,7 +6,7 @@
 \usage{
 target(command = NULL, trigger = NULL, retries = NULL,
   timeout = NULL, cpu = NULL, elapsed = NULL, priority = NULL,
-  worker = NULL, evaluator = NULL, ...)
+  worker = NULL, resources = NULL, ...)
 }
 \arguments{
 \item{command}{the command to build the target}
@@ -29,8 +29,14 @@ will be built first.}
 \item{worker}{the preferred worker to be assigned the target
 (in parallel computing).}
 
-\item{evaluator}{the \code{future} evaluator of the target.
-Not yet supported.}
+\item{resources}{Experimental, no guarantees that this works all the time.
+Same as the \code{resources} argument to \code{batchtools_slurm()}
+and related \code{future.bachtools} functions.
+See also \url{https://github.com/HenrikBengtsson/future.batchtools#examples}. # nolint
+\code{resources} is a list of computing resource parameters for the target.
+Each element is a value passed to a \code{brew} placeholder of a
+\code{batchtools} template file. The list names of \code{resources}
+should be the brew patterns.}
 
 \item{...}{named arguments specifying non-standard
 fields of the workflow plan.}
