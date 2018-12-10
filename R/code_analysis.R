@@ -55,7 +55,6 @@ code_dependencies <- function(expr, exclude = character(0), allow = NULL) {
   if (!is.null(allow)) {
     results$globals <- intersect(results$globals, allow)
   }
-  exclude <- base::union(exclude, ".")
   results <- lapply(
     X = results,
     FUN = function(x) {
@@ -175,7 +174,6 @@ file_out_fns <- pair_text(drake_prefix, c("file_out"))
 ignored_fns <- pair_text(drake_prefix, c("drake_envir", "ignore"))
 knitr_in_fns <- pair_text(drake_prefix, c("knitr_in"))
 loadd_fns <- pair_text(drake_prefix, "loadd")
-misc_syms <- "."
 readd_fns <- pair_text(drake_prefix, "readd")
 target_fns <- pair_text(drake_prefix, "target")
 trigger_fns <- pair_text(drake_prefix, "trigger")
@@ -188,7 +186,6 @@ drake_symbols <- sort(
     ignored_fns,
     loadd_fns,
     knitr_in_fns,
-    misc_syms,
     readd_fns,
     target_fns,
     trigger_fns
