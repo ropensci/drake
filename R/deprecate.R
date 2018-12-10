@@ -1852,6 +1852,7 @@ deprecate_fetch_cache <- function(fetch_cache) {
       call. = FALSE
     ) # 2018-12-08 # nolint
   }
+}
 
 #' @title Deprecated: load the main example.
 #' @description The main example lives at
