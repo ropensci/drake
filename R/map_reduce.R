@@ -223,8 +223,9 @@ gather_by <- function(
   )
   cols <- gathered[, col_names]
   suffix <- apply(X = cols, MARGIN = 1, FUN = paste, collapse = sep)
-  if (length(suffix) && nzchar(suffix)) {
-    gathered$target <- paste(gathered$target, suffix, sep = sep)
+  if (length(suffix)) {
+    suffix[nzchar(suffix)] <- paste0(sep, suffix[nzchar(suffix)])
+    gathered$target <- paste0(gathered$target, suffix)
   }
   if (append) {
     out <- bind_plans(plan, gathered)
@@ -406,8 +407,9 @@ reduce_by <- function(
   )
   cols <- reduced[, col_names]
   suffix <- apply(X = cols, MARGIN = 1, FUN = paste, collapse = sep)
-  if (length(suffix) && nzchar(suffix)) {
-    reduced$target <- paste(reduced$target, suffix, sep = sep)
+  if (length(suffix)) {
+    suffix[nzchar(suffix)] <- paste0(sep, suffix[nzchar(suffix)])
+    reduced$target <- paste0(reduced$target, suffix)
   }
   if (append) {
     out <- bind_plans(plan, reduced)

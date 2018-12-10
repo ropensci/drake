@@ -257,6 +257,17 @@ test_with_dir("deprecate the `force` argument", {
   expect_warning(load_mtcars_example(force = TRUE), regexp = "deprecated")
 })
 
+test_with_dir("timeout argument", {
+  expect_warning(
+    make(
+      drake_plan(x = 1),
+      timeout = 5,
+      session_info = FALSE,
+      cache = storr::storr_environment()
+    )
+  )
+})
+
 test_with_dir("old trigger interface", {
   skip_on_cran()
   for (old_trigger in suppressWarnings(triggers())) {
@@ -330,3 +341,23 @@ test_with_dir("pruning_strategy", {
   )
 })
 
+test_with_dir("main example", {
+  skip_on_cran()
+  skip_if_not_installed("downloader")
+  skip_if_not_installed("ggplot2")
+  for (file in c("raw_data.xlsx", "report.Rmd")) {
+    expect_false(file.exists(file))
+  }
+
+  # load_main_example() is now deprecated so should get a warning
+  expect_warning(load_main_example())
+
+  for (file in c("raw_data.xlsx", "report.Rmd")) {
+    expect_true(file.exists(file))
+  }
+  expect_warning(load_main_example(overwrite = TRUE), regexp = "Overwriting")
+  expect_warning(clean_main_example())
+  for (file in c("raw_data.xlsx", "report.Rmd")) {
+    expect_false(file.exists(file))
+  }
+})

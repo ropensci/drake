@@ -13,8 +13,8 @@ drake_config(plan = drake::read_drake_plan(), targets = NULL,
   packages = rev(.packages()), prework = character(0),
   prepend = character(0), command = drake::default_Makefile_command(),
   args = drake::default_Makefile_args(jobs = jobs, verbose = verbose),
-  recipe_command = drake::default_recipe_command(), timeout = Inf,
-  cpu = timeout, elapsed = timeout, retries = 0, force = FALSE,
+  recipe_command = drake::default_recipe_command(), timeout = NULL,
+  cpu = Inf, elapsed = Inf, retries = 0, force = FALSE,
   log_progress = FALSE, graph = NULL, trigger = drake::trigger(),
   skip_targets = FALSE, skip_imports = FALSE,
   skip_safety_checks = FALSE, lazy_load = "eager",
@@ -165,18 +165,15 @@ wherever possible.}
 \item{recipe_command}{Character scalar, command for the
 Makefile recipe for each target.}
 
-\item{timeout}{Seconds of overall time to allow before imposing
-a timeout on a target.
-Assign target-level timeout times with an optional \code{timeout}
-column in \code{plan}.}
+\item{timeout}{\code{deprecated}. Use \code{elapsed} and \code{cpu} instead.}
 
-\item{cpu}{Seconds of cpu time to allow before imposing
-a timeout on a target.
+\item{cpu}{Same as the \code{cpu} argument of \code{setTimeLimit()}.
+Seconds of cpu time before a target times out.
 Assign target-level cpu timeout times with an optional \code{cpu}
 column in \code{plan}.}
 
-\item{elapsed}{Seconds of elapsed time to allow before imposing
-a timeout on a target.
+\item{elapsed}{Same as the \code{elapsed} argument of \code{setTimeLimit()}.
+Seconds of elapsed time before a target times out.
 Assign target-level elapsed timeout times with an optional \code{elapsed}
 column in \code{plan}.}
 
@@ -227,7 +224,7 @@ on your workflow. Use at your own peril.}
 with \code{\link[=assign]{assign()}}.
 \item \code{"promise"}: lazy loading with \code{\link[=delayedAssign]{delayedAssign()}}
 \item \code{"bind"}: lazy loading with active bindings:
-\code{\link[bindr:populate_env]{bindr::populate_env()}}.
+\code{bindr::populate_env()}.
 \item \code{TRUE}: same as \code{"promise"}.
 \item \code{FALSE}: same as \code{"eager"}.
 }

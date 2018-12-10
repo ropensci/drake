@@ -74,7 +74,7 @@ cdl_imports_kernel <- function(config, imports) {
     jobs = config$jobs
   )
   names(out) <- names(imports)
-  out[sort(names(out))]
+  out[sort(names(out) %||% logical(0))]
 }
 
 cdl_analyze_imports <- function(config, imports) {

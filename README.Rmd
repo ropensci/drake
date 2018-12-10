@@ -62,7 +62,7 @@ invisible(file.copy("main/report.Rmd", ".", overwrite = TRUE))
 
 # The drake R package <img src="https://ropensci.github.io/drake/images/logo.svg" align="right" alt="logo" width="120" height = "139" style = "border: none; float: right;">
 
-`drake` &mdash; or, Data Frames in R for Make &mdash; is a general-purpose workflow manager for data-driven tasks. It rebuilds intermediate data objects when their dependencies change, and it skips work when the results are already up to date. Not every runthrough starts from scratch, and completed workflows have tangible evidence of reproducibility. `drake` also supports scalability, parallel computing, and a smooth user experience when it comes to setting up, deploying, and maintaining data science projects.
+`drake` &mdash; or, Data Frames in R for Make &mdash; is a general-purpose workflow manager for data-driven tasks. It rebuilds intermediate data objects when their dependencies change, and it skips work when the results are already up to date. Not every runthrough starts from scratch, there is native support for parallel and distributed computing, and completed workflows have tangible evidence of reproducibility.
 
 # 6-minute video
 

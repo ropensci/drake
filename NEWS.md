@@ -1,4 +1,4 @@
-# Version 6.1.0.9000
+# Version 6.2.0
 
 ## New features
 
@@ -8,7 +8,9 @@
 
 ## Bug fixes
 
+- Ensure compatibility with `tibble` 2.0.0.
 - Stop returning `0s` from `predict_runtime(targets_only = TRUE)` when some targets are outdated and others are not.
+- Remove `sort(NULL)` warnings from `create_drake_layout()`. (Affects R-3.3.x.)
 
 ## Enhancements
 
@@ -29,6 +31,7 @@
 - Change the names of the return value of `predict_load_balancing()` to `time` and `workers`.
 - Bring the documentation of `predict_runtime()` and `predict_load_balancing()` up to date.
 - Deprecate `drake_session()` and rename to `drake_get_session_info()`.
+- Deprecate the `timeout` argument in the API of `make()` and `drake_config()`. A value of `timeout` can be still passed to these functions without error, but only the `elapsed` and `cpu` arguments impose actual timeouts now.
 
 # Version 6.1.0
 

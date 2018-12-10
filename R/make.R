@@ -91,9 +91,9 @@ make <- function(
   recipe_command = drake::default_recipe_command(),
   log_progress = TRUE,
   skip_targets = FALSE,
-  timeout = Inf,
-  cpu = NULL,
-  elapsed = NULL,
+  timeout = NULL,
+  cpu = Inf,
+  elapsed = Inf,
   retries = 0,
   force = FALSE,
   return_config = NULL,
@@ -130,6 +130,14 @@ make <- function(
     )
   }
   deprecate_fetch_cache(fetch_cache)
+  if (!is.null(timeout)) {
+    warning(
+      "Argument `timeout` is deprecated. ",
+      "Use `elapsed` and/or `cpu` instead.",
+      call. = FALSE
+      # 2018-12-07 # nolint
+    )
+  }
   if (is.null(config)) {
     config <- drake_config(
       plan = plan,
