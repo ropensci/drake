@@ -82,6 +82,7 @@ get_cache <- function(
   console_log_file = NULL
 ) {
   deprecate_force(force)
+  deprecate_fetch_cache(fetch_cache)
   if (search) {
     path <- find_cache(path = path)
   } else {
@@ -126,6 +127,7 @@ this_cache <- function(
   console_log_file = NULL
 ) {
   deprecate_force(force)
+  deprecate_fetch_cache(fetch_cache)
   usual_path_missing <- is.null(path) || !file.exists(path)
   if (usual_path_missing & is.null(fetch_cache)) {
     return(NULL)
@@ -139,7 +141,6 @@ this_cache <- function(
       )
     )
   }
-  fetch_cache <- as.character(fetch_cache)
   cache <- drake_try_fetch_rds(path = path)
   configure_cache(
     cache = cache,
@@ -293,6 +294,7 @@ recover_cache <- function(
   console_log_file = NULL
 ) {
   deprecate_force(force)
+  deprecate_fetch_cache(fetch_cache)
   cache <- this_cache(
     path = path,
     verbose = verbose,

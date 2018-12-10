@@ -129,6 +129,7 @@ make <- function(
       call. = FALSE
     )
   }
+  deprecate_fetch_cache(fetch_cache)
   if (is.null(config)) {
     config <- drake_config(
       plan = plan,
