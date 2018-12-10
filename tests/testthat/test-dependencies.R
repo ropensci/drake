@@ -34,6 +34,14 @@ test_with_dir("dot symbol is ignored at the right time", {
     clean_dependency_list(config$layout$b$deps_build),
     character(0)
   )
+  . <- 1
+  expect_true(exists(".", envir = e))
+  config <- drake_config(plan)
+  expect_equal(
+    sort(clean_dependency_list(config$layout$a$deps_build)),
+    sort(c(".", "x", "y"))
+  )
+  expect_equal(clean_dependency_list(config$layout$b$deps_build), ".")
 })
 
 test_with_dir("file_out() and knitr_in(): commands vs imports", {

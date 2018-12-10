@@ -1,3 +1,7 @@
+# Version 6.2.0.9000
+
+- Allow the `magrittr` dot symbol to appear in some commands sometimes.
+
 # Version 6.1.0.9000
 
 ## New features
