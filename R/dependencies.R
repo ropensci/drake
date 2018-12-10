@@ -256,8 +256,8 @@ nonfile_target_dependencies <- function(targets, config, jobs = 1) {
   intersect(out, config$plan$target)
 }
 
-import_dependencies <- function(expr, exclude = character(0), globals = NULL) {
-  deps <- code_dependencies(expr, exclude = exclude, globals = globals)
+import_dependencies <- function(expr, exclude = character(0), allow = NULL) {
+  deps <- code_dependencies(expr, exclude = exclude, allow = allow)
   # Imported functions can't have file_out() deps # nolint
   # or target dependencies from knitr code chunks.
   # However, file_in()s are totally fine. # nolint
@@ -268,7 +268,7 @@ import_dependencies <- function(expr, exclude = character(0), globals = NULL) {
 command_dependencies <- function(
   command,
   exclude = character(0),
-  globals = NULL
+  allow = NULL
 ) {
   if (!length(command)) {
     return()
@@ -280,7 +280,7 @@ command_dependencies <- function(
   deps <- code_dependencies(
     expr,
     exclude = exclude,
-    globals = globals
+    allow = allow
   )
   deps$strings <- NULL
 

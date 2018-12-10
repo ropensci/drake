@@ -1,4 +1,4 @@
-code_dependencies <- function(expr, exclude = character(0), globals = NULL) {
+code_dependencies <- function(expr, exclude = character(0), allow = NULL) {
   if (
     !is.function(expr) &&
     !is.expression(expr) &&
@@ -52,8 +52,8 @@ code_dependencies <- function(expr, exclude = character(0), globals = NULL) {
   results$globals <- as.character(results$globals)
   non_locals <- find_non_locals(expr)
   results$globals <- intersect(results$globals, non_locals)
-  if (!is.null(globals)) {
-    results$globals <- intersect(results$globals, globals)
+  if (!is.null(allow)) {
+    results$globals <- intersect(results$globals, allow)
   }
   exclude <- base::union(exclude, ".")
   results <- lapply(

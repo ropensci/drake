@@ -18,7 +18,7 @@ create_drake_layout <- function(
     cache = cache,
     console_log_file = console_log_file,
     trigger = parse_trigger(trigger = trigger, envir = envir),
-    globals = sort(c(plan$target, ls(envir = envir, all.names = TRUE)))
+    allow = sort(c(plan$target, ls(envir = envir, all.names = TRUE)))
   )
   imports <- cdl_prepare_imports(config)
   imports_kernel <- cdl_imports_kernel(config, imports)
@@ -32,7 +32,7 @@ create_drake_layout <- function(
     config$cache,
     config$plan,
     config$trigger,
-    config$globals,
+    config$allow,
     import_layout
   )
   c(import_layout, command_layout)
@@ -93,7 +93,7 @@ cdl_analyze_imports <- function(config, imports) {
         deps_build = import_dependencies(
           expr = imports[[i]],
           exclude = names(imports)[[i]],
-          globals = config$globals
+          allow = config$allow
         ),
         imported = TRUE
       )
@@ -123,11 +123,11 @@ cdl_analyze_commands <- function(config) {
   names(layout) <- config$plan$target
   config$default_condition_deps <- import_dependencies(
     config$trigger$condition,
-    globals = config$globals
+    allow = config$allow
   )
   config$default_change_deps <- import_dependencies(
     config$trigger$change,
-    globals = config$globals
+    allow = config$allow
   )
   out <- lightly_parallelize(
     X = layout,
@@ -143,7 +143,7 @@ cdl_prepare_layout <- function(layout, config){
   layout$deps_build <- command_dependencies(
     command = layout$command,
     exclude = layout$target,
-    globals = config$globals
+    allow = config$allow
   )
   layout$command_standardized <- standardize_command(layout$command)
   layout$command_build <- preprocess_command(
@@ -158,12 +158,12 @@ cdl_prepare_layout <- function(layout, config){
     layout$deps_condition <- import_dependencies(
       layout$trigger$condition,
       exclude = layout$target,
-      globals = config$globals
+      allow = config$allow
     )
     layout$deps_change <- import_dependencies(
       layout$trigger$change,
       exclude = layout$target,
-      globals = config$globals
+      allow = config$allow
     )
   }
   layout
