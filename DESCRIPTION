@@ -4,6 +4,7 @@ Description: A general-purpose computational engine for data analysis,
   drake rebuilds intermediate data objects when their dependencies change,
   and it skips work when the results are already up to date.
   Not every execution starts from scratch,
+  there is native support for parallel and distributed computing,
   and completed projects have tangible evidence
   that they are reproducible.
   Extensive documentation, from beginner-friendly tutorials
