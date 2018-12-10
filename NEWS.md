@@ -1,4 +1,4 @@
-# Version 6.1.0.9000
+# Version 6.2.0
 
 ## New features
 
