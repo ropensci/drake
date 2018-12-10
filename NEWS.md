@@ -8,7 +8,9 @@
 
 ## Bug fixes
 
+- Ensure compatibility with `tibble` 2.0.0.
 - Stop returning `0s` from `predict_runtime(targets_only = TRUE)` when some targets are outdated and others are not.
+- Remove `sort(NULL)` warnings from `create_drake_layout()`. (Affects R-3.3.x.)
 
 ## Enhancements
 

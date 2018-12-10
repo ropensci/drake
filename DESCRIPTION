@@ -10,7 +10,7 @@ Description: A general-purpose computational engine for data analysis,
   to practical examples and more, is available at the reference website
   <https://ropensci.github.io/drake/> and the online manual
   <https://ropenscilabs.github.io/drake-manual/>.
-Version: 6.1.0.9000
+Version: 6.2.0
 License: GPL-3
 URL: https://github.com/ropensci/drake
 BugReports: https://github.com/ropensci/drake/issues
