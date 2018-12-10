@@ -77,7 +77,6 @@ test_with_dir(
   expect_equal(length(command_dependencies(character(0))), 0)
   expect_equal(clean_dependency_list(deps_code(base::c)), character(0))
   expect_equal(clean_dependency_list(deps_code(base::list)), character(0))
-  expect_equal(clean_dependency_list(deps_code(NA)), character(0))
   f <- function(x, y) {
     out <- x + y + g(x)
     saveRDS(out, "out.rds")

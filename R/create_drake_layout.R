@@ -150,7 +150,7 @@ cdl_prepare_layout <- function(layout, config){
     layout$command,
     config = config
   )
-  if (is.null(layout$trigger) || is.na(layout$trigger)){
+  if (is.null(layout$trigger) || all(is.na(layout$trigger))){
     layout$trigger <- config$trigger
     layout$deps_condition <- config$default_condition_deps
     layout$deps_change <- config$default_change_deps
