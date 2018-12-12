@@ -25,10 +25,10 @@ test_with_dir("function_dependencies() works on :: and :::", {
       "triple:::triple"
     )
   )
-  cd <- code_dependencies(crazy)
+  cd <- analyze_code(crazy)
   expect_equal(sort(cd$namespaced), ns)
   expect_equal(
-    unname(sort(unlist(code_dependencies(crazy)))),
+    unname(sort(unlist(analyze_code(crazy)))),
     sort(c(ns, "g", "myfun1", "sqrt", "local"))
   )
   command <- "pkgx::pkgx(mypkg1::myfun3(myfun1(mypkg1::myfun2(100))))"

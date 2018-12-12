@@ -79,7 +79,7 @@ deps_code <- function(x) {
   } else if (is.character(x)) {
     command_dependencies(x)
   } else{
-    code_dependencies(x)
+    analyze_code(x)
   }
 }
 
@@ -257,7 +257,7 @@ nonfile_target_dependencies <- function(targets, config, jobs = 1) {
 }
 
 import_dependencies <- function(expr, exclude = character(0), allow = NULL) {
-  deps <- code_dependencies(expr, exclude = exclude, allow = allow)
+  deps <- analyze_code(expr, exclude = exclude, allow = allow)
   # Imported functions can't have file_out() deps # nolint
   # or target dependencies from knitr code chunks.
   # However, file_in()s are totally fine. # nolint
@@ -277,7 +277,7 @@ command_dependencies <- function(
   if (is.character(command)){
     expr <- parse(text = command, keep.source = FALSE)
   }
-  deps <- code_dependencies(
+  deps <- analyze_code(
     expr,
     exclude = exclude,
     allow = allow

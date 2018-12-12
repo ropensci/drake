@@ -95,7 +95,7 @@ test_with_dir("File functions handle input", {
     file_out(1, "x", "y"), c("1", "x", "y")
   )
   expect_equal(
-    code_dependencies(quote(file_out(c("file1", "file2")))),
+    analyze_code(quote(file_out(c("file1", "file2")))),
     list(file_out = drake_quotes(c("file1", "file2"), single = FALSE))
   )
 })

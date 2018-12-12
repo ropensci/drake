@@ -1,11 +1,15 @@
-code_dependencies <- function(expr, exclude = character(0), allow = NULL) {
+# The analyze_*() functions analyze language objects from the top.
+# These functions tend to give sensible answers if you just supply
+# the language object to the first argument and rely on the defaults
+# of the other arguments.
+analyze_code <- function(expr, exclude = character(0), allow = NULL) {
   if (!is.function(expr) && !is.language(expr)) {
     return(list())
   }
   locals <- ht_new()
   ht_add(locals, exclude)
   results <- ht_new()
-  code_analysis_walk(expr, results = results, locals = locals, allow = allow)
+  walk_code(expr, results = results, locals = locals, allow = allow)
   results <- lapply(as.list(results), unique)
   results$globals <- as.character(results$globals)
   non_locals <- find_non_locals(expr)
@@ -22,11 +26,58 @@ code_dependencies <- function(expr, exclude = character(0), allow = NULL) {
   select_nonempty(results)
 }
 
-code_analysis_walk <- function(expr, results, locals, allow) {
+analyze_loadd <- function(expr) {
+  expr <- match.call(drake::loadd, as.call(expr))
+  expr <- expr[-1]
+  unnamed <- list()
+  if (any(is_unnamed <- which_unnamed(expr))) {
+    unnamed <- analyze_code(expr[is_unnamed])
+  }
+  out <- c(
+    unnamed$globals,
+    unnamed$strings,
+    analyze_code(expr["list"])$strings
+  )
+  list(loadd = setdiff(out, drake_symbols))
+}
+
+analyze_readd <- function(expr) {
+  expr <- match.call(drake::readd, as.call(expr))
+  deps <- unlist(analyze_code(expr["target"])[c("globals", "strings")])
+  list(readd = setdiff(deps, drake_symbols))
+}
+
+analyze_file_in <- function(expr) {
+  expr <- expr[-1]
+  deps <- drake_quotes(analyze_code(expr)$strings, single = FALSE)
+  list(file_in = deps)
+}
+
+analyze_file_out <- function(expr) {
+  expr <- expr[-1]
+  deps <- drake_quotes(analyze_code(expr)$strings, single = FALSE)
+  list(file_out = deps)
+}
+
+analyze_knitr_in <- function(expr) {
+  expr <- expr[-1]
+  files <- analyze_code(expr)$strings
+  out <- lapply(files, knitr_deps_list)
+  out <- Reduce(out, f = merge_lists)
+  files <- drake_quotes(files, single = FALSE)
+  out$knitr_in <- c(out$knitr_in, files)
+  out
+}
+
+# The walk_*() functions are repeated recursion steps inside
+# the analyze_*() functions. For walk_*(), the secondary arguments
+# are important for the recursion to work,
+# and no arguments have defaults.
+walk_code <- function(expr, results, locals, allow) {
   if (!length(expr)) {
     return()
   } else if (is.function(expr)) {
-    analyze_function(expr, results = results, locals = locals, allow = allow)
+    walk_function(expr, results = results, locals = locals, allow = allow)
   } else if (is.name(expr)) {
     results$globals <- c(results$globals, expr)
   } else if (is.character(expr)) {
@@ -44,12 +95,12 @@ code_analysis_walk <- function(expr, results, locals, allow) {
     } else if (name %in% file_out_fns) {
       zip_to_envir(analyze_file_out(expr), results)
     } else if (!(name %in% ignored_fns)) {
-      analyze_call(expr, name, results, locals = locals, allow = allow)
+      walk_call(expr, name, results, locals = locals, allow = allow)
     }
   }
 }
 
-analyze_call <- function(expr, name, results, locals, allow) {
+walk_call <- function(expr, name, results, locals, allow) {
   if (name %in% c("::", ":::")) {
     results$namespaced <- c(
       results$namespaced,
@@ -58,7 +109,7 @@ analyze_call <- function(expr, name, results, locals, allow) {
   } else {
     lapply(
       X = expr,
-      FUN = code_analysis_walk,
+      FUN = walk_code,
       results = results,
       locals = locals,
       allow = allow
@@ -66,59 +117,16 @@ analyze_call <- function(expr, name, results, locals, allow) {
   }
 }
 
-analyze_function <- function(expr, results, locals, allow) {
+walk_function <- function(expr, results, locals, allow) {
   expr <- unwrap_function(expr)
   if (typeof(expr) == "closure") {
-    code_analysis_walk(
+    walk_code(
       expr = body(expr),
       results = results,
       locals = locals,
       allow = allow
     )
   }
-}
-
-analyze_loadd <- function(expr) {
-  expr <- match.call(drake::loadd, as.call(expr))
-  expr <- expr[-1]
-  unnamed <- list()
-  if (any(is_unnamed <- which_unnamed(expr))) {
-    unnamed <- code_dependencies(expr[is_unnamed])
-  }
-  out <- c(
-    unnamed$globals,
-    unnamed$strings,
-    code_dependencies(expr["list"])$strings
-  )
-  list(loadd = setdiff(out, drake_symbols))
-}
-
-analyze_readd <- function(expr) {
-  expr <- match.call(drake::readd, as.call(expr))
-  deps <- unlist(code_dependencies(expr["target"])[c("globals", "strings")])
-  list(readd = setdiff(deps, drake_symbols))
-}
-
-analyze_file_in <- function(expr) {
-  expr <- expr[-1]
-  deps <- drake_quotes(code_dependencies(expr)$strings, single = FALSE)
-  list(file_in = deps)
-}
-
-analyze_file_out <- function(expr) {
-  expr <- expr[-1]
-  deps <- drake_quotes(code_dependencies(expr)$strings, single = FALSE)
-  list(file_out = deps)
-}
-
-analyze_knitr_in <- function(expr) {
-  expr <- expr[-1]
-  files <- code_dependencies(expr)$strings
-  out <- lapply(files, knitr_deps_list)
-  out <- Reduce(out, f = merge_lists)
-  files <- drake_quotes(files, single = FALSE)
-  out$knitr_in <- c(out$knitr_in, files)
-  out
 }
 
 is_target_call <- function(expr) {
