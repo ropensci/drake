@@ -464,7 +464,8 @@ deprecate_hash_algo_args <- function(
   if (!is.null(short_hash_algo) || !is.null(long_hash_algo)) {
     warning(
       "The long_hash_algo and short_hash_algo arguments to drake functions ",
-      "are deprecated. drake now uses only one hash algorithm, which you can set ",
+      "are deprecated. drake now uses only one hash algorithm, ",
+      "which you can set ",
       "with the hash_algorithm argument in new_cache().",
       call. = FALSE
     )

@@ -6,8 +6,7 @@ test_with_dir("scratch build with custom filesystem cache.", {
   path <- "my_cache"
   config$cache <- cache <- new_cache(
     path = path,
-    short_hash_algo = "murmur32",
-    long_hash_algo = "sha512"
+    hash_algorithm = "murmur32"
   )
   expect_error(drake_get_session_info(cache = cache))
   expect_true(length(progress(cache = cache)) == 0)
@@ -22,8 +21,7 @@ test_with_dir("scratch build with custom filesystem cache.", {
     all(read_drake_plan(cache = cache)$target %in% config$plan$target))
 
   cache <- this_cache(path = path)
-  expect_equal(short_hash(cache), "murmur32")
-  expect_equal(long_hash(cache), "sha512")
+  expect_equal(cache$driver$hash_algorithm, "murmur32")
 
   # changed nothing
   testrun(config)

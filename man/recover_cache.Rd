@@ -6,21 +6,20 @@
 or create a new one otherwise.}
 \usage{
 recover_cache(path = drake::default_cache_path(),
-  short_hash_algo = drake::default_short_hash_algo(),
-  long_hash_algo = drake::default_long_hash_algo(), force = FALSE,
+  hash_algorithm = NULL, short_hash_algo = NULL,
+  long_hash_algo = NULL, force = FALSE,
   verbose = drake::default_verbose(), fetch_cache = NULL,
   console_log_file = NULL)
 }
 \arguments{
 \item{path}{file path of the cache}
 
-\item{short_hash_algo}{short hash algorithm for the cache.
-See \code{\link[=default_short_hash_algo]{default_short_hash_algo()}} and
-\code{\link[=make]{make()}}}
+\item{hash_algorithm}{name of a hash algorithm to use.
+See the \code{algo} argument of the \code{digest} package for your options.}
 
-\item{long_hash_algo}{long hash algorithm for the cache.
-See \code{\link[=default_long_hash_algo]{default_long_hash_algo()}} and
-\code{\link[=make]{make()}}}
+\item{short_hash_algo}{Deprecated on 2018-12-12. Use \code{hash_algorithm} instead}
+
+\item{long_hash_algo}{Deprecated on 2018-12-12. Use \code{hash_algorithm} instead}
 
 \item{force}{logical, whether to load the cache
 despite any back compatibility issues with the

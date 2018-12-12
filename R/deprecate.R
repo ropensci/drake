@@ -358,7 +358,6 @@ config <- function(
 #'   on the master process
 #'
 #' @examples
-#' \dontrun{
 #' # deprecated
 configure_cache <- function(
   cache = drake::get_cache(verbose = verbose),
@@ -497,7 +496,6 @@ default_hook <- function(code) {
 #'   hash algorithm that drake picks for you.
 #' @examples
 #' # deprecated
-#' }
 default_long_hash_algo <- function(cache = NULL) {
   .Deprecated(
     "default_long_hash_algo",
@@ -530,7 +528,6 @@ default_long_hash_algo <- function(cache = NULL) {
 #'   hash algorithm that drake picks for you.
 #' @examples
 #' # deprecated
-#' }
 default_short_hash_algo <- function(cache = NULL) {
   .Deprecated(
     "default_short_hash_algo",
@@ -1021,7 +1018,6 @@ load_basic_example <- function(
 #' @inheritParams cached
 #' @examples
 #' # deprecated
-#' }
 long_hash <- function(
   cache = drake::get_cache(verbose = verbose),
   verbose = drake::default_verbose()
@@ -1130,9 +1126,7 @@ message_sink_hook <- function(code) {
 #' drake 4.4.0 or earlier
 #' to be compatible with the version of drake on your system.
 #' @examples
-#' \dontrun{
 #' # This function is deprecated.
-#' }
 migrate_drake_project <- function(
   path = drake::default_cache_path(), jobs = 1
 ) {
@@ -1769,7 +1763,6 @@ parallel_stages <- function(
 #' @inheritParams cached
 #' @examples
 #' # deprecated
-#' }
 short_hash <- function(
   cache = drake::get_cache(verbose = verbose),
   verbose = drake::default_verbose()

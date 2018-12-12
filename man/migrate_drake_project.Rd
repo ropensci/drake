@@ -19,9 +19,7 @@ drake 4.4.0 or earlier
 to be compatible with the version of drake on your system.
 }
 \examples{
-\dontrun{
 # This function is deprecated.
-}
 }
 \seealso{
 \code{\link[=rescue_cache]{rescue_cache()}}, \code{\link[=make]{make()}}

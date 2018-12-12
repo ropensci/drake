@@ -543,6 +543,7 @@ drake_config <- function(
   } else {
     long_hash_algo <- cache$driver$hash_algorithm
   }
+  init_common_values(cache)
   seed <- choose_seed(supplied = seed, cache = cache)
   trigger <- convert_old_trigger(trigger)
   if (is.null(layout)) {

@@ -99,7 +99,7 @@ drake_cache_log_file <- function(
 #' in your workflow plan data frame.
 #' Also, the keys depend on the hash algorithm
 #' of your cache. To define your own hash algorithm,
-#' you can create your own `storr` cache adn give it a hash algorithm
+#' you can create your own `storr` cache and give it a hash algorithm
 #' (e.g. `storr_rds(hash_algorithm = "murmur32")`)
 #' @seealso [drake_cache_log_file()], [cached()], [get_cache()]
 #' @export
