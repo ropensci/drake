@@ -184,19 +184,15 @@ drake_fetch_rds <- function(path) {
 #' @return A newly created drake cache as a storr object.
 #' @inheritParams cached
 #' @inheritParams drake_config
-#' @seealso [default_short_hash_algo()],
-#'   [default_long_hash_algo()],
-#'   [make()]
+#' @seealso [make()]
 #' @param path file path to the cache if the cache
 #'   is a file system cache.
 #' @param type deprecated argument. Once stood for cache type.
 #'   Use `storr` to customize your caches instead.
-#' @param short_hash_algo short hash algorithm for the cache.
-#'   See [default_short_hash_algo()] and
-#'   [make()]
-#' @param long_hash_algo long hash algorithm for the cache.
-#'   See [default_long_hash_algo()] and
-#'   [make()]
+#' @param hash_algorithm name of a hash algorithm to use.
+#'   See the `algo` argument of the `digest` package for your options.
+#' @param short_hash_algo Deprecated on 2018-12-12. Use `hash_algorithm` instead
+#' @param long_hash_algo Deprecated on 2018-12-12. Use `hash_algorithm` instead 
 #' @param ... other arguments to the cache constructor
 #' @examples
 #' \dontrun{
@@ -204,7 +200,7 @@ drake_fetch_rds <- function(path) {
 #' clean(destroy = TRUE) # Should not be necessary.
 #' unlink("not_hidden", recursive = TRUE) # Should not be necessary.
 #' cache1 <- new_cache() # Creates a new hidden '.drake' folder.
-#' cache2 <- new_cache(path = "not_hidden", short_hash_algo = "md5")
+#' cache2 <- new_cache(path = "not_hidden", hash_algorithm = "md5")
 #' clean(destroy = TRUE, cache = cache2)
 #' })
 #' }
@@ -212,11 +208,13 @@ new_cache <- function(
   path = drake::default_cache_path(),
   verbose = drake::default_verbose(),
   type = NULL,
-  short_hash_algo = drake::default_short_hash_algo(),
-  long_hash_algo = drake::default_long_hash_algo(),
+  hash_algorithm = NULL,
+  short_hash_algo = NULL,
+  long_hash_algo = NULL,
   ...,
   console_log_file = NULL
 ) {
+  hash_algorithm <- set_hash_algorithm(hash_algorithm)
   if (!is.null(type)) {
     warning(
       "The 'type' argument of new_cache() is deprecated. ",
@@ -224,10 +222,11 @@ new_cache <- function(
       "https://ropenscilabs.github.io/drake-manual/store.html"
     )
   }
+  deprecate_hash_algo_args(short_hash_algo, long_hash_algo)
   cache <- storr::storr_rds(
     path = path,
     mangle_key = TRUE,
-    hash_algorithm = short_hash_algo
+    hash_algorithm = hash_algorithm
   )
   writeLines(
     text = c("*", "!/.gitignore"),
@@ -253,15 +252,10 @@ new_cache <- function(
 #' in-memory caches such as [storr_environment()].
 #' @return A drake/storr cache.
 #' @inheritParams cached
+#' @inheritParams new_cache
 #' @inheritParams this_cache
 #' @inheritParams drake_config
 #' @param path file path of the cache
-#' @param short_hash_algo short hash algorithm for the cache.
-#'   See [default_short_hash_algo()] and
-#'   [make()]
-#' @param long_hash_algo long hash algorithm for the cache.
-#'   See [default_long_hash_algo()] and
-#'   [make()]
 #' @param force logical, whether to load the cache
 #'   despite any back compatibility issues with the
 #'   running version of drake.
@@ -276,14 +270,17 @@ new_cache <- function(
 #' }
 recover_cache <- function(
   path = drake::default_cache_path(),
-  short_hash_algo = drake::default_short_hash_algo(),
-  long_hash_algo = drake::default_long_hash_algo(),
+  hash_algorithm = NULL,
+  short_hash_algo = NULL,
+  long_hash_algo = NULL,
   force = FALSE,
   verbose = drake::default_verbose(),
   fetch_cache = NULL,
   console_log_file = NULL
 ) {
   deprecate_force(force)
+  deprecate_hash_algo_args(short_hash_algo, long_hash_algo)
+  hash_algorithm <- set_hash_algorithm(hash_algorithm)
   cache <- this_cache(
     path = path,
     verbose = verbose,
@@ -294,8 +291,7 @@ recover_cache <- function(
     cache <- new_cache(
       path = path,
       verbose = verbose,
-      short_hash_algo = short_hash_algo,
-      long_hash_algo = long_hash_algo,
+      hash_algorithm = hash_algorithm,
       fetch_cache = fetch_cache,
       console_log_file = console_log_file
     )
@@ -444,11 +440,33 @@ memo_expr <- function(expr, cache, ...) {
     return(force(expr))
   }
   lang <- match.call(expand.dots = FALSE)$expr
-  key <- digest::digest(list(lang, ...), algo = "sha256")
+  key <- digest::digest(list(lang, ...), algo = cache$driver$hash_algorithm)
   if (cache$exists(key = key, namespace = "memoize")) {
     return(cache$get(key = key, namespace = "memoize"))
   }
   value <- force(expr)
   cache$set(key = key, value = value, namespace = "memoize")
   value
+}
+
+set_hash_algorithm <- function(hash_algorithm) {
+  if (is.null(hash_algorithm)) {
+    "xxhash64"
+  } else {
+    hash_algorithm
+  }
+}
+
+deprecate_hash_algo_args <- function(
+  short_hash_algo = NULL,
+  long_hash_algo = NULL
+) {
+  if (!is.null(short_hash_algo) || !is.null(long_hash_algo)) {
+    warning(
+      "The long_hash_algo and short_hash_algo arguments to drake functions ",
+      "are deprecated. drake now uses only one hash algorithm, which you can set ",
+      "with the hash_algorithm argument in new_cache().",
+      call. = FALSE
+    )
+  }
 }

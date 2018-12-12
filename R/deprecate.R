@@ -402,7 +402,6 @@ configure_cache <- function(
     )
   }
   chosen_algo <- short_hash(cache)
-  check_storr_short_hash(cache = cache, chosen_algo = chosen_algo)
   if (init_common_values) {
     init_common_values(cache)
   }
@@ -1784,7 +1783,6 @@ short_hash <- function(
     return(NULL)
   }
   chosen_algo <- cache$get("short_hash_algo", namespace = "config")
-  check_storr_short_hash(cache = cache, chosen_algo = chosen_algo)
   cache$get("short_hash_algo", namespace = "config")
 }
 
