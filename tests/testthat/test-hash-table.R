@@ -1,6 +1,6 @@
-context("hash tables")
+drake_context("hash tables")
 
-test_that("hash tables work", {
+test_with_dir("hash tables work", {
   e <- ht_new()
   expect_equal(ht_list(e), character(0))
   expect_false(ht_exists(e, "a"))
