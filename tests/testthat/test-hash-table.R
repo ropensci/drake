@@ -12,4 +12,8 @@ test_that("hash tables work", {
   expect_false(ht_exists(e, "a"))
   expect_true(ht_exists(e, "b"))
   expect_equal(ht_list(e), "b")
+  f <- ht_clone(e)
+  ht_add(f, "xyz")
+  expect_false(ht_exists(e, "xyz"))
+  expect_true(ht_exists(f, "xyz"))
 })

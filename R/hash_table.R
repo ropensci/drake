@@ -27,3 +27,7 @@ ht_exists <- function(ht, x) {
 ht_list <- function(ht) {
   ls(envir = ht, all.names = TRUE, sorted = FALSE)
 }
+
+ht_clone <- function(ht) {
+  list2env(as.list(ht), hash = TRUE, parent = emptyenv())
+}
