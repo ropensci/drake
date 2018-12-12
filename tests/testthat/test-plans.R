@@ -450,6 +450,7 @@ test_with_dir("custom column interface", {
 test_with_dir("bind_plans()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   plan1 <- drake_plan(x = 1, y = 2)
+  expect_equal(bind_plans(plan1, plan1), plan1) # targets should be unique
   plan2 <- drake_plan(
     z = target(
       command = download_data(),
