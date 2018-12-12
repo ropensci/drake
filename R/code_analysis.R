@@ -10,13 +10,13 @@ code_dependencies <- function(expr, exclude = character(0), allow = NULL) {
   # `walk()` analyzes `drake`-specific calls
   # in an expression or function.
   # It sees `results` in its lexical scope.
-  walk <- function(expr) {
+  walk <- function(expr, locals) {
     if (!length(expr)) {
       return()
     } else if (is.function(expr)) {
       expr <- unwrap_function(expr)
       if (typeof(expr) == "closure") {
-        walk(body(expr))
+        walk(body(expr), locals)
       }
     } else if (is.name(expr)) {
       results$globals <<- c(results$globals, expr)
@@ -41,13 +41,15 @@ code_dependencies <- function(expr, exclude = character(0), allow = NULL) {
             namespaced = setdiff(wide_deparse(expr), drake_symbols)
           )
         } else {
-          lapply(X = expr, FUN = walk)
+          lapply(X = expr, FUN = walk, locals = locals)
         }
       }
       results <<- zip_lists(x = results, y = new_results)
     }
   }
-  walk(expr)
+  locals <- ht_new()
+  ht_add(locals, exclude)
+  walk(expr, locals)
   results <- lapply(results, unique)
   results$globals <- as.character(results$globals)
   non_locals <- find_non_locals(expr)
