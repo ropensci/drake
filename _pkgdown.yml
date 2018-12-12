@@ -136,7 +136,6 @@ reference:
   - '`show_source`'
 - title: Cache configuration
   contents:
-  - '`available_hash_algos`'
   - '`cache_namespaces`'
   - '`cache_path`'
   - '`cleaned_namespaces`'
