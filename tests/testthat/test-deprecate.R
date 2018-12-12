@@ -55,7 +55,7 @@ test_with_dir("deprecation: cache functions", {
   expect_warning(long_hash(cache))
   expect_warning(default_short_hash_algo(cache))
   expect_warning(default_long_hash_algo(cache))
-  expect_warning(available_hash_algos(cache))
+  expect_warning(available_hash_algos())
 })
 
 test_with_dir("drake_plan deprecation", {
