@@ -1,3 +1,7 @@
+# Version 6.2.1.9000
+
+- Allow the `magrittr` dot symbol to appear in some commands sometimes.
+
 # Version 6.2.1
 
 Version 6.2.1 is a hotfix to address the failing automated CRAN checks for 6.2.0. Chiefly, in CRAN's Debian R-devel (2018-12-10) check platform, errors of the form "length > 1 in coercion to logical" occurred when either argument to `&&` or `||` was not of length 1 (e.g. `nzchar(letters) && length(letters)`). In addition to fixing these errors, version 6.2.1 also removes a problematic link from the vignette.

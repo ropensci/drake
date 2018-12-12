@@ -1,4 +1,4 @@
-code_dependencies <- function(expr, exclude = character(0), globals = NULL) {
+code_dependencies <- function(expr, exclude = character(0), allow = NULL) {
   if (
     !is.function(expr) &&
     !is.expression(expr) &&
@@ -10,13 +10,13 @@ code_dependencies <- function(expr, exclude = character(0), globals = NULL) {
   # `walk()` analyzes `drake`-specific calls
   # in an expression or function.
   # It sees `results` in its lexical scope.
-  walk <- function(expr) {
+  walk <- function(expr, locals) {
     if (!length(expr)) {
       return()
     } else if (is.function(expr)) {
       expr <- unwrap_function(expr)
       if (typeof(expr) == "closure") {
-        walk(body(expr))
+        walk(body(expr), locals)
       }
     } else if (is.name(expr)) {
       results$globals <<- c(results$globals, expr)
@@ -41,21 +41,22 @@ code_dependencies <- function(expr, exclude = character(0), globals = NULL) {
             namespaced = setdiff(wide_deparse(expr), drake_symbols)
           )
         } else {
-          lapply(X = expr, FUN = walk)
+          lapply(X = expr, FUN = walk, locals = locals)
         }
       }
       results <<- zip_lists(x = results, y = new_results)
     }
   }
-  walk(expr)
+  locals <- ht_new()
+  ht_add(locals, exclude)
+  walk(expr, locals)
   results <- lapply(results, unique)
   results$globals <- as.character(results$globals)
   non_locals <- find_non_locals(expr)
   results$globals <- intersect(results$globals, non_locals)
-  if (!is.null(globals)) {
-    results$globals <- intersect(results$globals, globals)
+  if (!is.null(allow)) {
+    results$globals <- intersect(results$globals, allow)
   }
-  exclude <- base::union(exclude, ".")
   results <- lapply(
     X = results,
     FUN = function(x) {
@@ -175,7 +176,6 @@ file_out_fns <- pair_text(drake_prefix, c("file_out"))
 ignored_fns <- pair_text(drake_prefix, c("drake_envir", "ignore"))
 knitr_in_fns <- pair_text(drake_prefix, c("knitr_in"))
 loadd_fns <- pair_text(drake_prefix, "loadd")
-misc_syms <- "."
 readd_fns <- pair_text(drake_prefix, "readd")
 target_fns <- pair_text(drake_prefix, "target")
 trigger_fns <- pair_text(drake_prefix, "trigger")
@@ -188,7 +188,6 @@ drake_symbols <- sort(
     ignored_fns,
     loadd_fns,
     knitr_in_fns,
-    misc_syms,
     readd_fns,
     target_fns,
     trigger_fns
