@@ -5,7 +5,7 @@ code_dependencies <- function(expr, exclude = character(0), allow = NULL) {
   locals <- ht_new()
   ht_add(locals, exclude)
   results <- ht_new()
-  code_analysis_walk(expr, results = results, locals = locals)
+  code_analysis_walk(expr, results = results, locals = locals, allow = allow)
   results <- lapply(as.list(results), unique)
   results$globals <- as.character(results$globals)
   non_locals <- find_non_locals(expr)
@@ -22,11 +22,11 @@ code_dependencies <- function(expr, exclude = character(0), allow = NULL) {
   select_nonempty(results)
 }
 
-code_analysis_walk <- function(expr, results, locals) {
+code_analysis_walk <- function(expr, results, locals, allow) {
   if (!length(expr)) {
     return()
   } else if (is.function(expr)) {
-    analyze_function(expr = expr, results = results, locals = locals)
+    analyze_function(expr, results = results, locals = locals, allow = allow)
   } else if (is.name(expr)) {
     results$globals <- c(results$globals, expr)
   } else if (is.character(expr)) {
@@ -44,23 +44,12 @@ code_analysis_walk <- function(expr, results, locals) {
     } else if (name %in% file_out_fns) {
       zip_to_envir(analyze_file_out(expr), results)
     } else if (!(name %in% ignored_fns)) {
-      analyze_call(expr, name = name, results = results, locals = locals)
+      analyze_call(expr, name, results, locals = locals, allow = allow)
     }
   }
 }
 
-analyze_function <- function(expr, results, locals) {
-  expr <- unwrap_function(expr)
-  if (typeof(expr) == "closure") {
-    code_analysis_walk(
-      expr = body(expr),
-      results = results,
-      locals = locals
-    )
-  }
-}
-
-analyze_call <- function(expr, name, results, locals) {
+analyze_call <- function(expr, name, results, locals, allow) {
   if (name %in% c("::", ":::")) {
     results$namespaced <- c(
       results$namespaced,
@@ -71,53 +60,22 @@ analyze_call <- function(expr, name, results, locals) {
       X = expr,
       FUN = code_analysis_walk,
       results = results,
-      locals = locals
+      locals = locals,
+      allow = allow
     )
   }
 }
 
-is_vectorized <- function(funct) {
-  if (!is.function(funct)) {
-    return(FALSE)
+analyze_function <- function(expr, results, locals, allow) {
+  expr <- unwrap_function(expr)
+  if (typeof(expr) == "closure") {
+    code_analysis_walk(
+      expr = body(expr),
+      results = results,
+      locals = locals,
+      allow = allow
+    )
   }
-  if (!is.environment(environment(funct))) {
-    return(FALSE)
-  }
-  vectorized_names <- "FUN" # Chose not to include other names.
-  if (!all(vectorized_names %in% ls(environment(funct)))) {
-    return(FALSE)
-  }
-  f <- environment(funct)[["FUN"]]
-  is.function(f)
-}
-
-unwrap_function <- function(funct) {
-  if (is_vectorized(funct)) {
-    funct <- environment(funct)[["FUN"]]
-  }
-  funct
-}
-
-find_non_locals <- function(fun) {
-  if (!is.function(fun)) {
-    f <- function() {} # nolint
-    body(f) <- as.call(append(as.list(body(f)), fun))
-    fun <- f
-  }
-  if (typeof(fun) != "closure") {
-    return(character(0))
-  }
-  fun <- unwrap_function(fun)
-  # The tryCatch statement fixes a strange bug in codetools
-  # for R 3.3.3. I do not understand it.
-  out <- tryCatch(
-    codetools::findGlobals(fun = fun, merge = TRUE),
-    error = function(e) {
-      fun <- eval(parse(text = rlang::expr_text(fun))) # nocov
-      codetools::findGlobals(fun = fun, merge = TRUE)  # nocov
-    }
-  )
-  setdiff(out, ignored_symbols)
 }
 
 analyze_loadd <- function(expr) {
@@ -163,12 +121,18 @@ analyze_knitr_in <- function(expr) {
   out
 }
 
-which_unnamed <- function(x) {
-  if (!length(names(x))) {
-    rep(TRUE, length(x))
-  } else {
-    !nzchar(names(x))
-  }
+is_target_call <- function(expr) {
+  tryCatch(
+    wide_deparse(expr[[1]]) %in% target_fns,
+    error = error_false
+  )
+}
+
+is_trigger_call <- function(expr) {
+  tryCatch(
+    wide_deparse(expr[[1]]) %in% trigger_fns,
+    error = error_false
+  )
 }
 
 is_callish <- function(x) {
@@ -213,16 +177,24 @@ base_symbols <- sort(
 )
 ignored_symbols <- sort(c(drake_symbols, base_symbols))
 
-is_target_call <- function(expr) {
-  tryCatch(
-    wide_deparse(expr[[1]]) %in% target_fns,
-    error = error_false
+find_non_locals <- function(fun) {
+  if (!is.function(fun)) {
+    f <- function() {} # nolint
+    body(f) <- as.call(append(as.list(body(f)), fun))
+    fun <- f
+  }
+  if (typeof(fun) != "closure") {
+    return(character(0))
+  }
+  fun <- unwrap_function(fun)
+  # The tryCatch statement fixes a strange bug in codetools
+  # for R 3.3.3. I do not understand it.
+  out <- tryCatch(
+    codetools::findGlobals(fun = fun, merge = TRUE),
+    error = function(e) {
+      fun <- eval(parse(text = rlang::expr_text(fun))) # nocov
+      codetools::findGlobals(fun = fun, merge = TRUE)  # nocov
+    }
   )
-}
-
-is_trigger_call <- function(expr) {
-  tryCatch(
-    wide_deparse(expr[[1]]) %in% trigger_fns,
-    error = error_false
-  )
+  setdiff(out, ignored_symbols)
 }

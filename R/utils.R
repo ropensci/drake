@@ -250,3 +250,34 @@ zip_to_envir <- function(x, envir) {
   )
   invisible()
 }
+
+is_vectorized <- function(funct) {
+  if (!is.function(funct)) {
+    return(FALSE)
+  }
+  if (!is.environment(environment(funct))) {
+    return(FALSE)
+  }
+  vectorized_names <- "FUN" # Chose not to include other names.
+  if (!all(vectorized_names %in% ls(environment(funct)))) {
+    return(FALSE)
+  }
+  f <- environment(funct)[["FUN"]]
+  is.function(f)
+}
+
+unwrap_function <- function(funct) {
+  if (is_vectorized(funct)) {
+    funct <- environment(funct)[["FUN"]]
+  }
+  funct
+}
+
+which_unnamed <- function(x) {
+  if (!length(names(x))) {
+    rep(TRUE, length(x))
+  } else {
+    !nzchar(names(x))
+  }
+}
+
