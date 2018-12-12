@@ -69,6 +69,7 @@ as_file <- function(x) {
 
 #' @title Deprecated. List the available hash algorithms for drake caches.
 #' @export
+#' @keywords internal
 #' @description Deprecated on 2018-12-12.
 #' @return A character vector of names of available hash algorithms.
 #' @examples
@@ -502,6 +503,7 @@ default_long_hash_algo <- function(cache = NULL) {
     package = "drake",
     msg = "default_long_hash_algo() is deprecated."
   )
+  # nocov start
   out <- "sha256"
   if (is.null(cache)) {
     return(out)
@@ -513,6 +515,7 @@ default_long_hash_algo <- function(cache = NULL) {
     )
   }
   out
+  # nocov end
 }
 
 #' @title Deprecated. Return the default short hash algorithm for `make()`.
@@ -534,6 +537,7 @@ default_short_hash_algo <- function(cache = NULL) {
     package = "drake",
     msg = "default_short_hash_algo() is deprecated."
   )
+  # nocov start
   out <- "xxhash64"
   if (is.null(cache)) {
     return(out)
@@ -548,6 +552,7 @@ default_short_hash_algo <- function(cache = NULL) {
     out <- cache$driver$hash_algorithm
   }
   out
+  # nocov end
 }
 
 #' @title Deprecated function `default_system2_args`
@@ -1027,10 +1032,12 @@ long_hash <- function(
     package = "drake",
     msg = "long_hash() is deprecated."
   )
+  # nocov start
   if (!cache$exists(key = "long_hash_algo", namespace = "config")) {
     return(NULL)
   }
   cache$get("long_hash_algo", namespace = "config")
+  # nocov end
 }
 
 #' @title Deprecated function
@@ -1758,6 +1765,7 @@ parallel_stages <- function(
 
 #' @title Deprecated. `drake` now only uses one hash algorithm per cache.
 #' @export
+#' @keywords internal
 #' @description Deprecated on 2018-12-12.
 #' @return A character vector naming a hash algorithm.
 #' @inheritParams cached
@@ -1772,11 +1780,13 @@ short_hash <- function(
     package = "drake",
     msg = "short_hash() is deprecated."
   )
+  # nocov start
   if (!cache$exists(key = "short_hash_algo", namespace = "config")) {
     return(NULL)
   }
   chosen_algo <- cache$get("short_hash_algo", namespace = "config")
   cache$get("short_hash_algo", namespace = "config")
+  # nocov end
 }
 
 #' @title Deprecated.

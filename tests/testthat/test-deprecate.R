@@ -50,6 +50,12 @@ test_with_dir("deprecation: cache functions", {
     tmp <- read_drake_meta(targets = NULL, search = FALSE))))
   expect_true(expect_warning(is.list(
     tmp <- read_drake_meta(targets = "x", search = FALSE))))
+  cache <- get_cache()
+  expect_warning(short_hash(cache))
+  expect_warning(long_hash(cache))
+  expect_warning(default_short_hash_algo(cache))
+  expect_warning(default_long_hash_algo(cache))
+  expect_warning(available_hash_algos(cache))
 })
 
 test_with_dir("drake_plan deprecation", {
