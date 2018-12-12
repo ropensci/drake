@@ -56,6 +56,7 @@ test_with_dir("deprecation: cache functions", {
   expect_warning(default_short_hash_algo(cache))
   expect_warning(default_long_hash_algo(cache))
   expect_warning(available_hash_algos())
+  expect_warning(new_cache(short_hash_algo = "123", long_hash_algo = "456"))
 })
 
 test_with_dir("drake_plan deprecation", {
@@ -147,7 +148,9 @@ test_with_dir("deprecate misc utilities", {
   expect_warning(as_drake_filename("x"))
   expect_warning(drake_unquote("x", deep = TRUE))
   cache <- storr::storr_environment()
-  expect_warning(configure_cache(cache, log_progress = TRUE))
+  expect_warning(configure_cache(
+    cache, log_progress = TRUE, init_common_values = TRUE
+  ))
   expect_warning(max_useful_jobs(config(drake_plan(x = 1))))
   expect_warning(deps(123))
   load_mtcars_example()
@@ -246,6 +249,16 @@ test_with_dir("force with a non-back-compatible cache", {
   expect_silent(tmp <- get_cache())
   expect_silent(tmp <- this_cache())
   expect_silent(tmp <- recover_cache())
+})
+
+test_with_dir("v6.2.1 project is still up to date", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_if_not_installed("tibble")
+  write_v6.2.1_project() # nolint
+  plan <- read_drake_plan()
+  load_mtcars_example(overwrite = FALSE)
+  config <- make(plan)
+  expect_equal(justbuilt(config), character(0))
 })
 
 test_with_dir("deprecate the `force` argument", {
