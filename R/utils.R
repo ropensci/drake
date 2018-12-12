@@ -67,15 +67,15 @@ drake_pmap <- function(.l, .f, jobs = 1, ...) {
   stopifnot(is.list(.l))
   stopifnot(is.function(.f))
   stopifnot(is.numeric(jobs))
-  
+
   if (length(.l) == 0) {
     return(list())  # empty input
   }
-  
+
   # Ensure identically-lengthed sublists in .l
   len <- unique(unlist(lapply(.l, length)))
   stopifnot(length(len) == 1)
-  
+
   lightly_parallelize(
     X = seq_len(len),
     FUN = function(i) {
@@ -280,4 +280,3 @@ which_unnamed <- function(x) {
     !nzchar(names(x))
   }
 }
-
