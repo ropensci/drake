@@ -59,6 +59,32 @@ exists_tidyselect <- function() {
   )
 }
 
+# Simple version of purrr::pmap for use in drake
+# Applies function .f to list .l elements in parallel, i.e.
+# .f(.l[[1]][1], .l[[2]][1], ..., .l[[n]][1]) and then
+# .f(.l[[1]][2], .l[[2]][2], ..., .l[[n]][2]) etc.
+drake_pmap <- function(.l, .f, jobs = 1, ...) {
+  stopifnot(is.list(.l))
+  stopifnot(is.function(.f))
+  stopifnot(is.numeric(jobs))
+  
+  if (length(.l) == 0) {
+    return(list())  # empty input
+  }
+  
+  # Ensure identically-lengthed sublists in .l
+  len <- unique(unlist(lapply(.l, length)))
+  stopifnot(length(len) == 1)
+  
+  lightly_parallelize(
+    X = seq_len(len),
+    FUN = function(i) {
+      # extract ith element in each sublist, and then pass to .f
+      listi <- lapply(.l, function(x) x[[i]])
+      do.call(.f, args = c(listi, ...), quote = TRUE)
+    },
+    jobs = jobs)
+}
 
 drake_tidyselect <- function(
   cache,
@@ -215,41 +241,12 @@ standardize_filename <- function(text) {
   text
 }
 
-zip_lists <- function(x, y) {
-  names <- base::union(names(x), names(y))
-  x <- lapply(
-    X = names,
+zip_to_envir <- function(x, envir) {
+  lapply(
+    X = names(x),
     function(name) {
-      c(x[[name]], y[[name]])
+      envir[[name]] <- c(envir[[name]], x[[name]])
     }
   )
-  names(x) <- names
-  x
-}
-
-# Simple version of purrr::pmap for use in drake
-# Applies function .f to list .l elements in parallel, i.e.
-# .f(.l[[1]][1], .l[[2]][1], ..., .l[[n]][1]) and then
-# .f(.l[[1]][2], .l[[2]][2], ..., .l[[n]][2]) etc.
-drake_pmap <- function(.l, .f, jobs = 1, ...) {
-  stopifnot(is.list(.l))
-  stopifnot(is.function(.f))
-  stopifnot(is.numeric(jobs))
-
-  if (length(.l) == 0) {
-    return(list())  # empty input
-  }
-
-  # Ensure identically-lengthed sublists in .l
-  len <- unique(unlist(lapply(.l, length)))
-  stopifnot(length(len) == 1)
-
-  lightly_parallelize(
-    X = seq_len(len),
-    FUN = function(i) {
-      # extract ith element in each sublist, and then pass to .f
-      listi <- lapply(.l, function(x) x[[i]])
-      do.call(.f, args = c(listi, ...), quote = TRUE)
-    },
-    jobs = jobs)
+  invisible()
 }

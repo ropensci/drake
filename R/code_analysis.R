@@ -1,56 +1,12 @@
 code_dependencies <- function(expr, exclude = character(0), allow = NULL) {
-  if (
-    !is.function(expr) &&
-    !is.expression(expr) &&
-    !is.language(expr)
-  ) {
+  if (!is.function(expr) && !is.language(expr)) {
     return(list())
-  }
-  results <- list()
-  # `walk()` analyzes `drake`-specific calls
-  # in an expression or function.
-  # It sees `results` in its lexical scope.
-  walk <- function(expr, locals) {
-    if (!length(expr)) {
-      return()
-    } else if (is.function(expr)) {
-      expr <- unwrap_function(expr)
-      if (typeof(expr) == "closure") {
-        walk(body(expr), locals)
-      }
-    } else if (is.name(expr)) {
-      results$globals <<- c(results$globals, expr)
-    } else if (is.character(expr)) {
-      results$strings <<- c(results$strings, expr)
-    } else if (is.language(expr) && (is.call(expr) || is.recursive(expr))) {
-      name <- wide_deparse(expr[[1]])
-      new_results <- list()
-      if (name %in% loadd_fns) {
-        new_results <- analyze_loadd(expr)
-      } else if (name %in% readd_fns) {
-        new_results <- analyze_readd(expr)
-      } else if (name %in% c(knitr_in_fns)) {
-        new_results <- analyze_knitr_in(expr)
-      } else if (name %in% file_in_fns) {
-        new_results <- analyze_file_in(expr)
-      } else if (name %in% file_out_fns) {
-        new_results <- analyze_file_out(expr)
-      } else if (!(name %in% ignored_fns)) {
-        if (name %in% c("::", ":::")) {
-          new_results <- list(
-            namespaced = setdiff(wide_deparse(expr), drake_symbols)
-          )
-        } else {
-          lapply(X = expr, FUN = walk, locals = locals)
-        }
-      }
-      results <<- zip_lists(x = results, y = new_results)
-    }
   }
   locals <- ht_new()
   ht_add(locals, exclude)
-  walk(expr, locals)
-  results <- lapply(results, unique)
+  results <- ht_new()
+  code_analysis_walk(expr, results = results, locals = locals)
+  results <- lapply(as.list(results), unique)
   results$globals <- as.character(results$globals)
   non_locals <- find_non_locals(expr)
   results$globals <- intersect(results$globals, non_locals)
@@ -60,10 +16,64 @@ code_dependencies <- function(expr, exclude = character(0), allow = NULL) {
   results <- lapply(
     X = results,
     FUN = function(x) {
-      setdiff(x, exclude)
+      unique(setdiff(x, exclude))
     }
   )
   select_nonempty(results)
+}
+
+code_analysis_walk <- function(expr, results, locals) {
+  if (!length(expr)) {
+    return()
+  } else if (is.function(expr)) {
+    analyze_function(expr = expr, results = results, locals = locals)
+  } else if (is.name(expr)) {
+    results$globals <- c(results$globals, expr)
+  } else if (is.character(expr)) {
+    results$strings <- c(results$strings, expr)
+  } else if (is.language(expr) && (is.call(expr) || is.recursive(expr))) {
+    name <- wide_deparse(expr[[1]])
+    if (name %in% loadd_fns) {
+      zip_to_envir(analyze_loadd(expr), results)
+    } else if (name %in% readd_fns) {
+      zip_to_envir(analyze_readd(expr), results)
+    } else if (name %in% c(knitr_in_fns)) {
+      zip_to_envir(analyze_knitr_in(expr), results)
+    } else if (name %in% file_in_fns) {
+      zip_to_envir(analyze_file_in(expr), results)
+    } else if (name %in% file_out_fns) {
+      zip_to_envir(analyze_file_out(expr), results)
+    } else if (!(name %in% ignored_fns)) {
+      analyze_call(expr, name = name, results = results, locals = locals)
+    }
+  }
+}
+
+analyze_function <- function(expr, results, locals) {
+  expr <- unwrap_function(expr)
+  if (typeof(expr) == "closure") {
+    code_analysis_walk(
+      expr = body(expr),
+      results = results,
+      locals = locals
+    )
+  }
+}
+
+analyze_call <- function(expr, name, results, locals) {
+  if (name %in% c("::", ":::")) {
+    results$namespaced <- c(
+      results$namespaced,
+      setdiff(wide_deparse(expr), drake_symbols)
+    )
+  } else {
+    lapply(
+      X = expr,
+      FUN = code_analysis_walk,
+      results = results,
+      locals = locals
+    )
+  }
 }
 
 is_vectorized <- function(funct) {
@@ -149,7 +159,7 @@ analyze_knitr_in <- function(expr) {
   out <- lapply(files, knitr_deps_list)
   out <- Reduce(out, f = merge_lists)
   files <- drake_quotes(files, single = FALSE)
-  out$knitr_in <- base::union(out$knitr_in, files)
+  out$knitr_in <- c(out$knitr_in, files)
   out
 }
 
