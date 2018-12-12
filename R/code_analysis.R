@@ -2,20 +2,24 @@
 # These functions tend to give sensible answers if you just supply
 # the language object to the first argument and rely on the defaults
 # of the other arguments.
-analyze_code <- function(expr, exclude = character(0), allow = NULL) {
+analyze_code <- function(
+  expr,
+  exclude = character(0),
+  allowed_globals = NULL
+) {
   if (!is.function(expr) && !is.language(expr)) {
     return(list())
   }
   locals <- ht_new()
   ht_add(locals, exclude)
   results <- ht_new()
-  walk_code(expr, results = results, locals = locals, allow = allow)
+  walk_code(expr, results, locals = locals, allowed_globals = allowed_globals)
   results <- lapply(as.list(results), unique)
   results$globals <- as.character(results$globals)
   non_locals <- find_non_locals(expr)
   results$globals <- intersect(results$globals, non_locals)
-  if (!is.null(allow)) {
-    results$globals <- intersect(results$globals, allow)
+  if (!is.null(allowed_globals)) {
+    results$globals <- intersect(results$globals, allowed_globals)
   }
   results <- lapply(
     X = results,
@@ -73,11 +77,11 @@ analyze_knitr_in <- function(expr) {
 # the analyze_*() functions. For walk_*(), the secondary arguments
 # are important for the recursion to work,
 # and no arguments have defaults.
-walk_code <- function(expr, results, locals, allow) {
+walk_code <- function(expr, results, locals, allowed_globals) {
   if (!length(expr)) {
     return()
   } else if (is.function(expr)) {
-    walk_function(expr, results = results, locals = locals, allow = allow)
+    walk_function(expr, results, locals, allowed_globals)
   } else if (is.name(expr)) {
     results$globals <- c(results$globals, expr)
   } else if (is.character(expr)) {
@@ -95,12 +99,12 @@ walk_code <- function(expr, results, locals, allow) {
     } else if (name %in% file_out_fns) {
       zip_to_envir(analyze_file_out(expr), results)
     } else if (!(name %in% ignored_fns)) {
-      walk_call(expr, name, results, locals = locals, allow = allow)
+      walk_call(expr, name, results, locals, allowed_globals)
     }
   }
 }
 
-walk_call <- function(expr, name, results, locals, allow) {
+walk_call <- function(expr, name, results, locals, allowed_globals) {
   if (name %in% c("::", ":::")) {
     results$namespaced <- c(
       results$namespaced,
@@ -112,19 +116,19 @@ walk_call <- function(expr, name, results, locals, allow) {
       FUN = walk_code,
       results = results,
       locals = locals,
-      allow = allow
+      allowed_globals = allowed_globals
     )
   }
 }
 
-walk_function <- function(expr, results, locals, allow) {
+walk_function <- function(expr, results, locals, allowed_globals) {
   expr <- unwrap_function(expr)
   if (typeof(expr) == "closure") {
     walk_code(
       expr = body(expr),
       results = results,
       locals = locals,
-      allow = allow
+      allowed_globals = allowed_globals
     )
   }
 }
