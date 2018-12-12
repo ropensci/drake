@@ -316,6 +316,99 @@ config <- function(
   )
 }
 
+#' @title Deprecated. Configure the hash algorithms, etc. of a drake cache.
+#' @export
+#' @keywords internal
+#' @description The purpose of this function is
+#'   to prepare the cache to be called from [make()].
+#'   `drake` only uses a single hash algorithm now,
+#'   so we no longer need this configuration step.
+#' @details Deprecated on 2018-12-12.
+#' @return A drake/storr cache.
+#'
+#' @inheritParams cached
+#'
+#' @param cache cache to configure
+#'
+#' @param short_hash_algo short hash algorithm for drake.
+#'   The short algorithm must be among [available_hash_algos()],
+#'   which is just the collection of algorithms available to the `algo`
+#'   argument in [digest::digest()].
+#'   See [default_short_hash_algo()] for more.
+#'
+#' @param long_hash_algo long hash algorithm for drake.
+#'   The long algorithm must be among [available_hash_algos()],
+#'   which is just the collection of algorithms available to the `algo`
+#'   argument in `digest::digest()`.
+#'   See [default_long_hash_algo()] for more.
+#'
+#' @param log_progress deprecated logical.
+#'   Previously toggled whether to clear the recorded
+#'   build progress if this cache was used for previous calls to
+#'   [make()].
+#'
+#' @param overwrite_hash_algos logical, whether to try to overwrite
+#'   the hash algorithms in the cache with any user-specified ones.
+#'
+#' @param jobs number of jobs for parallel processing
+#'
+#' @param init_common_values logical, whether to set the initial `drake`
+#'   version in the cache and other common values.
+#'   Not always a thread safe operation, so should only be `TRUE`
+#'   on the master process
+#'
+#' @examples
+#' \dontrun{
+#' # deprecated
+configure_cache <- function(
+  cache = drake::get_cache(verbose = verbose),
+  short_hash_algo = drake::default_short_hash_algo(cache = cache),
+  long_hash_algo = drake::default_long_hash_algo(cache = cache),
+  log_progress = FALSE,
+  overwrite_hash_algos = FALSE,
+  verbose = drake::default_verbose(),
+  jobs = 1,
+  init_common_values = FALSE
+) {
+  .Deprecated(
+    "configure_cache",
+    package = "drake",
+    msg = "configure_cache() is deprecated."
+  )
+  short_hash_algo <- match.arg(short_hash_algo,
+                               choices = available_hash_algos())
+  long_hash_algo <- match.arg(long_hash_algo,
+                              choices = available_hash_algos())
+  if (log_progress) {
+    warning(
+      "The `log_progress` argument of `configure_cache()` is deprecated.",
+      call. = FALSE
+    )
+  }
+  short_exists <- cache$exists(key = "short_hash_algo", namespace = "config")
+  long_exists <- cache$exists(key = "long_hash_algo", namespace = "config")
+  if (overwrite_hash_algos | !short_exists) {
+    cache$set(
+      key = "short_hash_algo",
+      value = short_hash_algo,
+      namespace = "config"
+    )
+  }
+  if (overwrite_hash_algos | !long_exists) {
+    cache$set(
+      key = "long_hash_algo",
+      value = long_hash_algo,
+      namespace = "config"
+    )
+  }
+  chosen_algo <- short_hash(cache)
+  check_storr_short_hash(cache = cache, chosen_algo = chosen_algo)
+  if (init_common_values) {
+    init_common_values(cache)
+  }
+  cache
+}
+
 #' @title Deprecated function `dataframes_graph`
 #' @description Use [drake_graph_info()] instead.
 #' @details Deprecated on 2018-06-27.

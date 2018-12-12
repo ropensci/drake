@@ -538,13 +538,6 @@ drake_config <- function(
     drake_set_session_info(cache = cache)
   }
   cache_vers_stop(cache)
-  # A storr_rds() cache should already have the right hash algorithms.
-  cache <- configure_cache(
-    cache = cache,
-    overwrite_hash_algos = FALSE,
-    jobs = jobs,
-    init_common_values = TRUE
-  )
   seed <- choose_seed(supplied = seed, cache = cache)
   trigger <- convert_old_trigger(trigger)
   if (is.null(layout)) {
