@@ -255,6 +255,10 @@ test_with_dir("v6.2.1 project is still up to date", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("tibble")
   write_v6.2.1_project() # nolint
+  report_md_hash <- readRDS(
+    file.path(".drake", "data", "983396f9689f587b.rds")
+  )
+  expect_equal(nchar(report_md_hash), 64L)
   plan <- read_drake_plan()
   load_mtcars_example(overwrite = FALSE)
   config <- make(plan)
