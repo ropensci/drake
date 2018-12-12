@@ -11,8 +11,8 @@ analyze_code <- function(
     return(list())
   }
   locals <- ht_new()
-  ht_add(locals, exclude)
   results <- ht_new()
+  ht_add(locals, c(exclude, drake_symbols))
   walk_code(expr, results, locals = locals, allowed_globals = allowed_globals)
   results <- lapply(as.list(results), unique)
   results$globals <- as.character(results$globals)
