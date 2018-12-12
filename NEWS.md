@@ -1,5 +1,11 @@
 # Version 6.2.1.9000
 
+## Bug fixes
+
+- Allow `bind_plans()` to work with lists of plans (`bind_plans(list(plan1, plan2))` was returning `NULL` in `drake` 6.2.0 and 6.2.1).
+
+## Enhancements
+
 - Allow the `magrittr` dot symbol to appear in some commands sometimes.
 
 # Version 6.2.1
