@@ -74,7 +74,7 @@
 deps_code <- function(x) {
   if (is.function(x)) {
     import_dependencies(x)
-  } else if (is_file(x) && file.exists(drake_unquote(x))) {
+  } else if (all(is_file(x)) && all(file.exists(drake_unquote(x)))) {
     knitr_deps(drake_unquote(x))
   } else if (is.character(x)) {
     command_dependencies(x)

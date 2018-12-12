@@ -1,8 +1,12 @@
-# Version 6.2.0.9000
+# Version 6.2.1.9000
 
 - Allow the `magrittr` dot symbol to appear in some commands sometimes.
 
-# Version 6.1.0.9000
+# Version 6.2.1
+
+Version 6.2.1 is a hotfix to address the failing automated CRAN checks for 6.2.0. Chiefly, in CRAN's Debian R-devel (2018-12-10) check platform, errors of the form "length > 1 in coercion to logical" occurred when either argument to `&&` or `||` was not of length 1 (e.g. `nzchar(letters) && length(letters)`). In addition to fixing these errors, version 6.2.1 also removes a problematic link from the vignette.
+
+# Version 6.2.0
 
 ## New features
 
@@ -12,7 +16,9 @@
 
 ## Bug fixes
 
+- Ensure compatibility with `tibble` 2.0.0.
 - Stop returning `0s` from `predict_runtime(targets_only = TRUE)` when some targets are outdated and others are not.
+- Remove `sort(NULL)` warnings from `create_drake_layout()`. (Affects R-3.3.x.)
 
 ## Enhancements
 
