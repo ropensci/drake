@@ -45,9 +45,10 @@ force_cache_path <- function(cache = NULL) {
   path
 }
 
-#' @title Get the drake cache, optionally searching up the file system.
+#' @title Get the default cache of a `drake` project.
 #' @description Only works if the cache
-#' is in a folder called `.drake/`.
+#' is in a folder called `.drake/`. See the description of the
+#' `path` argument for details.
 #' @seealso [this_cache()], [new_cache()],
 #'   [recover_cache()], [drake_config()]
 #' @export
@@ -55,6 +56,19 @@ force_cache_path <- function(cache = NULL) {
 #'   if available. `NULL` otherwise.
 #' @inheritParams cached
 #' @inheritParams drake_config
+#' @param path If `search = FALSE`, `path` must be the root
+#'   directory of a `drake` project (a folder containing a `.drake` cache).
+#'   For example, if your cache is a folder called
+#'   `/home/you/my_project/.drake`, then
+#'   `get_cache(path = "/home/you/my_project", search = FALSE)`
+#'   will return the cache.
+#'   Otherwise, if `search = TRUE`, you can specify any
+#'   subdirectory of the project. The following are equivalent and correct:
+#'   - `get_cache(path = "/home/you/my_project", search = FALSE)`
+#'   - `get_cache(path = "/home/you/my_project", search = TRUE)`
+#'   - `get_cache(path = "/home/you/my_project/subdir/x", search = TRUE)`
+#'   - `get_cache(path = "/home/you/my_project/.drake", search = TRUE)`
+#'   - `get_cache(path = "/home/you/my_project/.drake/keys", search = TRUE)`
 #' @param force deprecated
 #' @param fetch_cache character vector containing lines of code.
 #'   The purpose of this code is to fetch the `storr` cache
@@ -85,7 +99,7 @@ get_cache <- function(
   if (search) {
     path <- find_cache(path = path)
   } else {
-    path <- default_cache_path()
+    path <- default_cache_path(root = path)
   }
   this_cache(
     path = path,
@@ -301,14 +315,17 @@ recover_cache <- function(
 
 #' @title Return the default file path of the drake/storr cache.
 #' @export
+#' @keywords internal
 #' @description Applies to file system caches only.
 #' @return Default file path of the drake/storr cache.
+#' @param root character scalar, path to the root of the
+#'   `drake` project with the cache.
 #' @examples
 #' \dontrun{
 #' default_cache_path()
 #' }
-default_cache_path <- function() {
-  file.path(getwd(), ".drake")
+default_cache_path <- function(root = getwd()) {
+  file.path(root, ".drake")
 }
 
 # Pre-set the values to avoid https://github.com/richfitz/storr/issues/80.

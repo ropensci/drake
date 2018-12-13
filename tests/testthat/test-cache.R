@@ -195,6 +195,24 @@ test_with_dir("subspaces", {
   expect_equal(sort(lst), c("a", "b"))
 })
 
+
+test_with_dir("get_cache() can search", {
+  dir.create(file.path("w"))
+  dir.create(file.path("w", "x"))
+  dir.create(file.path("w", "x", "y"))
+  dir.create(file.path("w", "x", "y", "z"))
+  tmp <- storr::storr_rds(file.path("w", "x", ".drake"), mangle_key = TRUE)
+  cache <- get_cache(file.path("w", "x", "y", "z"))
+  expect_true(inherits(cache, "storr"))
+  cache <- get_cache(file.path("w", "x", ".drake"))
+  expect_true(inherits(cache, "storr"))
+  cache <- get_cache(file.path("w", "x", ".drake", "keys"))
+  expect_true(inherits(cache, "storr"))
+  cache <- get_cache(file.path("w", "x"), search = FALSE)
+  expect_true(inherits(cache, "storr"))
+  expect_null(get_cache(file.path("w", "x", "y", "z"), search = FALSE))
+})
+
 test_with_dir("cache functions work", {
   skip_if_not_installed("lubridate")
   # May have been loaded in a globalenv() testing scenario # nolint
