@@ -9,11 +9,6 @@ test_with_dir("storr_dbi is usable", {
     mydb <- DBI::dbConnect(RSQLite::SQLite(), "my-db.sqlite")
     cache <- storr::storr_dbi(
       "dattbl", "keystbl", con = mydb, hash_algorithm = "murmur32")
-    configure_cache(
-      cache = cache,
-      long_hash_algo = "sha1",
-      overwrite_hash_algos = TRUE
-    )
   })
 
   cache <- eval(parse(text = fetch_cache))
@@ -59,8 +54,6 @@ test_with_dir("storr_dbi is usable", {
     expect_false(file.exists(default_cache_path()))
   }
 
-  expect_equal(short_hash(cache), "murmur32")
-  expect_equal(long_hash(cache), "sha1")
   expect_equal(
     sort(built(cache = cache)),
     sort(c("\"report.md\"", config$plan$target))

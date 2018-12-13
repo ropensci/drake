@@ -67,6 +67,22 @@ as_file <- function(x) {
   file_store(x)
 }
 
+#' @title Deprecated. List the available hash algorithms for drake caches.
+#' @export
+#' @keywords internal
+#' @description Deprecated on 2018-12-12.
+#' @return A character vector of names of available hash algorithms.
+#' @examples
+#' # deprecated
+available_hash_algos <- function() {
+  .Deprecated(
+    "available_hash_algos",
+    package = "drake",
+    msg = "drake::available_hash_algos() is deprecated."
+  )
+  eval(formals(digest::digest)$algo)
+}
+
 #' @title Deprecated function `backend`
 #' @description Use `future::plan()` instead.
 #' Avoid `drake::plan()`.
@@ -301,6 +317,97 @@ config <- function(
   )
 }
 
+#' @title Deprecated. Configure the hash algorithms, etc. of a drake cache.
+#' @export
+#' @keywords internal
+#' @description The purpose of this function is
+#'   to prepare the cache to be called from [make()].
+#'   `drake` only uses a single hash algorithm now,
+#'   so we no longer need this configuration step.
+#' @details Deprecated on 2018-12-12.
+#' @return A drake/storr cache.
+#'
+#' @inheritParams cached
+#'
+#' @param cache cache to configure
+#'
+#' @param short_hash_algo short hash algorithm for drake.
+#'   The short algorithm must be among [available_hash_algos()],
+#'   which is just the collection of algorithms available to the `algo`
+#'   argument in [digest::digest()].
+#'   See [default_short_hash_algo()] for more.
+#'
+#' @param long_hash_algo long hash algorithm for drake.
+#'   The long algorithm must be among [available_hash_algos()],
+#'   which is just the collection of algorithms available to the `algo`
+#'   argument in `digest::digest()`.
+#'   See [default_long_hash_algo()] for more.
+#'
+#' @param log_progress deprecated logical.
+#'   Previously toggled whether to clear the recorded
+#'   build progress if this cache was used for previous calls to
+#'   [make()].
+#'
+#' @param overwrite_hash_algos logical, whether to try to overwrite
+#'   the hash algorithms in the cache with any user-specified ones.
+#'
+#' @param jobs number of jobs for parallel processing
+#'
+#' @param init_common_values logical, whether to set the initial `drake`
+#'   version in the cache and other common values.
+#'   Not always a thread safe operation, so should only be `TRUE`
+#'   on the master process
+#'
+#' @examples
+#' # deprecated
+configure_cache <- function(
+  cache = drake::get_cache(verbose = verbose),
+  short_hash_algo = drake::default_short_hash_algo(cache = cache),
+  long_hash_algo = drake::default_long_hash_algo(cache = cache),
+  log_progress = FALSE,
+  overwrite_hash_algos = FALSE,
+  verbose = drake::default_verbose(),
+  jobs = 1,
+  init_common_values = FALSE
+) {
+  .Deprecated(
+    "configure_cache",
+    package = "drake",
+    msg = "configure_cache() is deprecated."
+  )
+  short_hash_algo <- match.arg(short_hash_algo,
+                               choices = available_hash_algos())
+  long_hash_algo <- match.arg(long_hash_algo,
+                              choices = available_hash_algos())
+  if (log_progress) {
+    warning(
+      "The `log_progress` argument of `configure_cache()` is deprecated.",
+      call. = FALSE
+    )
+  }
+  short_exists <- cache$exists(key = "short_hash_algo", namespace = "config")
+  long_exists <- cache$exists(key = "long_hash_algo", namespace = "config")
+  if (overwrite_hash_algos | !short_exists) {
+    cache$set(
+      key = "short_hash_algo",
+      value = short_hash_algo,
+      namespace = "config"
+    )
+  }
+  if (overwrite_hash_algos | !long_exists) {
+    cache$set(
+      key = "long_hash_algo",
+      value = long_hash_algo,
+      namespace = "config"
+    )
+  }
+  chosen_algo <- short_hash(cache)
+  if (init_common_values) {
+    init_common_values(cache)
+  }
+  cache
+}
+
 #' @title Deprecated function `dataframes_graph`
 #' @description Use [drake_graph_info()] instead.
 #' @details Deprecated on 2018-06-27.
@@ -375,6 +482,77 @@ default_hook <- function(code) {
     msg = "default_hook() is deprecated."
   )
   force(code)
+}
+
+#' @title Deprecated. Return the default long hash algorithm for `make()`.
+#' @export
+#' @keywords internal
+#' @description Deprecated. drake now only uses one hash algorithm per cache.
+#' @details Deprecated on 2018-12-12
+#' @return A character vector naming a hash algorithm.
+#' @param cache optional drake cache.
+#'   When you [configure_cache()] without
+#'   supplying a long hash algorithm,
+#'   `default_long_hash_algo(cache)` is the long
+#'   hash algorithm that drake picks for you.
+#' @examples
+#' # deprecated
+default_long_hash_algo <- function(cache = NULL) {
+  .Deprecated(
+    "default_long_hash_algo",
+    package = "drake",
+    msg = "default_long_hash_algo() is deprecated."
+  )
+  # nocov start
+  out <- "sha256"
+  if (is.null(cache)) {
+    return(out)
+  }
+  if (cache$exists(key = "long_hash_algo", namespace = "config")) {
+    out <- cache$get(
+      key = "long_hash_algo",
+      namespace = "config"
+    )
+  }
+  out
+  # nocov end
+}
+
+#' @title Deprecated. Return the default short hash algorithm for `make()`.
+#' @export
+#' @keywords internal
+#' @description Deprecated. drake now only uses one hash algorithm per cache.
+#' @details Deprecated on 2018-12-12
+#' @return A character vector naming a hash algorithm.
+#' @param cache optional drake cache.
+#'   When you [configure_cache()] without
+#'   supplying a short hash algorithm,
+#'   `default_short_hash_algo(cache)` is the short
+#'   hash algorithm that drake picks for you.
+#' @examples
+#' # deprecated
+default_short_hash_algo <- function(cache = NULL) {
+  .Deprecated(
+    "default_short_hash_algo",
+    package = "drake",
+    msg = "default_short_hash_algo() is deprecated."
+  )
+  # nocov start
+  out <- "xxhash64"
+  if (is.null(cache)) {
+    return(out)
+  }
+  if (cache$exists(key = "short_hash_algo", namespace = "config")) {
+    out <- cache$get(
+      key = "short_hash_algo",
+      namespace = "config"
+    )
+  }
+  if ("storr" %in% class(cache)) {
+    out <- cache$driver$hash_algorithm
+  }
+  out
+  # nocov end
 }
 
 #' @title Deprecated function `default_system2_args`
@@ -837,6 +1015,31 @@ load_basic_example <- function(
   )
 }
 
+#' @title Deprecated. `drake` now has just one hash algorithm per cache.
+#' @export
+#' @keywords internal
+#' @description Deprecated on 2018-12-12
+#' @return A character vector naming a hash algorithm.
+#' @inheritParams cached
+#' @examples
+#' # deprecated
+long_hash <- function(
+  cache = drake::get_cache(verbose = verbose),
+  verbose = drake::default_verbose()
+) {
+  .Deprecated(
+    "long_hash",
+    package = "drake",
+    msg = "long_hash() is deprecated."
+  )
+  # nocov start
+  if (!cache$exists(key = "long_hash_algo", namespace = "config")) {
+    return(NULL)
+  }
+  cache$get("long_hash_algo", namespace = "config")
+  # nocov end
+}
+
 #' @title Deprecated function
 #' @description Do not use this function. `drake`'s parallel algorithm
 #'   has changed since version 5.1.2, so `max_useful_jobs()`
@@ -930,9 +1133,7 @@ message_sink_hook <- function(code) {
 #' drake 4.4.0 or earlier
 #' to be compatible with the version of drake on your system.
 #' @examples
-#' \dontrun{
 #' # This function is deprecated.
-#' }
 migrate_drake_project <- function(
   path = drake::default_cache_path(), jobs = 1
 ) {
@@ -1560,6 +1761,32 @@ parallel_stages <- function(
       "drake uses a much better parallel algorithm now."
     )
   )
+}
+
+#' @title Deprecated. `drake` now only uses one hash algorithm per cache.
+#' @export
+#' @keywords internal
+#' @description Deprecated on 2018-12-12.
+#' @return A character vector naming a hash algorithm.
+#' @inheritParams cached
+#' @examples
+#' # deprecated
+short_hash <- function(
+  cache = drake::get_cache(verbose = verbose),
+  verbose = drake::default_verbose()
+) {
+  .Deprecated(
+    "short_hash",
+    package = "drake",
+    msg = "short_hash() is deprecated."
+  )
+  # nocov start
+  if (!cache$exists(key = "short_hash_algo", namespace = "config")) {
+    return(NULL)
+  }
+  chosen_algo <- cache$get("short_hash_algo", namespace = "config")
+  cache$get("short_hash_algo", namespace = "config")
+  # nocov end
 }
 
 #' @title Deprecated.

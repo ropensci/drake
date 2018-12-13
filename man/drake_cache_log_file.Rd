@@ -81,10 +81,5 @@ drake_cache_log_file() # writes drake_cache.log
 }
 }
 \seealso{
-\code{\link[=drake_cache_log]{drake_cache_log()}},
-\code{\link[=make]{make()}},
-\code{\link[=get_cache]{get_cache()}},
-\code{\link[=default_long_hash_algo]{default_long_hash_algo()}},
-\code{\link[=short_hash]{short_hash()}},
-\code{\link[=long_hash]{long_hash()}}
+\code{\link[=drake_cache_log]{drake_cache_log()}}, \code{\link[=make]{make()}}, \code{\link[=get_cache]{get_cache()}}
 }

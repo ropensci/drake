@@ -70,8 +70,10 @@ See the examples below for details.
 Depending on your project's
 history, the targets may be different than the ones
 in your workflow plan data frame.
-Also, the keys depend on the short hash algorithm
-of your cache (default: \code{\link[=default_short_hash_algo]{default_short_hash_algo()}}).
+Also, the keys depend on the hash algorithm
+of your cache. To define your own hash algorithm,
+you can create your own \code{storr} cache and give it a hash algorithm
+(e.g. \code{storr_rds(hash_algorithm = "murmur32")})
 }
 \examples{
 \dontrun{
@@ -102,11 +104,5 @@ write.table(
 }
 }
 \seealso{
-\code{\link[=drake_cache_log_file]{drake_cache_log_file()}}
-\code{\link[=cached]{cached()}},
-\code{\link[=get_cache]{get_cache()}},
-\code{\link[=default_short_hash_algo]{default_short_hash_algo()}},
-\code{\link[=default_long_hash_algo]{default_long_hash_algo()}},
-\code{\link[=short_hash]{short_hash()}},
-\code{\link[=long_hash]{long_hash()}}
+\code{\link[=drake_cache_log_file]{drake_cache_log_file()}}, \code{\link[=cached]{cached()}}, \code{\link[=get_cache]{get_cache()}}
 }

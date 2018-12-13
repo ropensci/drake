@@ -12,12 +12,7 @@
 #' This way, your data is versioned alongside your code
 #' in a easy-to-view format. Hopefully, this functionality
 #' is a step toward better data versioning tools.
-#' @seealso [drake_cache_log()],
-#'   [make()],
-#'   [get_cache()],
-#'   [default_long_hash_algo()],
-#'   [short_hash()],
-#'   [long_hash()]
+#' @seealso [drake_cache_log()], [make()], [get_cache()]
 #' @export
 #' @return There is no return value, but a log file is generated.
 #' @param file character scalar, name of the flat text log file.
@@ -102,15 +97,11 @@ drake_cache_log_file <- function(
 #' Depending on your project's
 #' history, the targets may be different than the ones
 #' in your workflow plan data frame.
-#' Also, the keys depend on the short hash algorithm
-#' of your cache (default: [default_short_hash_algo()]).
-#' @seealso [drake_cache_log_file()]
-#'   [cached()],
-#'   [get_cache()],
-#'   [default_short_hash_algo()],
-#'   [default_long_hash_algo()],
-#'   [short_hash()],
-#'   [long_hash()]
+#' Also, the keys depend on the hash algorithm
+#' of your cache. To define your own hash algorithm,
+#' you can create your own `storr` cache and give it a hash algorithm
+#' (e.g. `storr_rds(hash_algorithm = "murmur32")`)
+#' @seealso [drake_cache_log_file()], [cached()], [get_cache()]
 #' @export
 #' @return Data frame of the hash keys of the targets and imports
 #'   in the cache
