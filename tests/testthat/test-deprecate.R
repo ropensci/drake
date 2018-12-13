@@ -260,7 +260,23 @@ test_with_dir("v6.2.1 project is still up to date", {
   )
   expect_equal(nchar(report_md_hash), 64L)
   plan <- read_drake_plan()
-  load_mtcars_example(overwrite = FALSE)
+  random_rows <- function(data, n) {
+    data[sample.int(n = nrow(data), size = n, replace = TRUE), ]
+  }
+  simulate <- function(n) {
+    data <- random_rows(data = mtcars, n = n)
+    data.frame(
+      x = data$wt,
+      y = data$mpg
+    )
+  }
+  reg1 <- function(d) {
+    lm(y ~ + x, data = d)
+  }
+  reg2 <- function(d) {
+    d$x2 <- d$x ^ 2
+    lm(y ~ x2, data = d)
+  }
   config <- make(plan)
   expect_equal(justbuilt(config), character(0))
 })
