@@ -316,6 +316,7 @@ resolve_graph_outdated <- function(config) {
 resolve_levels <- function(config) {
   config$nodes$level <- level <- 0
   graph <- config$graph
+  check_drake_graph(graph)
   while (length(V(graph))) {
     level <- level + 1
     leaves <- leaf_nodes(graph)
