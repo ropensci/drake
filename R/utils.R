@@ -253,3 +253,14 @@ drake_pmap <- function(.l, .f, jobs = 1, ...) {
     },
     jobs = jobs)
 }
+
+# "Weak tibble" - use tibble() if available but 
+# fall back to data.frame() if necessary
+# The .force_df argument is only for testing
+weak_tibble <- function(.force_df = FALSE, ...) {
+  if(!.force_df & require(tibble, quietly = TRUE)) {
+    tibble::tibble(...)
+  } else {
+    data.frame(..., stringsAsFactors = FALSE)
+  }
+}

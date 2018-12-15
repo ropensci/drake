@@ -51,3 +51,26 @@ test_with_dir("operators", {
   expect_true(is.numeric(Inf %||NA% "b"))
   expect_false(is.na(NA %||NA% "b"))
 })
+
+test_with_dir("weak_tibble", {
+  # We test forcing to data frame and not, but results will differ depending
+  # on whether tibble is installed
+  if("tibble" %in% installed.packages()[,1]) {
+    classes <- list("FALSE" = c("tbl_df", "tbl", "data.frame"), 
+                    "TRUE" = "data.frame")
+  } else {
+    classes <- list("FALSE" = "data.frame", 
+                    "TRUE" = "data.frame")
+  }
+  
+  for(fdf in c(FALSE, TRUE)) {
+    # Empty object
+    df <- weak_tibble(.force_df = fdf)
+    expect_equivalent(dim(df), c(0, 0), info = fdf)
+    expect_identical(class(df), classes[[as.character(fdf)]], info = fdf)
+    
+    # No factors!
+    df <- weak_tibble(a = "a", .force_df = fdf)
+    expect_identical(class(df$a), "character", info = fdf)
+  }
+})
