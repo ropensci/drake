@@ -76,7 +76,7 @@ map_plan <- function(
     .f = function(...) {
       out <- list(as.name(fun), ...)
       out <- as.call(out)
-      rlang::expr_text(out)
+      wide_deparse(out)
     }
   )))
   out <- tibble::tibble(target = target, command = command)

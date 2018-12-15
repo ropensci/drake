@@ -204,7 +204,7 @@ find_non_locals <- function(fun) {
   out <- tryCatch(
     codetools::findGlobals(fun = fun, merge = TRUE),
     error = function(e) {
-      fun <- eval(parse(text = rlang::expr_text(fun))) # nocov
+      fun <- eval(parse(text = wide_deparse(fun))) # nocov
       codetools::findGlobals(fun = fun, merge = TRUE)  # nocov
     }
   )

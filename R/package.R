@@ -46,7 +46,7 @@
 #'   topo_sort V vertex_attr
 #' @importFrom methods new setRefClass
 #' @importFrom pkgconfig get_config
-#' @importFrom rlang enexpr enexprs enquo eval_tidy expr expr_text exprs
+#' @importFrom rlang enexpr enexprs enquo eval_tidy expr exprs
 #' @importFrom storr storr_environment storr_rds
 #' @importFrom tibble as_tibble tibble
 #' @importFrom utils capture.output compareVersion head packageVersion

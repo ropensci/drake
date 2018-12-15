@@ -77,7 +77,7 @@ debug_command <- function(command) {
     debug_command_char(command)
   } else {
     . <- NULL
-    out <- rlang::expr_text(command)
+    out <- wide_deparse(command)
     out <- debug_command_char(out)
     parse(text = out)[[1]]
   }
