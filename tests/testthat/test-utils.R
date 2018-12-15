@@ -54,11 +54,11 @@ test_with_dir("operators", {
 
 test_with_dir("weak_tibble", {
   skip_on_cran()
-  
+
   out <- weak_tibble(.force_df = TRUE)
   expect_equivalent(out, data.frame())
   expect_equivalent(weak_as_tibble(list()), data.frame())
-  
+
   # No factors
   out <- weak_tibble(a = 1:2, b = c("x", "y"), .force_df = TRUE)
   exp <- data.frame(a = 1:2, b = c("x", "y"), stringsAsFactors = FALSE)

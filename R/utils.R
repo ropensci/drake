@@ -285,7 +285,7 @@ which_unnamed <- function(x) {
 # data.frame() if necessary
 weak_tibble <- function(..., .force_df = FALSE) {
   no_tibble <- !suppressWarnings(require("tibble", quietly = TRUE))
-  
+
   if (.force_df || no_tibble) {
     data.frame(..., stringsAsFactors = FALSE)
   } else {
@@ -297,7 +297,7 @@ weak_tibble <- function(..., .force_df = FALSE) {
 # as.data.frame() if necessary
 weak_as_tibble <- function(..., .force_df = FALSE) {
   no_tibble <- !suppressWarnings(require("tibble", quietly = TRUE))
-  
+
   if (.force_df || no_tibble) {
     as.data.frame(..., stringsAsFactors = FALSE)
   } else {
