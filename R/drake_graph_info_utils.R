@@ -160,7 +160,7 @@ filtered_legend_nodes <- function(all_nodes, full_legend, font_size) {
 
 function_hover_text <- Vectorize(function(function_name, envir) {
   x <- tryCatch(
-    eval(parse(text = function_name), envir = envir),
+    get(x = function_name, envir = envir),
     error = function(e) function_name
   )
   x <- unwrap_function(x)

@@ -20,8 +20,6 @@ prepare_distributed <- function(config) {
   if (!file.exists(config$cache_path)) {
     dir.create(config$cache_path)
   }
-  # Always save globalenv() because config$envir could inherit from it
-  # and so drake might look for stuff there.
   save(
     list = setdiff(ls(globalenv(), all.names = TRUE), config$plan$target),
     envir = globalenv(),
@@ -55,8 +53,6 @@ build_distributed <- function(target, cache_path, check = TRUE) {
 recover_drake_config <- function(cache_path) {
   cache <- this_cache(cache_path, verbose = FALSE)
   config <- read_drake_config(cache = cache)
-  # Always load globalenv() because config$envir could inherit from it
-  # and so drake might look for stuff there.
   dir <- cache_path(cache = cache)
   file <- globalenv_file(dir)
   load(file = file, envir = globalenv())

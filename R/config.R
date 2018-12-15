@@ -660,8 +660,9 @@ add_packages_to_prework <- function(packages, prework) {
 do_prework <- function(config, verbose_packages) {
   wrapper <- ifelse(verbose_packages, invisible,
     base::suppressPackageStartupMessages)
-  for (code in config$prework) wrapper(eval(parse(text = code),
-    envir = config$envir))
+  for (code in config$prework) {
+    wrapper(eval(parse(text = code), envir = config$eval))
+  }
   invisible()
 }
 

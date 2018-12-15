@@ -48,7 +48,7 @@ run_future <- function(config) {
 #' @param meta list of metadata
 #' @param config [drake_config()] list
 #' @param protect Names of targets that still need their
-#' dependencies available in `config$envir`.
+#' dependencies available in memory.
 drake_future_task <- function(target, meta, config, protect) {
   if (identical(config$caching, "worker")) {
     manage_memory(targets = target, config = config, downstream = protect)
