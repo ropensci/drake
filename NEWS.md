@@ -1,3 +1,9 @@
+# Version 6.2.1
+
+## Enhancements
+
+- Deprecate the `fetch_cache` argument in all functions 
+
 # Version 6.2.0
 
 ## New features
