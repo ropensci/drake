@@ -33,10 +33,10 @@
 #' }
 drake_build <- function(
   target,
-  config = drake::read_drake_config(envir = envir, jobs = jobs),
+  config = NULL,
   meta = NULL,
   character_only = FALSE,
-  envir = NULL,
+  envir = parent.frame(),
   jobs = 1,
   replace = FALSE
 ) {
@@ -47,14 +47,13 @@ drake_build <- function(
       "Thus, the `meta` argument is deprecated."
     )
   }
-  if (!is.null(envir)) {
-    warning(
-      "In drake_build(), the envir argument is deprecated. ",
-      call. = FALSE
-    )
-  }
   if (!character_only) {
     target <- as.character(substitute(target))
+  }
+  force(envir)
+  if (is.null(config)) {
+    config <- drake::read_drake_config(envir = envir, jobs = jobs)
+    config$envir <- envir
   }
   loadd(
     list = target,
