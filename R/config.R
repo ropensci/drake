@@ -488,6 +488,7 @@ drake_config <- function(
 ) {
   force(envir)
   unlink(console_log_file)
+  deprecate_fetch_cache(fetch_cache)
   if (!is.null(imports_only)) {
     warning(
       "Argument `imports_only` is deprecated. Use `skip_targets` instead.",

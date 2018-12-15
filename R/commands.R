@@ -19,13 +19,6 @@ preprocess_command <- function(command, config) {
   as.call(c(quote(rlang::expr), command))
 }
 
-# Can remove once we remove fetch_cache.
-# We can remove fetch_cache once we allow the master process
-# to optionally do all the caching.
-localize <- function(command) {
-  paste0("local({\n", command, "\n})")
-}
-
 # The old standardization command
 # that relies on formatR.
 # Eventually, we may move to styler,
