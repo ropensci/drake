@@ -11,7 +11,7 @@
 - Allow the `magrittr` dot symbol to appear in some commands sometimes.
 - Deprecate the `fetch_cache` argument in all functions 
 - Remove packages `DBI` and `RSQLite` from "Suggests".
-- Define a special `config$eval <- new.env(parent = config$envir)` for storing built targets and evaluating commands in the plan. This move increases the purity of `make()` calls.
+- Define a special `config$eval <- new.env(parent = config$envir)` for storing built targets and evaluating commands in the plan. Now, `make()` no longer modifies the user's environemnt. This move is a long-overdue step toward purity.
 
 # Version 6.2.1
 
