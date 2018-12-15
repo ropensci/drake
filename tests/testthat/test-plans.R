@@ -200,7 +200,7 @@ test_with_dir("drake_plan() trims outer whitespace in target names", {
 test_with_dir(
   "make() and check_plan() trim outer whitespace in target names", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  x <- tibble(target = c("a\n", "  b", "c ", "\t  d   "),
+  x <- tibble::tibble(target = c("a\n", "  b", "c ", "\t  d   "),
                   command = 1)
   expect_silent(make(x, verbose = FALSE, session_info = FALSE))
   expect_equal(sort(cached()), letters[1:4])
@@ -634,7 +634,7 @@ test_with_dir("code_to_plan(), one target", {
   skip_if_not_installed("CodeDepends")
   writeLines("a <- 1", "script.R")
   plan <- code_to_plan("script.R")
-  expect_equal(plan, tibble(target = "a", command = "1"))
+  expect_equal(plan, tibble::tibble(target = "a", command = "1"))
 })
 
 test_with_dir("plan_to_code()", {

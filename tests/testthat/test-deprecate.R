@@ -220,7 +220,7 @@ test_with_dir("plan set 1", {
       tidy_evaluation = tidy_evaluation,
       strings_in_dots = "filenames"
     ))
-    y <- tibble(
+    y <- tibble::tibble(
       target = letters[1:4],
       command = c("c", "'c'",
       "d", "readRDS('e')"))

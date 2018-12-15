@@ -162,7 +162,7 @@ drake_plan <- function(
   commands <- c(commands_dots, list)
   if (!length(commands)) {
     return(
-      tibble(
+      tibble::tibble(
         target = character(0),
         command = character(0)
       )
@@ -171,7 +171,7 @@ drake_plan <- function(
   commands <- complete_target_names(commands)
   targets <- names(commands)
   commands <- as.character(commands)
-  plan <- tibble(
+  plan <- tibble::tibble(
     target = targets,
     command = commands
   )

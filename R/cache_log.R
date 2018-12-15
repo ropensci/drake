@@ -152,7 +152,7 @@ drake_cache_log <- function(
 ) {
   if (is.null(cache)) {
     return(
-      tibble(
+      tibble::tibble(
         hash = character(0),
         type = character(0),
         name = character(0)
@@ -182,5 +182,5 @@ single_cache_log <- function(key, cache) {
   )
   imported <- ifelse(is.na(imported), TRUE, imported)
   type <- ifelse(imported, "import", "target")
-  tibble(hash = hash, type = type, name = key)
+  tibble::tibble(hash = hash, type = type, name = key)
 }
