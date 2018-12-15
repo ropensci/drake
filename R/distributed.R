@@ -20,10 +20,6 @@ prepare_distributed <- function(config) {
   if (!file.exists(config$cache_path)) {
     dir.create(config$cache_path)
   }
-  writeLines(
-    text = as.character(config$fetch_cache),
-    con = file.path(config$cache_path, fetch_cache_file)
-  )
   # Always save globalenv() because config$envir could inherit from it
   # and so drake might look for stuff there.
   save(
@@ -57,13 +53,7 @@ build_distributed <- function(target, cache_path, check = TRUE) {
 }
 
 recover_drake_config <- function(cache_path) {
-  fetch_cache <- tryCatch({
-      out <- readLines(con = file.path(cache_path, fetch_cache_file))
-      paste0(out, collapse = "\n")
-    },
-    error = error_null
-  )
-  cache <- this_cache(cache_path, verbose = FALSE, fetch_cache = fetch_cache)
+  cache <- this_cache(cache_path, verbose = FALSE)
   config <- read_drake_config(cache = cache)
   # Always load globalenv() because config$envir could inherit from it
   # and so drake might look for stuff there.
@@ -72,5 +62,3 @@ recover_drake_config <- function(cache_path) {
   load(file = file, envir = globalenv())
   config
 }
-
-fetch_cache_file <- "fetch_cache.R"
