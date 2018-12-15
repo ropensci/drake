@@ -63,7 +63,7 @@ test_with_dir("weak_tibble", {
                     "TRUE" = "data.frame")
   }
   
-  for(fdf in c(FALSE, TRUE)) {
+  for(fdf in c(FALSE, TRUE)) { # force to data frame?
     # Empty object
     df <- weak_tibble(.force_df = fdf)
     expect_equivalent(dim(df), c(0, 0), info = fdf)
@@ -72,5 +72,15 @@ test_with_dir("weak_tibble", {
     # No factors!
     df <- weak_tibble(a = "a", .force_df = fdf)
     expect_identical(class(df$a), "character", info = fdf)
+    
+    # Test weak_as_tibble
+    m <- matrix(letters[1:4], nrow = 2, ncol = 2)
+    from_m <- weak_as_tibble(m, .force_df = fdf)
+    expect_identical(class(from_m), classes[[as.character(fdf)]], info = fdf)
+    expect_identical(names(from_m), c("V1", "V2"))
+    expect_identical(class(from_m$V1), "character")
+    
+    df <- as.data.frame(m, stringsAsFactors = FALSE)
+    expect_identical(weak_as_tibble(df, .force_df = fdf), from_m, info = fdf)
   }
 })

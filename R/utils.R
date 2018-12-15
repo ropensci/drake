@@ -264,3 +264,14 @@ weak_tibble <- function(.force_df = FALSE, ...) {
     data.frame(..., stringsAsFactors = FALSE)
   }
 }
+
+# "Weak as_tibble" - use as_tibble() if available but 
+# fall back to as.data.frame() if necessary
+# The .force_df argument is only for testing
+weak_as_tibble <- function(.force_df = FALSE, ...) {
+  if(!.force_df & require(tibble, quietly = TRUE)) {
+    tibble::as_tibble(...)
+  } else {
+    as.data.frame(..., stringsAsFactors = FALSE)
+  }
+}
