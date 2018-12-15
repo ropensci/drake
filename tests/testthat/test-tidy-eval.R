@@ -8,7 +8,7 @@ test_with_dir("drake_plan does tidy eval in `...` argument", {
     a = !!my_variable,
     list = c(d = "!!my_variable")
   )
-  plan2 <- tibble(
+  plan2 <- tibble::tibble(
     target = c("a", "d"),
     command = c("5", "!!my_variable")
   )

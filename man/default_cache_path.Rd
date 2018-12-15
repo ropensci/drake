@@ -4,7 +4,11 @@
 \alias{default_cache_path}
 \title{Return the default file path of the drake/storr cache.}
 \usage{
-default_cache_path()
+default_cache_path(root = getwd())
+}
+\arguments{
+\item{root}{character scalar, path to the root of the
+\code{drake} project with the cache.}
 }
 \value{
 Default file path of the drake/storr cache.
@@ -17,3 +21,4 @@ Applies to file system caches only.
 default_cache_path()
 }
 }
+\keyword{internal}

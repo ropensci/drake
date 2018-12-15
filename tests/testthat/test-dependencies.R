@@ -6,17 +6,42 @@ test_with_dir("unparsable commands are handled correctly", {
   expect_error(deps_code(x))
 })
 
-test_with_dir("dot symbol is ignored", {
+test_with_dir("dot symbol is ignored at the right time", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(
     sort(clean_dependency_list(deps_code("sqrt(x + y + .)"))),
-    sort(c("sqrt", "x", "y"))
+    sort(c(".", "sqrt", "x", "y"))
   )
   expect_equal(
     sort(clean_dependency_list(
       deps_code("subset(complete.cases(.))"))),
-    sort(c("complete.cases", "subset"))
+    sort(c("complete.cases", ".", "subset"))
   )
+  plan <- drake_plan(
+    x = 1,
+    y = 2,
+    a = sqrt(x + y + .),
+    b = subset(complete.cases(.))
+  )
+  e <- environment()
+  expect_false(exists(".", envir = e))
+  config <- drake_config(plan)
+  expect_equal(
+    sort(clean_dependency_list(config$layout$a$deps_build)),
+    sort(c("x", "y"))
+  )
+  expect_equal(
+    clean_dependency_list(config$layout$b$deps_build),
+    character(0)
+  )
+  . <- 1
+  expect_true(exists(".", envir = e))
+  config <- drake_config(plan)
+  expect_equal(
+    sort(clean_dependency_list(config$layout$a$deps_build)),
+    sort(c(".", "x", "y"))
+  )
+  expect_equal(clean_dependency_list(config$layout$b$deps_build), ".")
 })
 
 test_with_dir("file_out() and knitr_in(): commands vs imports", {
@@ -77,7 +102,6 @@ test_with_dir(
   expect_equal(length(command_dependencies(character(0))), 0)
   expect_equal(clean_dependency_list(deps_code(base::c)), character(0))
   expect_equal(clean_dependency_list(deps_code(base::list)), character(0))
-  expect_equal(clean_dependency_list(deps_code(NA)), character(0))
   f <- function(x, y) {
     out <- x + y + g(x)
     saveRDS(out, "out.rds")

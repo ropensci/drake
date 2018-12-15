@@ -145,7 +145,7 @@ test_with_dir("analyses and summaries", {
   )
 
   analyses <- plan_analyses(methods, datasets = datasets, sep = ".")
-  x <- tibble(
+  x <- tibble::tibble(
     target = c(
       "regression1.small",
       "regression1.large",
@@ -161,7 +161,7 @@ test_with_dir("analyses and summaries", {
   expect_equal(analyses, x)
 
   analyses <- plan_analyses(methods, datasets = datasets)
-  x <- tibble(
+  x <- tibble::tibble(
     target = c(
       "regression1_small",
       "regression1_large",
@@ -201,7 +201,7 @@ test_with_dir("analyses and summaries", {
     gather = NULL,
     sep = "."
   )
-  x <- tibble(
+  x <- tibble::tibble(
     target = c(
       "summ.regression1_small",
       "summ.regression1_large",
@@ -226,7 +226,7 @@ test_with_dir("analyses and summaries", {
   expect_equal(results, x)
 
   results <- plan_summaries(summary_types, analyses, datasets, gather = NULL)
-  x <- tibble(
+  x <- tibble::tibble(
     target = c(
       "summ_regression1_small",
       "summ_regression1_large",
@@ -260,7 +260,7 @@ test_with_dir("analyses and summaries", {
     datasets,
     gather = c("list", "rbind")
   )
-  x <- tibble(
+  x <- tibble::tibble(
     target = c(
       "summ_regression1_small",
       "summ_regression1_large",

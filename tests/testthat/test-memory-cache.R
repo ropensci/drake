@@ -3,14 +3,8 @@ drake_context("memory cache")
 test_with_dir("storr_environment is usable", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- storr_environment(hash_algorithm = "murmur32")
-  x <- configure_cache(
-    x,
-    long_hash_algo = "sha1",
-    overwrite_hash_algos = TRUE
-  )
   expect_false(file.exists(default_cache_path()))
-  expect_equal(short_hash(x), "murmur32")
-  expect_equal(long_hash(x), "sha1")
+  expect_equal(x$driver$hash_algorithm, "murmur32")
   expect_error(drake_get_session_info(cache = x))
   pln <- drake_plan(y = 1)
   config <- make(pln, cache = x, verbose = FALSE, session_info = FALSE)
@@ -43,8 +37,7 @@ test_with_dir("arbitrary storr in-memory cache", {
     lm(y ~ x3, data = d)
   }
   expect_false(file.exists(default_cache_path()))
-  expect_equal(short_hash(con$cache), "murmur32")
-  expect_equal(long_hash(con$cache), default_long_hash_algo())
+  expect_equal(con$cache$driver$hash_algorithm, "murmur32")
 
   expect_equal(cached(verbose = FALSE), character(0))
   targets <- con$plan$target

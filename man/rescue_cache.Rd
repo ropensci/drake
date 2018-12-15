@@ -18,10 +18,21 @@ as well as true targets.
 If \code{targets} is \code{NULL}, everything in the
 cache is rescued.}
 
-\item{path}{Root directory of the drake project,
-or if \code{search} is \code{TRUE}, either the
-project root or a subdirectory of the project.
-Ignored if a \code{cache} is supplied.}
+\item{path}{If \code{search = FALSE}, \code{path} must be the root
+directory of a \code{drake} project (a folder containing a \code{.drake} cache).
+For example, if your cache is a folder called
+\code{/home/you/my_project/.drake}, then
+\code{get_cache(path = "/home/you/my_project", search = FALSE)}
+will return the cache.
+Otherwise, if \code{search = TRUE}, you can specify any
+subdirectory of the project. The following are equivalent and correct:
+\itemize{
+\item \code{get_cache(path = "/home/you/my_project", search = FALSE)}
+\item \code{get_cache(path = "/home/you/my_project", search = TRUE)}
+\item \code{get_cache(path = "/home/you/my_project/subdir/x", search = TRUE)}
+\item \code{get_cache(path = "/home/you/my_project/.drake", search = TRUE)}
+\item \code{get_cache(path = "/home/you/my_project/.drake/keys", search = TRUE)}
+}}
 
 \item{search}{logical. If \code{TRUE}, search parent directories
 to find the nearest drake cache. Otherwise, look in the
