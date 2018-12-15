@@ -382,8 +382,8 @@ make_imports_targets <- function(config) {
 }
 
 conclude_session <- function(config) {
-  unmark_envir(config$envir)
-  suppressWarnings(remove(list = config$plan$target, envir = config$envir))
+  unmark_envir(config$eval)
+  remove(list = ls(config$eval, all.names = TRUE), envir = config$eval)
 }
 
 mark_envir <- function(envir) {

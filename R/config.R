@@ -580,6 +580,7 @@ drake_config <- function(
     plan = plan,
     targets = targets,
     envir = envir,
+    eval = new.env(parent = envir),
     cache = cache,
     cache_path = cache_path,
     fetch_cache = fetch_cache,

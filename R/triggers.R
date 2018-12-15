@@ -170,7 +170,7 @@ condition_trigger <- function(target, meta, config) {
   if (is.language(meta$trigger$condition)) {
     deps <- config$layout[[target]]$deps_condition
     deps <- ensure_loaded(deps, config = config)
-    value <- eval(meta$trigger$condition, envir = config$envir)
+    value <- eval(meta$trigger$condition, envir = config$eval)
     value <- as.logical(value)
   } else {
     value <- as.logical(meta$trigger$condition)

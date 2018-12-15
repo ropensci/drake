@@ -4,7 +4,7 @@ assign_to_envir <- function(target, value, config) {
     !is_file(target) &&
     !is_imported(target, config)
   ) {
-    assign(x = target, value = value, envir = config$envir)
+    assign(x = target, value = value, envir = config$eval)
   }
   invisible()
 }
@@ -42,8 +42,7 @@ manage_memory <- function(targets, config, downstream = NULL, jobs = 1) {
   } else {
     downstream <- downstream_deps <- NULL
   }
-  already_loaded <- ls(envir = config$envir, all.names = TRUE)
-  already_loaded <- intersect(already_loaded, config$plan$target)
+  already_loaded <- ls(envir = config$eval, all.names = TRUE)
   target_deps <- nonfile_target_dependencies(
     targets = targets,
     config = config,
@@ -64,7 +63,7 @@ manage_memory <- function(targets, config, downstream = NULL, jobs = 1) {
         pattern = "unload",
         config = config
       )
-      rm(list = discard_these, envir = config$envir)
+      rm(list = discard_these, envir = config$eval)
     }
   }
   targets <- setdiff(target_deps, targets)
@@ -85,7 +84,7 @@ safe_load <- function(targets, config, jobs = 1) {
     }
     loadd(
       list = targets,
-      envir = config$envir,
+      envir = config$eval,
       cache = config$cache,
       verbose = FALSE,
       lazy = config$lazy_load,
@@ -96,10 +95,12 @@ safe_load <- function(targets, config, jobs = 1) {
 }
 
 ensure_loaded <- function(targets, config) {
-  already_loaded <- ls(envir = config$envir, all.names = TRUE)
-  already_loaded <- intersect(already_loaded, config$plan$target)
-  targets <- setdiff(targets, already_loaded)
-  targets <- Filter(x = targets, f = is_not_file)
+  targets <- Filter(
+    x = targets,
+    f = function(target) {
+      !exists(x = target, envir = config$eval, inherits = FALSE)
+    }
+  )
   safe_load(targets = targets, config = config)
 }
 
