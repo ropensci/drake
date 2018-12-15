@@ -254,22 +254,36 @@ drake_pmap <- function(.l, .f, jobs = 1, ...) {
     jobs = jobs)
 }
 
-# "Weak tibble" - use tibble() if available but 
-# fall back to data.frame() if necessary
-# The .force_df argument is only for testing
-weak_tibble <- function(.force_df = FALSE, ...) {
-  if(!.force_df & require(tibble, quietly = TRUE)) {
-    tibble::tibble(...)
+# weak_tibble - use tibble() if available but fall back to 
+# data.frame() if necessary. Note that testing code may supply
+# a `.force_df` argument that must be removed
+weak_tibble <- function(...) {
+  args <- eval(substitute(alist(...)))
+  .force_df <- eval.parent(args$.force_df, 1)
+  if (is.null(.force_df)) {
+    .force_df <- FALSE
   } else {
-    data.frame(..., stringsAsFactors = FALSE)
+    args$.force_df <- NULL
+  }
+
+  if (!.force_df & require(tibble, quietly = TRUE)) {
+    do.call(tibble::tibble, args)
+  } else {
+    do.call(data.frame, c(args, stringsAsFactors = FALSE))
   }
 }
 
-# "Weak as_tibble" - use as_tibble() if available but 
-# fall back to as.data.frame() if necessary
-# The .force_df argument is only for testing
-weak_as_tibble <- function(.force_df = FALSE, ...) {
-  if(!.force_df & require(tibble, quietly = TRUE)) {
+# weak_as_tibble - use tibble() if available but fall back to 
+# data.frame() if necessary. Note that testing code may supply
+# a `.force_df` argument that must be removed
+weak_as_tibble <- function(...) {
+  args <- eval(substitute(alist(...)))
+  .force_df <- eval.parent(args$.force_df, 1)
+  if (is.null(.force_df)) {
+    .force_df <- FALSE
+  }
+
+  if (!.force_df & require(tibble, quietly = TRUE)) {
     tibble::as_tibble(...)
   } else {
     as.data.frame(..., stringsAsFactors = FALSE)

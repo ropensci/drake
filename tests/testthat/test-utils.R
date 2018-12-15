@@ -53,8 +53,8 @@ test_with_dir("operators", {
 })
 
 test_with_dir("weak_tibble", {
-  # We test forcing to data frame and not, but results will differ depending
-  # on whether tibble is installed
+  # We test forcing to data frame and not, but results will differ
+  # depending on whether tibble is installed or not
   if("tibble" %in% installed.packages()[,1]) {
     classes <- list("FALSE" = c("tbl_df", "tbl", "data.frame"), 
                     "TRUE" = "data.frame")
@@ -82,5 +82,12 @@ test_with_dir("weak_tibble", {
     
     df <- as.data.frame(m, stringsAsFactors = FALSE)
     expect_identical(weak_as_tibble(df, .force_df = fdf), from_m, info = fdf)
+    
+    # Complex function calls like in cache_log
+    lst <- list(data.frame(x = 1), data.frame(x = 2))
+    out <- weak_as_tibble(do.call(rbind, lst))
+    expect_s3_class(out, "data.frame")
+    out <- weak_as_tibble(do.call(rbind, lst), .force_df = fdf)
+    expect_identical(class(out), classes[[as.character(fdf)]], info = fdf)
   }
 })
