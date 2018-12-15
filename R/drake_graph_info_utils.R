@@ -219,7 +219,7 @@ hover_text <- function(config) {
 #' visNetwork::visNetwork(nodes = legend_nodes()) # nolint
 #' }
 legend_nodes <- function(font_size = 20) {
-  out <- tibble(
+  out <- weak_tibble(
     label = c(
       "Up to date",
       "Outdated",

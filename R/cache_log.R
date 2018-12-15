@@ -161,7 +161,7 @@ drake_cache_log <- function(
 ) {
   if (is.null(cache)) {
     return(
-      tibble(
+      weak_tibble(
         hash = character(0),
         type = character(0),
         name = character(0)
@@ -174,7 +174,7 @@ drake_cache_log <- function(
     jobs = jobs,
     cache = cache
   )
-  out <- tibble::as_tibble(do.call(rbind, out))
+  out <- weak_as_tibble(do.call(rbind, out))
   if (targets_only) {
     out <- out[out$type == "target", ]
   }
@@ -191,5 +191,5 @@ single_cache_log <- function(key, cache) {
   )
   imported <- ifelse(is.na(imported), TRUE, imported)
   type <- ifelse(imported, "import", "target")
-  tibble(hash = hash, type = type, name = key)
+  weak_tibble(hash = hash, type = type, name = key)
 }

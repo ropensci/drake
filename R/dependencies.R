@@ -195,7 +195,7 @@ dependency_profile <- function(
     input_file_hash(target, config),
     output_file_hash(target, config)
   )
-  tibble::tibble(
+  weak_tibble(
     hash = c("command", "depend", "file_in", "file_out"),
     changed = old_hashes != new_hashes,
     old_hash = old_hashes,
