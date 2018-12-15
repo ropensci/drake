@@ -6,24 +6,25 @@ drake_context <- function(x) {
 
 testrun <- function(config) {
   set_test_backend()
-  make(
-    plan = config$plan,
-    targets = config$targets,
-    envir = config$envir,
-    verbose = config$verbose,
-    parallelism = config$parallelism,
-    jobs = config$jobs,
-    packages = config$packages,
-    prework = config$prework,
-    prepend = config$prepend,
-    command = config$command,
-    cache = config$cache,
-    lazy_load = config$lazy_load,
-    session_info = config$session_info,
-    fetch_cache = config$fetch_cache,
-    caching = config$caching
+  invisible(
+    make(
+      plan = config$plan,
+      targets = config$targets,
+      envir = config$envir,
+      verbose = config$verbose,
+      parallelism = config$parallelism,
+      jobs = config$jobs,
+      packages = config$packages,
+      prework = config$prework,
+      prepend = config$prepend,
+      command = config$command,
+      cache = config$cache,
+      lazy_load = config$lazy_load,
+      session_info = config$session_info,
+      fetch_cache = config$fetch_cache,
+      caching = config$caching
+    )
   )
-  invisible()
 }
 
 justbuilt <- function(config) {
