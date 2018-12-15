@@ -84,7 +84,7 @@ test_with_dir("drake_build works as expected", {
   o <- drake_build(b, config = con, replace = TRUE)
   expect_equal(con$eval$a, 1)
   expect_equal(o, 1)
-  
+
   # `replace` in loadd()
   e$b <- 1
   expect_equal(e$b, 1)
