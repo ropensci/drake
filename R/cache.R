@@ -290,12 +290,9 @@ recover_cache <- function(
   console_log_file = NULL
 ) {
   deprecate_force(force)
-  <<<<<<< HEAD
   deprecate_fetch_cache(fetch_cache)
-  =======
-    deprecate_hash_algo_args(short_hash_algo, long_hash_algo)
+  deprecate_hash_algo_args(short_hash_algo, long_hash_algo)
   hash_algorithm <- set_hash_algorithm(hash_algorithm)
-  >>>>>>> upstream/master
   cache <- this_cache(
     path = path,
     verbose = verbose,
