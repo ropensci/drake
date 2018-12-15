@@ -53,41 +53,16 @@ test_with_dir("operators", {
 })
 
 test_with_dir("weak_tibble", {
-  # We test forcing to data frame and not, but results will differ
-  # depending on whether tibble is installed or not
-  if("tibble" %in% installed.packages()[,1]) {
-    classes <- list("FALSE" = c("tbl_df", "tbl", "data.frame"), 
-                    "TRUE" = "data.frame")
-  } else {
-    classes <- list("FALSE" = "data.frame", 
-                    "TRUE" = "data.frame")
-  }
+  skip_on_cran()
   
-  for(fdf in c(FALSE, TRUE)) { # force to data frame?
-    # Empty object
-    df <- weak_tibble(.force_df = fdf)
-    expect_equivalent(dim(df), c(0, 0), info = fdf)
-    expect_identical(class(df), classes[[as.character(fdf)]], info = fdf)
-    
-    # No factors!
-    df <- weak_tibble(a = "a", .force_df = fdf)
-    expect_identical(class(df$a), "character", info = fdf)
-    
-    # Test weak_as_tibble
-    m <- matrix(letters[1:4], nrow = 2, ncol = 2)
-    from_m <- weak_as_tibble(m, .force_df = fdf)
-    expect_identical(class(from_m), classes[[as.character(fdf)]], info = fdf)
-    expect_identical(names(from_m), c("V1", "V2"))
-    expect_identical(class(from_m$V1), "character")
-    
-    df <- as.data.frame(m, stringsAsFactors = FALSE)
-    expect_identical(weak_as_tibble(df, .force_df = fdf), from_m, info = fdf)
-    
-    # Complex function calls like in cache_log
-    lst <- list(data.frame(x = 1), data.frame(x = 2))
-    out <- weak_as_tibble(do.call(rbind, lst))
-    expect_s3_class(out, "data.frame")
-    out <- weak_as_tibble(do.call(rbind, lst), .force_df = fdf)
-    expect_identical(class(out), classes[[as.character(fdf)]], info = fdf)
-  }
+  out <- weak_tibble(.force_df = TRUE)
+  expect_equivalent(out, data.frame())
+  expect_equivalent(weak_as_tibble(list()), data.frame())
+  
+  # No factors
+  out <- weak_tibble(a = 1:2, b = c("x", "y"), .force_df = TRUE)
+  exp <- data.frame(a = 1:2, b = c("x", "y"), stringsAsFactors = FALSE)
+  expect_equivalent(out, exp)
+  out <- weak_as_tibble(list(a = 1:2, b = c("x", "y")))
+  expect_equivalent(out, exp)
 })
