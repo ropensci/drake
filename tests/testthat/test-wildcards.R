@@ -15,14 +15,14 @@ test_with_dir("evaluate and expand", {
   expect_equal(m1, df)
 
   x <- expand_plan(df, values = c("rep1", "rep2"), sep = ".")
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = c("data.rep1", "data.rep2"),
     command = rep("simulate(center = MU, scale = SIGMA)", 2)
   )
   expect_equal(x, y)
 
   x <- expand_plan(df, values = c("rep1", "rep2"))
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = c("data_rep1", "data_rep2"),
     command = rep("simulate(center = MU, scale = SIGMA)", 2)
   )
@@ -30,7 +30,7 @@ test_with_dir("evaluate and expand", {
 
   x1 <- expand_plan(df, values = c("rep1", "rep2"), rename = TRUE)
   x2 <- expand_plan(df, values = c("rep1", "rep2"), rename = FALSE)
-  y2 <- tibble::tibble(
+  y2 <- weak_tibble(
     target = c("data", "data"),
     command = rep("simulate(center = MU, scale = SIGMA)", 2)
   )
@@ -38,7 +38,7 @@ test_with_dir("evaluate and expand", {
   expect_equal(x2, y2)
 
   x2 <- evaluate_plan(x, wildcard = "MU", values = 1:2, sep = ".")
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = c("data_rep1.1", "data_rep1.2", "data_rep2.1", "data_rep2.2"),
     command = c(
       "simulate(center = 1, scale = SIGMA)",
@@ -50,7 +50,7 @@ test_with_dir("evaluate and expand", {
   expect_equal(x2, y)
 
   x2 <- evaluate_plan(x, wildcard = "MU", values = 1:2)
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = c("data_rep1_1", "data_rep1_2", "data_rep2_1", "data_rep2_2"),
     command = c(
       "simulate(center = 1, scale = SIGMA)",
@@ -63,7 +63,7 @@ test_with_dir("evaluate and expand", {
 
   x3 <- evaluate_plan(x2, wildcard = "SIGMA", values = letters[1:2],
                       expand = FALSE)
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = c("data_rep1_1", "data_rep1_2", "data_rep2_1", "data_rep2_2"),
     command = c(
       "simulate(center = 1, scale = a)",
@@ -76,7 +76,7 @@ test_with_dir("evaluate and expand", {
 
   x3a <- evaluate_plan(x2, wildcard = "SIGMA", values = letters[1:2],
                        expand = FALSE, rename = TRUE)
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = c(
       "data_rep1_1_a", "data_rep1_2_b", "data_rep2_1_a", "data_rep2_2_b"),
     command = c(
@@ -96,7 +96,7 @@ test_with_dir("evaluate and expand", {
     rename = TRUE,
     sep = "."
   )
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = c(
       "data_rep1_1.a", "data_rep1_2.b", "data_rep2_1.a", "data_rep2_2.b"),
     command = c(
@@ -110,7 +110,7 @@ test_with_dir("evaluate and expand", {
 
   x4 <- evaluate_plan(x, rules = list(MU = 1:2, SIGMA = c(0.1, 1)),
                       expand = FALSE)
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = c("data_rep1", "data_rep2"),
     command = c(
       "simulate(center = 1, scale = 0.1)",
@@ -125,7 +125,7 @@ test_with_dir("evaluate and expand", {
   expect_equal(6, length(unique(x5$command)))
 
   x6 <- evaluate_plan(df, rules = list(MU = 0:1, SIGMA = 1:2), sep = ".")
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = c("data.0.1", "data.0.2", "data.1.1", "data.1.2"),
     command = c(
       "simulate(center = 0, scale = 1)",
@@ -333,7 +333,7 @@ test_with_dir("evaluate_plan() and trace", {
 
   x <- evaluate_plan(
     plan, trace = TRUE, wildcard = "MU", values = 1:2, expand = FALSE)
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = c(
       "top",
       "data",
@@ -357,7 +357,7 @@ test_with_dir("evaluate_plan() and trace", {
 
   x <- evaluate_plan(
     plan, trace = TRUE, wildcard = "SIGMA", values = 1:2, expand = FALSE)
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = c(
       "top",
       "data",
@@ -380,7 +380,7 @@ test_with_dir("evaluate_plan() and trace", {
   expect_equal(x, y)
 
   x <- evaluate_plan(plan, trace = TRUE, wildcard = "MU", values = 1:2)
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = c(
       "top",
       "data_1",
@@ -408,7 +408,7 @@ test_with_dir("evaluate_plan() and trace", {
 
   x <- evaluate_plan(
     plan, trace = TRUE, rules = list(MU = 1:2, SIGMA = 3:4), expand = FALSE)
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = c(
       "top",
       "data",
@@ -433,7 +433,7 @@ test_with_dir("evaluate_plan() and trace", {
   expect_equal(x, y)
 
   x <- evaluate_plan(plan, trace = TRUE, rules = list(MU = 1:2, SIGMA = 3:4))
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = c(
       "top",
       "data_1_3",
@@ -497,7 +497,7 @@ test_with_dir("unconventional wildcards", {
   x <- evaluate_plan(
     x0, rules = list(.MU. = 1:2, "`{SIGMA}`" = c(0.1, 1)), expand = FALSE # nolint
   )
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = c("data_rep1", "data_rep2"),
     command = c(
       "simulate(center = 1, scale = 0.1)",

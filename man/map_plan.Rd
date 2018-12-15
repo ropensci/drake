@@ -49,7 +49,7 @@ my_model_fit <- function(x1, x2, data) {
 covariates <- setdiff(colnames(mtcars), "mpg")
 args <- t(combn(covariates, 2))
 colnames(args) <- c("x1", "x2")
-args <- tibble::as_tibble(args)
+args <- tibble::as_tibble(args) # or as.data.frame
 args$data <- "mtcars"
 args$data <- rlang::syms(args$data)
 args$id <- paste0("fit_", args$x1, "_", args$x2)

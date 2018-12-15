@@ -35,7 +35,7 @@
 #' covariates <- setdiff(colnames(mtcars), "mpg")
 #' args <- t(combn(covariates, 2))
 #' colnames(args) <- c("x1", "x2")
-#' args <- tibble::as_tibble(args)
+#' args <- tibble::as_tibble(args) # or as.data.frame
 #' args$data <- "mtcars"
 #' args$data <- rlang::syms(args$data)
 #' args$id <- paste0("fit_", args$x1, "_", args$x2)
@@ -57,7 +57,7 @@ map_plan <- function(
   character_only = FALSE,
   trace = FALSE
 ) {
-  args <- tibble::as_tibble(args)
+  args <- weak_as_tibble(args)
   if (!character_only) {
     fun <- as.character(substitute(fun))
     id <- as.character(substitute(id))
@@ -79,9 +79,9 @@ map_plan <- function(
       wide_deparse(out)
     }
   )))
-  out <- tibble::tibble(target = target, command = command)
+  out <- weak_tibble(target = target, command = command)
   if (trace) {
-    out <- tibble::as_tibble(cbind(out, args))
+    out <- weak_as_tibble(cbind(out, args))
   }
   sanitize_plan(out)
 }
@@ -139,7 +139,7 @@ gather_plan <- function(
   command <- paste(plan$target, "=", plan$target)
   command <- paste(command, collapse = ", ")
   command <- paste0(gather, "(", command, ")")
-  new_plan <- tibble::tibble(target = target, command = command)
+  new_plan <- weak_tibble(target = target, command = command)
   if (append) {
     bind_plans(plan, new_plan)
   } else {
@@ -302,7 +302,7 @@ reduce_plan <- function(
       base_name = paste0(target, sep)
     )
     pairs$names[nrow(pairs)] <- target
-    out <- tibble::tibble(
+    out <- weak_tibble(
       target = pairs$names,
       command = paste0(begin, pairs$odds, op, pairs$evens, end)
     )
@@ -313,7 +313,7 @@ reduce_plan <- function(
         paste0(begin, x, op, y, end)
       }
     )
-    out <- tibble::tibble(target = target, command = command)
+    out <- weak_tibble(target = target, command = command)
   }
   if (append) {
     bind_plans(plan, out)
