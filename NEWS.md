@@ -10,6 +10,7 @@
 - Use only one hash algorithm per `drake` cache, which the user can set with the `hash_algorithm` argument of `new_cache()`, `storr::storr_rds()`, and various other cache functions. Thus, the concepts of a "short hash algorithm" and "long hash algorithm" are deprecated, and the functions `long_hash()`, `short_hash()`, `default_long_hash_algo()`, `default_short_hash_algo()`, and `available_hash_algos()` are deprecated. Caches are still back-compatible with `drake` > 5.4.0 and <= 6.2.1.
 - Allow the `magrittr` dot symbol to appear in some commands sometimes.
 - Deprecate the `fetch_cache` argument in all functions 
+- Remove packages `DBI` and `RSQLite` from "Suggests".
 
 # Version 6.2.1
 
@@ -37,7 +38,7 @@ Version 6.2.1 is a hotfix to address the failing automated CRAN checks for 6.2.0
 - Improve memoized preprocessing: deparse all the functions in the environment so the memoization does not react so spurious changes in R internals. Related: #345.
 - Use the `label` argument to `future()` inside `make(parallelism = "future")`. That way , job names are target names by default if `job.name` is used correctly in the `batchtools` template file.
 - Remove strict dependencies on packages `dplyr`, `evaluate`, `fs`, `future`, `magrittr`, `parallel`, `R.utils`, `stats`, `stringi`, `tidyselect`, and `withr`.
-- Remove packages `DBI`, `rprojroot`, and `RSQLite` from "Suggests".
+- Remove package `rprojroot` from "Suggests".
 - Deprecate the `force` argument in all functions except `make()` and `drake_config()`.
 - Change the name of `prune_envir()` to `manage_memory()`.
 - Deprecate and rename the `pruning_strategy` argument to `memory_strategy` (`make()` and `drake_config()`).
