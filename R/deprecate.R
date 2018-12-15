@@ -2070,6 +2070,17 @@ workplan <- function(
   sanitize_plan(plan)
 }
 
+# Helper function: check for deprecated `fetch_cache` parameter
+# See ...drake/pull/608#pullrequestreview-182943763
+deprecate_fetch_cache <- function(fetch_cache) {
+  if (!is.null(fetch_cache)) {
+    warning(
+      "Argument `fetch_cache` is deprecated.",
+      call. = FALSE
+    ) # 2018-12-08 # nolint
+  }
+}
+
 #' @title Deprecated: load the main example.
 #' @description The main example lives at
 #' <https://github.com/wlandau/drake-examples/tree/master/main>.

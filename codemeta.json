@@ -14,10 +14,10 @@
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
-    "version": "3.5.1",
+    "version": "3.4.3",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 3.5.1 (2018-07-02)",
+  "runtimePlatform": "R version 3.4.3 (2017-11-30)",
   "provider": {
     "@id": "https://cran.r-project.org",
     "@type": "Organization",
@@ -155,18 +155,6 @@
     },
     {
       "@type": "SoftwareApplication",
-      "identifier": "DBI",
-      "name": "DBI",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=DBI"
-    },
-    {
-      "@type": "SoftwareApplication",
       "identifier": "downloader",
       "name": "downloader",
       "provider": {
@@ -282,18 +270,6 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=prettycode"
-    },
-    {
-      "@type": "SoftwareApplication",
-      "identifier": "RSQLite",
-      "name": "RSQLite",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=RSQLite"
     },
     {
       "@type": "SoftwareApplication",
@@ -502,9 +478,9 @@
       "name": "utils"
     }
   ],
-  "releaseNotes": "https://github.com/ropensci/drake/blob/master/NEWS.md",
-  "readme": "https://github.com/ropensci/drake/blob/master/README.md",
-  "fileSize": "401.038KB",
+  "releaseNotes": "https://github.com/bpbond/drake/blob/master/NEWS.md",
+  "readme": "https://github.com/bpbond/drake/blob/master/README.md",
+  "fileSize": "489.739KB",
   "contIntegration": [
     "https://ci.appveyor.com/project/ropensci/drake",
     "https://travis-ci.org/ropensci/drake",

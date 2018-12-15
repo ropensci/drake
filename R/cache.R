@@ -96,6 +96,7 @@ get_cache <- function(
   console_log_file = NULL
 ) {
   deprecate_force(force)
+  deprecate_fetch_cache(fetch_cache)
   if (search) {
     path <- find_cache(path = path)
   } else {
@@ -140,8 +141,9 @@ this_cache <- function(
   console_log_file = NULL
 ) {
   deprecate_force(force)
+  deprecate_fetch_cache(fetch_cache)
   usual_path_missing <- is.null(path) || !file.exists(path)
-  if (usual_path_missing & is.null(fetch_cache)) {
+  if (usual_path_missing) {
     return(NULL)
   }
   if (!is.null(path)) {
@@ -153,12 +155,7 @@ this_cache <- function(
       )
     )
   }
-  fetch_cache <- as.character(fetch_cache)
-  if (length(fetch_cache) && nzchar(fetch_cache)) {
-    cache <- eval(parse(text = localize(fetch_cache)))
-  } else {
-    cache <- drake_try_fetch_rds(path = path)
-  }
+  cache <- drake_try_fetch_rds(path = path)
   cache_vers_warn(cache = cache)
   cache
 }
@@ -293,6 +290,7 @@ recover_cache <- function(
   console_log_file = NULL
 ) {
   deprecate_force(force)
+  deprecate_fetch_cache(fetch_cache)
   deprecate_hash_algo_args(short_hash_algo, long_hash_algo)
   hash_algorithm <- set_hash_algorithm(hash_algorithm)
   cache <- this_cache(

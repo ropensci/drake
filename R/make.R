@@ -129,6 +129,7 @@ make <- function(
       call. = FALSE
     )
   }
+  deprecate_fetch_cache(fetch_cache)
   if (!is.null(timeout)) {
     warning(
       "Argument `timeout` is deprecated. ",
