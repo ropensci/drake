@@ -1,3 +1,6 @@
 unlink("docs", recursive = TRUE)
 pkgdown::build_site()
-fs::dir_copy("images", "docs")
+if (!file.exists("docs")) {
+  dir.create("docs")
+}
+file.copy("images", "docs", recursive = TRUE)
