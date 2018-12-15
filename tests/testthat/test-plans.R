@@ -95,7 +95,7 @@ test_with_dir("File functions handle input", {
     file_out(1, "x", "y"), c("1", "x", "y")
   )
   expect_equal(
-    code_dependencies(quote(file_out(c("file1", "file2")))),
+    analyze_code(quote(file_out(c("file1", "file2")))),
     list(file_out = drake_quotes(c("file1", "file2"), single = FALSE))
   )
 })
@@ -200,7 +200,7 @@ test_with_dir("drake_plan() trims outer whitespace in target names", {
 test_with_dir(
   "make() and check_plan() trim outer whitespace in target names", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  x <- tibble(target = c("a\n", "  b", "c ", "\t  d   "),
+  x <- tibble::tibble(target = c("a\n", "  b", "c ", "\t  d   "),
                   command = 1)
   expect_silent(make(x, verbose = FALSE, session_info = FALSE))
   expect_equal(sort(cached()), letters[1:4])
@@ -450,6 +450,7 @@ test_with_dir("custom column interface", {
 test_with_dir("bind_plans()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   plan1 <- drake_plan(x = 1, y = 2)
+  expect_equal(bind_plans(plan1, plan1), plan1) # targets should be unique
   plan2 <- drake_plan(
     z = target(
       command = download_data(),
@@ -457,13 +458,26 @@ test_with_dir("bind_plans()", {
     ),
     strings_in_dots = "literals"
   )
-  plan3 <- bind_plans(plan1, plan2)
-  plan4 <- tibble::tibble(
+  plan3 <- drake_plan(u = 3, v = 4, w = 5)
+  out <- bind_plans(plan1, plan2)
+  exp <- tibble::tibble(
     target = c("x", "y", "z"),
     command = c("1", "2", "download_data()"),
     trigger = c(NA, NA, "trigger(condition = TRUE)")
   )
-  expect_equal(plan3, plan4)
+  expect_equal(out, exp)
+  exp <- tibble::tibble(
+    target = c("x", "y", "z", "u", "v", "w"),
+    command = c("1", "2", "download_data()", "3", "4", "5"),
+    trigger = c(NA, NA, "trigger(condition = TRUE)", NA, NA, NA)
+  )
+  expect_equal(bind_plans(plan1, plan2, plan3), exp)
+  expect_equal(bind_plans(list(plan1, plan2, plan3)), exp)
+  expect_equal(bind_plans(list(list(plan1, plan2, plan3))), exp)
+  expect_equal(bind_plans(list(plan1, list(plan2, plan3))), exp)
+  expect_equal(bind_plans(list(plan1, list(plan2, list(plan3)))), exp)
+  expect_equal(bind_plans(list(list(plan1), list(plan2, list(plan3)))), exp)
+  expect_equal(bind_plans(list(list(plan1), list(plan2), list(plan3))), exp)
 })
 
 test_with_dir("spaces in target names are replaced only when appropriate", {
@@ -620,7 +634,7 @@ test_with_dir("code_to_plan(), one target", {
   skip_if_not_installed("CodeDepends")
   writeLines("a <- 1", "script.R")
   plan <- code_to_plan("script.R")
-  expect_equal(plan, tibble(target = "a", command = "1"))
+  expect_equal(plan, tibble::tibble(target = "a", command = "1"))
 })
 
 test_with_dir("plan_to_code()", {

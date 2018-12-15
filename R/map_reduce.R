@@ -76,7 +76,7 @@ map_plan <- function(
     .f = function(...) {
       out <- list(as.name(fun), ...)
       out <- as.call(out)
-      rlang::expr_text(out)
+      wide_deparse(out)
     }
   )))
   out <- tibble::tibble(target = target, command = command)
@@ -139,7 +139,7 @@ gather_plan <- function(
   command <- paste(plan$target, "=", plan$target)
   command <- paste(command, collapse = ", ")
   command <- paste0(gather, "(", command, ")")
-  new_plan <- tibble(target = target, command = command)
+  new_plan <- tibble::tibble(target = target, command = command)
   if (append) {
     bind_plans(plan, new_plan)
   } else {
@@ -302,7 +302,7 @@ reduce_plan <- function(
       base_name = paste0(target, sep)
     )
     pairs$names[nrow(pairs)] <- target
-    out <- tibble(
+    out <- tibble::tibble(
       target = pairs$names,
       command = paste0(begin, pairs$odds, op, pairs$evens, end)
     )
@@ -313,7 +313,7 @@ reduce_plan <- function(
         paste0(begin, x, op, y, end)
       }
     )
-    out <- tibble(target = target, command = command)
+    out <- tibble::tibble(target = target, command = command)
   }
   if (append) {
     bind_plans(plan, out)

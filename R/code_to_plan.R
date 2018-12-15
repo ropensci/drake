@@ -157,7 +157,7 @@ plan_to_text <- function(plan) {
   plan <- plan[order, ]
   if (!is.character(plan$command)) {
     plan$command <- vapply(plan$command,
-                           rlang::expr_text,
+                           wide_deparse,
                            FUN.VALUE = character(1))
   }
   text <- paste(plan$target, "<-", plan$command)

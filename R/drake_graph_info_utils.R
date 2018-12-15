@@ -219,7 +219,7 @@ hover_text <- function(config) {
 #' visNetwork::visNetwork(nodes = legend_nodes()) # nolint
 #' }
 legend_nodes <- function(font_size = 20) {
-  out <- tibble(
+  out <- tibble::tibble(
     label = c(
       "Up to date",
       "Outdated",
@@ -316,6 +316,7 @@ resolve_graph_outdated <- function(config) {
 resolve_levels <- function(config) {
   config$nodes$level <- level <- 0
   graph <- config$graph
+  check_drake_graph(graph)
   while (length(V(graph))) {
     level <- level + 1
     leaves <- leaf_nodes(graph)

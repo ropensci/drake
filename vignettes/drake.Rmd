@@ -72,7 +72,10 @@ If you have a project of your own, we would love to add it. [Click here to edit 
 
 ## Context and history
 
-For context and history, check out [this post on the rOpenSci blog](https://ropensci.org/blog/2018/02/06/drake/) and [episode 22 of the R Podcast](https://www.r-podcast.org/episode/022-diving-in-to-drake-with-will-landau/).
+For context and history, please refer to the following.
+
+- The rOpenSci blog post from February 6, 2018.
+- Episode 22 of the R-Podcast.
 
 # Acknowledgements
 

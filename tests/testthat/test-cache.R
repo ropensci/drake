@@ -147,7 +147,6 @@ test_with_dir("bad/corrupt caches, no progress, no seed", {
 test_with_dir("non-existent caches", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(0, nrow(drake_cache_log()))
-  check_storr_short_hash(NULL, "BLAH")
   expect_equal(find_cache(), NULL)
   expect_equal(find_project(), NULL)
   expect_error(loadd(list = "nothing", search = FALSE))
@@ -194,6 +193,24 @@ test_with_dir("subspaces", {
   lst <- list_subspace(
     subspace = "y", namespace = "x", cache = x, jobs = 1)
   expect_equal(sort(lst), c("a", "b"))
+})
+
+
+test_with_dir("get_cache() can search", {
+  dir.create(file.path("w"))
+  dir.create(file.path("w", "x"))
+  dir.create(file.path("w", "x", "y"))
+  dir.create(file.path("w", "x", "y", "z"))
+  tmp <- storr::storr_rds(file.path("w", "x", ".drake"), mangle_key = TRUE)
+  cache <- get_cache(file.path("w", "x", "y", "z"))
+  expect_true(inherits(cache, "storr"))
+  cache <- get_cache(file.path("w", "x", ".drake"))
+  expect_true(inherits(cache, "storr"))
+  cache <- get_cache(file.path("w", "x", ".drake", "keys"))
+  expect_true(inherits(cache, "storr"))
+  cache <- get_cache(file.path("w", "x"), search = FALSE)
+  expect_true(inherits(cache, "storr"))
+  expect_null(get_cache(file.path("w", "x", "y", "z"), search = FALSE))
 })
 
 test_with_dir("cache functions work", {
@@ -279,9 +296,9 @@ test_with_dir("cache functions work", {
 
   # config
   newconfig <- read_drake_config(search = FALSE)
-  expect_equal(newconfig$short_hash_algo, default_short_hash_algo())
-  expect_equal(newconfig$long_hash_algo, default_long_hash_algo())
   expect_true(is.list(newconfig) & length(newconfig) > 1)
+  expect_equal(config$plan, newconfig$plan)
+  expect_equal(config$seed, newconfig$seed)
   expect_equal(read_drake_plan(search = FALSE), config$plan)
   expect_equal(read_drake_seed(search = FALSE), config$seed)
   expect_true(inherits(read_drake_graph(search = FALSE), "igraph"))
