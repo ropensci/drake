@@ -3,7 +3,7 @@ drake_context("deprecation")
 test_with_dir("deprecation: fetch_cache", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   dp <- drake_plan(x = 1)
-  expect_warning(make(dp, fetch_cache = "storr::storr_rds('test')"), regexp = "deprecated")
+  expect_warning(make(dp, fetch_cache = ""), regexp = "deprecated")
   expect_warning(drake_config(dp, fetch_cache = ""), regexp = "deprecated")
   expect_warning(get_cache(fetch_cache = ""), regexp = "deprecated")
 })
