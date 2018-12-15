@@ -76,7 +76,7 @@ map_plan <- function(
     .f = function(...) {
       out <- list(as.name(fun), ...)
       out <- as.call(out)
-      rlang::expr_text(out)
+      wide_deparse(out)
     }
   )))
   out <- tibble::tibble(target = target, command = command)
@@ -139,7 +139,7 @@ gather_plan <- function(
   command <- paste(plan$target, "=", plan$target)
   command <- paste(command, collapse = ", ")
   command <- paste0(gather, "(", command, ")")
-  new_plan <- tibble(target = target, command = command)
+  new_plan <- tibble::tibble(target = target, command = command)
   if (append) {
     bind_plans(plan, new_plan)
   } else {
@@ -223,8 +223,9 @@ gather_by <- function(
   )
   cols <- gathered[, col_names]
   suffix <- apply(X = cols, MARGIN = 1, FUN = paste, collapse = sep)
-  if (length(suffix) && nzchar(suffix)) {
-    gathered$target <- paste(gathered$target, suffix, sep = sep)
+  if (length(suffix)) {
+    suffix[nzchar(suffix)] <- paste0(sep, suffix[nzchar(suffix)])
+    gathered$target <- paste0(gathered$target, suffix)
   }
   if (append) {
     out <- bind_plans(plan, gathered)
@@ -301,7 +302,7 @@ reduce_plan <- function(
       base_name = paste0(target, sep)
     )
     pairs$names[nrow(pairs)] <- target
-    out <- tibble(
+    out <- tibble::tibble(
       target = pairs$names,
       command = paste0(begin, pairs$odds, op, pairs$evens, end)
     )
@@ -312,7 +313,7 @@ reduce_plan <- function(
         paste0(begin, x, op, y, end)
       }
     )
-    out <- tibble(target = target, command = command)
+    out <- tibble::tibble(target = target, command = command)
   }
   if (append) {
     bind_plans(plan, out)
@@ -406,8 +407,9 @@ reduce_by <- function(
   )
   cols <- reduced[, col_names]
   suffix <- apply(X = cols, MARGIN = 1, FUN = paste, collapse = sep)
-  if (length(suffix) && nzchar(suffix)) {
-    reduced$target <- paste(reduced$target, suffix, sep = sep)
+  if (length(suffix)) {
+    suffix[nzchar(suffix)] <- paste0(sep, suffix[nzchar(suffix)])
+    reduced$target <- paste0(reduced$target, suffix)
   }
   if (append) {
     out <- bind_plans(plan, reduced)

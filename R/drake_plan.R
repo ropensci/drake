@@ -162,7 +162,7 @@ drake_plan <- function(
   commands <- c(commands_dots, list)
   if (!length(commands)) {
     return(
-      tibble(
+      tibble::tibble(
         target = character(0),
         command = character(0)
       )
@@ -171,7 +171,7 @@ drake_plan <- function(
   commands <- complete_target_names(commands)
   targets <- names(commands)
   commands <- as.character(commands)
-  plan <- tibble(
+  plan <- tibble::tibble(
     target = targets,
     command = commands
   )
@@ -240,7 +240,11 @@ drake_plan <- function(
 #' your_plan
 #' # make(your_plan) # nolint
 bind_plans <- function(...) {
-  plans <- list(...)
+  args <- list(...)
+  plan_env <- new.env(parent = emptyenv())
+  plan_env$plans <- list()
+  flatten_plan_list(args, plan_env = plan_env)
+  plans <- plan_env$plans
   plans <- Filter(f = nrow, x = plans)
   plans <- Filter(f = ncol, x = plans)
   cols <- lapply(plans, colnames)
@@ -248,6 +252,15 @@ bind_plans <- function(...) {
   plans <- lapply(plans, fill_cols, cols = cols)
   plan <- do.call(rbind, plans)
   sanitize_plan(plan)
+}
+
+flatten_plan_list <- function(args, plan_env){
+  if (!is.null(dim(args))) {
+    index <- length(plan_env$plans) + 1
+    plan_env$plans[[index]] <- tibble::as_tibble(args)
+  } else {
+    lapply(args, flatten_plan_list, plan_env = plan_env)
+  }
 }
 
 fill_cols <- function(x, cols) {

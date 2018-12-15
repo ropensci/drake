@@ -39,7 +39,7 @@ knitr_deps_list <- function(target) {
     return(list())
   }
   fragments <- safe_get_tangled_frags(target)
-  results <- code_dependencies(fragments)
+  results <- analyze_code(fragments)
   select <- c(
     "knitr_in",
     "file_in",

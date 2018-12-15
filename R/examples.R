@@ -153,6 +153,7 @@ load_mtcars_example <- function(
   overwrite = FALSE,
   force = FALSE
 ) {
+  force(envir)
   deprecate_force(force)
   if (!is.null(report_file)) {
     warning(
@@ -178,6 +179,7 @@ load_mtcars_example <- function(
 }
 
 populate_mtcars_example_envir <- function(envir) {
+  force(envir)
   eval(parse(text = "suppressPackageStartupMessages(require(drake))"))
   eval(parse(text = "suppressPackageStartupMessages(require(knitr))"))
   mtcars <- lm <- NULL

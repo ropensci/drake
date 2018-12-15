@@ -19,13 +19,6 @@ preprocess_command <- function(command, config) {
   as.call(c(quote(rlang::expr), command))
 }
 
-# Can remove once we remove fetch_cache.
-# We can remove fetch_cache once we allow the master process
-# to optionally do all the caching.
-localize <- function(command) {
-  paste0("local({\n", command, "\n})")
-}
-
 standardize_command <- function(x) {
   x <- ignore_ignore(x)
   x <- language_to_text(x)
@@ -43,7 +36,7 @@ recurse_ignore <- function(x) {
   if (is.function(x) && !is.primitive(x) && !is.null(body(x))) {
     body(x) <- recurse_ignore(body(x))
   } else if (is_callish(x)) {
-    if (is_ignored_call(x)) {
+    if (wide_deparse(x[[1]]) %in% ignored_fns) {
       x <- quote(ignore())
     } else {
       x[] <- lapply(as.list(x), recurse_ignore)

@@ -1,26 +1,12 @@
 drake_context("hash")
 
-test_with_dir("available hash algos", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  x <- available_hash_algos()
-  expect_true(length(x) > 0)
-  expect_true(is.character(x))
-})
-
 test_with_dir("illegal hashes", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- drake_plan(a = 1)
   expect_error(
     make(
       x,
-      short_hash_algo = "no_such_algo_aslkdjfoiewlk",
-      session_info = FALSE
-    )
-  )
-  expect_error(
-    make(
-      x,
-      long_hash_algo = "no_such_algo_aslkdjfoiewlk",
+      hash_algorithm = "no_such_algo_aslkdjfoiewlk",
       session_info = FALSE
     )
   )

@@ -117,7 +117,7 @@ style_recursive_loop <- function(expr) {
 }
 
 style_leaf <- function(name, expr, append_comma) {
-  text <- styler::style_text(rlang::expr_text(expr))
+  text <- styler::style_text(wide_deparse(expr))
   text[1] <- paste(name, "=", text[1])
   if (append_comma) {
     text[length(text)] <- paste0(text[length(text)], ",")

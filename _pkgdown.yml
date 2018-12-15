@@ -136,18 +136,13 @@ reference:
   - '`show_source`'
 - title: Cache configuration
   contents:
-  - '`available_hash_algos`'
   - '`cache_namespaces`'
   - '`cache_path`'
   - '`cleaned_namespaces`'
   - '`configure_cache`'
   - '`default_cache_path`'
-  - '`default_long_hash_algo`'
-  - '`default_short_hash_algo`'
-  - '`long_hash`'
   - '`new_cache`'
   - '`recover_cache`'
-  - '`short_hash`'
   - '`target_namespaces`'
   - '`this_cache`'
 - title: Utilities

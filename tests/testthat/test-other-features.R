@@ -7,7 +7,7 @@ test_with_dir("debug_command()", {
   x <- parse(text = txt)[[1]]
   out1 <- debug_command(x)
   out2 <- debug_command(txt)
-  txt3 <- rlang::expr_text(out1)
+  txt3 <- wide_deparse(out1)
   expect_equal(out2, txt2)
   expect_equal(out2, txt3)
 })

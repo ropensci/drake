@@ -1,4 +1,22 @@
-# Version 6.1.0.9000
+# Version 6.2.1.9000
+
+## Bug fixes
+
+- Allow `bind_plans()` to work with lists of plans (`bind_plans(list(plan1, plan2))` was returning `NULL` in `drake` 6.2.0 and 6.2.1).
+- Ensure that `get_cache(path = "non/default/path", search = FALSE)` looks for the cache in `"non/default/path"` instead of `getwd()`.
+
+## Enhancements
+
+- Use only one hash algorithm per `drake` cache, which the user can set with the `hash_algorithm` argument of `new_cache()`, `storr::storr_rds()`, and various other cache functions. Thus, the concepts of a "short hash algorithm" and "long hash algorithm" are deprecated, and the functions `long_hash()`, `short_hash()`, `default_long_hash_algo()`, `default_short_hash_algo()`, and `available_hash_algos()` are deprecated. Caches are still back-compatible with `drake` > 5.4.0 and <= 6.2.1.
+- Allow the `magrittr` dot symbol to appear in some commands sometimes.
+- Deprecate the `fetch_cache` argument in all functions 
+- Remove packages `DBI` and `RSQLite` from "Suggests".
+
+# Version 6.2.1
+
+Version 6.2.1 is a hotfix to address the failing automated CRAN checks for 6.2.0. Chiefly, in CRAN's Debian R-devel (2018-12-10) check platform, errors of the form "length > 1 in coercion to logical" occurred when either argument to `&&` or `||` was not of length 1 (e.g. `nzchar(letters) && length(letters)`). In addition to fixing these errors, version 6.2.1 also removes a problematic link from the vignette.
+
+# Version 6.2.0
 
 ## New features
 
@@ -8,7 +26,9 @@
 
 ## Bug fixes
 
+- Ensure compatibility with `tibble` 2.0.0.
 - Stop returning `0s` from `predict_runtime(targets_only = TRUE)` when some targets are outdated and others are not.
+- Remove `sort(NULL)` warnings from `create_drake_layout()`. (Affects R-3.3.x.)
 
 ## Enhancements
 

@@ -1,5 +1,13 @@
 drake_context("deprecation")
 
+test_with_dir("deprecation: fetch_cache", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  dp <- drake_plan(x = 1)
+  expect_warning(make(dp, fetch_cache = ""), regexp = "deprecated")
+  expect_warning(drake_config(dp, fetch_cache = ""), regexp = "deprecated")
+  expect_warning(get_cache(fetch_cache = ""), regexp = "deprecated")
+})
+
 test_with_dir("pkgconfig::get_config(\"drake::strings_in_dots\")", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   old_strings_in_dots <- pkgconfig::get_config("drake::strings_in_dots")
@@ -50,6 +58,13 @@ test_with_dir("deprecation: cache functions", {
     tmp <- read_drake_meta(targets = NULL, search = FALSE))))
   expect_true(expect_warning(is.list(
     tmp <- read_drake_meta(targets = "x", search = FALSE))))
+  cache <- get_cache()
+  expect_warning(short_hash(cache))
+  expect_warning(long_hash(cache))
+  expect_warning(default_short_hash_algo(cache))
+  expect_warning(default_long_hash_algo(cache))
+  expect_warning(available_hash_algos())
+  expect_warning(new_cache(short_hash_algo = "123", long_hash_algo = "456"))
 })
 
 test_with_dir("drake_plan deprecation", {
@@ -141,7 +156,9 @@ test_with_dir("deprecate misc utilities", {
   expect_warning(as_drake_filename("x"))
   expect_warning(drake_unquote("x", deep = TRUE))
   cache <- storr::storr_environment()
-  expect_warning(configure_cache(cache, log_progress = TRUE))
+  expect_warning(configure_cache(
+    cache, log_progress = TRUE, init_common_values = TRUE
+  ))
   expect_warning(max_useful_jobs(config(drake_plan(x = 1))))
   expect_warning(deps(123))
   load_mtcars_example()
@@ -211,7 +228,7 @@ test_with_dir("plan set 1", {
       tidy_evaluation = tidy_evaluation,
       strings_in_dots = "filenames"
     ))
-    y <- tibble(
+    y <- tibble::tibble(
       target = letters[1:4],
       command = c("c", "'c'",
       "d", "readRDS('e')"))
@@ -240,6 +257,36 @@ test_with_dir("force with a non-back-compatible cache", {
   expect_silent(tmp <- get_cache())
   expect_silent(tmp <- this_cache())
   expect_silent(tmp <- recover_cache())
+})
+
+test_with_dir("v6.2.1 project is still up to date", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_if_not_installed("tibble")
+  write_v6.2.1_project() # nolint
+  report_md_hash <- readRDS(
+    file.path(".drake", "data", "983396f9689f587b.rds")
+  )
+  expect_equal(nchar(report_md_hash), 64L)
+  plan <- read_drake_plan()
+  random_rows <- function(data, n) {
+    data[sample.int(n = nrow(data), size = n, replace = TRUE), ]
+  }
+  simulate <- function(n) {
+    data <- random_rows(data = mtcars, n = n)
+    data.frame(
+      x = data$wt,
+      y = data$mpg
+    )
+  }
+  reg1 <- function(d) {
+    lm(y ~ + x, data = d)
+  }
+  reg2 <- function(d) {
+    d$x2 <- d$x ^ 2
+    lm(y ~ x2, data = d)
+  }
+  config <- make(plan)
+  expect_equal(justbuilt(config), character(0))
 })
 
 test_with_dir("deprecate the `force` argument", {

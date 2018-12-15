@@ -74,12 +74,12 @@
 deps_code <- function(x) {
   if (is.function(x)) {
     import_dependencies(x)
-  } else if (is_file(x) && file.exists(drake_unquote(x))) {
+  } else if (all(is_file(x)) && all(file.exists(drake_unquote(x)))) {
     knitr_deps(drake_unquote(x))
   } else if (is.character(x)) {
     command_dependencies(x)
   } else{
-    code_dependencies(x)
+    analyze_code(x)
   }
 }
 
@@ -256,11 +256,14 @@ nonfile_target_dependencies <- function(targets, config, jobs = 1) {
   intersect(out, config$plan$target)
 }
 
-import_dependencies <- function(expr, exclude = character(0), globals = NULL) {
-  deps <- code_dependencies(expr, exclude = exclude, globals = globals)
-  # Imported functions can't have file_out() deps # nolint
-  # or target dependencies from knitr code chunks.
-  # However, file_in()s are totally fine. # nolint
+import_dependencies <- function(
+  expr, exclude = character(0), allowed_globals = NULL
+) {
+  deps <- analyze_code(
+    expr = expr,
+    exclude = exclude,
+    allowed_globals = allowed_globals
+  )
   deps$file_out <- deps$strings <- NULL
   deps
 }
@@ -268,7 +271,7 @@ import_dependencies <- function(expr, exclude = character(0), globals = NULL) {
 command_dependencies <- function(
   command,
   exclude = character(0),
-  globals = NULL
+  allowed_globals = NULL
 ) {
   if (!length(command)) {
     return()
@@ -277,10 +280,10 @@ command_dependencies <- function(
   if (is.character(command)){
     expr <- parse(text = command, keep.source = FALSE)
   }
-  deps <- code_dependencies(
+  deps <- analyze_code(
     expr,
     exclude = exclude,
-    globals = globals
+    allowed_globals = allowed_globals
   )
   deps$strings <- NULL
 

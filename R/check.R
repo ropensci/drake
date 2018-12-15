@@ -51,7 +51,8 @@ check_drake_config <- function(config) {
   if (!all(c("target", "command") %in% colnames(config$plan))) {
     stop(
       "The columns of your workflow plan data frame ",
-      "must include 'target' and 'command'."
+      "must include 'target' and 'command'.",
+      call. = FALSE
     )
   }
   stopifnot(nrow(config$plan) > 0)
@@ -107,7 +108,8 @@ check_drake_graph <- function(graph) {
     "  then consider using ignore() to mask sections \n",
     "  of your commands or imported functions.\n",
     "Cycles:\n",
-    multiline_message(cycles)
+    multiline_message(cycles),
+    call. = FALSE
   )
 }
 

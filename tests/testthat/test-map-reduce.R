@@ -116,7 +116,7 @@ test_with_dir("reduce_plan()", {
 
   # Pairwise reduce even number of targets
   x <- reduce_plan(x_plan, target = "x_sum", pairwise = TRUE)
-  x0 <- tibble(
+  x0 <- tibble::tibble(
     target = c(paste0("x_sum_", 1:6), "x_sum"),
     command = c(
       "x_1 + x_2", "x_3 + x_4", "x_5 + x_6", "x_7 + x_8",
@@ -135,7 +135,7 @@ test_with_dir("reduce_plan()", {
   )
   expect_equal(x, x0)
   x <- reduce_plan(x_plan, target = "x_sum", pairwise = TRUE)
-  x0 <- tibble(
+  x0 <- tibble::tibble(
     target = c(paste0("x_sum_", 1:6), "x_sum"),
     command = c(
       "x_1 + x_2", "x_3 + x_4", "x_5 + x_6", "x_7 + x_8",
@@ -155,7 +155,7 @@ test_with_dir("reduce_plan()", {
     values = 1:9
   )
   x <- reduce_plan(x_plan, target = "x_sum", pairwise = TRUE)
-  x0 <- tibble(
+  x0 <- tibble::tibble(
     target = c(paste0("x_sum_", 1:7), "x_sum"),
     command = c(
       "x_1 + x_2", "x_3 + x_4", "x_5 + x_6", "x_7 + x_8",
@@ -180,7 +180,7 @@ test_with_dir("reduce_plan()", {
   }
   x <- reduce_plan(x_plan, target = "x_sum", pairwise = TRUE,
                    begin = "fun(", op = ", ", end = ")")
-  x0 <- tibble(
+  x0 <- tibble::tibble(
     target = c(paste0("x_sum_", 1:6), "x_sum"),
     command = c(
       "fun(x_1, x_2)", "fun(x_3, x_4)", "fun(x_5, x_6)", "fun(x_7, x_8)",
