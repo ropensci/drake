@@ -93,7 +93,7 @@ cmq_deps_list <- function(target, config) {
   out <- lapply(
     X = deps,
     FUN = function(name) {
-      config$envir[[name]]
+      config$eval[[name]]
     }
   )
   names(out) <- deps
@@ -116,7 +116,7 @@ cmq_build <- function(target, meta, deps, config) {
   do_prework(config = config, verbose_packages = FALSE)
   if (identical(config$caching, "master")) {
     for (dep in names(deps)) {
-      config$envir[[dep]] <- deps[[dep]]
+      config$eval[[dep]] <- deps[[dep]]
     }
   } else {
     manage_memory(targets = target, config = config, jobs = 1)

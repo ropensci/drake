@@ -59,11 +59,11 @@ with_call_stack <- function(target, config) {
     signalCondition(e)
   }
   expr <- config$layout[[target]]$command_build
-  tidy_expr <- eval(expr = expr, envir = config$envir) # tidy eval prep
+  tidy_expr <- eval(expr = expr, envir = config$eval) # tidy eval prep
   frame <- sys.nframe()
   tryCatch(
     withCallingHandlers(
-      eval(expr = tidy_expr, envir <- config$envir), # pure eval
+      eval(expr = tidy_expr, envir <- config$eval), # pure eval
       error = capture_calls
     ),
     error = identity

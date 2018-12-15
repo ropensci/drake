@@ -13,7 +13,7 @@ hasty_loop <- function(config) {
   targets <- igraph::topo_sort(config$schedule)$name
   for (target in targets) {
     console_target(target = target, config = config)
-    config$envir[[target]] <- config$hasty_build(
+    config$eval[[target]] <- config$hasty_build(
       target = target,
       config = config
     )
@@ -29,9 +29,9 @@ hasty_loop <- function(config) {
 default_hasty_build <- function(target, config) {
   tidy_expr <- eval(
     expr = config$layout[[target]]$command_build,
-    envir = config$envir
+    envir = config$eval
   )
-  eval(expr = tidy_expr, envir = config$envir)
+  eval(expr = tidy_expr, envir = config$eval)
 }
 
 hasty_parallel <- function(config) {
@@ -98,7 +98,7 @@ hasty_send_target <- function(config) {
 remote_hasty_build <- function(target, deps = NULL, config) {
   do_prework(config = config, verbose_packages = FALSE)
   for (dep in names(deps)) {
-    config$envir[[dep]] <- deps[[dep]]
+    config$eval[[dep]] <- deps[[dep]]
   }
   value <- config$hasty_build(target = target, config = config)
   invisible(list(target = target, value = value))
@@ -108,7 +108,7 @@ conclude_hasty_build <- function(msg, config) {
   if (is.null(msg$result)) {
     return()
   }
-  config$envir[[msg$result$target]] <- msg$result$value
+  config$eval[[msg$result$target]] <- msg$result$value
   revdeps <- dependencies(
     targets = msg$result$target,
     config = config,

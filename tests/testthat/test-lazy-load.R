@@ -39,8 +39,9 @@ test_with_dir("lazy loading is actually lazy", {
   eagerly_loaded <- "combined"
   config <- dbug()
   unload_these <- c(lazily_loaded, eagerly_loaded)
-  unload_these <- intersect(unload_these, ls(envir = config$envir))
-  remove(list = unload_these, envir = config$envir)
+  unload_these <- intersect(unload_these, ls(envir = config$eval))
+  remove(list = unload_these, envir = config$eval)
+  eval <- config$eval
   config <- drake_config(
     lazy_load = TRUE,
     plan = config$plan,
@@ -49,9 +50,10 @@ test_with_dir("lazy loading is actually lazy", {
     verbose = FALSE,
     session_info = FALSE
   )
+  config$eval <- eval
   config$schedule <- config$graph
   run_loop(config)
-  loaded <- ls(envir = config$envir)
+  loaded <- ls(envir = config$eval)
   expect_true(all(lazily_loaded %in% loaded))
   expect_false(any(eagerly_loaded %in% loaded))
 })

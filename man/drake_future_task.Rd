@@ -14,7 +14,7 @@ drake_future_task(target, meta, config, protect)
 \item{config}{\code{\link[=drake_config]{drake_config()}} list}
 
 \item{protect}{Names of targets that still need their
-dependencies available in \code{config$envir}.}
+dependencies available in memory.}
 }
 \value{
 Either the target value or a list of build results.
