@@ -282,37 +282,26 @@ which_unnamed <- function(x) {
 }
 
 # weak_tibble - use tibble() if available but fall back to 
-# data.frame() if necessary. Note that testing code may supply
-# a `.force_df` argument that must be removed
-weak_tibble <- function(...) {
-  args <- eval(substitute(alist(...)))
-  .force_df <- eval.parent(args$.force_df, 1)
-  if (is.null(.force_df)) {
-    .force_df <- FALSE
+# data.frame() if necessary
+weak_tibble <- function(..., .force_df = FALSE) {
+  no_tibble <- !suppressWarnings(require("tibble", quietly = TRUE))
+  
+  if (.force_df || no_tibble) {
+    data.frame(..., stringsAsFactors = FALSE)
   } else {
-    args$.force_df <- NULL
-  }
-
-  if (!.force_df & require(tibble, quietly = TRUE)) {
-    do.call(tibble::tibble, args)
-  } else {
-    do.call(data.frame, c(args, stringsAsFactors = FALSE))
+    tibble::tibble(...)
   }
 }
 
 # weak_as_tibble - use tibble() if available but fall back to 
 # data.frame() if necessary. Note that testing code may supply
 # a `.force_df` argument that must be removed
-weak_as_tibble <- function(...) {
-  args <- eval(substitute(alist(...)))
-  .force_df <- eval.parent(args$.force_df, 1)
-  if (is.null(.force_df)) {
-    .force_df <- FALSE
-  }
-
-  if (!.force_df & require(tibble, quietly = TRUE)) {
-    tibble::as_tibble(...)
-  } else {
+weak_as_tibble <- function(..., .force_df = FALSE) {
+  no_tibble <- !suppressWarnings(require("tibble", quietly = TRUE))
+  
+  if (.force_df || no_tibble) {
     as.data.frame(..., stringsAsFactors = FALSE)
+  } else {
+    tibble::as_tibble(...)
   }
 }
