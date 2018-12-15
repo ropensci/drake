@@ -5,12 +5,12 @@
   ],
   "@type": "SoftwareSourceCode",
   "identifier": "drake",
-  "description": "A general-purpose computational engine for data analysis,\n  drake rebuilds intermediate data objects when their dependencies change,\n  and it skips work when the results are already up to date.\n  Not every execution starts from scratch,\n  and completed projects have tangible evidence\n  that they are reproducible.\n  Extensive documentation, from beginner-friendly tutorials\n  to practical examples and more, is available at the reference website\n  <https://ropensci.github.io/drake/> and the online manual\n  <https://ropenscilabs.github.io/drake-manual/>.",
+  "description": "A general-purpose computational engine for data analysis,\n  drake rebuilds intermediate data objects when their dependencies change,\n  and it skips work when the results are already up to date.\n  Not every execution starts from scratch,\n  there is native support for parallel and distributed computing,\n  and completed projects have tangible evidence\n  that they are reproducible.\n  Extensive documentation, from beginner-friendly tutorials\n  to practical examples and more, is available at the reference website\n  <https://ropensci.github.io/drake/> and the online manual\n  <https://ropenscilabs.github.io/drake-manual/>.",
   "name": "drake: A Pipeline Toolkit for Reproducible Computation at Scale",
   "codeRepository": "https://github.com/ropensci/drake",
   "issueTracker": "https://github.com/ropensci/drake/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "6.1.0.9000",
+  "version": "6.2.1",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -314,6 +314,18 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "tibble",
+      "name": "tibble",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=tibble"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "tidyselect",
       "name": "tidyselect",
       "version": ">= 0.2.4",
@@ -486,25 +498,13 @@
     },
     {
       "@type": "SoftwareApplication",
-      "identifier": "tibble",
-      "name": "tibble",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=tibble"
-    },
-    {
-      "@type": "SoftwareApplication",
       "identifier": "utils",
       "name": "utils"
     }
   ],
   "releaseNotes": "https://github.com/bpbond/drake/blob/master/NEWS.md",
   "readme": "https://github.com/bpbond/drake/blob/master/README.md",
-  "fileSize": "400.15KB",
+  "fileSize": "401.164KB",
   "contIntegration": [
     "https://ci.appveyor.com/project/ropensci/drake",
     "https://travis-ci.org/ropensci/drake",
