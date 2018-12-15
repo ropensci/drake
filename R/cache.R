@@ -129,7 +129,7 @@ this_cache <- function(
   deprecate_force(force)
   deprecate_fetch_cache(fetch_cache)
   usual_path_missing <- is.null(path) || !file.exists(path)
-  if (usual_path_missing & is.null(fetch_cache)) {
+  if (usual_path_missing) {
     return(NULL)
   }
   if (!is.null(path)) {
