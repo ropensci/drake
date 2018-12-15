@@ -105,7 +105,7 @@ test_with_dir("edge cases for plans", {
   # empty plan
   expect_equal(
     drake_plan(),
-    tibble::tibble(
+    weak_tibble(
       target = character(0),
       command = character(0)
     )
@@ -113,7 +113,7 @@ test_with_dir("edge cases for plans", {
   # no target names
   expect_equal(
     drake_plan(a, b),
-    tibble::tibble(
+    weak_tibble(
       target = c("drake_target_1", "drake_target_2"),
       command = c("a", "b")
     )
@@ -125,7 +125,7 @@ test_with_dir("edge cases for plans", {
   # incomplete target names
   expect_equal(
     drake_plan(a = 1, b),
-    tibble::tibble(
+    weak_tibble(
       target = c("a", "drake_target_1"),
       command = c("1", "b")
     )
@@ -136,7 +136,7 @@ test_with_dir("edge cases for plans", {
       a = file_out("file1", "file2"),
       strings_in_dots = "literals"
     ),
-    tibble::tibble(
+    weak_tibble(
       target = "a",
       command = "file_out(\"file1\", \"file2\")"
     )
@@ -146,7 +146,7 @@ test_with_dir("edge cases for plans", {
       a = file_out(c("file1", "file2")),
       strings_in_dots = "literals"
     ),
-    tibble::tibble(
+    weak_tibble(
       target = "a",
       command = "file_out(c(\"file1\", \"file2\"))"
     )
@@ -163,7 +163,7 @@ test_with_dir("plan set 2", {
       strings_in_dots = "literals",
       tidy_evaluation = tidy_evaluation
     )
-    y <- tibble(
+    y <- weak_tibble(
       target = letters[1:4],
       command = c("c", "\"c\"",
                   "d", "readRDS('e')"))
@@ -180,7 +180,7 @@ test_with_dir("plan set 3", {
     list = c(c = "d", d = "readRDS('e')"),
     strings_in_dots = "literals", file_targets = TRUE,
     tidy_evaluation = tidy_evaluation))
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = drake::drake_quotes(letters[1:4], single = TRUE),
     command = c("c", "\"c\"", "d", "readRDS('e')"))
   expect_equal(x, y)
@@ -200,7 +200,7 @@ test_with_dir("drake_plan() trims outer whitespace in target names", {
 test_with_dir(
   "make() and check_plan() trim outer whitespace in target names", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  x <- tibble(target = c("a\n", "  b", "c ", "\t  d   "),
+  x <- weak_tibble(target = c("a\n", "  b", "c ", "\t  d   "),
                   command = 1)
   expect_silent(make(x, verbose = FALSE, session_info = FALSE))
   expect_equal(sort(cached()), letters[1:4])
@@ -230,7 +230,7 @@ test_with_dir("make() plays nicely with tibbles", {
 
 test_with_dir("plans can have bad symbols", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  x <- tibble::tibble(
+  x <- weak_tibble(
     target = c("a'x'", "b'x'", "_a", "a^", "a*", "a-"),
     command = 1)
   y <- drake_config(x)
@@ -241,7 +241,7 @@ test_with_dir("issue 187 on Github (from Kendon Bell)", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   test <- drake_plan(test = run_it(wc__))
   out <- evaluate_plan(test, rules = list(wc__ = list(1:4, 5:8, 9:12)))
-  out2 <- tibble::tibble(
+  out2 <- weak_tibble(
     target = c("test_1.4", "test_5.8", "test_9.12"),
     command = c("run_it(1:4)", "run_it(5:8)", "run_it(9:12)")
   )
@@ -250,12 +250,12 @@ test_with_dir("issue 187 on Github (from Kendon Bell)", {
 
 test_with_dir("file names with weird characters do not get mangled", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  out <- tibble::tibble(
+  out <- weak_tibble(
     target = c("\"is:a:file\"", "not:a:file"),
     command = as.character(1:2)
   )
   out2 <- sanitize_plan(out)
-  out3 <- tibble::tibble(
+  out3 <- weak_tibble(
     target = c("\"is:a:file\"", "not.a.file"),
     command = as.character(1:2)
   )
@@ -401,7 +401,7 @@ test_with_dir("custom column interface", {
   tidyvar <- 2
   x <- target(
     stop(!!tidyvar), worker = !!tidyvar, cpu = 4, custom = stop(), c2 = 5)
-  y <- tibble::tibble(
+  y <- weak_tibble(
     command = "stop(2)",
     cpu = 4,
     worker = 2,
@@ -411,7 +411,7 @@ test_with_dir("custom column interface", {
   expect_equal(x, y)
   x <- drake_plan(x = target(
     stop(!!tidyvar), worker = !!tidyvar, cpu = 4, custom = stop(), c2 = 5))
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = "x",
     command = "stop(2)",
     cpu = 4,
@@ -434,7 +434,7 @@ test_with_dir("custom column interface", {
     z = rnorm(10),
     strings_in_dots = "literals"
   )
-  plan0 <- tibble::tibble(
+  plan0 <- weak_tibble(
     target = c("x", "y", "z"),
     command = c("1 + 2", "Sys.sleep(\"not a number\")", "rnorm(10)"),
     trigger = c("trigger(condition = TRUE)", NA, NA),
@@ -458,7 +458,7 @@ test_with_dir("bind_plans()", {
     strings_in_dots = "literals"
   )
   plan3 <- bind_plans(plan1, plan2)
-  plan4 <- tibble::tibble(
+  plan4 <- weak_tibble(
     target = c("x", "y", "z"),
     command = c("1", "2", "download_data()"),
     trigger = c(NA, NA, "trigger(condition = TRUE)")
@@ -470,7 +470,7 @@ test_with_dir("spaces in target names are replaced only when appropriate", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   pl <- drake_plan(a = x__, file_out("x__"))
   pl <- evaluate_plan(pl, wildcard = "x__", values = c("b  \n  x y", "a x"))
-  pl2 <- tibble::tibble(
+  pl2 <- weak_tibble(
     target = c(
       "a_b.....x.y", "a_a.x",
       "drake_target_1_b.....x.y", "drake_target_1_a.x"),
@@ -524,7 +524,7 @@ test_with_dir("'columns' argument to evaluate_plan()", {
     z = target("any", cpu = "any"),
     strings_in_dots = "literals"
   )
-  out <- tibble::tibble(
+  out <- weak_tibble(
     target = c("x_1", "x_2", "y_1", "y_2", "z"),
     command = c(1, 2, rep("any", 3)),
     cpu = c("any", "any", 1, 2, "any")
@@ -535,7 +535,7 @@ test_with_dir("'columns' argument to evaluate_plan()", {
     ),
     out
   )
-  out <- tibble::tibble(
+  out <- weak_tibble(
     target = c("x", "y_1", "y_2", "z"),
     command = c("always", rep("any", 3)),
     cpu = c("any", 1, 2, "any")
@@ -546,7 +546,7 @@ test_with_dir("'columns' argument to evaluate_plan()", {
     ),
     out
   )
-  out <- tibble::tibble(
+  out <- weak_tibble(
     target = c("x", "y", "z"),
     command = c(1, rep("any", 2)),
     cpu = c("any", 2, "any")
@@ -559,7 +559,7 @@ test_with_dir("'columns' argument to evaluate_plan()", {
     out
   )
   rules <- list(always = 1:2, any = 3:4)
-  out <- tibble::tibble(
+  out <- weak_tibble(
     target = c(
       "x_1_3", "x_1_4", "x_2_3", "x_2_4", "y_1_3",
       "y_1_4", "y_2_3", "y_2_4", "z_3", "z_4"

@@ -17,7 +17,7 @@ test_with_dir("map_plan()", {
   expect_equal(plan1$command, plan2$command)
   expect_equal(plan2, plan3)
   expect_equal(plan3, plan4)
-  expect_equal(tibble::as_tibble(cbind(plan3, args)), plan5)
+  expect_equal(weak_as_tibble(cbind(plan3, args)), plan5)
   cache <- storr::storr_environment()
   make(plan2, session_info = FALSE, cache = cache)
   expect_equal(
@@ -53,7 +53,7 @@ test_with_dir("map_plan() with symbols", {
   covariates <- setdiff(colnames(mtcars), "mpg")
   args <- t(combn(covariates, 2))
   colnames(args) <- c("x1", "x2")
-  args <- tibble::as_tibble(args)
+  args <- weak_as_tibble(args)
   args$data <- rlang::syms(rep("mtcars", nrow(args)))
   plan <- map_plan(args, my_model_fit)
   cache <- storr::storr_environment()
@@ -70,7 +70,7 @@ test_with_dir("gather_plan()", {
   expect_equal(m1, df)
   x <- expand_plan(df, values = c("rep1", "rep2"))
   x6 <- gather_plan(x, append = FALSE)
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = "target",
     command = "list(data_rep1 = data_rep1, data_rep2 = data_rep2)"
   )
@@ -80,7 +80,7 @@ test_with_dir("gather_plan()", {
   x7 <- gather_plan(
     x, target = "my_summaries", gather = "rbind", append = FALSE
   )
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = "my_summaries",
     command = "rbind(data_rep1 = data_rep1, data_rep2 = data_rep2)"
   )
@@ -99,7 +99,7 @@ test_with_dir("reduce_plan()", {
     x_plan, target = "x_sum", pairwise = FALSE,
     begin = "", end = "", append = FALSE
   )
-  x0 <- tibble::tibble(
+  x0 <- weak_tibble(
     target = "x_sum",
     command = paste0(x_plan$target, collapse = " + ")
   )
@@ -129,7 +129,7 @@ test_with_dir("reduce_plan()", {
     x_plan, target = "x_sum", pairwise = FALSE,
     begin = "", end = ""
   )
-  x0 <- tibble::tibble(
+  x0 <- weak_tibble(
     target = "x_sum",
     command = paste0(x_plan$target, collapse = " + ")
   )
@@ -214,7 +214,7 @@ test_with_dir("gather_by()", {
     trace = TRUE
   )
   x <- gather_by(plan, append = TRUE)
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = c(plan$target, "target"),
     command = c(
       plan$command,
@@ -234,7 +234,7 @@ test_with_dir("gather_by()", {
     append = TRUE,
     sep = "."
   )
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = c("xyz.y", "xyz.NA"),
     command = c("c(y_a = y_a, y_b = y_b)", "c(x_1 = x_1, x_2 = x_2, z = z)"),
     m__ = as.character(NA),
@@ -244,7 +244,7 @@ test_with_dir("gather_by()", {
   )
   expect_equal(x, bind_plans(plan, y))
   x <- gather_by(plan, n___from, prefix = "xyz", gather = "c", append = TRUE)
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = c("xyz_y", "xyz_NA"),
     command = c("c(y_a = y_a, y_b = y_b)", "c(x_1 = x_1, x_2 = x_2, z = z)"),
     m__ = as.character(NA),
@@ -255,7 +255,7 @@ test_with_dir("gather_by()", {
   expected <- bind_plans(plan, y)
   expect_equal(x[order(x$target), ], expected[order(expected$target), ])
   x <- gather_by(plan, m__, n__, prefix = "xyz", gather = "c", append = TRUE)
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = c("xyz_1_NA", "xyz_2_NA", "xyz_NA_a", "xyz_NA_b", "xyz_NA_NA"),
     command = c(
       "c(x_1 = x_1)",
@@ -280,7 +280,7 @@ test_with_dir("gather_by()", {
     append = TRUE,
     filter = n___from == "x"
   )
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = c(plan$target, "xyz_x"),
     command = c(plan$command, "c(x_1 = x_1, x_2 = x_2)")
   )
@@ -298,7 +298,7 @@ test_with_dir("reduce_by()", {
     trace = TRUE
   )
   x <- reduce_by(plan, pairwise = FALSE, append = TRUE)
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = c(plan$target, "target"),
     command = c(plan$command, "x_1 + x_2 + x_3 + x_4 + y_a + y_b + z")
   )
@@ -314,7 +314,7 @@ test_with_dir("reduce_by()", {
     append = TRUE,
     sep = "."
   )
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = c("xyz.1.x", "xyz.2.x", "xyz.x", "xyz.1.NA", "xyz.NA"),
     command = c(
       "c(x_1, x_2)",
@@ -338,7 +338,7 @@ test_with_dir("reduce_by()", {
     end = ")",
     append = TRUE
   )
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = c("xyz_1_x", "xyz_2_x", "xyz_x", "xyz_1_NA", "xyz_NA"),
     command = c(
       "c(x_1, x_2)", "c(x_3, x_4)", "c(xyz_1, xyz_2)",
@@ -355,7 +355,7 @@ test_with_dir("reduce_by()", {
     plan, m___from, prefix = "xyz", op = ", ", begin = "c(", end = ")",
     pairwise = FALSE, append = TRUE
   )
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = c("xyz_x", "xyz_NA"),
     command = c("c(c(c(x_1, x_2), x_3), x_4)", "c(c(y_a, y_b), z)"),
     m__ = as.character(NA),
@@ -366,7 +366,7 @@ test_with_dir("reduce_by()", {
   expected <- bind_plans(plan, y)
   expect_equal(x[order(x$target), ], expected[order(expected$target), ])
   x <- reduce_by(plan, m___from, n___from, append = TRUE)
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = c(
       "target_1_x_NA",
       "target_2_x_NA",
@@ -387,7 +387,7 @@ test_with_dir("reduce_by()", {
   expected <- bind_plans(plan, y)
   expect_equal(x[order(x$target), ], expected[order(expected$target), ])
   x <- reduce_by(plan, m___from, n___from, pairwise = FALSE, append = TRUE)
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = c(
       "target_x_NA",
       "target_NA_y",
@@ -414,7 +414,7 @@ test_with_dir("reduce_by()", {
     pairwise = FALSE,
     filter = from == "y"
   )
-  y <- tibble::tibble(
+  y <- weak_tibble(
     target = c(plan$target, "xyz_y"),
     command = c(plan$command, "y_a + y_b")
   )
