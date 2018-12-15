@@ -293,9 +293,8 @@ weak_tibble <- function(..., .force_df = FALSE) {
   }
 }
 
-# weak_as_tibble - use tibble() if available but fall back to 
-# data.frame() if necessary. Note that testing code may supply
-# a `.force_df` argument that must be removed
+# weak_as_tibble - use as_tibble() if available but fall back to 
+# as.data.frame() if necessary
 weak_as_tibble <- function(..., .force_df = FALSE) {
   no_tibble <- !suppressWarnings(require("tibble", quietly = TRUE))
   
