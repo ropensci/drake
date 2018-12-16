@@ -53,14 +53,26 @@ with_handling <- function(target, meta, config) {
 # https://github.com/r-lib/evaluate/blob/b43d54f1ea2fe4296f53316754a28246903cd703/R/traceback.r#L20-L47 # nolint
 # Copyright Hadley Wickham and Yihui Xie, 2008 - 2018. MIT license.
 with_call_stack <- function(target, config) {
+  frame <- sys.nframe()
   capture_calls <- function(e) {
     e <- mention_pure_functions(e)
     e$calls <- head(sys.calls()[-seq_len(frame + 7)], -2)
     signalCondition(e)
   }
   expr <- config$layout[[target]]$command_build
+  # Need to make sure the environment is locked the whole time.
+  # Better a bottleneck than a race condition.
+  if (config$lock_envir) {
+    i <- 1
+    # Lock the environment only while running the command.
+    while (environmentIsLocked(config$envir)) {
+      Sys.sleep(config$sleep(max(0L, i))) # nocov
+      i <- i + 1 # nocov
+    }
+    lock_environment(config$envir)
+    on.exit(unlock_environment(config$envir))
+  }
   tidy_expr <- eval(expr = expr, envir = config$eval) # tidy eval prep
-  frame <- sys.nframe()
   tryCatch(
     withCallingHandlers(
       eval(expr = tidy_expr, envir <- config$eval), # pure eval

@@ -33,7 +33,7 @@ run_future <- function(config) {
         )
       }
     }
-    Sys.sleep(config$sleep(i))
+    Sys.sleep(config$sleep(max(0L, i)))
     i <- i + 1
   }
 }
@@ -50,9 +50,6 @@ run_future <- function(config) {
 #' @param protect Names of targets that still need their
 #' dependencies available in memory.
 drake_future_task <- function(target, meta, config, protect) {
-  if (config$lock_envir) {
-    lock_environment(config$envir)
-  }
   if (identical(config$caching, "worker")) {
     manage_memory(targets = target, config = config, downstream = protect)
   }

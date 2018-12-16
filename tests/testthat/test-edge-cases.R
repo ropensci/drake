@@ -242,19 +242,36 @@ test_with_dir("Try to modify a locked environment", {
 })
 
 test_with_dir("lock_envir works", {
-  e <- environment()
-  plan <- drake_plan(x = assign("a", 1, envir = e))
+  scenario <- get_testing_scenario()
+  e <- eval(parse(text = scenario$envir))
+  jobs <- scenario$jobs
+  parallelism <- scenario$parallelism
+  caching <- scenario$caching
+  plan <- drake_plan(
+    x = assign("a", 1, envir = parent.env(drake_envir())),
+    strings_in_dots = "literals"
+  )
   expect_error(
     make(
       plan,
+      envir = e,
+      jobs = jobs,
+      parallelism = parallelism,
+      caching = caching,
       lock_envir = TRUE,
       session_info = FALSE
     ),
     regexp = "verify that all your commands and functions are pure"
   )
+  e$a <- 123
+  e$plan$four <- "five"
   expect_false("x" %in% cached())
   make(
     plan,
+    envir = e,
+    jobs = jobs,
+    parallelism = parallelism,
+    caching = caching,
     lock_envir = FALSE,
     session_info = FALSE
   )
