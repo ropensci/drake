@@ -275,11 +275,11 @@ unwrap_function <- function(funct) {
 
 lock_environment <- function(envir) {
   lockEnvironment(envir, bindings = FALSE)
-  lapply(
-    X = ls(envir, all.names = FALSE),
-    FUN = lockBinding,
-    env = envir
-  )
+  lock_these <- ls(envir, all.names = FALSE)
+  skip_these <- ".Random.seed"
+  lock_these <- setdiff(lock_these, skip_these)
+  lapply(X = lock_these, FUN = lockBinding, env = envir)
+  invisible()
 }
 
 unlock_environment <- function(envir) {

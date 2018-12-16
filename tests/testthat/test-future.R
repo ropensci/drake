@@ -12,16 +12,25 @@ test_with_dir("future package functionality", {
   backends <- c("future_lapply", rep("future", 2), "future_lapply_staged")
   caching <- c(rep("worker", 2), rep("master", 2))
   for (i in 1:4) {
+    if (backends[i] == "future_lapply_staged") {
+      wrap <- suppressWarnings
+    } else {
+      wrap <- function(code){
+        force(code)
+      }
+    }
     clean(destroy = TRUE)
-    config <- make(
-      e$my_plan,
-      envir = e,
-      parallelism = backends[i],
-      caching = caching[i],
-      jobs = 1,
-      verbose = FALSE,
-      session_info = FALSE,
-      lock_envir = TRUE
+    config <- wrap(
+      make(
+        e$my_plan,
+        envir = e,
+        parallelism = backends[i],
+        caching = caching[i],
+        jobs = 1,
+        verbose = FALSE,
+        session_info = FALSE,
+        lock_envir = TRUE
+      )
     )
     expect_equal(
       outdated(config),
@@ -31,15 +40,24 @@ test_with_dir("future package functionality", {
 
   # Stuff is already up to date.
   for (i in 1:4) {
-    config <- make(
-      e$my_plan,
-      envir = e,
-      parallelism = backends[i],
-      caching = caching[i],
-      jobs = 1,
-      verbose = FALSE,
-      session_info = FALSE,
-      lock_envir = TRUE
+    if (backends[i] == "future_lapply_staged") {
+      wrap <- suppressWarnings
+    } else {
+      wrap <- function(code){
+        force(code)
+      }
+    }
+    wrap(
+      config <- make(
+        e$my_plan,
+        envir = e,
+        parallelism = backends[i],
+        caching = caching[i],
+        jobs = 1,
+        verbose = FALSE,
+        session_info = FALSE,
+        lock_envir = TRUE
+      )
     )
     expect_equal(justbuilt(config), character(0))
   }
