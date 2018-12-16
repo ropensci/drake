@@ -120,22 +120,24 @@ but you can see what all the colors mean with
 test_with_dir("Quarantine side effects.", {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 config <- drake_config(my_plan)
-# Plot the network graph representation of the workflow.
-sankey_drake_graph(config, width = '100\%') # The width is passed to visNetwork
-# Show the legend separately.
-visNetwork::visNetwork(nodes = drake::legend_nodes())
-make(my_plan) # Run the project, build the targets.
-sankey_drake_graph(config) # The black nodes from before are now green.
-# Plot a subgraph of the workflow.
-sankey_drake_graph(config, from = c("small", "reg2"))
-# Optionally visualize clusters.
-config$plan$large_data <- grepl("large", config$plan$target)
-sankey_drake_graph(
-  config, group = "large_data", clusters = c(TRUE, FALSE))
-# You can even use clusters given to you for free in the `graph$nodes`
-# data frame of `drake_graph_info()`.
-sankey_drake_graph(
-  config, group = "status", clusters = "imported")
+if (requireNamespace("networkD3", quietly = TRUE)) {
+  # Plot the network graph representation of the workflow.
+  sankey_drake_graph(config, width = '100\%') # The width is passed to visNetwork
+  # Show the legend separately.
+  visNetwork::visNetwork(nodes = drake::legend_nodes())
+  make(my_plan) # Run the project, build the targets.
+  sankey_drake_graph(config) # The black nodes from before are now green.
+  # Plot a subgraph of the workflow.
+  sankey_drake_graph(config, from = c("small", "reg2"))
+  # Optionally visualize clusters.
+  config$plan$large_data <- grepl("large", config$plan$target)
+  sankey_drake_graph(
+    config, group = "large_data", clusters = c(TRUE, FALSE))
+  # You can even use clusters given to you for free in the `graph$nodes`
+  # data frame of `drake_graph_info()`.
+  sankey_drake_graph(
+    config, group = "status", clusters = "imported")
+}
 })
 }
 }

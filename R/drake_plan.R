@@ -162,7 +162,7 @@ drake_plan <- function(
   commands <- c(commands_dots, list)
   if (!length(commands)) {
     return(
-      tibble::tibble(
+      weak_tibble(
         target = character(0),
         command = character(0)
       )
@@ -171,7 +171,7 @@ drake_plan <- function(
   commands <- complete_target_names(commands)
   targets <- names(commands)
   commands <- as.character(commands)
-  plan <- tibble::tibble(
+  plan <- weak_tibble(
     target = targets,
     command = commands
   )
@@ -257,7 +257,7 @@ bind_plans <- function(...) {
 flatten_plan_list <- function(args, plan_env){
   if (!is.null(dim(args))) {
     index <- length(plan_env$plans) + 1
-    plan_env$plans[[index]] <- tibble::as_tibble(args)
+    plan_env$plans[[index]] <- weak_as_tibble(args)
   } else {
     lapply(args, flatten_plan_list, plan_env = plan_env)
   }
@@ -593,5 +593,5 @@ target <- function(
       }
     }
   )
-  tibble::as_tibble(out)
+  weak_as_tibble(out)
 }
