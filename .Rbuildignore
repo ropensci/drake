@@ -33,6 +33,8 @@ vignettes/.*\.md
 vignettes/.*\.log
 vignettes/.*_files
 ^.*\.css$
+^.*\.gcda$
+^.*\.gcno$
 ^.*\.js$
 ^.*\.log$
 ^.*\.out$
