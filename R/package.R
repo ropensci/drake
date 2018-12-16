@@ -37,6 +37,7 @@
 #' })
 #' }
 #' @references <https://github.com/ropensci/drake>
+#' @useDynLib drake
 #' @importFrom codetools findGlobals
 #' @importFrom digest digest
 #' @importFrom igraph adjacent_vertices components delete_vertices
@@ -47,7 +48,6 @@
 #' @importFrom pkgconfig get_config
 #' @importFrom rlang enexpr enexprs enquo eval_tidy expr exprs
 #' @importFrom storr storr_environment storr_rds
-#' @importFrom tibble as_tibble tibble
 #' @importFrom utils capture.output compareVersion head packageVersion
 #'   read.csv sessionInfo stack type.convert unzip write.table
 NULL

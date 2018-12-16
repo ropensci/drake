@@ -74,7 +74,6 @@ Imports:
   pkgconfig,
   rlang (>= 0.2.0),
   storr (>= 1.1.0),
-  tibble,
   utils
 Suggests:
   abind,
@@ -97,6 +96,7 @@ Suggests:
   prettycode,
   stats,
   testthat,
+  tibble,
   tidyselect (>= 0.2.4),
   txtq,
   rmarkdown,

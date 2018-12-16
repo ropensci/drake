@@ -106,7 +106,9 @@ test_with_dir("Quarantine side effects.", {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 config <- drake_config(my_plan)
 # Plot the network graph representation of the workflow.
-drake_ggraph(config) # Save to a file with `ggplot2::ggsave()`.
+if (requireNamespace("ggraph", quietly = TRUE)) {
+  drake_ggraph(config) # Save to a file with `ggplot2::ggsave()`.
+}
 })
 }
 }

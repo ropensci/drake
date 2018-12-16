@@ -240,6 +240,9 @@ global_imports <- function(config) {
 #' @export
 #' @inheritParams make_with_config
 make_session <- function(config) {
+  # Wait until drake 7.0.0 to uncomment
+  # lock_environment(config$envir) # nolint
+  # on.exit(unlock_environment(config$envir)) # nolint
   do_prework(config = config, verbose_packages = config$verbose)
   check_drake_config(config = config)
   store_drake_config(config = config)
@@ -382,8 +385,8 @@ make_imports_targets <- function(config) {
 }
 
 conclude_session <- function(config) {
-  unmark_envir(config$envir)
-  suppressWarnings(remove(list = config$plan$target, envir = config$envir))
+  unmark_envir(config$eval)
+  remove(list = ls(config$eval, all.names = TRUE), envir = config$eval)
 }
 
 mark_envir <- function(envir) {

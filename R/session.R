@@ -48,7 +48,7 @@ drake_set_session_info <- function(
 
 initialize_session <- function(config) {
   init_common_values(config$cache)
-  mark_envir(config$envir)
+  mark_envir(config$eval)
   if (config$log_progress) {
     clear_tmp_namespace(
       cache = config$cache,

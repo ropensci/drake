@@ -18,22 +18,24 @@
 #' test_with_dir("Quarantine side effects.", {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' config <- drake_config(my_plan)
-#' # Plot the network graph representation of the workflow.
-#' sankey_drake_graph(config, width = '100%') # The width is passed to visNetwork
-#' # Show the legend separately.
-#' visNetwork::visNetwork(nodes = drake::legend_nodes())
-#' make(my_plan) # Run the project, build the targets.
-#' sankey_drake_graph(config) # The black nodes from before are now green.
-#' # Plot a subgraph of the workflow.
-#' sankey_drake_graph(config, from = c("small", "reg2"))
-#' # Optionally visualize clusters.
-#' config$plan$large_data <- grepl("large", config$plan$target)
-#' sankey_drake_graph(
-#'   config, group = "large_data", clusters = c(TRUE, FALSE))
-#' # You can even use clusters given to you for free in the `graph$nodes`
-#' # data frame of `drake_graph_info()`.
-#' sankey_drake_graph(
-#'   config, group = "status", clusters = "imported")
+#' if (requireNamespace("networkD3", quietly = TRUE)) {
+#'   # Plot the network graph representation of the workflow.
+#'   sankey_drake_graph(config, width = '100%') # The width is passed to visNetwork
+#'   # Show the legend separately.
+#'   visNetwork::visNetwork(nodes = drake::legend_nodes())
+#'   make(my_plan) # Run the project, build the targets.
+#'   sankey_drake_graph(config) # The black nodes from before are now green.
+#'   # Plot a subgraph of the workflow.
+#'   sankey_drake_graph(config, from = c("small", "reg2"))
+#'   # Optionally visualize clusters.
+#'   config$plan$large_data <- grepl("large", config$plan$target)
+#'   sankey_drake_graph(
+#'     config, group = "large_data", clusters = c(TRUE, FALSE))
+#'   # You can even use clusters given to you for free in the `graph$nodes`
+#'   # data frame of `drake_graph_info()`.
+#'   sankey_drake_graph(
+#'     config, group = "status", clusters = "imported")
+#' }
 #' })
 #' }
 sankey_drake_graph <- function(
@@ -121,28 +123,30 @@ sankey_drake_graph <- function(
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' # Instead of jumpting right to sankey_drake_graph(), get the data frames
-#' # of nodes, edges, and legend nodes.
-#' config <- drake_config(my_plan) # Internal configuration list
-#' sankey_drake_graph(config) # Jump straight to the interactive graph.
-#' # Show the legend separately.
-#' visNetwork::visNetwork(nodes = drake::legend_nodes())
-#' # Get the node and edge info that sankey_drake_graph() just plotted:
-#' graph <- drake_graph_info(config)
-#' # You can pass the data frames right to render_sankey_drake_graph()
-#' # (as in sankey_drake_graph()) or you can create
-#' # your own custom visNewtork graph.
-#' render_sankey_drake_graph(graph, width = '100%') # Width is passed to visNetwork.
-#' # Optionally visualize clusters.
-#' config$plan$large_data <- grepl("large", config$plan$target)
-#' graph <- drake_graph_info(
+#' if (requireNamespace("networkD3", quietly = TRUE)) {
+#'   # Instead of jumpting right to sankey_drake_graph(), get the data frames
+#'   # of nodes, edges, and legend nodes.
+#'   config <- drake_config(my_plan) # Internal configuration list
+#'   sankey_drake_graph(config) # Jump straight to the interactive graph.
+#'   # Show the legend separately.
+#'   visNetwork::visNetwork(nodes = drake::legend_nodes())
+#'   # Get the node and edge info that sankey_drake_graph() just plotted:
+#'   graph <- drake_graph_info(config)
+#'   # You can pass the data frames right to render_sankey_drake_graph()
+#'   # (as in sankey_drake_graph()) or you can create
+#'   # your own custom visNewtork graph.
+#'   render_sankey_drake_graph(graph, width = '100%') # Width is passed to visNetwork.
+#'   # Optionally visualize clusters.
+#'   config$plan$large_data <- grepl("large", config$plan$target)
+#'   graph <- drake_graph_info(
 #'   config, group = "large_data", clusters = c(TRUE, FALSE))
-#' render_sankey_drake_graph(graph)
-#' # You can even use clusters given to you for free in the `graph$nodes`
-#' # data frame.
-#' graph <- drake_graph_info(
-#'   config, group = "status", clusters = "imported")
-#' render_sankey_drake_graph(graph)
+#'   render_sankey_drake_graph(graph)
+#'   # You can even use clusters given to you for free in the `graph$nodes`
+#'   # data frame.
+#'   graph <- drake_graph_info(
+#'     config, group = "status", clusters = "imported")
+#'   render_sankey_drake_graph(graph)
+#' }
 #' })
 #' }
 render_sankey_drake_graph <- function(

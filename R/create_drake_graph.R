@@ -49,16 +49,16 @@ node_to_edges <- function(node) {
   )
   out <- NULL
   if (length(inputs)) {
-    out <- tibble::tibble(from = inputs, to = node$target, collapse = FALSE)
+    out <- weak_tibble(from = inputs, to = node$target, collapse = FALSE)
   }
   if (length(file_out)) {
     out <- rbind(
       out,
-      tibble::tibble(from = node$target, to = file_out, collapse = TRUE)
+      weak_tibble(from = node$target, to = file_out, collapse = TRUE)
     )
   }
   if (is.null(out)) {
-    out <- tibble::tibble(
+    out <- weak_tibble(
       from = node$target,
       to = node$target,
       collapse = FALSE

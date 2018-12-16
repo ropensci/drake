@@ -34,7 +34,7 @@
 #' }
 drake_debug <- function(
   target = NULL,
-  config = drake::read_drake_config(envir = envir, jobs = jobs),
+  config = NULL,
   character_only = FALSE,
   envir = parent.frame(),
   jobs = 1,
@@ -43,6 +43,14 @@ drake_debug <- function(
 ) {
   # Tested in tests/testthat/test-always-skipped.R.
   # nocov start
+  force(envir)
+  if (is.null(config)) {
+    config <- drake::read_drake_config(envir = envir, jobs = jobs)
+    config$envir <- envir
+  }
+  # Wait until drake 7.0.0 to uncomment
+  # lock_environment(config$envir) # nolint
+  # on.exit(unlock_environment(config$envir)) # nolint
   if (!character_only) {
     target <- as.character(substitute(target))
   }
@@ -55,7 +63,7 @@ drake_debug <- function(
   loadd(
     list = target,
     deps = TRUE,
-    envir = envir,
+    envir = config$eval,
     cache = config$cache,
     graph = config$graph,
     jobs = jobs,

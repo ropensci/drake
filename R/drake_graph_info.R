@@ -211,8 +211,8 @@ drake_graph_info <- function(
     config <- cluster_nodes(config)
   }
   list(
-    nodes = tibble::as_tibble(config$nodes),
-    edges = tibble::as_tibble(config$edges),
+    nodes = weak_as_tibble(config$nodes),
+    edges = weak_as_tibble(config$edges),
     legend_nodes = filtered_legend_nodes(
       all_nodes = config$nodes,
       full_legend = full_legend,

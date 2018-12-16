@@ -1,4 +1,4 @@
-drake_context("envir")
+drake_context("memory")
 
 test_with_dir("manage_memory() warns if loading missing deps", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
@@ -30,7 +30,7 @@ test_with_dir("manage_memory in full build", {
     heuristics,
     datasets = datasets,
     analyses = analyses,
-    gather = c("rbind", "rbind")
+    gather = c("c", "c")
   )
   output <- drake_plan(
     final1 = mean(s) + mean(t),
@@ -56,17 +56,17 @@ test_with_dir("manage_memory in full build", {
 
   # Check that the right targets are loaded and the right targets
   # are discarded
-  remove(list = ls(config$envir), envir = config$envir)
-  expect_equal(ls(config$envir), character(0))
+  remove(list = ls(config$eval), envir = config$eval)
+  expect_equal(ls(config$eval), character(0))
   manage_memory(datasets$target, config)
-  expect_equal(ls(config$envir), character(0))
+  expect_equal(ls(config$eval), character(0))
   manage_memory(analyses$target, config)
-  expect_equal(ls(config$envir), c("x", "y", "z"))
+  expect_equal(ls(config$eval), c("x", "y", "z"))
   manage_memory("waitforme", config)
 
   # keep y around for waitformetoo
   expect_equal(
-    ls(config$envir),
+    ls(config$eval),
     c("a_x", "c_y", "s_b_x", "t_a_z", "y")
   )
 })

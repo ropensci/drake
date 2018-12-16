@@ -54,16 +54,16 @@ with_handling <- function(target, meta, config) {
 # Copyright Hadley Wickham and Yihui Xie, 2008 - 2018. MIT license.
 with_call_stack <- function(target, config) {
   capture_calls <- function(e) {
-    e["call"] <- e["call"]
+    e <- mention_pure_functions(e)
     e$calls <- head(sys.calls()[-seq_len(frame + 7)], -2)
     signalCondition(e)
   }
   expr <- config$layout[[target]]$command_build
-  tidy_expr <- eval(expr = expr, envir = config$envir) # tidy eval prep
+  tidy_expr <- eval(expr = expr, envir = config$eval) # tidy eval prep
   frame <- sys.nframe()
   tryCatch(
     withCallingHandlers(
-      eval(expr = tidy_expr, envir <- config$envir), # pure eval
+      eval(expr = tidy_expr, envir <- config$eval), # pure eval
       error = capture_calls
     ),
     error = identity

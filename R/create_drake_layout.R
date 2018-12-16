@@ -116,7 +116,7 @@ cdl_analyze_commands <- function(config) {
     config$plan$trigger <- lapply(
       config$plan$trigger,
       parse_trigger,
-      envir = config$envir
+      envir = config$eval
     )
   }
   layout <- drake_pmap(.l = config$plan, .f = list, jobs = config$jobs)

@@ -27,10 +27,8 @@
 #' if (requireNamespace("styler", quietly = TRUE)) {
 #'   source <- drake_plan_source(plan)
 #'   print(source) # Install the prettycode package for syntax highlighting.
-#' }
-#' \dontrun{
-#' file <- tempfile() # Path to an R script to contain the drake_plan() call.
-#' writeLines(source, file) # Save the code to an R script.
+#'   file <- tempfile() # Path to an R script to contain the drake_plan() call.
+#'   writeLines(source, file) # Save the code to an R script.
 #' }
 drake_plan_source <- function(plan) {
   assert_pkg("styler")

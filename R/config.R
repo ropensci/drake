@@ -580,6 +580,7 @@ drake_config <- function(
     plan = plan,
     targets = targets,
     envir = envir,
+    eval = new.env(parent = envir),
     cache = cache,
     cache_path = cache_path,
     fetch_cache = fetch_cache,
@@ -653,14 +654,17 @@ add_packages_to_prework <- function(packages, prework) {
 #' # and for distributed computing backends like "future_lapply",
 #' # right before each target is built.
 #' do_prework(config = con, verbose_packages = TRUE)
-#' identical(x, 1) # Should be TRUE.
+#' # The `eval` element is the environment where the prework
+#' # and the commands in your workflow plan data frame are executed.
+#' identical(con$eval$x, 1) # Should be TRUE.
 #' })
 #' }
 do_prework <- function(config, verbose_packages) {
   wrapper <- ifelse(verbose_packages, invisible,
     base::suppressPackageStartupMessages)
-  for (code in config$prework) wrapper(eval(parse(text = code),
-    envir = config$envir))
+  for (code in config$prework) {
+    wrapper(eval(parse(text = code), envir = config$eval))
+  }
   invisible()
 }
 

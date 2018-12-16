@@ -51,3 +51,57 @@ test_with_dir("operators", {
   expect_true(is.numeric(Inf %||NA% "b"))
   expect_false(is.na(NA %||NA% "b"))
 })
+
+test_with_dir("unlock_environment()", {
+  expect_error(
+    unlock_environment(NULL),
+    regexp = "use of NULL environment is defunct"
+  )
+  expect_error(
+    unlock_environment("x"),
+    regexp = "not an environment"
+  )
+  e <- new.env(parent = emptyenv())
+  e$y <- 1
+  expect_false(environmentIsLocked(e))
+  assign(x = ".x", value = "x", envir = e)
+  expect_equal(get(x = ".x", envir = e), "x")
+  lock_environment(e)
+  msg1 <- "cannot change value of locked binding"
+  msg2 <- "cannot add bindings to a locked environment"
+  expect_true(environmentIsLocked(e))
+  assign(x = ".x", value = "y", envir = e)
+  expect_equal(get(x = ".x", envir = e), "y")
+  expect_error(assign(x = "y", value = "y", envir = e), regexp = msg1)
+  expect_error(assign(x = "a", value = "x", envir = e), regexp = msg2)
+  expect_error(assign(x = "b", value = "y", envir = e), regexp = msg2)
+  unlock_environment(e)
+  assign(x = ".x", value = "1", envir = e)
+  assign(x = "y", value = "2", envir = e)
+  assign(x = "a", value = "x", envir = e)
+  expect_equal(get(x = ".x", envir = e), "1")
+  expect_equal(get(x = "y", envir = e), "2")
+  expect_equal(get(x = "a", envir = e), "x")
+  expect_false(environmentIsLocked(e))
+  unlock_environment(e)
+  assign(x = "b", value = "y", envir = e)
+  expect_equal(get(x = "b", envir = e), "y")
+  expect_false(environmentIsLocked(e))
+})
+
+test_with_dir("weak_tibble", {
+  skip_on_cran()
+
+  for (fdf in c(FALSE, TRUE)) {
+    out <- weak_tibble(.force_df = fdf)
+    expect_equivalent(out, data.frame())
+    expect_equivalent(weak_as_tibble(list(), .force_df = fdf), data.frame())
+  }
+
+  # No factors
+  out <- weak_tibble(a = 1:2, b = c("x", "y"), .force_df = TRUE)
+  exp <- data.frame(a = 1:2, b = c("x", "y"), stringsAsFactors = FALSE)
+  expect_equivalent(out, exp)
+  out <- weak_as_tibble(list(a = 1:2, b = c("x", "y")))
+  expect_equivalent(out, exp)
+})
