@@ -227,3 +227,16 @@ test_with_dir("file hash of a non-file", {
   expect_true(is.na(file_hash("asdf", list())))
   expect_true(is.na(rehash_file("asdf")))
 })
+
+test_with_dir("Try to modify a locked environment", {
+  e <- new.env()
+  lock_environment(e)
+  plan <- drake_plan(x = {
+    e$a <- 1
+    2
+  })
+  expect_error(
+    make(plan, session_info = FALSE, cache = storr::storr_environment()),
+    regexp = "verify that all your commands and functions are pure"
+  )
+})

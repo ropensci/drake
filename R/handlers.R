@@ -73,3 +73,24 @@ error_process <- function(e, id, config) {
 just_try <- function(code) {
   try(suppressWarnings(code), silent = TRUE)
 }
+
+mention_pure_functions <- function(e) {
+  msg1 <- "cannot change value of locked binding"
+  msg2 <- "cannot add bindings to a locked environment"
+  locked_envir <- grepl(msg1, e$message) || grepl(msg2, e$message)
+  if (locked_envir) {
+    e$message <- paste0(e$message, ". ", locked_envir_msg)
+  }
+  e
+}
+
+locked_envir_msg <- paste(
+  "One of your functions or drake plan commands may have tried",
+  "to modify an object in your environment/workspace/R session.",
+  "drake stops you from doing this sort of thing because it",
+  "invalidates upstream targets and undermines reproducibility.",
+  "In order to make sure you can trust your workflow,",
+  "please verify that all your commands and functions are pure:",
+  "they should only produce *new* output, and",
+  "they should never go back and modify old output or dependencies."
+)
