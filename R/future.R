@@ -50,8 +50,7 @@ run_future <- function(config) {
 #' @param protect Names of targets that still need their
 #' dependencies available in memory.
 drake_future_task <- function(target, meta, config, protect) {
-  # Wait until drake 7.0.0 to uncomment
-  # lock_environment(config$envir) # nolint
+  lock_environment(config$envir)
   if (identical(config$caching, "worker")) {
     manage_memory(targets = target, config = config, downstream = protect)
   }
