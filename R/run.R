@@ -62,8 +62,10 @@ with_call_stack <- function(target, config) {
   expr <- config$layout[[target]]$command_build
   # Need to make sure the environment is locked the whole time.
   # Better a bottleneck than a race condition.
+  i <- 1
   while (environmentIsLocked(config$envir)) {
-    Sys.sleep(config$sleep(max(0L, i)))
+    Sys.sleep(config$sleep(max(0L, i))) # nocov
+    i <- i + 1 # nocov
   }
   # Lock the environment only while running the command.
   if (config$lock_envir) {
