@@ -209,6 +209,9 @@ make <- function(
 #' })
 #' }
 make_with_config <- function(config = drake::read_drake_config()) {
+  if (config$lock_envir) {
+    on.exit(unlock_environment(config$envir))
+  }
   if (is.null(config$session)) {
     make_session(config = config)
   } else {
@@ -242,10 +245,6 @@ global_imports <- function(config) {
 #' @export
 #' @inheritParams make_with_config
 make_session <- function(config) {
-  if (config$lock_envir) {
-    lock_environment(config$envir)
-    on.exit(unlock_environment(config$envir))
-  }
   do_prework(config = config, verbose_packages = config$verbose)
   check_drake_config(config = config)
   store_drake_config(config = config)

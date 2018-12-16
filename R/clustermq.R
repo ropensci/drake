@@ -110,9 +110,6 @@ cmq_deps_list <- function(target, config) {
 #' @param deps named list of target dependencies
 #' @param config a [drake_config()] list
 cmq_build <- function(target, meta, deps, config) {
-  if (config$lock_envir) {
-    lock_environment(config$envir)
-  }
   if (identical(config$garbage_collection, TRUE)) {
     gc()
   }

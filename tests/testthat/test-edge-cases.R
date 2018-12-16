@@ -252,6 +252,8 @@ test_with_dir("lock_envir works", {
     ),
     regexp = "verify that all your commands and functions are pure"
   )
+  e$a <- 123
+  e$plan$four <- "five"
   expect_false("x" %in% cached())
   make(
     plan,
