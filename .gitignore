@@ -4,6 +4,8 @@ Thumbs.db
 *.bbl
 *.blg
 *.dcf
+*.gcda
+*.gcno
 *.log
 *.nav
 *.out
