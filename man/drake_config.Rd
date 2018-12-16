@@ -25,7 +25,8 @@ drake_config(plan = drake::read_drake_plan(), targets = NULL,
   ensure_workers = TRUE, garbage_collection = FALSE,
   template = list(), sleep = function(i) 0.01,
   hasty_build = drake::default_hasty_build,
-  memory_strategy = c("speed", "memory", "lookahead"), layout = NULL)
+  memory_strategy = c("speed", "memory", "lookahead"), layout = NULL,
+  lock_envir = FALSE)
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -438,6 +439,15 @@ of \code{\link[=drake_envir]{drake_envir()}}.}
 from a prior call to \code{drake_config()}. If your plan or environment
 have changed since the last \code{make()}, do not supply a \code{layout} argument.
 Otherwise, supplying one could save time.}
+
+\item{lock_envir}{logical, whether to lock \code{config$envir} during \code{make()}.
+If \code{TRUE}, \code{make()} quits in error whenever a command in your
+\code{drake} plan (or \code{prework}) tries to add, remove, or modify
+non-hidden variables in your environment/workspace/R session.
+This is extremely important for ensuring the purity of your functions
+and the reproducibility/credibility/trust you can place in your project.
+\code{lock_envir} will be set to a default of \code{TRUE} in \code{drake} version
+7.0.0 and higher.}
 }
 \value{
 The master internal configuration list of a project.

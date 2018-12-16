@@ -22,7 +22,8 @@ testrun <- function(config) {
       lazy_load = config$lazy_load,
       session_info = config$session_info,
       fetch_cache = config$fetch_cache,
-      caching = config$caching
+      caching = config$caching,
+      lock_envir = TRUE
     )
   )
 }

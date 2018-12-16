@@ -240,3 +240,23 @@ test_with_dir("Try to modify a locked environment", {
     regexp = "verify that all your commands and functions are pure"
   )
 })
+
+test_with_dir("lock_envir works", {
+  e <- environment()
+  plan <- drake_plan(x = assign("a", 1, envir = e))
+  expect_error(
+    make(
+      plan,
+      lock_envir = TRUE,
+      session_info = FALSE
+    ),
+    regexp = "verify that all your commands and functions are pure"
+  )
+  expect_false("x" %in% cached())
+  make(
+    plan,
+    lock_envir = FALSE,
+    session_info = FALSE
+  )
+  expect_true("x" %in% cached())
+})

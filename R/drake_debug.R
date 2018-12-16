@@ -48,8 +48,10 @@ drake_debug <- function(
     config <- drake::read_drake_config(envir = envir, jobs = jobs)
     config$envir <- envir
   }
-  lock_environment(config$envir)
-  on.exit(unlock_environment(config$envir))
+  if (config$lock_envir) {
+    lock_environment(config$envir)
+    on.exit(unlock_environment(config$envir))
+  }
   if (!character_only) {
     target <- as.character(substitute(target))
   }

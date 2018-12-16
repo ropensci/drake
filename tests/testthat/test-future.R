@@ -20,7 +20,8 @@ test_with_dir("future package functionality", {
       caching = caching[i],
       jobs = 1,
       verbose = FALSE,
-      session_info = FALSE
+      session_info = FALSE,
+      lock_envir = TRUE
     )
     expect_equal(
       outdated(config),
@@ -37,7 +38,8 @@ test_with_dir("future package functionality", {
       caching = caching[i],
       jobs = 1,
       verbose = FALSE,
-      session_info = FALSE
+      session_info = FALSE,
+      lock_envir = TRUE
     )
     expect_equal(justbuilt(config), character(0))
   }

@@ -422,6 +422,15 @@
 #'   have changed since the last `make()`, do not supply a `layout` argument.
 #'   Otherwise, supplying one could save time.
 #'
+#' @param lock_envir logical, whether to lock `config$envir` during `make()`.
+#'   If `TRUE`, `make()` quits in error whenever a command in your
+#'   `drake` plan (or `prework`) tries to add, remove, or modify
+#'   non-hidden variables in your environment/workspace/R session.
+#'   This is extremely important for ensuring the purity of your functions
+#'   and the reproducibility/credibility/trust you can place in your project.
+#'   `lock_envir` will be set to a default of `TRUE` in `drake` version
+#'   7.0.0 and higher.
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -484,7 +493,8 @@ drake_config <- function(
   sleep = function(i) 0.01,
   hasty_build = drake::default_hasty_build,
   memory_strategy = c("speed", "memory", "lookahead"),
-  layout = NULL
+  layout = NULL,
+  lock_envir = FALSE
 ) {
   force(envir)
   unlink(console_log_file)
@@ -623,7 +633,8 @@ drake_config <- function(
     garbage_collection = garbage_collection,
     template = template,
     sleep = sleep,
-    hasty_build = hasty_build
+    hasty_build = hasty_build,
+    lock_envir = lock_envir
   )
 }
 

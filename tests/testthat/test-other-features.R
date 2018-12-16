@@ -57,7 +57,12 @@ test_with_dir("drake_build works as expected", {
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
   pl <- drake_plan(a = 1, b = a)
-  con <- drake_config(plan = pl, session_info = FALSE, envir = e)
+  con <- drake_config(
+    plan = pl,
+    session_info = FALSE,
+    envir = e,
+    lock_envir = TRUE
+  )
 
   # can run before any make()
   o <- drake_build(

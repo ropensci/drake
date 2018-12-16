@@ -55,8 +55,10 @@ drake_build <- function(
     config <- drake::read_drake_config(envir = envir, jobs = jobs)
     config$envir <- envir
   }
-  lock_environment(config$envir)
-  on.exit(unlock_environment(config$envir))
+  if (config$lock_envir) {
+    lock_environment(config$envir)
+    on.exit(unlock_environment(config$envir))
+  }
   loadd(
     list = target,
     deps = TRUE,

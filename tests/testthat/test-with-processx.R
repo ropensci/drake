@@ -8,6 +8,7 @@ if (!identical(getOption("drake_no_processx"), TRUE)) {
     con$envir <- dbug_envir(globalenv())
     ls1 <- ls(envir = con$envir)
     con$session <- callr::r_vanilla
+    con$lock_envir <- FALSE
     make_with_config(con)
     expect_equal(sort(justbuilt(con)), sort(con$plan$target))
     ls2 <- ls(envir = con$envir)

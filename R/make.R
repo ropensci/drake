@@ -119,7 +119,8 @@ make <- function(
   sleep = function(i) 0.01,
   hasty_build = drake::default_hasty_build,
   memory_strategy = c("speed", "memory", "lookahead"),
-  layout = NULL
+  layout = NULL,
+  lock_envir = FALSE
 ) {
   force(envir)
   if (!is.null(return_config)) {
@@ -183,7 +184,8 @@ make <- function(
       sleep = sleep,
       hasty_build = hasty_build,
       memory_strategy = memory_strategy,
-      layout = layout
+      layout = layout,
+      lock_envir = lock_envir
     )
   }
   make_with_config(config = config)
@@ -240,8 +242,10 @@ global_imports <- function(config) {
 #' @export
 #' @inheritParams make_with_config
 make_session <- function(config) {
-  lock_environment(config$envir)
-  on.exit(unlock_environment(config$envir))
+  if (config$lock_envir) {
+    lock_environment(config$envir)
+    on.exit(unlock_environment(config$envir))
+  }
   do_prework(config = config, verbose_packages = config$verbose)
   check_drake_config(config = config)
   store_drake_config(config = config)
