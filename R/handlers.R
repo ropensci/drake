@@ -92,6 +92,8 @@ locked_envir_msg <- paste(
   "Please verify that all your commands and functions are pure:",
   "they should only produce *new* output, and",
   "they should never go back and modify old output or dependencies.",
+  "Beware <<-, ->>, attach(), and data().",
+  "Also please try to avoid options() even though drake does not stop you.",
   "Alternatively, you can set lock_envir to FALSE in make() or",
   "drake_config() to stop drake from producing these errors. But be warned:",
   "make(lock_envir = FALSE) decreases the levels of confidence and trust",
