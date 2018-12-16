@@ -72,6 +72,7 @@ with_call_stack <- function(target, config) {
     lock_environment(config$envir)
     on.exit(unlock_environment(config$envir))
   }
+  mark_envir(config$eval)
   tidy_expr <- eval(expr = expr, envir = config$eval) # tidy eval prep
   tryCatch(
     withCallingHandlers(

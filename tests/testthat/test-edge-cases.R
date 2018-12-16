@@ -1,5 +1,60 @@
 drake_context("edge cases")
 
+test_with_dir("lock_envir works", {
+  scenario <- get_testing_scenario()
+  e <- eval(parse(text = scenario$envir))
+  jobs <- scenario$jobs
+  parallelism <- scenario$parallelism
+  caching <- scenario$caching
+  plan <- drake_plan(
+    x = testthat::expect_error(
+      assign("a", 1, envir = parent.env(drake_envir())),
+      regexp = "binding"
+    ),
+    strings_in_dots = "literals"
+  )
+  make(
+    plan,
+    envir = e,
+    jobs = jobs,
+    parallelism = parallelism,
+    caching = caching,
+    lock_envir = TRUE,
+    verbose = FALSE,
+    session_info = FALSE
+  )
+  e$a <- 123
+  e$plan$four <- "five"
+  plan <- drake_plan(
+    x = assign("a", 1, envir = parent.env(drake_envir())),
+    strings_in_dots = "literals"
+  )
+  make(
+    plan,
+    envir = e,
+    jobs = jobs,
+    parallelism = parallelism,
+    caching = caching,
+    lock_envir = FALSE,
+    verbose = FALSE,
+    session_info = FALSE
+  )
+  expect_true("x" %in% cached())
+})
+
+test_with_dir("Try to modify a locked environment", {
+  e <- new.env()
+  lock_environment(e)
+  plan <- drake_plan(x = {
+    e$a <- 1
+    2
+  })
+  expect_error(
+    make(plan, session_info = FALSE, cache = storr::storr_environment()),
+    regexp = "verify that all your commands and functions are pure"
+  )
+})
+
 test_with_dir("skip everything", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   f <- function(x) {
@@ -226,54 +281,4 @@ test_with_dir("warning when file_out() files not produced", {
 test_with_dir("file hash of a non-file", {
   expect_true(is.na(file_hash("asdf", list())))
   expect_true(is.na(rehash_file("asdf")))
-})
-
-test_with_dir("Try to modify a locked environment", {
-  e <- new.env()
-  lock_environment(e)
-  plan <- drake_plan(x = {
-    e$a <- 1
-    2
-  })
-  expect_error(
-    make(plan, session_info = FALSE, cache = storr::storr_environment()),
-    regexp = "verify that all your commands and functions are pure"
-  )
-})
-
-test_with_dir("lock_envir works", {
-  scenario <- get_testing_scenario()
-  e <- eval(parse(text = scenario$envir))
-  jobs <- scenario$jobs
-  parallelism <- scenario$parallelism
-  caching <- scenario$caching
-  plan <- drake_plan(
-    x = assign("a", 1, envir = parent.env(drake_envir())),
-    strings_in_dots = "literals"
-  )
-  expect_error(
-    make(
-      plan,
-      envir = e,
-      jobs = jobs,
-      parallelism = parallelism,
-      caching = caching,
-      lock_envir = TRUE,
-      session_info = FALSE
-    ),
-    regexp = "verify that all your commands and functions are pure"
-  )
-  e$a <- 123
-  e$plan$four <- "five"
-  expect_false("x" %in% cached())
-  make(
-    plan,
-    envir = e,
-    jobs = jobs,
-    parallelism = parallelism,
-    caching = caching,
-    lock_envir = FALSE,
-    session_info = FALSE
-  )
-  expect_true("x" %in% cached())
 })

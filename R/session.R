@@ -46,6 +46,14 @@ drake_set_session_info <- function(
   invisible()
 }
 
+mark_envir <- function(envir) {
+  assign(x = drake_envir_marker, value = TRUE, envir = envir)
+}
+
+conclude_session <- function(config) {
+  remove(list = ls(config$eval, all.names = TRUE), envir = config$eval)
+}
+
 initialize_session <- function(config) {
   init_common_values(config$cache)
   mark_envir(config$eval)

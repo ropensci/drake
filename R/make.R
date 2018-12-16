@@ -382,16 +382,3 @@ make_imports_targets <- function(config) {
   console_up_to_date(config = config)
   invisible(config)
 }
-
-conclude_session <- function(config) {
-  unmark_envir(config$eval)
-  remove(list = ls(config$eval, all.names = TRUE), envir = config$eval)
-}
-
-mark_envir <- function(envir) {
-  assign(x = drake_envir_marker, value = TRUE, envir = envir)
-}
-
-unmark_envir <- function(envir) {
-  suppressWarnings(remove(list = drake_envir_marker, envir = envir))
-}
