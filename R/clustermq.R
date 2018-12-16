@@ -110,6 +110,8 @@ cmq_deps_list <- function(target, config) {
 #' @param deps named list of target dependencies
 #' @param config a [drake_config()] list
 cmq_build <- function(target, meta, deps, config) {
+  # Wait until drake 7.0.0 to uncomment
+  # lock_environment(config$envir) # nolint
   if (identical(config$garbage_collection, TRUE)) {
     gc()
   }

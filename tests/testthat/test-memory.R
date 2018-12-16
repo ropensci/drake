@@ -1,4 +1,4 @@
-drake_context("envir")
+drake_context("memory")
 
 test_with_dir("manage_memory() warns if loading missing deps", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
