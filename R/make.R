@@ -120,7 +120,7 @@ make <- function(
   hasty_build = drake::default_hasty_build,
   memory_strategy = c("speed", "memory", "lookahead"),
   layout = NULL,
-  lock_envir = FALSE
+  lock_envir = TRUE
 ) {
   force(envir)
   if (!is.null(return_config)) {

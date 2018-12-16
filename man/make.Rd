@@ -25,7 +25,7 @@ make(plan = drake::read_drake_plan(), targets = NULL,
   template = list(), sleep = function(i) 0.01,
   hasty_build = drake::default_hasty_build,
   memory_strategy = c("speed", "memory", "lookahead"), layout = NULL,
-  lock_envir = FALSE)
+  lock_envir = TRUE)
 }
 \arguments{
 \item{plan}{workflow plan data frame.
