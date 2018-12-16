@@ -62,14 +62,25 @@ test_with_dir("unlock_environment()", {
     regexp = "not an environment"
   )
   e <- new.env(parent = emptyenv())
+  e$y <- 1
   expect_false(environmentIsLocked(e))
-  lockEnvironment(e)
-  msg <- "cannot add bindings to a locked environment"
+  assign(x = ".x", value = "x", envir = e)
+  expect_equal(get(x = ".x", envir = e), "x")
+  lock_environment(e)
+  msg1 <- "cannot change value of locked binding"
+  msg2 <- "cannot add bindings to a locked environment"
   expect_true(environmentIsLocked(e))
-  expect_error(assign(x = "a", value = "x", envir = e), regexp = msg)
-  expect_error(assign(x = "b", value = "y", envir = e), regexp = msg)
+  assign(x = ".x", value = "y", envir = e)
+  expect_equal(get(x = ".x", envir = e), "y")
+  expect_error(assign(x = "y", value = "y", envir = e), regexp = msg1)
+  expect_error(assign(x = "a", value = "x", envir = e), regexp = msg2)
+  expect_error(assign(x = "b", value = "y", envir = e), regexp = msg2)
   unlock_environment(e)
+  assign(x = ".x", value = "1", envir = e)
+  assign(x = "y", value = "2", envir = e)
   assign(x = "a", value = "x", envir = e)
+  expect_equal(get(x = ".x", envir = e), "1")
+  expect_equal(get(x = "y", envir = e), "2")
   expect_equal(get(x = "a", envir = e), "x")
   expect_false(environmentIsLocked(e))
   unlock_environment(e)

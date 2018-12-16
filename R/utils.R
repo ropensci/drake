@@ -273,6 +273,15 @@ unwrap_function <- function(funct) {
   funct
 }
 
+lock_environment <- function(envir) {
+  lockEnvironment(envir, bindings = FALSE)
+  lapply(
+    X = ls(envir, all.names = FALSE),
+    FUN = lockBinding,
+    env = envir
+  )
+}
+
 unlock_environment <- function(envir) {
   if (is.null(envir)) {
     stop("use of NULL environment is defunct")
@@ -281,6 +290,11 @@ unlock_environment <- function(envir) {
     stop("not an environment")
   }
   .Call("unlock_environment", envir)
+  lapply(
+    X = ls(envir, all.names = FALSE),
+    FUN = unlockBinding,
+    env = envir
+  )
   stopifnot(!environmentIsLocked(envir))
 }
 
