@@ -27,13 +27,15 @@ Install them with \code{install.packages(c("ggplot2", "ggraph"))}.
 \dontrun{
 test_with_dir("Quarantine side effects.", {
 load_mtcars_example() # Get the code with drake_example("mtcars").
-# Instead of jumpting right to vis_drake_graph(), get the data frames
-# of nodes, edges, and legend nodes.
-config <- drake_config(my_plan) # Internal configuration list
-drake_ggraph(config) # Jump straight to the static graph.
-# Get the node and edge info that vis_drake_graph() just plotted:
-graph <- drake_graph_info(config)
-render_drake_ggraph(graph)
+if (requireNamespace("ggraph", quietly = TRUE)) {
+  # Instead of jumpting right to vis_drake_graph(), get the data frames
+  # of nodes, edges, and legend nodes.
+  config <- drake_config(my_plan) # Internal configuration list
+  drake_ggraph(config) # Jump straight to the static graph.
+  # Get the node and edge info that vis_drake_graph() just plotted:
+  graph <- drake_graph_info(config)
+  render_drake_ggraph(graph)
+}
 })
 }
 }

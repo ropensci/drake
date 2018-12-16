@@ -30,7 +30,7 @@ test_with_dir("manage_memory in full build", {
     heuristics,
     datasets = datasets,
     analyses = analyses,
-    gather = c("rbind", "rbind")
+    gather = c("c", "c")
   )
   output <- drake_plan(
     final1 = mean(s) + mean(t),

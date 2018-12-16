@@ -654,7 +654,9 @@ add_packages_to_prework <- function(packages, prework) {
 #' # and for distributed computing backends like "future_lapply",
 #' # right before each target is built.
 #' do_prework(config = con, verbose_packages = TRUE)
-#' identical(x, 1) # Should be TRUE.
+#' # The `eval` element is the environment where the prework
+#' # and the commands in your workflow plan data frame are executed.
+#' identical(con$eval$x, 1) # Should be TRUE.
 #' })
 #' }
 do_prework <- function(config, verbose_packages) {

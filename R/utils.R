@@ -231,8 +231,8 @@ split_by <- function(.x, .by = character(0)) {
   if (!length(.by)) {
     return(list(.x))
   }
-  f <- lapply(.x[, .by], factor, exclude = c())
-  splits <- split(x = .x, f = f)
+  fact <- lapply(.x[, .by, drop = FALSE], factor, exclude = c())
+  splits <- split(x = .x, f = fact)
   Filter(x = splits, f = nrow)
 }
 

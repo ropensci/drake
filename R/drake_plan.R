@@ -257,7 +257,7 @@ bind_plans <- function(...) {
 flatten_plan_list <- function(args, plan_env){
   if (!is.null(dim(args))) {
     index <- length(plan_env$plans) + 1
-    plan_env$plans[[index]] <- tibble::as_tibble(args)
+    plan_env$plans[[index]] <- weak_as_tibble(args)
   } else {
     lapply(args, flatten_plan_list, plan_env = plan_env)
   }

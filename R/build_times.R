@@ -68,7 +68,7 @@ build_times <- function(
     out <- out[out$type == "target", ]
   }
   tryCatch(
-    tibble::as_tibble(out),
+    weak_as_tibble(out),
     error = error_tibble_times
   )
 }

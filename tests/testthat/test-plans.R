@@ -18,7 +18,7 @@ test_with_dir("duplicated targets", {
     ),
     regexp = "Duplicated targets"
   )
-  expect_equal(
+  expect_equivalent(
     bind_plans(
       drake_plan(a = 1, b = 1, c = 1),
       drake_plan(a = 1, b = 1, d = 5)
@@ -30,7 +30,7 @@ test_with_dir("duplicated targets", {
       d = 5
     )
   )
-  expect_equal(
+  expect_equivalent(
     bind_plans(
       drake_plan(d = f(c, b)),
       drake_plan(c = f(a), a = 5),
@@ -466,7 +466,7 @@ test_with_dir("bind_plans()", {
     trigger = c(NA, NA, "trigger(condition = TRUE)")
   )
   expect_equal(out, exp)
-  exp <- tibble::tibble(
+  exp <- weak_tibble(
     target = c("x", "y", "z", "u", "v", "w"),
     command = c("1", "2", "download_data()", "3", "4", "5"),
     trigger = c(NA, NA, "trigger(condition = TRUE)", NA, NA, NA)
@@ -634,7 +634,7 @@ test_with_dir("code_to_plan(), one target", {
   skip_if_not_installed("CodeDepends")
   writeLines("a <- 1", "script.R")
   plan <- code_to_plan("script.R")
-  expect_equal(plan, tibble::tibble(target = "a", command = "1"))
+  expect_equivalent(plan, weak_tibble(target = "a", command = "1"))
 })
 
 test_with_dir("plan_to_code()", {
@@ -650,7 +650,7 @@ test_with_dir("plan_to_code()", {
   expect_true(file.exists("report.md"))
   skip_if_not_installed("CodeDepends")
   plan <- code_to_plan(path)
-  expect_equal(plan[order(plan$target), ], plan0[order(plan0$target), ])
+  expect_equivalent(plan[order(plan$target), ], plan0[order(plan0$target), ])
 })
 
 test_with_dir("plan_to_notebook()", {
@@ -666,5 +666,5 @@ test_with_dir("plan_to_notebook()", {
   expect_true(file.exists("report.md"))
   skip_if_not_installed("CodeDepends")
   plan <- code_to_plan(path)
-  expect_equal(plan[order(plan$target), ], plan0[order(plan0$target), ])
+  expect_equivalent(plan[order(plan$target), ], plan0[order(plan0$target), ])
 })
