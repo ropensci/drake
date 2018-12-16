@@ -33,7 +33,7 @@ run_future <- function(config) {
         )
       }
     }
-    Sys.sleep(config$sleep(i))
+    Sys.sleep(config$sleep(max(0L, i)))
     i <- i + 1
   }
 }

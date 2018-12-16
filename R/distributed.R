@@ -55,10 +55,6 @@ recover_drake_config <- function(cache_path) {
   config <- read_drake_config(cache = cache)
   dir <- cache_path(cache = cache)
   file <- globalenv_file(dir)
-  if (environmentIsLocked(globalenv())) {
-    warning("Unlocking global environment.", call. = FALSE) # nocov
-    unlock_environment(globalenv()) # nocov
-  }
   load(file = file, envir = globalenv())
   config
 }

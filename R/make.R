@@ -209,9 +209,6 @@ make <- function(
 #' })
 #' }
 make_with_config <- function(config = drake::read_drake_config()) {
-  if (config$lock_envir) {
-    on.exit(unlock_environment(config$envir))
-  }
   if (is.null(config$session)) {
     make_session(config = config)
   } else {

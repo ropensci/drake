@@ -74,7 +74,7 @@ mc_wait_checksum <- function(
     if (criterion(target, checksum, config)) {
       return()
     } else {
-      sleep <- config$sleep(i)
+      sleep <- config$sleep(max(0L, i))
       Sys.sleep(sleep)
       time_left <- time_left - sleep
     }
