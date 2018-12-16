@@ -156,6 +156,15 @@ run_parLapply_staged <- function(config) { # nolint
 run_future_lapply_staged <- function(config) {
   assert_pkg("future")
   assert_pkg("future.apply")
+  if (config$lock_envir) {
+    warning(
+      "Cannot combine lock_envir = TRUE with ",
+      "parallelism = 'future_lapply_staged'.",
+      call. = FALSE
+    )
+    config$lock_envir <- FALSE
+    unlock_environment(config$envir)
+  }
   prepare_distributed(config = config)
   schedule <- config$schedule
   while (length(V(schedule)$name)) {
@@ -183,6 +192,15 @@ run_future_lapply_staged <- function(config) {
 
 run_clustermq_staged <- function(config) {
   assert_pkg("clustermq", version = "0.8.5")
+  if (config$lock_envir) {
+    warning(
+      "Cannot combine lock_envir = TRUE with ",
+      "parallelism = 'clustermq_staged'.",
+      call. = FALSE
+    )
+    config$lock_envir <- FALSE
+    unlock_environment(config$envir)
+  }
   schedule <- config$schedule
   workers <- NULL
   config$cache$flush_cache()
