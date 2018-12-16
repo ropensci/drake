@@ -273,6 +273,17 @@ unwrap_function <- function(funct) {
   funct
 }
 
+unlock_environment <- function(envir) {
+  if (is.null(envir)) {
+    stop("use of NULL environment is defunct")
+  }
+  if (!inherits(envir, "environment")) {
+    stop("not an environment")
+  }
+  .Call("unlock_environment", envir)
+  stopifnot(!environmentIsLocked(envir))
+}
+
 which_unnamed <- function(x) {
   if (!length(names(x))) {
     rep(TRUE, length(x))

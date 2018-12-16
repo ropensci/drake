@@ -52,6 +52,32 @@ test_with_dir("operators", {
   expect_false(is.na(NA %||NA% "b"))
 })
 
+test_with_dir("unlock_environment()", {
+  expect_error(
+    unlock_environment(NULL),
+    regexp = "use of NULL environment is defunct"
+  )
+  expect_error(
+    unlock_environment("x"),
+    regexp = "not an environment"
+  )
+  e <- new.env(parent = emptyenv())
+  expect_false(environmentIsLocked(e))
+  lockEnvironment(e)
+  msg <- "cannot add bindings to a locked environment"
+  expect_true(environmentIsLocked(e))
+  expect_error(assign(x = "a", value = "x", envir = e), regexp = msg)
+  expect_error(assign(x = "b", value = "y", envir = e), regexp = msg)
+  unlock_environment(e)
+  assign(x = "a", value = "x", envir = e)
+  expect_equal(get(x = "a", envir = e), "x")
+  expect_false(environmentIsLocked(e))
+  unlock_environment(e)
+  assign(x = "b", value = "y", envir = e)
+  expect_equal(get(x = "b", envir = e), "y")
+  expect_false(environmentIsLocked(e))
+})
+
 test_with_dir("weak_tibble", {
   skip_on_cran()
 

@@ -37,6 +37,7 @@
 #' })
 #' }
 #' @references <https://github.com/ropensci/drake>
+#' @useDynLib drake
 #' @importFrom codetools findGlobals
 #' @importFrom digest digest
 #' @importFrom formatR tidy_source
