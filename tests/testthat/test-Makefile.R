@@ -140,7 +140,9 @@ test_with_dir("Makefile stuff in globalenv()", {
   mk("drake_TESTGLOBAL_target", cache_path = default_cache_path())
   expect_equal(unname(progress(list = targ)), "finished")
   drake_TESTGLOBAL_config$cache$del(key = targ, namespace = "progress")
-  mk("drake_TESTGLOBAL_target", cache_path = default_cache_path())
+  suppressWarnings(
+    mk("drake_TESTGLOBAL_target", cache_path = default_cache_path())
+  )
   expect_equal(unname(progress(list = targ)), "not built or imported")
   loaded <- ls(envir = globalenv())
   rm(list =
