@@ -23,7 +23,7 @@ testrun <- function(config) {
       session_info = config$session_info,
       fetch_cache = config$fetch_cache,
       caching = config$caching,
-      lock_envir = TRUE
+      lock_envir = !any(grepl("staged", config$parallelism))
     )
   )
 }
