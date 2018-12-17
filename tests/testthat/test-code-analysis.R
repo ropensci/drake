@@ -142,7 +142,7 @@ test_with_dir("`my_function<-` edge cases", {
   code <- quote(f(x) <- 1)
   out <- analyze_code(code)$globals
   expect_equal(out, "f<-")
-  code <- quote(f(g(x, 2, y, z), 1) <- 1)
+  code <- quote(f(g(h(x, w), y, z), 1) <- 1)
   out <- sort(as.character(analyze_code(code)$globals))
-  expect_equal(out, sort(c("f<-", "g", "g<-", "y", "z")))
+  expect_equal(out, sort(c("f<-", "g", "g<-", "h", "h<-", "w", "y", "z")))
 })
