@@ -58,7 +58,9 @@ analyze_function <- function(expr, results, locals, allowed_globals) {
 
 analyze_namespaced <- function(expr, results, locals, allowed_globals) {
   x <- wide_deparse(expr)
-  results$namespaced <- c(results$namespaced, x)
+  if (ht_exists(locals, x)) {
+    results$namespaced <- c(results$namespaced, x)
+  }
 }
 
 analyze_assign <- function(expr, results, locals, allowed_globals) {
