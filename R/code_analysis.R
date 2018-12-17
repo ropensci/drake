@@ -15,7 +15,6 @@ analyze_code <- function(
   allowed_globals <- ht_new(allowed_globals) %||% NULL
   walk_code(expr, results, locals, allowed_globals)
   results <- lapply(as.list(results), unique)
-  results <- lapply(as.list(results), sort) # remove after unit tests are in place
   select_nonempty(results)
 }
 
