@@ -25,6 +25,9 @@ hd_del <- function(ht, x) {
 }
 
 ht_exists <- function(ht, x) {
+  if (!nzchar(x)) {
+    return(FALSE)
+  }
   exists(x, envir = ht, inherits = FALSE)
 }
 
