@@ -93,8 +93,7 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
   )
 })
 
-test_with_dir(
-  "deps_code() and deps_target()", {
+test_with_dir("deps_code() and deps_target()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(length(deps_code("")), 0)
   expect_equal(length(command_dependencies(NA)), 0)
