@@ -15,18 +15,6 @@ analyze_code <- function(
   ht_add(locals, c(exclude, drake_symbols))
   walk_code(expr, results, locals = locals, allowed_globals = allowed_globals)
   results <- lapply(as.list(results), unique)
-  results$globals <- as.character(results$globals)
-  non_locals <- find_non_locals(expr)
-  results$globals <- intersect(results$globals, non_locals)
-  if (!is.null(allowed_globals)) {
-    results$globals <- intersect(results$globals, allowed_globals)
-  }
-  results <- lapply(
-    X = results,
-    FUN = function(x) {
-      unique(setdiff(x, exclude))
-    }
-  )
   select_nonempty(results)
 }
 
@@ -188,25 +176,3 @@ base_symbols <- sort(
   )
 )
 ignored_symbols <- sort(c(drake_symbols, base_symbols))
-
-find_non_locals <- function(fun) {
-  if (!is.function(fun)) {
-    f <- function() {} # nolint
-    body(f) <- as.call(append(as.list(body(f)), fun))
-    fun <- f
-  }
-  if (typeof(fun) != "closure") {
-    return(character(0))
-  }
-  fun <- unwrap_function(fun)
-  # The tryCatch statement fixes a strange bug in codetools
-  # for R 3.3.3. I do not understand it.
-  out <- tryCatch(
-    codetools::findGlobals(fun = fun, merge = TRUE),
-    error = function(e) {
-      fun <- eval(parse(text = wide_deparse(fun))) # nocov
-      codetools::findGlobals(fun = fun, merge = TRUE)  # nocov
-    }
-  )
-  setdiff(out, ignored_symbols)
-}
