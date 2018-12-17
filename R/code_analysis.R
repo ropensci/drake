@@ -11,7 +11,7 @@ analyze_code <- function(
     return(list())
   }
   results <- ht_new()
-  locals <- ht_new(c(exclude, drake_symbols))
+  locals <- ht_new(c(exclude, ignored_symbols))
   allowed_globals <- ht_new(allowed_globals) %||% NULL
   walk_code(expr, results, locals, allowed_globals)
   results <- lapply(as.list(results), unique)
@@ -218,7 +218,7 @@ drake_symbols <- sort(
 )
 base_symbols <- sort(
   grep(
-    pattern = "[a-zA-Z]",
+    pattern = "^[\\.a-zA-Z]",
     x = ls("package:base"),
     value = TRUE,
     invert = TRUE
