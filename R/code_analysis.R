@@ -44,7 +44,7 @@ analyze_right_arrow <- function(expr, results, locals, allowed_globals) {
 
 analyze_for <- function(expr, results, locals, allowed_globals) {
   ht_add(locals, as.character(expr[[2]]))
-  walk_code(expr[3:4], results, locals, allowed_globals)
+  walk_call(expr[-2], results, locals, allowed_globals)
 }
 
 analyze_function <- function(expr, results, locals, allowed_globals) {
@@ -68,6 +68,8 @@ analyze_namespaced <- function(expr, results, locals, allowed_globals) {
 analyze_assign <- function(expr, results, locals, allowed_globals) {
   expr <- match.call(definition = assign, call = expr)
   ht_add(locals, expr$x)
+  expr$x <- NULL
+  walk_call(expr, results, locals, allowed_globals)
 }
 
 analyze_loadd <- function(expr) {
@@ -127,9 +129,12 @@ walk_code <- function(expr, results, locals, allowed_globals) {
   } else if (is.character(expr)) {
     results$strings <- c(results$strings, expr)
   } else if (is.pairlist(expr)) {
-    walk_call(expr, name = "", results, locals, allowed_globals)
+    walk_call(expr, results, locals, allowed_globals)
   } else if (is.language(expr) && (is.call(expr) || is.recursive(expr))) {
     name <- wide_deparse(expr[[1]])
+    if (name == "local"){
+      locals <- ht_clone(locals)
+    }
     if (name %in% c("expression", "quote", "Quote")) {
       return()
     } else if (name %in% c("<-", "=")) {
@@ -155,15 +160,12 @@ walk_code <- function(expr, results, locals, allowed_globals) {
     } else if (name %in% file_out_fns) {
       zip_to_envir(analyze_file_out(expr), results)
     } else if (!(name %in% ignored_fns)) {
-      walk_call(expr, name, results, locals, allowed_globals)
+      walk_call(expr, results, locals, allowed_globals)
     }
   }
 }
 
-walk_call <- function(expr, name, results, locals, allowed_globals) {
-  if (name == "local"){
-    locals <- ht_clone(locals)
-  }
+walk_call <- function(expr, results, locals, allowed_globals) {
   lapply(
     X = expr,
     FUN = walk_code,
