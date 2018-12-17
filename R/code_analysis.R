@@ -20,6 +20,9 @@ analyze_code <- function(
 
 analyze_global <- function(expr, results, locals, allowed_globals) {
   x <- as.character(expr)
+  if (!nzchar(x)) {
+    return()
+  }
   if (ht_exists(locals, x)) {
     return()
   }
@@ -126,7 +129,7 @@ walk_code <- function(expr, results, locals, allowed_globals) {
   } else if (is.pairlist(expr)) {
     walk_call(expr, name = "", results, locals, allowed_globals)
   } else if (is.language(expr) && (is.call(expr) || is.recursive(expr))) {
-    name <- wide_deparse(expr[[1]]) %||% ""
+    name <- wide_deparse(expr[[1]])
     if (name %in% c("expression", "quote", "Quote")) {
       return()
     } else if (name %in% c("<-", "=")) {

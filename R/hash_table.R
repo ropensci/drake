@@ -11,7 +11,7 @@ ht_new <- function(x = NULL) {
 
 ht_add <- function(ht, x) {
   lapply(
-    X = x[nzchar(x)],
+    X = x,
     FUN = assign,
     value = TRUE,
     envir = ht,
@@ -21,16 +21,10 @@ ht_add <- function(ht, x) {
 }
 
 ht_del <- function(ht, x) {
-  if (!nzchar(x)) {
-    return()
-  }
   remove(list = x, envir = ht, inherits = FALSE)
 }
 
 ht_exists <- function(ht, x) {
-  if (!nzchar(x)) {
-    return(FALSE)
-  }
   exists(x, envir = ht, inherits = FALSE)
 }
 
