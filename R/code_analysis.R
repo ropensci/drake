@@ -53,7 +53,7 @@ analyze_function <- function(expr, results, locals, allowed_globals) {
     return()
   }
   locals <- ht_clone(locals)
-  ht_add(locals, formalArgs(expr))
+  ht_add(locals, names(formals(expr)))
   walk_code(formals(expr), results, locals, allowed_globals)
   walk_code(body(expr), results, locals, allowed_globals)
 }
