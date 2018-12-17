@@ -11,16 +11,33 @@ analyze_code <- function(
     return(list())
   }
   results <- ht_new()
-  locals <- ht_with(c(exclude, drake_symbols))
-  allowed_globals <- ht_with(allowed_globals) %||% NULL
-  walk_code(
-    expr = expr,
-    results = results,
-    locals = locals,
-    allowed_globals = allowed_globals
-  )
+  locals <- ht_new(c(exclude, drake_symbols))
+  allowed_globals <- ht_new(allowed_globals) %||% NULL
+  walk_code(expr, results, locals, allowed_globals)
   results <- lapply(as.list(results), unique)
+  results <- lapply(as.list(results), sort) # remove after unit tests are in place
   select_nonempty(results)
+}
+
+analyze_left_arrow <- function(expr, results, locals, allowed_globals) {
+  ht_add(locals, as.character(expr[[2]]))
+  walk_code(expr[[3]], results, locals, allowed_globals)
+}
+
+analyze_right_arrow <- function(expr, results, locals, allowed_globals) {
+  ht_add(locals, as.character(expr[[3]]))
+  walk_code(expr[[2]], results, locals, allowed_globals)
+}
+
+analyze_function <- function(expr, results, locals, allowed_globals) {
+  expr <- unwrap_function(expr)
+  if (typeof(expr) != "closure") {
+    return()
+  }
+  locals <- ht_clone(locals)
+  ht_add(locals, formalArgs(expr))
+  walk_code(formals(expr), results, locals, allowed_globals)
+  walk_code(body(expr), results, locals, allowed_globals)
 }
 
 analyze_global <- function(expr, results, locals, allowed_globals) {
@@ -32,6 +49,13 @@ analyze_global <- function(expr, results, locals, allowed_globals) {
     results$globals <- c(results$globals, x)
   }
   invisible()
+}
+
+analyze_namespaced <- function(expr, results, locals) {
+  x <- wide_deparse(expr)
+  if (!ht_exists(locals, x)) {
+    results$namespaced <- c(results$namespaced, x)
+  }
 }
 
 analyze_loadd <- function(expr) {
@@ -85,14 +109,20 @@ walk_code <- function(expr, results, locals, allowed_globals) {
   if (!length(expr)) {
     return()
   } else if (is.function(expr)) {
-    walk_function(expr, results, locals, allowed_globals)
+    analyze_function(expr, results, locals, allowed_globals)
   } else if (is.name(expr)) {
-    analyze_global(expr, results, locals, allowed_globals = allowed_globals)
+    analyze_global(expr, results, locals, allowed_globals)
   } else if (is.character(expr)) {
     results$strings <- c(results$strings, expr)
+  } else if (is.pairlist(expr)) {
+    walk_call(expr, name = "", results, locals, allowed_globals)
   } else if (is.language(expr) && (is.call(expr) || is.recursive(expr))) {
-    name <- wide_deparse(expr[[1]])
-    if (name %in% loadd_fns) {
+    name <- wide_deparse(expr[[1]]) %||% ""
+    if (name %in% c("<-", "=")) {
+      analyze_left_arrow(expr, results, locals, allowed_globals)
+    } else if (name %in% "->") {
+      analyze_right_arrow(expr, results, locals, allowed_globals)
+    } else if (name %in% loadd_fns) {
       zip_to_envir(analyze_loadd(expr), results)
     } else if (name %in% readd_fns) {
       zip_to_envir(analyze_readd(expr), results)
@@ -109,27 +139,15 @@ walk_code <- function(expr, results, locals, allowed_globals) {
 }
 
 walk_call <- function(expr, name, results, locals, allowed_globals) {
+  if (name == "local"){
+    locals <- ht_clone(locals)
+  }
   if (name %in% c("::", ":::")) {
-    results$namespaced <- c(
-      results$namespaced,
-      setdiff(wide_deparse(expr), drake_symbols)
-    )
+    analyze_namespaced(expr, results, locals)
   } else {
     lapply(
       X = expr,
       FUN = walk_code,
-      results = results,
-      locals = locals,
-      allowed_globals = allowed_globals
-    )
-  }
-}
-
-walk_function <- function(expr, results, locals, allowed_globals) {
-  expr <- unwrap_function(expr)
-  if (typeof(expr) == "closure") {
-    walk_code(
-      expr = body(expr),
       results = results,
       locals = locals,
       allowed_globals = allowed_globals

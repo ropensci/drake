@@ -1,8 +1,12 @@
 # Wanted to use reference classes here,
 # but they add computational overhead.
 # This is a part of the code that really needs to be fast.
-ht_new <- function() {
-  new.env(hash = TRUE, parent = emptyenv())
+ht_new <- function(x = NULL) {
+  out <- new.env(hash = TRUE, parent = emptyenv())
+  if (!is.null(x)) {
+    ht_add(out, x)
+  }
+  out
 }
 
 ht_add <- function(ht, x) {
@@ -14,12 +18,6 @@ ht_add <- function(ht, x) {
     inherits = FALSE
   )
   invisible()
-}
-
-ht_with <- function(x) {
-  ht <- ht_new()
-  ht_add(ht, x)
-  ht
 }
 
 hd_del <- function(ht, x) {
