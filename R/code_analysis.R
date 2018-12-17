@@ -20,13 +20,18 @@ analyze_code <- function(
 }
 
 analyze_left_arrow <- function(expr, results, locals, allowed_globals) {
-  ht_add(locals, as.character(expr[[2]]))
   walk_code(expr[[3]], results, locals, allowed_globals)
+  ht_add(locals, as.character(expr[[2]]))
 }
 
 analyze_right_arrow <- function(expr, results, locals, allowed_globals) {
-  ht_add(locals, as.character(expr[[3]]))
   walk_code(expr[[2]], results, locals, allowed_globals)
+  ht_add(locals, as.character(expr[[3]]))
+}
+
+analyze_for <- function(expr, results, locals, allowed_globals) {
+  ht_add(locals, as.character(expr[[2]]))
+  walk_code(expr[3:4], results, locals, allowed_globals)
 }
 
 analyze_function <- function(expr, results, locals, allowed_globals) {
@@ -118,12 +123,16 @@ walk_code <- function(expr, results, locals, allowed_globals) {
     walk_call(expr, name = "", results, locals, allowed_globals)
   } else if (is.language(expr) && (is.call(expr) || is.recursive(expr))) {
     name <- wide_deparse(expr[[1]]) %||% ""
-    if (name %in% "function") {
-      analyze_function(eval(expr), results, locals, allowed_globals)
+    if (name %in% c("expression", "quote", "Quote")) {
+      return()
     } else if (name %in% c("<-", "=")) {
       analyze_left_arrow(expr, results, locals, allowed_globals)
-    } else if (name %in% "->") {
+    } else if (name == "->") {
       analyze_right_arrow(expr, results, locals, allowed_globals)
+    } else if (name == "for") {
+      analyze_for(expr, results, locals, allowed_globals)
+    } else if (name == "function") {
+      analyze_function(eval(expr), results, locals, allowed_globals)
     } else if (name %in% loadd_fns) {
       zip_to_envir(analyze_loadd(expr), results)
     } else if (name %in% readd_fns) {
