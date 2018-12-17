@@ -11,7 +11,7 @@ ht_new <- function(x = NULL) {
 
 ht_add <- function(ht, x) {
   lapply(
-    X = x,
+    X = x[nzchar(x)],
     FUN = assign,
     value = TRUE,
     envir = ht,
@@ -20,7 +20,10 @@ ht_add <- function(ht, x) {
   invisible()
 }
 
-hd_del <- function(ht, x) {
+ht_del <- function(ht, x) {
+  if (!nzchar(x)) {
+    return()
+  }
   remove(list = x, envir = ht, inherits = FALSE)
 }
 
