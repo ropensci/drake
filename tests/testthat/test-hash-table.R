@@ -20,6 +20,6 @@ test_with_dir("hash tables work", {
   expect_true(ht_exists(f, "xyz"))
   ht_del(f, "xyz")
   expect_false(ht_exists(f, "xyz"))
-  g <- ht_new(c("", letters))
-  expect_true(all(ht_exists(g, letters)))
+  g <- ht_new(c("", "x"))
+  expect_true(all(ht_exists(g, "x")))
 })
