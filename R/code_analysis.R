@@ -32,16 +32,9 @@ analyze_global <- function(expr, results, locals, allowed_globals) {
   invisible()
 }
 
-analyze_left_arrow <- function(expr, results, locals, allowed_globals) {
+analyze_arrow <- function(expr, results, locals, allowed_globals) {
   walk_code(expr[[3]], results, locals, allowed_globals)
   ht_add(locals, as.character(expr[[2]]))
-}
-
-# R's parser reverses right arrows, but we can keep this one
-# just to be safe.
-analyze_right_arrow <- function(expr, results, locals, allowed_globals) {
-  walk_code(expr[[2]], results, locals, allowed_globals) # nocov
-  ht_add(locals, as.character(expr[[3]])) # nocov
 }
 
 analyze_for <- function(expr, results, locals, allowed_globals) {
@@ -69,7 +62,13 @@ analyze_namespaced <- function(expr, results, locals, allowed_globals) {
 
 analyze_assign <- function(expr, results, locals, allowed_globals) {
   expr <- match.call(definition = assign, call = expr)
-  ht_add(locals, expr$x)
+  if (is.character(expr$x)) {
+    if (is.null(expr$pos) || identical(expr$pos, formals(assign)$pos)) {
+      ht_add(locals, expr$x)
+    }
+  } else {
+    analyze_global(expr$x, results, locals, allowed_globals)
+  }
   expr$x <- NULL
   walk_call(expr, results, locals, allowed_globals)
 }
@@ -138,11 +137,9 @@ walk_code <- function(expr, results, locals, allowed_globals) {
       locals <- ht_clone(locals)
     }
     if (name %in% c("expression", "quote", "Quote")) {
-      return()
+      analyze_global(name, results, locals, allowed_globals)
     } else if (name %in% c("<-", "=")) {
-      analyze_left_arrow(expr, results, locals, allowed_globals)
-    } else if (name == "->") {
-      analyze_right_arrow(expr, results, locals, allowed_globals) # nocov
+      analyze_arrow(expr, results, locals, allowed_globals)
     } else if (name %in% c("::", ":::")) {
       analyze_namespaced(expr, results, locals, allowed_globals)
     } else if (name == "for") {
