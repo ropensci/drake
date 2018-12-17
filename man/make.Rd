@@ -421,18 +421,19 @@ to \code{make()} and \code{drake_config()} is an attempt at an automatic
 catch-all solution. These are the choices.
 \itemize{
 \item \code{"speed"}: Once a target is loaded in memory, just keep it there.
-Maximizes speed, but hogs memory.
-\item \code{"memory"}: For each target, unload everything from memory
-except the target's direct dependencies. Conserves memory,
-but sacrifices speed because each new target needs to reload
-any previously unloaded targets from the cache.
-\item \code{"lookahead"} (default): keep loaded targets in memory until they are
-no longer needed as dependencies in downstream build steps.
-Then, unload them from the environment. This step avoids
-keeping unneeded data in memory and minimizes expensive
-reads from the cache. However, it requires looking ahead
-in the dependency graph, which could add overhead for every
-target of projects with lots of targets.
+This choice maximizes speed and hogs memory.
+\item \code{"memory"}: Just before building each new target,
+unload everything from memory except the target's direct dependencies.
+This option conserves memory, but it sacrifices speed because
+each new target needs to reload
+any previously unloaded targets from storage.
+\item \code{"lookahead"}: Just before building each new target,
+search the dependency graph to find targets that will not be
+needed for the rest of the current \code{make()} session.
+In this mode, targets are only in memory if they need to be loaded,
+and we avoid superfluous reads from the cache.
+However, searching the graph takes time,
+and it could even double the computational overhead for large projects.
 }
 
 Each strategy has a weakness.
