@@ -54,8 +54,6 @@ test_with_dir("local variable tests from the codetools package", {
     ht_list(locals)
   }
   expect_equal(find_locals(quote(x <- 1)), "x")
- # expect_equal(find_locals(quote(f(x) <- 1)), c("x")) # wrong
-#  expect_equal(find_locals(quote(f(g(x, 2), 1) <- 1)), "x") # wrong
   expect_equal(find_locals(quote(x <- y <- 1)), c("x", "y"))
   expect_equal(find_locals(quote(local(x <- 1))), character(0))
   expect_equal(find_locals(quote(assign(x, 3))), character(0))
@@ -67,8 +65,6 @@ test_with_dir("local variable tests from the codetools package", {
 test_with_dir("same tests with global variables", {
   code <- quote(x <- 1)
   expect_equal(as.character(analyze_code(code)$globals), character(0))
-  # expect_equal(find_locals(quote(f(x) <- 1)), c("x")) # wrong
-  #  expect_equal(find_locals(quote(f(g(x, 2), 1) <- 1)), "x") # wrong
   code <- quote(x <- y <- 1)
   expect_equal(as.character(analyze_code(code)$globals), character(0))
   code <- quote(local(x <- 1))
@@ -96,6 +92,12 @@ test_with_dir("same tests with global variables", {
 })
 
 test_with_dir("solitary codetools globals tests", {
+  code <- quote(f(x) <- 1)
+  out <- analyze_code(code)$globals
+  expect_equal(out, "f<-")
+  code <- quote(f(g(x, 2, y, z), 1) <- 1)
+  out <- sort(analyze_code(code)$globals)
+  expect_equal(out, sort(c("f<-", "g", "g<-", "y", "z")))
   code <- quote({
     local <- 1
     local(x <- 1)
