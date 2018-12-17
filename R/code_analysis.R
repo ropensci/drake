@@ -118,7 +118,9 @@ walk_code <- function(expr, results, locals, allowed_globals) {
     walk_call(expr, name = "", results, locals, allowed_globals)
   } else if (is.language(expr) && (is.call(expr) || is.recursive(expr))) {
     name <- wide_deparse(expr[[1]]) %||% ""
-    if (name %in% c("<-", "=")) {
+    if (name %in% "function") {
+      analyze_function(eval(expr), results, locals, allowed_globals)
+    } else if (name %in% c("<-", "=")) {
       analyze_left_arrow(expr, results, locals, allowed_globals)
     } else if (name %in% "->") {
       analyze_right_arrow(expr, results, locals, allowed_globals)
