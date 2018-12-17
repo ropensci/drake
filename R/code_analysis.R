@@ -10,12 +10,28 @@ analyze_code <- function(
   if (!is.function(expr) && !is.language(expr)) {
     return(list())
   }
-  locals <- ht_new()
   results <- ht_new()
-  ht_add(locals, c(exclude, drake_symbols))
-  walk_code(expr, results, locals = locals, allowed_globals = allowed_globals)
+  locals <- ht_with(c(exclude, drake_symbols))
+  allowed_globals <- ht_with(allowed_globals) %||% NULL
+  walk_code(
+    expr = expr,
+    results = results,
+    locals = locals,
+    allowed_globals = allowed_globals
+  )
   results <- lapply(as.list(results), unique)
   select_nonempty(results)
+}
+
+analyze_global <- function(expr, results, locals, allowed_globals) {
+  x <- as.character(expr)
+  if (ht_exists(locals, x)) {
+    return()
+  }
+  if (is.null(allowed_globals) || ht_exists(allowed_globals, x)) {
+    results$globals <- c(results$globals, x)
+  }
+  invisible()
 }
 
 analyze_loadd <- function(expr) {
@@ -71,7 +87,7 @@ walk_code <- function(expr, results, locals, allowed_globals) {
   } else if (is.function(expr)) {
     walk_function(expr, results, locals, allowed_globals)
   } else if (is.name(expr)) {
-    results$globals <- c(results$globals, expr)
+    analyze_global(expr, results, locals, allowed_globals = allowed_globals)
   } else if (is.character(expr)) {
     results$strings <- c(results$strings, expr)
   } else if (is.language(expr) && (is.call(expr) || is.recursive(expr))) {

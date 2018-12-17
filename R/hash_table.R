@@ -16,6 +16,12 @@ ht_add <- function(ht, x) {
   invisible()
 }
 
+ht_with <- function(x) {
+  ht <- ht_new()
+  ht_add(ht, x)
+  ht
+}
+
 hd_del <- function(ht, x) {
   remove(list = x, envir = ht, inherits = FALSE)
 }
