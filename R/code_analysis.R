@@ -19,6 +19,17 @@ analyze_code <- function(
   select_nonempty(results)
 }
 
+analyze_global <- function(expr, results, locals, allowed_globals) {
+  x <- as.character(expr)
+  if (ht_exists(locals, x)) {
+    return()
+  }
+  if (is.null(allowed_globals) || ht_exists(allowed_globals, x)) {
+    results$globals <- c(results$globals, x)
+  }
+  invisible()
+}
+
 analyze_left_arrow <- function(expr, results, locals, allowed_globals) {
   walk_code(expr[[3]], results, locals, allowed_globals)
   ht_add(locals, as.character(expr[[2]]))
@@ -45,22 +56,14 @@ analyze_function <- function(expr, results, locals, allowed_globals) {
   walk_code(body(expr), results, locals, allowed_globals)
 }
 
-analyze_global <- function(expr, results, locals, allowed_globals) {
-  x <- as.character(expr)
-  if (ht_exists(locals, x)) {
-    return()
-  }
-  if (is.null(allowed_globals) || ht_exists(allowed_globals, x)) {
-    results$globals <- c(results$globals, x)
-  }
-  invisible()
+analyze_namespaced <- function(expr, results, locals, allowed_globals) {
+  x <- wide_deparse(expr)
+  results$namespaced <- c(results$namespaced, x)
 }
 
-analyze_namespaced <- function(expr, results, locals) {
-  x <- wide_deparse(expr)
-  if (!ht_exists(locals, x)) {
-    results$namespaced <- c(results$namespaced, x)
-  }
+analyze_assign <- function(expr, results, locals, allowed_globals) {
+  expr <- match.call(definition = assign, call = expr)
+  ht_add(locals, expr$x)
 }
 
 analyze_loadd <- function(expr) {
@@ -129,10 +132,14 @@ walk_code <- function(expr, results, locals, allowed_globals) {
       analyze_left_arrow(expr, results, locals, allowed_globals)
     } else if (name == "->") {
       analyze_right_arrow(expr, results, locals, allowed_globals)
+    } else if (name %in% c("::", ":::")) {
+      analyze_namespaced(expr, results, locals, allowed_globals)
     } else if (name == "for") {
       analyze_for(expr, results, locals, allowed_globals)
     } else if (name == "function") {
       analyze_function(eval(expr), results, locals, allowed_globals)
+    } else if (name %in% c("assign", "delayedAssign")) {
+      analyze_assign(expr, results, locals, allowed_globals)
     } else if (name %in% loadd_fns) {
       zip_to_envir(analyze_loadd(expr), results)
     } else if (name %in% readd_fns) {
@@ -153,17 +160,13 @@ walk_call <- function(expr, name, results, locals, allowed_globals) {
   if (name == "local"){
     locals <- ht_clone(locals)
   }
-  if (name %in% c("::", ":::")) {
-    analyze_namespaced(expr, results, locals)
-  } else {
-    lapply(
-      X = expr,
-      FUN = walk_code,
-      results = results,
-      locals = locals,
-      allowed_globals = allowed_globals
-    )
-  }
+  lapply(
+    X = expr,
+    FUN = walk_code,
+    results = results,
+    locals = locals,
+    allowed_globals = allowed_globals
+  )
 }
 
 is_target_call <- function(expr) {
