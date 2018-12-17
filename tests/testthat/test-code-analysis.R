@@ -20,6 +20,8 @@ test_with_dir("busy function", {
       xyz2 <- 6
     }
     abc <- xyz1 + xyz2
+    f2 <- "local"
+    lm(f1 ~ f2 + f3)
     file_in("x")
     drake::file_out("y")
     base::c(got, basevar)
@@ -33,8 +35,8 @@ test_with_dir("busy function", {
   expect_equal(out$namespaced, "base::c")
   exp <- sort(c(
     "assign", "basevar", "delayedAssign", "for",
-    "g", "got", "got_for", "got_while",
-    "i", "iter2", "k",  "local",
+    "f1", "f3", "g", "got", "got_for", "got_while",
+    "i", "iter2", "k",  "lm", "local",
     "val1", "val2", "while", "xyz1", "xyz2"
   ))
   expect_equal(sort(out$globals), exp)
