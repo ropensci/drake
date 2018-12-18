@@ -17,25 +17,23 @@ is_trigger_call <- function(expr) {
 }
 
 list_code_analysis_results <- function(results) {
+  nms <- names(results)
   x <- lapply(
-    X = code_analysis_slots,
+    X = nms,
     FUN = function(slot) {
       ht_list(results[[slot]])
     }
   )
-  names(x) <- code_analysis_slots
+  names(x) <- nms
   select_nonempty(x)
 }
 
 new_code_analysis_results <- function() {
-  x <- lapply(
-    X = code_analysis_slots,
-    FUN = function(tmp) {
-      ht_new()
-    }
-  )
-  names(x) <- code_analysis_slots
-  list2env(x = x, hash = TRUE, parent = emptyenv())
+  ht_hash <- replicate(length(ht_slots_hash), ht_new(hash = TRUE))
+  names(ht_hash) <- ht_slots_hash
+  ht_no_hash <- replicate(length(ht_slots_no_hash), ht_new(hash = FALSE))
+  names(ht_no_hash) <- ht_slots_no_hash
+  c(ht_hash, ht_no_hash)
 }
 
 pair_text <- function(x, y) {
@@ -89,8 +87,9 @@ base_symbols <- sort(
 
 ignored_symbols <- sort(c(drake_symbols, base_symbols))
 
-code_analysis_slots <- c(
-  "globals",
+ht_slots_hash <- "globals"
+
+ht_slots_no_hash <- c(
   "namespaced",
   "strings",
   "loadd",

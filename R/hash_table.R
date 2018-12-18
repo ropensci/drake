@@ -1,8 +1,8 @@
 # Wanted to use reference classes here,
 # but they add computational overhead.
 # This is a part of the code that really needs to be fast.
-ht_new <- function(x = NULL) {
-  out <- new.env(hash = TRUE, parent = emptyenv())
+ht_new <- function(x = NULL, hash = TRUE) {
+  out <- new.env(hash = hash, parent = emptyenv())
   if (!is.null(x)) {
     ht_add(out, x)
   }
