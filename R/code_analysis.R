@@ -29,7 +29,6 @@ analyze_global <- function(expr, results, locals, allowed_globals) {
   if (is.null(allowed_globals) || ht_exists(allowed_globals, x)) {
     ht_add(results$globals, x)
   }
-  invisible()
 }
 
 analyze_arrow <- function(expr, results, locals, allowed_globals) {

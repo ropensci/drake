@@ -17,7 +17,6 @@ ht_add <- function(ht, x) {
     envir = ht,
     inherits = FALSE
   )
-  invisible()
 }
 
 ht_del <- function(ht, x) {
