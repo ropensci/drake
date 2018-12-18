@@ -16,27 +16,30 @@ test_with_dir("busy function", {
     local({
       xyz1 <- 5
     })
+    stringvar <- "string1"
+    stringlist <- list(c("string2", "string3"))
     h <- function() {
       xyz2 <- 6
     }
     abc <- xyz1 + xyz2
     f2 <- "local"
     lm(f1 ~ f2 + f3)
-    file_in("x")
-    drake::file_out("y")
+    file_in("x", "y")
+    drake::file_out(c("w", "z"))
     base::c(got, basevar)
     quote(quoted)
     Quote(quoted2)
     expression(quoted3)
   }
   out <- analyze_code(f)
-  expect_equal(out$file_in, "\"x\"")
-  expect_equal(out$file_out, "\"y\"")
+  expect_equal(sort(out$file_in), sort(c("\"x\"", "\"y\"")))
+  expect_equal(sort(out$file_out), sort(c("\"w\"", "\"z\"")))
+  expect_equal(sort(out$strings), sort(c("local", paste0("string", 1:3))))
   expect_equal(out$namespaced, "base::c")
   exp <- sort(c(
-    "assign", "basevar", "delayedAssign", "expression", "for",
+    "assign", "basevar", "c", "delayedAssign", "expression", "for",
     "f1", "f3", "g", "got", "got_for", "got_while",
-    "i", "iter2", "k",  "lm", "local", "Quote", "quote",
+    "i", "iter2", "k",  "list", "lm", "local", "Quote", "quote",
     "val1", "val2", "while", "xyz1", "xyz2"
   ))
   expect_equal(sort(out$globals), exp)
