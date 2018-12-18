@@ -10,6 +10,7 @@ analyze_code <- function(
   locals <- ht_new(c(exclude, ignored_symbols))
   allowed_globals <- ht_new(allowed_globals) %||% NULL
   walk_code(expr, results, locals, allowed_globals)
+  # TODO: replace `unique` with `ht_list` when we convert to hash tables:
   results <- lapply(as.list(results), unique)
   select_nonempty(results)
 }

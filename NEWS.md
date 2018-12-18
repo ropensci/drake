@@ -17,7 +17,7 @@
 - Deprecate the `fetch_cache` argument in all functions 
 - Remove packages `DBI` and `RSQLite` from "Suggests".
 - Define a special `config$eval <- new.env(parent = config$envir)` for storing built targets and evaluating commands in the plan. Now, `make()` no longer modifies the user's environment. This move is a long-overdue step toward purity.
-- Remove depencency on the `codetools` package.
+- Remove dependency on the `codetools` package.
 
 # Version 6.2.1
 
