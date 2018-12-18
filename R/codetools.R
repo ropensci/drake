@@ -76,10 +76,7 @@ make_assignment_fn <- function(fun) {
       fun
     }
     else {
-      stop(
-        sQuote(deparse(fun)),
-        " is not a valid function in complex assignments"
-      )
+      stop("bad function in complex assignments: ", dsq(fun), call. = FALSE)
     }
   }
 }

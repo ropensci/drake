@@ -202,6 +202,12 @@ test_with_dir("replacement functions", {
 })
 
 test_with_dir("code analysis error handling", {
+  e <- quote(a <- 1)
+  expect_error(
+    make_assignment_fn(e),
+    regexp = "bad function in complex assignments"
+  )
+
   f <- function(a, b){
     invisible()
   }

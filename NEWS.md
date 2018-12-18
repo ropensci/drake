@@ -116,7 +116,7 @@ Version 6.2.1 is a hotfix to address the failing automated CRAN checks for 6.2.0
 - Remove more calls to `sort(NULL)` that caused warnings in R 3.3.3.
 - Fix a bug on R 3.3.3 where `analyze_loadd()` was sometimes quitting with "Error: attempt to set an attribute on NULL".
 - Do not call `digest::digest(file = TRUE)` on directories. Instead, set hashes of directories to `NA`. Users should still not directories as file dependencies.
-- If files are declared as dependnecies of custom triggers ("condition" and "change") include them in `vis_drake_graph()`. Previously, these files were missing from the visualization, but actual workflows worked just fine. Ref: https://stackoverflow.com/questions/52121537/trigger-notification-from-report-generation-in-r-drake-package
+- If files are declared as dependencies of custom triggers ("condition" and "change") include them in `vis_drake_graph()`. Previously, these files were missing from the visualization, but actual workflows worked just fine. Ref: https://stackoverflow.com/questions/52121537/trigger-notification-from-report-generation-in-r-drake-package
 - Work around mysterious `codetools` failures in R 3.3 (add a `tryCatch()` statement in `find_globals()`).
 
 ## New features
@@ -254,7 +254,7 @@ to tell the user if the command, a dependency, an input file, or an ouptut file 
 - Add a new `expose_imports()` function to optionally force `drake` detect deeply nested functions inside specific packages.
 - Move the "quickstart.Rmd" vignette to "example-basic.Rmd". The so-called "quickstart" didn't end up being very quick, and it was all about the basic example anyway.
 - Move `drake_build()` to be an exclusively user-side function.
-- Add a `replace` argument to `loadd()` so that objects already in the user's eOne small thing:nvironment need not be replaced.
+- Add a `replace` argument to `loadd()` so that objects already in the user's environment need not be replaced.
 - When the graph cyclic, print out all the cycles.
 - Prune self-referential loops (and duplicate edges) from the workflow graph. That way, recursive functions are allowed.
 - Add a `seed` argument to `make()`, `drake_config()`, and `load_basic_example()`. Also hard-code a default seed of `0`. That way, the pseudo-randomness in projects should be reproducible
@@ -353,7 +353,7 @@ Version 4.3.0 has:
 - [Reproducible random numbers](https://github.com/ropensci/drake/pull/56)
 - [Automatic detection of knitr dependencies](https://github.com/ropensci/drake/issues/9)
 - More vignettes
-- Bugfixes
+- Bug fixes
 
 # Version 4.2.0: 2017-09-29
 
