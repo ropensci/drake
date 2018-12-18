@@ -109,17 +109,27 @@ analyze_file_out <- function(expr, results) {
 }
 
 analyze_knitr_in <- function(expr, results) {
-  files <- analyze_code(expr[-1])$strings
-  out <- lapply(files, knitr_deps_list)
-  out <- Reduce(out, f = merge_lists)
-  files <- drake_quotes(files, single = FALSE)
-  ht_add(results$knitr_in, c(out$knitr_in, files))
-  lapply(
-    X = names(out),
-    FUN = function(x) {
-      ht_add(results[[x]], out[[x]])
-    }
+  files <- ht_list(analyze_code(expr[-1], as_list = FALSE)$strings)
+  lapply(files, analyze_knitr_file, results = results)
+  ht_add(results$knitr_in, drake_quotes(files, single = FALSE))
+}
+
+analyze_knitr_file <- function(file, results) {
+  if (!length(file)) {
+    return(list())
+  }
+  fragments <- safe_get_tangled_frags(file)
+  out <- analyze_code(fragments, as_list = FALSE)
+  slots <- c(
+    "knitr_in",
+    "file_in",
+    "file_out",
+    "loadd",
+    "readd"
   )
+  for (slot in slots) {
+    ht_merge(results[[slot]], out[[slot]])
+  }
 }
 
 # The walk_*() functions are repeated recursion steps inside
@@ -234,5 +244,5 @@ list_code_analysis_results <- function(results) {
     }
   )
   names(x) <- code_analysis_slots
-  x
+  select_nonempty(x)
 }

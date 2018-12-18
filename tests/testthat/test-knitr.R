@@ -62,7 +62,6 @@ test_with_dir("bad knitr report", {
 
 test_with_dir("empty cases", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_equal(knitr_deps_list(NULL), list())
   expect_equal(safe_get_tangled_frags(NULL), character(0))
 })
 

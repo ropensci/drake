@@ -31,24 +31,9 @@ knitr_deps <- function(target) {
   if (!length(target)) {
     return(character(0))
   }
-  clean_dependency_list(knitr_deps_list(target))
-}
-
-knitr_deps_list <- function(target) {
-  if (!length(target)) {
-    return(list())
-  }
-  fragments <- safe_get_tangled_frags(target)
-  results <- analyze_code(fragments)
-  select <- c(
-    "knitr_in",
-    "file_in",
-    "file_out",
-    "loadd",
-    "readd"
-  )
-  select <- intersect(select, names(results))
-  results[select]
+  out <- new_code_analysis_results()
+  analyze_knitr_file(target, out)
+  clean_dependency_list(list_code_analysis_results(out))
 }
 
 safe_get_tangled_frags <- function(target) {
