@@ -138,14 +138,16 @@ test_with_dir("solitary codetools globals tests", {
 })
 
 test_with_dir("replacement functions", {
-  skip("Not ready for `my_function<-` edge cases yet")
+  skip("Not ready for replacement functions yet")
   code <- quote(f(x) <- 1)
   out <- analyze_code(code)$globals
   expect_equal(out, "f<-")
+  code <- quote(f(g(h(k(x)))) <- seven)
+  out <- sort(as.character(analyze_code(code)$globals))
+  exp <- sort(c("f<-", "g", "g<-", "h", "h<-", "k", "k<-", "seven"))
+  expect_equal(out, exp)
   code <- quote(f(g(h(x, w), y(a)), z(u, v)) <- 1)
   out <- sort(as.character(analyze_code(code)$globals))
-  # Does not quite agree with codetools,
-  # but it is close, and it seems more consistent:
   exp <- sort(
     c("f<-", "g", "g<-", "h", "h<-", "a", "u", "v", "w", "y", "z")
   )
