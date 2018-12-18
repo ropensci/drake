@@ -6,12 +6,11 @@ analyze_code <- function(
   if (!is.function(expr) && !is.language(expr)) {
     return(list())
   }
-  results <- ht_new()
+  results <- new_code_analysis_results()
   locals <- ht_new(c(exclude, ignored_symbols))
   allowed_globals <- ht_new(allowed_globals) %||% NULL
   walk_code(expr, results, locals, allowed_globals)
-  # TODO: replace `unique` with `ht_list` when we convert to hash tables:
-  results <- lapply(as.list(results), unique)
+  results <- list_code_analysis_results(results)
   select_nonempty(results)
 }
 
@@ -24,7 +23,7 @@ analyze_global <- function(expr, results, locals, allowed_globals) {
     return()
   }
   if (is.null(allowed_globals) || ht_exists(allowed_globals, x)) {
-    results$globals <- c(results$globals, x)
+    ht_add(results$globals, x)
   }
   invisible()
 }
@@ -54,7 +53,7 @@ analyze_function <- function(expr, results, locals, allowed_globals) {
 analyze_namespaced <- function(expr, results, locals, allowed_globals) {
   x <- wide_deparse(expr)
   if (!ht_exists(locals, x)) {
-    results$namespaced <- c(results$namespaced, x)
+    ht_add(results$namespaced, x)
   }
 }
 
@@ -126,7 +125,7 @@ walk_code <- function(expr, results, locals, allowed_globals) {
   } else if (is.name(expr)) {
     analyze_global(expr, results, locals, allowed_globals)
   } else if (is.character(expr)) {
-    results$strings <- c(results$strings, expr)
+    ht_add(results$strings, expr)
   } else if (is.pairlist(expr)) {
     walk_call(expr, results, locals, allowed_globals)
   } else if (is.language(expr) && (is.call(expr) || is.recursive(expr))) {
@@ -150,12 +149,12 @@ walk_code <- function(expr, results, locals, allowed_globals) {
       zip_to_envir(analyze_loadd(expr), results)
     } else if (name %in% readd_fns) {
       zip_to_envir(analyze_readd(expr), results)
-    } else if (name %in% c(knitr_in_fns)) {
-      zip_to_envir(analyze_knitr_in(expr), results)
     } else if (name %in% file_in_fns) {
-      zip_to_envir(analyze_file_in(expr), results)
+      analyze_file_in(expr, results)
     } else if (name %in% file_out_fns) {
       zip_to_envir(analyze_file_out(expr), results)
+    } else if (name %in% c(knitr_in_fns)) {
+      zip_to_envir(analyze_knitr_in(expr), results)
     } else if (!(name %in% ignored_fns)) {
       walk_call(expr, results, locals, allowed_globals)
     }
@@ -192,4 +191,37 @@ is_callish <- function(x) {
 
 pair_text <- function(x, y) {
   apply(expand.grid(x, y), 1, paste0, collapse = "")
+}
+
+code_analysis_slots <- c(
+  "globals",
+  "namespaced",
+  "strings",
+  "loadd",
+  "readd",
+  "file_in",
+  "file_out",
+  "knitr_in"
+)
+
+new_code_analysis_results <- function() {
+  x <- lapply(
+    X = code_analysis_slots,
+    FUN = function(tmp) {
+      ht_new()
+    }
+  )
+  names(x) <- code_analysis_slots
+  list2env(x = x, hash = TRUE, parent = emptyenv())
+}
+
+list_code_analysis_results <- function(results) {
+  x <- lapply(
+    X = code_analysis_slots,
+    FUN = function(slot) {
+      ht_list(results[[slot]])
+    }
+  )
+  names(x) <- code_analysis_slots
+  x
 }
