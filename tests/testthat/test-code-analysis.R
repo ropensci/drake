@@ -137,7 +137,7 @@ test_with_dir("solitary codetools globals tests", {
   expect_equal(as.character(analyze_code(f)$globals), character(0))
 })
 
-test_with_dir("`my_function<-` edge cases", {
+test_with_dir("replacement functions", {
   skip("Not ready for `my_function<-` edge cases yet")
   code <- quote(f(x) <- 1)
   out <- analyze_code(code)$globals
