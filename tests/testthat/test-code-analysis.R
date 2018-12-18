@@ -1,7 +1,7 @@
 drake_context("code analysis")
 
 test_with_dir("busy function", {
-  f <- function(a = 1, b = k(i), nineteen) {
+  f <- function(a = 1, b = k(i), nineteen, string_args = c("sa1", "sa2")) {
     for (iter in 1:10) {
       got_for <- got_for + iter
     }
@@ -16,30 +16,38 @@ test_with_dir("busy function", {
     local({
       xyz1 <- 5
     })
+    stringvar <- "string1"
+    stringlist <- list(c("string2", "string3"))
     h <- function() {
       xyz2 <- 6
     }
     abc <- xyz1 + xyz2
     f2 <- "local"
     lm(f1 ~ f2 + f3)
-    file_in("x")
-    drake::file_out("y")
+    file_in("x", "y")
+    drake::file_out(c("w", "z"))
     base::c(got, basevar)
     quote(quoted)
     Quote(quoted2)
     expression(quoted3)
   }
   out <- analyze_code(f)
-  expect_equal(out$file_in, "\"x\"")
-  expect_equal(out$file_out, "\"y\"")
+  expect_equal(sort(out$file_in), sort(c("\"x\"", "\"y\"")))
+  expect_equal(sort(out$file_out), sort(c("\"w\"", "\"z\"")))
+  str <- sort(
+    c("iter3", "iter4", "local", paste0("string", 1:3), "sa1", "sa2")
+  )
+  expect_equal(sort(out$strings), str)
   expect_equal(out$namespaced, "base::c")
   exp <- sort(c(
-    "assign", "basevar", "delayedAssign", "expression", "for",
+    "assign", "basevar", "c", "delayedAssign", "expression", "for",
     "f1", "f3", "g", "got", "got_for", "got_while",
-    "i", "iter2", "k",  "lm", "local", "Quote", "quote",
+    "i", "iter2", "k",  "list", "lm", "local", "Quote", "quote",
     "val1", "val2", "while", "xyz1", "xyz2"
   ))
   expect_equal(sort(out$globals), exp)
+  str <- sort(c(str, "w", "x", "y", "z"))
+  expect_equal(sort(analyze_strings(f)), str)
 })
 
 # https://github.com/cran/codetools/blob/master/tests/tests.R # nolint
@@ -48,7 +56,7 @@ test_with_dir("local variable tests from the codetools package", {
     if (!is.function(expr) && !is.language(expr)) {
       return(list())
     }
-    results <- ht_new()
+    results <- new_code_analysis_results()
     locals <- ht_new()
     walk_code(expr, results, locals, NULL)
     ht_list(locals)
@@ -124,7 +132,7 @@ test_with_dir("solitary codetools globals tests", {
     local(x <- y)
     x
   }
-  expect_equal(analyze_code(f), list())
+  expect_equivalent(analyze_code(f), list())
   f <- function() {
     x <- 1; y <- 2
   }

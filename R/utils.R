@@ -242,16 +242,6 @@ standardize_filename <- function(text) {
   text
 }
 
-zip_to_envir <- function(x, envir) {
-  lapply(
-    X = names(x),
-    function(name) {
-      envir[[name]] <- c(envir[[name]], x[[name]])
-    }
-  )
-  invisible()
-}
-
 is_vectorized <- function(funct) {
   if (!is.function(funct)) {
     return(FALSE)

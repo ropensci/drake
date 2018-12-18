@@ -17,7 +17,6 @@ ht_add <- function(ht, x) {
     envir = ht,
     inherits = FALSE
   )
-  invisible()
 }
 
 ht_del <- function(ht, x) {
@@ -34,4 +33,9 @@ ht_list <- function(ht) {
 
 ht_clone <- function(ht) {
   list2env(as.list(ht), hash = TRUE, parent = emptyenv())
+}
+
+# Merge y into x
+ht_merge <- function(x, y) {
+  ht_add(x, ht_list(y))
 }
