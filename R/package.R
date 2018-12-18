@@ -38,7 +38,6 @@
 #' }
 #' @references <https://github.com/ropensci/drake>
 #' @useDynLib drake
-#' @importFrom codetools findGlobals
 #' @importFrom digest digest
 #' @importFrom formatR tidy_source
 #' @importFrom igraph adjacent_vertices components delete_vertices

@@ -1,7 +1,3 @@
-# The analyze_*() functions analyze language objects from the top.
-# These functions tend to give sensible answers if you just supply
-# the language object to the first argument and rely on the defaults
-# of the other arguments.
 analyze_code <- function(
   expr,
   exclude = character(0),
@@ -10,24 +6,69 @@ analyze_code <- function(
   if (!is.function(expr) && !is.language(expr)) {
     return(list())
   }
-  locals <- ht_new()
   results <- ht_new()
-  ht_add(locals, c(exclude, drake_symbols))
-  walk_code(expr, results, locals = locals, allowed_globals = allowed_globals)
+  locals <- ht_new(c(exclude, ignored_symbols))
+  allowed_globals <- ht_new(allowed_globals) %||% NULL
+  walk_code(expr, results, locals, allowed_globals)
+  # TODO: replace `unique` with `ht_list` when we convert to hash tables:
   results <- lapply(as.list(results), unique)
-  results$globals <- as.character(results$globals)
-  non_locals <- find_non_locals(expr)
-  results$globals <- intersect(results$globals, non_locals)
-  if (!is.null(allowed_globals)) {
-    results$globals <- intersect(results$globals, allowed_globals)
-  }
-  results <- lapply(
-    X = results,
-    FUN = function(x) {
-      unique(setdiff(x, exclude))
-    }
-  )
   select_nonempty(results)
+}
+
+analyze_global <- function(expr, results, locals, allowed_globals) {
+  x <- as.character(expr)
+  if (!nzchar(x)) {
+    return()
+  }
+  if (ht_exists(locals, x)) {
+    return()
+  }
+  if (is.null(allowed_globals) || ht_exists(allowed_globals, x)) {
+    results$globals <- c(results$globals, x)
+  }
+  invisible()
+}
+
+analyze_arrow <- function(expr, results, locals, allowed_globals) {
+  walk_call(flatten_assignment(expr[[2]]), results, locals, allowed_globals)
+  walk_code(expr[[3]], results, locals, allowed_globals)
+  ht_add(locals, get_assigned_var(expr))
+}
+
+analyze_for <- function(expr, results, locals, allowed_globals) {
+  ht_add(locals, as.character(expr[[2]]))
+  walk_call(expr[-2], results, locals, allowed_globals)
+}
+
+analyze_function <- function(expr, results, locals, allowed_globals) {
+  expr <- unwrap_function(expr)
+  if (typeof(expr) != "closure") {
+    return()
+  }
+  locals <- ht_clone(locals)
+  ht_add(locals, names(formals(expr)))
+  walk_code(formals(expr), results, locals, allowed_globals)
+  walk_code(body(expr), results, locals, allowed_globals)
+}
+
+analyze_namespaced <- function(expr, results, locals, allowed_globals) {
+  x <- wide_deparse(expr)
+  if (!ht_exists(locals, x)) {
+    results$namespaced <- c(results$namespaced, x)
+  }
+}
+
+analyze_assign <- function(expr, results, locals, allowed_globals) {
+  expr <- match.call(definition = assign, call = expr)
+  if (is.character(expr$x)) {
+    if (is.null(expr$pos) || identical(expr$pos, formals(assign)$pos)) {
+      ht_add(locals, expr$x)
+    }
+  } else {
+    analyze_global(expr$x, results, locals, allowed_globals)
+  }
+  expr$x <- NULL
+  walk_call(expr, results, locals, allowed_globals)
 }
 
 analyze_loadd <- function(expr) {
@@ -81,14 +122,31 @@ walk_code <- function(expr, results, locals, allowed_globals) {
   if (!length(expr)) {
     return()
   } else if (is.function(expr)) {
-    walk_function(expr, results, locals, allowed_globals)
+    analyze_function(expr, results, locals, allowed_globals)
   } else if (is.name(expr)) {
-    results$globals <- c(results$globals, expr)
+    analyze_global(expr, results, locals, allowed_globals)
   } else if (is.character(expr)) {
     results$strings <- c(results$strings, expr)
+  } else if (is.pairlist(expr)) {
+    walk_call(expr, results, locals, allowed_globals)
   } else if (is.language(expr) && (is.call(expr) || is.recursive(expr))) {
     name <- wide_deparse(expr[[1]])
-    if (name %in% loadd_fns) {
+    if (name == "local"){
+      locals <- ht_clone(locals)
+    }
+    if (name %in% c("expression", "quote", "Quote")) {
+      analyze_global(name, results, locals, allowed_globals)
+    } else if (name %in% c("<-", "=")) {
+      analyze_arrow(expr, results, locals, allowed_globals)
+    } else if (name %in% c("::", ":::")) {
+      analyze_namespaced(expr, results, locals, allowed_globals)
+    } else if (name == "for") {
+      analyze_for(expr, results, locals, allowed_globals)
+    } else if (name == "function") {
+      analyze_function(eval(expr), results, locals, allowed_globals)
+    } else if (name %in% c("assign", "delayedAssign")) {
+      analyze_assign(expr, results, locals, allowed_globals)
+    } else if (name %in% loadd_fns) {
       zip_to_envir(analyze_loadd(expr), results)
     } else if (name %in% readd_fns) {
       zip_to_envir(analyze_readd(expr), results)
@@ -99,38 +157,19 @@ walk_code <- function(expr, results, locals, allowed_globals) {
     } else if (name %in% file_out_fns) {
       zip_to_envir(analyze_file_out(expr), results)
     } else if (!(name %in% ignored_fns)) {
-      walk_call(expr, name, results, locals, allowed_globals)
+      walk_call(expr, results, locals, allowed_globals)
     }
   }
 }
 
-walk_call <- function(expr, name, results, locals, allowed_globals) {
-  if (name %in% c("::", ":::")) {
-    results$namespaced <- c(
-      results$namespaced,
-      setdiff(wide_deparse(expr), drake_symbols)
-    )
-  } else {
-    lapply(
-      X = expr,
-      FUN = walk_code,
-      results = results,
-      locals = locals,
-      allowed_globals = allowed_globals
-    )
-  }
-}
-
-walk_function <- function(expr, results, locals, allowed_globals) {
-  expr <- unwrap_function(expr)
-  if (typeof(expr) == "closure") {
-    walk_code(
-      expr = body(expr),
-      results = results,
-      locals = locals,
-      allowed_globals = allowed_globals
-    )
-  }
+walk_call <- function(expr, results, locals, allowed_globals) {
+  lapply(
+    X = expr,
+    FUN = walk_code,
+    results = results,
+    locals = locals,
+    allowed_globals = allowed_globals
+  )
 }
 
 is_target_call <- function(expr) {
@@ -153,60 +192,4 @@ is_callish <- function(x) {
 
 pair_text <- function(x, y) {
   apply(expand.grid(x, y), 1, paste0, collapse = "")
-}
-
-drake_prefix <- c("", "drake::", "drake:::")
-drake_envir_marker <- "._drake_envir"
-file_in_fns <- pair_text(drake_prefix, c("file_in"))
-file_out_fns <- pair_text(drake_prefix, c("file_out"))
-ignored_fns <- pair_text(drake_prefix, c("drake_envir", "ignore"))
-knitr_in_fns <- pair_text(drake_prefix, c("knitr_in"))
-loadd_fns <- pair_text(drake_prefix, "loadd")
-readd_fns <- pair_text(drake_prefix, "readd")
-target_fns <- pair_text(drake_prefix, "target")
-trigger_fns <- pair_text(drake_prefix, "trigger")
-
-drake_symbols <- sort(
-  c(
-    drake_envir_marker,
-    file_in_fns,
-    file_out_fns,
-    ignored_fns,
-    loadd_fns,
-    knitr_in_fns,
-    readd_fns,
-    target_fns,
-    trigger_fns
-  )
-)
-base_symbols <- sort(
-  grep(
-    pattern = "[a-zA-Z]",
-    x = ls("package:base"),
-    value = TRUE,
-    invert = TRUE
-  )
-)
-ignored_symbols <- sort(c(drake_symbols, base_symbols))
-
-find_non_locals <- function(fun) {
-  if (!is.function(fun)) {
-    f <- function() {} # nolint
-    body(f) <- as.call(append(as.list(body(f)), fun))
-    fun <- f
-  }
-  if (typeof(fun) != "closure") {
-    return(character(0))
-  }
-  fun <- unwrap_function(fun)
-  # The tryCatch statement fixes a strange bug in codetools
-  # for R 3.3.3. I do not understand it.
-  out <- tryCatch(
-    codetools::findGlobals(fun = fun, merge = TRUE),
-    error = function(e) {
-      fun <- eval(parse(text = wide_deparse(fun))) # nocov
-      codetools::findGlobals(fun = fun, merge = TRUE)  # nocov
-    }
-  )
-  setdiff(out, ignored_symbols)
 }
