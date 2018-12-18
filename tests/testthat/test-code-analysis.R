@@ -61,7 +61,6 @@ test_with_dir("local variable tests from the codetools package", {
   expect_equal(find_locals(quote(assign("x", 3, 4))), character(0))
 })
 
-
 test_with_dir("same tests with global variables", {
   code <- quote(x <- 1)
   expect_equal(as.character(analyze_code(code)$globals), character(0))
@@ -137,19 +136,86 @@ test_with_dir("solitary codetools globals tests", {
   expect_equal(as.character(analyze_code(f)$globals), character(0))
 })
 
+# https://github.com/cran/codetools/blob/9bac1daaf19a36bd03a2cd7d67041893032e7a04/R/codetools.R#L302-L365 # nolint
+# https://cran.r-project.org/doc/manuals/R-lang.html#Subset-assignment
 test_with_dir("replacement functions", {
-  skip("Not ready for replacement functions yet")
   code <- quote(f(x) <- 1)
+  out <- sort(analyze_code(code)$globals)
+  expect_equal(out, sort(c("f<-", "x")))
+
+  code <- quote({
+    f(x) <- 1
+    x <- 5
+  })
+  out <- sort(analyze_code(code)$globals)
+  expect_equal(out, sort(c("f<-", "x")))
+
+  code <- quote({
+    x <- 5
+    f(x) <- 1
+  })
   out <- analyze_code(code)$globals
   expect_equal(out, "f<-")
+
   code <- quote(f(g(h(k(x)))) <- seven)
   out <- sort(as.character(analyze_code(code)$globals))
-  exp <- sort(c("f<-", "g", "g<-", "h", "h<-", "k", "k<-", "seven"))
+  exp <- sort(c("f<-", "g", "g<-", "h", "h<-", "k", "k<-", "x", "seven"))
   expect_equal(out, exp)
+
   code <- quote(f(g(h(x, w), y(a)), z(u, v)) <- 1)
+  out <- sort(as.character(analyze_code(code)$globals))
+  exp <- sort(
+    c("f<-", "g", "g<-", "h", "h<-", "a", "u", "v", "w", "x", "y", "z")
+  )
+  expect_equal(out, exp)
+
+  code <- quote({
+    x <- 5
+    f(g(h(x, w), y(a)), z(u, v)) <- 1
+  })
   out <- sort(as.character(analyze_code(code)$globals))
   exp <- sort(
     c("f<-", "g", "g<-", "h", "h<-", "a", "u", "v", "w", "y", "z")
   )
   expect_equal(out, exp)
+
+  code <- quote({
+    f(g(h(x, w), y(a)), z(u, v)) <- 1
+    x <- 5
+  })
+  out <- sort(as.character(analyze_code(code)$globals))
+  exp <- sort(
+    c("f<-", "g", "g<-", "h", "h<-", "a", "u", "v", "w", "x", "y", "z")
+  )
+  expect_equal(out, exp)
+
+  code <- quote(f(base::g(pkg:::h(x, w), y(a)), z(u, v)) <- 1)
+  out <- analyze_code(code)
+  expect_equal(
+    sort(out$globals),
+    sort(c("f<-", "a", "u", "v", "x", "w", "y", "z"))
+  )
+  expect_equal(
+    sort(out$namespaced),
+    sort(c("pkg:::h", "base::g", "base::`g<-`", "pkg:::`h<-`"))
+  )
+})
+
+test_with_dir("code analysis error handling", {
+  f <- function(a, b){
+    invisible()
+  }
+  expect_error(get_assigned_var(formals(f)), regexp = "missing assignment")
+
+  e <- quote(x <- 1)
+  e <- list(e[1], e[1])
+  expect_error(get_assigned_var(e), regexp = "unfinished code")
+
+  e <- quote(x <- 1)
+  e[[2]] <- quote(x <- 1)
+  e[[2]][[2]] <- formals(f)[[1]]
+  expect_error(get_assigned_var(e), regexp = "missing variable")
+
+  e <- list(1, 2)
+  expect_error(get_assigned_var(e), regexp = "not a symbol")
 })

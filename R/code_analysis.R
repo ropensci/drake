@@ -1,7 +1,3 @@
-# The analyze_*() functions analyze language objects from the top.
-# These functions tend to give sensible answers if you just supply
-# the language object to the first argument and rely on the defaults
-# of the other arguments.
 analyze_code <- function(
   expr,
   exclude = character(0),
@@ -33,8 +29,9 @@ analyze_global <- function(expr, results, locals, allowed_globals) {
 }
 
 analyze_arrow <- function(expr, results, locals, allowed_globals) {
+  walk_call(flatten_assignment(expr[[2]]), results, locals, allowed_globals)
   walk_code(expr[[3]], results, locals, allowed_globals)
-  ht_add(locals, as.character(expr[[2]]))
+  ht_add(locals, get_assigned_var(expr))
 }
 
 analyze_for <- function(expr, results, locals, allowed_globals) {
@@ -195,37 +192,3 @@ is_callish <- function(x) {
 pair_text <- function(x, y) {
   apply(expand.grid(x, y), 1, paste0, collapse = "")
 }
-
-drake_prefix <- c("", "drake::", "drake:::")
-drake_envir_marker <- "._drake_envir"
-file_in_fns <- pair_text(drake_prefix, c("file_in"))
-file_out_fns <- pair_text(drake_prefix, c("file_out"))
-ignored_fns <- pair_text(drake_prefix, c("drake_envir", "ignore"))
-knitr_in_fns <- pair_text(drake_prefix, c("knitr_in"))
-loadd_fns <- pair_text(drake_prefix, "loadd")
-readd_fns <- pair_text(drake_prefix, "readd")
-target_fns <- pair_text(drake_prefix, "target")
-trigger_fns <- pair_text(drake_prefix, "trigger")
-
-drake_symbols <- sort(
-  c(
-    drake_envir_marker,
-    file_in_fns,
-    file_out_fns,
-    ignored_fns,
-    loadd_fns,
-    knitr_in_fns,
-    readd_fns,
-    target_fns,
-    trigger_fns
-  )
-)
-base_symbols <- sort(
-  grep(
-    pattern = "^[\\.a-zA-Z]",
-    x = ls("package:base"),
-    value = TRUE,
-    invert = TRUE
-  )
-)
-ignored_symbols <- sort(c(drake_symbols, base_symbols))
