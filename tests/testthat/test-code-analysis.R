@@ -1,7 +1,7 @@
 drake_context("code analysis")
 
 test_with_dir("busy function", {
-  f <- function(a = 1, b = k(i), nineteen) {
+  f <- function(a = 1, b = k(i), nineteen, string_args = c("sa1", "sa2")) {
     for (iter in 1:10) {
       got_for <- got_for + iter
     }
@@ -31,14 +31,13 @@ test_with_dir("busy function", {
     Quote(quoted2)
     expression(quoted3)
   }
-
-
-  x <- parse(text = deparse(body(f)), keep.source = FALSE)[[1]]
-
   out <- analyze_code(f)
   expect_equal(sort(out$file_in), sort(c("\"x\"", "\"y\"")))
   expect_equal(sort(out$file_out), sort(c("\"w\"", "\"z\"")))
-  expect_equal(sort(out$strings), sort(c("local", paste0("string", 1:3))))
+  str <- sort(
+    c("iter3", "iter4", "local", paste0("string", 1:3), "sa1", "sa2")
+  )
+  expect_equal(sort(out$strings), str)
   expect_equal(out$namespaced, "base::c")
   exp <- sort(c(
     "assign", "basevar", "c", "delayedAssign", "expression", "for",
@@ -47,6 +46,8 @@ test_with_dir("busy function", {
     "val1", "val2", "while", "xyz1", "xyz2"
   ))
   expect_equal(sort(out$globals), exp)
+  str <- sort(c(str, "w", "x", "y", "z"))
+  expect_equal(sort(analyze_strings(f)), str)
 })
 
 # https://github.com/cran/codetools/blob/master/tests/tests.R # nolint

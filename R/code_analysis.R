@@ -69,6 +69,7 @@ analyze_namespaced <- function(expr, results, locals, allowed_globals) {
 analyze_assign <- function(expr, results, locals, allowed_globals) {
   expr <- match.call(definition = assign, call = expr)
   if (is.character(expr$x)) {
+    ht_add(results$strings, expr$x)
     if (is.null(expr$pos) || identical(expr$pos, formals(assign)$pos)) {
       ht_add(locals, expr$x)
     }
@@ -191,7 +192,7 @@ walk_strings <- function(expr, ht) {
     if (nzchar(expr)) {
       ht_add(ht, expr)
     }
-  } else if (is_callish(expr)) {
+  } else if (is.pairlist(expr) || is_callish(expr)) {
     lapply(expr, walk_strings, ht = ht)
   }
 }
