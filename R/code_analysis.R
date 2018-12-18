@@ -1,7 +1,8 @@
 analyze_code <- function(
   expr,
   exclude = character(0),
-  allowed_globals = NULL
+  allowed_globals = NULL,
+  as_list = TRUE
 ) {
   if (!is.function(expr) && !is.language(expr)) {
     return(list())
@@ -10,8 +11,11 @@ analyze_code <- function(
   locals <- ht_new(c(exclude, ignored_symbols))
   allowed_globals <- ht_new(allowed_globals) %||% NULL
   walk_code(expr, results, locals, allowed_globals)
-  results <- list_code_analysis_results(results)
-  select_nonempty(results)
+  if (as_list) {
+    results <- list_code_analysis_results(results)
+    results <- select_nonempty(results)
+  }
+  results
 }
 
 analyze_global <- function(expr, results, locals, allowed_globals) {
@@ -70,7 +74,7 @@ analyze_assign <- function(expr, results, locals, allowed_globals) {
   walk_call(expr, results, locals, allowed_globals)
 }
 
-analyze_loadd <- function(expr) {
+analyze_loadd <- function(expr, results) {
   expr <- match.call(drake::loadd, as.call(expr))
   expr <- expr[-1]
   unnamed <- list()
@@ -82,35 +86,41 @@ analyze_loadd <- function(expr) {
     unnamed$strings,
     analyze_code(expr["list"])$strings
   )
-  list(loadd = setdiff(out, drake_symbols))
+  out <- setdiff(out, drake_symbols)
+  ht_add(results$loadd, out)
 }
 
-analyze_readd <- function(expr) {
+analyze_readd <- function(expr, results) {
   expr <- match.call(drake::readd, as.call(expr))
   deps <- unlist(analyze_code(expr["target"])[c("globals", "strings")])
-  list(readd = setdiff(deps, drake_symbols))
+  out <- setdiff(deps, drake_symbols)
+  ht_add(results$readd, out)
 }
 
-analyze_file_in <- function(expr) {
-  expr <- expr[-1]
-  deps <- drake_quotes(analyze_code(expr)$strings, single = FALSE)
-  list(file_in = deps)
+analyze_file_in <- function(expr, results) {
+  out <- analyze_code(expr[-1], as_list = FALSE)
+  files <- drake_quotes(ht_list(out$strings), single = FALSE)
+  ht_add(results$file_in, files)
 }
 
-analyze_file_out <- function(expr) {
-  expr <- expr[-1]
-  deps <- drake_quotes(analyze_code(expr)$strings, single = FALSE)
-  list(file_out = deps)
+analyze_file_out <- function(expr, results) {
+  out <- analyze_code(expr[-1], as_list = FALSE)
+  files <- drake_quotes(ht_list(out$strings), single = FALSE)
+  ht_add(results$file_out, files)
 }
 
-analyze_knitr_in <- function(expr) {
-  expr <- expr[-1]
-  files <- analyze_code(expr)$strings
+analyze_knitr_in <- function(expr, results) {
+  files <- analyze_code(expr[-1])$strings
   out <- lapply(files, knitr_deps_list)
   out <- Reduce(out, f = merge_lists)
   files <- drake_quotes(files, single = FALSE)
-  out$knitr_in <- c(out$knitr_in, files)
-  out
+  ht_add(results$knitr_in, c(out$knitr_in, files))
+  lapply(
+    X = names(out),
+    FUN = function(x) {
+      ht_add(results[[x]], out[[x]])
+    }
+  )
 }
 
 # The walk_*() functions are repeated recursion steps inside
@@ -125,7 +135,9 @@ walk_code <- function(expr, results, locals, allowed_globals) {
   } else if (is.name(expr)) {
     analyze_global(expr, results, locals, allowed_globals)
   } else if (is.character(expr)) {
-    ht_add(results$strings, expr)
+    if (nzchar(expr)) {
+      ht_add(results$strings, expr)
+    }
   } else if (is.pairlist(expr)) {
     walk_call(expr, results, locals, allowed_globals)
   } else if (is.language(expr) && (is.call(expr) || is.recursive(expr))) {
@@ -146,15 +158,15 @@ walk_code <- function(expr, results, locals, allowed_globals) {
     } else if (name %in% c("assign", "delayedAssign")) {
       analyze_assign(expr, results, locals, allowed_globals)
     } else if (name %in% loadd_fns) {
-      zip_to_envir(analyze_loadd(expr), results)
+      analyze_loadd(expr, results)
     } else if (name %in% readd_fns) {
-      zip_to_envir(analyze_readd(expr), results)
+      analyze_readd(expr, results)
     } else if (name %in% file_in_fns) {
       analyze_file_in(expr, results)
     } else if (name %in% file_out_fns) {
-      zip_to_envir(analyze_file_out(expr), results)
+      analyze_file_out(expr, results)
     } else if (name %in% c(knitr_in_fns)) {
-      zip_to_envir(analyze_knitr_in(expr), results)
+      analyze_knitr_in(expr, results)
     } else if (!(name %in% ignored_fns)) {
       walk_call(expr, results, locals, allowed_globals)
     }

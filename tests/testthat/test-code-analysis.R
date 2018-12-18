@@ -48,7 +48,7 @@ test_with_dir("local variable tests from the codetools package", {
     if (!is.function(expr) && !is.language(expr)) {
       return(list())
     }
-    results <- ht_new()
+    results <- new_code_analysis_results()
     locals <- ht_new()
     walk_code(expr, results, locals, NULL)
     ht_list(locals)
@@ -124,7 +124,7 @@ test_with_dir("solitary codetools globals tests", {
     local(x <- y)
     x
   }
-  expect_equal(analyze_code(f), list())
+  expect_equivalent(analyze_code(f), list())
   f <- function() {
     x <- 1; y <- 2
   }
