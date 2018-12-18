@@ -36,6 +36,7 @@ assert_pkg <- function(pkg, version = NULL, install = "install.packages") {
       call. = FALSE
     )
   }
+  invisible()
 }
 
 braces <- function(x) {

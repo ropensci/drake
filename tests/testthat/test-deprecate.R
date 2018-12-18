@@ -183,13 +183,14 @@ test_with_dir("deprecated arguments", {
 
 test_with_dir("old file API", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_if_not_installed("datasets")
   old_strings_in_dots <- pkgconfig::get_config("drake::strings_in_dots")
   on.exit(
     pkgconfig::set_config("drake::strings_in_dots" = old_strings_in_dots)
   )
   pkgconfig::set_config("drake::strings_in_dots" = "filenames")
   expect_warning(x <- drake_plan(
-    file.csv = write.csv(mtcars, file = "file.csv"),
+    file.csv = write.csv(datasets::mtcars, file = "file.csv"),
     strings_in_dots = "literals",
     file_targets = TRUE
   ))
@@ -261,7 +262,9 @@ test_with_dir("force with a non-back-compatible cache", {
 
 test_with_dir("v6.2.1 project is still up to date", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_if_not_installed("datasets")
   skip_if_not_installed("tibble")
+  requireNamespace("datasets")
   write_v6.2.1_project() # nolint
   report_md_hash <- readRDS(
     file.path(".drake", "data", "983396f9689f587b.rds")
@@ -399,4 +402,11 @@ test_with_dir("main example", {
   for (file in c("raw_data.xlsx", "report.Rmd")) {
     expect_false(file.exists(file))
   }
+})
+
+test_with_dir("session arg to make()", {
+  expect_warning(
+    make(drake_plan(x = 1), session = "callr::r_vanilla"),
+    regexp = "lock_envir"
+  )
 })

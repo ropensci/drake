@@ -2,6 +2,7 @@ drake_context("Makefile")
 
 test_with_dir("Makefile path and conflicts", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_if_not_installed("datasets")
   load_mtcars_example()
   file <- "non_standard_makefile"
   config <- drake_config(
@@ -14,7 +15,7 @@ test_with_dir("Makefile path and conflicts", {
   expect_true(file.exists(file))
   expect_silent(write_makefile(config))
   unlink(file)
-  write.csv(mtcars, file)
+  write.csv(datasets::mtcars, file)
   expect_error(
     write_makefile(config),
     regexp = "already exists and was not created by drake"

@@ -196,8 +196,9 @@ make <- function(
 #' @description Use [drake_config()]
 #' to create the `config` argument.
 #' @export
+#' @keywords internal
 #' @seealso [make()], [drake_config()]
-#' @return An output internal configuration list
+#' @return A [drake_config()] list
 #' @param config An input internal configuration list
 #' @examples
 #' \dontrun{
@@ -209,45 +210,22 @@ make <- function(
 #' })
 #' }
 make_with_config <- function(config = drake::read_drake_config()) {
-  if (is.null(config$session)) {
-    make_session(config = config)
-  } else {
-    globals <- global_imports(config)
-    args <- as.list(globalenv(), all.names = TRUE)[globals]
-    args$config <- config
-    config$session(
-      func = function(config, ...) {
-        args <- list(...)
-        envir <- globalenv()
-        for (var in names(args)) {
-          assign(x = var, value = args[[var]], envir = envir)
-        }
-        drake::make_session(config = config)
-      },
-      args = args,
-      libpath = .libPaths()
+  if (!is.null(config$session)) {
+    # Deprecated on 2018-12-18.
+    warning(
+      "The ", sQuote("session"), " argument of make() and drake_config() ",
+      "is deprecated. make() will NOT run in a separate callr session. ",
+      "For reproducibility, you may wish to try make(lock_envir = TRUE). ",
+      "Details: https://github.com/ropensci/drake/issues/623.",
+      call. = FALSE
     )
   }
-  return(invisible(config))
-}
-
-global_imports <- function(config) {
-  out <- setdiff(V(config$graph)$name, config$plan$target)
-  intersect(out, ls(envir = globalenv()))
-}
-
-#' @title Internal function to be called by [make_with_config()]
-#' @description For internal use only. Not for the API.
-#' @keywords internal
-#' @export
-#' @inheritParams make_with_config
-make_session <- function(config) {
   do_prework(config = config, verbose_packages = config$verbose)
   check_drake_config(config = config)
   store_drake_config(config = config)
   initialize_session(config = config)
   make_with_schedules(config = config)
-    drake_cache_log_file(
+  drake_cache_log_file(
     file = config$cache_log_file,
     cache = config$cache,
     jobs = config$jobs

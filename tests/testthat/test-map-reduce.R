@@ -31,10 +31,11 @@ test_with_dir("map_plan()", {
 
 test_with_dir("map_plan() onto a matrix", {
   skip_on_cran()
+  skip_if_not_installed("datasets")
   my_model_fit <- function(x1, x2) {
-    lm(as.formula(paste("mpg ~", x1, "+", x2)), data = mtcars)
+    lm(as.formula(paste("mpg ~", x1, "+", x2)), data = datasets::mtcars)
   }
-  covariates <- setdiff(colnames(mtcars), "mpg")
+  covariates <- setdiff(colnames(datasets::mtcars), "mpg")
   args <- t(combn(covariates, 2))
   colnames(args) <- c("x1", "x2")
   plan <- map_plan(args, "my_model_fit")
@@ -46,11 +47,12 @@ test_with_dir("map_plan() onto a matrix", {
 
 test_with_dir("map_plan() with symbols", {
   skip_on_cran()
+  skip_if_not_installed("datasets")
   my_model_fit <- function(x1, x2, data) {
     formula <- as.formula(paste("mpg ~", x1, "+", x1))
     lm(formula, data = data)
   }
-  covariates <- setdiff(colnames(mtcars), "mpg")
+  covariates <- setdiff(colnames(datasets::mtcars), "mpg")
   args <- t(combn(covariates, 2))
   colnames(args) <- c("x1", "x2")
   args <- weak_as_tibble(args)

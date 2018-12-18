@@ -32,13 +32,14 @@ test_with_dir("visNetwork graph runs", {
 
 test_with_dir("visNetwork dep graph does not fail if input file is binary", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_if_not_installed("datasets")
   skip_if_not_installed("lubridate")
   skip_if_not_installed("visNetwork")
   x <- drake_plan(
     y = readRDS(file_in("input.rds")),
     strings_in_dots = "literals"
   )
-  saveRDS(as.list(mtcars), "input.rds")
+  saveRDS(as.list(datasets::mtcars), "input.rds")
   con <- drake_config(x, verbose = FALSE)
   expect_silent(out <- vis_drake_graph(con))
   unlink("input.rds", force = TRUE)

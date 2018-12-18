@@ -18,6 +18,7 @@
 - Remove packages `DBI` and `RSQLite` from "Suggests".
 - Define a special `config$eval <- new.env(parent = config$envir)` for storing built targets and evaluating commands in the plan. Now, `make()` no longer modifies the user's environment. This move is a long-overdue step toward purity.
 - Remove dependency on the `codetools` package.
+- Deprecate and remove the `session` argument of `make()` and `drake_config()`. Details: https://github.com/ropensci/drake/issues/623#issue-391894088.
 
 # Version 6.2.1
 

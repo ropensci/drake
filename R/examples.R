@@ -179,6 +179,7 @@ load_mtcars_example <- function(
 }
 
 populate_mtcars_example_envir <- function(envir) {
+  assert_pkg("datasets")
   force(envir)
   eval(parse(text = "suppressPackageStartupMessages(require(drake))"))
   eval(parse(text = "suppressPackageStartupMessages(require(knitr))"))
@@ -188,7 +189,7 @@ populate_mtcars_example_envir <- function(envir) {
       data[sample.int(n = nrow(data), size = n, replace = TRUE), ]
     }
     simulate <- function(n) {
-      data <- random_rows(data = mtcars, n = n)
+      data <- random_rows(data = datasets::mtcars, n = n)
       data.frame(
         x = data$wt,
         y = data$mpg

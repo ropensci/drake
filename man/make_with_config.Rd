@@ -11,7 +11,7 @@ make_with_config(config = drake::read_drake_config())
 \item{config}{An input internal configuration list}
 }
 \value{
-An output internal configuration list
+A \code{\link[=drake_config]{drake_config()}} list
 }
 \description{
 Use \code{\link[=drake_config]{drake_config()}}
@@ -30,3 +30,4 @@ make_with_config(config = config) # Run the project, build the targets.
 \seealso{
 \code{\link[=make]{make()}}, \code{\link[=drake_config]{drake_config()}}
 }
+\keyword{internal}
