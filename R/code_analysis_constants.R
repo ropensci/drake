@@ -39,3 +39,22 @@ base_symbols <- sort(
 )
 
 ignored_symbols <- sort(c(drake_symbols, base_symbols))
+
+code_analysis_slots <- c(
+  "globals",
+  "namespaced",
+  "strings",
+  "loadd",
+  "readd",
+  "file_in",
+  "file_out",
+  "knitr_in"
+)
+
+knitr_in_slots <- c(
+  "knitr_in",
+  "file_in",
+  "file_out",
+  "loadd",
+  "readd"
+)

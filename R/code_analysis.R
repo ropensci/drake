@@ -120,15 +120,10 @@ analyze_knitr_file <- function(file, results) {
   }
   fragments <- safe_get_tangled_frags(file)
   out <- analyze_code(fragments, as_list = FALSE)
-  slots <- c(
-    "knitr_in",
-    "file_in",
-    "file_out",
-    "loadd",
-    "readd"
-  )
-  for (slot in slots) {
-    ht_merge(results[[slot]], out[[slot]])
+  if (length(out)){
+    for (slot in knitr_in_slots) {
+      ht_merge(results[[slot]], out[[slot]])
+    }
   }
 }
 
@@ -213,17 +208,6 @@ is_callish <- function(x) {
 pair_text <- function(x, y) {
   apply(expand.grid(x, y), 1, paste0, collapse = "")
 }
-
-code_analysis_slots <- c(
-  "globals",
-  "namespaced",
-  "strings",
-  "loadd",
-  "readd",
-  "file_in",
-  "file_out",
-  "knitr_in"
-)
 
 new_code_analysis_results <- function() {
   x <- lapply(
