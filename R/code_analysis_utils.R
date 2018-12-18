@@ -1,3 +1,52 @@
+is_callish <- function(x) {
+  length(x) > 0 && is.language(x) && (is.call(x) || is.recursive(x))
+}
+
+is_target_call <- function(expr) {
+  tryCatch(
+    wide_deparse(expr[[1]]) %in% target_fns,
+    error = error_false
+  )
+}
+
+is_trigger_call <- function(expr) {
+  tryCatch(
+    wide_deparse(expr[[1]]) %in% trigger_fns,
+    error = error_false
+  )
+}
+
+list_code_analysis_results <- function(results) {
+  x <- lapply(
+    X = code_analysis_slots,
+    FUN = function(slot) {
+      ht_list(results[[slot]])
+    }
+  )
+  names(x) <- code_analysis_slots
+  select_nonempty(x)
+}
+
+new_code_analysis_results <- function() {
+  x <- lapply(
+    X = code_analysis_slots,
+    FUN = function(tmp) {
+      ht_new()
+    }
+  )
+  names(x) <- code_analysis_slots
+  list2env(x = x, hash = TRUE, parent = emptyenv())
+}
+
+pair_text <- function(x, y) {
+  apply(expand.grid(x, y), 1, paste0, collapse = "")
+}
+
+safe_all_vars <- function(expr) {
+  out <- lapply(expr, all.vars)
+  as.character(unlist(out))
+}
+
 codetools_tmp_str <- "*ct_tmp*"
 codetools_tmpv_str <- "*ct_tmpv*"
 codetools_tmp <- as.name(codetools_tmp_str)

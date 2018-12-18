@@ -31,6 +31,10 @@ test_with_dir("busy function", {
     Quote(quoted2)
     expression(quoted3)
   }
+  
+  
+  x <- parse(text = deparse(body(f)), keep.source = FALSE)[[1]]
+  
   out <- analyze_code(f)
   expect_equal(sort(out$file_in), sort(c("\"x\"", "\"y\"")))
   expect_equal(sort(out$file_out), sort(c("\"w\"", "\"z\"")))

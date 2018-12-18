@@ -18,6 +18,12 @@ analyze_code <- function(
   results
 }
 
+analyze_strings <- function(expr) {
+  ht <- ht_new()
+  walk_strings(expr, ht)
+  ht_list(ht)
+}
+
 analyze_global <- function(expr, results, locals, allowed_globals) {
   x <- as.character(expr)
   if (!nzchar(x)) {
@@ -76,40 +82,32 @@ analyze_assign <- function(expr, results, locals, allowed_globals) {
 analyze_loadd <- function(expr, results) {
   expr <- match.call(drake::loadd, as.call(expr))
   expr <- expr[-1]
-  unnamed <- list()
-  if (any(is_unnamed <- which_unnamed(expr))) {
-    unnamed <- analyze_code(expr[is_unnamed])
-  }
-  out <- c(
-    unnamed$globals,
-    unnamed$strings,
-    analyze_code(expr["list"])$strings
-  )
-  out <- setdiff(out, drake_symbols)
-  ht_add(results$loadd, out)
+  dots <- expr[which_unnamed(expr)]
+  ht_add(results$loadd, analyze_strings(expr["list"]))
+  ht_add(results$loadd, analyze_strings(dots))
+  ht_add(results$loadd, safe_all_vars(dots))
 }
 
-analyze_readd <- function(expr, results) {
+analyze_readd <- function(expr, results, allowed_globals) {
   expr <- match.call(drake::readd, as.call(expr))
-  deps <- unlist(analyze_code(expr["target"])[c("globals", "strings")])
-  out <- setdiff(deps, drake_symbols)
-  ht_add(results$readd, out)
+  ht_add(results$readd, analyze_strings(expr["target"]))
+  ht_add(results$readd, safe_all_vars(expr["target"]))
 }
 
 analyze_file_in <- function(expr, results) {
-  out <- analyze_code(expr[-1], as_list = FALSE)
-  files <- drake_quotes(ht_list(out$strings), single = FALSE)
+  str <- analyze_strings(expr[-1])
+  files <- drake_quotes(str, single = FALSE)
   ht_add(results$file_in, files)
 }
 
 analyze_file_out <- function(expr, results) {
-  out <- analyze_code(expr[-1], as_list = FALSE)
-  files <- drake_quotes(ht_list(out$strings), single = FALSE)
+  str <- analyze_strings(expr[-1])
+  files <- drake_quotes(str, single = FALSE)
   ht_add(results$file_out, files)
 }
 
 analyze_knitr_in <- function(expr, results) {
-  files <- ht_list(analyze_code(expr[-1], as_list = FALSE)$strings)
+  files <- analyze_strings(expr[-1])
   lapply(files, analyze_knitr_file, results = results)
   ht_add(results$knitr_in, drake_quotes(files, single = FALSE))
 }
@@ -127,10 +125,6 @@ analyze_knitr_file <- function(file, results) {
   }
 }
 
-# The walk_*() functions are repeated recursion steps inside
-# the analyze_*() functions. For walk_*(), the secondary arguments
-# are important for the recursion to work,
-# and no arguments have defaults.
 walk_code <- function(expr, results, locals, allowed_globals) {
   if (!length(expr)) {
     return()
@@ -187,46 +181,17 @@ walk_call <- function(expr, results, locals, allowed_globals) {
   )
 }
 
-is_target_call <- function(expr) {
-  tryCatch(
-    wide_deparse(expr[[1]]) %in% target_fns,
-    error = error_false
-  )
-}
-
-is_trigger_call <- function(expr) {
-  tryCatch(
-    wide_deparse(expr[[1]]) %in% trigger_fns,
-    error = error_false
-  )
-}
-
-is_callish <- function(x) {
-  length(x) > 0 && is.language(x) && (is.call(x) || is.recursive(x))
-}
-
-pair_text <- function(x, y) {
-  apply(expand.grid(x, y), 1, paste0, collapse = "")
-}
-
-new_code_analysis_results <- function() {
-  x <- lapply(
-    X = code_analysis_slots,
-    FUN = function(tmp) {
-      ht_new()
+walk_strings <- function(expr, ht) {
+  if (!length(expr)) {
+    return()
+  } else if (is.function(expr)) {
+    walk_strings(formals(expr), ht)
+    walk_strings(body(expr), ht)
+  } else if (is.character(expr)) {
+    if (nzchar(expr)) {
+      ht_add(ht, expr)
     }
-  )
-  names(x) <- code_analysis_slots
-  list2env(x = x, hash = TRUE, parent = emptyenv())
-}
-
-list_code_analysis_results <- function(results) {
-  x <- lapply(
-    X = code_analysis_slots,
-    FUN = function(slot) {
-      ht_list(results[[slot]])
-    }
-  )
-  names(x) <- code_analysis_slots
-  select_nonempty(x)
+  } else if (is_callish(expr)) {
+    lapply(expr, walk_strings, ht = ht)
+  }
 }
