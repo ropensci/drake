@@ -308,6 +308,7 @@ recover_cache <- function(
       console_log_file = console_log_file
     )
   }
+  init_common_values(cache)
   cache
 }
 
