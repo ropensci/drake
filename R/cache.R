@@ -329,7 +329,6 @@ default_cache_path <- function(root = getwd()) {
 
 # Pre-set the values to avoid https://github.com/richfitz/storr/issues/80.
 init_common_values <- function(cache) {
-  set_initial_drake_version(cache)
   common_values <- list(TRUE, FALSE, "finished", "in progress", "failed")
   cache$mset(
     key = as.character(common_values),
@@ -348,28 +347,6 @@ clear_tmp_namespace <- function(cache, jobs, namespace) {
   )
   cache$clear(namespace = namespace)
   invisible()
-}
-
-set_initial_drake_version <- function(cache) {
-  if (cache$exists(
-    key = "initial_drake_version",
-    namespace = "session"
-  )) {
-    return()
-  } else if (cache$exists(
-    key = "sessionInfo",
-    namespace = "session"
-  )) {
-    last_session <- drake_get_session_info(cache = cache)
-  } else {
-    last_session <- NULL
-  }
-  version <- drake_version(session_info = last_session)
-  cache$set(
-    key = "initial_drake_version",
-    value = version,
-    namespace = "session"
-  )
 }
 
 drake_version <- function(session_info = NULL) { # nolint
