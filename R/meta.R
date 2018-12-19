@@ -55,14 +55,16 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
     missing = !target_exists(target = target, config = config),
     seed = seed_from_basic_types(config$seed, target)
   )
-  # For imported files.
-  if (is_file(target)) {
-    meta$mtime <- file.mtime(drake::drake_unquote(target))
-  }
   if (meta$imported) {
+    meta$isfile <- is_file(target)
     meta$trigger <- trigger(condition = TRUE)
   } else {
+    meta$isfile <- FALSE
     meta$trigger <- as.list(layout$trigger)
+  }
+  # For imported files.
+  if (meta$isfile) {
+    meta$mtime <- file.mtime(drake::drake_unquote(target))
   }
   if (meta$trigger$command) {
     meta$command <- layout$command_standardized
@@ -171,12 +173,11 @@ should_rehash_file <- function(filename, new_mtime, old_mtime,
 }
 
 file_hash <- function(
-  target, config, size_cutoff = rehash_file_size_cutoff) {
-  if (is_file(target)) {
-    filename <- drake::drake_unquote(target)
-  } else {
-    return(as.character(NA))
-  }
+  target,
+  config,
+  size_cutoff = rehash_file_size_cutoff
+) {
+  filename <- unwrap_file(target)
   if (!file.exists(filename))
     return(as.character(NA))
   old_mtime <- ifelse(

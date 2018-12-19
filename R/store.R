@@ -23,16 +23,7 @@ store_outputs <- function(target, value, meta, config) {
     )
     meta$trigger$value <- NULL
   }
-  file_out <- layout$deps_build$file_out
-  for (file in file_out) {
-    meta$name <- file
-    meta$mtime <- file.mtime(drake::drake_unquote(file))
-    store_single_output(
-      target = file,
-      meta = meta,
-      config = config
-    )
-  }
+  store_output_files(layout$deps_build$file_out, meta, config)
   if (length(file_out) || is.null(file_out)) {
     meta$output_file_hash <- output_file_hash(
       target = target, config = config)
@@ -47,11 +38,9 @@ store_outputs <- function(target, value, meta, config) {
 }
 
 store_single_output <- function(target, value, meta, config) {
-  if (is_file(target)) {
-    # Imported files are stored this way.
-    store_object(
+  if (meta$isfile) {
+    store_file(
       target = target,
-      value = safe_rehash_file(target = target, config = config),
       meta = meta,
       config = config
     )
@@ -103,6 +92,29 @@ store_object <- function(target, value, meta, config) {
     namespace_src = config$cache$default_namespace,
     namespace_dest = "kernels"
   )
+}
+
+store_file <- function(target, meta, config) {
+  store_object(
+    target = target,
+    value = safe_rehash_file(target = target, config = config),
+    meta = meta,
+    config = config
+  )
+}
+
+store_output_files <- function(files, meta, config) {
+  meta$isfile <- TRUE
+  for (file in files) {
+    meta$name <- file
+    meta$mtime <- file.mtime(unwrap_file(file))
+    meta$isfile <- TRUE
+    store_single_output(
+      target = file,
+      meta = meta,
+      config = config
+    )
+  } 
 }
 
 store_function <- function(target, value, meta, config) {

@@ -257,6 +257,10 @@ is_vectorized <- function(funct) {
   is.function(f)
 }
 
+unwrap_file <- function(x){
+  substr(x, 2, nchar(x) - 1)
+}
+
 unwrap_function <- function(funct) {
   if (is_vectorized(funct)) {
     funct <- environment(funct)[["FUN"]]
