@@ -349,15 +349,19 @@ clear_tmp_namespace <- function(cache, jobs, namespace) {
   invisible()
 }
 
-drake_version <- function(session_info = NULL) { # nolint
-  if (!length(session_info)) {
-    return(packageVersion("drake"))
+last_drake_version <- function(cache) {
+  if (cache$exists(key = "drake_version", namespace = "session")) {
+    cache$get(key = "drake_version", namespace = "session")
+  } else if (cache$exists(key = "sessionInfo", namespace = "session")) {
+    session_info <- drake_get_session_info(cache = cache)
+    all_pkgs <- c(
+      session_info$otherPkgs, # nolint
+      session_info$loadedOnly # nolint
+    )
+    as.character(all_pkgs$drake$Version)
+  } else {
+    NULL
   }
-  all_pkgs <- c(
-    session_info$otherPkgs, # nolint
-    session_info$loadedOnly # nolint
-  )
-  all_pkgs$drake$Version # nolint
 }
 
 is_default_cache <- function(cache) {
@@ -391,11 +395,8 @@ cache_vers_check <- function(cache) {
   if (is.null(cache)) {
     return(character(0))
   }
-  err <- try(
-    old <- drake_version(session_info = drake_get_session_info(cache = cache)), # nolint
-    silent = TRUE
-  )
-  if (inherits(err, "try-error")) {
+  old <- last_drake_version(cache = cache)
+  if (is.null(old)) {
     return(invisible())
   }
   if (compareVersion(old, "5.4.0") < 0) {

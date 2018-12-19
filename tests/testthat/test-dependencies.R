@@ -176,6 +176,8 @@ test_with_dir("missing input files", {
   expect_warning(tmp <- missing_input_files(config))
   expect_silent(tmp <- config_checks(config))
   expect_warning(runtime_checks(config), regexp = "missing")
+  config$skip_safety_checks <- TRUE
+  expect_silent(tmp <- runtime_checks(config))
 })
 
 test_with_dir("Vectorized nested functions work", {

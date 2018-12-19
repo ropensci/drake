@@ -33,19 +33,22 @@ drake_set_session_info <- function(
   path = getwd(),
   search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = drake::default_verbose()
+  verbose = drake::default_verbose(),
+  full = TRUE
 ) {
   if (is.null(cache)) {
     stop("No drake::make() session detected.")
   }
-  cache$set(
-    key = "sessionInfo",
-    value = utils::sessionInfo(),
-    namespace = "session"
-  )
+  if (full) {
+    cache$set(
+      key = "sessionInfo",
+      value = utils::sessionInfo(),
+      namespace = "session"
+    )
+  }
   cache$set(
     key = "drake_version",
-    value = utils::packageVersion("drake"),
+    value = as.character(utils::packageVersion("drake")),
     namespace = "session"
   )
   invisible()
@@ -76,7 +79,5 @@ initialize_session <- function(config) {
       namespace = namespace
     )
   }
-  if (config$session_info) {
-    drake_set_session_info(cache = config$cache)
-  }
+  drake_set_session_info(cache = config$cache, full = config$session_info)
 }

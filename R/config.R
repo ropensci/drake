@@ -547,7 +547,7 @@ drake_config <- function(
     )
   }
   if (force) {
-    drake_set_session_info(cache = cache)
+    drake_set_session_info(cache = cache, full = session_info)
   }
   seed <- choose_seed(supplied = seed, cache = cache)
   trigger <- convert_old_trigger(trigger)
