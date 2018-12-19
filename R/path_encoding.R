@@ -8,7 +8,7 @@ encode_path <- function(x){
 
 is_encoded_path <- function(x) {
   x <- substr(x = x, start = 0, stop = 1)
-  x == "\"" | x == "'" # TODO: get rid fo the single quote next major release
+  x == "\"" | x == "'" # TODO: get rid of the single quote next major release
 }
 
 not_encoded_path <- function(x) {
