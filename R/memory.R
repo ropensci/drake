@@ -51,6 +51,7 @@ manage_memory <- function(targets, config, downstream = NULL, jobs = 1) {
   if (!identical(config$memory_strategy, "speed")) {
     keep_these <- c(target_deps, downstream_deps)
     discard_these <- setdiff(x = config$plan$target, y = keep_these)
+    # TODO: remove for version 7.0.0
     discard_these <- parallel_filter(
       discard_these,
       f = is_not_file,
@@ -73,7 +74,10 @@ manage_memory <- function(targets, config, downstream = NULL, jobs = 1) {
 
 safe_load <- function(targets, config, jobs = 1) {
   targets <- exclude_unloadable(
-    targets = targets, config = config, jobs = jobs)
+    targets = targets,
+    config = config,
+    jobs = jobs
+  )
   if (length(targets)) {
     if (config$lazy_load == "eager") {
       console_many_targets(
@@ -82,13 +86,14 @@ safe_load <- function(targets, config, jobs = 1) {
         config = config
       )
     }
-    loadd(
-      list = targets,
+    lapply(
+      X = targets,
+      FUN = load_target,
+      namespace = config$cache$default_namespace,
       envir = config$eval,
       cache = config$cache,
       verbose = FALSE,
-      lazy = config$lazy_load,
-      tidyselect = FALSE
+      lazy = config$lazy_load
     )
   }
   invisible()

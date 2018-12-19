@@ -86,7 +86,7 @@ readd <- function(
     )
   }
   cache$get(
-    standardize_filename(target),
+    standardize_filename(target), # TODO: remove for version 7.0.0
     namespace = namespace,
     use_cache = TRUE
   )
@@ -202,6 +202,7 @@ loadd <- function(
   tidyselect = TRUE
 ) {
   force(envir)
+  lazy <- parse_lazy_arg(lazy)
   if (is.null(cache)) {
     stop("cannot find drake cache.")
   }
@@ -271,7 +272,6 @@ parse_lazy_arg <- function(lazy) {
 }
 
 load_target <- function(target, cache, namespace, envir, verbose, lazy) {
-  lazy <- parse_lazy_arg(lazy)
   switch(
     lazy,
     eager = eager_load_target(
