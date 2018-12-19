@@ -74,8 +74,8 @@
 deps_code <- function(x) {
   if (is.function(x)) {
     import_dependencies(x)
-  } else if (all(is_file(x)) && all(file.exists(file_decode(x)))) {
-    knitr_deps(file_decode(x))
+  } else if (all(is_encoded_path(x)) && all(file.exists(decode_path(x)))) {
+    knitr_deps(decode_path(x))
   } else if (is.character(x)) {
     command_dependencies(x)
   } else{
@@ -253,7 +253,7 @@ dependencies <- function(targets, config, reverse = FALSE) {
 target_graph_dependencies <- function(targets, config, jobs = 1) {
   deps <- dependencies(targets = targets, config = config)
   # TODO: remove this line for version 7.0.0
-  deps <- parallel_filter(x = deps, f = is_not_file, jobs = jobs)
+  deps <- parallel_filter(x = deps, f = not_encoded_path, jobs = jobs)
   intersect(deps, config$plan$target)
 }
 
@@ -305,7 +305,7 @@ command_dependencies <- function(
   }
   if (length(files)) {
     files <- drake_unquote(files)
-    files <- file_encode(files)
+    files <- encode_path(files)
     warn_single_quoted_files(files = files, deps = deps)
     files <- setdiff(files, deps$file_out)
     deps$file_in <- base::union(deps$file_in, files)
@@ -331,9 +331,9 @@ command_dependencies <- function(
 # TODO: this function can go away when drake
 # stops supporting single-quoted file names
 warn_single_quoted_files <- function(files, deps) {
-  old_api_files <- file_decode(files)
+  old_api_files <- decode_path(files)
   new_api_files <- c(deps$file_in, deps$file_out, deps$knitr_in)
-  new_api_files <- file_decode(new_api_files)
+  new_api_files <- decode_path(new_api_files)
   warn_files <- setdiff(old_api_files, new_api_files)
   if (!length(warn_files)) {
     return()

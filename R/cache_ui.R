@@ -207,7 +207,7 @@ imported <- function(
     jobs = jobs
   )
   if (files_only)
-    targets <- parallel_filter(targets, f = is_file, jobs = jobs)
+    targets <- parallel_filter(targets, f = is_encoded_path, jobs = jobs)
   targets
 }
 
@@ -254,6 +254,6 @@ is_imported_cache <- Vectorize(function(target, cache) {
 
 is_built_or_imported_file <- Vectorize(function(target, cache) {
   imported <- is_imported_cache(target = target, cache = cache)
-  !imported | (imported & is_file(target))
+  !imported | (imported & is_encoded_path(target))
 },
 "target", SIMPLIFY = TRUE)

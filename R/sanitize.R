@@ -43,9 +43,9 @@ sanitize_nodes <- function(nodes, choices) {
   unique(intersect(nodes, choices))
 }
 
-# TODO: get rid of the is_file() part in version 7.0.0
+# TODO: get rid of the is_encoded_path() part in version 7.0.0
 repair_target_names <- function(x) {
-  x[!is_file(x)] <- make.names(x[!is_file(x)], unique = FALSE)
+  x[!is_encoded_path(x)] <- make.names(x[!is_encoded_path(x)], unique = FALSE)
   x
 }
 

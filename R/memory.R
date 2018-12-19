@@ -1,7 +1,7 @@
 assign_to_envir <- function(target, value, config) {
   if (
     identical(config$lazy_load, "eager") &&
-    !is_file(target) &&
+    !is_encoded_path(target) &&
     !is_imported(target, config)
   ) {
     assign(x = target, value = value, envir = config$eval)
@@ -54,7 +54,7 @@ manage_memory <- function(targets, config, downstream = NULL, jobs = 1) {
     # TODO: remove for version 7.0.0
     discard_these <- parallel_filter(
       discard_these,
-      f = is_not_file,
+      f = not_encoded_path,
       jobs = jobs
     )
     discard_these <- intersect(discard_these, already_loaded)

@@ -48,7 +48,7 @@ categorize_nodes <- function(config) {
     nodes[in_progress, "status"] <- "in progress"
     nodes[failed, "status"] <- "failed"
     nodes$type <- "object"
-    nodes[is_file(nodes$id), "type"] <- "file"
+    nodes[is_encoded_path(nodes$id), "type"] <- "file"
     nodes[functions, "type"] <- "function"
     nodes
   })
@@ -126,7 +126,7 @@ default_graph_title <- function(split_columns = FALSE) {
 }
 
 file_hover_text <- Vectorize(function(encoded_file, targets) {
-  decoded_file <- file_decode(encoded_file)
+  decoded_file <- decode_path(encoded_file)
   if (encoded_file %in% targets || !file.exists(decoded_file)) {
     return(encoded_file)
   }
@@ -175,7 +175,7 @@ get_raw_node_category_data <- function(config) {
   config$in_progress <- in_progress(cache = config$cache)
   config$failed <- failed(cache = config$cache)
   config$files <- parallel_filter(
-    x = all_labels, f = is_file, jobs = config$jobs)
+    x = all_labels, f = is_encoded_path, jobs = config$jobs)
   config$functions <- parallel_filter(
     x = config$imports,
     f = function(x) can_get_function(x, envir = config$envir),
@@ -255,12 +255,12 @@ legend_nodes <- function(font_size = 20) {
 }
 
 missing_import <- function(x, envir) {
-  missing_object <- !is_file(x) & is.null(envir[[x]]) & tryCatch({
+  missing_object <- !is_encoded_path(x) & is.null(envir[[x]]) & tryCatch({
     flexible_get(x, envir = envir)
     FALSE
   },
   error = function(e) TRUE)
-  missing_file <- is_file(x) & !file.exists(file_decode(x))
+  missing_file <- is_encoded_path(x) & !file.exists(decode_path(x))
   missing_object | missing_file
 }
 

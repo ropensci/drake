@@ -154,7 +154,7 @@ clean_single_target <- function(
   layout
 ) {
   files <- character(0)
-  if (is_file(target)) {
+  if (is_encoded_path(target)) {
     if (cache$exists(target, namespace = "meta")) {
       if (!is_imported_cache(target, cache)) {
         files <- target
@@ -165,7 +165,7 @@ clean_single_target <- function(
     deps <- layout[[target]]$deps_build
     files <- sort(unique(as.character(deps$file_out)))
   }
-  unlink(file_decode(files))
+  unlink(decode_path(files))
   for (namespace in namespaces) {
     for (key in c(target, files)) {
       cache$del(key = key, namespace = namespace)

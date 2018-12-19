@@ -138,21 +138,12 @@ file_extn <- function(x) {
   x[1]
 }
 
-is_file <- function(x) {
-  x <- substr(x = x, start = 0, stop = 1)
-  x == "\"" | x == "'" # TODO: get rid fo the single quote next major release
-}
-
 is_image_filename <- function(x) {
   tolower(file_extn(x)) %in% c("jpg", "jpeg", "pdf", "png")
 }
 
 is_imported <- function(target, config) {
   config$layout[[target]]$imported %||% TRUE
-}
-
-is_not_file <- function(x) {
-  !is_file(x)
 }
 
 map_by <- function(.x, .by, .f, ...) {
@@ -239,7 +230,10 @@ split_by <- function(.x, .by = character(0)) {
 
 # TO DO: remove in version 7.0.0
 standardize_filename <- function(text) {
-  text[is_file(text)] <- gsub("^'|'$", "\"", text[is_file(text)])
+  text[is_encoded_path(text)] <- gsub(
+    "^'|'$", "\"",
+    text[is_encoded_path(text)]
+  )
   text
 }
 
@@ -256,14 +250,6 @@ is_vectorized <- function(funct) {
   }
   f <- environment(funct)[["FUN"]]
   is.function(f)
-}
-
-file_decode <- function(x){
-  substr(x, 2, nchar(x) - 1)
-}
-
-file_encode <- function(x){
-  sprintf("\"%s\"", x)
 }
 
 unwrap_function <- function(funct) {

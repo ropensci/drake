@@ -13,7 +13,7 @@ console_generic <- function(target, config, cutoff = 1, pattern = "target") {
     return()
   }
   text <- target
-  if (is_file(target)) {
+  if (is_encoded_path(target)) {
     text <- paste0("file ", text)
   }
   text <- paste(pattern, text)
@@ -73,7 +73,9 @@ console_many_targets <- function(
   if (n < 1) {
     return(invisible())
   }
-  targets[is_file(targets)] <- paste("file", targets[is_file(targets)])
+  targets[is_encoded_path(targets)] <- paste(
+    "file", targets[is_encoded_path(targets)]
+  )
   out <- paste0(
     pattern,
     " ", n, " ", type,
@@ -263,7 +265,7 @@ show_source <- function(target, config, character_only = FALSE) {
   }
   cache <- config$cache
   meta <- diagnose(target = target, cache = cache, character_only = TRUE)
-  prefix <- ifelse(is_file(target), "File ", "Target ")
+  prefix <- ifelse(is_encoded_path(target), "File ", "Target ")
   if (meta$imported) {
     message(prefix, target, " was imported.")
   } else {

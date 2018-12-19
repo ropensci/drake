@@ -74,10 +74,10 @@ missing_input_files <- function(config) {
   missing_files <- setdiff(x = missing_files, y = config$plan$target)
   missing_files <- parallel_filter(
     missing_files,
-    f = is_file,
+    f = is_encoded_path,
     jobs = config$jobs
   )
-  missing_files <- file_decode(missing_files)
+  missing_files <- decode_path(missing_files)
   missing_files <- parallel_filter(
     missing_files,
     f = function(x) {
