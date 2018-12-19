@@ -250,10 +250,11 @@ dependencies <- function(targets, config, reverse = FALSE) {
   igraph::V(config$graph)$name[index + 1]
 }
 
-nonfile_target_dependencies <- function(targets, config, jobs = 1) {
+target_graph_dependencies <- function(targets, config, jobs = 1) {
   deps <- dependencies(targets = targets, config = config)
-  out <- parallel_filter(x = deps, f = is_not_file, jobs = jobs)
-  intersect(out, config$plan$target)
+  # TODO: remove this line for version 7.0.0
+  deps <- parallel_filter(x = deps, f = is_not_file, jobs = jobs)
+  intersect(deps, config$plan$target)
 }
 
 import_dependencies <- function(

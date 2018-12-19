@@ -34,7 +34,7 @@ manage_memory <- function(targets, config, downstream = NULL, jobs = 1) {
         jobs = jobs
       )
     }
-    downstream_deps <- nonfile_target_dependencies(
+    downstream_deps <- target_graph_dependencies(
       targets = downstream,
       config = config,
       jobs = jobs
@@ -43,7 +43,7 @@ manage_memory <- function(targets, config, downstream = NULL, jobs = 1) {
     downstream <- downstream_deps <- NULL
   }
   already_loaded <- ls(envir = config$eval, all.names = TRUE)
-  target_deps <- nonfile_target_dependencies(
+  target_deps <- target_graph_dependencies(
     targets = targets,
     config = config,
     jobs = jobs
