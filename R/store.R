@@ -107,7 +107,7 @@ store_output_files <- function(files, meta, config) {
   meta$isfile <- TRUE
   for (file in files) {
     meta$name <- file
-    meta$mtime <- file.mtime(unwrap_file(file))
+    meta$mtime <- file.mtime(file_decode(file))
     meta$isfile <- TRUE
     store_single_output(
       target = file,

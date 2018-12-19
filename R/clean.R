@@ -165,7 +165,7 @@ clean_single_target <- function(
     deps <- layout[[target]]$deps_build
     files <- sort(unique(as.character(deps$file_out)))
   }
-  unlink(drake_unquote(files))
+  unlink(file_decode(files))
   for (namespace in namespaces) {
     for (key in c(target, files)) {
       cache$del(key = key, namespace = namespace)

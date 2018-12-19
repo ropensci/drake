@@ -32,15 +32,17 @@ knitr_deps <- function(target) {
     return(character(0))
   }
   out <- new_code_analysis_results()
+  if (is_file(target)) {
+    target <- file_decode(target)
+  }
   analyze_knitr_file(target, out)
   clean_dependency_list(list_code_analysis_results(out))
 }
 
-safe_get_tangled_frags <- function(target) {
-  if (!length(target)) {
+safe_get_tangled_frags <- function(file) {
+  if (!length(file)) {
     return(character(0))
   }
-  file <- drake_unquote(target)
   if (!file.exists(file)) {
     warning(
       "knitr/rmarkdown report '", file,

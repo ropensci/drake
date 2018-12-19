@@ -98,20 +98,20 @@ analyze_readd <- function(expr, results, allowed_globals) {
 
 analyze_file_in <- function(expr, results) {
   str <- analyze_strings(expr[-1])
-  files <- drake_quotes(str, single = FALSE)
+  files <- file_encode(str)
   ht_add(results$file_in, files)
 }
 
 analyze_file_out <- function(expr, results) {
   str <- analyze_strings(expr[-1])
-  files <- drake_quotes(str, single = FALSE)
+  files <- file_encode(str)
   ht_add(results$file_out, files)
 }
 
 analyze_knitr_in <- function(expr, results) {
   files <- analyze_strings(expr[-1])
   lapply(files, analyze_knitr_file, results = results)
-  ht_add(results$knitr_in, drake_quotes(files, single = FALSE))
+  ht_add(results$knitr_in, file_encode(files))
 }
 
 analyze_knitr_file <- function(file, results) {

@@ -125,22 +125,22 @@ default_graph_title <- function(split_columns = FALSE) {
   "Dependency graph"
 }
 
-file_hover_text <- Vectorize(function(quoted_file, targets) {
-  unquoted_file <- drake_unquote(quoted_file)
-  if (quoted_file %in% targets || !file.exists(unquoted_file)) {
-    return(quoted_file)
+file_hover_text <- Vectorize(function(encoded_file, targets) {
+  decoded_file <- file_decode(encoded_file)
+  if (encoded_file %in% targets || !file.exists(decoded_file)) {
+    return(encoded_file)
   }
   tryCatch({
-      x <- readLines(unquoted_file, n = 20, warn = FALSE)
+      x <- readLines(decoded_file, n = 20, warn = FALSE)
       x <- crop_lines(x, n = hover_lines)
       x <- crop_text(x, width = hover_width)
       paste0(x, collapse = "<br>")
     },
-    error = function(e) quoted_file,
-    warning = function(w) quoted_file
+    error = function(e) encoded_file,
+    warning = function(w) encoded_file
   )
 },
-"quoted_file")
+"encoded_file")
 
 filter_legend_nodes <- function(legend_nodes, all_nodes) {
   colors <- c(unique(all_nodes$color), color_of("object"))
@@ -194,7 +194,7 @@ hover_text <- function(config) {
     nodes$title <- nodes$id
     import_files <- setdiff(files, targets)
     nodes[import_files, "title"] <-
-      file_hover_text(quoted_file = import_files, targets = targets)
+      file_hover_text(encoded_file = import_files, targets = targets)
     nodes[functions, "title"] <-
       function_hover_text(function_name = functions, envir = config$envir)
     nodes[targets, "title"] <-
@@ -260,7 +260,7 @@ missing_import <- function(x, envir) {
     FALSE
   },
   error = function(e) TRUE)
-  missing_file <- is_file(x) & !file.exists(drake_unquote(x))
+  missing_file <- is_file(x) & !file.exists(file_decode(x))
   missing_object | missing_file
 }
 

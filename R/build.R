@@ -149,7 +149,7 @@ assert_output_files <- function(target, meta, config) {
   deps <- config$layout[[target]]$deps_build
   files <- unique(as.character(deps$file_out))
   missing_files <- Filter(x = files, f = function(x) {
-    !file.exists(unwrap_file(x))
+    !file.exists(file_decode(x))
   })
   if (length(missing_files)) {
     drake_warning(
