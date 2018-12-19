@@ -51,7 +51,6 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
     name = target,
     target = target,
     imported = layout$imported %||% TRUE,
-    foreign = !exists(x = target, envir = config$envir, inherits = FALSE),
     missing = !target_exists(target = target, config = config),
     seed = seed_from_basic_types(config$seed, target)
   )

@@ -110,16 +110,9 @@ test_with_dir("can exclude bad targets from loadd()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   plan <- drake_plan(a = TRUE)
   make(plan)
-  expect_silent(loadd(a, b, lazy = FALSE))
+  loadd(a, b, lazy = FALSE)
   expect_equal(a, TRUE)
-  expect_equal(
-    exclude_foreign_imports(
-      targets = "b",
-      cache = get_cache(),
-      jobs = 1
-    ),
-    character(0)
-  )
+  expect_error(b)
 })
 
 test_with_dir("bad/corrupt caches, no progress, no seed", {

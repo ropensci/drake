@@ -170,9 +170,6 @@ readd <- function(
 #' loadd(coef_regression2_small, deps = TRUE)
 #' ls()
 #' # Load all the imported objects/functions.
-#' # Note: loadd() excludes foreign imports
-#' # (R objects not originally defined in `envir`
-#' # when `make()` last imported them).
 #' loadd(imported_only = TRUE)
 #' ls()
 #' # Load all the targets listed in the workflow plan
@@ -247,11 +244,6 @@ loadd <- function(
   if (!replace) {
     targets <- setdiff(targets, ls(envir, all.names = TRUE))
   }
-  targets <- exclude_foreign_imports(
-    targets = targets,
-    cache = cache,
-    jobs = jobs
-  )
   if (show_source) {
     lapply(
       X = targets,
@@ -266,31 +258,6 @@ loadd <- function(
     verbose = verbose, lazy = lazy
   )
   invisible()
-}
-
-exclude_foreign_imports <- function(targets, cache, jobs) {
-  parallel_filter(
-    x = targets,
-    f = is_not_foreign_import_obj,
-    jobs = jobs,
-    cache = cache
-  )
-}
-
-is_not_foreign_import_obj <- function(target, cache) {
-  if (is_file(target)) {
-    return(TRUE)
-  }
-  if (!cache$exists(key = target, namespace = "meta")) {
-    return(FALSE)
-  }
-  meta <- diagnose(
-    target = target,
-    cache = cache,
-    character_only = TRUE,
-    verbose = FALSE
-  )
-  identical(meta$imported, FALSE) || identical(meta$foreign, FALSE)
 }
 
 parse_lazy_arg <- function(lazy) {

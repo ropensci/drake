@@ -237,8 +237,9 @@ split_by <- function(.x, .by = character(0)) {
   Filter(x = splits, f = nrow)
 }
 
+# TO DO: remove in version 7.0.0
 standardize_filename <- function(text) {
-  text[is_file(text)] <-  gsub("^'|'$", "\"", text[is_file(text)])
+  text[is_file(text)] <- gsub("^'|'$", "\"", text[is_file(text)])
   text
 }
 

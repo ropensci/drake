@@ -114,7 +114,7 @@ store_output_files <- function(files, meta, config) {
       meta = meta,
       config = config
     )
-  } 
+  }
 }
 
 store_function <- function(target, value, meta, config) {

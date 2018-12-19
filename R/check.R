@@ -70,7 +70,7 @@ missing_input_files <- function(config) {
     f = is_file,
     jobs = config$jobs
   )
-  missing_files <- drake_unquote(missing_files)
+  missing_files <- unwrap_file(missing_files)
   missing_files <- parallel_filter(
     missing_files,
     f = function(x) {
