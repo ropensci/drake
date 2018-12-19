@@ -39,11 +39,11 @@ check_plan <- function(
     cache = cache,
     jobs = jobs
   )
-  check_drake_config(config)
+  config_checks(config)
   invisible(plan)
 }
 
-check_drake_config <- function(config) {
+config_checks <- function(config) {
   if (identical(config$skip_safety_checks, TRUE)) {
     return(invisible())
   }
@@ -57,9 +57,16 @@ check_drake_config <- function(config) {
   }
   stopifnot(nrow(config$plan) > 0)
   stopifnot(length(config$targets) > 0)
+  check_drake_graph(graph = config$graph)
+  cache_vers_stop(config$cache)
+}
+
+runtime_checks <- function(config) {
+  if (identical(config$skip_safety_checks, TRUE)) {
+    return(invisible())
+  }
   missing_input_files(config = config)
   parallelism_warnings(config = config)
-  check_drake_graph(graph = config$graph)
 }
 
 missing_input_files <- function(config) {

@@ -40,7 +40,12 @@ drake_set_session_info <- function(
   }
   cache$set(
     key = "sessionInfo",
-    value = sessionInfo(),
+    value = utils::sessionInfo(),
+    namespace = "session"
+  )
+  cache$set(
+    key = "drake_version",
+    value = utils::packageVersion("drake"),
     namespace = "session"
   )
   invisible()

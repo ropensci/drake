@@ -199,7 +199,7 @@ test_with_dir("old file API", {
     strings_in_dots = "filenames"
   ))
   z <- rbind(x, y)
-  expect_warning(check_plan(z))
+  expect_warning(config <- drake_config(z), regexp = "single-quotes")
   expect_warning(make(z, session_info = FALSE) -> config)
   expect_equal(readd("'file.csv'"), readd("\"file.csv\""))
 })
@@ -234,7 +234,8 @@ test_with_dir("plan set 1", {
       command = c("c", "'c'",
       "d", "readRDS('e')"))
     expect_equal(x, y)
-    expect_warning(check_plan(x))
+    expect_warning(con <- drake_config(x))
+    expect_warning(runtime_checks(con))
   }
 })
 

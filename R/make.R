@@ -220,10 +220,10 @@ make_with_config <- function(config = drake::read_drake_config()) {
       call. = FALSE
     )
   }
-  do_prework(config = config, verbose_packages = config$verbose)
-  check_drake_config(config = config)
+  runtime_checks(config = config)
   store_drake_config(config = config)
   initialize_session(config = config)
+  do_prework(config = config, verbose_packages = config$verbose)
   make_with_schedules(config = config)
   drake_cache_log_file(
     file = config$cache_log_file,

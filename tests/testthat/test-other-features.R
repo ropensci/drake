@@ -201,7 +201,7 @@ test_with_dir(".onLoad() warns correctly and .onAttach() works", {
   expect_silent(suppressPackageStartupMessages(drake:::.onAttach()))
 })
 
-test_with_dir("check_drake_config() via check_plan() and make()", {
+test_with_dir("config_checks() via check_plan() and make()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   y <- data.frame(x = 1, y = 2)
@@ -253,7 +253,7 @@ test_with_dir("misc utils", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(pair_text("x", c("y", "z")), c("xy", "xz"))
   config <- list(plan = data.frame(x = 1, y = 2))
-  expect_error(check_drake_config(config), regexp = "columns")
+  expect_error(config_checks(config), regexp = "columns")
   expect_error(targets_from_dots(123, NULL), regexp = "must contain names")
 })
 

@@ -167,15 +167,15 @@ test_with_dir("tracked() works", {
   expect_equal(x, y)
 })
 
-test_with_dir("missing files via check_plan()", {
+test_with_dir("missing input files", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   expect_silent(check_plan(config$plan, envir = config$envir))
   expect_silent(tmp <- missing_input_files(config))
   unlink("input.rds", force = TRUE)
-  expect_warning(
-    tmp <- capture.output(check_plan(config$plan, envir = config$envir)))
   expect_warning(tmp <- missing_input_files(config))
+  expect_silent(tmp <- config_checks(config))
+  expect_warning(runtime_checks(config), regexp = "missing")
 })
 
 test_with_dir("Vectorized nested functions work", {

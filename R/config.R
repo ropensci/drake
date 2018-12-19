@@ -549,12 +549,6 @@ drake_config <- function(
   if (force) {
     drake_set_session_info(cache = cache)
   }
-  cache_vers_stop(cache)
-  if (cache$exists("long_hash_algo", namespace = "config")) {
-    long_hash_algo <- cache$get("long_hash_algo", namespace = "config")
-  } else {
-    long_hash_algo <- cache$driver$hash_algorithm
-  }
   init_common_values(cache)
   seed <- choose_seed(supplied = seed, cache = cache)
   trigger <- convert_old_trigger(trigger)
@@ -587,7 +581,7 @@ drake_config <- function(
   cache_path <- force_cache_path(cache)
   lazy_load <- parse_lazy_arg(lazy_load)
   memory_strategy <- match.arg(memory_strategy)
-  list(
+  out <- list(
     plan = plan,
     targets = targets,
     envir = envir,
@@ -608,7 +602,6 @@ drake_config <- function(
     recipe_command = recipe_command,
     layout = layout,
     graph = graph,
-    long_hash_algo = long_hash_algo,
     seed = seed,
     trigger = trigger,
     timeout = timeout,
@@ -637,6 +630,9 @@ drake_config <- function(
     hasty_build = hasty_build,
     lock_envir = lock_envir
   )
+  out <- enforce_compatible_config(out)
+  config_checks(out)
+  out
 }
 
 add_packages_to_prework <- function(packages, prework) {
@@ -678,6 +674,19 @@ do_prework <- function(config, verbose_packages) {
     wrapper(eval(parse(text = code), envir = config$eval))
   }
   invisible()
+}
+
+enforce_compatible_config <- function(config) {
+  # TODO: can probably remove this conditional for drake 7.0.0
+  if (config$cache$exists("long_hash_algo", namespace = "config")) {
+    config$long_hash_algo <- config$cache$get(
+      "long_hash_algo",
+      namespace = "config"
+    )
+  } else {
+    config$long_hash_algo <- config$cache$driver$hash_algorithm
+  }
+  config
 }
 
 #' @title Store an internal configuration list

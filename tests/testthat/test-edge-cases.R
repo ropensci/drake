@@ -148,7 +148,7 @@ test_with_dir("config and make without safety checks", {
   tmp <- drake_config(x, verbose = FALSE)
   expect_silent(
     tmp <- drake_config(x, skip_safety_checks = TRUE, verbose = FALSE))
-  expect_silent(check_drake_config(config = tmp))
+  expect_silent(config_checks(config = tmp))
 })
 
 test_with_dir("Strings stay strings, not symbols", {
