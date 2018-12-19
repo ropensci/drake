@@ -1,12 +1,13 @@
-# Wanted to use reference classes here,
-# but they add computational overhead.
-# This is a part of the code that really needs to be fast.
 ht_new <- function(x = NULL, hash = TRUE) {
   out <- new.env(hash = hash, parent = emptyenv())
   if (!is.null(x)) {
     ht_add(out, x)
   }
   out
+}
+
+ht_new_from_list <- function(x, hash = (length(x) > 100)) {
+  list2env(x, hash = hash, parent = emptyenv())
 }
 
 ht_add <- function(ht, x) {

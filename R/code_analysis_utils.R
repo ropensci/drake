@@ -86,6 +86,8 @@ base_symbols <- sort(
 )
 
 ignored_symbols <- sort(c(drake_symbols, base_symbols))
+ignored_symbols_list <- as.list(rep(TRUE, length(ignored_symbols)))
+names(ignored_symbols_list) <- ignored_symbols
 
 ht_slots_hash <- "globals"
 
