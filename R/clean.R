@@ -221,7 +221,7 @@ drake_gc <- function(
 }
 
 rm_bad_cache_filenames <- function(cache) {
-  if (is_default_cache(cache)) {
+  if (keys_are_mangled(cache)) {
     files <- list.files(path = cache$driver$path, recursive = TRUE)
     keep <- grepl(pattern = "^[-_./\\0-9a-zA-Z]*$", x = files)
     unlink(files[!keep], recursive = TRUE)

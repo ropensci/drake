@@ -675,19 +675,6 @@ do_prework <- function(config, verbose_packages) {
   invisible()
 }
 
-enforce_compatible_config <- function(config) {
-  # TODO: can probably remove this conditional for drake 7.0.0
-  if (config$cache$exists("long_hash_algo", namespace = "config")) {
-    config$long_hash_algo <- config$cache$get(
-      "long_hash_algo",
-      namespace = "config"
-    )
-  } else {
-    config$long_hash_algo <- config$cache$driver$hash_algorithm
-  }
-  config
-}
-
 #' @title Store an internal configuration list
 #'   from [drake_config()].
 #' @description Exported for demonstration and tinkering purposes
