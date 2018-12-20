@@ -286,6 +286,7 @@ test_with_dir("v6.2.1 project is still up to date", {
     d$x2 <- d$x ^ 2
     lm(y ~ x2, data = d)
   }
+  require("knitr", quietly = TRUE) # nolint
   config <- make(plan)
   expect_equal(justbuilt(config), character(0))
 
@@ -293,7 +294,6 @@ test_with_dir("v6.2.1 project is still up to date", {
   lines <- c(readLines("report.md"), "", "Last line.")
   writeLines(lines, "report.md")
   expect_equal(outdated(config), "report")
-  require("knitr", quietly = TRUE) # nolint
   config <- make(config = config)
   expect_equal(justbuilt(config), "report")
   expect_equal(outdated(config), character(0))
