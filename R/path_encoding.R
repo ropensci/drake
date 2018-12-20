@@ -17,8 +17,9 @@ reencode_path <- function(x) {
 display_path <- function(x) {
   x[is_encoded_path(x)] <- sprintf(
     "file %s",
-    redecode_path(x[is_encoded_path(x)], x)
+    redecode_path(x[is_encoded_path(x)])
   )
+  x
 }
 
 is_encoded_path <- function(x) {
