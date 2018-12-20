@@ -314,8 +314,8 @@ test_with_dir("cache functions work", {
   # imported , built, cached, diagnose, rescue
   expect_true(length(diagnose(search = FALSE)) > length(config$plan$target))
   expect_equal(
-    imported(files_only = FALSE, search = FALSE),
-    redisplay_path(imports)
+    sort(imported(files_only = FALSE, search = FALSE)),
+    sort(redisplay_path(imports))
   )
   expect_equal(
     imported(files_only = TRUE, search = FALSE),

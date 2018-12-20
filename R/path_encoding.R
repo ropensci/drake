@@ -19,6 +19,7 @@ displayed_path_vector <- function(x, config) {
     X = x,
     FUN = displayed_path,
     FUN.VALUE = character(1),
+    USE.NAMES = FALSE,
     config = config
   )
 }
@@ -41,7 +42,8 @@ redisplay_path_vector <- function(x) {
   vapply(
     X = x,
     FUN = redisplay_path,
-    FUN.VALUE = character(1)
+    FUN.VALUE = character(1),
+    USE.NAMES = FALSE
   )
 }
 

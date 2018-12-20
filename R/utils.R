@@ -230,10 +230,11 @@ split_by <- function(.x, .by = character(0)) {
 
 # TO DO: remove in version 7.0.0
 standardize_filename <- function(text) {
-  text[is_encoded_path(text)] <- gsub(
-    "^'|'$", "\"",
-    text[is_encoded_path(text)]
-  )
+  index <- is_quoted(text)
+  if (any(index)) {
+    text[index] <- gsub("^'|^\"|'$|\"", "", text[index])
+    text[index] <- reencode_path(text[index])
+  }
   text
 }
 
