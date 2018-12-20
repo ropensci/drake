@@ -567,6 +567,8 @@ drake_config <- function(
   }
   seed <- choose_seed(supplied = seed, cache = cache)
   trigger <- convert_old_trigger(trigger)
+  decode <- ht_new()
+  encode <- ht_new()
   layout <- create_drake_layout(
     plan = plan,
     targets = targets,
@@ -576,8 +578,13 @@ drake_config <- function(
     console_log_file = console_log_file,
     trigger = trigger,
     cache = cache,
-    files = files
+    decode = decode,
+    encode = encode
   )
+  
+  browser()
+  
+  
   graph <- create_drake_graph(
     layout = layout,
     targets = targets,
@@ -611,6 +618,8 @@ drake_config <- function(
     args = args,
     recipe_command = recipe_command,
     layout = layout,
+    decode = decode,
+    encode = encode,
     graph = graph,
     seed = seed,
     trigger = trigger,

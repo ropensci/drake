@@ -10,13 +10,22 @@ ht_new_from_list <- function(x, hash = (length(x) > 100)) {
   list2env(x, hash = hash, parent = emptyenv())
 }
 
-ht_set <- function(ht, x, value = TRUE) {
+ht_set <- function(ht, x) {
   lapply(
     X = x,
     FUN = assign,
-    value = value,
+    value = TRUE,
     envir = ht,
     inherits = FALSE
+  )
+}
+
+ht_vset <- function(ht, x, values) {
+  lapply(
+    X = seq_len(x),
+    FUN = function(i) {
+      assign(x = x[i], value = values[i], envir = ht, inherits = FALSE)
+    }
   )
 }
 

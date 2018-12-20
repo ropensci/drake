@@ -6,6 +6,10 @@ encode_path <- function(x){
   sprintf("\"%s\"", x)
 }
 
+reencode_path <- function(x){
+  sprintf("\"%s\"", x)
+}
+
 is_encoded_path <- function(x) {
   x <- substr(x = x, start = 0, stop = 1)
   x == "\"" | x == "'" # TODO: get rid of the single quote next major release

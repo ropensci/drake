@@ -6,7 +6,9 @@ create_drake_layout <- function(
   jobs = 1,
   console_log_file = NULL,
   trigger = drake::trigger(),
-  cache = NULL
+  cache = NULL,
+  decode,
+  encode
 ) {
   force(envir)
   config <- list(
@@ -18,7 +20,9 @@ create_drake_layout <- function(
     cache = cache,
     console_log_file = console_log_file,
     trigger = parse_trigger(trigger = trigger, envir = envir),
-    allowed_globals = sort(c(plan$target, ls(envir = envir, all.names = TRUE)))
+    allowed_globals = sort(c(plan$target, ls(envir, all.names = TRUE))),
+    decode = decode,
+    encode = encode
   )
   imports <- cdl_prepare_imports(config)
   imports_kernel <- cdl_imports_kernel(config, imports)
@@ -35,7 +39,8 @@ create_drake_layout <- function(
     config$allowed_globals,
     import_layout
   )
-  c(import_layout, command_layout)
+  layout <- c(import_layout, command_layout)
+  memo_expr(cdl_encode_paths(config, layout), config$cache, layout)
 }
 
 cdl_prepare_imports <- function(config) {
@@ -164,6 +169,44 @@ cdl_prepare_layout <- function(layout, config){
       layout$trigger$change,
       exclude = layout$target,
       allowed_globals = config$allowed_globals
+    )
+  }
+  layout
+}
+
+cdl_encode_paths <- function(config, layout) {
+  console_preprocess(text = "encode file paths", config = config)
+  decoded <- cld_collect_paths(layout = layout, files = config$files)
+  if (length(decoded)) {
+    encoded <- reencode_path(decoded)
+    names(decoded) <- encoded
+    names(encoded) <- decoded
+    list2env(x = as.list(decoded), envir = config$decode, hash = TRUE)
+    list2env(x = as.list(encoded), envir = config$encode, hash = TRUE)
+    lapply(X = layout, FUN = cld_encode_step, encode = config$encode)
+  } else {
+    layout
+  }
+}
+
+cld_collect_paths <- function(layout, files) {
+  out <- lapply(
+    X = layout,
+    FUN = function(x) {
+      c(x$deps_build$file_in, x$deps_build$file_out, x$deps_build$knitr_in)
+    }
+  )
+  unique(as.character(unlist(out)))
+}
+
+cld_encode_step <- function(layout, encode) {
+  for (field in c("file_in", "file_out", "knitr_in")) {
+    layout$deps_build[[field]] <- vapply(
+      X = layout$deps_build[[field]],
+      FUN = function(x) {
+        encode[[x]]
+      },
+      FUN.VALUE = character(1)
     )
   }
   layout
