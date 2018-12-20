@@ -16,7 +16,7 @@ test_with_dir("codeless knitr report", {
   expect_true(file.exists(file))
   expect_equal(
     deps_code(quote(knitr_in("codeless.Rmd"))),
-    list(knitr_in = file_store(file))
+    list(knitr_in = file)
   )
   expect_silent(
     tmp <- make(
@@ -111,8 +111,8 @@ test_with_dir("knitr_deps() works", {
   )
   expect_equal(sort(w), sort(c("funct")))
   expect_equal(sort(x), sort(real_deps))
-  expect_equal(sort(y), sort(c(real_deps, "knit", reencode_path("report.Rmd"))))
-  expect_equal(sort(z), sort(c(real_deps, "render", reencode_path("report.Rmd"))))
+  expect_equal(sort(y), sort(c(real_deps, "knit", "report.Rmd")))
+  expect_equal(sort(z), sort(c(real_deps, "render", "report.Rmd")))
 })
 
 test_with_dir("find_knitr_doc() works", {
