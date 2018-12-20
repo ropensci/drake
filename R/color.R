@@ -9,6 +9,7 @@ colors <- c(
   check = "skyblue1",
   analyze = "skyblue1",
   construct = "skyblue1",
+  encode = "skyblue1",
   launch = "#ff9933",
   load = "#ff9933",
   unload = "#ff7221",

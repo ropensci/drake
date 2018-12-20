@@ -569,7 +569,7 @@ drake_config <- function(
   trigger <- convert_old_trigger(trigger)
   decode <- ht_new()
   encode <- ht_new()
-  layout <- create_drake_layout(
+  analysis <- whole_static_analysis(
     plan = plan,
     targets = targets,
     envir = envir,
@@ -577,14 +577,11 @@ drake_config <- function(
     jobs = jobs,
     console_log_file = console_log_file,
     trigger = trigger,
-    cache = cache,
-    decode = decode,
-    encode = encode
+    cache = cache
   )
-  
-  browser()
-  
-  
+  layout <- analysis$layout
+  decode <- analysis$decode
+  encode <- analysis$encode
   graph <- create_drake_graph(
     layout = layout,
     targets = targets,

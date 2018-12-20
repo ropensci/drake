@@ -1,4 +1,4 @@
-create_drake_layout <- function(
+whole_static_analysis <- function(
   plan = read_drake_plan(),
   targets = plan$target,
   envir = parent.frame(),
@@ -6,9 +6,7 @@ create_drake_layout <- function(
   jobs = 1,
   console_log_file = NULL,
   trigger = drake::trigger(),
-  cache = NULL,
-  decode,
-  encode
+  cache = NULL
 ) {
   force(envir)
   config <- list(
@@ -20,19 +18,17 @@ create_drake_layout <- function(
     cache = cache,
     console_log_file = console_log_file,
     trigger = parse_trigger(trigger = trigger, envir = envir),
-    allowed_globals = sort(c(plan$target, ls(envir, all.names = TRUE))),
-    decode = decode,
-    encode = encode
+    allowed_globals = sort(c(plan$target, ls(envir, all.names = TRUE)))
   )
-  imports <- cdl_prepare_imports(config)
-  imports_kernel <- cdl_imports_kernel(config, imports)
+  imports <- wsa_prepare_imports(config)
+  imports_kernel <- wsa_imports_kernel(config, imports)
   import_layout <- memo_expr(
-    cdl_analyze_imports(config, imports),
+    wsa_analyze_imports(config, imports),
     config$cache,
     imports_kernel
   )
   command_layout <- memo_expr(
-    cdl_analyze_commands(config),
+    wsa_analyze_commands(config),
     config$cache,
     config$plan,
     config$trigger,
@@ -40,13 +36,32 @@ create_drake_layout <- function(
     import_layout
   )
   layout <- c(import_layout, command_layout)
-  memo_expr(cdl_encode_paths(config, layout), config$cache, layout)
+  path_encodings <- memo_expr(
+    wsa_get_path_encodings(config, layout),
+    config$cache,
+    layout
+  )
+  layout <- memo_expr(
+    wsa_encode_layout_paths(
+      config = config,
+      layout = layout,
+      path_encodings = path_encodings
+    ),
+    config$cache,
+    layout,
+    path_encodings
+  )
+  list(
+    layout = layout,
+    decode = path_encodings$decode,
+    encode = path_encodings$encode
+  )
 }
 
-cdl_prepare_imports <- function(config) {
+wsa_prepare_imports <- function(config) {
   console_preprocess(text = "analyze environment", config = config)
   imports <- as.list(config$envir)
-  cdl_unload_conflicts(
+  wsa_unload_conflicts(
     imports = names(imports),
     targets = config$plan$target,
     envir = config$envir,
@@ -56,7 +71,7 @@ cdl_prepare_imports <- function(config) {
   imports[import_names]
 }
 
-cdl_unload_conflicts <- function(imports, targets, envir, verbose) {
+wsa_unload_conflicts <- function(imports, targets, envir, verbose) {
   common <- intersect(imports, targets)
   if (verbose & length(common)) {
     message(
@@ -67,7 +82,7 @@ cdl_unload_conflicts <- function(imports, targets, envir, verbose) {
   remove(list = common, envir = envir)
 }
 
-cdl_imports_kernel <- function(config, imports) {
+wsa_imports_kernel <- function(config, imports) {
   out <- lightly_parallelize(
     X = imports,
     FUN = function(x) {
@@ -82,7 +97,7 @@ cdl_imports_kernel <- function(config, imports) {
   out[sort(names(out) %||% logical(0))]
 }
 
-cdl_analyze_imports <- function(config, imports) {
+wsa_analyze_imports <- function(config, imports) {
   names <-  names(imports)
   console_many_targets(
     targets = names,
@@ -109,7 +124,7 @@ cdl_analyze_imports <- function(config, imports) {
   out
 }
 
-cdl_analyze_commands <- function(config) {
+wsa_analyze_commands <- function(config) {
   console_many_targets(
     targets = config$plan$target,
     pattern = "analyze",
@@ -136,7 +151,7 @@ cdl_analyze_commands <- function(config) {
   )
   out <- lightly_parallelize(
     X = layout,
-    FUN = cdl_prepare_layout,
+    FUN = wsa_prepare_layout,
     jobs = config$jobs,
     config = config
   )
@@ -144,7 +159,7 @@ cdl_analyze_commands <- function(config) {
   out
 }
 
-cdl_prepare_layout <- function(layout, config){
+wsa_prepare_layout <- function(layout, config){
   layout$deps_build <- command_dependencies(
     command = layout$command,
     exclude = layout$target,
@@ -174,22 +189,23 @@ cdl_prepare_layout <- function(layout, config){
   layout
 }
 
-cdl_encode_paths <- function(config, layout) {
+wsa_get_path_encodings <- function(config, layout) {
   console_preprocess(text = "encode file paths", config = config)
-  decoded <- cld_collect_paths(layout = layout, files = config$files)
+  decode <- ht_new()
+  encode <- ht_new()
+  decoded <- wsa_collect_paths(layout = layout, files = config$files)
   if (length(decoded)) {
     encoded <- reencode_path(decoded)
     names(decoded) <- encoded
     names(encoded) <- decoded
-    list2env(x = as.list(decoded), envir = config$decode, hash = TRUE)
-    list2env(x = as.list(encoded), envir = config$encode, hash = TRUE)
-    lapply(X = layout, FUN = cld_encode_step, encode = config$encode)
-  } else {
-    layout
+    list2env(x = as.list(decoded), envir = decode, hash = TRUE)
+    list2env(x = as.list(encoded), envir = encode, hash = TRUE)
+    
   }
+  list(decode = decode, encode = encode)
 }
 
-cld_collect_paths <- function(layout, files) {
+wsa_collect_paths <- function(layout, files) {
   out <- lapply(
     X = layout,
     FUN = function(x) {
@@ -199,7 +215,15 @@ cld_collect_paths <- function(layout, files) {
   unique(as.character(unlist(out)))
 }
 
-cld_encode_step <- function(layout, encode) {
+wsa_encode_layout_paths <- function(config, layout, path_encodings) {
+  lapply(
+    X = layout,
+    FUN = wsa_encode_layout_step,
+    encode = path_encodings$encode
+  )
+}
+
+wsa_encode_layout_step <- function(layout, encode) {
   for (field in c("file_in", "file_out", "knitr_in")) {
     layout$deps_build[[field]] <- vapply(
       X = layout$deps_build[[field]],
