@@ -323,8 +323,14 @@ test_with_dir("cache functions work", {
   expect_equal(sort(cached(search = FALSE)), sort(all), twopiece)
   expect_equal(sort(cached(search = FALSE, no_imported_objects = TRUE)),
     sort(c(reencode_path("input.rds"), out_files, builds)))
-  expect_true(is_cached(targets = reencode_path("input.rds"), no_imported_objects = TRUE,
-    cache = config$cache, jobs = 1, namespace = config$cache$default_namespace))
+  expect_true(
+    is_cached(
+      targets = reencode_path("input.rds"),
+      no_imported_objects = TRUE,
+      cache = config$cache, jobs = 1,
+      namespace = config$cache$default_namespace
+    )
+  )
   expect_true(all(cached(search = FALSE, list = all)))
   expect_equal(
     length(cached(search = FALSE, i, list = imported(files_only = FALSE))),
@@ -385,8 +391,14 @@ test_with_dir("cache functions work", {
   expect_true(is.list(drake_get_session_info(search = TRUE, path = s)))
   expect_equal(sort(names(progress(search = TRUE, path = s))),
     sort(all))
-  expect_equal(sort(names(progress(no_imported_objects = TRUE,
-    search = TRUE, path = s))), sort(c(reencode_path("input.rds"), out_files, builds)))
+  expect_equal(
+    sort(
+      names(
+        progress(no_imported_objects = TRUE, search = TRUE, path = s)
+      )
+    ),
+    sort(c(reencode_path("input.rds"), out_files, builds))
+  )
   expect_equal(sort(progress(search = TRUE, path = s, bla, f,
     list = c("h", "final"))), sort(c(bla = "not built or imported",
     f = "finished", h = "finished", final = "finished")))

@@ -200,7 +200,7 @@ wsa_get_path_encodings <- function(config, layout) {
     names(encoded) <- decoded
     list2env(x = as.list(decoded), envir = decode, hash = TRUE)
     list2env(x = as.list(encoded), envir = encode, hash = TRUE)
-    
+
   }
   list(decode = decode, encode = encode)
 }
@@ -249,6 +249,5 @@ wsa_encode_vector <- function(x, encode) {
     },
     FUN.VALUE = character(1),
     USE.NAMES = FALSE
-  ) 
+  )
 }
-

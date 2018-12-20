@@ -7,11 +7,22 @@ test_with_dir("Functions drake_quotes() and drake_unquote() are correct.", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(drake_quotes(), character(0))
   expect_equal(drake_quotes(single = T), character(0))
-  expect_equal(drake_quotes(drake_strings(x, y)), c(reencode_path("x"), reencode_path("y")))
-  expect_equal(drake_quotes(c("x", "y")), c(reencode_path("x"), reencode_path("y")))
-  expect_equal(drake_quotes(c("x", "y"), single = F), c(reencode_path("x"), reencode_path("y")))
-  expect_equal(drake_quotes(c("x", "y"), single = T), c("\'x\'", "\'y\'"))
-
+  expect_equal(
+    drake_quotes(drake_strings(x, y)),
+    c(reencode_path("x"), reencode_path("y"))
+  )
+  expect_equal(
+    drake_quotes(c("x", "y")),
+    c(reencode_path("x"), reencode_path("y"))
+  )
+  expect_equal(
+    drake_quotes(c("x", "y"), single = F),
+    c(reencode_path("x"), reencode_path("y"))
+  )
+  expect_equal(
+    drake_quotes(c("x", "y"), single = T),
+    c("\'x\'", "\'y\'")
+  )
   expect_equal(drake_unquote(), character(0))
   expect_equal(drake_unquote(drake_strings(x, y)), drake_strings(x, y))
 
