@@ -315,3 +315,7 @@ weak_as_tibble <- function(..., .force_df = FALSE) {
     tibble::as_tibble(...)
   }
 }
+
+wide_deparse <- function(x) {
+  paste(deparse(x), collapse = "\n")
+}

@@ -67,6 +67,7 @@ Authors@R: c(
 Depends:
   R (>= 3.4.0)
 Imports:
+  base64url,
   digest,
   formatR,
   igraph,

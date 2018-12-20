@@ -15,11 +15,11 @@ displayed_path <- function(x, config) {
 }
 
 redecode_path <- function(x) {
-  substr(x, 2, nchar(x) - 1)
+  base64url::base64_urldecode(substr(x, start = 2, stop = 1e3))
 }
 
 reencode_path <- function(x) {
-  sprintf("\"%s\"", x)
+  paste0("-", base64url::base64_urlencode(x))
 }
 
 redisplay_path <- function(x) {
@@ -29,10 +29,50 @@ redisplay_path <- function(x) {
 }
 
 is_encoded_path <- function(x) {
-  x <- substr(x = x, start = 0, stop = 1)
-  x == "\"" | x == "'" # TODO: get rid of the single quote next major release
+  substr(x = x, start = 0, stop = 1) == "-"
 }
 
 not_encoded_path <- function(x) {
   !is_encoded_path(x)
+}
+
+#' @title Tell `drake` that you want information
+#'   on a *file* (target or import), not an ordinary object.
+#' @description This function simply wraps literal double quotes around
+#'   the argument `x` so `drake` knows it is the name of a file.
+#'   Use when you are calling functions like `deps_code()`: for example,
+#'   `deps_code(file_store("report.md"))`. See the examples for details.
+#'   Internally, `drake` wraps the names of file targets/imports
+#'   inside literal double quotes to avoid confusion between
+#'   files and generic R objects.
+#' @export
+#' @return A single-quoted character string: i.e., a filename
+#'   understandable by drake.
+#' @param x character string to be turned into a filename
+#'   understandable by drake (i.e., a string with literal
+#'   single quotes on both ends).
+#' @examples
+#'   # Wraps the string in single quotes.
+#'   file_store("my_file.rds") # "'my_file.rds'"
+#'   \dontrun{
+#'   test_with_dir("contain side effects", {
+#'   load_mtcars_example() # Get the code with drake_example("mtcars").
+#'   make(my_plan) # Run the workflow to build the targets
+#'   list.files() # Should include input "report.Rmd" and output "report.md".
+#'   head(readd(small)) # You can use symbols for ordinary objects.
+#'   # But if you want to read cached info on files, use `file_store()`.
+#'   readd(file_store("report.md"), character_only = TRUE) # File fingerprint.
+#'   deps_code(file_store("report.Rmd"))
+#'   config <- drake_config(my_plan)
+#'   dependency_profile(
+#'     file_store("report.Rmd"),
+#'     config = config,
+#'     character_only = TRUE
+#'   )
+#'   loadd(list = file_store("report.md"))
+#'   get(file_store("report.md"))
+#'   })
+#'   }
+file_store <- function(x) {
+  reencode_path(x)
 }
