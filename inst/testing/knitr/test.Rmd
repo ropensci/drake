@@ -58,3 +58,9 @@ readd(target = "\"file4\"", character_only = FALSE)
 loadd("\"file5\"")
 loadd(list = "\"file6\"")
 ```
+
+```{r file_deps}
+file_in("input.txt")
+file_out("output.txt")
+knitr_in("nested.Rmd")
+```

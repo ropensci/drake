@@ -75,19 +75,20 @@ test_with_dir("unparsable pieces of commands are handled correctly", {
 
 test_with_dir("knitr_deps() works", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  file <- system.file(
-    file.path("testing", "knitr", "test.Rmd"),
+  files <- system.file(
+    file.path("testing", "knitr", c("nested.Rmd", "test.Rmd")),
     package = "drake", mustWork = TRUE
   )
-  expect_true(file.copy(
-    from = file,
+  expect_true(all(file.copy(
+    from = files,
     to = getwd(),
     recursive = TRUE,
     overwrite = TRUE
-  ))
+  )))
   ans <- sort(c(
     "inline_dep", paste0("target", seq_len(18)),
-    file_store(paste0("file", seq_len(6)))
+    file_store(paste0("file", seq_len(6))),
+    "input.txt", "output.txt", "nested.Rmd", "nested"
   ))
   expect_equal(sort(knitr_deps("'test.Rmd'")), ans)
   expect_false(file.exists("test.md"))
@@ -192,3 +193,19 @@ test_with_dir("misc knitr", {
   expect_equal(doc_of_function_call(list(1, 2, 3)), "2")
   expect_equal(find_knitr_doc(NULL), character(0))
 })
+
+test_with_dir("knitr files can detect file_in", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  file <- "file_in.Rmd"
+  path <- system.file(
+    file.path("testing", "knitr", file),
+    package = "drake", mustWork = TRUE
+  )
+  expect_true(file.copy(
+    from = path,
+    to = getwd(),
+    recursive = TRUE,
+    overwrite = TRUE
+  ))
+})
+
