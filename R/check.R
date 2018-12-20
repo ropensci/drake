@@ -55,7 +55,7 @@ config_checks <- function(config) {
       call. = FALSE
     )
   }
-  if (any(bad_symbols) %in% config$plan$target) {
+  if (any(bad_symbols %in% config$plan$target)) {
     stop(
       "symbols that cannot be target names: ",
       paste0(sQuote(bad_symbols), sep = ", "),
