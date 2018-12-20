@@ -125,8 +125,8 @@ default_graph_title <- function(split_columns = FALSE) {
   "Dependency graph"
 }
 
-file_hover_text <- Vectorize(function(encoded_file, targets) {
-  decoded_file <- decoded_path(encoded_file)
+file_hover_text <- Vectorize(function(encoded_file, targets, config) {
+  decoded_file <- decoded_path(encoded_file, config)
   if (encoded_file %in% targets || !file.exists(decoded_file)) {
     return(encoded_file)
   }
@@ -183,7 +183,9 @@ get_raw_node_category_data <- function(config) {
   )
   config$missing <- parallel_filter(
     x = config$imports,
-    f = function(x) missing_import(x, envir = config$envir),
+    f = function(x) {
+      missing_import(x, config = config)
+    },
     jobs = config$jobs
   )
   config
@@ -194,7 +196,7 @@ hover_text <- function(config) {
     nodes$title <- nodes$id
     import_files <- setdiff(files, targets)
     nodes[import_files, "title"] <-
-      file_hover_text(encoded_file = import_files, targets = targets)
+      file_hover_text(encoded_file = import_files, targets, config)
     nodes[functions, "title"] <-
       function_hover_text(function_name = functions, envir = config$envir)
     nodes[targets, "title"] <-
@@ -254,13 +256,15 @@ legend_nodes <- function(font_size = 20) {
   out
 }
 
-missing_import <- function(x, envir) {
+missing_import <- function(x, config) {
+  envir <- config$envir
   missing_object <- !is_encoded_path(x) & is.null(envir[[x]]) & tryCatch({
     flexible_get(x, envir = envir)
     FALSE
   },
   error = function(e) TRUE)
-  missing_file <- is_encoded_path(x) & !file.exists(decoded_path(x))
+  missing_file <- is_encoded_path(x) &&
+    !file.exists(decoded_path(x, config))
   missing_object | missing_file
 }
 

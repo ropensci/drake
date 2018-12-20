@@ -25,15 +25,16 @@ test_with_dir("console_up_to_date", {
 
 test_with_dir("verbose consoles", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  config <- list(verbose = 2)
-  expect_silent(console_missing(reencode_path("myfile"), config))
-  expect_silent(console_import(reencode_path("myfile"), config))
+  config <- dbug()
+  config$verbose <- 2
+  expect_silent(console_missing(reencode_path("input.rds"), config))
+  expect_silent(console_import(reencode_path("input.rds"), config))
   config$verbose <- 3
-  expect_message(console_missing(reencode_path("myfile"), config))
-  expect_silent(console_import(reencode_path("myfile"), config))
+  expect_message(console_missing(reencode_path("input.rds"), config))
+  expect_silent(console_import(reencode_path("input.rds"), config))
   config$verbose <- 4
-  expect_message(console_missing(reencode_path("myfile"), config))
-  expect_message(console_import(reencode_path("myfile"), config))
+  expect_message(console_missing(reencode_path("input.rds"), config))
+  expect_message(console_import(reencode_path("input.rds"), config))
 })
 
 test_with_dir("console_parLapply", {

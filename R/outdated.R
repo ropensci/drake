@@ -112,7 +112,7 @@ missed <- function(config = drake::read_drake_config()) {
   is_missing <- lightly_parallelize(
     X = imports,
     FUN = function(x) {
-      missing_import(x, envir = config$envir)
+      missing_import(x, config = config)
     },
     jobs = config$jobs
   )

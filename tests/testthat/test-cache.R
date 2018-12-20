@@ -280,7 +280,7 @@ test_with_dir("cache functions work", {
   x <- config$cache
   bt <- build_times(search = FALSE, targets_only = FALSE)
   expect_equal(sort(x$list(namespace = "meta")), sort(cached()))
-  expect_equal(sort(bt$item), sort(display_path(all)))
+  expect_equal(sort(bt$item), sort(redisplay_path(all)))
   expect_length(bt, 5) # 5 columns
   n1 <- nrow(bt)
   n2 <- nrow(build_times(search = FALSE, targets_only = TRUE))

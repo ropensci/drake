@@ -160,11 +160,11 @@ test_with_dir("tracked() works", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   x <- sort(tracked(config))
-  y <- sort(c(display_path(reencode_path("intermediatefile.rds")),
+  y <- sort(c(redisplay_path(reencode_path("intermediatefile.rds")),
               "drake_target_1",
     "yourinput", "nextone",
     "combined", "myinput", "final", "j", "i", "h", "g", "f",
-    "c", "b", "a",  display_path(reencode_path("input.rds"))))
+    "c", "b", "a",  redisplay_path(reencode_path("input.rds"))))
   expect_equal(x, y)
 })
 

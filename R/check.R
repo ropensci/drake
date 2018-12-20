@@ -77,7 +77,7 @@ missing_input_files <- function(config) {
     f = is_encoded_path,
     jobs = config$jobs
   )
-  missing_files <- decoded_path(missing_files)
+  missing_files <- decoded_path(missing_files, config)
   missing_files <- parallel_filter(
     missing_files,
     f = function(x) {
