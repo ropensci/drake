@@ -12,10 +12,7 @@ console_generic <- function(target, config, cutoff = 1, pattern = "target") {
   if (config$verbose < cutoff) {
     return()
   }
-  text <- target
-  if (is_encoded_path(target)) {
-    text <- paste0("file ", text)
-  }
+  text <- display_path(target)
   text <- paste(pattern, text)
   finish_console(text = text, pattern = pattern, config = config)
 
@@ -73,9 +70,7 @@ console_many_targets <- function(
   if (n < 1) {
     return(invisible())
   }
-  targets[is_encoded_path(targets)] <- paste(
-    "file", targets[is_encoded_path(targets)]
-  )
+  targets <- display_path(targets)
   out <- paste0(
     pattern,
     " ", n, " ", type,
