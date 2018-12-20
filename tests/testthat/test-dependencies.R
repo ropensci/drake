@@ -63,17 +63,17 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
     from = path, to = file.path(getwd(), "report.Rmd"), overwrite = TRUE)
   x <- command_dependencies(cmd)
   x0 <- list(
-    file_in = "\"x\"", file_out = "\"y\"", loadd = "large",
+    file_in = reencode_path("x"), file_out = reencode_path("y"), loadd = "large",
     readd = c("small", "coef_regression2_small"),
-    knitr_in = "\"report.Rmd\"")
+    knitr_in = reencode_path("report.Rmd"))
   expect_equal(length(x), length(x0))
   for (i in names(x)) {
     expect_equal(sort(x[[i]]), sort(x0[[i]]))
   }
   y <- import_dependencies(f)
   y0 <- list(
-    file_in = "\"x\"",
-    knitr_in = "\"report.Rmd\"",
+    file_in = reencode_path("x"),
+    knitr_in = reencode_path("report.Rmd"),
     loadd = "large",
     readd = c("small", "coef_regression2_small")
   )
@@ -87,7 +87,7 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
     sort(clean_dependency_list(deps_code(cmd))),
     sort(
       c("coef_regression2_small", "large",
-        "\"report.Rmd\"", "small", "\"x\"", "\"y\""
+        reencode_path("report.Rmd"), "small", reencode_path("x"), reencode_path("y")
       )
     )
   )
@@ -160,10 +160,10 @@ test_with_dir("tracked() works", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   x <- sort(tracked(config))
-  y <- sort(c("\"intermediatefile.rds\"", "drake_target_1",
+  y <- sort(c(reencode_path("intermediatefile.rds"), "drake_target_1",
     "yourinput", "nextone",
     "combined", "myinput", "final", "j", "i", "h", "g", "f",
-    "c", "b", "a",  "\"input.rds\""))
+    "c", "b", "a",  reencode_path("input.rds")))
   expect_equal(x, y)
 })
 

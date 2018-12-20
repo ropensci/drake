@@ -246,7 +246,7 @@ test_with_dir("targets can be partially specified", {
 
 test_with_dir("file_store quotes properly", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_equal(file_store("x"), "\"x\"")
+  expect_equal(file_store("x"), reencode_path("x"))
 })
 
 test_with_dir("misc utils", {
@@ -272,7 +272,7 @@ test_with_dir("make(..., skip_imports = TRUE) works", {
   )
   expect_equal(
     sort(cached()),
-    sort(c("\"intermediatefile.rds\"", con$plan$target))
+    sort(c(reencode_path("intermediatefile.rds"), con$plan$target))
   )
 
   # If the imports are already cached, the targets built with
