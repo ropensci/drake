@@ -259,12 +259,12 @@ test_with_dir("issue 187 on Github (from Kendon Bell)", {
 test_with_dir("file names with weird characters do not get mangled", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   out <- weak_tibble(
-    target = c(reencode_path("is:a:file"), "not:a:file"),
+    target = c("'is:a:file'", "not:a:file"),
     command = as.character(1:2)
   )
   out2 <- sanitize_plan(out)
   out3 <- weak_tibble(
-    target = c(reencode_path("is:a:file"), "not.a.file"),
+    target = c("'is:a:file'", "not.a.file"),
     command = as.character(1:2)
   )
   expect_equal(out[1, ], out2[1, ])
