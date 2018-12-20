@@ -215,10 +215,10 @@ test_with_dir("trigger does not block out command deps", {
   expect_true(all(deps %in% igraph::V(config$graph)$name))
   expect_equal(sort(dependencies("x", config)), sort(deps))
   expect_equal(outdated(config), "x")
-  make(config = config)
+  make(config = config, memory_strategy = "memory")
   expect_equal(justbuilt(config), "x")
   expect_equal(outdated(config), character(0))
-  make(config = config)
+  make(config = config, memory_strategy = "memory")
   nobuild(config)
   f <- function(x) {
     identity(x) || FALSE
@@ -236,7 +236,7 @@ test_with_dir("trigger does not block out command deps", {
   expect_equal(justbuilt(config), "x")
 })
 
-test_with_dir("same, but with global trigger", {
+test_with_dir("same, but with global change trigger", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   writeLines("123", "knitr.Rmd")
   saveRDS(0, "file.rds")
@@ -253,24 +253,24 @@ test_with_dir("same, but with global trigger", {
   config <- drake_config(
     plan, session_info = FALSE, cache = storr::storr_environment(),
     log_progress = TRUE, trigger = trigger(
-      condition = {
+      change = {
         knitr_in("knitr.Rmd")
         f(FALSE) + readRDS(file_in("file.rds"))
       },
       command = FALSE,
       file = TRUE,
       depend = TRUE,
-      change = NULL
+      condition = FALSE
     )
   )
   deps <- c(file_store("file.rds"), file_store("knitr.Rmd"), "f")
   expect_true(all(deps %in% igraph::V(config$graph)$name))
   expect_equal(sort(dependencies("x", config)), sort(deps))
   expect_equal(outdated(config), "x")
-  make(config = config)
+  make(config = config, memory_strategy = "memory")
   expect_equal(justbuilt(config), "x")
   expect_equal(outdated(config), character(0))
-  make(config = config)
+  make(config = config, memory_strategy = "memory")
   nobuild(config)
   f <- function(x) {
     identity(x) || FALSE

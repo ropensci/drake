@@ -270,7 +270,7 @@ import_dependencies <- function(
     allowed_globals = allowed_globals
   )
   deps$file_out <- deps$strings <- NULL
-  deps
+  select_nonempty(deps)
 }
 
 command_dependencies <- function(

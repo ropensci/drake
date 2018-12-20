@@ -193,7 +193,7 @@ wsa_get_path_encodings <- function(config, layout) {
   console_preprocess(text = "encode file paths", config = config)
   decode <- ht_new()
   encode <- ht_new()
-  decoded <- wsa_collect_paths(layout = layout, files = config$files)
+  decoded <- wsa_collect_paths(layout = layout)
   if (length(decoded)) {
     encoded <- reencode_path(decoded)
     names(decoded) <- encoded
@@ -205,11 +205,17 @@ wsa_get_path_encodings <- function(config, layout) {
   list(decode = decode, encode = encode)
 }
 
-wsa_collect_paths <- function(layout, files) {
+wsa_collect_paths <- function(layout) {
   out <- lapply(
     X = layout,
     FUN = function(x) {
-      c(x$deps_build$file_in, x$deps_build$file_out, x$deps_build$knitr_in)
+      out <- character(0)
+      for (deps_field in c("deps_build", "deps_condition", "deps_change")) {
+        for (file_field in c("file_in", "file_out", "knitr_in")) {
+          out <- c(out, x[[deps_field]][[file_field]])
+        }
+      }
+      out
     }
   )
   unique(as.character(unlist(out)))
@@ -224,15 +230,25 @@ wsa_encode_layout_paths <- function(config, layout, path_encodings) {
 }
 
 wsa_encode_layout_step <- function(layout, encode) {
-  for (field in c("file_in", "file_out", "knitr_in")) {
-    layout$deps_build[[field]] <- vapply(
-      X = layout$deps_build[[field]],
-      FUN = function(x) {
-        encode[[x]]
-      },
-      FUN.VALUE = character(1),
-      USE.NAMES = FALSE
-    )
+  for (deps_field in c("deps_build", "deps_condition", "deps_change")) {
+    for (file_field in c("file_in", "file_out", "knitr_in")) {
+      layout[[deps_field]][[file_field]] <- wsa_encode_vector(
+        x = layout[[deps_field]][[file_field]],
+        encode = encode
+      )
+    }
   }
-  select_nonempty(layout)
+  layout
 }
+
+wsa_encode_vector <- function(x, encode) {
+  vapply(
+    X = x,
+    FUN = function(y) {
+      encode[[y]]
+    },
+    FUN.VALUE = character(1),
+    USE.NAMES = FALSE
+  ) 
+}
+
