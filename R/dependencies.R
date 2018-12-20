@@ -309,7 +309,6 @@ command_dependencies <- function(
   }
   if (length(files)) {
     files <- drake_unquote(files)
-    files <- encoded_path(files)
     warn_single_quoted_files(files = files, deps = deps)
     files <- setdiff(files, deps$file_out)
     deps$file_in <- base::union(deps$file_in, files)
