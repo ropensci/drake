@@ -1,13 +1,22 @@
-decode_path <- function(x){
+decoded_path <- function(x) {
   substr(x, 2, nchar(x) - 1)
 }
 
-encode_path <- function(x){
+encoded_path <- function(x) {
   sprintf("\"%s\"", x)
 }
 
-reencode_path <- function(x){
+redecode_path <- function(x) {
+  substr(x, 2, nchar(x) - 1)
+}
+
+reencode_path <- function(x) {
   sprintf("\"%s\"", x)
+}
+
+display_path <- function(x) {
+  x[is_encoded_path(x)] <- redecode_path(x[is_encoded_path(x)])
+  sprintf("file %s", x)
 }
 
 is_encoded_path <- function(x) {

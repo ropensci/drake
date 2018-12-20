@@ -54,11 +54,11 @@ test_with_dir("dependency profile", {
   expect_true(as.logical(dp[dp$hash == "depend", "changed"]))
   expect_equal(sum(dp$changed), 1)
   config$plan$command <- "b + c"
-  config$layout <- create_drake_layout(
+  config$layout <- whole_static_analysis(
     plan = config$plan,
     envir = config$envir,
     cache = config$cache
-  )
+  )$layout
   dp <- dependency_profile(target = a, config = config)
   expect_true(as.logical(dp[dp$hash == "command", "changed"]))
   expect_equal(sum(dp$changed), 2)
