@@ -74,8 +74,8 @@
 deps_code <- function(x) {
   if (is.function(x)) {
     import_dependencies(x)
-  } else if (all(is_encoded_path(x)) && all(file.exists(decode_path(x)))) {
-    knitr_deps(decode_path(x))
+  } else if (all(is_encoded_path(x)) && all(file.exists(redecode_path(x)))) {
+    knitr_deps(redecode_path(x))
   } else if (is.character(x)) {
     command_dependencies(x)
   } else{
@@ -111,7 +111,11 @@ deps_target <- function(
   if (!character_only) {
     target <- as.character(substitute(target))
   }
-  config$layout[[target]]$deps_build
+  out <- config$layout[[target]]$deps_build
+  for (field in c("file_in", "file_out", "knitr_in")) {
+    out[[field]] <- redecode_path(out[[field]])
+  }
+  select_nonempty(out)
 }
 
 #' @title Find out why a target is out of date.
@@ -230,7 +234,7 @@ tracked <- function(config) {
     },
     jobs = config$jobs
   )
-  clean_dependency_list(out)
+  displayed_path(clean_dependency_list(out), config)
 }
 
 dependencies <- function(targets, config, reverse = FALSE) {
@@ -266,7 +270,7 @@ import_dependencies <- function(
     allowed_globals = allowed_globals
   )
   deps$file_out <- deps$strings <- NULL
-  deps
+  select_nonempty(deps)
 }
 
 command_dependencies <- function(
@@ -305,7 +309,6 @@ command_dependencies <- function(
   }
   if (length(files)) {
     files <- drake_unquote(files)
-    files <- encode_path(files)
     warn_single_quoted_files(files = files, deps = deps)
     files <- setdiff(files, deps$file_out)
     deps$file_in <- base::union(deps$file_in, files)
@@ -331,9 +334,9 @@ command_dependencies <- function(
 # TODO: this function can go away when drake
 # stops supporting single-quoted file names
 warn_single_quoted_files <- function(files, deps) {
-  old_api_files <- decode_path(files)
+  old_api_files <- redecode_path(files)
   new_api_files <- c(deps$file_in, deps$file_out, deps$knitr_in)
-  new_api_files <- decode_path(new_api_files)
+  new_api_files <- redecode_path(new_api_files)
   warn_files <- setdiff(old_api_files, new_api_files)
   if (!length(warn_files)) {
     return()

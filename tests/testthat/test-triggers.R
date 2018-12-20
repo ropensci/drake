@@ -127,7 +127,7 @@ test_with_dir("can detect trigger deps without reacting to them", {
   config <- drake_config(
     plan, session_info = FALSE, cache = storr::storr_environment(),
     log_progress = TRUE)
-  deps <- c(file_store("file.rds"), file_store("knitr.Rmd"), "f")
+  deps <- c(reencode_path(c("file.rds", "knitr.Rmd")), "f")
   expect_true(all(deps %in% igraph::V(config$graph)$name))
   expect_equal(sort(dependencies("x", config)), sort(deps))
   expect_equal(outdated(config), "x")
@@ -165,7 +165,7 @@ test_with_dir("same, but with global trigger", {
       change = NULL
     )
   )
-  deps <- c(file_store("file.rds"), file_store("knitr.Rmd"), "f")
+  deps <- c(reencode_path(c("file.rds", "knitr.Rmd")), "f")
   expect_true(all(deps %in% igraph::V(config$graph)$name))
   expect_equal(sort(dependencies("x", config)), sort(deps))
   expect_equal(outdated(config), "x")
@@ -211,14 +211,14 @@ test_with_dir("trigger does not block out command deps", {
   config <- drake_config(
     plan, session_info = FALSE, cache = storr::storr_environment(),
     log_progress = TRUE)
-  deps <- c(file_store("file.rds"), file_store("knitr.Rmd"), "f")
+  deps <- c(reencode_path("file.rds"), reencode_path("knitr.Rmd"), "f")
   expect_true(all(deps %in% igraph::V(config$graph)$name))
   expect_equal(sort(dependencies("x", config)), sort(deps))
   expect_equal(outdated(config), "x")
-  make(config = config)
+  make(config = config, memory_strategy = "memory")
   expect_equal(justbuilt(config), "x")
   expect_equal(outdated(config), character(0))
-  make(config = config)
+  make(config = config, memory_strategy = "memory")
   nobuild(config)
   f <- function(x) {
     identity(x) || FALSE
@@ -236,7 +236,7 @@ test_with_dir("trigger does not block out command deps", {
   expect_equal(justbuilt(config), "x")
 })
 
-test_with_dir("same, but with global trigger", {
+test_with_dir("same, but with global change trigger", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   writeLines("123", "knitr.Rmd")
   saveRDS(0, "file.rds")
@@ -253,24 +253,24 @@ test_with_dir("same, but with global trigger", {
   config <- drake_config(
     plan, session_info = FALSE, cache = storr::storr_environment(),
     log_progress = TRUE, trigger = trigger(
-      condition = {
+      change = {
         knitr_in("knitr.Rmd")
         f(FALSE) + readRDS(file_in("file.rds"))
       },
       command = FALSE,
       file = TRUE,
       depend = TRUE,
-      change = NULL
+      condition = FALSE
     )
   )
   deps <- c(file_store("file.rds"), file_store("knitr.Rmd"), "f")
   expect_true(all(deps %in% igraph::V(config$graph)$name))
   expect_equal(sort(dependencies("x", config)), sort(deps))
   expect_equal(outdated(config), "x")
-  make(config = config)
+  make(config = config, memory_strategy = "memory")
   expect_equal(justbuilt(config), "x")
   expect_equal(outdated(config), character(0))
-  make(config = config)
+  make(config = config, memory_strategy = "memory")
   nobuild(config)
   f <- function(x) {
     identity(x) || FALSE
@@ -478,16 +478,16 @@ test_with_dir("trigger components react appropriately", {
     saveRDS(out, file_out(\"out_", plan$target, ".rds\"))
     out
   ")
-  config$layout <- create_drake_layout(
+  config$layout <- whole_static_analysis(
     plan = config$plan,
     envir = config$envir,
     cache = config$cache
-  )
-  simple_config$layout <- create_drake_layout(
+  )$layout
+  simple_config$layout <- whole_static_analysis(
     plan = simple_config$plan,
     envir = simple_config$envir,
     cache = simple_config$cache
-  )
+  )$layout
   expect_equal(sort(outdated(config)), "command")
   make(config = config)
   expect_equal(sort(justbuilt(config)), "command")
@@ -690,4 +690,41 @@ test_with_dir("trigger condition mode", {
     trigger = trigger(condition = TRUE, mode = "condition")
   )
   expect_equal(justbuilt(config), "y")
+})
+
+test_with_dir("files are collected/encoded from all triggers", {
+  skip_on_cran()
+  exp <- sort(c(
+    paste0(
+      rep(c("command_", "condition_", "change_"), times = 3),
+      rep(c("in", "out", "knitr_in"), each = 3)
+    )
+  ))
+  exp <- setdiff(exp, c("condition_out", "change_out"))
+  file.create(exp)
+  plan <- drake_plan(
+    x = target(
+      command = {
+        file_in("command_in")
+        file_out("command_out")
+        knitr_in("command_knitr_in")
+      },
+      trigger = trigger(
+        condition = {
+          file_in("condition_in")
+          file_out("condition_out")
+          knitr_in("condition_knitr_in")
+        },
+        change = {
+          file_in("change_in")
+          file_out("change_out")
+          knitr_in("change_knitr_in")
+        }
+      )
+    ),
+    strings_in_dots = "literals"
+  )
+  config <- drake_config(plan)
+  expect_equal(sort(ht_list(config$encode)), exp)
+  expect_equal(sort(ht_list(config$decode)), reencode_path(exp))
 })

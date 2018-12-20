@@ -61,18 +61,6 @@ test_with_dir("Supplied graph disagrees with the workflow plan", {
   )
 })
 
-test_with_dir("Supplied graph is pruned.", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  load_mtcars_example()
-  graph <- drake_config(my_plan)$graph
-  con <- drake_config(my_plan, targets = c("small", "large"), graph = graph)
-  vertices <- V(con$graph)$name
-  include <- c("small", "simulate", "large")
-  exclude <- setdiff(my_plan$target, include)
-  expect_true(all(include %in% vertices))
-  expect_false(any(exclude %in% vertices))
-})
-
 test_with_dir("we can generate different visNetwork dependency graphs", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("lubridate")
@@ -426,5 +414,19 @@ test_with_dir("same, but with an extra edge not due to files", {
     sort(info$nodes$id),
     sort(c(file_store(
       paste0("out", 3:4, ".txt")), "status: up to date", "target2"))
+  )
+})
+
+test_with_dir("graph pruning edge cases", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  load_mtcars_example()
+  graph <- drake_config(my_plan)$graph
+  expect_warning(
+    prune_drake_graph(graph, to = c("small", "shibboleth")),
+    regexp = "supplied targets not in the dependency graph"
+  )
+  expect_warning(
+    prune_drake_graph(graph, to = character(0)),
+    regexp = "no valid destination vertices supplied"
   )
 })

@@ -16,7 +16,7 @@ test_with_dir("codeless knitr report", {
   expect_true(file.exists(file))
   expect_equal(
     deps_code(quote(knitr_in("codeless.Rmd"))),
-    list(knitr_in = file_store(file))
+    list(knitr_in = file)
   )
   expect_silent(
     tmp <- make(
@@ -75,24 +75,25 @@ test_with_dir("unparsable pieces of commands are handled correctly", {
 
 test_with_dir("knitr_deps() works", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  file <- system.file(
-    file.path("testing", "knitr", "test.Rmd"),
+  files <- system.file(
+    file.path("testing", "knitr", c("nested.Rmd", "test.Rmd")),
     package = "drake", mustWork = TRUE
   )
-  expect_true(file.copy(
-    from = file,
+  expect_true(all(file.copy(
+    from = files,
     to = getwd(),
     recursive = TRUE,
     overwrite = TRUE
-  ))
+  )))
   ans <- sort(c(
     "inline_dep", paste0("target", seq_len(18)),
-    file_store(paste0("file", seq_len(6)))
+    file_store(paste0("file", seq_len(6))),
+    "input.txt", "output.txt", "nested.Rmd", "nested"
   ))
   expect_equal(sort(knitr_deps("'test.Rmd'")), ans)
   expect_false(file.exists("test.md"))
   expect_warning(x <- sort(knitr_deps("report.Rmd")))
-  expect_warning(expect_equal(x, sort(knitr_deps("\"report.Rmd\""))))
+  expect_warning(expect_equal(x, sort(knitr_deps(reencode_path("report.Rmd")))))
   expect_equal(x, character(0))
   load_mtcars_example()
   w <- clean_dependency_list(deps_code("funct(knitr_in(report.Rmd))"))
@@ -111,8 +112,8 @@ test_with_dir("knitr_deps() works", {
   )
   expect_equal(sort(w), sort(c("funct")))
   expect_equal(sort(x), sort(real_deps))
-  expect_equal(sort(y), sort(c(real_deps, "knit", "\"report.Rmd\"")))
-  expect_equal(sort(z), sort(c(real_deps, "render", "\"report.Rmd\"")))
+  expect_equal(sort(y), sort(c(real_deps, "knit", "report.Rmd")))
+  expect_equal(sort(z), sort(c(real_deps, "render", "report.Rmd")))
 })
 
 test_with_dir("find_knitr_doc() works", {

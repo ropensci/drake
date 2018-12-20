@@ -20,7 +20,7 @@ test_with_dir("pkgconfig::get_config(\"drake::strings_in_dots\")", {
   pkgconfig::set_config("drake::strings_in_dots" = "garbage")
   expect_equal(
     expect_warning(command_dependencies(cmd)),
-    list(globals = "readRDS", file_in = "\"my_file.rds\"")
+    list(globals = "readRDS", file_in = "my_file.rds")
   )
 })
 
@@ -158,7 +158,7 @@ test_with_dir("deprecate misc utilities", {
   expect_warning(max_useful_jobs(config(drake_plan(x = 1))))
   expect_warning(deps(123))
   load_mtcars_example()
-  config <- drake_config(my_plan)
+  expect_warning(config <- drake_config(my_plan, graph = 1, layout = 2))
   expect_warning(tmp <- dataframes_graph(config))
   expect_warning(migrate_drake_project())
   expect_null(warn_single_quoted_files(character(0), list()))

@@ -32,8 +32,8 @@ test_with_dir("busy function", {
     expression(quoted3)
   }
   out <- analyze_code(f)
-  expect_equal(sort(out$file_in), sort(c("\"x\"", "\"y\"")))
-  expect_equal(sort(out$file_out), sort(c("\"w\"", "\"z\"")))
+  expect_equal(sort(out$file_in), sort(c("x", "y")))
+  expect_equal(sort(out$file_out), sort(c("w", "z")))
   str <- sort(
     c("iter3", "iter4", "local", paste0("string", 1:3), "sa1", "sa2")
   )

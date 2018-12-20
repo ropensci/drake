@@ -1,9 +1,31 @@
-decode_path <- function(x){
+decoded_path <- function(x, config) {
+  out <- lapply(
+    X = x,
+    FUN = function(x) {
+      config$decode[[x]]
+    }
+  )
+  unlist(out)
+}
+
+displayed_path <- function(x, config) {
+  index <- is_encoded_path(x)
+  pretty <- sprintf("file %s", decoded_path(x[index], config))
+  c(x[!index], pretty)
+}
+
+redecode_path <- function(x) {
   substr(x, 2, nchar(x) - 1)
 }
 
-encode_path <- function(x){
+reencode_path <- function(x) {
   sprintf("\"%s\"", x)
+}
+
+redisplay_path <- function(x) {
+  index <- is_encoded_path(x)
+  pretty <- sprintf("file %s", redecode_path(x[index]))
+  c(x[!index], pretty)
 }
 
 is_encoded_path <- function(x) {

@@ -255,7 +255,8 @@ timing_assumptions <- function(
   }
   times <- build_times(
     cache = config$cache,
-    targets_only = targets_only
+    targets_only = targets_only,
+    pretty_files = FALSE
   )
   if (targets_only) {
     config$graph <- targets_graph(config)
