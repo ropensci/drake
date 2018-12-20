@@ -193,19 +193,3 @@ test_with_dir("misc knitr", {
   expect_equal(doc_of_function_call(list(1, 2, 3)), "2")
   expect_equal(find_knitr_doc(NULL), character(0))
 })
-
-test_with_dir("knitr files can detect file_in", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  file <- "file_in.Rmd"
-  path <- system.file(
-    file.path("testing", "knitr", file),
-    package = "drake", mustWork = TRUE
-  )
-  expect_true(file.copy(
-    from = path,
-    to = getwd(),
-    recursive = TRUE,
-    overwrite = TRUE
-  ))
-})
-
