@@ -127,7 +127,7 @@ test_with_dir("can detect trigger deps without reacting to them", {
   config <- drake_config(
     plan, session_info = FALSE, cache = storr::storr_environment(),
     log_progress = TRUE)
-  deps <- c("file.rds", "knitr.Rmd", "f")
+  deps <- c(reencode_path(c("file.rds", "knitr.Rmd")), "f")
   expect_true(all(deps %in% igraph::V(config$graph)$name))
   expect_equal(sort(dependencies("x", config)), sort(deps))
   expect_equal(outdated(config), "x")
@@ -165,7 +165,7 @@ test_with_dir("same, but with global trigger", {
       change = NULL
     )
   )
-  deps <- c("file.rds", "knitr.Rmd", "f")
+  deps <- c(reencode_path(c("file.rds", "knitr.Rmd")), "f")
   expect_true(all(deps %in% igraph::V(config$graph)$name))
   expect_equal(sort(dependencies("x", config)), sort(deps))
   expect_equal(outdated(config), "x")
