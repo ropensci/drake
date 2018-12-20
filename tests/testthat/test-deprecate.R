@@ -287,6 +287,8 @@ test_with_dir("v6.2.1 project is still up to date", {
     lm(y ~ x2, data = d)
   }
   require("knitr", quietly = TRUE) # nolint
+  config <- drake_config(plan)
+  expect_equal(outdated(config), character(0))
   config <- make(plan)
   expect_equal(justbuilt(config), character(0))
 
