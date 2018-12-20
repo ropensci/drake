@@ -55,6 +55,16 @@ config_checks <- function(config) {
       call. = FALSE
     )
   }
+  if (any(bad_symbols) %in% config$plan$target) {
+    stop(
+      "symbols ",
+      sQuote("."), ", ",
+      sQuote(".."), ", and ",
+      sQuote(".gitignore"),
+      " cannot be target names.",
+      call. = FALSE
+    )
+  }
   stopifnot(nrow(config$plan) > 0)
   stopifnot(length(config$targets) > 0)
   check_drake_graph(graph = config$graph)
