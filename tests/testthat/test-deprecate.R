@@ -297,7 +297,7 @@ test_with_dir("v6.2.1 project is still up to date", {
   config <- make(config = config)
   expect_equal(justbuilt(config), "report")
   expect_equal(outdated(config), character(0))
-  
+
   # How about knitr files?
   lines <- c(readLines("report.Rmd"), "", "Last line.")
   writeLines(lines, "report.Rmd")

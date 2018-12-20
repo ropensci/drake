@@ -329,7 +329,7 @@ test_with_dir("cache functions work", {
     files_only = FALSE)))
   expect_equal(
     sort(cached(search = FALSE)),
-    sort(redisplay_path(all)), 
+    sort(redisplay_path(all)),
     sort(redisplay_path(twopiece))
   )
   expect_equal(
@@ -359,7 +359,7 @@ test_with_dir("cache functions work", {
     rescue_cache(search = FALSE, garbage_collection = TRUE), "storr"))
   expect_equal(
     sort(cached(search = FALSE)),
-    sort(redisplay_path(all)), 
+    sort(redisplay_path(all)),
     sort(redisplay_path(twopiece))
   )
 
