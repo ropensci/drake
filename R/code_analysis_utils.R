@@ -89,7 +89,8 @@ bad_symbols <- sort(
   c(
     ".",
     "..",
-    ".gitignore"
+    ".gitignore",
+    "Thumbs.db"
   )
 )
 

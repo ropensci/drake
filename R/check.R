@@ -57,11 +57,8 @@ config_checks <- function(config) {
   }
   if (any(bad_symbols) %in% config$plan$target) {
     stop(
-      "symbols ",
-      sQuote("."), ", ",
-      sQuote(".."), ", and ",
-      sQuote(".gitignore"),
-      " cannot be target names.",
+      "symbols that cannot be target names: ",
+      paste0(sQuote(bad_symbols), sep = ", "),
       call. = FALSE
     )
   }
