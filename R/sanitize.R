@@ -45,7 +45,8 @@ sanitize_nodes <- function(nodes, choices) {
 
 # TODO: get rid of the is_encoded_path() part in version 7.0.0
 repair_target_names <- function(x) {
-  x[!is_encoded_path(x)] <- make.names(x[!is_encoded_path(x)], unique = FALSE)
+  index <- !is_quoted(x)
+  x[index] <- make.names(x[index], unique = FALSE)
   x
 }
 

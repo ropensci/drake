@@ -182,16 +182,16 @@ test_with_dir("plan set 2", {
 test_with_dir("plan set 3", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   for (tidy_evaluation in c(TRUE, FALSE)) {
-  expect_warning(x <- drake_plan(
-    a = c,
-    b = "c",
-    list = c(c = "d", d = "readRDS('e')"),
-    strings_in_dots = "literals", file_targets = TRUE,
-    tidy_evaluation = tidy_evaluation))
-  y <- weak_tibble(
-    target = drake::drake_quotes(letters[1:4], single = TRUE),
-    command = c("c", "\"c\"", "d", "readRDS('e')"))
-  expect_equal(x, y)
+    expect_warning(x <- drake_plan(
+      a = c,
+      b = "c",
+      list = c(c = "d", d = "readRDS('e')"),
+      strings_in_dots = "literals", file_targets = TRUE,
+      tidy_evaluation = tidy_evaluation))
+    y <- weak_tibble(
+      target = drake::drake_quotes(letters[1:4], single = TRUE),
+      command = c("c", "\"c\"", "d", "readRDS('e')"))
+    expect_equal(x, y)
   }
 })
 
