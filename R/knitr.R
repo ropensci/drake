@@ -33,7 +33,7 @@ knitr_deps <- function(target) {
   }
   out <- new_code_analysis_results()
   if (is_encoded_path(target)) {
-    target <- decode_path(target)
+    target <- decoded_path(target)
   }
   analyze_knitr_file(target, out)
   clean_dependency_list(list_code_analysis_results(out))

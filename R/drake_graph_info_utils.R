@@ -126,7 +126,7 @@ default_graph_title <- function(split_columns = FALSE) {
 }
 
 file_hover_text <- Vectorize(function(encoded_file, targets) {
-  decoded_file <- decode_path(encoded_file)
+  decoded_file <- decoded_path(encoded_file)
   if (encoded_file %in% targets || !file.exists(decoded_file)) {
     return(encoded_file)
   }
@@ -260,7 +260,7 @@ missing_import <- function(x, envir) {
     FALSE
   },
   error = function(e) TRUE)
-  missing_file <- is_encoded_path(x) & !file.exists(decode_path(x))
+  missing_file <- is_encoded_path(x) & !file.exists(decoded_path(x))
   missing_object | missing_file
 }
 

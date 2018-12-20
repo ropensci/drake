@@ -63,6 +63,7 @@ build_times <- function(
   out <- round_times(out, digits = digits)
   out <- to_build_duration_df(out)
   out <- out[order(out$item), ]
+  out$item <- display_path(out$item)
   out$type[is.na(out$type)] <- "target"
   if (targets_only) {
     out <- out[out$type == "target", ]

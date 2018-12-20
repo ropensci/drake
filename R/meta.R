@@ -63,7 +63,7 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
   }
   # For imported files.
   if (meta$isfile) {
-    meta$mtime <- file.mtime(decode_path(target))
+    meta$mtime <- file.mtime(decoded_path(target))
   }
   if (meta$trigger$command) {
     meta$command <- layout$command_standardized
@@ -142,7 +142,7 @@ self_hash <- Vectorize(function(target, config) {
 "target", USE.NAMES = FALSE)
 
 rehash_file <- function(target, config) {
-  file <- decode_path(target)
+  file <- decoded_path(target)
   if (!file.exists(file) || file.info(file)$isdir) {
     return(as.character(NA))
   }
@@ -155,7 +155,7 @@ rehash_file <- function(target, config) {
 }
 
 safe_rehash_file <- function(target, config) {
-  if (file.exists(decode_path(target))) {
+  if (file.exists(decoded_path(target))) {
     rehash_file(target = target, config = config)
   } else {
     as.character(NA)
@@ -176,7 +176,7 @@ file_hash <- function(
   config,
   size_cutoff = rehash_file_size_cutoff
 ) {
-  filename <- decode_path(target)
+  filename <- decoded_path(target)
   if (!file.exists(filename))
     return(as.character(NA))
   old_mtime <- ifelse(
