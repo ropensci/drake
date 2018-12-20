@@ -98,13 +98,13 @@ test_with_dir("File functions handle input", {
   out <- analyze_code(quote(file_in(c("file1", "file2"))))
   expect_equal(length(out), 1L)
   out <- sort(out$file_in)
-  exp <- sort(drake_quotes(c("file1", "file2"), single = FALSE))
+  exp <- sort(c("file1", "file2"))
   expect_equal(out, exp)
 
   out <- analyze_code(quote(file_out(c("file1", "file2"))))
   expect_equal(length(out), 1L)
   out <- sort(out$file_out)
-  exp <- sort(drake_quotes(c("file1", "file2"), single = FALSE))
+  exp <- sort(c("file1", "file2"))
   expect_equal(out, exp)
 })
 
