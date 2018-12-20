@@ -87,7 +87,7 @@ test_with_dir("knitr_deps() works", {
   )))
   ans <- sort(c(
     "inline_dep", paste0("target", seq_len(18)),
-    file_store(paste0("file", seq_len(6))),
+    drake_quotes(paste0("file", seq_len(6)), single = FALSE),
     "input.txt", "output.txt", "nested.Rmd", "nested"
   ))
   expect_equal(sort(knitr_deps("'test.Rmd'")), ans)
@@ -172,8 +172,8 @@ test_with_dir("knitr file deps from commands and functions", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   load_mtcars_example()
   expect_equal(sort(
-    clean_dependency_list(deps_code("'report.Rmd'"))), sort(c(
-    "coef_regression2_small", "large", "small"
+    clean_dependency_list(deps_code("knitr_in(\"report.Rmd\")"))), sort(c(
+    "coef_regression2_small", "large", "small", "report.Rmd"
   )))
   f <- function(x) {
     knit(x)

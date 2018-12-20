@@ -46,7 +46,6 @@ enforce_compatible_config <- function(config) {
   } else {
     config$long_hash_algo <- config$cache$driver$hash_algorithm
   }
-  config$using_encoded_paths <- using_encoded_paths(cache = config$cache)
   config
 }
 
@@ -63,9 +62,4 @@ last_drake_version <- function(cache) {
   } else {
     NULL
   }
-}
-
-using_encoded_paths <- function(cache) {
-  version <- last_drake_version(cache) %||% "0.0.0"
-  compareVersion(version, "6.2.1") > 0L
 }
