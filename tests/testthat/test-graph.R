@@ -416,3 +416,17 @@ test_with_dir("same, but with an extra edge not due to files", {
       paste0("out", 3:4, ".txt")), "status: up to date", "target2"))
   )
 })
+
+test_with_dir("graph pruning edge cases", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  load_mtcars_example()
+  graph <- drake_config(my_plan)$graph
+  expect_warning(
+    prune_drake_graph(graph, to = c("small", "shibboleth")),
+    regexp = "supplied targets not in the dependency graph"
+  )
+  expect_warning(
+    prune_drake_graph(graph, to = character(0)),
+    regexp = "no valid destination vertices supplied"
+  )
+})

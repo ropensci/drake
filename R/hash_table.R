@@ -20,19 +20,6 @@ ht_set <- function(ht, x) {
   )
 }
 
-ht_vset <- function(ht, x, values) {
-  lapply(
-    X = seq_len(x),
-    FUN = function(i) {
-      assign(x = x[i], value = values[i], envir = ht, inherits = FALSE)
-    }
-  )
-}
-
-ht_get <- function(ht, x) {
-  get(x = x, envir = ht, inherits = FALSE)
-}
-
 ht_del <- function(ht, x) {
   remove(list = x, envir = ht, inherits = FALSE)
 }

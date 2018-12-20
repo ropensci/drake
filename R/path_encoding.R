@@ -2,10 +2,6 @@ decoded_path <- function(x) {
   substr(x, 2, nchar(x) - 1)
 }
 
-encoded_path <- function(x) {
-  sprintf("\"%s\"", x)
-}
-
 redecode_path <- function(x) {
   substr(x, 2, nchar(x) - 1)
 }
