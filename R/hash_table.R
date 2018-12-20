@@ -1,7 +1,7 @@
 ht_new <- function(x = NULL, hash = TRUE) {
   out <- new.env(hash = hash, parent = emptyenv())
   if (!is.null(x)) {
-    ht_add(out, x)
+    ht_set(out, x)
   }
   out
 }
@@ -10,14 +10,18 @@ ht_new_from_list <- function(x, hash = (length(x) > 100)) {
   list2env(x, hash = hash, parent = emptyenv())
 }
 
-ht_add <- function(ht, x) {
+ht_set <- function(ht, x, value = TRUE) {
   lapply(
     X = x,
     FUN = assign,
-    value = TRUE,
+    value = value,
     envir = ht,
     inherits = FALSE
   )
+}
+
+ht_get <- function(ht, x) {
+  get(x = x, envir = ht, inherits = FALSE)
 }
 
 ht_del <- function(ht, x) {
@@ -38,5 +42,5 @@ ht_clone <- function(ht) {
 
 # Merge y into x
 ht_merge <- function(x, y) {
-  ht_add(x, ht_list(y))
+  ht_set(x, ht_list(y))
 }

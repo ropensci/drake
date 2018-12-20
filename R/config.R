@@ -527,6 +527,22 @@ drake_config <- function(
       # 2018-12-07 # nolint
     )
   }
+  if (!is.null(graph)) {
+    warning(
+      "Argument `graph` is deprecated. Instead, ",
+      "the preprocessing of the graph is memoized to save time.",
+      call. = FALSE
+      # 2018-12-19 # nolint
+    )
+  }
+  if (!is.null(layout)) {
+    warning(
+      "Argument `layout` is deprecated. Instead, ",
+      "the preprocessing of the layout is memoized to save time.",
+      call. = FALSE
+      # 2018-12-19 # nolint
+    )
+  }
   plan <- sanitize_plan(plan)
   if (is.null(targets)) {
     targets <- plan$target
@@ -551,30 +567,25 @@ drake_config <- function(
   }
   seed <- choose_seed(supplied = seed, cache = cache)
   trigger <- convert_old_trigger(trigger)
-  if (is.null(layout)) {
-    layout <- create_drake_layout(
-      plan = plan,
-      targets = targets,
-      envir = envir,
-      verbose = verbose,
-      jobs = jobs,
-      console_log_file = console_log_file,
-      trigger = trigger,
-      cache = cache
-    )
-  }
-  if (is.null(graph)) {
-    graph <- create_drake_graph(
-      layout = layout,
-      targets = targets,
-      cache = cache,
-      jobs = jobs,
-      console_log_file = console_log_file,
-      verbose = verbose
-    )
-  } else {
-    graph <- prune_drake_graph(graph = graph, to = targets, jobs = jobs)
-  }
+  layout <- create_drake_layout(
+    plan = plan,
+    targets = targets,
+    envir = envir,
+    verbose = verbose,
+    jobs = jobs,
+    console_log_file = console_log_file,
+    trigger = trigger,
+    cache = cache,
+    files = files
+  )
+  graph <- create_drake_graph(
+    layout = layout,
+    targets = targets,
+    cache = cache,
+    jobs = jobs,
+    console_log_file = console_log_file,
+    verbose = verbose
+  )
   all_targets <- intersect(igraph::V(graph)$name, plan$target)
   all_imports <- setdiff(igraph::V(graph)$name, all_targets)
   cache_path <- force_cache_path(cache)
