@@ -89,6 +89,7 @@ dependency_hash <- function(target, config) {
   if (is_imported(target, config)) {
     deps <- c(deps, x$file_in, x$knitr_in)
   }
+  deps <- unlist(deps)
   deps <- as.character(deps)
   deps <- unique(deps)
   deps <- sort(deps)
