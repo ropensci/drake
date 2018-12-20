@@ -272,7 +272,9 @@ test_with_dir("make(..., skip_imports = TRUE) works", {
   )
   expect_equal(
     sort(cached()),
-    sort(c(reencode_path("intermediatefile.rds"), con$plan$target))
+    sort(redisplay_path(
+      c(reencode_path("intermediatefile.rds"), con$plan$target)
+    ))
   )
 
   # If the imports are already cached, the targets built with
