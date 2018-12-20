@@ -230,8 +230,9 @@ wsa_encode_layout_step <- function(layout, encode) {
       FUN = function(x) {
         encode[[x]]
       },
-      FUN.VALUE = character(1)
+      FUN.VALUE = character(1),
+      USE.NAMES = FALSE
     )
   }
-  layout
+  select_nonempty(layout)
 }

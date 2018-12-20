@@ -111,7 +111,11 @@ deps_target <- function(
   if (!character_only) {
     target <- as.character(substitute(target))
   }
-  config$layout[[target]]$deps_build
+  out <- config$layout[[target]]$deps_build
+  for (field in c("file_in", "file_out", "knitr_in")) {
+    out[[field]] <- redecode_path(out[[field]])
+  }
+  select_nonempty(out)
 }
 
 #' @title Find out why a target is out of date.
@@ -230,7 +234,7 @@ tracked <- function(config) {
     },
     jobs = config$jobs
   )
-  clean_dependency_list(out)
+  display_path(clean_dependency_list(out))
 }
 
 dependencies <- function(targets, config, reverse = FALSE) {
