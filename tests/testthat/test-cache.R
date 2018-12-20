@@ -168,7 +168,7 @@ test_with_dir("non-existent caches", {
 test_with_dir("drake_gc() and mangled keys", {
   cache <- storr::storr_rds(tempfile(), mangle_key = TRUE)
   cache$set("a", 1)
-  drake_gc(cache = cache)
+  expect_silent(tmp <- drake_gc(cache = cache))
 })
 
 test_with_dir("try to rescue non-existent stuff", {
