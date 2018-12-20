@@ -32,7 +32,7 @@ knitr_deps <- function(target) {
     target <- redecode_path(target)
   }
   analyze_knitr_file(target, out)
-  clean_dependency_list(list_code_analysis_results(out))
+  list_code_analysis_results(out)
 }
 
 safe_get_tangled_frags <- function(file) {

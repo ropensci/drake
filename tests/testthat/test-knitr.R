@@ -90,10 +90,11 @@ test_with_dir("knitr_deps() works", {
     drake_quotes(paste0("file", seq_len(6)), single = FALSE),
     "input.txt", "output.txt", "nested.Rmd", "nested"
   ))
-  expect_equal(sort(knitr_deps("'test.Rmd'")), ans)
+  expect_equal(sort(clean_dependency_list(knitr_deps("'test.Rmd'"))), ans)
   expect_false(file.exists("test.md"))
-  expect_warning(x <- sort(knitr_deps("report.Rmd")))
-  expect_warning(expect_equal(x, sort(knitr_deps(reencode_path("report.Rmd")))))
+  expect_warning(x <- sort(clean_dependency_list(knitr_deps("report.Rmd"))))
+  expect_warning(expect_equal(x, sort(
+    clean_dependency_list(knitr_deps(reencode_path("report.Rmd"))))))
   expect_equal(x, character(0))
   load_mtcars_example()
   w <- clean_dependency_list(deps_code("funct(knitr_in(report.Rmd))"))
@@ -111,7 +112,7 @@ test_with_dir("knitr_deps() works", {
     "small", "coef_regression2_small", "large"
   )
   expect_equal(sort(w), sort(c("funct")))
-  expect_equal(sort(x), sort(real_deps))
+  expect_equal(sort(clean_dependency_list(x)), sort(real_deps))
   expect_equal(sort(y), sort(c(real_deps, "knit", "report.Rmd")))
   expect_equal(sort(z), sort(c(real_deps, "render", "report.Rmd")))
 })

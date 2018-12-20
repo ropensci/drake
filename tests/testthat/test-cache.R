@@ -165,6 +165,12 @@ test_with_dir("non-existent caches", {
   expect_silent(read_drake_graph(cache = dummy))
 })
 
+test_with_dir("drake_gc() and mangled keys", {
+  cache <- storr::storr_rds(tempfile(), mangle_key = TRUE)
+  cache$set("a", 1)
+  drake_gc(cache = cache)
+})
+
 test_with_dir("try to rescue non-existent stuff", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_null(rescue_cache())

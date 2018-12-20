@@ -5,6 +5,9 @@ drake_context("strings")
 
 test_with_dir("Functions drake_quotes() and drake_unquote() are correct.", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  expect_true(not_quoted("x"))
+  expect_false(not_quoted("'x'"))
+  expect_false(not_quoted("\"x\""))
   expect_equal(drake_quotes(), character(0))
   expect_equal(drake_quotes(single = T), character(0))
   expect_equal(

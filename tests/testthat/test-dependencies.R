@@ -259,3 +259,9 @@ test_with_dir("._drake_envir and drake_envir() are not dependencies", {
   expect_false("._drake_envir" %in% deps1)
   expect_false("._drake_envir" %in% deps2)
 })
+
+test_with_dir("deps_code() on a knitr file", {
+  skip_on_cran()
+  load_mtcars_example()
+  expect_true(is.list(deps_code(file_store("report.Rmd"))))
+})
