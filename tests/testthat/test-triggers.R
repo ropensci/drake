@@ -691,3 +691,40 @@ test_with_dir("trigger condition mode", {
   )
   expect_equal(justbuilt(config), "y")
 })
+
+test_with_dir("files are collected/encoded from all triggers", {
+  skip_on_cran()
+  exp <- sort(c(
+    paste0(
+      rep(c("command_", "condition_", "change_"), times = 3),
+      rep(c("in", "out", "knitr_in"), each = 3)
+    )
+  ))
+  exp <- setdiff(exp, c("condition_out", "change_out"))
+  file.create(exp)
+  plan <- drake_plan(
+    x = target(
+      command = {
+        file_in("command_in")
+        file_out("command_out")
+        knitr_in("command_knitr_in")
+      },
+      trigger = trigger(
+        condition = {
+          file_in("condition_in")
+          file_out("condition_out")
+          knitr_in("condition_knitr_in")
+        },
+        change = {
+          file_in("change_in")
+          file_out("change_out")
+          knitr_in("change_knitr_in")
+        }
+      )
+    ),
+    strings_in_dots = "literals"
+  )
+  config <- drake_config(plan)
+  expect_equal(sort(ht_list(config$encode)), exp)
+  expect_equal(sort(ht_list(config$decode)), reencode_path(exp))
+})
