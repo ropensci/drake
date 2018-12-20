@@ -34,7 +34,6 @@ cache_vers_warn <- function(cache){
 }
 
 enforce_compatible_config <- function(config) {
-  config$cache_version <- get_cache_version(config$cache)
   # TODO: can probably remove this conditional for drake 7.0.0
   if (config$cache$exists("long_hash_algo", namespace = "config")) {
     config$long_hash_algo <- config$cache$get(

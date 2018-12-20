@@ -27,14 +27,14 @@ test_with_dir("empty read_drake_plan()", {
 
 test_with_dir("drake_version", {
   cache <- storr::storr_environment()
-  expect_null(last_drake_version(cache))
+  expect_null(get_cache_version(cache))
   con <- make(drake_plan(x = 1), session_info = FALSE)
-  expect_true(is.character(last_drake_version(con$cache)))
+  expect_true(is.character(get_cache_version(con$cache)))
   clean()
   con <- make(drake_plan(x = 1), session_info = TRUE)
-  expect_true(is.character(last_drake_version(con$cache)))
+  expect_true(is.character(get_cache_version(con$cache)))
   con$cache$clear(namespace = "session")
-  expect_null(last_drake_version(con$cache))
+  expect_null(get_cache_version(con$cache))
 })
 
 test_with_dir("dependency profile", {
