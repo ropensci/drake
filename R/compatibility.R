@@ -2,10 +2,7 @@ cache_vers_check <- function(cache) {
   if (is.null(cache)) {
     return(character(0))
   }
-  old <- last_drake_version(cache = cache)
-  if (is.null(old)) {
-    return(invisible())
-  }
+  old <- get_cache_version(cache = cache)
   if (compareVersion(old, "5.4.0") < 0) {
     paste0(
       "This project was last run with drake version ",
@@ -37,6 +34,10 @@ cache_vers_warn <- function(cache){
 }
 
 enforce_compatible_config <- function(config) {
+  config$cache_version <- get_cache_version(config$cache)
+  config$encode_paths <- utils::compareVersion(
+    config$cache_version, "6.2.1"
+  ) > 0L
   # TODO: can probably remove this conditional for drake 7.0.0
   if (config$cache$exists("long_hash_algo", namespace = "config")) {
     config$long_hash_algo <- config$cache$get(
@@ -49,7 +50,7 @@ enforce_compatible_config <- function(config) {
   config
 }
 
-last_drake_version <- function(cache) {
+get_cache_version <- function(cache) {
   if (cache$exists(key = "drake_version", namespace = "session")) {
     cache$get(key = "drake_version", namespace = "session")
   } else if (cache$exists(key = "sessionInfo", namespace = "session")) {
@@ -60,6 +61,6 @@ last_drake_version <- function(cache) {
     )
     as.character(all_pkgs$drake$Version)
   } else {
-    NULL
+    as.character(utils::packageVersion("drake"))
   }
 }
