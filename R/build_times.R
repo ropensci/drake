@@ -74,7 +74,7 @@ build_times <- function(
     out <- out[out$type == "target", ]
   }
   if (pretty_files) {
-    out$item <- redisplay_path(out$item)
+    out$item <- redisplay_path_vector(out$item)
   }
   tryCatch(
     weak_as_tibble(out),

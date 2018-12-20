@@ -14,6 +14,15 @@ displayed_path <- function(x, config) {
   c(x[!index], pretty)
 }
 
+displayed_path_vector <- function(x, config) {
+  vapply(
+    X = x,
+    FUN = displayed_path,
+    FUN.VALUE = character(1),
+    config = config
+  )
+}
+
 redecode_path <- function(x) {
   base64url::base64_urldecode(substr(x, start = 2, stop = 1e3))
 }
@@ -26,6 +35,14 @@ redisplay_path <- function(x) {
   index <- is_encoded_path(x)
   pretty <- sprintf("file %s", redecode_path(x[index]))
   c(x[!index], pretty)
+}
+
+redisplay_path_vector <- function(x) {
+  vapply(
+    X = x,
+    FUN = redisplay_path,
+    FUN.VALUE = character(1)
+  )
 }
 
 is_encoded_path <- function(x) {

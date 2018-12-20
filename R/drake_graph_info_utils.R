@@ -4,7 +4,11 @@ hover_width <- 49
 append_build_times <- function(config) {
   with(config, {
     time_data <- build_times(
-      digits = digits, cache = cache, type = build_times)
+      digits = digits,
+      cache = cache,
+      type = build_times,
+      pretty_files = FALSE
+    )
     timed <- intersect(time_data$item, nodes$id)
     if (!length(timed))
       return(nodes)
@@ -103,7 +107,8 @@ cluster_status <- function(statuses) {
 }
 
 configure_nodes <- function(config) {
-  rownames(config$nodes) <- config$nodes$label
+  rownames(config$nodes) <- config$nodes$id
+  config$nodes$label <- displayed_path_vector(config$nodes$label, config)
   config$nodes <- categorize_nodes(config = config)
   config$nodes <- style_nodes(config = config)
   config$nodes <- resolve_levels(config = config)
