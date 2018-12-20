@@ -18,6 +18,11 @@
 #'   for the full build time including the time it took to
 #'   store the target, or `"command"` for the time it took
 #'   just to run the command.
+#' @param pretty_files logical. If `TRUE`, files are displayed
+#'   in the `item` column as "file my_file.Rmd". If `FALSE`,
+#'   files are encoded according to `drake`'s internal standard
+#'   for representing file paths, which may not be human readable
+#'   in future versions of `drake`. 
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -36,7 +41,8 @@ build_times <- function(
   targets_only = FALSE,
   verbose = drake::default_verbose(),
   jobs = 1,
-  type = c("build", "command")
+  type = c("build", "command"),
+  pretty_files = TRUE
 ) {
   eval(parse(text = "require(methods, quietly = TRUE)")) # needed for lubridate
   if (is.null(cache)) {
@@ -63,10 +69,12 @@ build_times <- function(
   out <- round_times(out, digits = digits)
   out <- to_build_duration_df(out)
   out <- out[order(out$item), ]
-  out$item <- display_path(out$item)
   out$type[is.na(out$type)] <- "target"
   if (targets_only) {
     out <- out[out$type == "target", ]
+  }
+  if (pretty_files) {
+    out$item <- display_path(out$item)
   }
   tryCatch(
     weak_as_tibble(out),
