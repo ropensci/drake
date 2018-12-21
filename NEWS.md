@@ -24,6 +24,7 @@
 - Deprecate and remove the `session` argument of `make()` and `drake_config()`. Details: https://github.com/ropensci/drake/issues/623#issue-391894088.
 - Deprecate the `graph` and `layout` arguments to `make()` and `drake_config()`. The change simplifies the internals, and memoization allows us to do this.
 - Warn the user if running `make()` in a subdirectory of the `drake` project root (determined by the location of the `.drake` folder in relation to the working directory).
+- In the code analysis, explicitly prohibit targets from being dependencies of imported functions.
 
 # Version 6.2.1
 
