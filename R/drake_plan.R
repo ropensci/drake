@@ -265,7 +265,7 @@ flatten_plan_list <- function(args, plan_env){
 
 fill_cols <- function(x, cols) {
   na_cols <- setdiff(cols, colnames(x))
-  x[, na_cols] <- NA_character_
+  x[, na_cols] <- NA
   x
 }
 
