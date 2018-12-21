@@ -215,7 +215,7 @@ imported <- function(
 # from base::remove()
 targets_from_dots <- function(dots, list) {
   if (length(dots) && !all(vapply(dots, function(x) is.symbol(x) ||
-    is.character(x), NA_character_, USE.NAMES = FALSE))) {
+    is.character(x), NA, USE.NAMES = FALSE))) {
     stop("... must contain names or character strings", call. = FALSE)
   }
   names <- vapply(dots, as.character, "")
