@@ -8,7 +8,7 @@
 }
 
 `%||NA%` <- function(x, y) {
-  if (is.null(x) || length(x) < 1 || is.na(x)) {
+  if (is.null(x) || length(x) < 1 || anyNA(x)) {
     y
   } else {
     x

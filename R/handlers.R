@@ -42,7 +42,7 @@ error_false <- function(e) {
 }
 
 error_na <- function(e) {
-  NA
+  NA_character_
 }
 
 error_null <- function(e) {

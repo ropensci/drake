@@ -138,7 +138,7 @@ self_hash <- Vectorize(function(target, config) {
   if (kernel_exists(target = target, config = config)) {
     config$cache$get_hash(target, namespace = "kernels")
   } else {
-    as.character(NA)
+    NA_character_
   }
 },
 "target", USE.NAMES = FALSE)
@@ -146,7 +146,7 @@ self_hash <- Vectorize(function(target, config) {
 rehash_file <- function(target, config) {
   file <- decoded_path(target, config) %||% target
   if (!file.exists(file) || file.info(file)$isdir) {
-    return(as.character(NA))
+    return(NA_character_)
   }
   digest::digest(
     object = file,
@@ -160,7 +160,7 @@ safe_rehash_file <- function(target, config) {
   if (file.exists(decoded_path(target, config))) {
     rehash_file(target = target, config = config)
   } else {
-    as.character(NA)
+    NA_character_
   }
 }
 
@@ -180,7 +180,7 @@ file_hash <- function(
 ) {
   filename <- decoded_path(target, config) %||% target
   if (!file.exists(filename))
-    return(as.character(NA))
+    return(NA_character_)
   old_mtime <- ifelse(
     exists_in_subspace(
       key = target,

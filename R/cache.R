@@ -353,7 +353,7 @@ keys_are_mangled <- function(cache) {
 safe_get <- function(key, namespace, config) {
   out <- just_try(config$cache$get(key = key, namespace = namespace))
   if (inherits(out, "try-error")) {
-    out <- NA
+    out <- NA_character_
   }
   out
 }
@@ -361,7 +361,7 @@ safe_get <- function(key, namespace, config) {
 safe_get_hash <- function(key, namespace, config) {
   out <- just_try(config$cache$get_hash(key = key, namespace = namespace))
   if (inherits(out, "try-error")) {
-    out <- NA
+    out <- NA_character_
   }
   out
 }

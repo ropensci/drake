@@ -278,7 +278,7 @@ null_graph <- function() {
   nodes <- data.frame(id = 1, label = "Nothing to plot.")
   visNetwork::visNetwork(
     nodes = nodes,
-    edges = data.frame(from = NA, to = NA),
+    edges = data.frame(from = NA_character_, to = NA_character_),
     main = "Nothing to plot."
   )
 }

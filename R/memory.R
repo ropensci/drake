@@ -125,7 +125,7 @@ get_import_from_memory <- function(target, envir) {
     if (exists(x = target, envir = envir, inherits = FALSE)) {
       out <- get(x = target, envir = envir, inherits = FALSE)
     } else {
-      NA
+      NA_character_
     }
   }
 }

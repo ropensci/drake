@@ -93,7 +93,7 @@ fetch_runtime <- function(key, cache, type) {
     return(empty_times())
   }
   if (inherits(x, "proc_time")) {
-    x <- runtime_entry(runtime = x, target = key, imported = NA)
+    x <- runtime_entry(runtime = x, target = key, imported = NA_character_)
   }
   x
 }
