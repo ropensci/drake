@@ -229,7 +229,7 @@ split_by <- function(.x, .by = character(0)) {
 }
 
 # TO DO: remove in version 7.0.0
-standardize_filename <- function(text) {
+standardize_key <- function(text) {
   index <- is_quoted(text)
   if (any(index)) {
     text[index] <- gsub("^'|^\"|'$|\"", "", text[index])

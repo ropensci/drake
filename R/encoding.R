@@ -1,3 +1,7 @@
+decode_namespaced <- function(x) {
+  gsub(pattern = "--", replacement = "::", x = x, fixed = TRUE)
+}
+
 decoded_path <- function(x, config) {
   out <- lapply(
     X = x,
@@ -6,6 +10,10 @@ decoded_path <- function(x, config) {
     }
   )
   unlist(out)
+}
+
+encode_namespaced <- function(x) {
+  gsub(pattern = "::", replacement = "--", x = x, fixed = TRUE)
 }
 
 displayed_path <- function(x, config) {
@@ -24,27 +32,8 @@ displayed_path_vector <- function(x, config) {
   )
 }
 
-redecode_path <- function(x) {
-  base64url::base64_urldecode(substr(x, start = 2, stop = 1e3))
-}
-
-reencode_path <- function(x) {
-  paste0("-", base64url::base64_urlencode(x))
-}
-
-redisplay_path <- function(x) {
-  index <- is_encoded_path(x)
-  pretty <- sprintf("file %s", redecode_path(x[index]))
-  c(x[!index], pretty)
-}
-
-redisplay_path_vector <- function(x) {
-  vapply(
-    X = x,
-    FUN = redisplay_path,
-    FUN.VALUE = character(1),
-    USE.NAMES = FALSE
-  )
+is_encoded_namespaced <- function(x) {
+  grepl(pattern = "--", x = x, fixed = TRUE)
 }
 
 is_encoded_path <- function(x) {
@@ -53,6 +42,29 @@ is_encoded_path <- function(x) {
 
 not_encoded_path <- function(x) {
   !is_encoded_path(x)
+}
+
+redecode_path <- function(x) {
+  base64url::base64_urldecode(substr(x, start = 0, stop = nchar(x) - 1))
+}
+
+reencode_path <- function(x) {
+  paste0(base64url::base64_urlencode(x), "-")
+}
+
+redisplay_path <- function(x) {
+  index <- is_encoded_path(x)
+  pretty <- sprintf("file %s", redecode_path(x[index]))
+  c(x[!index], pretty)
+}
+
+redisplay_keys <- function(x) {
+  vapply(
+    X = decode_namespaced(x),
+    FUN = redisplay_path,
+    FUN.VALUE = character(1),
+    USE.NAMES = FALSE
+  )
 }
 
 #' @title Tell `drake` that you want information

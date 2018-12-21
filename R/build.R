@@ -188,10 +188,10 @@ process_import <- function(target, meta, config) {
   } else if (exists(x = target, envir = config$envir, inherits = FALSE)) {
     value <- config$envir[[target]]
   } else {
-    value <- tryCatch(
-      flexible_get(target, envir = config$envir),
-      error = function(e)
-        console(imported = NA, target = target, config = config))
+    value <- get_import_from_memory(target, envir = config$envir)
+  }
+  if (safe_is_na(value)) {
+    console(imported = NA, target = target, config = config)
   }
   list(target = target, value = value, meta = meta)
 }

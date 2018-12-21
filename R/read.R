@@ -86,7 +86,7 @@ readd <- function(
     )
   }
   cache$get(
-    standardize_filename(target), # TODO: remove for version 7.0.0
+    standardize_key(target), # TODO: remove for version 7.0.0
     namespace = namespace,
     use_cache = TRUE
   )

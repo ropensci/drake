@@ -7,7 +7,7 @@ append_build_times <- function(config) {
       digits = digits,
       cache = cache,
       type = build_times,
-      pretty_files = FALSE
+      pretty_keys = FALSE
     )
     timed <- intersect(time_data$item, nodes$id)
     if (!length(timed))
@@ -34,13 +34,6 @@ append_output_file_nodes <- function(config) {
     }
     nodes
   })
-}
-
-can_get_function <- function(x, envir) {
-  tryCatch({
-    is.function(eval(parse(text = x), envir = envir))
-  },
-  error = function(e) FALSE)
 }
 
 categorize_nodes <- function(config) {
@@ -108,6 +101,7 @@ cluster_status <- function(statuses) {
 
 configure_nodes <- function(config) {
   rownames(config$nodes) <- config$nodes$id
+  config$nodes$label <- decode_namespaced(config$nodes$label)
   config$nodes$label <- displayed_path_vector(config$nodes$label, config)
   config$nodes <- categorize_nodes(config = config)
   config$nodes <- style_nodes(config = config)
@@ -183,7 +177,9 @@ get_raw_node_category_data <- function(config) {
     x = all_labels, f = is_encoded_path, jobs = config$jobs)
   config$functions <- parallel_filter(
     x = config$imports,
-    f = function(x) can_get_function(x, envir = config$envir),
+    f = function(x) {
+      is.function(get_import_from_memory(x, envir = config$envir))
+    },
     jobs = config$jobs
   )
   config$missing <- parallel_filter(
@@ -263,11 +259,15 @@ legend_nodes <- function(font_size = 20) {
 
 missing_import <- function(x, config) {
   envir <- config$envir
-  missing_object <- !is_encoded_path(x) & is.null(envir[[x]]) & tryCatch({
-    flexible_get(x, envir = envir)
-    FALSE
-  },
-  error = function(e) TRUE)
+  x <- decode_namespaced(x)
+  missing_object <- !is_encoded_path(x) & tryCatch({
+      get_import_from_memory(x, envir = envir)
+      FALSE
+    },
+    error = function(e){
+      TRUE
+    }
+  )
   missing_file <- is_encoded_path(x) &&
     !file.exists(decoded_path(x, config))
   missing_object | missing_file

@@ -87,7 +87,7 @@ diagnose <- function(
     stop("No diagnostic information for target ", target, ".")
   }
   cache$get(
-    key = standardize_filename(target),
+    key = standardize_key(target),
     namespace = "meta"
   )
 }

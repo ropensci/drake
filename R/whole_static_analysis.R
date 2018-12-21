@@ -42,7 +42,7 @@ whole_static_analysis <- function(
     layout
   )
   layout <- memo_expr(
-    wsa_encode_layout_paths(
+    wsa_encode_layout_keys(
       config = config,
       layout = layout,
       path_encodings = path_encodings
@@ -221,7 +221,7 @@ wsa_collect_paths <- function(layout) {
   unique(as.character(unlist(out)))
 }
 
-wsa_encode_layout_paths <- function(config, layout, path_encodings) {
+wsa_encode_layout_keys <- function(config, layout, path_encodings) {
   lapply(
     X = layout,
     FUN = wsa_encode_layout_step,
@@ -232,16 +232,19 @@ wsa_encode_layout_paths <- function(config, layout, path_encodings) {
 wsa_encode_layout_step <- function(layout, encode) {
   for (deps_field in c("deps_build", "deps_condition", "deps_change")) {
     for (file_field in c("file_in", "file_out", "knitr_in")) {
-      layout[[deps_field]][[file_field]] <- wsa_encode_vector(
+      layout[[deps_field]][[file_field]] <- wsa_encode_path_vector(
         x = layout[[deps_field]][[file_field]],
         encode = encode
       )
     }
+    layout[[deps_field]]$namespaced <- encode_namespaced(
+      layout[[deps_field]]$namespaced
+    )
   }
   layout
 }
 
-wsa_encode_vector <- function(x, encode) {
+wsa_encode_path_vector <- function(x, encode) {
   vapply(
     X = x,
     FUN = function(y) {

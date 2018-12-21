@@ -23,7 +23,7 @@ console_missing <- function(target, config) {
 }
 
 console_import <- function(target, config) {
-  console_generic(target, config, 4, "import")
+  console_generic(decode_namespaced(target), config, 4, "import")
 }
 
 console_skip <- function(target, config) {

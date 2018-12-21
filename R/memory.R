@@ -109,20 +109,25 @@ ensure_loaded <- function(targets, config) {
   safe_load(targets = targets, config = config)
 }
 
-flexible_get <- function(target, envir) {
-  stopifnot(length(target) == 1)
+get_import_from_memory <- function(target, envir) {
+  target <- decode_namespaced(target)
   parsed <- parse(text = target)
   parsed <- as.call(parsed)
   parsed <- as.list(parsed)
   lang <- parsed[[1]]
   is_namespaced <- length(lang) > 1
-  if (!is_namespaced) {
-    return(get(x = target, envir = envir, inherits = FALSE))
+  if (is_namespaced) {
+    stopifnot(deparse(lang[[1]]) %in% c("::", ":::"))
+    pkg <- deparse(lang[[2]])
+    fun <- deparse(lang[[3]])
+    tryCatch(get(fun, envir = getNamespace(pkg)), error = error_na)
+  } else {
+    if (exists(x = target, envir = envir, inherits = FALSE)) {
+      out <- get(x = target, envir = envir, inherits = FALSE)
+    } else {
+      NA
+    }
   }
-  stopifnot(deparse(lang[[1]]) %in% c("::", ":::"))
-  pkg <- deparse(lang[[2]])
-  fun <- deparse(lang[[3]])
-  get(fun, envir = getNamespace(pkg))
 }
 
 exclude_unloadable <- function(targets, config, jobs = jobs) {
