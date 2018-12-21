@@ -571,7 +571,6 @@ drake_config <- function(
   encode <- ht_new()
   analysis <- whole_static_analysis(
     plan = plan,
-    targets = targets,
     envir = envir,
     verbose = verbose,
     jobs = jobs,

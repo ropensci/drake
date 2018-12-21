@@ -1,6 +1,5 @@
 whole_static_analysis <- function(
   plan = read_drake_plan(),
-  targets = plan$target,
   envir = parent.frame(),
   verbose = drake::default_verbose(),
   jobs = 1,
@@ -11,7 +10,6 @@ whole_static_analysis <- function(
   force(envir)
   config <- list(
     plan = plan,
-    targets = targets,
     envir = envir,
     verbose = verbose,
     jobs = jobs,
@@ -67,7 +65,7 @@ wsa_prepare_imports <- function(config) {
     envir = config$envir,
     verbose = config$verbose
   )
-  import_names <- setdiff(names(imports), config$targets)
+  import_names <- setdiff(names(imports), config$plan$target)
   imports[import_names]
 }
 
