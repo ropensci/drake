@@ -37,7 +37,8 @@ is_encoded_namespaced <- function(x) {
 }
 
 is_encoded_path <- function(x) {
-  substr(x = x, start = 0, stop = 1) == "-"
+  n <- nchar(x)
+  substr(x = x, start = n, stop = n) == "-"
 }
 
 not_encoded_path <- function(x) {
