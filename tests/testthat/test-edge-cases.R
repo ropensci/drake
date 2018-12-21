@@ -282,3 +282,24 @@ test_with_dir("file hash of a non-file", {
   expect_true(is.na(file_hash("asdf", list())))
   expect_true(is.na(rehash_file("asdf", list())))
 })
+
+test_with_dir("imported functions cannot depend on targets", {
+  global_import <- 1
+  my_fun <- function(){
+    global_import
+    other_fun <- function(){
+      target_in_plan
+    }
+  }
+  plan <- drake_plan(
+    target_in_plan = 1,
+    my_fun()()
+  )
+  config <- drake_config(
+    plan,
+    cache = storr::storr_environment(),
+    session_info = FALSE
+  )
+  deps <- deps_target("my_fun", config)
+  expect_equal(unlist(deps, use.names = FALSE), "global_import")
+})

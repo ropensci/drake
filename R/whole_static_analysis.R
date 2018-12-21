@@ -111,7 +111,7 @@ wsa_analyze_imports <- function(config, imports) {
         deps_build = import_dependencies(
           expr = imports[[i]],
           exclude = names(imports)[[i]],
-          allowed_globals = config$allowed_globals
+          allowed_globals = names
         ),
         imported = TRUE
       )
