@@ -445,10 +445,10 @@ test_with_dir("custom column interface", {
   plan0 <- weak_tibble(
     target = c("x", "y", "z"),
     command = c("1 + 2", "Sys.sleep(\"not a number\")", "rnorm(10)"),
-    trigger = c("trigger(condition = TRUE)", NA_character_, NA_character_),
-    user_column_1 = c(1, NA_character_, NA_character_),
-    user_column_2 = c("some text", NA_character_, NA_character_),
-    col3 = c(NA_character_, "some text", NA_character_)
+    trigger = c("trigger(condition = TRUE)", NA, NA),
+    user_column_1 = c(1, NA, NA),
+    user_column_2 = c("some text", NA, NA),
+    col3 = c(NA, "some text", NA)
   )
   cn <- colnames(plan)
   expect_equal(cn, colnames(plan0))
