@@ -1,7 +1,5 @@
 decode_namespaced <- function(x) {
-  i <- not_encoded_path(x)
-  x[i] <- gsub(pattern = "-", replacement = ":", x = x[i], fixed = TRUE)
-  x
+  gsub(pattern = "-.", replacement = ":", x = x, fixed = TRUE)
 }
 
 decoded_path <- function(x, config) {
@@ -15,7 +13,7 @@ decoded_path <- function(x, config) {
 }
 
 encode_namespaced <- function(x) {
-  gsub(pattern = ":", replacement = "-", x = x, fixed = TRUE)
+  gsub(pattern = ":", replacement = "-.", x = x, fixed = TRUE)
 }
 
 displayed_path <- function(x, config) {
