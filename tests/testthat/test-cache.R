@@ -561,3 +561,21 @@ test_with_dir("master caching, environment caches and parallelism", {
   )
   expect_true("report" %in% justbuilt(config))
 })
+
+test_with_dir("run make() from subdir", {
+  old <- Sys.getenv("drake_warn_subdir")
+  Sys.setenv(drake_warn_subdir = "")
+  on.exit(Sys.setenv(drake_warn_subdir = old))
+  plan <- drake_plan(x = 1)
+  x <- new_cache()
+  y <- new_cache("not_.drake")
+  dir.create("subdir")
+  with_dir("subdir", {
+    expect_warning(make(plan), regexp = "subdirectory")
+    expect_warning(make(plan), regexp = "subdirectory")
+    make(plan, cache = y)
+    new_cache(".drake")
+    make(plan)
+    make(plan, cache = storr::storr_environment())
+  })
+})

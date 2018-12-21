@@ -13,7 +13,8 @@
 
 ## Enhancements
 
-- Move away from `storr`'s key mangling in favor of `drake`'s own base 64 encoding of file paths for `storr` keys. Needed to exclude symbols `.`, `..`, and `.gitignore` from being target names.
+- **Large speed boost**: move away from `storr`'s key mangling in favor of `drake`'s own base 64 encoding of file paths for `storr` keys.
+- Exclude symbols `.`, `..`, and `.gitignore` from being target names (consequence of the above).
 - Use only one hash algorithm per `drake` cache, which the user can set with the `hash_algorithm` argument of `new_cache()`, `storr::storr_rds()`, and various other cache functions. Thus, the concepts of a "short hash algorithm" and "long hash algorithm" are deprecated, and the functions `long_hash()`, `short_hash()`, `default_long_hash_algo()`, `default_short_hash_algo()`, and `available_hash_algos()` are deprecated. Caches are still back-compatible with `drake` > 5.4.0 and <= 6.2.1.
 - Allow the `magrittr` dot symbol to appear in some commands sometimes.
 - Deprecate the `fetch_cache` argument in all functions 
@@ -22,6 +23,7 @@
 - Remove dependency on the `codetools` package.
 - Deprecate and remove the `session` argument of `make()` and `drake_config()`. Details: https://github.com/ropensci/drake/issues/623#issue-391894088.
 - Deprecate the `graph` and `layout` arguments to `make()` and `drake_config()`. The change simplifies the internals, and memoization allows us to do this.
+- Warn the user if running `make()` in a subdirectory of the `drake` project root (determined by the location of the `.drake` folder in relation to the working directory).
 
 # Version 6.2.1
 

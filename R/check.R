@@ -74,6 +74,7 @@ runtime_checks <- function(config) {
   }
   missing_input_files(config = config)
   parallelism_warnings(config = config)
+  subdirectory_warning(config = config)
 }
 
 missing_input_files <- function(config) {
@@ -161,4 +162,39 @@ check_parallelism <- function(parallelism) {
       )
     }
   }
+}
+
+subdirectory_warning <- function(config) {
+  if (identical(Sys.getenv("drake_warn_subdir"), "false")) {
+    return()
+  }
+  dir_cache <- config$cache$driver$path
+  if (is.null(dir_cache)) {
+    return()
+  }
+  if (!identical(basename(dir_cache), basename(default_cache_path()))) {
+    return()
+  }
+  dir_wd <- getwd()
+  in_root <- is.null(dir_cache) ||
+    basename(dir_cache) %in% list.files(path = dir_wd, all.files = TRUE)
+  if (in_root) {
+    return()
+  }
+  warning(
+    "Running make() in a subdirectory of your project. \n",
+    "This could cause problems if your ",
+    "file_in()/file_out()/knitr_in() files ",
+    "are relative paths.\n",
+    "Please either\n",
+    "  (1) run make() from your drake project root, or\n",
+    "  (2) create a cache in your working ",
+    "directory with new_cache('path_name'), or\n",
+    "  (3) supply a cache of your own (e.g. make(cache = your_cache))\n",
+    "      whose folder name is not '.drake'.\n",
+    "  running make() from: ", dir_wd, "\n",
+    "  drake project root:  ", dirname(dir_cache), "\n",
+    "  cache directory:     ", dir_cache,
+    call. = FALSE
+  )
 }
