@@ -12,7 +12,7 @@ console_generic <- function(target, config, cutoff = 1, pattern = "target") {
   if (config$verbose < cutoff) {
     return()
   }
-  text <- displayed_path(target, config)
+  text <- decode_namespaced(displayed_path(target, config))
   text <- paste(pattern, text)
   finish_console(text = text, pattern = pattern, config = config)
 
@@ -70,7 +70,7 @@ console_many_targets <- function(
   if (n < 1) {
     return(invisible())
   }
-  targets <- displayed_path(targets, config)
+  targets <- decode_namespaced(displayed_path(targets, config))
   out <- paste0(
     pattern,
     " ", n, " ", type,

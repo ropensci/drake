@@ -110,10 +110,13 @@ ensure_loaded <- function(targets, config) {
 }
 
 get_import_from_memory <- function(target, envir) {
-  target <- decode_namespaced(target)
   if (is_encoded_path(target)) {
-    return(NULL)
+    return(NA_character_)
   }
+  if (exists(x = target, envir = envir, inherits = FALSE)) {
+    return(get(x = target, envir = envir, inherits = FALSE))
+  }
+  target <- decode_namespaced(target)
   parsed <- parse(text = target)
   parsed <- as.call(parsed)
   parsed <- as.list(parsed)
@@ -125,11 +128,7 @@ get_import_from_memory <- function(target, envir) {
     fun <- deparse(lang[[3]])
     tryCatch(get(fun, envir = getNamespace(pkg)), error = error_na)
   } else {
-    if (exists(x = target, envir = envir, inherits = FALSE)) {
-      out <- get(x = target, envir = envir, inherits = FALSE)
-    } else {
-      NA_character_
-    }
+    NA_character_
   }
 }
 

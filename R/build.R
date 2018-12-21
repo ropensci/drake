@@ -185,12 +185,12 @@ build_target <- function(target, meta, config) {
 process_import <- function(target, meta, config) {
   if (meta$isfile) {
     value <- NA_character_
-  } else if (exists(x = target, envir = config$envir, inherits = FALSE)) {
-    value <- config$envir[[target]]
+    is_missing <- !file.exists(decoded_path(target, config))
   } else {
     value <- get_import_from_memory(target, envir = config$envir)
+    is_missing <- identical(value, NA_character_)
   }
-  if (identical(value, NA_character_)) {
+  if (is_missing) {
     console(imported = NA_character_, target = target, config = config)
   }
   list(target = target, value = value, meta = meta)
