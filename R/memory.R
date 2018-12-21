@@ -112,7 +112,7 @@ ensure_loaded <- function(targets, config) {
 get_import_from_memory <- function(target, envir) {
   target <- decode_namespaced(target)
   if (is_encoded_path(target)) {
-    return(NA_character_)
+    return(NULL)
   }
   parsed <- parse(text = target)
   parsed <- as.call(parsed)
