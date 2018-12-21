@@ -228,8 +228,9 @@ split_by <- function(.x, .by = character(0)) {
   Filter(x = splits, f = nrow)
 }
 
-# TO DO: remove in version 7.0.0
 standardize_key <- function(text) {
+  text <- encode_namespaced(text)
+  # TO DO: remove the rest in version 7.0.0.
   index <- is_quoted(text)
   if (any(index)) {
     text[index] <- gsub("^'|^\"|'$|\"", "", text[index])
