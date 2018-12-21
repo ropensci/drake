@@ -32,10 +32,6 @@ displayed_path_vector <- function(x, config) {
   )
 }
 
-is_encoded_namespaced <- function(x) {
-  grepl(pattern = "--", x = x, fixed = TRUE)
-}
-
 is_encoded_path <- function(x) {
   n <- nchar(x)
   substr(x = x, start = n, stop = n) == "-"
