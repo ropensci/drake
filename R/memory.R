@@ -111,6 +111,9 @@ ensure_loaded <- function(targets, config) {
 
 get_import_from_memory <- function(target, envir) {
   target <- decode_namespaced(target)
+  if (is_encoded_path(target)) {
+    return(NA_character_)
+  }
   parsed <- parse(text = target)
   parsed <- as.call(parsed)
   parsed <- as.list(parsed)
@@ -189,4 +192,12 @@ drake_envir <- function() {
     "in your workflow plan data frame.",
     call. = FALSE
   )
+}
+
+missing_import <- function(x, config) {
+  if (is_encoded_path(x)) {
+    return(!file.exists(decoded_path(x, config)))
+  }
+  x <- decode_namespaced(x)
+  identical(get_import_from_memory(x, envir = config$envir), NA_character_)
 }

@@ -257,22 +257,6 @@ legend_nodes <- function(font_size = 20) {
   out
 }
 
-missing_import <- function(x, config) {
-  envir <- config$envir
-  x <- decode_namespaced(x)
-  missing_object <- !is_encoded_path(x) & tryCatch({
-      get_import_from_memory(x, envir = envir)
-      FALSE
-    },
-    error = function(e){
-      TRUE
-    }
-  )
-  missing_file <- is_encoded_path(x) &&
-    !file.exists(decoded_path(x, config))
-  missing_object | missing_file
-}
-
 null_graph <- function() {
   assert_pkg("visNetwork")
   nodes <- data.frame(id = 1, label = "Nothing to plot.")
