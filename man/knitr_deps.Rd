@@ -31,12 +31,7 @@ mentioned in \code{\link[=loadd]{loadd()}} and \code{\link[=readd]{readd()}}.
 \dontrun{
 test_with_dir("Quarantine side effects.", {
 load_mtcars_example() # Get the code with drake_example("mtcars").
-knitr_deps("'report.Rmd'") # Files must be single-quoted.
-# Find the dependencies of the compiled output target, 'report.md'.
-knitr_deps("report.Rmd")
-make(my_plan) # Run the project.
-# Work only on the Rmd source, not the output.
-try(knitr_deps("'report.md'"), silent = FALSE) # error
+knitr_deps(file_store("report.Rmd"))
 })
 }
 }

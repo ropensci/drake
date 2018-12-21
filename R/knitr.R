@@ -19,12 +19,7 @@
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' knitr_deps("'report.Rmd'") # Files must be single-quoted.
-#' # Find the dependencies of the compiled output target, 'report.md'.
-#' knitr_deps("report.Rmd")
-#' make(my_plan) # Run the project.
-#' # Work only on the Rmd source, not the output.
-#' try(knitr_deps("'report.md'"), silent = FALSE) # error
+#' knitr_deps(file_store("report.Rmd"))
 #' })
 #' }
 knitr_deps <- function(target) {
@@ -32,11 +27,12 @@ knitr_deps <- function(target) {
     return(character(0))
   }
   out <- new_code_analysis_results()
+  target <- drake_unquote(target)
   if (is_encoded_path(target)) {
     target <- redecode_path(target)
   }
   analyze_knitr_file(target, out)
-  clean_dependency_list(list_code_analysis_results(out))
+  list_code_analysis_results(out)
 }
 
 safe_get_tangled_frags <- function(file) {

@@ -18,7 +18,7 @@
 #'   for the full build time including the time it took to
 #'   store the target, or `"command"` for the time it took
 #'   just to run the command.
-#' @param pretty_files logical. If `TRUE`, files are displayed
+#' @param pretty_keys logical. If `TRUE`, files are displayed
 #'   in the `item` column as "file my_file.Rmd". If `FALSE`,
 #'   files are encoded according to `drake`'s internal standard
 #'   for representing file paths, which may not be human readable
@@ -42,7 +42,7 @@ build_times <- function(
   verbose = drake::default_verbose(),
   jobs = 1,
   type = c("build", "command"),
-  pretty_files = TRUE
+  pretty_keys = TRUE
 ) {
   eval(parse(text = "require(methods, quietly = TRUE)")) # needed for lubridate
   if (is.null(cache)) {
@@ -73,8 +73,8 @@ build_times <- function(
   if (targets_only) {
     out <- out[out$type == "target", ]
   }
-  if (pretty_files) {
-    out$item <- redisplay_path(out$item)
+  if (pretty_keys) {
+    out$item <- redisplay_keys(out$item)
   }
   tryCatch(
     weak_as_tibble(out),
@@ -93,7 +93,7 @@ fetch_runtime <- function(key, cache, type) {
     return(empty_times())
   }
   if (inherits(x, "proc_time")) {
-    x <- runtime_entry(runtime = x, target = key, imported = NA)
+    x <- runtime_entry(runtime = x, target = key, imported = NA_character_)
   }
   x
 }

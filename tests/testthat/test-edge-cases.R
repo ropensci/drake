@@ -159,7 +159,7 @@ test_with_dir("Strings stay strings, not symbols", {
 
 test_with_dir("error handlers", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_equal(error_na(1), NA)
+  expect_equal(error_na(1), NA_character_)
   expect_false(error_false(1))
   expect_equal(error_character0(1), character(0))
   expect_null(error_null(1))
@@ -259,7 +259,7 @@ test_with_dir("GitHub issue 460", {
   expect_equal(sort(config$all_targets), sort(letters[1:2]))
   expect_equal(
     intersect(config$all_imports, config$all_targets), character(0))
-  expect_true("base::sqrt" %in% config$all_imports)
+  expect_true(encode_namespaced("base::sqrt") %in% config$all_imports)
   make_targets(config)
 })
 

@@ -85,7 +85,16 @@ base_symbols <- sort(
   )
 )
 
-ignored_symbols <- sort(c(drake_symbols, base_symbols))
+bad_symbols <- sort(
+  c(
+    ".",
+    "..",
+    ".gitignore",
+    "Thumbs.db"
+  )
+)
+
+ignored_symbols <- sort(c(drake_symbols, base_symbols, bad_symbols))
 ignored_symbols_list <- as.list(rep(TRUE, length(ignored_symbols)))
 names(ignored_symbols_list) <- ignored_symbols
 

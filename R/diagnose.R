@@ -83,11 +83,12 @@ diagnose <- function(
   if (!length(target)) {
     return(cache$list(namespace = "meta"))
   }
+  target <- standardize_key(target)
   if (!cache$exists(key = target, namespace = "meta")) {
     stop("No diagnostic information for target ", target, ".")
   }
   cache$get(
-    key = standardize_filename(target),
+    key = target,
     namespace = "meta"
   )
 }

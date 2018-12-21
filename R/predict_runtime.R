@@ -178,6 +178,7 @@ predict_load_balancing <- function(
   default_time = 0,
   warn = TRUE
 ) {
+  names(known_times) <- standardize_key(names(known_times))
   assumptions <- timing_assumptions(
     config = config,
     targets = targets,
@@ -256,7 +257,7 @@ timing_assumptions <- function(
   times <- build_times(
     cache = config$cache,
     targets_only = targets_only,
-    pretty_files = FALSE
+    pretty_keys = FALSE
   )
   if (targets_only) {
     config$graph <- targets_graph(config)

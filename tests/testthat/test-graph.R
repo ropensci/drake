@@ -292,18 +292,18 @@ test_with_dir("show_output_files", {
   }
   e <- info$edges[with(info$edges, order(from, to)), ]
   expect_equal(
-    e$from,
-    c(
+    sort(e$from),
+    sort(c(
       file_store(paste0("out", 1:2, ".txt")),
       paste0("target", rep(1:2, each = 2))
-    )
+    ))
   )
   expect_equal(
-    e$to,
-    c(
+    sort(e$to),
+    sort(c(
       rep("target2", 2),
       file_store(paste0("out", 1:4, ".txt"))
-    )
+    ))
   )
   info <- drake_graph_info(
     config,
@@ -380,20 +380,20 @@ test_with_dir("same, but with an extra edge not due to files", {
   }
   e <- info$edges[with(info$edges, order(from, to)), ]
   expect_equal(
-    e$from,
-    c(
+    sort(e$from),
+    sort(c(
       file_store(paste0("out", 1:2, ".txt")),
       paste0("target", c(1, rep(1:2, each = 2)))
-    )
+    ))
   )
   expect_equal(
-    e$to,
-    c(
+    sort(e$to),
+    sort(c(
       rep("target2", 2),
       file_store(paste0("out", 1:2, ".txt")),
       "target2",
       file_store(paste0("out", 3:4, ".txt"))
-    )
+    ))
   )
   info <- drake_graph_info(
     config,

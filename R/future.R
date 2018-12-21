@@ -138,7 +138,7 @@ future_globals <- function(target, meta, config, protect) {
 }
 
 empty_worker <- function(target) {
-  structure(NA, target = target)
+  structure(NA_character_, target = target)
 }
 
 is_empty_worker <- function(worker) {
@@ -198,7 +198,7 @@ running_targets <- function(workers, config) {
 initialize_workers <- function(config) {
   out <- list()
   for (i in seq_len(config$jobs))
-    out[[i]] <- empty_worker(target = NA)
+    out[[i]] <- empty_worker(target = NA_character_)
   out
 }
 

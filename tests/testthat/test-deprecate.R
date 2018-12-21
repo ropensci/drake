@@ -195,7 +195,7 @@ test_with_dir("old file API", {
     strings_in_dots = "filenames"
   ))
   z <- rbind(x, y)
-  expect_warning(config <- drake_config(z), regexp = "single-quotes")
+  expect_warning(config <- drake_config(z))
   expect_warning(make(z, session_info = FALSE) -> config)
   expect_equal(readd("'file.csv'"), readd("\"file.csv\""))
 })
@@ -261,6 +261,7 @@ test_with_dir("v6.2.1 project is still up to date", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("datasets")
   skip_if_not_installed("tibble")
+  skip_if_not_installed("knitr")
   requireNamespace("datasets")
   write_v6.2.1_project() # nolint
   report_md_hash <- readRDS(
@@ -285,8 +286,28 @@ test_with_dir("v6.2.1 project is still up to date", {
     d$x2 <- d$x ^ 2
     lm(y ~ x2, data = d)
   }
+  require("knitr", quietly = TRUE) # nolint
+  config <- drake_config(plan)
+  expect_equal(outdated(config), character(0))
   config <- make(plan)
   expect_equal(justbuilt(config), character(0))
+
+  # Does it still respond correctly to changes in output files?
+  lines <- c(readLines("report.md"), "", "Last line.")
+  writeLines(lines, "report.md")
+  expect_equal(outdated(config), "report")
+  config <- make(config = config)
+  expect_equal(justbuilt(config), "report")
+  expect_equal(outdated(config), character(0))
+
+  # How about knitr files?
+  lines <- c(readLines("report.Rmd"), "", "Last line.")
+  writeLines(lines, "report.Rmd")
+  expect_equal(outdated(config), "report")
+  requireNamespace("knitr")
+  config <- make(config = config)
+  expect_equal(justbuilt(config), "report")
+  expect_equal(outdated(config), character(0))
 })
 
 test_with_dir("deprecate the `force` argument", {

@@ -725,6 +725,6 @@ test_with_dir("files are collected/encoded from all triggers", {
     strings_in_dots = "literals"
   )
   config <- drake_config(plan)
-  expect_equal(sort(ht_list(config$encode)), exp)
-  expect_equal(sort(ht_list(config$decode)), reencode_path(exp))
+  expect_equal(sort(ht_list(config$encode)), sort(exp))
+  expect_equal(sort(ht_list(config$decode)), sort(reencode_path(exp)))
 })

@@ -181,11 +181,7 @@ drake_fetch_rds <- function(path) {
   }
   hash_algo_file <- file.path(path, "config", "hash_algorithm")
   hash_algo <- scan(hash_algo_file, quiet = TRUE, what = character())
-  storr::storr_rds(
-    path = path,
-    mangle_key = TRUE,
-    hash_algorithm = hash_algo
-  )
+  storr::storr_rds(path = path, hash_algorithm = hash_algo)
 }
 
 #' @title  Make a new `drake` cache.
@@ -236,7 +232,7 @@ new_cache <- function(
   deprecate_hash_algo_args(short_hash_algo, long_hash_algo)
   cache <- storr::storr_rds(
     path = path,
-    mangle_key = TRUE,
+    mangle_key = FALSE,
     hash_algorithm = hash_algorithm
   )
   writeLines(
@@ -357,7 +353,7 @@ keys_are_mangled <- function(cache) {
 safe_get <- function(key, namespace, config) {
   out <- just_try(config$cache$get(key = key, namespace = namespace))
   if (inherits(out, "try-error")) {
-    out <- NA
+    out <- NA_character_
   }
   out
 }
@@ -365,7 +361,7 @@ safe_get <- function(key, namespace, config) {
 safe_get_hash <- function(key, namespace, config) {
   out <- just_try(config$cache$get_hash(key = key, namespace = namespace))
   if (inherits(out, "try-error")) {
-    out <- NA
+    out <- NA_character_
   }
   out
 }

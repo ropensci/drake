@@ -182,16 +182,16 @@ test_with_dir("plan set 2", {
 test_with_dir("plan set 3", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   for (tidy_evaluation in c(TRUE, FALSE)) {
-  expect_warning(x <- drake_plan(
-    a = c,
-    b = "c",
-    list = c(c = "d", d = "readRDS('e')"),
-    strings_in_dots = "literals", file_targets = TRUE,
-    tidy_evaluation = tidy_evaluation))
-  y <- weak_tibble(
-    target = drake::drake_quotes(letters[1:4], single = TRUE),
-    command = c("c", "\"c\"", "d", "readRDS('e')"))
-  expect_equal(x, y)
+    expect_warning(x <- drake_plan(
+      a = c,
+      b = "c",
+      list = c(c = "d", d = "readRDS('e')"),
+      strings_in_dots = "literals", file_targets = TRUE,
+      tidy_evaluation = tidy_evaluation))
+    y <- weak_tibble(
+      target = drake::drake_quotes(letters[1:4], single = TRUE),
+      command = c("c", "\"c\"", "d", "readRDS('e')"))
+    expect_equal(x, y)
   }
 })
 
@@ -259,12 +259,12 @@ test_with_dir("issue 187 on Github (from Kendon Bell)", {
 test_with_dir("file names with weird characters do not get mangled", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   out <- weak_tibble(
-    target = c(reencode_path("is:a:file"), "not:a:file"),
+    target = c("'is:a:file'", "not:a:file"),
     command = as.character(1:2)
   )
   out2 <- sanitize_plan(out)
   out3 <- weak_tibble(
-    target = c(reencode_path("is:a:file"), "not.a.file"),
+    target = c("'is:a:file'", "not.a.file"),
     command = as.character(1:2)
   )
   expect_equal(out[1, ], out2[1, ])
@@ -599,7 +599,7 @@ test_with_dir("drake_plan_call() produces the correct calls", {
   skip_on_cran()
   skip_if_not_installed("styler")
   load_mtcars_example()
-  my_plan$trigger <- NA
+  my_plan$trigger <- NA_character_
   my_plan$trigger[4] <- "trigger(condition = is_tuesday(), file = FALSE)"
   my_plan$non_standard_column <- 1234
   pkgconfig::set_config("drake::strings_in_dots" = "literals")

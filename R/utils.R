@@ -8,7 +8,7 @@
 }
 
 `%||NA%` <- function(x, y) {
-  if (is.null(x) || length(x) < 1 || is.na(x)) {
+  if (is.null(x) || length(x) < 1 || anyNA(x)) {
     y
   } else {
     x
@@ -228,12 +228,14 @@ split_by <- function(.x, .by = character(0)) {
   Filter(x = splits, f = nrow)
 }
 
-# TO DO: remove in version 7.0.0
-standardize_filename <- function(text) {
-  text[is_encoded_path(text)] <- gsub(
-    "^'|'$", "\"",
-    text[is_encoded_path(text)]
-  )
+standardize_key <- function(text) {
+  text <- encode_namespaced(text)
+  # TO DO: remove the rest in version 7.0.0.
+  index <- is_quoted(text)
+  if (any(index)) {
+    text[index] <- gsub("^'|^\"|'$|\"", "", text[index])
+    text[index] <- reencode_path(text[index])
+  }
   text
 }
 
@@ -314,4 +316,8 @@ weak_as_tibble <- function(..., .force_df = FALSE) {
   } else {
     tibble::as_tibble(...)
   }
+}
+
+wide_deparse <- function(x) {
+  paste(deparse(x), collapse = "\n")
 }

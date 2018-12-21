@@ -173,7 +173,7 @@ dependency_profile <- function(
   }
   meta <- config$cache$get(key = target, namespace = "meta")
   if (!length(meta$command)) {
-    meta$command <- NA
+    meta$command <- NA_character_
   }
   old_hashes <- meta[c(
     "command",

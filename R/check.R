@@ -55,6 +55,13 @@ config_checks <- function(config) {
       call. = FALSE
     )
   }
+  if (any(bad_symbols %in% config$plan$target)) {
+    stop(
+      "symbols that cannot be target names: \n",
+      multiline_message(shQuote(bad_symbols)),
+      call. = FALSE
+    )
+  }
   stopifnot(nrow(config$plan) > 0)
   stopifnot(length(config$targets) > 0)
   check_drake_graph(graph = config$graph)

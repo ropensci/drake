@@ -86,7 +86,7 @@ readd <- function(
     )
   }
   cache$get(
-    standardize_filename(target), # TODO: remove for version 7.0.0
+    standardize_key(target), # TODO: remove for version 7.0.0
     namespace = namespace,
     use_cache = TRUE
   )
@@ -306,13 +306,7 @@ load_target <- function(target, cache, namespace, envir, verbose, lazy) {
 #' @export
 #' @inheritParams loadd
 eager_load_target <- function(target, cache, namespace, envir, verbose) {
-  value <- readd(
-    target,
-    character_only = TRUE,
-    cache = cache,
-    namespace = namespace,
-    verbose = verbose
-  )
+  value <- cache$get(key = target, namespace = namespace)
   assign(x = target, value = value, envir = envir)
   local <- environment()
   rm(value, envir = local)
@@ -323,13 +317,7 @@ promise_load_target <- function(target, cache, namespace, envir, verbose) {
   eval_env <- environment()
   delayedAssign(
     x = target,
-    value = readd(
-      target,
-      character_only = TRUE,
-      cache = cache,
-      namespace = namespace,
-      verbose = verbose
-    ),
+    value = cache$get(key = target, namespace = namespace),
     eval.env = eval_env,
     assign.env = envir
   )
