@@ -238,6 +238,7 @@ wsa_encode_layout_step <- function(layout, encode) {
     layout[[deps_field]]$namespaced <- encode_namespaced(
       layout[[deps_field]]$namespaced
     )
+    layout[[deps_field]] <- select_nonempty(layout[[deps_field]])
   }
   layout
 }
