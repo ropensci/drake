@@ -170,7 +170,7 @@ drake_try_fetch_rds <- function(path) {
     "Something is wrong with the file system of the cache. ",
     "If you downloaded it from an online repository, are you sure ",
     "all the files were downloaded correctly? ",
-    "If all else fails, remove the folder at ", path, "and try again.",
+    "If all else fails, remove the folder at ", path, " and try again.",
     call. = FALSE
   )
 }
