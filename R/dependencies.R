@@ -333,7 +333,8 @@ command_dependencies <- function(
 # TODO: this function can go away when drake
 # stops supporting single-quoted file names
 warn_single_quoted_files <- function(files, deps) {
-  old_api_files <- decode_path(files)
+  files[is_encoded_path(files)] <- decode_path(files[is_encoded_path(files)])
+  old_api_files <- files
   new_api_files <- c(deps$file_in, deps$file_out, deps$knitr_in)
   new_api_files <- decode_path(new_api_files)
   warn_files <- setdiff(old_api_files, new_api_files)
