@@ -64,9 +64,13 @@ display_keys <- function(x, config = NULL) {
 
 decode_deps_list <- function(x) {
   for (field in c("file_in", "file_out", "knitr_in")) {
-    x[[field]] <- decode_path(x[[field]])
+    if (length(x[[field]])) {
+      x[[field]] <- decode_path(x[[field]])
+    }
   }
-  x$namespaced <- decode_namespaced(x$namespaced)
+  if (length(x$namespaced)) {
+    x$namespaced <- decode_namespaced(x$namespaced)
+  }
   x
 }
 
@@ -74,7 +78,7 @@ decode_deps_list <- function(x) {
 
 reencode_path <- function(x) {
   y <- base64url::base32_encode(x = x, use.padding = FALSE)
-  paste0("p-", y)
+  sprintf("p-%s", y)
 }
 
 redecode_path <- function(x) {
@@ -84,7 +88,7 @@ redecode_path <- function(x) {
 
 reencode_namespaced <- function(x) {
   y <- base64url::base32_encode(x, use.padding = FALSE)
-  paste0("n-", y)
+  sprintf("n-%s", y)
 }
 
 redecode_namespaced <- redecode_path

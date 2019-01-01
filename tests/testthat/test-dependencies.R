@@ -53,6 +53,7 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
   file.copy(
     from = path, to = file.path(getwd(), "report.Rmd"), overwrite = TRUE)
   x <- command_dependencies(cmd)
+  x <- decode_deps_list(x)
   x0 <- list(
     file_in = "x", file_out = "y", loadd = "large",
     readd = c("small", "coef_regression2_small"),
@@ -62,6 +63,7 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
     expect_equal(sort(x[[i]]), sort(x0[[i]]))
   }
   y <- import_dependencies(f)
+  y <- decode_deps_list(y)
   y0 <- list(
     file_in = "x",
     knitr_in = "report.Rmd",

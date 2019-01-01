@@ -106,6 +106,14 @@ test_with_dir("weak_tibble", {
   expect_equivalent(out, exp)
 })
 
+test_with_dir("encoding empty keys", {
+  x <- character(0)
+  expect_equal(encode_path(x), x)
+  expect_equal(decode_path(x), x)
+  expect_equal(encode_namespaced(x), x)
+  expect_equal(decode_namespaced(x), x)
+})
+
 test_with_dir("key encoding for paths and namespaced functions", {
   x <- c("myfunny:::variablename", "relative/path\na\\m//e")
   expect_false(all(is_encoded_path(x)))

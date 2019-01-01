@@ -81,6 +81,7 @@ deps_code <- function(x) {
   } else{
     out <- analyze_code(x)
   }
+  decode_deps_list(out)
 }
 
 #' @title List the dependencies of one or more targets
