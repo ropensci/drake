@@ -1,5 +1,9 @@
 # Version 6.2.1.9000
 
+## Breaking changes
+
+This release will be version 7.0.0, a major update. Unfortunately, the enhancements that increase speed also invalidate targets in old projects. Workflows run with drake <= 6.2.1 will need to run from scratch again. In addition, a large amount of deprecated functionality is removed, including several functions and the single-quoted file API.
+
 ## Bug fixes
 
 - Allow `bind_plans()` to work with lists of plans (`bind_plans(list(plan1, plan2))` was returning `NULL` in `drake` 6.2.0 and 6.2.1).
@@ -13,7 +17,7 @@
 
 ## Enhancements
 
-- **Large speed boost**: move away from `storr`'s key mangling in favor of `drake`'s own base 64 encoding of file paths for `storr` keys.
+- **Large speed boost**: move away from `storr`'s key mangling in favor of `drake`'s own encoding of file paths and namespaced functions for `storr` keys.
 - Exclude symbols `.`, `..`, and `.gitignore` from being target names (consequence of the above).
 - Use only one hash algorithm per `drake` cache, which the user can set with the `hash_algorithm` argument of `new_cache()`, `storr::storr_rds()`, and various other cache functions. Thus, the concepts of a "short hash algorithm" and "long hash algorithm" are deprecated, and the functions `long_hash()`, `short_hash()`, `default_long_hash_algo()`, `default_short_hash_algo()`, and `available_hash_algos()` are deprecated. Caches are still back-compatible with `drake` > 5.4.0 and <= 6.2.1.
 - Allow the `magrittr` dot symbol to appear in some commands sometimes.
