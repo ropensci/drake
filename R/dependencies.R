@@ -73,13 +73,13 @@
 #' }
 deps_code <- function(x) {
   if (is.function(x)) {
-    import_dependencies(x)
+    out <- import_dependencies(x)
   } else if (all(is_encoded_path(x)) && all(file.exists(decode_path(x)))) {
-    knitr_deps(decode_path(x))
+    out <- knitr_deps(decode_path(x))
   } else if (is.character(x)) {
-    command_dependencies(x)
+    out <- command_dependencies(x)
   } else{
-    analyze_code(x)
+    out <- analyze_code(x)
   }
 }
 
@@ -112,9 +112,7 @@ deps_target <- function(
     target <- as.character(substitute(target))
   }
   out <- config$layout[[target]]$deps_build
-  for (field in c("file_in", "file_out", "knitr_in")) {
-    out[[field]] <- decode_path(out[[field]])
-  }
+  out <- decode_deps_list(out)
   select_nonempty(out)
 }
 

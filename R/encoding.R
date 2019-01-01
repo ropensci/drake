@@ -62,6 +62,14 @@ display_keys <- function(x, config = NULL) {
   )
 }
 
+decode_deps_list <- function(x) {
+  for (field in c("file_in", "file_out", "knitr_in")) {
+    x[[field]] <- decode_path(x[[field]])
+  }
+  x$namespaced <- decode_namespaced(x$namespaced)
+  x
+}
+
 # Do not call the following functions except in the above internal API.
 
 reencode_path <- function(x) {
