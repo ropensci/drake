@@ -178,9 +178,13 @@ file_hash <- function(
   config,
   size_cutoff = rehash_file_size_cutoff
 ) {
-  filename <- decode_path(target, config) %||% target
-  if (!file.exists(filename))
+  if (!is_encoded_path(target)) {
     return(NA_character_)
+  }
+  filename <- decode_path(target, config) %||% target
+  if (!file.exists(filename)) {
+    return(NA_character_)
+  }
   old_mtime <- ifelse(
     exists_in_subspace(
       key = target,
