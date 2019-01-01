@@ -482,12 +482,12 @@ test_with_dir("trigger components react appropriately", {
     plan = config$plan,
     envir = config$envir,
     cache = config$cache
-  )$layout
+  )
   simple_config$layout <- whole_static_analysis(
     plan = simple_config$plan,
     envir = simple_config$envir,
     cache = simple_config$cache
-  )$layout
+  )
   expect_equal(sort(outdated(config)), "command")
   make(config = config)
   expect_equal(sort(justbuilt(config)), "command")
