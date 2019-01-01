@@ -45,8 +45,20 @@ ht_merge <- function(x, y) {
   ht_set(x, ht_list(y))
 }
 
-# hash-table-based memoization
-ht_memo <- function(ht = NULL, x, fun) {
+# hash-table-based memoization for characters
+ht_memo <- function(ht, x, fun) {
+  vapply(
+    X = x,
+    FUN = ht_memo_single,
+    FUN.VALUE = character(1),
+    USE.NAMES = FALSE,
+    ht = ht,
+    fun = fun
+  )
+}
+
+# x must be a character scalar.
+ht_memo_single <- function(ht, x, fun) {
   if (ht_exists(ht = ht, x = x)) {
     ht_get(ht = ht, x = x)
   } else {
