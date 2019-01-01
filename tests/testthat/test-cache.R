@@ -292,10 +292,10 @@ test_with_dir("cache functions work", {
   x <- config$cache
   bt <- build_times(search = FALSE, targets_only = FALSE)
   expect_equal(
-    sort(redisplay_path(x$list(namespace = "meta"))),
+    sort(display_keys(x$list(namespace = "meta"))),
     sort(cached())
   )
-  expect_equal(sort(bt$item), sort(redisplay_path(all)))
+  expect_equal(sort(bt$item), sort(display_keys(all)))
   expect_length(bt, 5) # 5 columns
   n1 <- nrow(bt)
   n2 <- nrow(build_times(search = FALSE, targets_only = TRUE))
@@ -327,26 +327,26 @@ test_with_dir("cache functions work", {
   expect_true(length(diagnose(search = FALSE)) > length(config$plan$target))
   expect_equal(
     sort(imported(files_only = FALSE, search = FALSE)),
-    sort(redisplay_path(imports))
+    sort(display_keys(imports))
   )
   expect_equal(
     imported(files_only = TRUE, search = FALSE),
-    redisplay_path(encode_path("input.rds"))
+    display_keys(encode_path("input.rds"))
   )
   expect_equal(
     sort(built(search = FALSE)),
-    sort(redisplay_path(c(config$plan$target, out_files)))
+    sort(display_keys(c(config$plan$target, out_files)))
   )
   twopiece <- sort(c(built(search = FALSE), imported(search = FALSE,
     files_only = FALSE)))
   expect_equal(
     sort(cached(search = FALSE)),
-    sort(redisplay_path(all)),
-    sort(redisplay_path(twopiece))
+    sort(display_keys(all)),
+    sort(display_keys(twopiece))
   )
   expect_equal(
     sort(cached(search = FALSE, no_imported_objects = TRUE)),
-    sort(redisplay_path(c(encode_path("input.rds"), out_files, builds)))
+    sort(display_keys(c(encode_path("input.rds"), out_files, builds)))
   )
   expect_true(
     is_cached(
@@ -371,8 +371,8 @@ test_with_dir("cache functions work", {
     rescue_cache(search = FALSE, garbage_collection = TRUE), "storr"))
   expect_equal(
     sort(cached(search = FALSE)),
-    sort(redisplay_path(all)),
-    sort(redisplay_path(twopiece))
+    sort(display_keys(all)),
+    sort(display_keys(twopiece))
   )
 
   # find your project
@@ -398,7 +398,7 @@ test_with_dir("cache functions work", {
     imported(search = FALSE),
     c("readRDS", "saveRDS")
   )
-  expect_true(all(should_have_loaded %in% redisplay_path(ls(envir = e))))
+  expect_true(all(should_have_loaded %in% display_keys(ls(envir = e))))
   e <- new.env()
   loadd(search = FALSE, envir = e)
   should_have_loaded <- setdiff(
@@ -437,15 +437,15 @@ test_with_dir("cache functions work", {
   expect_equal(diagnose(search = TRUE), character(0))
   expect_equal(
     sort(imported(files_only = FALSE, search = TRUE, path = s)),
-    sort(redisplay_path(imports))
+    sort(display_keys(imports))
   )
   expect_equal(
     imported(files_only = TRUE, search = TRUE, path = s),
-    redisplay_path(encode_path("input.rds"))
+    display_keys(encode_path("input.rds"))
   )
   expect_equal(
     sort(built(search = TRUE, path = s)),
-    sort(redisplay_path(c(config$plan$target, out_files)))
+    sort(display_keys(c(config$plan$target, out_files)))
   )
   twopiece <- sort(c(
     built(path = s, search = TRUE),
@@ -453,12 +453,12 @@ test_with_dir("cache functions work", {
   )
   expect_equal(
     sort(cached(path = s, search = TRUE)),
-    sort(redisplay_path(all)),
-    sort(redisplay_path(twopiece))
+    sort(display_keys(all)),
+    sort(display_keys(twopiece))
   )
   expect_equal(
     sort(cached(no_imported_objects = TRUE, path = s, search = T)),
-    sort(redisplay_path(c(encode_path("input.rds"), out_files, builds)))
+    sort(display_keys(c(encode_path("input.rds"), out_files, builds)))
   )
   expect_true(all(cached(list = all, path = s, search = TRUE)))
   expect_true(inherits(rescue_cache(path = s, search = TRUE), "storr"))
@@ -510,11 +510,11 @@ test_with_dir("cache functions work", {
   setwd("..") # nolint
 
   # clean using search = TRUE or FALSE
-  expect_true(all(redisplay_path(all) %in% cached(path = s, search = T)))
+  expect_true(all(display_keys(all) %in% cached(path = s, search = T)))
   clean(final, path = s, search = TRUE, jobs = 2,
     garbage_collection = TRUE)
   expect_true(all(
-    sort(redisplay_path(setdiff(all, "final"))) %in%
+    sort(display_keys(setdiff(all, "final"))) %in%
       cached(path = s, search = T)))
   drake_gc(path = s, search = T)
 

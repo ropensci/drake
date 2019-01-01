@@ -280,7 +280,7 @@ test_with_dir("make(..., skip_imports = TRUE) works", {
   )
   expect_equal(
     sort(cached()),
-    sort(redisplay_path(
+    sort(display_keys(
       c(encode_path("intermediatefile.rds"), con$plan$target)
     ))
   )
