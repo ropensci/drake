@@ -121,7 +121,7 @@ test_with_dir("runtime predictions", {
     yourinput = 27,
     final = Inf
   )
-  known_times[reencode_path(c("saveRDS", "input.rds"))] <- 0
+  known_times[encode_path(c("saveRDS", "input.rds"))] <- 0
   targets <- c("nextone", "yourinput")
   p5 <- predict_runtime(
     config = con,

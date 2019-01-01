@@ -27,14 +27,14 @@ test_with_dir("verbose consoles", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   config$verbose <- 2
-  expect_silent(console_missing(reencode_path("input.rds"), config))
-  expect_silent(console_import(reencode_path("input.rds"), config))
+  expect_silent(console_missing(encode_path("input.rds"), config))
+  expect_silent(console_import(encode_path("input.rds"), config))
   config$verbose <- 3
-  expect_message(console_missing(reencode_path("input.rds"), config))
-  expect_silent(console_import(reencode_path("input.rds"), config))
+  expect_message(console_missing(encode_path("input.rds"), config))
+  expect_silent(console_import(encode_path("input.rds"), config))
   config$verbose <- 4
-  expect_message(console_missing(reencode_path("input.rds"), config))
-  expect_message(console_import(reencode_path("input.rds"), config))
+  expect_message(console_missing(encode_path("input.rds"), config))
+  expect_message(console_import(encode_path("input.rds"), config))
 })
 
 test_with_dir("console_parLapply", {

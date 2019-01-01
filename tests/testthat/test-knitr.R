@@ -94,7 +94,7 @@ test_with_dir("knitr_deps() works", {
   expect_false(file.exists("test.md"))
   expect_warning(x <- sort(clean_dependency_list(knitr_deps("report.Rmd"))))
   expect_warning(expect_equal(x, sort(
-    clean_dependency_list(knitr_deps(reencode_path("report.Rmd"))))))
+    clean_dependency_list(knitr_deps(encode_path("report.Rmd"))))))
   expect_equal(x, character(0))
   load_mtcars_example()
   w <- clean_dependency_list(deps_code("funct(knitr_in(report.Rmd))"))

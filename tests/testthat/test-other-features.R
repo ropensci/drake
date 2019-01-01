@@ -192,7 +192,7 @@ test_with_dir("missed() works with files", {
   o <- dbug()
   expect_equal(character(0), missed(o))
   unlink("input.rds")
-  expect_equal(redisplay_keys(reencode_path("input.rds")), missed(o))
+  expect_equal(redisplay_keys(encode_path("input.rds")), missed(o))
 })
 
 test_with_dir(".onLoad() warns correctly and .onAttach() works", {
@@ -254,7 +254,7 @@ test_with_dir("targets can be partially specified", {
 
 test_with_dir("file_store quotes properly", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_equal(file_store("x"), reencode_path("x"))
+  expect_equal(file_store("x"), encode_path("x"))
 })
 
 test_with_dir("misc utils", {
@@ -281,7 +281,7 @@ test_with_dir("make(..., skip_imports = TRUE) works", {
   expect_equal(
     sort(cached()),
     sort(redisplay_path(
-      c(reencode_path("intermediatefile.rds"), con$plan$target)
+      c(encode_path("intermediatefile.rds"), con$plan$target)
     ))
   )
 

@@ -281,11 +281,11 @@ test_with_dir("cache functions work", {
   expect_equal(outdated(config), character(0))
 
   # targets and imports
-  imports <- sort(c(reencode_path("input.rds"),
+  imports <- sort(c(encode_path("input.rds"),
     "a", "b", "c", "f", "g",
     "h", "i", "j"))
   builds <- sort(config$plan$target)
-  out_files <- reencode_path("intermediatefile.rds")
+  out_files <- encode_path("intermediatefile.rds")
   all <- sort(c(builds, imports, out_files))
 
   # build_times
@@ -309,7 +309,7 @@ test_with_dir("cache functions work", {
   expect_equal(sort(names(progress(search = FALSE))), all)
   expect_equal(
     sort(names(progress(search = FALSE, no_imported_objects = TRUE))),
-    sort(c(reencode_path("input.rds"), out_files, builds)))
+    sort(c(encode_path("input.rds"), out_files, builds)))
   expect_equal(progress(bla, f, list = c("h", "final"), search = FALSE),
     c(bla = "not built or imported", f = "finished", h = "finished",
       final = "finished"))
@@ -331,7 +331,7 @@ test_with_dir("cache functions work", {
   )
   expect_equal(
     imported(files_only = TRUE, search = FALSE),
-    redisplay_path(reencode_path("input.rds"))
+    redisplay_path(encode_path("input.rds"))
   )
   expect_equal(
     sort(built(search = FALSE)),
@@ -346,11 +346,11 @@ test_with_dir("cache functions work", {
   )
   expect_equal(
     sort(cached(search = FALSE, no_imported_objects = TRUE)),
-    sort(redisplay_path(c(reencode_path("input.rds"), out_files, builds)))
+    sort(redisplay_path(c(encode_path("input.rds"), out_files, builds)))
   )
   expect_true(
     is_cached(
-      targets = reencode_path("input.rds"),
+      targets = encode_path("input.rds"),
       no_imported_objects = TRUE,
       cache = config$cache, jobs = 1,
       namespace = config$cache$default_namespace
@@ -426,7 +426,7 @@ test_with_dir("cache functions work", {
         progress(no_imported_objects = TRUE, search = TRUE, path = s)
       )
     ),
-    sort(c(reencode_path("input.rds"), out_files, builds))
+    sort(c(encode_path("input.rds"), out_files, builds))
   )
   expect_equal(sort(progress(search = TRUE, path = s, bla, f,
     list = c("h", "final"))), sort(c(bla = "not built or imported",
@@ -441,7 +441,7 @@ test_with_dir("cache functions work", {
   )
   expect_equal(
     imported(files_only = TRUE, search = TRUE, path = s),
-    redisplay_path(reencode_path("input.rds"))
+    redisplay_path(encode_path("input.rds"))
   )
   expect_equal(
     sort(built(search = TRUE, path = s)),
@@ -458,7 +458,7 @@ test_with_dir("cache functions work", {
   )
   expect_equal(
     sort(cached(no_imported_objects = TRUE, path = s, search = T)),
-    sort(redisplay_path(c(reencode_path("input.rds"), out_files, builds)))
+    sort(redisplay_path(c(encode_path("input.rds"), out_files, builds)))
   )
   expect_true(all(cached(list = all, path = s, search = TRUE)))
   expect_true(inherits(rescue_cache(path = s, search = TRUE), "storr"))

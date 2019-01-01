@@ -127,7 +127,7 @@ test_with_dir("can detect trigger deps without reacting to them", {
   config <- drake_config(
     plan, session_info = FALSE, cache = storr::storr_environment(),
     log_progress = TRUE)
-  deps <- c(reencode_path(c("file.rds", "knitr.Rmd")), "f")
+  deps <- c(encode_path(c("file.rds", "knitr.Rmd")), "f")
   expect_true(all(deps %in% igraph::V(config$graph)$name))
   expect_equal(sort(dependencies("x", config)), sort(deps))
   expect_equal(outdated(config), "x")
@@ -165,7 +165,7 @@ test_with_dir("same, but with global trigger", {
       change = NULL
     )
   )
-  deps <- c(reencode_path(c("file.rds", "knitr.Rmd")), "f")
+  deps <- c(encode_path(c("file.rds", "knitr.Rmd")), "f")
   expect_true(all(deps %in% igraph::V(config$graph)$name))
   expect_equal(sort(dependencies("x", config)), sort(deps))
   expect_equal(outdated(config), "x")
@@ -211,7 +211,7 @@ test_with_dir("trigger does not block out command deps", {
   config <- drake_config(
     plan, session_info = FALSE, cache = storr::storr_environment(),
     log_progress = TRUE)
-  deps <- c(reencode_path("file.rds"), reencode_path("knitr.Rmd"), "f")
+  deps <- c(encode_path("file.rds"), encode_path("knitr.Rmd"), "f")
   expect_true(all(deps %in% igraph::V(config$graph)$name))
   expect_equal(sort(dependencies("x", config)), sort(deps))
   expect_equal(outdated(config), "x")
@@ -726,5 +726,5 @@ test_with_dir("files are collected/encoded from all triggers", {
   )
   config <- drake_config(plan)
   expect_equal(sort(ht_list(config$encode)), sort(exp))
-  expect_equal(sort(ht_list(config$decode)), sort(reencode_path(exp)))
+  expect_equal(sort(ht_list(config$decode)), sort(encode_path(exp)))
 })
