@@ -305,3 +305,21 @@ test_with_dir("imported functions cannot depend on targets", {
   deps <- deps_target("my_fun", config)
   expect_equal(unlist(deps, use.names = FALSE), "global_import")
 })
+
+test_with_dir("case sensitivity", {
+  plan <- drake_plan(
+    a = 1,
+    b = 2,
+    B = A(),
+    c = 15
+  )
+  A <- function(){}
+  expect_warning(
+    config <- drake_config(
+      plan,
+      cache = storr::storr_environment(),
+      session_info = FALSE
+    ),
+    regexp = "case insensitive"
+  )
+})
