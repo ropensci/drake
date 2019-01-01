@@ -107,23 +107,24 @@ test_with_dir("weak_tibble", {
 })
 
 test_with_dir("key encoding for paths and namespaced functions", {
-  x <- "myfunny:::variablename"
+  x <- c("myfunny:::variablename", "relative/path\na\\m//e")
+  expect_false(all(is_encoded_path(x)))
+  expect_false(all(is_encoded_namespaced(x)))
+
   y <- encode_path(x)
   z <- encode_namespaced(x)
 
-  expect_false(is_encoded_path(x))
-  expect_true(is_encoded_path(y))
-  expect_false(is_encoded_path(z))
-  
-  expect_false(is_encoded_namespaced(x))
-  expect_false(is_encoded_namespaced(y))
-  expect_true(is_encoded_namespaced(z))
+  expect_true(all(is_encoded_path(y)))
+  expect_false(all(is_encoded_path(z)))
+
+  expect_false(all(is_encoded_namespaced(y)))
+  expect_true(all(is_encoded_namespaced(z)))
 
   expect_equal(decode_path(y), x)
   expect_equal(decode_namespaced(z), x)
 
-  expect_true(file.create(y))
-  expect_true(file.create(z))
+  expect_true(all(file.create(y)))
+  expect_true(all(file.create(z)))
 })
 
 test_with_dir("same with memoization", {
@@ -132,23 +133,23 @@ test_with_dir("same with memoization", {
     cache = storr::storr_environment(),
     session_info = FALSE
   )
+  x <- c("myfunny:::variablename", "relative/path\na\\m//e")
+  expect_false(all(is_encoded_path(x)))
+  expect_false(all(is_encoded_namespaced(x)))
   for (i in 1:3) {
-    x <- "myfunny:::variablename"
     y <- encode_path(x, config = config)
     z <- encode_namespaced(x, config = config)
     
-    expect_false(is_encoded_path(x))
-    expect_true(is_encoded_path(y))
-    expect_false(is_encoded_path(z))
+    expect_true(all(is_encoded_path(y)))
+    expect_false(all(is_encoded_path(z)))
     
-    expect_false(is_encoded_namespaced(x))
-    expect_false(is_encoded_namespaced(y))
-    expect_true(is_encoded_namespaced(z))
+    expect_false(all(is_encoded_namespaced(y)))
+    expect_true(all(is_encoded_namespaced(z)))
     
     expect_equal(decode_path(y, config = config), x)
     expect_equal(decode_namespaced(z, config = config), x)
     
-    expect_true(file.create(y))
-    expect_true(file.create(z))
+    expect_true(all(file.create(y)))
+    expect_true(all(file.create(z)))
   }
 })
