@@ -569,7 +569,7 @@ drake_config <- function(
   trigger <- convert_old_trigger(trigger)
   decode <- ht_new()
   encode <- ht_new()
-  analysis <- whole_static_analysis(
+  layout <- whole_static_analysis(
     plan = plan,
     envir = envir,
     verbose = verbose,
@@ -578,9 +578,6 @@ drake_config <- function(
     trigger = trigger,
     cache = cache
   )
-  layout <- analysis$layout
-  decode <- analysis$decode
-  encode <- analysis$encode
   graph <- create_drake_graph(
     layout = layout,
     targets = targets,
@@ -614,8 +611,7 @@ drake_config <- function(
     args = args,
     recipe_command = recipe_command,
     layout = layout,
-    decode = decode,
-    encode = encode,
+    encodings = ht_new(),
     graph = graph,
     seed = seed,
     trigger = trigger,

@@ -108,20 +108,20 @@ test_with_dir("weak_tibble", {
 
 test_with_dir("key encoding for paths and namespaced functions", {
   x <- "myfunny:::variablename"
-  y <- encode_namespaced(x)
-  expect_equal(x, decode_namespaced(y))
-  expect_false(all(x == encode_namespaced(x)))
+  y <- encode_path(x)
+  z <- encode_namespaced(x)
+
   expect_false(is_encoded_path(x))
-  z <- reencode_path(x)
-  expect_false(all(x == y))
-  expect_false(all(y == z))
-  expect_true(is_encoded_path(z))
-  expect_equal(x, redecode_path(z))
-  expect_equal(z, decode_namespaced(z))
-  expect_equal(z, encode_namespaced(z))
-  expect_true(all(x == decode_namespaced(x)))
-  expect_false(all(y == decode_namespaced(y)))
-  expect_true(all(z == decode_namespaced(z)))
+  expect_true(is_encoded_path(y))
+  expect_false(is_encoded_path(z))
+  
+  expect_false(is_encoded_namespaced(x))
+  expect_false(is_encoded_namespaced(y))
+  expect_true(is_encoded_namespaced(z))
+
+  expect_equal(decode_path(y), x)
+  expect_equal(decode_namespaced(z), x)
+
   expect_true(file.create(y))
   expect_true(file.create(z))
 })

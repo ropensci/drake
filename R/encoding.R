@@ -1,67 +1,82 @@
-decode_namespaced <- function(x) {
-  gsub(pattern = "-.", replacement = ":", x = x, fixed = TRUE)
+# Internal encoding API
+
+encode_path <- function(x, config = NULL) {
+  encode_memo(x = x, fun = reencode_path, config = config)
 }
 
-decoded_path <- function(x, config) {
-  out <- lapply(
-    X = x,
-    FUN = function(x) {
-      config$decode[[x]]
-    }
-  )
-  unlist(out)
+decode_path <- function(x, config = NULL) {
+  encode_memo(x = x, fun = redecode_path, config = config)
 }
 
-encode_namespaced <- function(x) {
-  gsub(pattern = ":", replacement = "-.", x = x, fixed = TRUE)
+encode_namespaced <- function(x, config = NULL) {
+  encode_memo(x = x, fun = reencode_namespaced, config = config)
 }
 
-displayed_path <- function(x, config) {
-  index <- is_encoded_path(x)
-  pretty <- sprintf("file %s", decoded_path(x[index], config))
-  c(x[!index], pretty)
-}
-
-displayed_path_vector <- function(x, config) {
-  vapply(
-    X = x,
-    FUN = displayed_path,
-    FUN.VALUE = character(1),
-    USE.NAMES = FALSE,
-    config = config
-  )
+decode_namespaced <- function(x, config = NULL) {
+  encode_memo(x = x, fun = redecode_namespaced, config = config)
 }
 
 is_encoded_path <- function(x) {
-  n <- nchar(x)
-  substr(x = x, start = n, stop = n) == "-"
+  substr(x = x, start = 1, stop = 2) == "p-"
 }
 
 not_encoded_path <- function(x) {
   !is_encoded_path(x)
 }
 
-redecode_path <- function(x) {
-  base64url::base64_urldecode(substr(x, start = 0, stop = nchar(x) - 1))
+is_encoded_namespaced <- function(x) {
+  substr(x = x, start = 1, stop = 2) == "n-"
+}
+
+not_encoded_namespaced <- function(x) {
+  !is_encoded_namespaced(x)
+}
+
+display_keys <- function(x, config) {
+  vapply(
+    X = x,
+    FUN = display_path,
+    FUN.VALUE = character(1),
+    USE.NAMES = FALSE,
+    config = config
+  )
+}
+
+# Do not call the following functions except in the above internal API.
+
+encode_memo <- function(x, fun, config = NULL) {
+  if (is.null(config) || is.null(config$encodings)) {
+    fun(x)
+  } else {
+    ht_memo(ht = config$encodings, x = x, fun = fun)
+  }
 }
 
 reencode_path <- function(x) {
-  paste0(base64url::base64_urlencode(x), "-")
+  y <- base64url::base32_encode(x = x, use.padding = FALSE)
+  paste0("p-", y)
 }
 
-redisplay_path <- function(x) {
-  index <- is_encoded_path(x)
-  pretty <- sprintf("file %s", redecode_path(x[index]))
-  c(x[!index], pretty)
+redecode_path <- function(x) {
+  y <- substr(x = x, start = 3, stop = 1e6)
+  base64url::base32_decode(x = y, use.padding = FALSE)
 }
 
-redisplay_keys <- function(x) {
-  vapply(
-    X = decode_namespaced(x),
-    FUN = redisplay_path,
-    FUN.VALUE = character(1),
-    USE.NAMES = FALSE
-  )
+reencode_namespaced <- function(x) {
+  y <- base64url::base32_encode(x, use.padding = FALSE)
+  paste0("n-", y)
+}
+
+redecode_namespaced <- redecode_path
+
+display_key <- function(x, config) {
+  if (is_encoded_path(x)) {
+    sprintf("file %s", decode_path(x = x, config = config))
+  } else if (is_encoded_namespaced(x)) {
+    sprintf("%s", decode_namespaced(x = x, config = config))
+  } else {
+    x
+  }
 }
 
 #' @title Tell `drake` that you want information
@@ -102,5 +117,5 @@ redisplay_keys <- function(x) {
 #'   })
 #'   }
 file_store <- function(x) {
-  reencode_path(x)
+  encode_path(x)
 }
