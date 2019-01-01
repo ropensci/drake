@@ -1,19 +1,39 @@
 # Internal encoding API
 
 encode_path <- function(x, config = NULL) {
-  encode_memo(x = x, fun = reencode_path, config = config)
+  if (is.null(config) || is.null(config$ht_encode_path)) {
+    reencode_path(x)
+  } else {
+    ht_memo(ht = config$ht_encode_path, x = x, fun = reencode_path)
+  }
 }
 
 decode_path <- function(x, config = NULL) {
-  encode_memo(x = x, fun = redecode_path, config = config)
+  if (is.null(config) || is.null(config$ht_decode_path)) {
+    redecode_path(x)
+  } else {
+    ht_memo(ht = config$ht_decode_path, x = x, fun = redecode_path)
+  }
 }
 
 encode_namespaced <- function(x, config = NULL) {
-  encode_memo(x = x, fun = reencode_namespaced, config = config)
+  if (is.null(config) || is.null(config$ht_encode_namespaced)) {
+    reencode_namespaced(x)
+  } else {
+    ht_memo(
+      ht = config$ht_encode_namespaced, x = x, fun = reencode_namespaced
+    )
+  }
 }
 
 decode_namespaced <- function(x, config = NULL) {
-  encode_memo(x = x, fun = redecode_namespaced, config = config)
+  if (is.null(config) || is.null(config$ht_encode_namespaced)) {
+    redecode_namespaced(x)
+  } else {
+    ht_memo(
+      ht = config$ht_decode_namespaced, x = x, fun = redecode_namespaced
+    )
+  }
 }
 
 is_encoded_path <- function(x) {
@@ -43,14 +63,6 @@ display_keys <- function(x, config) {
 }
 
 # Do not call the following functions except in the above internal API.
-
-encode_memo <- function(x, fun, config = NULL) {
-  if (is.null(config) || is.null(config$encodings)) {
-    fun(x)
-  } else {
-    ht_memo(ht = config$encodings, x = x, fun = fun)
-  }
-}
 
 reencode_path <- function(x) {
   y <- base64url::base32_encode(x = x, use.padding = FALSE)

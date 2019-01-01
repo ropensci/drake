@@ -195,7 +195,7 @@ drake_envir <- function() {
 
 missing_import <- function(x, config) {
   if (is_encoded_path(x)) {
-    return(!file.exists(decoded_path(x, config)))
+    return(!file.exists(decode_path(x, config)))
   }
   x <- decode_namespaced(x)
   identical(get_import_from_memory(x, envir = config$envir), NA_character_)

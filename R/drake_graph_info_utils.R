@@ -125,7 +125,7 @@ default_graph_title <- function(split_columns = FALSE) {
 }
 
 file_hover_text <- Vectorize(function(encoded_file, targets, config) {
-  decoded_file <- decoded_path(encoded_file, config)
+  decoded_file <- decode_path(encoded_file, config)
   if (encoded_file %in% targets || !file.exists(decoded_file)) {
     return(encoded_file)
   }

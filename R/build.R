@@ -149,7 +149,7 @@ assert_output_files <- function(target, meta, config) {
   deps <- config$layout[[target]]$deps_build
   files <- unique(as.character(deps$file_out))
   missing_files <- Filter(x = files, f = function(x) {
-    !file.exists(decoded_path(x, config))
+    !file.exists(decode_path(x, config))
   })
   if (length(missing_files)) {
     drake_warning(
@@ -185,7 +185,7 @@ build_target <- function(target, meta, config) {
 process_import <- function(target, meta, config) {
   if (meta$isfile) {
     value <- NA_character_
-    is_missing <- !file.exists(decoded_path(target, config))
+    is_missing <- !file.exists(decode_path(target, config))
   } else {
     value <- get_import_from_memory(target, envir = config$envir)
     is_missing <- identical(value, NA_character_)

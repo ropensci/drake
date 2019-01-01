@@ -125,3 +125,30 @@ test_with_dir("key encoding for paths and namespaced functions", {
   expect_true(file.create(y))
   expect_true(file.create(z))
 })
+
+test_with_dir("same with memoization", {
+  config <- drake_config(
+    drake_plan(targ = 1),
+    cache = storr::storr_environment(),
+    session_info = FALSE
+  )
+  for (i in 1:3) {
+    x <- "myfunny:::variablename"
+    y <- encode_path(x, config = config)
+    z <- encode_namespaced(x, config = config)
+    
+    expect_false(is_encoded_path(x))
+    expect_true(is_encoded_path(y))
+    expect_false(is_encoded_path(z))
+    
+    expect_false(is_encoded_namespaced(x))
+    expect_false(is_encoded_namespaced(y))
+    expect_true(is_encoded_namespaced(z))
+    
+    expect_equal(decode_path(y, config = config), x)
+    expect_equal(decode_namespaced(z, config = config), x)
+    
+    expect_true(file.create(y))
+    expect_true(file.create(z))
+  }
+})
