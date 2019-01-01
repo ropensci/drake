@@ -166,7 +166,7 @@ clean_single_target <- function(
     files <- sort(unique(as.character(deps$file_out)))
   }
   if (length(files)) {
-    unlink(redecode_path(files))
+    unlink(decode_path(files))
   }
   for (namespace in namespaces) {
     for (key in c(target, files)) {

@@ -29,7 +29,7 @@ knitr_deps <- function(target) {
   out <- new_code_analysis_results()
   target <- drake_unquote(target)
   if (is_encoded_path(target)) {
-    target <- redecode_path(target)
+    target <- decode_path(target)
   }
   analyze_knitr_file(target, out)
   list_code_analysis_results(out)

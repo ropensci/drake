@@ -74,8 +74,8 @@
 deps_code <- function(x) {
   if (is.function(x)) {
     import_dependencies(x)
-  } else if (all(is_encoded_path(x)) && all(file.exists(redecode_path(x)))) {
-    knitr_deps(redecode_path(x))
+  } else if (all(is_encoded_path(x)) && all(file.exists(decode_path(x)))) {
+    knitr_deps(decode_path(x))
   } else if (is.character(x)) {
     command_dependencies(x)
   } else{
@@ -113,7 +113,7 @@ deps_target <- function(
   }
   out <- config$layout[[target]]$deps_build
   for (field in c("file_in", "file_out", "knitr_in")) {
-    out[[field]] <- redecode_path(out[[field]])
+    out[[field]] <- decode_path(out[[field]])
   }
   select_nonempty(out)
 }
@@ -334,9 +334,9 @@ command_dependencies <- function(
 # TODO: this function can go away when drake
 # stops supporting single-quoted file names
 warn_single_quoted_files <- function(files, deps) {
-  old_api_files <- redecode_path(files)
+  old_api_files <- decode_path(files)
   new_api_files <- c(deps$file_in, deps$file_out, deps$knitr_in)
-  new_api_files <- redecode_path(new_api_files)
+  new_api_files <- decode_path(new_api_files)
   warn_files <- setdiff(old_api_files, new_api_files)
   if (!length(warn_files)) {
     return()
