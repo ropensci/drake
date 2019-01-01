@@ -144,7 +144,10 @@ self_hash <- Vectorize(function(target, config) {
 "target", USE.NAMES = FALSE)
 
 rehash_file <- function(target, config) {
-  file <- decode_path(target, config) %||% target
+  if (!is_encoded_path(target)) {
+    return(NA_character_)
+  }
+  file <- decode_path(target, config)
   if (!file.exists(file) || file.info(file)$isdir) {
     return(NA_character_)
   }
@@ -181,7 +184,7 @@ file_hash <- function(
   if (!is_encoded_path(target)) {
     return(NA_character_)
   }
-  filename <- decode_path(target, config) %||% target
+  filename <- decode_path(target, config)
   if (!file.exists(filename)) {
     return(NA_character_)
   }
