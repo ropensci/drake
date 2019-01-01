@@ -90,7 +90,8 @@ test_with_dir("knitr_deps() works", {
     drake_quotes(paste0("file", seq_len(6)), single = FALSE),
     "input.txt", "output.txt", "nested.Rmd", "nested"
   ))
-  expect_equal(sort(clean_dependency_list(knitr_deps("'test.Rmd'"))), ans)
+  out <- knitr_deps("'test.Rmd'")
+  expect_equal(sort(clean_dependency_list(out)), ans)
   expect_false(file.exists("test.md"))
   expect_warning(x <- sort(clean_dependency_list(knitr_deps("report.Rmd"))))
   expect_warning(expect_equal(x, sort(
@@ -104,17 +105,11 @@ test_with_dir("knitr_deps() works", {
   )
   pkgconfig::set_config("drake::strings_in_dots" = "filenames")
   x <- knitr_deps("report.Rmd")
-  y <- expect_warning(
-    clean_dependency_list(deps_code("knit('report.Rmd')")))
-  z <- expect_warning(
-    clean_dependency_list(deps_code("render('report.Rmd')")))
   real_deps <- c(
     "small", "coef_regression2_small", "large"
   )
   expect_equal(sort(w), sort(c("funct")))
   expect_equal(sort(clean_dependency_list(x)), sort(real_deps))
-  expect_equal(sort(y), sort(c(real_deps, "knit", "report.Rmd")))
-  expect_equal(sort(z), sort(c(real_deps, "render", "report.Rmd")))
 })
 
 test_with_dir("find_knitr_doc() works", {

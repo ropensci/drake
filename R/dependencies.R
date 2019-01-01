@@ -75,7 +75,7 @@ deps_code <- function(x) {
   if (is.function(x)) {
     out <- import_dependencies(x)
   } else if (all(is_encoded_path(x)) && all(file.exists(decode_path(x)))) {
-    out <- knitr_deps(decode_path(x))
+    out <- get_knitr_deps(decode_path(x))
   } else if (is.character(x)) {
     out <- command_dependencies(x)
   } else{
@@ -321,7 +321,7 @@ command_dependencies <- function(
   # the deprecation anyway.
   if (!use_new_file_api) {
     deps$loadd <- base::union(
-      deps$loadd, knitr_deps(find_knitr_doc(command))
+      deps$loadd, get_knitr_deps(find_knitr_doc(command))
     )
     deps$loadd <- unique(deps$loadd)
   }

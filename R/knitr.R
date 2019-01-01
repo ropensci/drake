@@ -23,6 +23,10 @@
 #' })
 #' }
 knitr_deps <- function(target) {
+  decode_deps_list(get_knitr_deps(target))
+}
+
+get_knitr_deps <- function(target) {
   if (!length(target)) {
     return(character(0))
   }
@@ -32,7 +36,7 @@ knitr_deps <- function(target) {
     target <- decode_path(target)
   }
   analyze_knitr_file(target, out)
-  list_code_analysis_results(out)
+  list_code_analysis_results(out) 
 }
 
 safe_get_tangled_frags <- function(file) {
