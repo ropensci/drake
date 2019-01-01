@@ -121,6 +121,7 @@ test_with_dir("key encoding for paths and namespaced functions", {
 
   y <- encode_path(x)
   z <- encode_namespaced(x)
+  expect_false(any(y == z))
 
   expect_true(all(is_encoded_path(y)))
   expect_false(all(is_encoded_path(z)))
@@ -147,6 +148,7 @@ test_with_dir("same with memoization", {
   for (i in 1:3) {
     y <- encode_path(x, config = config)
     z <- encode_namespaced(x, config = config)
+    expect_false(any(y == z))
 
     expect_true(all(is_encoded_path(y)))
     expect_false(all(is_encoded_path(z)))
