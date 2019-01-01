@@ -187,7 +187,7 @@ process_import <- function(target, meta, config) {
     value <- NA_character_
     is_missing <- !file.exists(decode_path(target, config))
   } else {
-    value <- get_import_from_memory(target, envir = config$envir)
+    value <- get_import_from_memory(target, config = config)
     is_missing <- identical(value, NA_character_)
   }
   if (is_missing) {

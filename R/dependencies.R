@@ -234,7 +234,7 @@ tracked <- function(config) {
     },
     jobs = config$jobs
   )
-  displayed_path(clean_dependency_list(out), config)
+  display_keys(clean_dependency_list(out), config)
 }
 
 dependencies <- function(targets, config, reverse = FALSE) {

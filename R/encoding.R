@@ -52,10 +52,10 @@ not_encoded_namespaced <- function(x) {
   !is_encoded_namespaced(x)
 }
 
-display_keys <- function(x, config) {
+display_keys <- function(x, config = NULL) {
   vapply(
     X = x,
-    FUN = display_path,
+    FUN = display_key,
     FUN.VALUE = character(1),
     USE.NAMES = FALSE,
     config = config

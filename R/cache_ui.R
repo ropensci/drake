@@ -112,7 +112,7 @@ is_cached <- function(targets, no_imported_objects, cache, namespace, jobs) {
     jobs = jobs
   )
   inclusion <- unlist(inclusion)
-  names(inclusion) <- redisplay_keys(targets)
+  names(inclusion) <- display_keys(targets)
   inclusion
 }
 
@@ -122,7 +122,7 @@ list_cache <- function(no_imported_objects, cache, namespace, jobs) {
     targets <- no_imported_objects(
       targets = targets, cache = cache, jobs = jobs)
   }
-  redisplay_keys(targets)
+  display_keys(targets)
 }
 
 #' @title List all the built targets (non-imports) in the cache.
@@ -159,7 +159,7 @@ built <- function(
     },
     jobs = jobs
   )
-  redisplay_keys(out)
+  display_keys(out)
 }
 
 #' @title List all the imports in the drake cache.
@@ -209,7 +209,7 @@ imported <- function(
   )
   if (files_only)
     targets <- parallel_filter(targets, f = is_encoded_path, jobs = jobs)
-  redisplay_keys(targets)
+  display_keys(targets)
 }
 
 # from base::remove()

@@ -236,7 +236,7 @@ standardize_key <- function(text) {
   index <- is_quoted(text)
   if (any(index)) {
     text[index] <- gsub("^'|^\"|'$|\"", "", text[index])
-    text[index] <- reencode_path(text[index])
+    text[index] <- encode_path(text[index])
   }
   text
 }

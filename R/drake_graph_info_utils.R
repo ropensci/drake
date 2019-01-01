@@ -102,7 +102,7 @@ cluster_status <- function(statuses) {
 configure_nodes <- function(config) {
   rownames(config$nodes) <- config$nodes$id
   config$nodes$label <- decode_namespaced(config$nodes$label)
-  config$nodes$label <- displayed_path_vector(config$nodes$label, config)
+  config$nodes$label <- display_keys(config$nodes$label, config)
   config$nodes <- categorize_nodes(config = config)
   config$nodes <- style_nodes(config = config)
   config$nodes <- resolve_levels(config = config)
@@ -178,7 +178,7 @@ get_raw_node_category_data <- function(config) {
   config$functions <- parallel_filter(
     x = config$imports,
     f = function(x) {
-      is.function(get_import_from_memory(x, envir = config$envir))
+      is.function(get_import_from_memory(x, config = config))
     },
     jobs = config$jobs
   )

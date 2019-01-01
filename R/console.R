@@ -12,7 +12,7 @@ console_generic <- function(target, config, cutoff = 1, pattern = "target") {
   if (config$verbose < cutoff) {
     return()
   }
-  text <- decode_namespaced(displayed_path(target, config))
+  text <- display_keys(target, config)
   text <- paste(pattern, text)
   finish_console(text = text, pattern = pattern, config = config)
 
@@ -23,7 +23,7 @@ console_missing <- function(target, config) {
 }
 
 console_import <- function(target, config) {
-  console_generic(decode_namespaced(target), config, 4, "import")
+  console_generic(target, config, 4, "import")
 }
 
 console_skip <- function(target, config) {
@@ -70,7 +70,7 @@ console_many_targets <- function(
   if (n < 1) {
     return(invisible())
   }
-  targets <- decode_namespaced(displayed_path(targets, config))
+  targets <- display_keys(targets, config)
   out <- paste0(
     pattern,
     " ", n, " ", type,
