@@ -147,16 +147,16 @@ test_with_dir("same with memoization", {
   for (i in 1:3) {
     y <- encode_path(x, config = config)
     z <- encode_namespaced(x, config = config)
-    
+
     expect_true(all(is_encoded_path(y)))
     expect_false(all(is_encoded_path(z)))
-    
+
     expect_false(all(is_encoded_namespaced(y)))
     expect_true(all(is_encoded_namespaced(z)))
-    
+
     expect_equal(decode_path(y, config = config), x)
     expect_equal(decode_namespaced(z, config = config), x)
-    
+
     expect_true(all(file.create(y)))
     expect_true(all(file.create(z)))
   }

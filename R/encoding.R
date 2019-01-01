@@ -48,10 +48,6 @@ is_encoded_namespaced <- function(x) {
   substr(x = x, start = 1, stop = 2) == "n-"
 }
 
-not_encoded_namespaced <- function(x) {
-  !is_encoded_namespaced(x)
-}
-
 display_keys <- function(x, config = NULL) {
   vapply(
     X = x,

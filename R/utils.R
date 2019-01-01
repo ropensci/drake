@@ -232,12 +232,6 @@ standardize_key <- function(text) {
   if (any(grepl("::", text))) {
     text <- encode_namespaced(text)
   }
-  # TO DO: remove the rest in version 7.0.0.
-  index <- is_quoted(text)
-  if (any(index)) {
-    text[index] <- gsub("^'|^\"|'$|\"", "", text[index])
-    text[index] <- encode_path(text[index])
-  }
   text
 }
 
