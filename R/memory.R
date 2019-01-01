@@ -110,15 +110,14 @@ ensure_loaded <- function(targets, config) {
 }
 
 get_import_from_memory <- function(target, config) {
-  envir <- config$envir
   if (is_encoded_path(target)) {
     return(NA_character_)
   }
-  if (exists(x = target, envir = envir, inherits = FALSE)) {
-    return(get(x = target, envir = envir, inherits = FALSE))
-  }
   if (is_encoded_namespaced(target)) {
     target <- decode_namespaced(target, config)
+  }
+  if (exists(x = target, envir = config$envir, inherits = FALSE)) {
+    return(get(x = target, envir = config$envir, inherits = FALSE))
   }
   parsed <- parse(text = target)
   parsed <- as.call(parsed)
@@ -200,6 +199,5 @@ missing_import <- function(x, config) {
   if (is_encoded_path(x)) {
     return(!file.exists(decode_path(x, config)))
   }
-  x <- decode_namespaced(x)
   identical(get_import_from_memory(x, config = config), NA_character_)
 }

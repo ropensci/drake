@@ -101,7 +101,6 @@ cluster_status <- function(statuses) {
 
 configure_nodes <- function(config) {
   rownames(config$nodes) <- config$nodes$id
-  config$nodes$label <- decode_namespaced(config$nodes$label)
   config$nodes$label <- display_keys(config$nodes$label, config)
   config$nodes <- categorize_nodes(config = config)
   config$nodes <- style_nodes(config = config)
