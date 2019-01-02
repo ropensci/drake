@@ -7,9 +7,8 @@
 configure_cache(cache = drake::get_cache(verbose = verbose),
   short_hash_algo = drake::default_short_hash_algo(cache = cache),
   long_hash_algo = drake::default_long_hash_algo(cache = cache),
-  log_progress = FALSE, overwrite_hash_algos = FALSE,
-  verbose = drake::default_verbose(), jobs = 1,
-  init_common_values = FALSE)
+  log_progress = FALSE, overwrite_hash_algos = FALSE, verbose = 1L,
+  jobs = 1, init_common_values = FALSE)
 }
 \arguments{
 \item{cache}{cache to configure}
@@ -35,9 +34,6 @@ build progress if this cache was used for previous calls to
 the hash algorithms in the cache with any user-specified ones.}
 
 \item{verbose}{logical or numeric, control printing to the console.
-Use \code{pkgconfig} to set the default value of \code{verbose}
-for your R session:
-for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 \itemize{
 \item \code{0} or \code{FALSE}: print nothing.
 \item \code{1} or \code{TRUE}: print only targets to build.

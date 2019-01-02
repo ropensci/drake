@@ -5,9 +5,8 @@
 \title{Deprecated function \code{build_drake_graph}}
 \usage{
 build_drake_graph(plan = read_drake_plan(), targets = plan$target,
-  envir = parent.frame(), verbose = drake::default_verbose(),
-  jobs = 1, sanitize_plan = FALSE, console_log_file = NULL,
-  trigger = drake::trigger(), cache = NULL)
+  envir = parent.frame(), verbose = 1L, jobs = 1,
+  console_log_file = NULL, trigger = drake::trigger(), cache = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -39,9 +38,6 @@ from \code{envir} and the global environment and
 then reproducibly tracked as dependencies.}
 
 \item{verbose}{logical or numeric, control printing to the console.
-Use \code{pkgconfig} to set the default value of \code{verbose}
-for your R session:
-for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 \itemize{
 \item \code{0} or \code{FALSE}: print nothing.
 \item \code{1} or \code{TRUE}: print only targets to build.
@@ -66,8 +62,6 @@ You can experiment with \code{\link[=predict_runtime]{predict_runtime()}}
 to help decide on an appropriate number of jobs.
 For details, visit
 \url{https://ropenscilabs.github.io/drake-manual/time.html}.}
-
-\item{sanitize_plan}{deprecated}
 
 \item{console_log_file}{character scalar,
 connection object (such as \code{stdout()}) or \code{NULL}.

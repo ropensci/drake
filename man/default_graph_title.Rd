@@ -4,10 +4,7 @@
 \alias{default_graph_title}
 \title{Return the default title for graph visualizations}
 \usage{
-default_graph_title(split_columns = FALSE)
-}
-\arguments{
-\item{split_columns}{deprecated}
+default_graph_title()
 }
 \value{
 A character scalar with the default graph title.

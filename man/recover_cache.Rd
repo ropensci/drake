@@ -7,9 +7,8 @@ or create a new one otherwise.}
 \usage{
 recover_cache(path = drake::default_cache_path(),
   hash_algorithm = NULL, short_hash_algo = NULL,
-  long_hash_algo = NULL, force = FALSE,
-  verbose = drake::default_verbose(), fetch_cache = NULL,
-  console_log_file = NULL)
+  long_hash_algo = NULL, force = FALSE, verbose = 1L,
+  fetch_cache = NULL, console_log_file = NULL)
 }
 \arguments{
 \item{path}{file path of the cache}
@@ -26,9 +25,6 @@ despite any back compatibility issues with the
 running version of drake.}
 
 \item{verbose}{logical or numeric, control printing to the console.
-Use \code{pkgconfig} to set the default value of \code{verbose}
-for your R session:
-for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 \itemize{
 \item \code{0} or \code{FALSE}: print nothing.
 \item \code{1} or \code{TRUE}: print only targets to build.

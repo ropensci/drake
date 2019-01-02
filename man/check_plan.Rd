@@ -6,7 +6,7 @@
 \usage{
 check_plan(plan = read_drake_plan(), targets = NULL,
   envir = parent.frame(), cache = drake::get_cache(verbose = verbose),
-  verbose = drake::default_verbose(), jobs = 1)
+  verbose = 1L, jobs = 1)
 }
 \arguments{
 \item{plan}{workflow plan data frame, possibly from
@@ -19,9 +19,6 @@ check_plan(plan = read_drake_plan(), targets = NULL,
 \item{cache}{optional drake cache. See \code{\link[=new_cache]{new_cache()}}.}
 
 \item{verbose}{logical or numeric, control printing to the console.
-Use \code{pkgconfig} to set the default value of \code{verbose}
-for your R session:
-for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 \itemize{
 \item \code{0} or \code{FALSE}: print nothing.
 \item \code{1} or \code{TRUE}: print only targets to build.

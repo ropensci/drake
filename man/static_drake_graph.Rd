@@ -32,8 +32,6 @@ no build times at all. See \code{\link[=build_times]{build_times()}} for details
 whether to skip the imports and only include the
 targets in the workflow plan.}
 
-\item{split_columns}{logical, deprecated.}
-
 \item{main}{character string, title of the graph}
 
 \item{from}{Optional collection of target/import names.

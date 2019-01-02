@@ -4,17 +4,13 @@
 \alias{short_hash}
 \title{Deprecated. \code{drake} now only uses one hash algorithm per cache.}
 \usage{
-short_hash(cache = drake::get_cache(verbose = verbose),
-  verbose = drake::default_verbose())
+short_hash(cache = drake::get_cache(verbose = verbose), verbose = 1L)
 }
 \arguments{
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} and \code{search} are ignored.}
 
 \item{verbose}{logical or numeric, control printing to the console.
-Use \code{pkgconfig} to set the default value of \code{verbose}
-for your R session:
-for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 \itemize{
 \item \code{0} or \code{FALSE}: print nothing.
 \item \code{1} or \code{TRUE}: print only targets to build.

@@ -7,16 +7,14 @@
 \usage{
 readd(target, character_only = FALSE, path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose =
-  verbose), namespace = NULL, verbose = drake::default_verbose(),
-  show_source = FALSE)
+  verbose), namespace = NULL, verbose = 1L, show_source = FALSE)
 
 loadd(..., list = character(0), imported_only = FALSE,
   path = getwd(), search = TRUE, cache = drake::get_cache(path =
   path, search = search, verbose = verbose), namespace = NULL,
-  envir = parent.frame(), jobs = 1,
-  verbose = drake::default_verbose(), deps = FALSE, lazy = "eager",
-  graph = NULL, replace = TRUE, show_source = FALSE,
-  tidyselect = TRUE)
+  envir = parent.frame(), jobs = 1, verbose = 1L, deps = FALSE,
+  lazy = "eager", graph = NULL, replace = TRUE,
+  show_source = FALSE, tidyselect = TRUE)
 }
 \arguments{
 \item{target}{If \code{character_only} is \code{TRUE}, then
@@ -45,9 +43,6 @@ If supplied, \code{path} and \code{search} are ignored.}
 name of the \code{storr} namespace to read from.}
 
 \item{verbose}{logical or numeric, control printing to the console.
-Use \code{pkgconfig} to set the default value of \code{verbose}
-for your R session:
-for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 \itemize{
 \item \code{0} or \code{FALSE}: print nothing.
 \item \code{1} or \code{TRUE}: print only targets to build.
