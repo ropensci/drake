@@ -181,11 +181,6 @@ test_with_dir("error handlers", {
   expect_false(tmp)
 })
 
-test_with_dir("error when file target names do not match actual filenames", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_warning(x <- drake_plan(y = 1, file_targets = TRUE))
-})
-
 test_with_dir("clean a nonexistent cache", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   clean(list = "no_cache")
