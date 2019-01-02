@@ -70,5 +70,8 @@ standardize_code <- function(x){
   if (!length(x)){
     return(NA_character_)
   }
-  deparse(parse(text = as.character(x), keep.source = FALSE)[[1]])
+  if (is.character(x)) {
+    x <- parse(text = x, keep.source = FALSE)[[1]]
+  }
+  deparse(x)
 }
