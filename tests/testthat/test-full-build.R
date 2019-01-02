@@ -57,7 +57,7 @@ test_with_dir("scratch build with custom filesystem cache.", {
   expect_true(file.exists("input.rds"))
   expect_true(encode_path("input.rds") %in%
     config$cache$list())
-  clean(encode_path("input.rds"), cache = cache)
+  clean(list = encode_path("input.rds"), cache = cache)
   expect_true(file.exists("input.rds"))
   expect_false(encode_path("input.rds") %in%
     config$cache$list())

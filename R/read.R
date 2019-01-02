@@ -234,14 +234,14 @@ loadd <- function(
       graph <- read_drake_graph(cache = cache)
     }
     targets <- dependencies(targets = targets, config = list(graph = graph))
-    exists <- lightly_parallelize(
-      X = targets,
-      FUN = cache$exists,
-      jobs = jobs
-    )
-    exists <- unlist(exists)
-    targets <- targets[exists]
   }
+  exists <- lightly_parallelize(
+    X = targets,
+    FUN = cache$exists,
+    jobs = jobs
+  )
+  exists <- unlist(exists)
+  targets <- targets[exists]
   if (!replace) {
     targets <- setdiff(targets, ls(envir, all.names = TRUE))
   }
