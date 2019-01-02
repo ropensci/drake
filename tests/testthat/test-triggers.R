@@ -372,12 +372,12 @@ test_with_dir("trigger components react appropriately", {
       )
     )
   )
-  plan$command <- paste0("
+  plan$command <- paste0("{
     knitr_in(\"report.Rmd\")
     out <- f(readRDS(file_in(\"file.rds\")))
     saveRDS(out, file_out(\"out_", plan$target, ".rds\"))
     out
-  ")
+  }")
   config <- make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = FALSE, caching = caching, session_info = FALSE
