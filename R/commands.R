@@ -52,12 +52,13 @@ language_to_text <- function(x) {
   if (is.expression(x)) {
     if (length(x) > 1) {
       stop(
-        "Found malformed multi-line command:\n\n", x,
+        "Found malformed multi-line command:\n\n",
+        multiline_message(as.character(x)),
         "\n\nPlease enclose multi-line commands in curly braces, e.g.\n\n",
-        "{\n",
-        "  x <- 4\n",
-        "  sqrt(x)\n",
-        "}",
+        "  {\n",
+        "    x <- 4\n",
+        "    sqrt(x)\n",
+        "  }",
         call. = FALSE
       )
     }
