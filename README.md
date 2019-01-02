@@ -56,6 +56,7 @@ Development
 <a href="https://zenodo.org/badge/latestdoi/82609103"><img src="https://zenodo.org/badge/82609103.svg" alt="Zenodo"></a>
 </td>
 <td align="left">
+<a href="https://saythanks.io/to/wlandau"> <img src="https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg" alt="Zenodo"> </a>
 </td>
 <td align="left">
 <a href="http://www.repostatus.org/#active"><img src="http://www.repostatus.org/badges/latest/active.svg" alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed." /></a>
@@ -164,6 +165,15 @@ So far, we have just been setting the stage. Use `make()` to do the real work. T
 ``` r
 make(plan)
 #> target raw_data
+#> readxl works best with a newer version of the tibble package.
+#> You currently have tibble v1.4.2.
+#> Falling back to column name repair from tibble <= v1.4.2.
+#> Message displays once per session.
+#> Target raw_data messages:
+#>   readxl works best with a newer version of the tibble package.
+#> You currently have tibble v1.4.2.
+#> Falling back to column name repair from tibble <= v1.4.2.
+#> Message displays once per session.
 #> target data
 #> target fit
 #> target hist
