@@ -50,13 +50,6 @@ language_to_text <- function(x) {
   if (length(x) < 1) {
     return(character(0)) # nocov
   }
-  if (is.expression(x)) {
-    # TODO: remove the if () clause in some major version bump.
-    # The only reason it exists is to avoid invalidating old projects.
-    if (length(x) < 2) {
-      x <- x[[1]]
-    }
-  }
   if (is.expression(x) || is.language(x)) {
     for (attribute in c("srcref", "srcfile", "wholeSrcref")) {
       attr(x = x, which = attribute) <- NULL

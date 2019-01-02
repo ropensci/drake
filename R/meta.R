@@ -95,7 +95,11 @@ dependency_hash <- function(target, config) {
   deps <- sort(deps)
   out <- self_hash(deps, config)
   out <- paste(out, collapse = "")
-  digest::digest(out, algo = config$long_hash_algo, serialize = FALSE)
+  digest::digest(
+    out,
+    algo = config$cache$driver$hash_algorithm,
+    serialize = FALSE
+  )
 }
 
 input_file_hash <- function(
@@ -113,7 +117,11 @@ input_file_hash <- function(
     size_cutoff = size_cutoff
   )
   out <- paste(out, collapse = "")
-  digest::digest(out, algo = config$long_hash_algo, serialize = FALSE)
+  digest::digest(
+    out,
+    algo = config$cache$driver$hash_algorithm,
+    serialize = FALSE
+  )
 }
 
 output_file_hash <- function(
@@ -131,7 +139,11 @@ output_file_hash <- function(
     size_cutoff = size_cutoff
   )
   out <- paste(out, collapse = "")
-  digest::digest(out, algo = config$long_hash_algo, serialize = FALSE)
+  digest::digest(
+    out,
+    algo = config$cache$driver$hash_algorithm,
+    serialize = FALSE
+  )
 }
 
 self_hash <- Vectorize(function(target, config) {
@@ -153,7 +165,7 @@ rehash_file <- function(target, config) {
   }
   digest::digest(
     object = file,
-    algo = config$long_hash_algo,
+    algo = config$cache$driver$hash_algorithm,
     file = TRUE,
     serialize = FALSE
   )

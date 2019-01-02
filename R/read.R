@@ -86,7 +86,7 @@ readd <- function(
     )
   }
   cache$get(
-    standardize_key(target), # TODO: remove for version 7.0.0
+    standardize_key(target),
     namespace = namespace,
     use_cache = TRUE
   )
@@ -485,8 +485,6 @@ read_drake_plan <- function(
   }
 }
 
-# TODO: the other read_drake_*() functions should be as minimal
-# as this one and probably not exported.
 read_drake_layout <- function(cache){
   if (cache$exists(key = "layout", namespace = "config")) {
     cache$get(

@@ -176,41 +176,12 @@ drake_plan <- function(
     command = commands
   )
   from_dots <- plan$target %in% names(commands_dots)
-  if (length(file_targets) || identical(strings_in_dots, "filenames")) {
+  if (length(file_targets) || length(strings_in_dots)) {
     warning(
-      "Use the file_in(), file_out(), and knitr_in() functions ",
-      "to work with files in your commands, and pass ",
-      "`strings_in_dots = \"literals\"`. ",
-      "See `?drake_plan` for examples. ",
-      "The `file_targets` argument is deprecated. ",
-      "Worry about single-quotes no more!"
+      "Arguments `file_targets` and `strings_in_dots` ",
+      "of `drake_plan()` are deprecated.",
+      call. = FALSE
     )
-  }
-  if (identical(file_targets, TRUE)) {
-    plan$target <- drake::drake_quotes(plan$target, single = TRUE)
-  }
-
-  # TODO: leave double-quoted strings alone when we're ready to
-  # deprecate single-quoting in the file API.
-  # Currently, to totally take advantage of the new file API,
-  # users need to set strings_in_dots to "literals" every time.
-  from_dots_with_quotes <- grep("\"", plan$command[from_dots])
-  if (length(from_dots_with_quotes)) {
-    if (!length(strings_in_dots)) {
-      warning(
-        "Converting double-quotes to single-quotes because ",
-        "the `strings_in_dots` argument is missing. ",
-        "Use the file_in(), file_out(), and knitr_in() functions ",
-        "to work with files in your commands. To remove this warning, ",
-        "either call `drake_plan()` with `strings_in_dots = \"literals\"` ",
-        "or use ",
-        "`pkgconfig::set_config(\"drake::strings_in_dots\" = \"literals\")`.",
-        call. = FALSE
-      )
-    }
-    if (!length(strings_in_dots) || identical(strings_in_dots, "filenames")) {
-      plan$command[from_dots] <- gsub("\"", "'", plan$command[from_dots])
-    }
   }
   plan <- parse_custom_plan_columns(plan)
   sanitize_plan(plan)
