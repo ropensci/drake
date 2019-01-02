@@ -38,18 +38,11 @@ drake_quotes <- function(x = NULL, single = FALSE) {
 #'   or trailing escaped quotes around
 #'   the elements.
 #' @param x character vector
-#' @param deep deprecated logical.
 #' @examples
 #' x <- "'abcd'"
 #' # Remove the literal quotes around x.
 #' drake_unquote(x) # "abcd"
-drake_unquote <- function(x = NULL, deep = FALSE) {
-  if (deep) {
-    warning(
-      "The `deep` argument to `drake_unquote()` is deprecated",
-      call. = FALSE
-    )
-  }
+drake_unquote <- function(x = NULL) {
   gsub(pattern = quotes_regex, replacement = "\\1\\2", x = x)
 }
 

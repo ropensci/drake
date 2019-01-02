@@ -21,7 +21,6 @@ available_hash_algos <- function() {
 #' @keywords internal
 #' @return An `igraph` object.
 #' @inheritParams drake_config
-#' @param sanitize_plan deprecated
 #' @examples
 #' # See ?drake_config for examples.
 build_drake_graph <- function(
@@ -30,7 +29,6 @@ build_drake_graph <- function(
   envir = parent.frame(),
   verbose = 1L,
   jobs = 1,
-  sanitize_plan = FALSE,
   console_log_file = NULL,
   trigger = drake::trigger(),
   cache = NULL

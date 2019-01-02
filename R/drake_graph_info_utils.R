@@ -116,10 +116,9 @@ configure_nodes <- function(config) {
 #' @export
 #' @keywords internal
 #' @return A character scalar with the default graph title.
-#' @param split_columns deprecated
 #' @examples
 #' default_graph_title()
-default_graph_title <- function(split_columns = FALSE) {
+default_graph_title <- function() {
   "Dependency graph"
 }
 

@@ -57,8 +57,6 @@
 #' @param skip_targets logical, whether to skip building the targets
 #'   in `plan` and just import objects and files.
 #'
-#' @param imports_only deprecated. Use `skip_targets` instead.
-#'
 #' @param parallelism character, type of parallelism to use.
 #'   To list the options, call [parallelism_choices()].
 #'   For detailed explanations, see the
@@ -480,7 +478,6 @@ drake_config <- function(
   caching = c("master", "worker"),
   keep_going = FALSE,
   session = NULL,
-  imports_only = NULL,
   pruning_strategy = NULL,
   makefile_path = "Makefile",
   console_log_file = NULL,
@@ -496,12 +493,6 @@ drake_config <- function(
   force(envir)
   unlink(console_log_file)
   deprecate_fetch_cache(fetch_cache)
-  if (!is.null(imports_only)) {
-    warning(
-      "Argument `imports_only` is deprecated. Use `skip_targets` instead.",
-      call. = FALSE
-    ) # 2018-05-04 # nolint
-  }
   if (!is.null(hook)) {
     warning(
       "Argument `hook` is deprecated.",
