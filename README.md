@@ -139,8 +139,7 @@ and plan what you are going to do.
 plan <- drake_plan(
   raw_data = readxl::read_excel(file_in("raw_data.xlsx")),
   data = raw_data %>%
-    mutate(Species = forcats::fct_inorder(Species)) %>%
-    select(-X__1),
+    mutate(Species = forcats::fct_inorder(Species)),
   hist = create_plot(data),
   fit = lm(Sepal.Width ~ Petal.Width + Species, data),
   report = rmarkdown::render(
@@ -154,7 +153,7 @@ plan
 #>   target   command                                                         
 #>   <chr>    <chr>                                                           
 #> 1 raw_data "readxl::read_excel(file_in(\"raw_data.xlsx\"))"                
-#> 2 data     "raw_data %>% mutate(Species = forcats::fct_inorder(Species)) %…
+#> 2 data     raw_data %>% mutate(Species = forcats::fct_inorder(Species))    
 #> 3 hist     create_plot(data)                                               
 #> 4 fit      lm(Sepal.Width ~ Petal.Width + Species, data)                   
 #> 5 report   "rmarkdown::render(knitr_in(\"report.Rmd\"), output_file = file…
@@ -165,15 +164,11 @@ So far, we have just been setting the stage. Use `make()` to do the real work. T
 ``` r
 make(plan)
 #> target raw_data
-#> readxl works best with a newer version of the tibble package.
-#> You currently have tibble v1.4.2.
-#> Falling back to column name repair from tibble <= v1.4.2.
-#> Message displays once per session.
+#> New names:
+#> * `` -> `..1`
 #> Target raw_data messages:
-#>   readxl works best with a newer version of the tibble package.
-#> You currently have tibble v1.4.2.
-#> Falling back to column name repair from tibble <= v1.4.2.
-#> Message displays once per session.
+#>   New names:
+#> * `` -> `..1`
 #> target data
 #> target fit
 #> target hist
@@ -184,15 +179,15 @@ Except for files like `report.html`, your output is stored in a hidden `.drake/`
 
 ``` r
 readd(data) # See also loadd().
-#> # A tibble: 150 x 5
-#>   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
-#>          <dbl>       <dbl>        <dbl>       <dbl> <fct>  
-#> 1          5.1         3.5          1.4         0.2 setosa 
-#> 2          4.9         3            1.4         0.2 setosa 
-#> 3          4.7         3.2          1.3         0.2 setosa 
-#> 4          4.6         3.1          1.5         0.2 setosa 
-#> 5          5           3.6          1.4         0.2 setosa 
-#> # ... with 145 more rows
+#> # A tibble: 150 x 6
+#>     ..1 Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+#>   <dbl>        <dbl>       <dbl>        <dbl>       <dbl> <fct>  
+#> 1     1          5.1         3.5          1.4         0.2 setosa 
+#> 2     2          4.9         3            1.4         0.2 setosa 
+#> 3     3          4.7         3.2          1.3         0.2 setosa 
+#> 4     4          4.6         3.1          1.5         0.2 setosa 
+#> 5     5          5           3.6          1.4         0.2 setosa 
+#> # … with 145 more rows
 ```
 
 You may look back on your work and see room for improvement, but it's all good! The whole point of `drake` is to help you go back and change things quickly and painlessly. For example, we forgot to give our histogram a bin width.
@@ -268,6 +263,11 @@ When it comes time to actually rerun the entire project, you have much more conf
 clean()       # Remove the original author's results.
 make(plan) # Independently re-create the results from the code and input data.
 #> target raw_data
+#> New names:
+#> * `` -> `..1`
+#> Target raw_data messages:
+#>   New names:
+#> * `` -> `..1`
 #> target data
 #> target fit
 #> target hist
