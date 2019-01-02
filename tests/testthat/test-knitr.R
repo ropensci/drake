@@ -99,11 +99,6 @@ test_with_dir("knitr_deps() works", {
   expect_equal(x, character(0))
   load_mtcars_example()
   w <- clean_dependency_list(deps_code("funct(knitr_in(report.Rmd))"))
-  old_strings_in_dots <- pkgconfig::get_config("drake::strings_in_dots")
-  on.exit(
-    pkgconfig::set_config("drake::strings_in_dots" = old_strings_in_dots)
-  )
-  pkgconfig::set_config("drake::strings_in_dots" = "filenames")
   x <- knitr_deps("report.Rmd")
   real_deps <- c(
     "small", "coef_regression2_small", "large"
