@@ -316,7 +316,7 @@ test_with_dir("case sensitivity", {
   )
 })
 
-test_with_dir("bad multipart command", {
+test_with_dir("bad multi-line command", {
    plan <- data.frame(
      target = "x",
      command = "knitr_in(\"report.Rmd\")
