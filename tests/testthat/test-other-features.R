@@ -55,7 +55,8 @@ test_with_dir("drake_build works as expected", {
     target = "a", character_only = TRUE, config = con)
   x <- cached()
   expect_equal(x, "a")
-  o <- make(pl, envir = e)
+  make(pl, envir = e)
+  o <- drake_config(pl, envir = e)
   expect_equal(justbuilt(o), "b")
 
   # Can run without config
@@ -256,14 +257,20 @@ test_with_dir("make(..., skip_imports = TRUE) works", {
   con <- dbug()
   verbose <- max(con$jobs) < 2 &&
     targets_setting(con$parallelism) == "parLapply"
-  suppressMessages(
-    con <- make(
+  suppressMessages({
+    make(
       con$plan, parallelism = con$parallelism,
       envir = con$envir, jobs = con$jobs, verbose = verbose,
       skip_imports = TRUE,
       session_info = FALSE
     )
-  )
+    con <- drake_config(
+      con$plan, parallelism = con$parallelism,
+      envir = con$envir, jobs = con$jobs, verbose = verbose,
+      skip_imports = TRUE,
+      session_info = FALSE
+    )
+  })
   expect_equal(
     sort(cached()),
     sort(display_keys(
@@ -275,13 +282,18 @@ test_with_dir("make(..., skip_imports = TRUE) works", {
   # skip_imports = TRUE should be up to date.
   make(con$plan, verbose = FALSE, envir = con$envir, session_info = FALSE)
   clean(list = con$plan$target, verbose = FALSE)
-  suppressMessages(
-    con <- make(
+  suppressMessages({
+    make(
       con$plan, parallelism = con$parallelism,
       envir = con$envir, jobs = con$jobs, verbose = verbose,
       skip_imports = TRUE, session_info = FALSE
     )
-  )
+    con <- drake_config(
+      con$plan, parallelism = con$parallelism,
+      envir = con$envir, jobs = con$jobs, verbose = verbose,
+      skip_imports = TRUE, session_info = FALSE
+    )
+  })
   out <- outdated(con)
   expect_equal(out, character(0))
 })

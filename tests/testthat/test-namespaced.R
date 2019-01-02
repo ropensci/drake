@@ -59,7 +59,15 @@ test_with_dir("namespaced drake_plan works", {
     base:::c(x, 1)
   }
   x <- drake_plan(a = base::list(f(1)))
-  config <- make(
+  make(
+    x,
+    envir = envir,
+    jobs = scenarios$jobs,
+    parallelism = scenarios$parallelism,
+    verbose = FALSE,
+    session_info = FALSE
+  )
+  config <- drake_config(
     x,
     envir = envir,
     jobs = scenarios$jobs,
