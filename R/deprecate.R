@@ -894,4 +894,3 @@ drake_strings <- function(...) {
   names(out) <- keys
   out
 }
-

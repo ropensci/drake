@@ -47,20 +47,20 @@ recurse_ignore <- function(x) {
 
 language_to_text <- function(x) {
   if (length(x) < 1) {
-    return(character(0)) 
-  }
-  if (length(x) > 1) {
-    stop(
-      "Found malformed multi-line command:\n\n", x,
-      "\n\nPlease enclose multi-line commands in curly braces, e.g.\n\n",
-      "{\n",
-      "  x <- 4\n",
-      "  sqrt(x)\n",
-      "}",
-      call. = FALSE 
-    )
+    return(character(0))
   }
   if (is.expression(x)) {
+    if (length(x) > 1) {
+      stop(
+        "Found malformed multi-line command:\n\n", x,
+        "\n\nPlease enclose multi-line commands in curly braces, e.g.\n\n",
+        "{\n",
+        "  x <- 4\n",
+        "  sqrt(x)\n",
+        "}",
+        call. = FALSE
+      )
+    }
     x <- x[[1]]
   }
   if (is.language(x)) {
