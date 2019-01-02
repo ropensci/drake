@@ -19,7 +19,7 @@ test_with_dir("codeless knitr report", {
     list(knitr_in = file)
   )
   expect_silent(
-    tmp <- make(
+    make(
       drake_plan(x = knitr_in("codeless.Rmd")),
       session_info = FALSE,
       cache = storr::storr_environment(),
@@ -44,7 +44,7 @@ test_with_dir("bad knitr report", {
   expect_true(file.exists(file))
   expect_warning(deps_code(quote(knitr_in("bad.Rmd"))))
   expect_warning(
-    tmp <- make(
+    make(
       drake_plan(
         x = knitr_in("bad.Rmd")
       ),
