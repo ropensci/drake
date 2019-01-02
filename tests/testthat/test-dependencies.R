@@ -327,16 +327,17 @@ test_with_dir("Can standardize commands", {
   )
   expect_identical(
     standardize_command("y=sqrt(x=1)"),
-    standardize_command("y <- sqrt(x = 1)")
+    standardize_command("y = sqrt(x = 1)")
   )
   expect_identical(
-    standardize_command("abcdefg = hijklmnop = qrstuvwxyz\n\n"),
-    standardize_command("abcdefg <- hijklmnop <- qrstuvwxyz")
+    standardize_command("abcdefg = hijklmnop <- qrstuvwxyz\n\n"),
+    standardize_command("abcdefg = hijklmnop <- qrstuvwxyz")
   )
   a <- standardize_command("z = {f('#') # comment
-    x <- 5
+    x = 5
 
-    y <- 'test'
+    y <-
+      'test'
     z <- 4
 
     x2 <- 'test2'
@@ -345,14 +346,14 @@ test_with_dir("Can standardize commands", {
   x = 5
 
   y <- 'test'
-  z = 4
+  z <- 4
   'test2' -> x2
   }")
   c <- standardize_command("z = {f('#') # comment X
   x = 5
 
   y <- 'test3'
-    z = 4
+  z <- 4
   'test2' -> x2
   }")
   expect_identical(a, b)

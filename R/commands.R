@@ -70,15 +70,5 @@ standardize_code <- function(x){
   if (!length(x)){
     return(as.character(NA))
   }
-  x <- deparse(parse(text = as.character(x), keep.source = FALSE)[[1]])
-  x <- paste(x, collapse = "\n")
-  expr <- parse(text = x, keep.source = TRUE)
-  info <- utils::getParseData(expr, includeText = TRUE)
-  change <- info$token == "LEFT_ASSIGN"
-  info$text[change] <- "="
-  info$token[change] <- "EQ_ASSIGN"
-  out <- info[info$token != "COMMENT" & info$terminal, c("token", "text")]
-  out <- lapply(out, FUN = paste, collapse = " ")
-  out <- paste(out, collapse = " >> ")
-  digest::digest(out, algo = "sha256", serialize = FALSE)
+  deparse(parse(text = as.character(x), keep.source = FALSE)[[1]])
 }
