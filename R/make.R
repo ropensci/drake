@@ -217,7 +217,7 @@ make_with_config <- function(config = drake::read_drake_config()) {
     jobs = config$jobs
   )
   conclude_session(config = config)
-  return(invisible(config))
+  invisible()
 }
 
 make_with_schedules <- function(config) {
