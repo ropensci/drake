@@ -7,8 +7,7 @@ test_with_dir("clean() removes the correct files", {
   plan <- drake_plan(
     a = file_in("a.txt"),
     b = knitr_in("b.txt"),
-    d = writeLines("123", file_out("d.rds")),
-    strings_in_dots = "literals"
+    d = writeLines("123", file_out("d.rds"))
   )
   config <- drake_config(plan, session_info = FALSE)
   make_imports(config)

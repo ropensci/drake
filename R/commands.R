@@ -45,12 +45,14 @@ recurse_ignore <- function(x) {
   x
 }
 
-# We won't need this function after #563.
 language_to_text <- function(x) {
   if (length(x) < 1) {
-    return(character(0)) # nocov
+    return(character(0)) 
   }
-  if (is.expression(x) || is.language(x)) {
+  if (is.expression(x)) {
+    x <- x[[1]]
+  }
+  if (is.language(x)) {
     for (attribute in c("srcref", "srcfile", "wholeSrcref")) {
       attr(x = x, which = attribute) <- NULL
     }
@@ -61,7 +63,7 @@ language_to_text <- function(x) {
 
 standardize_code <- function(x){
   if (!length(x)){
-    return(NA_character_)
+    return("")
   }
   if (is.character(x)) {
     x <- parse(text = x, keep.source = FALSE)[[1]]

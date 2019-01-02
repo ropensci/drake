@@ -2,7 +2,7 @@ drake_context("dependencies")
 
 # TODO: move other tests relating to command standardization here.
 test_with_dir("standardize empty code", {
-  expect_true(is.na(standardize_code(NULL)))
+  expect_equal(standardize_code(NULL), "")
 })
 
 test_with_dir("unparsable commands are handled correctly", {
@@ -114,8 +114,7 @@ test_with_dir("deps_code() and deps_target()", {
     my_target = x + readRDS(file_in("tracked_input_file.rds")),
     return_value = f(x, y, g(z + w)),
     botched = read.csv(file_in(nothing)),
-    meta = read.table(file_in("file_in")),
-    strings_in_dots = "literals"
+    meta = read.table(file_in("file_in"))
   )
   config <- drake_config(
     my_plan,
@@ -310,6 +309,7 @@ test_with_dir("ignore() works on its own", {
 
 test_with_dir("Can standardize commands", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  expect_equal(standardize_command(""), "")
   x <- parse(text = c("f(x +2) + 2", "!!y"))
   y <- standardize_command(x[[1]])
   x <- parse(text = "f(x +2) + 2")
