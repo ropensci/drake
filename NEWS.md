@@ -1,3 +1,10 @@
+# Version 7.0.0
+
+## Breaking changes
+
+- Set the default value of `lock_envir` to `TRUE` in `make()` and `drake_config()`. So `make()` will automatically quit in error if the act of building a target tries to change upstream dependencies.
+
+
 # Version 6.2.1.9000
 
 ## Breaking changes
