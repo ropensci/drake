@@ -888,3 +888,46 @@ drake_strings <- function(...) {
   names(out) <- keys
   out
 }
+
+
+#' @title Deprecated. List all the built targets (non-imports) in the cache.
+#' @description Targets are listed in the workflow plan
+#' data frame (see [drake_plan()].
+#' @seealso [cached()], [loadd()], [imported()]
+#' @export
+#' @return Character vector naming the built targets in the cache.
+#' @inheritParams cached
+#' @param jobs number of jobs/workers for parallel processing
+#' @examples
+#' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
+#' load_mtcars_example() # Load drake's canonical example.
+#' make(my_plan) # Run the project, build all the targets.
+#' built() # List all the cached targets (built objects and files).
+#' # For file targets, only the fingerprints/hashes are stored.
+#' })
+#' }
+built <- function(
+  path = getwd(), search = TRUE,
+  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  verbose = 1L,
+  jobs = 1
+) {
+  .Deprecated(
+    "built",
+    package = "drake",
+    msg = paste("built() is deprecated.")
+  )
+  if (is.null(cache)) {
+    return(character(0))
+  }
+  out <- cache$list(namespace = cache$default_namespace)
+  out <- parallel_filter(
+    out,
+    f = function(target) {
+      !is_imported_cache(target = target, cache = cache)
+    },
+    jobs = jobs
+  )
+  display_keys(out)
+}

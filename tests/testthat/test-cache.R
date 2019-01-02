@@ -243,8 +243,7 @@ test_with_dir("cache functions work", {
   }
   setwd(scratch) # nolint
   owd <- getwd()
-  expect_equal(character(0), cached(search = FALSE), imported(search = FALSE),
-    built(search = FALSE))
+  expect_equal(character(0), cached(search = FALSE), imported(search = FALSE))
   expect_equal(nrow(build_times(search = FALSE)), 0)
   expect_equal(progress(search = FALSE), character(0))
   expect_equal(in_progress(search = FALSE), character(0))
@@ -321,7 +320,7 @@ test_with_dir("cache functions work", {
   expect_equal(read_drake_seed(search = FALSE), config$seed)
   expect_true(inherits(read_drake_graph(search = FALSE), "igraph"))
 
-  # imported , built, cached, diagnose, rescue
+  # imported, cached, diagnose, rescue
   expect_true(length(diagnose(search = FALSE)) > length(config$plan$target))
   expect_equal(
     sort(imported(files_only = FALSE, search = FALSE)),
@@ -330,17 +329,6 @@ test_with_dir("cache functions work", {
   expect_equal(
     imported(files_only = TRUE, search = FALSE),
     display_keys(encode_path("input.rds"))
-  )
-  expect_equal(
-    sort(built(search = FALSE)),
-    sort(display_keys(c(config$plan$target, out_files)))
-  )
-  twopiece <- sort(c(built(search = FALSE), imported(search = FALSE,
-    files_only = FALSE)))
-  expect_equal(
-    sort(cached(search = FALSE)),
-    sort(display_keys(all)),
-    sort(display_keys(twopiece))
   )
   expect_equal(
     sort(cached(search = FALSE, no_imported_objects = TRUE)),
@@ -379,7 +367,7 @@ test_with_dir("cache functions work", {
   expect_true(is.numeric(readd(a, search = FALSE)))
 
   # load and read stuff
-  list <- intersect(c(imported(), built()), ls(envir = envir))
+  list <- intersect(imported(), ls(envir = envir))
   rm(list = list, envir = envir)
   expect_error(h(1))
   expect_true(is.numeric(readd(final, search = FALSE)))
@@ -431,7 +419,7 @@ test_with_dir("cache functions work", {
     f = "finished", h = "finished", final = "finished")))
   expect_equal(in_progress(search = TRUE, path = s), character(0))
 
-  # imported, built, cached, diagnose
+  # imported, cached, diagnose
   expect_equal(diagnose(search = TRUE), character(0))
   expect_equal(
     sort(imported(files_only = FALSE, search = TRUE, path = s)),
@@ -440,19 +428,6 @@ test_with_dir("cache functions work", {
   expect_equal(
     imported(files_only = TRUE, search = TRUE, path = s),
     display_keys(encode_path("input.rds"))
-  )
-  expect_equal(
-    sort(built(search = TRUE, path = s)),
-    sort(display_keys(c(config$plan$target, out_files)))
-  )
-  twopiece <- sort(c(
-    built(path = s, search = TRUE),
-    imported(files_only = FALSE, path = s, search = TRUE))
-  )
-  expect_equal(
-    sort(cached(path = s, search = TRUE)),
-    sort(display_keys(all)),
-    sort(display_keys(twopiece))
   )
   expect_equal(
     sort(cached(no_imported_objects = TRUE, path = s, search = T)),

@@ -28,6 +28,34 @@ test_with_dir("deprecation: cache functions", {
   expect_warning(default_long_hash_algo(cache))
   expect_warning(available_hash_algos())
   expect_warning(new_cache(short_hash_algo = "123", long_hash_algo = "456"))
+  
+  # built
+  expect_equal(
+    sort(built(search = FALSE)),
+    sort(display_keys(c(config$plan$target, out_files)))
+  )
+  twopiece <- sort(c(built(search = FALSE), imported(search = FALSE,
+                                                     files_only = FALSE)))
+  expect_equal(
+    sort(cached(search = FALSE)),
+    sort(display_keys(all)),
+    sort(display_keys(twopiece))
+  )
+  
+  expect_equal(
+    sort(built(search = TRUE, path = s)),
+    sort(display_keys(c(config$plan$target, out_files)))
+  )
+  twopiece <- sort(c(
+    built(path = s, search = TRUE),
+    imported(files_only = FALSE, path = s, search = TRUE))
+  )
+  expect_equal(
+    sort(cached(path = s, search = TRUE)),
+    sort(display_keys(all)),
+    sort(display_keys(twopiece))
+  )
+  
 })
 
 test_with_dir("arg deprecation", {
