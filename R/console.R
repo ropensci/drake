@@ -98,7 +98,7 @@ console_up_to_date <- function(config) {
     return(invisible())
   }
   any_attempted <- get_attempt_flag(config = config)
-  custom_triggers <- "trigger" %in% colnames(plan) ||
+  custom_triggers <- "trigger" %in% colnames(config$plan) ||
     !identical(config$trigger, trigger())
   if (!any_attempted && !custom_triggers && !config$skip_imports) {
     console_all_up_to_date(config = config)
