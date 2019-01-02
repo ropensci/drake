@@ -313,7 +313,9 @@ test_with_dir("case sensitivity", {
     B = A(),
     c = 15
   )
-  A <- function(){}
+  A <- function(){
+    1 + 1
+  }
   expect_warning(
     config <- drake_config(
       plan,
