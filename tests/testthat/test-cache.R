@@ -556,7 +556,7 @@ test_with_dir("master caching, environment caches and parallelism", {
   cache <- storr::storr_environment() # not thread-safe
   make(
     my_plan,
-    cache = cache, 
+    cache = cache,
     caching = "master",
     parallelism = "future",
     jobs = 2

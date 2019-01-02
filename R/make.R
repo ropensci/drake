@@ -175,6 +175,7 @@ make <- function(
     )
   }
   make_with_config(config = config)
+  invisible()
 }
 
 #' @title Run [make()],
@@ -236,6 +237,7 @@ make_with_schedules <- function(config) {
   } else {
     make_imports_targets(config = config)
   }
+  invisible()
 }
 
 #' @title Just make the imports.
@@ -279,7 +281,7 @@ make_imports <- function(config = drake::read_drake_config()) {
   config$jobs <- imports_setting(config$jobs)
   config$parallelism <- imports_setting(config$parallelism)
   run_parallel_backend(config = config)
-  invisible(config)
+  invisible()
 }
 
 #' @title Just build the targets.
@@ -335,7 +337,7 @@ make_targets <- function(config = drake::read_drake_config()) {
   config$parallelism <- targets_setting(config$parallelism)
   run_parallel_backend(config = config)
   console_up_to_date(config = config)
-  invisible(config)
+  invisible()
 }
 
 make_imports_targets <- function(config) {
@@ -344,5 +346,5 @@ make_imports_targets <- function(config) {
   config$jobs <- max(config$jobs)
   run_parallel_backend(config = config)
   console_up_to_date(config = config)
-  invisible(config)
+  invisible()
 }

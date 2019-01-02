@@ -128,7 +128,7 @@ test_with_dir("solitary codetools globals tests", {
   f <- function(x) {z <- 1; x + y + z} # nolint
   expect_equal(sort(analyze_code(f)$globals), "y")
   expect_equal(analyze_code(function() Quote(x))$globals, "Quote")
-  f <- function (f, x, y) {
+  f <- function(f, x, y) {
     local <- f
     local(x <- y)
     x

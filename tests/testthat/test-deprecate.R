@@ -163,7 +163,7 @@ test_with_dir("old trigger interface", {
         plan,
         session_info = FALSE,
         cache = cache
-      ) 
+      )
     )
     trigger <- diagnose(x, cache = config$cache)$trigger
     expect_true(is.list(trigger))
