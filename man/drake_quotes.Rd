@@ -19,10 +19,7 @@ Character vector with quotes around it.
 Deprecated on 2019-01-01
 }
 \examples{
-# Single-quote this string.
-drake_quotes("abcd", single = TRUE) # "'abcd'"
-# Double-quote this string.
-drake_quotes("abcd") # "\\"abcd\\""
+# deprecated
 }
 \seealso{
 \code{\link[=drake_unquote]{drake_unquote()}}, \code{\link[=drake_strings]{drake_strings()}}

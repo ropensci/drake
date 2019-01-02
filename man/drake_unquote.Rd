@@ -19,9 +19,7 @@ the elements.
 Deprecated on 2019-01-01
 }
 \examples{
-x <- "'abcd'"
-# Remove the literal quotes around x.
-drake_unquote(x) # "abcd"
+# deprecated
 }
 \seealso{
 \code{\link[=drake_quotes]{drake_quotes()}}, \code{\link[=drake_strings]{drake_strings()}}

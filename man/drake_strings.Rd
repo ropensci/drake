@@ -16,8 +16,7 @@ A character vector.
 Deprecated on 2019-01-01
 }
 \examples{
-# Turn symbols into strings.
-drake_strings(a, b, c, d) # [1] "a" "b" "c" "d"
+# deprecated
 }
 \seealso{
 \code{\link[=drake_quotes]{drake_quotes()}}, \code{\link[=drake_unquote]{drake_unquote()}}
