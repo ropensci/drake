@@ -79,13 +79,15 @@ test_with_dir("responses to imported objects and functions", {
 test_with_dir("add a new import", {
   plan <- drake_plan(a = as.integer(sqrt(4)))
   cache <- storr::storr_environment()
-  config <- make(plan, cache = cache, session_info = FALSE)
+  make(plan, cache = cache, session_info = FALSE)
+  config <- drake_config(plan, cache = cache, session_info = FALSE)
   expect_equal(justbuilt(config), "a")
   expect_equal(readd(a, cache = cache), 2L)
   sqrt <- function(x) {
     x + 1L
   }
-  config <- make(plan, cache = cache, session_info = FALSE)
+  make(plan, cache = cache, session_info = FALSE)
+  config <- drake_config(plan, cache = cache, session_info = FALSE)
   expect_equal(justbuilt(config), "a")
   expect_equal(readd(a, cache = cache), 5L)
 })
