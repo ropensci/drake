@@ -305,7 +305,6 @@ test_with_dir("cache functions work", {
   expect_true(is.list(drake_get_session_info(search = FALSE)))
   expect_true(all(progress(search = FALSE) == "finished"))
   expect_equal(in_progress(search = FALSE), character(0))
-  expect_warning(tmp <- progress(imported_files_only = TRUE))
   expect_equal(sort(names(progress(search = FALSE))), all)
   expect_equal(
     sort(names(progress(search = FALSE, no_imported_objects = TRUE))),
