@@ -6,7 +6,7 @@
 \usage{
 imported(files_only = FALSE, path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose =
-  verbose), verbose = drake::default_verbose(), jobs = 1)
+  verbose), verbose = 1L, jobs = 1)
 }
 \arguments{
 \item{files_only}{logical, whether to show imported files only
@@ -28,9 +28,6 @@ Ignored if a \code{cache} is supplied.}
 If supplied, \code{path} and \code{search} are ignored.}
 
 \item{verbose}{logical or numeric, control printing to the console.
-Use \code{pkgconfig} to set the default value of \code{verbose}
-for your R session:
-for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 \itemize{
 \item \code{0} or \code{FALSE}: print nothing.
 \item \code{1} or \code{TRUE}: print only targets to build.

@@ -48,7 +48,7 @@ time_stamp <- function(target, config) {
   if (!length(target)) {
     return(character(0))
   }
-  safe_encode(x = target, hash_algo = config$short_hash_algo)
+  safe_encode(x = target, hash_algo = config$cache$driver$hash_algorithm)
 }
 
 time_stamp_file <- function(target, config) {

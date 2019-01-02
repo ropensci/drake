@@ -1,13 +1,3 @@
-extract_filenames <- function(command) {
-  if (!safe_grepl("'", command, fixed = TRUE)) {
-    return(character(0))
-  }
-  splits <- paste(" ", command, " ")
-  splits <- strsplit(splits, split = "'")
-  splits <- unlist(splits)
-  splits[seq(from = 2, to = length(splits), by = 2)]
-}
-
 # Get the command ready for tidy eval prep
 # and then pure eval (no side effects).
 preprocess_command <- function(command, config) {
@@ -45,19 +35,16 @@ recurse_ignore <- function(x) {
   x
 }
 
-# We won't need this function after #563.
 language_to_text <- function(x) {
   if (length(x) < 1) {
-    return(character(0)) # nocov
+    return(character(0))
   }
   if (is.expression(x)) {
-    # TODO: remove the if () clause in some major version bump.
-    # The only reason it exists is to avoid invalidating old projects.
     if (length(x) < 2) {
       x <- x[[1]]
     }
   }
-  if (is.expression(x) || is.language(x)) {
+  if (is.language(x)) {
     for (attribute in c("srcref", "srcfile", "wholeSrcref")) {
       attr(x = x, which = attribute) <- NULL
     }
@@ -68,7 +55,7 @@ language_to_text <- function(x) {
 
 standardize_code <- function(x){
   if (!length(x)){
-    return(NA_character_)
+    return("")
   }
   if (is.character(x)) {
     x <- parse(text = x, keep.source = FALSE)[[1]]

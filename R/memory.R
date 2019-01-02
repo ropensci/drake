@@ -51,12 +51,6 @@ manage_memory <- function(targets, config, downstream = NULL, jobs = 1) {
   if (!identical(config$memory_strategy, "speed")) {
     keep_these <- c(target_deps, downstream_deps)
     discard_these <- setdiff(x = config$plan$target, y = keep_these)
-    # TODO: remove for version 7.0.0
-    discard_these <- parallel_filter(
-      discard_these,
-      f = not_encoded_path,
-      jobs = jobs
-    )
     discard_these <- intersect(discard_these, already_loaded)
     if (length(discard_these)) {
       console_many_targets(
@@ -172,8 +166,7 @@ exclude_unloadable <- function(targets, config, jobs = jobs) {
 #'     rm(large_data_1, large_data_2, envir = drake_envir())
 #'     print(ls(envir = drake_envir()))
 #'     mean(subset)
-#'   },
-#'   strings_in_dots = "literals"
+#'   }
 #' )
 #' make(plan, cache = storr::storr_environment(), session_info = FALSE)
 drake_envir <- function() {

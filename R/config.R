@@ -46,10 +46,6 @@
 #'   then reproducibly tracked as dependencies.
 #'
 #' @param verbose logical or numeric, control printing to the console.
-#'   Use `pkgconfig` to set the default value of `verbose` 
-#'   for your R session:
-#'   for example, `pkgconfig::set_config("drake::verbose" = 2)`.
-#'
 #'   - `0` or `FALSE`: print nothing.
 #'   - `1` or `TRUE`: print only targets to build.
 #'   - `2`: also print checks and cache info.
@@ -60,8 +56,6 @@
 #'
 #' @param skip_targets logical, whether to skip building the targets
 #'   in `plan` and just import objects and files.
-#'
-#' @param imports_only deprecated. Use `skip_targets` instead.
 #'
 #' @param parallelism character, type of parallelism to use.
 #'   To list the options, call [parallelism_choices()].
@@ -450,7 +444,7 @@ drake_config <- function(
   plan = drake::read_drake_plan(),
   targets = NULL,
   envir = parent.frame(),
-  verbose = drake::default_verbose(),
+  verbose = 1L,
   hook = NULL,
   cache = drake::get_cache(
     verbose = verbose, console_log_file = console_log_file),
@@ -484,7 +478,6 @@ drake_config <- function(
   caching = c("master", "worker"),
   keep_going = FALSE,
   session = NULL,
-  imports_only = NULL,
   pruning_strategy = NULL,
   makefile_path = "Makefile",
   console_log_file = NULL,
@@ -500,12 +493,6 @@ drake_config <- function(
   force(envir)
   unlink(console_log_file)
   deprecate_fetch_cache(fetch_cache)
-  if (!is.null(imports_only)) {
-    warning(
-      "Argument `imports_only` is deprecated. Use `skip_targets` instead.",
-      call. = FALSE
-    ) # 2018-05-04 # nolint
-  }
   if (!is.null(hook)) {
     warning(
       "Argument `hook` is deprecated.",

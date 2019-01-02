@@ -43,11 +43,8 @@ sanitize_nodes <- function(nodes, choices) {
   unique(intersect(nodes, choices))
 }
 
-# TODO: get rid of the is_encoded_path() part in version 7.0.0
 repair_target_names <- function(x) {
-  index <- !is_quoted(x)
-  x[index] <- make.names(x[index], unique = FALSE)
-  x
+  make.names(x, unique = FALSE)
 }
 
 sanitize_cmd_type <- function(x) {

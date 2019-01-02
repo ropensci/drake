@@ -20,10 +20,7 @@ test_with_dir("codeless knitr report", {
   )
   expect_silent(
     tmp <- make(
-      drake_plan(
-        x = knitr_in("codeless.Rmd"),
-        strings_in_dots = "literals"
-      ),
+      drake_plan(x = knitr_in("codeless.Rmd")),
       session_info = FALSE,
       cache = storr::storr_environment(),
       verbose = FALSE
@@ -49,8 +46,7 @@ test_with_dir("bad knitr report", {
   expect_warning(
     tmp <- make(
       drake_plan(
-        x = knitr_in("bad.Rmd"),
-        strings_in_dots = "literals"
+        x = knitr_in("bad.Rmd")
       ),
       session_info = FALSE,
       cache = storr::storr_environment(),
@@ -66,15 +62,9 @@ test_with_dir("empty cases", {
   expect_silent(tmp <- analyze_knitr_file(NULL, NULL))
 })
 
-test_with_dir("unparsable pieces of commands are handled correctly", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  x <- "bluh$"
-  expect_error(parse(text = x))
-  expect_equal(find_knitr_doc(x), character(0))
-})
-
 test_with_dir("knitr_deps() works", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  expect_equal(knitr_deps(character(0)), list())
   files <- system.file(
     file.path("testing", "knitr", c("nested.Rmd", "test.Rmd")),
     package = "drake", mustWork = TRUE
@@ -87,10 +77,10 @@ test_with_dir("knitr_deps() works", {
   )))
   ans <- sort(c(
     "inline_dep", paste0("target", seq_len(18)),
-    drake_quotes(paste0("file", seq_len(6)), single = FALSE),
+    paste0("\"file", seq_len(6), "\""),
     "input.txt", "output.txt", "nested.Rmd", "nested"
   ))
-  out <- knitr_deps("'test.Rmd'")
+  out <- knitr_deps("test.Rmd")
   expect_equal(sort(clean_dependency_list(out)), ans)
   expect_false(file.exists("test.md"))
   expect_warning(x <- sort(clean_dependency_list(knitr_deps("report.Rmd"))))
@@ -99,69 +89,12 @@ test_with_dir("knitr_deps() works", {
   expect_equal(x, character(0))
   load_mtcars_example()
   w <- clean_dependency_list(deps_code("funct(knitr_in(report.Rmd))"))
-  old_strings_in_dots <- pkgconfig::get_config("drake::strings_in_dots")
-  on.exit(
-    pkgconfig::set_config("drake::strings_in_dots" = old_strings_in_dots)
-  )
-  pkgconfig::set_config("drake::strings_in_dots" = "filenames")
   x <- knitr_deps("report.Rmd")
   real_deps <- c(
     "small", "coef_regression2_small", "large"
   )
   expect_equal(sort(w), sort(c("funct")))
   expect_equal(sort(clean_dependency_list(x)), sort(real_deps))
-})
-
-test_with_dir("find_knitr_doc() works", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  false <- c(
-    "knit",
-    "knit()",
-    "dknit(4)",
-    "other(f)",
-    "knittles(f('file.Rmd'))",
-    "other::knit('file.Rmd')",
-    "drake:::knit('file.Rmd')",
-    "render",
-    "render()",
-    "rendermania(f('file.Rmd'))",
-    "other::render('file.Rmd')",
-    "drake:::render('file.Rmd')"
-  )
-  true <- list(
-    "knit('file.Rmd')",
-    "knitr::knit(input = 'file.Rmd')",
-    "knitr:::knit('file.Rmd')",
-    function(x) {
-      knit("file.Rmd")
-    },
-    "f(g(knit('file.Rmd', output = 'file.md', quiet = TRUE)))",
-    "f(g(knit(output = 'file.md', quiet = TRUE, input = 'file.Rmd') + 5))",
-    "f(g(knit(output = 'file.md', quiet = TRUE, 'file.Rmd') + 5))",
-    "render(input = 'file.Rmd')",
-    "rmarkdown::render('file.Rmd')",
-    "rmarkdown:::render('file.Rmd')",
-    function(x) {
-      render("file.Rmd")
-    },
-    "f(g(render('file.Rmd', output_file = 'file.md', quiet = TRUE)))",
-    "f(g(render(output_file = 'file.md', quiet = TRUE, input = 'file.Rmd') + 5))", # nolint
-    "f(g(render(output_file = 'file.md', quiet = TRUE, 'file.Rmd') + 5))"
-  )
-  for (cmd in false) {
-    expect_equal(find_knitr_doc(cmd), character(0))
-  }
-  for (cmd in true) {
-    expect_equal(find_knitr_doc(cmd), "file.Rmd")
-  }
-})
-
-test_with_dir("edge cases finding knitr docs", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_equal(find_knitr_doc("knit(a, b)"), "a")
-  expect_equal(find_knitr_doc("knit(quiet = TRUE)"), character(0))
-  expect_equal(
-    clean_dependency_list(deps_code("knit(quiet = TRUE)")), "knit")
 })
 
 test_with_dir("knitr file deps from commands and functions", {
@@ -175,17 +108,4 @@ test_with_dir("knitr file deps from commands and functions", {
     knit(x)
   }
   expect_equal(clean_dependency_list(deps_code(f)), "knit")
-})
-
-test_with_dir("misc knitr", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  f <- function()
-  expect_silent(o <- doc_of_function_call(knit))
-  f <- function(x) {
-    knitr::knit("file.Rmd")
-  }
-  doc_of_function_call(f)
-  expect_equal(doc_of_function_call(as.expression(1)), character(0))
-  expect_equal(doc_of_function_call(list(1, 2, 3)), "2")
-  expect_equal(find_knitr_doc(NULL), character(0))
 })

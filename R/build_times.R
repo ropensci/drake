@@ -39,7 +39,7 @@ build_times <- function(
   digits = 3,
   cache = get_cache(path = path, search = search, verbose = verbose),
   targets_only = FALSE,
-  verbose = drake::default_verbose(),
+  verbose = 1L,
   jobs = 1,
   type = c("build", "command"),
   pretty_keys = TRUE

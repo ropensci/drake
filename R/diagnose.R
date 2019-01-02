@@ -72,7 +72,7 @@ diagnose <- function(
   path = getwd(),
   search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = drake::default_verbose()
+  verbose = 1L
 ) {
   if (is.null(cache)) {
     return(character(0))

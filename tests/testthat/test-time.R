@@ -90,7 +90,6 @@ test_with_dir("runtime predictions", {
   )
   expect_true(p0 > 4e4 - 10 && p0 < 6e4 + 10)
   testrun(con)
-  expect_warning(predict_runtime(con, digits = 1))
   p1 <- as.numeric(predict_runtime(config = con, jobs = 1))
   p2 <- predict_runtime(
     config = con,

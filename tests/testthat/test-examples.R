@@ -132,8 +132,7 @@ test_with_dir("mtcars example works", {
     c = knitr::knit("nonfile"),
     d = rmarkdown::render("report.Rmd"), # nolint
     e = rmarkdown::render("report.md"), # nolint
-    f = rmarkdown::render("nonfile"),
-    strings_in_dots = "literals"
+    f = rmarkdown::render("nonfile")
   )
   suppressWarnings(con <- drake_config(plan = x))
   for (target in c("a")) {

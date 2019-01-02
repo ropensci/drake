@@ -19,8 +19,7 @@ download_plan <- drake_plan(
   data = target(
     command = download_data(),
     trigger = "always"
-  ),
-  strings_in_dots = "literals"
+  )
 )
 # But if the data don't change, the analyses don't need to change.
 analysis_plan <- drake_plan(

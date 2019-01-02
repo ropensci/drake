@@ -46,8 +46,6 @@
 #'   whether to skip the imports and only include the
 #'   targets in the workflow plan.
 #'
-#' @param split_columns logical, deprecated.
-#'
 #' @param font_size numeric, font size of the node labels in the graph
 #'
 #' @param build_times character string or logical.
@@ -133,7 +131,6 @@ drake_graph_info <- function(
   build_times = "build",
   digits = 3,
   targets_only = FALSE,
-  split_columns = NULL,
   font_size = 20,
   from_scratch = FALSE,
   make_imports = TRUE,
@@ -145,9 +142,6 @@ drake_graph_info <- function(
   assert_pkg("visNetwork")
   if (!length(V(config$graph)$name)) {
     return(null_graph())
-  }
-  if (!is.null(split_columns)) {
-    warning("Argument split_columns is deprecated.", call. = FALSE)
   }
   config$build_times <- resolve_build_times(build_times)
   config$digits <- digits
@@ -218,6 +212,6 @@ drake_graph_info <- function(
       full_legend = full_legend,
       font_size = font_size
     ),
-    default_title = default_graph_title(split_columns = split_columns)
+    default_title = default_graph_title()
   )
 }

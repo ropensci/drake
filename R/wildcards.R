@@ -135,8 +135,7 @@ dataset_wildcard <- function() {
 #'   drake_plan(
 #'     x = target("1 + 1", cpu = "any"),
 #'     y = target("sqrt(4)", cpu = "always"),
-#'     z = target("sqrt(16)", cpu = "any"),
-#'     strings_in_dots = "literals"
+#'     z = target("sqrt(16)", cpu = "any")
 #'   ),
 #'   rules = list(always = 1:2),
 #'   columns = c("command", "cpu")
@@ -394,11 +393,6 @@ expand_plan <- function(plan, values = NULL, rename = TRUE, sep = "_") {
 #' my_plan <- rbind(datasets, ans)
 #' my_plan
 plan_analyses <- function(plan, datasets, sep = "_") {
-  plan <- deprecate_wildcard(
-    plan = plan,
-    old = "..dataset..",
-    replacement = dataset_wildcard()
-  )
   evaluate_plan(
     plan,
     wildcard = dataset_wildcard(),
@@ -461,16 +455,6 @@ plan_summaries <- function(
   gather = rep("list", nrow(plan)),
   sep = "_"
 ) {
-  plan <- deprecate_wildcard(
-    plan = plan,
-    old = "..analysis..",
-    replacement = analysis_wildcard()
-  )
-  plan <- deprecate_wildcard(
-    plan = plan,
-    old = "..dataset..",
-    replacement = dataset_wildcard()
-  )
   plan <- with_analyses_only(plan)
   out <- plan
   group <- paste(colnames(out), collapse = sep)

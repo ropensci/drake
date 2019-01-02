@@ -97,7 +97,7 @@ clean <- function(
   path = getwd(),
   search = TRUE,
   cache = NULL,
-  verbose = drake::default_verbose(),
+  verbose = 1L,
   jobs = 1,
   force = FALSE,
   garbage_collection = FALSE,
@@ -203,7 +203,7 @@ clean_single_target <- function(
 drake_gc <- function(
   path = getwd(),
   search = TRUE,
-  verbose = drake::default_verbose(),
+  verbose = 1L,
   cache = NULL,
   force = FALSE
 ) {
@@ -269,7 +269,7 @@ rescue_cache <- function(
   targets = NULL,
   path = getwd(),
   search = TRUE,
-  verbose = drake::default_verbose(),
+  verbose = 1L,
   force = FALSE,
   cache = drake::get_cache(
     path = path, search = search, verbose = verbose, force = force),

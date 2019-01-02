@@ -90,7 +90,7 @@ build_recipe <- function(target, recipe_command,
   if (is.null(cache_path)) {
     cache_path <- cache_value_macro
   }
-  target <- drake_quotes(drake_unquote(target))
+  target <- suppressWarnings(drake_quotes(drake_unquote(target)))
   r_recipe <- paste0("drake::mk(target = ", target,
     ", cache_path = \"", cache_path, "\")")
   if (!safe_grepl(r_recipe_wildcard(), recipe_command, fixed = TRUE)) {

@@ -21,10 +21,6 @@
 #' @inheritParams drake_config
 #' @param config Master configuration list produced by both
 #'   [make()] and [drake_config()].
-#' @param return_config Logical, whether to return the internal list
-#'   of runtime configuration parameters used by `make()`.
-#'   This argument is deprecated. Now, a configuration list
-#'   is always invisibly returned.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -73,7 +69,7 @@ make <- function(
   plan = drake::read_drake_plan(),
   targets = NULL,
   envir = parent.frame(),
-  verbose = drake::default_verbose(),
+  verbose = 1L,
   hook = NULL,
   cache = drake::get_cache(
     verbose = verbose, console_log_file = console_log_file),
@@ -96,7 +92,6 @@ make <- function(
   elapsed = Inf,
   retries = 0,
   force = FALSE,
-  return_config = NULL,
   graph = NULL,
   trigger = drake::trigger(),
   skip_imports = FALSE,
@@ -109,7 +104,6 @@ make <- function(
   caching = "master",
   keep_going = FALSE,
   session = NULL,
-  imports_only = NULL,
   pruning_strategy = NULL,
   makefile_path = "Makefile",
   console_log_file = NULL,
@@ -123,13 +117,6 @@ make <- function(
   lock_envir = TRUE
 ) {
   force(envir)
-  if (!is.null(return_config)) {
-    warning(
-      "The return_config argument to make() is deprecated. ",
-      "Now, an internal configuration list is always invisibly returned.",
-      call. = FALSE
-    )
-  }
   deprecate_fetch_cache(fetch_cache)
   if (!is.null(timeout)) {
     warning(
@@ -174,7 +161,6 @@ make <- function(
       caching = caching,
       keep_going = keep_going,
       session = session,
-      imports_only = imports_only,
       pruning_strategy = pruning_strategy,
       makefile_path = makefile_path,
       console_log_file = console_log_file,

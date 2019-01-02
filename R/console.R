@@ -98,7 +98,7 @@ console_up_to_date <- function(config) {
     return(invisible())
   }
   any_attempted <- get_attempt_flag(config = config)
-  custom_triggers <- "trigger" %in% colnames(plan) ||
+  custom_triggers <- "trigger" %in% colnames(config$plan) ||
     !identical(config$trigger, trigger())
   if (!any_attempted && !custom_triggers && !config$skip_imports) {
     console_all_up_to_date(config = config)
@@ -224,18 +224,6 @@ multiline_message <- function(x) {
   }
   x <- paste0("  ", x)
   paste(x, collapse = "\n")
-}
-
-#' @title Default verbosity for `drake`
-#' @description Set with `pkgconfig`: for example,
-#'   `pkgconfig::set_config("drake::verbose" = 2)`.
-#' @export
-#' @keywords internal
-#' @return A logical or integer with the value of
-#'   the default `verbose` argument to `drake` functions.
-default_verbose <- function() {
-  default <- pkgconfig::get_config("drake::verbose")
-  ifelse(!length(default), 1, default)
 }
 
 #' @title Show how a target/import was produced.

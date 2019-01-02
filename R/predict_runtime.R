@@ -59,8 +59,6 @@ predict_runtime <- function(
   targets = NULL,
   from_scratch = FALSE,
   targets_only = FALSE,
-  future_jobs = NULL,
-  digits = NULL,
   jobs = 1,
   known_times = numeric(0),
   default_time = 0,
@@ -71,8 +69,6 @@ predict_runtime <- function(
     targets = targets,
     from_scratch = from_scratch,
     targets_only = targets_only,
-    future_jobs = future_jobs,
-    digits = digits,
     jobs = jobs,
     known_times = known_times,
     default_time = default_time,
@@ -153,8 +149,6 @@ predict_runtime <- function(
 #' @param jobs the `jobs` argument of your next planned
 #'   `make()`. How many targets to do you plan
 #'   to have running simultaneously?
-#' @param future_jobs deprecated
-#' @param digits deprecated
 #' @param known_times a named numeric vector with targets/imports
 #'   as names and values as hypothetical runtimes in seconds.
 #'   Use this argument to overwrite any of the existing build times
@@ -171,8 +165,6 @@ predict_load_balancing <- function(
   targets = NULL,
   from_scratch = FALSE,
   targets_only = FALSE,
-  future_jobs = NULL,
-  digits = NULL,
   jobs = 1,
   known_times = numeric(0),
   default_time = 0,
@@ -184,8 +176,6 @@ predict_load_balancing <- function(
     targets = targets,
     from_scratch = from_scratch,
     targets_only = targets_only,
-    future_jobs = future_jobs,
-    digits = digits,
     jobs = jobs,
     known_times = known_times,
     default_time = default_time,
@@ -236,8 +226,6 @@ timing_assumptions <- function(
   targets,
   from_scratch,
   targets_only,
-  future_jobs,
-  digits,
   jobs,
   known_times,
   default_time,
@@ -246,13 +234,6 @@ timing_assumptions <- function(
   assert_pkg("lubridate")
   if (!from_scratch) {
     outdated <- outdated(config)
-  }
-  if (!is.null(future_jobs) || !is.null(digits)) {
-    warning(
-      "The `future_jobs` and `digits` arguments ",
-      "of predict_runtime() are deprecated.",
-      call. = FALSE
-    )
   }
   times <- build_times(
     cache = config$cache,

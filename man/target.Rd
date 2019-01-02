@@ -64,8 +64,7 @@ plan <- drake_plan(
     trigger = "always",
     custom_column = 5
   ),
-  analysis = analyze(website_data),
-  strings_in_dots = "literals"
+  analysis = analyze(website_data)
 )
 plan
 # make(plan) # nolint

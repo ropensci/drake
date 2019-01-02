@@ -49,7 +49,7 @@ drake_cache_log_file <- function(
   path = getwd(),
   search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = drake::default_verbose(),
+  verbose = 1L,
   jobs = 1,
   targets_only = FALSE
 ) {
@@ -146,7 +146,7 @@ drake_cache_log <- function(
   path = getwd(),
   search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = drake::default_verbose(),
+  verbose = 1L,
   jobs = 1,
   targets_only = FALSE
 ) {

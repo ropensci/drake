@@ -6,8 +6,7 @@
 for the \code{plan} argument of \code{\link[=make]{make()}}.}
 \usage{
 drake_plan(..., list = character(0), file_targets = NULL,
-  strings_in_dots = pkgconfig::get_config("drake::strings_in_dots"),
-  tidy_evaluation = TRUE)
+  strings_in_dots = NULL, tidy_evaluation = TRUE)
 }
 \arguments{
 \item{...}{A collection of symbols/targets
@@ -16,42 +15,9 @@ with commands assigned to them. See the examples for details.}
 \item{list}{A named character vector of commands
 with names as targets.}
 
-\item{file_targets}{deprecated argument. See \code{\link[=file_out]{file_out()}},
-\code{\link[=file_in]{file_in()}}, and \code{\link[=knitr_in]{knitr_in()}} for the current way to work
-with files.
-In the past, this argument was a logical to indicate whether the
-target names should be single-quoted to denote files. But the newer
-interface is much better.}
+\item{file_targets}{deprecated}
 
-\item{strings_in_dots}{deprecated argument for handling strings in
-commands specified in the \code{...} argument. Defaults to \code{NULL} for backward
-compatibility. New code should use \code{\link[=file_out]{file_out()}}, \code{\link[=file_in]{file_in()}}, and
-\code{\link[=knitr_in]{knitr_in()}} to specify file names and set this argument to \code{"literals"},
-which will at some point become the only accepted value.
-
-To fully embrace the glorious new file API, call
-\code{pkgconfig::set_config("drake::strings_in_dots" = "literals")}
-right when you start your R session.
-That way, \code{drake} totally relies on \code{\link[=file_in]{file_in()}}, \code{\link[=file_out]{file_out()}},
-and \code{\link[=knitr_in]{knitr_in()}} to coordinate input and output files, as
-opposed to deprecated features like single-quotes
-(and in the case of \code{knitr} reports,
-explicit calls to \code{knitr::knit()} and \code{rmarkdown::render()} in commands).
-This is why the default value of \code{strings_in_dots} is
-\code{pkgconfig::get_config("drake::strings_in_dots")}.
-
-In the past, this argument was a character scalar denoting
-how to treat quoted character strings in the commands
-specified through \code{...}.
-Set to \code{"filenames"} to treat all these strings as
-external file targets/imports (single-quoted),
-or to \code{"literals"} to treat them all as literal
-strings (double-quoted).
-Unfortunately, because of how R deparses code,
-you cannot simply leave literal quotes alone in the
-\code{...} argument. R will either convert all these quotes
-to single quotes or double quotes. Literal quotes in the
-\code{list} argument are left alone.}
+\item{strings_in_dots}{deprecated}
 
 \item{tidy_evaluation}{logical, whether to use tidy evaluation
 such as quasiquotation
@@ -121,8 +87,7 @@ test_with_dir("Contain side effects", {
 # Create workflow plan data frames.
 mtcars_plan <- drake_plan(
   write.csv(mtcars[, c("mpg", "cyl")], file_out("mtcars.csv")),
-  value = read.csv(file_in("mtcars.csv")),
-  strings_in_dots = "literals"
+  value = read.csv(file_in("mtcars.csv"))
 )
 mtcars_plan
 make(mtcars_plan) # Makes `mtcars.csv` and then `value`
@@ -143,8 +108,7 @@ drake_plan(
     trigger = "always",
     custom_column = 5
   ),
-  analysis = analyze(website_data),
-  strings_in_dots = "literals"
+  analysis = analyze(website_data)
 )
 # Are you a fan of tidy evaluation?
 my_variable <- 1

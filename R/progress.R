@@ -19,7 +19,7 @@
 #' }
 in_progress <- function(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = drake::default_verbose()
+  verbose = 1L
 ) {
   prog <- progress(path = path, search = search, cache = cache)
   as.character(names(which(prog == "in progress")))
@@ -54,7 +54,7 @@ in_progress <- function(path = getwd(), search = TRUE,
 #' }
 failed <- function(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = drake::default_verbose(),
+  verbose = 1L,
   upstream_only = FALSE
 ) {
   prog <- progress(path = path, search = search, cache = cache)
@@ -92,10 +92,6 @@ failed <- function(path = getwd(), search = TRUE,
 #'   about imported files and targets with commands (i.e. whether to ignore
 #'   imported objects that are not files).
 #'
-#' @param imported_files_only logical, deprecated. Same as
-#'   `no_imported_objects`.  Use the `no_imported_objects` argument
-#'   instead.
-#'
 #' @param jobs number of jobs/workers for parallel processing
 #'
 #' @examples
@@ -114,23 +110,12 @@ progress <- function(
   ...,
   list = character(0),
   no_imported_objects = FALSE,
-  imported_files_only = logical(0),
   path = getwd(),
   search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = drake::default_verbose(),
+  verbose = 1L,
   jobs = 1
 ) {
-  # deprecate imported_files_only
-  if (length(imported_files_only)) {
-    warning(
-      "The imported_files_only argument to progress() is deprecated ",
-      "and will be removed the next major release. ",
-      "Use the no_imported_objects argument instead.",
-      call. = FALSE
-    )
-    no_imported_objects <- imported_files_only
-  }
   if (is.null(cache)) {
     return(character(0))
   }

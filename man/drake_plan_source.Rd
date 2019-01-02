@@ -31,8 +31,7 @@ plan <- drake::drake_plan(
       depend = FALSE
     ),
     timeout = 1e3
-  ),
-  strings_in_dots = "literals"
+  )
 )
 print(plan)
 if (requireNamespace("styler", quietly = TRUE)) {

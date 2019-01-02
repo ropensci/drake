@@ -90,7 +90,7 @@ force_cache_path <- function(cache = NULL) {
 get_cache <- function(
   path = getwd(),
   search = TRUE,
-  verbose = drake::default_verbose(),
+  verbose = 1L,
   force = FALSE,
   fetch_cache = NULL,
   console_log_file = NULL
@@ -136,7 +136,7 @@ get_cache <- function(
 this_cache <- function(
   path = drake::default_cache_path(),
   force = FALSE,
-  verbose = drake::default_verbose(),
+  verbose = 1L,
   fetch_cache = NULL,
   console_log_file = NULL
 ) {
@@ -213,7 +213,7 @@ drake_fetch_rds <- function(path) {
 #' }
 new_cache <- function(
   path = drake::default_cache_path(),
-  verbose = drake::default_verbose(),
+  verbose = 1L,
   type = NULL,
   hash_algorithm = NULL,
   short_hash_algo = NULL,
@@ -281,7 +281,7 @@ recover_cache <- function(
   short_hash_algo = NULL,
   long_hash_algo = NULL,
   force = FALSE,
-  verbose = drake::default_verbose(),
+  verbose = 1L,
   fetch_cache = NULL,
   console_log_file = NULL
 ) {

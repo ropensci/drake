@@ -232,8 +232,7 @@ mtcars_plan <- function() {
     values = my_analyses$target
   )
   report <- drake_plan(
-    report = knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE),
-    strings_in_dots = "literals"
+    report = knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE)
   )
   bind_plans(report, my_datasets, my_analyses, my_summaries)
 }

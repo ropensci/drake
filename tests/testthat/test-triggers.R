@@ -47,8 +47,7 @@ test_with_dir("triggers in plan override make(trigger = whatever)", {
     y = target(
       readRDS(file_in("file.rds")),
       trigger(file = TRUE)
-    ),
-    strings_in_dots = "literals"
+    )
   )
   config <- make(plan, session_info = FALSE)
   expect_equal(sort(justbuilt(config)), c("x", "y"))
@@ -68,8 +67,7 @@ test_with_dir("change trigger on a fresh build", {
       depend = FALSE,
       file = FALSE,
       change = readRDS("file.rds"))
-    ),
-    strings_in_dots = "literals"
+    )
   )
   config <- make(plan, session_info = FALSE)
   expect_equal(justbuilt(config), "x")
@@ -121,8 +119,7 @@ test_with_dir("can detect trigger deps without reacting to them", {
         depend = TRUE,
         change = NULL
       )
-    ),
-    strings_in_dots = "literals"
+    )
   )
   config <- drake_config(
     plan, session_info = FALSE, cache = storr::storr_environment(),
@@ -205,8 +202,7 @@ test_with_dir("trigger does not block out command deps", {
         depend = TRUE,
         change = NULL
       )
-    ),
-    strings_in_dots = "literals"
+    )
   )
   config <- drake_config(
     plan, session_info = FALSE, cache = storr::storr_environment(),
@@ -247,8 +243,7 @@ test_with_dir("same, but with global change trigger", {
     x = {
       knitr_in("knitr.Rmd")
       f(0) + readRDS(file_in("file.rds"))
-    },
-    strings_in_dots = "literals"
+    }
   )
   config <- drake_config(
     plan, session_info = FALSE, cache = storr::storr_environment(),
@@ -317,8 +312,7 @@ test_with_dir("deps load into memory for complex triggers", {
     psi_3 = target(
       command = 1,
       trigger = trigger(change = psi_2)
-    ),
-    strings_in_dots = "literals"
+    )
   )
   for (i in 1:3) {
     make(
@@ -376,15 +370,14 @@ test_with_dir("trigger components react appropriately", {
         change = readRDS("change.rds"),
         command = FALSE, depend = FALSE, file = FALSE
       )
-    ),
-    strings_in_dots = "literals"
+    )
   )
-  plan$command <- paste0("
+  plan$command <- paste0("{
     knitr_in(\"report.Rmd\")
     out <- f(readRDS(file_in(\"file.rds\")))
     saveRDS(out, file_out(\"out_", plan$target, ".rds\"))
     out
-  ")
+  }")
   config <- make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = FALSE, caching = caching, session_info = FALSE
@@ -472,12 +465,12 @@ test_with_dir("trigger components react appropriately", {
   make(config = simple_config)
 
   # Command trigger
-  config$plan$command <- simple_config$plan$command <- paste0("
+  config$plan$command <- simple_config$plan$command <- paste0("{
     knitr_in(\"report.Rmd\")
     out <- f(1 + readRDS(file_in(\"file.rds\")))
     saveRDS(out, file_out(\"out_", plan$target, ".rds\"))
     out
-  ")
+  }")
   config$layout <- whole_static_analysis(
     plan = config$plan,
     envir = config$envir,
@@ -721,8 +714,7 @@ test_with_dir("files are collected/encoded from all triggers", {
           knitr_in("change_knitr_in")
         }
       )
-    ),
-    strings_in_dots = "literals"
+    )
   )
   config <- drake_config(plan)
   deps_build <- decode_path(unlist(config$layout[["x"]]$deps_build))

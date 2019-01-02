@@ -7,8 +7,8 @@ of your drake project.}
 \usage{
 static_drake_graph(config = drake::read_drake_config(),
   build_times = "build", digits = 3, targets_only = FALSE,
-  split_columns = NULL, main = NULL, from = NULL, mode = c("out",
-  "in", "all"), order = NULL, subset = NULL, make_imports = TRUE,
+  main = NULL, from = NULL, mode = c("out", "in", "all"),
+  order = NULL, subset = NULL, make_imports = TRUE,
   from_scratch = FALSE, full_legend = FALSE, group = NULL,
   clusters = NULL)
 }
@@ -31,8 +31,6 @@ no build times at all. See \code{\link[=build_times]{build_times()}} for details
 \item{targets_only}{logical,
 whether to skip the imports and only include the
 targets in the workflow plan.}
-
-\item{split_columns}{logical, deprecated.}
 
 \item{main}{character string, title of the graph}
 

@@ -73,7 +73,10 @@ test_with_dir("we can generate different visNetwork dependency graphs", {
     tmp <- drake_graph_info(
       config = config, build_times = FALSE, from_scratch = TRUE))
   expect_warning(
-    tmp <- drake_graph_info(config = config, split_columns = TRUE))
+    tmp <- drake_graph_info(
+      config = config, build_times = FALSE, full_legend = TRUE))
+  expect_warning(
+    tmp <- drake_graph_info(config = config, build_times = TRUE))
   expect_warning(
     tmp <- drake_graph_info(config = config, build_times = FALSE))
   tmpcopy <- drake_graph_info(config = config,
@@ -204,8 +207,7 @@ test_with_dir("file_out()/file_in() connections", {
     saver2 = file_out("d"),
     out2 = reader2,
     reader1 = file_in("c", "d"),
-    reader2 = file_in("a", "b"),
-    strings_in_dots = "literals"
+    reader2 = file_in("a", "b")
   )
   config <- drake_config(
     plan,
@@ -255,8 +257,7 @@ test_with_dir("show_output_files", {
       file_out("out3.txt", "out4.txt")
       file.create("out3.txt")
       file.create("out4.txt")
-    },
-    strings_in_dots = "literals"
+    }
   )
   writeLines("in1", "in1.txt")
   writeLines("in2", "in2.txt")
@@ -343,8 +344,7 @@ test_with_dir("same, but with an extra edge not due to files", {
       file.create("out3.txt")
       file.create("out4.txt")
       target1
-    },
-    strings_in_dots = "literals"
+    }
   )
   writeLines("in1", "in1.txt")
   writeLines("in2", "in2.txt")

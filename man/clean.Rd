@@ -5,9 +5,8 @@
 \title{Remove targets/imports from the cache.}
 \usage{
 clean(..., list = character(0), destroy = FALSE, path = getwd(),
-  search = TRUE, cache = NULL, verbose = drake::default_verbose(),
-  jobs = 1, force = FALSE, garbage_collection = FALSE,
-  purge = FALSE)
+  search = TRUE, cache = NULL, verbose = 1L, jobs = 1,
+  force = FALSE, garbage_collection = FALSE, purge = FALSE)
 }
 \arguments{
 \item{...}{targets to remove from the cache: as names (symbols) or
@@ -38,9 +37,6 @@ Ignored if a \code{cache} is supplied.}
 If supplied, \code{path} and \code{search} are ignored.}
 
 \item{verbose}{logical or numeric, control printing to the console.
-Use \code{pkgconfig} to set the default value of \code{verbose}
-for your R session:
-for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 \itemize{
 \item \code{0} or \code{FALSE}: print nothing.
 \item \code{1} or \code{TRUE}: print only targets to build.

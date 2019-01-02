@@ -143,8 +143,7 @@ test_with_dir("edge cases for plans", {
   # multiple file outputs are okay
   expect_equal(
     drake_plan(
-      a = file_out("file1", "file2"),
-      strings_in_dots = "literals"
+      a = file_out("file1", "file2")
     ),
     weak_tibble(
       target = "a",
@@ -153,8 +152,7 @@ test_with_dir("edge cases for plans", {
   )
   expect_equal(
     drake_plan(
-      a = file_out(c("file1", "file2")),
-      strings_in_dots = "literals"
+      a = file_out(c("file1", "file2"))
     ),
     weak_tibble(
       target = "a",
@@ -170,29 +168,12 @@ test_with_dir("plan set 2", {
       a = c,
       b = "c",
       list = c(c = "d", d = "readRDS('e')"),
-      strings_in_dots = "literals",
       tidy_evaluation = tidy_evaluation
     )
     y <- weak_tibble(
       target = letters[1:4],
       command = c("c", "\"c\"",
                   "d", "readRDS('e')"))
-    expect_equal(x, y)
-  }
-})
-
-test_with_dir("plan set 3", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  for (tidy_evaluation in c(TRUE, FALSE)) {
-    expect_warning(x <- drake_plan(
-      a = c,
-      b = "c",
-      list = c(c = "d", d = "readRDS('e')"),
-      strings_in_dots = "literals", file_targets = TRUE,
-      tidy_evaluation = tidy_evaluation))
-    y <- weak_tibble(
-      target = drake::drake_quotes(letters[1:4], single = TRUE),
-      command = c("c", "\"c\"", "d", "readRDS('e')"))
     expect_equal(x, y)
   }
 })
@@ -258,22 +239,6 @@ test_with_dir("issue 187 on Github (from Kendon Bell)", {
   expect_equal(out, out2)
 })
 
-test_with_dir("file names with weird characters do not get mangled", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  out <- weak_tibble(
-    target = c("'is:a:file'", "not:a:file"),
-    command = as.character(1:2)
-  )
-  out2 <- sanitize_plan(out)
-  out3 <- weak_tibble(
-    target = c("'is:a:file'", "not.a.file"),
-    command = as.character(1:2)
-  )
-  expect_equal(out[1, ], out2[1, ])
-  expect_false(identical(out[2, ], out2[2, ]))
-  expect_equal(out2, out3)
-})
-
 test_with_dir("can use semicolons for multi-line commands", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   plan <- drake_plan(list = c(x = "a<-1; a", y = "b<-2\nb"))
@@ -333,8 +298,7 @@ test_with_dir("custom column interface", {
       command = Sys.sleep("not a number"),
       col3 = "some text"
     ),
-    z = rnorm(10),
-    strings_in_dots = "literals"
+    z = rnorm(10)
   )
   plan0 <- weak_tibble(
     target = c("x", "y", "z"),
@@ -357,8 +321,7 @@ test_with_dir("bind_plans()", {
     z = target(
       command = download_data(),
       trigger = trigger(condition = TRUE)
-    ),
-    strings_in_dots = "literals"
+    )
   )
   plan3 <- drake_plan(u = 3, v = 4, w = 5)
   out <- bind_plans(plan1, plan2)
@@ -416,8 +379,7 @@ test_with_dir("bad 'columns' argument to evaluate_plan()", {
   plan <- drake_plan(
     x = target("always", cpu = "any"),
     y = target("any", cpu = "always"),
-    z = target("any", cpu = "any"),
-    strings_in_dots = "literals"
+    z = target("any", cpu = "any")
   )
   expect_error(
     evaluate_plan(plan, wildcard = "any", values = 1:2, columns = "target"),
@@ -437,8 +399,7 @@ test_with_dir("'columns' argument to evaluate_plan()", {
   plan <- drake_plan(
     x = target("always", cpu = "any"),
     y = target("any", cpu = "always"),
-    z = target("any", cpu = "any"),
-    strings_in_dots = "literals"
+    z = target("any", cpu = "any")
   )
   out <- weak_tibble(
     target = c("x_1", "x_2", "y_1", "y_2", "z"),
@@ -496,7 +457,6 @@ test_with_dir("drake_plan_call() produces the correct calls", {
   my_plan$trigger <- NA_character_
   my_plan$trigger[4] <- "trigger(condition = is_tuesday(), file = FALSE)"
   my_plan$non_standard_column <- 1234
-  pkgconfig::set_config("drake::strings_in_dots" = "literals")
   new_plan <- eval(drake_plan_call(my_plan))
   expected <- my_plan
   expect_equal(
@@ -519,8 +479,7 @@ test_with_dir("drake_plan_source()", {
         depend = FALSE
       ),
       elapsed = 1e3
-    ),
-    strings_in_dots = "literals"
+    )
   )
   x <- drake_plan_source(plan)
   y <- capture.output(print(x))

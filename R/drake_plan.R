@@ -58,41 +58,8 @@
 #'   with commands assigned to them. See the examples for details.
 #' @param list A named character vector of commands
 #'   with names as targets.
-#' @param file_targets deprecated argument. See [file_out()],
-#'   [file_in()], and [knitr_in()] for the current way to work
-#'   with files.
-#'   In the past, this argument was a logical to indicate whether the
-#'   target names should be single-quoted to denote files. But the newer
-#'   interface is much better.
-#' @param strings_in_dots deprecated argument for handling strings in
-#'   commands specified in the `...` argument. Defaults to `NULL` for backward
-#'   compatibility. New code should use [file_out()], [file_in()], and
-#'   [knitr_in()] to specify file names and set this argument to `"literals"`,
-#'   which will at some point become the only accepted value.
-#'
-#'   To fully embrace the glorious new file API, call
-#'   `pkgconfig::set_config("drake::strings_in_dots" = "literals")`
-#'   right when you start your R session.
-#'   That way, `drake` totally relies on [file_in()], [file_out()],
-#'   and [knitr_in()] to coordinate input and output files, as
-#'   opposed to deprecated features like single-quotes
-#'   (and in the case of `knitr` reports,
-#'   explicit calls to `knitr::knit()` and `rmarkdown::render()` in commands).
-#'   This is why the default value of `strings_in_dots` is
-#'   `pkgconfig::get_config("drake::strings_in_dots")`.
-#'
-#'   In the past, this argument was a character scalar denoting
-#'   how to treat quoted character strings in the commands
-#'   specified through `...`.
-#'   Set to `"filenames"` to treat all these strings as
-#'   external file targets/imports (single-quoted),
-#'   or to `"literals"` to treat them all as literal
-#'   strings (double-quoted).
-#'   Unfortunately, because of how R deparses code,
-#'   you cannot simply leave literal quotes alone in the
-#'   `...` argument. R will either convert all these quotes
-#'   to single quotes or double quotes. Literal quotes in the
-#'   `list` argument are left alone.
+#' @param file_targets deprecated
+#' @param strings_in_dots deprecated
 #' @param tidy_evaluation logical, whether to use tidy evaluation
 #'   such as quasiquotation
 #'   when evaluating commands passed through the free-form
@@ -102,8 +69,7 @@
 #' # Create workflow plan data frames.
 #' mtcars_plan <- drake_plan(
 #'   write.csv(mtcars[, c("mpg", "cyl")], file_out("mtcars.csv")),
-#'   value = read.csv(file_in("mtcars.csv")),
-#'   strings_in_dots = "literals"
+#'   value = read.csv(file_in("mtcars.csv"))
 #' )
 #' mtcars_plan
 #' make(mtcars_plan) # Makes `mtcars.csv` and then `value`
@@ -124,8 +90,7 @@
 #'     trigger = "always",
 #'     custom_column = 5
 #'   ),
-#'   analysis = analyze(website_data),
-#'   strings_in_dots = "literals"
+#'   analysis = analyze(website_data)
 #' )
 #' # Are you a fan of tidy evaluation?
 #' my_variable <- 1
@@ -148,7 +113,7 @@ drake_plan <- function(
   ...,
   list = character(0),
   file_targets = NULL,
-  strings_in_dots = pkgconfig::get_config("drake::strings_in_dots"),
+  strings_in_dots = NULL,
   tidy_evaluation = TRUE
 ) {
   if (tidy_evaluation) {
@@ -176,41 +141,12 @@ drake_plan <- function(
     command = commands
   )
   from_dots <- plan$target %in% names(commands_dots)
-  if (length(file_targets) || identical(strings_in_dots, "filenames")) {
+  if (length(file_targets) || length(strings_in_dots)) {
     warning(
-      "Use the file_in(), file_out(), and knitr_in() functions ",
-      "to work with files in your commands, and pass ",
-      "`strings_in_dots = \"literals\"`. ",
-      "See `?drake_plan` for examples. ",
-      "The `file_targets` argument is deprecated. ",
-      "Worry about single-quotes no more!"
+      "Arguments `file_targets` and `strings_in_dots` ",
+      "of `drake_plan()` are deprecated.",
+      call. = FALSE
     )
-  }
-  if (identical(file_targets, TRUE)) {
-    plan$target <- drake::drake_quotes(plan$target, single = TRUE)
-  }
-
-  # TODO: leave double-quoted strings alone when we're ready to
-  # deprecate single-quoting in the file API.
-  # Currently, to totally take advantage of the new file API,
-  # users need to set strings_in_dots to "literals" every time.
-  from_dots_with_quotes <- grep("\"", plan$command[from_dots])
-  if (length(from_dots_with_quotes)) {
-    if (!length(strings_in_dots)) {
-      warning(
-        "Converting double-quotes to single-quotes because ",
-        "the `strings_in_dots` argument is missing. ",
-        "Use the file_in(), file_out(), and knitr_in() functions ",
-        "to work with files in your commands. To remove this warning, ",
-        "either call `drake_plan()` with `strings_in_dots = \"literals\"` ",
-        "or use ",
-        "`pkgconfig::set_config(\"drake::strings_in_dots\" = \"literals\")`.",
-        call. = FALSE
-      )
-    }
-    if (!length(strings_in_dots) || identical(strings_in_dots, "filenames")) {
-      plan$command[from_dots] <- gsub("\"", "'", plan$command[from_dots])
-    }
   }
   plan <- parse_custom_plan_columns(plan)
   sanitize_plan(plan)
@@ -228,8 +164,7 @@ drake_plan <- function(
 #'   data = target(
 #'     command = download_data(),
 #'     trigger = "always"
-#'   ),
-#'   strings_in_dots = "literals"
+#'   )
 #' )
 #' # But if the data don't change, the analyses don't need to change.
 #' analysis_plan <- drake_plan(
@@ -329,8 +264,7 @@ complete_target_names <- function(commands_list) {
 #' suppressWarnings(
 #'   plan <- drake_plan(
 #'     write.csv(mtcars, file_out("mtcars.csv")),
-#'     contents = read.csv(file_in("mtcars.csv")),
-#'     strings_in_dots = "literals" # deprecated but useful: no single quotes needed. # nolint
+#'     contents = read.csv(file_in("mtcars.csv"))
 #'   )
 #' )
 #' plan
@@ -369,8 +303,7 @@ file_in <- function(...) {
 #' suppressWarnings(
 #'   plan <- drake_plan(
 #'     write.csv(mtcars, file_out("mtcars.csv")),
-#'     contents = read.csv(file_in("mtcars.csv")),
-#'     strings_in_dots = "literals" # deprecated but useful: no single quotes needed. # nolint
+#'     contents = read.csv(file_in("mtcars.csv"))
 #'   )
 #' )
 #' plan
@@ -546,8 +479,7 @@ detect_arrow <- function(command) {
 #'     trigger = "always",
 #'     custom_column = 5
 #'   ),
-#'   analysis = analyze(website_data),
-#'   strings_in_dots = "literals"
+#'   analysis = analyze(website_data)
 #' )
 #' plan
 #' # make(plan) # nolint

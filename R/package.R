@@ -45,7 +45,6 @@
 #'   make_empty_graph set_vertex_attr simplify subcomponent
 #'   topo_sort V vertex_attr
 #' @importFrom methods new setRefClass
-#' @importFrom pkgconfig get_config
 #' @importFrom rlang enexpr enexprs enquo eval_tidy expr exprs
 #' @importFrom storr storr_environment storr_rds
 #' @importFrom utils capture.output compareVersion head packageVersion

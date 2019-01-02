@@ -65,7 +65,7 @@ readd <- function(
   search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
   namespace = NULL,
-  verbose = drake::default_verbose(),
+  verbose = 1L,
   show_source = FALSE
 ) {
   # if the cache is null after trying get_cache:
@@ -86,7 +86,7 @@ readd <- function(
     )
   }
   cache$get(
-    standardize_key(target), # TODO: remove for version 7.0.0
+    standardize_key(target),
     namespace = namespace,
     use_cache = TRUE
   )
@@ -193,7 +193,7 @@ loadd <- function(
   namespace = NULL,
   envir = parent.frame(),
   jobs = 1,
-  verbose = drake::default_verbose(),
+  verbose = 1L,
   deps = FALSE,
   lazy = "eager",
   graph = NULL,
@@ -383,7 +383,7 @@ read_drake_config <- function(
   path = getwd(),
   search = TRUE,
   cache = NULL,
-  verbose = drake::default_verbose(),
+  verbose = 1L,
   jobs = 1,
   envir = parent.frame()
 ) {
@@ -434,7 +434,7 @@ read_drake_graph <- function(
   path = getwd(),
   search = TRUE,
   cache = NULL,
-  verbose = drake::default_verbose()
+  verbose = 1L
 ) {
   if (is.null(cache)) {
     cache <- get_cache(path = path, search = search, verbose = verbose)
@@ -470,7 +470,7 @@ read_drake_plan <- function(
   path = getwd(),
   search = TRUE,
   cache = NULL,
-  verbose = drake::default_verbose()
+  verbose = 1L
 ) {
   if (is.null(cache)) {
     cache <- get_cache(path = path, search = search, verbose = verbose)
@@ -485,8 +485,6 @@ read_drake_plan <- function(
   }
 }
 
-# TODO: the other read_drake_*() functions should be as minimal
-# as this one and probably not exported.
 read_drake_layout <- function(cache){
   if (cache$exists(key = "layout", namespace = "config")) {
     cache$get(
@@ -549,7 +547,7 @@ read_drake_seed <- function(
   path = getwd(),
   search = TRUE,
   cache = NULL,
-  verbose = drake::default_verbose()
+  verbose = 1L
 ) {
   if (is.null(cache)) {
     cache <- get_cache(path = path, search = search, verbose = verbose)

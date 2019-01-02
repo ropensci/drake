@@ -6,9 +6,9 @@
 used internally in \code{\link[=make]{make()}}.}
 \usage{
 drake_config(plan = drake::read_drake_plan(), targets = NULL,
-  envir = parent.frame(), verbose = drake::default_verbose(),
-  hook = NULL, cache = drake::get_cache(verbose = verbose,
-  console_log_file = console_log_file), fetch_cache = NULL,
+  envir = parent.frame(), verbose = 1L, hook = NULL,
+  cache = drake::get_cache(verbose = verbose, console_log_file =
+  console_log_file), fetch_cache = NULL,
   parallelism = drake::default_parallelism(), jobs = 1,
   packages = rev(.packages()), prework = character(0),
   prepend = character(0), command = drake::default_Makefile_command(),
@@ -20,7 +20,7 @@ drake_config(plan = drake::read_drake_plan(), targets = NULL,
   skip_safety_checks = FALSE, lazy_load = "eager",
   session_info = TRUE, cache_log_file = NULL, seed = NULL,
   caching = c("master", "worker"), keep_going = FALSE,
-  session = NULL, imports_only = NULL, pruning_strategy = NULL,
+  session = NULL, pruning_strategy = NULL,
   makefile_path = "Makefile", console_log_file = NULL,
   ensure_workers = TRUE, garbage_collection = FALSE,
   template = list(), sleep = function(i) 0.01,
@@ -58,9 +58,6 @@ from \code{envir} and the global environment and
 then reproducibly tracked as dependencies.}
 
 \item{verbose}{logical or numeric, control printing to the console.
-Use \code{pkgconfig} to set the default value of \code{verbose}
-for your R session:
-for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 \itemize{
 \item \code{0} or \code{FALSE}: print nothing.
 \item \code{1} or \code{TRUE}: print only targets to build.
@@ -324,8 +321,6 @@ If \code{session} is \code{NULL} (default), then \code{\link[=make]{make()}} wil
 your current R session as the master session. This is slightly faster,
 but it causes \code{\link[=make]{make()}} to populate your workspace/environment
 with the last few targets it builds.}
-
-\item{imports_only}{deprecated. Use \code{skip_targets} instead.}
 
 \item{pruning_strategy}{deprecated. See \code{memory_strategy}.}
 

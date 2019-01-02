@@ -29,8 +29,7 @@ file_out("summaries.txt")
 suppressWarnings(
   plan <- drake_plan(
     write.csv(mtcars, file_out("mtcars.csv")),
-    contents = read.csv(file_in("mtcars.csv")),
-    strings_in_dots = "literals" # deprecated but useful: no single quotes needed. # nolint
+    contents = read.csv(file_in("mtcars.csv"))
   )
 )
 plan

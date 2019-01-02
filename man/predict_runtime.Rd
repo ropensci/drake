@@ -6,9 +6,8 @@
 for non-staged parallel backends.}
 \usage{
 predict_runtime(config = drake::read_drake_config(), targets = NULL,
-  from_scratch = FALSE, targets_only = FALSE, future_jobs = NULL,
-  digits = NULL, jobs = 1, known_times = numeric(0),
-  default_time = 0, warn = TRUE)
+  from_scratch = FALSE, targets_only = FALSE, jobs = 1,
+  known_times = numeric(0), default_time = 0, warn = TRUE)
 }
 \arguments{
 \item{config}{option internal runtime parameter list of
@@ -28,10 +27,6 @@ already up to date and therefore skipped.}
 \item{targets_only}{logical, whether to factor in
 just the targets into the calculations or use the
 build times for everything, including the imports}
-
-\item{future_jobs}{deprecated}
-
-\item{digits}{deprecated}
 
 \item{jobs}{the \code{jobs} argument of your next planned
 \code{make()}. How many targets to do you plan

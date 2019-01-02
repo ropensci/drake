@@ -20,8 +20,7 @@
 #'       depend = FALSE
 #'     ),
 #'     timeout = 1e3
-#'   ),
-#'   strings_in_dots = "literals"
+#'   )
 #' )
 #' print(plan)
 #' if (requireNamespace("styler", quietly = TRUE)) {
@@ -39,16 +38,6 @@ drake_plan_source <- function(plan) {
 }
 
 drake_plan_call <- function(plan) {
-  # TODO: when we remove the old file API, remove
-  # this hack that converts to the new file API.
-  plan <- bind_plans(
-    plan,
-    data.frame(
-      target = "strings_in_dots",
-      command = "\"literals\"",
-      stringsAsFactors = FALSE
-    )
-  )
   target_calls <- drake_pmap(plan, drake_target_call)
   names(target_calls) <- plan$target
   as.call(c(quote(drake_plan), target_calls))

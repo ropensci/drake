@@ -93,8 +93,7 @@ test_with_dir("drake_envir() and memory strategies", {
     c = {
       saveRDS(ls(envir = drake_envir()), "ls.rds")
       b
-    },
-    strings_in_dots = "literals"
+    }
   )
   make(
     plan,
@@ -136,8 +135,7 @@ test_with_dir("drake_envir() and memory strategies", {
     c = {
       saveRDS(ls(envir = drake_envir()), "ls.rds")
       b
-    },
-    strings_in_dots = "literals"
+    }
   )
   make(
     plan,
@@ -168,8 +166,7 @@ test_with_dir("drake_envir() depth", {
       )
       expect_false(any(targs %in% ls(envir = drake_envir())))
       mean(subset)
-    },
-    strings_in_dots = "literals"
+    }
   )
   make(
     plan,

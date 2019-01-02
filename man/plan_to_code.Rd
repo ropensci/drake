@@ -33,8 +33,7 @@ plan <- drake_plan(
   raw_data = read_excel(file_in("raw_data.xlsx")),
   data = raw_data,
   hist = create_plot(data),
-  fit = lm(Sepal.Width ~ Petal.Width + Species, data),
-  strings_in_dots = "literals"
+  fit = lm(Sepal.Width ~ Petal.Width + Species, data)
 )
 file <- tempfile()
 # Turn the plan into an R script a the given file path.

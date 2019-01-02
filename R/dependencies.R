@@ -52,8 +52,7 @@
 #' my_plan <- drake_plan(
 #'   x = 1 + some_object,
 #'   my_target = x + readRDS(file_in("tracked_input_file.rds")),
-#'   return_value = f(x, y, g(z + w)),
-#'   strings_in_dots = "literals"
+#'   return_value = f(x, y, g(z + w))
 #' )
 #' # Get the dependencies of workflow plan commands.
 #' # Here, the dependencies could be R functions/objects from your workspace
@@ -184,14 +183,14 @@ dependency_profile <- function(
   old_hashes <- unname(old_hashes)
   old_hashes[1] <- digest::digest(
     paste(old_hashes[1], collapse = ""),
-    algo = config$long_hash_algo,
+    algo = config$cache$driver$hash_algorithm,
     serialize = FALSE
   )
   layout <- config$layout[[target]]
   new_hashes <- c(
     digest::digest(
       paste(layout$command_standardized, collapse = ""),
-      algo = config$long_hash_algo,
+      algo = config$cache$driver$hash_algorithm,
       serialize = FALSE
     ),
     dependency_hash(target, config),
@@ -255,8 +254,6 @@ dependencies <- function(targets, config, reverse = FALSE) {
 
 target_graph_dependencies <- function(targets, config, jobs = 1) {
   deps <- dependencies(targets = targets, config = config)
-  # TODO: remove this line for version 7.0.0
-  deps <- parallel_filter(x = deps, f = not_encoded_path, jobs = jobs)
   intersect(deps, config$plan$target)
 }
 
@@ -290,63 +287,5 @@ command_dependencies <- function(
     allowed_globals = allowed_globals
   )
   deps$strings <- NULL
-
-  # TODO: this block can go away when `drake`
-  # stops supporting single-quoted file names.
-
-  use_new_file_api <- identical(
-    pkgconfig::get_config("drake::strings_in_dots"),
-    "literals"
-  )
-  if (use_new_file_api) {
-    files <- character(0)
-  } else {
-    if (!is.character(command)){
-      command <- wide_deparse(command)
-    }
-    files <- extract_filenames(command)
-  }
-  if (length(files)) {
-    files <- drake_unquote(files)
-    warn_single_quoted_files(files = files, deps = deps)
-    files <- setdiff(files, deps$file_out)
-    deps$file_in <- base::union(deps$file_in, files)
-  }
-
-  # TODO: remove this bit when we're confident
-  # users have totally switched to `knitr_in()`.
-  # Turn it off right away if users elect for the new file API.
-  # I know strings_in_dots is not really meant to do this,
-  # but pkgconfig is only a temporary solution to manage
-  # the deprecation anyway.
-  if (!use_new_file_api) {
-    deps$loadd <- base::union(
-      deps$loadd, get_knitr_deps(find_knitr_doc(command))
-    )
-    deps$loadd <- unique(deps$loadd)
-  }
-
-  # This bit stays the same.
   select_nonempty(deps)
-}
-
-# TODO: this function can go away when drake
-# stops supporting single-quoted file names
-warn_single_quoted_files <- function(files, deps) {
-  files[is_encoded_path(files)] <- decode_path(files[is_encoded_path(files)])
-  old_api_files <- files
-  new_api_files <- c(deps$file_in, deps$file_out, deps$knitr_in)
-  new_api_files <- decode_path(new_api_files)
-  warn_files <- setdiff(old_api_files, new_api_files)
-  if (!length(warn_files)) {
-    return()
-  }
-  warning(
-    "Files in a command declared with single-quotes:\n",
-    multiline_message(warn_files),
-    "\nThe use of single-quotes to declare files is deprecated. ",
-    "Use file_in(), file_out(), and knitr_in() ",
-    "in your commands. See `?drake_plan` for examples.",
-    call. = FALSE
-  )
 }
