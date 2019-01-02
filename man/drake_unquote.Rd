@@ -24,3 +24,4 @@ Deprecated on 2019-01-01
 \seealso{
 \code{\link[=drake_quotes]{drake_quotes()}}, \code{\link[=drake_strings]{drake_strings()}}
 }
+\keyword{internal}
