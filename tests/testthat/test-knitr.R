@@ -64,6 +64,7 @@ test_with_dir("empty cases", {
 
 test_with_dir("knitr_deps() works", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  expect_equal(knitr_deps(character(0)), list())
   files <- system.file(
     file.path("testing", "knitr", c("nested.Rmd", "test.Rmd")),
     package = "drake", mustWork = TRUE

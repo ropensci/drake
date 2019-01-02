@@ -40,10 +40,6 @@ is_encoded_path <- function(x) {
   substr(x = x, start = 1, stop = 2) == "p-"
 }
 
-not_encoded_path <- function(x) {
-  !is_encoded_path(x)
-}
-
 is_encoded_namespaced <- function(x) {
   substr(x = x, start = 1, stop = 2) == "n-"
 }

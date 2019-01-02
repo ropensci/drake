@@ -28,7 +28,7 @@ knitr_deps <- function(target) {
 
 get_knitr_deps <- function(target) {
   if (!length(target)) {
-    return(character(0))
+    return(list())
   }
   out <- new_code_analysis_results()
   if (is_encoded_path(target)) {

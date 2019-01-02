@@ -830,10 +830,7 @@ default_verbose <- function() {
 #' @param single Add single quotes if `TRUE`
 #'   and double quotes otherwise.
 #' @examples
-#' # Single-quote this string.
-#' drake_quotes("abcd", single = TRUE) # "'abcd'"
-#' # Double-quote this string.
-#' drake_quotes("abcd") # "\"abcd\""
+#' # deprecated
 drake_quotes <- function(x = NULL, single = FALSE) {
   .Deprecated(
     "drake_quotes",
@@ -861,9 +858,7 @@ drake_quotes <- function(x = NULL, single = FALSE) {
 #'   the elements.
 #' @param x character vector
 #' @examples
-#' x <- "'abcd'"
-#' # Remove the literal quotes around x.
-#' drake_unquote(x) # "abcd"
+#' # deprecated
 drake_unquote <- function(x = NULL) {
   .Deprecated(
     "drake_unquote",
@@ -880,8 +875,7 @@ drake_unquote <- function(x = NULL) {
 #' @return A character vector.
 #' @param ... unquoted symbols to turn into character strings.
 #' @examples
-#' # Turn symbols into strings.
-#' drake_strings(a, b, c, d) # [1] "a" "b" "c" "d"
+#' # deprecated
 drake_strings <- function(...) {
   .Deprecated(
     "drake_strings",

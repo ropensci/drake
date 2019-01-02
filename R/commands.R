@@ -1,13 +1,3 @@
-extract_filenames <- function(command) {
-  if (!safe_grepl("'", command, fixed = TRUE)) {
-    return(character(0))
-  }
-  splits <- paste(" ", command, " ")
-  splits <- strsplit(splits, split = "'")
-  splits <- unlist(splits)
-  splits[seq(from = 2, to = length(splits), by = 2)]
-}
-
 # Get the command ready for tidy eval prep
 # and then pure eval (no side effects).
 preprocess_command <- function(command, config) {

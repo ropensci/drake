@@ -68,7 +68,11 @@ test_with_dir("deprecate misc utilities", {
   expect_error(parallel_stages(1), regexp = "parallelism")
   expect_error(rate_limiting_times(1), regexp = "parallelism")
   expect_warning(drake_unquote("x"))
+  expect_warning(drake_quotes(character(0)))
+  expect_warning(drake_quotes(""))
   expect_warning(drake_quotes("x"))
+  expect_warning(drake_quotes("x", single = TRUE))
+  expect_warning(drake_quotes("x", single = FALSE))
   expect_warning(drake_strings("x"))
   cache <- storr::storr_environment()
   expect_warning(configure_cache(
@@ -79,6 +83,7 @@ test_with_dir("deprecate misc utilities", {
   load_mtcars_example()
   expect_warning(config <- drake_config(my_plan, graph = 1, layout = 2))
   expect_warning(migrate_drake_project())
+  expect_warning(default_verbose())
 })
 
 test_with_dir("deprecated arguments", {
