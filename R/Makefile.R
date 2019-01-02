@@ -126,13 +126,14 @@ build_recipe <- function(target, recipe_command,
 #' # of make(..., parallelism = "Makefile").
 #' time_stamps(config = config)
 #' # Use mk() to build a target. Usually called inside a Makefile recipe.
-#' mk(target = "small", cache_path = default_cache_path())
+#' mk(target = "small", cache_path = ".drake")
 #' })
 #' }
 mk <- function(
   target = character(0),
-  cache_path = drake::default_cache_path()
+  cache_path = NULL
 ) {
+  cache_path <- cache_path %||% default_cache_path()
   config <- recover_drake_config(cache_path)
   old_hash <- makefile_hash(target = target, config = config)
   build_distributed(target = target, cache_path = cache_path)

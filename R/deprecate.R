@@ -444,7 +444,7 @@ max_useful_jobs <- function(
 #' @examples
 #' # This function is deprecated.
 migrate_drake_project <- function(
-  path = drake::default_cache_path(), jobs = 1
+  path = NULL, jobs = 1
 ) {
   .Deprecated(
     package = "drake",

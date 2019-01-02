@@ -38,11 +38,7 @@ cache_path <- function(cache = NULL) {
 }
 
 force_cache_path <- function(cache = NULL) {
-  path <- cache_path(cache)
-  if (is.null(path)) {
-    path <- default_cache_path()
-  }
-  path
+  cache_path(cache) %||% default_cache_path()
 }
 
 #' @title Get the default cache of a `drake` project.
@@ -134,12 +130,13 @@ get_cache <- function(
 #' })
 #' }
 this_cache <- function(
-  path = drake::default_cache_path(),
+  path = NULL,
   force = FALSE,
   verbose = 1L,
   fetch_cache = NULL,
   console_log_file = NULL
 ) {
+  path <- path %||% default_cache_path()
   deprecate_force(force)
   deprecate_fetch_cache(fetch_cache)
   usual_path_missing <- is.null(path) || !file.exists(path)
@@ -212,7 +209,7 @@ drake_fetch_rds <- function(path) {
 #' })
 #' }
 new_cache <- function(
-  path = drake::default_cache_path(),
+  path = NULL,
   verbose = 1L,
   type = NULL,
   hash_algorithm = NULL,
@@ -221,6 +218,7 @@ new_cache <- function(
   ...,
   console_log_file = NULL
 ) {
+  path <- path %||% default_cache_path()
   hash_algorithm <- set_hash_algorithm(hash_algorithm)
   if (!is.null(type)) {
     warning(
@@ -276,7 +274,7 @@ new_cache <- function(
 #' })
 #' }
 recover_cache <- function(
-  path = drake::default_cache_path(),
+  path = NULL,
   hash_algorithm = NULL,
   short_hash_algo = NULL,
   long_hash_algo = NULL,
@@ -285,6 +283,7 @@ recover_cache <- function(
   fetch_cache = NULL,
   console_log_file = NULL
 ) {
+  path <- path %||% default_cache_path()
   deprecate_force(force)
   deprecate_fetch_cache(fetch_cache)
   deprecate_hash_algo_args(short_hash_algo, long_hash_algo)
@@ -308,17 +307,6 @@ recover_cache <- function(
   cache
 }
 
-#' @title Return the default file path of the drake/storr cache.
-#' @export
-#' @keywords internal
-#' @description Applies to file system caches only.
-#' @return Default file path of the drake/storr cache.
-#' @param root character scalar, path to the root of the
-#'   `drake` project with the cache.
-#' @examples
-#' \dontrun{
-#' default_cache_path()
-#' }
 default_cache_path <- function(root = getwd()) {
   file.path(root, ".drake")
 }

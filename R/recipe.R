@@ -75,8 +75,9 @@
 Makefile_recipe <- function( # nolint
   recipe_command = drake::default_recipe_command(),
   target = "your_target",
-  cache_path = drake::default_cache_path()
+  cache_path = NULL
 ) {
+  cache_path <- cache_path %||% default_cache_path()
   msg <- build_recipe(
     target = target,
     recipe_command = recipe_command,

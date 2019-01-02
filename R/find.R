@@ -20,8 +20,9 @@
 #' }
 find_cache <- function(
   path = getwd(),
-  directory = basename(drake::default_cache_path())
+  directory = NULL
 ) {
+  directory <- directory %||% basename(default_cache_path())
   while (!(directory %in% list.files(path = path, all.files = TRUE))) {
     path <- dirname(path)
     # If we can search no higher...
