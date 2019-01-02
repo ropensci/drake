@@ -2,18 +2,18 @@ drake_context("map reduce")
 
 test_with_dir("map_plan()", {
   skip_on_cran()
-  f <- function(a, b) {
+  fn <- function(a, b) {
     a + b
   }
   args <- expand.grid(a = 1:2, b = 3:5)
-  plan1 <- map_plan(args = args, fun = f)
+  plan1 <- map_plan(args = args, fun = fn)
   args$id <- LETTERS[seq_len(nrow(args))]
-  plan2 <- map_plan(args = args, fun = f)
+  plan2 <- map_plan(args = args, fun = fn)
   args$x <- args$id
   args$id <- NULL
-  plan3 <- map_plan(args = args, fun = f, id = x)
-  plan4 <- map_plan(args = args, fun = "f", id = "x", character_only = TRUE)
-  plan5 <- map_plan(args = args, fun = f, id = x, trace = TRUE)
+  plan3 <- map_plan(args = args, fun = fn, id = x)
+  plan4 <- map_plan(args = args, fun = "fn", id = "x", character_only = TRUE)
+  plan5 <- map_plan(args = args, fun = fn, id = x, trace = TRUE)
   expect_equal(plan1$command, plan2$command)
   expect_equal(plan2, plan3)
   expect_equal(plan3, plan4)

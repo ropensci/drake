@@ -37,7 +37,7 @@ test_with_dir("circular non-DAG drake_plans quit in error", {
   )
   x <- drake_plan(
     a = b, b = c, c = a, d = 4, e = d,
-    A = B, B = C, C = A, mytarget = e
+    Aa = Bb, Bb = Cc, Cc = Aa, mytarget = e
   )
   expect_error(tmp <- capture.output(check_plan(x)))
   expect_error(

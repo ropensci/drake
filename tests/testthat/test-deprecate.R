@@ -193,7 +193,7 @@ test_with_dir("force with a non-back-compatible cache", {
   expect_null(get_cache())
   expect_null(this_cache())
   expect_true(inherits(recover_cache(), "storr"))
-  write_v4.3.0_project() # nolint
+  write_v6.2.1_project() # nolint
   expect_warning(get_cache(), regexp = "compatible")
   expect_warning(this_cache(), regexp = "compatible")
   expect_warning(recover_cache(), regexp = "compatible")
@@ -207,59 +207,6 @@ test_with_dir("force with a non-back-compatible cache", {
   expect_silent(tmp <- get_cache())
   expect_silent(tmp <- this_cache())
   expect_silent(tmp <- recover_cache())
-})
-
-test_with_dir("v6.2.1 project is still up to date", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  skip_if_not_installed("datasets")
-  skip_if_not_installed("tibble")
-  skip_if_not_installed("knitr")
-  requireNamespace("datasets")
-  write_v6.2.1_project() # nolint
-  report_md_hash <- readRDS(
-    file.path(".drake", "data", "983396f9689f587b.rds")
-  )
-  expect_equal(nchar(report_md_hash), 64L)
-  plan <- read_drake_plan()
-  random_rows <- function(data, n) {
-    data[sample.int(n = nrow(data), size = n, replace = TRUE), ]
-  }
-  simulate <- function(n) {
-    data <- random_rows(data = mtcars, n = n)
-    data.frame(
-      x = data$wt,
-      y = data$mpg
-    )
-  }
-  reg1 <- function(d) {
-    lm(y ~ + x, data = d)
-  }
-  reg2 <- function(d) {
-    d$x2 <- d$x ^ 2
-    lm(y ~ x2, data = d)
-  }
-  require("knitr", quietly = TRUE) # nolint
-  config <- drake_config(plan)
-  expect_equal(outdated(config), character(0))
-  config <- make(plan)
-  expect_equal(justbuilt(config), character(0))
-
-  # Does it still respond correctly to changes in output files?
-  lines <- c(readLines("report.md"), "", "Last line.")
-  writeLines(lines, "report.md")
-  expect_equal(outdated(config), "report")
-  config <- make(config = config)
-  expect_equal(justbuilt(config), "report")
-  expect_equal(outdated(config), character(0))
-
-  # How about knitr files?
-  lines <- c(readLines("report.Rmd"), "", "Last line.")
-  writeLines(lines, "report.Rmd")
-  expect_equal(outdated(config), "report")
-  requireNamespace("knitr")
-  config <- make(config = config)
-  expect_equal(justbuilt(config), "report")
-  expect_equal(outdated(config), character(0))
 })
 
 test_with_dir("deprecate the `force` argument", {

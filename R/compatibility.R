@@ -3,7 +3,7 @@ cache_vers_check <- function(cache) {
     return(character(0))
   }
   old <- get_cache_version(cache = cache)
-  if (compareVersion(old, "5.4.0") < 0) {
+  if (compareVersion(old, "6.2.1") <= 0) {
     paste0(
       "This project was last run with drake version ",
       old, ".\nYour cache is not compatible with the current ",
