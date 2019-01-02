@@ -13,12 +13,14 @@ test_with_dir("console_cache", {
 test_with_dir("console_up_to_date", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   pl <- drake_plan(a = 1)
-  con <- make(pl, verbose = FALSE, session_info = FALSE)
+  make(pl, verbose = FALSE, session_info = FALSE)
+  con <- drake_config(pl, verbose = FALSE, session_info = FALSE)
   expect_silent(console_up_to_date(con))
   con$verbose <- TRUE
   expect_silent(console_up_to_date(con))
   con$cache$clear(namespace = "attempt")
-  con <- make(pl, verbose = FALSE, session_info = FALSE)
+  make(pl, verbose = FALSE, session_info = FALSE)
+  con <- drake_config(pl, verbose = FALSE, session_info = FALSE)
   con$verbose <- TRUE
   expect_message(console_up_to_date(con))
 })
