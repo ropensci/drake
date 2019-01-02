@@ -8,34 +8,55 @@ console <- function(imported, target, config) {
   }
 }
 
-console_generic <- function(target, config, cutoff = 1, pattern = "target") {
+console_generic <- function(
+  target,
+  config,
+  cutoff = 1,
+  pattern = "target",
+  tail = ""
+) {
   if (config$verbose < cutoff) {
     return()
   }
   text <- display_keys(target, config)
-  text <- paste(pattern, text)
+  text <- paste0(pattern, " ", text, tail)
   finish_console(text = text, pattern = pattern, config = config)
 
 }
 
 console_missing <- function(target, config) {
-  console_generic(target, config, 3, "missing")
+  console_generic(target, config, 3L, "missing")
 }
 
 console_import <- function(target, config) {
-  console_generic(target, config, 4, "import")
+  console_generic(target, config, 4L, "import")
 }
 
 console_skip <- function(target, config) {
-  console_generic(target, config, 4, "skip")
+  console_generic(target, config, 4L, "skip")
 }
 
 console_store <- function(target, config) {
-  console_generic(target, config, 4, "store")
+  console_generic(target, config, 6L, "store")
 }
 
 console_target <- function(target, config) {
-  console_generic(target, config, 1, "target")
+  console_generic(target, config, 1L, "target")
+}
+
+console_time <- function(target, meta, config) {
+  tol <- 5L
+  if (config$verbose < tol) {
+    return()
+  }
+  if (requireNamespace("lubridate", quietly = TRUE)) {
+    exec <- round(lubridate::dseconds(meta$time_command$elapsed), 3)
+    total <- round(lubridate::dseconds( meta$time_build$elapsed), 3)
+    tail <- paste("", exec, "(exec)", total, "(total)")
+  } else {
+    tail <- " (install lubridate)" # nocov
+  }
+  console_generic(target, config, tol, "time", tail = tail)
 }
 
 console_cache <- function(config) {

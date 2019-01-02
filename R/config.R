@@ -48,9 +48,11 @@
 #' @param verbose logical or numeric, control printing to the console.
 #'   - `0` or `FALSE`: print nothing.
 #'   - `1` or `TRUE`: print only targets to build.
-#'   - `2`: also print checks and cache info.
-#'   - `3`: also print any potentially missing items.
-#'   - `4`: also print imports and writes to the cache.
+#'   - `2`: plus checks and cache info.
+#'   - `3`: plus missing imports.
+#'   - `4`: plus all imports.
+#'   - `5`: plus execution and total build times for targets.
+#'   - `6`: plus notifications when targets are being stored.
 #'
 #' @param hook Deprecated.
 #'

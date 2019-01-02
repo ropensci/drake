@@ -33,11 +33,12 @@ store_outputs <- function(target, value, meta, config) {
     target = target,
     value = value,
     meta = meta,
-    config = config
+    config = config,
+    verbose = TRUE
   )
 }
 
-store_single_output <- function(target, value, meta, config) {
+store_single_output <- function(target, value, meta, config, verbose = FALSE) {
   if (meta$isfile) {
     store_file(
       target = target,
@@ -63,11 +64,12 @@ store_single_output <- function(target, value, meta, config) {
     target = target,
     value = value,
     meta = meta,
-    config = config
+    config = config,
+    verbose = verbose
   )
 }
 
-finalize_storage <- function(target, value, meta, config) {
+finalize_storage <- function(target, value, meta, config, verbose) {
   meta <- finalize_times(
     target = target,
     meta = meta,
@@ -79,6 +81,9 @@ finalize_storage <- function(target, value, meta, config) {
     value = "finished",
     config = config
   )
+  if (!meta$imported && verbose) {
+    console_time(target, meta, config)
+  }
 }
 
 store_object <- function(target, value, meta, config) {
