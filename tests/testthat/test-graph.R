@@ -261,9 +261,15 @@ test_with_dir("show_output_files", {
   )
   writeLines("in1", "in1.txt")
   writeLines("in2", "in2.txt")
-  config <- make(
+  cache <- storr::storr_environment()
+  make(
     plan,
-    cache = storr::storr_environment(),
+    cache = cache,
+    session_info = FALSE
+  )
+  config <- drake_config(
+    plan,
+    cache = cache,
     session_info = FALSE
   )
   writeLines("abcdefg", "out3.txt")
@@ -348,9 +354,15 @@ test_with_dir("same, but with an extra edge not due to files", {
   )
   writeLines("in1", "in1.txt")
   writeLines("in2", "in2.txt")
-  config <- make(
+  cache <- storr::storr_environment()
+  make(
     plan,
-    cache = storr::storr_environment(),
+    cache = cache,
+    session_info = FALSE
+  )
+  config <- drake_config(
+    plan,
+    cache = cache,
     session_info = FALSE
   )
   writeLines("abcdefg", "out3.txt")
