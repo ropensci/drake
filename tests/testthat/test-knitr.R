@@ -20,10 +20,7 @@ test_with_dir("codeless knitr report", {
   )
   expect_silent(
     tmp <- make(
-      drake_plan(
-        x = knitr_in("codeless.Rmd"),
-        strings_in_dots = "literals"
-      ),
+      drake_plan(x = knitr_in("codeless.Rmd")),
       session_info = FALSE,
       cache = storr::storr_environment(),
       verbose = FALSE
@@ -49,8 +46,7 @@ test_with_dir("bad knitr report", {
   expect_warning(
     tmp <- make(
       drake_plan(
-        x = knitr_in("bad.Rmd"),
-        strings_in_dots = "literals"
+        x = knitr_in("bad.Rmd")
       ),
       session_info = FALSE,
       cache = storr::storr_environment(),

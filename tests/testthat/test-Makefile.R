@@ -174,8 +174,7 @@ test_with_dir("packages are loaded in prework", {
   config$prework <- "options(test_drake_option_12345 = 'set')"
   config$plan <- drake_plan(
     x = getOption("test_drake_option_12345"),
-    y = c(deparse(body(abind)), x),
-    strings_in_dots = "literals"
+    y = c(deparse(body(abind)), x)
   )
   config$targets <- config$plan$target
   expect_false(any(c("x", "y") %in% config$cache$list()))

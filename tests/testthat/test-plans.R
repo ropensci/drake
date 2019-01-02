@@ -143,8 +143,7 @@ test_with_dir("edge cases for plans", {
   # multiple file outputs are okay
   expect_equal(
     drake_plan(
-      a = file_out("file1", "file2"),
-      strings_in_dots = "literals"
+      a = file_out("file1", "file2")
     ),
     weak_tibble(
       target = "a",
@@ -153,8 +152,7 @@ test_with_dir("edge cases for plans", {
   )
   expect_equal(
     drake_plan(
-      a = file_out(c("file1", "file2")),
-      strings_in_dots = "literals"
+      a = file_out(c("file1", "file2"))
     ),
     weak_tibble(
       target = "a",
@@ -169,8 +167,7 @@ test_with_dir("plan set 2", {
     x <- drake_plan(
       a = c,
       b = "c",
-      list = c(c = "d", d = "readRDS('e')"),
-      strings_in_dots = "literals",
+      list = c(c = "d", d = "readRDS('e')")
       tidy_evaluation = tidy_evaluation
     )
     y <- weak_tibble(
@@ -317,8 +314,7 @@ test_with_dir("custom column interface", {
       command = Sys.sleep("not a number"),
       col3 = "some text"
     ),
-    z = rnorm(10),
-    strings_in_dots = "literals"
+    z = rnorm(10)
   )
   plan0 <- weak_tibble(
     target = c("x", "y", "z"),
@@ -341,8 +337,7 @@ test_with_dir("bind_plans()", {
     z = target(
       command = download_data(),
       trigger = trigger(condition = TRUE)
-    ),
-    strings_in_dots = "literals"
+    )
   )
   plan3 <- drake_plan(u = 3, v = 4, w = 5)
   out <- bind_plans(plan1, plan2)
@@ -400,8 +395,7 @@ test_with_dir("bad 'columns' argument to evaluate_plan()", {
   plan <- drake_plan(
     x = target("always", cpu = "any"),
     y = target("any", cpu = "always"),
-    z = target("any", cpu = "any"),
-    strings_in_dots = "literals"
+    z = target("any", cpu = "any")
   )
   expect_error(
     evaluate_plan(plan, wildcard = "any", values = 1:2, columns = "target"),
@@ -421,8 +415,7 @@ test_with_dir("'columns' argument to evaluate_plan()", {
   plan <- drake_plan(
     x = target("always", cpu = "any"),
     y = target("any", cpu = "always"),
-    z = target("any", cpu = "any"),
-    strings_in_dots = "literals"
+    z = target("any", cpu = "any")
   )
   out <- weak_tibble(
     target = c("x_1", "x_2", "y_1", "y_2", "z"),
@@ -502,8 +495,7 @@ test_with_dir("drake_plan_source()", {
         depend = FALSE
       ),
       elapsed = 1e3
-    ),
-    strings_in_dots = "literals"
+    )
   )
   x <- drake_plan_source(plan)
   y <- capture.output(print(x))
