@@ -49,6 +49,17 @@ language_to_text <- function(x) {
   if (length(x) < 1) {
     return(character(0)) 
   }
+  if (length(x) > 1) {
+    stop(
+      "Found malformed multi-line command:\n\n", x,
+      "\n\nPlease enclose multi-line commands in curly braces, e.g.\n\n",
+      "{\n",
+      "  x <- 4\n",
+      "  sqrt(x)\n",
+      "}",
+      call. = FALSE 
+    )
+  }
   if (is.expression(x)) {
     x <- x[[1]]
   }

@@ -315,3 +315,15 @@ test_with_dir("case sensitivity", {
     regexp = "case insensitive"
   )
 })
+
+test_with_dir("bad multipart command", {
+   plan <- data.frame(
+     target = "x",
+     command = "knitr_in(\"report.Rmd\")
+       out <- f(1 + readRDS(file_in(\"file.rds\")))
+       saveRDS(out, file_out(\"out.rds\"))
+       out",
+     stringsAsFactors = FALSE
+   )
+   expect_error(make(plan), regexp = "malformed multi-line command")
+})
