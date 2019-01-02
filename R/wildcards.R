@@ -393,11 +393,6 @@ expand_plan <- function(plan, values = NULL, rename = TRUE, sep = "_") {
 #' my_plan <- rbind(datasets, ans)
 #' my_plan
 plan_analyses <- function(plan, datasets, sep = "_") {
-  plan <- deprecate_wildcard(
-    plan = plan,
-    old = "..dataset..",
-    replacement = dataset_wildcard()
-  )
   evaluate_plan(
     plan,
     wildcard = dataset_wildcard(),
@@ -460,16 +455,6 @@ plan_summaries <- function(
   gather = rep("list", nrow(plan)),
   sep = "_"
 ) {
-  plan <- deprecate_wildcard(
-    plan = plan,
-    old = "..analysis..",
-    replacement = analysis_wildcard()
-  )
-  plan <- deprecate_wildcard(
-    plan = plan,
-    old = "..dataset..",
-    replacement = dataset_wildcard()
-  )
   plan <- with_analyses_only(plan)
   out <- plan
   group <- paste(colnames(out), collapse = sep)
