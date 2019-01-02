@@ -27,8 +27,7 @@ plan <- drake_plan(
     rm(large_data_1, large_data_2, envir = drake_envir())
     print(ls(envir = drake_envir()))
     mean(subset)
-  },
-  strings_in_dots = "literals"
+  }
 )
 make(plan, cache = storr::storr_environment(), session_info = FALSE)
 }

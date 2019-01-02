@@ -63,8 +63,7 @@ deps_code(f)
 my_plan <- drake_plan(
   x = 1 + some_object,
   my_target = x + readRDS(file_in("tracked_input_file.rds")),
-  return_value = f(x, y, g(z + w)),
-  strings_in_dots = "literals"
+  return_value = f(x, y, g(z + w))
 )
 # Get the dependencies of workflow plan commands.
 # Here, the dependencies could be R functions/objects from your workspace

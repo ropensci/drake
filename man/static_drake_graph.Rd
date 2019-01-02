@@ -7,8 +7,8 @@ of your drake project.}
 \usage{
 static_drake_graph(config = drake::read_drake_config(),
   build_times = "build", digits = 3, targets_only = FALSE,
-  split_columns = NULL, main = NULL, from = NULL, mode = c("out",
-  "in", "all"), order = NULL, subset = NULL, make_imports = TRUE,
+  main = NULL, from = NULL, mode = c("out", "in", "all"),
+  order = NULL, subset = NULL, make_imports = TRUE,
   from_scratch = FALSE, full_legend = FALSE, group = NULL,
   clusters = NULL)
 }
