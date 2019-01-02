@@ -68,7 +68,7 @@ language_to_text <- function(x) {
 
 standardize_code <- function(x){
   if (!length(x)){
-    return(as.character(NA))
+    return(NA_character_)
   }
   deparse(parse(text = as.character(x), keep.source = FALSE)[[1]])
 }
