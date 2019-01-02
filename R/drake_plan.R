@@ -58,41 +58,8 @@
 #'   with commands assigned to them. See the examples for details.
 #' @param list A named character vector of commands
 #'   with names as targets.
-#' @param file_targets deprecated argument. See [file_out()],
-#'   [file_in()], and [knitr_in()] for the current way to work
-#'   with files.
-#'   In the past, this argument was a logical to indicate whether the
-#'   target names should be single-quoted to denote files. But the newer
-#'   interface is much better.
-#' @param strings_in_dots deprecated argument for handling strings in
-#'   commands specified in the `...` argument. Defaults to `NULL` for backward
-#'   compatibility. New code should use [file_out()], [file_in()], and
-#'   [knitr_in()] to specify file names and set this argument to `"literals"`,
-#'   which will at some point become the only accepted value.
-#'
-#'   To fully embrace the glorious new file API, call
-#'   `pkgconfig::set_config("drake::strings_in_dots" = "literals")`
-#'   right when you start your R session.
-#'   That way, `drake` totally relies on [file_in()], [file_out()],
-#'   and [knitr_in()] to coordinate input and output files, as
-#'   opposed to deprecated features like single-quotes
-#'   (and in the case of `knitr` reports,
-#'   explicit calls to `knitr::knit()` and `rmarkdown::render()` in commands).
-#'   This is why the default value of `strings_in_dots` is
-#'   `pkgconfig::get_config("drake::strings_in_dots")`.
-#'
-#'   In the past, this argument was a character scalar denoting
-#'   how to treat quoted character strings in the commands
-#'   specified through `...`.
-#'   Set to `"filenames"` to treat all these strings as
-#'   external file targets/imports (single-quoted),
-#'   or to `"literals"` to treat them all as literal
-#'   strings (double-quoted).
-#'   Unfortunately, because of how R deparses code,
-#'   you cannot simply leave literal quotes alone in the
-#'   `...` argument. R will either convert all these quotes
-#'   to single quotes or double quotes. Literal quotes in the
-#'   `list` argument are left alone.
+#' @param file_targets deprecated
+#' @param strings_in_dots deprecated
 #' @param tidy_evaluation logical, whether to use tidy evaluation
 #'   such as quasiquotation
 #'   when evaluating commands passed through the free-form
@@ -148,7 +115,7 @@ drake_plan <- function(
   ...,
   list = character(0),
   file_targets = NULL,
-  strings_in_dots = pkgconfig::get_config("drake::strings_in_dots"),
+  strings_in_dots = NULL,
   tidy_evaluation = TRUE
 ) {
   if (tidy_evaluation) {
