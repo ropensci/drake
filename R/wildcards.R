@@ -135,8 +135,7 @@ dataset_wildcard <- function() {
 #'   drake_plan(
 #'     x = target("1 + 1", cpu = "any"),
 #'     y = target("sqrt(4)", cpu = "always"),
-#'     z = target("sqrt(16)", cpu = "any"),
-#'     strings_in_dots = "literals"
+#'     z = target("sqrt(16)", cpu = "any")
 #'   ),
 #'   rules = list(always = 1:2),
 #'   columns = c("command", "cpu")

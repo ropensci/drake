@@ -69,8 +69,7 @@
 #' # Create workflow plan data frames.
 #' mtcars_plan <- drake_plan(
 #'   write.csv(mtcars[, c("mpg", "cyl")], file_out("mtcars.csv")),
-#'   value = read.csv(file_in("mtcars.csv")),
-#'   strings_in_dots = "literals"
+#'   value = read.csv(file_in("mtcars.csv"))
 #' )
 #' mtcars_plan
 #' make(mtcars_plan) # Makes `mtcars.csv` and then `value`
@@ -91,8 +90,7 @@
 #'     trigger = "always",
 #'     custom_column = 5
 #'   ),
-#'   analysis = analyze(website_data),
-#'   strings_in_dots = "literals"
+#'   analysis = analyze(website_data)
 #' )
 #' # Are you a fan of tidy evaluation?
 #' my_variable <- 1
@@ -166,8 +164,7 @@ drake_plan <- function(
 #'   data = target(
 #'     command = download_data(),
 #'     trigger = "always"
-#'   ),
-#'   strings_in_dots = "literals"
+#'   )
 #' )
 #' # But if the data don't change, the analyses don't need to change.
 #' analysis_plan <- drake_plan(
@@ -267,8 +264,7 @@ complete_target_names <- function(commands_list) {
 #' suppressWarnings(
 #'   plan <- drake_plan(
 #'     write.csv(mtcars, file_out("mtcars.csv")),
-#'     contents = read.csv(file_in("mtcars.csv")),
-#'     strings_in_dots = "literals" # deprecated but useful: no single quotes needed. # nolint
+#'     contents = read.csv(file_in("mtcars.csv"))
 #'   )
 #' )
 #' plan
@@ -307,8 +303,7 @@ file_in <- function(...) {
 #' suppressWarnings(
 #'   plan <- drake_plan(
 #'     write.csv(mtcars, file_out("mtcars.csv")),
-#'     contents = read.csv(file_in("mtcars.csv")),
-#'     strings_in_dots = "literals" # deprecated but useful: no single quotes needed. # nolint
+#'     contents = read.csv(file_in("mtcars.csv"))
 #'   )
 #' )
 #' plan
@@ -484,8 +479,7 @@ detect_arrow <- function(command) {
 #'     trigger = "always",
 #'     custom_column = 5
 #'   ),
-#'   analysis = analyze(website_data),
-#'   strings_in_dots = "literals"
+#'   analysis = analyze(website_data)
 #' )
 #' plan
 #' # make(plan) # nolint
