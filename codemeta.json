@@ -1,5 +1,8 @@
 {
-  "@context": ["https://doi.org/10.5063/schema/codemeta-2.0", "http://schema.org"],
+  "@context": [
+    "https://doi.org/10.5063/schema/codemeta-2.0",
+    "http://schema.org"
+  ],
   "@type": "SoftwareSourceCode",
   "identifier": "drake",
   "description": "A general-purpose computational engine for data analysis,\n  drake rebuilds intermediate data objects when their dependencies change,\n  and it skips work when the results are already up to date.\n  Not every execution starts from scratch,\n  there is native support for parallel and distributed computing,\n  and completed projects have tangible evidence\n  that they are reproducible.\n  Extensive documentation, from beginner-friendly tutorials\n  to practical examples and more, is available at the reference website\n  <https://ropensci.github.io/drake/> and the online manual\n  <https://ropenscilabs.github.io/drake-manual/>.",
@@ -7,14 +10,14 @@
   "codeRepository": "https://github.com/ropensci/drake",
   "issueTracker": "https://github.com/ropensci/drake/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "6.2.1.9000",
+  "version": "6.2.1.9001",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
-    "version": "3.5.1",
+    "version": "3.5.2",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 3.5.1 (2018-07-02)",
+  "runtimePlatform": "R version 3.5.2 (2018-12-20)",
   "provider": {
     "@id": "https://cran.r-project.org",
     "@type": "Organization",
@@ -96,18 +99,6 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=bindr"
-    },
-    {
-      "@type": "SoftwareApplication",
-      "identifier": "callr",
-      "name": "callr",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=callr"
     },
     {
       "@type": "SoftwareApplication",
@@ -376,19 +367,19 @@
       "@type": "SoftwareApplication",
       "identifier": "R",
       "name": "R",
-      "version": ">= 3.3.0"
+      "version": ">= 3.4.0"
     },
     {
       "@type": "SoftwareApplication",
-      "identifier": "codetools",
-      "name": "codetools",
+      "identifier": "base64url",
+      "name": "base64url",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
         "name": "Comprehensive R Archive Network (CRAN)",
         "url": "https://cran.r-project.org"
       },
-      "sameAs": "https://CRAN.R-project.org/package=codetools"
+      "sameAs": "https://CRAN.R-project.org/package=base64url"
     },
     {
       "@type": "SoftwareApplication",
@@ -463,10 +454,9 @@
       "name": "utils"
     }
   ],
-  
-  "releaseNotes": "https://github.com/bpbond/drake/blob/master/NEWS.md",
-  "readme": "https://github.com/bpbond/drake/blob/master/README.md",
-  "fileSize": "489.96KB",
+  "releaseNotes": "https://github.com/ropensci/drake/blob/master/NEWS.md",
+  "readme": "https://github.com/ropensci/drake/blob/master/README.md",
+  "fileSize": "379.5KB",
   "contIntegration": [
     "https://ci.appveyor.com/project/ropensci/drake",
     "https://travis-ci.org/ropensci/drake",
@@ -478,6 +468,20 @@
     "url": "https://github.com/ropensci/onboarding/issues/156",
     "provider": "http://ropensci.org"
   },
-  "keywords": ["reproducibility", "high-performance-computing", "r", "data-science", "drake", "makefile", "pipeline", "workflow", "reproducible-research", "rstats", "r-package", "ropensci", "peer-reviewed"],
+  "keywords": [
+    "reproducibility",
+    "high-performance-computing",
+    "r",
+    "data-science",
+    "drake",
+    "makefile",
+    "pipeline",
+    "workflow",
+    "reproducible-research",
+    "rstats",
+    "r-package",
+    "ropensci",
+    "peer-reviewed"
+  ],
   "relatedLink": "https://CRAN.R-project.org/package=drake"
 }
