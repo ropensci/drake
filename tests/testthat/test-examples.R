@@ -42,7 +42,8 @@ test_with_dir("mtcars example works", {
 
   dats <- c("small", "large")
   config$targets <- dats
-  con <- testrun(config)
+  testrun(config)
+  con <- testconfig(config)
 
   expect_true(is.list(dependency_profile(
     target = "small", config = con)))
@@ -52,7 +53,7 @@ test_with_dir("mtcars example works", {
   remove_these <- intersect(dats, ls(config$envir))
   rm(list = remove_these, envir = config$envir)
   config$targets <- config$plan$target
-  con <- testrun(config)
+  testrun(config)
   jb <- justbuilt(con)
   expect_true("report" %in% jb)
   expect_false(any(dats %in% jb))

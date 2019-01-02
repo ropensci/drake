@@ -301,11 +301,13 @@ test_with_dir("ignore() suppresses updates", {
   )
   expect_equal(justbuilt(con), "x")
   con$envir$arg <- con$envir$arg + 1
+  con$cache$clear(namespace = "progress")
   make(config = con)
   expect_equal(justbuilt(con), character(0))
 
   con$envir$arg2 <- con$envir$arg + 1234
   con$plan <- drake_plan(x = sqrt( ignore  (arg2 ) + 123)) # nolint
+  con$cache$clear(namespace = "progress")
   make(config = con)
   expect_equal(justbuilt(con), character(0))
 })
