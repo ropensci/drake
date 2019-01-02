@@ -10,8 +10,7 @@ make_imports(config = drake::read_drake_config())
 \item{config}{a configuration list returned by \code{\link[=drake_config]{drake_config()}}}
 }
 \value{
-The master internal configuration list
-used by \code{\link[=make]{make()}}.
+nothing
 }
 \description{
 \code{\link[=make]{make()}} is the central, most important function

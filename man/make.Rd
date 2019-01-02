@@ -447,10 +447,7 @@ and the reproducibility/credibility/trust you can place in your project.
 7.0.0 and higher.}
 }
 \value{
-The master internal configuration list, mostly
-containing arguments to \code{make()} and important objects
-constructed along the way. See \code{\link[=drake_config]{drake_config()}}
-for more details.
+nothing
 }
 \description{
 This is the central, most important function
