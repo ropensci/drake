@@ -138,7 +138,6 @@ reference:
   - '`cache_namespaces`'
   - '`cache_path`'
   - '`cleaned_namespaces`'
-  - '`configure_cache`'
   - '`default_cache_path`'
   - '`new_cache`'
   - '`recover_cache`'
@@ -146,7 +145,4 @@ reference:
   - '`this_cache`'
 - title: Utilities
   contents:
-  - '`drake_quotes`'
-  - '`drake_strings`'
-  - '`drake_unquote`'
   - '`expose_imports`'

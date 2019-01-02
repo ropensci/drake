@@ -30,10 +30,12 @@ test_with_dir("drake_version", {
     get_cache_version(cache),
     as.character(utils::packageVersion("drake"))
   )
-  con <- make(drake_plan(x = 1), session_info = FALSE)
+  make(drake_plan(x = 1), session_info = FALSE)
+  con <- drake_config(drake_plan(x = 1), session_info = FALSE)
   expect_true(is.character(get_cache_version(con$cache)))
   clean()
-  con <- make(drake_plan(x = 1), session_info = TRUE)
+  make(drake_plan(x = 1), session_info = TRUE)
+  con <- drake_config(drake_plan(x = 1), session_info = TRUE)
   expect_true(is.character(get_cache_version(con$cache)))
   con$cache$clear(namespace = "session")
   expect_equal(
@@ -45,7 +47,8 @@ test_with_dir("drake_version", {
 test_with_dir("dependency profile", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   b <- 1
-  config <- make(drake_plan(a = b), session_info = FALSE)
+  make(drake_plan(a = b), session_info = FALSE)
+  config <- drake_config(drake_plan(a = b), session_info = FALSE)
   expect_error(
     dependency_profile(target = missing, config = config),
     regexp = "no recorded metadata"
@@ -550,9 +553,17 @@ test_with_dir("master caching, environment caches and parallelism", {
   skip_if_not_installed("future")
   load_mtcars_example()
   future::plan(future::multiprocess)
-  config <- make(
+  cache <- storr::storr_environment() # not thread-safe
+  make(
     my_plan,
-    cache = storr::storr_environment(), # not thread-safe
+    cache = cache,
+    caching = "master",
+    parallelism = "future",
+    jobs = 2
+  )
+  config <- drake_config(
+    my_plan,
+    cache = cache,
     caching = "master",
     parallelism = "future",
     jobs = 2

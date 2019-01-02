@@ -825,6 +825,7 @@ default_verbose <- function() {
 #' @description Deprecated on 2019-01-01
 #' @seealso [drake_unquote()], [drake_strings()]
 #' @export
+#' @keywords internal
 #' @return Character vector with quotes around it.
 #' @param x character vector or object to be coerced to character.
 #' @param single Add single quotes if `TRUE`
@@ -853,6 +854,7 @@ drake_quotes <- function(x = NULL, single = FALSE) {
 #' @description Deprecated on 2019-01-01
 #' @seealso [drake_quotes()], [drake_strings()]
 #' @export
+#' @keywords internal
 #' @return Character vector without leading
 #'   or trailing escaped quotes around
 #'   the elements.
@@ -872,6 +874,7 @@ drake_unquote <- function(x = NULL) {
 #' @description Deprecated on 2019-01-01
 #' @seealso [drake_quotes()], [drake_unquote()]
 #' @export
+#' @keywords internal
 #' @return A character vector.
 #' @param ... unquoted symbols to turn into character strings.
 #' @examples

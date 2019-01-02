@@ -101,21 +101,25 @@ test_with_dir("mclapply and lapply", {
   config$parallelism <- "parLapply"
   config$jobs <- 1
   config$debug <- TRUE
-  suppressWarnings(out <- make(config = config))
+  suppressWarnings(make(config = config))
+  out <- config
   expect_false(
     grepl("NA", mc_get_checksum(target = "combined", config = config)))
   expect_true(length(justbuilt(out)) > 0)
   expect_true(is.numeric(readd(final)))
-  suppressWarnings(out <- make(config = config))
+  suppressWarnings(make(config = config))
+  out <- config
   expect_true(is.numeric(readd(final)))
   expect_equal(justbuilt(out), character(0))
   skip_on_os("windows")
   config$parallelism <- "mclapply"
   clean()
-  suppressWarnings(out <- make(config = config))
+  suppressWarnings(make(config = config))
+  out <- config
   expect_true(length(justbuilt(out)) > 0)
   expect_true(is.numeric(readd(final)))
-  suppressWarnings(out <- make(config = config))
+  suppressWarnings(make(config = config))
+  out <- config
   expect_true(is.numeric(readd(final)))
   expect_equal(justbuilt(out), character(0))
 })
@@ -126,14 +130,17 @@ test_with_dir("staged mclapply and lapply", {
   env <- config$envir
   config$parallelism <- "parLapply_staged"
   config$jobs <- 1
-  out <- make(config = config)
+  make(config = config)
+  out <- config
   clean()
   config$jobs <- 2
   config$debug <- TRUE
-  suppressWarnings(out <- make(config = config))
+  suppressWarnings(make(config = config))
+  out <- config
   expect_true(length(justbuilt(out)) > 0)
   expect_true(is.numeric(readd(final)))
-  suppressWarnings(out <- make(config = config))
+  suppressWarnings(make(config = config))
+  out <- config
   expect_true(is.numeric(readd(final)))
   expect_equal(justbuilt(out), character(0))
   expect_true(is.numeric(readd(final)))
@@ -142,10 +149,12 @@ test_with_dir("staged mclapply and lapply", {
   config$parallelism <- "mclapply_staged"
   clean()
   config$envir <- env
-  suppressWarnings(out <- make(config = config))
+  suppressWarnings(make(config = config))
+  out <- config
   expect_true(length(justbuilt(out)) > 0)
   expect_true(is.numeric(readd(final)))
-  suppressWarnings(out <- make(config = config))
+  suppressWarnings(make(config = config))
+  out <- config
   expect_true(is.numeric(readd(final)))
   expect_equal(justbuilt(out), character(0))
 })

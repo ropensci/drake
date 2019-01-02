@@ -11,7 +11,7 @@ make_with_config(config = drake::read_drake_config())
 \item{config}{An input internal configuration list}
 }
 \value{
-A \code{\link[=drake_config]{drake_config()}} list
+nothing
 }
 \description{
 Use \code{\link[=drake_config]{drake_config()}}

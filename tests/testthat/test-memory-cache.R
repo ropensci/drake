@@ -7,7 +7,9 @@ test_with_dir("storr_environment is usable", {
   expect_equal(x$driver$hash_algorithm, "murmur32")
   expect_error(drake_get_session_info(cache = x))
   pln <- drake_plan(y = 1)
-  config <- make(pln, cache = x, verbose = FALSE, session_info = FALSE)
+  make(pln, cache = x, verbose = FALSE, session_info = FALSE)
+  config <- drake_config(
+    pln, cache = x, verbose = FALSE, session_info = FALSE)
   expect_equal(cached(cache = x), "y")
   expect_false(file.exists(default_cache_path()))
   expect_equal(outdated(config), character(0))
@@ -24,7 +26,15 @@ test_with_dir("arbitrary storr in-memory cache", {
   cache <- storr::storr_environment(hash_algorithm = "murmur32")
   load_mtcars_example(envir = envir)
   my_plan <- envir$my_plan
-  con <- make(
+  make(
+    my_plan,
+    envir = envir,
+    cache = cache,
+    parallelism = parallelism,
+    jobs = jobs,
+    verbose = FALSE
+  )
+  con <- drake_config(
     my_plan,
     envir = envir,
     cache = cache,

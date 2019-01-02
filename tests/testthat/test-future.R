@@ -13,7 +13,17 @@ test_with_dir("future package functionality", {
   caching <- c(rep("worker", 2), rep("master", 2))
   for (i in 1:4) {
     clean(destroy = TRUE)
-    config <- make(
+    make(
+      e$my_plan,
+      envir = e,
+      parallelism = backends[i],
+      caching = caching[i],
+      jobs = 1,
+      verbose = FALSE,
+      session_info = FALSE,
+      lock_envir = TRUE
+    )
+    config <- drake_config(
       e$my_plan,
       envir = e,
       parallelism = backends[i],
@@ -31,7 +41,17 @@ test_with_dir("future package functionality", {
 
   # Stuff is already up to date.
   for (i in 1:4) {
-    config <- make(
+    make(
+      e$my_plan,
+      envir = e,
+      parallelism = backends[i],
+      caching = caching[i],
+      jobs = 1,
+      verbose = FALSE,
+      session_info = FALSE,
+      lock_envir = TRUE
+    )
+    config <- drake_config(
       e$my_plan,
       envir = e,
       parallelism = backends[i],

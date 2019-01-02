@@ -149,13 +149,21 @@ test_with_dir("old trigger interface", {
     plan <- drake_plan(x = 1)
     plan$trigger <- old_trigger
     clean()
+    cache <- storr::storr_environment()
     expect_warning(
-      config <- make(
+      make(
         plan,
         session_info = FALSE,
-        cache = storr::storr_environment()
+        cache = cache
       ),
       regexp = "old trigger interface is deprecated"
+    )
+    suppressWarnings(
+      config <- drake_config(
+        plan,
+        session_info = FALSE,
+        cache = cache
+      )
     )
     trigger <- diagnose(x, cache = config$cache)$trigger
     expect_true(is.list(trigger))

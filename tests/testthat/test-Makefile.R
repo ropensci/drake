@@ -128,7 +128,12 @@ test_with_dir("Makefile stuff in globalenv()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   targ <- "drake_TESTGLOBAL_target"
   drake_TESTGLOBAL_plan <- data.frame(target = targ, command = 1)
-  drake_TESTGLOBAL_config <- make(
+  make(
+    drake_TESTGLOBAL_plan,
+    envir = globalenv(),
+    verbose = FALSE, session_info = FALSE
+  )
+  drake_TESTGLOBAL_config <- drake_config(
     drake_TESTGLOBAL_plan,
     envir = globalenv(),
     verbose = FALSE, session_info = FALSE
@@ -139,7 +144,7 @@ test_with_dir("Makefile stuff in globalenv()", {
   drake_TESTGLOBAL_config$cache$del(key = targ, namespace = "progress")
   expect_equal(unname(progress(list = targ)), "not built or imported")
   mk("drake_TESTGLOBAL_target", cache_path = default_cache_path())
-  expect_equal(unname(progress(list = targ)), "finished")
+  expect_true(readd(targ, character_only = TRUE) < 2)
   drake_TESTGLOBAL_config$cache$del(key = targ, namespace = "progress")
   suppressWarnings(
     mk("drake_TESTGLOBAL_target", cache_path = default_cache_path())

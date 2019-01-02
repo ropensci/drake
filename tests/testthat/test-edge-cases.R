@@ -59,7 +59,13 @@ test_with_dir("skip everything", {
     x
   }
   pl <- drake_plan(a = f(0))
-  con <- make(
+  make(
+    pl,
+    session_info = FALSE,
+    skip_targets = TRUE,
+    skip_imports = TRUE
+  )
+  con <- drake_config(
     pl,
     session_info = FALSE,
     skip_targets = TRUE,
@@ -125,7 +131,8 @@ test_with_dir("failed targets do not become up to date", {
     b = 5,
     c = list(a, b)
   )
-  con <- make(plan)
+  make(plan)
+  con <- drake_config(plan)
   expect_equal(sort(justbuilt(con)), sort(letters[1:4]))
   fail <- TRUE
   expect_error(make(plan))
@@ -228,7 +235,8 @@ test_with_dir("true targets can be functions", {
     x + 1
   })
   plan <- drake_plan(myfunction = generator(), output = myfunction(1))
-  config <- make(plan, verbose = FALSE, session_info = FALSE)
+  make(plan, verbose = FALSE, session_info = FALSE)
+  config <- drake_config(plan, verbose = FALSE, session_info = FALSE)
   expect_equal(readd(output), 2)
   expect_true(
     is.character(

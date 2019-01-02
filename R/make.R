@@ -14,10 +14,7 @@
 #'   [parallelism_choices()],
 #'   [triggers()]
 #' @export
-#' @return The master internal configuration list, mostly
-#'   containing arguments to `make()` and important objects
-#'   constructed along the way. See [drake_config()]
-#'   for more details.
+#' @return nothing
 #' @inheritParams drake_config
 #' @param config Master configuration list produced by both
 #'   [make()] and [drake_config()].
@@ -175,6 +172,7 @@ make <- function(
     )
   }
   make_with_config(config = config)
+  invisible()
 }
 
 #' @title Run [make()],
@@ -184,7 +182,7 @@ make <- function(
 #' @export
 #' @keywords internal
 #' @seealso [make()], [drake_config()]
-#' @return A [drake_config()] list
+#' @return nothing
 #' @param config An input internal configuration list
 #' @examples
 #' \dontrun{
@@ -217,7 +215,7 @@ make_with_config <- function(config = drake::read_drake_config()) {
     jobs = config$jobs
   )
   conclude_session(config = config)
-  return(invisible(config))
+  invisible()
 }
 
 make_with_schedules <- function(config) {
@@ -236,6 +234,7 @@ make_with_schedules <- function(config) {
   } else {
     make_imports_targets(config = config)
   }
+  invisible()
 }
 
 #' @title Just make the imports.
@@ -259,8 +258,7 @@ make_with_schedules <- function(config) {
 #' @export
 #' @seealso [make()], [drake_config()],
 #'   [make_targets()]
-#' @return The master internal configuration list
-#'   used by [make()].
+#' @return nothing
 #' @param config a configuration list returned by [drake_config()]
 #' @examples
 #' \dontrun{
@@ -279,7 +277,7 @@ make_imports <- function(config = drake::read_drake_config()) {
   config$jobs <- imports_setting(config$jobs)
   config$parallelism <- imports_setting(config$parallelism)
   run_parallel_backend(config = config)
-  invisible(config)
+  invisible()
 }
 
 #' @title Just build the targets.
@@ -303,8 +301,7 @@ make_imports <- function(config = drake::read_drake_config()) {
 #' @export
 #' @seealso [make()], [drake_config()],
 #'   [make_imports()]
-#' @return The master internal configuration list
-#'   used by [make()].
+#' @return nothing
 #' @param config a configuration list returned by [drake_config()]
 #' @examples
 #' \dontrun{
@@ -335,7 +332,7 @@ make_targets <- function(config = drake::read_drake_config()) {
   config$parallelism <- targets_setting(config$parallelism)
   run_parallel_backend(config = config)
   console_up_to_date(config = config)
-  invisible(config)
+  invisible()
 }
 
 make_imports_targets <- function(config) {
@@ -344,5 +341,5 @@ make_imports_targets <- function(config) {
   config$jobs <- max(config$jobs)
   run_parallel_backend(config = config)
   console_up_to_date(config = config)
-  invisible(config)
+  invisible()
 }

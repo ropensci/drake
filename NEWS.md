@@ -1,15 +1,11 @@
-# Version 7.0.0
-
-## Breaking changes
-
-- Set the default value of `lock_envir` to `TRUE` in `make()` and `drake_config()`. So `make()` will automatically quit in error if the act of building a target tries to change upstream dependencies.
-
-
 # Version 6.2.1.9000
 
 ## Breaking changes
 
-This release will be version 7.0.0, a major update. Unfortunately, the enhancements that increase speed also invalidate targets in old projects. Workflows run with drake <= 6.2.1 will need to run from scratch again. In addition, a large amount of deprecated functionality is removed, including several functions and the single-quoted file API.
+- This release will be version 7.0.0, a major update. Unfortunately, some enhancements that increase cache speed also invalidate targets in old projects. Workflows run with drake <= 6.2.1 will need to run from scratch again.
+- A large amount of deprecated functionality is removed, including several functions and the single-quoted file API.
+- Set the default value of `lock_envir` to `TRUE` in `make()` and `drake_config()`. So `make()` will automatically quit in error if the act of building a target tries to change upstream dependencies.
+- `make()` no longer returns a value. Users will need to call `drake_config()` separately to get the old return value of `make()`.
 
 ## Bug fixes
 
