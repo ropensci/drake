@@ -7,7 +7,7 @@ see what your \code{Makefile} recipes
 will look like in advance.}
 \usage{
 Makefile_recipe(recipe_command = drake::default_recipe_command(),
-  target = "your_target", cache_path = drake::default_cache_path())
+  target = "your_target", cache_path = NULL)
 }
 \arguments{
 \item{recipe_command}{The Makefile recipe command.

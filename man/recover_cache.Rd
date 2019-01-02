@@ -5,10 +5,9 @@
 \title{Load an existing drake files system cache if it exists
 or create a new one otherwise.}
 \usage{
-recover_cache(path = drake::default_cache_path(),
-  hash_algorithm = NULL, short_hash_algo = NULL,
-  long_hash_algo = NULL, force = FALSE, verbose = 1L,
-  fetch_cache = NULL, console_log_file = NULL)
+recover_cache(path = NULL, hash_algorithm = NULL,
+  short_hash_algo = NULL, long_hash_algo = NULL, force = FALSE,
+  verbose = 1L, fetch_cache = NULL, console_log_file = NULL)
 }
 \arguments{
 \item{path}{file path of the cache}

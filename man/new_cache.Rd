@@ -4,8 +4,8 @@
 \alias{new_cache}
 \title{Make a new \code{drake} cache.}
 \usage{
-new_cache(path = drake::default_cache_path(), verbose = 1L,
-  type = NULL, hash_algorithm = NULL, short_hash_algo = NULL,
+new_cache(path = NULL, verbose = 1L, type = NULL,
+  hash_algorithm = NULL, short_hash_algo = NULL,
   long_hash_algo = NULL, ..., console_log_file = NULL)
 }
 \arguments{

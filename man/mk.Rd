@@ -5,7 +5,7 @@
 \title{Build a target inside a \code{Makefile}
 during \code{make(..., parallelism = "Makefile")}.}
 \usage{
-mk(target = character(0), cache_path = drake::default_cache_path())
+mk(target = character(0), cache_path = NULL)
 }
 \arguments{
 \item{target}{name of target to make}
@@ -36,7 +36,7 @@ prepare_distributed(config = config)
 # of make(..., parallelism = "Makefile").
 time_stamps(config = config)
 # Use mk() to build a target. Usually called inside a Makefile recipe.
-mk(target = "small", cache_path = default_cache_path())
+mk(target = "small", cache_path = ".drake")
 })
 }
 }
