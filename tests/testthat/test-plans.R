@@ -167,7 +167,7 @@ test_with_dir("plan set 2", {
     x <- drake_plan(
       a = c,
       b = "c",
-      list = c(c = "d", d = "readRDS('e')")
+      list = c(c = "d", d = "readRDS('e')"),
       tidy_evaluation = tidy_evaluation
     )
     y <- weak_tibble(
@@ -237,22 +237,6 @@ test_with_dir("issue 187 on Github (from Kendon Bell)", {
     command = c("run_it(1:4)", "run_it(5:8)", "run_it(9:12)")
   )
   expect_equal(out, out2)
-})
-
-test_with_dir("file names with weird characters do not get mangled", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  out <- weak_tibble(
-    target = c("'is:a:file'", "not:a:file"),
-    command = as.character(1:2)
-  )
-  out2 <- sanitize_plan(out)
-  out3 <- weak_tibble(
-    target = c("'is:a:file'", "not.a.file"),
-    command = as.character(1:2)
-  )
-  expect_equal(out[1, ], out2[1, ])
-  expect_false(identical(out[2, ], out2[2, ]))
-  expect_equal(out2, out3)
 })
 
 test_with_dir("can use semicolons for multi-line commands", {
