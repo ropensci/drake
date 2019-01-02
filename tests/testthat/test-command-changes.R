@@ -31,7 +31,7 @@ test_with_dir("changes to commands are handled well", {
     plan = config$plan,
     envir = config$envir,
     cache = config$cache
-  )$layout
+  )
   expect_equal(
     sort(outdated(config)),
     sort(c(

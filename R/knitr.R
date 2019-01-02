@@ -23,13 +23,17 @@
 #' })
 #' }
 knitr_deps <- function(target) {
+  decode_deps_list(get_knitr_deps(target))
+}
+
+get_knitr_deps <- function(target) {
   if (!length(target)) {
     return(character(0))
   }
   out <- new_code_analysis_results()
   target <- drake_unquote(target)
   if (is_encoded_path(target)) {
-    target <- redecode_path(target)
+    target <- decode_path(target)
   }
   analyze_knitr_file(target, out)
   list_code_analysis_results(out)

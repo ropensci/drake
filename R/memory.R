@@ -109,14 +109,16 @@ ensure_loaded <- function(targets, config) {
   safe_load(targets = targets, config = config)
 }
 
-get_import_from_memory <- function(target, envir) {
+get_import_from_memory <- function(target, config) {
   if (is_encoded_path(target)) {
     return(NA_character_)
   }
-  if (exists(x = target, envir = envir, inherits = FALSE)) {
-    return(get(x = target, envir = envir, inherits = FALSE))
+  if (is_encoded_namespaced(target)) {
+    target <- decode_namespaced(target, config)
   }
-  target <- decode_namespaced(target)
+  if (exists(x = target, envir = config$envir, inherits = FALSE)) {
+    return(get(x = target, envir = config$envir, inherits = FALSE))
+  }
   parsed <- parse(text = target)
   parsed <- as.call(parsed)
   parsed <- as.list(parsed)
@@ -195,8 +197,7 @@ drake_envir <- function() {
 
 missing_import <- function(x, config) {
   if (is_encoded_path(x)) {
-    return(!file.exists(decoded_path(x, config)))
+    return(!file.exists(decode_path(x, config)))
   }
-  x <- decode_namespaced(x)
-  identical(get_import_from_memory(x, envir = config$envir), NA_character_)
+  identical(get_import_from_memory(x, config = config), NA_character_)
 }

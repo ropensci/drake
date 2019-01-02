@@ -64,6 +64,7 @@ config_checks <- function(config) {
   }
   stopifnot(nrow(config$plan) > 0)
   stopifnot(length(config$targets) > 0)
+  check_case_sensitivity(config)
   check_drake_graph(graph = config$graph)
   cache_vers_stop(config$cache)
 }
@@ -85,7 +86,7 @@ missing_input_files <- function(config) {
     f = is_encoded_path,
     jobs = config$jobs
   )
-  missing_files <- decoded_path(missing_files, config)
+  missing_files <- decode_path(missing_files, config)
   missing_files <- parallel_filter(
     missing_files,
     f = function(x) {
@@ -101,6 +102,28 @@ missing_input_files <- function(config) {
     )
   }
   invisible(missing_files)
+}
+
+check_case_sensitivity <- function(config) {
+  x <- igraph::V(config$graph)$name
+  x <- x[!is_encoded_path(x) & !is_encoded_namespaced(x)]
+  lower <- tolower(x)
+  i <- duplicated(lower)
+  if (!any(i)) {
+    return()
+  }
+  dups <- sort(x[which(lower %in% lower[i])])
+  warning(
+    "Duplicated target/import names when converting to lowercase:\n",
+    multiline_message(dups),
+    "\nDuplicates cause problems on Windows ",
+    "because the file system is case insensitive. Options:\n",
+    "  (1) Make your target/import names more unique.\n",
+    "  (2) Use a more portable custom cache, ",
+    "e.g. make(cache = storr::storr_rds(mangle_key = TRUE))\n",
+    "  (3) Avoid Windows.",
+    call. = FALSE
+  )
 }
 
 check_drake_graph <- function(graph) {

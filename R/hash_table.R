@@ -20,6 +20,10 @@ ht_set <- function(ht, x) {
   )
 }
 
+ht_get <- function(ht, x) {
+  get(x = x, envir = ht, inherits = FALSE)
+}
+
 ht_del <- function(ht, x) {
   remove(list = x, envir = ht, inherits = FALSE)
 }
@@ -39,4 +43,27 @@ ht_clone <- function(ht) {
 # Merge y into x
 ht_merge <- function(x, y) {
   ht_set(x, ht_list(y))
+}
+
+# hash-table-based memoization for characters
+ht_memo <- function(ht, x, fun) {
+  vapply(
+    X = x,
+    FUN = ht_memo_single,
+    FUN.VALUE = character(1),
+    USE.NAMES = FALSE,
+    ht = ht,
+    fun = fun
+  )
+}
+
+# x must be a character scalar.
+ht_memo_single <- function(ht, x, fun) {
+  if (ht_exists(ht = ht, x = x)) {
+    ht_get(ht = ht, x = x)
+  } else {
+    value <- fun(x)
+    assign(x = x, value = value, envir = ht, inherits = FALSE)
+    value
+  }
 }

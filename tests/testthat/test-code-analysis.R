@@ -32,6 +32,7 @@ test_with_dir("busy function", {
     expression(quoted3)
   }
   out <- analyze_code(f)
+  out <- decode_deps_list(out)
   expect_equal(sort(out$file_in), sort(c("x", "y")))
   expect_equal(sort(out$file_out), sort(c("w", "z")))
   str <- sort(
@@ -199,6 +200,7 @@ test_with_dir("replacement functions", {
 
   code <- quote(f(base::g(pkg:::h(x, w), y(a)), z(u, v)) <- 1)
   out <- analyze_code(code)
+  out <- decode_deps_list(out)
   expect_equal(
     sort(out$globals),
     sort(c("f<-", "a", "u", "v", "x", "w", "y", "z"))

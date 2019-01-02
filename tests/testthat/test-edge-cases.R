@@ -281,6 +281,8 @@ test_with_dir("warning when file_out() files not produced", {
 test_with_dir("file hash of a non-file", {
   expect_true(is.na(file_hash("asdf", list())))
   expect_true(is.na(rehash_file("asdf", list())))
+  expect_true(is.na(file_hash(encode_path("asdf"), list())))
+  expect_true(is.na(rehash_file(encode_path("asdf"), list())))
 })
 
 test_with_dir("imported functions cannot depend on targets", {
@@ -302,4 +304,22 @@ test_with_dir("imported functions cannot depend on targets", {
   )
   deps <- deps_target("my_fun", config)
   expect_equal(unlist(deps, use.names = FALSE), "global_import")
+})
+
+test_with_dir("case sensitivity", {
+  plan <- drake_plan(
+    a = 1,
+    b = 2,
+    B = A(),
+    c = 15
+  )
+  A <- function(){}
+  expect_warning(
+    config <- drake_config(
+      plan,
+      cache = storr::storr_environment(),
+      session_info = FALSE
+    ),
+    regexp = "case insensitive"
+  )
 })

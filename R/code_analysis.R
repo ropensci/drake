@@ -63,7 +63,7 @@ analyze_function <- function(expr, results, locals, allowed_globals) {
 analyze_namespaced <- function(expr, results, locals, allowed_globals) {
   x <- wide_deparse(expr)
   if (!ht_exists(locals, x)) {
-    ht_set(results$namespaced, x)
+    ht_set(results$namespaced, encode_namespaced(x))
   }
 }
 
@@ -97,17 +97,21 @@ analyze_readd <- function(expr, results, allowed_globals) {
 }
 
 analyze_file_in <- function(expr, results) {
-  ht_set(results$file_in, analyze_strings(expr[-1]))
+  x <- analyze_strings(expr[-1])
+  x <- encode_path(x)
+  ht_set(results$file_in, x)
 }
 
 analyze_file_out <- function(expr, results) {
-  ht_set(results$file_out, analyze_strings(expr[-1]))
+  x <- analyze_strings(expr[-1])
+  x <- encode_path(x)
+  ht_set(results$file_out, x)
 }
 
 analyze_knitr_in <- function(expr, results) {
   files <- analyze_strings(expr[-1])
   lapply(files, analyze_knitr_file, results = results)
-  ht_set(results$knitr_in, files)
+  ht_set(results$knitr_in, encode_path(files))
 }
 
 analyze_knitr_file <- function(file, results) {

@@ -127,7 +127,7 @@ test_with_dir("can detect trigger deps without reacting to them", {
   config <- drake_config(
     plan, session_info = FALSE, cache = storr::storr_environment(),
     log_progress = TRUE)
-  deps <- c(reencode_path(c("file.rds", "knitr.Rmd")), "f")
+  deps <- c(encode_path(c("file.rds", "knitr.Rmd")), "f")
   expect_true(all(deps %in% igraph::V(config$graph)$name))
   expect_equal(sort(dependencies("x", config)), sort(deps))
   expect_equal(outdated(config), "x")
@@ -165,7 +165,7 @@ test_with_dir("same, but with global trigger", {
       change = NULL
     )
   )
-  deps <- c(reencode_path(c("file.rds", "knitr.Rmd")), "f")
+  deps <- c(encode_path(c("file.rds", "knitr.Rmd")), "f")
   expect_true(all(deps %in% igraph::V(config$graph)$name))
   expect_equal(sort(dependencies("x", config)), sort(deps))
   expect_equal(outdated(config), "x")
@@ -211,7 +211,7 @@ test_with_dir("trigger does not block out command deps", {
   config <- drake_config(
     plan, session_info = FALSE, cache = storr::storr_environment(),
     log_progress = TRUE)
-  deps <- c(reencode_path("file.rds"), reencode_path("knitr.Rmd"), "f")
+  deps <- c(encode_path("file.rds"), encode_path("knitr.Rmd"), "f")
   expect_true(all(deps %in% igraph::V(config$graph)$name))
   expect_equal(sort(dependencies("x", config)), sort(deps))
   expect_equal(outdated(config), "x")
@@ -482,12 +482,12 @@ test_with_dir("trigger components react appropriately", {
     plan = config$plan,
     envir = config$envir,
     cache = config$cache
-  )$layout
+  )
   simple_config$layout <- whole_static_analysis(
     plan = simple_config$plan,
     envir = simple_config$envir,
     cache = simple_config$cache
-  )$layout
+  )
   expect_equal(sort(outdated(config)), "command")
   make(config = config)
   expect_equal(sort(justbuilt(config)), "command")
@@ -725,6 +725,20 @@ test_with_dir("files are collected/encoded from all triggers", {
     strings_in_dots = "literals"
   )
   config <- drake_config(plan)
-  expect_equal(sort(ht_list(config$encode)), sort(exp))
-  expect_equal(sort(ht_list(config$decode)), sort(reencode_path(exp)))
+  deps_build <- decode_path(unlist(config$layout[["x"]]$deps_build))
+  deps_condition <- decode_path(
+    unlist(config$layout[["x"]]$deps_condition))
+  deps_change <- decode_path(unlist(config$layout[["x"]]$deps_change))
+  expect_equal(
+    sort(deps_build),
+    sort(c("command_in", "command_out", "command_knitr_in"))
+  )
+  expect_equal(
+    sort(deps_condition),
+    sort(c("condition_in", "condition_knitr_in"))
+  )
+  expect_equal(
+    sort(deps_change),
+    sort(c("change_in", "change_knitr_in"))
+  )
 })

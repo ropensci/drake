@@ -74,7 +74,7 @@ build_times <- function(
     out <- out[out$type == "target", ]
   }
   if (pretty_keys) {
-    out$item <- redisplay_keys(out$item)
+    out$item <- display_keys(out$item)
   }
   tryCatch(
     weak_as_tibble(out),

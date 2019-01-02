@@ -229,12 +229,8 @@ split_by <- function(.x, .by = character(0)) {
 }
 
 standardize_key <- function(text) {
-  text <- encode_namespaced(text)
-  # TO DO: remove the rest in version 7.0.0.
-  index <- is_quoted(text)
-  if (any(index)) {
-    text[index] <- gsub("^'|^\"|'$|\"", "", text[index])
-    text[index] <- reencode_path(text[index])
+  if (any(grepl("::", text))) {
+    text <- encode_namespaced(text)
   }
   text
 }

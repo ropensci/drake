@@ -177,29 +177,6 @@ test_with_dir("deprecated arguments", {
   expect_warning(drake_build(a, config = con, meta = list()))
 })
 
-test_with_dir("old file API", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  skip_if_not_installed("datasets")
-  old_strings_in_dots <- pkgconfig::get_config("drake::strings_in_dots")
-  on.exit(
-    pkgconfig::set_config("drake::strings_in_dots" = old_strings_in_dots)
-  )
-  pkgconfig::set_config("drake::strings_in_dots" = "filenames")
-  expect_warning(x <- drake_plan(
-    file.csv = write.csv(datasets::mtcars, file = "file.csv"),
-    strings_in_dots = "literals",
-    file_targets = TRUE
-  ))
-  expect_warning(y <- drake_plan(
-    contents = read.csv('file.csv'), # nolint
-    strings_in_dots = "filenames"
-  ))
-  z <- rbind(x, y)
-  expect_warning(config <- drake_config(z))
-  expect_warning(make(z, session_info = FALSE) -> config)
-  expect_equal(readd("'file.csv'"), readd("\"file.csv\""))
-})
-
 test_with_dir("example template files (deprecated)", {
   skip_on_cran()
   expect_false(file.exists("slurm_batchtools.tmpl"))
@@ -208,31 +185,6 @@ test_with_dir("example template files (deprecated)", {
     regexp = "deprecated"
   )
   expect_true(file.exists("slurm_batchtools.tmpl"))
-})
-
-test_with_dir("plan set 1", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  old_strings_in_dots <- pkgconfig::get_config("drake::strings_in_dots")
-  on.exit(
-    pkgconfig::set_config("drake::strings_in_dots" = old_strings_in_dots)
-  )
-  pkgconfig::set_config("drake::strings_in_dots" = "filenames")
-  for (tidy_evaluation in c(TRUE, FALSE)) {
-    expect_warning(x <- drake_plan(
-      a = c,
-      b = "c",
-      list = c(c = "d", d = "readRDS('e')"),
-      tidy_evaluation = tidy_evaluation,
-      strings_in_dots = "filenames"
-    ))
-    y <- weak_tibble(
-      target = letters[1:4],
-      command = c("c", "'c'",
-      "d", "readRDS('e')"))
-    expect_equal(x, y)
-    expect_warning(con <- drake_config(x))
-    expect_warning(runtime_checks(con))
-  }
 })
 
 test_with_dir("force with a non-back-compatible cache", {

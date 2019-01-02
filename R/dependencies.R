@@ -73,14 +73,15 @@
 #' }
 deps_code <- function(x) {
   if (is.function(x)) {
-    import_dependencies(x)
-  } else if (all(is_encoded_path(x)) && all(file.exists(redecode_path(x)))) {
-    knitr_deps(redecode_path(x))
+    out <- import_dependencies(x)
+  } else if (all(is_encoded_path(x)) && all(file.exists(decode_path(x)))) {
+    out <- get_knitr_deps(decode_path(x))
   } else if (is.character(x)) {
-    command_dependencies(x)
+    out <- command_dependencies(x)
   } else{
-    analyze_code(x)
+    out <- analyze_code(x)
   }
+  decode_deps_list(out)
 }
 
 #' @title List the dependencies of one or more targets
@@ -112,9 +113,7 @@ deps_target <- function(
     target <- as.character(substitute(target))
   }
   out <- config$layout[[target]]$deps_build
-  for (field in c("file_in", "file_out", "knitr_in")) {
-    out[[field]] <- redecode_path(out[[field]])
-  }
+  out <- decode_deps_list(out)
   select_nonempty(out)
 }
 
@@ -234,7 +233,7 @@ tracked <- function(config) {
     },
     jobs = config$jobs
   )
-  displayed_path(clean_dependency_list(out), config)
+  display_keys(clean_dependency_list(out), config)
 }
 
 dependencies <- function(targets, config, reverse = FALSE) {
@@ -322,7 +321,7 @@ command_dependencies <- function(
   # the deprecation anyway.
   if (!use_new_file_api) {
     deps$loadd <- base::union(
-      deps$loadd, knitr_deps(find_knitr_doc(command))
+      deps$loadd, get_knitr_deps(find_knitr_doc(command))
     )
     deps$loadd <- unique(deps$loadd)
   }
@@ -334,9 +333,10 @@ command_dependencies <- function(
 # TODO: this function can go away when drake
 # stops supporting single-quoted file names
 warn_single_quoted_files <- function(files, deps) {
-  old_api_files <- redecode_path(files)
+  files[is_encoded_path(files)] <- decode_path(files[is_encoded_path(files)])
+  old_api_files <- files
   new_api_files <- c(deps$file_in, deps$file_out, deps$knitr_in)
-  new_api_files <- redecode_path(new_api_files)
+  new_api_files <- decode_path(new_api_files)
   warn_files <- setdiff(old_api_files, new_api_files)
   if (!length(warn_files)) {
     return()

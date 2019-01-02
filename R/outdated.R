@@ -120,5 +120,5 @@ missed <- function(config = drake::read_drake_config()) {
   if (!any(is_missing)) {
     return(character(0))
   }
-  redisplay_keys(imports[is_missing])
+  display_keys(imports[is_missing])
 }

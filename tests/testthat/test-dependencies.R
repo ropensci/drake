@@ -53,6 +53,7 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
   file.copy(
     from = path, to = file.path(getwd(), "report.Rmd"), overwrite = TRUE)
   x <- command_dependencies(cmd)
+  x <- decode_deps_list(x)
   x0 <- list(
     file_in = "x", file_out = "y", loadd = "large",
     readd = c("small", "coef_regression2_small"),
@@ -62,6 +63,7 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
     expect_equal(sort(x[[i]]), sort(x0[[i]]))
   }
   y <- import_dependencies(f)
+  y <- decode_deps_list(y)
   y0 <- list(
     file_in = "x",
     knitr_in = "report.Rmd",
@@ -151,11 +153,11 @@ test_with_dir("tracked() works", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   x <- sort(tracked(config))
-  y <- sort(c(redisplay_path(reencode_path("intermediatefile.rds")),
+  y <- sort(c(display_keys(encode_path("intermediatefile.rds")),
               "drake_target_1",
     "yourinput", "nextone",
     "combined", "myinput", "final", "j", "i", "h", "g", "f",
-    "c", "b", "a",  redisplay_path(reencode_path("input.rds"))))
+    "c", "b", "a",  display_keys(encode_path("input.rds"))))
   expect_equal(x, y)
 })
 
