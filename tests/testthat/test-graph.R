@@ -73,8 +73,6 @@ test_with_dir("we can generate different visNetwork dependency graphs", {
     tmp <- drake_graph_info(
       config = config, build_times = FALSE, from_scratch = TRUE))
   expect_warning(
-    tmp <- drake_graph_info(config = config, split_columns = TRUE))
-  expect_warning(
     tmp <- drake_graph_info(config = config, build_times = FALSE))
   tmpcopy <- drake_graph_info(config = config,
     make_imports = FALSE, build_times = "none")
