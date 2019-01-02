@@ -403,7 +403,8 @@ test_with_dir("trigger components react appropriately", {
   )
   config <- drake_config(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = FALSE, caching = caching, session_info = FALSE
+    verbose = FALSE, caching = caching, session_info = FALSE,
+    log_progress = TRUE
   )
   expect_equal(sort(justbuilt(config)), sort(config$plan$target))
   expect_equal(outdated(config), "condition")
@@ -415,7 +416,8 @@ test_with_dir("trigger components react appropriately", {
   )
   simple_config <- drake_config(
     simple_plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = FALSE, caching = caching, session_info = FALSE
+    verbose = FALSE, caching = caching, session_info = FALSE,
+    log_progress = TRUE
   )
 
   # Condition trigger

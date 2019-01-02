@@ -486,7 +486,9 @@ test_with_dir("make() with wildcard columns", {
   for (col in c("n__", "n___from")) {
     expect_true(col %in% colnames(plan))
   }
-  con <- make(plan, cache = storr::storr_environment(), session_info = FALSE)
+  cache <- storr::storr_environment()
+  make(plan, cache = cache, session_info = FALSE)
+  con <- drake_config(plan, cache = cache, session_info = FALSE)
   expect_true(all(plan$target %in% cached(cache = con$cache)))
   expect_identical(con$plan, plan)
 })
