@@ -465,12 +465,12 @@ test_with_dir("trigger components react appropriately", {
   make(config = simple_config)
 
   # Command trigger
-  config$plan$command <- simple_config$plan$command <- paste0("
+  config$plan$command <- simple_config$plan$command <- paste0("{
     knitr_in(\"report.Rmd\")
     out <- f(1 + readRDS(file_in(\"file.rds\")))
     saveRDS(out, file_out(\"out_", plan$target, ".rds\"))
     out
-  ")
+  }")
   config$layout <- whole_static_analysis(
     plan = config$plan,
     envir = config$envir,
