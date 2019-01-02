@@ -31,7 +31,6 @@ get_knitr_deps <- function(target) {
     return(character(0))
   }
   out <- new_code_analysis_results()
-  target <- drake_unquote(target)
   if (is_encoded_path(target)) {
     target <- decode_path(target)
   }

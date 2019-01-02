@@ -176,8 +176,7 @@ test_with_dir("drake_warning() and drake_error()", {
       message("some_message")
       warning("some_warning")
       stop("some_error")
-    },
-    strings_in_dots = "literals"
+    }
   )
   expect_error(expect_warning(make(
     plan, cache = storr::storr_environment(),

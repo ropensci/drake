@@ -345,21 +345,6 @@ drake_session <- function(
   return(cache$get("sessionInfo", namespace = "session"))
 }
 
-#' @title Deprecated.
-#' @description Deprecated on 2018-10-24.
-#' @export
-#' @keywords internal
-#' @return Evaluated code.
-#' @param code Placeholder for the code to build a target/import.
-empty_hook <- function(code) {
-  .Deprecated(
-    "empty_hook",
-    package = "drake",
-    msg = "empty_hook() is deprecated."
-  )
-  invisible()
-}
-
 #' @title Deprecated. `drake` now has just one hash algorithm per cache.
 #' @export
 #' @keywords internal
@@ -445,27 +430,6 @@ max_useful_jobs <- function(
   # nocov end
 }
 
-#' @title Deprecated.
-#' @description Deprecated on 2018-10-24.
-#' @export
-#' @keywords internal
-#' @return Evaluated code.
-#' @param code Placeholder for the code to build a target/import.
-message_sink_hook <- function(code) {
-  .Deprecated(
-    "message_sink_hook",
-    package = "drake",
-    msg = "message_sink_hook() is deprecated."
-  )
-  message <- file(paste0("message", Sys.getpid(), ".txt"), "w")
-  on.exit({
-    suppressWarnings(sink(type = "message"))
-    close(message)
-  })
-  sink(message, type = "message")
-  code
-}
-
 #' @title Deprecated: reconfigure an old project (built with drake <= 4.4.0)
 #'   to be compatible with later versions of drake.
 #' @export
@@ -489,24 +453,6 @@ migrate_drake_project <- function(
       "make() again on projects built with drake version <= 4.4.0"
     )
   )
-}
-
-#' @title Deprecated.
-#' @description Deprecated on 2018-10-24.
-#' @export
-#' @keywords internal
-#' @return Evaluated code.
-#' @param code Placeholder for the code to build a target/import.
-output_sink_hook <- function(code) {
-  .Deprecated(
-    "output_sink_hook",
-    package = "drake",
-    msg = "output_sink_hook() is deprecated."
-  )
-  output <- paste0("output", Sys.getpid(), ".txt")
-  on.exit(suppressWarnings(sink(type = "output")))
-  sink(output, type = "output")
-  code
 }
 
 #' @title Defunct
