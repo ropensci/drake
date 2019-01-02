@@ -16,9 +16,10 @@ is a file system cache.}
 \itemize{
 \item \code{0} or \code{FALSE}: print nothing.
 \item \code{1} or \code{TRUE}: print only targets to build.
-\item \code{2}: also print checks and cache info.
-\item \code{3}: also print any potentially missing items.
-\item \code{4}: also print imports and writes to the cache.
+\item \code{2}: plus checks and cache info.
+\item \code{3}: plus missing imports.
+\item \code{4}: plus all imports.
+\item \code{5}: plus cache storage and build times.
 }}
 
 \item{type}{deprecated argument. Once stood for cache type.

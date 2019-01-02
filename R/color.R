@@ -16,6 +16,7 @@ colors <- c(
   trigger = "maroon",
   skip = "skyblue1",
   store = "skyblue1",
+  time = "#ff7221",
   retry = "forestgreen",
   fail = "red",
   up_to_date = "forestgreen",
