@@ -876,3 +876,78 @@ default_verbose <- function() {
   )
   1L
 }
+
+#' @title Put quotes around each element of a character vector.
+#' @description Deprecated on 2019-01-01
+#' @seealso [drake_unquote()], [drake_strings()]
+#' @export
+#' @return Character vector with quotes around it.
+#' @param x character vector or object to be coerced to character.
+#' @param single Add single quotes if `TRUE`
+#'   and double quotes otherwise.
+#' @examples
+#' # Single-quote this string.
+#' drake_quotes("abcd", single = TRUE) # "'abcd'"
+#' # Double-quote this string.
+#' drake_quotes("abcd") # "\"abcd\""
+drake_quotes <- function(x = NULL, single = FALSE) {
+  .Deprecated(
+    "drake_quotes",
+    package = "drake",
+    msg = paste("drake_quotes() is deprecated.")
+  )
+  stopifnot(is.logical(single))
+  if (!length(x)) {
+    return(character(0))
+  }
+  if (single) {
+    paste0("'", x, "'")
+  } else {
+    paste0("\"", x, "\"")
+  }
+}
+
+#' @title Remove leading and trailing
+#'   escaped quotes from character strings.
+#' @description Deprecated on 2019-01-01
+#' @seealso [drake_quotes()], [drake_strings()]
+#' @export
+#' @return Character vector without leading
+#'   or trailing escaped quotes around
+#'   the elements.
+#' @param x character vector
+#' @examples
+#' x <- "'abcd'"
+#' # Remove the literal quotes around x.
+#' drake_unquote(x) # "abcd"
+drake_unquote <- function(x = NULL) {
+  .Deprecated(
+    "drake_unquote",
+    package = "drake",
+    msg = paste("drake_unquote() is deprecated.")
+  )
+  gsub(pattern = "^(?:'(.*)'|\"(.*)\")$", replacement = "\\1\\2", x = x)
+}
+
+#' @title Turn valid expressions into character strings.
+#' @description Deprecated on 2019-01-01
+#' @seealso [drake_quotes()], [drake_unquote()]
+#' @export
+#' @return A character vector.
+#' @param ... unquoted symbols to turn into character strings.
+#' @examples
+#' # Turn symbols into strings.
+#' drake_strings(a, b, c, d) # [1] "a" "b" "c" "d"
+drake_strings <- function(...) {
+  .Deprecated(
+    "drake_strings",
+    package = "drake",
+    msg = paste("drake_strings() is deprecated.")
+  )
+  args <- structure(as.list(match.call()[-1]), class = "uneval")
+  keys <- names(args)
+  out <- as.character(args)
+  names(out) <- keys
+  out
+}
+
