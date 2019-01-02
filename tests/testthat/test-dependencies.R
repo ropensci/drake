@@ -400,6 +400,20 @@ test_with_dir("can standardize command with other ignored symbols", {
   )
 })
 
+test_with_dir("Can standardize commands from expr or lang", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  x <- parse(text = c("f(x +2) + 2", "!!y"))
+  y <- standardize_command(x[[1]])
+  x <- parse(text = "f(x +2) + 2")
+  z <- standardize_command(x)
+  w <- standardize_command(x[[1]])
+  s <- "f(x + 2) + 2"
+  debug_char0 <-
+    expect_equal(y, s)
+  expect_equal(z, s)
+  expect_equal(w, s)
+})
+
 test_with_dir("ignore() in imported functions", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   f <- function(x) {
