@@ -10,14 +10,14 @@
   "codeRepository": "https://github.com/ropensci/drake",
   "issueTracker": "https://github.com/ropensci/drake/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "6.2.1.9000",
+  "version": "6.2.1.9001",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
-    "version": "3.4.3",
+    "version": "3.5.2",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 3.4.3 (2017-11-30)",
+  "runtimePlatform": "R version 3.5.2 (2018-12-20)",
   "provider": {
     "@id": "https://cran.r-project.org",
     "@type": "Organization",
@@ -99,18 +99,6 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=bindr"
-    },
-    {
-      "@type": "SoftwareApplication",
-      "identifier": "callr",
-      "name": "callr",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=callr"
     },
     {
       "@type": "SoftwareApplication",
@@ -379,19 +367,19 @@
       "@type": "SoftwareApplication",
       "identifier": "R",
       "name": "R",
-      "version": ">= 3.3.0"
+      "version": ">= 3.4.0"
     },
     {
       "@type": "SoftwareApplication",
-      "identifier": "codetools",
-      "name": "codetools",
+      "identifier": "base64url",
+      "name": "base64url",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
         "name": "Comprehensive R Archive Network (CRAN)",
         "url": "https://cran.r-project.org"
       },
-      "sameAs": "https://CRAN.R-project.org/package=codetools"
+      "sameAs": "https://CRAN.R-project.org/package=base64url"
     },
     {
       "@type": "SoftwareApplication",
@@ -404,18 +392,6 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=digest"
-    },
-    {
-      "@type": "SoftwareApplication",
-      "identifier": "formatR",
-      "name": "formatR",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=formatR"
     },
     {
       "@type": "SoftwareApplication",
@@ -478,9 +454,9 @@
       "name": "utils"
     }
   ],
-  "releaseNotes": "https://github.com/bpbond/drake/blob/master/NEWS.md",
-  "readme": "https://github.com/bpbond/drake/blob/master/README.md",
-  "fileSize": "489.96KB",
+  "releaseNotes": "https://github.com/ropensci/drake/blob/master/NEWS.md",
+  "readme": "https://github.com/ropensci/drake/blob/master/README.md",
+  "fileSize": "379.5KB",
   "contIntegration": [
     "https://ci.appveyor.com/project/ropensci/drake",
     "https://travis-ci.org/ropensci/drake",

@@ -567,8 +567,6 @@ drake_config <- function(
   }
   seed <- choose_seed(supplied = seed, cache = cache)
   trigger <- convert_old_trigger(trigger)
-  decode <- ht_new()
-  encode <- ht_new()
   layout <- whole_static_analysis(
     plan = plan,
     envir = envir,

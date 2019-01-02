@@ -69,7 +69,6 @@ Depends:
 Imports:
   base64url,
   digest,
-  formatR,
   igraph,
   methods,
   pkgconfig,

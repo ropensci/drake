@@ -126,15 +126,6 @@ with_all_options <- function(code) {
   force(code)
 }
 
-write_v4.3.0_project <- function() { # nolint
-  zip <- system.file(
-    file.path("testing", "built_mtcars_example_v4.3.0.zip"),
-    package = "drake",
-    mustWork = TRUE
-  )
-  unzip(zip, exdir = ".", setTimes = TRUE)
-}
-
 write_v6.2.1_project <- function() { # nolint
   zip <- system.file(
     file.path("testing", "built_mtcars_example_v6.2.1.zip"),

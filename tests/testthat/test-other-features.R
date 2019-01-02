@@ -1,19 +1,5 @@
 drake_context("other features")
 
-test_with_dir("Can standardize commands from expr or lang", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  x <- parse(text = c("f(x +2) + 2", "!!y"))
-  y <- standardize_command(x[[1]])
-  x <- parse(text = "f(x +2) + 2")
-  z <- standardize_command(x)
-  w <- standardize_command(x[[1]])
-  s <- "{\n f(x + 2) + 2 \n}"
-  debug_char0 <-
-  expect_equal(y, s)
-  expect_equal(z, s)
-  expect_equal(w, s)
-})
-
 test_with_dir("debug_command()", {
   skip_on_cran()
   txt <- "    f(x + 2) + 2"

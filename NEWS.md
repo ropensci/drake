@@ -57,6 +57,7 @@ Version 6.2.1 is a hotfix to address the failing automated CRAN checks for 6.2.0
 
 ## Enhancements
 
+- Remove strict dependencies on packages `evaluate`, `formatR`, `fs`, `future`, `parallel`, `R.utils`, `stats`, and `stringi`.
 - **Large speed boost**: reduce repeated calls to `parse()` in `code_dependencies()`.
 - **Large speed boost**: change the default value of `memory_strategy` (previously `pruning_strategy`) to `"speed"` (previously `"lookahead"`).
 - Compute a special data structure in `drake_config()` (`config$layout`) just to store the code analysis results. This is an intermediate structure between the workflow plan data frame and the graph. It will help clean up the internals in future development.

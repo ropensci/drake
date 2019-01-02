@@ -19,31 +19,10 @@ preprocess_command <- function(command, config) {
   as.call(c(quote(rlang::expr), command))
 }
 
-# The old standardization command
-# that relies on formatR.
-# Eventually, we may move to styler,
-# since it is now the preferred option for
-# text tidying.
-# The important thing for drake's standardization of commands
-# is to stay stable here, not to be super correct.
-# If styler's behavior changes a lot, it will
-# put targets out of date.
 standardize_command <- function(x) {
   x <- ignore_ignore(x)
   x <- language_to_text(x)
-  x <- formatR::tidy_source(
-    source = NULL,
-    comment = FALSE,
-    blank = FALSE,
-    arrow = TRUE,
-    brace.newline = FALSE,
-    indent = 4,
-    output = FALSE,
-    text = as.character(x),
-    width.cutoff = 119
-  )$text.tidy
-  x <- paste(x, collapse = "\n")
-  braces(x)
+  standardize_code(x)
 }
 
 ignore_ignore <- function(expr) {
@@ -85,4 +64,14 @@ language_to_text <- function(x) {
     x <- wide_deparse(x)
   }
   x
+}
+
+standardize_code <- function(x){
+  if (!length(x)){
+    return(NA_character_)
+  }
+  if (is.character(x)) {
+    x <- parse(text = x, keep.source = FALSE)[[1]]
+  }
+  deparse(x)
 }
