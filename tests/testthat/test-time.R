@@ -63,6 +63,16 @@ test_with_dir("build time the same after superfluous make", {
   expect_equal(b1[b1$item == "y", ], b2[b2$item == "y", ])
 })
 
+test_with_dir("namespaced key in runtime prediction", {
+  skip_on_cran()
+  skip_if_not_installed("lubridate")
+  plan <- drake_plan(x = base::sqrt(1))
+  config <- make(plan)
+  p1 <- predict_runtime(config)
+  p2 <- predict_runtime(config, known_times = c("base::sqrt" = 1000))
+  expect_true(p2 > p1)
+})
+
 test_with_dir("runtime predictions", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("lubridate")
@@ -106,12 +116,12 @@ test_with_dir("runtime predictions", {
   known_times <- c(
     a = 0, b = 0, c = 0, f = 0, g = 0, h = 0, i = 0, j = 0,
     readRDS = 0, saveRDS = 0,
-    "\"saveRDS\"" = 0, "\"input.rds\"" = 0,
     myinput = 10,
     nextone = 33,
     yourinput = 27,
     final = Inf
   )
+  known_times[encode_path(c("saveRDS", "input.rds"))] <- 0
   targets <- c("nextone", "yourinput")
   p5 <- predict_runtime(
     config = con,

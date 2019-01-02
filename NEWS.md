@@ -1,18 +1,41 @@
+# Version 7.0.0
+
+## Breaking changes
+
+- Set the default value of `lock_envir` to `TRUE` in `make()` and `drake_config()`. So `make()` will automatically quit in error if the act of building a target tries to change upstream dependencies.
+
+
 # Version 6.2.1.9000
+
+## Breaking changes
+
+This release will be version 7.0.0, a major update. Unfortunately, the enhancements that increase speed also invalidate targets in old projects. Workflows run with drake <= 6.2.1 will need to run from scratch again. In addition, a large amount of deprecated functionality is removed, including several functions and the single-quoted file API.
 
 ## Bug fixes
 
 - Allow `bind_plans()` to work with lists of plans (`bind_plans(list(plan1, plan2))` was returning `NULL` in `drake` 6.2.0 and 6.2.1).
 - Ensure that `get_cache(path = "non/default/path", search = FALSE)` looks for the cache in `"non/default/path"` instead of `getwd()`.
 - Remove strict dependencies on package `tibble`.
+- Pass the correct data structure to `ensure_loaded()` in `meta.R` and `triggers.R` when ensuring the dependencies of the `condition` and `change` triggers are loaded.
+
+## New features
+
+- Implement a `lock_envir` argument to safeguard reproducibility. See [this thread](https://github.com/ropensci/drake/issues/615#issuecomment-447585359) for a demonstration of the problem solved by `make(lock_envir = TRUE)`. More discussion: #619, #620.
 
 ## Enhancements
 
+- **Large speed boost**: move away from `storr`'s key mangling in favor of `drake`'s own encoding of file paths and namespaced functions for `storr` keys.
+- Exclude symbols `.`, `..`, and `.gitignore` from being target names (consequence of the above).
 - Use only one hash algorithm per `drake` cache, which the user can set with the `hash_algorithm` argument of `new_cache()`, `storr::storr_rds()`, and various other cache functions. Thus, the concepts of a "short hash algorithm" and "long hash algorithm" are deprecated, and the functions `long_hash()`, `short_hash()`, `default_long_hash_algo()`, `default_short_hash_algo()`, and `available_hash_algos()` are deprecated. Caches are still back-compatible with `drake` > 5.4.0 and <= 6.2.1.
 - Allow the `magrittr` dot symbol to appear in some commands sometimes.
 - Deprecate the `fetch_cache` argument in all functions 
 - Remove packages `DBI` and `RSQLite` from "Suggests".
-- Define a special `config$eval <- new.env(parent = config$envir)` for storing built targets and evaluating commands in the plan. Now, `make()` no longer modifies the user's environemnt. This move is a long-overdue step toward purity.
+- Define a special `config$eval <- new.env(parent = config$envir)` for storing built targets and evaluating commands in the plan. Now, `make()` no longer modifies the user's environment. This move is a long-overdue step toward purity.
+- Remove dependency on the `codetools` package.
+- Deprecate and remove the `session` argument of `make()` and `drake_config()`. Details: https://github.com/ropensci/drake/issues/623#issue-391894088.
+- Deprecate the `graph` and `layout` arguments to `make()` and `drake_config()`. The change simplifies the internals, and memoization allows us to do this.
+- Warn the user if running `make()` in a subdirectory of the `drake` project root (determined by the location of the `.drake` folder in relation to the working directory).
+- In the code analysis, explicitly prohibit targets from being dependencies of imported functions.
 
 # Version 6.2.1
 
@@ -93,7 +116,7 @@ Version 6.2.1 is a hotfix to address the failing automated CRAN checks for 6.2.0
 - Add a console message for building the priority queue when `verbose` is at least 2.
 - Condense `load_mtcars_example()`.
 - Deprecate the `hook` argument of `make()` and `drake_config()`.
-- In `gather_by()` and `reduce_by()`, do not exclude targets with all `NA` gathring variables.
+- In `gather_by()` and `reduce_by()`, do not exclude targets with all `NA` gathering variables.
 
 # Version 6.0.0
 
@@ -113,7 +136,7 @@ Version 6.2.1 is a hotfix to address the failing automated CRAN checks for 6.2.0
 - Remove more calls to `sort(NULL)` that caused warnings in R 3.3.3.
 - Fix a bug on R 3.3.3 where `analyze_loadd()` was sometimes quitting with "Error: attempt to set an attribute on NULL".
 - Do not call `digest::digest(file = TRUE)` on directories. Instead, set hashes of directories to `NA`. Users should still not directories as file dependencies.
-- If files are declared as dependnecies of custom triggers ("condition" and "change") include them in `vis_drake_graph()`. Previously, these files were missing from the visualization, but actual workflows worked just fine. Ref: https://stackoverflow.com/questions/52121537/trigger-notification-from-report-generation-in-r-drake-package
+- If files are declared as dependencies of custom triggers ("condition" and "change") include them in `vis_drake_graph()`. Previously, these files were missing from the visualization, but actual workflows worked just fine. Ref: https://stackoverflow.com/questions/52121537/trigger-notification-from-report-generation-in-r-drake-package
 - Work around mysterious `codetools` failures in R 3.3 (add a `tryCatch()` statement in `find_globals()`).
 
 ## New features
@@ -133,7 +156,7 @@ Version 6.2.1 is a hotfix to address the failing automated CRAN checks for 6.2.0
 - Align hover text properly in `vis_drake_graph()` using the "title" node column.
 - Optionally collapse nodes into clusters with `vis_drake_graph(collapse = TRUE)`.
 - Improve `dependency_profile()` show major trigger hashes side-by-side
-to tell the user if the command, a dependency, an input file, or an ouptut file changed since the last `make()`.
+to tell the user if the command, a dependency, an input file, or an output file changed since the last `make()`.
 - Choose more appropriate places to check that the `txtq` package is installed.
 - Improve the help files of `loadd()` and `readd()`, giving specific usage guidance in prose.
 - Memoize all the steps of `build_drake_graph()` and print to the console the ones that execute.
@@ -168,7 +191,7 @@ to tell the user if the command, a dependency, an input file, or an ouptut file 
 - Skip more tests on CRAN. White-list tests instead of blacklisting them in order to try to keep check time under the official 10-minute cap.
 - Disallow wildcard names to grep-match other wildcard names or any replacement values. This will prevent careless mistakes and confusion when generating `drake_plan()`s.
 - Prevent persistent workers from hanging when a target fails.
-- Move the example template files to https://github.com/ropensci/drake/tree/master/inst/hpc_template_files.
+- Move the example template files [here](https://github.com/ropensci/drake/tree/master/inst/hpc_template_files).
 - Deprecate `drake_batchtools_tmpl_file()` in favor of `drake_hpc_template_file()` and `drake_hpc_template_files()`.
 - Add a `garbage_collection` argument to `make()`. If `TRUE`, `gc()` is called after every new build of a target.
 - Remove redundant calls to `sanitize_plan()` in `make()`.
@@ -185,7 +208,7 @@ to tell the user if the command, a dependency, an input file, or an ouptut file 
 - Sequester staged parallelism in backends "mclapply_staged" and "parLapply_staged". For the other `lapply`-like backends, `drake` uses persistent workers and a master process. In the case of `"future_lapply"` parallelism, the master process is a separate background process called by `Rscript`.
 - Remove the appearance of staged parallelism from single-job `make()`'s.
 (Previously, there were "check" messages and a call to `staged_parallelism()`.)
-- Remove uncontained remnants of staged parallelism internals.
+- Remove some remnants of staged parallelism internals.
 - Allow different parallel backends for imports vs targets. For example, `make(parallelism = c(imports = "mclapply_staged", targets = "mclapply")`.
 - Fix a bug in environment pruning. Previously, dependencies of downstream targets were being dropped from memory in `make(jobs = 1)`. Now, they are kept in memory until no downstream target needs them (for `make(jobs = 1)`).
 - Improve `predict_runtime()`. It is a more sensible way to go about predicting runtimes with multiple jobs. Likely to be more accurate.
@@ -226,7 +249,7 @@ to tell the user if the command, a dependency, an input file, or an ouptut file 
 # Version 5.1.0
 
 - Add a `reduce_plan()` function to do pairwise reductions on collections of targets.
-- Forcibly exclude the dot (`.`) from being a dependency of any target or import. This enforces more consistent behavior in the face of the current static code analysis funcionality, which sometimes detects `.` and sometimes does not.
+- Forcibly exclude the dot (`.`) from being a dependency of any target or import. This enforces more consistent behavior in the face of the current static code analysis functionality, which sometimes detects `.` and sometimes does not.
 - Use `ignore()` to optionally ignore pieces of workflow plan commands and/or imported functions. Use `ignore(some_code)` to
     1. Force `drake` to not track dependencies in `some_code`, and
     2. Ignore any changes in `some_code` when it comes to deciding which target are out of date.
@@ -251,7 +274,7 @@ to tell the user if the command, a dependency, an input file, or an ouptut file 
 - Add a new `expose_imports()` function to optionally force `drake` detect deeply nested functions inside specific packages.
 - Move the "quickstart.Rmd" vignette to "example-basic.Rmd". The so-called "quickstart" didn't end up being very quick, and it was all about the basic example anyway.
 - Move `drake_build()` to be an exclusively user-side function.
-- Add a `replace` argument to `loadd()` so that objects already in the user's eOne small thing:nvironment need not be replaced.
+- Add a `replace` argument to `loadd()` so that objects already in the user's environment need not be replaced.
 - When the graph cyclic, print out all the cycles.
 - Prune self-referential loops (and duplicate edges) from the workflow graph. That way, recursive functions are allowed.
 - Add a `seed` argument to `make()`, `drake_config()`, and `load_basic_example()`. Also hard-code a default seed of `0`. That way, the pseudo-randomness in projects should be reproducible
@@ -350,7 +373,7 @@ Version 4.3.0 has:
 - [Reproducible random numbers](https://github.com/ropensci/drake/pull/56)
 - [Automatic detection of knitr dependencies](https://github.com/ropensci/drake/issues/9)
 - More vignettes
-- Bugfixes
+- Bug fixes
 
 # Version 4.2.0: 2017-09-29
 

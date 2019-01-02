@@ -25,7 +25,8 @@ drake_config(plan = drake::read_drake_plan(), targets = NULL,
   ensure_workers = TRUE, garbage_collection = FALSE,
   template = list(), sleep = function(i) 0.01,
   hasty_build = drake::default_hasty_build,
-  memory_strategy = c("speed", "memory", "lookahead"), layout = NULL)
+  memory_strategy = c("speed", "memory", "lookahead"), layout = NULL,
+  lock_envir = TRUE)
 }
 \arguments{
 \item{plan}{workflow plan data frame.
@@ -413,18 +414,19 @@ to \code{make()} and \code{drake_config()} is an attempt at an automatic
 catch-all solution. These are the choices.
 \itemize{
 \item \code{"speed"}: Once a target is loaded in memory, just keep it there.
-Maximizes speed, but hogs memory.
-\item \code{"memory"}: For each target, unload everything from memory
-except the target's direct dependencies. Conserves memory,
-but sacrifices speed because each new target needs to reload
-any previously unloaded targets from the cache.
-\item \code{"lookahead"} (default): keep loaded targets in memory until they are
-no longer needed as dependencies in downstream build steps.
-Then, unload them from the environment. This step avoids
-keeping unneeded data in memory and minimizes expensive
-reads from the cache. However, it requires looking ahead
-in the dependency graph, which could add overhead for every
-target of projects with lots of targets.
+This choice maximizes speed and hogs memory.
+\item \code{"memory"}: Just before building each new target,
+unload everything from memory except the target's direct dependencies.
+This option conserves memory, but it sacrifices speed because
+each new target needs to reload
+any previously unloaded targets from storage.
+\item \code{"lookahead"}: Just before building each new target,
+search the dependency graph to find targets that will not be
+needed for the rest of the current \code{make()} session.
+In this mode, targets are only in memory if they need to be loaded,
+and we avoid superfluous reads from the cache.
+However, searching the graph takes time,
+and it could even double the computational overhead for large projects.
 }
 
 Each strategy has a weakness.
@@ -438,6 +440,15 @@ of \code{\link[=drake_envir]{drake_envir()}}.}
 from a prior call to \code{drake_config()}. If your plan or environment
 have changed since the last \code{make()}, do not supply a \code{layout} argument.
 Otherwise, supplying one could save time.}
+
+\item{lock_envir}{logical, whether to lock \code{config$envir} during \code{make()}.
+If \code{TRUE}, \code{make()} quits in error whenever a command in your
+\code{drake} plan (or \code{prework}) tries to add, remove, or modify
+non-hidden variables in your environment/workspace/R session.
+This is extremely important for ensuring the purity of your functions
+and the reproducibility/credibility/trust you can place in your project.
+\code{lock_envir} will be set to a default of \code{TRUE} in \code{drake} version
+7.0.0 and higher.}
 }
 \value{
 The master internal configuration list of a project.

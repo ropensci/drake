@@ -7,7 +7,7 @@
 build_times(..., path = getwd(), search = TRUE, digits = 3,
   cache = get_cache(path = path, search = search, verbose = verbose),
   targets_only = FALSE, verbose = drake::default_verbose(), jobs = 1,
-  type = c("build", "command"))
+  type = c("build", "command"), pretty_keys = TRUE)
 }
 \arguments{
 \item{...}{targets to load from the cache: as names (symbols) or
@@ -51,6 +51,12 @@ for example, \code{pkgconfig::set_config("drake::verbose" = 2)}.
 for the full build time including the time it took to
 store the target, or \code{"command"} for the time it took
 just to run the command.}
+
+\item{pretty_keys}{logical. If \code{TRUE}, files are displayed
+in the \code{item} column as "file my_file.Rmd". If \code{FALSE},
+files are encoded according to \code{drake}'s internal standard
+for representing file paths, which may not be human readable
+in future versions of \code{drake}.}
 }
 \value{
 A data frame of times, each from \code{\link[=system.time]{system.time()}}.

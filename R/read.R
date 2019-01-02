@@ -86,7 +86,7 @@ readd <- function(
     )
   }
   cache$get(
-    standardize_filename(target),
+    standardize_key(target), # TODO: remove for version 7.0.0
     namespace = namespace,
     use_cache = TRUE
   )
@@ -170,9 +170,6 @@ readd <- function(
 #' loadd(coef_regression2_small, deps = TRUE)
 #' ls()
 #' # Load all the imported objects/functions.
-#' # Note: loadd() excludes foreign imports
-#' # (R objects not originally defined in `envir`
-#' # when `make()` last imported them).
 #' loadd(imported_only = TRUE)
 #' ls()
 #' # Load all the targets listed in the workflow plan
@@ -205,6 +202,7 @@ loadd <- function(
   tidyselect = TRUE
 ) {
   force(envir)
+  lazy <- parse_lazy_arg(lazy)
   if (is.null(cache)) {
     stop("cannot find drake cache.")
   }
@@ -247,11 +245,6 @@ loadd <- function(
   if (!replace) {
     targets <- setdiff(targets, ls(envir, all.names = TRUE))
   }
-  targets <- exclude_foreign_imports(
-    targets = targets,
-    cache = cache,
-    jobs = jobs
-  )
   if (show_source) {
     lapply(
       X = targets,
@@ -268,31 +261,6 @@ loadd <- function(
   invisible()
 }
 
-exclude_foreign_imports <- function(targets, cache, jobs) {
-  parallel_filter(
-    x = targets,
-    f = is_not_foreign_import_obj,
-    jobs = jobs,
-    cache = cache
-  )
-}
-
-is_not_foreign_import_obj <- function(target, cache) {
-  if (is_file(target)) {
-    return(TRUE)
-  }
-  if (!cache$exists(key = target, namespace = "meta")) {
-    return(FALSE)
-  }
-  meta <- diagnose(
-    target = target,
-    cache = cache,
-    character_only = TRUE,
-    verbose = FALSE
-  )
-  identical(meta$imported, FALSE) || identical(meta$foreign, FALSE)
-}
-
 parse_lazy_arg <- function(lazy) {
   if (identical(lazy, FALSE)) {
     "eager"
@@ -304,7 +272,6 @@ parse_lazy_arg <- function(lazy) {
 }
 
 load_target <- function(target, cache, namespace, envir, verbose, lazy) {
-  lazy <- parse_lazy_arg(lazy)
   switch(
     lazy,
     eager = eager_load_target(
@@ -339,13 +306,7 @@ load_target <- function(target, cache, namespace, envir, verbose, lazy) {
 #' @export
 #' @inheritParams loadd
 eager_load_target <- function(target, cache, namespace, envir, verbose) {
-  value <- readd(
-    target,
-    character_only = TRUE,
-    cache = cache,
-    namespace = namespace,
-    verbose = verbose
-  )
+  value <- cache$get(key = target, namespace = namespace)
   assign(x = target, value = value, envir = envir)
   local <- environment()
   rm(value, envir = local)
@@ -356,13 +317,7 @@ promise_load_target <- function(target, cache, namespace, envir, verbose) {
   eval_env <- environment()
   delayedAssign(
     x = target,
-    value = readd(
-      target,
-      character_only = TRUE,
-      cache = cache,
-      namespace = namespace,
-      verbose = verbose
-    ),
+    value = cache$get(key = target, namespace = namespace),
     eval.env = eval_env,
     assign.env = envir
   )

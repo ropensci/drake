@@ -170,7 +170,7 @@ drake_try_fetch_rds <- function(path) {
     "Something is wrong with the file system of the cache. ",
     "If you downloaded it from an online repository, are you sure ",
     "all the files were downloaded correctly? ",
-    "If all else fails, remove the folder at ", path, "and try again.",
+    "If all else fails, remove the folder at ", path, " and try again.",
     call. = FALSE
   )
 }
@@ -181,11 +181,7 @@ drake_fetch_rds <- function(path) {
   }
   hash_algo_file <- file.path(path, "config", "hash_algorithm")
   hash_algo <- scan(hash_algo_file, quiet = TRUE, what = character())
-  storr::storr_rds(
-    path = path,
-    mangle_key = TRUE,
-    hash_algorithm = hash_algo
-  )
+  storr::storr_rds(path = path, hash_algorithm = hash_algo)
 }
 
 #' @title  Make a new `drake` cache.
@@ -236,7 +232,7 @@ new_cache <- function(
   deprecate_hash_algo_args(short_hash_algo, long_hash_algo)
   cache <- storr::storr_rds(
     path = path,
-    mangle_key = TRUE,
+    mangle_key = FALSE,
     hash_algorithm = hash_algorithm
   )
   writeLines(
@@ -308,6 +304,7 @@ recover_cache <- function(
       console_log_file = console_log_file
     )
   }
+  init_common_values(cache)
   cache
 }
 
@@ -328,7 +325,6 @@ default_cache_path <- function(root = getwd()) {
 
 # Pre-set the values to avoid https://github.com/richfitz/storr/issues/80.
 init_common_values <- function(cache) {
-  set_initial_drake_version(cache)
   common_values <- list(TRUE, FALSE, "finished", "in progress", "failed")
   cache$mset(
     key = as.character(common_values),
@@ -349,40 +345,7 @@ clear_tmp_namespace <- function(cache, jobs, namespace) {
   invisible()
 }
 
-set_initial_drake_version <- function(cache) {
-  if (cache$exists(
-    key = "initial_drake_version",
-    namespace = "session"
-  )) {
-    return()
-  } else if (cache$exists(
-    key = "sessionInfo",
-    namespace = "session"
-  )) {
-    last_session <- drake_get_session_info(cache = cache)
-  } else {
-    last_session <- NULL
-  }
-  version <- drake_version(session_info = last_session)
-  cache$set(
-    key = "initial_drake_version",
-    value = version,
-    namespace = "session"
-  )
-}
-
-drake_version <- function(session_info = NULL) { # nolint
-  if (!length(session_info)) {
-    return(packageVersion("drake"))
-  }
-  all_pkgs <- c(
-    session_info$otherPkgs, # nolint
-    session_info$loadedOnly # nolint
-  )
-  all_pkgs$drake$Version # nolint
-}
-
-is_default_cache <- function(cache) {
+keys_are_mangled <- function(cache) {
   "driver_rds" %in% class(cache$driver) &&
     identical(cache$driver$mangle_key, TRUE)
 }
@@ -390,7 +353,7 @@ is_default_cache <- function(cache) {
 safe_get <- function(key, namespace, config) {
   out <- just_try(config$cache$get(key = key, namespace = namespace))
   if (inherits(out, "try-error")) {
-    out <- NA
+    out <- NA_character_
   }
   out
 }
@@ -398,7 +361,7 @@ safe_get <- function(key, namespace, config) {
 safe_get_hash <- function(key, namespace, config) {
   out <- just_try(config$cache$get_hash(key = key, namespace = namespace))
   if (inherits(out, "try-error")) {
-    out <- NA
+    out <- NA_character_
   }
   out
 }
@@ -408,47 +371,6 @@ kernel_exists <- function(target, config) {
 }
 
 target_exists <- kernel_exists
-
-cache_vers_check <- function(cache) {
-  if (is.null(cache)) {
-    return(character(0))
-  }
-  err <- try(
-    old <- drake_version(session_info = drake_get_session_info(cache = cache)), # nolint
-    silent = TRUE
-  )
-  if (inherits(err, "try-error")) {
-    return(invisible())
-  }
-  if (compareVersion(old, "5.4.0") < 0) {
-    paste0(
-      "This project was last run with drake version ",
-      old, ".\nYour cache is not compatible with the current ",
-      "version of drake (",
-      packageVersion("drake"), ").\nTo run your project with version ",
-      packageVersion("drake"), ", use make(force = TRUE).\n",
-      "But be warned: if you do that, ",
-      "all you targets will run from scratch.\nYou may instead wish to ",
-      "downgrade drake to version ", old, "."
-    )
-  } else {
-    character(0)
-  }
-}
-
-cache_vers_stop <- function(cache){
-  msg <- cache_vers_check(cache)
-  if (length(msg)) {
-    stop(msg, call. = FALSE)
-  }
-}
-
-cache_vers_warn <- function(cache){
-  msg <- cache_vers_check(cache)
-  if (length(msg)) {
-    warning(msg, call. = FALSE)
-  }
-}
 
 memo_expr <- function(expr, cache, ...) {
   if (is.null(cache)) {

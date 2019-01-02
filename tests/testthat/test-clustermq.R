@@ -23,7 +23,8 @@ test_with_dir("clustermq parallelism", {
         caching = caching,
         envir = e,
         verbose = 4,
-        garbage_collection = TRUE
+        garbage_collection = TRUE,
+        lock_envir = TRUE
       )
       expect_equal(outdated(config), character(0))
       make(
@@ -32,7 +33,8 @@ test_with_dir("clustermq parallelism", {
         jobs = jobs,
         caching = caching,
         envir = e,
-        verbose = 4
+        verbose = 4,
+        lock_envir = TRUE
       )
       expect_equal(justbuilt(config), character(0))
       clean(destroy = TRUE)

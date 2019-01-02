@@ -1,7 +1,7 @@
 assign_to_envir <- function(target, value, config) {
   if (
     identical(config$lazy_load, "eager") &&
-    !is_file(target) &&
+    !is_encoded_path(target) &&
     !is_imported(target, config)
   ) {
     assign(x = target, value = value, envir = config$eval)
@@ -34,7 +34,7 @@ manage_memory <- function(targets, config, downstream = NULL, jobs = 1) {
         jobs = jobs
       )
     }
-    downstream_deps <- nonfile_target_dependencies(
+    downstream_deps <- target_graph_dependencies(
       targets = downstream,
       config = config,
       jobs = jobs
@@ -43,7 +43,7 @@ manage_memory <- function(targets, config, downstream = NULL, jobs = 1) {
     downstream <- downstream_deps <- NULL
   }
   already_loaded <- ls(envir = config$eval, all.names = TRUE)
-  target_deps <- nonfile_target_dependencies(
+  target_deps <- target_graph_dependencies(
     targets = targets,
     config = config,
     jobs = jobs
@@ -51,9 +51,10 @@ manage_memory <- function(targets, config, downstream = NULL, jobs = 1) {
   if (!identical(config$memory_strategy, "speed")) {
     keep_these <- c(target_deps, downstream_deps)
     discard_these <- setdiff(x = config$plan$target, y = keep_these)
+    # TODO: remove for version 7.0.0
     discard_these <- parallel_filter(
       discard_these,
-      f = is_not_file,
+      f = not_encoded_path,
       jobs = jobs
     )
     discard_these <- intersect(discard_these, already_loaded)
@@ -73,7 +74,10 @@ manage_memory <- function(targets, config, downstream = NULL, jobs = 1) {
 
 safe_load <- function(targets, config, jobs = 1) {
   targets <- exclude_unloadable(
-    targets = targets, config = config, jobs = jobs)
+    targets = targets,
+    config = config,
+    jobs = jobs
+  )
   if (length(targets)) {
     if (config$lazy_load == "eager") {
       console_many_targets(
@@ -82,13 +86,14 @@ safe_load <- function(targets, config, jobs = 1) {
         config = config
       )
     }
-    loadd(
-      list = targets,
+    lapply(
+      X = targets,
+      FUN = load_target,
+      namespace = config$cache$default_namespace,
       envir = config$eval,
       cache = config$cache,
       verbose = FALSE,
-      lazy = config$lazy_load,
-      tidyselect = FALSE
+      lazy = config$lazy_load
     )
   }
   invisible()
@@ -104,20 +109,29 @@ ensure_loaded <- function(targets, config) {
   safe_load(targets = targets, config = config)
 }
 
-flexible_get <- function(target, envir) {
-  stopifnot(length(target) == 1)
+get_import_from_memory <- function(target, config) {
+  if (is_encoded_path(target)) {
+    return(NA_character_)
+  }
+  if (is_encoded_namespaced(target)) {
+    target <- decode_namespaced(target, config)
+  }
+  if (exists(x = target, envir = config$envir, inherits = FALSE)) {
+    return(get(x = target, envir = config$envir, inherits = FALSE))
+  }
   parsed <- parse(text = target)
   parsed <- as.call(parsed)
   parsed <- as.list(parsed)
   lang <- parsed[[1]]
   is_namespaced <- length(lang) > 1
-  if (!is_namespaced) {
-    return(get(x = target, envir = envir, inherits = FALSE))
+  if (is_namespaced) {
+    stopifnot(deparse(lang[[1]]) %in% c("::", ":::"))
+    pkg <- deparse(lang[[2]])
+    fun <- deparse(lang[[3]])
+    tryCatch(get(fun, envir = getNamespace(pkg)), error = error_na)
+  } else {
+    NA_character_
   }
-  stopifnot(deparse(lang[[1]]) %in% c("::", ":::"))
-  pkg <- deparse(lang[[2]])
-  fun <- deparse(lang[[3]])
-  get(fun, envir = getNamespace(pkg))
 }
 
 exclude_unloadable <- function(targets, config, jobs = jobs) {
@@ -179,4 +193,11 @@ drake_envir <- function() {
     "in your workflow plan data frame.",
     call. = FALSE
   )
+}
+
+missing_import <- function(x, config) {
+  if (is_encoded_path(x)) {
+    return(!file.exists(decode_path(x, config)))
+  }
+  identical(get_import_from_memory(x, config = config), NA_character_)
 }

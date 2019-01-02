@@ -145,7 +145,7 @@ file_trigger <- function(target, meta, config) {
   }
   file_out <- config$layout[[target]]$deps_build$file_out
   for (file in file_out) {
-    if (!file.exists(drake_unquote(file))) {
+    if (!file.exists(decode_path(file, config))) {
       return(TRUE)
     }
   }
@@ -169,7 +169,8 @@ condition_trigger <- function(target, meta, config) {
   }
   if (is.language(meta$trigger$condition)) {
     deps <- config$layout[[target]]$deps_condition
-    deps <- ensure_loaded(deps, config = config)
+    deps <- deps[c("globals", "namespaced", "loadd", "readd")]
+    deps <- ensure_loaded(unlist(deps), config = config)
     value <- eval(meta$trigger$condition, envir = config$eval)
     value <- as.logical(value)
   } else {

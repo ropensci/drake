@@ -18,7 +18,8 @@ test_with_dir("expose_imports() works", {
   )
   plan <- drake_plan(
     x = f(1),
-    y = digest::digest(x)) # double-scoped functions stop the nesting.
+    y = digest::digest(x)
+  ) # double-scoped functions stop the nesting.
   config <- drake_config(plan, envir = envir)
   n_nodes <- length(igraph::V(config$graph)$name)
   expect_true(n_nodes < 10)

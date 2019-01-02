@@ -20,7 +20,7 @@ test_with_dir("pkgconfig::get_config(\"drake::strings_in_dots\")", {
   pkgconfig::set_config("drake::strings_in_dots" = "garbage")
   expect_equal(
     expect_warning(command_dependencies(cmd)),
-    list(globals = "readRDS", file_in = "\"my_file.rds\"")
+    list(globals = "readRDS", file_in = "my_file.rds")
   )
 })
 
@@ -92,10 +92,6 @@ test_with_dir("drake version checks in previous caches", {
   expect_silent(make(plan, verbose = FALSE))
   x <- get_cache()
   expect_warning(session())
-  x$del(key = "initial_drake_version", namespace = "session")
-  expect_false("initial_drake_version" %in% x$list(namespace = "session"))
-  set_initial_drake_version(cache = x)
-  expect_true("initial_drake_version" %in% x$list(namespace = "session"))
   suppressWarnings(expect_error(drake_session(cache = NULL), regexp = "make"))
   expect_warning(drake_session(cache = x), regexp = "deprecated")
 })
@@ -162,7 +158,7 @@ test_with_dir("deprecate misc utilities", {
   expect_warning(max_useful_jobs(config(drake_plan(x = 1))))
   expect_warning(deps(123))
   load_mtcars_example()
-  config <- drake_config(my_plan)
+  expect_warning(config <- drake_config(my_plan, graph = 1, layout = 2))
   expect_warning(tmp <- dataframes_graph(config))
   expect_warning(migrate_drake_project())
   expect_null(warn_single_quoted_files(character(0), list()))
@@ -181,28 +177,6 @@ test_with_dir("deprecated arguments", {
   expect_warning(drake_build(a, config = con, meta = list()))
 })
 
-test_with_dir("old file API", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  old_strings_in_dots <- pkgconfig::get_config("drake::strings_in_dots")
-  on.exit(
-    pkgconfig::set_config("drake::strings_in_dots" = old_strings_in_dots)
-  )
-  pkgconfig::set_config("drake::strings_in_dots" = "filenames")
-  expect_warning(x <- drake_plan(
-    file.csv = write.csv(mtcars, file = "file.csv"),
-    strings_in_dots = "literals",
-    file_targets = TRUE
-  ))
-  expect_warning(y <- drake_plan(
-    contents = read.csv('file.csv'), # nolint
-    strings_in_dots = "filenames"
-  ))
-  z <- rbind(x, y)
-  expect_warning(check_plan(z))
-  expect_warning(make(z, session_info = FALSE) -> config)
-  expect_equal(readd("'file.csv'"), readd("\"file.csv\""))
-})
-
 test_with_dir("example template files (deprecated)", {
   skip_on_cran()
   expect_false(file.exists("slurm_batchtools.tmpl"))
@@ -213,37 +187,13 @@ test_with_dir("example template files (deprecated)", {
   expect_true(file.exists("slurm_batchtools.tmpl"))
 })
 
-test_with_dir("plan set 1", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  old_strings_in_dots <- pkgconfig::get_config("drake::strings_in_dots")
-  on.exit(
-    pkgconfig::set_config("drake::strings_in_dots" = old_strings_in_dots)
-  )
-  pkgconfig::set_config("drake::strings_in_dots" = "filenames")
-  for (tidy_evaluation in c(TRUE, FALSE)) {
-    expect_warning(x <- drake_plan(
-      a = c,
-      b = "c",
-      list = c(c = "d", d = "readRDS('e')"),
-      tidy_evaluation = tidy_evaluation,
-      strings_in_dots = "filenames"
-    ))
-    y <- weak_tibble(
-      target = letters[1:4],
-      command = c("c", "'c'",
-      "d", "readRDS('e')"))
-    expect_equal(x, y)
-    expect_warning(check_plan(x))
-  }
-})
-
 test_with_dir("force with a non-back-compatible cache", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(cache_vers_check(NULL), character(0))
   expect_null(get_cache())
   expect_null(this_cache())
   expect_true(inherits(recover_cache(), "storr"))
-  write_v4.3.0_project() # nolint
+  write_v6.2.1_project() # nolint
   expect_warning(get_cache(), regexp = "compatible")
   expect_warning(this_cache(), regexp = "compatible")
   expect_warning(recover_cache(), regexp = "compatible")
@@ -369,4 +319,11 @@ test_with_dir("main example", {
   for (file in c("raw_data.xlsx", "report.Rmd")) {
     expect_false(file.exists(file))
   }
+})
+
+test_with_dir("session arg to make()", {
+  expect_warning(
+    make(drake_plan(x = 1), session = "callr::r_vanilla"),
+    regexp = "lock_envir"
+  )
 })

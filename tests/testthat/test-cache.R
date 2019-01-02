@@ -25,6 +25,24 @@ test_with_dir("empty read_drake_plan()", {
   )
 })
 
+test_with_dir("drake_version", {
+  cache <- storr::storr_environment()
+  expect_equal(
+    get_cache_version(cache),
+    as.character(utils::packageVersion("drake"))
+  )
+  con <- make(drake_plan(x = 1), session_info = FALSE)
+  expect_true(is.character(get_cache_version(con$cache)))
+  clean()
+  con <- make(drake_plan(x = 1), session_info = TRUE)
+  expect_true(is.character(get_cache_version(con$cache)))
+  con$cache$clear(namespace = "session")
+  expect_equal(
+    get_cache_version(con$cache),
+    as.character(utils::packageVersion("drake"))
+  )
+})
+
 test_with_dir("dependency profile", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   b <- 1
@@ -42,11 +60,11 @@ test_with_dir("dependency profile", {
   expect_true(as.logical(dp[dp$hash == "depend", "changed"]))
   expect_equal(sum(dp$changed), 1)
   config$plan$command <- "b + c"
-  config$layout <- create_drake_layout(
+  config$layout <- whole_static_analysis(
     plan = config$plan,
     envir = config$envir,
     cache = config$cache
-  )
+  )$layout
   dp <- dependency_profile(target = a, config = config)
   expect_true(as.logical(dp[dp$hash == "command", "changed"]))
   expect_equal(sum(dp$changed), 2)
@@ -110,16 +128,9 @@ test_with_dir("can exclude bad targets from loadd()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   plan <- drake_plan(a = TRUE)
   make(plan)
-  expect_silent(loadd(a, b, lazy = FALSE))
+  loadd(a, b, lazy = FALSE)
   expect_equal(a, TRUE)
-  expect_equal(
-    exclude_foreign_imports(
-      targets = "b",
-      cache = get_cache(),
-      jobs = 1
-    ),
-    character(0)
-  )
+  expect_error(b)
 })
 
 test_with_dir("bad/corrupt caches, no progress, no seed", {
@@ -158,6 +169,12 @@ test_with_dir("non-existent caches", {
   expect_error(tmp <- drake_set_session_info(search = FALSE))
   dummy <- new_cache()
   expect_silent(read_drake_graph(cache = dummy))
+})
+
+test_with_dir("drake_gc() and mangled keys", {
+  cache <- storr::storr_rds(tempfile(), mangle_key = TRUE)
+  cache$set("a", 1)
+  expect_silent(tmp <- drake_gc(cache = cache))
 })
 
 test_with_dir("try to rescue non-existent stuff", {
@@ -264,18 +281,21 @@ test_with_dir("cache functions work", {
   expect_equal(outdated(config), character(0))
 
   # targets and imports
-  imports <- sort(c("\"input.rds\"",
+  imports <- sort(c(encode_path("input.rds"),
     "a", "b", "c", "f", "g",
     "h", "i", "j"))
   builds <- sort(config$plan$target)
-  out_files <- "\"intermediatefile.rds\""
+  out_files <- encode_path("intermediatefile.rds")
   all <- sort(c(builds, imports, out_files))
 
   # build_times
   x <- config$cache
   bt <- build_times(search = FALSE, targets_only = FALSE)
-  expect_equal(sort(x$list(namespace = "meta")), sort(cached()))
-  expect_equal(sort(bt$item), all)
+  expect_equal(
+    sort(display_keys(x$list(namespace = "meta"))),
+    sort(cached())
+  )
+  expect_equal(sort(bt$item), sort(display_keys(all)))
   expect_length(bt, 5) # 5 columns
   n1 <- nrow(bt)
   n2 <- nrow(build_times(search = FALSE, targets_only = TRUE))
@@ -289,7 +309,7 @@ test_with_dir("cache functions work", {
   expect_equal(sort(names(progress(search = FALSE))), all)
   expect_equal(
     sort(names(progress(search = FALSE, no_imported_objects = TRUE))),
-    sort(c("\"input.rds\"", out_files, builds)))
+    sort(c(encode_path("input.rds"), out_files, builds)))
   expect_equal(progress(bla, f, list = c("h", "final"), search = FALSE),
     c(bla = "not built or imported", f = "finished", h = "finished",
       final = "finished"))
@@ -305,21 +325,37 @@ test_with_dir("cache functions work", {
 
   # imported , built, cached, diagnose, rescue
   expect_true(length(diagnose(search = FALSE)) > length(config$plan$target))
-  expect_equal(imported(files_only = FALSE, search = FALSE),
-    imports)
-  expect_equal(imported(files_only = TRUE, search = FALSE),
-    "\"input.rds\"")
+  expect_equal(
+    sort(imported(files_only = FALSE, search = FALSE)),
+    sort(display_keys(imports))
+  )
+  expect_equal(
+    imported(files_only = TRUE, search = FALSE),
+    display_keys(encode_path("input.rds"))
+  )
   expect_equal(
     sort(built(search = FALSE)),
-    sort(c(config$plan$target, out_files))
+    sort(display_keys(c(config$plan$target, out_files)))
   )
   twopiece <- sort(c(built(search = FALSE), imported(search = FALSE,
     files_only = FALSE)))
-  expect_equal(sort(cached(search = FALSE)), sort(all), twopiece)
-  expect_equal(sort(cached(search = FALSE, no_imported_objects = TRUE)),
-    sort(c("\"input.rds\"", out_files, builds)))
-  expect_true(is_cached(targets = "\"input.rds\"", no_imported_objects = TRUE,
-    cache = config$cache, jobs = 1, namespace = config$cache$default_namespace))
+  expect_equal(
+    sort(cached(search = FALSE)),
+    sort(display_keys(all)),
+    sort(display_keys(twopiece))
+  )
+  expect_equal(
+    sort(cached(search = FALSE, no_imported_objects = TRUE)),
+    sort(display_keys(c(encode_path("input.rds"), out_files, builds)))
+  )
+  expect_true(
+    is_cached(
+      targets = encode_path("input.rds"),
+      no_imported_objects = TRUE,
+      cache = config$cache, jobs = 1,
+      namespace = config$cache$default_namespace
+    )
+  )
   expect_true(all(cached(search = FALSE, list = all)))
   expect_equal(
     length(cached(search = FALSE, i, list = imported(files_only = FALSE))),
@@ -333,7 +369,11 @@ test_with_dir("cache functions work", {
     rescue_cache(search = FALSE, garbage_collection = FALSE), "storr"))
   expect_true(inherits(
     rescue_cache(search = FALSE, garbage_collection = TRUE), "storr"))
-  expect_equal(sort(cached(search = FALSE)), sort(all), twopiece)
+  expect_equal(
+    sort(cached(search = FALSE)),
+    sort(display_keys(all)),
+    sort(display_keys(twopiece))
+  )
 
   # find your project
   expect_equal(find_project(), getwd())
@@ -358,7 +398,7 @@ test_with_dir("cache functions work", {
     imported(search = FALSE),
     c("readRDS", "saveRDS")
   )
-  expect_true(all(should_have_loaded %in% ls(envir = e)))
+  expect_true(all(should_have_loaded %in% display_keys(ls(envir = e))))
   e <- new.env()
   loadd(search = FALSE, envir = e)
   should_have_loaded <- setdiff(
@@ -380,8 +420,14 @@ test_with_dir("cache functions work", {
   expect_true(is.list(drake_get_session_info(search = TRUE, path = s)))
   expect_equal(sort(names(progress(search = TRUE, path = s))),
     sort(all))
-  expect_equal(sort(names(progress(no_imported_objects = TRUE,
-    search = TRUE, path = s))), sort(c("\"input.rds\"", out_files, builds)))
+  expect_equal(
+    sort(
+      names(
+        progress(no_imported_objects = TRUE, search = TRUE, path = s)
+      )
+    ),
+    sort(c(encode_path("input.rds"), out_files, builds))
+  )
   expect_equal(sort(progress(search = TRUE, path = s, bla, f,
     list = c("h", "final"))), sort(c(bla = "not built or imported",
     f = "finished", h = "finished", final = "finished")))
@@ -389,19 +435,31 @@ test_with_dir("cache functions work", {
 
   # imported, built, cached, diagnose
   expect_equal(diagnose(search = TRUE), character(0))
-  expect_equal(sort(imported(files_only = FALSE, search = TRUE,
-    path = s)), sort(imports))
-  expect_equal(imported(files_only = TRUE, search = TRUE, path = s),
-    "\"input.rds\"")
-  expect_equal(sort(built(search = TRUE, path = s)),
-    sort(c(config$plan$target, out_files)))
-  twopiece <- sort(c(built(path = s, search = TRUE),
-    imported(files_only = FALSE,
-    path = s, search = TRUE)))
-  expect_equal(sort(cached(path = s, search = TRUE)), sort(all),
-    twopiece)
-  expect_equal(sort(cached(no_imported_objects = TRUE, path = s,
-    search = T)), sort(c("\"input.rds\"", out_files, builds)))
+  expect_equal(
+    sort(imported(files_only = FALSE, search = TRUE, path = s)),
+    sort(display_keys(imports))
+  )
+  expect_equal(
+    imported(files_only = TRUE, search = TRUE, path = s),
+    display_keys(encode_path("input.rds"))
+  )
+  expect_equal(
+    sort(built(search = TRUE, path = s)),
+    sort(display_keys(c(config$plan$target, out_files)))
+  )
+  twopiece <- sort(c(
+    built(path = s, search = TRUE),
+    imported(files_only = FALSE, path = s, search = TRUE))
+  )
+  expect_equal(
+    sort(cached(path = s, search = TRUE)),
+    sort(display_keys(all)),
+    sort(display_keys(twopiece))
+  )
+  expect_equal(
+    sort(cached(no_imported_objects = TRUE, path = s, search = T)),
+    sort(display_keys(c(encode_path("input.rds"), out_files, builds)))
+  )
   expect_true(all(cached(list = all, path = s, search = TRUE)))
   expect_true(inherits(rescue_cache(path = s, search = TRUE), "storr"))
   expect_true(all(cached(list = all, path = s, search = TRUE)))
@@ -452,11 +510,12 @@ test_with_dir("cache functions work", {
   setwd("..") # nolint
 
   # clean using search = TRUE or FALSE
-  expect_true(all(all %in% cached(path = s, search = T)))
+  expect_true(all(display_keys(all) %in% cached(path = s, search = T)))
   clean(final, path = s, search = TRUE, jobs = 2,
     garbage_collection = TRUE)
-  expect_true(all(setdiff(all, "final") %in% cached(path = s,
-    search = T)))
+  expect_true(all(
+    sort(display_keys(setdiff(all, "final"))) %in%
+      cached(path = s, search = T)))
   drake_gc(path = s, search = T)
 
   # Test purging
@@ -501,4 +560,22 @@ test_with_dir("master caching, environment caches and parallelism", {
     jobs = 2
   )
   expect_true("report" %in% justbuilt(config))
+})
+
+test_with_dir("run make() from subdir", {
+  old <- Sys.getenv("drake_warn_subdir")
+  Sys.setenv(drake_warn_subdir = "")
+  on.exit(Sys.setenv(drake_warn_subdir = old))
+  plan <- drake_plan(x = 1)
+  x <- new_cache()
+  y <- new_cache("not_.drake")
+  dir.create("subdir")
+  with_dir("subdir", {
+    expect_warning(make(plan), regexp = "subdirectory")
+    expect_warning(make(plan), regexp = "subdirectory")
+    make(plan, cache = y)
+    new_cache(".drake")
+    make(plan)
+    make(plan, cache = storr::storr_environment())
+  })
 })

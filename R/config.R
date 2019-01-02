@@ -319,19 +319,20 @@
 #'   to `make()` and `drake_config()` is an attempt at an automatic
 #'   catch-all solution. These are the choices.
 #'
-#'   - `"speed"`: Once a target is loaded in memory, just keep it there.
-#'     Maximizes speed, but hogs memory.
-#'   - `"memory"`: For each target, unload everything from memory
-#'     except the target's direct dependencies. Conserves memory,
-#'     but sacrifices speed because each new target needs to reload
-#'     any previously unloaded targets from the cache.
-#'   - `"lookahead"` (default): keep loaded targets in memory until they are
-#'     no longer needed as dependencies in downstream build steps.
-#'     Then, unload them from the environment. This step avoids
-#'     keeping unneeded data in memory and minimizes expensive
-#'     reads from the cache. However, it requires looking ahead
-#'     in the dependency graph, which could add overhead for every
-#'     target of projects with lots of targets.
+#' - `"speed"`: Once a target is loaded in memory, just keep it there.
+#'   This choice maximizes speed and hogs memory.
+#' - `"memory"`: Just before building each new target,
+#'   unload everything from memory except the target's direct dependencies.
+#'   This option conserves memory, but it sacrifices speed because
+#'   each new target needs to reload
+#'   any previously unloaded targets from storage.
+#' - `"lookahead"`: Just before building each new target,
+#'   search the dependency graph to find targets that will not be
+#'   needed for the rest of the current `make()` session.
+#'   In this mode, targets are only in memory if they need to be loaded,
+#'   and we avoid superfluous reads from the cache.
+#'   However, searching the graph takes time,
+#'   and it could even double the computational overhead for large projects.
 #'
 #' Each strategy has a weakness.
 #' `"speed"` is memory-hungry, `"memory"` wastes time reloading
@@ -422,6 +423,15 @@
 #'   have changed since the last `make()`, do not supply a `layout` argument.
 #'   Otherwise, supplying one could save time.
 #'
+#' @param lock_envir logical, whether to lock `config$envir` during `make()`.
+#'   If `TRUE`, `make()` quits in error whenever a command in your
+#'   `drake` plan (or `prework`) tries to add, remove, or modify
+#'   non-hidden variables in your environment/workspace/R session.
+#'   This is extremely important for ensuring the purity of your functions
+#'   and the reproducibility/credibility/trust you can place in your project.
+#'   `lock_envir` will be set to a default of `TRUE` in `drake` version
+#'   7.0.0 and higher.
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -484,7 +494,8 @@ drake_config <- function(
   sleep = function(i) 0.01,
   hasty_build = drake::default_hasty_build,
   memory_strategy = c("speed", "memory", "lookahead"),
-  layout = NULL
+  layout = NULL,
+  lock_envir = TRUE
 ) {
   force(envir)
   unlink(console_log_file)
@@ -516,6 +527,22 @@ drake_config <- function(
       # 2018-12-07 # nolint
     )
   }
+  if (!is.null(graph)) {
+    warning(
+      "Argument `graph` is deprecated. Instead, ",
+      "the preprocessing of the graph is memoized to save time.",
+      call. = FALSE
+      # 2018-12-19 # nolint
+    )
+  }
+  if (!is.null(layout)) {
+    warning(
+      "Argument `layout` is deprecated. Instead, ",
+      "the preprocessing of the layout is memoized to save time.",
+      call. = FALSE
+      # 2018-12-19 # nolint
+    )
+  }
   plan <- sanitize_plan(plan)
   if (is.null(targets)) {
     targets <- plan$target
@@ -536,47 +563,35 @@ drake_config <- function(
     )
   }
   if (force) {
-    drake_set_session_info(cache = cache)
+    drake_set_session_info(cache = cache, full = session_info)
   }
-  cache_vers_stop(cache)
-  if (cache$exists("long_hash_algo", namespace = "config")) {
-    long_hash_algo <- cache$get("long_hash_algo", namespace = "config")
-  } else {
-    long_hash_algo <- cache$driver$hash_algorithm
-  }
-  init_common_values(cache)
   seed <- choose_seed(supplied = seed, cache = cache)
   trigger <- convert_old_trigger(trigger)
-  if (is.null(layout)) {
-    layout <- create_drake_layout(
-      plan = plan,
-      targets = targets,
-      envir = envir,
-      verbose = verbose,
-      jobs = jobs,
-      console_log_file = console_log_file,
-      trigger = trigger,
-      cache = cache
-    )
-  }
-  if (is.null(graph)) {
-    graph <- create_drake_graph(
-      layout = layout,
-      targets = targets,
-      cache = cache,
-      jobs = jobs,
-      console_log_file = console_log_file,
-      verbose = verbose
-    )
-  } else {
-    graph <- prune_drake_graph(graph = graph, to = targets, jobs = jobs)
-  }
+  decode <- ht_new()
+  encode <- ht_new()
+  layout <- whole_static_analysis(
+    plan = plan,
+    envir = envir,
+    verbose = verbose,
+    jobs = jobs,
+    console_log_file = console_log_file,
+    trigger = trigger,
+    cache = cache
+  )
+  graph <- create_drake_graph(
+    layout = layout,
+    targets = targets,
+    cache = cache,
+    jobs = jobs,
+    console_log_file = console_log_file,
+    verbose = verbose
+  )
   all_targets <- intersect(igraph::V(graph)$name, plan$target)
   all_imports <- setdiff(igraph::V(graph)$name, all_targets)
   cache_path <- force_cache_path(cache)
   lazy_load <- parse_lazy_arg(lazy_load)
   memory_strategy <- match.arg(memory_strategy)
-  list(
+  out <- list(
     plan = plan,
     targets = targets,
     envir = envir,
@@ -596,8 +611,11 @@ drake_config <- function(
     args = args,
     recipe_command = recipe_command,
     layout = layout,
+    ht_encode_path = ht_new(),
+    ht_decode_path = ht_new(),
+    ht_encode_namespaced = ht_new(),
+    ht_decode_namespaced = ht_new(),
     graph = graph,
-    long_hash_algo = long_hash_algo,
     seed = seed,
     trigger = trigger,
     timeout = timeout,
@@ -623,8 +641,12 @@ drake_config <- function(
     garbage_collection = garbage_collection,
     template = template,
     sleep = sleep,
-    hasty_build = hasty_build
+    hasty_build = hasty_build,
+    lock_envir = lock_envir
   )
+  out <- enforce_compatible_config(out)
+  config_checks(out)
+  out
 }
 
 add_packages_to_prework <- function(packages, prework) {

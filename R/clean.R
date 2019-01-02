@@ -154,7 +154,7 @@ clean_single_target <- function(
   layout
 ) {
   files <- character(0)
-  if (is_file(target)) {
+  if (is_encoded_path(target)) {
     if (cache$exists(target, namespace = "meta")) {
       if (!is_imported_cache(target, cache)) {
         files <- target
@@ -165,7 +165,9 @@ clean_single_target <- function(
     deps <- layout[[target]]$deps_build
     files <- sort(unique(as.character(deps$file_out)))
   }
-  unlink(drake_unquote(files))
+  if (length(files)) {
+    unlink(decode_path(files))
+  }
   for (namespace in namespaces) {
     for (key in c(target, files)) {
       cache$del(key = key, namespace = namespace)
@@ -221,7 +223,7 @@ drake_gc <- function(
 }
 
 rm_bad_cache_filenames <- function(cache) {
-  if (is_default_cache(cache)) {
+  if (keys_are_mangled(cache)) {
     files <- list.files(path = cache$driver$path, recursive = TRUE)
     keep <- grepl(pattern = "^[-_./\\0-9a-zA-Z]*$", x = files)
     unlink(files[!keep], recursive = TRUE)

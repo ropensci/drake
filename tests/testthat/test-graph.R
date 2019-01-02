@@ -37,7 +37,7 @@ test_with_dir("circular non-DAG drake_plans quit in error", {
   )
   x <- drake_plan(
     a = b, b = c, c = a, d = 4, e = d,
-    A = B, B = C, C = A, mytarget = e
+    Aa = Bb, Bb = Cc, Cc = Aa, mytarget = e
   )
   expect_error(tmp <- capture.output(check_plan(x)))
   expect_error(
@@ -59,18 +59,6 @@ test_with_dir("Supplied graph disagrees with the workflow plan", {
       session_info = FALSE
     )
   )
-})
-
-test_with_dir("Supplied graph is pruned.", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  load_mtcars_example()
-  graph <- drake_config(my_plan)$graph
-  con <- drake_config(my_plan, targets = c("small", "large"), graph = graph)
-  vertices <- V(con$graph)$name
-  include <- c("small", "simulate", "large")
-  exclude <- setdiff(my_plan$target, include)
-  expect_true(all(include %in% vertices))
-  expect_false(any(exclude %in% vertices))
 })
 
 test_with_dir("we can generate different visNetwork dependency graphs", {
@@ -304,18 +292,18 @@ test_with_dir("show_output_files", {
   }
   e <- info$edges[with(info$edges, order(from, to)), ]
   expect_equal(
-    e$from,
-    c(
+    sort(e$from),
+    sort(c(
       file_store(paste0("out", 1:2, ".txt")),
       paste0("target", rep(1:2, each = 2))
-    )
+    ))
   )
   expect_equal(
-    e$to,
-    c(
+    sort(e$to),
+    sort(c(
       rep("target2", 2),
       file_store(paste0("out", 1:4, ".txt"))
-    )
+    ))
   )
   info <- drake_graph_info(
     config,
@@ -392,20 +380,20 @@ test_with_dir("same, but with an extra edge not due to files", {
   }
   e <- info$edges[with(info$edges, order(from, to)), ]
   expect_equal(
-    e$from,
-    c(
+    sort(e$from),
+    sort(c(
       file_store(paste0("out", 1:2, ".txt")),
       paste0("target", c(1, rep(1:2, each = 2)))
-    )
+    ))
   )
   expect_equal(
-    e$to,
-    c(
+    sort(e$to),
+    sort(c(
       rep("target2", 2),
       file_store(paste0("out", 1:2, ".txt")),
       "target2",
       file_store(paste0("out", 3:4, ".txt"))
-    )
+    ))
   )
   info <- drake_graph_info(
     config,
@@ -426,5 +414,19 @@ test_with_dir("same, but with an extra edge not due to files", {
     sort(info$nodes$id),
     sort(c(file_store(
       paste0("out", 3:4, ".txt")), "status: up to date", "target2"))
+  )
+})
+
+test_with_dir("graph pruning edge cases", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  load_mtcars_example()
+  graph <- drake_config(my_plan)$graph
+  expect_warning(
+    prune_drake_graph(graph, to = c("small", "shibboleth")),
+    regexp = "supplied targets not in the dependency graph"
+  )
+  expect_warning(
+    prune_drake_graph(graph, to = character(0)),
+    regexp = "no valid destination vertices supplied"
   )
 })

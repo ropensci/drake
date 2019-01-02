@@ -1,6 +1,5 @@
-create_drake_layout <- function(
+whole_static_analysis <- function(
   plan = read_drake_plan(),
-  targets = plan$target,
   envir = parent.frame(),
   verbose = drake::default_verbose(),
   jobs = 1,
@@ -11,24 +10,23 @@ create_drake_layout <- function(
   force(envir)
   config <- list(
     plan = plan,
-    targets = targets,
     envir = envir,
     verbose = verbose,
     jobs = jobs,
     cache = cache,
     console_log_file = console_log_file,
     trigger = parse_trigger(trigger = trigger, envir = envir),
-    allowed_globals = sort(c(plan$target, ls(envir = envir, all.names = TRUE)))
+    allowed_globals = sort(c(plan$target, ls(envir, all.names = TRUE)))
   )
-  imports <- cdl_prepare_imports(config)
-  imports_kernel <- cdl_imports_kernel(config, imports)
+  imports <- wsa_prepare_imports(config)
+  imports_kernel <- wsa_imports_kernel(config, imports)
   import_layout <- memo_expr(
-    cdl_analyze_imports(config, imports),
+    wsa_analyze_imports(config, imports),
     config$cache,
     imports_kernel
   )
   command_layout <- memo_expr(
-    cdl_analyze_commands(config),
+    wsa_analyze_commands(config),
     config$cache,
     config$plan,
     config$trigger,
@@ -38,20 +36,20 @@ create_drake_layout <- function(
   c(import_layout, command_layout)
 }
 
-cdl_prepare_imports <- function(config) {
+wsa_prepare_imports <- function(config) {
   console_preprocess(text = "analyze environment", config = config)
   imports <- as.list(config$envir)
-  cdl_unload_conflicts(
+  wsa_unload_conflicts(
     imports = names(imports),
     targets = config$plan$target,
     envir = config$envir,
     verbose = config$verbose
   )
-  import_names <- setdiff(names(imports), config$targets)
+  import_names <- setdiff(names(imports), config$plan$target)
   imports[import_names]
 }
 
-cdl_unload_conflicts <- function(imports, targets, envir, verbose) {
+wsa_unload_conflicts <- function(imports, targets, envir, verbose) {
   common <- intersect(imports, targets)
   if (verbose & length(common)) {
     message(
@@ -62,7 +60,7 @@ cdl_unload_conflicts <- function(imports, targets, envir, verbose) {
   remove(list = common, envir = envir)
 }
 
-cdl_imports_kernel <- function(config, imports) {
+wsa_imports_kernel <- function(config, imports) {
   out <- lightly_parallelize(
     X = imports,
     FUN = function(x) {
@@ -77,7 +75,7 @@ cdl_imports_kernel <- function(config, imports) {
   out[sort(names(out) %||% logical(0))]
 }
 
-cdl_analyze_imports <- function(config, imports) {
+wsa_analyze_imports <- function(config, imports) {
   names <-  names(imports)
   console_many_targets(
     targets = names,
@@ -93,7 +91,7 @@ cdl_analyze_imports <- function(config, imports) {
         deps_build = import_dependencies(
           expr = imports[[i]],
           exclude = names(imports)[[i]],
-          allowed_globals = config$allowed_globals
+          allowed_globals = names
         ),
         imported = TRUE
       )
@@ -104,7 +102,7 @@ cdl_analyze_imports <- function(config, imports) {
   out
 }
 
-cdl_analyze_commands <- function(config) {
+wsa_analyze_commands <- function(config) {
   console_many_targets(
     targets = config$plan$target,
     pattern = "analyze",
@@ -131,7 +129,7 @@ cdl_analyze_commands <- function(config) {
   )
   out <- lightly_parallelize(
     X = layout,
-    FUN = cdl_prepare_layout,
+    FUN = wsa_prepare_layout,
     jobs = config$jobs,
     config = config
   )
@@ -139,7 +137,7 @@ cdl_analyze_commands <- function(config) {
   out
 }
 
-cdl_prepare_layout <- function(layout, config){
+wsa_prepare_layout <- function(layout, config){
   layout$deps_build <- command_dependencies(
     command = layout$command,
     exclude = layout$target,

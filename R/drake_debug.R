@@ -48,9 +48,6 @@ drake_debug <- function(
     config <- drake::read_drake_config(envir = envir, jobs = jobs)
     config$envir <- envir
   }
-  # Wait until drake 7.0.0 to uncomment
-  # lock_environment(config$envir) # nolint
-  # on.exit(unlock_environment(config$envir)) # nolint
   if (!character_only) {
     target <- as.character(substitute(target))
   }

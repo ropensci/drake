@@ -42,7 +42,7 @@ error_false <- function(e) {
 }
 
 error_na <- function(e) {
-  NA
+  NA_character_
 }
 
 error_null <- function(e) {
@@ -89,8 +89,13 @@ locked_envir_msg <- paste(
   "to modify an object in your environment/workspace/R session.",
   "drake stops you from doing this sort of thing because it",
   "invalidates upstream targets and undermines reproducibility.",
-  "In order to make sure you can trust your workflow,",
-  "please verify that all your commands and functions are pure:",
+  "Please verify that all your commands and functions are pure:",
   "they should only produce *new* output, and",
-  "they should never go back and modify old output or dependencies."
+  "they should never go back and modify old output or dependencies.",
+  "Beware <<-, ->>, attach(), and data().",
+  "Also please try to avoid options() even though drake does not stop you.",
+  "Alternatively, you can set lock_envir to FALSE in make() or",
+  "drake_config() to stop drake from producing these errors. But be warned:",
+  "make(lock_envir = FALSE) decreases the levels of confidence and trust",
+  "you can place in your results."
 )

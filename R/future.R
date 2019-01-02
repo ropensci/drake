@@ -33,7 +33,7 @@ run_future <- function(config) {
         )
       }
     }
-    Sys.sleep(config$sleep(i))
+    Sys.sleep(config$sleep(max(0L, i)))
     i <- i + 1
   }
 }
@@ -50,8 +50,6 @@ run_future <- function(config) {
 #' @param protect Names of targets that still need their
 #' dependencies available in memory.
 drake_future_task <- function(target, meta, config, protect) {
-  # Wait until drake 7.0.0 to uncomment
-  # lock_environment(config$envir) # nolint
   if (identical(config$caching, "worker")) {
     manage_memory(targets = target, config = config, downstream = protect)
   }
@@ -140,7 +138,7 @@ future_globals <- function(target, meta, config, protect) {
 }
 
 empty_worker <- function(target) {
-  structure(NA, target = target)
+  structure(NA_character_, target = target)
 }
 
 is_empty_worker <- function(worker) {
@@ -200,7 +198,7 @@ running_targets <- function(workers, config) {
 initialize_workers <- function(config) {
   out <- list()
   for (i in seq_len(config$jobs))
-    out[[i]] <- empty_worker(target = NA)
+    out[[i]] <- empty_worker(target = NA_character_)
   out
 }
 

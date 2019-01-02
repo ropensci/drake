@@ -2,18 +2,18 @@ drake_context("map reduce")
 
 test_with_dir("map_plan()", {
   skip_on_cran()
-  f <- function(a, b) {
+  fn <- function(a, b) {
     a + b
   }
   args <- expand.grid(a = 1:2, b = 3:5)
-  plan1 <- map_plan(args = args, fun = f)
+  plan1 <- map_plan(args = args, fun = fn)
   args$id <- LETTERS[seq_len(nrow(args))]
-  plan2 <- map_plan(args = args, fun = f)
+  plan2 <- map_plan(args = args, fun = fn)
   args$x <- args$id
   args$id <- NULL
-  plan3 <- map_plan(args = args, fun = f, id = x)
-  plan4 <- map_plan(args = args, fun = "f", id = "x", character_only = TRUE)
-  plan5 <- map_plan(args = args, fun = f, id = x, trace = TRUE)
+  plan3 <- map_plan(args = args, fun = fn, id = x)
+  plan4 <- map_plan(args = args, fun = "fn", id = "x", character_only = TRUE)
+  plan5 <- map_plan(args = args, fun = fn, id = x, trace = TRUE)
   expect_equal(plan1$command, plan2$command)
   expect_equal(plan2, plan3)
   expect_equal(plan3, plan4)
@@ -31,10 +31,11 @@ test_with_dir("map_plan()", {
 
 test_with_dir("map_plan() onto a matrix", {
   skip_on_cran()
+  skip_if_not_installed("datasets")
   my_model_fit <- function(x1, x2) {
-    lm(as.formula(paste("mpg ~", x1, "+", x2)), data = mtcars)
+    lm(as.formula(paste("mpg ~", x1, "+", x2)), data = datasets::mtcars)
   }
-  covariates <- setdiff(colnames(mtcars), "mpg")
+  covariates <- setdiff(colnames(datasets::mtcars), "mpg")
   args <- t(combn(covariates, 2))
   colnames(args) <- c("x1", "x2")
   plan <- map_plan(args, "my_model_fit")
@@ -46,11 +47,12 @@ test_with_dir("map_plan() onto a matrix", {
 
 test_with_dir("map_plan() with symbols", {
   skip_on_cran()
+  skip_if_not_installed("datasets")
   my_model_fit <- function(x1, x2, data) {
     formula <- as.formula(paste("mpg ~", x1, "+", x1))
     lm(formula, data = data)
   }
-  covariates <- setdiff(colnames(mtcars), "mpg")
+  covariates <- setdiff(colnames(datasets::mtcars), "mpg")
   args <- t(combn(covariates, 2))
   colnames(args) <- c("x1", "x2")
   args <- weak_as_tibble(args)

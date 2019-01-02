@@ -1,5 +1,60 @@
 drake_context("edge cases")
 
+test_with_dir("lock_envir works", {
+  scenario <- get_testing_scenario()
+  e <- eval(parse(text = scenario$envir))
+  jobs <- scenario$jobs
+  parallelism <- scenario$parallelism
+  caching <- scenario$caching
+  plan <- drake_plan(
+    x = testthat::expect_error(
+      assign("a", 1, envir = parent.env(drake_envir())),
+      regexp = "binding"
+    ),
+    strings_in_dots = "literals"
+  )
+  make(
+    plan,
+    envir = e,
+    jobs = jobs,
+    parallelism = parallelism,
+    caching = caching,
+    lock_envir = TRUE,
+    verbose = FALSE,
+    session_info = FALSE
+  )
+  e$a <- 123
+  e$plan$four <- "five"
+  plan <- drake_plan(
+    x = assign("a", 1, envir = parent.env(drake_envir())),
+    strings_in_dots = "literals"
+  )
+  make(
+    plan,
+    envir = e,
+    jobs = jobs,
+    parallelism = parallelism,
+    caching = caching,
+    lock_envir = FALSE,
+    verbose = FALSE,
+    session_info = FALSE
+  )
+  expect_true("x" %in% cached())
+})
+
+test_with_dir("Try to modify a locked environment", {
+  e <- new.env()
+  lock_environment(e)
+  plan <- drake_plan(x = {
+    e$a <- 1
+    2
+  })
+  expect_error(
+    make(plan, session_info = FALSE, cache = storr::storr_environment()),
+    regexp = "verify that all your commands and functions are pure"
+  )
+})
+
 test_with_dir("skip everything", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   f <- function(x) {
@@ -93,7 +148,7 @@ test_with_dir("config and make without safety checks", {
   tmp <- drake_config(x, verbose = FALSE)
   expect_silent(
     tmp <- drake_config(x, skip_safety_checks = TRUE, verbose = FALSE))
-  expect_silent(check_drake_config(config = tmp))
+  expect_silent(config_checks(config = tmp))
 })
 
 test_with_dir("Strings stay strings, not symbols", {
@@ -104,7 +159,7 @@ test_with_dir("Strings stay strings, not symbols", {
 
 test_with_dir("error handlers", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_equal(error_na(1), NA)
+  expect_equal(error_na(1), NA_character_)
   expect_false(error_false(1))
   expect_equal(error_character0(1), character(0))
   expect_null(error_null(1))
@@ -204,7 +259,7 @@ test_with_dir("GitHub issue 460", {
   expect_equal(sort(config$all_targets), sort(letters[1:2]))
   expect_equal(
     intersect(config$all_imports, config$all_targets), character(0))
-  expect_true("base::sqrt" %in% config$all_imports)
+  expect_true(encode_namespaced("base::sqrt") %in% config$all_imports)
   make_targets(config)
 })
 
@@ -225,18 +280,48 @@ test_with_dir("warning when file_out() files not produced", {
 
 test_with_dir("file hash of a non-file", {
   expect_true(is.na(file_hash("asdf", list())))
-  expect_true(is.na(rehash_file("asdf")))
+  expect_true(is.na(rehash_file("asdf", list())))
+  expect_true(is.na(file_hash(encode_path("asdf"), list())))
+  expect_true(is.na(rehash_file(encode_path("asdf"), list())))
 })
 
-test_with_dir("Try to modify a locked environment", {
-  e <- new.env()
-  lock_environment(e)
-  plan <- drake_plan(x = {
-    e$a <- 1
-    2
-  })
-  expect_error(
-    make(plan, session_info = FALSE, cache = storr::storr_environment()),
-    regexp = "verify that all your commands and functions are pure"
+test_with_dir("imported functions cannot depend on targets", {
+  global_import <- 1
+  my_fun <- function(){
+    global_import
+    other_fun <- function(){
+      target_in_plan
+    }
+  }
+  plan <- drake_plan(
+    target_in_plan = 1,
+    my_fun()()
+  )
+  config <- drake_config(
+    plan,
+    cache = storr::storr_environment(),
+    session_info = FALSE
+  )
+  deps <- deps_target("my_fun", config)
+  expect_equal(unlist(deps, use.names = FALSE), "global_import")
+})
+
+test_with_dir("case sensitivity", {
+  plan <- drake_plan(
+    a = 1,
+    b = 2,
+    B = A(),
+    c = 15
+  )
+  A <- function(){
+    1 + 1
+  }
+  expect_warning(
+    config <- drake_config(
+      plan,
+      cache = storr::storr_environment(),
+      session_info = FALSE
+    ),
+    regexp = "case insensitive"
   )
 })

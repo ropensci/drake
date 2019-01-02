@@ -39,11 +39,11 @@ check_plan <- function(
     cache = cache,
     jobs = jobs
   )
-  check_drake_config(config)
+  config_checks(config)
   invisible(plan)
 }
 
-check_drake_config <- function(config) {
+config_checks <- function(config) {
   if (identical(config$skip_safety_checks, TRUE)) {
     return(invisible())
   }
@@ -55,11 +55,27 @@ check_drake_config <- function(config) {
       call. = FALSE
     )
   }
+  if (any(bad_symbols %in% config$plan$target)) {
+    stop(
+      "symbols that cannot be target names: \n",
+      multiline_message(shQuote(bad_symbols)),
+      call. = FALSE
+    )
+  }
   stopifnot(nrow(config$plan) > 0)
   stopifnot(length(config$targets) > 0)
+  check_case_sensitivity(config)
+  check_drake_graph(graph = config$graph)
+  cache_vers_stop(config$cache)
+}
+
+runtime_checks <- function(config) {
+  if (identical(config$skip_safety_checks, TRUE)) {
+    return(invisible())
+  }
   missing_input_files(config = config)
   parallelism_warnings(config = config)
-  check_drake_graph(graph = config$graph)
+  subdirectory_warning(config = config)
 }
 
 missing_input_files <- function(config) {
@@ -67,10 +83,10 @@ missing_input_files <- function(config) {
   missing_files <- setdiff(x = missing_files, y = config$plan$target)
   missing_files <- parallel_filter(
     missing_files,
-    f = is_file,
+    f = is_encoded_path,
     jobs = config$jobs
   )
-  missing_files <- drake_unquote(missing_files)
+  missing_files <- decode_path(missing_files, config)
   missing_files <- parallel_filter(
     missing_files,
     f = function(x) {
@@ -86,6 +102,28 @@ missing_input_files <- function(config) {
     )
   }
   invisible(missing_files)
+}
+
+check_case_sensitivity <- function(config) {
+  x <- igraph::V(config$graph)$name
+  x <- x[!is_encoded_path(x) & !is_encoded_namespaced(x)]
+  lower <- tolower(x)
+  i <- duplicated(lower)
+  if (!any(i)) {
+    return()
+  }
+  dups <- sort(x[which(lower %in% lower[i])])
+  warning(
+    "Duplicated target/import names when converting to lowercase:\n",
+    multiline_message(dups),
+    "\nDuplicates cause problems on Windows ",
+    "because the file system is case insensitive. Options:\n",
+    "  (1) Make your target/import names more unique.\n",
+    "  (2) Use a more portable custom cache, ",
+    "e.g. make(cache = storr::storr_rds(mangle_key = TRUE))\n",
+    "  (3) Avoid Windows.",
+    call. = FALSE
+  )
 }
 
 check_drake_graph <- function(graph) {
@@ -147,4 +185,39 @@ check_parallelism <- function(parallelism) {
       )
     }
   }
+}
+
+subdirectory_warning <- function(config) {
+  if (identical(Sys.getenv("drake_warn_subdir"), "false")) {
+    return()
+  }
+  dir_cache <- config$cache$driver$path
+  if (is.null(dir_cache)) {
+    return()
+  }
+  if (!identical(basename(dir_cache), basename(default_cache_path()))) {
+    return()
+  }
+  dir_wd <- getwd()
+  in_root <- is.null(dir_cache) ||
+    basename(dir_cache) %in% list.files(path = dir_wd, all.files = TRUE)
+  if (in_root) {
+    return()
+  }
+  warning(
+    "Running make() in a subdirectory of your project. \n",
+    "This could cause problems if your ",
+    "file_in()/file_out()/knitr_in() files ",
+    "are relative paths.\n",
+    "Please either\n",
+    "  (1) run make() from your drake project root, or\n",
+    "  (2) create a cache in your working ",
+    "directory with new_cache('path_name'), or\n",
+    "  (3) supply a cache of your own (e.g. make(cache = your_cache))\n",
+    "      whose folder name is not '.drake'.\n",
+    "  running make() from: ", dir_wd, "\n",
+    "  drake project root:  ", dirname(dir_cache), "\n",
+    "  cache directory:     ", dir_cache,
+    call. = FALSE
+  )
 }

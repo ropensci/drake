@@ -55,9 +55,6 @@ drake_build <- function(
     config <- drake::read_drake_config(envir = envir, jobs = jobs)
     config$envir <- envir
   }
-  # Wait until drake 7.0.0 to uncomment
-  # lock_environment(config$envir) # nolint
-  # on.exit(unlock_environment(config$envir)) # nolint
   loadd(
     list = target,
     deps = TRUE,
@@ -150,9 +147,9 @@ conclude_build <- function(target, value, meta, config) {
 
 assert_output_files <- function(target, meta, config) {
   deps <- config$layout[[target]]$deps_build
-  files <- sort(unique(as.character(deps$file_out)))
+  files <- unique(as.character(deps$file_out))
   missing_files <- Filter(x = files, f = function(x) {
-    !file.exists(drake::drake_unquote(x))
+    !file.exists(decode_path(x, config))
   })
   if (length(missing_files)) {
     drake_warning(
@@ -186,15 +183,15 @@ build_target <- function(target, meta, config) {
 }
 
 process_import <- function(target, meta, config) {
-  if (is_file(target)) {
-    value <- NA
-  } else if (exists(x = target, envir = config$envir, inherits = FALSE)) {
-    value <- config$envir[[target]]
+  if (meta$isfile) {
+    value <- NA_character_
+    is_missing <- !file.exists(decode_path(target, config))
   } else {
-    value <- tryCatch(
-      flexible_get(target, envir = config$envir),
-      error = function(e)
-        console(imported = NA, target = target, config = config))
+    value <- get_import_from_memory(target, config = config)
+    is_missing <- identical(value, NA_character_)
+  }
+  if (is_missing) {
+    console(imported = NA_character_, target = target, config = config)
   }
   list(target = target, value = value, meta = meta)
 }

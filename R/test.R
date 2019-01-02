@@ -22,7 +22,8 @@ testrun <- function(config) {
       lazy_load = config$lazy_load,
       session_info = config$session_info,
       fetch_cache = config$fetch_cache,
-      caching = config$caching
+      caching = config$caching,
+      lock_envir = !any(grepl("staged", config$parallelism))
     )
   )
 }
@@ -73,6 +74,9 @@ nobuild <- function(config) {
 #' }
 test_with_dir <- function(desc, ...) {
   assert_pkg("testthat")
+  old <- Sys.getenv("drake_warn_subdir")
+  Sys.setenv(drake_warn_subdir = "false")
+  on.exit(Sys.setenv(drake_warn_subdir = old))
   while (file.exists(new <- tempfile())) {
     # Should not reach this part of the loop.
     Sys.sleep(0.01) # nocov

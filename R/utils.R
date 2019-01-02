@@ -8,7 +8,7 @@
 }
 
 `%||NA%` <- function(x, y) {
-  if (is.null(x) || length(x) < 1 || is.na(x)) {
+  if (is.null(x) || length(x) < 1 || anyNA(x)) {
     y
   } else {
     x
@@ -36,6 +36,7 @@ assert_pkg <- function(pkg, version = NULL, install = "install.packages") {
       call. = FALSE
     )
   }
+  invisible()
 }
 
 clean_dependency_list <- function(x){
@@ -133,21 +134,12 @@ file_extn <- function(x) {
   x[1]
 }
 
-is_file <- function(x) {
-  x <- substr(x = x, start = 0, stop = 1)
-  x == "\"" | x == "'" # TODO: get rid fo the single quote next major release
-}
-
 is_image_filename <- function(x) {
   tolower(file_extn(x)) %in% c("jpg", "jpeg", "pdf", "png")
 }
 
 is_imported <- function(target, config) {
   config$layout[[target]]$imported %||% TRUE
-}
-
-is_not_file <- function(x) {
-  !is_file(x)
 }
 
 map_by <- function(.x, .by, .f, ...) {
@@ -232,19 +224,11 @@ split_by <- function(.x, .by = character(0)) {
   Filter(x = splits, f = nrow)
 }
 
-standardize_filename <- function(text) {
-  text[is_file(text)] <-  gsub("^'|'$", "\"", text[is_file(text)])
+standardize_key <- function(text) {
+  if (any(grepl("::", text))) {
+    text <- encode_namespaced(text)
+  }
   text
-}
-
-zip_to_envir <- function(x, envir) {
-  lapply(
-    X = names(x),
-    function(name) {
-      envir[[name]] <- c(envir[[name]], x[[name]])
-    }
-  )
-  invisible()
 }
 
 is_vectorized <- function(funct) {
@@ -271,11 +255,11 @@ unwrap_function <- function(funct) {
 
 lock_environment <- function(envir) {
   lockEnvironment(envir, bindings = FALSE)
-  lapply(
-    X = ls(envir, all.names = FALSE),
-    FUN = lockBinding,
-    env = envir
-  )
+  lock_these <- ls(envir, all.names = FALSE)
+  skip_these <- ".Random.seed"
+  lock_these <- setdiff(lock_these, skip_these)
+  lapply(X = lock_these, FUN = lockBinding, env = envir)
+  invisible()
 }
 
 unlock_environment <- function(envir) {
@@ -324,4 +308,8 @@ weak_as_tibble <- function(..., .force_df = FALSE) {
   } else {
     tibble::as_tibble(...)
   }
+}
+
+wide_deparse <- function(x) {
+  paste(deparse(x), collapse = "\n")
 }

@@ -82,7 +82,7 @@ test_with_dir("drake_debug()", {
   skip_on_cran()
   load_mtcars_example()
   my_plan$command[2] <- "simulate(48); stop(1234)"
-  config <- drake_config(my_plan)
+  config <- drake_config(my_plan, lock_envir = TRUE)
   expect_error(make(my_plan), regexp = "1234")
   expect_error(drake_debug(), regexp = "1234")
   out <- drake_debug(large, config)

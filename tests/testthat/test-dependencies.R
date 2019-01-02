@@ -11,16 +11,16 @@ test_with_dir("unparsable commands are handled correctly", {
   expect_error(deps_code(x))
 })
 
-test_with_dir("dot symbol is ignored at the right time", {
+test_with_dir("dot symbol is illegal", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(
     sort(clean_dependency_list(deps_code("sqrt(x + y + .)"))),
-    sort(c(".", "sqrt", "x", "y"))
+    sort(c("sqrt", "x", "y"))
   )
   expect_equal(
     sort(clean_dependency_list(
       deps_code("subset(complete.cases(.))"))),
-    sort(c("complete.cases", ".", "subset"))
+    sort(c("complete.cases", "subset"))
   )
   plan <- drake_plan(
     x = 1,
@@ -31,22 +31,13 @@ test_with_dir("dot symbol is ignored at the right time", {
   e <- environment()
   expect_false(exists(".", envir = e))
   config <- drake_config(plan)
-  expect_equal(
-    sort(clean_dependency_list(config$layout$a$deps_build)),
-    sort(c("x", "y"))
+  plan <- drake_plan(
+    . = 1,
+    y = 2,
+    a = sqrt(x + y),
+    b = subset(complete.cases(.))
   )
-  expect_equal(
-    clean_dependency_list(config$layout$b$deps_build),
-    character(0)
-  )
-  . <- 1
-  expect_true(exists(".", envir = e))
-  config <- drake_config(plan)
-  expect_equal(
-    sort(clean_dependency_list(config$layout$a$deps_build)),
-    sort(c(".", "x", "y"))
-  )
-  expect_equal(clean_dependency_list(config$layout$b$deps_build), ".")
+  expect_error(drake_config(plan), "cannot be target names")
 })
 
 test_with_dir("file_out() and knitr_in(): commands vs imports", {
@@ -67,18 +58,20 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
   file.copy(
     from = path, to = file.path(getwd(), "report.Rmd"), overwrite = TRUE)
   x <- command_dependencies(cmd)
+  x <- decode_deps_list(x)
   x0 <- list(
-    file_in = "\"x\"", file_out = "\"y\"", loadd = "large",
+    file_in = "x", file_out = "y", loadd = "large",
     readd = c("small", "coef_regression2_small"),
-    knitr_in = "\"report.Rmd\"")
+    knitr_in = "report.Rmd")
   expect_equal(length(x), length(x0))
   for (i in names(x)) {
     expect_equal(sort(x[[i]]), sort(x0[[i]]))
   }
   y <- import_dependencies(f)
+  y <- decode_deps_list(y)
   y0 <- list(
-    file_in = "\"x\"",
-    knitr_in = "\"report.Rmd\"",
+    file_in = "x",
+    knitr_in = "report.Rmd",
     loadd = "large",
     readd = c("small", "coef_regression2_small")
   )
@@ -92,14 +85,13 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
     sort(clean_dependency_list(deps_code(cmd))),
     sort(
       c("coef_regression2_small", "large",
-        "\"report.Rmd\"", "small", "\"x\"", "\"y\""
+        "report.Rmd", "small", "x", "y"
       )
     )
   )
 })
 
-test_with_dir(
-  "deps_code() and deps_target()", {
+test_with_dir("deps_code() and deps_target()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(length(deps_code("")), 0)
   expect_equal(length(command_dependencies(NA)), 0)
@@ -134,7 +126,7 @@ test_with_dir(
     clean_dependency_list(deps_code(my_plan$command[1])), "some_object")
   expect_equal(sort(
     clean_dependency_list(deps_code(my_plan$command[2]))),
-    sort(c("\"tracked_input_file.rds\"", "x", "readRDS")))
+    sort(c("tracked_input_file.rds", "x", "readRDS")))
   expect_equal(sort(
     clean_dependency_list(deps_code(my_plan$command[3]))),
     sort(c("f", "g", "w", "x", "y", "z"))
@@ -146,11 +138,11 @@ test_with_dir(
   )
   expect_equal(
     sort(clean_dependency_list(deps_code(my_plan$command[5]))),
-    sort(c("read.table", "\"file_in\"")))
+    sort(c("read.table", "file_in")))
   expect_true(!length(deps_target(x, config)))
   expect_equal(sort(
     clean_dependency_list(deps_target(my_target, config))),
-    sort(c("\"tracked_input_file.rds\"", "x")))
+    sort(c("tracked_input_file.rds", "x")))
   expect_equal(sort(
     clean_dependency_list(deps_target(return_value, config))),
     sort(c("f", "x")))
@@ -159,29 +151,32 @@ test_with_dir(
     character(0))
   expect_equal(sort(
     clean_dependency_list(deps_target(meta, config))),
-    sort("\"file_in\""))
+    sort("file_in"))
 })
 
 test_with_dir("tracked() works", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   x <- sort(tracked(config))
-  y <- sort(c("\"intermediatefile.rds\"", "drake_target_1",
+  y <- sort(c(display_keys(encode_path("intermediatefile.rds")),
+              "drake_target_1",
     "yourinput", "nextone",
     "combined", "myinput", "final", "j", "i", "h", "g", "f",
-    "c", "b", "a",  "\"input.rds\""))
+    "c", "b", "a",  display_keys(encode_path("input.rds"))))
   expect_equal(x, y)
 })
 
-test_with_dir("missing files via check_plan()", {
+test_with_dir("missing input files", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   expect_silent(check_plan(config$plan, envir = config$envir))
   expect_silent(tmp <- missing_input_files(config))
   unlink("input.rds", force = TRUE)
-  expect_warning(
-    tmp <- capture.output(check_plan(config$plan, envir = config$envir)))
   expect_warning(tmp <- missing_input_files(config))
+  expect_silent(tmp <- config_checks(config))
+  expect_warning(runtime_checks(config), regexp = "missing")
+  config$skip_safety_checks <- TRUE
+  expect_silent(tmp <- runtime_checks(config))
 })
 
 test_with_dir("Vectorized nested functions work", {
@@ -233,8 +228,8 @@ test_with_dir("deps_target()", {
   config <- drake_config(my_plan, cache = storr::storr_environment())
   d1 <- lapply(deps_target(report, config = config), sort)
   d2 <- list(
-    knitr_in = file_store("report.Rmd"),
-    file_out = file_store("report.md"),
+    knitr_in = "report.Rmd",
+    file_out = "report.md",
     readd = sort(c("coef_regression2_small", "small")),
     loadd = "large"
   )
@@ -428,4 +423,10 @@ test_with_dir("ignore() in imported functions", {
   }
   config <- make(plan, cache = cache)
   expect_equal(justbuilt(config), "x")
+})
+
+test_with_dir("deps_code() on a knitr file", {
+  skip_on_cran()
+  load_mtcars_example()
+  expect_true(is.list(deps_code(file_store("report.Rmd"))))
 })

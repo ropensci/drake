@@ -1,11 +1,16 @@
-# Wanted to use reference classes here,
-# but they add computational overhead.
-# This is a part of the code that really needs to be fast.
-ht_new <- function() {
-  new.env(hash = TRUE, parent = emptyenv())
+ht_new <- function(x = NULL, hash = TRUE) {
+  out <- new.env(hash = hash, parent = emptyenv())
+  if (!is.null(x)) {
+    ht_set(out, x)
+  }
+  out
 }
 
-ht_add <- function(ht, x) {
+ht_new_from_list <- function(x, hash = (length(x) > 100)) {
+  list2env(x, hash = hash, parent = emptyenv())
+}
+
+ht_set <- function(ht, x) {
   lapply(
     X = x,
     FUN = assign,
@@ -13,10 +18,13 @@ ht_add <- function(ht, x) {
     envir = ht,
     inherits = FALSE
   )
-  invisible()
 }
 
-hd_del <- function(ht, x) {
+ht_get <- function(ht, x) {
+  get(x = x, envir = ht, inherits = FALSE)
+}
+
+ht_del <- function(ht, x) {
   remove(list = x, envir = ht, inherits = FALSE)
 }
 
@@ -30,4 +38,32 @@ ht_list <- function(ht) {
 
 ht_clone <- function(ht) {
   list2env(as.list(ht), hash = TRUE, parent = emptyenv())
+}
+
+# Merge y into x
+ht_merge <- function(x, y) {
+  ht_set(x, ht_list(y))
+}
+
+# hash-table-based memoization for characters
+ht_memo <- function(ht, x, fun) {
+  vapply(
+    X = x,
+    FUN = ht_memo_single,
+    FUN.VALUE = character(1),
+    USE.NAMES = FALSE,
+    ht = ht,
+    fun = fun
+  )
+}
+
+# x must be a character scalar.
+ht_memo_single <- function(ht, x, fun) {
+  if (ht_exists(ht = ht, x = x)) {
+    ht_get(ht = ht, x = x)
+  } else {
+    value <- fun(x)
+    assign(x = x, value = value, envir = ht, inherits = FALSE)
+    value
+  }
 }

@@ -34,7 +34,7 @@ get_from_subspace <- function(key, subspace, namespace, cache) {
   if (subspace %in% names(object)) {
     object[[subspace]]
   } else {
-    NA
+    NA_character_
   }
 }
 

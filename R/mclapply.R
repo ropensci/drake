@@ -70,7 +70,7 @@ mc_master <- function(config) {
       i <- 1
     }
     mc_assign_ready_targets(config)
-    Sys.sleep(config$sleep(i))
+    Sys.sleep(config$sleep(max(0L, i)))
     i <- i + 1
   }
 }
@@ -82,7 +82,7 @@ mc_worker <- function(worker, config) {
   while (TRUE) {
     i <- 1
     while (nrow(msg <- ready_queue$list(1)) < 1) {
-      Sys.sleep(config$sleep(i))
+      Sys.sleep(config$sleep(max(0L, i)))
       i <- i + 1
     }
     if (identical(msg$message, "done")) {

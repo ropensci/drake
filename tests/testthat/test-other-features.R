@@ -14,7 +14,7 @@ test_with_dir("debug_command()", {
 
 test_with_dir("build_target() does not need to access cache", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  config <- drake_config(drake_plan(x = 1))
+  config <- drake_config(drake_plan(x = 1), lock_envir = FALSE)
   meta <- drake_meta(target = "x", config = config)
   config$cache <- NULL
   build <- build_target(target = "x", meta = meta, config = config)
@@ -43,7 +43,12 @@ test_with_dir("drake_build works as expected", {
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
   pl <- drake_plan(a = 1, b = a)
-  con <- drake_config(plan = pl, session_info = FALSE, envir = e)
+  con <- drake_config(
+    plan = pl,
+    session_info = FALSE,
+    envir = e,
+    lock_envir = TRUE
+  )
 
   # can run before any make()
   o <- drake_build(
@@ -157,7 +162,7 @@ test_with_dir("warnings and messages are caught", {
   expect_true(grepl("my second mess", x$messages[2], fixed = TRUE))
 })
 
-test_with_dir("missed() works", {
+test_with_dir("missed() works with in-memory deps", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   # May have been loaded in a globalenv() testing scenario
   remove_these <- intersect(ls(envir = globalenv()), c("f", "g"))
@@ -166,6 +171,14 @@ test_with_dir("missed() works", {
   expect_equal(character(0), missed(o))
   rm(list = c("f", "g"), envir = o$envir)
   expect_equal(sort(c("f", "g")), sort(missed(o)))
+})
+
+test_with_dir("missed() works with files", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  o <- dbug()
+  expect_equal(character(0), missed(o))
+  unlink("input.rds")
+  expect_equal(display_keys(encode_path("input.rds")), missed(o))
 })
 
 test_with_dir(".onLoad() warns correctly and .onAttach() works", {
@@ -182,7 +195,7 @@ test_with_dir(".onLoad() warns correctly and .onAttach() works", {
   expect_silent(suppressPackageStartupMessages(drake:::.onAttach()))
 })
 
-test_with_dir("check_drake_config() via check_plan() and make()", {
+test_with_dir("config_checks() via check_plan() and make()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   y <- data.frame(x = 1, y = 2)
@@ -227,14 +240,14 @@ test_with_dir("targets can be partially specified", {
 
 test_with_dir("file_store quotes properly", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_equal(file_store("x"), "\"x\"")
+  expect_equal(file_store("x"), encode_path("x"))
 })
 
 test_with_dir("misc utils", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(pair_text("x", c("y", "z")), c("xy", "xz"))
   config <- list(plan = data.frame(x = 1, y = 2))
-  expect_error(check_drake_config(config), regexp = "columns")
+  expect_error(config_checks(config), regexp = "columns")
   expect_error(targets_from_dots(123, NULL), regexp = "must contain names")
 })
 
@@ -253,7 +266,9 @@ test_with_dir("make(..., skip_imports = TRUE) works", {
   )
   expect_equal(
     sort(cached()),
-    sort(c("\"intermediatefile.rds\"", con$plan$target))
+    sort(display_keys(
+      c(encode_path("intermediatefile.rds"), con$plan$target)
+    ))
   )
 
   # If the imports are already cached, the targets built with

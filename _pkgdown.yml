@@ -40,7 +40,6 @@ reference:
   - '`drake_debug`'
   - '`make_imports`'
   - '`make_targets`'
-  - '`make_with_config`'
 - title: Workflow plan data frames
   contents:
   - '`drake_plan`'

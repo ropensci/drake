@@ -19,43 +19,30 @@
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' knitr_deps("'report.Rmd'") # Files must be single-quoted.
-#' # Find the dependencies of the compiled output target, 'report.md'.
-#' knitr_deps("report.Rmd")
-#' make(my_plan) # Run the project.
-#' # Work only on the Rmd source, not the output.
-#' try(knitr_deps("'report.md'"), silent = FALSE) # error
+#' knitr_deps(file_store("report.Rmd"))
 #' })
 #' }
 knitr_deps <- function(target) {
+  decode_deps_list(get_knitr_deps(target))
+}
+
+get_knitr_deps <- function(target) {
   if (!length(target)) {
     return(character(0))
   }
-  clean_dependency_list(knitr_deps_list(target))
-}
-
-knitr_deps_list <- function(target) {
-  if (!length(target)) {
-    return(list())
+  out <- new_code_analysis_results()
+  target <- drake_unquote(target)
+  if (is_encoded_path(target)) {
+    target <- decode_path(target)
   }
-  fragments <- safe_get_tangled_frags(target)
-  results <- analyze_code(fragments)
-  select <- c(
-    "knitr_in",
-    "file_in",
-    "file_out",
-    "loadd",
-    "readd"
-  )
-  select <- intersect(select, names(results))
-  results[select]
+  analyze_knitr_file(target, out)
+  list_code_analysis_results(out)
 }
 
-safe_get_tangled_frags <- function(target) {
-  if (!length(target)) {
+safe_get_tangled_frags <- function(file) {
+  if (!length(file)) {
     return(character(0))
   }
-  file <- drake_unquote(target)
   if (!file.exists(file)) {
     warning(
       "knitr/rmarkdown report '", file,

@@ -19,15 +19,15 @@ test_with_dir("changes to commands are handled well", {
     character(0)
   )
   config$plan$command[2] <- "f(1+ 1) # nothing should rebuild"
-  config$layout <- create_drake_layout(
+  config$layout <- whole_static_analysis(
     plan = config$plan,
     envir = config$envir,
     cache = config$cache
-  )
+  )$layout
   config <- testrun(config)
   nobuild(config)
   config$plan$command[2] <- "f(1+ 1 -2 + 2) -1 + 1 #only yourinput changed"
-  config$layout <- create_drake_layout(
+  config$layout <- whole_static_analysis(
     plan = config$plan,
     envir = config$envir,
     cache = config$cache
@@ -44,11 +44,11 @@ test_with_dir("changes to commands are handled well", {
   config <- testrun(config)
   expect_equal(justbuilt(config), "yourinput")
   config$plan$command[2] <- "f(1+2) # now downstream should rebuild"
-  config$layout <- create_drake_layout(
+  config$layout <- whole_static_analysis(
     plan = config$plan,
     envir = config$envir,
     cache = config$cache
-  )
+  )$layout
   config <- testrun(config)
   expect_equal(
     justbuilt(config),
@@ -65,11 +65,11 @@ test_with_dir("changes to commands are handled well", {
   # command changed for an intermediate file
   config$plan$command[1] <-
     "saveRDS(combined + 1, file_out(\"intermediatefile.rds\"))"
-  config$layout <- create_drake_layout(
+  config$layout <- whole_static_analysis(
     plan = config$plan,
     envir = config$envir,
     cache = config$cache
-  )
+  )$layout
   config <- testrun(config)
   expect_equal(
     justbuilt(config),

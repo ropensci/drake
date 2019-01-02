@@ -4,7 +4,11 @@ hover_width <- 49
 append_build_times <- function(config) {
   with(config, {
     time_data <- build_times(
-      digits = digits, cache = cache, type = build_times)
+      digits = digits,
+      cache = cache,
+      type = build_times,
+      pretty_keys = FALSE
+    )
     timed <- intersect(time_data$item, nodes$id)
     if (!length(timed))
       return(nodes)
@@ -32,13 +36,6 @@ append_output_file_nodes <- function(config) {
   })
 }
 
-can_get_function <- function(x, envir) {
-  tryCatch({
-    is.function(eval(parse(text = x), envir = envir))
-  },
-  error = function(e) FALSE)
-}
-
 categorize_nodes <- function(config) {
   with(config, {
     nodes$status <- "imported"
@@ -48,7 +45,7 @@ categorize_nodes <- function(config) {
     nodes[in_progress, "status"] <- "in progress"
     nodes[failed, "status"] <- "failed"
     nodes$type <- "object"
-    nodes[is_file(nodes$id), "type"] <- "file"
+    nodes[is_encoded_path(nodes$id), "type"] <- "file"
     nodes[functions, "type"] <- "function"
     nodes
   })
@@ -103,7 +100,8 @@ cluster_status <- function(statuses) {
 }
 
 configure_nodes <- function(config) {
-  rownames(config$nodes) <- config$nodes$label
+  rownames(config$nodes) <- config$nodes$id
+  config$nodes$label <- display_keys(config$nodes$label, config)
   config$nodes <- categorize_nodes(config = config)
   config$nodes <- style_nodes(config = config)
   config$nodes <- resolve_levels(config = config)
@@ -125,22 +123,22 @@ default_graph_title <- function(split_columns = FALSE) {
   "Dependency graph"
 }
 
-file_hover_text <- Vectorize(function(quoted_file, targets) {
-  unquoted_file <- drake_unquote(quoted_file)
-  if (quoted_file %in% targets || !file.exists(unquoted_file)) {
-    return(quoted_file)
+file_hover_text <- Vectorize(function(encoded_file, targets, config) {
+  decoded_file <- decode_path(encoded_file, config)
+  if (encoded_file %in% targets || !file.exists(decoded_file)) {
+    return(encoded_file)
   }
   tryCatch({
-      x <- readLines(unquoted_file, n = 20, warn = FALSE)
+      x <- readLines(decoded_file, n = 20, warn = FALSE)
       x <- crop_lines(x, n = hover_lines)
       x <- crop_text(x, width = hover_width)
       paste0(x, collapse = "<br>")
     },
-    error = function(e) quoted_file,
-    warning = function(w) quoted_file
+    error = function(e) encoded_file,
+    warning = function(w) encoded_file
   )
 },
-"quoted_file")
+"encoded_file")
 
 filter_legend_nodes <- function(legend_nodes, all_nodes) {
   colors <- c(unique(all_nodes$color), color_of("object"))
@@ -175,15 +173,19 @@ get_raw_node_category_data <- function(config) {
   config$in_progress <- in_progress(cache = config$cache)
   config$failed <- failed(cache = config$cache)
   config$files <- parallel_filter(
-    x = all_labels, f = is_file, jobs = config$jobs)
+    x = all_labels, f = is_encoded_path, jobs = config$jobs)
   config$functions <- parallel_filter(
     x = config$imports,
-    f = function(x) can_get_function(x, envir = config$envir),
+    f = function(x) {
+      is.function(get_import_from_memory(x, config = config))
+    },
     jobs = config$jobs
   )
   config$missing <- parallel_filter(
     x = config$imports,
-    f = function(x) missing_import(x, envir = config$envir),
+    f = function(x) {
+      missing_import(x, config = config)
+    },
     jobs = config$jobs
   )
   config
@@ -194,7 +196,7 @@ hover_text <- function(config) {
     nodes$title <- nodes$id
     import_files <- setdiff(files, targets)
     nodes[import_files, "title"] <-
-      file_hover_text(quoted_file = import_files, targets = targets)
+      file_hover_text(encoded_file = import_files, targets, config)
     nodes[functions, "title"] <-
       function_hover_text(function_name = functions, envir = config$envir)
     nodes[targets, "title"] <-
@@ -254,22 +256,12 @@ legend_nodes <- function(font_size = 20) {
   out
 }
 
-missing_import <- function(x, envir) {
-  missing_object <- !is_file(x) & is.null(envir[[x]]) & tryCatch({
-    flexible_get(x, envir = envir)
-    FALSE
-  },
-  error = function(e) TRUE)
-  missing_file <- is_file(x) & !file.exists(drake_unquote(x))
-  missing_object | missing_file
-}
-
 null_graph <- function() {
   assert_pkg("visNetwork")
   nodes <- data.frame(id = 1, label = "Nothing to plot.")
   visNetwork::visNetwork(
     nodes = nodes,
-    edges = data.frame(from = NA, to = NA),
+    edges = data.frame(from = NA_character_, to = NA_character_),
     main = "Nothing to plot."
   )
 }
