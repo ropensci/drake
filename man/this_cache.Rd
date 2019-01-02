@@ -20,7 +20,8 @@ is compatible with your current version of drake.}
 \item \code{2}: plus checks and cache info.
 \item \code{3}: plus missing imports.
 \item \code{4}: plus all imports.
-\item \code{5}: plus cache storage and build times.
+\item \code{5}: plus execution and total build times for targets.
+\item \code{6}: plus notifications when targets are being stored.
 }}
 
 \item{fetch_cache}{character vector containing lines of code.

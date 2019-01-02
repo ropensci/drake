@@ -37,7 +37,7 @@ console_skip <- function(target, config) {
 }
 
 console_store <- function(target, config) {
-  console_generic(target, config, 5L, "store")
+  console_generic(target, config, 6L, "store")
 }
 
 console_target <- function(target, config) {

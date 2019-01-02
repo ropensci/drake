@@ -29,7 +29,8 @@ If supplied, \code{path} and \code{search} are ignored.}
 \item \code{2}: plus checks and cache info.
 \item \code{3}: plus missing imports.
 \item \code{4}: plus all imports.
-\item \code{5}: plus cache storage and build times.
+\item \code{5}: plus execution and total build times for targets.
+\item \code{6}: plus notifications when targets are being stored.
 }}
 }
 \value{

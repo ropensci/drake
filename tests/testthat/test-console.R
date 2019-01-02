@@ -154,15 +154,15 @@ test_with_dir("console to file", {
   expect_false(file.exists("log.txt"))
   tmp <- capture.output({
       make(
-        my_plan, cache = cache, verbose = 5, session_info = FALSE,
+        my_plan, cache = cache, verbose = 6, session_info = FALSE,
         console_log_file = "log.txt"
       )
       make(
-        my_plan, cache = cache, verbose = 5, session_info = FALSE,
+        my_plan, cache = cache, verbose = 6, session_info = FALSE,
         console_log_file = "log.txt"
       )
       make(
-        my_plan, cache = cache, verbose = 5, session_info = FALSE,
+        my_plan, cache = cache, verbose = 6, session_info = FALSE,
         trigger = trigger(condition = TRUE), console_log_file = "log.txt"
       )
     },

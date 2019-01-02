@@ -32,6 +32,7 @@
 - Deprecate the `graph` and `layout` arguments to `make()` and `drake_config()`. The change simplifies the internals, and memoization allows us to do this.
 - Warn the user if running `make()` in a subdirectory of the `drake` project root (determined by the location of the `.drake` folder in relation to the working directory).
 - In the code analysis, explicitly prohibit targets from being dependencies of imported functions.
+- Increase options for the `verbose` argument, including the option to print execution and total build times.
 
 # Version 6.2.1
 

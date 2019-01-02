@@ -51,7 +51,8 @@
 #'   - `2`: plus checks and cache info.
 #'   - `3`: plus missing imports.
 #'   - `4`: plus all imports.
-#'   - `5`: plus cache storage and build times.
+#'   - `5`: plus execution and total build times for targets.
+#'   - `6`: plus notifications when targets are being stored.
 #'
 #' @param hook Deprecated.
 #'
