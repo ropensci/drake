@@ -10,8 +10,7 @@ test_with_dir("lock_envir works", {
     x = testthat::expect_error(
       assign("a", 1, envir = parent.env(drake_envir())),
       regexp = "binding"
-    ),
-    strings_in_dots = "literals"
+    )
   )
   make(
     plan,
@@ -26,8 +25,7 @@ test_with_dir("lock_envir works", {
   e$a <- 123
   e$plan$four <- "five"
   plan <- drake_plan(
-    x = assign("a", 1, envir = parent.env(drake_envir())),
-    strings_in_dots = "literals"
+    x = assign("a", 1, envir = parent.env(drake_envir()))
   )
   make(
     plan,
@@ -125,8 +123,7 @@ test_with_dir("failed targets do not become up to date", {
       }
     },
     b = 5,
-    c = list(a, b),
-    strings_in_dots = "literals"
+    c = list(a, b)
   )
   con <- make(plan)
   expect_equal(sort(justbuilt(con)), sort(letters[1:4]))
@@ -142,8 +139,7 @@ test_with_dir("failed targets do not become up to date", {
 test_with_dir("config and make without safety checks", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- drake_plan(
-    file = readRDS(file_in("my_file.rds")),
-    strings_in_dots = "literals"
+    file = readRDS(file_in("my_file.rds"))
   )
   tmp <- drake_config(x, verbose = FALSE)
   expect_silent(
@@ -153,7 +149,7 @@ test_with_dir("config and make without safety checks", {
 
 test_with_dir("Strings stay strings, not symbols", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_silent(x <- drake_plan(a = "A", strings_in_dots = "literals"))
+  expect_silent(x <- drake_plan(a = "A"))
   expect_silent(make(x, verbose = FALSE, session_info = FALSE))
 })
 
@@ -264,8 +260,7 @@ test_with_dir("warning when file_out() files not produced", {
     x = {
       file.create(file_out("a"))
       file_out("b", "c")
-    },
-    strings_in_dots = "literals"
+    }
   )
   expect_warning(
     make(plan, cache = storr::storr_environment(), session_info = FALSE),
