@@ -28,7 +28,7 @@ build_drake_graph <- function(
   plan = read_drake_plan(),
   targets = plan$target,
   envir = parent.frame(),
-  verbose = drake::default_verbose(),
+  verbose = 1L,
   jobs = 1,
   sanitize_plan = FALSE,
   console_log_file = NULL,
@@ -104,7 +104,7 @@ configure_cache <- function(
   long_hash_algo = drake::default_long_hash_algo(cache = cache),
   log_progress = FALSE,
   overwrite_hash_algos = FALSE,
-  verbose = drake::default_verbose(),
+  verbose = 1L,
   jobs = 1,
   init_common_values = FALSE
 ) {
@@ -331,7 +331,7 @@ drake_session <- function(
   path = getwd(),
   search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = drake::default_verbose()
+  verbose = 1L
 ) {
   .Deprecated(
     "drake_session",
@@ -372,7 +372,7 @@ empty_hook <- function(code) {
 #' # deprecated
 long_hash <- function(
   cache = drake::get_cache(verbose = verbose),
-  verbose = drake::default_verbose()
+  verbose = 1L
 ) {
   .Deprecated(
     "long_hash",
@@ -626,7 +626,7 @@ parallel_stages <- function(
 #' # deprecated
 short_hash <- function(
   cache = drake::get_cache(verbose = verbose),
-  verbose = drake::default_verbose()
+  verbose = 1L
 ) {
   .Deprecated(
     "short_hash",
@@ -860,8 +860,21 @@ clean_main_example <- function() {
     package = "drake",
     msg = paste("clean_main_example() is deprecated.")
   )
-
   clean(destroy = TRUE, search = FALSE)
   unlink(c("report.Rmd", "raw_data.xlsx"))
   invisible()
+}
+
+#' @title Deprecated
+#' @description Deprecated on 2019-01-01
+#' @export
+#' @keywords internal
+#' @return 1
+default_verbose <- function() {
+  .Deprecated(
+    "default_verbose",
+    package = "drake",
+    msg = paste("default_verbose() is deprecated.")
+  )
+  1L
 }

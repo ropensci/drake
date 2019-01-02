@@ -19,7 +19,7 @@
 #' }
 in_progress <- function(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = drake::default_verbose()
+  verbose = 1L
 ) {
   prog <- progress(path = path, search = search, cache = cache)
   as.character(names(which(prog == "in progress")))
@@ -54,7 +54,7 @@ in_progress <- function(path = getwd(), search = TRUE,
 #' }
 failed <- function(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = drake::default_verbose(),
+  verbose = 1L,
   upstream_only = FALSE
 ) {
   prog <- progress(path = path, search = search, cache = cache)
@@ -118,7 +118,7 @@ progress <- function(
   path = getwd(),
   search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = drake::default_verbose(),
+  verbose = 1L,
   jobs = 1
 ) {
   # deprecate imported_files_only

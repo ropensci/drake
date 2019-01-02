@@ -76,7 +76,7 @@ cached <- function(
   path = getwd(),
   search = TRUE,
   cache = NULL,
-  verbose = drake::default_verbose(),
+  verbose = 1L,
   namespace = NULL,
   jobs = 1
 ) {
@@ -145,7 +145,7 @@ list_cache <- function(no_imported_objects, cache, namespace, jobs) {
 built <- function(
   path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = drake::default_verbose(),
+  verbose = 1L,
   jobs = 1
 ) {
   if (is.null(cache)) {
@@ -193,7 +193,7 @@ built <- function(
 imported <- function(
   files_only = FALSE, path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = drake::default_verbose(),
+  verbose = 1L,
   jobs = 1
 ) {
   if (is.null(cache)) {

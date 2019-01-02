@@ -46,10 +46,6 @@
 #'   then reproducibly tracked as dependencies.
 #'
 #' @param verbose logical or numeric, control printing to the console.
-#'   Use `pkgconfig` to set the default value of `verbose` 
-#'   for your R session:
-#'   for example, `pkgconfig::set_config("drake::verbose" = 2)`.
-#'
 #'   - `0` or `FALSE`: print nothing.
 #'   - `1` or `TRUE`: print only targets to build.
 #'   - `2`: also print checks and cache info.
@@ -450,7 +446,7 @@ drake_config <- function(
   plan = drake::read_drake_plan(),
   targets = NULL,
   envir = parent.frame(),
-  verbose = drake::default_verbose(),
+  verbose = 1L,
   hook = NULL,
   cache = drake::get_cache(
     verbose = verbose, console_log_file = console_log_file),

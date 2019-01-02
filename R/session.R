@@ -21,7 +21,7 @@ drake_get_session_info <- function(
   path = getwd(),
   search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = drake::default_verbose()
+  verbose = 1L
 ) {
   if (is.null(cache)) {
     stop("No drake::make() session detected.")
@@ -33,7 +33,7 @@ drake_set_session_info <- function(
   path = getwd(),
   search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = drake::default_verbose(),
+  verbose = 1L,
   full = TRUE
 ) {
   if (is.null(cache)) {

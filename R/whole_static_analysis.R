@@ -1,7 +1,7 @@
 whole_static_analysis <- function(
   plan = read_drake_plan(),
   envir = parent.frame(),
-  verbose = drake::default_verbose(),
+  verbose = 1L,
   jobs = 1,
   console_log_file = NULL,
   trigger = drake::trigger(),

@@ -226,18 +226,6 @@ multiline_message <- function(x) {
   paste(x, collapse = "\n")
 }
 
-#' @title Default verbosity for `drake`
-#' @description Set with `pkgconfig`: for example,
-#'   `pkgconfig::set_config("drake::verbose" = 2)`.
-#' @export
-#' @keywords internal
-#' @return A logical or integer with the value of
-#'   the default `verbose` argument to `drake` functions.
-default_verbose <- function() {
-  default <- pkgconfig::get_config("drake::verbose")
-  ifelse(!length(default), 1, default)
-}
-
 #' @title Show how a target/import was produced.
 #' @description Show the command that produced a target
 #'   or indicate that the object or file was imported.
