@@ -66,21 +66,13 @@
 #'   of the user manual.
 #'
 #' @param jobs maximum number of parallel workers for processing the targets.
-#'   If you wish to parallelize the imports and preprocessing as well, you can
-#'   use a named numeric vector of length 2, e.g.
-#'   `make(jobs = c(imports = 4, targets = 8))`.
-#'   `make(jobs = 4)` is equivalent to `make(jobs = c(imports = 1, targets = 4))`.
-#'
-#'   Windows users should not set `jobs > 1` if
-#'   `parallelism` is `"mclapply"` because
-#'   [mclapply()] is based on forking. Windows users
-#'   who use `parallelism = "Makefile"` will need to
-#'   download and install Rtools.
-#'
 #'   You can experiment with [predict_runtime()]
 #'   to help decide on an appropriate number of jobs.
 #'   For details, visit
 #'   <https://ropenscilabs.github.io/drake-manual/time.html>.
+#'
+#' @param jobs number of parallel jobs for processing the imports
+#'   and doing other preprocessing tasks.
 #'
 #' @param packages character vector packages to load, in the order
 #'   they should be loaded. Defaults to `rev(.packages())`, so you
@@ -452,7 +444,8 @@ drake_config <- function(
     verbose = verbose, console_log_file = console_log_file),
   fetch_cache = NULL,
   parallelism = drake::default_parallelism(),
-  jobs = 1,
+  jobs = 1L,
+  jobs_preprocess = 1L,
   packages = rev(.packages()),
   prework = character(0),
   prepend = character(0),

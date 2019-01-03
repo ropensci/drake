@@ -9,9 +9,10 @@ drake_config(plan = drake::read_drake_plan(), targets = NULL,
   envir = parent.frame(), verbose = 1L, hook = NULL,
   cache = drake::get_cache(verbose = verbose, console_log_file =
   console_log_file), fetch_cache = NULL,
-  parallelism = drake::default_parallelism(), jobs = 1,
-  packages = rev(.packages()), prework = character(0),
-  prepend = character(0), command = drake::default_Makefile_command(),
+  parallelism = drake::default_parallelism(), jobs = 1L,
+  jobs_preprocess = 1L, packages = rev(.packages()),
+  prework = character(0), prepend = character(0),
+  command = drake::default_Makefile_command(),
   args = drake::default_Makefile_args(jobs = jobs, verbose = verbose),
   recipe_command = drake::default_recipe_command(), timeout = NULL,
   cpu = Inf, elapsed = Inf, retries = 0, force = FALSE,
@@ -89,17 +90,6 @@ For detailed explanations, see the
 of the user manual.}
 
 \item{jobs}{maximum number of parallel workers for processing the targets.
-If you wish to parallelize the imports and preprocessing as well, you can
-use a named numeric vector of length 2, e.g.
-\code{make(jobs = c(imports = 4, targets = 8))}.
-\code{make(jobs = 4)} is equivalent to \code{make(jobs = c(imports = 1, targets = 4))}.
-
-Windows users should not set \code{jobs > 1} if
-\code{parallelism} is \code{"mclapply"} because
-\code{\link[=mclapply]{mclapply()}} is based on forking. Windows users
-who use \code{parallelism = "Makefile"} will need to
-download and install Rtools.
-
 You can experiment with \code{\link[=predict_runtime]{predict_runtime()}}
 to help decide on an appropriate number of jobs.
 For details, visit
@@ -446,6 +436,9 @@ This is extremely important for ensuring the purity of your functions
 and the reproducibility/credibility/trust you can place in your project.
 \code{lock_envir} will be set to a default of \code{TRUE} in \code{drake} version
 7.0.0 and higher.}
+
+\item{jobs}{number of parallel jobs for processing the imports
+and doing other preprocessing tasks.}
 }
 \value{
 The master internal configuration list of a project.

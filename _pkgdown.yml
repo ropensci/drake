@@ -85,17 +85,8 @@ reference:
   - '`trigger`'
 - title: High-performance computing
   contents:
-  - '`default_Makefile_args`'
-  - '`default_Makefile_command`'
-  - '`default_parallelism`'
-  - '`default_recipe_command`'
   - '`drake_hpc_template_file`'
   - '`drake_hpc_template_files`'
-  - '`Makefile_recipe`'
-  - '`parallelism_choices`'
-  - '`parallel_stages`'
-  - '`r_recipe_wildcard`'
-  - '`shell_file`'
 - title: Time
   contents:
   - '`build_times`'
@@ -103,37 +94,23 @@ reference:
   - '`predict_load_balancing`'
 - title: Cache usage
   contents:
-  - '`built`'
   - '`cached`'
   - '`clean`'
   - '`drake_cache_log`'
   - '`drake_cache_log_file`'
   - '`drake_gc`'
-  - '`drake_session`'
+  - '`drake_get_session_info`'
   - '`failed`'
   - '`find_cache`'
-  - '`find_project`'
   - '`get_cache`'
-  - '`imported`'
-  - '`in_progress`'
   - '`loadd`'
   - '`progress`'
-  - '`read_drake_config`'
-  - '`read_drake_graph`'
-  - '`read_drake_plan`'
-  - '`read_drake_seed`'
   - '`readd`'
   - '`rescue_cache`'
   - '`show_source`'
 - title: Cache configuration
   contents:
-  - '`cache_namespaces`'
-  - '`cache_path`'
-  - '`cleaned_namespaces`'
-  - '`default_cache_path`'
   - '`new_cache`'
-  - '`recover_cache`'
-  - '`target_namespaces`'
   - '`this_cache`'
 - title: Utilities
   contents:
