@@ -71,22 +71,15 @@ next_stage <- function(config, schedule, jobs) {
   list(targets = targets, meta_list = meta_list, schedule = schedule)
 }
 
-#' @title Do the prep work for `make(parallelism = "future_lapply_staged)`
-#' @description For internal use only. Exported to flesh out some
-#' of the more advanced examples.
+#' @title Do the prep work for `future_lapply_staged` parallelism.
+#' @description For internal use only. Do not call directly.
 #' @export
 #' @keywords internal
 #' @param config Internal configuration list from
 #'   [drake_config()].
 #' @return Nothing.
 #' @examples
-#' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' config <- drake_config(my_plan)
-#' prepare_distributed(config = config)
-#' })
-#' }
+#' # Not a user-side function.
 prepare_distributed <- function(config) {
   if (!file.exists(config$cache_path)) {
     dir.create(config$cache_path)
