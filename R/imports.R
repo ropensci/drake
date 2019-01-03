@@ -19,7 +19,6 @@ process_import <- function(target, meta, config) {
 
 process_imports_mclapply <- function(config) {
   assert_pkg("parallel")
-  config$jobs <- safe_jobs(config$jobs)
   schedule <- config$schedule
   while (length(V(schedule)$name)) {
     imports <- leaf_nodes(schedule)
@@ -27,7 +26,7 @@ process_imports_mclapply <- function(config) {
       X = imports,
       FUN = process_import,
       config = config,
-      mc.cores = config$jobs
+      mc.cores = config$jobs_preprocess
     )
     schedule <- delete_vertices(schedule, v = imports)
   }
@@ -38,7 +37,7 @@ process_imports_parLapply <- function(config) { # nolint
   assert_pkg("parallel")
   eval(parse(text = "require(drake)"))
   console_parLapply(config) # nolint
-  config$cluster <- parallel::makePSOCKcluster(config$jobs)
+  config$cluster <- parallel::makePSOCKcluster(config$jobs_preprocess)
   on.exit(parallel::stopCluster(cl = config$cluster))
   parallel::clusterExport(
     cl = config$cluster, varlist = "config",

@@ -68,14 +68,14 @@ initialize_session <- function(config) {
   if (config$log_progress) {
     clear_tmp_namespace(
       cache = config$cache,
-      jobs = imports_setting(config$jobs),
+      jobs = config$jobs_preprocess,
       namespace = "progress"
     )
   }
   for (namespace in c("attempt", "session")) {
     clear_tmp_namespace(
       cache = config$cache,
-      jobs = imports_setting(config$jobs),
+      jobs = config$jobs_preprocess,
       namespace = namespace
     )
   }

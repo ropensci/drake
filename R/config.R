@@ -538,8 +538,6 @@ drake_config <- function(
   } else {
     targets <- sanitize_targets(plan, targets)
   }
-  parallelism <- parse_parallelism(parallelism)
-  jobs <- parse_jobs(jobs)
   prework <- add_packages_to_prework(
     packages = packages,
     prework = prework
@@ -588,8 +586,7 @@ drake_config <- function(
     fetch_cache = fetch_cache,
     parallelism = parallelism,
     jobs = jobs,
-    jobs_imports = jobs["imports"],
-    jobs_targets = jobs["targets"],
+    jobs_preprocess = jobs_preprocess,
     verbose = verbose,
     hook = hook,
     prepend = prepend,
@@ -709,33 +706,4 @@ store_drake_config <- function(config) {
     jobs = config$jobs
   )
   invisible()
-}
-
-parse_jobs <- function(jobs) {
-  check_jobs(jobs)
-  mode(jobs) <- "integer"
-  if (length(jobs) < 2L) {
-    c(imports = 1L, targets = jobs)
-  } else {
-    jobs
-  }
-}
-
-parse_parallelism <- function(parallelism) {
-  check_parallelism(parallelism)
-  for (i in seq_along(parallelism)) {
-    parallelism[i] <- match.arg(
-      arg = parallelism[i],
-      choices = parallelism_choices(distributed_only = FALSE)
-    )
-  }
-  if (length(parallelism) < 2) {
-    if (parallelism %in% parallelism_choices(distributed_only = TRUE)) {
-      c(imports = default_parallelism(), targets = parallelism)
-    } else {
-      c(imports = parallelism, targets = parallelism)
-    }
-  } else {
-    parallelism
-  }
 }

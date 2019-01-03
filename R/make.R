@@ -260,7 +260,6 @@ make_with_config <- function(config = drake::read_drake_config()) {
 #' }
 make_imports <- function(config = drake::read_drake_config()) {
   config$schedule <- imports_graph(config = config)
-  config$jobs <- imports_setting(config$jobs)
   if (on_windows() && config$jobs > 1L) {
     process_imports_parLapply(config)
   } else {
@@ -305,8 +304,6 @@ make_imports <- function(config = drake::read_drake_config()) {
 #' })
 #' }
 make_targets <- function(config = drake::read_drake_config()) {
-  config$parallelism <- targets_setting(config$parallelism)
-  config$jobs <- targets_setting(config$jobs)
   config$schedule <- targets_graph(config = config)
   if (config$parallelism == "hasty") {
     run_hasty(config)

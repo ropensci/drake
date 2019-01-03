@@ -67,6 +67,8 @@ config_checks <- function(config) {
   check_case_sensitivity(config)
   check_drake_graph(graph = config$graph)
   cache_vers_stop(config$cache)
+  check_parallelism(config$parallelism)
+  check_jobs(config$jobs)
 }
 
 runtime_checks <- function(config) {
@@ -155,34 +157,23 @@ check_jobs <- function(jobs) {
   stopifnot(is.numeric(jobs) || is.integer(jobs))
   stopifnot(all(jobs > 0))
   if (length(jobs) > 1) {
-    if (
-      is.null(names(jobs)) ||
-      !identical(sort(names(jobs)), sort(c("imports", "targets")))
-    ) {
-      stop(
-        "In the `jobs` argument, you must either give a numeric scalar ",
-        "or a named numeric vector with names 'imports' and 'targets'.",
-        call. = FALSE
-      )
-    }
+    stop(
+      "The `jobs` argument of `make()` should be of length 1. ",
+      "Use the `jobs_preprocess` argument to parallelize the imports ",
+      "and other preprocessing tasks.",
+      call. = FALSE
+    )
   }
 }
 
-check_parallelism <- function(parallelism, jobs) {
-  stopifnot(length(parallelism) > 0)
+check_parallelism <- function(parallelism) {
   stopifnot(is.character(parallelism))
+  stopifnot(length(parallelism) > 0)
   if (length(parallelism) > 1) {
-    if (
-      is.null(names(parallelism)) ||
-      !identical(sort(names(parallelism)), sort(c("imports", "targets")))
-    ) {
-      stop(
-        "In the `parallelism` argument, you must either ",
-        "give a character scalar or a named character vector ",
-        "with names 'imports' and 'targets'.",
-        call. = FALSE
-      )
-    }
+    stop(
+      "The `parallelism` argument of `make()` should be of length 1.",
+      call. = FALSE
+    )
   }
 }
 
