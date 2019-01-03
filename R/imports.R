@@ -21,6 +21,7 @@ process_import <- function(import, config) {
 }
 
 process_imports_mclapply <- function(config) {
+  config$jobs <- safe_jobs(config$jobs)
   if (config$jobs > 1L) {
     assert_pkg("parallel")
   }
