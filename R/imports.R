@@ -28,7 +28,7 @@ process_imports_mclapply <- function(config) {
   schedule <- config$schedule
   while (length(V(schedule)$name)) {
     imports <- leaf_nodes(schedule)
-    safe_mclapply(
+    weak_mclapply(
       X = imports,
       FUN = process_import,
       config = config,

@@ -16,7 +16,7 @@ lightly_parallelize <- function(X, FUN, jobs = 1, ...) {
   if (is.atomic(X)) {
     lightly_parallelize_atomic(X = X, FUN = FUN, jobs = jobs, ...)
   } else {
-    safe_mclapply(X = X, FUN = FUN, mc.cores = jobs, ...)
+    weak_mclapply(X = X, FUN = FUN, mc.cores = jobs, ...)
   }
 }
 
@@ -24,13 +24,13 @@ lightly_parallelize_atomic <- function(X, FUN, jobs = 1, ...) {
   jobs <- safe_jobs(jobs)
   keys <- unique(X)
   index <- match(X, keys)
-  values <- safe_mclapply(X = keys, FUN = FUN, mc.cores = jobs, ...)
+  values <- weak_mclapply(X = keys, FUN = FUN, mc.cores = jobs, ...)
   values[index]
 }
 
 # Avoid SIGCHLD handler when mc.cores is 1.
 # Could help avoid zeromq interrupted system call errors.
-safe_mclapply <- function(X, FUN, mc.cores, ...) {
+weak_mclapply <- function(X, FUN, mc.cores, ...) {
   if (mc.cores > 1) {
     parallel::mclapply(X = X, FUN = FUN, mc.cores = mc.cores, ...)
   } else {
