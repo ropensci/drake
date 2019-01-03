@@ -18,7 +18,9 @@ process_import <- function(target, meta, config) {
 }
 
 process_imports_mclapply <- function(config) {
-  assert_pkg("parallel")
+  if (config$jobs > 1L) {
+    assert_pkg("parallel")
+  }
   schedule <- config$schedule
   while (length(V(schedule)$name)) {
     imports <- leaf_nodes(schedule)
