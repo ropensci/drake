@@ -12,33 +12,32 @@ test_with_dir("clustermq parallelism", {
   e <- eval(parse(text = scenario$envir))
   jobs <- scenario$jobs # ignoring for now, using 2 jobs
   load_mtcars_example(envir = e)
-  for (parallelism in c("clustermq", "clustermq_staged")) {
-    for (caching in c("master", "worker")) {
-      config <- drake_config(e$my_plan, envir = e)
-      expect_equal(length(outdated(config)), nrow(config$plan))
-      make(
-        e$my_plan,
-        parallelism = parallelism,
-        jobs = jobs,
-        caching = caching,
-        envir = e,
-        verbose = 4,
-        garbage_collection = TRUE,
-        lock_envir = TRUE
-      )
-      expect_equal(outdated(config), character(0))
-      make(
-        e$my_plan,
-        parallelism = parallelism,
-        jobs = jobs,
-        caching = caching,
-        envir = e,
-        verbose = 4,
-        lock_envir = TRUE
-      )
-      expect_equal(justbuilt(config), character(0))
-      clean(destroy = TRUE)
-    }
+  parallelism <- "clustermq"
+  for (caching in c("master", "worker")) {
+    config <- drake_config(e$my_plan, envir = e)
+    expect_equal(length(outdated(config)), nrow(config$plan))
+    make(
+      e$my_plan,
+      parallelism = parallelism,
+      jobs = jobs,
+      caching = caching,
+      envir = e,
+      verbose = 4,
+      garbage_collection = TRUE,
+      lock_envir = TRUE
+    )
+    expect_equal(outdated(config), character(0))
+    make(
+      e$my_plan,
+      parallelism = parallelism,
+      jobs = jobs,
+      caching = caching,
+      envir = e,
+      verbose = 4,
+      lock_envir = TRUE
+    )
+    expect_equal(justbuilt(config), character(0))
+    clean(destroy = TRUE)
   }
   if ("package:clustermq" %in% search()) {
     detach("package:clustermq", unload = TRUE) # nolint

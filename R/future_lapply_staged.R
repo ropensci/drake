@@ -1,3 +1,30 @@
+run_future_lapply_staged <- function(config) {
+  assert_pkg("future")
+  assert_pkg("future.apply")
+  prepare_distributed(config = config)
+  schedule <- config$schedule
+  while (length(V(schedule)$name)) {
+    stage <- next_stage(
+      config = config,
+      schedule = schedule,
+      jobs = config$jobs_preprocess
+    )
+    schedule <- stage$schedule
+    if (!length(stage$targets)) {
+      # Keep in case outdated targets are ever back in the schedule.
+      break # nocov
+    } else if (any(stage$targets %in% config$plan$target)) {
+      set_attempt_flag(key = "_attempt", config = config)
+    }
+    tmp <- future.apply::future_lapply(
+      X = stage$targets,
+      FUN = build_distributed,
+      cache_path = config$cache_path,
+      check = FALSE
+    )
+  }
+  invisible()
+}
 
 next_stage <- function(config, schedule, jobs) {
   targets <- character(0)
@@ -44,30 +71,65 @@ next_stage <- function(config, schedule, jobs) {
   list(targets = targets, meta_list = meta_list, schedule = schedule)
 }
 
-run_future_lapply_staged <- function(config) {
-  assert_pkg("future")
-  assert_pkg("future.apply")
-  prepare_distributed(config = config)
-  schedule <- config$schedule
-  while (length(V(schedule)$name)) {
-    stage <- next_stage(
-      config = config,
-      schedule = schedule,
-      jobs = config$jobs_preprocess
-    )
-    schedule <- stage$schedule
-    if (!length(stage$targets)) {
-      # Keep in case outdated targets are ever back in the schedule.
-      break # nocov
-    } else if (any(stage$targets %in% config$plan$target)) {
-      set_attempt_flag(key = "_attempt", config = config)
-    }
-    tmp <- future.apply::future_lapply(
-      X = stage$targets,
-      FUN = build_distributed,
-      cache_path = config$cache_path,
-      check = FALSE
-    )
+#' @title Do the prep work for `make(parallelism = "future_lapply_staged)`
+#' @description For internal use only. Exported to flesh out some
+#' of the more advanced examples.
+#' @export
+#' @keywords internal
+#' @param config Internal configuration list from
+#'   [drake_config()].
+#' @return Nothing.
+#' @examples
+#' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
+#' config <- drake_config(my_plan)
+#' prepare_distributed(config = config)
+#' })
+#' }
+prepare_distributed <- function(config) {
+  if (!file.exists(config$cache_path)) {
+    dir.create(config$cache_path)
+  }
+  save(
+    list = setdiff(ls(globalenv(), all.names = TRUE), config$plan$target),
+    envir = globalenv(),
+    file = globalenv_file(config$cache_path)
+  )
+  for (item in c("envir", "schedule")) {
+    config$cache$set(key = item, value = config[[item]], namespace = "config")
   }
   invisible()
+}
+
+finish_distributed <- function(config) {
+  dir <- cache_path(config$cache)
+  file <- globalenv_file(dir)
+  unlink(file, force = TRUE)
+}
+
+build_distributed <- function(target, cache_path, check = TRUE) {
+  config <- recover_drake_config(cache_path = cache_path)
+  eval(parse(text = "base::require(drake, quietly = TRUE)"))
+  do_prework(config = config, verbose_packages = FALSE)
+  if (check) {
+    check_build_store(target = target, config = config)
+  } else {
+    manage_memory(targets = target, config = config)
+    build_store(target = target, config = config)
+  }
+  invisible()
+}
+
+recover_drake_config <- function(cache_path) {
+  cache <- this_cache(cache_path, verbose = FALSE)
+  config <- read_drake_config(cache = cache)
+  dir <- cache_path(cache = cache)
+  file <- globalenv_file(dir)
+  load(file = file, envir = globalenv())
+  config
+}
+
+globalenv_file <- function(cache_path) {
+  file.path(cache_path, "globalenv.RData")
 }
