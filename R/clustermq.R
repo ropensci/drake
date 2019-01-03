@@ -121,7 +121,7 @@ cmq_build <- function(target, meta, deps, config) {
   } else {
     manage_memory(targets = target, config = config, jobs = 1)
   }
-  build <- just_build(target = target, meta = meta, config = config)
+  build <- build_target(target = target, meta = meta, config = config)
   if (identical(config$caching, "master")) {
     build$checksum <- mc_get_outfile_checksum(target, config)
     return(build)

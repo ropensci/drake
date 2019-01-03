@@ -72,11 +72,3 @@ on_windows <- function() {
 this_os <- function() {
   unname(tolower(Sys.info()["sysname"]))
 }
-
-parallelism_warnings <- function(config) {
-  warn_mclapply_windows(
-    parallelism = config$parallelism,
-    jobs = config$jobs,
-    os = this_os()
-  )
-}

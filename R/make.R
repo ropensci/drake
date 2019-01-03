@@ -208,32 +208,18 @@ make_with_config <- function(config = drake::read_drake_config()) {
   store_drake_config(config = config)
   initialize_session(config = config)
   do_prework(config = config, verbose_packages = config$verbose)
-  make_with_schedules(config = config)
+  if (!config$skip_imports) {
+    make_imports(config)
+  }
+  if (!config$skip_targets) {
+    make_targets(config)
+  }
   drake_cache_log_file(
     file = config$cache_log_file,
     cache = config$cache,
     jobs = config$jobs
   )
   conclude_session(config = config)
-  invisible()
-}
-
-make_with_schedules <- function(config) {
-  if (config$skip_imports && config$skip_targets) {
-    invisible(config)
-  } else if (config$skip_targets) {
-    make_imports(config = config)
-  } else if (config$skip_imports) {
-    make_targets(config = config)
-  } else if (
-    (length(unique(config$parallelism)) > 1) ||
-    (length(unique(config$jobs)) > 1)
-  ) {
-    make_imports(config = config)
-    make_targets(config = config)
-  } else {
-    make_imports_targets(config = config)
-  }
   invisible()
 }
 
@@ -275,8 +261,11 @@ make_with_schedules <- function(config) {
 make_imports <- function(config = drake::read_drake_config()) {
   config$schedule <- imports_graph(config = config)
   config$jobs <- imports_setting(config$jobs)
-  config$parallelism <- imports_setting(config$parallelism)
-  run_parallel_backend(config = config)
+  if (on_windows() && config$jobs > 1L) {
+    process_imports_parLapply(config)
+  } else {
+    process_imports_mclapply(config)
+  }
   invisible()
 }
 
@@ -316,29 +305,20 @@ make_imports <- function(config = drake::read_drake_config()) {
 #' })
 #' }
 make_targets <- function(config = drake::read_drake_config()) {
-  if ("hasty" %in% config$parallelism) {
+  config$parallelism <- targets_setting(config$parallelism)
+  config$jobs <- targets_setting(config$jobs)
+  config$schedule <- targets_graph(config = config)
+  if (config$parallelism == "hasty") {
     run_hasty(config)
     return(invisible(config))
   }
   outdated <- outdated(config, do_prework = FALSE, make_imports = FALSE)
   if (!length(outdated)) {
     console_up_to_date(config = config)
-    return(config)
+    return(invisible())
   }
   up_to_date <- setdiff(config$all_targets, outdated)
-  config$schedule <- targets_graph(config = config)
   config$schedule <- igraph::delete_vertices(config$schedule, v = up_to_date)
-  config$jobs <- targets_setting(config$jobs)
-  config$parallelism <- targets_setting(config$parallelism)
-  run_parallel_backend(config = config)
-  console_up_to_date(config = config)
-  invisible()
-}
-
-make_imports_targets <- function(config) {
-  config$schedule <- config$graph
-  config$parallelism <- config$parallelism[1]
-  config$jobs <- max(config$jobs)
   run_parallel_backend(config = config)
   console_up_to_date(config = config)
   invisible()

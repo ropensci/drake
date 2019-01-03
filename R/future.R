@@ -54,7 +54,7 @@ drake_future_task <- function(target, meta, config, protect) {
     manage_memory(targets = target, config = config, downstream = protect)
   }
   do_prework(config = config, verbose_packages = FALSE)
-  build <- just_build(target = target, meta = meta, config = config)
+  build <- build_target(target = target, meta = meta, config = config)
   if (identical(config$caching, "master")) {
     build$checksum <- mc_get_outfile_checksum(target, config)
     return(build)

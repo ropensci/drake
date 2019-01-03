@@ -99,14 +99,10 @@ drake_hpc_template_files <- function() {
 #' parallelism_choices(distributed_only = TRUE)
 parallelism_choices <- function(distributed_only = FALSE) {
   local <- c(
-    "mclapply",
-    "parLapply",
-    "mclapply_staged",
-    "parLapply_staged"
+    "loop"
   )
   distributed <- c(
     "clustermq",
-    "clustermq_staged",
     "future",
     "future_lapply_staged",
     "hasty",
@@ -129,7 +125,7 @@ parallelism_choices <- function(distributed_only = FALSE) {
 #' @examples
 #' default_parallelism()
 default_parallelism <- function() {
-  unname(ifelse(on_windows(), "parLapply", "mclapply"))
+  "loop"
 }
 
 #' @title Write an example `shell.sh` file required by

@@ -74,7 +74,6 @@ runtime_checks <- function(config) {
     return(invisible())
   }
   missing_input_files(config = config)
-  parallelism_warnings(config = config)
   subdirectory_warning(config = config)
 }
 
@@ -169,7 +168,7 @@ check_jobs <- function(jobs) {
   }
 }
 
-check_parallelism <- function(parallelism) {
+check_parallelism <- function(parallelism, jobs) {
   stopifnot(length(parallelism) > 0)
   stopifnot(is.character(parallelism))
   if (length(parallelism) > 1) {

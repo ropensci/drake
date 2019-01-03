@@ -108,25 +108,13 @@ build_store <- function(target, config, meta = NULL, announce = TRUE) {
   if (announce) {
     announce_build(target = target, meta = meta, config = config)
   }
-  build <- just_build(target = target, meta = meta, config = config)
+  build <- build_target(target = target, meta = meta, config = config)
   conclude_build(
     target = target,
     value = build$value,
     meta = build$meta,
     config = config
   )
-}
-
-just_build <- function(target, meta, config) {
-  if (meta$imported) {
-    process_import(target = target, meta = meta, config = config)
-  } else {
-    build_target(
-      target = target,
-      meta = meta,
-      config = config
-    )
-  }
 }
 
 announce_build <- function(target, meta, config) {
@@ -180,18 +168,4 @@ build_target <- function(target, meta, config) {
     console_retry(target = target, retries = retries, config = config)
   }
   build
-}
-
-process_import <- function(target, meta, config) {
-  if (meta$isfile) {
-    value <- NA_character_
-    is_missing <- !file.exists(decode_path(target, config))
-  } else {
-    value <- get_import_from_memory(target, config = config)
-    is_missing <- identical(value, NA_character_)
-  }
-  if (is_missing) {
-    console(imported = NA_character_, target = target, config = config)
-  }
-  list(target = target, value = value, meta = meta)
 }

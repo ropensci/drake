@@ -1,6 +1,6 @@
 run_hasty <- function(config) {
   warn_hasty(config)
-  config$graph <- config$schedule <- targets_graph(config = config)
+  config$graph <- config$schedule
   if (config$jobs_targets > 1L) {
     hasty_parallel(config)
   } else{
