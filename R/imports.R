@@ -21,18 +21,17 @@ process_import <- function(import, config) {
 }
 
 process_imports_mclapply <- function(config) {
-  config$jobs <- safe_jobs(config$jobs)
-  if (config$jobs > 1L) {
+  if (config$jobs_preprocess > 1L) {
     assert_pkg("parallel")
   }
   schedule <- config$schedule
   while (length(V(schedule)$name)) {
     imports <- leaf_nodes(schedule)
-    weak_mclapply(
+    lightly_parallelize(
       X = imports,
       FUN = process_import,
       config = config,
-      mc.cores = config$jobs_preprocess
+      jobs = config$jobs_preprocess
     )
     schedule <- delete_vertices(schedule, v = imports)
   }

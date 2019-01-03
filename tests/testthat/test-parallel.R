@@ -32,7 +32,6 @@ test_with_dir("parallel imports", {
   config$schedule <- imports_graph(config = config)
   process_imports_parLapply(config)
   expect_true("a" %in% cached())
-  skip_on_os("windows")
   config$schedule <- imports_graph(config = config)
   process_imports_mclapply(config)
 })
