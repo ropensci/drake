@@ -11,7 +11,6 @@
 #'   [vis_drake_graph()],
 #'   [evaluate_plan()],
 #'   [outdated()],
-#'   [parallelism_choices()],
 #'   [triggers()]
 #' @export
 #' @return nothing

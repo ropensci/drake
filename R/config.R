@@ -59,8 +59,7 @@
 #' @param skip_targets logical, whether to skip building the targets
 #'   in `plan` and just import objects and files.
 #'
-#' @param parallelism character, type of parallelism to use.
-#'   To list the options, call [parallelism_choices()].
+#' @param parallelism function or character, type of parallelism to use.
 #'   For detailed explanations, see the
 #'   [high-performance computing chapter](https://ropenscilabs.github.io/drake-manual/hpc.html)
 #'   of the user manual.
@@ -101,17 +100,10 @@
 #'   `"Makefile"`, the prework is run once on initialization
 #'   and then once again for each target right before that target is built.
 #'
-#' @param prepend lines to prepend to the Makefile if `parallelism`
-#'   is `"Makefile"`. See the [high-performance computing guide](https://ropenscilabs.github.io/drake-manual/store.html)
-#'   to learn how to use `prepend`
-#'   to distribute work on a cluster.
-#'
+#' @param prepend deprecated
 #' @param command deprecated
-#'
 #' @param args deprecated
-#'
-#' @param recipe_command Character scalar, command for the
-#'   Makefile recipe for each target.
+#' @param recipe_command deprecated
 #'
 #' @param log_progress logical, whether to log the progress
 #'   of individual targets as they are being built. Progress logging
@@ -503,9 +495,15 @@ drake_config <- function(
       # 2018-12-07 # nolint
     )
   }
-  if (!is.null(command) || !is.null(args) || !is.null(recipe_command)) {
+  if (
+    !is.null(command) ||
+    !is.null(args) ||
+    !is.null(recipe_command) ||
+    !is.null(prepend)
+  ) {
     warning(
-      "Arguments `command`, `args`, and `recipe_command` are deprecated ",
+      "Arguments `command`, `args`, `prepend`, and ",
+      "`recipe_command` are deprecated ",
       "because Makefile parallelism is no longer supported.",
       call. = FALSE
       # 2019-01-03

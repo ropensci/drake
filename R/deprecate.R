@@ -1024,3 +1024,60 @@ time_stamps <- function(config) {
     stamp_these, write_time_stamp, jobs = config$jobs, config = config)
   return(invisible())
 }
+
+#' @title Deprecated
+#' @description 2019-01-03
+#' @export
+#' @keywords internal
+#' @return character vector
+#' @param distributed_only logical
+#' @examples
+#' # deprecated
+parallelism_choices <- function(distributed_only = FALSE) {
+  .Deprecated(
+    "parallelism_choices",
+    package = "drake",
+    msg = paste(
+      "parallelism_choices() and",
+      "Makefile parallelism are deprecated."
+    )
+  )
+  local <- c(
+    "loop"
+  )
+  distributed <- c(
+    "clustermq",
+    "future",
+    "future_lapply_staged",
+    "hasty"
+  )
+  if (distributed_only) {
+    sort(distributed)
+  } else {
+    sort(c(local, distributed))
+  }
+}
+
+#' @title Deprecated
+#' @description 2019-01-03
+#' @export
+#' @return logical
+#' @param path character
+#' @param overwrite logical
+#' @examples
+#' # deprecated
+shell_file <- function(
+  path = "shell.sh",
+  overwrite = FALSE
+) {
+  .Deprecated(
+    "shell_file",
+    package = "drake",
+    msg = paste(
+      "shell_file() and",
+      "Makefile parallelism are deprecated."
+    )
+  )
+  FALSE
+}
+

@@ -72,8 +72,7 @@ See also \code{\link[=get_cache]{get_cache()}} and \code{\link[=this_cache]{this
 
 \item{fetch_cache}{deprecated}
 
-\item{parallelism}{character, type of parallelism to use.
-To list the options, call \code{\link[=parallelism_choices]{parallelism_choices()}}.
+\item{parallelism}{function or character, type of parallelism to use.
 For detailed explanations, see the
 \href{https://ropenscilabs.github.io/drake-manual/hpc.html}{high-performance computing chapter}
 of the user manual.}
@@ -111,17 +110,13 @@ is run once before any targets are built. If \code{parallelism} is
 \code{"Makefile"}, the prework is run once on initialization
 and then once again for each target right before that target is built.}
 
-\item{prepend}{lines to prepend to the Makefile if \code{parallelism}
-is \code{"Makefile"}. See the \href{https://ropenscilabs.github.io/drake-manual/store.html}{high-performance computing guide}
-to learn how to use \code{prepend}
-to distribute work on a cluster.}
+\item{prepend}{deprecated}
 
 \item{command}{deprecated}
 
 \item{args}{deprecated}
 
-\item{recipe_command}{Character scalar, command for the
-Makefile recipe for each target.}
+\item{recipe_command}{deprecated}
 
 \item{log_progress}{logical, whether to log the progress
 of individual targets as they are being built. Progress logging
@@ -470,6 +465,5 @@ readd(letter) # "b"
 \code{\link[=vis_drake_graph]{vis_drake_graph()}},
 \code{\link[=evaluate_plan]{evaluate_plan()}},
 \code{\link[=outdated]{outdated()}},
-\code{\link[=parallelism_choices]{parallelism_choices()}},
 \code{\link[=triggers]{triggers()}}
 }
