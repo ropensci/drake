@@ -21,7 +21,4 @@ to be compatible with the version of drake on your system.
 \examples{
 # This function is deprecated.
 }
-\seealso{
-\code{\link[=rescue_cache]{rescue_cache()}}, \code{\link[=make]{make()}}
-}
 \keyword{internal}

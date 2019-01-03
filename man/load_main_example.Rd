@@ -45,7 +45,4 @@ Deprecated December 2018.
 # https://ropenscilabs.github.io/drake-manual/.
 }
 }
-\seealso{
-\code{\link[=clean_main_example]{clean_main_example()}}
-}
 \keyword{internal}

@@ -38,7 +38,4 @@ Deprecated on May 4, 2018.
 # Pay special attention to the force_times and default_time
 # arguments.
 }
-\seealso{
-\code{\link[=predict_runtime]{predict_runtime()}}
-}
 \keyword{internal}

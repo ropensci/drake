@@ -25,7 +25,6 @@ reference:
 - title: Help
   contents:
   - '`drake-package`'
-  - '`drake_tip`'
 - title: Examples
   contents:
   - '`drake_example`'
@@ -38,8 +37,6 @@ reference:
   - '`drake_config`'
   - '`drake_build`'
   - '`drake_debug`'
-  - '`make_imports`'
-  - '`make_targets`'
 - title: Workflow plan data frames
   contents:
   - '`drake_plan`'
@@ -64,8 +61,6 @@ reference:
   - '`expand_plan`'
   - '`plan_analyses`'
   - '`plan_summaries`'
-  - '`dataset_wildcard`'
-  - '`analysis_wildcard`'
 - title: Network graphs and visualization
   contents:
   - '`vis_drake_graph`'
@@ -76,11 +71,8 @@ reference:
   - '`drake_ggraph`'
   - '`drake_graph_info`'
   - '`legend_nodes`'
-  - '`drake_palette`'
-  - '`prune_drake_graph`'
 - title: Debugging and testing
   contents:
-  - '`check_plan`'
   - '`dependency_profile`'
   - '`deps_code`'
   - '`deps_target`'

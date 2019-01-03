@@ -46,7 +46,3 @@ Deprecated on 2018-12-06.
 \examples{
 # See ?drake_get_session_info for examples.
 }
-\seealso{
-\code{\link[=diagnose]{diagnose()}}, \code{\link[=built]{built()}}, \code{\link[=imported]{imported()}},
-\code{\link[=readd]{readd()}}, \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
-}
