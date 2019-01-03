@@ -109,6 +109,7 @@ conclude_build <- function(build, config) {
   assert_output_files(target = target, meta = meta, config = config)
   handle_build_exceptions(target = target, meta = meta, config = config)
   store_outputs(target = target, value = value, meta = meta, config = config)
+  assign_to_envir(target = target, value = value, config = config)
   invisible(value)
 }
 

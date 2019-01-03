@@ -49,7 +49,7 @@ run_future <- function(config) {
 #' @param config [drake_config()] list
 #' @param protect Names of targets that still need their
 #' dependencies available in memory.
-drake_future_task <- function(target, meta, config, protect) {
+future_build <- function(target, meta, config, protect) {
   if (identical(config$caching, "worker")) {
     manage_memory(targets = target, config = config, downstream = protect)
   }
@@ -88,7 +88,7 @@ new_worker <- function(id, target, config, protect) {
   layout <- config$layout[[target]]
   structure(
     future::future(
-      expr = drake_future_task(
+      expr = future_build(
         target = DRAKE_GLOBALS__$target,
         meta = DRAKE_GLOBALS__$meta,
         config = DRAKE_GLOBALS__$config,

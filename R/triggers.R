@@ -210,10 +210,7 @@ change_trigger <- function(target, meta, config) {
   !identical(old_value, meta$trigger$value)
 }
 
-should_build_target <- function(target, meta = NULL, config) {
-  if (is.null(meta)) {
-    meta <- drake_meta(target = target, config = config)
-  }
+should_build_target <- function(target, meta, config) {
   if (meta$imported) {
     return(TRUE)
   }

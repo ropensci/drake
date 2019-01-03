@@ -6,9 +6,11 @@ first_outdated <- function(config) {
     new_leaves <- setdiff(leaf_nodes(graph), out)
     do_build <- lightly_parallelize(
       X = new_leaves,
-      FUN = should_build_target,
-      jobs = config$jobs,
-      config = config
+      FUN = function(target) {
+        meta <- drake_meta(target, config)
+        should_build_target(target, meta, config)
+      },
+      jobs = config$jobs
     )
     do_build <- unlist(do_build)
     out <- c(out, new_leaves[do_build])
