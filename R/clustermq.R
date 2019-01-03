@@ -61,7 +61,7 @@ cmq_send_target <- function(config) {
   meta <- drake_meta(target = target, config = config)
   # Target should not even be in the priority queue
   # nocov start
-  if (!should_build_target(target = target, meta = meta, config = config)) {
+  if (!should_build_target(target, meta, config)) {
     console_skip(target = target, config = config)
     cmq_conclude_target(target = target, config = config)
     config$workers$send_wait()
@@ -69,6 +69,7 @@ cmq_send_target <- function(config) {
   }
   # nocov end
   announce_build(target = target, meta = meta, config = config)
+  set_attempt_flag(key = target, config = config)
   if (identical(config$caching, "master")) {
     manage_memory(targets = target, config = config, jobs = 1)
     deps <- cmq_deps_list(target = target, config = config)
@@ -125,13 +126,7 @@ cmq_build <- function(target, meta, deps, config) {
     build$checksum <- mc_get_outfile_checksum(target, config)
     return(build)
   }
-  conclude_build(
-    target = build$target,
-    value = build$value,
-    meta = build$meta,
-    config = config
-  )
-  set_attempt_flag(key = build$target, config = config)
+  conclude_build(build = build, config = config)
   list(target = target, checksum = mc_get_checksum(target, config))
 }
 
@@ -152,18 +147,12 @@ cmq_conclude_build <- function(msg, config) {
     )
     return()
   }
-  set_attempt_flag(key = build$target, config = config)
   mc_wait_outfile_checksum(
     target = build$target,
     checksum = build$checksum,
     config = config
   )
-  conclude_build(
-    target = build$target,
-    value = build$value,
-    meta = build$meta,
-    config = config
-  )
+  conclude_build(build = build, config = config)
 }
 
 cmq_conclude_target <- function(target, config) {

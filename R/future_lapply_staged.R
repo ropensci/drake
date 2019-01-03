@@ -4,7 +4,6 @@ run_future_lapply_staged <- function(config) {
   fls_prepare(config = config)
   schedule <- config$schedule
   while (length(V(schedule)$name)) {
-    set_attempt_flag(key = "_attempt", config = config)
     targets <- leaf_nodes(schedule)
     future.apply::future_lapply(
       X = targets,
@@ -36,16 +35,16 @@ fls_build <- function(target, cache_path) {
   config <- recover_drake_config(cache_path = cache_path)
   eval(parse(text = "base::require(drake, quietly = TRUE)"))
   do_prework(config = config, verbose_packages = FALSE)
-  manage_memory(targets = target, config = config)
   meta <- drake_meta(target = target, config = config)
+  if (!should_build_target(target, meta, config)) {
+    console_skip(target = target, config = config)
+    return(invisible())
+  }
   announce_build(target = target, meta = meta, config = config)
+  set_attempt_flag(key = target, config = config)
+  manage_memory(targets = target, config = config)
   build <- build_target(target = target, meta = meta, config = config)
-  conclude_build(
-    target = target,
-    value = build$value,
-    meta = build$meta,
-    config = config
-  )
+  conclude_build(build = build, config = config)
   invisible()
 }
 

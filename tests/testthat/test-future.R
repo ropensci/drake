@@ -36,6 +36,18 @@ test_with_dir("future package functionality", {
       outdated(config),
       character(0)
     )
+    e$my_plan$command[2] <- paste0("identity(", e$my_plan$command[2], ")")
+    make(
+      e$my_plan,
+      envir = e,
+      parallelism = backends[i],
+      caching = caching[i],
+      jobs = 1,
+      verbose = FALSE,
+      session_info = FALSE,
+      lock_envir = TRUE
+    )
+    expect_equal(justbuilt(config), "small")
   }
 
   # Stuff is already up to date.
@@ -60,7 +72,7 @@ test_with_dir("future package functionality", {
       session_info = FALSE,
       lock_envir = TRUE
     )
-    expect_equal(justbuilt(config), character(0))
+    nobuild(config)
   }
 
   # Workers can wait for dependencies.

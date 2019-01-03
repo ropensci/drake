@@ -59,23 +59,15 @@ drake_future_task <- function(target, meta, config, protect) {
     build$checksum <- mc_get_outfile_checksum(target, config)
     return(build)
   }
-  conclude_build(
-    target = build$target,
-    value = build$value,
-    meta = build$meta,
-    config = config
-  )
+  conclude_build(build = build, config = config)
   set_attempt_flag(key = build$target, config = config)
   list(target = target, checksum = mc_get_checksum(target, config))
 }
 
 new_worker <- function(id, target, config, protect) {
   meta <- drake_meta(target = target, config = config)
-  if (!should_build_target(
-    target = target,
-    meta = meta,
-    config = config
-  )) {
+  if (!should_build_target(target, meta, config)) {
+    console_skip(target = target, config = config)
     return(empty_worker(target = target))
   }
   if (identical(config$caching, "master")) {
@@ -234,12 +226,7 @@ conclude_worker <- function(worker, config, queue) {
     checksum = build$checksum,
     config = config
   )
-  conclude_build(
-    target = build$target,
-    value = build$value,
-    meta = build$meta,
-    config = config
-  )
+  conclude_build(build = build, config = config)
   out
 }
 

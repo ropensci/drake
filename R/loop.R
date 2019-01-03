@@ -12,27 +12,14 @@ run_loop <- function(config) {
 
 build_loop <- function(target, config, downstream) {
   meta <- drake_meta(target = target, config = config)
-  if (!should_build_target(
-    target = target,
-    meta = meta,
-    config = config
-  )) {
+  if (!should_build_target(target, meta, config)) {
     console_skip(target = target, config = config)
     return()
   }
   set_attempt_flag(key = target, config = config)
-  manage_memory(
-    targets = target,
-    config = config,
-    downstream = downstream
-  )
+  manage_memory(target, config, downstream = downstream)
   build <- build_target(target = target, meta = meta, config = config)
-  conclude_build(
-    target = target,
-    value = build$value,
-    meta = build$meta,
-    config = config
-  )
+  conclude_build(build = build, config = config)
   assign_to_envir(target = target, value = build$value, config = config)
   invisible()
 }

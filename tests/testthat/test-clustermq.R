@@ -14,6 +14,7 @@ test_with_dir("clustermq parallelism", {
   load_mtcars_example(envir = e)
   parallelism <- "clustermq"
   for (caching in c("master", "worker")) {
+    clean(destroy = TRUE)
     config <- drake_config(e$my_plan, envir = e)
     expect_equal(length(outdated(config)), nrow(config$plan))
     make(
@@ -37,7 +38,17 @@ test_with_dir("clustermq parallelism", {
       lock_envir = TRUE
     )
     expect_equal(justbuilt(config), character(0))
-    clean(destroy = TRUE)
+    e$my_plan$command[2] <- paste0("identity(", e$my_plan$command[2], ")")
+    make(
+      e$my_plan,
+      parallelism = parallelism,
+      jobs = jobs,
+      caching = caching,
+      envir = e,
+      verbose = 4,
+      lock_envir = TRUE
+    )
+    expect_equal(justbuilt(config), "small")
   }
   if ("package:clustermq" %in% search()) {
     detach("package:clustermq", unload = TRUE) # nolint

@@ -73,8 +73,8 @@ drake_debug <- function(
   meta <- drake_meta(target = target, config = config)
   announce_build(target = target, meta = meta, config = config)
   build <- build_target(target = target, meta = meta, config = config)
-  assert_output_files(target = target, meta = meta, config = config)
-  handle_build_exceptions(target = target, meta = meta, config = config)
+  assert_output_files(target = target, meta = build$meta, config = config)
+  handle_build_exceptions(target = target, meta = build$meta, config = config)
   invisible(build$value)
   # nocov end
 }

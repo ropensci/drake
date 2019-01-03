@@ -68,12 +68,7 @@ drake_build <- function(
   meta <- drake_meta(target = target, config = config)
   announce_build(target = target, meta = meta, config = config)
   build <- build_target(target = target, meta = meta, config = config)
-  conclude_build(
-    target = target,
-    value = build$value,
-    meta = build$meta,
-    config = config
-  )
+  conclude_build(build = build, config = config)
 }
 
 announce_build <- function(target, meta, config) {
@@ -107,7 +102,10 @@ build_target <- function(target, meta, config) {
   build
 }
 
-conclude_build <- function(target, value, meta, config) {
+conclude_build <- function(build, config) {
+  target <- build$target
+  value <- build$value
+  meta <- build$meta
   assert_output_files(target = target, meta = meta, config = config)
   handle_build_exceptions(target = target, meta = meta, config = config)
   store_outputs(target = target, value = value, meta = meta, config = config)
