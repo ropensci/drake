@@ -106,30 +106,9 @@
 #'   to learn how to use `prepend`
 #'   to distribute work on a cluster.
 #'
-#' @param command character scalar, command to call the Makefile
-#'   generated for distributed computing.
-#'   Only applies when `parallelism` is `"Makefile"`.
-#'   Defaults to the usual `"make"`
-#'   ([default_Makefile_command()]),
-#'   but it could also be
-#'   `"lsmake"` on supporting systems, for example.
-#'   `command` and `args` are executed via
-#'   `system2(command, args)` to run the Makefile.
-#'   If `args` has something like `"--jobs=2"`, or if
-#'   `jobs >= 2` and `args` is left alone, targets
-#'   will be distributed over independent parallel R sessions
-#'   wherever possible.
+#' @param command deprecated
 #'
-#' @param args command line arguments to call the Makefile for
-#'   distributed computing. For advanced users only. If set,
-#'   `jobs` and `verbose` are overwritten as they apply to the
-#'   Makefile.
-#'   `command` and `args` are executed via
-#'   `system2(command, args)` to run the Makefile.
-#'   If `args` has something like `"--jobs=2"`, or if
-#'   `jobs >= 2` and `args` is left alone, targets
-#'   will be distributed over independent parallel R sessions
-#'   wherever possible.
+#' @param args deprecated
 #'
 #' @param recipe_command Character scalar, command for the
 #'   Makefile recipe for each target.
@@ -146,14 +125,7 @@
 #' @param cache drake cache as created by [new_cache()].
 #'   See also [get_cache()] and [this_cache()].
 #'
-#' @param fetch_cache character vector containing lines of code.
-#'   The purpose of this code is to fetch the `storr` cache
-#'   with a command like [storr_rds()] or [storr_dbi()],
-#'   but customized. This feature is experimental. It will turn out
-#'   to be necessary if you are using both custom non-RDS caches
-#'   and distributed parallelism (`parallelism = "future_lapply"`
-#'   or `"Makefile"`) because the distributed R sessions
-#'   need to know how to load the cache.
+#' @param fetch_cache deprecated
 #'
 #' @param timeout `deprecated`. Use `elapsed` and `cpu` instead.
 #'
@@ -449,12 +421,9 @@ drake_config <- function(
   packages = rev(.packages()),
   prework = character(0),
   prepend = character(0),
-  command = drake::default_Makefile_command(),
-  args = drake::default_Makefile_args(
-    jobs = jobs,
-    verbose = verbose
-  ),
-  recipe_command = drake::default_recipe_command(),
+  command = NULL,
+  args = NULL,
+  recipe_command = NULL,
   timeout = NULL,
   cpu = Inf,
   elapsed = Inf,
@@ -523,6 +492,23 @@ drake_config <- function(
       "the preprocessing of the layout is memoized to save time.",
       call. = FALSE
       # 2018-12-19 # nolint
+    )
+  }
+  deprecate_fetch_cache(fetch_cache)
+  if (!is.null(timeout)) {
+    warning(
+      "Argument `timeout` is deprecated. ",
+      "Use `elapsed` and/or `cpu` instead.",
+      call. = FALSE
+      # 2018-12-07 # nolint
+    )
+  }
+  if (!is.null(command) || !is.null(args) || !is.null(recipe_command)) {
+    warning(
+      "Arguments `command`, `args`, and `recipe_command` are deprecated ",
+      "because Makefile parallelism is no longer supported.",
+      call. = FALSE
+      # 2019-01-03
     )
   }
   plan <- sanitize_plan(plan)

@@ -1,16 +1,19 @@
-process_import <- function(target, meta, config) {
+process_import <- function(import, config) {
+  meta <- drake_meta(target = import, config = config)
   if (meta$isfile) {
     value <- NA_character_
-    is_missing <- !file.exists(decode_path(target, config))
+    is_missing <- !file.exists(decode_path(import, config))
   } else {
-    value <- get_import_from_memory(target, config = config)
+    value <- get_import_from_memory(import, config = config)
     is_missing <- identical(value, NA_character_)
   }
   if (is_missing) {
-    console(imported = NA_character_, target = target, config = config)
+    console_missing(target = import, config = config)
+  } else {
+    console_import(target = import, config = config)
   }
   store_single_output(
-    target = target,
+    target = import,
     value = value,
     meta = meta,
     config = config

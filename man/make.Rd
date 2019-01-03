@@ -10,13 +10,11 @@ make(plan = drake::read_drake_plan(), targets = NULL,
   console_log_file), fetch_cache = NULL,
   parallelism = drake::default_parallelism(), jobs = 1L,
   jobs_preprocess = 1L, packages = rev(.packages()),
-  prework = character(0), prepend = character(0),
-  command = drake::default_Makefile_command(),
-  args = drake::default_Makefile_args(jobs = jobs, verbose = verbose),
-  recipe_command = drake::default_recipe_command(),
-  log_progress = TRUE, skip_targets = FALSE, timeout = NULL,
-  cpu = Inf, elapsed = Inf, retries = 0, force = FALSE,
-  graph = NULL, trigger = drake::trigger(), skip_imports = FALSE,
+  prework = character(0), prepend = character(0), command = NULL,
+  args = NULL, recipe_command = NULL, log_progress = TRUE,
+  skip_targets = FALSE, timeout = NULL, cpu = Inf, elapsed = Inf,
+  retries = 0, force = FALSE, graph = NULL,
+  trigger = drake::trigger(), skip_imports = FALSE,
   skip_safety_checks = FALSE, config = NULL, lazy_load = "eager",
   session_info = TRUE, cache_log_file = NULL, seed = NULL,
   caching = "master", keep_going = FALSE, session = NULL,
@@ -72,14 +70,7 @@ then reproducibly tracked as dependencies.}
 \item{cache}{drake cache as created by \code{\link[=new_cache]{new_cache()}}.
 See also \code{\link[=get_cache]{get_cache()}} and \code{\link[=this_cache]{this_cache()}}.}
 
-\item{fetch_cache}{character vector containing lines of code.
-The purpose of this code is to fetch the \code{storr} cache
-with a command like \code{\link[=storr_rds]{storr_rds()}} or \code{\link[=storr_dbi]{storr_dbi()}},
-but customized. This feature is experimental. It will turn out
-to be necessary if you are using both custom non-RDS caches
-and distributed parallelism (\code{parallelism = "future_lapply"}
-or \code{"Makefile"}) because the distributed R sessions
-need to know how to load the cache.}
+\item{fetch_cache}{deprecated}
 
 \item{parallelism}{character, type of parallelism to use.
 To list the options, call \code{\link[=parallelism_choices]{parallelism_choices()}}.
@@ -125,30 +116,9 @@ is \code{"Makefile"}. See the \href{https://ropenscilabs.github.io/drake-manual/
 to learn how to use \code{prepend}
 to distribute work on a cluster.}
 
-\item{command}{character scalar, command to call the Makefile
-generated for distributed computing.
-Only applies when \code{parallelism} is \code{"Makefile"}.
-Defaults to the usual \code{"make"}
-(\code{\link[=default_Makefile_command]{default_Makefile_command()}}),
-but it could also be
-\code{"lsmake"} on supporting systems, for example.
-\code{command} and \code{args} are executed via
-\code{system2(command, args)} to run the Makefile.
-If \code{args} has something like \code{"--jobs=2"}, or if
-\code{jobs >= 2} and \code{args} is left alone, targets
-will be distributed over independent parallel R sessions
-wherever possible.}
+\item{command}{deprecated}
 
-\item{args}{command line arguments to call the Makefile for
-distributed computing. For advanced users only. If set,
-\code{jobs} and \code{verbose} are overwritten as they apply to the
-Makefile.
-\code{command} and \code{args} are executed via
-\code{system2(command, args)} to run the Makefile.
-If \code{args} has something like \code{"--jobs=2"}, or if
-\code{jobs >= 2} and \code{args} is left alone, targets
-will be distributed over independent parallel R sessions
-wherever possible.}
+\item{args}{deprecated}
 
 \item{recipe_command}{Character scalar, command for the
 Makefile recipe for each target.}

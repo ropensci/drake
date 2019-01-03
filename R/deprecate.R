@@ -898,7 +898,7 @@ default_Makefile_args <- function(jobs, verbose) {
       "Makefile parallelism are deprecated."
     )
   )
-  out <- paste0("--jobs=", targets_setting(jobs))
+  out <- paste0("--jobs=", head(jobs, 1))
   if (verbose < 1) {
     out <- c(out, "--silent")
   }

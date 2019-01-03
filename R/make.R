@@ -77,12 +77,9 @@ make <- function(
   packages = rev(.packages()),
   prework = character(0),
   prepend = character(0),
-  command = drake::default_Makefile_command(),
-  args = drake::default_Makefile_args(
-    jobs = jobs,
-    verbose = verbose
-  ),
-  recipe_command = drake::default_recipe_command(),
+  command = NULL,
+  args = NULL,
+  recipe_command = NULL,
   log_progress = TRUE,
   skip_targets = FALSE,
   timeout = NULL,
@@ -115,15 +112,6 @@ make <- function(
   lock_envir = TRUE
 ) {
   force(envir)
-  deprecate_fetch_cache(fetch_cache)
-  if (!is.null(timeout)) {
-    warning(
-      "Argument `timeout` is deprecated. ",
-      "Use `elapsed` and/or `cpu` instead.",
-      call. = FALSE
-      # 2018-12-07 # nolint
-    )
-  }
   if (is.null(config)) {
     config <- drake_config(
       plan = plan,
