@@ -994,6 +994,7 @@ r_recipe_wildcard <- function() {
   "R_RECIPE"
 }
 
+# nocov start
 #' @title Deprecated
 #' @description 2019-01-03
 #' @export
@@ -1024,6 +1025,7 @@ time_stamps <- function(config) {
     stamp_these, write_time_stamp, jobs = config$jobs, config = config)
   return(invisible())
 }
+# nocov end
 
 #' @title Deprecated
 #' @description 2019-01-03
@@ -1080,4 +1082,3 @@ shell_file <- function(
   )
   FALSE
 }
-

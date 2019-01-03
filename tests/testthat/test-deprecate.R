@@ -84,6 +84,14 @@ test_with_dir("deprecate misc utilities", {
   expect_warning(config <- drake_config(my_plan, graph = 1, layout = 2))
   expect_warning(migrate_drake_project())
   expect_warning(default_verbose())
+  expect_warning(default_Makefile_args(1, 2))
+  expect_warning(default_Makefile_command())
+  expect_warning(Makefile_recipe())
+  expect_warning(default_recipe_command())
+  expect_warning(r_recipe_wildcard())
+  expect_warning(parallelism_choices(TRUE))
+  expect_warning(parallelism_choices(FALSE))
+  expect_warning(shell_file())
 })
 
 test_with_dir("deprecated arguments", {
