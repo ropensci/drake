@@ -1,4 +1,4 @@
-run_future_lapply_staged <- function(config) {
+backend_future_lapply_staged <- function(config) {
   assert_pkg("future")
   assert_pkg("future.apply")
   fls_prepare(config = config)

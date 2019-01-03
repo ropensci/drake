@@ -1,4 +1,4 @@
-run_clustermq <- function(config) {
+backend_clustermq <- function(config) {
   assert_pkg("clustermq", version = "0.8.5")
   config$queue <- new_priority_queue(
     config = config,

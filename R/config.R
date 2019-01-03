@@ -59,10 +59,24 @@
 #' @param skip_targets logical, whether to skip building the targets
 #'   in `plan` and just import objects and files.
 #'
-#' @param parallelism function or character, type of parallelism to use.
+#' @param parallelism character scalar, type of parallelism to use.
 #'   For detailed explanations, see the
 #'   [high-performance computing chapter](https://ropenscilabs.github.io/drake-manual/hpc.html)
 #'   of the user manual.
+#'
+#'   You could also supply your own scheduler function
+#'   if you want to experiment or aggressively optimize.
+#'   The function should take a single `config` argument
+#'   (produced by [drake_config()]). Existing examples
+#'   from `drake`'s internals are the `backend_*()` functions:
+#'   - `backend_loop()`
+#'   - `backend_clustermq()`
+#'   - `backend_future()`
+#'   - `backend_hasty()` (unofficial)
+#'   However, this functionality is really a back door
+#'   and should not be used for production purposes unless you really
+#'   know what you are doing and you are willing to suffer setbacks
+#'   whenever `drake`'s unexported core functions are updated.
 #'
 #' @param jobs maximum number of parallel workers for processing the targets.
 #'   You can experiment with [predict_runtime()]

@@ -71,10 +71,26 @@ See also \code{\link[=get_cache]{get_cache()}} and \code{\link[=this_cache]{this
 
 \item{fetch_cache}{deprecated}
 
-\item{parallelism}{function or character, type of parallelism to use.
+\item{parallelism}{character scalar, type of parallelism to use.
 For detailed explanations, see the
 \href{https://ropenscilabs.github.io/drake-manual/hpc.html}{high-performance computing chapter}
-of the user manual.}
+of the user manual.
+
+You could also supply your own scheduler function
+if you want to experiment or aggressively optimize.
+The function should take a single \code{config} argument
+(produced by \code{\link[=drake_config]{drake_config()}}). Existing examples
+from \code{drake}'s internals are the \code{backend_*()} functions:
+\itemize{
+\item \code{backend_loop()}
+\item \code{backend_clustermq()}
+\item \code{backend_future()}
+\item \code{backend_hasty()} (unofficial)
+However, this functionality is really a back door
+and should not be used for production purposes unless you really
+know what you are doing and you are willing to suffer setbacks
+whenever \code{drake}'s unexported core functions are updated.
+}}
 
 \item{jobs}{maximum number of parallel workers for processing the targets.
 You can experiment with \code{\link[=predict_runtime]{predict_runtime()}}

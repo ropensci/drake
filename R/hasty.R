@@ -1,4 +1,4 @@
-run_hasty <- function(config) {
+backend_hasty <- function(config) {
   warn_hasty(config)
   config$graph <- config$schedule
   if (config$jobs > 1L) {

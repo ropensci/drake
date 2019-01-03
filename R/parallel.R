@@ -1,6 +1,6 @@
-run_parallel_backend <- function(config) {
+run_drake_backend <- function(config) {
   get(
-    paste0("run_", config$parallelism),
+    paste0("backend_", config$parallelism),
     envir = getNamespace("drake")
   )(config)
 }

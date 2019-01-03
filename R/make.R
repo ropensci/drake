@@ -295,7 +295,7 @@ make_imports <- function(config = drake::read_drake_config()) {
 make_targets <- function(config = drake::read_drake_config()) {
   config$schedule <- targets_graph(config = config)
   if (config$parallelism == "hasty") {
-    run_hasty(config)
+    backend_hasty(config)
     return(invisible(config))
   }
   outdated <- outdated(config, do_prework = FALSE, make_imports = FALSE)
@@ -305,7 +305,7 @@ make_targets <- function(config = drake::read_drake_config()) {
   }
   up_to_date <- setdiff(config$all_targets, outdated)
   config$schedule <- igraph::delete_vertices(config$schedule, v = up_to_date)
-  run_parallel_backend(config = config)
+  run_drake_backend(config = config)
   console_up_to_date(config = config)
   invisible()
 }
