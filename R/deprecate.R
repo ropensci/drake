@@ -318,8 +318,6 @@ drake_batchtools_tmpl_file <- function(
 #'   of the last call to [make()].
 #' @description Deprecated. Use [drake_get_session_info()] instead.
 #' @details Deprecated on 2018-12-06.
-#' @seealso [diagnose()], [built()], [imported()],
-#'   [readd()], [drake_plan()], [make()]
 #' @export
 #' @return [sessionInfo()] of the last call to [make()]
 #' @inheritParams cached
@@ -382,7 +380,6 @@ long_hash <- function(
 #' @keywords internal
 #' @return A numeric scalar, the maximum number of useful jobs for
 #'   \code{\link{make}(..., jobs = ...)}.
-#' @seealso [predict_runtime()]
 #' @param config internal configuration list of \code{\link{make}(...)},
 #'   produced also with [drake_config()].
 #' @param imports Set the `imports` argument to change your
@@ -434,7 +431,6 @@ max_useful_jobs <- function(
 #'   to be compatible with later versions of drake.
 #' @export
 #' @keywords internal
-#' @seealso [rescue_cache()], [make()]
 #' @param path Full path to the cache.
 #' @param jobs number of jobs for light parallelism.
 #' @description Deprecated on May 4, 2018.
@@ -508,7 +504,6 @@ rate_limiting_times <- function(
 #' @details Deprecated on 2018-25-07.
 #' @export
 #' @keywords internal
-#' @seealso [render_drake_ggraph()]
 #' @return A `ggplot2` object, which you can modify with more layers,
 #'   show with `plot()`, or save as a file with `ggsave()`.
 #' @inheritParams render_drake_ggraph
@@ -592,7 +587,6 @@ short_hash <- function(
 #' @details Deprecated on 2018-25-07.
 #' @export
 #' @keywords internal
-#' @seealso [drake_ggraph()]
 #' @return A `ggplot2` object, which you can modify with more layers,
 #'   show with `plot()`, or save as a file with `ggsave()`.
 #' @inheritParams drake_ggraph
@@ -643,7 +637,6 @@ static_drake_graph <- function(
 #' @title Deprecated. List the old drake triggers.
 #' @export
 #' @keywords internal
-#' @seealso [drake_plan()], [make()]
 #' @description Triggers are target-level rules
 #' that tell [make()] how to know if a target
 #' is outdated or up to date.
@@ -722,7 +715,6 @@ deprecate_fetch_cache <- function(fetch_cache) {
 #' This function also writes/overwrites
 #' the files `report.Rmd` and `raw_data.xlsx`.
 #' @export
-#' @seealso [clean_main_example()]
 #' @return A [drake_config()] configuration list.
 #' @inheritParams drake_config
 #' @param envir The environment to load the example into.
@@ -823,7 +815,6 @@ default_verbose <- function() {
 
 #' @title Put quotes around each element of a character vector.
 #' @description Deprecated on 2019-01-01
-#' @seealso [drake_unquote()], [drake_strings()]
 #' @export
 #' @keywords internal
 #' @return Character vector with quotes around it.
@@ -852,7 +843,6 @@ drake_quotes <- function(x = NULL, single = FALSE) {
 #' @title Remove leading and trailing
 #'   escaped quotes from character strings.
 #' @description Deprecated on 2019-01-01
-#' @seealso [drake_quotes()], [drake_strings()]
 #' @export
 #' @keywords internal
 #' @return Character vector without leading
@@ -872,7 +862,6 @@ drake_unquote <- function(x = NULL) {
 
 #' @title Turn valid expressions into character strings.
 #' @description Deprecated on 2019-01-01
-#' @seealso [drake_quotes()], [drake_unquote()]
 #' @export
 #' @keywords internal
 #' @return A character vector.
@@ -890,4 +879,148 @@ drake_strings <- function(...) {
   out <- as.character(args)
   names(out) <- keys
   out
+}
+
+#' @title Deprecated
+#' @description 2019-01-03
+#' @export
+#' @return `args` for `system2(command, args)`
+#' @inheritParams drake_config
+#' @param jobs number of jobs
+#' @examples
+#' # deprecated
+default_Makefile_args <- function(jobs, verbose) {
+  .Deprecated(
+    "default_Makefile_args",
+    package = "drake",
+    msg = paste(
+      "default_Makefile_args() and",
+      "Makefile parallelism are deprecated."
+    )
+  )
+  out <- paste0("--jobs=", targets_setting(jobs))
+  if (verbose < 1) {
+    out <- c(out, "--silent")
+  }
+  return(out)
+}
+
+#' @title Deprecated
+#' @description 2019-01-03
+#' @keywords internal
+#' @return A character scalar
+#' @export
+#' @examples
+#' # deprecated
+default_Makefile_command <- function() {
+  .Deprecated(
+    "default_Makefile_command",
+    package = "drake",
+    msg = paste(
+      "default_Makefile_command() and",
+      "Makefile parallelism are deprecated."
+    )
+  )
+  "make"
+}
+
+#' @title Deprecated
+#' @export
+#' @keywords internal
+#' @description 2019-01-03
+#' @return A character scalar
+#' @param recipe_command character scalar
+#' @param target character scalar
+#' @param cache_path character scalar
+#' @examples
+#' # deprecated
+Makefile_recipe <- function( # nolint
+  recipe_command = drake::default_recipe_command(),
+  target = "your_target",
+  cache_path = NULL
+) {
+  .Deprecated(
+    "Makefile_recipe",
+    package = "drake",
+    msg = paste(
+      "Makefile_recipe() and",
+      "Makefile parallelism are deprecated."
+    )
+  )
+  cache_path <- cache_path %||% default_cache_path()
+  msg <- build_recipe(
+    target = target,
+    recipe_command = recipe_command,
+    cache_path = cache_path
+  )
+  message(msg)
+}
+
+#' @title Deprecated
+#' @export
+#' @description See the help file of [Makefile_recipe()]
+#' for details and examples.
+#' @return A character scalar with the default recipe command.
+#' @examples
+#' default_recipe_command()
+default_recipe_command <- function() {
+  .Deprecated(
+    "default_recipe_command",
+    package = "drake",
+    msg = paste(
+      "default_recipe_command() and",
+      "Makefile parallelism are deprecated."
+    )
+  )
+  paste0("Rscript -e '", r_recipe_wildcard(), "'")
+}
+
+#' @title Show the R recipe wildcard
+#'   for `make(..., parallelism = "Makefile")`.
+#' @export
+#' @description Relevant to `"Makefile"` parallelism only.
+#' @return The R recipe wildcard.
+#' @examples
+#' r_recipe_wildcard()
+r_recipe_wildcard <- function() {
+  .Deprecated(
+    "r_recipe_wildcard",
+    package = "drake",
+    msg = paste(
+      "r_recipe_wildcard() and",
+      "Makefile parallelism are deprecated."
+    )
+  )
+  "R_RECIPE"
+}
+
+#' @title Deprecated
+#' @description 2019-01-03
+#' @export
+#' @keywords internal
+#' @return nothing
+#' @param config[drake_config()] list
+#' @examples
+#' # deprecated
+time_stamps <- function(config) {
+  .Deprecated(
+    "time_stamps",
+    package = "drake",
+    msg = paste(
+      "time_stamps() and",
+      "Makefile parallelism are deprecated."
+    )
+  )
+  cache_path <- config$cache_path
+  stamp_dir <- time_stamp_dir(cache_path)
+  dir_empty(stamp_dir)
+  write_time_stamp_template(cache_path)
+  build_these <- first_outdated(config = config)
+  if (length(build_these)) {
+    set_attempt_flag(key = "_attempt", config = config)
+  }
+  stamp_these <- setdiff(config$plan$target, build_these)
+  lightly_parallelize(
+    stamp_these, write_time_stamp, jobs = config$jobs, config = config)
+  return(invisible())
 }

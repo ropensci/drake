@@ -105,8 +105,7 @@ parallelism_choices <- function(distributed_only = FALSE) {
     "clustermq",
     "future",
     "future_lapply_staged",
-    "hasty",
-    "Makefile"
+    "hasty"
   )
   if (distributed_only) {
     sort(distributed)
