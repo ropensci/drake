@@ -49,12 +49,13 @@ process_imports_parLapply <- function(config) { # nolint
     cl = config$cluster, varlist = "config",
     envir = environment())
   if (identical(config$envir, globalenv()) || length(config$debug)) {
+    # nocov start
     parallel::clusterExport(
       cl = config$cluster,
-      varlist = ls(globalenv(),
-                   all.names = TRUE),
+      varlist = ls(globalenv(), all.names = TRUE),
       envir = globalenv()
     )
+    # nocov end
   }
   parallel::clusterCall(
     cl = config$cluster,

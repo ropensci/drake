@@ -15,12 +15,15 @@ test_with_dir("check_jobs()", {
 
 test_with_dir("check_parallelism()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_error(check_parallelism(character(0)), regexp = "length")
-  expect_error(check_parallelism(-1), regexp = "character")
+  expect_error(check_parallelism(character(0), 1), regexp = "length")
+  expect_error(check_parallelism(-1, 1), regexp = "character")
   expect_error(
-    check_parallelism(letters[1:2]), regexp = "of length 1")
+    check_parallelism(letters[1:2], 1), regexp = "of length 1")
+  expect_warning(
+    make(drake_plan(x = 1), parallelism = "loop", jobs = 2),
+    regexp = "should not be"
+  )
 })
-
 
 test_with_dir("parallel imports", {
   config <- dbug()

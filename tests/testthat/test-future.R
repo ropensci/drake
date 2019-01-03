@@ -9,10 +9,22 @@ test_with_dir("future package functionality", {
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
   load_mtcars_example(envir = e)
-  backends <- c(rep("future", 2), "future_lapply_staged")
-  caching <- c("worker", "master", "master")
+  backends <- c(rep("future", 2), rep("future_lapply_staged", 2))
+  caching <- c("master", "worker", "master", "worker")
   for (i in seq_along(backends)) {
     clean(destroy = TRUE)
+    if (i > 3) {
+      # So next_stage() jumps to the next targets
+      make(
+        e$my_plan,
+        targets = "small",
+        envir = e,
+        jobs = 1,
+        verbose = FALSE,
+        session_info = FALSE,
+        lock_envir = TRUE
+      )
+    }
     make(
       e$my_plan,
       envir = e,

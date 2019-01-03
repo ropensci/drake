@@ -67,7 +67,7 @@ config_checks <- function(config) {
   check_case_sensitivity(config)
   check_drake_graph(graph = config$graph)
   cache_vers_stop(config$cache)
-  check_parallelism(config$parallelism)
+  check_parallelism(config$parallelism, config$jobs)
   check_jobs(config$jobs)
 }
 
@@ -166,12 +166,18 @@ check_jobs <- function(jobs) {
   }
 }
 
-check_parallelism <- function(parallelism) {
+check_parallelism <- function(parallelism, jobs) {
   stopifnot(is.character(parallelism))
   stopifnot(length(parallelism) > 0)
   if (length(parallelism) > 1) {
     stop(
       "The `parallelism` argument of `make()` should be of length 1.",
+      call. = FALSE
+    )
+  }
+  if (parallelism == "loop" && jobs > 1L) {
+    warning(
+      "In make(), `parallelism` should not be \"loop\" if `jobs` > 1",
       call. = FALSE
     )
   }

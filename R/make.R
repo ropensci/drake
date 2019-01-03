@@ -250,7 +250,7 @@ make_with_config <- function(config = drake::read_drake_config()) {
 make_imports <- function(config = drake::read_drake_config()) {
   config$schedule <- imports_graph(config = config)
   if (on_windows() && config$jobs > 1L) {
-    process_imports_parLapply(config)
+    process_imports_parLapply(config) # nocov
   } else {
     process_imports_mclapply(config)
   }

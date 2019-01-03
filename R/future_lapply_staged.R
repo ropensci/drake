@@ -19,10 +19,10 @@ run_future_lapply_staged <- function(config) {
     tmp <- future.apply::future_lapply(
       X = stage$targets,
       FUN = build_distributed,
-      cache_path = config$cache_path,
-      check = FALSE
+      cache_path = config$cache_path
     )
   }
+  finish_distributed(config)
   invisible()
 }
 
@@ -108,16 +108,12 @@ finish_distributed <- function(config) {
   unlink(file, force = TRUE)
 }
 
-build_distributed <- function(target, cache_path, check = TRUE) {
+build_distributed <- function(target, cache_path) {
   config <- recover_drake_config(cache_path = cache_path)
   eval(parse(text = "base::require(drake, quietly = TRUE)"))
   do_prework(config = config, verbose_packages = FALSE)
-  if (check) {
-    check_build_store(target = target, config = config)
-  } else {
-    manage_memory(targets = target, config = config)
-    build_store(target = target, config = config)
-  }
+  manage_memory(targets = target, config = config)
+  build_store(target = target, config = config)
   invisible()
 }
 
