@@ -75,7 +75,7 @@ make <- function(
   jobs_preprocess = 1L,
   packages = rev(.packages()),
   prework = character(0),
-  prepend = character(0),
+  prepend = NULL,
   command = NULL,
   args = NULL,
   recipe_command = NULL,

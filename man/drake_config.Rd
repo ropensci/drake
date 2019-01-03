@@ -8,21 +8,19 @@ used internally in \code{\link[=make]{make()}}.}
 drake_config(plan = drake::read_drake_plan(), targets = NULL,
   envir = parent.frame(), verbose = 1L, hook = NULL,
   cache = drake::get_cache(verbose = verbose, console_log_file =
-  console_log_file), fetch_cache = NULL,
-  parallelism = drake::default_parallelism(), jobs = 1L,
-  jobs_preprocess = 1L, packages = rev(.packages()),
-  prework = character(0), prepend = character(0), command = NULL,
+  console_log_file), fetch_cache = NULL, parallelism = "loop",
+  jobs = 1L, jobs_preprocess = 1L, packages = rev(.packages()),
+  prework = character(0), prepend = NULL, command = NULL,
   args = NULL, recipe_command = NULL, timeout = NULL, cpu = Inf,
   elapsed = Inf, retries = 0, force = FALSE, log_progress = FALSE,
   graph = NULL, trigger = drake::trigger(), skip_targets = FALSE,
   skip_imports = FALSE, skip_safety_checks = FALSE,
   lazy_load = "eager", session_info = TRUE, cache_log_file = NULL,
   seed = NULL, caching = c("master", "worker"), keep_going = FALSE,
-  session = NULL, pruning_strategy = NULL,
-  makefile_path = "Makefile", console_log_file = NULL,
-  ensure_workers = TRUE, garbage_collection = FALSE,
-  template = list(), sleep = function(i) 0.01,
-  hasty_build = drake::default_hasty_build,
+  session = NULL, pruning_strategy = NULL, makefile_path = NULL,
+  console_log_file = NULL, ensure_workers = TRUE,
+  garbage_collection = FALSE, template = list(), sleep = function(i)
+  0.01, hasty_build = drake::default_hasty_build,
   memory_strategy = c("speed", "memory", "lookahead"), layout = NULL,
   lock_envir = TRUE)
 }
