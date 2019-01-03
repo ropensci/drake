@@ -93,6 +93,7 @@ test_with_dir("deprecate misc utilities", {
   expect_warning(parallelism_choices(TRUE))
   expect_warning(parallelism_choices(FALSE))
   expect_warning(shell_file())
+  expect_warning(default_parallelism())
 })
 
 test_with_dir("deprecated arguments", {

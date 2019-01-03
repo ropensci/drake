@@ -1076,3 +1076,20 @@ shell_file <- function(
   )
   FALSE
 }
+
+#' @title Deprecated
+#' @description 2019-01-02
+#' @export
+#' @return character
+#' @examples
+#' # deprecated
+default_parallelism <- function() {
+  .Deprecated(
+    "default_parallelism",
+    package = "drake",
+    msg = paste(
+      "default_parallelism() is deprecated."
+    )
+  )
+  "loop"
+}

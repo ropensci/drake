@@ -128,17 +128,3 @@ drake_hpc_template_files <- function() {
     )
   )
 }
-
-#' @title Show the default `parallelism` argument
-#'   to [make()] for your system.
-#' @description Returns `'parLapply'` for Windows machines
-#' and `'mclapply'` for other platforms.
-#' @export
-#' @seealso [make()], [shell_file()]
-#' @return The default parallelism option for your system.
-#' @examples
-#' default_parallelism()
-default_parallelism <- function() {
-  "loop"
-}
-

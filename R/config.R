@@ -507,7 +507,7 @@ drake_config <- function(
       "`recipe_command` are deprecated ",
       "because Makefile parallelism is no longer supported.",
       call. = FALSE
-      # 2019-01-03
+      # 2019-01-03 # nolint
     )
   }
   plan <- sanitize_plan(plan)

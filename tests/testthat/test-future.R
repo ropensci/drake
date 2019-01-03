@@ -4,7 +4,6 @@ test_with_dir("future package functionality", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("future")
   skip_if_not_installed("future.apply")
-  skip_if_not_installed("txtq")
   future::plan(future::sequential)
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
@@ -17,13 +16,13 @@ test_with_dir("future package functionality", {
       # So next_stage() jumps to the next targets
       make(
         e$my_plan,
-        targets = "small",
         envir = e,
         jobs = 1,
         verbose = FALSE,
         session_info = FALSE,
         lock_envir = TRUE
       )
+      clean(list = "regression1_small")
     }
     make(
       e$my_plan,
