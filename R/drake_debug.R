@@ -70,10 +70,12 @@ drake_debug <- function(
   config$layout[[target]]$command_build <- preprocess_command(
     debug_command(config$layout[[target]]$command)
   )
-  # Spoof the cache to avoid storage.
-  # We still want the error handling in build_store().
-  config$cache <- storr::storr_environment()
-  build_store(target = target, config = config)
+  meta <- drake_meta(target = target, config = config)
+  announce_build(target = target, meta = meta, config = config)
+  build <- build_target(target = target, meta = meta, config = config)
+  assert_output_files(target = target, meta = meta, config = config)
+  handle_build_exceptions(target = target, meta = meta, config = config)
+  invisible(build$value)
   # nocov end
 }
 

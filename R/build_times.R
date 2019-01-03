@@ -156,9 +156,9 @@ finalize_times <- function(target, meta, config) {
       imported = meta$imported
     )
   }
-  if (!is_bad_time(meta$start)) {
+  if (!is_bad_time(meta$time_start)) {
     meta$time_build <- runtime_entry(
-      runtime = proc.time() - meta$start,
+      runtime = proc.time() - meta$time_start,
       target = target,
       imported = meta$imported
     )

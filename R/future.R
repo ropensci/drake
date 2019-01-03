@@ -81,7 +81,6 @@ new_worker <- function(id, target, config, protect) {
   if (identical(config$caching, "master")) {
     manage_memory(targets = target, config = config, downstream = protect)
   }
-  meta$start <- proc.time()
   config$cache$flush_cache() # Less data to pass this way.
   DRAKE_GLOBALS__ <- NULL # Fixes warning about undefined globals.
   # Avoid potential name conflicts with other globals.

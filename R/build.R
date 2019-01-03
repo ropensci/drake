@@ -65,49 +65,8 @@ drake_build <- function(
     replace = replace,
     tidyselect = FALSE
   )
-  build_store(target = target, config = config)
-}
-
-check_build_store <- function(
-  target, config, downstream = NULL, announce = TRUE, flag_attempt = FALSE
-) {
   meta <- drake_meta(target = target, config = config)
-  if (!should_build_target(
-    target = target,
-    meta = meta,
-    config = config
-  )) {
-    console_skip(target = target, config = config)
-    return()
-  }
-  meta$start <- proc.time()
-  if (!meta$imported) {
-    manage_memory(
-      targets = target,
-      config = config,
-      downstream = downstream
-    )
-  }
-  value <- build_store(target = target, meta = meta, config = config)
-  assign_to_envir(target = target, value = value, config = config)
-  if (flag_attempt && !is_imported(target, config)) {
-    set_attempt_flag(key = target, config = config)
-  }
-  invisible()
-}
-
-build_store <- function(target, config, meta = NULL, announce = TRUE) {
-  # The environment should have been pruned by now.
-  # For staged parallelism, this was already done in bulk
-  # for the whole stage.
-  # Most of these steps require access to the cache.
-  if (is.null(meta)) {
-    meta <- drake_meta(target = target, config = config)
-  }
-  meta$start <- proc.time()
-  if (announce) {
-    announce_build(target = target, meta = meta, config = config)
-  }
+  announce_build(target = target, meta = meta, config = config)
   build <- build_target(target = target, meta = meta, config = config)
   conclude_build(
     target = target,
@@ -124,28 +83,6 @@ announce_build <- function(target, meta, config) {
     config = config
   )
   console(imported = meta$imported, target = target, config = config)
-}
-
-conclude_build <- function(target, value, meta, config) {
-  assert_output_files(target = target, meta = meta, config = config)
-  handle_build_exceptions(target = target, meta = meta, config = config)
-  store_outputs(target = target, value = value, meta = meta, config = config)
-  invisible(value)
-}
-
-assert_output_files <- function(target, meta, config) {
-  deps <- config$layout[[target]]$deps_build
-  files <- unique(as.character(deps$file_out))
-  missing_files <- Filter(x = files, f = function(x) {
-    !file.exists(decode_path(x, config))
-  })
-  if (length(missing_files)) {
-    drake_warning(
-      "Missing files for target ", target, ":\n",
-      multiline_message(missing_files),
-      config = config
-    )
-  }
 }
 
 build_target <- function(target, meta, config) {
@@ -168,4 +105,26 @@ build_target <- function(target, meta, config) {
     console_retry(target = target, retries = retries, config = config)
   }
   build
+}
+
+conclude_build <- function(target, value, meta, config) {
+  assert_output_files(target = target, meta = meta, config = config)
+  handle_build_exceptions(target = target, meta = meta, config = config)
+  store_outputs(target = target, value = value, meta = meta, config = config)
+  invisible(value)
+}
+
+assert_output_files <- function(target, meta, config) {
+  deps <- config$layout[[target]]$deps_build
+  files <- unique(as.character(deps$file_out))
+  missing_files <- Filter(x = files, f = function(x) {
+    !file.exists(decode_path(x, config))
+  })
+  if (length(missing_files)) {
+    drake_warning(
+      "Missing files for target ", target, ":\n",
+      multiline_message(missing_files),
+      config = config
+    )
+  }
 }

@@ -68,7 +68,6 @@ cmq_send_target <- function(config) {
     return()
   }
   # nocov end
-  meta$start <- proc.time()
   announce_build(target = target, meta = meta, config = config)
   if (identical(config$caching, "master")) {
     manage_memory(targets = target, config = config, jobs = 1)

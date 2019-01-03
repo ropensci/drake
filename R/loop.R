@@ -1,12 +1,38 @@
 run_loop <- function(config) {
   targets <- igraph::topo_sort(config$schedule)$name
   for (i in seq_along(targets)) {
-    check_build_store(
+    build_loop(
       target = targets[i],
       config = config,
-      downstream = targets[-seq_len(i)],
-      flag_attempt = TRUE
+      downstream = targets[-seq_len(i)]
     )
   }
+  invisible()
+}
+
+build_loop <- function(target, config, downstream) {
+  meta <- drake_meta(target = target, config = config)
+  if (!should_build_target(
+    target = target,
+    meta = meta,
+    config = config
+  )) {
+    console_skip(target = target, config = config)
+    return()
+  }
+  set_attempt_flag(key = target, config = config)
+  manage_memory(
+    targets = target,
+    config = config,
+    downstream = downstream
+  )
+  build <- build_target(target = target, meta = meta, config = config)
+  conclude_build(
+    target = target,
+    value = build$value,
+    meta = build$meta,
+    config = config
+  )
+  assign_to_envir(target = target, value = build$value, config = config)
   invisible()
 }

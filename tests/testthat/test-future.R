@@ -8,22 +8,10 @@ test_with_dir("future package functionality", {
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
   load_mtcars_example(envir = e)
-  backends <- c(rep("future", 2), rep("future_lapply_staged", 2))
-  caching <- c("master", "worker", "master", "worker")
+  backends <- c(rep("future", 2), "future_lapply_staged")
+  caching <- c("master", "worker", "master")
   for (i in seq_along(backends)) {
     clean(destroy = TRUE)
-    if (i > 3) {
-      # So next_stage() jumps to the next targets
-      make(
-        e$my_plan,
-        envir = e,
-        jobs = 1,
-        verbose = FALSE,
-        session_info = FALSE,
-        lock_envir = TRUE
-      )
-      clean(list = "regression1_small")
-    }
     make(
       e$my_plan,
       envir = e,
@@ -93,18 +81,17 @@ test_with_dir("future package functionality", {
   }
 })
 
-test_with_dir("prepare_distributed() writes cache folder if nonexistent", {
+test_with_dir("fls_prepare() writes cache folder if nonexistent", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   config$cache_path <- "nope"
-  prepare_distributed(config)
+  fls_prepare(config)
   expect_true(file.exists("nope"))
 })
 
 test_with_dir("can gracefully conclude a crashed worker", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("future")
-  skip_if_not_installed("future.apply")
   for (caching in c("master", "worker")) {
     con <- dbug()
     con$caching <- caching

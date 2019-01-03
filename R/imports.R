@@ -1,6 +1,5 @@
 process_import <- function(import, config) {
   meta <- drake_meta(target = import, config = config)
-  meta$start <- proc.time()
   if (meta$isfile) {
     value <- NA_character_
     is_missing <- !file.exists(decode_path(import, config))
