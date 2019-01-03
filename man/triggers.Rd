@@ -20,7 +20,4 @@ Deprecated on 2018-07-22.
 \examples{
 # Deprecated. See the trigger() function instead (singular).
 }
-\seealso{
-\code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
-}
 \keyword{internal}

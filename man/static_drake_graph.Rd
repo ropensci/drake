@@ -100,7 +100,4 @@ Deprecated on 2018-25-07.
 \examples{
 # See drake_ggraph()
 }
-\seealso{
-\code{\link[=drake_ggraph]{drake_ggraph()}}
-}
 \keyword{internal}

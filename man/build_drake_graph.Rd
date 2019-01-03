@@ -49,17 +49,6 @@ then reproducibly tracked as dependencies.}
 }}
 
 \item{jobs}{maximum number of parallel workers for processing the targets.
-If you wish to parallelize the imports and preprocessing as well, you can
-use a named numeric vector of length 2, e.g.
-\code{make(jobs = c(imports = 4, targets = 8))}.
-\code{make(jobs = 4)} is equivalent to \code{make(jobs = c(imports = 1, targets = 4))}.
-
-Windows users should not set \code{jobs > 1} if
-\code{parallelism} is \code{"mclapply"} because
-\code{\link[=mclapply]{mclapply()}} is based on forking. Windows users
-who use \code{parallelism = "Makefile"} will need to
-download and install Rtools.
-
 You can experiment with \code{\link[=predict_runtime]{predict_runtime()}}
 to help decide on an appropriate number of jobs.
 For details, visit

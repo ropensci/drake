@@ -167,21 +167,6 @@ test_with_dir("error handlers", {
   expect_equal(error_character0(1), character(0))
   expect_null(error_null(1))
   expect_error(error_tibble_times(123))
-  expect_warning(
-    error_process(
-      e = list(message = 5),
-      id = "2",
-      config = dbug()),
-    regexp = "5"
-  )
-  config <- dbug()
-  config$cache$set("worker_1", TRUE, "mc_error")
-  config$keep_going <- FALSE
-  expect_warning(tmp <- mc_abort_with_errored_workers(config))
-  expect_true(tmp)
-  config$keep_going <- TRUE
-  expect_silent(tmp <- mc_abort_with_errored_workers(config))
-  expect_false(tmp)
 })
 
 test_with_dir("clean a nonexistent cache", {

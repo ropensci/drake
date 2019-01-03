@@ -18,7 +18,4 @@ Deprecated on 2019-01-01
 \examples{
 # deprecated
 }
-\seealso{
-\code{\link[=drake_quotes]{drake_quotes()}}, \code{\link[=drake_unquote]{drake_unquote()}}
-}
 \keyword{internal}

@@ -8,23 +8,19 @@ used internally in \code{\link[=make]{make()}}.}
 drake_config(plan = drake::read_drake_plan(), targets = NULL,
   envir = parent.frame(), verbose = 1L, hook = NULL,
   cache = drake::get_cache(verbose = verbose, console_log_file =
-  console_log_file), fetch_cache = NULL,
-  parallelism = drake::default_parallelism(), jobs = 1,
-  packages = rev(.packages()), prework = character(0),
-  prepend = character(0), command = drake::default_Makefile_command(),
-  args = drake::default_Makefile_args(jobs = jobs, verbose = verbose),
-  recipe_command = drake::default_recipe_command(), timeout = NULL,
-  cpu = Inf, elapsed = Inf, retries = 0, force = FALSE,
-  log_progress = FALSE, graph = NULL, trigger = drake::trigger(),
-  skip_targets = FALSE, skip_imports = FALSE,
-  skip_safety_checks = FALSE, lazy_load = "eager",
-  session_info = TRUE, cache_log_file = NULL, seed = NULL,
-  caching = c("master", "worker"), keep_going = FALSE,
-  session = NULL, pruning_strategy = NULL,
-  makefile_path = "Makefile", console_log_file = NULL,
-  ensure_workers = TRUE, garbage_collection = FALSE,
-  template = list(), sleep = function(i) 0.01,
-  hasty_build = drake::default_hasty_build,
+  console_log_file), fetch_cache = NULL, parallelism = "loop",
+  jobs = 1L, jobs_preprocess = 1L, packages = rev(.packages()),
+  prework = character(0), prepend = NULL, command = NULL,
+  args = NULL, recipe_command = NULL, timeout = NULL, cpu = Inf,
+  elapsed = Inf, retries = 0, force = FALSE, log_progress = FALSE,
+  graph = NULL, trigger = drake::trigger(), skip_targets = FALSE,
+  skip_imports = FALSE, skip_safety_checks = FALSE,
+  lazy_load = "eager", session_info = TRUE, cache_log_file = NULL,
+  seed = NULL, caching = c("master", "worker"), keep_going = FALSE,
+  session = NULL, pruning_strategy = NULL, makefile_path = NULL,
+  console_log_file = NULL, ensure_workers = TRUE,
+  garbage_collection = FALSE, template = list(), sleep = function(i)
+  0.01, hasty_build = drake::default_hasty_build,
   memory_strategy = c("speed", "memory", "lookahead"), layout = NULL,
   lock_envir = TRUE)
 }
@@ -73,37 +69,37 @@ then reproducibly tracked as dependencies.}
 \item{cache}{drake cache as created by \code{\link[=new_cache]{new_cache()}}.
 See also \code{\link[=get_cache]{get_cache()}} and \code{\link[=this_cache]{this_cache()}}.}
 
-\item{fetch_cache}{character vector containing lines of code.
-The purpose of this code is to fetch the \code{storr} cache
-with a command like \code{\link[=storr_rds]{storr_rds()}} or \code{\link[=storr_dbi]{storr_dbi()}},
-but customized. This feature is experimental. It will turn out
-to be necessary if you are using both custom non-RDS caches
-and distributed parallelism (\code{parallelism = "future_lapply"}
-or \code{"Makefile"}) because the distributed R sessions
-need to know how to load the cache.}
+\item{fetch_cache}{deprecated}
 
-\item{parallelism}{character, type of parallelism to use.
-To list the options, call \code{\link[=parallelism_choices]{parallelism_choices()}}.
+\item{parallelism}{character scalar, type of parallelism to use.
 For detailed explanations, see the
 \href{https://ropenscilabs.github.io/drake-manual/hpc.html}{high-performance computing chapter}
-of the user manual.}
+of the user manual.
+
+You could also supply your own scheduler function
+if you want to experiment or aggressively optimize.
+The function should take a single \code{config} argument
+(produced by \code{\link[=drake_config]{drake_config()}}). Existing examples
+from \code{drake}'s internals are the \code{backend_*()} functions:
+\itemize{
+\item \code{backend_loop()}
+\item \code{backend_clustermq()}
+\item \code{backend_future()}
+\item \code{backend_hasty()} (unofficial)
+However, this functionality is really a back door
+and should not be used for production purposes unless you really
+know what you are doing and you are willing to suffer setbacks
+whenever \code{drake}'s unexported core functions are updated.
+}}
 
 \item{jobs}{maximum number of parallel workers for processing the targets.
-If you wish to parallelize the imports and preprocessing as well, you can
-use a named numeric vector of length 2, e.g.
-\code{make(jobs = c(imports = 4, targets = 8))}.
-\code{make(jobs = 4)} is equivalent to \code{make(jobs = c(imports = 1, targets = 4))}.
-
-Windows users should not set \code{jobs > 1} if
-\code{parallelism} is \code{"mclapply"} because
-\code{\link[=mclapply]{mclapply()}} is based on forking. Windows users
-who use \code{parallelism = "Makefile"} will need to
-download and install Rtools.
-
 You can experiment with \code{\link[=predict_runtime]{predict_runtime()}}
 to help decide on an appropriate number of jobs.
 For details, visit
 \url{https://ropenscilabs.github.io/drake-manual/time.html}.}
+
+\item{jobs_preprocess}{number of parallel jobs for processing the imports
+and doing other preprocessing tasks.}
 
 \item{packages}{character vector packages to load, in the order
 they should be loaded. Defaults to \code{rev(.packages())}, so you
@@ -132,38 +128,13 @@ is run once before any targets are built. If \code{parallelism} is
 \code{"Makefile"}, the prework is run once on initialization
 and then once again for each target right before that target is built.}
 
-\item{prepend}{lines to prepend to the Makefile if \code{parallelism}
-is \code{"Makefile"}. See the \href{https://ropenscilabs.github.io/drake-manual/store.html}{high-performance computing guide}
-to learn how to use \code{prepend}
-to distribute work on a cluster.}
+\item{prepend}{deprecated}
 
-\item{command}{character scalar, command to call the Makefile
-generated for distributed computing.
-Only applies when \code{parallelism} is \code{"Makefile"}.
-Defaults to the usual \code{"make"}
-(\code{\link[=default_Makefile_command]{default_Makefile_command()}}),
-but it could also be
-\code{"lsmake"} on supporting systems, for example.
-\code{command} and \code{args} are executed via
-\code{system2(command, args)} to run the Makefile.
-If \code{args} has something like \code{"--jobs=2"}, or if
-\code{jobs >= 2} and \code{args} is left alone, targets
-will be distributed over independent parallel R sessions
-wherever possible.}
+\item{command}{deprecated}
 
-\item{args}{command line arguments to call the Makefile for
-distributed computing. For advanced users only. If set,
-\code{jobs} and \code{verbose} are overwritten as they apply to the
-Makefile.
-\code{command} and \code{args} are executed via
-\code{system2(command, args)} to run the Makefile.
-If \code{args} has something like \code{"--jobs=2"}, or if
-\code{jobs >= 2} and \code{args} is left alone, targets
-will be distributed over independent parallel R sessions
-wherever possible.}
+\item{args}{deprecated}
 
-\item{recipe_command}{Character scalar, command for the
-Makefile recipe for each target.}
+\item{recipe_command}{deprecated}
 
 \item{timeout}{\code{deprecated}. Use \code{elapsed} and \code{cpu} instead.}
 

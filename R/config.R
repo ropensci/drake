@@ -59,28 +59,33 @@
 #' @param skip_targets logical, whether to skip building the targets
 #'   in `plan` and just import objects and files.
 #'
-#' @param parallelism character, type of parallelism to use.
-#'   To list the options, call [parallelism_choices()].
+#' @param parallelism character scalar, type of parallelism to use.
 #'   For detailed explanations, see the
 #'   [high-performance computing chapter](https://ropenscilabs.github.io/drake-manual/hpc.html)
 #'   of the user manual.
 #'
+#'   You could also supply your own scheduler function
+#'   if you want to experiment or aggressively optimize.
+#'   The function should take a single `config` argument
+#'   (produced by [drake_config()]). Existing examples
+#'   from `drake`'s internals are the `backend_*()` functions:
+#'   - `backend_loop()`
+#'   - `backend_clustermq()`
+#'   - `backend_future()`
+#'   - `backend_hasty()` (unofficial)
+#'   However, this functionality is really a back door
+#'   and should not be used for production purposes unless you really
+#'   know what you are doing and you are willing to suffer setbacks
+#'   whenever `drake`'s unexported core functions are updated.
+#'
 #' @param jobs maximum number of parallel workers for processing the targets.
-#'   If you wish to parallelize the imports and preprocessing as well, you can
-#'   use a named numeric vector of length 2, e.g.
-#'   `make(jobs = c(imports = 4, targets = 8))`.
-#'   `make(jobs = 4)` is equivalent to `make(jobs = c(imports = 1, targets = 4))`.
-#'
-#'   Windows users should not set `jobs > 1` if
-#'   `parallelism` is `"mclapply"` because
-#'   [mclapply()] is based on forking. Windows users
-#'   who use `parallelism = "Makefile"` will need to
-#'   download and install Rtools.
-#'
 #'   You can experiment with [predict_runtime()]
 #'   to help decide on an appropriate number of jobs.
 #'   For details, visit
 #'   <https://ropenscilabs.github.io/drake-manual/time.html>.
+#'
+#' @param jobs_preprocess number of parallel jobs for processing the imports
+#'   and doing other preprocessing tasks.
 #'
 #' @param packages character vector packages to load, in the order
 #'   they should be loaded. Defaults to `rev(.packages())`, so you
@@ -109,38 +114,10 @@
 #'   `"Makefile"`, the prework is run once on initialization
 #'   and then once again for each target right before that target is built.
 #'
-#' @param prepend lines to prepend to the Makefile if `parallelism`
-#'   is `"Makefile"`. See the [high-performance computing guide](https://ropenscilabs.github.io/drake-manual/store.html)
-#'   to learn how to use `prepend`
-#'   to distribute work on a cluster.
-#'
-#' @param command character scalar, command to call the Makefile
-#'   generated for distributed computing.
-#'   Only applies when `parallelism` is `"Makefile"`.
-#'   Defaults to the usual `"make"`
-#'   ([default_Makefile_command()]),
-#'   but it could also be
-#'   `"lsmake"` on supporting systems, for example.
-#'   `command` and `args` are executed via
-#'   `system2(command, args)` to run the Makefile.
-#'   If `args` has something like `"--jobs=2"`, or if
-#'   `jobs >= 2` and `args` is left alone, targets
-#'   will be distributed over independent parallel R sessions
-#'   wherever possible.
-#'
-#' @param args command line arguments to call the Makefile for
-#'   distributed computing. For advanced users only. If set,
-#'   `jobs` and `verbose` are overwritten as they apply to the
-#'   Makefile.
-#'   `command` and `args` are executed via
-#'   `system2(command, args)` to run the Makefile.
-#'   If `args` has something like `"--jobs=2"`, or if
-#'   `jobs >= 2` and `args` is left alone, targets
-#'   will be distributed over independent parallel R sessions
-#'   wherever possible.
-#'
-#' @param recipe_command Character scalar, command for the
-#'   Makefile recipe for each target.
+#' @param prepend deprecated
+#' @param command deprecated
+#' @param args deprecated
+#' @param recipe_command deprecated
 #'
 #' @param log_progress logical, whether to log the progress
 #'   of individual targets as they are being built. Progress logging
@@ -154,14 +131,7 @@
 #' @param cache drake cache as created by [new_cache()].
 #'   See also [get_cache()] and [this_cache()].
 #'
-#' @param fetch_cache character vector containing lines of code.
-#'   The purpose of this code is to fetch the `storr` cache
-#'   with a command like [storr_rds()] or [storr_dbi()],
-#'   but customized. This feature is experimental. It will turn out
-#'   to be necessary if you are using both custom non-RDS caches
-#'   and distributed parallelism (`parallelism = "future_lapply"`
-#'   or `"Makefile"`) because the distributed R sessions
-#'   need to know how to load the cache.
+#' @param fetch_cache deprecated
 #'
 #' @param timeout `deprecated`. Use `elapsed` and `cpu` instead.
 #'
@@ -451,17 +421,15 @@ drake_config <- function(
   cache = drake::get_cache(
     verbose = verbose, console_log_file = console_log_file),
   fetch_cache = NULL,
-  parallelism = drake::default_parallelism(),
-  jobs = 1,
+  parallelism = "loop",
+  jobs = 1L,
+  jobs_preprocess = 1L,
   packages = rev(.packages()),
   prework = character(0),
-  prepend = character(0),
-  command = drake::default_Makefile_command(),
-  args = drake::default_Makefile_args(
-    jobs = jobs,
-    verbose = verbose
-  ),
-  recipe_command = drake::default_recipe_command(),
+  prepend = NULL,
+  command = NULL,
+  args = NULL,
+  recipe_command = NULL,
   timeout = NULL,
   cpu = Inf,
   elapsed = Inf,
@@ -481,7 +449,7 @@ drake_config <- function(
   keep_going = FALSE,
   session = NULL,
   pruning_strategy = NULL,
-  makefile_path = "Makefile",
+  makefile_path = NULL,
   console_log_file = NULL,
   ensure_workers = TRUE,
   garbage_collection = FALSE,
@@ -532,14 +500,36 @@ drake_config <- function(
       # 2018-12-19 # nolint
     )
   }
+  deprecate_fetch_cache(fetch_cache)
+  if (!is.null(timeout)) {
+    warning(
+      "Argument `timeout` is deprecated. ",
+      "Use `elapsed` and/or `cpu` instead.",
+      call. = FALSE
+      # 2018-12-07 # nolint
+    )
+  }
+  if (
+    !is.null(command) ||
+    !is.null(args) ||
+    !is.null(recipe_command) ||
+    !is.null(prepend) ||
+    !is.null(makefile_path)
+  ) {
+    warning(
+      "Arguments `command`, `args`, `prepend`, `makefile_path`, ",
+      "`recipe_command` are deprecated ",
+      "because Makefile parallelism is no longer supported.",
+      call. = FALSE
+      # 2019-01-03 # nolint
+    )
+  }
   plan <- sanitize_plan(plan)
   if (is.null(targets)) {
     targets <- plan$target
   } else {
     targets <- sanitize_targets(plan, targets)
   }
-  parallelism <- parse_parallelism(parallelism)
-  jobs <- parse_jobs(jobs)
   prework <- add_packages_to_prework(
     packages = packages,
     prework = prework
@@ -585,18 +575,11 @@ drake_config <- function(
     eval = new.env(parent = envir),
     cache = cache,
     cache_path = cache_path,
-    fetch_cache = fetch_cache,
     parallelism = parallelism,
     jobs = jobs,
-    jobs_imports = jobs["imports"],
-    jobs_targets = jobs["targets"],
+    jobs_preprocess = jobs_preprocess,
     verbose = verbose,
-    hook = hook,
-    prepend = prepend,
     prework = prework,
-    command = command,
-    args = args,
-    recipe_command = recipe_command,
     layout = layout,
     ht_encode_path = ht_new(),
     ht_decode_path = ht_new(),
@@ -620,7 +603,6 @@ drake_config <- function(
     keep_going = keep_going,
     session = session,
     memory_strategy = memory_strategy,
-    makefile_path = makefile_path,
     console_log_file = console_log_file,
     ensure_workers = ensure_workers,
     all_targets = all_targets,
@@ -709,33 +691,4 @@ store_drake_config <- function(config) {
     jobs = config$jobs
   )
   invisible()
-}
-
-parse_jobs <- function(jobs) {
-  check_jobs(jobs)
-  mode(jobs) <- "integer"
-  if (length(jobs) < 2L) {
-    c(imports = 1L, targets = jobs)
-  } else {
-    jobs
-  }
-}
-
-parse_parallelism <- function(parallelism) {
-  check_parallelism(parallelism)
-  for (i in seq_along(parallelism)) {
-    parallelism[i] <- match.arg(
-      arg = parallelism[i],
-      choices = parallelism_choices(distributed_only = FALSE)
-    )
-  }
-  if (length(parallelism) < 2) {
-    if (parallelism %in% parallelism_choices(distributed_only = TRUE)) {
-      c(imports = default_parallelism(), targets = parallelism)
-    } else {
-      c(imports = parallelism, targets = parallelism)
-    }
-  } else {
-    parallelism
-  }
 }

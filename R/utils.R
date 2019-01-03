@@ -185,10 +185,6 @@ random_tempdir <- function() {
 
 rehash_file_size_cutoff <- 1e5
 
-safe_grepl <- function(pattern, x, ...) {
-  tryCatch(grepl(pattern, x, ...), error = error_false)
-}
-
 safe_is_na <- function(x) {
   tryCatch(is.na(x), error = error_false, warning = error_false)
 }

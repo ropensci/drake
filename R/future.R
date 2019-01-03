@@ -1,4 +1,4 @@
-run_future <- function(config) {
+backend_future <- function(config) {
   assert_pkg("future")
   queue <- new_priority_queue(config = config)
   workers <- initialize_workers(config)
@@ -49,39 +49,30 @@ run_future <- function(config) {
 #' @param config [drake_config()] list
 #' @param protect Names of targets that still need their
 #' dependencies available in memory.
-drake_future_task <- function(target, meta, config, protect) {
+future_build <- function(target, meta, config, protect) {
   if (identical(config$caching, "worker")) {
     manage_memory(targets = target, config = config, downstream = protect)
   }
   do_prework(config = config, verbose_packages = FALSE)
-  build <- just_build(target = target, meta = meta, config = config)
+  build <- build_target(target = target, meta = meta, config = config)
   if (identical(config$caching, "master")) {
     build$checksum <- mc_get_outfile_checksum(target, config)
     return(build)
   }
-  conclude_build(
-    target = build$target,
-    value = build$value,
-    meta = build$meta,
-    config = config
-  )
+  conclude_build(build = build, config = config)
   set_attempt_flag(key = build$target, config = config)
   list(target = target, checksum = mc_get_checksum(target, config))
 }
 
 new_worker <- function(id, target, config, protect) {
   meta <- drake_meta(target = target, config = config)
-  if (!should_build_target(
-    target = target,
-    meta = meta,
-    config = config
-  )) {
+  if (!should_build_target(target, meta, config)) {
+    console_skip(target = target, config = config)
     return(empty_worker(target = target))
   }
   if (identical(config$caching, "master")) {
     manage_memory(targets = target, config = config, downstream = protect)
   }
-  meta$start <- proc.time()
   config$cache$flush_cache() # Less data to pass this way.
   DRAKE_GLOBALS__ <- NULL # Fixes warning about undefined globals.
   # Avoid potential name conflicts with other globals.
@@ -97,7 +88,7 @@ new_worker <- function(id, target, config, protect) {
   layout <- config$layout[[target]]
   structure(
     future::future(
-      expr = drake_future_task(
+      expr = future_build(
         target = DRAKE_GLOBALS__$target,
         meta = DRAKE_GLOBALS__$meta,
         config = DRAKE_GLOBALS__$config,
@@ -235,12 +226,7 @@ conclude_worker <- function(worker, config, queue) {
     checksum = build$checksum,
     config = config
   )
-  conclude_build(
-    target = build$target,
-    value = build$value,
-    meta = build$meta,
-    config = config
-  )
+  conclude_build(build = build, config = config)
   out
 }
 

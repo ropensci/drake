@@ -12,6 +12,7 @@ test_with_dir("Recursive functions are okay", {
   x <- drake_plan(output = factorial(10))
   cache <- storr::storr_environment()
   make(x, cache = cache, session_info = FALSE)
+  expect_equal(readd(output, cache = cache), factorial(10))
 })
 
 test_with_dir("Supplied graph is not an igraph.", {

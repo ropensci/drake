@@ -11,7 +11,6 @@
 #'   [vis_drake_graph()],
 #'   [evaluate_plan()],
 #'   [outdated()],
-#'   [parallelism_choices()],
 #'   [triggers()]
 #' @export
 #' @return nothing
@@ -71,17 +70,15 @@ make <- function(
   cache = drake::get_cache(
     verbose = verbose, console_log_file = console_log_file),
   fetch_cache = NULL,
-  parallelism = drake::default_parallelism(),
-  jobs = 1,
+  parallelism = "loop",
+  jobs = 1L,
+  jobs_preprocess = 1L,
   packages = rev(.packages()),
   prework = character(0),
-  prepend = character(0),
-  command = drake::default_Makefile_command(),
-  args = drake::default_Makefile_args(
-    jobs = jobs,
-    verbose = verbose
-  ),
-  recipe_command = drake::default_recipe_command(),
+  prepend = NULL,
+  command = NULL,
+  args = NULL,
+  recipe_command = NULL,
   log_progress = TRUE,
   skip_targets = FALSE,
   timeout = NULL,
@@ -102,7 +99,7 @@ make <- function(
   keep_going = FALSE,
   session = NULL,
   pruning_strategy = NULL,
-  makefile_path = "Makefile",
+  makefile_path = NULL,
   console_log_file = NULL,
   ensure_workers = TRUE,
   garbage_collection = FALSE,
@@ -114,15 +111,6 @@ make <- function(
   lock_envir = TRUE
 ) {
   force(envir)
-  deprecate_fetch_cache(fetch_cache)
-  if (!is.null(timeout)) {
-    warning(
-      "Argument `timeout` is deprecated. ",
-      "Use `elapsed` and/or `cpu` instead.",
-      call. = FALSE
-      # 2018-12-07 # nolint
-    )
-  }
   if (is.null(config)) {
     config <- drake_config(
       plan = plan,
@@ -133,6 +121,7 @@ make <- function(
       hook = hook,
       parallelism = parallelism,
       jobs = jobs,
+      jobs_preprocess = jobs_preprocess,
       packages = packages,
       prework = prework,
       prepend = prepend,
@@ -208,32 +197,18 @@ make_with_config <- function(config = drake::read_drake_config()) {
   store_drake_config(config = config)
   initialize_session(config = config)
   do_prework(config = config, verbose_packages = config$verbose)
-  make_with_schedules(config = config)
+  if (!config$skip_imports) {
+    make_imports(config)
+  }
+  if (!config$skip_targets) {
+    make_targets(config)
+  }
   drake_cache_log_file(
     file = config$cache_log_file,
     cache = config$cache,
     jobs = config$jobs
   )
   conclude_session(config = config)
-  invisible()
-}
-
-make_with_schedules <- function(config) {
-  if (config$skip_imports && config$skip_targets) {
-    invisible(config)
-  } else if (config$skip_targets) {
-    make_imports(config = config)
-  } else if (config$skip_imports) {
-    make_targets(config = config)
-  } else if (
-    (length(unique(config$parallelism)) > 1) ||
-    (length(unique(config$jobs)) > 1)
-  ) {
-    make_imports(config = config)
-    make_targets(config = config)
-  } else {
-    make_imports_targets(config = config)
-  }
   invisible()
 }
 
@@ -274,9 +249,11 @@ make_with_schedules <- function(config) {
 #' }
 make_imports <- function(config = drake::read_drake_config()) {
   config$schedule <- imports_graph(config = config)
-  config$jobs <- imports_setting(config$jobs)
-  config$parallelism <- imports_setting(config$parallelism)
-  run_parallel_backend(config = config)
+  if (on_windows() && config$jobs > 1L) {
+    process_imports_parLapply(config) # nocov
+  } else {
+    process_imports_mclapply(config)
+  }
   invisible()
 }
 
@@ -316,30 +293,19 @@ make_imports <- function(config = drake::read_drake_config()) {
 #' })
 #' }
 make_targets <- function(config = drake::read_drake_config()) {
-  if ("hasty" %in% config$parallelism) {
-    run_hasty(config)
+  config$schedule <- targets_graph(config = config)
+  if (config$parallelism == "hasty") {
+    backend_hasty(config)
     return(invisible(config))
   }
   outdated <- outdated(config, do_prework = FALSE, make_imports = FALSE)
   if (!length(outdated)) {
     console_up_to_date(config = config)
-    return(config)
+    return(invisible())
   }
   up_to_date <- setdiff(config$all_targets, outdated)
-  config$schedule <- targets_graph(config = config)
   config$schedule <- igraph::delete_vertices(config$schedule, v = up_to_date)
-  config$jobs <- targets_setting(config$jobs)
-  config$parallelism <- targets_setting(config$parallelism)
-  run_parallel_backend(config = config)
-  console_up_to_date(config = config)
-  invisible()
-}
-
-make_imports_targets <- function(config) {
-  config$schedule <- config$graph
-  config$parallelism <- config$parallelism[1]
-  config$jobs <- max(config$jobs)
-  run_parallel_backend(config = config)
+  run_drake_backend(config = config)
   console_up_to_date(config = config)
   invisible()
 }

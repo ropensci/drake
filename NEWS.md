@@ -3,9 +3,11 @@
 ## Breaking changes
 
 - This release will be version 7.0.0, a major update. Unfortunately, some enhancements that increase cache speed also invalidate targets in old projects. Workflows run with drake <= 6.2.1 will need to run from scratch again.
+- Remove all parallel backends (`parallelism` argument of `make()`) except "clustermq", "future", and "hasty".
 - A large amount of deprecated functionality is removed, including several functions and the single-quoted file API.
 - Set the default value of `lock_envir` to `TRUE` in `make()` and `drake_config()`. So `make()` will automatically quit in error if the act of building a target tries to change upstream dependencies.
 - `make()` no longer returns a value. Users will need to call `drake_config()` separately to get the old return value of `make()`.
+- Make `jobs` a scalar argument to `make()` and `drake_config()`. To parallelize the imports and other preprocessing tasks, use `jobs_preprocess`.
 
 ## Bug fixes
 
@@ -33,6 +35,7 @@
 - Warn the user if running `make()` in a subdirectory of the `drake` project root (determined by the location of the `.drake` folder in relation to the working directory).
 - In the code analysis, explicitly prohibit targets from being dependencies of imported functions.
 - Increase options for the `verbose` argument, including the option to print execution and total build times.
+- Separate the building of targets from the processing of imports. Imports are processed with rudimentary staged parallelism (`mclapply()` or `parLapply()`, depending on the operating system).
 
 # Version 6.2.1
 

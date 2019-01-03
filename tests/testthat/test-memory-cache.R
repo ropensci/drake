@@ -20,7 +20,7 @@ test_with_dir("arbitrary storr in-memory cache", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("lubridate")
   expect_false(file.exists(default_cache_path()))
-  parallelism <- default_parallelism()
+  parallelism <- "loop"
   jobs <- 1
   envir <- eval(parse(text = get_testing_scenario()$envir))
   cache <- storr::storr_environment(hash_algorithm = "murmur32")

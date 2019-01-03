@@ -255,8 +255,7 @@ test_with_dir("misc utils", {
 test_with_dir("make(..., skip_imports = TRUE) works", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   con <- dbug()
-  verbose <- max(con$jobs) < 2 &&
-    targets_setting(con$parallelism) == "parLapply"
+  verbose <- max(con$jobs) < 2
   suppressMessages({
     make(
       con$plan, parallelism = con$parallelism,
@@ -313,4 +312,62 @@ test_with_dir("assert_pkg", {
     ),
     regexp = "with BiocManager::install"
   )
+})
+
+test_with_dir("packages are loaded in prework", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_if_not_installed("abind")
+
+  original <- getOption("test_drake_option_12345")
+  options(test_drake_option_12345 = "unset")
+  expect_equal(getOption("test_drake_option_12345"), "unset")
+  config <- dbug()
+  try(detach("package:abind", unload = TRUE), silent = TRUE) # nolint
+  expect_error(abind(1))
+
+  # Load packages with the 'packages' argument
+  config$packages <- "abind"
+  config$prework <- "options(test_drake_option_12345 = 'set')"
+  config$plan <- drake_plan(
+    x = getOption("test_drake_option_12345"),
+    y = c(deparse(body(abind)), x)
+  )
+  config$targets <- config$plan$target
+  expect_false(any(c("x", "y") %in% config$cache$list()))
+  testrun(config)
+  expect_true(all(c("x", "y") %in% config$cache$list()))
+  expect_equal(readd(x, search = FALSE), "set")
+  expect_true(length(readd(y, search = FALSE)) > 0)
+  options(test_drake_option_12345 = original)
+  clean(search = FALSE)
+
+  # load packages the usual way
+  options(test_drake_option_12345 = "unset")
+  expect_equal(getOption("test_drake_option_12345"), "unset")
+  try(detach("package:abind", unload = TRUE), silent = TRUE) # nolint
+  expect_error(abind(1))
+  library(abind) # nolint
+  config$packages <- NULL
+  expect_false(any(c("x", "y") %in% config$cache$list()))
+
+  # drake may be loaded with devtools::load_all() but not
+  # installed.
+  scenario <- get_testing_scenario()
+  suppressWarnings(
+    make(
+      plan = config$plan,
+      targets = config$targets,
+      envir = config$envir,
+      verbose = FALSE,
+      parallelism = scenario$parallelism,
+      jobs = scenario$jobs,
+      prework = config$prework,
+      command = config$command,
+      session_info = FALSE
+    )
+  )
+  expect_true(all(c("x", "y") %in% config$cache$list()))
+  expect_equal(readd(x, search = FALSE), "set")
+  expect_true(length(readd(y, search = FALSE)) > 0)
+  options(test_drake_option_12345 = original)
 })

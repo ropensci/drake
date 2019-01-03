@@ -1,7 +1,7 @@
-run_hasty <- function(config) {
+backend_hasty <- function(config) {
   warn_hasty(config)
-  config$graph <- config$schedule <- targets_graph(config = config)
-  if (config$jobs_targets > 1L) {
+  config$graph <- config$schedule
+  if (config$jobs > 1L) {
     hasty_parallel(config)
   } else{
     hasty_loop(config)
@@ -38,11 +38,11 @@ hasty_parallel <- function(config) {
   assert_pkg("clustermq", version = "0.8.5")
   config$queue <- new_priority_queue(
     config = config,
-    jobs = config$jobs_imports
+    jobs = config$jobs_preprocess
   )
   if (!config$queue$empty()) {
     config$workers <- clustermq::workers(
-      n_jobs = config$jobs_targets,
+      n_jobs = config$jobs,
       template = config$template
     )
     cmq_set_common_data(config)

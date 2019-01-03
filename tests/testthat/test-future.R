@@ -4,13 +4,12 @@ test_with_dir("future package functionality", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("future")
   skip_if_not_installed("future.apply")
-  skip_if_not_installed("txtq")
   future::plan(future::sequential)
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
   load_mtcars_example(envir = e)
   backends <- c(rep("future", 2), "future_lapply_staged")
-  caching <- c("worker", "master", "master")
+  caching <- c("master", "worker", "master")
   for (i in seq_along(backends)) {
     clean(destroy = TRUE)
     make(
@@ -37,6 +36,18 @@ test_with_dir("future package functionality", {
       outdated(config),
       character(0)
     )
+    e$my_plan$command[2] <- paste0("identity(", e$my_plan$command[2], ")")
+    make(
+      e$my_plan,
+      envir = e,
+      parallelism = backends[i],
+      caching = caching[i],
+      jobs = 1,
+      verbose = FALSE,
+      session_info = FALSE,
+      lock_envir = TRUE
+    )
+    expect_equal(justbuilt(config), "small")
   }
 
   # Stuff is already up to date.
@@ -61,7 +72,7 @@ test_with_dir("future package functionality", {
       session_info = FALSE,
       lock_envir = TRUE
     )
-    expect_equal(justbuilt(config), character(0))
+    nobuild(config)
   }
 
   # Workers can wait for dependencies.
@@ -73,7 +84,7 @@ test_with_dir("future package functionality", {
       envir = e,
       parallelism = backends[i],
       caching = caching[i],
-      jobs = c(imports = 1, targets = 2),
+      jobs = 2,
       verbose = FALSE,
       session_info = FALSE,
       ensure_workers = FALSE
@@ -82,18 +93,17 @@ test_with_dir("future package functionality", {
   }
 })
 
-test_with_dir("prepare_distributed() writes cache folder if nonexistent", {
+test_with_dir("fls_prepare() writes cache folder if nonexistent", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   config$cache_path <- "nope"
-  prepare_distributed(config)
+  fls_prepare(config)
   expect_true(file.exists("nope"))
 })
 
 test_with_dir("can gracefully conclude a crashed worker", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("future")
-  skip_if_not_installed("future.apply")
   for (caching in c("master", "worker")) {
     con <- dbug()
     con$caching <- caching

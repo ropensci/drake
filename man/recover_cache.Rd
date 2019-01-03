@@ -34,14 +34,7 @@ running version of drake.}
 \item \code{6}: plus notifications when targets are being stored.
 }}
 
-\item{fetch_cache}{character vector containing lines of code.
-The purpose of this code is to fetch the \code{storr} cache
-with a command like \code{\link[=storr_rds]{storr_rds()}} or \code{\link[=storr_dbi]{storr_dbi()}},
-but customized. This feature is experimental. It will turn out
-to be necessary if you are using both custom non-RDS caches
-and distributed parallelism (\code{parallelism = "future_lapply"}
-or \code{"Makefile"}) because the distributed R sessions
-need to know how to load the cache.}
+\item{fetch_cache}{deprecated}
 
 \item{console_log_file}{character scalar,
 connection object (such as \code{stdout()}) or \code{NULL}.

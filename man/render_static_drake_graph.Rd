@@ -28,7 +28,4 @@ Deprecated on 2018-25-07.
 \examples{
 # See render_drake_ggraph()
 }
-\seealso{
-\code{\link[=render_drake_ggraph]{render_drake_ggraph()}}
-}
 \keyword{internal}

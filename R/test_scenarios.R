@@ -1,4 +1,4 @@
-default_testing_scenario <- "local_parLapply_1"
+default_testing_scenario <- "local_loop_1"
 test_option_name <- "drake_test_scenario"
 
 testing_scenarios <- function() {

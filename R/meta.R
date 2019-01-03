@@ -52,7 +52,8 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
     target = target,
     imported = layout$imported %||% TRUE,
     missing = !target_exists(target = target, config = config),
-    seed = seed_from_basic_types(config$seed, target)
+    seed = seed_from_basic_types(config$seed, target),
+    time_start = proc.time()
   )
   if (meta$imported) {
     meta$isfile <- is_encoded_path(target)
