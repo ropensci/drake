@@ -947,13 +947,7 @@ Makefile_recipe <- function( # nolint
       "Makefile parallelism are deprecated."
     )
   )
-  cache_path <- cache_path %||% default_cache_path()
-  msg <- build_recipe(
-    target = target,
-    recipe_command = recipe_command,
-    cache_path = cache_path
-  )
-  message(msg)
+  character(0)
 }
 
 #' @title Deprecated
