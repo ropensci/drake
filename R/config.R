@@ -84,7 +84,7 @@
 #'   For details, visit
 #'   <https://ropenscilabs.github.io/drake-manual/time.html>.
 #'
-#' @param jobs number of parallel jobs for processing the imports
+#' @param jobs_preprocess number of parallel jobs for processing the imports
 #'   and doing other preprocessing tasks.
 #'
 #' @param packages character vector packages to load, in the order

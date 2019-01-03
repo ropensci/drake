@@ -98,6 +98,9 @@ to help decide on an appropriate number of jobs.
 For details, visit
 \url{https://ropenscilabs.github.io/drake-manual/time.html}.}
 
+\item{jobs_preprocess}{number of parallel jobs for processing the imports
+and doing other preprocessing tasks.}
+
 \item{packages}{character vector packages to load, in the order
 they should be loaded. Defaults to \code{rev(.packages())}, so you
 should not usually need to set this manually. Just call
@@ -414,9 +417,6 @@ This is extremely important for ensuring the purity of your functions
 and the reproducibility/credibility/trust you can place in your project.
 \code{lock_envir} will be set to a default of \code{TRUE} in \code{drake} version
 7.0.0 and higher.}
-
-\item{jobs}{number of parallel jobs for processing the imports
-and doing other preprocessing tasks.}
 }
 \value{
 The master internal configuration list of a project.

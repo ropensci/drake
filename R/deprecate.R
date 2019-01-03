@@ -988,39 +988,6 @@ r_recipe_wildcard <- function() {
   "R_RECIPE"
 }
 
-# nocov start
-#' @title Deprecated
-#' @description 2019-01-03
-#' @export
-#' @keywords internal
-#' @return nothing
-#' @param config[drake_config()] list
-#' @examples
-#' # deprecated
-time_stamps <- function(config) {
-  .Deprecated(
-    "time_stamps",
-    package = "drake",
-    msg = paste(
-      "time_stamps() and",
-      "Makefile parallelism are deprecated."
-    )
-  )
-  cache_path <- config$cache_path
-  stamp_dir <- time_stamp_dir(cache_path)
-  dir_empty(stamp_dir)
-  write_time_stamp_template(cache_path)
-  build_these <- first_outdated(config = config)
-  if (length(build_these)) {
-    set_attempt_flag(key = "_attempt", config = config)
-  }
-  stamp_these <- setdiff(config$plan$target, build_these)
-  lightly_parallelize(
-    stamp_these, write_time_stamp, jobs = config$jobs, config = config)
-  return(invisible())
-}
-# nocov end
-
 #' @title Deprecated
 #' @description 2019-01-03
 #' @export
