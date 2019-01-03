@@ -53,7 +53,7 @@ run_future_lapply_staged <- function(config) {
     stage <- next_stage(
       config = config,
       schedule = schedule,
-      jobs = config$jobs_imports
+      jobs = config$jobs_preprocess
     )
     schedule <- stage$schedule
     if (!length(stage$targets)) {
