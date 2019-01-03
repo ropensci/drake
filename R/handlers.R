@@ -57,18 +57,6 @@ error_tibble_times <- function(e) {
   )
 }
 
-error_process <- function(e, id, config) {
-  stack <- sys.calls()
-  drake_warning("Error: ", e$message, config = config)
-  drake_warning("Call: ", e$call, config = config)
-  config$cache$set(
-    key = id,
-    value = list(error = e, stack = stack),
-    namespace = "mc_error"
-  )
-  set_attempt_flag(key = id, config = config)
-}
-
 # Should be used as sparingly as possible.
 just_try <- function(code) {
   try(suppressWarnings(code), silent = TRUE)
