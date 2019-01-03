@@ -10,153 +10,27 @@ test_with_dir("check_jobs()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_error(check_jobs(NULL), regexp = "length")
   expect_error(check_jobs(-1), regexp = "jobs > 0")
-  expect_error(check_jobs(c(-1, 1)), regexp = "jobs > 0")
-  expect_error(check_jobs(c(a = 1, targets = 5)), regexp = "targets")
-  expect_error(check_jobs(1:2))
-  expect_silent(check_jobs(1))
-  expect_silent(check_jobs(c(targets = 5, imports = 6)))
-  expect_silent(check_jobs(c(imports = 5, targets = 6)))
+  expect_error(check_jobs(c(1, 1)), regexp = "of length 1")
 })
 
 test_with_dir("check_parallelism()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_error(check_parallelism(NULL), regexp = "length")
+  expect_error(check_parallelism(character(0)), regexp = "length")
   expect_error(check_parallelism(-1), regexp = "character")
   expect_error(
-    check_parallelism(c(a = "x", targets = "y")), regexp = "character")
-  expect_error(
-    check_parallelism(c("mclapply", "mclapply")), regexp = "with names")
-  expect_silent(check_parallelism("mclapply"))
-  expect_silent(
-    check_parallelism(c(targets = "mclapply", imports = "mclapply")))
-  expect_silent(
-    check_parallelism(c(imports = "parLapply", targets = "future")))
-})
-
-test_with_dir("imports_setting()", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_equal(imports_setting(8), 8)
-  expect_equal(imports_setting(c(targets = 8, imports = 12)), 12)
-  expect_equal(imports_setting(c(imports = 8, targets = 12)), 8)
-})
-
-test_with_dir("targets_setting()", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_equal(targets_setting(8), 8)
-  expect_equal(targets_setting(c(targets = 8, imports = 12)), 8)
-  expect_equal(targets_setting(c(imports = 8, targets = 12)), 12)
+    check_parallelism(letters[1:2]), regexp = "of length 1")
 })
 
 
-test_with_dir("parallelism not found for testrun()", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  config <- list(parallelism = "not found", verbose = FALSE)
-  suppressWarnings(expect_error(testrun(config)))
-})
-
-test_with_dir("parallelism_choices", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_true(
-    length(parallelism_choices(distributed_only = TRUE)) <
-    length(parallelism_choices(distributed_only = FALSE))
-  )
-})
-
-test_with_dir("parallelism warnings", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+test_with_dir("parallel imports", {
   config <- dbug()
-  suppressWarnings(parallelism_warnings(config))
-  expect_silent(
-    warn_mclapply_windows(parallelism = "mclapply", jobs = 1)
-  )
-  expect_warning(
-    warn_mclapply_windows(parallelism = "mclapply", jobs = 2, os = "windows")
-  )
-})
-
-test_with_dir("shell_file() writes correctly", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_false(file.exists("shell.sh"))
-  shell_file()
-  expect_true(file.exists("shell.sh"))
-  unlink("shell.sh", force = TRUE)
-
-  d <- "exdir"
-  dir.create(d)
-  p <- file.path(d, "script.txt")
-  expect_false(file.exists(p))
-  shell_file(p)
-  expect_true(file.exists(p))
-  unlink(d, recursive = TRUE, force = TRUE)
-
-  expect_silent(shell_file(overwrite = TRUE))
-  expect_silent(shell_file(overwrite = FALSE))
-  expect_warning(shell_file(overwrite = TRUE))
-})
-
-test_with_dir("mclapply and lapply", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  skip_if_not_installed("txtq")
-  config <- dbug()
-  config$parallelism <- "parLapply"
-  config$jobs <- 1
-  config$debug <- TRUE
-  suppressWarnings(make(config = config))
-  out <- config
-  expect_false(
-    grepl("NA", mc_get_checksum(target = "combined", config = config)))
-  expect_true(length(justbuilt(out)) > 0)
-  expect_true(is.numeric(readd(final)))
-  suppressWarnings(make(config = config))
-  out <- config
-  expect_true(is.numeric(readd(final)))
-  expect_equal(justbuilt(out), character(0))
+  config$jobs_preprocess <- 2
+  make_imports(config)
+  config$schedule <- imports_graph(config = config)
+  process_imports_parLapply(config)
   skip_on_os("windows")
-  config$parallelism <- "mclapply"
-  clean()
-  suppressWarnings(make(config = config))
-  out <- config
-  expect_true(length(justbuilt(out)) > 0)
-  expect_true(is.numeric(readd(final)))
-  suppressWarnings(make(config = config))
-  out <- config
-  expect_true(is.numeric(readd(final)))
-  expect_equal(justbuilt(out), character(0))
-})
-
-test_with_dir("staged mclapply and lapply", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  config <- dbug()
-  env <- config$envir
-  config$parallelism <- "parLapply_staged"
-  config$jobs <- 1
-  make(config = config)
-  out <- config
-  clean()
-  config$jobs <- 2
-  config$debug <- TRUE
-  suppressWarnings(make(config = config))
-  out <- config
-  expect_true(length(justbuilt(out)) > 0)
-  expect_true(is.numeric(readd(final)))
-  suppressWarnings(make(config = config))
-  out <- config
-  expect_true(is.numeric(readd(final)))
-  expect_equal(justbuilt(out), character(0))
-  expect_true(is.numeric(readd(final)))
-  expect_equal(justbuilt(out), character(0))
-  skip_on_os("windows")
-  config$parallelism <- "mclapply_staged"
-  clean()
-  config$envir <- env
-  suppressWarnings(make(config = config))
-  out <- config
-  expect_true(length(justbuilt(out)) > 0)
-  expect_true(is.numeric(readd(final)))
-  suppressWarnings(make(config = config))
-  out <- config
-  expect_true(is.numeric(readd(final)))
-  expect_equal(justbuilt(out), character(0))
+  config$schedule <- imports_graph(config = config)
+  process_imports_mclapply(config)
 })
 
 test_with_dir("lightly_parallelize_atomic() is correct", {
@@ -174,23 +48,6 @@ test_with_dir("lightly_parallelize_atomic() is correct", {
     y <- gsub("_text", "", unlist(out1))
     expect_identical(x, y)
   })
-})
-
-test_with_dir("preferred queue may not be there", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  load_mtcars_example()
-  my_plan$worker <- 17
-  config <- drake_config(my_plan, cache = storr::storr_environment())
-  expect_warning(mc_preferred_queue("small", config))
-})
-
-test_with_dir("null cases for message queues", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  config <- list(cache = storr::storr_environment())
-  config <- mc_refresh_queue_lists(config)
-  expect_null(config$mc_ready_queues)
-  expect_null(config$mc_done_queues)
-  expect_null(mc_assign_ready_targets(config))
 })
 
 test_with_dir("checksum functionality", {

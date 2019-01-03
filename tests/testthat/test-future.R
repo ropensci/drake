@@ -73,7 +73,7 @@ test_with_dir("future package functionality", {
       envir = e,
       parallelism = backends[i],
       caching = caching[i],
-      jobs = c(imports = 1, targets = 2),
+      jobs = 2,
       verbose = FALSE,
       session_info = FALSE,
       ensure_workers = FALSE

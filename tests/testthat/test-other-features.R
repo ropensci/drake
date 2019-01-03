@@ -255,8 +255,7 @@ test_with_dir("misc utils", {
 test_with_dir("make(..., skip_imports = TRUE) works", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   con <- dbug()
-  verbose <- max(con$jobs) < 2 &&
-    targets_setting(con$parallelism) == "parLapply"
+  verbose <- max(con$jobs) < 2
   suppressMessages({
     make(
       con$plan, parallelism = con$parallelism,
