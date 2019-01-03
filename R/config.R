@@ -407,7 +407,7 @@ drake_config <- function(
   cache = drake::get_cache(
     verbose = verbose, console_log_file = console_log_file),
   fetch_cache = NULL,
-  parallelism = drake::default_parallelism(),
+  parallelism = "loop",
   jobs = 1L,
   jobs_preprocess = 1L,
   packages = rev(.packages()),
@@ -435,7 +435,7 @@ drake_config <- function(
   keep_going = FALSE,
   session = NULL,
   pruning_strategy = NULL,
-  makefile_path = "Makefile",
+  makefile_path = NULL,
   console_log_file = NULL,
   ensure_workers = TRUE,
   garbage_collection = FALSE,
@@ -499,10 +499,11 @@ drake_config <- function(
     !is.null(command) ||
     !is.null(args) ||
     !is.null(recipe_command) ||
-    !is.null(prepend)
+    !is.null(prepend) ||
+    !is.null(makefile_path)
   ) {
     warning(
-      "Arguments `command`, `args`, `prepend`, and ",
+      "Arguments `command`, `args`, `prepend`, `makefile_path`, ",
       "`recipe_command` are deprecated ",
       "because Makefile parallelism is no longer supported.",
       call. = FALSE
@@ -560,17 +561,11 @@ drake_config <- function(
     eval = new.env(parent = envir),
     cache = cache,
     cache_path = cache_path,
-    fetch_cache = fetch_cache,
     parallelism = parallelism,
     jobs = jobs,
     jobs_preprocess = jobs_preprocess,
     verbose = verbose,
-    hook = hook,
-    prepend = prepend,
     prework = prework,
-    command = command,
-    args = args,
-    recipe_command = recipe_command,
     layout = layout,
     ht_encode_path = ht_new(),
     ht_decode_path = ht_new(),
@@ -594,7 +589,6 @@ drake_config <- function(
     keep_going = keep_going,
     session = session,
     memory_strategy = memory_strategy,
-    makefile_path = makefile_path,
     console_log_file = console_log_file,
     ensure_workers = ensure_workers,
     all_targets = all_targets,

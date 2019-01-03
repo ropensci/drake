@@ -70,7 +70,7 @@ make <- function(
   cache = drake::get_cache(
     verbose = verbose, console_log_file = console_log_file),
   fetch_cache = NULL,
-  parallelism = drake::default_parallelism(),
+  parallelism = "loop",
   jobs = 1L,
   jobs_preprocess = 1L,
   packages = rev(.packages()),
@@ -99,7 +99,7 @@ make <- function(
   keep_going = FALSE,
   session = NULL,
   pruning_strategy = NULL,
-  makefile_path = "Makefile",
+  makefile_path = NULL,
   console_log_file = NULL,
   ensure_workers = TRUE,
   garbage_collection = FALSE,
