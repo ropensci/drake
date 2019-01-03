@@ -9,9 +9,9 @@ test_with_dir("future package functionality", {
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
   load_mtcars_example(envir = e)
-  backends <- c("future_lapply", rep("future", 2), "future_lapply_staged")
-  caching <- c(rep("worker", 2), rep("master", 2))
-  for (i in 1:4) {
+  backends <- c(rep("future", 2), "future_lapply_staged")
+  caching <- c("worker", "master", "master")
+  for (i in seq_along(backends)) {
     clean(destroy = TRUE)
     make(
       e$my_plan,
@@ -40,7 +40,7 @@ test_with_dir("future package functionality", {
   }
 
   # Stuff is already up to date.
-  for (i in 1:4) {
+  for (i in seq_along(backends)) {
     make(
       e$my_plan,
       envir = e,
@@ -65,18 +65,21 @@ test_with_dir("future package functionality", {
   }
 
   # Workers can wait for dependencies.
-  e$my_plan$command[2] <- "Sys.sleep(2); simulate(48)"
-  future::plan(future::multicore)
-  make(
-    e$my_plan,
-    envir = e,
-    parallelism = backends[3],
-    caching = caching[3],
-    jobs = c(imports = 1, targets = 2),
-    verbose = FALSE,
-    session_info = FALSE,
-    ensure_workers = FALSE
-  )
+  for (i in 1:2) {
+    e$my_plan$command[2] <- "Sys.sleep(2); simulate(48)"
+    future::plan(future::multicore)
+    make(
+      e$my_plan,
+      envir = e,
+      parallelism = backends[i],
+      caching = caching[i],
+      jobs = c(imports = 1, targets = 2),
+      verbose = FALSE,
+      session_info = FALSE,
+      ensure_workers = FALSE
+    )
+    clean(destroy = TRUE)
+  }
 })
 
 test_with_dir("prepare_distributed() writes cache folder if nonexistent", {

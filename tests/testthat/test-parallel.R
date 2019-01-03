@@ -193,24 +193,6 @@ test_with_dir("null cases for message queues", {
   expect_null(mc_assign_ready_targets(config))
 })
 
-test_with_dir("ensure_workers can be disabled", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  skip_if_not_installed("future")
-  skip_if_not_installed("future.apply")
-  skip_if_not_installed("txtq")
-  load_mtcars_example()
-  future::plan(future::sequential)
-  config <- drake_config(my_plan)
-  make(my_plan, skip_targets = TRUE)
-  expect_true(length(outdated(config)) >= nrow(my_plan))
-  make(
-    my_plan, jobs = 2, skip_imports = TRUE,
-    parallelism = "future_lapply",
-    session_info = FALSE, ensure_workers = FALSE
-  )
-  expect_equal(outdated(config), character(0))
-})
-
 test_with_dir("checksum functionality", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()

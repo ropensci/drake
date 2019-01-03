@@ -108,7 +108,6 @@ parallelism_choices <- function(distributed_only = FALSE) {
     "clustermq",
     "clustermq_staged",
     "future",
-    "future_lapply",
     "future_lapply_staged",
     "hasty",
     "Makefile"
