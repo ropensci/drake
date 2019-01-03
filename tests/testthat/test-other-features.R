@@ -371,3 +371,29 @@ test_with_dir("packages are loaded in prework", {
   expect_true(length(readd(y, search = FALSE)) > 0)
   options(test_drake_option_12345 = original)
 })
+
+test_with_dir("parallelism can be a scheduler function", {
+  plan <- drake_plan(x = file.create("x"))
+  build_ <- function(target, config){
+    tidy_expr <- eval(
+      expr = config$layout[[target]]$command_build,
+      envir = config$eval
+    )
+    eval(expr = tidy_expr, envir = config$eval)
+  }
+  loop_ <- function(config) {
+    targets <- igraph::topo_sort(config$schedule)$name
+    for (target in targets) {
+      console_target(target = target, config = config)
+      config$eval[[target]] <- build_(
+        target = target,
+        config = config
+      )
+    }
+    invisible()
+  }
+  config <- drake_config(plan, parallelism = loop_)
+  make(config = config)
+  expect_true(file.exists("x"))
+  expect_false(config$cache$exists("x"))
+})

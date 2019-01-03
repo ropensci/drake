@@ -1,8 +1,18 @@
 run_drake_backend <- function(config) {
-  get(
-    paste0("backend_", config$parallelism),
-    envir = getNamespace("drake")
-  )(config)
+  parallelism <- config$parallelism
+  if (is.character(parallelism)) {
+    parallelism <- match.arg(
+      parallelism,
+      c("loop", "clustermq", "future",
+        "hasty", "future_lapply_staged")
+    )
+    get(
+      paste0("backend_", parallelism),
+      envir = getNamespace("drake")
+    )(config)
+  } else {
+    parallelism(config)
+  }
 }
 
 parallel_filter <- function(x, f, jobs = 1, ...) {

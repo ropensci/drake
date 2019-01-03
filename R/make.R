@@ -294,7 +294,7 @@ make_imports <- function(config = drake::read_drake_config()) {
 #' }
 make_targets <- function(config = drake::read_drake_config()) {
   config$schedule <- targets_graph(config = config)
-  if (config$parallelism == "hasty") {
+  if (identical(config$parallelism, "hasty")) {
     backend_hasty(config)
     return(invisible(config))
   }

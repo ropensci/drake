@@ -167,7 +167,7 @@ check_jobs <- function(jobs) {
 }
 
 check_parallelism <- function(parallelism, jobs) {
-  stopifnot(is.character(parallelism))
+  stopifnot(is.character(parallelism) || is.function(parallelism))
   stopifnot(length(parallelism) > 0)
   if (length(parallelism) > 1) {
     stop(
@@ -175,7 +175,7 @@ check_parallelism <- function(parallelism, jobs) {
       call. = FALSE
     )
   }
-  if (parallelism == "loop" && jobs > 1L) {
+  if (identical(parallelism, "loop") && jobs > 1L) {
     warning(
       "In make(), `parallelism` should not be \"loop\" if `jobs` > 1",
       call. = FALSE
