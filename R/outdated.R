@@ -10,7 +10,7 @@ first_outdated <- function(config) {
         meta <- drake_meta(target, config)
         should_build_target(target, meta, config)
       },
-      jobs = config$jobs
+      jobs = config$jobs_preprocess
     )
     do_build <- unlist(do_build)
     out <- c(out, new_leaves[do_build])
@@ -83,7 +83,7 @@ outdated <-  function(
   later_targets <- downstream_nodes(
     from = first_targets,
     graph = config$targets_schedule,
-    jobs = config$jobs
+    jobs = config$jobs_preprocess
   )
   sort(unique(as.character(c(first_targets, later_targets))))
 }

@@ -117,7 +117,7 @@ filter_upstream <- function(targets, graph) {
 
 subset_graph <- function(graph, subset) {
   if (!length(subset)) {
-    return(graph)
+    return(igraph::empty_graph())
   }
   subset <- intersect(subset, V(graph)$name)
   igraph::induced_subgraph(graph = graph, vids = subset)
