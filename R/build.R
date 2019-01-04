@@ -115,10 +115,12 @@ conclude_build <- function(build, config) {
 
 assert_output_files <- function(target, meta, config) {
   deps <- config$layout[[target]]$deps_build
+  if (!length(deps$file_out)) {
+    return()
+  }
   files <- unique(as.character(deps$file_out))
-  missing_files <- Filter(x = files, f = function(x) {
-    !file.exists(decode_path(x, config))
-  })
+  files <- decode_path(files, config)
+  missing_files <- files[!file.exists(files)]
   if (length(missing_files)) {
     drake_warning(
       "Missing files for target ", target, ":\n",
