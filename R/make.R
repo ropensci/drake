@@ -293,17 +293,13 @@ make_imports <- function(config = drake::read_drake_config()) {
 #' })
 #' }
 make_targets <- function(config = drake::read_drake_config()) {
-  config$schedule <- targets_graph(config = config)
-  if (identical(config$parallelism, "hasty")) {
-    backend_hasty(config)
-    return(invisible(config))
-  }
   outdated <- outdated(config, do_prework = FALSE, make_imports = FALSE)
   if (!length(outdated)) {
     console_up_to_date(config = config)
     return(invisible())
   }
   up_to_date <- setdiff(config$all_targets, outdated)
+  config$schedule <- targets_graph(config = config)
   config$schedule <- igraph::delete_vertices(config$schedule, v = up_to_date)
   run_drake_backend(config = config)
   console_up_to_date(config = config)
