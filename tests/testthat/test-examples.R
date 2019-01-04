@@ -113,7 +113,7 @@ test_with_dir("mtcars example works", {
     all_times <- build_times()
     expect_true(nrow(all_times) >= nrow(config$plan))
     some_times <- build_times(starts_with("coef"))
-    expect_equal(sort(some_times$item), coefs)
+    expect_equal(sort(some_times$target), coefs)
 
     # clean() # nolint
     x <- sort(cached())

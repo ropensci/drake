@@ -6,14 +6,14 @@ append_build_times <- function(config) {
     time_data <- build_times(
       digits = digits,
       cache = cache,
-      type = build_times,
-      pretty_keys = FALSE
+      type = build_times
     )
-    timed <- intersect(time_data$item, nodes$id)
-    if (!length(timed))
+    timed <- intersect(time_data$target, nodes$id)
+    if (!length(timed)) {
       return(nodes)
+    }
     time_labels <- as.character(time_data$elapsed)
-    names(time_labels) <- time_data$item
+    names(time_labels) <- time_data$target
     time_labels <- time_labels[timed]
     nodes[timed, "label"] <-
       paste(nodes[timed, "label"], time_labels, sep = "\n")

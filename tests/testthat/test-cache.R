@@ -292,16 +292,14 @@ test_with_dir("cache functions work", {
 
   # build_times
   x <- config$cache
-  bt <- build_times(search = FALSE, targets_only = FALSE)
+  bt <- build_times(search = FALSE)
   expect_equal(
     sort(display_keys(x$list(namespace = "meta"))),
     sort(cached())
   )
-  expect_equal(sort(bt$item), sort(display_keys(all)))
-  expect_length(bt, 5) # 5 columns
+  expect_equal(sort(bt$item), sort(builds))
+  expect_length(bt, 4) # 4 columns
   n1 <- nrow(bt)
-  n2 <- nrow(build_times(search = FALSE, targets_only = TRUE))
-  expect_true(n1 > n2 & n2 > 0)
 
   # find stuff in current directory session, progress
   expect_true(is.list(drake_get_session_info(search = FALSE)))

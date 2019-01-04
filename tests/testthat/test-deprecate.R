@@ -44,6 +44,12 @@ test_with_dir("drake version checks in previous caches", {
   x <- get_cache()
   suppressWarnings(expect_error(drake_session(cache = NULL), regexp = "make"))
   expect_warning(drake_session(cache = x), regexp = "deprecated")
+  expect_warning(build_times(targets_only = TRUE), regexp = "deprecated")
+  config <- drake_config(plan)  
+  expect_warning(
+    predict_runtime(config, targets_only = TRUE),
+    regexp = "deprecated"
+  )
 })
 
 test_with_dir("deprecated graphing functions", {

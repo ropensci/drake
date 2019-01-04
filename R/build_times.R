@@ -1,9 +1,6 @@
-#' @title List the time it took to build each target/import.
-#' @description Listed times do not include the amount of time
-#'  spent loading and saving objects! See the `type`
-#'  argument for different versions of the build time.
-#'  (You can choose whether to take storage time into account.)
-#' @seealso [built()]
+#' @title List the time it took to build each target.
+#' @description Applies to targets in your plan, not imports or files.
+#' @seealso [predict_runtime()]
 #' @export
 #' @return A data frame of times, each from [system.time()].
 #' @inheritParams cached
@@ -11,18 +8,12 @@
 #'   character strings. If the `tidyselect` package is installed,
 #'   you can also supply `dplyr`-style `tidyselect`
 #'   commands such as `starts_with()`, `ends_with()`, and `one_of()`.
-#' @param targets_only logical, whether to only return the
-#'   build times of the targets (exclude the imports).
+#' @param targets_only deprecated
 #' @param digits How many digits to round the times to.
 #' @param type Type of time you want: either `"build"`
 #'   for the full build time including the time it took to
 #'   store the target, or `"command"` for the time it took
 #'   just to run the command.
-#' @param pretty_keys logical. If `TRUE`, files are displayed
-#'   in the `item` column as "file my_file.Rmd". If `FALSE`,
-#'   files are encoded according to `drake`'s internal standard
-#'   for representing file paths, which may not be human readable
-#'   in future versions of `drake`. 
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -38,12 +29,12 @@ build_times <- function(
   search = TRUE,
   digits = 3,
   cache = get_cache(path = path, search = search, verbose = verbose),
-  targets_only = FALSE,
+  targets_only = NULL,
   verbose = 1L,
   jobs = 1,
-  type = c("build", "command"),
-  pretty_keys = TRUE
+  type = c("build", "command")
 ) {
+  deprecate_targets_only(targets_only) # 2019-01-03 # nolint
   eval(parse(text = "require(methods, quietly = TRUE)")) # needed for lubridate
   if (is.null(cache)) {
     return(empty_times())
@@ -53,7 +44,7 @@ build_times <- function(
     targets <- drake_tidyselect(cache = cache, ..., namespaces = "meta")
   }
   if (!length(targets)) {
-    targets <- cache$list(namespace = "meta")
+    targets <- read_drake_plan(cache = cache, verbose = FALSE)$target
   }
   type <- match.arg(type)
   out <- lightly_parallelize(
@@ -68,14 +59,7 @@ build_times <- function(
   out <- rbind(out, empty_times())
   out <- round_times(out, digits = digits)
   out <- to_build_duration_df(out)
-  out <- out[order(out$item), ]
-  out$type[is.na(out$type)] <- "target"
-  if (targets_only) {
-    out <- out[out$type == "target", ]
-  }
-  if (pretty_keys) {
-    out$item <- display_keys(out$item)
-  }
+  out <- out[order(out$target), ]
   tryCatch(
     weak_as_tibble(out),
     error = error_tibble_times
@@ -100,8 +84,7 @@ fetch_runtime <- function(key, cache, type) {
 
 empty_times <- function() {
   data.frame(
-    item = character(0),
-    type = character(0),
+    target = character(0),
     elapsed = numeric(0),
     user = numeric(0),
     system = numeric(0),
@@ -117,10 +100,8 @@ round_times <- function(times, digits) {
 }
 
 runtime_entry <- function(runtime, target, imported) {
-  type <- ifelse(imported, "import", "target")
   data.frame(
-    item = target,
-    type = type,
+    target = target,
     elapsed = runtime[["elapsed"]],
     user = runtime[["user.self"]],
     system = runtime[["sys.self"]],

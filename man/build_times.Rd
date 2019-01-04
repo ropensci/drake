@@ -2,12 +2,12 @@
 % Please edit documentation in R/build_times.R
 \name{build_times}
 \alias{build_times}
-\title{List the time it took to build each target/import.}
+\title{List the time it took to build each target.}
 \usage{
 build_times(..., path = getwd(), search = TRUE, digits = 3,
   cache = get_cache(path = path, search = search, verbose = verbose),
-  targets_only = FALSE, verbose = 1L, jobs = 1, type = c("build",
-  "command"), pretty_keys = TRUE)
+  targets_only = NULL, verbose = 1L, jobs = 1, type = c("build",
+  "command"))
 }
 \arguments{
 \item{...}{targets to load from the cache: as names (symbols) or
@@ -30,8 +30,7 @@ Ignored if a \code{cache} is supplied.}
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} and \code{search} are ignored.}
 
-\item{targets_only}{logical, whether to only return the
-build times of the targets (exclude the imports).}
+\item{targets_only}{deprecated}
 
 \item{verbose}{logical or numeric, control printing to the console.
 \itemize{
@@ -50,21 +49,12 @@ build times of the targets (exclude the imports).}
 for the full build time including the time it took to
 store the target, or \code{"command"} for the time it took
 just to run the command.}
-
-\item{pretty_keys}{logical. If \code{TRUE}, files are displayed
-in the \code{item} column as "file my_file.Rmd". If \code{FALSE},
-files are encoded according to \code{drake}'s internal standard
-for representing file paths, which may not be human readable
-in future versions of \code{drake}.}
 }
 \value{
 A data frame of times, each from \code{\link[=system.time]{system.time()}}.
 }
 \description{
-Listed times do not include the amount of time
-spent loading and saving objects! See the \code{type}
-argument for different versions of the build time.
-(You can choose whether to take storage time into account.)
+Applies to targets in your plan, not imports or files.
 }
 \examples{
 \dontrun{
@@ -77,5 +67,5 @@ build_times() # Show how long it took to build each target.
 }
 }
 \seealso{
-\code{\link[=built]{built()}}
+\code{\link[=predict_runtime]{predict_runtime()}}
 }

@@ -705,6 +705,17 @@ deprecate_fetch_cache <- function(fetch_cache) {
   }
 }
 
+deprecate_targets_only <- function(targets_only) {
+  if (!is.null(targets_only)) {
+    warning(
+      "Argument `targets_only` is deprecated. ",
+      "build_times(), graph visualizations, and runtime predictions ",
+      "now always focus only on the targets (ignoring the imports).",
+      call. = FALSE
+    ) # build times, vis, and predictions: 2019-01-03 # nolint
+  }
+}
+
 #' @title Deprecated: load the main example.
 #' @description The main example lives at
 #' <https://github.com/wlandau/drake-examples/tree/master/main>.
