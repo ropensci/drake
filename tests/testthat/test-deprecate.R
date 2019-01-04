@@ -102,6 +102,7 @@ test_with_dir("deprecated arguments", {
   con <- drake_config(plan = pl)
   expect_warning(drake_build(a, config = con, meta = list()))
   expect_warning(make(drake_plan(x = 1), recipe_command = "123"))
+  expect_warning(make(drake_plan(x = 1), hasty_build = "123"))
 })
 
 test_with_dir("example template files (deprecated)", {
