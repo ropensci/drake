@@ -110,14 +110,14 @@ leaf_nodes <- function(graph) {
 }
 
 filter_upstream <- function(targets, graph) {
-  delete_these <- setdiff(V(graph)$name, targets)
+  delete_these <- setdiff(igraph::V(graph)$name, targets)
   graph <- delete_vertices(graph = graph, v = delete_these)
   leaf_nodes(graph)
 }
 
 subset_graph <- function(graph, subset) {
   if (!length(subset)) {
-    return(igraph::empty_graph())
+    return(igraph::make_empty_graph())
   }
   subset <- intersect(subset, V(graph)$name)
   igraph::induced_subgraph(graph = graph, vids = subset)

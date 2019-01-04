@@ -1,7 +1,4 @@
 store_outputs <- function(target, value, meta, config) {
-  
-  browser()
-  
   # Failed targets need to stay invalidated,
   # even when `config$keep_going` is `TRUE`.
   if (inherits(meta$error, "error")) {
