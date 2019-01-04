@@ -297,7 +297,7 @@ test_with_dir("cache functions work", {
     sort(display_keys(x$list(namespace = "meta"))),
     sort(cached())
   )
-  expect_equal(sort(bt$item), sort(builds))
+  expect_equal(sort(bt$target), sort(builds))
   expect_length(bt, 4) # 4 columns
   n1 <- nrow(bt)
 
