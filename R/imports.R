@@ -24,7 +24,7 @@ process_imports_mclapply <- function(config) {
   if (config$jobs_preprocess > 1L) {
     assert_pkg("parallel")
   }
-  schedule <- config$schedule
+  schedule <- config$imports_schedule
   while (length(V(schedule)$name)) {
     imports <- leaf_nodes(schedule)
     lightly_parallelize(
@@ -68,7 +68,7 @@ process_imports_parLapply <- function(config) { # nolint
     config = config,
     verbose_packages = FALSE
   )
-  schedule <- config$schedule
+  schedule <- config$imports_schedule
   while (length(V(schedule)$name)) {
     imports <- leaf_nodes(schedule)
     parallel::parLapply(

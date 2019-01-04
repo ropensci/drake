@@ -235,7 +235,7 @@ tracked <- function(config) {
   display_keys(clean_dependency_list(out), config)
 }
 
-dependencies <- function(targets, config, reverse = FALSE) {
+deps_schedule <- function(targets, config, reverse = FALSE) {
   if (!length(targets)) {
     return(character(0))
   }
@@ -243,18 +243,13 @@ dependencies <- function(targets, config, reverse = FALSE) {
   on.exit(igraph::igraph_options(return.vs.es = opt))
   igraph::igraph_options(return.vs.es = FALSE)
   index <- adjacent_vertices(
-    graph = config$graph,
+    graph = config$targets_schedule,
     v = targets,
     mode = ifelse(reverse, "out", "in")
   )
   index <- unlist(index)
   index <- unique(index)
-  igraph::V(config$graph)$name[index + 1]
-}
-
-target_graph_dependencies <- function(targets, config, jobs = 1) {
-  deps <- dependencies(targets = targets, config = config)
-  intersect(deps, config$plan$target)
+  igraph::V(config$targets_schedule)$name[index + 1]
 }
 
 import_dependencies <- function(

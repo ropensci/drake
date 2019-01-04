@@ -286,7 +286,7 @@ deps_targets <- function(
       "Use deps_target() (singular) instead."
     )
   )
-  dependencies(targets = targets, config = config, reverse = reverse)
+  deps_schedule(targets = targets, config = config, reverse = reverse)
 }
 
 #' @title Deprecated. Get a template file for execution on a cluster.

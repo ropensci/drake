@@ -248,7 +248,6 @@ make_with_config <- function(config = drake::read_drake_config()) {
 #' })
 #' }
 make_imports <- function(config = drake::read_drake_config()) {
-  config$schedule <- imports_graph(config = config)
   if (on_windows() && config$jobs > 1L) {
     process_imports_parLapply(config) # nocov
   } else {
@@ -298,10 +297,10 @@ make_targets <- function(config = drake::read_drake_config()) {
     console_up_to_date(config = config)
     return(invisible())
   }
-  up_to_date <- setdiff(config$all_targets, outdated)
-  config$schedule <- targets_graph(config = config)
-  config$schedule <- igraph::delete_vertices(config$schedule, v = up_to_date)
+  config$targets_schedule <- igraph::induced_subgraph(
+    graph = config$targets_schedule,
+    vids = outdated
+  )
   run_drake_backend(config = config)
-  console_up_to_date(config = config)
   invisible()
 }

@@ -233,7 +233,10 @@ loadd <- function(
     if (is.null(graph)) {
       graph <- read_drake_graph(cache = cache)
     }
-    targets <- dependencies(targets = targets, config = list(graph = graph))
+    targets <- deps_schedule(
+      targets = targets,
+      config = list(targets_schedule = graph)
+    )
   }
   exists <- lightly_parallelize(
     X = targets,

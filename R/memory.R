@@ -34,20 +34,12 @@ manage_memory <- function(targets, config, downstream = NULL, jobs = 1) {
         jobs = jobs
       )
     }
-    downstream_deps <- target_graph_dependencies(
-      targets = downstream,
-      config = config,
-      jobs = jobs
-    )
+    downstream_deps <- deps_schedule(targets = downstream, config = config)
   } else {
     downstream <- downstream_deps <- NULL
   }
   already_loaded <- ls(envir = config$eval, all.names = TRUE)
-  target_deps <- target_graph_dependencies(
-    targets = targets,
-    config = config,
-    jobs = jobs
-  )
+  target_deps <- deps_schedule(targets = targets, config = config)
   if (!identical(config$memory_strategy, "speed")) {
     keep_these <- c(target_deps, downstream_deps)
     discard_these <- setdiff(x = config$plan$target, y = keep_these)
