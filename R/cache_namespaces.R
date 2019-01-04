@@ -12,7 +12,6 @@ cache_namespaces <- function(
 ) {
   out <- c(
     target_namespaces(default = default),
-    "attempt",  # attempt flags so drake knows when to print "everything up to date" # nolint
     "change",   # value returned by the "change" trigger
     "config",   # elements of the config list
     "memoize",  # for the memoization in preprocessing
