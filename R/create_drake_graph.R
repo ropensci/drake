@@ -4,8 +4,7 @@ create_drake_graph <- function(
   cache,
   jobs,
   console_log_file,
-  verbose,
-  collapse = TRUE
+  verbose
 ) {
   config <- list(
     jobs = jobs,
@@ -13,35 +12,31 @@ create_drake_graph <- function(
     console_log_file = console_log_file
   )
   edges <- memo_expr(
-    cdg_create_edges(config, layout, collapse),
+    cdg_create_edges(config, layout),
     cache,
     config,
-    layout,
-    collapse
+    layout
   )
   memo_expr(
-    cdg_finalize_graph(edges, targets, config, collapse),
+    cdg_finalize_graph(edges, targets, config),
     cache,
     edges,
     targets
   )
 }
 
-cdg_create_edges <- function(config, layout, collapse) {
+cdg_create_edges <- function(config, layout) {
   console_preprocess(text = "construct graph edges", config = config)
   edges <- lightly_parallelize(
     X = layout,
-    FUN = node_to_edges,
+    FUN = cdg_node_to_edges,
     jobs = config$jobs
   )
   edges <- do.call(rbind, edges)
-  if (collapse) {
-    edges <- collapse_edges(edges)
-  }
-  edges
+  cdg_edges_thru_file_out(edges)
 }
 
-node_to_edges <- function(node) {
+cdg_node_to_edges <- function(node) {
   file_out <- node$deps_build$file_out
   node$deps_build$file_out <- NULL
   inputs <- clean_dependency_list(
@@ -49,44 +44,50 @@ node_to_edges <- function(node) {
   )
   out <- NULL
   if (length(inputs)) {
-    out <- weak_tibble(from = inputs, to = node$target, collapse = FALSE)
+    out <- weak_tibble(from = inputs, to = node$target)
   }
   if (length(file_out)) {
     out <- rbind(
       out,
-      weak_tibble(from = node$target, to = file_out, collapse = TRUE)
+      weak_tibble(from = node$target, to = file_out)
     )
   }
   if (is.null(out)) {
-    out <- weak_tibble(
-      from = node$target,
-      to = node$target,
-      collapse = FALSE
-    )
+    out <- weak_tibble(from = node$target, to = node$target)
   }
   out
 }
 
-collapse_edges <- function(edges) {
-  which_collapse <- which(edges$collapse)
-  for (index in which_collapse){
-    to <- edges$to[index]
-    edges$from[edges$from == to] <- edges$from[index]
-  }
-  edges$to[edges$collapse] <- edges$from[edges$collapse]
-  edges
+cdg_edges_thru_file_out <- function(edges) {
+  file_out <- edges$to[is_encoded_path(edges$to)]
+  file_out_edges <- lapply(
+    X = file_out,
+    FUN = cdg_transitive_edges,
+    edges = edges
+  )
+  file_out_edges <- do.call(what = rbind, args = file_out_edges)
+  edges <- rbind(edges, file_out_edges)
+  edges[!duplicated(edges), ]
 }
 
-cdg_finalize_graph <- function(edges, targets, config, collapse) {
+cdg_transitive_edges <- function(vertex, edges) {
+  from <- unique(edges$from[edges$to == vertex])
+  to <- unique(edges$to[edges$from == vertex])
+  expand.grid(from = from, to = to, stringsAsFactors = FALSE)
+}
+
+cdg_finalize_graph <- function(edges, targets, config) {
   console_preprocess(text = "construct graph", config = config)
-  if (!collapse) {
-    targets <- c(
-      targets,
-      edges$to[edges$collapse & (edges$from %in% targets)]
-    )
-  }
-  graph <- igraph::graph_from_data_frame(edges[, c("from", "to")])
+  targets <- union(targets, edges$to[edges$from %in% targets])
+  graph <- igraph::graph_from_data_frame(edges)
   graph <- prune_drake_graph(graph, to = targets, jobs = config$jobs)
+  graph <- igraph::set_vertex_attr(graph, "imported", value = TRUE)
+  graph <- igraph::set_vertex_attr(
+    graph = graph,
+    name = "imported",
+    index = targets,
+    value = FALSE
+  )
   igraph::simplify(
     graph,
     remove.loops = TRUE,
