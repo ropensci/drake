@@ -145,6 +145,9 @@ predict_load_balancing <- function(
 ) {
   deprecate_targets_only(targets_only) # 2019-01-03 # nolint
   config$schedule <- targets_graph(config)
+  if (!is.null(targets)) {
+    config$schedule <- prune_drake_graph(config$schedule, to = targets)
+  }
   assumptions <- timing_assumptions(
     config = config,
     targets = targets,
@@ -204,9 +207,6 @@ timing_assumptions <- function(
     outdated <- outdated(config)
   }
   times <- build_times(cache = config$cache)
-  if (!is.null(targets)) {
-    config$schedule <- prune_drake_graph(config$schedule, to = targets)
-  }
   times <- times[times$target %in% V(config$schedule)$name, ]
   untimed <- setdiff(V(config$schedule)$name, times$target)
   untimed <- setdiff(untimed, names(known_times))
