@@ -1,9 +1,9 @@
 first_outdated <- function(config) {
-  graph <- targets_graph(config)
+  schedule <- config$targets_schedule
   out <- character(0)
   old_leaves <- NULL
   while (TRUE) {
-    new_leaves <- setdiff(leaf_nodes(graph), out)
+    new_leaves <- setdiff(leaf_nodes(schedule), out)
     do_build <- lightly_parallelize(
       X = new_leaves,
       FUN = function(target) {
@@ -17,7 +17,7 @@ first_outdated <- function(config) {
     if (all(do_build)) {
       break
     } else {
-      graph <- delete_vertices(graph, v = new_leaves[!do_build])
+      schedule <- delete_vertices(schedule, v = new_leaves[!do_build])
     }
     old_leaves <- new_leaves
   }
@@ -82,7 +82,7 @@ outdated <-  function(
   first_targets <- first_outdated(config = config)
   later_targets <- downstream_nodes(
     from = first_targets,
-    graph = config$graph,
+    graph = config$targets_schedule,
     jobs = config$jobs
   )
   sort(unique(as.character(c(first_targets, later_targets))))
