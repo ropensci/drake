@@ -8,8 +8,8 @@ test_with_dir("future package functionality", {
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
   load_mtcars_example(envir = e)
-  backends <- c(rep("future", 2), "future_lapply_staged")
-  caching <- c("master", "worker", "master")
+  backends <- rep("future", 2)
+  caching <- c("master", "worker")
   for (i in seq_along(backends)) {
     clean(destroy = TRUE)
     make(
@@ -91,14 +91,6 @@ test_with_dir("future package functionality", {
     )
     clean(destroy = TRUE)
   }
-})
-
-test_with_dir("fls_prepare() writes cache folder if nonexistent", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  config <- dbug()
-  config$cache_path <- "nope"
-  fls_prepare(config)
-  expect_true(file.exists("nope"))
 })
 
 test_with_dir("can gracefully conclude a crashed worker", {

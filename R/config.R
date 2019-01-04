@@ -455,7 +455,7 @@ drake_config <- function(
   garbage_collection = FALSE,
   template = list(),
   sleep = function(i) 0.01,
-  hasty_build = drake::default_hasty_build,
+  hasty_build = NULL,
   memory_strategy = c("speed", "memory", "lookahead"),
   layout = NULL,
   lock_envir = TRUE
@@ -505,6 +505,14 @@ drake_config <- function(
     warning(
       "Argument `timeout` is deprecated. ",
       "Use `elapsed` and/or `cpu` instead.",
+      call. = FALSE
+      # 2018-12-07 # nolint
+    )
+  }
+  if (!is.null(hasty_build)) {
+    warning(
+      "Argument `hasty_build` is deprecated. ",
+      "Check out https://github.com/wlandau/drake.hasty instead.",
       call. = FALSE
       # 2018-12-07 # nolint
     )

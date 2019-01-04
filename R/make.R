@@ -105,7 +105,7 @@ make <- function(
   garbage_collection = FALSE,
   template = list(),
   sleep = function(i) 0.01,
-  hasty_build = drake::default_hasty_build,
+  hasty_build = NULL,
   memory_strategy = c("speed", "memory", "lookahead"),
   layout = NULL,
   lock_envir = TRUE
