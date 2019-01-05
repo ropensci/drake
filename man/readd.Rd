@@ -14,7 +14,7 @@ loadd(..., list = character(0), imported_only = FALSE,
   path, search = search, verbose = verbose), namespace = NULL,
   envir = parent.frame(), jobs = 1, verbose = 1L, deps = FALSE,
   lazy = "eager", graph = NULL, replace = TRUE,
-  show_source = FALSE, tidyselect = TRUE)
+  show_source = FALSE, tidyselect = TRUE, config = NULL)
 }
 \arguments{
 \item{target}{If \code{character_only} is \code{TRUE}, then
