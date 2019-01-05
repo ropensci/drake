@@ -146,14 +146,9 @@ output_file_hash <- function(
   )
 }
 
-self_hash <- Vectorize(function(target, config) {
-  if (kernel_exists(target = target, config = config)) {
-    config$cache$get_hash(target, namespace = "kernels")
-  } else {
-    NA_character_
-  }
-},
-"target", USE.NAMES = FALSE)
+self_hash <- function(target, config) {
+  config$cache$mget_hash(target, namespace = "kernels")
+}
 
 rehash_file <- function(target, config) {
   if (!is_encoded_path(target)) {
