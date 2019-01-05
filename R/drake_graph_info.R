@@ -173,7 +173,7 @@ drake_graph_info <- function(
   if (targets_only) {
     config$graph <- igraph::delete_vertices(
       graph = config$graph,
-      v = config$import_names
+      v = igraph::V(config$graph)$name[igraph::V(config$graph)$imported]
     )
   }
   config <- get_raw_node_category_data(config)

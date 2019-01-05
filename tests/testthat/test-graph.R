@@ -215,28 +215,35 @@ test_with_dir("file_out()/file_in() connections", {
     session_info = FALSE,
     cache = storr::storr_environment()
   )
+  dependencies <- function(target, config, reverse = FALSE) {
+    deps_graph(targets = target, graph = config$graph, reverse = reverse)
+  }
   expect_equal(dependencies("out1", config), "saver1")
   expect_equal(dependencies("saver1", config), character(0))
   expect_equal(
     sort(dependencies("reader3", config)),
-    sort(c("saver1", "saver2"))
+    sort(c("saver1", "saver2", encode_path("b"), encode_path("d")))
   )
   expect_equal(dependencies("saver2", config), character(0))
   expect_equal(dependencies("out2", config), "reader2")
   expect_equal(
     sort(dependencies("reader1", config)),
-    sort(c("saver1", "saver2"))
+    sort(c("saver1", "saver2", encode_path("c"), encode_path("d")))
   )
-  expect_equal(dependencies("reader2", config), "saver1")
+  expect_equal(
+    sort(dependencies("reader2", config)),
+    sort(c("saver1", encode_path("a"), encode_path("b")))
+  )
   expect_equal(dependencies("out1", config, reverse = TRUE), character(0))
   expect_equal(
     sort(dependencies("saver1", config, reverse = TRUE)),
-    sort(c("out1", "reader1", "reader2", "reader3"))
+    sort(c("out1", "reader1", "reader2", "reader3",
+           encode_path("a"), encode_path("b"), encode_path("c")))
   )
   expect_equal(dependencies("reader3", config, reverse = TRUE), character(0))
   expect_equal(
     sort(dependencies("saver2", config, reverse = TRUE)),
-    sort(c("reader1", "reader3"))
+    sort(c("reader1", "reader3", encode_path("d")))
   )
   expect_equal(dependencies("out2", config, reverse = TRUE), character(0))
   expect_equal(dependencies("reader1", config, reverse = TRUE), character(0))
