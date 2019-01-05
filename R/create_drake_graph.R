@@ -80,7 +80,9 @@ cdg_finalize_graph <- function(edges, targets, config) {
   console_preprocess(text = "construct graph", config = config)
   targets <- union(targets, edges$to[edges$from %in% targets])
   graph <- igraph::graph_from_data_frame(edges)
-  graph <- prune_drake_graph(graph, to = targets, jobs = config$jobs)
+  graph <- prune_drake_graph(
+    graph, to = config$plan$target, jobs = config$jobs
+  )
   graph <- igraph::set_vertex_attr(graph, "imported", value = TRUE)
   graph <- igraph::set_vertex_attr(
     graph = graph,
