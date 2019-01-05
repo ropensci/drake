@@ -89,7 +89,7 @@ outdated <-  function(
 }
 
 #' @title Report any import objects required by your drake_plan
-#'   plan but missing from your workspace.
+#'   plan but missing from your workspace or file system.
 #' @description Checks your workspace/environment and
 #' file system.
 #' @export
@@ -110,7 +110,7 @@ outdated <-  function(
 #' })
 #' }
 missed <- function(config = drake::read_drake_config()) {
-  imports <- setdiff(V(config$graph)$name, config$plan$target)
+  imports <- igraph::V(config$imports)$name
   is_missing <- lightly_parallelize(
     X = imports,
     FUN = function(x) {
