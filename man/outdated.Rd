@@ -48,7 +48,8 @@ load_mtcars_example() # Get the code with drake_example("mtcars").
 # most current information. Do not modify the config list by hand.
 config <- drake_config(my_plan)
 outdated(config = config) # Which targets are out of date?
-config <- make(my_plan) # Run the projects, build the targets.
+make(my_plan) # Run the projects, build the targets.
+config <- drake_config(my_plan)
 # Now, everything should be up to date (no targets listed).
 outdated(config = config)
 # outdated() is sensitive to triggers.

@@ -450,29 +450,7 @@ outdated(config) # Everything is up to date again.
 vis_drake_graph(config) # See how they fit in an interactive graph.
 make(my_plan, cache_log_file = TRUE) # Write a text log file this time.
 vis_drake_graph(config) # The colors changed in the graph.
-clean() # Start from scratch.
-# Run with at most 2 jobs at a time for the imports
-# and at most 4 jobs at a time for the targets.
-make(my_plan, jobs = c(imports = 2, targets = 4))
-clean() # Start from scratch.
-# Rerun with "Makefile" parallelism with at most 4 jobs.
-# Requires Rtools on Windows.
-# make(my_plan, parallelism = "Makefile", jobs = 4) # nolint
-clean() # Start from scratch.
-# Specify your own Makefile recipe.
-# Requires Rtools on Windows.
-# make(my_plan, parallelism = "Makefile", jobs = 4, # nolint
-#   recipe_command = "R -q -e") # nolint
-#
-# make() respects tidy evaluation as implemented in the rlang package.
-# This workflow plan uses rlang's quasiquotation operator `!!`.
-my_plan <- drake_plan(list = c(
-  little_b = "\\"b\\"",
-  letter = "!!little_b"
-))
-my_plan
-make(my_plan)
-readd(letter) # "b"
+clean() # Start from scratch next time around.
 })
 }
 }

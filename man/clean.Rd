@@ -114,11 +114,9 @@ clean(garbage_collection = TRUE)
 # All the targets and imports are gone.
 cached()
 # But there is still cached metadata.
-names(read_drake_meta())
 build_times()
 # To make even more room, use the "purge" flag.
 clean(purge = TRUE)
-names(read_drake_meta())
 build_times()
 # Completely remove the entire cache (default: '.drake/' folder).
 clean(destroy = TRUE)

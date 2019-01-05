@@ -14,5 +14,5 @@ The R recipe wildcard.
 Relevant to \code{"Makefile"} parallelism only.
 }
 \examples{
-r_recipe_wildcard()
+# deprecated
 }

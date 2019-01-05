@@ -41,7 +41,8 @@ currently get more specific than that.
 \dontrun{
 test_with_dir("Quarantine side effects.", {
 load_mtcars_example() # Load drake's canonical example.
-config <- make(my_plan) # Run the project, build the targets.
+make(my_plan) # Run the project, build the targets.
+config <- drake_config(my_plan)
 # Get some example dependency profiles of targets.
 dependency_profile(small, config = config)
 # Change a dependency.

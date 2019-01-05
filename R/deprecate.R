@@ -986,7 +986,7 @@ default_recipe_command <- function() {
 #' @description Relevant to `"Makefile"` parallelism only.
 #' @return The R recipe wildcard.
 #' @examples
-#' r_recipe_wildcard()
+#' # deprecated
 r_recipe_wildcard <- function() {
   .Deprecated(
     "r_recipe_wildcard",
