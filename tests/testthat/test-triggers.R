@@ -340,6 +340,9 @@ test_with_dir("deps load into memory for complex triggers", {
     )
     expect_true(all(cached(list = plan$target)))
   }
+  config <- drake_config(plan)
+  expect_equal(config$layout[["psi_2"]]$deps_condition$memory, "psi_1")
+  expect_equal(config$layout[["psi_3"]]$deps_change$memory, "psi_2")
 })
 
 test_with_dir("trigger components react appropriately", {
