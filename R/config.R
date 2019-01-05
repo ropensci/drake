@@ -571,10 +571,9 @@ drake_config <- function(
     console_log_file = console_log_file,
     verbose = verbose
   )
-  all_imports <- igraph::V(graph)$name[igraph::V(graph)$imported]
-  all_targets <- intersect(igraph::V(graph)$name, plan$target)
-  imports_schedule <- subset_graph(graph, all_imports)
-  targets_schedule <- subset_graph(graph, all_targets)
+  imports <- igraph::V(graph)$name[igraph::V(graph)$imported]
+  imports_schedule <- subset_graph(graph, imports)
+  targets_schedule <- subset_graph(graph, plan$target)
   cache_path <- force_cache_path(cache)
   lazy_load <- parse_lazy_arg(lazy_load)
   memory_strategy <- match.arg(memory_strategy)
@@ -622,8 +621,6 @@ drake_config <- function(
     memory_strategy = memory_strategy,
     console_log_file = console_log_file,
     ensure_workers = ensure_workers,
-    all_targets = all_targets,
-    all_imports = all_imports,
     garbage_collection = garbage_collection,
     template = template,
     sleep = sleep,
