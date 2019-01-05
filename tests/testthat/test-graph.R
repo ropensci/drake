@@ -310,13 +310,14 @@ test_with_dir("show_output_files", {
     sort(e$from),
     sort(c(
       file_store(paste0("out", 1:2, ".txt")),
+      "target1",
       paste0("target", rep(1:2, each = 2))
     ))
   )
   expect_equal(
     sort(e$to),
     sort(c(
-      rep("target2", 2),
+      rep("target2", 3),
       file_store(paste0("out", 1:4, ".txt"))
     ))
   )
