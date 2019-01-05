@@ -967,7 +967,7 @@ Makefile_recipe <- function( # nolint
 #' for details and examples.
 #' @return A character scalar with the default recipe command.
 #' @examples
-#' default_recipe_command()
+#' # deprecated
 default_recipe_command <- function() {
   .Deprecated(
     "default_recipe_command",
