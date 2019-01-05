@@ -60,7 +60,6 @@ future_build <- function(target, meta, config, protect) {
     return(build)
   }
   conclude_build(build = build, config = config)
-  set_attempt_flag(key = build$target, config = config)
   list(target = target, checksum = mc_get_checksum(target, config))
 }
 
@@ -220,7 +219,6 @@ conclude_worker <- function(worker, config, queue) {
     )
     return(out)
   }
-  set_attempt_flag(key = build$target, config = config)
   mc_wait_outfile_checksum(
     target = build$target,
     checksum = build$checksum,

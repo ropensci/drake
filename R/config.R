@@ -564,18 +564,25 @@ drake_config <- function(
     cache = cache
   )
   graph <- create_drake_graph(
+    plan = plan,
     layout = layout,
     targets = targets,
     cache = cache,
-    jobs = jobs,
+    jobs = jobs_preprocess,
     console_log_file = console_log_file,
     verbose = verbose
   )
-  all_targets <- intersect(igraph::V(graph)$name, plan$target)
-  all_imports <- setdiff(igraph::V(graph)$name, all_targets)
+  import_names <- igraph::V(graph)$name[igraph::V(graph)$imported]
+  imports <- subset_graph(graph, import_names)
+  schedule <- subset_graph(graph, plan$target)
   cache_path <- force_cache_path(cache)
   lazy_load <- parse_lazy_arg(lazy_load)
   memory_strategy <- match.arg(memory_strategy)
+  caching <- match.arg(caching)
+  ht_encode_path <- ht_new()
+  ht_decode_path <- ht_new()
+  ht_encode_namespaced <- ht_new()
+  ht_decode_namespaced <- ht_new()
   out <- list(
     plan = plan,
     targets = targets,
@@ -589,11 +596,13 @@ drake_config <- function(
     verbose = verbose,
     prework = prework,
     layout = layout,
-    ht_encode_path = ht_new(),
-    ht_decode_path = ht_new(),
-    ht_encode_namespaced = ht_new(),
-    ht_decode_namespaced = ht_new(),
+    ht_encode_path = ht_encode_path,
+    ht_decode_path = ht_decode_path,
+    ht_encode_namespaced = ht_encode_namespaced,
+    ht_decode_namespaced = ht_decode_namespaced,
     graph = graph,
+    imports = imports,
+    schedule = schedule,
     seed = seed,
     trigger = trigger,
     timeout = timeout,
@@ -607,14 +616,12 @@ drake_config <- function(
     lazy_load = lazy_load,
     session_info = session_info,
     cache_log_file = cache_log_file,
-    caching = match.arg(caching),
+    caching = caching,
     keep_going = keep_going,
     session = session,
     memory_strategy = memory_strategy,
     console_log_file = console_log_file,
     ensure_workers = ensure_workers,
-    all_targets = all_targets,
-    all_imports = all_imports,
     garbage_collection = garbage_collection,
     template = template,
     sleep = sleep,

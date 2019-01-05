@@ -40,6 +40,16 @@ ht_clone <- function(ht) {
   list2env(as.list(ht), hash = TRUE, parent = emptyenv())
 }
 
+ht_filter <- function(ht, x) {
+  index <- vapply(
+    X = x,
+    FUN = ht_exists,
+    FUN.VALUE = logical(1),
+    ht = ht
+  )
+  x[index]
+}
+
 # Merge y into x
 ht_merge <- function(x, y) {
   ht_set(x, ht_list(y))

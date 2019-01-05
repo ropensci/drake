@@ -286,7 +286,7 @@ deps_targets <- function(
       "Use deps_target() (singular) instead."
     )
   )
-  dependencies(targets = targets, config = config, reverse = reverse)
+  deps_target(target = targets, config = config)
 }
 
 #' @title Deprecated. Get a template file for execution on a cluster.
@@ -967,7 +967,7 @@ Makefile_recipe <- function( # nolint
 #' for details and examples.
 #' @return A character scalar with the default recipe command.
 #' @examples
-#' default_recipe_command()
+#' # deprecated
 default_recipe_command <- function() {
   .Deprecated(
     "default_recipe_command",
@@ -986,7 +986,7 @@ default_recipe_command <- function() {
 #' @description Relevant to `"Makefile"` parallelism only.
 #' @return The R recipe wildcard.
 #' @examples
-#' r_recipe_wildcard()
+#' # deprecated
 r_recipe_wildcard <- function() {
   .Deprecated(
     "r_recipe_wildcard",

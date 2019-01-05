@@ -145,7 +145,8 @@ deps_target <- function(
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
 #' load_mtcars_example() # Load drake's canonical example.
-#' config <- make(my_plan) # Run the project, build the targets.
+#' make(my_plan) # Run the project, build the targets.
+#' config <- drake_config(my_plan)
 #' # Get some example dependency profiles of targets.
 #' dependency_profile(small, config = config)
 #' # Change a dependency.
@@ -233,28 +234,6 @@ tracked <- function(config) {
     jobs = config$jobs
   )
   display_keys(clean_dependency_list(out), config)
-}
-
-dependencies <- function(targets, config, reverse = FALSE) {
-  if (!length(targets)) {
-    return(character(0))
-  }
-  opt <- igraph::igraph_opt("return.vs.es")
-  on.exit(igraph::igraph_options(return.vs.es = opt))
-  igraph::igraph_options(return.vs.es = FALSE)
-  index <- adjacent_vertices(
-    graph = config$graph,
-    v = targets,
-    mode = ifelse(reverse, "out", "in")
-  )
-  index <- unlist(index)
-  index <- unique(index)
-  igraph::V(config$graph)$name[index + 1]
-}
-
-target_graph_dependencies <- function(targets, config, jobs = 1) {
-  deps <- dependencies(targets = targets, config = config)
-  intersect(deps, config$plan$target)
 }
 
 import_dependencies <- function(

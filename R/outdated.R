@@ -1,23 +1,23 @@
 first_outdated <- function(config) {
-  graph <- targets_graph(config)
+  schedule <- config$schedule
   out <- character(0)
   old_leaves <- NULL
   while (TRUE) {
-    new_leaves <- setdiff(leaf_nodes(graph), out)
+    new_leaves <- setdiff(leaf_nodes(schedule), out)
     do_build <- lightly_parallelize(
       X = new_leaves,
       FUN = function(target) {
         meta <- drake_meta(target, config)
         should_build_target(target, meta, config)
       },
-      jobs = config$jobs
+      jobs = config$jobs_preprocess
     )
     do_build <- unlist(do_build)
     out <- c(out, new_leaves[do_build])
     if (all(do_build)) {
       break
     } else {
-      graph <- delete_vertices(graph, v = new_leaves[!do_build])
+      schedule <- delete_vertices(schedule, v = new_leaves[!do_build])
     }
     old_leaves <- new_leaves
   }
@@ -59,7 +59,8 @@ first_outdated <- function(config) {
 #' # most current information. Do not modify the config list by hand.
 #' config <- drake_config(my_plan)
 #' outdated(config = config) # Which targets are out of date?
-#' config <- make(my_plan) # Run the projects, build the targets.
+#' make(my_plan) # Run the projects, build the targets.
+#' config <- drake_config(my_plan)
 #' # Now, everything should be up to date (no targets listed).
 #' outdated(config = config)
 #' # outdated() is sensitive to triggers.
@@ -82,14 +83,14 @@ outdated <-  function(
   first_targets <- first_outdated(config = config)
   later_targets <- downstream_nodes(
     from = first_targets,
-    graph = config$graph,
-    jobs = config$jobs
+    graph = config$schedule,
+    jobs = config$jobs_preprocess
   )
   sort(unique(as.character(c(first_targets, later_targets))))
 }
 
 #' @title Report any import objects required by your drake_plan
-#'   plan but missing from your workspace.
+#'   plan but missing from your workspace or file system.
 #' @description Checks your workspace/environment and
 #' file system.
 #' @export
@@ -110,7 +111,7 @@ outdated <-  function(
 #' })
 #' }
 missed <- function(config = drake::read_drake_config()) {
-  imports <- setdiff(V(config$graph)$name, config$plan$target)
+  imports <- igraph::V(config$imports)$name
   is_missing <- lightly_parallelize(
     X = imports,
     FUN = function(x) {

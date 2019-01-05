@@ -235,8 +235,9 @@ test_with_dir("deps_target()", {
     expect_equal(d1[[n]], d2[[n]])
   }
   d <- deps_target(regression1_small, config = config)
-  expect_equal(length(d), 1)
+  expect_equal(length(d), 2)
   expect_equal(sort(d$globals), sort(c("reg1", "small")))
+  expect_equal(d$memory, "small")
 })
 
 test_with_dir("self-referential commands and imports", {

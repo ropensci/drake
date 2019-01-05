@@ -14,5 +14,5 @@ See the help file of \code{\link[=Makefile_recipe]{Makefile_recipe()}}
 for details and examples.
 }
 \examples{
-default_recipe_command()
+# deprecated
 }

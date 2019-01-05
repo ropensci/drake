@@ -17,11 +17,6 @@ test_with_dir("console_up_to_date", {
   con <- drake_config(pl, verbose = FALSE, session_info = FALSE)
   expect_silent(console_up_to_date(con))
   con$verbose <- TRUE
-  expect_silent(console_up_to_date(con))
-  con$cache$clear(namespace = "attempt")
-  make(pl, verbose = FALSE, session_info = FALSE)
-  con <- drake_config(pl, verbose = FALSE, session_info = FALSE)
-  con$verbose <- TRUE
   expect_message(console_up_to_date(con))
 })
 

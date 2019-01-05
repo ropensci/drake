@@ -144,9 +144,11 @@ predict_load_balancing <- function(
   warn = TRUE
 ) {
   deprecate_targets_only(targets_only) # 2019-01-03 # nolint
-  config$schedule <- targets_graph(config)
   if (!is.null(targets)) {
-    config$schedule <- prune_drake_graph(config$schedule, to = targets)
+    config$schedule <- prune_drake_graph(
+      config$schedule,
+      to = targets
+    )
   }
   assumptions <- timing_assumptions(
     config = config,
@@ -207,8 +209,9 @@ timing_assumptions <- function(
     outdated <- outdated(config)
   }
   times <- build_times(cache = config$cache)
-  times <- times[times$target %in% V(config$schedule)$name, ]
-  untimed <- setdiff(V(config$schedule)$name, times$target)
+  vertices <- igraph::V(config$schedule)$name
+  times <- times[times$target %in% vertices, ]
+  untimed <- setdiff(vertices, times$target)
   untimed <- setdiff(untimed, names(known_times))
   if (length(untimed)) {
     warning(
@@ -220,11 +223,10 @@ timing_assumptions <- function(
       call. = FALSE
     )
   }
-  keep_known_times <- intersect(names(known_times), V(config$schedule)$name)
+  keep_known_times <- intersect(names(known_times), vertices)
   known_times <- known_times[keep_known_times]
-  names <- igraph::V(config$schedule)$name
-  assumptions <- rep(default_time, length(names))
-  names(assumptions) <- names
+  assumptions <- rep(default_time, length(vertices))
+  names(assumptions) <- vertices
   assumptions[times$target] <- times$elapsed
   assumptions[names(known_times)] <- known_times
   if (!from_scratch) {

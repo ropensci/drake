@@ -69,7 +69,6 @@ cmq_send_target <- function(config) {
   }
   # nocov end
   announce_build(target = target, meta = meta, config = config)
-  set_attempt_flag(key = target, config = config)
   if (identical(config$caching, "master")) {
     manage_memory(targets = target, config = config, jobs = 1)
     deps <- cmq_deps_list(target = target, config = config)
@@ -88,8 +87,7 @@ cmq_send_target <- function(config) {
 }
 
 cmq_deps_list <- function(target, config) {
-  deps <- dependencies(targets = target, config = config)
-  deps <- intersect(deps, config$plan$target)
+  deps <- config$layout[[target]]$deps_build$memory
   out <- lapply(
     X = deps,
     FUN = function(name) {

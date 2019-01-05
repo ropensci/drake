@@ -16,7 +16,8 @@ whole_static_analysis <- function(
     cache = cache,
     console_log_file = console_log_file,
     trigger = parse_trigger(trigger = trigger, envir = envir),
-    allowed_globals = sort(c(plan$target, ls(envir, all.names = TRUE)))
+    allowed_globals = sort(c(plan$target, ls(envir, all.names = TRUE))),
+    ht_targets = ht_new(plan$target)
   )
   imports <- wsa_prepare_imports(config)
   imports_kernel <- wsa_imports_kernel(config, imports)
@@ -162,6 +163,12 @@ wsa_prepare_layout <- function(layout, config){
       layout$trigger$change,
       exclude = layout$target,
       allowed_globals = config$allowed_globals
+    )
+  }
+  for (field in c("deps_build", "deps_condition", "deps_change")) {
+    layout[[field]]$memory <- ht_filter(
+      ht = config$ht_targets,
+      x = layout[[field]]$globals
     )
   }
   layout

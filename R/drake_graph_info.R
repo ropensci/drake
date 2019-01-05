@@ -154,16 +154,11 @@ drake_graph_info <- function(
     config$layout[[target]]$deps_build$file_out
   })
   names(config$file_out) <- config$plan$target
-  if (show_output_files) {
-    config$graph <- create_drake_graph(
-      layout = config$layout,
-      targets = config$targets,
-      cache = NULL,
-      jobs = config$jobs,
-      console_log_file = config$console_log_file,
-      verbose = config$verbose,
-      collapse = FALSE
-    )
+  if (!show_output_files) {
+    vertices <- igraph::V(config$graph)$name
+    imported <- igraph::V(config$graph)$imported
+    vertices <- vertices[!(!imported & is_encoded_path(vertices))]
+    config$graph <- subset_graph(config$graph, vertices)
   }
   config$graph <- get_neighborhood(
     graph = config$graph,
@@ -171,15 +166,14 @@ drake_graph_info <- function(
     mode = match.arg(mode),
     order = order
   )
-  config$graph <- subset_graph(graph = config$graph, subset = subset)
-  config$imports <- intersect(
-    igraph::V(config$graph)$name,
-    config$all_imports
-  )
+  if (!is.null(subset)) {
+    config$graph <- subset_graph(graph = config$graph, subset = subset)
+  }
+  config$import_names <- igraph::V(config$imports)$name
   if (targets_only) {
     config$graph <- igraph::delete_vertices(
       graph = config$graph,
-      v = config$imports
+      v = igraph::V(config$graph)$name[igraph::V(config$graph)$imported]
     )
   }
   config <- get_raw_node_category_data(config)

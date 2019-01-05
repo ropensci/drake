@@ -36,29 +36,7 @@
 #' vis_drake_graph(config) # See how they fit in an interactive graph.
 #' make(my_plan, cache_log_file = TRUE) # Write a text log file this time.
 #' vis_drake_graph(config) # The colors changed in the graph.
-#' clean() # Start from scratch.
-#' # Run with at most 2 jobs at a time for the imports
-#' # and at most 4 jobs at a time for the targets.
-#' make(my_plan, jobs = c(imports = 2, targets = 4))
-#' clean() # Start from scratch.
-#' # Rerun with "Makefile" parallelism with at most 4 jobs.
-#' # Requires Rtools on Windows.
-#' # make(my_plan, parallelism = "Makefile", jobs = 4) # nolint
-#' clean() # Start from scratch.
-#' # Specify your own Makefile recipe.
-#' # Requires Rtools on Windows.
-#' # make(my_plan, parallelism = "Makefile", jobs = 4, # nolint
-#' #   recipe_command = "R -q -e") # nolint
-#' #
-#' # make() respects tidy evaluation as implemented in the rlang package.
-#' # This workflow plan uses rlang's quasiquotation operator `!!`.
-#' my_plan <- drake_plan(list = c(
-#'   little_b = "\"b\"",
-#'   letter = "!!little_b"
-#' ))
-#' my_plan
-#' make(my_plan)
-#' readd(letter) # "b"
+#' clean() # Start from scratch next time around.
 #' })
 #' }
 make <- function(
@@ -248,7 +226,6 @@ make_with_config <- function(config = drake::read_drake_config()) {
 #' })
 #' }
 make_imports <- function(config = drake::read_drake_config()) {
-  config$schedule <- imports_graph(config = config)
   if (on_windows() && config$jobs > 1L) {
     process_imports_parLapply(config) # nocov
   } else {
@@ -294,14 +271,15 @@ make_imports <- function(config = drake::read_drake_config()) {
 #' }
 make_targets <- function(config = drake::read_drake_config()) {
   outdated <- outdated(config, do_prework = FALSE, make_imports = FALSE)
-  if (!length(outdated)) {
+  if (length(outdated)) {
+    config$schedule <- igraph::induced_subgraph(
+      graph = config$schedule,
+      vids = outdated
+    )
+    run_drake_backend(config = config)
+  } else {
     console_up_to_date(config = config)
-    return(invisible())
   }
-  up_to_date <- setdiff(config$all_targets, outdated)
-  config$schedule <- targets_graph(config = config)
-  config$schedule <- igraph::delete_vertices(config$schedule, v = up_to_date)
-  run_drake_backend(config = config)
-  console_up_to_date(config = config)
+  console_edge_cases(config)
   invisible()
 }

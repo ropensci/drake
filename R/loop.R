@@ -17,7 +17,6 @@ loop_build <- function(target, config, downstream) {
     return()
   }
   announce_build(target, meta, config)
-  set_attempt_flag(key = target, config = config)
   manage_memory(target, config, downstream = downstream)
   build <- build_target(target = target, meta = meta, config = config)
   conclude_build(build = build, config = config)

@@ -80,21 +80,13 @@ runtime_checks <- function(config) {
 }
 
 missing_input_files <- function(config) {
-  missing_files <- V(config$graph)$name
-  missing_files <- setdiff(x = missing_files, y = config$plan$target)
-  missing_files <- parallel_filter(
-    missing_files,
+  files <- parallel_filter(
+    igraph::V(config$imports)$name,
     f = is_encoded_path,
-    jobs = config$jobs
+    jobs = config$jobs_preprocess
   )
-  missing_files <- decode_path(missing_files, config)
-  missing_files <- parallel_filter(
-    missing_files,
-    f = function(x) {
-      !file.exists(x)
-    },
-    jobs = config$jobs
-  )
+  files <- decode_path(x = files, config = config)
+  missing_files <- files[!file.exists(files)]
   if (length(missing_files)) {
     warning(
       "missing input files:\n",
@@ -102,7 +94,7 @@ missing_input_files <- function(config) {
       call. = FALSE
     )
   }
-  invisible(missing_files)
+  invisible()
 }
 
 check_case_sensitivity <- function(config) {

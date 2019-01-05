@@ -67,6 +67,23 @@ prune_drake_graph <- function(
   delete_vertices(graph = graph, v = ignore)
 }
 
+deps_graph <- function(targets, graph, reverse = FALSE) {
+  if (!length(targets)) {
+    return(character(0))
+  }
+  opt <- igraph::igraph_opt("return.vs.es")
+  on.exit(igraph::igraph_options(return.vs.es = opt))
+  igraph::igraph_options(return.vs.es = FALSE)
+  index <- adjacent_vertices(
+    graph = graph,
+    v = targets,
+    mode = ifelse(reverse, "out", "in")
+  )
+  index <- unlist(index)
+  index <- unique(index)
+  igraph::V(graph)$name[index + 1]
+}
+
 get_neighborhood <- function(graph, from, mode, order) {
   if (!length(order)) {
     order <- length(V(graph))
@@ -110,27 +127,17 @@ leaf_nodes <- function(graph) {
 }
 
 filter_upstream <- function(targets, graph) {
-  delete_these <- setdiff(V(graph)$name, targets)
+  delete_these <- setdiff(igraph::V(graph)$name, targets)
   graph <- delete_vertices(graph = graph, v = delete_these)
   leaf_nodes(graph)
 }
 
 subset_graph <- function(graph, subset) {
   if (!length(subset)) {
-    return(graph)
+    return(igraph::make_empty_graph())
   }
   subset <- intersect(subset, V(graph)$name)
   igraph::induced_subgraph(graph = graph, vids = subset)
-}
-
-imports_graph <- function(config) {
-  delete_these <- setdiff(V(config$graph)$name, config$all_imports)
-  delete_vertices(config$graph, v = delete_these)
-}
-
-targets_graph <- function(config) {
-  delete_these <- intersect(V(config$graph)$name, config$all_imports)
-  delete_vertices(config$graph, v = delete_these)
 }
 
 drake_subcomponent <- function(...) {

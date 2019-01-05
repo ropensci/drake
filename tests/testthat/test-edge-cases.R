@@ -240,10 +240,16 @@ test_with_dir("GitHub issue 460", {
     targets = "b",
     cache = storr::storr_environment()
   )
-  expect_equal(sort(config$all_targets), sort(letters[1:2]))
+  expect_equal(sort(igraph::V(config$schedule)$name), sort(letters[1:2]))
   expect_equal(
-    intersect(config$all_imports, config$all_targets), character(0))
-  expect_true(encode_namespaced("base::sqrt") %in% config$all_imports)
+    intersect(
+      igraph::V(config$schedule)$name,
+      igraph::V(config$imports)$name
+    ),
+    character(0)
+  )
+  expect_true(
+    encode_namespaced("base::sqrt") %in% igraph::V(config$imports)$name)
   make_targets(config)
 })
 
@@ -307,4 +313,8 @@ test_with_dir("case sensitivity", {
     ),
     regexp = "case insensitive"
   )
+})
+
+test_with_dir("empty deps_graph()", {
+  expect_equal(deps_graph(NULL, 1, 2), character(0))
 })
