@@ -87,8 +87,9 @@ cmq_send_target <- function(config) {
 }
 
 cmq_deps_list <- function(target, config) {
+  deps <- config$layout[[target]]$deps_build$memory
   out <- lapply(
-    X = config$layout[[target]]$deps_build$memory,
+    X = deps,
     FUN = function(name) {
       config$eval[[name]]
     }

@@ -166,7 +166,10 @@ wsa_prepare_layout <- function(layout, config){
     )
   }
   for (field in c("deps_build", "deps_condition", "deps_change")) {
-    layout[[field]]$memory <- ht_filter(ht_targets, layout[[field]]$globals)
+    layout[[field]]$memory <- ht_filter(
+      ht = config$ht_targets,
+      x = layout[[field]]$globals
+    )
   }
   layout
 }
