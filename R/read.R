@@ -199,7 +199,8 @@ loadd <- function(
   graph = NULL,
   replace = TRUE,
   show_source = FALSE,
-  tidyselect = TRUE
+  tidyselect = TRUE,
+  config = NULL
 ) {
   force(envir)
   lazy <- parse_lazy_arg(lazy)
@@ -230,13 +231,10 @@ loadd <- function(
     stop("no targets to load.")
   }
   if (deps) {
-    if (is.null(graph)) {
-      graph <- read_drake_graph(cache = cache)
+    if (is.null(config)) {
+      config <- read_drake_config(cache = cache)
     }
-    targets <- deps_schedule(
-      targets = targets,
-      config = list(targets_schedule = graph)
-    )
+    targets <- deps_memory(targets = targets, config = config)
   }
   exists <- lightly_parallelize(
     X = targets,

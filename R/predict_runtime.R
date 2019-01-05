@@ -145,8 +145,8 @@ predict_load_balancing <- function(
 ) {
   deprecate_targets_only(targets_only) # 2019-01-03 # nolint
   if (!is.null(targets)) {
-    config$targets_schedule <- prune_drake_graph(
-      config$targets_schedule,
+    config$schedule <- prune_drake_graph(
+      config$schedule,
       to = targets
     )
   }
@@ -209,7 +209,7 @@ timing_assumptions <- function(
     outdated <- outdated(config)
   }
   times <- build_times(cache = config$cache)
-  vertices <- igraph::V(config$targets_schedule)$name
+  vertices <- igraph::V(config$schedule)$name
   times <- times[times$target %in% vertices, ]
   untimed <- setdiff(vertices, times$target)
   untimed <- setdiff(untimed, names(known_times))

@@ -87,10 +87,8 @@ cmq_send_target <- function(config) {
 }
 
 cmq_deps_list <- function(target, config) {
-  deps <- deps_schedule(targets = target, config = config)
-  deps <- intersect(deps, config$plan$target)
   out <- lapply(
-    X = deps,
+    X = config$layout[[target]]$deps_build$memory,
     FUN = function(name) {
       config$eval[[name]]
     }

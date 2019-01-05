@@ -24,16 +24,15 @@ process_imports_mclapply <- function(config) {
   if (config$jobs_preprocess > 1L) {
     assert_pkg("parallel")
   }
-  schedule <- config$imports_schedule
-  while (length(V(schedule)$name)) {
-    imports <- leaf_nodes(schedule)
+  while (length(V(config$imports)$name)) {
+    imports <- leaf_nodes(config$imports)
     lightly_parallelize(
       X = imports,
       FUN = process_import,
       config = config,
       jobs = config$jobs_preprocess
     )
-    schedule <- delete_vertices(schedule, v = imports)
+    config$imports <- delete_vertices(config$imports, v = imports)
   }
   invisible()
 }
@@ -68,16 +67,15 @@ process_imports_parLapply <- function(config) { # nolint
     config = config,
     verbose_packages = FALSE
   )
-  schedule <- config$imports_schedule
-  while (length(V(schedule)$name)) {
-    imports <- leaf_nodes(schedule)
+  while (length(V(config$imports)$name)) {
+    imports <- leaf_nodes(config$imports)
     parallel::parLapply(
       cl = config$cluster,
       X = imports,
       fun = process_import,
       config = config
     )
-    schedule <- delete_vertices(schedule, v = imports)
+    config$imports <- delete_vertices(config$imports, v = imports)
   }
   invisible()
 }

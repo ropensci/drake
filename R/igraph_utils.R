@@ -67,6 +67,23 @@ prune_drake_graph <- function(
   delete_vertices(graph = graph, v = ignore)
 }
 
+deps_graph <- function(targets, graph, reverse = FALSE) {
+  if (!length(targets)) {
+    return(character(0))
+  }
+  opt <- igraph::igraph_opt("return.vs.es")
+  on.exit(igraph::igraph_options(return.vs.es = opt))
+  igraph::igraph_options(return.vs.es = FALSE)
+  index <- adjacent_vertices(
+    graph = graph,
+    v = targets,
+    mode = ifelse(reverse, "out", "in")
+  )
+  index <- unlist(index)
+  index <- unique(index)
+  igraph::V(graph)$name[index + 1]
+}
+
 get_neighborhood <- function(graph, from, mode, order) {
   if (!length(order)) {
     order <- length(V(graph))

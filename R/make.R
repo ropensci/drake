@@ -297,8 +297,8 @@ make_targets <- function(config = drake::read_drake_config()) {
     console_up_to_date(config = config)
     return(invisible())
   }
-  config$targets_schedule <- igraph::induced_subgraph(
-    graph = config$targets_schedule,
+  config$schedule <- igraph::induced_subgraph(
+    graph = config$schedule,
     vids = outdated
   )
   run_drake_backend(config = config)

@@ -235,23 +235,6 @@ tracked <- function(config) {
   display_keys(clean_dependency_list(out), config)
 }
 
-deps_schedule <- function(targets, config, reverse = FALSE) {
-  if (!length(targets)) {
-    return(character(0))
-  }
-  opt <- igraph::igraph_opt("return.vs.es")
-  on.exit(igraph::igraph_options(return.vs.es = opt))
-  igraph::igraph_options(return.vs.es = FALSE)
-  index <- adjacent_vertices(
-    graph = config$targets_schedule,
-    v = targets,
-    mode = ifelse(reverse, "out", "in")
-  )
-  index <- unlist(index)
-  index <- unique(index)
-  igraph::V(config$targets_schedule)$name[index + 1]
-}
-
 import_dependencies <- function(
   expr, exclude = character(0), allowed_globals = NULL
 ) {

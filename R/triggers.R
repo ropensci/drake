@@ -168,9 +168,7 @@ condition_trigger <- function(target, meta, config) {
     return(FALSE)
   }
   if (is.language(meta$trigger$condition)) {
-    deps <- config$layout[[target]]$deps_condition
-    deps <- deps[c("globals", "namespaced", "loadd", "readd")]
-    deps <- ensure_loaded(unlist(deps), config = config)
+    try_load(config$layout[[target]]$deps_condition$memory, config = config)
     value <- eval(meta$trigger$condition, envir = config$eval)
     value <- as.logical(value)
   } else {

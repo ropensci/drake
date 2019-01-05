@@ -34,12 +34,12 @@ manage_memory <- function(targets, config, downstream = NULL, jobs = 1) {
         jobs = jobs
       )
     }
-    downstream_deps <- deps_schedule(targets = downstream, config = config)
+    downstream_deps <- deps_memory(targets = downstream, config = config)
   } else {
     downstream <- downstream_deps <- NULL
   }
   already_loaded <- ls(envir = config$eval, all.names = TRUE)
-  target_deps <- deps_schedule(targets = targets, config = config)
+  target_deps <- deps_memory(targets = targets, config = config)
   if (!identical(config$memory_strategy, "speed")) {
     keep_these <- c(target_deps, downstream_deps)
     discard_these <- setdiff(x = config$plan$target, y = keep_these)
@@ -55,15 +55,20 @@ manage_memory <- function(targets, config, downstream = NULL, jobs = 1) {
   }
   targets <- setdiff(target_deps, targets)
   targets <- setdiff(targets, already_loaded)
-  safe_load(targets = targets, config = config, jobs = jobs)
+  try_load(targets = targets, config = config, jobs = jobs)
 }
 
-safe_load <- function(targets, config, jobs = 1) {
-  targets <- exclude_unloadable(
-    targets = targets,
-    config = config,
-    jobs = jobs
+deps_memory <- function(targets, config) {
+  out <- lapply(
+    X = targets,
+    FUN = function(target) {
+      config$layout[[target]]$deps_build$memory
+    }
   )
+  as.character(unlist(out))
+}
+
+try_load <- function(targets, config, jobs = 1) {
   if (length(targets)) {
     if (config$lazy_load == "eager") {
       console_many_targets(
@@ -74,25 +79,24 @@ safe_load <- function(targets, config, jobs = 1) {
     }
     lapply(
       X = targets,
-      FUN = load_target,
+      FUN = try_load_target,
+      config = config
+    )
+  }
+  invisible()
+}
+
+try_load_target <- function(target, config) {
+  try(
+    load_target(
+      target = target,
       namespace = config$cache$default_namespace,
       envir = config$eval,
       cache = config$cache,
       verbose = FALSE,
       lazy = config$lazy_load
     )
-  }
-  invisible()
-}
-
-ensure_loaded <- function(targets, config) {
-  targets <- Filter(
-    x = targets,
-    f = function(target) {
-      !exists(x = target, envir = config$eval, inherits = FALSE)
-    }
   )
-  safe_load(targets = targets, config = config)
 }
 
 get_import_from_memory <- function(target, config) {

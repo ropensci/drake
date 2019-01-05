@@ -77,8 +77,7 @@ drake_meta <- function(target, config = drake::read_drake_config()) {
     meta$output_file_hash <- output_file_hash(target = target, config = config)
   }
   if (!is.null(meta$trigger$change)) {
-    deps <- layout$deps_change[c("globals", "namespaced", "loadd", "readd")]
-    ensure_loaded(unlist(deps), config = config)
+    try_load(layout$deps_change$memory, config = config)
     meta$trigger$value <- eval(meta$trigger$change, config$eval)
   }
   meta

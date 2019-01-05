@@ -1,6 +1,6 @@
 new_priority_queue <- function(config, jobs = config$jobs_preprocess) {
   console_preprocess(text = "construct priority queue", config = config)
-  targets <- igraph::V(config$targets_schedule)$name
+  targets <- igraph::V(config$schedule)$name
   if (!length(targets)) {
     return(
       refclass_priority_queue$new(
@@ -16,7 +16,7 @@ new_priority_queue <- function(config, jobs = config$jobs_preprocess) {
   ndeps <- lightly_parallelize(
     X = targets,
     FUN = function(target) {
-      length(deps_schedule(targets = target, config = config))
+      igraph::degree(config$schedule, v = target, mode = "in")
     },
     jobs = jobs
   )
@@ -101,9 +101,9 @@ refclass_priority_queue <- methods::setRefClass(
 # Very specific to drake, does not belong inside
 # a generic priority queue.
 decrease_revdep_keys <- function(queue, target, config) {
-  revdeps <- deps_schedule(
+  revdeps <- deps_graph(
     targets = target,
-    config = config,
+    graph = config$schedule,
     reverse = TRUE
   )
   revdeps <- intersect(revdeps, queue$list())

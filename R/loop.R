@@ -1,5 +1,5 @@
 backend_loop <- function(config) {
-  targets <- igraph::topo_sort(config$targets_schedule)$name
+  targets <- igraph::topo_sort(config$schedule)$name
   for (i in seq_along(targets)) {
     loop_build(
       target = targets[i],

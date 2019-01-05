@@ -1,5 +1,5 @@
 first_outdated <- function(config) {
-  schedule <- config$targets_schedule
+  schedule <- config$schedule
   out <- character(0)
   old_leaves <- NULL
   while (TRUE) {
@@ -82,7 +82,7 @@ outdated <-  function(
   first_targets <- first_outdated(config = config)
   later_targets <- downstream_nodes(
     from = first_targets,
-    graph = config$targets_schedule,
+    graph = config$schedule,
     jobs = config$jobs_preprocess
   )
   sort(unique(as.character(c(first_targets, later_targets))))
