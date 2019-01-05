@@ -166,7 +166,9 @@ drake_graph_info <- function(
     mode = match.arg(mode),
     order = order
   )
-  config$graph <- subset_graph(graph = config$graph, subset = subset)
+  if (!is.null(subset)) {
+    config$graph <- subset_graph(graph = config$graph, subset = subset)
+  }
   config$imports <- intersect(
     igraph::V(config$graph)$name,
     config$all_imports
