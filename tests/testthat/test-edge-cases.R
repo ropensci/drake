@@ -314,3 +314,7 @@ test_with_dir("case sensitivity", {
     regexp = "case insensitive"
   )
 })
+
+test_with_dir("empty deps_graph()", {
+  expect_equal(deps_graph(NULL, 1, 2), character(0))
+})

@@ -124,24 +124,6 @@ get_import_from_memory <- function(target, config) {
   }
 }
 
-exclude_unloadable <- function(targets, config, jobs = jobs) {
-  unloadable <- parallel_filter(
-    x = targets,
-    f = function(target) {
-      !config$cache$exists(key = target)
-    },
-    jobs = jobs
-  )
-  if (length(unloadable)) {
-    warning(
-      "unable to load required dependencies:\n",
-      multiline_message(targets),
-      call. = FALSE
-    )
-  }
-  setdiff(targets, unloadable)
-}
-
 #' @title Get the environment where drake builds targets
 #' @description Call this function inside the commands in your plan
 #'   to get the environment where `drake` builds targets.

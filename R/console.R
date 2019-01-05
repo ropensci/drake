@@ -117,12 +117,21 @@ console_retry <- function(target, error, retries, config) {
 console_up_to_date <- function(config) {
   if (!config$verbose) {
     return(invisible())
-  } else if (config$skip_imports) {
-    console_skipped_imports(config = config)
   } else {
     out <- color("All targets are already up to date.", colors["target"])
     drake_message(out, config = config)
   }
+}
+
+console_edge_cases <- function(config) {
+  if (config$skip_imports) {
+    console_skipped_imports(config = config)
+  }
+  custom_triggers <- "trigger" %in% colnames(config$plan) ||
+    !identical(config$trigger, trigger())
+  if (custom_triggers) {
+    console_custom_triggers(config)
+  } 
 }
 
 console_skipped_imports <- function(config) {

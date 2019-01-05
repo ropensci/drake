@@ -293,14 +293,15 @@ make_imports <- function(config = drake::read_drake_config()) {
 #' }
 make_targets <- function(config = drake::read_drake_config()) {
   outdated <- outdated(config, do_prework = FALSE, make_imports = FALSE)
-  if (!length(outdated)) {
+  if (length(outdated)) {
+    config$schedule <- igraph::induced_subgraph(
+      graph = config$schedule,
+      vids = outdated
+    )
+    run_drake_backend(config = config)
+  } else {
     console_up_to_date(config = config)
-    return(invisible())
   }
-  config$schedule <- igraph::induced_subgraph(
-    graph = config$schedule,
-    vids = outdated
-  )
-  run_drake_backend(config = config)
+  console_edge_cases(config)
   invisible()
 }
