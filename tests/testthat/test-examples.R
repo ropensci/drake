@@ -137,10 +137,14 @@ test_with_dir("mtcars example works", {
   )
   suppressWarnings(con <- drake_config(plan = x))
   for (target in c("a")) {
-    expect_true("small" %in% dependencies(targets = target, config = con))
+    expect_true(
+      "small" %in% unlist(deps_target(target, con, character_only = TRUE))
+    )
   }
   for (target in c("b", "c")) {
-    expect_false("small" %in% dependencies(targets = target, config = con))
+    expect_false(
+      "small" %in% unlist(deps_target(target, con, character_only = TRUE))
+    )
   }
 
   # clean_mtcars_example() # nolint
