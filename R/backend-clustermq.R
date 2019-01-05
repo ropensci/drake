@@ -21,7 +21,6 @@ cmq_set_common_data <- function(config) {
   if (identical(config$envir, globalenv())) {
     export <- as.list(config$envir, all.names = TRUE) # nocov
   }
-  config$cache$flush_cache()
   export$config <- config
   config$workers$set_common_data(
     export = export,
