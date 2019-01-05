@@ -60,10 +60,10 @@ drake_build <- function(
     deps = TRUE,
     envir = config$eval,
     cache = config$cache,
-    graph = config$graph,
     jobs = jobs,
     replace = replace,
-    tidyselect = FALSE
+    tidyselect = FALSE,
+    config = config
   )
   meta <- drake_meta(target = target, config = config)
   announce_build(target = target, meta = meta, config = config)

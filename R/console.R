@@ -134,7 +134,7 @@ console_edge_cases <- function(config) {
     !identical(config$trigger, trigger())
   if (custom_triggers) {
     console_custom_triggers(config)
-  } 
+  }
 }
 
 console_skipped_imports <- function(config) {
