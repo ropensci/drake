@@ -54,7 +54,7 @@ cdg_node_to_edges <- function(node) {
       weak_tibble(from = node$target, to = file_out)
     )
   }
-  if (is.null(out)) {
+  if (is.null(out) && length(node$target)) {
     out <- weak_tibble(from = node$target, to = node$target)
   }
   out
