@@ -124,6 +124,9 @@ console_up_to_date <- function(config) {
 }
 
 console_edge_cases <- function(config) {
+  if (config$verbose < 1L) {
+    return()
+  }
   if (config$skip_imports) {
     console_skipped_imports(config = config)
   }
