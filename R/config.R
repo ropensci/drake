@@ -564,6 +564,7 @@ drake_config <- function(
     cache = cache
   )
   graph <- create_drake_graph(
+    plan = plan,
     layout = layout,
     targets = targets,
     cache = cache,
