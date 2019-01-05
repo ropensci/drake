@@ -28,10 +28,12 @@ test_with_dir("check_parallelism()", {
 test_with_dir("parallel imports", {
   config <- dbug()
   config$jobs_preprocess <- 2
-  make_imports(config)
+  process_imports(config)
   process_imports_parLapply(config)
   expect_true("a" %in% cached())
+  clean(cache = config$cache)
   process_imports_mclapply(config)
+  expect_true("a" %in% cached())
 })
 
 test_with_dir("lightly_parallelize_atomic() is correct", {

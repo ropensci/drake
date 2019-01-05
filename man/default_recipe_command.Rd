@@ -10,9 +10,9 @@ default_recipe_command()
 A character scalar with the default recipe command.
 }
 \description{
-See the help file of \code{\link[=Makefile_recipe]{Makefile_recipe()}}
-for details and examples.
+2019-01-02
 }
 \examples{
 # deprecated
 }
+\keyword{internal}

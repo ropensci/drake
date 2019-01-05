@@ -250,7 +250,7 @@ test_with_dir("GitHub issue 460", {
   )
   expect_true(
     encode_namespaced("base::sqrt") %in% igraph::V(config$imports)$name)
-  make_targets(config)
+  process_targets(config)
 })
 
 test_with_dir("warning when file_out() files not produced", {

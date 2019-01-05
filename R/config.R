@@ -517,6 +517,16 @@ drake_config <- function(
       # 2018-12-07 # nolint
     )
   }
+  if (!is.null(session)) {
+    # Deprecated on 2018-12-18.
+    warning(
+      "The ", sQuote("session"), " argument of make() and drake_config() ",
+      "is deprecated. make() will NOT run in a separate callr session. ",
+      "For reproducibility, you may wish to try make(lock_envir = TRUE). ",
+      "Details: https://github.com/ropensci/drake/issues/623.",
+      call. = FALSE
+    )
+  }
   if (
     !is.null(command) ||
     !is.null(args) ||

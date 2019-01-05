@@ -15,3 +15,4 @@ character
 \examples{
 # deprecated
 }
+\keyword{internal}

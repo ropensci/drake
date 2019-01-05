@@ -29,3 +29,4 @@ default_Makefile_args(jobs, verbose)
 \examples{
 # deprecated
 }
+\keyword{internal}

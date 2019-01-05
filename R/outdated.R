@@ -78,7 +78,7 @@ outdated <-  function(
     do_prework(config = config, verbose_packages = config$verbose)
   }
   if (make_imports) {
-    make_imports(config = config)
+    process_imports(config = config)
   }
   first_targets <- first_outdated(config = config)
   later_targets <- downstream_nodes(

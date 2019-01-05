@@ -759,7 +759,6 @@ load_main_example <- function(
     msg = paste("load_main_example() is deprecated.",
                 'Use drake_example("main") instead.')
   )
-
   dir <- tempfile()
   drake_example(example = "main", to = dir)
   source(file.path(dir, "main", "R", "setup.R"), local = envir)
@@ -895,6 +894,7 @@ drake_strings <- function(...) {
 #' @title Deprecated
 #' @description 2019-01-03
 #' @export
+#' @keywords internal
 #' @return `args` for `system2(command, args)`
 #' @inheritParams drake_config
 #' @param jobs number of jobs
@@ -963,8 +963,8 @@ Makefile_recipe <- function( # nolint
 
 #' @title Deprecated
 #' @export
-#' @description See the help file of [Makefile_recipe()]
-#' for details and examples.
+#' @keywords internal
+#' @description 2019-01-02
 #' @return A character scalar with the default recipe command.
 #' @examples
 #' # deprecated
@@ -980,10 +980,10 @@ default_recipe_command <- function() {
   paste0("Rscript -e '", r_recipe_wildcard(), "'")
 }
 
-#' @title Show the R recipe wildcard
-#'   for `make(..., parallelism = "Makefile")`.
+#' @title deprecated
 #' @export
-#' @description Relevant to `"Makefile"` parallelism only.
+#' @keywords internal
+#' @description 2019-01-02
 #' @return The R recipe wildcard.
 #' @examples
 #' # deprecated
@@ -1035,6 +1035,7 @@ parallelism_choices <- function(distributed_only = FALSE) {
 #' @title Deprecated
 #' @description 2019-01-03
 #' @export
+#' @keywords internal
 #' @return logical
 #' @param path character
 #' @param overwrite logical
@@ -1058,6 +1059,7 @@ shell_file <- function(
 #' @title Deprecated
 #' @description 2019-01-02
 #' @export
+#' @keywords internal
 #' @return character
 #' @examples
 #' # deprecated
@@ -1070,4 +1072,68 @@ default_parallelism <- function() {
     )
   )
   "loop"
+}
+
+#' @title deprecated
+#' @description Deprecated on 2019-01-04
+#' @export
+#' @keywords internal
+#' @seealso [make()], [drake_config()]
+#' @return nothing
+#' @param config a configuration list returned by [drake_config()]
+#' @examples
+#' # deprecated
+make_imports <- function(config = drake::read_drake_config()) {
+  .Deprecated(
+    "make_imports",
+    package = "drake",
+    msg = paste(
+      "make_imports() is deprecated. Use make()."
+    )
+  )
+  config$skip_imports <- FALSE
+  config$skip_targets <- TRUE
+  make(config = config)
+}
+
+#' @title deprecated
+#' @description Deprecated on 2019-01-04
+#' @export
+#' @keywords internal
+#' @seealso [make()], [drake_config()]
+#' @return nothing
+#' @param config a configuration list returned by [drake_config()]
+#' @examples
+#' # deprecated
+make_targets <- function(config = drake::read_drake_config()) {
+  .Deprecated(
+    "make_targets",
+    package = "drake",
+    msg = paste(
+      "make_targets() is deprecated. Use make()."
+    )
+  )
+  config$skip_imports <- TRUE
+  config$skip_targets <- FALSE
+  make(config = config)
+}
+
+#' @title deprecated
+#' @description Deprecated on 2019-01-04
+#' @export
+#' @keywords internal
+#' @seealso [make()], [drake_config()]
+#' @return nothing
+#' @param config a configuration list returned by [drake_config()]
+#' @examples
+#' # deprecated
+make_with_config <- function(config = drake::read_drake_config()) {
+  .Deprecated(
+    "make_with_config",
+    package = "drake",
+    msg = paste(
+      "make_with_config() is deprecated. Use make()."
+    )
+  )
+  make(config = config)
 }

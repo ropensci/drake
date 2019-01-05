@@ -59,10 +59,18 @@ mark_envir <- function(envir) {
 }
 
 conclude_session <- function(config) {
+  drake_cache_log_file(
+    file = config$cache_log_file,
+    cache = config$cache,
+    jobs = config$jobs
+  )
   remove(list = ls(config$eval, all.names = TRUE), envir = config$eval)
+  console_edge_cases(config)
 }
 
 initialize_session <- function(config) {
+  runtime_checks(config = config)
+  store_drake_config(config = config)
   init_common_values(config$cache)
   mark_envir(config$eval)
   if (config$log_progress) {
@@ -80,4 +88,5 @@ initialize_session <- function(config) {
     )
   }
   drake_set_session_info(cache = config$cache, full = config$session_info)
+  do_prework(config = config, verbose_packages = config$verbose)
 }

@@ -1,28 +1,3 @@
-run_drake_backend <- function(config) {
-  parallelism <- config$parallelism
-  if (is.character(parallelism)) {
-    parallelism <- match.arg(
-      parallelism,
-      c("loop", "clustermq", "future")
-    )
-    get(
-      paste0("backend_", parallelism),
-      envir = getNamespace("drake")
-    )(config)
-  } else {
-    warning(
-      "`drake` can indeed accept a custom scheduler function for the ",
-      "`parallelism` argument of `make()` ",
-      "but this is only for the sake of experimentation ",
-      "and graceful deprecation. ",
-      "Your own custom schedulers may cause surprising errors. ",
-      "Use at your own risk.",
-      call. = FALSE
-    )
-    parallelism(config)
-  }
-}
-
 parallel_filter <- function(x, f, jobs = 1, ...) {
   index <- lightly_parallelize(X = x, FUN = f, jobs = jobs, ...)
   index <- unlist(index)

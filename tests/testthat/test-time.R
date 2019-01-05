@@ -43,7 +43,7 @@ test_with_dir("build times works if no targets are built", {
   expect_equal(nrow(build_times(search = FALSE)), 0)
   my_plan <- drake_plan(x = 1)
   con <- drake_config(my_plan, verbose = FALSE)
-  make_imports(con)
+  process_imports(con)
   expect_equal(nrow(build_times(search = FALSE)), 0)
 })
 

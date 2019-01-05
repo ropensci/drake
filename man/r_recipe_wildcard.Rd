@@ -2,8 +2,7 @@
 % Please edit documentation in R/deprecate.R
 \name{r_recipe_wildcard}
 \alias{r_recipe_wildcard}
-\title{Show the R recipe wildcard
-for \code{make(..., parallelism = "Makefile")}.}
+\title{deprecated}
 \usage{
 r_recipe_wildcard()
 }
@@ -11,8 +10,9 @@ r_recipe_wildcard()
 The R recipe wildcard.
 }
 \description{
-Relevant to \code{"Makefile"} parallelism only.
+2019-01-02
 }
 \examples{
 # deprecated
 }
+\keyword{internal}

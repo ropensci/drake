@@ -46,7 +46,9 @@ make <- function(
   verbose = 1L,
   hook = NULL,
   cache = drake::get_cache(
-    verbose = verbose, console_log_file = console_log_file),
+    verbose = verbose,
+    console_log_file = console_log_file
+  ),
   fetch_cache = NULL,
   parallelism = "loop",
   jobs = 1L,
@@ -138,148 +140,13 @@ make <- function(
       lock_envir = lock_envir
     )
   }
-  make_with_config(config = config)
-  invisible()
-}
-
-#' @title Run [make()],
-#'   on an existing internal configuration list.
-#' @description Use [drake_config()]
-#' to create the `config` argument.
-#' @export
-#' @keywords internal
-#' @seealso [make()], [drake_config()]
-#' @return nothing
-#' @param config An input internal configuration list
-#' @examples
-#' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' # The following lines are the same as make(my_plan)
-#' config <- drake_config(my_plan) # Create the internal config list.
-#' make_with_config(config = config) # Run the project, build the targets.
-#' })
-#' }
-make_with_config <- function(config = drake::read_drake_config()) {
-  if (!is.null(config$session)) {
-    # Deprecated on 2018-12-18.
-    warning(
-      "The ", sQuote("session"), " argument of make() and drake_config() ",
-      "is deprecated. make() will NOT run in a separate callr session. ",
-      "For reproducibility, you may wish to try make(lock_envir = TRUE). ",
-      "Details: https://github.com/ropensci/drake/issues/623.",
-      call. = FALSE
-    )
-  }
-  runtime_checks(config = config)
-  store_drake_config(config = config)
   initialize_session(config = config)
-  do_prework(config = config, verbose_packages = config$verbose)
   if (!config$skip_imports) {
-    make_imports(config)
+    process_imports(config)
   }
   if (!config$skip_targets) {
-    make_targets(config)
+    process_targets(config)
   }
-  drake_cache_log_file(
-    file = config$cache_log_file,
-    cache = config$cache,
-    jobs = config$jobs
-  )
-  conclude_session(config = config)
-  invisible()
-}
-
-#' @title Just make the imports.
-#' @description [make()] is the central, most important function
-#' of the drake package. [make()] runs all the steps of your
-#' workflow in the correct order, skipping any work
-#' that is already up to date. During [make()],
-#' there are two kinds of processing steps: "imports",
-#' which are pre-existing functions and input data files
-#' that are loaded or checked, and targets, which are
-#' serious reproducibly-tracked data analysis steps
-#' that have commands in your workflow plan data frame.
-#' The [make_targets()] function just makes the targets
-#' (skipping any targets that are already up to date)
-#' and [make_imports()] just makes the imports.
-#' Most users should just use [make()]
-#' instead of either [make_imports()] or
-#' [make_targets()].
-#' See <https://github.com/ropensci/drake/blob/master/README.md#documentation>
-#' for an overview of the documentation.
-#' @export
-#' @seealso [make()], [drake_config()],
-#'   [make_targets()]
-#' @return nothing
-#' @param config a configuration list returned by [drake_config()]
-#' @examples
-#' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' # Generate the master internal configuration list.
-#' con <- drake_config(my_plan)
-#' # Just cache the imports, do not build any targets.
-#' make_imports(config = con)
-#' # Just make the targets
-#' make_targets(config = con)
-#' })
-#' }
-make_imports <- function(config = drake::read_drake_config()) {
-  if (on_windows() && config$jobs > 1L) {
-    process_imports_parLapply(config) # nocov
-  } else {
-    process_imports_mclapply(config)
-  }
-  invisible()
-}
-
-#' @title Just build the targets.
-#' @description [make()] is the central, most important function
-#' of the drake package. [make()] runs all the steps of your
-#' workflow in the correct order, skipping any work
-#' that is already up to date. During [make()],
-#' there are two kinds of processing steps: "imports",
-#' which are pre-existing functions and input data files
-#' that are loaded or checked, and targets, which are
-#' serious reproducibly-tracked data analysis steps
-#' that have commands in your workflow plan data frame.
-#' The [make_targets()] function just makes the targets
-#' (skipping any targets that are already up to date)
-#' and [make_imports()] just makes the imports.
-#' Most users should just use [make()]
-#' instead of either [make_imports()] or
-#' [make_targets()].
-#' See <https://github.com/ropensci/drake/blob/master/README.md#documentation>
-#' for an overview of the documentation.
-#' @export
-#' @seealso [make()], [drake_config()],
-#'   [make_imports()]
-#' @return nothing
-#' @param config a configuration list returned by [drake_config()]
-#' @examples
-#' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' # Generate the master internal configuration list.
-#' con <- drake_config(my_plan)
-#' # Just cache the imports, do not build any targets.
-#' make_imports(config = con)
-#' # Just make the targets
-#' make_targets(config = con)
-#' })
-#' }
-make_targets <- function(config = drake::read_drake_config()) {
-  outdated <- outdated(config, do_prework = FALSE, make_imports = FALSE)
-  if (length(outdated)) {
-    config$schedule <- igraph::induced_subgraph(
-      graph = config$schedule,
-      vids = outdated
-    )
-    run_drake_backend(config = config)
-  } else {
-    console_up_to_date(config = config)
-  }
-  console_edge_cases(config)
+  conclude_session(config)
   invisible()
 }

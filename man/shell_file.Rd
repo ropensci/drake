@@ -20,3 +20,4 @@ logical
 \examples{
 # deprecated
 }
+\keyword{internal}

@@ -1,3 +1,11 @@
+process_imports <- function(config) {
+  if (on_windows() && config$jobs > 1L) {
+    process_imports_parLapply(config) # nocov
+  } else {
+    process_imports_mclapply(config)
+  }
+}
+
 process_import <- function(import, config) {
   meta <- drake_meta(target = import, config = config)
   if (meta$isfile) {

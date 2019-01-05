@@ -9,8 +9,8 @@ test_with_dir("clean() removes the correct files", {
     b = knitr_in("b.txt"),
     d = writeLines("123", file_out("d.rds"))
   )
-  config <- drake_config(plan, session_info = FALSE)
-  make_imports(config)
+  config <- drake_config(plan, session_info = FALSE, skip_targets = TRUE)
+  make(config = config)
   clean()
   expect_true(file.exists("a.txt"))
   expect_true(file.exists("b.txt"))
