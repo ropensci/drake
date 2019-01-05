@@ -29,10 +29,8 @@ test_with_dir("parallel imports", {
   config <- dbug()
   config$jobs_preprocess <- 2
   make_imports(config)
-  config$schedule <- imports_graph(config = config)
   process_imports_parLapply(config)
   expect_true("a" %in% cached())
-  config$schedule <- imports_graph(config = config)
   process_imports_mclapply(config)
 })
 
