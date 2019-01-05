@@ -101,10 +101,7 @@ with \code{\link[=assign]{assign()}}.
 \item \code{FALSE}: same as \code{"eager"}.
 }}
 
-\item{graph}{optional igraph object, representation
-of the workflow network for getting dependencies
-if \code{deps} is \code{TRUE}. If none is supplied,
-it will be read from the cache.}
+\item{graph}{deprecated}
 
 \item{replace}{logical. If \code{FALSE},
 items already in your environment
@@ -113,6 +110,9 @@ will not be replaced.}
 \item{tidyselect}{logical, whether to enable
 \code{tidyselect} expressions in \code{...} like
 \code{starts_with("prefix")} and \code{ends_with("suffix")}.}
+
+\item{config}{optional \code{\link[=drake_config]{drake_config()}} object.
+You should supply one if \code{deps} is \code{TRUE}.}
 }
 \value{
 The cached value of the \code{target}.

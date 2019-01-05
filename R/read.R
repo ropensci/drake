@@ -142,10 +142,7 @@ readd <- function(
 #'   - `TRUE`: same as `"promise"`.
 #'   - `FALSE`: same as `"eager"`.
 #'
-#' @param graph optional igraph object, representation
-#'   of the workflow network for getting dependencies
-#'   if `deps` is `TRUE`. If none is supplied,
-#'   it will be read from the cache.
+#' @param graph deprecated
 #'
 #' @param replace logical. If `FALSE`,
 #'   items already in your environment
@@ -154,6 +151,9 @@ readd <- function(
 #' @param tidyselect logical, whether to enable
 #'   `tidyselect` expressions in `...` like
 #'   `starts_with("prefix")` and `ends_with("suffix")`.
+#'
+#' @param config optional [drake_config()] object.
+#'   You should supply one if `deps` is `TRUE`.
 #'
 #' @examples
 #' \dontrun{
@@ -204,6 +204,12 @@ loadd <- function(
 ) {
   force(envir)
   lazy <- parse_lazy_arg(lazy)
+  if (!is.null(graph)) {
+    warning(
+      "argument `graph` is deprecated.",
+      call. = FALSE
+    ) # 2019-01-04 # nolint
+  }
   if (is.null(cache)) {
     stop("cannot find drake cache.")
   }
