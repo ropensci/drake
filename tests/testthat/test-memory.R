@@ -6,6 +6,8 @@ test_with_dir("manage_memory() warns if loading missing deps", {
     drake_plan(a = 1, b = a),
     memory_strategy = "lookahead"
   )
+  try(rm(list = "b", envir = con$envir), silent = TRUE)
+  try(rm(list = "b", envir = con$eval), silent = TRUE)
   capture.output(
     manage_memory(targets = "b", config = con),
     type = "message"
