@@ -169,11 +169,11 @@ drake_graph_info <- function(
   if (!is.null(subset)) {
     config$graph <- subset_graph(graph = config$graph, subset = subset)
   }
-  config$imports <- igraph::V(config$imports_schedule)$name
+  config$import_names <- igraph::V(config$imports_schedule)$name
   if (targets_only) {
     config$graph <- igraph::delete_vertices(
       graph = config$graph,
-      v = config$imports
+      v = config$import_names
     )
   }
   config <- get_raw_node_category_data(config)

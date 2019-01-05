@@ -174,14 +174,14 @@ get_raw_node_category_data <- function(config) {
   config$files <- parallel_filter(
     x = all_labels, f = is_encoded_path, jobs = config$jobs)
   config$functions <- parallel_filter(
-    x = config$imports,
+    x = config$import_names,
     f = function(x) {
       is.function(get_import_from_memory(x, config = config))
     },
     jobs = config$jobs
   )
   config$missing <- parallel_filter(
-    x = config$imports,
+    x = config$import_names,
     f = function(x) {
       missing_import(x, config = config)
     },
