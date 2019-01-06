@@ -564,7 +564,7 @@ drake_config <- function(
   }
   seed <- choose_seed(supplied = seed, cache = cache)
   trigger <- convert_old_trigger(trigger)
-  layout <- whole_static_analysis(
+  layout <- create_drake_layout(
     plan = plan,
     envir = envir,
     verbose = verbose,
