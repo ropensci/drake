@@ -8,6 +8,7 @@ create_drake_layout <- function(
   cache = NULL
 ) {
   force(envir)
+  import_names <- ls(envir, all.names = TRUE)
   config <- list(
     plan = plan,
     envir = envir,
@@ -16,7 +17,8 @@ create_drake_layout <- function(
     cache = cache,
     console_log_file = console_log_file,
     trigger = parse_trigger(trigger = trigger, envir = envir),
-    allowed_globals = sort(c(plan$target, ls(envir, all.names = TRUE))),
+    allowed_globals_imports = ht_new(import_names),
+    allowed_globals_targets = ht_new(c(import_names, plan$target)),
     ht_targets = ht_new(plan$target)
   )
   imports <- cdl_prepare_imports(config)
@@ -31,7 +33,6 @@ create_drake_layout <- function(
     config$cache,
     config$plan,
     config$trigger,
-    config$allowed_globals,
     import_layout
   )
   c(import_layout, command_layout)
@@ -92,14 +93,14 @@ cdl_analyze_imports <- function(config, imports) {
         deps_build = import_dependencies(
           expr = imports[[i]],
           exclude = names(imports)[[i]],
-          allowed_globals = names
+          allowed_globals = config$allowed_globals_imports
         ),
         imported = TRUE
       )
     },
     jobs = config$jobs
   )
-  names(out) <- names(imports)
+  names(out) <- names
   out
 }
 
@@ -122,11 +123,11 @@ cdl_analyze_commands <- function(config) {
   names(layout) <- config$plan$target
   config$default_condition_deps <- import_dependencies(
     config$trigger$condition,
-    allowed_globals = config$allowed_globals
+    allowed_globals = config$allowed_globals_targets
   )
   config$default_change_deps <- import_dependencies(
     config$trigger$change,
-    allowed_globals = config$allowed_globals
+    allowed_globals = config$allowed_globals_targets
   )
   out <- lightly_parallelize(
     X = layout,
@@ -142,7 +143,7 @@ cdl_prepare_layout <- function(layout, config){
   layout$deps_build <- command_dependencies(
     command = layout$command,
     exclude = layout$target,
-    allowed_globals = config$allowed_globals
+    allowed_globals = config$allowed_globals_targets
   )
   layout$command_standardized <- standardize_command(layout$command)
   layout$command_build <- preprocess_command(
@@ -157,12 +158,12 @@ cdl_prepare_layout <- function(layout, config){
     layout$deps_condition <- import_dependencies(
       layout$trigger$condition,
       exclude = layout$target,
-      allowed_globals = config$allowed_globals
+      allowed_globals = config$allowed_globals_targets
     )
     layout$deps_change <- import_dependencies(
       layout$trigger$change,
       exclude = layout$target,
-      allowed_globals = config$allowed_globals
+      allowed_globals = config$allowed_globals_targets
     )
   }
   for (field in c("deps_build", "deps_condition", "deps_change")) {

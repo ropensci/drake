@@ -10,7 +10,6 @@ analyze_code <- function(
   results <- new_code_analysis_results()
   locals <- ht_new_from_list(ignored_symbols_list)
   ht_set(locals, exclude)
-  allowed_globals <- ht_new(allowed_globals) %||% NULL
   walk_code(expr, results, locals, allowed_globals)
   if (as_list) {
     results <- list_code_analysis_results(results)
