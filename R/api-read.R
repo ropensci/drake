@@ -238,7 +238,11 @@ loadd <- function(
   }
   if (deps) {
     if (is.null(config)) {
-      config <- read_drake_config(cache = cache)
+      stop(
+        "In `loadd(deps = TRUE)`, you must supply a `drake_config()` ",
+        "object to the `config` argument.",
+        call. = FALSE
+      )
     }
     targets <- deps_memory(targets = targets, config = config)
   }
@@ -367,7 +371,6 @@ bind_load_target <- function(target, cache, namespace, envir, verbose) {
 #' the seeds of all the targets will deterministically depend on
 #' this one central seed. That way, reproducibility is protected,
 #' even under randomness.
-#' @seealso [read_drake_config()]
 #' @export
 #' @return An integer vector.
 #'

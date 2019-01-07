@@ -105,7 +105,7 @@ deps_code <- function(x) {
 #' }
 deps_target <- function(
   target,
-  config = read_drake_config(),
+  config,
   character_only = FALSE
 ) {
   if (!character_only) {
@@ -161,7 +161,7 @@ deps_target <- function(
 #' }
 dependency_profile <- function(
   target,
-  config = drake::read_drake_config(),
+  config,
   character_only = FALSE
 ) {
   if (!character_only) {

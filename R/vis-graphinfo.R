@@ -123,7 +123,7 @@
 #' })
 #' }
 drake_graph_info <- function(
-  config = drake::read_drake_config(),
+  config,
   from = NULL,
   mode = c("out", "in", "all"),
   order = NULL,

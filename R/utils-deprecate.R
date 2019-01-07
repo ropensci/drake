@@ -24,7 +24,7 @@ available_hash_algos <- function() {
 #' @examples
 #' # See ?drake_config for examples.
 build_drake_graph <- function(
-  plan = read_drake_plan(),
+  plan,
   targets = plan$target,
   envir = parent.frame(),
   verbose = 1L,
@@ -275,7 +275,7 @@ deps <- function(x) {
 #' }
 deps_targets <- function(
   targets,
-  config = read_drake_config(),
+  config,
   reverse = FALSE
 ) {
   .Deprecated(
@@ -392,7 +392,7 @@ long_hash <- function(
 #' # Pay special attention to the force_times and default_time
 #' # arguments.
 max_useful_jobs <- function(
-  config = drake::read_drake_config(),
+  config,
   imports = c("files", "all", "none"),
   from_scratch = FALSE
 ) {
@@ -480,7 +480,7 @@ migrate_drake_project <- function(
 #'   assuming this number of jobs.
 #' @param digits number of digits for rounding the times.
 rate_limiting_times <- function(
-  config = drake::read_drake_config(),
+  config,
   targets = NULL,
   from_scratch = FALSE,
   targets_only = FALSE,
@@ -542,7 +542,7 @@ render_static_drake_graph <- function(
 #' @examples
 #' # Do not use this function.
 parallel_stages <- function(
-  config = drake::read_drake_config(),
+  config,
   from_scratch = FALSE
 ) {
   .Defunct(
@@ -593,7 +593,7 @@ short_hash <- function(
 #' @examples
 #' # See drake_ggraph()
 static_drake_graph <- function(
-  config = drake::read_drake_config(),
+  config,
   build_times = "build",
   digits = 3,
   targets_only = FALSE,
@@ -1083,7 +1083,7 @@ default_parallelism <- function() {
 #' @param config a configuration list returned by [drake_config()]
 #' @examples
 #' # deprecated
-make_imports <- function(config = drake::read_drake_config()) {
+make_imports <- function(config) {
   .Deprecated(
     "make_imports",
     package = "drake",
@@ -1105,7 +1105,7 @@ make_imports <- function(config = drake::read_drake_config()) {
 #' @param config a configuration list returned by [drake_config()]
 #' @examples
 #' # deprecated
-make_targets <- function(config = drake::read_drake_config()) {
+make_targets <- function(config) {
   .Deprecated(
     "make_targets",
     package = "drake",
@@ -1127,7 +1127,7 @@ make_targets <- function(config = drake::read_drake_config()) {
 #' @param config a configuration list returned by [drake_config()]
 #' @examples
 #' # deprecated
-make_with_config <- function(config = drake::read_drake_config()) {
+make_with_config <- function(config) {
   .Deprecated(
     "make_with_config",
     package = "drake",
@@ -1157,10 +1157,10 @@ read_drake_config <- function(
   envir = parent.frame()
 ) {
   .Deprecated(
-    "read_drake_plan",
+    "read_drake_config",
     package = "drake",
     msg = paste(
-      "read_drake_plan() is deprecated.",
+      "read_drake_config() is deprecated.",
       "drake no longer stores the config object,",
       "the plan, etc. in the cache during `make()`. This change",
       "improves speed."
@@ -1186,10 +1186,10 @@ read_drake_graph <- function(
   verbose = 1L
 ) {
   .Deprecated(
-    "read_drake_plan",
+    "read_drake_graph",
     package = "drake",
     msg = paste(
-      "read_drake_plan() is deprecated.",
+      "read_drake_graph() is deprecated.",
       "drake no longer stores the config object,",
       "the plan, etc. in the cache during `make()`. This change",
       "improves speed."

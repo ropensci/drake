@@ -45,7 +45,7 @@
 #' readd(small)
 #' })
 #' }
-drake_meta <- function(target, config = drake::read_drake_config()) {
+drake_meta <- function(target, config) {
   layout <- config$layout[[target]]
   meta <- list(
     name = target,

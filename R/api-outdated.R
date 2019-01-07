@@ -70,7 +70,7 @@ first_outdated <- function(config) {
 #' })
 #' }
 outdated <-  function(
-  config = drake::read_drake_config(),
+  config,
   make_imports = TRUE,
   do_prework = TRUE
 ) {
@@ -110,7 +110,7 @@ outdated <-  function(
 #' missed(config) # Should report that reg1 is missing.
 #' })
 #' }
-missed <- function(config = drake::read_drake_config()) {
+missed <- function(config) {
   imports <- igraph::V(config$imports)$name
   is_missing <- lightly_parallelize(
     X = imports,

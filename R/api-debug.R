@@ -44,9 +44,8 @@ drake_debug <- function(
   # Tested in tests/testthat/test-always-skipped.R.
   # nocov start
   force(envir)
-  if (is.null(config)) {
-    config <- drake::read_drake_config(envir = envir, jobs = jobs)
-    config$envir <- envir
+  if (!is.null(envir)) {
+    warning("the `envir` argument of drake_debug() is deprecated")
   }
   if (!character_only) {
     target <- as.character(substitute(target))

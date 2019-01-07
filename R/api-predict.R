@@ -42,7 +42,7 @@
 #' })
 #' }
 predict_runtime <- function(
-  config = drake::read_drake_config(),
+  config,
   targets = NULL,
   from_scratch = FALSE,
   targets_only = NULL,
@@ -134,7 +134,7 @@ predict_runtime <- function(
 #'   `known_times` or [build_times()]. The times for these
 #'   targets default to `default_time`.
 predict_load_balancing <- function(
-  config = drake::read_drake_config(),
+  config,
   targets = NULL,
   from_scratch = FALSE,
   targets_only = NULL,

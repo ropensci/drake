@@ -21,7 +21,7 @@
 #' })
 #' }
 drake_ggraph <- function(
-  config = drake::read_drake_config(),
+  config,
   build_times = "build",
   digits = 3,
   targets_only = FALSE,
