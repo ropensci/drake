@@ -90,6 +90,9 @@ dependency_hash <- function(target, config) {
   if (is_imported(target, config)) {
     deps <- c(deps, x$file_in, x$knitr_in)
   }
+  if (!length(deps)) {
+    return("")
+  }
   deps <- unlist(deps)
   deps <- as.character(deps)
   deps <- unique(deps)
@@ -110,6 +113,9 @@ input_file_hash <- function(
 ) {
   deps <- config$layout[[target]]$deps_build
   files <- sort(unique(as.character(c(deps$file_in, deps$knitr_in))))
+  if (!length(files)) {
+    return("")
+  }
   out <- vapply(
     X = files,
     FUN = file_hash,
@@ -132,6 +138,9 @@ output_file_hash <- function(
 ) {
   deps <- config$layout[[target]]$deps_build
   files <- sort(unique(as.character(deps$file_out)))
+  if (!length(files)) {
+    return("")
+  }
   out <- vapply(
     X = files,
     FUN = file_hash,
