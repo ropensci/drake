@@ -45,9 +45,10 @@ build_times <- function(
   }
   if (!length(targets)) {
     targets <- parallel_filter(
-      x = config$cache$list(namespace = "meta"),
+      x = cache$list(namespace = "meta"),
       f = function(target) {
-        !is_imported_cache(target = target, cache = cache)
+        !is_imported_cache(target = target, cache = cache) &&
+        !is_encoded_path(target)
       },
       jobs = jobs
     )

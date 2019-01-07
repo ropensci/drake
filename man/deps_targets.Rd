@@ -4,7 +4,7 @@
 \alias{deps_targets}
 \title{Deprecated.}
 \usage{
-deps_targets(targets, config = read_drake_config(), reverse = FALSE)
+deps_targets(targets, config, reverse = FALSE)
 }
 \arguments{
 \item{targets}{a character vector of target names}

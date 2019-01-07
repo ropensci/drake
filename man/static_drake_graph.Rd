@@ -5,10 +5,9 @@
 \title{Deprecated: show a \code{ggraph}/\code{ggplot2} representation
 of your drake project.}
 \usage{
-static_drake_graph(config = drake::read_drake_config(),
-  build_times = "build", digits = 3, targets_only = FALSE,
-  main = NULL, from = NULL, mode = c("out", "in", "all"),
-  order = NULL, subset = NULL, make_imports = TRUE,
+static_drake_graph(config, build_times = "build", digits = 3,
+  targets_only = FALSE, main = NULL, from = NULL, mode = c("out",
+  "in", "all"), order = NULL, subset = NULL, make_imports = TRUE,
   from_scratch = FALSE, full_legend = FALSE, group = NULL,
   clusters = NULL)
 }

@@ -4,8 +4,7 @@
 \alias{deps_target}
 \title{List the dependencies of one or more targets}
 \usage{
-deps_target(target, config = read_drake_config(),
-  character_only = FALSE)
+deps_target(target, config, character_only = FALSE)
 }
 \arguments{
 \item{target}{a symbol denoting a target name, or if \code{character_only}

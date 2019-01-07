@@ -4,9 +4,9 @@
 \alias{build_drake_graph}
 \title{Deprecated function \code{build_drake_graph}}
 \usage{
-build_drake_graph(plan = read_drake_plan(), targets = plan$target,
-  envir = parent.frame(), verbose = 1L, jobs = 1,
-  console_log_file = NULL, trigger = drake::trigger(), cache = NULL)
+build_drake_graph(plan, targets = plan$target, envir = parent.frame(),
+  verbose = 1L, jobs = 1, console_log_file = NULL,
+  trigger = drake::trigger(), cache = NULL)
 }
 \arguments{
 \item{plan}{workflow plan data frame.

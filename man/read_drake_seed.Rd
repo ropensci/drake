@@ -77,6 +77,3 @@ make(my_plan, cache = cache, seed = 1234)
 read_drake_seed(cache = cache)
 readd(target2, cache = cache)
 }
-\seealso{
-\code{\link[=read_drake_config]{read_drake_config()}}
-}

@@ -4,7 +4,7 @@
 \alias{make_targets}
 \title{deprecated}
 \usage{
-make_targets(config = drake::read_drake_config())
+make_targets(config)
 }
 \arguments{
 \item{config}{a configuration list returned by \code{\link[=drake_config]{drake_config()}}}

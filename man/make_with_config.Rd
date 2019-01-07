@@ -4,7 +4,7 @@
 \alias{make_with_config}
 \title{deprecated}
 \usage{
-make_with_config(config = drake::read_drake_config())
+make_with_config(config)
 }
 \arguments{
 \item{config}{a configuration list returned by \code{\link[=drake_config]{drake_config()}}}

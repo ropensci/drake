@@ -4,7 +4,7 @@
 \alias{drake_meta}
 \title{Compute the initial pre-build metadata of a target or import.}
 \usage{
-drake_meta(target, config = drake::read_drake_config())
+drake_meta(target, config)
 }
 \arguments{
 \item{target}{Character scalar, name of the target

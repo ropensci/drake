@@ -4,8 +4,7 @@
 \alias{dependency_profile}
 \title{Find out why a target is out of date.}
 \usage{
-dependency_profile(target, config = drake::read_drake_config(),
-  character_only = FALSE)
+dependency_profile(target, config, character_only = FALSE)
 }
 \arguments{
 \item{target}{name of the target}

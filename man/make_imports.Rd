@@ -4,7 +4,7 @@
 \alias{make_imports}
 \title{deprecated}
 \usage{
-make_imports(config = drake::read_drake_config())
+make_imports(config)
 }
 \arguments{
 \item{config}{a configuration list returned by \code{\link[=drake_config]{drake_config()}}}

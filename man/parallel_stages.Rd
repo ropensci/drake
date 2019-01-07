@@ -4,8 +4,7 @@
 \alias{parallel_stages}
 \title{Defunct function}
 \usage{
-parallel_stages(config = drake::read_drake_config(),
-  from_scratch = FALSE)
+parallel_stages(config, from_scratch = FALSE)
 }
 \arguments{
 \item{config}{An configuration list output by
