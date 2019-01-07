@@ -44,7 +44,13 @@ build_times <- function(
     targets <- drake_tidyselect(cache = cache, ..., namespaces = "meta")
   }
   if (!length(targets)) {
-    targets <- read_drake_plan(cache = cache, verbose = FALSE)$target
+    targets <- parallel_filter(
+      x = config$cache$list(namespace = "meta"),
+      f = function(target) {
+        !is_imported_cache(target = target, cache = cache)
+      },
+      jobs = jobs
+    )
   }
   type <- match.arg(type)
   out <- lightly_parallelize(

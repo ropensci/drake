@@ -23,7 +23,7 @@
 #' })
 #' }
 check_plan <- function(
-  plan = read_drake_plan(),
+  plan = NULL,
   targets = NULL,
   envir = parent.frame(),
   cache = drake::get_cache(verbose = verbose),

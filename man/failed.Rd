@@ -7,7 +7,7 @@ to \code{\link[=make]{make()}}.}
 \usage{
 failed(path = getwd(), search = TRUE, cache = drake::get_cache(path =
   path, search = search, verbose = verbose), verbose = 1L,
-  upstream_only = FALSE)
+  upstream_only = NULL)
 }
 \arguments{
 \item{path}{Root directory of the drake project,
@@ -34,9 +34,7 @@ If supplied, \code{path} and \code{search} are ignored.}
 \item \code{6}: plus notifications when targets are being stored.
 }}
 
-\item{upstream_only}{logical, whether to list only those targets
-with no failed dependencies.
-Naturally accompanies \code{make(keep_going = TRUE)}.}
+\item{upstream_only}{deprecated}
 }
 \value{
 A character vector of target names.

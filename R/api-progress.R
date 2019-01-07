@@ -36,9 +36,7 @@ in_progress <- function(path = getwd(), search = TRUE,
 #' @export
 #' @return A character vector of target names.
 #' @inheritParams cached
-#' @param upstream_only logical, whether to list only those targets
-#'   with no failed dependencies.
-#'   Naturally accompanies `make(keep_going = TRUE)`.
+#' @param upstream_only deprecated
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -55,15 +53,13 @@ in_progress <- function(path = getwd(), search = TRUE,
 failed <- function(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
   verbose = 1L,
-  upstream_only = FALSE
+  upstream_only = NULL
 ) {
-  prog <- progress(path = path, search = search, cache = cache)
-  out <- as.character(names(which(prog == "failed")))
-  if (upstream_only) {
-    graph <- read_drake_graph(cache = cache)
-    out <- filter_upstream(targets = out, graph = graph)
+  if (!is.null(upstream_only)) {
+    warning("argument upstream_only is deprecated.")
   }
-  out
+  prog <- progress(path = path, search = search, cache = cache)
+  as.character(names(which(prog == "failed")))
 }
 
 #' @title Get the build progress of your targets

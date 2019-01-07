@@ -4,20 +4,19 @@
 \alias{make}
 \title{Run your project (build the outdated targets).}
 \usage{
-make(plan = drake::read_drake_plan(), targets = NULL,
-  envir = parent.frame(), verbose = 1L, hook = NULL,
-  cache = drake::get_cache(verbose = verbose, console_log_file =
-  console_log_file), fetch_cache = NULL, parallelism = "loop",
-  jobs = 1L, jobs_preprocess = 1L, packages = rev(.packages()),
-  prework = character(0), prepend = NULL, command = NULL,
-  args = NULL, recipe_command = NULL, log_progress = TRUE,
-  skip_targets = FALSE, timeout = NULL, cpu = Inf, elapsed = Inf,
-  retries = 0, force = FALSE, graph = NULL,
-  trigger = drake::trigger(), skip_imports = FALSE,
-  skip_safety_checks = FALSE, config = NULL, lazy_load = "eager",
-  session_info = TRUE, cache_log_file = NULL, seed = NULL,
-  caching = "master", keep_going = FALSE, session = NULL,
-  pruning_strategy = NULL, makefile_path = NULL,
+make(plan, targets = NULL, envir = parent.frame(), verbose = 1L,
+  hook = NULL, cache = drake::get_cache(verbose = verbose,
+  console_log_file = console_log_file), fetch_cache = NULL,
+  parallelism = "loop", jobs = 1L, jobs_preprocess = 1L,
+  packages = rev(.packages()), prework = character(0),
+  prepend = NULL, command = NULL, args = NULL,
+  recipe_command = NULL, log_progress = TRUE, skip_targets = FALSE,
+  timeout = NULL, cpu = Inf, elapsed = Inf, retries = 0,
+  force = FALSE, graph = NULL, trigger = drake::trigger(),
+  skip_imports = FALSE, skip_safety_checks = FALSE, config = NULL,
+  lazy_load = "eager", session_info = TRUE, cache_log_file = NULL,
+  seed = NULL, caching = "master", keep_going = FALSE,
+  session = NULL, pruning_strategy = NULL, makefile_path = NULL,
   console_log_file = NULL, ensure_workers = TRUE,
   garbage_collection = FALSE, template = list(), sleep = function(i)
   0.01, hasty_build = NULL, memory_strategy = c("speed", "memory",

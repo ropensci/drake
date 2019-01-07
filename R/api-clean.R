@@ -124,16 +124,12 @@ clean <- function(
   } else {
     namespaces <- cleaned_namespaces(default = cache$default_namespace)
   }
-  graph <- read_drake_graph(cache = cache)
-  layout <- read_drake_layout(cache = cache)
   lightly_parallelize(
     X = targets,
     FUN = clean_single_target,
     jobs = jobs,
     cache = cache,
-    namespaces = namespaces,
-    graph = graph,
-    layout = layout
+    namespaces = namespaces
   )
   if (destroy) {
     cache$destroy()
@@ -152,24 +148,16 @@ clean_single_target <- function(
   layout
 ) {
   files <- character(0)
-  if (is_encoded_path(target)) {
-    if (cache$exists(target, namespace = "meta")) {
-      if (!is_imported_cache(target, cache)) {
-        files <- target
-      }
-    }
-  }
-  if (target %in% igraph::V(graph)$name) {
-    deps <- layout[[target]]$deps_build
-    files <- sort(unique(as.character(deps$file_out)))
-  }
-  if (length(files)) {
-    unlink(decode_path(files))
+  if (cache$exists(target, namespace = "meta")) {
+    files <- cache$get(key = target, namespace = "meta")$file_out
   }
   for (namespace in namespaces) {
     for (key in c(target, files)) {
-      cache$del(key = key, namespace = namespace)
+      try(cache$del(key = key, namespace = namespace))
     }
+  }
+  if (length(files)) {
+    unlink(decode_path(files))
   }
 }
 

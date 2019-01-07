@@ -413,7 +413,7 @@
 #' })
 #' }
 drake_config <- function(
-  plan = drake::read_drake_plan(),
+  plan,
   targets = NULL,
   envir = parent.frame(),
   verbose = 1L,

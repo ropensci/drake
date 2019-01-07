@@ -1,5 +1,5 @@
 create_drake_layout <- function(
-  plan = read_drake_plan(),
+  plan,
   envir = parent.frame(),
   verbose = 1L,
   jobs = 1,
