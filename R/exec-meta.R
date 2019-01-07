@@ -111,6 +111,14 @@ dependency_hash <- function(target, config) {
   )
 }
 
+self_hash <- function(target, config) {
+  # tryCatch is faster than checking if the key exists beforehand.
+  tryCatch(
+    config$cache$get_hash(target, namespace = "kernels"),
+    error = error_na
+  )
+}
+
 input_file_hash <- function(
   target,
   config,
@@ -158,14 +166,6 @@ output_file_hash <- function(
     out,
     algo = config$cache$driver$hash_algorithm,
     serialize = FALSE
-  )
-}
-
-self_hash <- function(target, config) {
-  # tryCatch is faster than checking if the key exists beforehand.
-  tryCatch(
-    config$cache$get_hash(target, namespace = "kernels"),
-    error = error_na
   )
 }
 
