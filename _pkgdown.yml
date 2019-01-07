@@ -92,8 +92,10 @@ reference:
   - '`build_times`'
   - '`predict_runtime`'
   - '`predict_load_balancing`'
-- title: Cache usage
+- title: Caches
   contents:
+  - '`new_cache`'
+  - '`this_cache`'
   - '`cached`'
   - '`clean`'
   - '`drake_cache_log`'
@@ -108,10 +110,7 @@ reference:
   - '`readd`'
   - '`rescue_cache`'
   - '`show_source`'
-- title: Cache configuration
-  contents:
-  - '`new_cache`'
-  - '`this_cache`'
-- title: Utilities
+  - '`read_drake_seed`'
+- title: Environments
   contents:
   - '`expose_imports`'

@@ -126,12 +126,6 @@ leaf_nodes <- function(graph) {
   V(graph)[is_leaf]$name
 }
 
-filter_upstream <- function(targets, graph) {
-  delete_these <- setdiff(igraph::V(graph)$name, targets)
-  graph <- delete_vertices(graph = graph, v = delete_these)
-  leaf_nodes(graph)
-}
-
 subset_graph <- function(graph, subset) {
   if (!length(subset)) {
     return(igraph::make_empty_graph())
