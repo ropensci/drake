@@ -56,79 +56,42 @@ Development
 <a href="https://travis-ci.org/ropensci/drake"><img src="https://travis-ci.org/ropensci/drake.svg?branch=master" alt="Travis"></a>
 
 </td>
-
 </tr>
-
 <tr class="even">
-
 <td align="left">
-
 <a href="https://cran.r-project.org/"><img src="https://img.shields.io/badge/R%3E%3D-3.4.0-blue.svg" alt="minimal R version"></a>
-
 </td>
-
 <td align="left">
-
 <a href="https://github.com/ropensci/onboarding/issues/156"><img src="https://badges.ropensci.org/156_status.svg" alt="rOpenSci"></a>
-
 </td>
-
 <td align="left">
-
 <a href="https://ci.appveyor.com/project/ropensci/drake"><img src="https://ci.appveyor.com/api/projects/status/4ypc9xnmqt70j94e?svg=true&amp;branch=master" alt="AppVeyor"></a>
-
 </td>
-
 </tr>
-
 <tr class="odd">
-
 <td align="left">
-
 <a href="http://cran.rstudio.com/package=drake"><img src="http://cranlogs.r-pkg.org/badges/drake" alt="downloads"></a>
-
 </td>
-
 <td align="left">
-
 <a href="http://cran.r-project.org/package=drake"><img src="http://www.r-pkg.org/badges/version/drake" alt="CRAN"></a>
-
 </td>
-
 <td align="left">
-
 <a href="https://codecov.io/github/ropensci/drake?branch=master"><img src="https://codecov.io/github/ropensci/drake/coverage.svg?branch=master" alt="Codecov"></a>
-
 </td>
-
 </tr>
-
 <tr class="even">
-
 <td align="left">
-
 <a href="https://saythanks.io/to/drake-r-package-feedback"><img src="https://img.shields.io/badge/Say-Thanks-blue.svg" alt="SayThanks"></a>
-
 </td>
-
 <td align="left">
-
 <a href="https://zenodo.org/badge/latestdoi/82609103"><img src="https://zenodo.org/badge/82609103.svg" alt="Zenodo"></a>
-
 </td>
-
 <td align="left">
-
 <a href="http://www.repostatus.org/#active"><img src="http://www.repostatus.org/badges/latest/active.svg" alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed." /></a>
-
 </td>
-
 </tr>
-
 </tbody>
-
 </table>
-
 <br>
 
 # The drake R package <img src="https://ropensci.github.io/drake/images/logo.svg" align="right" alt="logo" width="120" height = "139" style = "border: none; float: right;">
