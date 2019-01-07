@@ -110,10 +110,6 @@ test_with_dir("can keep going", {
   )
   expect_equal(sort(built()), sort(c("a2", "a3", "b2", "b3", "b4")))
   expect_equal(sort(failed()), sort(c("a1", "a4", "b1")))
-  expect_equal(
-    sort(failed(upstream_only = TRUE)),
-    sort(c("a1", "a4"))
-  )
 })
 
 test_with_dir("failed targets do not become up to date", {
