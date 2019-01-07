@@ -38,7 +38,7 @@ manage_memory <- function(targets, config, downstream = NULL, jobs = 1) {
   } else {
     downstream <- downstream_deps <- NULL
   }
-  already_loaded <- ls(envir = config$eval, all.names = TRUE)
+  already_loaded <- names(config$eval)
   target_deps <- deps_memory(targets = targets, config = config)
   if (!identical(config$memory_strategy, "speed")) {
     keep_these <- c(target_deps, downstream_deps)

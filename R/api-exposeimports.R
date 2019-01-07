@@ -100,7 +100,7 @@ expose_imports <- function(
   expose_envir(from = getNamespace(package), to = envir, jobs = jobs)
 }
 
-expose_envir <- function(from, to, jobs, keep = ls(from, all.names = TRUE)) {
+expose_envir <- function(from, to, jobs, keep = names(from)) {
   from <- as.list(from, all.names = TRUE)[keep]
   from <- list2env(from, parent = globalenv())
   lightly_parallelize(

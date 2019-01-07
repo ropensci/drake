@@ -235,7 +235,7 @@ is_vectorized <- function(funct) {
     return(FALSE)
   }
   vectorized_names <- "FUN" # Chose not to include other names.
-  if (!all(vectorized_names %in% ls(environment(funct)))) {
+  if (!all(vectorized_names %in% names(environment(funct)))) {
     return(FALSE)
   }
   f <- environment(funct)[["FUN"]]

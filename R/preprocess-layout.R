@@ -8,7 +8,7 @@ create_drake_layout <- function(
   cache = NULL
 ) {
   force(envir)
-  import_names <- ls(envir, all.names = TRUE)
+  import_names <- names(envir)
   config <- list(
     plan = plan,
     envir = envir,

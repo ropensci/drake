@@ -254,7 +254,7 @@ loadd <- function(
   exists <- unlist(exists)
   targets <- targets[exists]
   if (!replace) {
-    targets <- setdiff(targets, ls(envir, all.names = TRUE))
+    targets <- setdiff(targets, names(envir))
   }
   if (show_source) {
     lapply(
