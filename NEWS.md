@@ -37,6 +37,8 @@
 - Increase options for the `verbose` argument, including the option to print execution and total build times.
 - Separate the building of targets from the processing of imports. Imports are processed with rudimentary staged parallelism (`mclapply()` or `parLapply()`, depending on the operating system).
 - Ignore the imports when it comes to build times. Functions `build_times()`, `predict_runtime()`, etc. focus on only the targets.
+- Deprecate many functions, including `read_drake_config()`, `read_drake_graph()`, and `read_drake_plan()`.
+- Require a `config` argument to `drake_build()` and `loadd(deps = TRUE)`.
 
 # Version 6.2.1
 
