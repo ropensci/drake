@@ -80,19 +80,6 @@ test_with_dir("arbitrary storr in-memory cache", {
   expect_true(length(p2) > length(p1))
   expect_false(file.exists(default_cache_path()))
 
-  expect_error(read_drake_config(verbose = FALSE))
-  expect_true(is.list(read_drake_config(cache = cache, verbose = FALSE)))
-  expect_false(file.exists(default_cache_path()))
-
-  expect_error(read_drake_graph(verbose = FALSE))
-  expect_equal(class(
-    read_drake_graph(cache = cache, verbose = FALSE)), "igraph")
-  expect_false(file.exists(default_cache_path()))
-
-  expect_error(read_drake_plan(verbose = FALSE))
-  expect_true(is.data.frame(read_drake_plan(cache = cache, verbose = FALSE)))
-  expect_false(file.exists(default_cache_path()))
-
   expect_error(readd(small, verbose = FALSE))
   expect_true(is.data.frame(readd(small, cache = cache, verbose = FALSE)))
   expect_false(file.exists(default_cache_path()))

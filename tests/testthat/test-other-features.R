@@ -59,10 +59,6 @@ test_with_dir("drake_build works as expected", {
   o <- drake_config(pl, envir = e)
   expect_equal(justbuilt(o), "b")
 
-  # Can run without config
-  o <- drake_build(b)
-  expect_equal(o, readd(b))
-
   # Replacing deps in environment
   con$eval$a <- 2
   o <- drake_build(b, config = con)

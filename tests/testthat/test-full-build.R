@@ -17,9 +17,6 @@ test_with_dir("scratch build with custom filesystem cache.", {
   expect_true(is.numeric(readd(final, cache = cache)))
   expect_true(length(config$cache$list()) > 2)
   expect_false(any(c("f", "final") %in% ls()))
-  expect_true(
-    all(read_drake_plan(cache = cache)$target %in% config$plan$target))
-
   cache <- this_cache(path = path)
   expect_equal(cache$driver$hash_algorithm, "murmur32")
 

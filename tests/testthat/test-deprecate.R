@@ -103,6 +103,9 @@ test_with_dir("deprecate misc utilities", {
   expect_warning(parallelism_choices(FALSE))
   expect_warning(shell_file())
   expect_warning(default_parallelism())
+  expect_warning(read_drake_config())
+  expect_warning(read_drake_graph())
+  expect_warning(read_drake_plan())
 })
 
 test_with_dir("deprecated arguments", {
