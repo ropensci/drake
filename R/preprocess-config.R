@@ -683,37 +683,3 @@ do_prework <- function(config, verbose_packages) {
   }
   invisible()
 }
-
-#' @title Store an internal configuration list
-#'   from [drake_config()].
-#' @description Exported for demonstration and tinkering purposes
-#' only. Not meant to be called by the user.
-#' @export
-#' @keywords internal
-#' @param config Internal configuration list
-#' @return Nothing.
-#' @examples
-#' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' config <- drake_config(my_plan)
-#' store_drake_config(config = config)
-#' read_drake_config()
-#' })
-#' }
-store_drake_config <- function(config) {
-  config$cache$flush_cache() # Less data to save this way.
-  save_these <- setdiff(names(config), "envir")  # envir could get massive.
-  lightly_parallelize(
-    save_these,
-    function(item) {
-      config$cache$set(
-        key = item,
-        value = config[[item]],
-        namespace = "config"
-      )
-    },
-    jobs = config$jobs
-  )
-  invisible()
-}

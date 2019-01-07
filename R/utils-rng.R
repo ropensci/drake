@@ -20,8 +20,8 @@ choose_seed <- function(supplied, cache) {
 }
 
 get_previous_seed <- function(cache) {
-  if (cache$exists(key = "seed", namespace = "config")) {
-    cache$get(key = "seed", namespace = "config")
+  if (cache$exists(key = "seed", namespace = "session")) {
+    cache$get(key = "seed", namespace = "session")
   } else {
     NULL
   }

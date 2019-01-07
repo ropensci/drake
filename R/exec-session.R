@@ -70,7 +70,7 @@ conclude_session <- function(config) {
 
 initialize_session <- function(config) {
   runtime_checks(config = config)
-  store_drake_config(config = config)
+  config$cache$set(key = "seed", value = config$seed, namespace = "session")
   init_common_values(config$cache)
   mark_envir(config$eval)
   if (config$log_progress) {
@@ -78,13 +78,6 @@ initialize_session <- function(config) {
       cache = config$cache,
       jobs = config$jobs_preprocess,
       namespace = "progress"
-    )
-  }
-  for (namespace in c("session")) {
-    clear_tmp_namespace(
-      cache = config$cache,
-      jobs = config$jobs_preprocess,
-      namespace = namespace
     )
   }
   drake_set_session_info(cache = config$cache, full = config$session_info)

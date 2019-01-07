@@ -1137,3 +1137,92 @@ make_with_config <- function(config = drake::read_drake_config()) {
   )
   make(config = config)
 }
+
+#' @title Deprecated
+#' @description drake no longer stores the config object,
+#'   the plan, etc. in the cache during `make()`. This change
+#'   improves speed.
+#' @details 2019-01-06
+#' @export
+#' @keywords internal
+#' @inheritParams cached
+#' @examples
+#' # deprecated
+read_drake_config <- function(
+  path = getwd(),
+  search = TRUE,
+  cache = NULL,
+  verbose = 1L,
+  jobs = 1,
+  envir = parent.frame()
+) {
+  .Deprecated(
+    "read_drake_plan",
+    package = "drake",
+    msg = paste(
+      "read_drake_plan() is deprecated.",
+      "drake no longer stores the config object,",
+      "the plan, etc. in the cache during `make()`. This change",
+      "improves speed."
+    )
+  )
+  list()
+}
+
+#' @title Deprecated
+#' @description drake no longer stores the config object,
+#'   the plan, etc. in the cache during `make()`. This change
+#'   improves speed.
+#' @details 2019-01-06
+#' @export
+#' @keywords internal
+#' @inheritParams cached
+#' @examples
+#' # deprecated
+read_drake_graph <- function(
+  path = getwd(),
+  search = TRUE,
+  cache = NULL,
+  verbose = 1L
+) {
+  .Deprecated(
+    "read_drake_plan",
+    package = "drake",
+    msg = paste(
+      "read_drake_plan() is deprecated.",
+      "drake no longer stores the config object,",
+      "the plan, etc. in the cache during `make()`. This change",
+      "improves speed."
+    )
+  )
+  igraph::make_empty_graph()
+}
+
+#' @title Deprecated
+#' @description drake no longer stores the config object,
+#'   the plan, etc. in the cache during `make()`. This change
+#'   improves speed.
+#' @details 2019-01-06
+#' @export
+#' @keywords internal
+#' @inheritParams cached
+#' @examples
+#' # deprecated
+read_drake_plan <- function(
+  path = getwd(),
+  search = TRUE,
+  cache = NULL,
+  verbose = 1L
+) {
+  .Deprecated(
+    "read_drake_plan",
+    package = "drake",
+    msg = paste(
+      "read_drake_plan() is deprecated.",
+      "drake no longer stores the config object,",
+      "the plan, etc. in the cache during `make()`. This change",
+      "improves speed."
+    )
+  )
+  drake_plan()
+}
