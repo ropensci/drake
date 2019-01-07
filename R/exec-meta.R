@@ -97,7 +97,12 @@ dependency_hash <- function(target, config) {
   deps <- as.character(deps)
   deps <- unique(deps)
   deps <- sort(deps)
-  out <- self_hash(deps, config)
+  out <- vapply(
+    X = deps,
+    FUN = self_hash,
+    FUN.VALUE = character(1),
+    config = config
+  )
   out <- paste(out, collapse = "")
   digest::digest(
     out,
@@ -157,7 +162,11 @@ output_file_hash <- function(
 }
 
 self_hash <- function(target, config) {
-  config$cache$mget_hash(target, namespace = "kernels")
+  # tryCatch is faster than checking if the key exists beforehand.
+  tryCatch(
+    config$cache$get_hash(target, namespace = "kernels"),
+    error = error_na
+  )
 }
 
 rehash_file <- function(target, config) {
