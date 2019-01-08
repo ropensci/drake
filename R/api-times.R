@@ -35,10 +35,10 @@ build_times <- function(
   type = c("build", "command")
 ) {
   deprecate_targets_only(targets_only) # 2019-01-03 # nolint
-  eval(parse(text = "require(methods, quietly = TRUE)")) # needed for lubridate
   if (is.null(cache)) {
-    return(empty_times())
+    return(weak_as_tibble(empty_times()))
   }
+  eval(parse(text = "require(methods, quietly = TRUE)")) # needed for lubridate
   targets <- as.character(match.call(expand.dots = FALSE)$...)
   if (exists_tidyselect()) {
     targets <- drake_tidyselect(cache = cache, ..., namespaces = "meta")
@@ -52,6 +52,9 @@ build_times <- function(
       },
       jobs = jobs
     )
+  }
+  if (!length(targets)) {
+    return(weak_as_tibble(empty_times()))
   }
   type <- match.arg(type)
   out <- lightly_parallelize(
@@ -81,45 +84,46 @@ fetch_runtime <- function(key, cache, type) {
     cache = cache
   )
   if (is_bad_time(x)) {
-    return(empty_times())
+    x <- empty_times()
+  } else if (inherits(x, "proc_time")) {
+    x <- runtime_entry(runtime = x, target = key)
   }
-  if (inherits(x, "proc_time")) {
-    x <- runtime_entry(runtime = x, target = key, imported = NA_character_)
-  }
-  x
+  weak_as_tibble(x)
 }
 
 empty_times <- function() {
-  data.frame(
+  list(
     target = character(0),
     elapsed = numeric(0),
     user = numeric(0),
-    system = numeric(0),
-    stringsAsFactors = FALSE
+    system = numeric(0)
   )
 }
 
 round_times <- function(times, digits) {
   for (col in time_columns) {
-    times[[col]] <- round(times[[col]], digits = digits)
+    if (length(times[[col]])) {
+      times[[col]] <- round(times[[col]], digits = digits)
+    }
   }
   times
 }
 
-runtime_entry <- function(runtime, target, imported) {
-  data.frame(
+runtime_entry <- function(runtime, target) {
+  list(
     target = target,
     elapsed = runtime[["elapsed"]],
     user = runtime[["user.self"]],
-    system = runtime[["sys.self"]],
-    stringsAsFactors = FALSE
+    system = runtime[["sys.self"]]
   )
 }
 
 to_build_duration_df <- function(times) {
   eval(parse(text = "require(methods, quietly = TRUE)")) # needed for lubridate
   for (col in time_columns) {
-    times[[col]] <- to_build_duration(times[[col]])
+    if (length(times[[col]])) {
+      times[[col]] <- to_build_duration(times[[col]])
+    }
   }
   times
 }
@@ -140,15 +144,13 @@ finalize_times <- function(target, meta, config) {
   if (!is_bad_time(meta$time_command)) {
     meta$time_command <- runtime_entry(
       runtime = meta$time_command,
-      target = target,
-      imported = meta$imported
+      target = target
     )
   }
   if (!is_bad_time(meta$time_start)) {
     meta$time_build <- runtime_entry(
       runtime = proc.time() - meta$time_start,
-      target = target,
-      imported = meta$imported
+      target = target
     )
   }
   meta
