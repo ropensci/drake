@@ -62,8 +62,8 @@ test_with_dir("arbitrary storr in-memory cache", {
   expect_true(length(imported(cache = cache, verbose = FALSE)) > 0)
   expect_false(file.exists(default_cache_path()))
 
-  expect_equal(length(built(verbose = FALSE)), 0)
-  expect_true(length(built(cache = cache)) > 0)
+  expect_equal(length(cached(verbose = FALSE)), 0)
+  expect_true(length(cached(cache = cache)) > 0)
   expect_false(file.exists(default_cache_path()))
 
   expect_equal(nrow(build_times(verbose = FALSE)), 0)
