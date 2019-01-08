@@ -894,7 +894,7 @@ drake_strings <- function(...) {
 #' @title Deprecated. List all the built targets (non-imports) in the cache.
 #' @description Targets are listed in the workflow plan
 #' data frame (see [drake_plan()].
-#' @seealso [cached()], [loadd()], [imported()]
+#' @seealso [cached()], [loadd()]
 #' @export
 #' @return Character vector naming the built targets in the cache.
 #' @inheritParams cached
@@ -1302,4 +1302,61 @@ read_drake_plan <- function(
     )
   )
   drake_plan()
+}
+
+#' @title Deprecated. List all the imports in the drake cache.
+#' @description An import is a non-target object processed
+#' by [make()]. Targets in the workflow
+#' plan data frame (see [drake_config()]
+#' may depend on imports.
+#' @seealso [cached()], [loadd()]
+#' @export
+#' @return Character vector naming the imports in the cache.
+#'
+#' @inheritParams cached
+#'
+#' @param files_only logical, whether to show imported files only
+#'   and ignore imported objects. Since all your functions and
+#'   all their global variables are imported, the full list of
+#'   imported objects could get really cumbersome.
+#'
+#' @param jobs number of jobs/workers for parallel processing
+#'
+#' @examples
+#' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
+#' load_mtcars_example() # Load the canonical example.
+#' make(my_plan) # Run the project, build the targets.
+#' imported() # List all the imported objects/files in the cache.
+#' # For imported files, only the fingerprints/hashes are stored.
+#' })
+#' }
+imported <- function(
+  files_only = FALSE, path = getwd(), search = TRUE,
+  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  verbose = 1L,
+  jobs = 1
+) {
+  .Deprecated(
+    "imported",
+    package = "drake",
+    msg = paste(
+      "imported() is deprecated.",
+      "Use setdiff(cached(), cached(no_imported_objects = TRUE)) instead."
+    )
+  )
+  if (is.null(cache)) {
+    return(character(0))
+  }
+  targets <- cache$list(namespace = cache$default_namespace)
+  targets <- parallel_filter(
+    targets,
+    f = function(target) {
+      is_imported_cache(target = target, cache = cache)
+    },
+    jobs = jobs
+  )
+  if (files_only)
+    targets <- parallel_filter(targets, f = is_encoded_path, jobs = jobs)
+  display_keys(targets)
 }

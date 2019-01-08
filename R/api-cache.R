@@ -587,8 +587,7 @@ deprecate_hash_algo_args <- function(
 #' @title Enumerate cached targets or check if a target is cached.
 #' @description Read/load a cached item with [readd()]
 #' or [loadd()].
-#' @seealso [cached()], [imported()],
-#'   [readd()], [loadd()],
+#' @seealso [cached()], [readd()], [loadd()],
 #'   [drake_plan()], [make()]
 #' @export
 #' @return Either a named logical indicating whether the given
@@ -708,55 +707,6 @@ list_cache <- function(no_imported_objects, cache, namespace, jobs) {
     targets <- no_imported_objects(
       targets = targets, cache = cache, jobs = jobs)
   }
-  display_keys(targets)
-}
-
-#' @title List all the imports in the drake cache.
-#' @description An import is a non-target object processed
-#' by [make()]. Targets in the workflow
-#' plan data frame (see [drake_config()]
-#' may depend on imports.
-#' @seealso [cached()], [loadd()]
-#' @export
-#' @return Character vector naming the imports in the cache.
-#'
-#' @inheritParams cached
-#'
-#' @param files_only logical, whether to show imported files only
-#'   and ignore imported objects. Since all your functions and
-#'   all their global variables are imported, the full list of
-#'   imported objects could get really cumbersome.
-#'
-#' @param jobs number of jobs/workers for parallel processing
-#'
-#' @examples
-#' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' load_mtcars_example() # Load the canonical example.
-#' make(my_plan) # Run the project, build the targets.
-#' imported() # List all the imported objects/files in the cache.
-#' # For imported files, only the fingerprints/hashes are stored.
-#' })
-#' }
-imported <- function(
-  files_only = FALSE, path = getwd(), search = TRUE,
-  cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = 1L,
-  jobs = 1
-) {
-  if (is.null(cache)) {
-    return(character(0))
-  }
-  targets <- cache$list(namespace = cache$default_namespace)
-  targets <- parallel_filter(
-    targets,
-    f = function(target) {
-      is_imported_cache(target = target, cache = cache)
-    },
-    jobs = jobs
-  )
-  if (files_only)
-    targets <- parallel_filter(targets, f = is_encoded_path, jobs = jobs)
   display_keys(targets)
 }
 

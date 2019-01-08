@@ -197,7 +197,7 @@ get(file_store("report.md"))
 }
 }
 \seealso{
-\code{\link[=cached]{cached()}}, \code{\link[=imported]{imported()}}, \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
+\code{\link[=cached]{cached()}}, \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
 
-\code{\link[=cached]{cached()}}, \code{\link[=imported]{imported()}}, \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
+\code{\link[=cached]{cached()}}, \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
 }
