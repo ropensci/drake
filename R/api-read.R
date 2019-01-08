@@ -30,7 +30,7 @@
 #' your custom (imported) functions or the commands in your [drake_plan()].
 #' This creates confusion inside [make()], which has its own ways of
 #' interacting with the cache.
-#' @seealso [cached()], [built()], [imported()], [drake_plan()], [make()]
+#' @seealso [cached()], [imported()], [drake_plan()], [make()]
 #' @export
 #' @return The cached value of the `target`.
 #' @inheritParams cached
@@ -94,7 +94,7 @@ readd <- function(
 
 #' @title Load one or more targets or imports from the drake cache.
 #' @rdname readd
-#' @seealso [cached()], [built()], [imported()], [drake_plan()], [make()]
+#' @seealso [cached()], [imported()], [drake_plan()], [make()]
 #' @export
 #'
 #' @inheritParams cached

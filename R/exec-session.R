@@ -3,7 +3,7 @@
 #' @description By default, session info is saved
 #' during [make()] to ensure reproducibility.
 #' Your loaded packages and their versions are recorded, for example.
-#' @seealso [diagnose()], [built()], [imported()],
+#' @seealso [diagnose()], [cached()], [imported()],
 #'   [readd()], [drake_plan()], [make()]
 #' @export
 #' @return [sessionInfo()] of the last

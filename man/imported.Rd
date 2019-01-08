@@ -60,6 +60,5 @@ imported() # List all the imported objects/files in the cache.
 }
 }
 \seealso{
-\code{\link[=cached]{cached()}}, \code{\link[=loadd]{loadd()}},
-\code{\link[=built]{built()}}
+\code{\link[=cached]{cached()}}, \code{\link[=loadd]{loadd()}}
 }

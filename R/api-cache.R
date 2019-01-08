@@ -587,7 +587,7 @@ deprecate_hash_algo_args <- function(
 #' @title Enumerate cached targets or check if a target is cached.
 #' @description Read/load a cached item with [readd()]
 #' or [loadd()].
-#' @seealso [built()], [imported()],
+#' @seealso [cached()], [imported()],
 #'   [readd()], [loadd()],
 #'   [drake_plan()], [make()]
 #' @export
@@ -716,8 +716,7 @@ list_cache <- function(no_imported_objects, cache, namespace, jobs) {
 #' by [make()]. Targets in the workflow
 #' plan data frame (see [drake_config()]
 #' may depend on imports.
-#' @seealso [cached()], [loadd()],
-#'   [built()]
+#' @seealso [cached()], [loadd()]
 #' @export
 #' @return Character vector naming the imports in the cache.
 #'

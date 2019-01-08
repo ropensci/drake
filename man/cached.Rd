@@ -89,7 +89,7 @@ build_times()
 }
 }
 \seealso{
-\code{\link[=built]{built()}}, \code{\link[=imported]{imported()}},
+\code{\link[=cached]{cached()}}, \code{\link[=imported]{imported()}},
 \code{\link[=readd]{readd()}}, \code{\link[=loadd]{loadd()}},
 \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
 }

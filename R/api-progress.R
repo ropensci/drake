@@ -3,7 +3,7 @@
 #'   (2) were being built if the last [make()] quit unexpectedly.
 #' @description Similar to [progress()].
 #' @seealso [diagnose()], [drake_get_session_info()],
-#'   [built()], [imported()],
+#'   [cached()], [imported()],
 #'   [readd()], [drake_plan()], [make()]
 #' @export
 #' @return A character vector of target names.
@@ -31,7 +31,7 @@ in_progress <- function(path = getwd(), search = TRUE,
 #' [diagnose()] should eliminate the strict need
 #' for ordinary error messages printed to the console.
 #' @seealso [diagnose()], [drake_get_session_info()],
-#'   [built()], [imported()],
+#'   [cached()], [imported()],
 #'   [readd()], [drake_plan()], [make()]
 #' @export
 #' @return A character vector of target names.
@@ -68,7 +68,7 @@ failed <- function(path = getwd(), search = TRUE,
 #' to build are listed as `"finished"` or `"in progress"`.
 #' Skipped objects are not listed.
 #' @seealso [diagnose()], [drake_get_session_info()],
-#'   [built()], [imported()],
+#'   [cached()], [imported()],
 #'   [readd()], [drake_plan()], [make()]
 #' @export
 #'
