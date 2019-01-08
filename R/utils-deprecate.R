@@ -891,7 +891,6 @@ drake_strings <- function(...) {
   out
 }
 
-
 #' @title Deprecated. List all the built targets (non-imports) in the cache.
 #' @description Targets are listed in the workflow plan
 #' data frame (see [drake_plan()].
@@ -932,6 +931,41 @@ built <- function(
     jobs = jobs
   )
   display_keys(out)
+}
+
+#' @title Deprecated. Search up the file system
+#'   for the nearest root path of a drake project.
+#' @description Only works if the cache is a file system
+#' in a folder named `.drake` (default).
+#' @export
+#' @seealso [drake_plan()], [make()]
+#' @return File path of the nearest drake project or `NULL`
+#'   if no drake project is found.
+#' @param path starting path for search back for the project.
+#'   Should be a subdirectory of the drake project.
+#' @examples
+#' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
+#' make(my_plan) # Run the project, build the target.
+#' # Find the root directory of the current drake project.
+#' # Search up through parent directories if necessary.
+#' find_cache()
+#' })
+#' }
+find_project <- function(path = getwd()) {
+  .Deprecated(
+    "find_project",
+    package = "drake",
+    msg = paste("find_project() is deprecated.",
+                "Use find_cache() instead.")
+  )
+  
+  cache <- find_cache(path = path)
+  if (is.null(cache)) {
+    return(NULL)
+  }
+  return(dirname(cache))
 }
 
 #' @title Deprecated

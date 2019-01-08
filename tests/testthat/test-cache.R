@@ -154,7 +154,6 @@ test_with_dir("non-existent caches", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(0, nrow(drake_cache_log()))
   expect_equal(find_cache(), NULL)
-  expect_equal(find_project(), NULL)
   expect_error(loadd(list = "nothing", search = FALSE))
   expect_error(tmp <- read_drake_seed(search = FALSE))
   expect_error(tmp <- drake_get_session_info(search = FALSE))
@@ -353,7 +352,6 @@ test_with_dir("cache functions work from various working directories", {
   )
 
   # find your project
-  expect_equal(find_project(), getwd())
   expect_equal(find_cache(), file.path(getwd(), cache_dir))
   expect_true(is.numeric(readd(a, search = FALSE)))
 
@@ -429,7 +427,6 @@ test_with_dir("cache functions work from various working directories", {
   expect_true(all(cached(list = all, path = s, search = TRUE)))
 
   # find your project
-  expect_equal(find_project(path = s), file.path(scratch))
   expect_equal(find_cache(path = s),
     file.path(scratch, cache_dir))
 
