@@ -6,10 +6,11 @@ test_with_dir("manage_memory() warns if loading missing deps", {
     drake_plan(a = 1, b = a),
     memory_strategy = "lookahead"
   )
-  expect_warning(
+  capture.output(
     manage_memory(targets = "b", config = con),
-    regexp = "unable to load required dependencies"
+    type = "message"
   )
+  expect_false(exists("b", envir = con$eval, inherits = FALSE))
 })
 
 test_with_dir("manage_memory in full build", {

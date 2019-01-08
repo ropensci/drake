@@ -21,9 +21,12 @@ test_with_dir("set_testing_scenario", {
   with_all_options({
     expect_equal(get_testing_scenario_name(), original)
     expect_error(set_testing_scenario("lskdjf"))
-    set_testing_scenario("local_mclapply_9")
-    expect_equal(get_testing_scenario_name(), "local_mclapply_9")
-    expect_equal(get_testing_scenario()$parallelism, "mclapply")
+    set_testing_scenario("local_future_9_future::multisession_worker")
+    expect_equal(
+      get_testing_scenario_name(),
+      "local_future_9_future::multisession_worker"
+    )
+    expect_equal(get_testing_scenario()$parallelism, "future")
     expect_equal(get_testing_scenario()$jobs, 9)
   })
   expect_equal(original, get_testing_scenario_name())
@@ -38,7 +41,7 @@ test_with_dir("testing utils", {
   expect_true(is.data.frame(testing_scenarios()))
   expect_false(should_skip(scenario, os = "windows"))
   expect_false(should_skip(scenario, os = "linux"))
-  scenario <- "global_mclapply_2"
+  scenario <- "local_clustermq_2"
   expect_true(should_skip(scenario, os = "windows"))
   expect_false(should_skip(scenario, os = "linux"))
   expect_error(should_skip("scenario not found"))

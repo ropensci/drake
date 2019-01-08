@@ -32,7 +32,15 @@ test_with_dir("Random targets are reproducible", {
   )
   # Should not change the session's seed
   seed0 <- .Random.seed # nolint
-  con <- make(
+  make(
+    data,
+    envir = env,
+    parallelism = parallelism,
+    jobs = jobs,
+    verbose = FALSE,
+    session_info = FALSE
+  )
+  con <- drake_config(
     data,
     envir = env,
     parallelism = parallelism,
@@ -53,7 +61,15 @@ test_with_dir("Random targets are reproducible", {
 
   # Delete and reproduce some random data.
   clean()
-  con2 <- make(
+  make(
+    data,
+    envir = env,
+    parallelism = parallelism,
+    jobs = jobs,
+    verbose = FALSE,
+    session_info = FALSE
+  )
+  con2 <- drake_config(
     data,
     envir = env,
     parallelism = parallelism,
@@ -74,7 +90,15 @@ test_with_dir("Random targets are reproducible", {
   # and check that y and my are the same as before.
   tmp <- sample.int(1)
   clean(y)
-  con3 <- make(
+  make(
+    data,
+    envir = env,
+    parallelism = parallelism,
+    jobs = jobs,
+    verbose = FALSE,
+    session_info = FALSE
+  )
+  con3 <- drake_config(
     data,
     envir = env,
     parallelism = parallelism,
@@ -91,7 +115,16 @@ test_with_dir("Random targets are reproducible", {
   # and check that things are the same as before.
   tmp <- sample.int(1)
   clean(y)
-  con4 <- make(
+  make(
+    data,
+    envir = env,
+    seed = con2$seed,
+    parallelism = parallelism,
+    jobs = jobs,
+    verbose = FALSE,
+    session_info = FALSE
+  )
+  con4 <- drake_config(
     data,
     envir = env,
     seed = con2$seed,
@@ -109,7 +142,16 @@ test_with_dir("Random targets are reproducible", {
   # and check that the results are different.
   tmp <- sample.int(1)
   clean(destroy = TRUE)
-  con5 <- make(
+  make(
+    data,
+    envir = env,
+    seed = con2$seed + 1,
+    parallelism = parallelism,
+    jobs = jobs,
+    verbose = FALSE,
+    session_info = FALSE
+  )
+  con5 <- drake_config(
     data,
     envir = env,
     seed = con2$seed + 1,

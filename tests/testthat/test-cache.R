@@ -9,19 +9,12 @@ test_with_dir("clean() removes the correct files", {
     b = knitr_in("b.txt"),
     d = writeLines("123", file_out("d.rds"))
   )
-  config <- drake_config(plan, session_info = FALSE)
-  make_imports(config)
+  config <- drake_config(plan, session_info = FALSE, skip_targets = TRUE)
+  make(config = config)
   clean()
   expect_true(file.exists("a.txt"))
   expect_true(file.exists("b.txt"))
   expect_false(file.exists("d.txt"))
-})
-
-test_with_dir("empty read_drake_plan()", {
-  expect_equal(
-    read_drake_plan(cache = storr::storr_environment()),
-    drake_plan()
-  )
 })
 
 test_with_dir("drake_version", {
@@ -30,10 +23,12 @@ test_with_dir("drake_version", {
     get_cache_version(cache),
     as.character(utils::packageVersion("drake"))
   )
-  con <- make(drake_plan(x = 1), session_info = FALSE)
+  make(drake_plan(x = 1), session_info = FALSE)
+  con <- drake_config(drake_plan(x = 1), session_info = FALSE)
   expect_true(is.character(get_cache_version(con$cache)))
   clean()
-  con <- make(drake_plan(x = 1), session_info = TRUE)
+  make(drake_plan(x = 1), session_info = TRUE)
+  con <- drake_config(drake_plan(x = 1), session_info = TRUE)
   expect_true(is.character(get_cache_version(con$cache)))
   con$cache$clear(namespace = "session")
   expect_equal(
@@ -45,7 +40,8 @@ test_with_dir("drake_version", {
 test_with_dir("dependency profile", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   b <- 1
-  config <- make(drake_plan(a = b), session_info = FALSE)
+  make(drake_plan(a = b), session_info = FALSE)
+  config <- drake_config(drake_plan(a = b), session_info = FALSE)
   expect_error(
     dependency_profile(target = missing, config = config),
     regexp = "no recorded metadata"
@@ -59,7 +55,7 @@ test_with_dir("dependency profile", {
   expect_true(as.logical(dp[dp$hash == "depend", "changed"]))
   expect_equal(sum(dp$changed), 1)
   config$plan$command <- "b + c"
-  config$layout <- whole_static_analysis(
+  config$layout <- create_drake_layout(
     plan = config$plan,
     envir = config$envir,
     cache = config$cache
@@ -160,14 +156,10 @@ test_with_dir("non-existent caches", {
   expect_equal(find_cache(), NULL)
   expect_equal(find_project(), NULL)
   expect_error(loadd(list = "nothing", search = FALSE))
-  expect_error(tmp <- read_drake_config(search = FALSE))
-  expect_error(tmp <- read_drake_plan(search = FALSE))
-  expect_error(tmp <- read_drake_graph(search = FALSE))
   expect_error(tmp <- read_drake_seed(search = FALSE))
   expect_error(tmp <- drake_get_session_info(search = FALSE))
   expect_error(tmp <- drake_set_session_info(search = FALSE))
   dummy <- new_cache()
-  expect_silent(read_drake_graph(cache = dummy))
 })
 
 test_with_dir("drake_gc() and mangled keys", {
@@ -229,7 +221,7 @@ test_with_dir("get_cache() can search", {
   expect_null(get_cache(file.path("w", "x", "y", "z"), search = FALSE))
 })
 
-test_with_dir("cache functions work", {
+test_with_dir("cache functions work from various working directories", {
   skip_if_not_installed("lubridate")
   # May have been loaded in a globalenv() testing scenario # nolint
   remove_these <- intersect(ls(envir = globalenv()), c("h", "j"))
@@ -288,18 +280,17 @@ test_with_dir("cache functions work", {
 
   # build_times
   x <- config$cache
-  bt <- build_times(search = FALSE, targets_only = FALSE)
+  bt <- build_times(search = FALSE)
   expect_equal(
     sort(display_keys(x$list(namespace = "meta"))),
     sort(cached())
   )
-  expect_equal(sort(bt$item), sort(display_keys(all)))
-  expect_length(bt, 5) # 5 columns
+  expect_equal(sort(bt$target), sort(builds))
+  expect_length(bt, 4) # 4 columns
   n1 <- nrow(bt)
-  n2 <- nrow(build_times(search = FALSE, targets_only = TRUE))
-  expect_true(n1 > n2 & n2 > 0)
 
   # find stuff in current directory session, progress
+  expect_equal(read_drake_seed(search = FALSE), config$seed)
   expect_true(is.list(drake_get_session_info(search = FALSE)))
   expect_true(all(progress(search = FALSE) == "finished"))
   expect_equal(in_progress(search = FALSE), character(0))
@@ -442,13 +433,6 @@ test_with_dir("cache functions work", {
   expect_equal(find_cache(path = s),
     file.path(scratch, cache_dir))
 
-  # config
-  newconfig <- read_drake_config(search = TRUE, path = s)
-  expect_true(is.list(newconfig) & length(newconfig) > 1)
-  expect_equal(read_drake_plan(search = TRUE, path = s), config$plan)
-  expect_equal(class(read_drake_graph(search = TRUE, path = s)),
-    "igraph")
-
   # load and read stuff
   expect_true(is.numeric(readd(a, path = s, search = TRUE)))
   expect_error(h(1))
@@ -462,25 +446,11 @@ test_with_dir("cache functions work", {
   e <- new.env()
   deps <- c("nextone", "yourinput")
   expect_false(any(deps %in% ls(envir = e)))
-  loadd(combined, deps = TRUE, path = s, search = TRUE, envir = e)
+  loadd(
+    combined, deps = TRUE, config = config,
+    path = s, search = TRUE, envir = e
+  )
   expect_true(all(deps %in% ls(envir = e)))
-
-  # Read the graph
-  pdf(NULL)
-  tmp <- dbug()
-  tmp <- read_drake_graph(search = TRUE, path = s)
-  tmp <- capture.output(dev.off())
-  unlink("Rplots.pdf", force = TRUE)
-
-  setwd(scratch) # nolint
-  pdf(NULL)
-  tmp <- read_drake_graph(search = FALSE)
-  tmp <- capture.output(dev.off())
-  unlink("Rplots.pdf", force = TRUE)
-  pdf(NULL)
-  tmp <- capture.output(dev.off())
-  unlink("Rplots.pdf", force = TRUE)
-  setwd("..") # nolint
 
   # clean using search = TRUE or FALSE
   expect_true(all(display_keys(all) %in% cached(path = s, search = T)))
@@ -525,9 +495,17 @@ test_with_dir("master caching, environment caches and parallelism", {
   skip_if_not_installed("future")
   load_mtcars_example()
   future::plan(future::multiprocess)
-  config <- make(
+  cache <- storr::storr_environment() # not thread-safe
+  make(
     my_plan,
-    cache = storr::storr_environment(), # not thread-safe
+    cache = cache,
+    caching = "master",
+    parallelism = "future",
+    jobs = 2
+  )
+  config <- drake_config(
+    my_plan,
+    cache = cache,
     caching = "master",
     parallelism = "future",
     jobs = 2

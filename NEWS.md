@@ -1,15 +1,13 @@
-# Version 7.0.0
-
-## Breaking changes
-
-- Set the default value of `lock_envir` to `TRUE` in `make()` and `drake_config()`. So `make()` will automatically quit in error if the act of building a target tries to change upstream dependencies.
-
-
 # Version 6.2.1.9000
 
 ## Breaking changes
 
-This release will be version 7.0.0, a major update. Unfortunately, the enhancements that increase speed also invalidate targets in old projects. Workflows run with drake <= 6.2.1 will need to run from scratch again. In addition, a large amount of deprecated functionality is removed, including several functions and the single-quoted file API.
+- This release will be version 7.0.0, a major update. Unfortunately, some enhancements that increase cache speed also invalidate targets in old projects. Workflows run with drake <= 6.2.1 will need to run from scratch again.
+- Remove all parallel backends (`parallelism` argument of `make()`) except "clustermq", "future", and "hasty".
+- A large amount of deprecated functionality is removed, including several functions and the single-quoted file API.
+- Set the default value of `lock_envir` to `TRUE` in `make()` and `drake_config()`. So `make()` will automatically quit in error if the act of building a target tries to change upstream dependencies.
+- `make()` no longer returns a value. Users will need to call `drake_config()` separately to get the old return value of `make()`.
+- Make `jobs` a scalar argument to `make()` and `drake_config()`. To parallelize the imports and other preprocessing tasks, use `jobs_preprocess`.
 
 ## Bug fixes
 
@@ -36,6 +34,11 @@ This release will be version 7.0.0, a major update. Unfortunately, the enhanceme
 - Deprecate the `graph` and `layout` arguments to `make()` and `drake_config()`. The change simplifies the internals, and memoization allows us to do this.
 - Warn the user if running `make()` in a subdirectory of the `drake` project root (determined by the location of the `.drake` folder in relation to the working directory).
 - In the code analysis, explicitly prohibit targets from being dependencies of imported functions.
+- Increase options for the `verbose` argument, including the option to print execution and total build times.
+- Separate the building of targets from the processing of imports. Imports are processed with rudimentary staged parallelism (`mclapply()` or `parLapply()`, depending on the operating system).
+- Ignore the imports when it comes to build times. Functions `build_times()`, `predict_runtime()`, etc. focus on only the targets.
+- Deprecate many functions, including `read_drake_config()`, `read_drake_graph()`, and `read_drake_plan()`.
+- Require a `config` argument to `drake_build()` and `loadd(deps = TRUE)`.
 
 # Version 6.2.1
 

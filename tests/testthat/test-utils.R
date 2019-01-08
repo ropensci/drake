@@ -163,3 +163,9 @@ test_with_dir("same with memoization", {
     expect_true(all(file.create(z)))
   }
 })
+
+test_with_dir("safe_get", {
+  config <- drake_config(drake_plan(a = 1))
+  expect_true(is.na(safe_get("a", "b", config)))
+  expect_true(is.na(safe_get_hash("a", "b", config)))
+})

@@ -42,7 +42,8 @@ test_with_dir("mtcars example works", {
 
   dats <- c("small", "large")
   config$targets <- dats
-  con <- testrun(config)
+  testrun(config)
+  con <- testconfig(config)
 
   expect_true(is.list(dependency_profile(
     target = "small", config = con)))
@@ -52,7 +53,7 @@ test_with_dir("mtcars example works", {
   remove_these <- intersect(dats, ls(config$envir))
   rm(list = remove_these, envir = config$envir)
   config$targets <- config$plan$target
-  con <- testrun(config)
+  testrun(config)
   jb <- justbuilt(con)
   expect_true("report" %in% jb)
   expect_false(any(dats %in% jb))
@@ -112,7 +113,7 @@ test_with_dir("mtcars example works", {
     all_times <- build_times()
     expect_true(nrow(all_times) >= nrow(config$plan))
     some_times <- build_times(starts_with("coef"))
-    expect_equal(sort(some_times$item), coefs)
+    expect_equal(sort(some_times$target), coefs)
 
     # clean() # nolint
     x <- sort(cached())
@@ -136,10 +137,14 @@ test_with_dir("mtcars example works", {
   )
   suppressWarnings(con <- drake_config(plan = x))
   for (target in c("a")) {
-    expect_true("small" %in% dependencies(targets = target, config = con))
+    expect_true(
+      "small" %in% unlist(deps_target(target, con, character_only = TRUE))
+    )
   }
   for (target in c("b", "c")) {
-    expect_false("small" %in% dependencies(targets = target, config = con))
+    expect_false(
+      "small" %in% unlist(deps_target(target, con, character_only = TRUE))
+    )
   }
 
   # clean_mtcars_example() # nolint

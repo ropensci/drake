@@ -33,7 +33,8 @@ test_with_dir("drake_debug()", {
   for (i in 1:2) {
     clean(destroy = TRUE)
     load_mtcars_example()
-    config <- make(my_plan)
+    make(my_plan)
+    config <- drake_config(my_plan)
     expect_true(config$cache$exists("small"))
     clean(small)
     expect_false(config$cache$exists("small"))
