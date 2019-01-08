@@ -1,5 +1,5 @@
 devtools::load_all()
-for (scenario in sort(testing_scenario_names())){
+for (scenario in testing_scenario_names()){
   cat(scenario, "\n")
   system2(
     command = "R",

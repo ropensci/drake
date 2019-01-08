@@ -198,14 +198,20 @@ test_with_dir(
   stat <- c(a = "finished", b = "finished", c = "finished",
             d = "finished")
   expect_equal(progress(), stat)
-  expect_warning(
-    con <- make(
+  expect_warning({
+    make(
       x,
       verbose = FALSE,
       targets = c("a", "nobody_home"),
       session_info = FALSE
     )
-  )
+    con <- drake_config(
+      x,
+      verbose = FALSE,
+      targets = c("a", "nobody_home"),
+      session_info = FALSE
+    )
+  })
   expect_true(all(letters[1:4] %in% cached()))
   expect_true(all(letters[1:4] %in% con$plan$target))
 })

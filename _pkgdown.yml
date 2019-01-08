@@ -25,7 +25,6 @@ reference:
 - title: Help
   contents:
   - '`drake-package`'
-  - '`drake_tip`'
 - title: Examples
   contents:
   - '`drake_example`'
@@ -38,8 +37,6 @@ reference:
   - '`drake_config`'
   - '`drake_build`'
   - '`drake_debug`'
-  - '`make_imports`'
-  - '`make_targets`'
 - title: Workflow plan data frames
   contents:
   - '`drake_plan`'
@@ -64,8 +61,6 @@ reference:
   - '`expand_plan`'
   - '`plan_analyses`'
   - '`plan_summaries`'
-  - '`dataset_wildcard`'
-  - '`analysis_wildcard`'
 - title: Network graphs and visualization
   contents:
   - '`vis_drake_graph`'
@@ -76,11 +71,8 @@ reference:
   - '`drake_ggraph`'
   - '`drake_graph_info`'
   - '`legend_nodes`'
-  - '`drake_palette`'
-  - '`prune_drake_graph`'
 - title: Debugging and testing
   contents:
-  - '`check_plan`'
   - '`dependency_profile`'
   - '`deps_code`'
   - '`deps_target`'
@@ -93,60 +85,32 @@ reference:
   - '`trigger`'
 - title: High-performance computing
   contents:
-  - '`default_Makefile_args`'
-  - '`default_Makefile_command`'
-  - '`default_parallelism`'
-  - '`default_recipe_command`'
   - '`drake_hpc_template_file`'
   - '`drake_hpc_template_files`'
-  - '`Makefile_recipe`'
-  - '`parallelism_choices`'
-  - '`parallel_stages`'
-  - '`r_recipe_wildcard`'
-  - '`shell_file`'
 - title: Time
   contents:
   - '`build_times`'
   - '`predict_runtime`'
   - '`predict_load_balancing`'
-- title: Cache usage
+- title: Caches
   contents:
-  - '`built`'
+  - '`new_cache`'
+  - '`this_cache`'
   - '`cached`'
   - '`clean`'
   - '`drake_cache_log`'
   - '`drake_cache_log_file`'
   - '`drake_gc`'
-  - '`drake_session`'
+  - '`drake_get_session_info`'
   - '`failed`'
   - '`find_cache`'
-  - '`find_project`'
   - '`get_cache`'
-  - '`imported`'
-  - '`in_progress`'
   - '`loadd`'
   - '`progress`'
-  - '`read_drake_config`'
-  - '`read_drake_graph`'
-  - '`read_drake_plan`'
-  - '`read_drake_seed`'
   - '`readd`'
   - '`rescue_cache`'
   - '`show_source`'
-- title: Cache configuration
+  - '`read_drake_seed`'
+- title: Environments
   contents:
-  - '`cache_namespaces`'
-  - '`cache_path`'
-  - '`cleaned_namespaces`'
-  - '`configure_cache`'
-  - '`default_cache_path`'
-  - '`new_cache`'
-  - '`recover_cache`'
-  - '`target_namespaces`'
-  - '`this_cache`'
-- title: Utilities
-  contents:
-  - '`drake_quotes`'
-  - '`drake_strings`'
-  - '`drake_unquote`'
   - '`expose_imports`'

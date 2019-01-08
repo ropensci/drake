@@ -55,12 +55,9 @@ test_with_dir("drake_build works as expected", {
     target = "a", character_only = TRUE, config = con)
   x <- cached()
   expect_equal(x, "a")
-  o <- make(pl, envir = e)
+  make(pl, envir = e)
+  o <- drake_config(pl, envir = e)
   expect_equal(justbuilt(o), "b")
-
-  # Can run without config
-  o <- drake_build(b)
-  expect_equal(o, readd(b))
 
   # Replacing deps in environment
   con$eval$a <- 2
@@ -254,16 +251,21 @@ test_with_dir("misc utils", {
 test_with_dir("make(..., skip_imports = TRUE) works", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   con <- dbug()
-  verbose <- max(con$jobs) < 2 &&
-    targets_setting(con$parallelism) == "parLapply"
-  suppressMessages(
-    con <- make(
+  verbose <- max(con$jobs) < 2
+  suppressMessages({
+    make(
       con$plan, parallelism = con$parallelism,
       envir = con$envir, jobs = con$jobs, verbose = verbose,
       skip_imports = TRUE,
       session_info = FALSE
     )
-  )
+    con <- drake_config(
+      con$plan, parallelism = con$parallelism,
+      envir = con$envir, jobs = con$jobs, verbose = verbose,
+      skip_imports = TRUE,
+      session_info = FALSE
+    )
+  })
   expect_equal(
     sort(cached()),
     sort(display_keys(
@@ -275,13 +277,18 @@ test_with_dir("make(..., skip_imports = TRUE) works", {
   # skip_imports = TRUE should be up to date.
   make(con$plan, verbose = FALSE, envir = con$envir, session_info = FALSE)
   clean(list = con$plan$target, verbose = FALSE)
-  suppressMessages(
-    con <- make(
+  suppressMessages({
+    make(
       con$plan, parallelism = con$parallelism,
       envir = con$envir, jobs = con$jobs, verbose = verbose,
       skip_imports = TRUE, session_info = FALSE
     )
-  )
+    con <- drake_config(
+      con$plan, parallelism = con$parallelism,
+      envir = con$envir, jobs = con$jobs, verbose = verbose,
+      skip_imports = TRUE, session_info = FALSE
+    )
+  })
   out <- outdated(con)
   expect_equal(out, character(0))
 })
@@ -301,4 +308,91 @@ test_with_dir("assert_pkg", {
     ),
     regexp = "with BiocManager::install"
   )
+})
+
+test_with_dir("packages are loaded in prework", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_if_not_installed("abind")
+
+  original <- getOption("test_drake_option_12345")
+  options(test_drake_option_12345 = "unset")
+  expect_equal(getOption("test_drake_option_12345"), "unset")
+  config <- dbug()
+  try(detach("package:abind", unload = TRUE), silent = TRUE) # nolint
+  expect_error(abind(1))
+
+  # Load packages with the 'packages' argument
+  config$packages <- "abind"
+  config$prework <- "options(test_drake_option_12345 = 'set')"
+  config$plan <- drake_plan(
+    x = getOption("test_drake_option_12345"),
+    y = c(deparse(body(abind)), x)
+  )
+  config$targets <- config$plan$target
+  expect_false(any(c("x", "y") %in% config$cache$list()))
+  testrun(config)
+  expect_true(all(c("x", "y") %in% config$cache$list()))
+  expect_equal(readd(x, search = FALSE), "set")
+  expect_true(length(readd(y, search = FALSE)) > 0)
+  options(test_drake_option_12345 = original)
+  clean(search = FALSE)
+
+  # load packages the usual way
+  options(test_drake_option_12345 = "unset")
+  expect_equal(getOption("test_drake_option_12345"), "unset")
+  try(detach("package:abind", unload = TRUE), silent = TRUE) # nolint
+  expect_error(abind(1))
+  library(abind) # nolint
+  config$packages <- NULL
+  expect_false(any(c("x", "y") %in% config$cache$list()))
+
+  # drake may be loaded with devtools::load_all() but not
+  # installed.
+  scenario <- get_testing_scenario()
+  suppressWarnings(
+    make(
+      plan = config$plan,
+      targets = config$targets,
+      envir = config$envir,
+      verbose = FALSE,
+      parallelism = scenario$parallelism,
+      jobs = scenario$jobs,
+      prework = config$prework,
+      command = config$command,
+      session_info = FALSE
+    )
+  )
+  expect_true(all(c("x", "y") %in% config$cache$list()))
+  expect_equal(readd(x, search = FALSE), "set")
+  expect_true(length(readd(y, search = FALSE)) > 0)
+  options(test_drake_option_12345 = original)
+})
+
+test_with_dir("parallelism can be a scheduler function", {
+  plan <- drake_plan(x = file.create("x"))
+  build_ <- function(target, config){
+    tidy_expr <- eval(
+      expr = config$layout[[target]]$command_build,
+      envir = config$eval
+    )
+    eval(expr = tidy_expr, envir = config$eval)
+  }
+  loop_ <- function(config) {
+    targets <- igraph::topo_sort(config$schedule)$name
+    for (target in targets) {
+      console_target(target = target, config = config)
+      config$eval[[target]] <- build_(
+        target = target,
+        config = config
+      )
+    }
+    invisible()
+  }
+  config <- drake_config(plan, parallelism = loop_)
+  expect_warning(
+    make(config = config),
+    regexp = "Use at your own risk"
+  )
+  expect_true(file.exists("x"))
+  expect_false(config$cache$exists("x"))
 })

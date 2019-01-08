@@ -192,7 +192,8 @@ test_with_dir("Vectorized nested functions work", {
   expect_equal(clean_dependency_list(deps_code(e$f)), sort(c("g")))
   expect_equal(clean_dependency_list(deps_code(e$g)), sort(c("y")))
 
-  config <- testrun(config)
+  testrun(config)
+  config <- testconfig(config)
   if ("a" %in% ls(config$envir)) {
     rm(a, envir = config$envir)
   }
@@ -204,14 +205,16 @@ test_with_dir("Vectorized nested functions work", {
   expect_equal("a", outdated(config))
 
   # Target "a" should react.
-  config <- testrun(config)
+  testrun(config)
+  config <- testconfig(config)
   expect_equal(character(0), outdated(config))
   expect_equal(readd(a), 9:18)
 
   # Change a vectorized function and see target "a" react.
   eval(parse(text = "f <- Vectorize(function(x) {g(x) + 3}, \"x\")"),
        envir = e)
-  config <- testrun(config)
+  testrun(config)
+  config <- testconfig(config)
   expect_equal(justbuilt(config), "a")
   expect_equal(readd(a), 12:21)
 })
@@ -232,8 +235,9 @@ test_with_dir("deps_target()", {
     expect_equal(d1[[n]], d2[[n]])
   }
   d <- deps_target(regression1_small, config = config)
-  expect_equal(length(d), 1)
+  expect_equal(length(d), 2)
   expect_equal(sort(d$globals), sort(c("reg1", "small")))
+  expect_equal(d$memory, "small")
 })
 
 test_with_dir("self-referential commands and imports", {
@@ -243,10 +247,12 @@ test_with_dir("self-referential commands and imports", {
   x <- data.frame(f = 123)
   plan <- drake_plan(y = f(x, y))
   cache <- storr::storr_environment()
-  o <- make(plan, cache = cache, session_info = FALSE)
+  make(plan, cache = cache, session_info = FALSE)
+  o <- drake_config(plan, cache = cache, session_info = FALSE)
   expect_equal(justbuilt(o), "y")
   log1 <- drake_cache_log(cache = cache)
-  o <- make(plan, cache = cache, session_info = FALSE)
+  make(plan, cache = cache, session_info = FALSE)
+  o <- drake_config(plan, cache = cache, session_info = FALSE)
   expect_true(nobuild(o))
   log2 <- drake_cache_log(cache = cache)
   expect_equal(log1, log2)
@@ -268,30 +274,42 @@ test_with_dir("ignore() suppresses updates", {
   envir$arg <- 4
 
   # Without ignore()
-  con <- make(
+  make(
+    plan = drake_plan(x = sqrt(arg)),
+    envir = envir,
+    cache = cache
+  )
+  con <- drake_config(
     plan = drake_plan(x = sqrt(arg)),
     envir = envir,
     cache = cache
   )
   expect_equal(justbuilt(con), "x")
   con$envir$arg <- con$envir$arg + 1
-  con <- make_with_config(con)
+  make(config = con)
   expect_equal(justbuilt(con), "x")
 
   # With ignore()
-  con <- make(
+  make(
+    plan = drake_plan(x = sqrt( ignore(arg) + 123)), # nolint
+    envir = envir,
+    cache = cache
+  )
+  con <- drake_config(
     plan = drake_plan(x = sqrt( ignore(arg) + 123)), # nolint
     envir = envir,
     cache = cache
   )
   expect_equal(justbuilt(con), "x")
   con$envir$arg <- con$envir$arg + 1
-  con <- make_with_config(con)
+  con$cache$clear(namespace = "progress")
+  make(config = con)
   expect_equal(justbuilt(con), character(0))
 
   con$envir$arg2 <- con$envir$arg + 1234
   con$plan <- drake_plan(x = sqrt( ignore  (arg2 ) + 123)) # nolint
-  con <- make_with_config(con)
+  con$cache$clear(namespace = "progress")
+  make(config = con)
   expect_equal(justbuilt(con), character(0))
 })
 
@@ -416,7 +434,8 @@ test_with_dir("ignore() in imported functions", {
   }
   plan <- drake_plan(x = f(1))
   cache <- storr::storr_environment()
-  config <- make(plan, cache = cache)
+  make(plan, cache = cache)
+  config <- drake_config(plan, cache = cache)
   expect_equal(justbuilt(config), "x")
   expect_equal(readd(f, cache = cache), f)
   expect_equal(
@@ -426,12 +445,14 @@ test_with_dir("ignore() in imported functions", {
   f <- function(x) {
     (sqrt( ignore(sqrt(x) + 8) + 123)) # nolint
   }
-  config <- make(plan, cache = cache)
+  make(plan, cache = cache)
+  config <- drake_config(plan, cache = cache)
   expect_equal(justbuilt(config), character(0))
   f <- function(x) {
     (sqrt( ignore(sqrt(x) + 8) + 124)) # nolint
   }
-  config <- make(plan, cache = cache)
+  make(plan, cache = cache)
+  config <- drake_config(plan, cache = cache)
   expect_equal(justbuilt(config), "x")
 })
 

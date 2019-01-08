@@ -72,6 +72,12 @@ test_with_dir("drake version checks in previous caches", {
   x <- get_cache()
   suppressWarnings(expect_error(drake_session(cache = NULL), regexp = "make"))
   expect_warning(drake_session(cache = x), regexp = "deprecated")
+  expect_warning(build_times(targets_only = TRUE), regexp = "deprecated")
+  config <- drake_config(plan)
+  expect_warning(
+    predict_runtime(config, targets_only = TRUE),
+    regexp = "deprecated"
+  )
 })
 
 test_with_dir("deprecated graphing functions", {
@@ -110,8 +116,24 @@ test_with_dir("deprecate misc utilities", {
   expect_warning(deps(123))
   load_mtcars_example()
   expect_warning(config <- drake_config(my_plan, graph = 1, layout = 2))
+  expect_warning(make_imports(config))
+  expect_warning(make_targets(config))
+  expect_warning(make_with_config(config))
   expect_warning(migrate_drake_project())
   expect_warning(default_verbose())
+  expect_warning(default_Makefile_args(2, 2))
+  expect_warning(default_Makefile_args(0, 0))
+  expect_warning(default_Makefile_command())
+  expect_warning(Makefile_recipe())
+  expect_warning(default_recipe_command())
+  expect_warning(r_recipe_wildcard())
+  expect_warning(parallelism_choices(TRUE))
+  expect_warning(parallelism_choices(FALSE))
+  expect_warning(shell_file())
+  expect_warning(default_parallelism())
+  expect_warning(read_drake_config())
+  expect_warning(read_drake_graph())
+  expect_warning(read_drake_plan())
 })
 
 test_with_dir("deprecated arguments", {
@@ -119,6 +141,12 @@ test_with_dir("deprecated arguments", {
   pl <- drake_plan(a = 1, b = a)
   con <- drake_config(plan = pl)
   expect_warning(drake_build(a, config = con, meta = list()))
+  expect_warning(make(drake_plan(x = 1), recipe_command = "123"))
+  expect_warning(make(drake_plan(x = 1), hasty_build = "123"))
+  expect_warning(loadd(x, graph = 123))
+  expect_warning(drake_build("a", config = con, envir = 123))
+  expect_warning(failed(upstream_only = TRUE))
+  expect_error(expect_warning(loadd(list = "a", deps = TRUE)))
 })
 
 test_with_dir("example template files (deprecated)", {
@@ -177,13 +205,21 @@ test_with_dir("old trigger interface", {
     plan <- drake_plan(x = 1)
     plan$trigger <- old_trigger
     clean()
+    cache <- storr::storr_environment()
     expect_warning(
-      config <- make(
+      make(
         plan,
         session_info = FALSE,
-        cache = storr::storr_environment()
+        cache = cache
       ),
       regexp = "old trigger interface is deprecated"
+    )
+    suppressWarnings(
+      config <- drake_config(
+        plan,
+        session_info = FALSE,
+        cache = cache
+      )
     )
     trigger <- diagnose(x, cache = config$cache)$trigger
     expect_true(is.list(trigger))

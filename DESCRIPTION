@@ -96,7 +96,6 @@ Suggests:
   testthat,
   tibble,
   tidyselect (>= 0.2.4),
-  txtq,
   rmarkdown,
   styler,
   visNetwork,

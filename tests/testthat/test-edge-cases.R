@@ -19,7 +19,7 @@ test_with_dir("lock_envir works", {
     parallelism = parallelism,
     caching = caching,
     lock_envir = TRUE,
-    verbose = FALSE,
+    verbose = T,
     session_info = FALSE
   )
   e$a <- 123
@@ -59,7 +59,13 @@ test_with_dir("skip everything", {
     x
   }
   pl <- drake_plan(a = f(0))
-  con <- make(
+  make(
+    pl,
+    session_info = FALSE,
+    skip_targets = TRUE,
+    skip_imports = TRUE
+  )
+  con <- drake_config(
     pl,
     session_info = FALSE,
     skip_targets = TRUE,
@@ -104,10 +110,6 @@ test_with_dir("can keep going", {
   )
   expect_equal(sort(built()), sort(c("a2", "a3", "b2", "b3", "b4")))
   expect_equal(sort(failed()), sort(c("a1", "a4", "b1")))
-  expect_equal(
-    sort(failed(upstream_only = TRUE)),
-    sort(c("a1", "a4"))
-  )
 })
 
 test_with_dir("failed targets do not become up to date", {
@@ -125,7 +127,8 @@ test_with_dir("failed targets do not become up to date", {
     b = 5,
     c = list(a, b)
   )
-  con <- make(plan)
+  make(plan)
+  con <- drake_config(plan)
   expect_equal(sort(justbuilt(con)), sort(letters[1:4]))
   fail <- TRUE
   expect_error(make(plan))
@@ -160,21 +163,6 @@ test_with_dir("error handlers", {
   expect_equal(error_character0(1), character(0))
   expect_null(error_null(1))
   expect_error(error_tibble_times(123))
-  expect_warning(
-    error_process(
-      e = list(message = 5),
-      id = "2",
-      config = dbug()),
-    regexp = "5"
-  )
-  config <- dbug()
-  config$cache$set("worker_1", TRUE, "mc_error")
-  config$keep_going <- FALSE
-  expect_warning(tmp <- mc_abort_with_errored_workers(config))
-  expect_true(tmp)
-  config$keep_going <- TRUE
-  expect_silent(tmp <- mc_abort_with_errored_workers(config))
-  expect_false(tmp)
 })
 
 test_with_dir("clean a nonexistent cache", {
@@ -228,7 +216,8 @@ test_with_dir("true targets can be functions", {
     x + 1
   })
   plan <- drake_plan(myfunction = generator(), output = myfunction(1))
-  config <- make(plan, verbose = FALSE, session_info = FALSE)
+  make(plan, verbose = FALSE, session_info = FALSE)
+  config <- drake_config(plan, verbose = FALSE, session_info = FALSE)
   expect_equal(readd(output), 2)
   expect_true(
     is.character(
@@ -247,11 +236,17 @@ test_with_dir("GitHub issue 460", {
     targets = "b",
     cache = storr::storr_environment()
   )
-  expect_equal(sort(config$all_targets), sort(letters[1:2]))
+  expect_equal(sort(igraph::V(config$schedule)$name), sort(letters[1:2]))
   expect_equal(
-    intersect(config$all_imports, config$all_targets), character(0))
-  expect_true(encode_namespaced("base::sqrt") %in% config$all_imports)
-  make_targets(config)
+    intersect(
+      igraph::V(config$schedule)$name,
+      igraph::V(config$imports)$name
+    ),
+    character(0)
+  )
+  expect_true(
+    encode_namespaced("base::sqrt") %in% igraph::V(config$imports)$name)
+  process_targets(config)
 })
 
 test_with_dir("warning when file_out() files not produced", {
@@ -314,4 +309,8 @@ test_with_dir("case sensitivity", {
     ),
     regexp = "case insensitive"
   )
+})
+
+test_with_dir("empty deps_graph()", {
+  expect_equal(deps_graph(NULL, 1, 2), character(0))
 })

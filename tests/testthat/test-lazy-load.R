@@ -10,14 +10,16 @@ test_with_dir("no overt errors lazy load for the debug example", {
   }
   expect_equal(sort(outdated(config)), sort(config$plan$target))
 
-  config <- testrun(config)
+  testrun(config)
+  config <- testconfig(config)
   expect_equal(sort(justbuilt(config)), sort(config$plan$target))
   expect_equal(outdated(config), character(0))
 
   unload_these <- intersect(config$plan$target, ls(envir = config$envir))
   remove(list = unload_these, envir = config$envir)
 
-  config <- testrun(config)
+  testrun(config)
+  config <- testconfig(config)
   expect_equal(sort(justbuilt(config)), character(0))
   expect_equal(outdated(config), character(0))
 
@@ -26,7 +28,8 @@ test_with_dir("no overt errors lazy load for the debug example", {
 
   config$plan$command[config$plan$target == "combined"] <-
     "nextone + yourinput + 1"
-  config <- testrun(config)
+  testrun(config)
+  config <- testconfig(config)
   expect_equal(sort(justbuilt(config)), sort(c(
     "combined", "final", "drake_target_1"
   )))
@@ -52,7 +55,7 @@ test_with_dir("lazy loading is actually lazy", {
   )
   config$eval <- eval
   config$schedule <- config$graph
-  run_loop(config)
+  backend_loop(config)
   loaded <- ls(envir = config$eval)
   expect_true(all(lazily_loaded %in% loaded))
   expect_false(any(eagerly_loaded %in% loaded))

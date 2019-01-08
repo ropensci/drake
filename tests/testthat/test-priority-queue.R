@@ -111,22 +111,8 @@ test_with_dir("queues with priorities", {
   load_mtcars_example()
   my_plan$priority <- seq_len(nrow(my_plan))
   config <- drake_config(my_plan, cache = storr::storr_environment())
-  config$schedule <- config$graph
-  q <- new_priority_queue(config)
-  expect_true(all(diff(q$data$ndeps) >= 0))
-  expect_equal(nrow(q$data), length(igraph::V(config$graph)))
-  expect_equal(sum(is.finite(q$data$priority)), nrow(config$plan))
-  config$schedule <- targets_graph(config)
   q <- new_priority_queue(config)
   expect_true(all(diff(q$data$ndeps) >= 0))
   expect_equal(sort(q$data$target), sort(config$plan$target))
   expect_true(all(is.finite(q$data$priority)))
-  config$schedule <- imports_graph(config)
-  q <- new_priority_queue(config)
-  expect_true(all(diff(q$data$ndeps) >= 0))
-  expect_equal(
-    sort(q$data$target),
-    sort(setdiff(igraph::V(config$graph)$name, config$plan$target))
-  )
-  expect_false(any(is.finite(q$data$priority)))
 })

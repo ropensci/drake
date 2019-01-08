@@ -17,9 +17,6 @@ test_with_dir("scratch build with custom filesystem cache.", {
   expect_true(is.numeric(readd(final, cache = cache)))
   expect_true(length(config$cache$list()) > 2)
   expect_false(any(c("f", "final") %in% ls()))
-  expect_true(
-    all(read_drake_plan(cache = cache)$target %in% config$plan$target))
-
   cache <- this_cache(path = path)
   expect_equal(cache$driver$hash_algorithm, "murmur32")
 
@@ -41,7 +38,7 @@ test_with_dir("scratch build with custom filesystem cache.", {
   expect_true(file.exists(path))
 
   # clean specific targets
-  clean(b, c, list = c(encode_path("intermediatefile.rds"), "nextone"),
+  clean(b, c, list = c("drake_target_1", "nextone"),
     cache = cache)
   expect_false(file.exists("intermediatefile.rds"))
   expect_true(file.exists("input.rds"))
@@ -49,7 +46,8 @@ test_with_dir("scratch build with custom filesystem cache.", {
     sort(config$cache$list()),
     sort(setdiff(
       all,
-      c("b", "c", encode_path("intermediatefile.rds"), "nextone")
+      c("b", "c", "drake_target_1",
+        encode_path("intermediatefile.rds"), "nextone")
     ))
   )
 
@@ -57,7 +55,7 @@ test_with_dir("scratch build with custom filesystem cache.", {
   expect_true(file.exists("input.rds"))
   expect_true(encode_path("input.rds") %in%
     config$cache$list())
-  clean(encode_path("input.rds"), cache = cache)
+  clean(list = encode_path("input.rds"), cache = cache)
   expect_true(file.exists("input.rds"))
   expect_false(encode_path("input.rds") %in%
     config$cache$list())

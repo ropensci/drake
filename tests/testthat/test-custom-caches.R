@@ -64,7 +64,16 @@ test_with_dir("use two differnt file system caches", {
     x
   }
   cache <- new_cache(path = "cache1", hash_algorithm = "murmur32")
-  con <- make(
+  make(
+    my_plan,
+    cache = cache,
+    envir = envir,
+    verbose = FALSE,
+    parallelism = parallelism,
+    jobs = jobs,
+    session_info = FALSE
+  )
+  con <- drake_config(
     my_plan,
     cache = cache,
     envir = envir,
@@ -89,7 +98,16 @@ test_with_dir("use two differnt file system caches", {
   con2 <- con
   con2$cache <- cache2
   o2 <- outdated(con2)
-  con2 <- make(
+  make(
+    my_plan,
+    cache = cache2,
+    envir = envir,
+    verbose = FALSE,
+    parallelism = parallelism,
+    jobs = jobs,
+    session_info = FALSE
+  )
+  con2 <- drake_config(
     my_plan,
     cache = cache2,
     envir = envir,
