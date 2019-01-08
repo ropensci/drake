@@ -31,11 +31,11 @@ test_with_dir("deprecation: cache functions", {
 })
 
 test_with_dir("deprecation: built", {
-  
+
   plan <- drake_plan(x = 1)
   make(plan)
   config <- drake_config(plan)
-  
+
   expect_warning(built(cache = NULL))
   expect_equal(
     sort(suppressWarnings(built(search = FALSE))),

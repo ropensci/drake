@@ -960,7 +960,7 @@ find_project <- function(path = getwd()) {
     msg = paste("find_project() is deprecated.",
                 "Use find_cache() instead.")
   )
-  
+
   cache <- find_cache(path = path)
   if (is.null(cache)) {
     return(NULL)
