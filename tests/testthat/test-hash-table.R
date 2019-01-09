@@ -25,4 +25,6 @@ test_with_dir("hash tables work", {
   ht_merge(x, y)
   expect_equal(sort(ht_list(x)), sort(c("a", "b", "c", "d")))
   expect_equal(sort(ht_list(y)), sort(c("b", "c", "d")))
+  ht_clear(y)
+  expect_equal(ht_list(y), character(0))
 })

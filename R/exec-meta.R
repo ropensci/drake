@@ -97,10 +97,10 @@ dependency_hash <- function(target, config) {
   deps <- as.character(deps)
   deps <- unique(deps)
   deps <- sort(deps)
-  out <- vapply(
-    X = deps,
-    FUN = self_hash,
-    FUN.VALUE = character(1),
+  out <- ht_memo(
+    ht = config$ht_hash,
+    x = deps,
+    fun = self_hash,
     config = config
   )
   out <- paste(out, collapse = "")

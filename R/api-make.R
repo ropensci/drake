@@ -141,12 +141,15 @@ make <- function(
     )
   }
   initialize_session(config = config)
+  config$ht_hash <- ht_new()
   if (!config$skip_imports) {
     process_imports(config)
   }
   if (!config$skip_targets) {
     process_targets(config)
   }
+  ht_clear(config$ht_hash)
+  config$ht_hash <- NULL
   conclude_session(config)
   invisible()
 }
