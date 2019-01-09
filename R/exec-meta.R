@@ -97,10 +97,10 @@ dependency_hash <- function(target, config) {
   deps <- as.character(deps)
   deps <- unique(deps)
   deps <- sort(deps)
-  out <- vapply(
-    X = deps,
-    FUN = self_hash,
-    FUN.VALUE = character(1),
+  out <- ht_memo(
+    ht = config$ht_get_hash,
+    x = deps,
+    fun = self_hash,
     config = config
   )
   out <- paste(out, collapse = "")
@@ -129,10 +129,10 @@ input_file_hash <- function(
   if (!length(files)) {
     return("")
   }
-  out <- vapply(
-    X = files,
-    FUN = file_hash,
-    FUN.VALUE = character(1),
+  out <- ht_memo(
+    ht = config$ht_get_hash,
+    x = files,
+    fun = file_hash,
     config = config,
     size_cutoff = size_cutoff
   )

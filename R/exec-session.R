@@ -54,20 +54,6 @@ drake_set_session_info <- function(
   invisible()
 }
 
-mark_envir <- function(envir) {
-  assign(x = drake_envir_marker, value = TRUE, envir = envir)
-}
-
-conclude_session <- function(config) {
-  drake_cache_log_file(
-    file = config$cache_log_file,
-    cache = config$cache,
-    jobs = config$jobs
-  )
-  remove(list = ls(config$eval, all.names = TRUE), envir = config$eval)
-  console_edge_cases(config)
-}
-
 initialize_session <- function(config) {
   runtime_checks(config = config)
   config$cache$set(key = "seed", value = config$seed, namespace = "session")
@@ -82,4 +68,20 @@ initialize_session <- function(config) {
   }
   drake_set_session_info(cache = config$cache, full = config$session_info)
   do_prework(config = config, verbose_packages = config$verbose)
+  invisible()
+}
+
+conclude_session <- function(config) {
+  drake_cache_log_file(
+    file = config$cache_log_file,
+    cache = config$cache,
+    jobs = config$jobs
+  )
+  remove(list = names(config$eval), envir = config$eval)
+  console_edge_cases(config)
+  invisible()
+}
+
+mark_envir <- function(envir) {
+  assign(x = drake_envir_marker, value = TRUE, envir = envir)
 }
