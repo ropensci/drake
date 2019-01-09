@@ -163,16 +163,6 @@ So far, we have just been setting the stage. Use `make()` to do the real work. T
 
 ``` r
 make(plan)
-#> Warning: Running make() in a subdirectory of your project. 
-#> This could cause problems if your file_in()/file_out()/knitr_in() files are relative paths.
-#> Please either
-#>   (1) run make() from your drake project root, or
-#>   (2) create a cache in your working directory with new_cache('path_name'), or
-#>   (3) supply a cache of your own (e.g. make(cache = your_cache))
-#>       whose folder name is not '.drake'.
-#>   running make() from: /home/landau/projects/drake
-#>   drake project root:  /home/landau
-#>   cache directory:     /home/landau/.drake
 #> target raw_data
 #> target data
 #> target fit
@@ -227,16 +217,6 @@ The next `make()` just builds `hist` and `report.html`. No point in wasting time
 
 ``` r
 make(plan)
-#> Warning: Running make() in a subdirectory of your project. 
-#> This could cause problems if your file_in()/file_out()/knitr_in() files are relative paths.
-#> Please either
-#>   (1) run make() from your drake project root, or
-#>   (2) create a cache in your working directory with new_cache('path_name'), or
-#>   (3) supply a cache of your own (e.g. make(cache = your_cache))
-#>       whose folder name is not '.drake'.
-#>   running make() from: /home/landau/projects/drake
-#>   drake project root:  /home/landau
-#>   cache directory:     /home/landau/.drake
 #> target hist
 #> target report
 ```
@@ -260,16 +240,6 @@ Suppose you are reviewing someone else's data analysis project for reproducibili
 
 ``` r
 make(plan)
-#> Warning: Running make() in a subdirectory of your project. 
-#> This could cause problems if your file_in()/file_out()/knitr_in() files are relative paths.
-#> Please either
-#>   (1) run make() from your drake project root, or
-#>   (2) create a cache in your working directory with new_cache('path_name'), or
-#>   (3) supply a cache of your own (e.g. make(cache = your_cache))
-#>       whose folder name is not '.drake'.
-#>   running make() from: /home/landau/projects/drake
-#>   drake project root:  /home/landau
-#>   cache directory:     /home/landau/.drake
 #> All targets are already up to date.
 
 config <- drake_config(plan)
@@ -287,16 +257,6 @@ When it comes time to actually rerun the entire project, you have much more conf
 ``` r
 clean()       # Remove the original author's results.
 make(plan) # Independently re-create the results from the code and input data.
-#> Warning: Running make() in a subdirectory of your project. 
-#> This could cause problems if your file_in()/file_out()/knitr_in() files are relative paths.
-#> Please either
-#>   (1) run make() from your drake project root, or
-#>   (2) create a cache in your working directory with new_cache('path_name'), or
-#>   (3) supply a cache of your own (e.g. make(cache = your_cache))
-#>       whose folder name is not '.drake'.
-#>   running make() from: /home/landau/projects/drake
-#>   drake project root:  /home/landau
-#>   cache directory:     /home/landau/.drake
 #> target raw_data
 #> target data
 #> target fit
