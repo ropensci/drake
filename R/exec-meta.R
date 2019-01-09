@@ -129,10 +129,10 @@ input_file_hash <- function(
   if (!length(files)) {
     return("")
   }
-  out <- vapply(
-    X = files,
-    FUN = file_hash,
-    FUN.VALUE = character(1),
+  out <- ht_memo(
+    ht = config$ht_hash,
+    x = files,
+    fun = file_hash,
     config = config,
     size_cutoff = size_cutoff
   )
