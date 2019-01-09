@@ -141,15 +141,14 @@ make <- function(
     )
   }
   initialize_session(config = config)
-  config$ht_hash <- ht_new()
+  config$ht_hash <- ht_new() # Memoize getting hashes from the cache.
+  on.exit(ht_clear(config$ht_hash)) # Needs to be empty afterwards.
   if (!config$skip_imports) {
     process_imports(config)
   }
   if (!config$skip_targets) {
     process_targets(config)
   }
-  ht_clear(config$ht_hash)
-  config$ht_hash <- NULL
   conclude_session(config)
   invisible()
 }

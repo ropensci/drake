@@ -77,7 +77,7 @@ conclude_session <- function(config) {
     cache = config$cache,
     jobs = config$jobs
   )
-  remove(list = ls(config$eval, all.names = TRUE), envir = config$eval)
+  remove(list = names(config$eval), envir = config$eval)
   console_edge_cases(config)
   invisible()
 }
