@@ -37,7 +37,7 @@
 #' })
 #' }
 #' @references <https://github.com/ropensci/drake>
-#' @useDynLib drake
+#' @useDynLib drake, .registration = TRUE
 #' @importFrom base64url base32_decode base32_encode
 #' @importFrom digest digest
 #' @importFrom igraph adjacent_vertices components delete_vertices

@@ -265,7 +265,7 @@ unlock_environment <- function(envir) {
   if (!inherits(envir, "environment")) {
     stop("not an environment")
   }
-  .Call("unlock_environment", envir)
+  .Call(Cunlock_environment, envir)
   lapply(
     X = ls(envir, all.names = FALSE),
     FUN = unlockBinding,
