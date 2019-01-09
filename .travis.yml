@@ -43,8 +43,8 @@ script:
     R CMD build .
     R CMD INSTALL drake*tar.gz
     Rscript pkgdown.R
-    travis_wait 20 R CMD check drake*tar.gz # --no-tests
-    travis_wait 20 Rscript -e 'cov <- covr::package_coverage()' -e 'print(cov)' -e 'covr::codecov(coverage = cov)'
+    travis_wait 20 R CMD check drake*tar.gz --no-tests
+    travis_wait 20 Rscript -e 'cov <- covr::package_coverage(quiet = FALSE)' -e 'print(cov)' -e 'covr::codecov(coverage = cov)'
 
 after_success:
   - ./pkgdown.sh
