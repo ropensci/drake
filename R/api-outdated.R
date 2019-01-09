@@ -1,6 +1,6 @@
 first_outdated <- function(config) {
-  config$ht_hash <- ht_new() # Memoize getting hashes from the cache.
-  on.exit(ht_clear(config$ht_hash)) # Needs to be empty afterwards.
+  config$ht_get_hash <- ht_new() # Memoize getting hashes from the cache.
+  on.exit(ht_clear(config$ht_get_hash)) # Needs to be empty afterwards.
   schedule <- config$schedule
   out <- character(0)
   old_leaves <- NULL
