@@ -4,9 +4,8 @@
 \alias{trigger}
 \title{Customize the decision rules for rebuilding targets}
 \usage{
-trigger(command = TRUE, depend = TRUE, file = TRUE,
-  condition = FALSE, change = NULL, mode = c("whitelist",
-  "blacklist", "condition"))
+trigger(command = TRUE, depend = TRUE, file = TRUE, condition = FALSE,
+  change = NULL, mode = c("whitelist", "blacklist", "condition"))
 }
 \arguments{
 \item{command}{logical, whether to rebuild the target if the

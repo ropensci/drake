@@ -4,8 +4,8 @@
 \alias{gather_by}
 \title{Gather multiple groupings of targets}
 \usage{
-gather_by(plan, ..., prefix = "target", gather = "list",
-  append = TRUE, filter = NULL, sep = "_")
+gather_by(plan, ..., prefix = "target", gather = "list", append = TRUE,
+  filter = NULL, sep = "_")
 }
 \arguments{
 \item{plan}{workflow plan data frame of prespecified targets}

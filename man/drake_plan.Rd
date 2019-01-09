@@ -81,6 +81,9 @@ Each element is a value passed to a \code{brew} placeholder of a
 The list names of \code{resources[[target_name]]}
 should be the brew patterns.
 }
+
+[[target_name]: R:[target_name
+[[target_name]: R:[target_name
 }
 \examples{
 test_with_dir("Contain side effects", {

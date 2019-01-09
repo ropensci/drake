@@ -6,8 +6,7 @@
 list the \code{storr} namespaces that are cleaned
 during a call to \code{\link[=clean]{clean()}}.}
 \usage{
-
-  cleaned_namespaces(default = storr::storr_environment()$default_namespace)
+cleaned_namespaces(default = storr::storr_environment()$default_namespace)
 }
 \arguments{
 \item{default}{Name of the default \code{storr} namespace.}

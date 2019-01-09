@@ -65,7 +65,7 @@ Authors@R: c(
     role = "cph"
   ))
 Depends:
-  R (>= 3.4.0)
+  R (>= 3.2.0)
 Imports:
   base64url,
   digest,

@@ -5,8 +5,7 @@
 \title{Reduce multiple groupings of targets}
 \usage{
 reduce_by(plan, ..., prefix = "target", begin = "", op = " + ",
-  end = "", pairwise = TRUE, append = TRUE, filter = NULL,
-  sep = "_")
+  end = "", pairwise = TRUE, append = TRUE, filter = NULL, sep = "_")
 }
 \arguments{
 \item{plan}{workflow plan data frame of prespecified targets}
