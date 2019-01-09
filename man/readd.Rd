@@ -6,14 +6,15 @@
 \title{Read and return a drake target/import from the cache.}
 \usage{
 readd(target, character_only = FALSE, path = getwd(), search = TRUE,
-  cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  namespace = NULL, verbose = 1L, show_source = FALSE)
+  cache = drake::get_cache(path = path, search = search, verbose =
+  verbose), namespace = NULL, verbose = 1L, show_source = FALSE)
 
-loadd(..., list = character(0), imported_only = FALSE, path = getwd(),
-  search = TRUE, cache = drake::get_cache(path = path, search = search,
-  verbose = verbose), namespace = NULL, envir = parent.frame(), jobs = 1,
-  verbose = 1L, deps = FALSE, lazy = "eager", graph = NULL,
-  replace = TRUE, show_source = FALSE, tidyselect = TRUE, config = NULL)
+loadd(..., list = character(0), imported_only = FALSE,
+  path = getwd(), search = TRUE, cache = drake::get_cache(path =
+  path, search = search, verbose = verbose), namespace = NULL,
+  envir = parent.frame(), jobs = 1, verbose = 1L, deps = FALSE,
+  lazy = "eager", graph = NULL, replace = TRUE,
+  show_source = FALSE, tidyselect = TRUE, config = NULL)
 }
 \arguments{
 \item{target}{If \code{character_only} is \code{TRUE}, then

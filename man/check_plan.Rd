@@ -5,7 +5,8 @@
 \title{Check a workflow plan data frame for obvious errors.}
 \usage{
 check_plan(plan = NULL, targets = NULL, envir = parent.frame(),
-  cache = drake::get_cache(verbose = verbose), verbose = 1L, jobs = 1)
+  cache = drake::get_cache(verbose = verbose), verbose = 1L,
+  jobs = 1)
 }
 \arguments{
 \item{plan}{workflow plan data frame, possibly from

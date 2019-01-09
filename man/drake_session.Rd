@@ -5,8 +5,9 @@
 \title{Deprecated. Return the \code{\link[=sessionInfo]{sessionInfo()}}
 of the last call to \code{\link[=make]{make()}}.}
 \usage{
-drake_session(path = getwd(), search = TRUE, cache = drake::get_cache(path
-  = path, search = search, verbose = verbose), verbose = 1L)
+drake_session(path = getwd(), search = TRUE,
+  cache = drake::get_cache(path = path, search = search, verbose =
+  verbose), verbose = 1L)
 }
 \arguments{
 \item{path}{Root directory of the drake project,

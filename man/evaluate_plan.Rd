@@ -6,8 +6,8 @@
 workflow plan data frame from a template data frame.}
 \usage{
 evaluate_plan(plan, rules = NULL, wildcard = NULL, values = NULL,
-  expand = TRUE, rename = expand, trace = FALSE, columns = "command",
-  sep = "_")
+  expand = TRUE, rename = expand, trace = FALSE,
+  columns = "command", sep = "_")
 }
 \arguments{
 \item{plan}{workflow plan data frame, similar to one produced by

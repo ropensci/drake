@@ -274,7 +274,7 @@ unlock_environment <- function(envir) {
   stopifnot(!environmentIsLocked(envir))
 }
 
-which_unnamed <- function(x) {
+is_unnamed <- function(x) {
   if (!length(names(x))) {
     rep(TRUE, length(x))
   } else {

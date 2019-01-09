@@ -4,9 +4,9 @@
 \alias{target}
 \title{Define custom columns in a \code{\link[=drake_plan]{drake_plan()}}.}
 \usage{
-target(command = NULL, trigger = NULL, retries = NULL, timeout = NULL,
-  cpu = NULL, elapsed = NULL, priority = NULL, worker = NULL,
-  resources = NULL, ...)
+target(command = NULL, trigger = NULL, retries = NULL,
+  timeout = NULL, cpu = NULL, elapsed = NULL, priority = NULL,
+  worker = NULL, resources = NULL, ...)
 }
 \arguments{
 \item{command}{the command to build the target}

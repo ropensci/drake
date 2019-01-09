@@ -4,8 +4,8 @@
 \alias{this_cache}
 \title{Get the cache at the exact file path specified.}
 \usage{
-this_cache(path = NULL, force = FALSE, verbose = 1L, fetch_cache = NULL,
-  console_log_file = NULL)
+this_cache(path = NULL, force = FALSE, verbose = 1L,
+  fetch_cache = NULL, console_log_file = NULL)
 }
 \arguments{
 \item{path}{file path of the cache}

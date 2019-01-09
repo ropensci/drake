@@ -4,8 +4,8 @@
 \alias{built}
 \title{List all the built targets (non-imports) in the cache.}
 \usage{
-built(path = getwd(), search = TRUE, cache = drake::get_cache(path = path,
-  search = search, verbose = verbose), verbose = 1L, jobs = 1)
+built(path = getwd(), search = TRUE, cache = drake::get_cache(path =
+  path, search = search, verbose = verbose), verbose = 1L, jobs = 1)
 }
 \arguments{
 \item{path}{Root directory of the drake project,

@@ -5,10 +5,10 @@
 \title{Show a Sankey graph of your drake project.}
 \usage{
 sankey_drake_graph(config, file = character(0), selfcontained = FALSE,
-  build_times = "build", digits = 3, targets_only = FALSE, from = NULL,
-  mode = c("out", "in", "all"), order = NULL, subset = NULL,
-  make_imports = TRUE, from_scratch = FALSE, group = NULL,
-  clusters = NULL, show_output_files = TRUE, ...)
+  build_times = "build", digits = 3, targets_only = FALSE,
+  from = NULL, mode = c("out", "in", "all"), order = NULL,
+  subset = NULL, make_imports = TRUE, from_scratch = FALSE,
+  group = NULL, clusters = NULL, show_output_files = TRUE, ...)
 }
 \arguments{
 \item{config}{a \code{\link[=drake_config]{drake_config()}} configuration list.

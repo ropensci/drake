@@ -4,8 +4,8 @@
 \alias{get_cache}
 \title{Get the default cache of a \code{drake} project.}
 \usage{
-get_cache(path = getwd(), search = TRUE, verbose = 1L, force = FALSE,
-  fetch_cache = NULL, console_log_file = NULL)
+get_cache(path = getwd(), search = TRUE, verbose = 1L,
+  force = FALSE, fetch_cache = NULL, console_log_file = NULL)
 }
 \arguments{
 \item{path}{If \code{search = FALSE}, \code{path} must be the root

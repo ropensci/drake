@@ -5,8 +5,8 @@
 \title{Remove targets/imports from the cache.}
 \usage{
 clean(..., list = character(0), destroy = FALSE, path = getwd(),
-  search = TRUE, cache = NULL, verbose = 1L, jobs = 1, force = FALSE,
-  garbage_collection = FALSE, purge = FALSE)
+  search = TRUE, cache = NULL, verbose = 1L, jobs = 1,
+  force = FALSE, garbage_collection = FALSE, purge = FALSE)
 }
 \arguments{
 \item{...}{targets to remove from the cache: as names (symbols) or

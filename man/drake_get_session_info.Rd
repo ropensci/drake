@@ -6,8 +6,8 @@
 of the last call to \code{\link[=make]{make()}}.}
 \usage{
 drake_get_session_info(path = getwd(), search = TRUE,
-  cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = 1L)
+  cache = drake::get_cache(path = path, search = search, verbose =
+  verbose), verbose = 1L)
 }
 \arguments{
 \item{path}{Root directory of the drake project,

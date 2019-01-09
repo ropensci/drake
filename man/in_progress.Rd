@@ -6,8 +6,9 @@
 (1) are currently being built during a \code{\link[=make]{make()}}, or
 (2) were being built if the last \code{\link[=make]{make()}} quit unexpectedly.}
 \usage{
-in_progress(path = getwd(), search = TRUE, cache = drake::get_cache(path =
-  path, search = search, verbose = verbose), verbose = 1L)
+in_progress(path = getwd(), search = TRUE,
+  cache = drake::get_cache(path = path, search = search, verbose =
+  verbose), verbose = 1L)
 }
 \arguments{
 \item{path}{Root directory of the drake project,
