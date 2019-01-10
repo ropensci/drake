@@ -1226,3 +1226,24 @@ read_drake_plan <- function(
   )
   drake_plan()
 }
+
+#' @title deprecated
+#' @export
+#' @keywords internal
+#' @description 2019-01-08
+#' @return an `igraph` object
+#' @param graph an igraph object
+#' @param to character vector of vertices
+#' @param jobs number of jobs for parallelism
+#' @examples
+#' # deprectaed
+prune_drake_graph <- function(
+  graph, to = igraph::V(graph)$name, jobs = 1
+) {
+  nbhd_graph(
+    graph = graph,
+    vertices = to,
+    mode = "in",
+    order = igraph::gorder(graph)
+  )
+}
