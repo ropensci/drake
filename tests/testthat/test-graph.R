@@ -15,11 +15,6 @@ test_with_dir("Recursive functions are okay", {
   expect_equal(readd(output, cache = cache), factorial(10))
 })
 
-test_with_dir("Supplied graph is not an igraph.", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_error(prune_drake_graph(12345, to = "node"))
-})
-
 test_with_dir("null graph", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("lubridate")
