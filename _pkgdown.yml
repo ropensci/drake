@@ -77,7 +77,6 @@ reference:
   - '`deps_code`'
   - '`deps_target`'
   - '`diagnose`'
-  - '`drake_meta`'
   - '`knitr_deps`'
   - '`missed`'
   - '`outdated`'
