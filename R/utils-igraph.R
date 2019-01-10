@@ -15,7 +15,7 @@ deps_graph <- function(targets, graph, reverse = FALSE) {
   igraph::V(graph)$name[index + 1]
 }
 
-downstream_nodes <- function(from, graph) {
+downstream_nodes <- function(graph, from) {
   g <- nbhd_graph(
     graph = graph,
     vertices = from,
@@ -35,7 +35,7 @@ nbhd_graph <- function(graph, vertices, mode, order = igraph::gorder(graph)) {
     return(igraph::make_empty_graph())
   }
   vertices <- intersect(vertices, igraph::V(graph)$name)
-  out <- make_ego_graph(
+  out <- igraph::make_ego_graph(
     graph = graph,
     order = order,
     nodes = vertices,

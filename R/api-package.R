@@ -42,7 +42,7 @@
 #' @importFrom digest digest
 #' @importFrom igraph adjacent_vertices components delete_vertices
 #'   degree gorder igraph_opt igraph_options induced_subgraph is_dag
-#'   make_empty_graph set_vertex_attr simplify subcomponent
+#'   make_empty_graph make_ego_graph set_vertex_attr simplify
 #'   topo_sort V vertex_attr
 #' @importFrom methods new setRefClass
 #' @importFrom rlang enexpr enexprs enquo eval_tidy expr exprs
