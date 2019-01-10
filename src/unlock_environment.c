@@ -20,13 +20,13 @@
 #define UNLOCK_FRAME(e) SET_ENVFLAGS(e, ENVFLAGS(e) & (~ FRAME_LOCK_MASK))
 #endif
 
-SEXP Cunlock_environment(SEXP envir) {
+SEXP unlock_environment(SEXP envir) {
   UNLOCK_FRAME(envir);
   return R_NilValue;
 }
 
 static const R_CallMethodDef call_methods[] = {
-  {"Cunlock_environment", (DL_FUNC) &Cunlock_environment, 1},
+  {"Cunlock_environment", (DL_FUNC) &unlock_environment, 1},
   {NULL, NULL, 0}
 };
 
