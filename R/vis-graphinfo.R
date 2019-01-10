@@ -160,12 +160,14 @@ drake_graph_info <- function(
     vertices <- vertices[!(!imported & is_encoded_path(vertices))]
     config$graph <- subset_graph(config$graph, vertices)
   }
-  config$graph <- get_neighborhood(
-    graph = config$graph,
-    from = from,
-    mode = match.arg(mode),
-    order = order
-  )
+  if (!is.null(from)) {
+    config$graph <- nbhd_graph(
+      graph = config$graph,
+      vertices = from,
+      mode = match.arg(mode),
+      order = order %||% igraph::gorder(config$graph)
+    )
+  }
   if (!is.null(subset)) {
     config$graph <- subset_graph(graph = config$graph, subset = subset)
   }
