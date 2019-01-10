@@ -40,7 +40,7 @@
 #' @useDynLib drake, .registration = TRUE
 #' @importFrom base64url base32_decode base32_encode
 #' @importFrom digest digest
-#' @importFrom igraph adjacent_vertices components delete_vertices
+#' @importFrom igraph adjacent_vertices as_ids components delete_vertices
 #'   degree gorder igraph_opt igraph_options induced_subgraph is_dag
 #'   make_empty_graph make_ego_graph set_vertex_attr simplify
 #'   topo_sort V vertex_attr

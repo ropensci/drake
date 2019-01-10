@@ -165,7 +165,7 @@ drake_graph_info <- function(
       graph = config$graph,
       vertices = from,
       mode = match.arg(mode),
-      order = order
+      order = order %||% igraph::gorder(config$graph)
     )
   }
   if (!is.null(subset)) {
