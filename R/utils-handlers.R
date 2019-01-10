@@ -63,8 +63,8 @@ just_try <- function(code) {
 }
 
 mention_pure_functions <- function(e) {
-  msg1 <- "cannot change value of locked binding"
-  msg2 <- "cannot add bindings to a locked environment"
+  msg1 <- "locked binding"
+  msg2 <- "locked environment"
   locked_envir <- grepl(msg1, e$message) || grepl(msg2, e$message)
   if (locked_envir) {
     e$message <- paste0(e$message, ". ", locked_envir_msg)
