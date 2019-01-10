@@ -1240,6 +1240,11 @@ read_drake_plan <- function(
 prune_drake_graph <- function(
   graph, to = igraph::V(graph)$name, jobs = 1
 ) {
+  .Deprecated(
+    "prune_drake_graph",
+    package = "drake",
+    msg = "prune_drake_graph() is deprecated."
+  )
   nbhd_graph(
     graph = graph,
     vertices = to,
