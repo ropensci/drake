@@ -39,7 +39,11 @@ assert_pkg <- function(pkg, version = NULL, install = "install.packages") {
   invisible()
 }
 
-clean_dependency_list <- function(x){
+clean_dependency_list <- function(x) {
+  sort(clean_nested_char_list(x))
+}
+
+clean_nested_char_list <- function(x) {
   if (!length(x)){
     return(character(0))
   }
@@ -47,7 +51,6 @@ clean_dependency_list <- function(x){
   x <- unname(x)
   x <- as.character(x)
   x <- unique(x)
-  sort(x)
 }
 
 exists_tidyselect <- function() {
@@ -282,7 +285,7 @@ is_unnamed <- function(x) {
   }
 }
 
-# weak_tibble - use tibble() if available but fall back to 
+# weak_tibble - use tibble() if available but fall back to
 # data.frame() if necessary
 weak_tibble <- function(..., .force_df = FALSE) {
   no_tibble <- !suppressWarnings(requireNamespace("tibble", quietly = TRUE))
@@ -294,7 +297,7 @@ weak_tibble <- function(..., .force_df = FALSE) {
   }
 }
 
-# weak_as_tibble - use as_tibble() if available but fall back to 
+# weak_as_tibble - use as_tibble() if available but fall back to
 # as.data.frame() if necessary
 weak_as_tibble <- function(..., .force_df = FALSE) {
   no_tibble <- !suppressWarnings(requireNamespace("tibble", quietly = TRUE))

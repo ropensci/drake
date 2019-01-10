@@ -41,23 +41,30 @@ cdg_create_edges <- function(config, layout) {
 cdg_node_to_edges <- function(node) {
   file_out <- node$deps_build$file_out
   node$deps_build$file_out <- NULL
-  inputs <- clean_dependency_list(
+  inputs <- clean_nested_char_list(
     c(node$deps_build, node$deps_condition, node$deps_change)
   )
   out <- NULL
   if (length(inputs)) {
-    out <- weak_tibble(from = inputs, to = node$target)
-  }
-  if (length(file_out)) {
-    out <- rbind(
-      out,
-      weak_tibble(from = node$target, to = file_out)
+    out <- data.frame(
+      from = inputs,
+      to = node$target,
+      stringsAsFactors = FALSE
     )
   }
+  if (length(file_out)) {
+    out2 <- data.frame(
+      from = node$target,
+      to = file_out,
+      stringsAsFactors = FALSE
+    )
+    out <- rbind(out, out2)
+  }
   if (is.null(out)) {
-    out <- weak_tibble(
+    out <- data.frame(
       from = node$target %||% character(0),
-      to = node$target %||% character(0)
+      to = node$target %||% character(0),
+      stringsAsFactors = FALSE
     )
   }
   out
