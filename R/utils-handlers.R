@@ -73,17 +73,15 @@ mention_pure_functions <- function(e) {
 }
 
 locked_envir_msg <- paste(
-  "One of your functions or drake plan commands may have tried",
-  "to modify an object in your environment/workspace/R session.",
-  "drake stops you from doing this sort of thing because it",
-  "invalidates upstream targets and undermines reproducibility.",
-  "Please verify that all your commands and functions are pure:",
-  "they should only produce *new* output, and",
-  "they should never go back and modify old output or dependencies.",
+  "Your `drake` code tried to modify some pre-existing data",
+  "in your environment.",
+  "This sort of thing undermines reproducibility",
+  "(example: https://github.com/ropensci/drake/issues/664#issuecomment-453163562)", # nolint
+  "so `drake` stops you by default.",
+  "All your commands and functions should return *new* output",
+  "and never modify existing targets or potential imports.",
   "Beware <<-, ->>, attach(), and data().",
   "Also please try to avoid options() even though drake does not stop you.",
-  "Alternatively, you can set lock_envir to FALSE in make() or",
-  "drake_config() to stop drake from producing these errors. But be warned:",
-  "make(lock_envir = FALSE) decreases the levels of confidence and trust",
-  "you can place in your results."
+  "Use make(lock_envir = FALSE) to avoid this error",
+  "(not recommended)."
 )
