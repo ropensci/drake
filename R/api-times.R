@@ -141,18 +141,14 @@ to_build_duration <- function(x) {
 time_columns <- c("elapsed", "user", "system")
 
 finalize_times <- function(target, meta, config) {
-  if (!is_bad_time(meta$time_command)) {
-    meta$time_command <- runtime_entry(
-      runtime = meta$time_command,
-      target = target
-    )
-  }
-  if (!is_bad_time(meta$time_start)) {
-    meta$time_build <- runtime_entry(
-      runtime = proc.time() - meta$time_start,
-      target = target
-    )
-  }
+  meta$time_command <- runtime_entry(
+    runtime = meta$time_command,
+    target = target
+  )
+  meta$time_build <- runtime_entry(
+    runtime = proc.time() - meta$time_start,
+    target = target
+  )
   meta
 }
 
