@@ -54,11 +54,14 @@ test_with_dir("deprecation: built", {
   )
   
   # imported
-  imp <- suppressWarnings(imported(files_only = FALSE, search = FALSE))
-  expect_equal(
-    sort(imp),
-    sort(setdiff(cached(), cached(no_imported_objects = TRUE)))
-  )
+  for(fo in c(FALSE, TRUE)) {
+    imp <- suppressWarnings(imported(files_only = fo, search = FALSE))
+    expect_equal(
+      sort(imp),
+      sort(setdiff(cached(), cached(no_imported_objects = TRUE))),
+      info = paste("files_only =", fo)
+    )
+  }
 })
 
 test_with_dir("deprecation: find_project", {
