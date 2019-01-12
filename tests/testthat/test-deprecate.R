@@ -52,9 +52,9 @@ test_with_dir("deprecation: built", {
     sort(suppressWarnings(built(search = TRUE))),
     sort(display_keys(c(config$plan$target)))
   )
-  
+
   # imported
-  for(fo in c(FALSE, TRUE)) {
+  for (fo in c(FALSE, TRUE)) {
     imp <- suppressWarnings(imported(files_only = fo, search = FALSE))
     expect_equal(
       sort(imp),
