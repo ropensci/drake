@@ -10,13 +10,17 @@ preprocess_command <- function(command, config) {
 }
 
 standardize_command <- function(x) {
+  look_for_ignore <- TRUE
   if (is.character(x)) {
+    look_for_ignore <- grepl("ignore", x, fixed = TRUE)
     x <- parse(text = x, keep.source = FALSE)
   }
   if (is.expression(x) && length(x) == 1L) {
     x <- x[[1]]
   }
-  x <- ignore_ignore(x)
+  if (look_for_ignore) {
+    x <- ignore_ignore(x)
+  }
   for (attribute in c("srcref", "srcfile", "wholeSrcref")) {
     attr(x = x, which = attribute) <- NULL
   }
@@ -27,7 +31,7 @@ ignore_ignore <- function(x) {
   if (is.function(x) && !is.primitive(x) && !is.null(body(x))) {
     body(x) <- ignore_ignore(body(x))
   } else if (is_callish(x)) {
-    if (wide_deparse(x[[1]]) %in% ignored_fns) {
+    if (wide_deparse(x[[1]]) %in% ignore_fns) {
       x <- quote(ignore())
     } else {
       x[] <- lapply(as.list(x), ignore_ignore)

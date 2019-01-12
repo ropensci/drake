@@ -412,13 +412,6 @@ test_with_dir("standardized commands with ignore()", {
   expect_equal(b, quote({  (sqrt(ignore() + 123)) })) # nolint
 })
 
-test_with_dir("can standardize command with other ignored symbols", {
-  expect_equal(
-    standardize_command("function(x){(sqrt( drake_envir(arg) + 123))}"),
-    standardize_command("function(x) {\n    (sqrt(ignore() + 123))\n}")
-  )
-})
-
 test_with_dir("Can standardize commands from expr or lang", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- parse(text = c("f(x +2) + 2", "!!y"))
