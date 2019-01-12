@@ -81,7 +81,8 @@ test_with_dir("namespaced drake_plan works", {
   expect_true(is.character(fromcache2))
   ns <- sort(c("base:::c", "base::list", "base::nchar"))
   expect_true(all(cached(list = ns)))
-  expect_true(all(ns %in% setdiff(cached(), cached(no_imported_objects = TRUE))))
+  expect_true(all(ns %in% setdiff(cached(),
+                                  cached(no_imported_objects = TRUE))))
   expect_equal(
     outdated(config),
     character(0)
