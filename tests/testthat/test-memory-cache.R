@@ -58,8 +58,11 @@ test_with_dir("arbitrary storr in-memory cache", {
   expect_true(is.list(drake_get_session_info(cache = cache, verbose = FALSE)))
   expect_false(file.exists(default_cache_path()))
 
-  expect_equal(length(imported(verbose = FALSE)), 0)
-  expect_true(length(imported(cache = cache, verbose = FALSE)) > 0)
+  imp <- setdiff(cached(), cached(no_imported_objects = TRUE))
+  expect_equal(length(imp), 0)
+  imp <- setdiff(cached(cache = cache), 
+                 cached(cache = cache, no_imported_objects = TRUE))
+  expect_true(length(imp) > 0)
   expect_false(file.exists(default_cache_path()))
 
   expect_equal(length(cached(verbose = FALSE)), 0)
