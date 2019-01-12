@@ -5,9 +5,11 @@
 #' @description Ordinary users do not need to worry about this function.
 #' It is just another window into `drake`'s internals.
 #' @param default name of the default `storr` namespace
+#' @note When the now-deprecated [cache_namespaces()] is removed,
+#' this function's name should have the final "_" stripped off.
 #' @examples
 #' cache_namespaces()
-cache_namespaces <- function(
+cache_namespaces_ <- function(
   default = storr::storr_environment()$default_namespace
 ) {
   out <- c(

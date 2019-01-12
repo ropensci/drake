@@ -1423,3 +1423,24 @@ cache_path <- function(cache = NULL) {
   )
   cache_path_(cache)
 }
+
+#' @title Deprecated. List all the `storr` cache namespaces used by drake.
+#' @description Deprecated on 2019-01-12.
+#' @return A character vector of `storr` namespaces used for drake.
+#' @details Ordinary users do not need to worry about this function.
+#' It is just another window into `drake`'s internals.
+#' @param default name of the default `storr` namespace
+#' @export
+#' @seealso [make()]
+#' @examples
+#' cache_namespaces()
+cache_namespaces <- function(
+  default = storr::storr_environment()$default_namespace
+) {
+  .Deprecated(
+    "cache_namespaces",
+    package = "drake",
+    msg = "cache_namespaces() is deprecated."
+  )
+  cache_namespaces_(default)
+}
