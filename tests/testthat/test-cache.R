@@ -303,14 +303,6 @@ test_with_dir("cache functions work from various working directories", {
   # cached, diagnose, rescue
   expect_true(length(diagnose(search = FALSE)) > length(config$plan$target))
   expect_equal(
-    sort(imported(files_only = FALSE, search = FALSE)),
-    sort(display_keys(imports))
-  )
-  expect_equal(
-    imported(files_only = TRUE, search = FALSE),
-    display_keys(encode_path("input.rds"))
-  )
-  expect_equal(
     sort(cached(search = FALSE, no_imported_objects = TRUE)),
     sort(display_keys(c(encode_path("input.rds"), out_files, builds)))
   )
@@ -323,9 +315,6 @@ test_with_dir("cache functions work from various working directories", {
     )
   )
   expect_true(all(cached(search = FALSE, list = all)))
-  expect_equal(
-    length(cached(search = FALSE, i, list = imported(files_only = FALSE))),
-    length(imported(files_only = FALSE)))
   expect_equal(sort(cached(i, bla, list = c("final", "run"),
                            search = FALSE)),
                sort(c(i = TRUE, bla = FALSE, final = TRUE,
@@ -347,7 +336,8 @@ test_with_dir("cache functions work from various working directories", {
   expect_true(is.numeric(readd(a, search = FALSE)))
 
   # load and read stuff
-  list <- intersect(imported(), ls(envir = envir))
+  list <- intersect(setdiff(cached(), cached(no_imported_objects = TRUE)),
+                    ls(envir = envir))
   rm(list = list, envir = envir)
   expect_error(h(1))
   expect_true(is.numeric(readd(final, search = FALSE)))
@@ -361,7 +351,7 @@ test_with_dir("cache functions work from various working directories", {
   e <- new.env()
   loadd(imported_only = TRUE, envir = e)
   should_have_loaded <- setdiff(
-    imported(search = FALSE),
+    setdiff(cached(), cached(no_imported_objects = TRUE)),
     c("readRDS", "saveRDS")
   )
   expect_true(all(should_have_loaded %in% display_keys(ls(envir = e))))
@@ -400,16 +390,8 @@ test_with_dir("cache functions work from various working directories", {
                       f = "finished", h = "finished", final = "finished")))
   expect_equal(in_progress(search = TRUE, path = s), character(0))
 
-  # imported, cached, diagnose
+  # cached and diagnose
   expect_equal(diagnose(search = TRUE), character(0))
-  expect_equal(
-    sort(imported(files_only = FALSE, search = TRUE, path = s)),
-    sort(display_keys(imports))
-  )
-  expect_equal(
-    imported(files_only = TRUE, search = TRUE, path = s),
-    display_keys(encode_path("input.rds"))
-  )
   expect_equal(
     sort(cached(no_imported_objects = TRUE, path = s, search = T)),
     sort(display_keys(c(encode_path("input.rds"), out_files, builds)))

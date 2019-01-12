@@ -52,6 +52,13 @@ test_with_dir("deprecation: built", {
     sort(suppressWarnings(built(search = TRUE))),
     sort(display_keys(c(config$plan$target)))
   )
+  
+  # imported
+  imp <- suppressWarnings(imported(files_only = FALSE, search = FALSE))
+  expect_equal(
+    sort(imp),
+    sort(setdiff(cached(), cached(no_imported_objects = TRUE)))
+  )
 })
 
 test_with_dir("deprecation: find_project", {
