@@ -1393,13 +1393,11 @@ prune_drake_graph <- function(
 
 #' @title Deprecated. Show the analysis wildcard
 #'   used in [plan_summaries()].
-#' @description Deprecated on 2019-01-08.
+#' @description Deprecated on 2019-01-12.
 #' @details Used to generate workflow plan data frames.
 #' @export
 #' @seealso [plan_summaries()]
 #' @return The analysis wildcard used in [plan_summaries()].
-#' @examples
-#' # See ?plan_analyses for examples
 analysis_wildcard <- function() {
   .Deprecated(
     "analysis_wildcard",
@@ -1407,4 +1405,21 @@ analysis_wildcard <- function() {
     msg = "analysis_wildcard() is deprecated."
   )
   analysis_wildcard_()
+}
+
+#' @title Deprecated. Return the file path where the cache is stored,
+#' if applicable.
+#' @export
+#' @description Deprecated on 2019-01-12.
+#' @details Currently only works with
+#' [storr::storr_rds()] file system caches.
+#' @return File path where the cache is stored.
+#' @param cache the cache whose file path you want to know
+cache_path <- function(cache = NULL) {
+  .Deprecated(
+    "cache_path",
+    package = "drake",
+    msg = "cache_path() is deprecated."
+  )
+  cache_path_(cache)
 }

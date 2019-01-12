@@ -11,13 +11,10 @@ analysis_wildcard()
 The analysis wildcard used in \code{\link[=plan_summaries]{plan_summaries()}}.
 }
 \description{
-Deprecated on 2019-01-08.
+Deprecated on 2019-01-12.
 }
 \details{
 Used to generate workflow plan data frames.
-}
-\examples{
-# See ?plan_analyses for examples
 }
 \seealso{
 \code{\link[=plan_summaries]{plan_summaries()}}
