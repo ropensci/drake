@@ -10,26 +10,22 @@ preprocess_command <- function(command, config) {
 }
 
 standardize_command <- function(x) {
+  if (is.character(x)) {
+    x <- parse(text = x)
+  }
   x <- ignore_ignore(x)
   x <- language_to_text(x)
   standardize_code(x)
 }
 
-ignore_ignore <- function(expr) {
-  if (is.character(expr)) {
-    expr <- parse(text = expr)
-  }
-  recurse_ignore(expr)
-}
-
-recurse_ignore <- function(x) {
+ignore_ignore <- function(x) {
   if (is.function(x) && !is.primitive(x) && !is.null(body(x))) {
-    body(x) <- recurse_ignore(body(x))
+    body(x) <- ignore_ignore(body(x))
   } else if (is_callish(x)) {
     if (wide_deparse(x[[1]]) %in% ignored_fns) {
       x <- quote(ignore())
     } else {
-      x[] <- lapply(as.list(x), recurse_ignore)
+      x[] <- lapply(as.list(x), ignore_ignore)
     }
   }
   x
