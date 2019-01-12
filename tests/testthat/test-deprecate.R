@@ -42,7 +42,7 @@ test_with_dir("deprecation: built", {
     sort(display_keys(config$plan$target))
   )
   twopiece <- sort(c(suppressWarnings(built(search = FALSE)),
-                     imported(search = FALSE, files_only = FALSE)))
+                     suppressWarnings(imported(search = FALSE, files_only = FALSE))))
   expect_equal(
     sort(cached(search = FALSE)),
     sort(display_keys(twopiece))
@@ -51,6 +51,19 @@ test_with_dir("deprecation: built", {
     sort(suppressWarnings(built(search = TRUE))),
     sort(display_keys(c(config$plan$target)))
   )
+})
+
+test_with_dir("deprecation: find_project", {
+  scratch <- "./scratch"
+  dir.create(scratch)
+  fp <- suppressWarnings(find_project(path = scratch))
+  expect_null(fp)
+
+  plan <- drake_plan(x = 1)
+  make(plan)
+  fp <- suppressWarnings(find_project(path = normalizePath(scratch)))
+  expect_is(fp, "character")
+  expect_equal(fp, getwd())
 })
 
 test_with_dir("arg deprecation", {
