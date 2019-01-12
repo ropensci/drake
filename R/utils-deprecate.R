@@ -918,7 +918,8 @@ built <- function(
   .Deprecated(
     "built",
     package = "drake",
-    msg = paste("built() is deprecated.")
+    msg = paste("built() is deprecated.",
+                "Use cached(no_imported_objects = TRUE)) instead.")
   )
   if (is.null(cache)) {
     return(character(0))
