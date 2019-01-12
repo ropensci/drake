@@ -1226,3 +1226,16 @@ read_drake_plan <- function(
   )
   drake_plan()
 }
+
+#' @title Deprecated. Show the analysis wildcard
+#'   used in [plan_summaries()].
+#' @description Used to generate workflow plan data frames.
+#' @details 2019-01-12.
+#' @export
+#' @seealso [plan_summaries()]
+#' @return The analysis wildcard used in [plan_summaries()].
+#' @examples
+#' # See ?plan_analyses for examples
+analysis_wildcard <- function() {
+  analysis_wildcard_()
+}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/api-cache.R
 \name{built}
 \alias{built}
-\title{Deprecated. List all the built targets (non-imports) in the cache.}
+\title{List all the built targets (non-imports) in the cache.}
 \usage{
 built(path = getwd(), search = TRUE, cache = drake::get_cache(path =
   path, search = search, verbose = verbose), verbose = 1L, jobs = 1)

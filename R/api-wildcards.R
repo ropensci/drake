@@ -1,12 +1,13 @@
 #' @title Show the analysis wildcard
 #'   used in [plan_summaries()].
 #' @description Used to generate workflow plan data frames.
-#' @export
 #' @seealso [plan_summaries()]
 #' @return The analysis wildcard used in [plan_summaries()].
+#' @note When the now-deprecated \code{analysis_wildcard} is removed,
+#' this function's name should have the final "_" stripped off.
 #' @examples
 #' # See ?plan_analyses for examples
-analysis_wildcard <- function() {
+analysis_wildcard_ <- function() {
   "analysis__"
 }
 
@@ -459,7 +460,7 @@ plan_summaries <- function(
   out <- plan
   group <- paste(colnames(out), collapse = sep)
   out[[group]] <- out$target
-  if (!any(grepl(analysis_wildcard(), out$command, fixed = TRUE))) {
+  if (!any(grepl(analysis_wildcard_(), out$command, fixed = TRUE))) {
     stop(
       "no 'analysis__' wildcard found in plan$command. ",
       "Use plan_analyses() instead."
@@ -467,7 +468,7 @@ plan_summaries <- function(
   }
   out <- evaluate_plan(
     out,
-    wildcard = analysis_wildcard(),
+    wildcard = analysis_wildcard_(),
     values = analyses$target,
     sep = sep
   )
@@ -506,7 +507,7 @@ plan_summaries <- function(
 }
 
 with_analyses_only <- function(plan) {
-  has_analysis <- grepl(analysis_wildcard(), plan$command, fixed = TRUE)
+  has_analysis <- grepl(analysis_wildcard_(), plan$command, fixed = TRUE)
   if (any(!has_analysis)) {
     warning(
       "removing ",
