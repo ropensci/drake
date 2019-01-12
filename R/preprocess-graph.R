@@ -34,7 +34,11 @@ cdg_create_edges <- function(config, layout) {
     FUN = cdg_node_to_edges,
     jobs = config$jobs
   )
-  edges <- do.call(rbind, edges)
+  edges <- data.frame(
+    from = unlist(lapply(edges, `[[`, "from")),
+    to = unlist(lapply(edges, `[[`, "to")),
+    stringsAsFactors = FALSE
+  )
   cdg_edges_thru_file_out(edges)
 }
 
@@ -46,26 +50,20 @@ cdg_node_to_edges <- function(node) {
   )
   out <- NULL
   if (length(inputs)) {
-    out <- data.frame(
+    out <- list(
       from = inputs,
-      to = node$target,
-      stringsAsFactors = FALSE
+      to = rep(node$target, length(inputs))
     )
   }
   if (length(file_out)) {
-    out2 <- data.frame(
-      from = node$target,
-      to = file_out,
-      stringsAsFactors = FALSE
+    out <- list(
+      from = c(out$from, rep(node$target, length(file_out))),
+      to = c(out$to, file_out)
     )
-    out <- rbind(out, out2)
   }
   if (is.null(out)) {
-    out <- data.frame(
-      from = node$target %||% character(0),
-      to = node$target %||% character(0),
-      stringsAsFactors = FALSE
-    )
+    out <- list(from = node$target %||% character(0))
+    out$to <- out$from
   }
   out
 }
