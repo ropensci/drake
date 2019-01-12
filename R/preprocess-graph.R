@@ -34,31 +34,36 @@ cdg_create_edges <- function(config, layout) {
     FUN = cdg_node_to_edges,
     jobs = config$jobs
   )
-  edges <- do.call(rbind, edges)
+  edges <- data.frame(
+    from = unlist(lapply(edges, `[[`, "from")),
+    to = unlist(lapply(edges, `[[`, "to")),
+    stringsAsFactors = FALSE
+  )
   cdg_edges_thru_file_out(edges)
 }
 
 cdg_node_to_edges <- function(node) {
   file_out <- node$deps_build$file_out
   node$deps_build$file_out <- NULL
-  inputs <- clean_dependency_list(
+  inputs <- clean_nested_char_list(
     c(node$deps_build, node$deps_condition, node$deps_change)
   )
   out <- NULL
   if (length(inputs)) {
-    out <- weak_tibble(from = inputs, to = node$target)
+    out <- list(
+      from = inputs,
+      to = rep(node$target, length(inputs))
+    )
   }
   if (length(file_out)) {
-    out <- rbind(
-      out,
-      weak_tibble(from = node$target, to = file_out)
+    out <- list(
+      from = c(out$from, rep(node$target, length(file_out))),
+      to = c(out$to, file_out)
     )
   }
   if (is.null(out)) {
-    out <- weak_tibble(
-      from = node$target %||% character(0),
-      to = node$target %||% character(0)
-    )
+    out <- list(from = node$target %||% character(0))
+    out$to <- out$from
   }
   out
 }
@@ -86,7 +91,12 @@ cdg_finalize_graph <- function(edges, targets, config) {
   file_out <- edges$to[edges$from %in% targets & is_encoded_path(edges$to)]
   to <- union(targets, file_out)
   graph <- igraph::graph_from_data_frame(edges)
-  graph <- prune_drake_graph(graph, to = to, jobs = config$jobs)
+  graph <- nbhd_graph(
+    graph = graph,
+    vertices = to,
+    mode = "in",
+    order = igraph::gorder(graph)
+  )
   graph <- igraph::set_vertex_attr(graph, "imported", value = TRUE)
   index <- c(config$plan$target, file_out)
   index <- intersect(index, igraph::V(graph)$name)

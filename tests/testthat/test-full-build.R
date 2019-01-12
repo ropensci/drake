@@ -63,17 +63,12 @@ test_with_dir("scratch build with custom filesystem cache.", {
   # clean removes imported functions and cleans up 'functions'
   # namespace
   expect_true(cached(f, cache = cache))
-  for (n in c(cache$default_namespace, "kernels")) {
-    expect_true("f" %in% config$cache$list(namespace = n))
-  }
+  expect_true("f" %in% config$cache$list())
   clean(f, cache = cache)
-  for (n in c(cache$default_namespace, "kernels")) {
-    expect_false("f" %in% config$cache$list(namespace = n))
-  }
+  expect_false("f" %in% config$cache$list())
 
   clean(destroy = FALSE, cache = cache)
   expect_equal(config$cache$list(), character(0))
-  expect_equal(config$cache$list("kernels"), character(0))
   expect_false(file.exists("intermediatefile.rds"))
   expect_true(file.exists("input.rds"))
   expect_false(file.exists(default_cache_path()))

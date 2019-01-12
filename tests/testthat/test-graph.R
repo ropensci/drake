@@ -15,11 +15,6 @@ test_with_dir("Recursive functions are okay", {
   expect_equal(readd(output, cache = cache), factorial(10))
 })
 
-test_with_dir("Supplied graph is not an igraph.", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_error(prune_drake_graph(12345, to = "node"))
-})
-
 test_with_dir("null graph", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("lubridate")
@@ -96,12 +91,8 @@ test_with_dir("we can generate different visNetwork dependency graphs", {
     targets_only = TRUE)
   tmp6 <- drake_graph_info(config = config, build_times = "build",
     targets_only = TRUE, from_scratch = FALSE)
-  expect_warning(
-    tmp7 <- drake_graph_info(config = config, build_times = "none",
-                             from = c("small", "not_found"))
-  )
   expect_error(
-    tmp8 <- drake_graph_info(config = config, build_times = "none",
+    tmp7 <- drake_graph_info(config = config, build_times = "none",
                              from = "not_found")
   )
   expect_equal(nrow(tmp0$nodes), 2)
@@ -435,19 +426,5 @@ test_with_dir("same, but with an extra edge not due to files", {
     sort(info$nodes$id),
     sort(c(file_store(
       paste0("out", 3:4, ".txt")), "status: up to date", "target2"))
-  )
-})
-
-test_with_dir("graph pruning edge cases", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  load_mtcars_example()
-  graph <- drake_config(my_plan)$graph
-  expect_warning(
-    prune_drake_graph(graph, to = c("small", "shibboleth")),
-    regexp = "supplied targets not in the dependency graph"
-  )
-  expect_warning(
-    prune_drake_graph(graph, to = character(0)),
-    regexp = "no valid destination vertices supplied"
   )
 })

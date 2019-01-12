@@ -6,6 +6,14 @@ process_imports <- function(config) {
   }
 }
 
+#' @title internal function
+#' @description only used inside process_imports(). Not a user-side function.
+#' @export
+#' @keywords internal
+#' @param import character, name of an import to process
+#' @param config [drake_config()] object
+#' @examples
+#' # Not a user-side function.
 process_import <- function(import, config) {
   meta <- drake_meta(target = import, config = config)
   if (meta$isfile) {
@@ -47,7 +55,6 @@ process_imports_mclapply <- function(config) {
 
 process_imports_parLapply <- function(config) { # nolint
   assert_pkg("parallel")
-  eval(parse(text = "require(drake)"))
   console_parLapply(config) # nolint
   config$cluster <- parallel::makePSOCKcluster(config$jobs_preprocess)
   on.exit(parallel::stopCluster(cl = config$cluster))
@@ -80,7 +87,9 @@ process_imports_parLapply <- function(config) { # nolint
     parallel::parLapply(
       cl = config$cluster,
       X = imports,
-      fun = process_import,
+      fun = function(import, config) {
+        drake::process_import(import = import, config = config)
+      },
       config = config
     )
     config$imports <- delete_vertices(config$imports, v = imports)
