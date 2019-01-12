@@ -5,7 +5,6 @@ mc_get_checksum <- function(target, config) {
       namespace = config$cache$default_namespace,
       config = config
     ),
-    safe_get_hash(key = target, namespace = "kernels", config = config),
     safe_get_hash(key = target, namespace = "meta", config = config),
     mc_get_outfile_checksum(target, config),
     sep = " "
@@ -46,7 +45,7 @@ mc_is_good_checksum <- function(target, checksum, config) {
   }
   all(
     vapply(
-      X = unlist(strsplit(local_checksum, " "))[1:3],
+      X = unlist(strsplit(local_checksum, " "))[1:2],
       config$cache$exists_object,
       FUN.VALUE = logical(1)
     )

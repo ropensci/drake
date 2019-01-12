@@ -194,7 +194,7 @@ test_with_dir("Vectorized nested functions work", {
   }
   expect_equal(readd(a), 8:17)
   k <- readd(f)
-  expect_equal(k(2:5), 9:12)
+  expect_true(is.character(k))
   expect_equal(character(0), outdated(config))
   config$envir$y <- 8
   expect_equal("a", outdated(config))
@@ -436,11 +436,10 @@ test_with_dir("ignore() in imported functions", {
   make(plan, cache = cache)
   config <- drake_config(plan, cache = cache)
   expect_equal(justbuilt(config), "x")
-  expect_equal(readd(f, cache = cache), f)
-  expect_equal(
-    readd(f, cache = cache, namespace = "kernels")[3],
-    "    (sqrt(ignore() + 123))"
-  )
+
+  str <- readd(f, cache = cache)
+  expect_false(any(grepl("sqrt(x)", str, fixed = TRUE)))
+  expect_equal(str[3], "    (sqrt(ignore() + 123))")
   f <- function(x) {
     (sqrt( ignore(sqrt(x) + 8) + 123)) # nolint
   }

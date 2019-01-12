@@ -38,11 +38,7 @@ cache_namespaces <- function(
 cleaned_namespaces <- function(
   default = storr::storr_environment()$default_namespace
 ) {
-  out <- c(
-    default,   # the target values themselves
-    "kernels", # reproducibly-tracked representation of targets. watched for changes # nolint
-    "meta"     # watched metadata such as hashes and time stamps
-  )
+  out <- c(default, "meta")
   sort(out)
 }
 

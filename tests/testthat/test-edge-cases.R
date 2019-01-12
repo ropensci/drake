@@ -219,12 +219,7 @@ test_with_dir("true targets can be functions", {
   make(plan, verbose = FALSE, session_info = FALSE)
   config <- drake_config(plan, verbose = FALSE, session_info = FALSE)
   expect_equal(readd(output), 2)
-  expect_true(
-    is.character(
-      config$cache$get("myfunction",
-      namespace = "kernels")
-    )
-  )
+  expect_true(is.function(config$cache$get("myfunction")))
   myfunction <- readd(myfunction)
   expect_equal(myfunction(4), 5)
 })

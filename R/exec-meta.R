@@ -114,7 +114,7 @@ dependency_hash <- function(target, config) {
 self_hash <- function(target, config) {
   # tryCatch is faster than checking if the key exists beforehand.
   tryCatch(
-    config$cache$get_hash(target, namespace = "kernels"),
+    config$cache$get_hash(target),
     error = error_na
   )
 }
@@ -235,10 +235,10 @@ file_hash <- function(
     new_mtime = new_mtime,
     old_mtime = old_mtime,
     size_cutoff = size_cutoff)
-  old_hash_exists <- config$cache$exists(key = target, namespace = "kernels")
+  old_hash_exists <- config$cache$exists(key = target)
   if (do_rehash || !old_hash_exists) {
     rehash_file(target = target, config = config)
   } else {
-    config$cache$get(key = target, namespace = "kernels")
+    config$cache$get(key = target)
   }
 }
