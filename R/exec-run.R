@@ -60,8 +60,13 @@ with_call_stack <- function(target, config) {
     signalCondition(e)
   }
   expr <- config$layout[[target]]$command_build
-  # Need to make sure the environment is locked the whole time.
-  # Better a bottleneck than a race condition.
+  # Need to make sure the environment is locked for running commands.
+  # Why not just do this once at the beginning of `make()`?
+  # Because do_prework() and future::value()
+  # may need to modify the global state.
+  # Unfortunately, we have to repeatedly lock and unlock the envir.
+  # Unfortunately, the safe way to do this adds overhead and
+  # makes future::multicore parallelism serial.
   if (config$lock_envir) {
     i <- 1
     # Lock the environment only while running the command.

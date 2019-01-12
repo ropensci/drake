@@ -1,4 +1,8 @@
 backend_loop <- function(config) {
+  if (config$lock_envir) {
+    lock_environment(config$envir)
+    on.exit(unlock_environment(config$envir))
+  }
   targets <- igraph::topo_sort(config$schedule)$name
   for (i in seq_along(targets)) {
     loop_build(
@@ -11,6 +15,7 @@ backend_loop <- function(config) {
 }
 
 loop_build <- function(target, config, downstream) {
+  config$lock_envir <- FALSE # Already locked it in backend_loop().
   meta <- drake_meta(target = target, config = config)
   if (!should_build_target(target, meta, config)) {
     console_skip(target = target, config = config)
