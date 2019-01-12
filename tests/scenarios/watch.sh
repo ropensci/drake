@@ -1,1 +1,1 @@
-watch -n .1 tail -n 30 *out
+watch -n .1 tail -n 30 $1

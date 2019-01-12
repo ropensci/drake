@@ -8,6 +8,7 @@
 - Set the default value of `lock_envir` to `TRUE` in `make()` and `drake_config()`. So `make()` will automatically quit in error if the act of building a target tries to change upstream dependencies.
 - `make()` no longer returns a value. Users will need to call `drake_config()` separately to get the old return value of `make()`.
 - Make `jobs` a scalar argument to `make()` and `drake_config()`. To parallelize the imports and other preprocessing tasks, use `jobs_preprocess`.
+- Get rid of the "kernels" `storr` namespace. As a result, `drake` is faster, but users will no longer be able to use imported functions loaded from `loadd()` or `readd()`.
 
 ## Bug fixes
 
