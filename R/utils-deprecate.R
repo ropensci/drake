@@ -1390,3 +1390,21 @@ prune_drake_graph <- function(
     order = igraph::gorder(graph)
   )
 }
+
+#' @title Deprecated. Show the analysis wildcard
+#'   used in [plan_summaries()].
+#' @description Deprecated on 2019-01-08.
+#' @details Used to generate workflow plan data frames.
+#' @export
+#' @seealso [plan_summaries()]
+#' @return The analysis wildcard used in [plan_summaries()].
+#' @examples
+#' # See ?plan_analyses for examples
+analysis_wildcard <- function() {
+  .Deprecated(
+    "analysis_wildcard",
+    package = "drake",
+    msg = "analysis_wildcard() is deprecated."
+  )
+  analysis_wildcard_()
+}
