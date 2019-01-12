@@ -355,7 +355,7 @@
       "@type": "SoftwareApplication",
       "identifier": "R",
       "name": "R",
-      "version": ">= 3.4.0"
+      "version": ">= 3.3.0"
     },
     {
       "@type": "SoftwareApplication",
@@ -432,7 +432,7 @@
   ],
   "releaseNotes": "https://github.com/bpbond/drake/blob/master/NEWS.md",
   "readme": "https://github.com/bpbond/drake/blob/master/README.md",
-  "fileSize": "337.124KB",
+  "fileSize": "336.73KB",
   "contIntegration": [
     "https://ci.appveyor.com/project/ropensci/drake",
     "https://travis-ci.org/ropensci/drake",

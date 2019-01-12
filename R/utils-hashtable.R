@@ -36,6 +36,10 @@ ht_list <- function(ht) {
   names(ht)
 }
 
+ht_clear <- function(ht) {
+  rm(list = names(ht), envir = ht)
+}
+
 ht_clone <- function(ht) {
   list2env(as.list(ht), hash = TRUE, parent = emptyenv())
 }
@@ -57,6 +61,9 @@ ht_merge <- function(x, y) {
 
 # hash-table-based memoization for characters
 ht_memo <- function(ht, x, fun, ...) {
+  if (is.null(ht)) {
+    return(lapply(X = x, FUN = fun, ...))
+  }
   vapply(
     X = x,
     FUN = ht_memo_single,

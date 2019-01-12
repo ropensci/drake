@@ -5,15 +5,6 @@ test_with_dir("file system", {
   expect_equal(file_extn("123"), "123")
 })
 
-test_with_dir("merge_lists()", {
-  x <- list(a = 1, b = 1:2, c = 1:3)
-  y <- list(b = 3:4, c = 4:5, d = 1:5)
-  z <- merge_lists(x, y)
-  z <- lapply(z, sort)
-  w <- list(a = 1, b = 1:4, c = 1:5, d = 1:5)
-  expect_equal(z, w)
-})
-
 test_with_dir("drake_pmap", {
   # Basic functionality: example from purrr::pmap
   x <- list(1, 10, 100)

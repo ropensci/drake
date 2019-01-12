@@ -1,10 +1,5 @@
 drake_context("dependencies")
 
-# TODO: move other tests relating to command standardization here.
-test_with_dir("standardize empty code", {
-  expect_equal(standardize_code(NULL), "")
-})
-
 test_with_dir("unparsable commands are handled correctly", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- "bluh$"
@@ -199,7 +194,7 @@ test_with_dir("Vectorized nested functions work", {
   }
   expect_equal(readd(a), 8:17)
   k <- readd(f)
-  expect_equal(k(2:5), 9:12)
+  expect_true(is.character(k))
   expect_equal(character(0), outdated(config))
   config$envir$y <- 8
   expect_equal("a", outdated(config))
@@ -322,18 +317,25 @@ test_with_dir("ignore() works on its own", {
 
 test_with_dir("Can standardize commands", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_equal(standardize_command(""), "")
-  x <- parse(text = c("f(x +2) + 2", "!!y"))
-  y <- standardize_command(x[[1]])
-  x <- parse(text = "f(x +2) + 2")
-  z <- standardize_command(x)
-  w <- standardize_command(x[[1]])
-  s <- standardize_command("f(x + 2) + 2")
-  a <- standardize_command("f(x + 1 - 1) + 2")
-  expect_identical(y, s)
-  expect_identical(z, s)
-  expect_identical(w, s)
-  expect_false(identical(a, s))
+  expect_true(is.character(standardize_command("")))
+  expect_identical(
+    standardize_command("f(x +2) + 2"),
+    standardize_command("f(x + 2) + 2")
+  )
+  expect_identical(
+    standardize_command(parse(text = "f(x +2) + 2")),
+    standardize_command("f(x + 2) + 2")
+  )
+  expect_identical(
+    standardize_command(quote(f(x + 2) + 2)),
+    standardize_command("f(x + 2) + 2")
+  )
+  expect_false(
+    identical(
+      standardize_command("f(x + 2) + 2"),
+      standardize_command("f(x + 1 - 1) + 2")
+    )
+  )
   expect_identical(
     standardize_command("b->a"),
     standardize_command("a <- b")
@@ -396,6 +398,10 @@ test_with_dir("standardized commands with ignore()", {
     standardize_command("function(x){(sqrt( ignore(fun(arg) + 7) + 123))}"),
     standardize_command("function(x) {\n    (sqrt(ignore() + 123))\n}")
   )
+  expect_equal(
+    standardize_command("f(sqrt( ignore(fun(arg) + 7) + 123)); g(ignore(i))"),
+    standardize_command("f(sqrt( ignore() + 123)); g(ignore())")
+  )
   f <- function(x) {
     (sqrt( ignore(fun(arg) + 7) + 123)) # nolint
   }
@@ -404,13 +410,6 @@ test_with_dir("standardized commands with ignore()", {
     attr(b, a) <- NULL
   }
   expect_equal(b, quote({  (sqrt(ignore() + 123)) })) # nolint
-})
-
-test_with_dir("can standardize command with other ignored symbols", {
-  expect_equal(
-    standardize_command("function(x){(sqrt( drake_envir(arg) + 123))}"),
-    standardize_command("function(x) {\n    (sqrt(ignore() + 123))\n}")
-  )
 })
 
 test_with_dir("Can standardize commands from expr or lang", {
@@ -437,11 +436,10 @@ test_with_dir("ignore() in imported functions", {
   make(plan, cache = cache)
   config <- drake_config(plan, cache = cache)
   expect_equal(justbuilt(config), "x")
-  expect_equal(readd(f, cache = cache), f)
-  expect_equal(
-    readd(f, cache = cache, namespace = "kernels")[3],
-    "    (sqrt(ignore() + 123))"
-  )
+
+  str <- readd(f, cache = cache)
+  expect_false(any(grepl("sqrt(x)", str, fixed = TRUE)))
+  expect_equal(str[3], "    (sqrt(ignore() + 123))")
   f <- function(x) {
     (sqrt( ignore(sqrt(x) + 8) + 123)) # nolint
   }

@@ -41,10 +41,11 @@ before_script:
 script:
   - |
     R CMD build .
-    R CMD INSTALL drake*tar.gz
+    R CMD INSTALL . # Expose the *.so file for pkgdown.R.
     Rscript pkgdown.R
+    R CMD INSTALL drake*tar.gz
     travis_wait 20 R CMD check drake*tar.gz --no-tests
-    travis_wait 20 Rscript -e 'cov <- covr::package_coverage()' -e 'print(cov)' -e 'covr::codecov(coverage = cov)'
+    travis_wait 20 Rscript -e 'cov <- covr::package_coverage(quiet = FALSE)' -e 'print(cov)' -e 'covr::codecov(coverage = cov)'
 
 after_success:
   - ./pkgdown.sh

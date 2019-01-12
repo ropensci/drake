@@ -85,16 +85,7 @@ finalize_storage <- function(target, value, meta, config, verbose) {
 }
 
 store_object <- function(target, value, meta, config) {
-  config$cache$set(
-    key = target,
-    value = value
-  )
-  config$cache$duplicate(
-    key_src = target,
-    key_dest = target,
-    namespace_src = config$cache$default_namespace,
-    namespace_dest = "kernels"
-  )
+  config$cache$set(key = target, value = value)
 }
 
 store_file <- function(target, meta, config) {
@@ -121,26 +112,13 @@ store_output_files <- function(files, meta, config) {
 }
 
 store_function <- function(target, value, meta, config) {
-  config$cache$set(
-    key = target,
-    value = value,
-    namespace = config$cache$default_namespace
-  )
-  # For the kernel of an imported function,
-  # we ignore any code wrapped in ignore().
   if (meta$imported) {
     value <- ignore_ignore(value)
+    # Unfortunately, vectorization is removed, but this is for the best.
+    value <- deparse(unwrap_function(value))
+    value <- c(value, meta$dependency_hash)
   }
-  # Unfortunately, vectorization is removed, but this is for the best.
-  string <- deparse(unwrap_function(value))
-  if (meta$imported) {
-    string <- c(string, meta$dependency_hash)
-  }
-  config$cache$set(
-    key = target,
-    value = string,
-    namespace = "kernels"
-  )
+  store_object(target, value, meta, config)
 }
 
 store_failure <- function(target, meta, config) {

@@ -482,7 +482,7 @@ drake_cache_log <- function(
 }
 
 single_cache_log <- function(key, cache) {
-  hash <- cache$get_hash(key = key, namespace = "kernels")
+  hash <- cache$get_hash(key = key)
   imported <- get_from_subspace(
     key = key,
     subspace = "imported",
@@ -541,11 +541,9 @@ safe_get_hash <- function(key, namespace, config) {
   out
 }
 
-kernel_exists <- function(target, config) {
-  config$cache$exists(key = target, namespace = "kernels")
+target_exists <- function(target, config) {
+  config$cache$exists(key = target)
 }
-
-target_exists <- kernel_exists
 
 memo_expr <- function(expr, cache, ...) {
   if (is.null(cache)) {

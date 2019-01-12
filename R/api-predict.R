@@ -145,9 +145,11 @@ predict_load_balancing <- function(
 ) {
   deprecate_targets_only(targets_only) # 2019-01-03 # nolint
   if (!is.null(targets)) {
-    config$schedule <- prune_drake_graph(
+    config$schedule <- nbhd_graph(
       config$schedule,
-      to = targets
+      vertices = targets,
+      mode = "in",
+      order = igraph::gorder(config$schedule)
     )
   }
   assumptions <- timing_assumptions(

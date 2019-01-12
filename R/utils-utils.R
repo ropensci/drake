@@ -39,7 +39,11 @@ assert_pkg <- function(pkg, version = NULL, install = "install.packages") {
   invisible()
 }
 
-clean_dependency_list <- function(x){
+clean_dependency_list <- function(x) {
+  sort(clean_nested_char_list(x))
+}
+
+clean_nested_char_list <- function(x) {
   if (!length(x)){
     return(character(0))
   }
@@ -47,7 +51,6 @@ clean_dependency_list <- function(x){
   x <- unname(x)
   x <- as.character(x)
   x <- unique(x)
-  sort(x)
 }
 
 exists_tidyselect <- function() {
@@ -157,18 +160,6 @@ map_by <- function(.x, .by, .f, ...) {
   do.call(what = rbind, args = out)
 }
 
-merge_lists <- function(x, y) {
-  names <- base::union(names(x), names(y))
-  x <- lapply(
-    X = names,
-    function(name) {
-      base::union(x[[name]], y[[name]])
-    }
-  )
-  names(x) <- names
-  x
-}
-
 padded_scale <- function(x) {
   r <- range(x)
   pad <- 0.2 * (r[2] - r[1])
@@ -251,10 +242,7 @@ unwrap_function <- function(funct) {
 
 lock_environment <- function(envir) {
   lockEnvironment(envir, bindings = FALSE)
-  lock_these <- ls(envir, all.names = FALSE)
-  skip_these <- ".Random.seed"
-  lock_these <- setdiff(lock_these, skip_these)
-  lapply(X = lock_these, FUN = lockBinding, env = envir)
+  lapply(X = unhidden_names(envir), FUN = lockBinding, env = envir)
   invisible()
 }
 
@@ -265,16 +253,22 @@ unlock_environment <- function(envir) {
   if (!inherits(envir, "environment")) {
     stop("not an environment")
   }
-  .Call("unlock_environment", envir)
+  .Call(Cunlock_environment, envir)
   lapply(
-    X = ls(envir, all.names = FALSE),
+    X = unhidden_names(envir),
     FUN = unlockBinding,
     env = envir
   )
   stopifnot(!environmentIsLocked(envir))
 }
 
-which_unnamed <- function(x) {
+unhidden_names <- function(envir) {
+  out <- names(envir)
+  out <- out[substr(out, 0, 1) != "."]
+  out
+}
+
+is_unnamed <- function(x) {
   if (!length(names(x))) {
     rep(TRUE, length(x))
   } else {
@@ -282,7 +276,7 @@ which_unnamed <- function(x) {
   }
 }
 
-# weak_tibble - use tibble() if available but fall back to 
+# weak_tibble - use tibble() if available but fall back to
 # data.frame() if necessary
 weak_tibble <- function(..., .force_df = FALSE) {
   no_tibble <- !suppressWarnings(requireNamespace("tibble", quietly = TRUE))
@@ -294,7 +288,7 @@ weak_tibble <- function(..., .force_df = FALSE) {
   }
 }
 
-# weak_as_tibble - use as_tibble() if available but fall back to 
+# weak_as_tibble - use as_tibble() if available but fall back to
 # as.data.frame() if necessary
 weak_as_tibble <- function(..., .force_df = FALSE) {
   no_tibble <- !suppressWarnings(requireNamespace("tibble", quietly = TRUE))

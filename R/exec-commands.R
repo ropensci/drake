@@ -10,55 +10,32 @@ preprocess_command <- function(command, config) {
 }
 
 standardize_command <- function(x) {
-  x <- ignore_ignore(x)
-  x <- language_to_text(x)
-  standardize_code(x)
-}
-
-ignore_ignore <- function(expr) {
-  if (is.character(expr)) {
-    expr <- parse(text = expr)
+  look_for_ignore <- TRUE
+  if (is.character(x)) {
+    look_for_ignore <- grepl("ignore", x, fixed = TRUE)
+    x <- parse(text = x, keep.source = FALSE)
   }
-  recurse_ignore(expr)
+  if (is.expression(x) && length(x) == 1L) {
+    x <- x[[1]]
+  }
+  if (look_for_ignore) {
+    x <- ignore_ignore(x)
+  }
+  for (attribute in c("srcref", "srcfile", "wholeSrcref")) {
+    attr(x = x, which = attribute) <- NULL
+  }
+  wide_deparse(x)
 }
 
-recurse_ignore <- function(x) {
+ignore_ignore <- function(x) {
   if (is.function(x) && !is.primitive(x) && !is.null(body(x))) {
-    body(x) <- recurse_ignore(body(x))
+    body(x) <- ignore_ignore(body(x))
   } else if (is_callish(x)) {
-    if (wide_deparse(x[[1]]) %in% ignored_fns) {
+    if (wide_deparse(x[[1]]) %in% ignore_fns) {
       x <- quote(ignore())
     } else {
-      x[] <- lapply(as.list(x), recurse_ignore)
+      x[] <- lapply(as.list(x), ignore_ignore)
     }
   }
   x
-}
-
-language_to_text <- function(x) {
-  if (length(x) < 1) {
-    return(character(0))
-  }
-  if (is.expression(x)) {
-    if (length(x) < 2) {
-      x <- x[[1]]
-    }
-  }
-  if (is.language(x)) {
-    for (attribute in c("srcref", "srcfile", "wholeSrcref")) {
-      attr(x = x, which = attribute) <- NULL
-    }
-    x <- wide_deparse(x)
-  }
-  x
-}
-
-standardize_code <- function(x){
-  if (!length(x)){
-    return("")
-  }
-  if (is.character(x)) {
-    x <- parse(text = x, keep.source = FALSE)[[1]]
-  }
-  deparse(x)
 }
