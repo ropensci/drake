@@ -42,7 +42,8 @@ test_with_dir("deprecation: built", {
     sort(display_keys(config$plan$target))
   )
   twopiece <- sort(c(suppressWarnings(built(search = FALSE)),
-                     suppressWarnings(imported(search = FALSE, files_only = FALSE))))
+                     suppressWarnings(imported(search = FALSE, 
+                                               files_only = FALSE))))
   expect_equal(
     sort(cached(search = FALSE)),
     sort(display_keys(twopiece))

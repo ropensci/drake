@@ -417,7 +417,7 @@ test_with_dir("cache functions work from various working directories", {
   expect_true(all(cached(list = all, path = s, search = TRUE)))
   expect_true(inherits(rescue_cache(path = s, search = TRUE), "storr"))
   expect_true(all(cached(list = all, path = s, search = TRUE)))
-  
+
   # find your project
   expect_equal(find_cache(path = s),
                file.path(scratch, cache_dir))
