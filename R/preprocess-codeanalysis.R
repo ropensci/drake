@@ -83,10 +83,13 @@ analyze_assign <- function(expr, results, locals, allowed_globals) {
 analyze_loadd <- function(expr, results) {
   expr <- match.call(drake::loadd, as.call(expr))
   expr <- expr[-1]
-  dots <- expr[which_unnamed(expr)]
   ht_set(results$loadd, analyze_strings(expr["list"]))
-  ht_set(results$loadd, analyze_strings(dots))
-  ht_set(results$loadd, safe_all_vars(dots))
+  index <- which(is_unnamed(expr))
+  if (length(index)) {
+    dots <- expr[index]
+    ht_set(results$loadd, analyze_strings(dots))
+    ht_set(results$loadd, safe_all_vars(dots))
+  }
 }
 
 analyze_readd <- function(expr, results, allowed_globals) {
@@ -166,7 +169,7 @@ walk_code <- function(expr, results, locals, allowed_globals) {
       analyze_file_out(expr, results)
     } else if (name %in% c(knitr_in_fns)) {
       analyze_knitr_in(expr, results)
-    } else if (!(name %in% ignored_fns)) {
+    } else if (!(name %in% ignore_fns)) {
       walk_call(expr, results, locals, allowed_globals)
     }
   }

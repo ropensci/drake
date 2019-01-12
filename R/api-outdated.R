@@ -1,4 +1,6 @@
 first_outdated <- function(config) {
+  config$ht_get_hash <- ht_new() # Memoize getting hashes from the cache.
+  on.exit(ht_clear(config$ht_get_hash)) # Needs to be empty afterwards.
   schedule <- config$schedule
   out <- character(0)
   old_leaves <- NULL
@@ -80,13 +82,9 @@ outdated <-  function(
   if (make_imports) {
     process_imports(config = config)
   }
-  first_targets <- first_outdated(config = config)
-  later_targets <- downstream_nodes(
-    from = first_targets,
-    graph = config$schedule,
-    jobs = config$jobs_preprocess
-  )
-  sort(unique(as.character(c(first_targets, later_targets))))
+  from <- first_outdated(config = config)
+  to <- downstream_nodes(config$schedule, from)
+  sort(unique(as.character(c(from, to))))
 }
 
 #' @title Report any import objects required by your drake_plan

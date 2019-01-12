@@ -76,9 +76,9 @@ test_with_dir("namespaced drake_plan works", {
     session_info = FALSE
   )
   fromcache <- readd("base::list", character_only = TRUE)
-  expect_equal(fromcache(1, "a"), list(1, "a"))
+  expect_true(is.character(fromcache))
   fromcache2 <- readd("base:::c", character_only = TRUE)
-  expect_equal(fromcache2(1, 2), c(1, 2))
+  expect_true(is.character(fromcache2))
   ns <- sort(c("base:::c", "base::list", "base::nchar"))
   expect_true(all(cached(list = ns)))
   expect_true(all(ns %in% imported()))

@@ -50,10 +50,11 @@ codetools_tmpv_str <- "*ct_tmpv*"
 codetools_tmp <- as.name(codetools_tmp_str)
 codetools_tmpv <- as.name(codetools_tmpv_str)
 drake_prefix <- c("", "drake::", "drake:::")
+drake_envir_fns <- pair_text(drake_prefix, "drake_envir")
 drake_envir_marker <- "._drake_envir"
 file_in_fns <- pair_text(drake_prefix, c("file_in"))
 file_out_fns <- pair_text(drake_prefix, c("file_out"))
-ignored_fns <- pair_text(drake_prefix, c("drake_envir", "ignore"))
+ignore_fns <- pair_text(drake_prefix, "ignore")
 knitr_in_fns <- pair_text(drake_prefix, c("knitr_in"))
 loadd_fns <- pair_text(drake_prefix, "loadd")
 readd_fns <- pair_text(drake_prefix, "readd")
@@ -64,10 +65,11 @@ drake_symbols <- sort(
   c(
     codetools_tmp_str,
     codetools_tmpv_str,
+    drake_envir_fns,
     drake_envir_marker,
     file_in_fns,
     file_out_fns,
-    ignored_fns,
+    ignore_fns,
     loadd_fns,
     knitr_in_fns,
     readd_fns,

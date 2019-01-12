@@ -87,13 +87,12 @@ new_worker <- function(id, target, config, protect) {
   layout <- config$layout[[target]]
   structure(
     future::future(
-      expr = future_build(
+      expr = drake::future_build(
         target = DRAKE_GLOBALS__$target,
         meta = DRAKE_GLOBALS__$meta,
         config = DRAKE_GLOBALS__$config,
         protect = DRAKE_GLOBALS__$protect
       ),
-      packages = "drake",
       globals = globals,
       label = target,
       resources = as.list(layout$resources)

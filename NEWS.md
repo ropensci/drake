@@ -2,12 +2,13 @@
 
 ## Breaking changes
 
-- This release will be version 7.0.0, a major update. Unfortunately, some enhancements that increase cache speed also invalidate targets in old projects. Workflows run with drake <= 6.2.1 will need to run from scratch again.
+- This release will be version 7.0.0, a major update. It contains tremendous speed improvements, more and better boosts than in any previous release. Unfortunately, some enhancements that increase cache speed also invalidate targets in old projects. Workflows run with drake <= 6.2.1 will need to run from scratch again.
 - Remove all parallel backends (`parallelism` argument of `make()`) except "clustermq", "future", and "hasty".
 - A large amount of deprecated functionality is removed, including several functions and the single-quoted file API.
 - Set the default value of `lock_envir` to `TRUE` in `make()` and `drake_config()`. So `make()` will automatically quit in error if the act of building a target tries to change upstream dependencies.
 - `make()` no longer returns a value. Users will need to call `drake_config()` separately to get the old return value of `make()`.
 - Make `jobs` a scalar argument to `make()` and `drake_config()`. To parallelize the imports and other preprocessing tasks, use `jobs_preprocess`.
+- Get rid of the "kernels" `storr` namespace. As a result, `drake` is faster, but users will no longer be able to use imported functions loaded from `loadd()` or `readd()`.
 
 ## Bug fixes
 
