@@ -1398,14 +1398,14 @@ prune_drake_graph <- function(
 #' @export
 #' @seealso [plan_summaries()]
 #' @return The analysis wildcard used in [plan_summaries()].
-analysis_wildcard <- function() {
+analysis_wildcard <- function() { # nocov start
   .Deprecated(
     "analysis_wildcard",
     package = "drake",
     msg = "analysis_wildcard() is deprecated."
   )
   analysis_wildcard_()
-}
+} # nocov end
 
 #' @title Deprecated. Return the file path where the cache is stored,
 #' if applicable.
@@ -1415,14 +1415,14 @@ analysis_wildcard <- function() {
 #' [storr::storr_rds()] file system caches.
 #' @return File path where the cache is stored.
 #' @param cache the cache whose file path you want to know
-cache_path <- function(cache = NULL) {
+cache_path <- function(cache = NULL) { # nocov start
   .Deprecated(
     "cache_path",
     package = "drake",
     msg = "cache_path() is deprecated."
   )
   cache_path_(cache)
-}
+} # nocov end
 
 #' @title Deprecated. List all the `storr` cache namespaces used by drake.
 #' @description Deprecated on 2019-01-12.
@@ -1432,15 +1432,42 @@ cache_path <- function(cache = NULL) {
 #' @param default name of the default `storr` namespace
 #' @export
 #' @seealso [make()]
-#' @examples
-#' cache_namespaces()
 cache_namespaces <- function(
   default = storr::storr_environment()$default_namespace
-) {
+) { # nocov start
   .Deprecated(
     "cache_namespaces",
     package = "drake",
     msg = "cache_namespaces() is deprecated."
   )
   cache_namespaces_(default)
-}
+} # nocov end
+
+#' @title Deprecated. Check a workflow plan data frame for obvious errors.
+#' @description Deprecated on 2019-01-12.
+#' @details Possible obvious errors include circular dependencies and
+#' missing input files.
+#' @seealso [drake_plan()], [make()]
+#' @export
+#' @return Invisibly return `plan`.
+#' @inheritParams cached
+#' @param plan workflow plan data frame, possibly from
+#'   [drake_plan()].
+#' @param targets character vector of targets to make
+#' @param envir environment containing user-defined functions
+#' @param cache optional drake cache. See [new_cache()].
+check_plan <- function(
+  plan = NULL,
+  targets = NULL,
+  envir = parent.frame(),
+  cache = drake::get_cache(verbose = verbose),
+  verbose = 1L,
+  jobs = 1
+) { # nocov start
+  .Deprecated(
+    "check_plan",
+    package = "drake",
+    msg = "check_plan() is deprecated."
+  )
+  check_plan_(plan, targets, envir, cache, verbose, jobs)
+} # nocov end

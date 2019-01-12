@@ -8,7 +8,7 @@
 #' @note When the now-deprecated [cache_namespaces()] is removed,
 #' this function's name should have the final "_" stripped off.
 #' @examples
-#' cache_namespaces()
+#' cache_namespaces_()
 cache_namespaces_ <- function(
   default = storr::storr_environment()$default_namespace
 ) {

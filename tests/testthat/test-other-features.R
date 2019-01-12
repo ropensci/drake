@@ -196,18 +196,18 @@ test_with_dir("config_checks() via check_plan() and make()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   y <- data.frame(x = 1, y = 2)
-  suppressWarnings(expect_error(check_plan(y, envir = config$envir)))
+  suppressWarnings(expect_error(check_plan_(y, envir = config$envir)))
   suppressWarnings(
     expect_error(
       make(y, envir = config$envir, session_info = FALSE, verbose = FALSE)))
   y <- data.frame(target = character(0), command = character(0))
-  expect_error(suppressWarnings(check_plan(y, envir = config$envir)))
+  expect_error(suppressWarnings(check_plan_(y, envir = config$envir)))
   suppressWarnings(
     expect_error(
       make(y, envir = config$envir,
            session_info = FALSE, verbose = FALSE)))
   suppressWarnings(expect_error(
-    check_plan(config$plan, targets = character(0), envir = config$envir)))
+    check_plan_(config$plan, targets = character(0), envir = config$envir)))
   suppressWarnings(expect_error(
     make(
       config$plan,
@@ -230,9 +230,9 @@ test_with_dir("targets can be partially specified", {
   testrun(config)
   expect_true(is.numeric(readd(final, search = FALSE)))
   pl <- drake_plan(x = 1, y = 2)
-  expect_error(check_plan(pl, "lskjdf", verbose = FALSE))
-  expect_warning(check_plan(pl, c("lskdjf", "x"), verbose = FALSE))
-  expect_silent(check_plan(pl, verbose = FALSE))
+  expect_error(check_plan_(pl, "lskjdf", verbose = FALSE))
+  expect_warning(check_plan_(pl, c("lskdjf", "x"), verbose = FALSE))
+  expect_silent(check_plan_(pl, verbose = FALSE))
 })
 
 test_with_dir("file_store quotes properly", {

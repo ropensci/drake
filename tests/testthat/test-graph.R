@@ -26,7 +26,7 @@ test_with_dir("null graph", {
 test_with_dir("circular non-DAG drake_plans quit in error", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- drake_plan(a = b, b = c, c = a)
-  expect_error(tmp <- capture.output(check_plan(x)))
+  expect_error(tmp <- capture.output(check_plan_(x)))
   expect_error(
     make(x, verbose = FALSE, session_info = FALSE),
     regexp = "[Cc]ircular workflow"
@@ -35,7 +35,7 @@ test_with_dir("circular non-DAG drake_plans quit in error", {
     a = b, b = c, c = a, d = 4, e = d,
     Aa = Bb, Bb = Cc, Cc = Aa, mytarget = e
   )
-  expect_error(tmp <- capture.output(check_plan(x)))
+  expect_error(tmp <- capture.output(check_plan_(x)))
   expect_error(
     make(x, verbose = FALSE, session_info = FALSE),
     regexp = "[Cc]ircular workflow"

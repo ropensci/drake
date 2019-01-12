@@ -221,7 +221,7 @@ test_with_dir("make() plays nicely with tibbles", {
   skip_if_not_installed("pillar")
   skip_if_not_installed("tibble")
   x <- tibble::tribble(~target, ~command, "nothing", 1)
-  expect_silent(check_plan(x, verbose = FALSE))
+  expect_silent(check_plan_(x, verbose = FALSE))
   expect_silent(make(x, verbose = FALSE, session_info = FALSE))
 })
 

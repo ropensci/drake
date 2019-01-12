@@ -3,7 +3,6 @@
 #' circular dependencies and
 #' missing input files.
 #' @seealso [drake_plan()], [make()]
-#' @export
 #' @return Invisibly return `plan`.
 #' @inheritParams cached
 #' @param plan workflow plan data frame, possibly from
@@ -22,7 +21,7 @@
 #' suppressWarnings(check_plan(my_plan))
 #' })
 #' }
-check_plan <- function(
+check_plan_ <- function(
   plan = NULL,
   targets = NULL,
   envir = parent.frame(),

@@ -22,7 +22,7 @@ When the now-deprecated \code{\link[=cache_namespaces]{cache_namespaces()}} is r
 this function's name should have the final "_" stripped off.
 }
 \examples{
-cache_namespaces()
+cache_namespaces_()
 }
 \seealso{
 \code{\link[=make]{make()}}

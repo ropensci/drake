@@ -19,9 +19,6 @@ Deprecated on 2019-01-12.
 Ordinary users do not need to worry about this function.
 It is just another window into \code{drake}'s internals.
 }
-\examples{
-cache_namespaces()
-}
 \seealso{
 \code{\link[=make]{make()}}
 }
