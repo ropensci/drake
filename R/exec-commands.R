@@ -11,11 +11,16 @@ preprocess_command <- function(command, config) {
 
 standardize_command <- function(x) {
   if (is.character(x)) {
-    x <- parse(text = x)
+    x <- parse(text = x, keep.source = FALSE)
+  }
+  if (is.expression(x) && length(x) == 1L) {
+    x <- x[[1]]
   }
   x <- ignore_ignore(x)
-  x <- language_to_text(x)
-  standardize_code(x)
+  for (attribute in c("srcref", "srcfile", "wholeSrcref")) {
+    attr(x = x, which = attribute) <- NULL
+  }
+  wide_deparse(x)
 }
 
 ignore_ignore <- function(x) {
@@ -29,32 +34,4 @@ ignore_ignore <- function(x) {
     }
   }
   x
-}
-
-language_to_text <- function(x) {
-  if (length(x) < 1) {
-    return(character(0))
-  }
-  if (is.expression(x)) {
-    if (length(x) < 2) {
-      x <- x[[1]]
-    }
-  }
-  if (is.language(x)) {
-    for (attribute in c("srcref", "srcfile", "wholeSrcref")) {
-      attr(x = x, which = attribute) <- NULL
-    }
-    x <- wide_deparse(x)
-  }
-  x
-}
-
-standardize_code <- function(x){
-  if (!length(x)){
-    return("")
-  }
-  if (is.character(x)) {
-    x <- parse(text = x, keep.source = FALSE)[[1]]
-  }
-  deparse(x)
 }
