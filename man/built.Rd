@@ -38,6 +38,9 @@ If supplied, \code{path} and \code{search} are ignored.}
 Character vector naming the built targets in the cache.
 }
 \description{
+Deprecated on 2019-01-08.
+}
+\details{
 Targets are listed in the workflow plan
 data frame (see \code{\link[=drake_plan]{drake_plan()}}.
 }

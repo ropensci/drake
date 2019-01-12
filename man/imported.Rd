@@ -44,6 +44,9 @@ If supplied, \code{path} and \code{search} are ignored.}
 Character vector naming the imports in the cache.
 }
 \description{
+Deprecated on 2019-01-08.
+}
+\details{
 An import is a non-target object processed
 by \code{\link[=make]{make()}}. Targets in the workflow
 plan data frame (see \code{\link[=drake_config]{drake_config()}}

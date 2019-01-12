@@ -108,7 +108,7 @@ test_with_dir("can keep going", {
       session_info = FALSE
     )
   )
-  expect_equal(sort(cached()), 
+  expect_equal(sort(cached()),
                sort(c("a2", "a3", "b2", "b3", "b4", "fail", "succeed")))
   expect_equal(sort(failed()), sort(c("a1", "a4", "b1")))
 })

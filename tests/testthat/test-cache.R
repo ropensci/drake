@@ -225,7 +225,7 @@ test_with_dir("cache functions work from various working directories", {
   # May have been loaded in a globalenv() testing scenario # nolint
   remove_these <- intersect(ls(envir = globalenv()), c("h", "j"))
   rm(list = remove_these, envir = globalenv())
-  
+
   cache_dir <- basename(default_cache_path())
   first_wd <- getwd()
   scratch <- file.path(first_wd, "scratch")
@@ -245,10 +245,10 @@ test_with_dir("cache functions work from various working directories", {
   } else {
     envir <- environment()
   }
-  
+
   config$session_info <- TRUE
   testrun(config)
-  
+
   # drake_cache_log() # nolint
   all_hashes <- drake_cache_log()
   some_hashes <- drake_cache_log(targets_only = TRUE)
@@ -259,7 +259,7 @@ test_with_dir("cache functions work from various working directories", {
   expect_false(file.exists("log.txt"))
   drake_cache_log_file(file = "log.txt")
   expect_true(file.exists("log.txt"))
-  
+
   # drake_gc() should not remove any important targets/imports.
   x <- cached()
   expect_true(length(x) > 0)
@@ -267,7 +267,7 @@ test_with_dir("cache functions work from various working directories", {
   y <- cached()
   expect_equal(sort(x), sort(y))
   expect_equal(outdated(config), character(0))
-  
+
   # targets and imports
   imports <- sort(c(encode_path("input.rds"),
                     "a", "b", "c", "f", "g",
@@ -275,7 +275,7 @@ test_with_dir("cache functions work from various working directories", {
   builds <- sort(config$plan$target)
   out_files <- encode_path("intermediatefile.rds")
   all <- sort(c(builds, imports, out_files))
-  
+
   # build_times
   x <- config$cache
   bt <- build_times(search = FALSE)
@@ -286,7 +286,7 @@ test_with_dir("cache functions work from various working directories", {
   expect_equal(sort(bt$target), sort(builds))
   expect_length(bt, 4) # 4 columns
   n1 <- nrow(bt)
-  
+
   # find stuff in current directory session, progress
   expect_equal(read_drake_seed(search = FALSE), config$seed)
   expect_true(is.list(drake_get_session_info(search = FALSE)))
@@ -299,7 +299,7 @@ test_with_dir("cache functions work from various working directories", {
   expect_equal(progress(bla, f, list = c("h", "final"), search = FALSE),
                c(bla = "not built or imported", f = "finished", h = "finished",
                  final = "finished"))
-  
+
   # cached, diagnose, rescue
   expect_true(length(diagnose(search = FALSE)) > length(config$plan$target))
   expect_equal(
@@ -341,11 +341,11 @@ test_with_dir("cache functions work from various working directories", {
     sort(display_keys(all)),
     sort(display_keys(twopiece))
   )
-  
+
   # find your project
   expect_equal(find_cache(), file.path(getwd(), cache_dir))
   expect_true(is.numeric(readd(a, search = FALSE)))
-  
+
   # load and read stuff
   list <- intersect(imported(), ls(envir = envir))
   rm(list = list, envir = envir)
@@ -356,7 +356,7 @@ test_with_dir("cache functions work from various working directories", {
   expect_true(is.numeric(h(1)))
   rm(h, i, j, c, envir = envir)
   expect_error(h(1))
-  
+
   # test loadd imported_only and loadd() everything safe
   e <- new.env()
   loadd(imported_only = TRUE, envir = e)
@@ -421,7 +421,7 @@ test_with_dir("cache functions work from various working directories", {
   # find your project
   expect_equal(find_cache(path = s),
                file.path(scratch, cache_dir))
-  
+
   # load and read stuff
   expect_true(is.numeric(readd(a, path = s, search = TRUE)))
   expect_error(h(1))
@@ -430,7 +430,7 @@ test_with_dir("cache functions work from various working directories", {
   expect_true(is.numeric(h(1)))
   rm(h, i, j, c, envir = envir)
   expect_error(h(1))
-  
+
   # load dependencies
   e <- new.env()
   deps <- c("nextone", "yourinput")
@@ -440,7 +440,7 @@ test_with_dir("cache functions work from various working directories", {
     path = s, search = TRUE, envir = e
   )
   expect_true(all(deps %in% ls(envir = e)))
-  
+
   # clean using search = TRUE or FALSE
   expect_true(all(display_keys(all) %in% cached(path = s, search = T)))
   clean(final, path = s, search = TRUE, jobs = 2,
@@ -449,16 +449,16 @@ test_with_dir("cache functions work from various working directories", {
     sort(display_keys(setdiff(all, "final"))) %in%
       cached(path = s, search = T)))
   drake_gc(path = s, search = T)
-  
+
   # Test purging
   prog <- progress(search = TRUE, path = s)
   expect_true("final" %in% names(prog))
-  
+
   clean(final, path = s, search = TRUE, jobs = 2,
         garbage_collection = TRUE, purge = TRUE)
   prog <- progress(search = TRUE, path = s)
   expect_false("final" %in% names(prog))
-  
+
   # More cleaning checks
   clean(path = s, search = TRUE, garbage_collection = FALSE)
   expect_equal(cached(path = s, search = T), character(0))
@@ -469,7 +469,7 @@ test_with_dir("cache functions work from various working directories", {
   clean(path = s, search = TRUE, destroy = TRUE)
   expect_false(file.exists(where))
   expect_silent(drake_gc()) # Cache does not exist
-  
+
   setwd(scratch) # nolint
   unlink("searchfrom", recursive = TRUE, force = TRUE)
 })

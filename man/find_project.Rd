@@ -16,6 +16,9 @@ File path of the nearest drake project or \code{NULL}
 if no drake project is found.
 }
 \description{
+Deprecated on 2019-01-08.
+}
+\details{
 Only works if the cache is a file system
 in a folder named \code{.drake} (default).
 }

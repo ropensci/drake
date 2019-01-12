@@ -892,7 +892,8 @@ drake_strings <- function(...) {
 }
 
 #' @title Deprecated. List all the built targets (non-imports) in the cache.
-#' @description Targets are listed in the workflow plan
+#' @description Deprecated on 2019-01-08.
+#' @details Targets are listed in the workflow plan
 #' data frame (see [drake_plan()].
 #' @seealso [cached()], [loadd()]
 #' @export
@@ -935,7 +936,8 @@ built <- function(
 
 #' @title Deprecated. Search up the file system
 #'   for the nearest root path of a drake project.
-#' @description Only works if the cache is a file system
+#' @description Deprecated on 2019-01-08.
+#' @details Only works if the cache is a file system
 #' in a folder named `.drake` (default).
 #' @export
 #' @seealso [drake_plan()], [make()]
@@ -1305,7 +1307,8 @@ read_drake_plan <- function(
 }
 
 #' @title Deprecated. List all the imports in the drake cache.
-#' @description An import is a non-target object processed
+#' @description Deprecated on 2019-01-08.
+#' @details An import is a non-target object processed
 #' by [make()]. Targets in the workflow
 #' plan data frame (see [drake_config()]
 #' may depend on imports.
