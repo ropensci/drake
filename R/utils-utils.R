@@ -254,10 +254,7 @@ unwrap_function <- function(funct) {
 
 lock_environment <- function(envir) {
   lockEnvironment(envir, bindings = FALSE)
-  lock_these <- ls(envir, all.names = FALSE)
-  skip_these <- ".Random.seed"
-  lock_these <- setdiff(lock_these, skip_these)
-  lapply(X = lock_these, FUN = lockBinding, env = envir)
+  lapply(X = unhidden_names(envir), FUN = lockBinding, env = envir)
   invisible()
 }
 
@@ -270,11 +267,17 @@ unlock_environment <- function(envir) {
   }
   .Call(Cunlock_environment, envir)
   lapply(
-    X = ls(envir, all.names = FALSE),
+    X = unhidden_names(envir),
     FUN = unlockBinding,
     env = envir
   )
   stopifnot(!environmentIsLocked(envir))
+}
+
+unhidden_names <- function(envir) {
+  out <- names(envir)
+  out <- out[substr(out, 0, 1) != "."]
+  out
 }
 
 is_unnamed <- function(x) {
