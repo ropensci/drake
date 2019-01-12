@@ -14,8 +14,9 @@ with_seed_timeout <- function(target, meta, config) {
   )
 }
 
-# with_handling() borrowed from the rmonad package.
-# Copyright Zebulun Arendsee, GPL-3.
+# The beginnings of with_handling() were borrowed from the rmonad package.
+# Lots of modifications since.
+# Copyright Zebulun Arendsee, GPL-3:
 # https://github.com/arendsee/rmonad/blob/14bf2ef95c81be5307e295e8458ef8fb2b074dee/R/to-monad.R#L68 # nolint
 with_handling <- function(target, meta, config) {
   warnings <- messages <- NULL
