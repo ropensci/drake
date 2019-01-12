@@ -14,28 +14,27 @@ with_seed_timeout <- function(target, meta, config) {
   )
 }
 
-# Borrowed from the rmonad package
+# with_handling() borrowed from the rmonad package.
+# Copyright Zebulun Arendsee, GPL-3.
 # https://github.com/arendsee/rmonad/blob/14bf2ef95c81be5307e295e8458ef8fb2b074dee/R/to-monad.R#L68 # nolint
 with_handling <- function(target, meta, config) {
   warnings <- messages <- NULL
-  capture.output({
-    start <- proc.time()
-    withCallingHandlers(
-      value <- with_call_stack(target = target, config = config),
-      warning = function(w) {
-        drake_log_warning(w$message, config = config)
-        warnings <<- c(warnings, w$message)
-      },
-      message = function(m) {
-        msg <- gsub(pattern = "\n$", replacement = "", x = m$message)
-        drake_log_message(msg, config = config)
-        messages <<- c(messages, msg)
-      }
-    )
-    meta$time_command <- proc.time() - start
-  },
-    type = "message"
+  start <- proc.time()
+  withCallingHandlers(
+    value <- with_call_stack(target = target, config = config),
+    warning = function(w) {
+      drake_log_warning(w$message, config = config)
+      warnings <<- c(warnings, w$message)
+      invokeRestart("muffleWarning")
+    },
+    message = function(m) {
+      msg <- gsub(pattern = "\n$", replacement = "", x = m$message)
+      drake_log_message(msg, config = config)
+      messages <<- c(messages, msg)
+      invokeRestart("muffleMessage")
+    }
   )
+  meta$time_command <- proc.time() - start
   meta$warnings <- warnings
   meta$messages <- messages
   if (inherits(value, "error")) {
