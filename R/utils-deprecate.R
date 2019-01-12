@@ -1237,6 +1237,11 @@ read_drake_plan <- function(
 #' @examples
 #' # See ?plan_analyses for examples
 analysis_wildcard <- function() {
+  .Deprecated(
+    "analysis_wildcard",
+    package = "drake",
+    msg = "prune_drake_graph() is deprecated."
+  )
   analysis_wildcard_()
 }
 
@@ -1264,4 +1269,35 @@ prune_drake_graph <- function(
     mode = "in",
     order = igraph::gorder(graph)
   )
+}
+
+#' @title Deprecated. Return the file path where the cache is stored,
+#' if applicable.
+#' @export
+#' @description Currently only works with
+#' [storr::storr_rds()] file system caches.
+#' @details 2019-01-12.
+#' @return File path where the cache is stored.
+#' @param cache the cache whose file path
+#'   you want to know
+#' @examples
+#' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
+#' clean(destroy = TRUE)
+#' # Get/create a new drake/storr cache.
+#' cache <- recover_cache()
+#' # Show the file path of the cache.
+#' cache_path(cache = cache)
+#' # In-memory caches do not have file paths.
+#' mem <- storr_environment()
+#' cache_path(cache = mem)
+#' })
+#' }
+cache_path <- function(cache = NULL) {
+  .Deprecated(
+    "cache_path",
+    package = "drake",
+    msg = "cache_path() is deprecated."
+  )
+  cache_path_(cache)
 }

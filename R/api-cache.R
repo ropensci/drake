@@ -8,12 +8,13 @@ assert_cache <- function(cache) {
 
 #' @title Return the file path where the cache is stored,
 #' if applicable.
-#' @export
 #' @description Currently only works with
 #' [storr::storr_rds()] file system caches.
 #' @return File path where the cache is stored.
 #' @param cache the cache whose file path
 #'   you want to know
+#' @note When the now-deprecated \code{cache_path} is removed,
+#' this function's name should have the final "_" stripped off.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -27,7 +28,7 @@ assert_cache <- function(cache) {
 #' cache_path(cache = mem)
 #' })
 #' }
-cache_path <- function(cache = NULL) {
+cache_path_ <- function(cache = NULL) {
   if (is.null(cache)) {
     NULL
   } else if ("storr" %in% class(cache)) {
@@ -38,7 +39,7 @@ cache_path <- function(cache = NULL) {
 }
 
 force_cache_path <- function(cache = NULL) {
-  cache_path(cache) %||% default_cache_path()
+  cache_path_(cache) %||% default_cache_path()
 }
 
 #' @title Get the default cache of a `drake` project.
@@ -239,7 +240,7 @@ new_cache <- function(
   )
   console_cache(
     config = list(
-      cache_path = cache_path(cache),
+      cache_path = cache_path_(cache),
       verbose = verbose,
       console_log_file = console_log_file
     )
