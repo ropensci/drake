@@ -1,6 +1,10 @@
 mc_get_checksum <- function(target, config) {
   paste(
-    safe_get_hash(key = target, config = config),
+    safe_get_hash(
+      key = target,
+      namespace = config$cache$default_namespace,
+      config = config
+    ),
     safe_get_hash(key = target, namespace = "meta", config = config),
     mc_get_outfile_checksum(target, config),
     sep = " "
