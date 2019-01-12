@@ -14,10 +14,10 @@
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
-    "version": "3.5.2",
+    "version": "3.5.1",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 3.5.2 (2018-12-20)",
+  "runtimePlatform": "R version 3.5.1 (2018-07-02)",
   "provider": {
     "@id": "https://cran.r-project.org",
     "@type": "Organization",
@@ -303,18 +303,6 @@
     },
     {
       "@type": "SoftwareApplication",
-      "identifier": "txtq",
-      "name": "txtq",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=txtq"
-    },
-    {
-      "@type": "SoftwareApplication",
       "identifier": "rmarkdown",
       "name": "rmarkdown",
       "provider": {
@@ -367,7 +355,7 @@
       "@type": "SoftwareApplication",
       "identifier": "R",
       "name": "R",
-      "version": ">= 3.4.0"
+      "version": ">= 3.3.0"
     },
     {
       "@type": "SoftwareApplication",
@@ -442,9 +430,9 @@
       "name": "utils"
     }
   ],
-  "releaseNotes": "https://github.com/ropensci/drake/blob/master/NEWS.md",
-  "readme": "https://github.com/ropensci/drake/blob/master/README.md",
-  "fileSize": "368.077KB",
+  "releaseNotes": "https://github.com/bpbond/drake/blob/master/NEWS.md",
+  "readme": "https://github.com/bpbond/drake/blob/master/README.md",
+  "fileSize": "336.757KB",
   "contIntegration": [
     "https://ci.appveyor.com/project/ropensci/drake",
     "https://travis-ci.org/ropensci/drake",

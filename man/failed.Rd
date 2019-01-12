@@ -60,6 +60,5 @@ diagnose(x) # Retrieve the cached error log of x.
 }
 \seealso{
 \code{\link[=diagnose]{diagnose()}}, \code{\link[=drake_get_session_info]{drake_get_session_info()}},
-\code{\link[=built]{built()}}, \code{\link[=imported]{imported()}},
-\code{\link[=readd]{readd()}}, \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
+\code{\link[=cached]{cached()}}, \code{\link[=readd]{readd()}}, \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
 }

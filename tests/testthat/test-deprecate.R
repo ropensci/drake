@@ -30,6 +30,53 @@ test_with_dir("deprecation: cache functions", {
   expect_warning(new_cache(short_hash_algo = "123", long_hash_algo = "456"))
 })
 
+test_with_dir("deprecation: built", {
+
+  plan <- drake_plan(x = 1)
+  make(plan)
+  config <- drake_config(plan)
+
+  expect_warning(built(cache = NULL))
+  expect_equal(
+    sort(suppressWarnings(built(search = FALSE))),
+    sort(display_keys(config$plan$target))
+  )
+  twopiece <- sort(c(suppressWarnings(built(search = FALSE)),
+                     suppressWarnings(imported(search = FALSE,
+                                               files_only = FALSE))))
+  expect_equal(
+    sort(cached(search = FALSE)),
+    sort(display_keys(twopiece))
+  )
+  expect_equal(
+    sort(suppressWarnings(built(search = TRUE))),
+    sort(display_keys(c(config$plan$target)))
+  )
+
+  # imported
+  for (fo in c(FALSE, TRUE)) {
+    imp <- suppressWarnings(imported(files_only = fo, search = FALSE))
+    expect_equal(
+      sort(imp),
+      sort(setdiff(cached(), cached(no_imported_objects = TRUE))),
+      info = paste("files_only =", fo)
+    )
+  }
+})
+
+test_with_dir("deprecation: find_project", {
+  scratch <- "./scratch"
+  dir.create(scratch)
+  fp <- suppressWarnings(find_project(path = scratch))
+  expect_null(fp)
+
+  plan <- drake_plan(x = 1)
+  make(plan)
+  fp <- suppressWarnings(find_project(path = normalizePath(scratch)))
+  expect_is(fp, "character")
+  expect_equal(fp, getwd())
+})
+
 test_with_dir("arg deprecation", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_warning(drake::drake_plan(x = y, file_targets = TRUE))
