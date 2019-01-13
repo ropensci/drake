@@ -339,6 +339,10 @@ test_with_dir("deprecated cache_ and target_namespaces()", {
   expect_false(all(x %in% y))
 })
 
+test_with_dir("deprecated drake_tip()", {
+  expect_true(is.character(suppressWarnings(drake_tip())))
+})
+
 test_with_dir("former external functions that will become internal", {
   plan <- drake_plan(x = 1)
   make(plan)
