@@ -139,9 +139,7 @@ of individual targets as they are being built. Progress logging
 creates a lot of little files in the cache, and it may make builds
 a tiny bit slower. So you may see gains in storage efficiency
 and speed with
-\code{make(..., log_progress = FALSE)}. But be warned that
-\code{\link[=progress]{progress()}} and \code{\link[=in_progress]{in_progress()}}
-will no longer work if you do that.}
+\code{make(..., log_progress = FALSE)}.}
 
 \item{skip_targets}{logical, whether to skip building the targets
 in \code{plan} and just import objects and files.}

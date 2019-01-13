@@ -26,5 +26,5 @@ target-level namespaces are cleaned during
 cleaned_namespaces()
 }
 \seealso{
-\code{\link[=cache_namespaces]{cache_namespaces()}}, \code{\link[=clean]{clean()}}
+\code{\link[=clean]{clean()}}
 }

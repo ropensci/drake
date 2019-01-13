@@ -15,7 +15,7 @@ process_imports <- function(config) {
 #' @examples
 #' # Not a user-side function.
 process_import <- function(import, config) {
-  meta <- drake_meta(target = import, config = config)
+  meta <- drake_meta_(import, config)
   if (meta$isfile) {
     value <- NA_character_
     is_missing <- !file.exists(decode_path(import, config))
@@ -88,7 +88,7 @@ process_imports_parLapply <- function(config) { # nolint
       cl = config$cluster,
       X = imports,
       fun = function(import, config) {
-        drake::process_import(import = import, config = config)
+        process_import(import = import, config = config)
       },
       config = config
     )

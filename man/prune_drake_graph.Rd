@@ -20,6 +20,6 @@ an \code{igraph} object
 2019-01-08
 }
 \examples{
-# deprectaed
+# deprecated
 }
 \keyword{internal}

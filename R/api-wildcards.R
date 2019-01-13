@@ -1,25 +1,11 @@
-#' @title Show the analysis wildcard
-#'   used in [plan_summaries()].
-#' @description Used to generate workflow plan data frames.
-#' @export
-#' @seealso [plan_summaries()]
-#' @return The analysis wildcard used in [plan_summaries()].
-#' @examples
-#' # See ?plan_analyses for examples
-analysis_wildcard <- function() {
+# Show the analysis wildcard used in [plan_summaries()].
+analysis_wildcard_ <- function() {
   "analysis__"
 }
 
-#' @title Show the dataset wildcard
-#'   used in [plan_analyses()] and [plan_summaries()].
-#' @description Used to generate workflow plan data frames.
-#' @export
-#' @seealso [plan_analyses()]
-#' @return The dataset wildcard used in
-#'   [plan_analyses()] and [plan_summaries()].
-#' @examples
-#' # See ?plan_analyses for examples
-dataset_wildcard <- function() {
+# Show the dataset wildcard used in
+# [plan_analyses()] and [plan_summaries()].
+dataset_wildcard_ <- function() {
   "dataset__"
 }
 
@@ -395,7 +381,7 @@ expand_plan <- function(plan, values = NULL, rename = TRUE, sep = "_") {
 plan_analyses <- function(plan, datasets, sep = "_") {
   evaluate_plan(
     plan,
-    wildcard = dataset_wildcard(),
+    wildcard = dataset_wildcard_(),
     values = datasets$target,
     sep = sep
   )
@@ -459,7 +445,7 @@ plan_summaries <- function(
   out <- plan
   group <- paste(colnames(out), collapse = sep)
   out[[group]] <- out$target
-  if (!any(grepl(analysis_wildcard(), out$command, fixed = TRUE))) {
+  if (!any(grepl(analysis_wildcard_(), out$command, fixed = TRUE))) {
     stop(
       "no 'analysis__' wildcard found in plan$command. ",
       "Use plan_analyses() instead."
@@ -467,13 +453,13 @@ plan_summaries <- function(
   }
   out <- evaluate_plan(
     out,
-    wildcard = analysis_wildcard(),
+    wildcard = analysis_wildcard_(),
     values = analyses$target,
     sep = sep
   )
   out <- evaluate_plan(
     out,
-    wildcard = dataset_wildcard(),
+    wildcard = dataset_wildcard_(),
     values = datasets$target,
     expand = FALSE,
     sep = sep
@@ -506,7 +492,7 @@ plan_summaries <- function(
 }
 
 with_analyses_only <- function(plan) {
-  has_analysis <- grepl(analysis_wildcard(), plan$command, fixed = TRUE)
+  has_analysis <- grepl(analysis_wildcard_(), plan$command, fixed = TRUE)
   if (any(!has_analysis)) {
     warning(
       "removing ",

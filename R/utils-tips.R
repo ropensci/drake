@@ -1,11 +1,5 @@
-#' @title Output a random tip about drake.
-#' @description Tips are usually related to news and usage.
-#' @export
-#' @return A character scalar with a tip on how to use drake.
-#' @examples
-#' drake_tip() # Show a tip about using drake.
-#' message(drake_tip()) # Print out a tip as a message.
-drake_tip <- function() {
+# Output a random tip about drake.
+drake_tip_ <- function() {
   tips <- c(
     "map_plan() sets up iterative function calls on a grid of arguments
      to create a drake plan.",
@@ -29,7 +23,7 @@ drake_tip <- function() {
 }
 
 drake_tip_message <- function() {
-  packageStartupMessage(drake_tip())
+  packageStartupMessage(drake_tip_())
 }
 
 wrap_text <- Vectorize(

@@ -98,12 +98,9 @@ test_with_dir("broken cache", {
 
 test_with_dir("Cache namespaces", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  x <- cache_namespaces()
-  y <- target_namespaces()
+  y <- target_namespaces_()
   z <- cleaned_namespaces()
-  expect_true(all(y %in% x))
   expect_true(all(z %in% y))
-  expect_false(all(x %in% y))
   expect_false(all(y %in% z))
 })
 
@@ -236,7 +233,7 @@ test_with_dir("cache functions work from various working directories", {
   owd <- getwd()
   expect_equal(nrow(build_times(search = FALSE)), 0)
   expect_equal(progress(search = FALSE), character(0))
-  expect_equal(in_progress(search = FALSE), character(0))
+  expect_false(any("in progress" %in% progress(search = FALSE)))
   expect_error(readd(search = FALSE))
   config <- dbug()
   using_global <- identical(config$envir, globalenv())
@@ -291,7 +288,7 @@ test_with_dir("cache functions work from various working directories", {
   expect_equal(read_drake_seed(search = FALSE), config$seed)
   expect_true(is.list(drake_get_session_info(search = FALSE)))
   expect_true(all(progress(search = FALSE) == "finished"))
-  expect_equal(in_progress(search = FALSE), character(0))
+  expect_false(any("in progress" %in% progress(search = FALSE)))
   expect_equal(sort(names(progress(search = FALSE))), all)
   expect_equal(
     sort(names(progress(search = FALSE, no_imported_objects = TRUE))),
@@ -388,7 +385,7 @@ test_with_dir("cache functions work from various working directories", {
                              list = c("h", "final"))),
                sort(c(bla = "not built or imported",
                       f = "finished", h = "finished", final = "finished")))
-  expect_equal(in_progress(search = TRUE, path = s), character(0))
+  expect_false(any("in progress" %in% progress(search = TRUE, path = s)))
 
   # cached and diagnose
   expect_equal(diagnose(search = TRUE), character(0))

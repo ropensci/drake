@@ -124,9 +124,7 @@
 #'   creates a lot of little files in the cache, and it may make builds
 #'   a tiny bit slower. So you may see gains in storage efficiency
 #'   and speed with
-#'   `make(..., log_progress = FALSE)`. But be warned that
-#'   [progress()] and [in_progress()]
-#'   will no longer work if you do that.
+#'   `make(..., log_progress = FALSE)`.
 #'
 #' @param cache drake cache as created by [new_cache()].
 #'   See also [get_cache()] and [this_cache()].
@@ -553,7 +551,7 @@ drake_config <- function(
     prework = prework
   )
   if (is.null(cache)) {
-    cache <- recover_cache(
+    cache <- recover_cache_(
       verbose = verbose,
       fetch_cache = fetch_cache,
       console_log_file = console_log_file

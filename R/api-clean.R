@@ -112,7 +112,7 @@ clean <- function(
   if (exists_tidyselect()) {
     targets <- drake_tidyselect(
       cache = cache, ...,
-      namespaces = target_namespaces(),
+      namespaces = target_namespaces_(),
       list = list
     )
   }
@@ -120,7 +120,7 @@ clean <- function(
     targets <- cache$list()
   }
   if (purge) {
-    namespaces <- target_namespaces(default = cache$default_namespace)
+    namespaces <- target_namespaces_(default = cache$default_namespace)
   } else {
     namespaces <- cleaned_namespaces(default = cache$default_namespace)
   }

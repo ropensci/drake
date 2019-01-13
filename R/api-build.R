@@ -67,7 +67,7 @@ drake_build <- function(
     tidyselect = FALSE,
     config = config
   )
-  meta <- drake_meta(target = target, config = config)
+  meta <- drake_meta_(target = target, config = config)
   announce_build(target = target, meta = meta, config = config)
   build <- build_target(target = target, meta = meta, config = config)
   conclude_build(build = build, config = config)

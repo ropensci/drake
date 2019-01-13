@@ -6,28 +6,8 @@ assert_cache <- function(cache) {
   }
 }
 
-#' @title Return the file path where the cache is stored,
-#' if applicable.
-#' @export
-#' @description Currently only works with
-#' [storr::storr_rds()] file system caches.
-#' @return File path where the cache is stored.
-#' @param cache the cache whose file path
-#'   you want to know
-#' @examples
-#' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' clean(destroy = TRUE)
-#' # Get/create a new drake/storr cache.
-#' cache <- recover_cache()
-#' # Show the file path of the cache.
-#' cache_path(cache = cache)
-#' # In-memory caches do not have file paths.
-#' mem <- storr_environment()
-#' cache_path(cache = mem)
-#' })
-#' }
-cache_path <- function(cache = NULL) {
+# Return the file path where the cache is stored, if applicable.
+cache_path_ <- function(cache = NULL) {
   if (is.null(cache)) {
     NULL
   } else if ("storr" %in% class(cache)) {
@@ -38,7 +18,7 @@ cache_path <- function(cache = NULL) {
 }
 
 force_cache_path <- function(cache = NULL) {
-  cache_path(cache) %||% default_cache_path()
+  cache_path_(cache) %||% default_cache_path()
 }
 
 #' @title Get the default cache of a `drake` project.
@@ -239,7 +219,7 @@ new_cache <- function(
   )
   console_cache(
     config = list(
-      cache_path = cache_path(cache),
+      cache_path = cache_path_(cache),
       verbose = verbose,
       console_log_file = console_log_file
     )
@@ -247,33 +227,9 @@ new_cache <- function(
   cache
 }
 
-#' @title Load an existing drake files system cache if it exists
-#'   or create a new one otherwise.
-#' @export
-#' @seealso [new_cache()], [this_cache()],
-#'   [get_cache()]
-#' @description
-#' Does not work with
-#' in-memory caches such as [storr_environment()].
-#' @return A drake/storr cache.
-#' @inheritParams cached
-#' @inheritParams new_cache
-#' @inheritParams this_cache
-#' @inheritParams drake_config
-#' @param path file path of the cache
-#' @param force logical, whether to load the cache
-#'   despite any back compatibility issues with the
-#'   running version of drake.
-#' @examples
-#' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' clean(destroy = TRUE)
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' make(my_plan) # Run the project, build all the targets.
-#' x <- recover_cache(".drake") # Recover the project's storr cache.
-#' })
-#' }
-recover_cache <- function(
+# Load an existing drake files system cache if it exists
+# or create a new one otherwise.
+recover_cache_ <- function(
   path = NULL,
   hash_algorithm = NULL,
   short_hash_algo = NULL,

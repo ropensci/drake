@@ -57,7 +57,7 @@ cmq_send_target <- function(config) {
     config$workers$send_wait() # nocov
     return() # nocov
   }
-  meta <- drake_meta(target = target, config = config)
+  meta <- drake_meta_(target = target, config = config)
   # Target should not even be in the priority queue
   # nocov start
   if (!should_build_target(target, meta, config)) {

@@ -52,8 +52,11 @@ test_with_dir("deprecation: built", {
     sort(suppressWarnings(built(search = TRUE))),
     sort(display_keys(c(config$plan$target)))
   )
+})
 
-  # imported
+test_with_dir("deprecation: imported", {
+  expect_identical(suppressWarnings(imported(cache = NULL)),
+                   character(0))
   for (fo in c(FALSE, TRUE)) {
     imp <- suppressWarnings(imported(files_only = fo, search = FALSE))
     expect_equal(
@@ -184,7 +187,7 @@ test_with_dir("force with a non-back-compatible cache", {
   expect_equal(cache_vers_check(NULL), character(0))
   expect_null(get_cache())
   expect_null(this_cache())
-  expect_true(inherits(recover_cache(), "storr"))
+  expect_true(inherits(suppressWarnings(recover_cache()), "storr"))
   write_v6.2.1_project() # nolint
   expect_warning(get_cache(), regexp = "compatible")
   expect_warning(this_cache(), regexp = "compatible")
@@ -198,7 +201,6 @@ test_with_dir("force with a non-back-compatible cache", {
   expect_warning(make(drake_plan(x = 1), force = TRUE), regexp = "compatible")
   expect_silent(tmp <- get_cache())
   expect_silent(tmp <- this_cache())
-  expect_silent(tmp <- recover_cache())
 })
 
 test_with_dir("deprecate the `force` argument", {
@@ -321,4 +323,38 @@ test_with_dir("session arg to make()", {
     make(drake_plan(x = 1), session = "callr::r_vanilla"),
     regexp = "lock_envir"
   )
+})
+
+test_with_dir("deprecated check_plan()", {
+  # Circular non-DAG plan
+  x <- drake_plan(a = b, b = c, c = a)
+  expect_error(tmp <- capture.output(suppressWarning(check_plan(x))))
+})
+
+test_with_dir("deprecated cache_ and target_namespaces()", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  x <- suppressWarnings(cache_namespaces())
+  y <- suppressWarnings(target_namespaces())
+  expect_true(all(y %in% x))
+  expect_false(all(x %in% y))
+})
+
+test_with_dir("deprecated drake_tip()", {
+  expect_true(is.character(suppressWarnings(drake_tip())))
+})
+
+test_with_dir("former external functions that will become internal", {
+  plan <- drake_plan(x = 1)
+  make(plan)
+  config <- drake_config(plan)
+  expect_warning(analysis_wildcard(), regexp = "deprecated")
+  expect_warning(cache_namespaces(), regexp = "deprecated")
+  expect_warning(cache_path(), regexp = "deprecated")
+  expect_warning(check_plan(plan = plan), regexp = "deprecated")
+  expect_warning(dataset_wildcard(), regexp = "deprecated")
+  expect_warning(drake_meta("x", config), regexp = "deprecated")
+  expect_warning(drake_palette(), regexp = "deprecated")
+  expect_warning(in_progress(), regexp = "deprecated")
+  expect_warning(recover_cache(), regexp = "deprecated")
+  expect_warning(target_namespaces(), regexp = "deprecated")
 })

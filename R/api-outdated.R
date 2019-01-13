@@ -9,7 +9,7 @@ first_outdated <- function(config) {
     do_build <- lightly_parallelize(
       X = new_leaves,
       FUN = function(target) {
-        meta <- drake_meta(target, config)
+        meta <- drake_meta_(target, config)
         should_build_target(target, meta, config)
       },
       jobs = config$jobs_preprocess

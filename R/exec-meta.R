@@ -1,51 +1,5 @@
-#' @title Compute the initial pre-build metadata of a target or import.
-#' @description The metadata helps determine if the
-#' target is up to date or outdated. The metadata of imports
-#' is used to compute the metadata of targets.
-#' @details Target metadata is computed
-#' with `drake_meta()`, and then
-#' `drake:::store_outputs()` completes the metadata
-#' after the target is built.
-#' In other words, the output of `drake_meta()` corresponds
-#' to the state of the target immediately before [make()]
-#' builds it.
-#' See [diagnose()] to read the final metadata of a target,
-#' including any errors, warnings, and messages in the last build.
-#' @seealso [diagnose()], [dependency_profile()], [make()]
-#' @export
-#' @return A list of metadata on a target. Does not include
-#'   the file modification time if the target is a file.
-#'   That piece is computed later in [make()] by
-#'   `drake:::store_outputs()`.
-#' @param target Character scalar, name of the target
-#'   to get metadata.
-#' @param config Master internal configuration list produced
-#'   by [drake_config()].
-#' @examples
-#' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' # This example is not really a user-side demonstration.
-#' # It just walks through a dive into the internals.
-#' # Populate your workspace and write 'report.Rmd'.
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' # Create the master internal configuration list.
-#' config <- drake_config(my_plan)
-#' # Optionally, compute metadata on 'small',
-#' # including a hash/fingerprint
-#' # of the dependencies. If meta is not supplied,
-#' # drake_build() computes it automatically.
-#' meta <- drake_meta(target = "small", config = config)
-#' # Should not yet include 'small'.
-#' cached()
-#' # Build 'small'.
-#' # Equivalent to just drake_build(target = "small", config = config).
-#' drake_build(target = "small", config = config, meta = meta)
-#' # Should now include 'small'
-#' cached()
-#' readd(small)
-#' })
-#' }
-drake_meta <- function(target, config) {
+# Compute the initial pre-build metadata of a target or import.
+drake_meta_ <- function(target, config) {
   layout <- config$layout[[target]]
   meta <- list(
     name = target,
