@@ -6,15 +6,8 @@ process_imports <- function(config) {
   }
 }
 
-#' @title internal function
-#' @description only used inside process_imports(). Not a user-side function.
-#' @export
-#' @keywords internal
-#' @param import character, name of an import to process
-#' @param config [drake_config()] object
-#' @examples
-#' # Not a user-side function.
-process_import <- function(import, config) {
+# Internal function only used inside process_imports(); not user-side.
+process_import_ <- function(import, config) {
   meta <- drake_meta_(import, config)
   if (meta$isfile) {
     value <- NA_character_
@@ -44,7 +37,7 @@ process_imports_mclapply <- function(config) {
     imports <- leaf_nodes(config$imports)
     lightly_parallelize(
       X = imports,
-      FUN = process_import,
+      FUN = process_import_,
       config = config,
       jobs = config$jobs_preprocess
     )
@@ -88,7 +81,7 @@ process_imports_parLapply <- function(config) { # nolint
       cl = config$cluster,
       X = imports,
       fun = function(import, config) {
-        drake::process_import(import = import, config = config)
+        process_import_(import = import, config = config)
       },
       config = config
     )
