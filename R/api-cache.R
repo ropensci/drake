@@ -228,7 +228,7 @@ new_cache <- function(
 }
 
 # Load an existing drake files system cache if it exists
-#'   or create a new one otherwise.
+# or create a new one otherwise.
 recover_cache_ <- function(
   path = NULL,
   hash_algorithm = NULL,

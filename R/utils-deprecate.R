@@ -963,7 +963,7 @@ find_project <- function(path = getwd()) {
     msg = paste("find_project() is deprecated.",
                 "Use find_cache() instead.")
   )
-  
+
   cache <- find_cache(path = path)
   if (is.null(cache)) {
     return(NULL)
@@ -1595,8 +1595,11 @@ drake_tip <- function() {
 #' @export
 #' @return A character vector of target names.
 #' @inheritParams cached
-in_progress <- function(path = getwd(), search = TRUE,
-                        cache = drake::get_cache(path = path, search = search, verbose = verbose),
+in_progress <- function(path = getwd(),
+                        search = TRUE,
+                        cache = drake::get_cache(path = path,
+                                                 search = search,
+                                                 verbose = verbose),
                         verbose = 1L
 ) {
   .Deprecated(
@@ -1643,9 +1646,8 @@ recover_cache <- function(
                  force, verbose, fetch_cache, console_log_file)
 }
 
-#' @title Deprecated. For drake caches,
-#'   list the `storr` cache namespaces
-#'   that store target-level information.
+#' @title Deprecated. For drake caches, list the `storr` cache 
+#' namespaces that store target-level information.
 #' @description Deprecated on 2019-01-13.
 #' @export
 #' @seealso [make()]
