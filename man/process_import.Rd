@@ -15,7 +15,4 @@ process_import(import, config)
 \description{
 Deprecated on 2019-01-12.
 }
-\examples{
-# Not a user-side function.
-}
 \keyword{internal}

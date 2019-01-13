@@ -23,9 +23,6 @@ Deprecated on 2019-01-13.
 Ordinary users do not need to worry about this function.
 It is just another window into \code{drake}'s internals.
 }
-\examples{
-target_namespaces()
-}
 \seealso{
 \code{\link[=make]{make()}}
 }

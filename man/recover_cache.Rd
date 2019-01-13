@@ -60,16 +60,6 @@ Deprecated on 2019-01-13.
 Does not work with
 in-memory caches such as \code{\link[=storr_environment]{storr_environment()}}.
 }
-\examples{
-\dontrun{
-test_with_dir("Quarantine side effects.", {
-clean(destroy = TRUE)
-load_mtcars_example() # Get the code with drake_example("mtcars").
-make(my_plan) # Run the project, build all the targets.
-x <- recover_cache(".drake") # Recover the project's storr cache.
-})
-}
-}
 \seealso{
 \code{\link[=new_cache]{new_cache()}}, \code{\link[=this_cache]{this_cache()}},
 \code{\link[=get_cache]{get_cache()}}

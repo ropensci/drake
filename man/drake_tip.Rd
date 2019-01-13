@@ -15,7 +15,3 @@ Deprecated on 2019-01-12.
 \details{
 Tips are usually related to news and usage.
 }
-\examples{
-drake_tip() # Show a tip about using drake.
-message(drake_tip()) # Print out a tip as a message.
-}

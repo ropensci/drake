@@ -35,31 +35,6 @@ builds it.
 See \code{\link[=diagnose]{diagnose()}} to read the final metadata of a target,
 including any errors, warnings, and messages in the last build.
 }
-\examples{
-\dontrun{
-test_with_dir("Quarantine side effects.", {
-# This example is not really a user-side demonstration.
-# It just walks through a dive into the internals.
-# Populate your workspace and write 'report.Rmd'.
-load_mtcars_example() # Get the code with drake_example("mtcars").
-# Create the master internal configuration list.
-config <- drake_config(my_plan)
-# Optionally, compute metadata on 'small',
-# including a hash/fingerprint
-# of the dependencies. If meta is not supplied,
-# drake_build() computes it automatically.
-meta <- drake_meta(target = "small", config = config)
-# Should not yet include 'small'.
-cached()
-# Build 'small'.
-# Equivalent to just drake_build(target = "small", config = config).
-drake_build(target = "small", config = config, meta = meta)
-# Should now include 'small'
-cached()
-readd(small)
-})
-}
-}
 \seealso{
 \code{\link[=diagnose]{diagnose()}}, \code{\link[=dependency_profile]{dependency_profile()}}, \code{\link[=make]{make()}}
 }

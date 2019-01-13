@@ -44,16 +44,6 @@ Deprecated on 2019-01-13.
 \details{
 Similar to \code{\link[=progress]{progress()}}.
 }
-\examples{
-\dontrun{
-test_with_dir("Quarantine side effects.", {
-load_mtcars_example() # Get the code with drake_example("mtcars").
-make(my_plan) # Kill before targets finish.
-# If you interrupted make(), some targets will probably be listed:
-in_progress()
-})
-}
-}
 \seealso{
 \code{\link[=diagnose]{diagnose()}}, \code{\link[=drake_get_session_info]{drake_get_session_info()}},
 \code{\link[=cached]{cached()}}, \code{\link[=readd]{readd()}}, \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}

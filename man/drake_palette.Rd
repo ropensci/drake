@@ -25,12 +25,3 @@ So if you want to contribute improvements to the palette,
 please both \code{drake_palette()} and
 \code{visNetwork::visNetwork(nodes = legend_nodes())}
 }
-\examples{
-# Show drake's color palette as text.
-drake_palette()
-# Show part of the palette as an interactive visNetwork graph.
-# These are the nodes in the legend of the graph visualizations.
-\dontrun{
-# visNetwork::visNetwork(nodes = legend_nodes()) # nolint
-}
-}

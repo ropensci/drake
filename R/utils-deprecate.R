@@ -1374,7 +1374,7 @@ imported <- function(
 #' @param to character vector of vertices
 #' @param jobs number of jobs for parallelism
 #' @examples
-#' # deprectaed
+#' # deprecated
 prune_drake_graph <- function(
   graph, to = igraph::V(graph)$name, jobs = 1
 ) {
@@ -1490,8 +1490,6 @@ check_plan <- function(
 #' @seealso [plan_analyses()]
 #' @return The dataset wildcard used in
 #'   [plan_analyses()] and [plan_summaries()].
-#' @examples
-#' # See ?plan_analyses for examples
 dataset_wildcard <- function() {
   .Deprecated(
     "dataset_wildcard",
@@ -1524,30 +1522,6 @@ dataset_wildcard <- function() {
 #'   to get metadata.
 #' @param config Master internal configuration list produced
 #'   by [drake_config()].
-#' @examples
-#' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' # This example is not really a user-side demonstration.
-#' # It just walks through a dive into the internals.
-#' # Populate your workspace and write 'report.Rmd'.
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' # Create the master internal configuration list.
-#' config <- drake_config(my_plan)
-#' # Optionally, compute metadata on 'small',
-#' # including a hash/fingerprint
-#' # of the dependencies. If meta is not supplied,
-#' # drake_build() computes it automatically.
-#' meta <- drake_meta(target = "small", config = config)
-#' # Should not yet include 'small'.
-#' cached()
-#' # Build 'small'.
-#' # Equivalent to just drake_build(target = "small", config = config).
-#' drake_build(target = "small", config = config, meta = meta)
-#' # Should now include 'small'
-#' cached()
-#' readd(small)
-#' })
-#' }
 drake_meta <- function(target, config) {
   .Deprecated(
     "drake_meta",
@@ -1564,8 +1538,6 @@ drake_meta <- function(target, config) {
 #' @keywords internal
 #' @param import character, name of an import to process
 #' @param config [drake_config()] object
-#' @examples
-#' # Not a user-side function.
 process_import <- function(import, config) {
   .Deprecated(
     "process_import",
@@ -1590,14 +1562,6 @@ process_import <- function(import, config) {
 #' `visNetwork::visNetwork(nodes = legend_nodes())`
 #' @return There is a console message,
 #'   but the actual return value is `NULL`.
-#' @examples
-#' # Show drake's color palette as text.
-#' drake_palette()
-#' # Show part of the palette as an interactive visNetwork graph.
-#' # These are the nodes in the legend of the graph visualizations.
-#' \dontrun{
-#' # visNetwork::visNetwork(nodes = legend_nodes()) # nolint
-#' }
 drake_palette <- function() {
   .Deprecated(
     "drake_palette",
@@ -1612,9 +1576,6 @@ drake_palette <- function() {
 #' @details Tips are usually related to news and usage.
 #' @export
 #' @return A character scalar with a tip on how to use drake.
-#' @examples
-#' drake_tip() # Show a tip about using drake.
-#' message(drake_tip()) # Print out a tip as a message.
 drake_tip <- function() {
   .Deprecated(
     "drake_tip",
@@ -1634,15 +1595,6 @@ drake_tip <- function() {
 #' @export
 #' @return A character vector of target names.
 #' @inheritParams cached
-#' @examples
-#' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' make(my_plan) # Kill before targets finish.
-#' # If you interrupted make(), some targets will probably be listed:
-#' in_progress()
-#' })
-#' }
 in_progress <- function(path = getwd(), search = TRUE,
                         cache = drake::get_cache(path = path, search = search, verbose = verbose),
                         verbose = 1L
@@ -1672,15 +1624,6 @@ in_progress <- function(path = getwd(), search = TRUE,
 #' @param force logical, whether to load the cache
 #'   despite any back compatibility issues with the
 #'   running version of drake.
-#' @examples
-#' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' clean(destroy = TRUE)
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' make(my_plan) # Run the project, build all the targets.
-#' x <- recover_cache(".drake") # Recover the project's storr cache.
-#' })
-#' }
 recover_cache <- function(
   path = NULL,
   hash_algorithm = NULL,
@@ -1711,8 +1654,6 @@ recover_cache <- function(
 #' @details Ordinary users do not need to worry about this function.
 #' It is just another window into `drake`'s internals.
 #' @param default name of the default `storr` namespace
-#' @examples
-#' target_namespaces()
 target_namespaces <- function(
   default = storr::storr_environment()$default_namespace
 ) {
