@@ -3,16 +3,9 @@ analysis_wildcard_ <- function() {
   "analysis__"
 }
 
-#' @title Show the dataset wildcard
-#'   used in [plan_analyses()] and [plan_summaries()].
-#' @description Used to generate workflow plan data frames.
-#' @export
-#' @seealso [plan_analyses()]
-#' @return The dataset wildcard used in
-#'   [plan_analyses()] and [plan_summaries()].
-#' @examples
-#' # See ?plan_analyses for examples
-dataset_wildcard <- function() {
+# Show the dataset wildcard used in
+# [plan_analyses()] and [plan_summaries()].
+dataset_wildcard_ <- function() {
   "dataset__"
 }
 
@@ -388,7 +381,7 @@ expand_plan <- function(plan, values = NULL, rename = TRUE, sep = "_") {
 plan_analyses <- function(plan, datasets, sep = "_") {
   evaluate_plan(
     plan,
-    wildcard = dataset_wildcard(),
+    wildcard = dataset_wildcard_(),
     values = datasets$target,
     sep = sep
   )
@@ -466,7 +459,7 @@ plan_summaries <- function(
   )
   out <- evaluate_plan(
     out,
-    wildcard = dataset_wildcard(),
+    wildcard = dataset_wildcard_(),
     values = datasets$target,
     expand = FALSE,
     sep = sep

@@ -330,4 +330,5 @@ test_with_dir("former external functions that will become internal", {
   expect_warning(cache_namespaces(), regexp = "deprecated")
   expect_warning(cache_path(), regexp = "deprecated")
   expect_warning(check_plan(plan = plan), regexp = "deprecated")
+  expect_warning(dataset_wildcard(), regexp = "deprecated")
 })

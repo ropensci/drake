@@ -1471,3 +1471,22 @@ check_plan <- function(
   )
   check_plan_(plan, targets, envir, cache, verbose, jobs)
 }
+
+#' @title Show the dataset wildcard
+#'   used in [plan_analyses()] and [plan_summaries()].
+#' @details Used to generate workflow plan data frames.
+#' @description Deprecated on 2019-01-12.
+#' @export
+#' @seealso [plan_analyses()]
+#' @return The dataset wildcard used in
+#'   [plan_analyses()] and [plan_summaries()].
+#' @examples
+#' # See ?plan_analyses for examples
+dataset_wildcard <- function() {
+  .Deprecated(
+    "dataset_wildcard",
+    package = "drake",
+    msg = "dataset_wildcard() is deprecated."
+  )
+  dataset_wildcard_()
+}
