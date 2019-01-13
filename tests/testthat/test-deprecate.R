@@ -52,6 +52,7 @@ test_with_dir("deprecation: built", {
     sort(suppressWarnings(built(search = TRUE))),
     sort(display_keys(c(config$plan$target)))
   )
+  expect_warning(imported(search = FALSE, files_only = TRUE))
 })
 
 test_with_dir("deprecation: imported", {

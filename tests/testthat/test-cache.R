@@ -86,7 +86,7 @@ test_with_dir("Missing cache", {
   expect_error(assert_cache(s), regexp = "drake cache missing")
 })
 
-test_with_dir("broken cache", {
+test_with_dir("broken or incomplete cache", {
   skip_on_cran()
   make(drake_plan(x = 1), session_info = FALSE)
   unlink(file.path(".drake", "config"), recursive = TRUE)
@@ -299,6 +299,7 @@ test_with_dir("cache functions work from various working directories", {
 
   # cached, diagnose, rescue
   expect_true(length(diagnose(search = FALSE)) > length(config$plan$target))
+  expect_error(diagnose("xyz", cache = config$cache), regexp = "diagnostic")
   expect_equal(
     sort(cached(search = FALSE, no_imported_objects = TRUE)),
     sort(display_keys(c(encode_path("input.rds"), out_files, builds)))
