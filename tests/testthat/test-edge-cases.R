@@ -193,10 +193,10 @@ test_with_dir("target conflicts with current import or another target", {
   config$plan <- rbind(config$plan, data.frame(target = "f",
                                                command = "1+1"))
   expect_message(drake_config(plan = config$plan,
-                            envir = config$envir))
+                            envir = config$envir),
+                 regexp = "Unloading targets from environment")
   config$plan$target <- "repeated"
-  expect_error(drake_config(plan = config$plan),
-               regexp = "Duplicated targets with different commands")
+  expect_error(drake_config(plan = config$plan))
 })
 
 test_with_dir("target conflicts with previous import", {
