@@ -124,9 +124,7 @@
 #'   creates a lot of little files in the cache, and it may make builds
 #'   a tiny bit slower. So you may see gains in storage efficiency
 #'   and speed with
-#'   `make(..., log_progress = FALSE)`. But be warned that
-#'   [progress()] and [in_progress()]
-#'   will no longer work if you do that.
+#'   `make(..., log_progress = FALSE)`.
 #'
 #' @param cache drake cache as created by [new_cache()].
 #'   See also [get_cache()] and [this_cache()].

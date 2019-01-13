@@ -341,4 +341,5 @@ test_with_dir("former external functions that will become internal", {
   expect_warning(drake_meta("x", config), regexp = "deprecated")
   expect_warning(process_import("x", config), regexp = "deprecated")
   expect_warning(drake_palette(), regexp = "deprecated")
+  expect_warning(in_progress(), regexp = "deprecated")
 })

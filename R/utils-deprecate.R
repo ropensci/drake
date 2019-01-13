@@ -1623,3 +1623,34 @@ drake_tip <- function() {
   )
   drake_tip_()
 }
+
+#' @title Deprecated. List the targets that either
+#'   (1) are currently being built during a [make()], or
+#'   (2) were being built if the last [make()] quit unexpectedly.
+#' @description Deprecated on 2019-01-13.
+#' @details Similar to [progress()].
+#' @seealso [diagnose()], [drake_get_session_info()],
+#'   [cached()], [readd()], [drake_plan()], [make()]
+#' @export
+#' @return A character vector of target names.
+#' @inheritParams cached
+#' @examples
+#' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
+#' make(my_plan) # Kill before targets finish.
+#' # If you interrupted make(), some targets will probably be listed:
+#' in_progress()
+#' })
+#' }
+in_progress <- function(path = getwd(), search = TRUE,
+                        cache = drake::get_cache(path = path, search = search, verbose = verbose),
+                        verbose = 1L
+) {
+  .Deprecated(
+    "in_progress",
+    package = "drake",
+    msg = "in_progress() is deprecated."
+  )
+  in_progress_(path, search, cache, verbose )
+}

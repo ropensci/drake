@@ -118,31 +118,9 @@ test_with_dir("make() with skip_targets", {
   expect_false(cached(x))
 })
 
-test_with_dir("in_progress() works and errors are handled correctly", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_equal(in_progress(), character(0))
-  bad_plan <- drake_plan(x = function_doesnt_exist())
-  expect_error(
-    make(bad_plan, verbose = TRUE, session_info = FALSE))
-  expect_equal(failed(), "x")
-  expect_equal(in_progress(), character(0))
-  expect_is(e <- diagnose(x)$error, "error")
-  expect_true(
-    grepl(
-      pattern = "function_doesnt_exist",
-      x = e$message,
-      fixed = TRUE
-    )
-  )
-  expect_error(diagnose("notfound"))
-  expect_true(inherits(diagnose(x)$error, "error"))
-  y <- "x"
-  expect_true(inherits(diagnose(y, character_only = TRUE)$error, "error"))
-})
-
 test_with_dir("warnings and messages are caught", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_equal(in_progress(), character(0))
+  expect_equal(suppressWarnings(in_progress()), character(0))
   f <- function(x) {
     warning("my first warn")
     message("my first mess")
