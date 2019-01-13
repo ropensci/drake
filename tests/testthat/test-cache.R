@@ -99,7 +99,7 @@ test_with_dir("broken cache", {
 test_with_dir("Cache namespaces", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- cache_namespaces_()
-  y <- target_namespaces()
+  y <- target_namespaces_()
   z <- cleaned_namespaces()
   expect_true(all(y %in% x))
   expect_true(all(z %in% y))

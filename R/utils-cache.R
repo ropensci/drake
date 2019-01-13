@@ -3,7 +3,7 @@ cache_namespaces_ <- function(
   default = storr::storr_environment()$default_namespace
 ) {
   out <- c(
-    target_namespaces(default = default),
+    target_namespaces_(default = default),
     "change",   # value returned by the "change" trigger
     "config",   # elements of the config list
     "memoize",  # for the memoization in preprocessing
@@ -34,19 +34,8 @@ cleaned_namespaces <- function(
   sort(out)
 }
 
-#' @title For drake caches,
-#'   list the `storr` cache namespaces
-#'   that store target-level information.
-#' @export
-#' @seealso [make()]
-#' @return A character vector of `storr` namespaces that store
-#'   target-level information.
-#' @description Ordinary users do not need to worry about this function.
-#' It is just another window into `drake`'s internals.
-#' @param default name of the default `storr` namespace
-#' @examples
-#' target_namespaces()
-target_namespaces <- function(
+# List the `storr` cache namespaces that store target-level information.
+target_namespaces_ <- function(
   default = storr::storr_environment()$default_namespace
 ) {
   out <- c(

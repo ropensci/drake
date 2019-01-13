@@ -1699,3 +1699,27 @@ recover_cache <- function(
   recover_cache_(path, hash_algorithm, short_hash_algo, long_hash_algo,
                  force, verbose, fetch_cache, console_log_file)
 }
+
+#' @title Deprecated. For drake caches,
+#'   list the `storr` cache namespaces
+#'   that store target-level information.
+#' @description Deprecated on 2019-01-13.
+#' @export
+#' @seealso [make()]
+#' @return A character vector of `storr` namespaces that store
+#'   target-level information.
+#' @details Ordinary users do not need to worry about this function.
+#' It is just another window into `drake`'s internals.
+#' @param default name of the default `storr` namespace
+#' @examples
+#' target_namespaces()
+target_namespaces <- function(
+  default = storr::storr_environment()$default_namespace
+) {
+  .Deprecated(
+    "target_namespaces",
+    package = "drake",
+    msg = "target_namespaces() is deprecated."
+  )
+  target_namespaces_(default)
+}
