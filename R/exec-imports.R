@@ -7,7 +7,7 @@ process_imports <- function(config) {
 }
 
 #' @title internal function
-#' @description only used inside [process_imports()]. Not a user-side function.
+#' @description only used inside process_imports(). Not a user-side function.
 #' @export
 #' @keywords internal
 #' @param import character, name of an import to process

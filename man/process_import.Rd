@@ -12,7 +12,7 @@ process_import(import, config)
 \item{config}{\code{\link[=drake_config]{drake_config()}} object}
 }
 \description{
-only used inside \code{\link[=process_imports]{process_imports()}}. Not a user-side function.
+only used inside process_imports(). Not a user-side function.
 }
 \examples{
 # Not a user-side function.
