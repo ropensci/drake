@@ -188,7 +188,7 @@ test_with_dir(".onLoad() warns correctly and .onAttach() works", {
   expect_warning(drake:::.onLoad())
   unlink(f, force = TRUE)
   set.seed(0)
-  expect_true(is.character(drake_tip()))
+  expect_true(is.character(suppressWarnings(drake_tip())))
   expect_silent(suppressPackageStartupMessages(drake:::.onAttach()))
 })
 

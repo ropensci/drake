@@ -1596,3 +1596,20 @@ drake_palette <- function() {
   )
   drake_palette_()
 }
+
+#' @title Deprecated. Output a random tip about drake.
+#' @description Deprecated on 2019-01-12.
+#' @details Tips are usually related to news and usage.
+#' @export
+#' @return A character scalar with a tip on how to use drake.
+#' @examples
+#' drake_tip() # Show a tip about using drake.
+#' message(drake_tip()) # Print out a tip as a message.
+drake_tip <- function() {
+  .Deprecated(
+    "drake_tip",
+    package = "drake",
+    msg = "drake_tip() is deprecated."
+  )
+  drake_tip_()
+}
