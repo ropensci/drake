@@ -963,7 +963,7 @@ find_project <- function(path = getwd()) {
     msg = paste("find_project() is deprecated.",
                 "Use find_cache() instead.")
   )
-
+  
   cache <- find_cache(path = path)
   if (is.null(cache)) {
     return(NULL)
@@ -1469,7 +1469,17 @@ check_plan <- function(
     package = "drake",
     msg = "check_plan() is deprecated."
   )
-  check_plan_(plan, targets, envir, cache, verbose, jobs)
+  force(envir)
+  config <- drake_config(
+    plan = plan,
+    targets = targets,
+    envir = envir,
+    verbose = verbose,
+    cache = cache,
+    jobs = jobs
+  )
+  config_checks(config)
+  invisible(plan)
 }
 
 #' @title Show the dataset wildcard

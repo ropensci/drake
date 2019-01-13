@@ -1,25 +1,3 @@
-# Check a workflow plan data frame for obvious errors.
-check_plan_ <- function(
-  plan = NULL,
-  targets = NULL,
-  envir = parent.frame(),
-  cache = drake::get_cache(verbose = verbose),
-  verbose = 1L,
-  jobs = 1
-) {
-  force(envir)
-  config <- drake_config(
-    plan = plan,
-    targets = targets,
-    envir = envir,
-    verbose = verbose,
-    cache = cache,
-    jobs = jobs
-  )
-  config_checks(config)
-  invisible(plan)
-}
-
 config_checks <- function(config) {
   if (identical(config$skip_safety_checks, TRUE)) {
     return(invisible())

@@ -323,6 +323,12 @@ test_with_dir("session arg to make()", {
   )
 })
 
+test_with_dir("deprecated check_plan()", {
+  # Circular non-DAG plan
+  x <- drake_plan(a = b, b = c, c = a)
+  expect_error(tmp <- capture.output(suppressWarning(check_plan(x))))
+})
+
 test_with_dir("former external functions that will become internal", {
   plan <- drake_plan(x = 1)
   make(plan)
