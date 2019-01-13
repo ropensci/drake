@@ -15,7 +15,7 @@ test_with_dir("debug_command()", {
 test_with_dir("build_target() does not need to access cache", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- drake_config(drake_plan(x = 1), lock_envir = FALSE)
-  meta <- drake_meta(target = "x", config = config)
+  meta <- suppressWarnings(drake_meta(target = "x", config = config))
   config$cache <- NULL
   build <- build_target(target = "x", meta = meta, config = config)
   expect_equal(1, build$value)
