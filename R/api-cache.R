@@ -6,28 +6,7 @@ assert_cache <- function(cache) {
   }
 }
 
-#' @title Return the file path where the cache is stored,
-#' if applicable.
-#' @description Currently only works with
-#' [storr::storr_rds()] file system caches.
-#' @return File path where the cache is stored.
-#' @param cache the cache whose file path
-#'   you want to know
-#' @note When the now-deprecated [cache_path()] is removed,
-#' this function's name should have the final "_" stripped off.
-#' @examples
-#' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' clean(destroy = TRUE)
-#' # Get/create a new drake/storr cache.
-#' cache <- recover_cache()
-#' # Show the file path of the cache.
-#' cache_path(cache = cache)
-#' # In-memory caches do not have file paths.
-#' mem <- storr_environment()
-#' cache_path(cache = mem)
-#' })
-#' }
+# Return the file path where the cache is stored, if applicable.
 cache_path_ <- function(cache = NULL) {
   if (is.null(cache)) {
     NULL

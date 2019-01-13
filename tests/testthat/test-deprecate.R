@@ -322,3 +322,12 @@ test_with_dir("session arg to make()", {
     regexp = "lock_envir"
   )
 })
+
+test_with_dir("former external functions that will become internal", {
+  plan <- drake_plan(x = 1)
+  make(plan)
+  expect_warning(analysis_wildcard(), regexp = "deprecated")
+  expect_warning(cache_namespaces(), regexp = "deprecated")
+  expect_warning(cache_path(), regexp = "deprecated")
+  expect_warning(check_plan(plan = plan), regexp = "deprecated")
+})

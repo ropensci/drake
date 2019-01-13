@@ -1398,14 +1398,14 @@ prune_drake_graph <- function(
 #' @export
 #' @seealso [plan_summaries()]
 #' @return The analysis wildcard used in [plan_summaries()].
-analysis_wildcard <- function() { # nocov start
+analysis_wildcard <- function() {
   .Deprecated(
     "analysis_wildcard",
     package = "drake",
     msg = "analysis_wildcard() is deprecated."
   )
   analysis_wildcard_()
-} # nocov end
+} #
 
 #' @title Deprecated. Return the file path where the cache is stored,
 #' if applicable.
@@ -1415,14 +1415,14 @@ analysis_wildcard <- function() { # nocov start
 #' [storr::storr_rds()] file system caches.
 #' @return File path where the cache is stored.
 #' @param cache the cache whose file path you want to know
-cache_path <- function(cache = NULL) { # nocov start
+cache_path <- function(cache = NULL) {
   .Deprecated(
     "cache_path",
     package = "drake",
     msg = "cache_path() is deprecated."
   )
   cache_path_(cache)
-} # nocov end
+}
 
 #' @title Deprecated. List all the `storr` cache namespaces used by drake.
 #' @description Deprecated on 2019-01-12.
@@ -1434,14 +1434,14 @@ cache_path <- function(cache = NULL) { # nocov start
 #' @seealso [make()]
 cache_namespaces <- function(
   default = storr::storr_environment()$default_namespace
-) { # nocov start
+) {
   .Deprecated(
     "cache_namespaces",
     package = "drake",
     msg = "cache_namespaces() is deprecated."
   )
   cache_namespaces_(default)
-} # nocov end
+}
 
 #' @title Deprecated. Check a workflow plan data frame for obvious errors.
 #' @description Deprecated on 2019-01-12.
@@ -1463,11 +1463,11 @@ check_plan <- function(
   cache = drake::get_cache(verbose = verbose),
   verbose = 1L,
   jobs = 1
-) { # nocov start
+) {
   .Deprecated(
     "check_plan",
     package = "drake",
     msg = "check_plan() is deprecated."
   )
   check_plan_(plan, targets, envir, cache, verbose, jobs)
-} # nocov end
+}

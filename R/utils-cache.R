@@ -1,14 +1,4 @@
-#' @title List all the `storr` cache namespaces used by drake.
-#' @export
-#' @seealso [make()]
-#' @return A character vector of `storr` namespaces used for drake.
-#' @description Ordinary users do not need to worry about this function.
-#' It is just another window into `drake`'s internals.
-#' @param default name of the default `storr` namespace
-#' @note When the now-deprecated [cache_namespaces()] is removed,
-#' this function's name should have the final "_" stripped off.
-#' @examples
-#' cache_namespaces_()
+# List all the `storr` cache namespaces used by drake.
 cache_namespaces_ <- function(
   default = storr::storr_environment()$default_namespace
 ) {

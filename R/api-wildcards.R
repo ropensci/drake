@@ -1,12 +1,4 @@
-#' @title Show the analysis wildcard
-#'   used in [plan_summaries()].
-#' @description Used to generate workflow plan data frames.
-#' @seealso [plan_summaries()]
-#' @return The analysis wildcard used in [plan_summaries()].
-#' @note When the now-deprecated [analysis_wildcard()] is removed,
-#' this function's name should have the final "_" stripped off.
-#' @examples
-#' # See ?plan_analyses for examples
+# Show the analysis wildcard used in [plan_summaries()].
 analysis_wildcard_ <- function() {
   "analysis__"
 }

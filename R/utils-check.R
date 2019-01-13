@@ -1,26 +1,4 @@
-#' @title Check a workflow plan data frame for obvious errors.
-#' @description Possible obvious errors include
-#' circular dependencies and
-#' missing input files.
-#' @seealso [drake_plan()], [make()]
-#' @return Invisibly return `plan`.
-#' @inheritParams cached
-#' @param plan workflow plan data frame, possibly from
-#'   [drake_plan()].
-#' @param targets character vector of targets to make
-#' @param envir environment containing user-defined functions
-#' @param cache optional drake cache. See [new_cache()].
-#' @examples
-#' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' check_plan(my_plan) # Check the workflow plan dataframe for obvious errors.
-#' unlink("report.Rmd") # Remove an import file mentioned in the plan.
-#' # If you un-suppress the warnings, check_plan()
-#' # will tell you that 'report.Rmd' is missing.
-#' suppressWarnings(check_plan(my_plan))
-#' })
-#' }
+# Check a workflow plan data frame for obvious errors.
 check_plan_ <- function(
   plan = NULL,
   targets = NULL,
