@@ -88,7 +88,6 @@ test_with_dir("drake_build works as expected", {
 
 test_with_dir("colors and shapes", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_message(suppressWarnings(drake_palette()))
   expect_is(color_of("target"), "character")
   expect_is(color_of("import"), "character")
   expect_is(color_of("not found"), "character")
@@ -120,7 +119,7 @@ test_with_dir("make() with skip_targets", {
 
 test_with_dir("warnings and messages are caught", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_equal(suppressWarnings(in_progress()), character(0))
+  expect_equal(progress(), character(0))
   f <- function(x) {
     warning("my first warn")
     message("my first mess")

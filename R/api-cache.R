@@ -25,8 +25,7 @@ force_cache_path <- function(cache = NULL) {
 #' @description Only works if the cache
 #' is in a folder called `.drake/`. See the description of the
 #' `path` argument for details.
-#' @seealso [this_cache()], [new_cache()],
-#'   [recover_cache()], [drake_config()]
+#' @seealso [this_cache()], [new_cache()], [drake_config()]
 #' @export
 #' @return A drake/storr cache in a folder called `.drake/`,
 #'   if available. `NULL` otherwise.

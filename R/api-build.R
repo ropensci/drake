@@ -4,8 +4,7 @@
 #' @seealso [drake_debug()]
 #' @return The value of the target right after it is built.
 #' @param target name of the target
-#' @param meta list of metadata that tell which
-#'   targets are up to date (from [drake_meta()]).
+#' @param meta deprecated
 #' @param config internal configuration list
 #' @inheritParams loadd
 #' @inheritParams readd
