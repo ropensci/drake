@@ -331,6 +331,14 @@ test_with_dir("deprecated check_plan()", {
   expect_error(tmp <- capture.output(suppressWarning(check_plan(x))))
 })
 
+test_with_dir("deprecated cache_ and target_namespaces()", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  x <- suppressWarnings(cache_namespaces())
+  y <- suppressWarnings(target_namespaces())
+  expect_true(all(y %in% x))
+  expect_false(all(x %in% y))
+})
+
 test_with_dir("former external functions that will become internal", {
   plan <- drake_plan(x = 1)
   make(plan)

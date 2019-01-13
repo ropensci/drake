@@ -9,7 +9,7 @@
 - `make()` no longer returns a value. Users will need to call `drake_config()` separately to get the old return value of `make()`.
 - Make `jobs` a scalar argument to `make()` and `drake_config()`. To parallelize the imports and other preprocessing tasks, use `jobs_preprocess`.
 - Get rid of the "kernels" `storr` namespace. As a result, `drake` is faster, but users will no longer be able to use imported functions loaded from `loadd()` or `readd()`.
-- Deprecate many functions that should never have been exposed to users, including `analysis_wildcard()`, `cache_namespaces()`, `cache_path()`, `check_plan()`, `dataset_wildcard()`, `drake_meta()`, `process_import()`, `drake_palette()`, `drake_tip()`, `in_progress()`, `recover_cache()`, `target_namespaces()`.
+- Deprecate many functions that should never have been exposed to users, including `analysis_wildcard()`, `cache_namespaces()`, `cache_path()`, `check_plan()`, `dataset_wildcard()`, `drake_meta()`, `drake_palette()`, `drake_tip()`, `in_progress()`, `recover_cache()`, `target_namespaces()`.
 
 ## Bug fixes
 

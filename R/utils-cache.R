@@ -1,18 +1,3 @@
-# List all the `storr` cache namespaces used by drake.
-cache_namespaces_ <- function(
-  default = storr::storr_environment()$default_namespace
-) {
-  out <- c(
-    target_namespaces_(default = default),
-    "change",   # value returned by the "change" trigger
-    "config",   # elements of the config list
-    "memoize",  # for the memoization in preprocessing
-    "progress", # build progress: in progress, finished, failed, etc.
-    "session"   # session info
-  )
-  sort(out)
-}
-
 #' @title For drake caches,
 #'   list the `storr` namespaces that are cleaned
 #'   during a call to [clean()].
@@ -21,7 +6,7 @@ cache_namespaces_ <- function(
 #' target-level namespaces are cleaned during
 #' [clean()].
 #' @export
-#' @seealso [cache_namespaces()], [clean()]
+#' @seealso [clean()]
 #' @return A character vector of `storr` namespaces
 #'   that are cleaned during [clean()].
 #' @param default Name of the default `storr` namespace.

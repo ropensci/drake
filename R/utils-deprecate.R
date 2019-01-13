@@ -1440,7 +1440,15 @@ cache_namespaces <- function(
     package = "drake",
     msg = "cache_namespaces() is deprecated."
   )
-  cache_namespaces_(default)
+  out <- c(
+    target_namespaces_(default = default),
+    "change",   # value returned by the "change" trigger
+    "config",   # elements of the config list
+    "memoize",  # for the memoization in preprocessing
+    "progress", # build progress: in progress, finished, failed, etc.
+    "session"   # session info
+  )
+  sort(out)
 }
 
 #' @title Deprecated. Check a workflow plan data frame for obvious errors.
