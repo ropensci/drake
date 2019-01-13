@@ -1531,22 +1531,6 @@ drake_meta <- function(target, config) {
   drake_meta_(target, config)
 }
 
-#' @title Deprecated. An internal function only used 
-#' inside process_imports().
-#' @description Deprecated on 2019-01-12.
-#' @export
-#' @keywords internal
-#' @param import character, name of an import to process
-#' @param config [drake_config()] object
-process_import <- function(import, config) {
-  .Deprecated(
-    "process_import",
-    package = "drake",
-    msg = "process_import() is deprecated."
-  )
-  process_import_(import, config)
-}
-
 #' @title Deprecated. Show drake's color palette.
 #' @description Deprecated on 2019-01-12.
 #' @export
