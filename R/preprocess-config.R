@@ -551,7 +551,7 @@ drake_config <- function(
     prework = prework
   )
   if (is.null(cache)) {
-    cache <- recover_cache(
+    cache <- recover_cache_(
       verbose = verbose,
       fetch_cache = fetch_cache,
       console_log_file = console_log_file

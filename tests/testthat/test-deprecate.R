@@ -184,7 +184,7 @@ test_with_dir("force with a non-back-compatible cache", {
   expect_equal(cache_vers_check(NULL), character(0))
   expect_null(get_cache())
   expect_null(this_cache())
-  expect_true(inherits(recover_cache(), "storr"))
+  expect_true(inherits(suppressWarnings(recover_cache()), "storr"))
   write_v6.2.1_project() # nolint
   expect_warning(get_cache(), regexp = "compatible")
   expect_warning(this_cache(), regexp = "compatible")
@@ -198,7 +198,6 @@ test_with_dir("force with a non-back-compatible cache", {
   expect_warning(make(drake_plan(x = 1), force = TRUE), regexp = "compatible")
   expect_silent(tmp <- get_cache())
   expect_silent(tmp <- this_cache())
-  expect_silent(tmp <- recover_cache())
 })
 
 test_with_dir("deprecate the `force` argument", {
@@ -342,4 +341,5 @@ test_with_dir("former external functions that will become internal", {
   expect_warning(process_import("x", config), regexp = "deprecated")
   expect_warning(drake_palette(), regexp = "deprecated")
   expect_warning(in_progress(), regexp = "deprecated")
+  expect_warning(recover_cache(), regexp = "deprecated")
 })

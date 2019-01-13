@@ -227,33 +227,9 @@ new_cache <- function(
   cache
 }
 
-#' @title Load an existing drake files system cache if it exists
+# Load an existing drake files system cache if it exists
 #'   or create a new one otherwise.
-#' @export
-#' @seealso [new_cache()], [this_cache()],
-#'   [get_cache()]
-#' @description
-#' Does not work with
-#' in-memory caches such as [storr_environment()].
-#' @return A drake/storr cache.
-#' @inheritParams cached
-#' @inheritParams new_cache
-#' @inheritParams this_cache
-#' @inheritParams drake_config
-#' @param path file path of the cache
-#' @param force logical, whether to load the cache
-#'   despite any back compatibility issues with the
-#'   running version of drake.
-#' @examples
-#' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' clean(destroy = TRUE)
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' make(my_plan) # Run the project, build all the targets.
-#' x <- recover_cache(".drake") # Recover the project's storr cache.
-#' })
-#' }
-recover_cache <- function(
+recover_cache_ <- function(
   path = NULL,
   hash_algorithm = NULL,
   short_hash_algo = NULL,

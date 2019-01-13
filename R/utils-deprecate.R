@@ -1654,3 +1654,48 @@ in_progress <- function(path = getwd(), search = TRUE,
   )
   in_progress_(path, search, cache, verbose )
 }
+
+#' @title Deprecated. Load an existing drake files system cache 
+#' if it exists or create a new one otherwise.
+#' @description Deprecated on 2019-01-13.
+#' @export
+#' @seealso [new_cache()], [this_cache()],
+#'   [get_cache()]
+#' @details Does not work with
+#' in-memory caches such as [storr_environment()].
+#' @return A drake/storr cache.
+#' @inheritParams cached
+#' @inheritParams new_cache
+#' @inheritParams this_cache
+#' @inheritParams drake_config
+#' @param path file path of the cache
+#' @param force logical, whether to load the cache
+#'   despite any back compatibility issues with the
+#'   running version of drake.
+#' @examples
+#' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
+#' clean(destroy = TRUE)
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
+#' make(my_plan) # Run the project, build all the targets.
+#' x <- recover_cache(".drake") # Recover the project's storr cache.
+#' })
+#' }
+recover_cache <- function(
+  path = NULL,
+  hash_algorithm = NULL,
+  short_hash_algo = NULL,
+  long_hash_algo = NULL,
+  force = FALSE,
+  verbose = 1L,
+  fetch_cache = NULL,
+  console_log_file = NULL
+) {
+  .Deprecated(
+    "recover_cache",
+    package = "drake",
+    msg = "recover_cache() is deprecated."
+  )
+  recover_cache_(path, hash_algorithm, short_hash_algo, long_hash_algo,
+                 force, verbose, fetch_cache, console_log_file)
+}
