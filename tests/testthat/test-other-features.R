@@ -88,7 +88,7 @@ test_with_dir("drake_build works as expected", {
 
 test_with_dir("colors and shapes", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_message(drake_palette())
+  expect_message(suppressWarnings(drake_palette()))
   expect_is(color_of("target"), "character")
   expect_is(color_of("import"), "character")
   expect_is(color_of("not found"), "character")

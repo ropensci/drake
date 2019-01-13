@@ -1564,3 +1564,35 @@ process_import <- function(import, config) {
   )
   process_import_(import, config)
 }
+
+#' @title Deprecated. Show drake's color palette.
+#' @description Deprecated on 2019-01-12.
+#' @export
+#' @details This function is
+#' used in both the console and graph visualizations.
+#' Your console must have the crayon package enabled.
+#' This palette applies to console output
+#' (internal functions `console()` and
+#' `console_many_targets()`) and the node colors
+#' in the graph visualizations.
+#' So if you want to contribute improvements to the palette,
+#' please both `drake_palette()` and
+#' `visNetwork::visNetwork(nodes = legend_nodes())`
+#' @return There is a console message,
+#'   but the actual return value is `NULL`.
+#' @examples
+#' # Show drake's color palette as text.
+#' drake_palette()
+#' # Show part of the palette as an interactive visNetwork graph.
+#' # These are the nodes in the legend of the graph visualizations.
+#' \dontrun{
+#' # visNetwork::visNetwork(nodes = legend_nodes()) # nolint
+#' }
+drake_palette <- function() {
+  .Deprecated(
+    "drake_palette",
+    package = "drake",
+    msg = "drake_palette() is deprecated."
+  )
+  drake_palette_()
+}
