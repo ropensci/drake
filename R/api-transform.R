@@ -18,6 +18,7 @@ plan <- drake_plan(
   )
 )
 row <- 3
+tf_plan(plan)
 
 }
 
@@ -52,14 +53,12 @@ tf_cols <- function(plan) {
 
 tf_cross <- function(plan, target, command, levels) {
   levels$stringsAsFactors <- FALSE
-  rules <- do.call(what = expand.grid, args = levels)
-  rules[, tf_cols(plan)] <- plan[, tf_cols(plan)]
-  gsub_grid(text = command, rules = rules)
+  factors <- tf_factors(plan, levels)
+  gsub_grid(text = command, factors = factors)
 }
 
-gsub_grid <- function(text, rules) {
-  browser()
-  
-  
+tf_factors <- function(plan, levels) {
+  factors <- do.call(what = expand.grid, args = levels)
+  factors[, tf_cols(plan)] <- plan[, tf_cols(plan)]
+  factors
 }
-

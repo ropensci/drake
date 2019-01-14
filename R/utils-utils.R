@@ -137,6 +137,16 @@ file_extn <- function(x) {
   x[1]
 }
 
+gsub_grid <- function(text, factors) {
+  text <- rep(text, nrow(factors))
+  for (factor in colnames(factors)) {
+    text <- gsub_vector(factor, factors[[factor]], text)
+  }
+  text
+}
+
+gsub_vector <- Vectorize(gsub, c("replacement", "x"), USE.NAMES = FALSE)
+
 is_image_filename <- function(x) {
   tolower(file_extn(x)) %in% c("jpg", "jpeg", "pdf", "png")
 }
