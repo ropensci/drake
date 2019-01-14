@@ -12,7 +12,7 @@ drake_graph_info(config, from = NULL, mode = c("out", "in", "all"),
   clusters = NULL, show_output_files = TRUE)
 }
 \arguments{
-\item{config}{a \code{\link[=drake_config]{drake_config()}} configuration list.
+\item{config}{A \code{\link[=drake_config]{drake_config()}} configuration list.
 You can get one as a return value from \code{\link[=make]{make()}} as well.}
 
 \item{from}{Optional collection of target/import names.
@@ -46,7 +46,7 @@ Be advised: edges are only kept for adjacent nodes in \code{subset}.
 If you do not select all the intermediate nodes,
 edges will drop from the graph.}
 
-\item{build_times}{character string or logical.
+\item{build_times}{Character string or logical.
 If character, the choices are
 1. \code{"build"}: runtime of the command plus the time
 it take to store the target or import.
@@ -56,37 +56,37 @@ If logical, \code{build_times} selects whether to show the
 times from `build_times(..., type = "build")`` or use
 no build times at all. See \code{\link[=build_times]{build_times()}} for details.}
 
-\item{digits}{number of digits for rounding the build times}
+\item{digits}{Number of digits for rounding the build times}
 
-\item{targets_only}{logical,
+\item{targets_only}{Logical,
 whether to skip the imports and only include the
 targets in the workflow plan.}
 
-\item{font_size}{numeric, font size of the node labels in the graph}
+\item{font_size}{Numeric, font size of the node labels in the graph}
 
-\item{from_scratch}{logical, whether to assume all the targets
+\item{from_scratch}{Logical, whether to assume all the targets
 will be made from scratch on the next \code{\link[=make]{make()}}.
 Makes all targets outdated, but keeps information about
 build progress in previous \code{\link[=make]{make()}}s.}
 
-\item{make_imports}{logical, whether to make the imports first.
+\item{make_imports}{Logical, whether to make the imports first.
 Set to \code{FALSE} to increase speed and risk using obsolete information.}
 
-\item{full_legend}{logical. If \code{TRUE}, all the node types
+\item{full_legend}{Logical. If \code{TRUE}, all the node types
 are printed in the legend. If \code{FALSE}, only the
 node types used are printed in the legend.}
 
-\item{group}{optional character scalar, name of the column used to
+\item{group}{Optional character scalar, name of the column used to
 group nodes into columns. All the columns names of your \code{config$plan}
 are choices. The other choices (such as \code{"status"}) are column names
 in the \code{nodes} . To group nodes into clusters in the graph,
 you must also supply the \code{clusters} argument.}
 
-\item{clusters}{optional character vector of values to cluster on.
+\item{clusters}{Optional character vector of values to cluster on.
 These values must be elements of the column of the \code{nodes} data frame
 that you specify in the \code{group} argument to \code{drake_graph_info()}.}
 
-\item{show_output_files}{logical, whether to include
+\item{show_output_files}{Logical, whether to include
 \code{\link[=file_out]{file_out()}} files in the graph.}
 }
 \value{

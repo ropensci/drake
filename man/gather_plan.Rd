@@ -9,14 +9,14 @@ gather_plan(plan = NULL, target = "target", gather = "list",
   append = FALSE)
 }
 \arguments{
-\item{plan}{workflow plan data frame of prespecified targets}
+\item{plan}{Workflow plan data frame of prespecified targets.}
 
-\item{target}{name of the new aggregated target}
+\item{target}{Name of the new aggregated target.}
 
-\item{gather}{function used to gather the targets. Should be
+\item{gather}{Function used to gather the targets. Should be
 one of \code{list(...)}, \code{c(...)}, \code{rbind(...)}, or similar.}
 
-\item{append}{logical. If \code{TRUE}, the output will include the
+\item{append}{Logical. If \code{TRUE}, the output will include the
 original rows in the \code{plan} argument.
 If \code{FALSE}, the output will only include the new
 targets and commands.}

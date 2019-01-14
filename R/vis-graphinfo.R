@@ -8,7 +8,7 @@
 #'   the legend nodes. The list also contains the
 #'   default title of the graph.
 #' @seealso [vis_drake_graph()]
-#' @param config a [drake_config()] configuration list.
+#' @param config A [drake_config()] configuration list.
 #'   You can get one as a return value from [make()] as well.
 #'
 #' @param from Optional collection of target/import names.
@@ -42,13 +42,13 @@
 #'   If you do not select all the intermediate nodes,
 #'   edges will drop from the graph.
 #'
-#' @param targets_only logical,
+#' @param targets_only Logical,
 #'   whether to skip the imports and only include the
 #'   targets in the workflow plan.
 #'
-#' @param font_size numeric, font size of the node labels in the graph
+#' @param font_size Numeric, font size of the node labels in the graph
 #'
-#' @param build_times character string or logical.
+#' @param build_times Character string or logical.
 #'   If character, the choices are
 #'     1. `"build"`: runtime of the command plus the time
 #'       it take to store the target or import.
@@ -58,31 +58,31 @@
 #'   times from `build_times(..., type = "build")`` or use
 #'   no build times at all. See [build_times()] for details.
 #'
-#' @param digits number of digits for rounding the build times
+#' @param digits Number of digits for rounding the build times
 #'
-#' @param from_scratch logical, whether to assume all the targets
+#' @param from_scratch Logical, whether to assume all the targets
 #'   will be made from scratch on the next [make()].
 #'   Makes all targets outdated, but keeps information about
 #'   build progress in previous [make()]s.
 #'
-#' @param make_imports logical, whether to make the imports first.
+#' @param make_imports Logical, whether to make the imports first.
 #'   Set to `FALSE` to increase speed and risk using obsolete information.
 #'
-#' @param full_legend logical. If `TRUE`, all the node types
+#' @param full_legend Logical. If `TRUE`, all the node types
 #'   are printed in the legend. If `FALSE`, only the
 #'   node types used are printed in the legend.
 #'
-#' @param group optional character scalar, name of the column used to
+#' @param group Optional character scalar, name of the column used to
 #'   group nodes into columns. All the columns names of your `config$plan`
 #'   are choices. The other choices (such as `"status"`) are column names
 #'   in the `nodes` . To group nodes into clusters in the graph,
 #'   you must also supply the `clusters` argument.
 #'
-#' @param clusters optional character vector of values to cluster on.
+#' @param clusters Optional character vector of values to cluster on.
 #'   These values must be elements of the column of the `nodes` data frame
 #'   that you specify in the `group` argument to `drake_graph_info()`.
 #'
-#' @param show_output_files logical, whether to include
+#' @param show_output_files Logical, whether to include
 #'   [file_out()] files in the graph.
 #'
 #' @examples

@@ -8,11 +8,11 @@ Makefile_recipe(recipe_command = drake::default_recipe_command(),
   target = "your_target", cache_path = NULL)
 }
 \arguments{
-\item{recipe_command}{character scalar}
+\item{recipe_command}{Character scalar.}
 
-\item{target}{character scalar}
+\item{target}{Character scalar.}
 
-\item{cache_path}{character scalar}
+\item{cache_path}{Character scalar.}
 }
 \value{
 A character scalar

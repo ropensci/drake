@@ -16,8 +16,8 @@
 #'   [gather_plan()], [evaluate_plan()], [expand_plan()]
 #' @return A workflow plan data frame with the wildcards evaluated.
 #'
-#' @param plan workflow plan data frame, similar to one produced by
-#'   [drake_plan()]
+#' @param plan Workflow plan data frame, similar to one produced by
+#'   [drake_plan()].
 #'
 #' @param rules Named list with wildcards as names and vectors of
 #'   replacements
@@ -26,9 +26,9 @@
 #'   `values` if
 #'   not `NULL`.
 #'
-#' @param wildcard character scalar denoting a wildcard placeholder
+#' @param wildcard Character scalar denoting a wildcard placeholder.
 #'
-#' @param values vector of values to replace the wildcard
+#' @param values Vector of values to replace the wildcard
 #'   in the drake instructions. Will be treated as a character vector.
 #'   Must be the same length as `plan$command` if `expand` is
 #'   `TRUE`.
@@ -40,19 +40,19 @@
 #'   is replaced with the next entry in the `values` vector,
 #'   and the values are recycled.
 #'
-#' @param rename logical, whether to rename the targets
+#' @param rename Logical, whether to rename the targets
 #'   based on the values supplied for the wildcards
 #'   (based on `values` or `rules`).
 #'
-#' @param trace logical, whether to add columns that
+#' @param trace Logical, whether to add columns that
 #'   trace the wildcard expansion process. These new
 #'   columns indicate which targets were evaluated and with which
 #'   wildcards.
 #'   
-#' @param columns character vector of names of columns
+#' @param columns Character vector of names of columns
 #'   to look for and evaluate the wildcards.
 #'
-#' @param sep character scalar, separator for the names
+#' @param sep Character scalar, separator for the names
 #'   of the new targets generated. For example, in
 #'   `evaluate_plan(drake_plan(x = sqrt(y__)), list(y__ = 1:2), sep = ".")`,
 #'   the names of the new targets are `x.1` and `x.2`.
@@ -298,12 +298,12 @@ check_wildcard_rules <- function(rules) {
 #' @seealso [drake_plan()], [map_plan()], [reduce_by()], [gather_by()], [reduce_plan()],
 #'   [gather_plan()], [evaluate_plan()], [expand_plan()]
 #' @return An expanded workflow plan data frame (with replicated targets).
-#' @param plan workflow plan data frame
-#' @param values values to expand over. These will be appended to
+#' @param plan Workflow plan data frame.
+#' @param values Values to expand over. These will be appended to
 #'   the names of the new targets.
-#' @param rename logical, whether to rename the targets
+#' @param rename Logical, whether to rename the targets
 #'   based on the `values`. See the examples for a demo.
-#' @param sep character scalar, delimiter between the original
+#' @param sep Character scalar, delimiter between the original
 #'   target names and the values to append to create the new
 #'   target names. Only relevant when `rename` is `TRUE`.
 #' @examples

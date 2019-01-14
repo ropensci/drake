@@ -7,7 +7,7 @@
 process_import(import, config)
 }
 \arguments{
-\item{import}{character, name of an import to process}
+\item{import}{Character, name of an import to process}
 
 \item{config}{\code{\link[=drake_config]{drake_config()}} object}
 }

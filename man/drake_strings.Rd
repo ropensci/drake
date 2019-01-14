@@ -7,7 +7,7 @@
 drake_strings(...)
 }
 \arguments{
-\item{...}{unquoted symbols to turn into character strings.}
+\item{...}{Unquoted symbols to turn into character strings.}
 }
 \value{
 A character vector.

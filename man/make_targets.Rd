@@ -7,7 +7,7 @@
 make_targets(config)
 }
 \arguments{
-\item{config}{a configuration list returned by \code{\link[=drake_config]{drake_config()}}}
+\item{config}{A configuration list returned by \code{\link[=drake_config]{drake_config()}}.}
 }
 \value{
 nothing

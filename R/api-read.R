@@ -38,12 +38,12 @@
 #'   `target` is a character string naming the object to read.
 #'   Otherwise, `target` is an unquoted symbol with the name of the
 #'   object.
-#' @param character_only logical, whether `name` should be treated
+#' @param character_only Logical, whether `name` should be treated
 #'   as a character or a symbol
 #'   (just like `character.only` in [library()]).
-#' @param namespace optional character string,
+#' @param namespace Optional character string,
 #'   name of the `storr` namespace to read from.
-#' @param show_source logical, option to show the command
+#' @param show_source Logical, option to show the command
 #'   that produced the target or indicate that the object
 #'   was imported (using [show_source()]).
 #' @examples
@@ -100,27 +100,27 @@ readd <- function(
 #' @inheritParams cached
 #' @inheritParams readd
 #'
-#' @param ... targets to load from the cache: as names (symbols) or
+#' @param ... Targets to load from the cache: as names (symbols) or
 #'   character strings. If the `tidyselect` package is installed,
 #'   you can also supply `dplyr`-style `tidyselect`
 #'   commands such as `starts_with()`, `ends_with()`, and `one_of()`.
 #'
-#' @param list character vector naming targets to be loaded from the
+#' @param list Character vector naming targets to be loaded from the
 #'   cache. Similar to the `list` argument of [remove()].
 #'
-#' @param imported_only logical, whether only imported objects
+#' @param imported_only Logical, whether only imported objects
 #'   should be loaded.
 #'
-#' @param envir environment to load objects into. Defaults to the
+#' @param envir Environment to load objects into. Defaults to the
 #'   calling environment (current workspace).
 #'
-#' @param jobs number of parallel jobs for loading objects. On
+#' @param jobs Number of parallel jobs for loading objects. On
 #'   non-Windows systems, the loading process for multiple objects
 #'   can be lightly parallelized via `parallel::mclapply()`.
 #'   just set jobs to be an integer greater than 1. On Windows,
 #'   `jobs` is automatically demoted to 1.
 #'
-#' @param deps logical, whether to load any cached
+#' @param deps Logical, whether to load any cached
 #'   dependencies of the targets
 #'   instead of the targets themselves.
 #'   This is useful if you know your
@@ -133,7 +133,7 @@ readd <- function(
 #'   That means you need to have already called [make()]
 #'   if you set `deps` to `TRUE`.
 #'
-#' @param lazy either a string or a logical. Choices:
+#' @param lazy Either a string or a logical. Choices:
 #'   - `"eager"`: no lazy loading. The target is loaded right away
 #'     with [assign()].
 #'   - `"promise"`: lazy loading with [delayedAssign()]
@@ -142,17 +142,17 @@ readd <- function(
 #'   - `TRUE`: same as `"promise"`.
 #'   - `FALSE`: same as `"eager"`.
 #'
-#' @param graph deprecated
+#' @param graph Deprecated.
 #'
-#' @param replace logical. If `FALSE`,
+#' @param replace Logical. If `FALSE`,
 #'   items already in your environment
 #'   will not be replaced.
 #'  
-#' @param tidyselect logical, whether to enable
+#' @param tidyselect Logical, whether to enable
 #'   `tidyselect` expressions in `...` like
 #'   `starts_with("prefix")` and `ends_with("suffix")`.
 #'
-#' @param config optional [drake_config()] object.
+#' @param config Optional [drake_config()] object.
 #'   You should supply one if `deps` is `TRUE`.
 #'
 #' @examples

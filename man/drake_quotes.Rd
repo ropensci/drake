@@ -7,7 +7,7 @@
 drake_quotes(x = NULL, single = FALSE)
 }
 \arguments{
-\item{x}{character vector or object to be coerced to character.}
+\item{x}{Character vector or object to be coerced to character.}
 
 \item{single}{Add single quotes if \code{TRUE}
 and double quotes otherwise.}

@@ -9,14 +9,14 @@ cached(..., list = character(0), no_imported_objects = FALSE,
   namespace = NULL, jobs = 1)
 }
 \arguments{
-\item{...}{objects to load from the cache, as names (unquoted)
+\item{...}{Objects to load from the cache, as names (unquoted)
 or character strings (quoted). Similar to \code{...} in
 \code{remove()}.}
 
-\item{list}{character vector naming objects to be loaded from the
+\item{list}{Character vector naming objects to be loaded from the
 cache. Similar to the \code{list} argument of \code{\link[=remove]{remove()}}.}
 
-\item{no_imported_objects}{logical, applies only when
+\item{no_imported_objects}{Logical, applies only when
 no targets are specified and a list of cached targets is returned.
 If \code{no_imported_objects} is \code{TRUE}, then \code{cached()}
 shows built targets (with commands) plus imported files,
@@ -30,7 +30,7 @@ or if \code{search} is \code{TRUE}, either the
 project root or a subdirectory of the project.
 Ignored if a \code{cache} is supplied.}
 
-\item{search}{logical. If \code{TRUE}, search parent directories
+\item{search}{Logical. If \code{TRUE}, search parent directories
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.
 Ignored if a \code{cache} is supplied.}
@@ -38,7 +38,7 @@ Ignored if a \code{cache} is supplied.}
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} and \code{search} are ignored.}
 
-\item{verbose}{logical or numeric, control printing to the console.
+\item{verbose}{Logical or numeric, control printing to the console.
 \itemize{
 \item \code{0} or \code{FALSE}: print nothing.
 \item \code{1} or \code{TRUE}: print only targets to build.
@@ -49,10 +49,10 @@ If supplied, \code{path} and \code{search} are ignored.}
 \item \code{6}: plus notifications when targets are being stored.
 }}
 
-\item{namespace}{character scalar, name of the storr namespace
-to use for listing objects}
+\item{namespace}{Character scalar, name of the storr namespace
+to use for listing objects.}
 
-\item{jobs}{number of jobs/workers for parallel processing}
+\item{jobs}{Number of jobs/workers for parallel processing.}
 }
 \value{
 Either a named logical indicating whether the given

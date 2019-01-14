@@ -65,31 +65,31 @@ build_drake_graph <- function(
 #'
 #' @inheritParams cached
 #'
-#' @param cache cache to configure
+#' @param cache Cache to configure
 #'
-#' @param short_hash_algo short hash algorithm for drake.
+#' @param short_hash_algo Short hash algorithm for drake.
 #'   The short algorithm must be among [available_hash_algos()],
 #'   which is just the collection of algorithms available to the `algo`
 #'   argument in [digest::digest()].
 #'   See [default_short_hash_algo()] for more.
 #'
-#' @param long_hash_algo long hash algorithm for drake.
+#' @param long_hash_algo Long hash algorithm for drake.
 #'   The long algorithm must be among [available_hash_algos()],
 #'   which is just the collection of algorithms available to the `algo`
 #'   argument in `digest::digest()`.
 #'   See [default_long_hash_algo()] for more.
 #'
-#' @param log_progress deprecated logical.
+#' @param log_progress Deprecated logical.
 #'   Previously toggled whether to clear the recorded
 #'   build progress if this cache was used for previous calls to
 #'   [make()].
 #'
-#' @param overwrite_hash_algos logical, whether to try to overwrite
+#' @param overwrite_hash_algos Logical, whether to try to overwrite
 #'   the hash algorithms in the cache with any user-specified ones.
 #'
-#' @param jobs number of jobs for parallel processing
+#' @param jobs Number of jobs for parallel processing
 #'
-#' @param init_common_values logical, whether to set the initial `drake`
+#' @param init_common_values Logical, whether to set the initial `drake`
 #'   version in the cache and other common values.
 #'   Not always a thread safe operation, so should only be `TRUE`
 #'   on the master process
@@ -150,7 +150,7 @@ configure_cache <- function(
 #' @description Deprecated. drake now only uses one hash algorithm per cache.
 #' @details Deprecated on 2018-12-12
 #' @return A character vector naming a hash algorithm.
-#' @param cache optional drake cache.
+#' @param cache Optional drake cache.
 #'   When you [configure_cache()] without
 #'   supplying a long hash algorithm,
 #'   `default_long_hash_algo(cache)` is the long
@@ -184,7 +184,7 @@ default_long_hash_algo <- function(cache = NULL) {
 #' @description Deprecated. drake now only uses one hash algorithm per cache.
 #' @details Deprecated on 2018-12-12
 #' @return A character vector naming a hash algorithm.
-#' @param cache optional drake cache.
+#' @param cache Optional drake cache.
 #'   When you [configure_cache()] without
 #'   supplying a short hash algorithm,
 #'   `default_short_hash_algo(cache)` is the short
@@ -259,9 +259,9 @@ deps <- function(x) {
 #' @details Deprecated on 2018-08-30.
 #' @export
 #' @keywords internal
-#' @param targets a character vector of target names
-#' @param config an output list from [drake_config()]
-#' @param reverse logical, whether to compute reverse dependencies
+#' @param targets A character vector of target names.
+#' @param config An output list from [drake_config()]
+#' @param reverse Logical, whether to compute reverse dependencies
 #'   (targets immediately downstream) instead of ordinary dependencies.
 #' @return Names of dependencies listed by type (object, input file, etc).
 #' @examples
@@ -295,7 +295,7 @@ deps_targets <- function(
 #' @export
 #' @keywords internal
 #' @inheritParams drake_hpc_template_file
-#' @param example name of template file
+#' @param example Name of template file.
 #' @examples
 #' # See drake_hpc_template_file() for examples.
 drake_batchtools_tmpl_file <- function(
@@ -380,11 +380,11 @@ long_hash <- function(
 #' @keywords internal
 #' @return A numeric scalar, the maximum number of useful jobs for
 #'   \code{\link{make}(..., jobs = ...)}.
-#' @param config internal configuration list of \code{\link{make}(...)},
+#' @param config Internal configuration list of \code{\link{make}(...)},
 #'   produced also with [drake_config()].
 #' @param imports Set the `imports` argument to change your
 #'   assumptions about how fast objects/files are imported.
-#' @param from_scratch logical, whether to assume
+#' @param from_scratch Logical, whether to assume
 #'   the next [make()] will run from scratch
 #'   so that all targets are attempted.
 #' @examples
@@ -432,7 +432,7 @@ max_useful_jobs <- function(
 #' @export
 #' @keywords internal
 #' @param path Full path to the cache.
-#' @param jobs number of jobs for light parallelism.
+#' @param jobs Number of jobs for light parallelism.
 #' @description Deprecated on May 4, 2018.
 #' This function was intended to migrate a project/cache from
 #' drake 4.4.0 or earlier
@@ -462,7 +462,7 @@ migrate_drake_project <- function(
 #' # Do not use this function.
 #' @return A data frame of times of the worst-case scenario
 #'   rate-limiting targets in each parallelizable stage.
-#' @param config option internal runtime parameter list of
+#' @param config Optional internal runtime parameter list of
 #'   \code{\link{make}(...)},
 #'   produced by both [make()] and
 #'   [drake_config()].
@@ -470,15 +470,15 @@ migrate_drake_project <- function(
 #'   Find the rate-limiting times for building these targets
 #'   plus dependencies.
 #'   Defaults to all targets.
-#' @param from_scratch logical, whether to assume
+#' @param from_scratch Logical, whether to assume
 #'   next hypothetical call to [make()]
 #'   is a build from scratch (after [clean()]).
-#' @param targets_only logical, whether to factor in just the
+#' @param targets_only Logical, whether to factor in just the
 #'   targets or use times from everything, including the imports.
-#' @param future_jobs hypothetical number of jobs
+#' @param future_jobs Hypothetical number of jobs
 #'   assumed for the predicted runtime.
 #'   assuming this number of jobs.
-#' @param digits number of digits for rounding the times.
+#' @param digits Number of digits for rounding the times.
 rate_limiting_times <- function(
   config,
   targets = NULL,
@@ -534,9 +534,9 @@ render_static_drake_graph <- function(
 #' @return A data frame of information spelling out how
 #'   targets are divided into parallelizable stages
 #'   (according to the `stage` column).
-#' @param config An configuration list output by
+#' @param config A configuration list output by
 #'   [make()] or [drake_config()].
-#' @param from_scratch logical, whether to assume
+#' @param from_scratch Logical, whether to assume
 #'   that the next [make()] will run from scratch
 #'   so that all targets are attempted.
 #' @examples
@@ -732,10 +732,10 @@ deprecate_targets_only <- function(targets_only) {
 #'   Defaults to your workspace.
 #'   For an insulated workspace,
 #'   set `envir = new.env(parent = globalenv())`.
-#' @param report_file where to write the report file `report.Rmd`.
-#' @param overwrite logical, whether to overwrite an
+#' @param report_file Where to write the report file `report.Rmd`.
+#' @param overwrite Logical, whether to overwrite an
 #'   existing file `report.Rmd`
-#' @param force deprecated
+#' @param force Deprecated.
 #' @keywords internal
 #' @details Deprecated December 2018.
 #' @examples
@@ -828,7 +828,7 @@ default_verbose <- function() {
 #' @export
 #' @keywords internal
 #' @return Character vector with quotes around it.
-#' @param x character vector or object to be coerced to character.
+#' @param x Character vector or object to be coerced to character.
 #' @param single Add single quotes if `TRUE`
 #'   and double quotes otherwise.
 #' @examples
@@ -858,7 +858,7 @@ drake_quotes <- function(x = NULL, single = FALSE) {
 #' @return Character vector without leading
 #'   or trailing escaped quotes around
 #'   the elements.
-#' @param x character vector
+#' @param x Character vector.
 #' @examples
 #' # deprecated
 drake_unquote <- function(x = NULL) {
@@ -875,7 +875,7 @@ drake_unquote <- function(x = NULL) {
 #' @export
 #' @keywords internal
 #' @return A character vector.
-#' @param ... unquoted symbols to turn into character strings.
+#' @param ... Unquoted symbols to turn into character strings.
 #' @examples
 #' # deprecated
 drake_strings <- function(...) {
@@ -899,7 +899,7 @@ drake_strings <- function(...) {
 #' @export
 #' @return Character vector naming the built targets in the cache.
 #' @inheritParams cached
-#' @param jobs number of jobs/workers for parallel processing
+#' @param jobs Number of jobs/workers for parallel processing.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -944,7 +944,7 @@ built <- function(
 #' @seealso [drake_plan()], [make()]
 #' @return File path of the nearest drake project or `NULL`
 #'   if no drake project is found.
-#' @param path starting path for search back for the project.
+#' @param path Starting path for search back for the project.
 #'   Should be a subdirectory of the drake project.
 #' @examples
 #' \dontrun{
@@ -977,7 +977,7 @@ find_project <- function(path = getwd()) {
 #' @keywords internal
 #' @return `args` for `system2(command, args)`
 #' @inheritParams drake_config
-#' @param jobs number of jobs
+#' @param jobs Number of jobs.
 #' @examples
 #' # deprecated
 default_Makefile_args <- function(jobs, verbose) {
@@ -1020,9 +1020,9 @@ default_Makefile_command <- function() {
 #' @keywords internal
 #' @description 2019-01-03
 #' @return A character scalar
-#' @param recipe_command character scalar
-#' @param target character scalar
-#' @param cache_path character scalar
+#' @param recipe_command Character scalar.
+#' @param target Character scalar.
+#' @param cache_path Character scalar.
 #' @examples
 #' # deprecated
 Makefile_recipe <- function( # nolint
@@ -1084,7 +1084,7 @@ r_recipe_wildcard <- function() {
 #' @export
 #' @keywords internal
 #' @return character vector
-#' @param distributed_only logical
+#' @param distributed_only Logical.
 #' @examples
 #' # deprecated
 parallelism_choices <- function(distributed_only = FALSE) {
@@ -1117,8 +1117,8 @@ parallelism_choices <- function(distributed_only = FALSE) {
 #' @export
 #' @keywords internal
 #' @return logical
-#' @param path character
-#' @param overwrite logical
+#' @param path Character.
+#' @param overwrite Logical.
 #' @examples
 #' # deprecated
 shell_file <- function(
@@ -1160,7 +1160,7 @@ default_parallelism <- function() {
 #' @keywords internal
 #' @seealso [make()], [drake_config()]
 #' @return nothing
-#' @param config a configuration list returned by [drake_config()]
+#' @param config A configuration list returned by [drake_config()].
 #' @examples
 #' # deprecated
 make_imports <- function(config) {
@@ -1182,7 +1182,7 @@ make_imports <- function(config) {
 #' @keywords internal
 #' @seealso [make()], [drake_config()]
 #' @return nothing
-#' @param config a configuration list returned by [drake_config()]
+#' @param config A configuration list returned by [drake_config()].
 #' @examples
 #' # deprecated
 make_targets <- function(config) {
@@ -1204,7 +1204,7 @@ make_targets <- function(config) {
 #' @keywords internal
 #' @seealso [make()], [drake_config()]
 #' @return nothing
-#' @param config a configuration list returned by [drake_config()]
+#' @param config A configuration list returned by [drake_config()].
 #' @examples
 #' # deprecated
 make_with_config <- function(config) {
@@ -1319,12 +1319,12 @@ read_drake_plan <- function(
 #'
 #' @inheritParams cached
 #'
-#' @param files_only logical, whether to show imported files only
+#' @param files_only Logical, whether to show imported files only
 #'   and ignore imported objects. Since all your functions and
 #'   all their global variables are imported, the full list of
 #'   imported objects could get really cumbersome.
 #'
-#' @param jobs number of jobs/workers for parallel processing
+#' @param jobs Number of jobs/workers for parallel processing.
 #'
 #' @examples
 #' \dontrun{
@@ -1369,10 +1369,10 @@ imported <- function(
 #' @export
 #' @keywords internal
 #' @description 2019-01-08
-#' @return an `igraph` object
-#' @param graph an igraph object
-#' @param to character vector of vertices
-#' @param jobs number of jobs for parallelism
+#' @return An `igraph` object
+#' @param graph An igraph object.
+#' @param to Character vector of vertices.
+#' @param jobs Number of jobs for parallelism.
 #' @examples
 #' # deprecated
 prune_drake_graph <- function(
@@ -1416,7 +1416,7 @@ analysis_wildcard <- function() {
 #' @details Currently only works with
 #' [storr::storr_rds()] file system caches.
 #' @return File path where the cache is stored.
-#' @param cache the cache whose file path you want to know
+#' @param cache The cache whose file path you want to know.
 cache_path <- function(cache = NULL) {
   .Deprecated(
     "cache_path",
@@ -1431,7 +1431,7 @@ cache_path <- function(cache = NULL) {
 #' @return A character vector of `storr` namespaces used for drake.
 #' @details Ordinary users do not need to worry about this function.
 #' It is just another window into `drake`'s internals.
-#' @param default name of the default `storr` namespace
+#' @param default Name of the default `storr` namespace.
 #' @export
 #' @keywords internal
 #' @seealso [make()]
@@ -1463,11 +1463,11 @@ cache_namespaces <- function(
 #' @keywords internal
 #' @return Invisibly return `plan`.
 #' @inheritParams cached
-#' @param plan workflow plan data frame, possibly from
+#' @param plan Workflow plan data frame, possibly from
 #'   [drake_plan()].
-#' @param targets character vector of targets to make
-#' @param envir environment containing user-defined functions
-#' @param cache optional drake cache. See [new_cache()].
+#' @param targets Character vector of targets to make.
+#' @param envir Environment containing user-defined functions.
+#' @param cache Optional drake cache. See [new_cache()].
 check_plan <- function(
   plan = NULL,
   targets = NULL,
@@ -1628,8 +1628,8 @@ in_progress <- function(
 #' @inheritParams new_cache
 #' @inheritParams this_cache
 #' @inheritParams drake_config
-#' @param path file path of the cache
-#' @param force logical, whether to load the cache
+#' @param path File path of the cache.
+#' @param force Logical, whether to load the cache
 #'   despite any back compatibility issues with the
 #'   running version of drake.
 recover_cache <- function(
@@ -1661,7 +1661,7 @@ recover_cache <- function(
 #'   target-level information.
 #' @details Ordinary users do not need to worry about this function.
 #' It is just another window into `drake`'s internals.
-#' @param default name of the default `storr` namespace
+#' @param default Name of the default `storr` namespace.
 target_namespaces <- function(
   default = storr::storr_environment()$default_namespace
 ) {
@@ -1679,16 +1679,16 @@ target_namespaces <- function(
 #' @export
 #' @keywords internal
 #' @return An evaluated workflow plan data frame of analysis targets.
-#' @param plan workflow plan data frame of analysis methods.
+#' @param plan Workflow plan data frame of analysis methods.
 #'   The commands in the `command` column must
 #'   have the `dataset__` wildcard where the datasets go.
 #'   For example, one command could be `lm(dataset__)`. Then,
 #'   the commands in the output will include `lm(your_dataset_1)`,
 #'   `lm(your_dataset_2)`, etc.
-#' @param datasets workflow plan data frame with instructions
+#' @param datasets Workflow plan data frame with instructions
 #'   to make the datasets.
-#' @param sep character scalar, delimiter for creating
-#'   the names of new targets
+#' @param sep character Scalar, delimiter for creating
+#'   the names of new targets.
 #' @examples
 #' # Deprecated
 plan_analyses <- function(plan, datasets, sep = "_") {
@@ -1717,18 +1717,18 @@ plan_analyses <- function(plan, datasets, sep = "_") {
 #' @return An evaluated workflow plan data frame of instructions
 #'   for computing summaries of analyses and datasets.
 #'   analyses of multiple datasets in multiple ways.
-#' @param plan workflow plan data frame with commands for the summaries.
+#' @param plan Workflow plan data frame with commands for the summaries.
 #'   Use the `analysis__` and `dataset__` wildcards
 #'   just like the `dataset__` wildcard in [plan_analyses()].
-#' @param analyses workflow plan data frame of analysis instructions
-#' @param datasets workflow plan data frame with instructions to make
+#' @param analyses Workflow plan data frame of analysis instructions.
+#' @param datasets Workflow plan data frame with instructions to make
 #'   or import the datasets.
 #' @param gather Character vector, names of functions to gather the
 #'   summaries. If not `NULL`, the length must be the number of
 #'   rows in the `plan`. See the [gather_plan()] function
 #'   for more.
-#' @param sep character scalar, delimiter for creating the
-#'   new target names
+#' @param sep Character scalar, delimiter for creating the
+#'   new target names.
 #' @examples
 #' # Deprecated
 plan_summaries <- function(

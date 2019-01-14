@@ -9,34 +9,34 @@ reduce_by(plan, ..., prefix = "target", begin = "", op = " + ",
   sep = "_")
 }
 \arguments{
-\item{plan}{workflow plan data frame of prespecified targets}
+\item{plan}{Workflow plan data frame of prespecified targets.}
 
 \item{...}{Symbols, columns of \code{plan} to define target groupings.
 A \code{\link[=reduce_plan]{reduce_plan()}} call is applied for each grouping.
 Groupings with all \code{NA}s in the selector variables are ignored.}
 
-\item{prefix}{character, prefix for naming the new targets.
+\item{prefix}{Character, prefix for naming the new targets.
 Suffixes are generated from the values of the columns
 specified in \code{...}.}
 
-\item{begin}{character, code to place at the beginning
-of each step in the reduction}
+\item{begin}{Character, code to place at the beginning
+of each step in the reduction.}
 
-\item{op}{binary operator to apply in the reduction}
+\item{op}{Binary operator to apply in the reduction}
 
-\item{end}{character, code to place at the end
-of each step in the reduction}
+\item{end}{Character, code to place at the end
+of each step in the reduction.}
 
-\item{pairwise}{logical, whether to create multiple
+\item{pairwise}{Logical, whether to create multiple
 new targets, one for each pair/step in the reduction (\code{TRUE}),
 or to do the reduction all in one command.}
 
-\item{append}{logical. If \code{TRUE}, the output will include the
+\item{append}{Logical. If \code{TRUE}, the output will include the
 original rows in the \code{plan} argument.
 If \code{FALSE}, the output will only include the new
 targets and commands.}
 
-\item{filter}{an expression like you would pass to \code{dplyr::filter()}.
+\item{filter}{An expression like you would pass to \code{dplyr::filter()}.
 The rows for which \code{filter} evaluates to \code{TRUE} will be gathered,
 and the rest will be excluded from gathering.
 Why not just call \code{dplyr::filter()} before \code{gather_by()}?
@@ -44,8 +44,8 @@ Because \code{gather_by(append = TRUE, filter = my_column == "my_value")}
 gathers on some targets while including all the original targets
 in the output. See the examples for a demonstration.}
 
-\item{sep}{character scalar, delimiter for creating the names
-of new targets}
+\item{sep}{Character scalar, delimiter for creating the names
+of new targets.}
 }
 \value{
 A workflow plan data frame.

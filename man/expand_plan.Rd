@@ -7,15 +7,15 @@
 expand_plan(plan, values = NULL, rename = TRUE, sep = "_")
 }
 \arguments{
-\item{plan}{workflow plan data frame}
+\item{plan}{Workflow plan data frame.}
 
-\item{values}{values to expand over. These will be appended to
+\item{values}{Values to expand over. These will be appended to
 the names of the new targets.}
 
-\item{rename}{logical, whether to rename the targets
+\item{rename}{Logical, whether to rename the targets
 based on the \code{values}. See the examples for a demo.}
 
-\item{sep}{character scalar, delimiter between the original
+\item{sep}{Character scalar, delimiter between the original
 target names and the values to append to create the new
 target names. Only relevant when \code{rename} is \code{TRUE}.}
 }

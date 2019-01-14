@@ -7,7 +7,7 @@
 drake_examples(quiet = TRUE)
 }
 \arguments{
-\item{quiet}{logical, passed to \code{downloader::download()}
+\item{quiet}{Logical, passed to \code{downloader::download()}
 and thus \code{utils::download.file()}. Whether
 to download quietly or print progress.}
 }

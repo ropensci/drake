@@ -8,13 +8,13 @@ plan_summaries(plan, analyses, datasets, gather = rep("list",
   nrow(plan)), sep = "_")
 }
 \arguments{
-\item{plan}{workflow plan data frame with commands for the summaries.
+\item{plan}{Workflow plan data frame with commands for the summaries.
 Use the \code{analysis__} and \code{dataset__} wildcards
 just like the \code{dataset__} wildcard in \code{\link[=plan_analyses]{plan_analyses()}}.}
 
-\item{analyses}{workflow plan data frame of analysis instructions}
+\item{analyses}{Workflow plan data frame of analysis instructions.}
 
-\item{datasets}{workflow plan data frame with instructions to make
+\item{datasets}{Workflow plan data frame with instructions to make
 or import the datasets.}
 
 \item{gather}{Character vector, names of functions to gather the
@@ -22,8 +22,8 @@ summaries. If not \code{NULL}, the length must be the number of
 rows in the \code{plan}. See the \code{\link[=gather_plan]{gather_plan()}} function
 for more.}
 
-\item{sep}{character scalar, delimiter for creating the
-new target names}
+\item{sep}{Character scalar, delimiter for creating the
+new target names.}
 }
 \value{
 An evaluated workflow plan data frame of instructions

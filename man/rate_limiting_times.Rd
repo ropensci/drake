@@ -8,7 +8,7 @@ rate_limiting_times(config, targets = NULL, from_scratch = FALSE,
   targets_only = FALSE, future_jobs = 1, digits = 3)
 }
 \arguments{
-\item{config}{option internal runtime parameter list of
+\item{config}{Optional internal runtime parameter list of
 \code{\link{make}(...)},
 produced by both \code{\link[=make]{make()}} and
 \code{\link[=drake_config]{drake_config()}}.}
@@ -18,18 +18,18 @@ Find the rate-limiting times for building these targets
 plus dependencies.
 Defaults to all targets.}
 
-\item{from_scratch}{logical, whether to assume
+\item{from_scratch}{Logical, whether to assume
 next hypothetical call to \code{\link[=make]{make()}}
 is a build from scratch (after \code{\link[=clean]{clean()}}).}
 
-\item{targets_only}{logical, whether to factor in just the
+\item{targets_only}{Logical, whether to factor in just the
 targets or use times from everything, including the imports.}
 
-\item{future_jobs}{hypothetical number of jobs
+\item{future_jobs}{Hypothetical number of jobs
 assumed for the predicted runtime.
 assuming this number of jobs.}
 
-\item{digits}{number of digits for rounding the times.}
+\item{digits}{Number of digits for rounding the times.}
 }
 \value{
 A data frame of times of the worst-case scenario

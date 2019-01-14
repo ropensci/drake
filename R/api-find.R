@@ -5,7 +5,7 @@
 #' @export
 #' @return File path of the nearest drake cache or `NULL`
 #'   if no cache is found.
-#' @param path starting path for search back for the cache.
+#' @param path Starting path for search back for the cache.
 #'   Should be a subdirectory of the drake project.
 #' @param directory Name of the folder containing the cache.
 #' @examples

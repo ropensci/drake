@@ -7,7 +7,7 @@
 default_short_hash_algo(cache = NULL)
 }
 \arguments{
-\item{cache}{optional drake cache.
+\item{cache}{Optional drake cache.
 When you \code{\link[=configure_cache]{configure_cache()}} without
 supplying a short hash algorithm,
 \code{default_short_hash_algo(cache)} is the short

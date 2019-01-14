@@ -9,15 +9,15 @@ clean(..., list = character(0), destroy = FALSE, path = getwd(),
   force = FALSE, garbage_collection = FALSE, purge = FALSE)
 }
 \arguments{
-\item{...}{targets to remove from the cache: as names (symbols) or
+\item{...}{Targets to remove from the cache: as names (symbols) or
 character strings. If the \code{tidyselect} package is installed,
 you can also supply \code{dplyr}-style \code{tidyselect}
 commands such as \code{starts_with()}, \code{ends_with()}, and \code{one_of()}.}
 
-\item{list}{character vector naming targets to be removed from the
+\item{list}{Character vector naming targets to be removed from the
 cache. Similar to the \code{list} argument of \code{\link[=remove]{remove()}}.}
 
-\item{destroy}{logical, whether to totally remove the drake cache.
+\item{destroy}{Logical, whether to totally remove the drake cache.
 If \code{destroy} is \code{FALSE}, only the targets
 from \code{make()}
 are removed. If \code{TRUE}, the whole cache is removed, including
@@ -28,7 +28,7 @@ or if \code{search} is \code{TRUE}, either the
 project root or a subdirectory of the project.
 Ignored if a \code{cache} is supplied.}
 
-\item{search}{logical. If \code{TRUE}, search parent directories
+\item{search}{Logical. If \code{TRUE}, search parent directories
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.
 Ignored if a \code{cache} is supplied.}
@@ -36,7 +36,7 @@ Ignored if a \code{cache} is supplied.}
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} and \code{search} are ignored.}
 
-\item{verbose}{logical or numeric, control printing to the console.
+\item{verbose}{Logical or numeric, control printing to the console.
 \itemize{
 \item \code{0} or \code{FALSE}: print nothing.
 \item \code{1} or \code{TRUE}: print only targets to build.
@@ -50,11 +50,11 @@ If supplied, \code{path} and \code{search} are ignored.}
 \item{jobs}{Number of jobs for light parallelism
 (disabled on Windows).}
 
-\item{force}{logical, whether to try to clean the cache
+\item{force}{Logical, whether to try to clean the cache
 even though the project may not be back compatible with the
 current version of drake.}
 
-\item{garbage_collection}{logical, whether to call
+\item{garbage_collection}{Logical, whether to call
 \code{cache$gc()} to do garbage collection.
 If \code{TRUE}, cached data with no remaining references
 will be removed.
@@ -62,7 +62,7 @@ This will slow down \code{clean()}, but the cache
 could take up far less space afterwards.
 See the \code{gc()} method for \code{storr} caches.}
 
-\item{purge}{logical, whether to remove objects from
+\item{purge}{Logical, whether to remove objects from
 metadata namespaces such as "meta", "build_times", and "errors".}
 }
 \value{

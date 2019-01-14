@@ -7,22 +7,22 @@
 #' @seealso [drake_plan()], [reduce_by()], [gather_by()], [reduce_plan()], [gather_plan()],
 #'   [evaluate_plan()], [expand_plan()]
 #' @return A workflow plan data frame.
-#' @param args a data frame (or better yet, a `tibble`)
+#' @param args A data frame (or better yet, a `tibble`)
 #'   of function arguments to `fun`.
 #'   Here, the column names should be the names of the arguments
 #'   of `fun`, and each row of `args` corresponds to a
 #'   call to `fun`.
-#' @param fun name of a function to apply the arguments
+#' @param fun Name of a function to apply the arguments
 #'   row-by-row. Supply a symbol if `character_only` is
 #'   `FALSE` and a character scalar otherwise.
-#' @param id name of an optional column in `args`
+#' @param id Name of an optional column in `args`
 #'   giving the names of the targets. If not supplied,
 #'   target names will be generated automatically.
 #'   `id` should be a symbol if `character_only` is `FALSE`
 #'   and a character scalar otherwise.
-#' @param character_only logical, whether to interpret
+#' @param character_only Logical, whether to interpret
 #'   the `fun` and `id` arguments as character scalars or symbols.
-#' @param trace logical, whether to append the columns of `args`
+#' @param trace Logical, whether to append the columns of `args`
 #'   to the output workflow plan data frame. The added columns
 #'   help "trace back" the original settings that went into building
 #'   each target. Similar to the `trace` argument of [evaluate_plan()].
@@ -98,11 +98,11 @@ map_plan <- function(
 #'   [evaluate_plan()], [expand_plan()]
 #' @return A workflow plan data frame that aggregates multiple
 #'   prespecified targets into one additional target downstream.
-#' @param plan workflow plan data frame of prespecified targets
-#' @param target name of the new aggregated target
-#' @param gather function used to gather the targets. Should be
+#' @param plan Workflow plan data frame of prespecified targets.
+#' @param target Name of the new aggregated target.
+#' @param gather Function used to gather the targets. Should be
 #'   one of `list(...)`, `c(...)`, `rbind(...)`, or similar.
-#' @param append logical. If `TRUE`, the output will include the
+#' @param append Logical. If `TRUE`, the output will include the
 #'   original rows in the `plan` argument.
 #'   If `FALSE`, the output will only include the new
 #'   targets and commands.
@@ -162,18 +162,18 @@ gather_plan <- function(
 #' @param ... Symbols, columns of `plan` to define target groupings.
 #'   A [gather_plan()] call is applied for each grouping.
 #'   Groupings with all `NA`s in the selector variables are ignored.
-#' @param prefix character, prefix for naming the new targets.
+#' @param prefix Character, prefix for naming the new targets.
 #'   Suffixes are generated from the values of the columns
 #'   specified in `...`.
-#' @param filter an expression like you would pass to `dplyr::filter()`.
+#' @param filter An expression like you would pass to `dplyr::filter()`.
 #'   The rows for which `filter` evaluates to `TRUE` will be gathered,
 #'   and the rest will be excluded from gathering.
 #'   Why not just call `dplyr::filter()` before `gather_by()`?
 #'   Because `gather_by(append = TRUE, filter = my_column == "my_value")`
 #'   gathers on some targets while including all the original targets
 #'   in the output. See the examples for a demonstration.
-#' @param sep character scalar, delimiter for creating the names
-#'   of new targets
+#' @param sep Character scalar, delimiter for creating the names
+#'   of new targets.
 #' @examples
 #' plan <- drake_plan(
 #'   data = get_data(),
@@ -247,21 +247,21 @@ gather_by <- function(
 #'   [gather_plan()], [evaluate_plan()], [expand_plan()]
 #' @return A workflow plan data frame that aggregates multiple
 #'   prespecified targets into one additional target downstream.
-#' @param plan workflow plan data frame of prespecified targets
-#' @param target name of the new reduced target
-#' @param begin character, code to place at the beginning
-#'   of each step in the reduction
-#' @param op binary operator to apply in the reduction
-#' @param end character, code to place at the end
-#'   of each step in the reduction
-#' @param pairwise logical, whether to create multiple
+#' @param plan Workflow plan data frame of prespecified targets.
+#' @param target Name of the new reduced target.
+#' @param begin Character, code to place at the beginning
+#'   of each step in the reduction.
+#' @param op Binary operator to apply in the reduction
+#' @param end Character, code to place at the end
+#'   of each step in the reduction.
+#' @param pairwise Logical, whether to create multiple
 #'   new targets, one for each pair/step in the reduction (`TRUE`),
 #'   or to do the reduction all in one command.
-#' @param append logical. If `TRUE`, the output will include the
+#' @param append Logical. If `TRUE`, the output will include the
 #'   original rows in the `plan` argument.
 #'   If `FALSE`, the output will only include the new
 #'   targets and commands.
-#' @param sep character scalar, delimiter for creating new target names
+#' @param sep Character scalar, delimiter for creating new target names.
 #' @examples
 #' # Workflow plan for datasets:
 #' x_plan <- evaluate_plan(
@@ -338,18 +338,18 @@ reduce_plan <- function(
 #' @param ... Symbols, columns of `plan` to define target groupings.
 #'   A [reduce_plan()] call is applied for each grouping.
 #'   Groupings with all `NA`s in the selector variables are ignored.
-#' @param prefix character, prefix for naming the new targets.
+#' @param prefix Character, prefix for naming the new targets.
 #'   Suffixes are generated from the values of the columns
 #'   specified in `...`.
-#' @param filter an expression like you would pass to `dplyr::filter()`.
+#' @param filter An expression like you would pass to `dplyr::filter()`.
 #'   The rows for which `filter` evaluates to `TRUE` will be gathered,
 #'   and the rest will be excluded from gathering.
 #'   Why not just call `dplyr::filter()` before `gather_by()`?
 #'   Because `gather_by(append = TRUE, filter = my_column == "my_value")`
 #'   gathers on some targets while including all the original targets
 #'   in the output. See the examples for a demonstration.
-#' @param sep character scalar, delimiter for creating the names
-#'   of new targets
+#' @param sep Character scalar, delimiter for creating the names
+#'   of new targets.
 #' @examples
 #' plan <- drake_plan(
 #'   data = get_data(),

@@ -7,14 +7,14 @@
 manage_memory(targets, config, downstream = NULL, jobs = 1)
 }
 \arguments{
-\item{targets}{character vector of targets}
+\item{targets}{Character vector of targets.}
 
-\item{config}{\code{\link[=drake_config]{drake_config()}} list}
+\item{config}{\code{\link[=drake_config]{drake_config()}} list.}
 
-\item{downstream}{optional, character vector of any targets
+\item{downstream}{Optional, character vector of any targets
 assumed to be downstream.}
 
-\item{jobs}{number of jobs for local parallel computing}
+\item{jobs}{Number of jobs for local parallel computing}
 }
 \value{
 Nothing.

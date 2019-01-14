@@ -8,10 +8,10 @@ into a plain R script file.}
 plan_to_code(plan, con = stdout())
 }
 \arguments{
-\item{plan}{workflow plan data frame. See \code{\link[=drake_plan]{drake_plan()}}
+\item{plan}{Workflow plan data frame. See \code{\link[=drake_plan]{drake_plan()}}
 for details.}
 
-\item{con}{a file path or connection to write to.}
+\item{con}{A file path or connection to write to.}
 }
 \description{
 \code{code_to_plan()}, \code{\link[=plan_to_code]{plan_to_code()}}, and

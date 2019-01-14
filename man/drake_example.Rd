@@ -9,7 +9,7 @@ drake_example(example = "main", to = getwd(), destination = NULL,
   overwrite = FALSE, quiet = TRUE)
 }
 \arguments{
-\item{example}{name of the example.
+\item{example}{Name of the example.
 The possible values are the names of the folders at
 \url{https://github.com/wlandau/drake-examples}.}
 
@@ -17,12 +17,12 @@ The possible values are the names of the folders at
 the folder containing the code files for the example.
 passed to the \code{exdir} argument of \code{utils::unzip()}.}
 
-\item{destination}{Deprecated, use \code{to} instead.}
+\item{destination}{Deprecated; use \code{to} instead.}
 
 \item{overwrite}{Logical, whether to overwrite an existing folder
 with the same name as the drake example.}
 
-\item{quiet}{logical, passed to \code{downloader::download()}
+\item{quiet}{Logical, passed to \code{downloader::download()}
 and thus \code{utils::download.file()}. Whether
 to download quietly or print progress.}
 }

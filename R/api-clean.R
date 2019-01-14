@@ -22,15 +22,15 @@
 #'
 #' @inheritParams cached
 #'
-#' @param ... targets to remove from the cache: as names (symbols) or
+#' @param ... Targets to remove from the cache: as names (symbols) or
 #'   character strings. If the `tidyselect` package is installed,
 #'   you can also supply `dplyr`-style `tidyselect`
 #'   commands such as `starts_with()`, `ends_with()`, and `one_of()`.
 #'
-#' @param list character vector naming targets to be removed from the
+#' @param list Character vector naming targets to be removed from the
 #'   cache. Similar to the `list` argument of [remove()].
 #'
-#' @param destroy logical, whether to totally remove the drake cache.
+#' @param destroy Logical, whether to totally remove the drake cache.
 #'   If `destroy` is `FALSE`, only the targets
 #'   from `make()`
 #'   are removed. If `TRUE`, the whole cache is removed, including
@@ -39,11 +39,11 @@
 #' @param jobs Number of jobs for light parallelism
 #'   (disabled on Windows).
 #'
-#' @param force logical, whether to try to clean the cache
+#' @param force Logical, whether to try to clean the cache
 #'   even though the project may not be back compatible with the
 #'   current version of drake.
 #'
-#' @param garbage_collection logical, whether to call
+#' @param garbage_collection Logical, whether to call
 #'   `cache$gc()` to do garbage collection.
 #'   If `TRUE`, cached data with no remaining references
 #'   will be removed.
@@ -51,7 +51,7 @@
 #'   could take up far less space afterwards.
 #'   See the `gc()` method for `storr` caches.
 #'
-#' @param purge logical, whether to remove objects from
+#' @param purge Logical, whether to remove objects from
 #'   metadata namespaces such as "meta", "build_times", and "errors".
 #'
 #' @examples
@@ -170,7 +170,7 @@ clean_single_target <- function(
 #' @export
 #' @return`NULL`
 #' @inheritParams cached
-#' @param force logical, whether to load the cache
+#' @param force Logical, whether to load the cache
 #'   despite any back compatibility issues with the
 #'   running version of drake.
 #' @examples
@@ -233,10 +233,10 @@ rm_bad_cache_filenames <- function(cache) {
 #'   as well as true targets.
 #'   If `targets` is `NULL`, everything in the
 #'   cache is rescued.
-#' @param cache a `storr` cache object
-#' @param jobs number of jobs for light parallelism
-#'   (disabled on Windows)
-#' @param garbage_collection logical, whether to do garbage collection
+#' @param cache A `storr` cache object.
+#' @param jobs Number of jobs for light parallelism
+#'   (disabled on Windows).
+#' @param garbage_collection Logical, whether to do garbage collection
 #'   as a final step. See [drake_gc()] and [clean()]
 #'   for details.
 #' @examples
