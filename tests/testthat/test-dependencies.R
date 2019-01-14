@@ -163,7 +163,6 @@ test_with_dir("tracked() works", {
 test_with_dir("missing input files", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
-  expect_silent(check_plan(config$plan, envir = config$envir))
   expect_silent(tmp <- missing_input_files(config))
   unlink("input.rds", force = TRUE)
   expect_warning(tmp <- missing_input_files(config))

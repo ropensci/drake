@@ -14,10 +14,10 @@
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
-    "version": "3.5.1",
+    "version": "3.5.2",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 3.5.1 (2018-07-02)",
+  "runtimePlatform": "R version 3.5.2 (2018-12-20)",
   "provider": {
     "@id": "https://cran.r-project.org",
     "@type": "Organization",
@@ -432,7 +432,7 @@
   ],
   "releaseNotes": "https://github.com/bpbond/drake/blob/master/NEWS.md",
   "readme": "https://github.com/bpbond/drake/blob/master/README.md",
-  "fileSize": "336.757KB",
+  "fileSize": "337.847KB",
   "contIntegration": [
     "https://ci.appveyor.com/project/ropensci/drake",
     "https://travis-ci.org/ropensci/drake",

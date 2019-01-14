@@ -31,9 +31,8 @@ for descriptions of the optional columns.)
 Targets are the objects and files that drake generates,
 and commands are the pieces of R code that produce them.
 Use the function \code{\link[=drake_plan]{drake_plan()}} to generate workflow plan
-data frames easily, and see functions \code{\link[=plan_analyses]{plan_analyses()}},
-\code{\link[=plan_summaries]{plan_summaries()}}, \code{\link[=evaluate_plan]{evaluate_plan()}},
-\code{\link[=expand_plan]{expand_plan()}}, and \code{\link[=gather_plan]{gather_plan()}} for
+data frames easily, and see functions \code{\link[=evaluate_plan]{evaluate_plan()}},
+\code{\link[=expand_plan]{expand_plan()}}, \code{\link[=gather_by]{gather_by()}}, and \code{\link[=map_plan]{map_plan()}} for
 easy ways to generate large workflow plan data frames.}
 
 \item{targets}{Character vector, names of targets to build.
@@ -139,9 +138,7 @@ of individual targets as they are being built. Progress logging
 creates a lot of little files in the cache, and it may make builds
 a tiny bit slower. So you may see gains in storage efficiency
 and speed with
-\code{make(..., log_progress = FALSE)}. But be warned that
-\code{\link[=progress]{progress()}} and \code{\link[=in_progress]{in_progress()}}
-will no longer work if you do that.}
+\code{make(..., log_progress = FALSE)}.}
 
 \item{skip_targets}{Logical, whether to skip building the targets
 in \code{plan} and just import objects and files.}

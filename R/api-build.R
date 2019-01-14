@@ -4,8 +4,7 @@
 #' @seealso [drake_debug()]
 #' @return The value of the target right after it is built.
 #' @param target Name of the target.
-#' @param meta List of metadata that tell which
-#'   targets are up to date (from [drake_meta()]).
+#' @param meta Deprecated.
 #' @param config Internal configuration list.
 #' @inheritParams loadd
 #' @inheritParams readd
@@ -67,7 +66,7 @@ drake_build <- function(
     tidyselect = FALSE,
     config = config
   )
-  meta <- drake_meta(target = target, config = config)
+  meta <- drake_meta_(target = target, config = config)
   announce_build(target = target, meta = meta, config = config)
   build <- build_target(target = target, meta = meta, config = config)
   conclude_build(build = build, config = config)

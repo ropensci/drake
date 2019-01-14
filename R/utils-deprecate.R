@@ -1374,7 +1374,7 @@ imported <- function(
 #' @param to Character vector of vertices.
 #' @param jobs Number of jobs for parallelism.
 #' @examples
-#' # deprectaed
+#' # deprecated
 prune_drake_graph <- function(
   graph, to = igraph::V(graph)$name, jobs = 1
 ) {
@@ -1389,4 +1389,434 @@ prune_drake_graph <- function(
     mode = "in",
     order = igraph::gorder(graph)
   )
+}
+
+#' @title Deprecated. Show the analysis wildcard
+#'   used in [plan_summaries()].
+#' @description Deprecated on 2019-01-12.
+#' @details Used to generate workflow plan data frames.
+#' @export
+#' @keywords internal
+#' @seealso [plan_summaries()]
+#' @return The analysis wildcard used in [plan_summaries()].
+analysis_wildcard <- function() {
+  .Deprecated(
+    "analysis_wildcard",
+    package = "drake",
+    msg = "analysis_wildcard() is deprecated."
+  )
+  analysis_wildcard_()
+} #
+
+#' @title Deprecated. Return the file path where the cache is stored,
+#' if applicable.
+#' @export
+#' @keywords internal
+#' @description Deprecated on 2019-01-12.
+#' @details Currently only works with
+#' [storr::storr_rds()] file system caches.
+#' @return File path where the cache is stored.
+#' @param cache the cache whose file path you want to know
+cache_path <- function(cache = NULL) {
+  .Deprecated(
+    "cache_path",
+    package = "drake",
+    msg = "cache_path() is deprecated."
+  )
+  cache_path_(cache)
+}
+
+#' @title Deprecated. List all the `storr` cache namespaces used by drake.
+#' @description Deprecated on 2019-01-12.
+#' @return A character vector of `storr` namespaces used for drake.
+#' @details Ordinary users do not need to worry about this function.
+#' It is just another window into `drake`'s internals.
+#' @param default name of the default `storr` namespace
+#' @export
+#' @keywords internal
+#' @seealso [make()]
+cache_namespaces <- function(
+  default = storr::storr_environment()$default_namespace
+) {
+  .Deprecated(
+    "cache_namespaces",
+    package = "drake",
+    msg = "cache_namespaces() is deprecated."
+  )
+  out <- c(
+    target_namespaces_(default = default),
+    "change",   # value returned by the "change" trigger
+    "config",   # elements of the config list
+    "memoize",  # for the memoization in preprocessing
+    "progress", # build progress: in progress, finished, failed, etc.
+    "session"   # session info
+  )
+  sort(out)
+}
+
+#' @title Deprecated. Check a workflow plan data frame for obvious errors.
+#' @description Deprecated on 2019-01-12.
+#' @details Possible obvious errors include circular dependencies and
+#' missing input files.
+#' @seealso [drake_plan()], [make()]
+#' @export
+#' @keywords internal
+#' @return Invisibly return `plan`.
+#' @inheritParams cached
+#' @param plan workflow plan data frame, possibly from
+#'   [drake_plan()].
+#' @param targets character vector of targets to make
+#' @param envir environment containing user-defined functions
+#' @param cache optional drake cache. See [new_cache()].
+check_plan <- function(
+  plan = NULL,
+  targets = NULL,
+  envir = parent.frame(),
+  cache = drake::get_cache(verbose = verbose),
+  verbose = 1L,
+  jobs = 1
+) {
+  .Deprecated(
+    "check_plan",
+    package = "drake",
+    msg = "check_plan() is deprecated."
+  )
+  force(envir)
+  config <- drake_config(
+    plan = plan,
+    targets = targets,
+    envir = envir,
+    verbose = verbose,
+    cache = cache,
+    jobs = jobs
+  )
+  config_checks(config)
+  invisible(plan)
+}
+
+#' @title Show the dataset wildcard
+#'   used in [plan_analyses()] and [plan_summaries()].
+#' @details Used to generate workflow plan data frames.
+#' @description Deprecated on 2019-01-12.
+#' @export
+#' @keywords internal
+#' @seealso [plan_analyses()]
+#' @return The dataset wildcard used in
+#'   [plan_analyses()] and [plan_summaries()].
+dataset_wildcard <- function() {
+  .Deprecated(
+    "dataset_wildcard",
+    package = "drake",
+    msg = "dataset_wildcard() is deprecated."
+  )
+  dataset_wildcard_()
+}
+
+#' @title Deprecated. Compute the initial pre-build metadata of a target or import.
+#' @description Deprecated on 2019-01-12.
+#' @details The metadata helps determine if the
+#' target is up to date or outdated. The metadata of imports
+#' is used to compute the metadata of targets.
+#' Target metadata is computed with `drake_meta()`, and then
+#' `drake:::store_outputs()` completes the metadata
+#' after the target is built.
+#' In other words, the output of `drake_meta()` corresponds
+#' to the state of the target immediately before [make()]
+#' builds it.
+#' See [diagnose()] to read the final metadata of a target,
+#' including any errors, warnings, and messages in the last build.
+#' @seealso [diagnose()], [dependency_profile()], [make()]
+#' @export
+#' @keywords internal
+#' @return A list of metadata on a target. Does not include
+#'   the file modification time if the target is a file.
+#'   That piece is computed later in [make()] by
+#'   `drake:::store_outputs()`.
+#' @param target Character scalar, name of the target
+#'   to get metadata.
+#' @param config Master internal configuration list produced
+#'   by [drake_config()].
+drake_meta <- function(target, config) {
+  .Deprecated(
+    "drake_meta",
+    package = "drake",
+    msg = "drake_meta() is deprecated."
+  )
+  drake_meta_(target, config)
+}
+
+#' @title Deprecated. Show drake's color palette.
+#' @description Deprecated on 2019-01-12.
+#' @export
+#' @keywords internal
+#' @details This function is
+#' used in both the console and graph visualizations.
+#' Your console must have the crayon package enabled.
+#' This palette applies to console output
+#' (internal functions `console()` and
+#' `console_many_targets()`) and the node colors
+#' in the graph visualizations.
+#' So if you want to contribute improvements to the palette,
+#' please both `drake_palette()` and
+#' `visNetwork::visNetwork(nodes = legend_nodes())`
+#' @return There is a console message,
+#'   but the actual return value is `NULL`.
+drake_palette <- function() {
+  .Deprecated(
+    "drake_palette",
+    package = "drake",
+    msg = "drake_palette() is deprecated."
+  )
+  drake_palette_()
+}
+
+#' @title Deprecated. Output a random tip about drake.
+#' @description Deprecated on 2019-01-12.
+#' @details Tips are usually related to news and usage.
+#' @export
+#' @keywords internal
+#' @return A character scalar with a tip on how to use drake.
+drake_tip <- function() {
+  .Deprecated(
+    "drake_tip",
+    package = "drake",
+    msg = "drake_tip() is deprecated."
+  )
+  drake_tip_()
+}
+
+#' @title Deprecated. List the targets that either
+#'   (1) are currently being built during a [make()], or
+#'   (2) were being built if the last [make()] quit unexpectedly.
+#' @description Deprecated on 2019-01-13.
+#' @details Similar to [progress()].
+#' @seealso [diagnose()], [drake_get_session_info()],
+#'   [cached()], [readd()], [drake_plan()], [make()]
+#' @export
+#' @keywords internal
+#' @return A character vector of target names.
+#' @inheritParams cached
+in_progress <- function(
+  path = getwd(),
+  search = TRUE,
+  cache = drake::get_cache(
+    path = path,
+    search = search,
+    verbose = verbose
+  ),
+  verbose = 1L
+) {
+  .Deprecated(
+    "in_progress",
+    package = "drake",
+    msg = "in_progress() is deprecated."
+  )
+  in_progress_(path, search, cache, verbose )
+}
+
+#' @title Deprecated. Load an existing drake files system cache 
+#' if it exists or create a new one otherwise.
+#' @description Deprecated on 2019-01-13.
+#' @export
+#' @keywords internal
+#' @seealso [new_cache()], [this_cache()],
+#'   [get_cache()]
+#' @details Does not work with
+#' in-memory caches such as [storr_environment()].
+#' @return A drake/storr cache.
+#' @inheritParams cached
+#' @inheritParams new_cache
+#' @inheritParams this_cache
+#' @inheritParams drake_config
+#' @param path file path of the cache
+#' @param force logical, whether to load the cache
+#'   despite any back compatibility issues with the
+#'   running version of drake.
+recover_cache <- function(
+  path = NULL,
+  hash_algorithm = NULL,
+  short_hash_algo = NULL,
+  long_hash_algo = NULL,
+  force = FALSE,
+  verbose = 1L,
+  fetch_cache = NULL,
+  console_log_file = NULL
+) {
+  .Deprecated(
+    "recover_cache",
+    package = "drake",
+    msg = "recover_cache() is deprecated."
+  )
+  recover_cache_(path, hash_algorithm, short_hash_algo, long_hash_algo,
+                 force, verbose, fetch_cache, console_log_file)
+}
+
+#' @title Deprecated. For drake caches, list the `storr` cache 
+#' namespaces that store target-level information.
+#' @description Deprecated on 2019-01-13.
+#' @export
+#' @keywords internal
+#' @seealso [make()]
+#' @return A character vector of `storr` namespaces that store
+#'   target-level information.
+#' @details Ordinary users do not need to worry about this function.
+#' It is just another window into `drake`'s internals.
+#' @param default name of the default `storr` namespace
+target_namespaces <- function(
+  default = storr::storr_environment()$default_namespace
+) {
+  .Deprecated(
+    "target_namespaces",
+    package = "drake",
+    msg = "target_namespaces() is deprecated."
+  )
+  target_namespaces_(default)
+}
+
+#' @title Deprecated.
+#' @description Use [evaluate_plan()] and [expand_plan()] instead.
+#' @details 2019-01-13
+#' @export
+#' @keywords internal
+#' @return An evaluated workflow plan data frame of analysis targets.
+#' @param plan workflow plan data frame of analysis methods.
+#'   The commands in the `command` column must
+#'   have the `dataset__` wildcard where the datasets go.
+#'   For example, one command could be `lm(dataset__)`. Then,
+#'   the commands in the output will include `lm(your_dataset_1)`,
+#'   `lm(your_dataset_2)`, etc.
+#' @param datasets workflow plan data frame with instructions
+#'   to make the datasets.
+#' @param sep character scalar, delimiter for creating
+#'   the names of new targets
+#' @examples
+#' # Deprecated
+plan_analyses <- function(plan, datasets, sep = "_") {
+  .Deprecated(
+    "plan_analyses",
+    package = "drake",
+    msg = paste(
+      "plan_analyses() is deprecated.",
+      "Use evaluate_plan() and expand_plan() instead."
+    )
+  )
+  evaluate_plan(
+    plan,
+    wildcard = dataset_wildcard_(),
+    values = datasets$target,
+    sep = sep
+  )
+}
+
+#' @title Deprecated
+#' @description Use [evaluate_plan()], [expand_plan()],
+#'   and [gather_by()] instead.
+#' @details 2019-01-13
+#' @export
+#' @keywords internal
+#' @return An evaluated workflow plan data frame of instructions
+#'   for computing summaries of analyses and datasets.
+#'   analyses of multiple datasets in multiple ways.
+#' @param plan workflow plan data frame with commands for the summaries.
+#'   Use the `analysis__` and `dataset__` wildcards
+#'   just like the `dataset__` wildcard in [plan_analyses()].
+#' @param analyses workflow plan data frame of analysis instructions
+#' @param datasets workflow plan data frame with instructions to make
+#'   or import the datasets.
+#' @param gather Character vector, names of functions to gather the
+#'   summaries. If not `NULL`, the length must be the number of
+#'   rows in the `plan`. See the [gather_plan()] function
+#'   for more.
+#' @param sep character scalar, delimiter for creating the
+#'   new target names
+#' @examples
+#' # Deprecated
+plan_summaries <- function(
+  plan,
+  analyses,
+  datasets,
+  gather = rep("list", nrow(plan)),
+  sep = "_"
+) {
+  .Deprecated(
+    "plan_summaries",
+    package = "drake",
+    msg = paste(
+      "plan_summaries() is deprecated.",
+      "Use evaluate_plan(), expand_plan(), and gather_by() instead."
+    )
+  )
+  plan <- with_analyses_only(plan)
+  out <- plan
+  group <- paste(colnames(out), collapse = sep)
+  out[[group]] <- out$target
+  if (!any(grepl(analysis_wildcard_(), out$command, fixed = TRUE))) {
+    stop(
+      "no 'analysis__' wildcard found in plan$command. ",
+      "Use plan_analyses() instead."
+    )
+  }
+  out <- evaluate_plan(
+    out,
+    wildcard = analysis_wildcard_(),
+    values = analyses$target,
+    sep = sep
+  )
+  out <- evaluate_plan(
+    out,
+    wildcard = dataset_wildcard_(),
+    values = datasets$target,
+    expand = FALSE,
+    sep = sep
+  )
+  if (!length(gather)) {
+    return(out[setdiff(names(out), group)])
+  }
+  if (length(gather) == 1) {
+    gather <- rep(gather, dim(plan)[1])
+  }
+  if (!(length(gather) == dim(plan)[1])) {
+    stop("gather must be NULL or have length 1 or nrow(plan)")
+  }
+  gathered <- map_by(
+    .x = out,
+    .by = group,
+    .f = function(x) {
+      summary_type <- x[[group]][1]
+      gather_plan(
+        x,
+        target = summary_type,
+        gather = gather[which(summary_type == plan$target)],
+        append = FALSE
+      )
+    }
+  )
+  target <- command <- NULL
+  out <- bind_plans(gathered, out)
+  out[, c("target", "command")]
+}
+
+with_analyses_only <- function(plan) {
+  has_analysis <- grepl(analysis_wildcard_(), plan$command, fixed = TRUE)
+  if (any(!has_analysis)) {
+    warning(
+      "removing ",
+      sum(has_analysis),
+      " rows with no 'analysis__' wildcard in the command.",
+      "Use plan_analyses() for these.",
+      call. = FALSE
+    )
+  }
+  return(plan[has_analysis, ])
+}
+
+# Show the analysis wildcard used in [plan_summaries()].
+analysis_wildcard_ <- function() {
+  "analysis__"
+}
+
+# Show the dataset wildcard used in
+# [plan_analyses()] and [plan_summaries()].
+dataset_wildcard_ <- function() {
+  "dataset__"
 }

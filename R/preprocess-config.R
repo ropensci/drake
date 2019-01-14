@@ -25,9 +25,8 @@
 #'   Targets are the objects and files that drake generates,
 #'   and commands are the pieces of R code that produce them.
 #'   Use the function [drake_plan()] to generate workflow plan
-#'   data frames easily, and see functions [plan_analyses()],
-#'   [plan_summaries()], [evaluate_plan()],
-#'   [expand_plan()], and [gather_plan()] for
+#'   data frames easily, and see functions [evaluate_plan()],
+#'   [expand_plan()], [gather_by()], and [map_plan()] for
 #'   easy ways to generate large workflow plan data frames.
 #'
 #' @param targets Character vector, names of targets to build.
@@ -124,9 +123,7 @@
 #'   creates a lot of little files in the cache, and it may make builds
 #'   a tiny bit slower. So you may see gains in storage efficiency
 #'   and speed with
-#'   `make(..., log_progress = FALSE)`. But be warned that
-#'   [progress()] and [in_progress()]
-#'   will no longer work if you do that.
+#'   `make(..., log_progress = FALSE)`.
 #'
 #' @param cache drake cache as created by [new_cache()].
 #'   See also [get_cache()] and [this_cache()].
@@ -553,7 +550,7 @@ drake_config <- function(
     prework = prework
   )
   if (is.null(cache)) {
-    cache <- recover_cache(
+    cache <- recover_cache_(
       verbose = verbose,
       fetch_cache = fetch_cache,
       console_log_file = console_log_file

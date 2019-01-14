@@ -64,7 +64,7 @@ future_build <- function(target, meta, config, protect) {
 }
 
 new_worker <- function(id, target, config, protect) {
-  meta <- drake_meta(target = target, config = config)
+  meta <- drake_meta_(target = target, config = config)
   if (!should_build_target(target, meta, config)) {
     console_skip(target = target, config = config)
     return(empty_worker(target = target))

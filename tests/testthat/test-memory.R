@@ -23,15 +23,29 @@ test_with_dir("manage_memory in full build", {
     b = dataset__,
     c = dataset__
   )
-  analyses <- plan_analyses(methods, datasets)
+  analyses <- evaluate_plan(
+    methods,
+    wildcard = "dataset__",
+    values = datasets$target
+  )
   heuristics <- drake_plan(
     s = c(dataset__, analysis__),
     t = analysis__)
-  summaries <- plan_summaries(
+  h <- evaluate_plan(
     heuristics,
-    datasets = datasets,
-    analyses = analyses,
-    gather = c("c", "c")
+    wildcard = "analysis__",
+    values = analyses$target
+  )
+  h <- evaluate_plan(
+    h,
+    wildcard = "dataset__",
+    values = datasets$target,
+    expand = FALSE
+  )
+  summaries <- rbind(
+    gather_plan(h[1:9, ], target = "s", gather = "c"),
+    gather_plan(h[10:18, ], target = "t", gather = "c"),
+    h
   )
   output <- drake_plan(
     final1 = mean(s) + mean(t),

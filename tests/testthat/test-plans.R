@@ -189,7 +189,7 @@ test_with_dir("drake_plan() trims outer whitespace in target names", {
 })
 
 test_with_dir(
-  "make() and check_plan() trim outer whitespace in target names", {
+  "make() trims outer whitespace in target names", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- weak_tibble(target = c("a\n", "  b", "c ", "\t  d   "),
                   command = 1)
@@ -221,7 +221,6 @@ test_with_dir("make() plays nicely with tibbles", {
   skip_if_not_installed("pillar")
   skip_if_not_installed("tibble")
   x <- tibble::tribble(~target, ~command, "nothing", 1)
-  expect_silent(check_plan(x, verbose = FALSE))
   expect_silent(make(x, verbose = FALSE, session_info = FALSE))
 })
 

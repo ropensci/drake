@@ -1,22 +1,6 @@
-#' @title List the targets that either
-#'   (1) are currently being built during a [make()], or
-#'   (2) were being built if the last [make()] quit unexpectedly.
-#' @description Similar to [progress()].
-#' @seealso [diagnose()], [drake_get_session_info()],
-#'   [cached()], [readd()], [drake_plan()], [make()]
-#' @export
-#' @return A character vector of target names.
-#' @inheritParams cached
-#' @examples
-#' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' make(my_plan) # Kill before targets finish.
-#' # If you interrupted make(), some targets will probably be listed:
-#' in_progress()
-#' })
-#' }
-in_progress <- function(path = getwd(), search = TRUE,
+# List the targets that either (1) are currently being built, or
+# were being built if the last make quit unexpectedly.
+in_progress_ <- function(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
   verbose = 1L
 ) {

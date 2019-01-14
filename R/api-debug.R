@@ -69,7 +69,7 @@ drake_debug <- function(
   config$layout[[target]]$command_build <- preprocess_command(
     debug_command(config$layout[[target]]$command)
   )
-  meta <- drake_meta(target = target, config = config)
+  meta <- drake_meta_(target = target, config = config)
   announce_build(target = target, meta = meta, config = config)
   build <- build_target(target = target, meta = meta, config = config)
   assert_output_files(target = target, meta = build$meta, config = config)

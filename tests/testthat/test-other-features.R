@@ -15,7 +15,7 @@ test_with_dir("debug_command()", {
 test_with_dir("build_target() does not need to access cache", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- drake_config(drake_plan(x = 1), lock_envir = FALSE)
-  meta <- drake_meta(target = "x", config = config)
+  meta <- drake_meta_(target = "x", config = config)
   config$cache <- NULL
   build <- build_target(target = "x", meta = meta, config = config)
   expect_equal(1, build$value)
@@ -88,7 +88,6 @@ test_with_dir("drake_build works as expected", {
 
 test_with_dir("colors and shapes", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_message(drake_palette())
   expect_is(color_of("target"), "character")
   expect_is(color_of("import"), "character")
   expect_is(color_of("not found"), "character")
@@ -118,31 +117,9 @@ test_with_dir("make() with skip_targets", {
   expect_false(cached(x))
 })
 
-test_with_dir("in_progress() works and errors are handled correctly", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_equal(in_progress(), character(0))
-  bad_plan <- drake_plan(x = function_doesnt_exist())
-  expect_error(
-    make(bad_plan, verbose = TRUE, session_info = FALSE))
-  expect_equal(failed(), "x")
-  expect_equal(in_progress(), character(0))
-  expect_is(e <- diagnose(x)$error, "error")
-  expect_true(
-    grepl(
-      pattern = "function_doesnt_exist",
-      x = e$message,
-      fixed = TRUE
-    )
-  )
-  expect_error(diagnose("notfound"))
-  expect_true(inherits(diagnose(x)$error, "error"))
-  y <- "x"
-  expect_true(inherits(diagnose(y, character_only = TRUE)$error, "error"))
-})
-
 test_with_dir("warnings and messages are caught", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_equal(in_progress(), character(0))
+  expect_equal(progress(), character(0))
   f <- function(x) {
     warning("my first warn")
     message("my first mess")
@@ -188,26 +165,21 @@ test_with_dir(".onLoad() warns correctly and .onAttach() works", {
   expect_warning(drake:::.onLoad())
   unlink(f, force = TRUE)
   set.seed(0)
-  expect_true(is.character(drake_tip()))
   expect_silent(suppressPackageStartupMessages(drake:::.onAttach()))
 })
 
-test_with_dir("config_checks() via check_plan() and make()", {
+test_with_dir("config_checks() via make()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   y <- data.frame(x = 1, y = 2)
-  suppressWarnings(expect_error(check_plan(y, envir = config$envir)))
   suppressWarnings(
     expect_error(
       make(y, envir = config$envir, session_info = FALSE, verbose = FALSE)))
   y <- data.frame(target = character(0), command = character(0))
-  expect_error(suppressWarnings(check_plan(y, envir = config$envir)))
   suppressWarnings(
     expect_error(
       make(y, envir = config$envir,
            session_info = FALSE, verbose = FALSE)))
-  suppressWarnings(expect_error(
-    check_plan(config$plan, targets = character(0), envir = config$envir)))
   suppressWarnings(expect_error(
     make(
       config$plan,
@@ -229,10 +201,6 @@ test_with_dir("targets can be partially specified", {
   config$targets <- "final"
   testrun(config)
   expect_true(is.numeric(readd(final, search = FALSE)))
-  pl <- drake_plan(x = 1, y = 2)
-  expect_error(check_plan(pl, "lskjdf", verbose = FALSE))
-  expect_warning(check_plan(pl, c("lskdjf", "x"), verbose = FALSE))
-  expect_silent(check_plan(pl, verbose = FALSE))
 })
 
 test_with_dir("file_store quotes properly", {

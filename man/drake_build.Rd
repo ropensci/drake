@@ -12,8 +12,7 @@ drake_build(target, config = NULL, meta = NULL,
 
 \item{config}{Internal configuration list.}
 
-\item{meta}{List of metadata that tell which
-targets are up to date (from \code{\link[=drake_meta]{drake_meta()}}).}
+\item{meta}{Deprecated.}
 
 \item{character_only}{Logical, whether \code{name} should be treated
 as a character or a symbol
