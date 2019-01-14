@@ -113,9 +113,7 @@ store_output_files <- function(files, meta, config) {
 
 store_function <- function(target, value, meta, config) {
   if (meta$imported) {
-    value <- ignore_ignore(value)
-    # Unfortunately, vectorization is removed, but this is for the best.
-    value <- deparse(unwrap_function(value))
+    value <- standardize_imported_function(value)
     value <- c(value, meta$dependency_hash)
   }
   store_object(target, value, meta, config)

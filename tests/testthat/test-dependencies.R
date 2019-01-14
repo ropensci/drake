@@ -314,9 +314,17 @@ test_with_dir("ignore() works on its own", {
   expect_identical(ignore_ignore(digest::digest), digest::digest)
 })
 
+test_with_dir("Standardized commands have no attributes", {
+  expect_null(attributes(standardize_command("")))
+  expect_null(attributes(standardize_command("f(x) + y + function(abc){}")))
+  expect_null(attributes(standardize_command(quote(NULL))))
+  expect_null(attributes(standardize_command(digest::digest)))
+  expect_null(attributes(standardize_command(body(digest::digest))))
+})
+
 test_with_dir("Can standardize commands", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_true(is.character(standardize_command("")))
+  expect_true(is.language(standardize_command("")))
   expect_identical(
     standardize_command("f(x +2) + 2"),
     standardize_command("f(x + 2) + 2")
@@ -377,11 +385,11 @@ test_with_dir("Can standardize commands", {
 test_with_dir("standardized commands with ignore()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(
-    standardize_command("f(sqrt( ignore(fun(arg) + 7) + 123))"),
+    standardize_command("f(     sqrt( ignore(fun(arg) + 7) + 123))"),
     standardize_command("f(sqrt(ignore() + 123))")
   )
   expect_equal(
-    standardize_command("f(sqrt( ignore  (fun(arg) + 7) + 123) )"),
+    standardize_command("f(sqrt( ignore  (fun(arg) + 7)+123) ) # noooop"),
     standardize_command("f(sqrt(ignore() + 123))")
   )
 
@@ -413,14 +421,12 @@ test_with_dir("standardized commands with ignore()", {
 
 test_with_dir("Can standardize commands from expr or lang", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  x <- parse(text = c("f(x +2) + 2", "!!y"))
-  y <- standardize_command(x[[1]])
   x <- parse(text = "f(x +2) + 2")
+  y <- standardize_command(x)
   z <- standardize_command(x)
   w <- standardize_command(x[[1]])
-  s <- "f(x + 2) + 2"
-  debug_char0 <-
-    expect_equal(y, s)
+  s <- quote(f(x + 2) + 2)
+  expect_equal(y, s)
   expect_equal(z, s)
   expect_equal(w, s)
 })

@@ -21,10 +21,13 @@ standardize_command <- function(x) {
   if (look_for_ignore) {
     x <- ignore_ignore(x)
   }
-  for (attribute in c("srcref", "srcfile", "wholeSrcref")) {
-    attr(x = x, which = attribute) <- NULL
-  }
-  wide_deparse(x)
+  attributes(x) <- NULL
+  x
+}
+
+standardize_imported_function <- function(x) {
+  x <- ignore_ignore(x)
+  deparse(unwrap_function(x))
 }
 
 ignore_ignore <- function(x) {
