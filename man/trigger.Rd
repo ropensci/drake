@@ -9,13 +9,13 @@ trigger(command = TRUE, depend = TRUE, file = TRUE,
   "blacklist", "condition"))
 }
 \arguments{
-\item{command}{logical, whether to rebuild the target if the
+\item{command}{Logical, whether to rebuild the target if the
 \code{\link[=drake_plan]{drake_plan()}} command changes.}
 
-\item{depend}{logical, whether to rebuild if a
+\item{depend}{Logical, whether to rebuild if a
 non-file dependency changes.}
 
-\item{file}{logical, whether to rebuild the target
+\item{file}{Logical, whether to rebuild the target
 if a \code{\link[=file_in]{file_in()}}/\code{\link[=file_out]{file_out()}}/\code{\link[=knitr_in]{knitr_in()}} file changes.}
 
 \item{condition}{R code (expression or language object)
@@ -27,7 +27,7 @@ that returns any value. The target will rebuild
 if that value is different from last time
 or not already cached.}
 
-\item{mode}{a character scalar equal to \code{"whitelist"} (default) or
+\item{mode}{A character scalar equal to \code{"whitelist"} (default) or
 \code{"blacklist"} or \code{"condition"}. With the \code{mode} argument, you can choose
 how the \code{condition} trigger factors into the decision to build
 or skip the target. Here are the options.

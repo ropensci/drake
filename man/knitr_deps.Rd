@@ -7,7 +7,7 @@
 knitr_deps(target)
 }
 \arguments{
-\item{target}{file path to the file or name of the file target,
+\item{target}{File path to the file or name of the file target,
 source text of the document.}
 }
 \value{

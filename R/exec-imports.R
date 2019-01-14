@@ -10,7 +10,7 @@ process_imports <- function(config) {
 #' @description only used inside process_imports(). Not a user-side function.
 #' @export
 #' @keywords internal
-#' @param import character, name of an import to process
+#' @param import Character, name of an import to process
 #' @param config [drake_config()] object
 #' @examples
 #' # Not a user-side function.

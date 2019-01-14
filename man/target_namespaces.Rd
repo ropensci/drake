@@ -9,7 +9,7 @@ namespaces that store target-level information.}
   target_namespaces(default = storr::storr_environment()$default_namespace)
 }
 \arguments{
-\item{default}{name of the default \code{storr} namespace}
+\item{default}{Name of the default \code{storr} namespace.}
 }
 \value{
 A character vector of \code{storr} namespaces that store

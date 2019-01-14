@@ -10,7 +10,7 @@ build_times(..., path = getwd(), search = TRUE, digits = 3,
   "command"))
 }
 \arguments{
-\item{...}{targets to load from the cache: as names (symbols) or
+\item{...}{Targets to load from the cache: as names (symbols) or
 character strings. If the \code{tidyselect} package is installed,
 you can also supply \code{dplyr}-style \code{tidyselect}
 commands such as \code{starts_with()}, \code{ends_with()}, and \code{one_of()}.}
@@ -20,7 +20,7 @@ or if \code{search} is \code{TRUE}, either the
 project root or a subdirectory of the project.
 Ignored if a \code{cache} is supplied.}
 
-\item{search}{logical. If \code{TRUE}, search parent directories
+\item{search}{Logical. If \code{TRUE}, search parent directories
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.
 Ignored if a \code{cache} is supplied.}
@@ -30,9 +30,9 @@ Ignored if a \code{cache} is supplied.}
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} and \code{search} are ignored.}
 
-\item{targets_only}{deprecated}
+\item{targets_only}{Deprecated.}
 
-\item{verbose}{logical or numeric, control printing to the console.
+\item{verbose}{Logical or numeric, control printing to the console.
 \itemize{
 \item \code{0} or \code{FALSE}: print nothing.
 \item \code{1} or \code{TRUE}: print only targets to build.
@@ -43,7 +43,7 @@ If supplied, \code{path} and \code{search} are ignored.}
 \item \code{6}: plus notifications when targets are being stored.
 }}
 
-\item{jobs}{number of jobs/workers for parallel processing}
+\item{jobs}{Number of jobs/workers for parallel processing.}
 
 \item{type}{Type of time you want: either \code{"build"}
 for the full build time including the time it took to

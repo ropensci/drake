@@ -9,7 +9,7 @@ build_drake_graph(plan, targets = plan$target, envir = parent.frame(),
   trigger = drake::trigger(), cache = NULL)
 }
 \arguments{
-\item{plan}{workflow plan data frame.
+\item{plan}{Workflow plan data frame.
 A workflow plan data frame is a data frame
 with a \code{target} column and a \code{command} column.
 (See the details in the \code{\link[=drake_plan]{drake_plan()}} help file
@@ -21,13 +21,13 @@ data frames easily, and see functions \code{\link[=evaluate_plan]{evaluate_plan(
 \code{\link[=expand_plan]{expand_plan()}}, \code{\link[=gather_by]{gather_by()}}, and \code{\link[=map_plan]{map_plan()}} for
 easy ways to generate large workflow plan data frames.}
 
-\item{targets}{character vector, names of targets to build.
+\item{targets}{Character vector, names of targets to build.
 Dependencies are built too. Together, the \code{plan} and
 \code{targets} comprise the workflow network
 (i.e. the \code{graph} argument).
 Changing either will change the network.}
 
-\item{envir}{environment to use. Defaults to the current
+\item{envir}{Environment to use. Defaults to the current
 workspace, so you should not need to worry about this
 most of the time. A deep copy of \code{envir} is made,
 so you don't need to worry about your workspace being modified
@@ -36,7 +36,7 @@ Wherever necessary, objects and functions are imported
 from \code{envir} and the global environment and
 then reproducibly tracked as dependencies.}
 
-\item{verbose}{logical or numeric, control printing to the console.
+\item{verbose}{Logical or numeric, control printing to the console.
 \itemize{
 \item \code{0} or \code{FALSE}: print nothing.
 \item \code{1} or \code{TRUE}: print only targets to build.
@@ -47,13 +47,13 @@ then reproducibly tracked as dependencies.}
 \item \code{6}: plus notifications when targets are being stored.
 }}
 
-\item{jobs}{maximum number of parallel workers for processing the targets.
+\item{jobs}{Maximum number of parallel workers for processing the targets.
 You can experiment with \code{\link[=predict_runtime]{predict_runtime()}}
 to help decide on an appropriate number of jobs.
 For details, visit
 \url{https://ropenscilabs.github.io/drake-manual/time.html}.}
 
-\item{console_log_file}{character scalar,
+\item{console_log_file}{Character scalar,
 connection object (such as \code{stdout()}) or \code{NULL}.
 If \code{NULL}, console output will be printed
 to the R console using \code{message()}.

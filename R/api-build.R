@@ -3,9 +3,9 @@
 #' @export
 #' @seealso [drake_debug()]
 #' @return The value of the target right after it is built.
-#' @param target name of the target
-#' @param meta deprecated
-#' @param config internal configuration list
+#' @param target Name of the target.
+#' @param meta Deprecated.
+#' @param config Internal configuration list.
 #' @inheritParams loadd
 #' @inheritParams readd
 #' @examples

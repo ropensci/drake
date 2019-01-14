@@ -8,28 +8,28 @@ reduce_plan(plan = NULL, target = "target", begin = "", op = " + ",
   end = "", pairwise = TRUE, append = FALSE, sep = "_")
 }
 \arguments{
-\item{plan}{workflow plan data frame of prespecified targets}
+\item{plan}{Workflow plan data frame of prespecified targets.}
 
-\item{target}{name of the new reduced target}
+\item{target}{Name of the new reduced target.}
 
-\item{begin}{character, code to place at the beginning
-of each step in the reduction}
+\item{begin}{Character, code to place at the beginning
+of each step in the reduction.}
 
-\item{op}{binary operator to apply in the reduction}
+\item{op}{Binary operator to apply in the reduction}
 
-\item{end}{character, code to place at the end
-of each step in the reduction}
+\item{end}{Character, code to place at the end
+of each step in the reduction.}
 
-\item{pairwise}{logical, whether to create multiple
+\item{pairwise}{Logical, whether to create multiple
 new targets, one for each pair/step in the reduction (\code{TRUE}),
 or to do the reduction all in one command.}
 
-\item{append}{logical. If \code{TRUE}, the output will include the
+\item{append}{Logical. If \code{TRUE}, the output will include the
 original rows in the \code{plan} argument.
 If \code{FALSE}, the output will only include the new
 targets and commands.}
 
-\item{sep}{character scalar, delimiter for creating new target names}
+\item{sep}{Character scalar, delimiter for creating new target names.}
 }
 \value{
 A workflow plan data frame that aggregates multiple

@@ -7,14 +7,14 @@
 prune_drake_graph(graph, to = igraph::V(graph)$name, jobs = 1)
 }
 \arguments{
-\item{graph}{an igraph object}
+\item{graph}{An igraph object.}
 
-\item{to}{character vector of vertices}
+\item{to}{Character vector of vertices.}
 
-\item{jobs}{number of jobs for parallelism}
+\item{jobs}{Number of jobs for parallelism.}
 }
 \value{
-an \code{igraph} object
+An \code{igraph} object
 }
 \description{
 2019-01-08

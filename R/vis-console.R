@@ -250,10 +250,10 @@ multiline_message <- function(x) {
 #' @description Show the command that produced a target
 #'   or indicate that the object or file was imported.
 #' @export
-#' @param target symbol denoting the target or import
+#' @param target Symbol denoting the target or import
 #'   or a character vector if character_only is `TRUE`.
-#' @param config a [drake_config()] list
-#' @param character_only logical, whether to interpret
+#' @param config A [drake_config()] list.
+#' @param character_only Logical, whether to interpret
 #'   `target` as a symbol (`FALSE`) or character vector
 #'   (`TRUE`).
 #' @examples

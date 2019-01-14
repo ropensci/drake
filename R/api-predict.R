@@ -107,29 +107,29 @@ predict_runtime <- function(
 #' @return A list with (1) the total runtime and (2) a list
 #'   of the names of the targets assigned to each worker.
 #'   For each worker, targets are listed in the order they are assigned.
-#' @param config option internal runtime parameter list of
+#' @param config Optional internal runtime parameter list of
 #'   produced by both [make()] and
 #'   [drake_config()].
 #' @param targets Character vector, names of targets.
 #'   Predict the runtime of building these targets
 #'   plus dependencies.
 #'   Defaults to all targets.
-#' @param from_scratch logical, whether to predict a
+#' @param from_scratch Logical, whether to predict a
 #'   [make()] build from scratch or to
 #'   take into account the fact that some targets may be
 #'   already up to date and therefore skipped.
-#' @param targets_only deprecated
-#' @param jobs the `jobs` argument of your next planned
+#' @param targets_only Deprecated.
+#' @param jobs The `jobs` argument of your next planned
 #'   `make()`. How many targets to do you plan
 #'   to have running simultaneously?
-#' @param known_times a named numeric vector with targets/imports
+#' @param known_times A named numeric vector with targets/imports
 #'   as names and values as hypothetical runtimes in seconds.
 #'   Use this argument to overwrite any of the existing build times
 #'   or the `default_time`.
-#' @param default_time number of seconds to assume for any
+#' @param default_time Number of seconds to assume for any
 #'   target or import with no recorded runtime (from [build_times()])
 #'   or anything in `known_times`.
-#' @param warn logical, whether to warn the user about
+#' @param warn Logical, whether to warn the user about
 #'   any targets with no available runtime, either in
 #'   `known_times` or [build_times()]. The times for these
 #'   targets default to `default_time`.

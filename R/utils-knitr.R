@@ -13,7 +13,7 @@
 #' @details drake looks for dependencies in the document by
 #' analyzing evaluated code chunks for other targets/imports
 #' mentioned in [loadd()] and [readd()].
-#' @param target file path to the file or name of the file target,
+#' @param target File path to the file or name of the file target,
 #'   source text of the document.
 #' @examples
 #' \dontrun{

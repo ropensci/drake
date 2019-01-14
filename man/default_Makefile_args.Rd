@@ -7,9 +7,9 @@
 default_Makefile_args(jobs, verbose)
 }
 \arguments{
-\item{jobs}{number of jobs}
+\item{jobs}{Number of jobs.}
 
-\item{verbose}{logical or numeric, control printing to the console.
+\item{verbose}{Logical or numeric, control printing to the console.
 \itemize{
 \item \code{0} or \code{FALSE}: print nothing.
 \item \code{1} or \code{TRUE}: print only targets to build.

@@ -7,7 +7,7 @@
 ignore(x = NULL)
 }
 \arguments{
-\item{x}{code to ignore}
+\item{x}{Code to ignore.}
 }
 \value{
 The argument.

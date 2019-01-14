@@ -8,7 +8,7 @@ or knitr report source file.}
 deps_code(x)
 }
 \arguments{
-\item{x}{a language object (code), character string (code as text),
+\item{x}{A language object (code), character string (code as text),
 or imported function to analyze for dependencies.}
 }
 \value{

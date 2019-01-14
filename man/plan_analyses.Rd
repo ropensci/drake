@@ -7,18 +7,18 @@
 plan_analyses(plan, datasets, sep = "_")
 }
 \arguments{
-\item{plan}{workflow plan data frame of analysis methods.
+\item{plan}{Workflow plan data frame of analysis methods.
 The commands in the \code{command} column must
 have the \code{dataset__} wildcard where the datasets go.
 For example, one command could be \code{lm(dataset__)}. Then,
 the commands in the output will include \code{lm(your_dataset_1)},
 \code{lm(your_dataset_2)}, etc.}
 
-\item{datasets}{workflow plan data frame with instructions
+\item{datasets}{Workflow plan data frame with instructions
 to make the datasets.}
 
-\item{sep}{character scalar, delimiter for creating
-the names of new targets}
+\item{sep}{character Scalar, delimiter for creating
+the names of new targets.}
 }
 \value{
 An evaluated workflow plan data frame of analysis targets.

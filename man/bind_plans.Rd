@@ -7,7 +7,7 @@
 bind_plans(...)
 }
 \arguments{
-\item{...}{workflow plan data frames (see \code{\link[=drake_plan]{drake_plan()}})}
+\item{...}{Workflow plan data frames (see \code{\link[=drake_plan]{drake_plan()}}).}
 }
 \description{
 Combine drake plans together in a way that

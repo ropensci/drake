@@ -7,7 +7,7 @@
 parallelism_choices(distributed_only = FALSE)
 }
 \arguments{
-\item{distributed_only}{logical}
+\item{distributed_only}{Logical.}
 }
 \value{
 character vector

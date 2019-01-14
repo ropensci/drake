@@ -107,7 +107,7 @@ display_key <- function(x, config) {
 #' @export
 #' @return A single-quoted character string: i.e., a filename
 #'   understandable by drake.
-#' @param x character string to be turned into a filename
+#' @param x Character string to be turned into a filename
 #'   understandable by drake (i.e., a string with literal
 #'   single quotes on both ends).
 #' @examples

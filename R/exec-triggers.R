@@ -26,11 +26,11 @@
 #' @return A list of trigger specification details that
 #'   `drake` processes internally when it comes time to decide
 #'   whether to build the target.
-#' @param command logical, whether to rebuild the target if the
+#' @param command Logical, whether to rebuild the target if the
 #'   [drake_plan()] command changes.
-#' @param depend logical, whether to rebuild if a
+#' @param depend Logical, whether to rebuild if a
 #'   non-file dependency changes.
-#' @param file logical, whether to rebuild the target
+#' @param file Logical, whether to rebuild the target
 #'   if a [file_in()]/[file_out()]/[knitr_in()] file changes.
 #' @param condition R code (expression or language object)
 #'   that returns a logical. The target will rebuild
@@ -39,7 +39,7 @@
 #'  that returns any value. The target will rebuild
 #'   if that value is different from last time
 #'   or not already cached.
-#' @param mode a character scalar equal to `"whitelist"` (default) or
+#' @param mode A character scalar equal to `"whitelist"` (default) or
 #'   `"blacklist"` or `"condition"`. With the `mode` argument, you can choose
 #'   how the `condition` trigger factors into the decision to build
 #'   or skip the target. Here are the options.

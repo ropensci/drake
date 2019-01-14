@@ -7,9 +7,9 @@
 shell_file(path = "shell.sh", overwrite = FALSE)
 }
 \arguments{
-\item{path}{character}
+\item{path}{Character.}
 
-\item{overwrite}{logical}
+\item{overwrite}{Logical.}
 }
 \value{
 logical

@@ -8,7 +8,7 @@ for the nearest root path of a drake project.}
 find_project(path = getwd())
 }
 \arguments{
-\item{path}{starting path for search back for the project.
+\item{path}{Starting path for search back for the project.
 Should be a subdirectory of the drake project.}
 }
 \value{

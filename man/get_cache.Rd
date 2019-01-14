@@ -24,12 +24,12 @@ subdirectory of the project. The following are equivalent and correct:
 \item \code{get_cache(path = "/home/you/my_project/.drake/keys", search = TRUE)}
 }}
 
-\item{search}{logical. If \code{TRUE}, search parent directories
+\item{search}{Logical. If \code{TRUE}, search parent directories
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.
 Ignored if a \code{cache} is supplied.}
 
-\item{verbose}{logical or numeric, control printing to the console.
+\item{verbose}{Logical or numeric, control printing to the console.
 \itemize{
 \item \code{0} or \code{FALSE}: print nothing.
 \item \code{1} or \code{TRUE}: print only targets to build.
@@ -40,14 +40,14 @@ Ignored if a \code{cache} is supplied.}
 \item \code{6}: plus notifications when targets are being stored.
 }}
 
-\item{force}{deprecated}
+\item{force}{Deprecated.}
 
-\item{fetch_cache}{character vector containing lines of code.
+\item{fetch_cache}{Character vector containing lines of code.
 The purpose of this code is to fetch the \code{storr} cache
 with a command like \code{storr_rds()} or \code{storr_dbi()},
 but customized. This feature is experimental.}
 
-\item{console_log_file}{character scalar,
+\item{console_log_file}{Character scalar,
 connection object (such as \code{stdout()}) or \code{NULL}.
 If \code{NULL}, console output will be printed
 to the R console using \code{message()}.

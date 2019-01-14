@@ -7,12 +7,12 @@
 deps_target(target, config, character_only = FALSE)
 }
 \arguments{
-\item{target}{a symbol denoting a target name, or if \code{character_only}
+\item{target}{A symbol denoting a target name, or if \code{character_only}
 is TRUE, a character scalar denoting a target name.}
 
-\item{config}{an output list from \code{\link[=drake_config]{drake_config()}}}
+\item{config}{An output list from \code{\link[=drake_config]{drake_config()}}.}
 
-\item{character_only}{logical, whether to assume target is a character
+\item{character_only}{Logical, whether to assume target is a character
 string rather than a symbol.}
 }
 \value{

@@ -6,6 +6,7 @@ assert_cache <- function(cache) {
   }
 }
 
+
 # Return the file path where the cache is stored, if applicable.
 cache_path_ <- function(cache = NULL) {
   if (is.null(cache)) {
@@ -44,8 +45,8 @@ force_cache_path <- function(cache = NULL) {
 #'   - `get_cache(path = "/home/you/my_project/subdir/x", search = TRUE)`
 #'   - `get_cache(path = "/home/you/my_project/.drake", search = TRUE)`
 #'   - `get_cache(path = "/home/you/my_project/.drake/keys", search = TRUE)`
-#' @param force deprecated
-#' @param fetch_cache character vector containing lines of code.
+#' @param force Deprecated.
+#' @param fetch_cache Character vector containing lines of code.
 #'   The purpose of this code is to fetch the `storr` cache
 #'   with a command like `storr_rds()` or `storr_dbi()`,
 #'   but customized. This feature is experimental.
@@ -92,9 +93,8 @@ get_cache <- function(
 #' @return A drake/storr cache at the specified path, if it exists.
 #' @inheritParams cached
 #' @inheritParams drake_config
-#' @param path file path of the cache
-#' @param force deprecated
-#'   is compatible with your current version of drake.
+#' @param path File path of the cache.
+#' @param force Deprecated.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -168,15 +168,15 @@ drake_fetch_rds <- function(path) {
 #' @inheritParams cached
 #' @inheritParams drake_config
 #' @seealso [make()]
-#' @param path file path to the cache if the cache
+#' @param path File path to the cache if the cache
 #'   is a file system cache.
-#' @param type deprecated argument. Once stood for cache type.
+#' @param type Deprecated argument. Once stood for cache type.
 #'   Use `storr` to customize your caches instead.
-#' @param hash_algorithm name of a hash algorithm to use.
+#' @param hash_algorithm Name of a hash algorithm to use.
 #'   See the `algo` argument of the `digest` package for your options.
-#' @param short_hash_algo Deprecated on 2018-12-12. Use `hash_algorithm` instead
-#' @param long_hash_algo Deprecated on 2018-12-12. Use `hash_algorithm` instead 
-#' @param ... other arguments to the cache constructor
+#' @param short_hash_algo Deprecated on 2018-12-12. Use `hash_algorithm` instead.
+#' @param long_hash_algo Deprecated on 2018-12-12. Use `hash_algorithm` instead.
+#' @param ... other arguments to the cache constructor.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine new_cache() side effects.", {
@@ -283,9 +283,9 @@ recover_cache_ <- function(
 #'
 #' @inheritParams cached
 #'
-#' @param jobs number of jobs/workers for parallel processing
+#' @param jobs Number of jobs/workers for parallel processing.
 #'
-#' @param targets_only logical, whether to output information
+#' @param targets_only Logical, whether to output information
 #'   only on the targets in your workflow plan data frame.
 #'   If `targets_only` is `FALSE`, the output will
 #'   include the hashes of both targets and imports.
@@ -372,9 +372,9 @@ drake_cache_log_file <- function(
 #'
 #' @inheritParams cached
 #'
-#' @param jobs number of jobs/workers for parallel processing
+#' @param jobs Number of jobs/workers for parallel processing.
 #'
-#' @param targets_only logical, whether to output information
+#' @param targets_only Logical, whether to output information
 #'   only on the targets in your workflow plan data frame.
 #'   If `targets_only` is `FALSE`, the output will
 #'   include the hashes of both targets and imports.
@@ -549,14 +549,14 @@ deprecate_hash_algo_args <- function(
 #'
 #' @inheritParams drake_config
 #'
-#' @param ... objects to load from the cache, as names (unquoted)
+#' @param ... Objects to load from the cache, as names (unquoted)
 #'   or character strings (quoted). Similar to `...` in
 #'   `remove()`.
 #'
-#' @param list character vector naming objects to be loaded from the
+#' @param list Character vector naming objects to be loaded from the
 #'   cache. Similar to the `list` argument of [remove()].
 #'
-#' @param no_imported_objects logical, applies only when
+#' @param no_imported_objects Logical, applies only when
 #'   no targets are specified and a list of cached targets is returned.
 #'   If `no_imported_objects` is `TRUE`, then `cached()`
 #'   shows built targets (with commands) plus imported files,
@@ -573,15 +573,15 @@ deprecate_hash_algo_args <- function(
 #'   project root or a subdirectory of the project.
 #'   Ignored if a `cache` is supplied.
 #'
-#' @param search logical. If `TRUE`, search parent directories
+#' @param search Logical. If `TRUE`, search parent directories
 #'   to find the nearest drake cache. Otherwise, look in the
 #'   current working directory only.
 #'   Ignored if a `cache` is supplied.
 #'
-#' @param namespace character scalar, name of the storr namespace
-#'   to use for listing objects
+#' @param namespace Character scalar, name of the storr namespace
+#'   to use for listing objects.
 #'
-#' @param jobs number of jobs/workers for parallel processing
+#' @param jobs Number of jobs/workers for parallel processing.
 #'
 #' @examples
 #' \dontrun{

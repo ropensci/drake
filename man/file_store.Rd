@@ -8,7 +8,7 @@ on a \emph{file} (target or import), not an ordinary object.}
 file_store(x)
 }
 \arguments{
-\item{x}{character string to be turned into a filename
+\item{x}{Character string to be turned into a filename
 understandable by drake (i.e., a string with literal
 single quotes on both ends).}
 }

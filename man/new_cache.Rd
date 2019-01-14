@@ -9,10 +9,10 @@ new_cache(path = NULL, verbose = 1L, type = NULL,
   long_hash_algo = NULL, ..., console_log_file = NULL)
 }
 \arguments{
-\item{path}{file path to the cache if the cache
+\item{path}{File path to the cache if the cache
 is a file system cache.}
 
-\item{verbose}{logical or numeric, control printing to the console.
+\item{verbose}{Logical or numeric, control printing to the console.
 \itemize{
 \item \code{0} or \code{FALSE}: print nothing.
 \item \code{1} or \code{TRUE}: print only targets to build.
@@ -23,19 +23,19 @@ is a file system cache.}
 \item \code{6}: plus notifications when targets are being stored.
 }}
 
-\item{type}{deprecated argument. Once stood for cache type.
+\item{type}{Deprecated argument. Once stood for cache type.
 Use \code{storr} to customize your caches instead.}
 
-\item{hash_algorithm}{name of a hash algorithm to use.
+\item{hash_algorithm}{Name of a hash algorithm to use.
 See the \code{algo} argument of the \code{digest} package for your options.}
 
-\item{short_hash_algo}{Deprecated on 2018-12-12. Use \code{hash_algorithm} instead}
+\item{short_hash_algo}{Deprecated on 2018-12-12. Use \code{hash_algorithm} instead.}
 
-\item{long_hash_algo}{Deprecated on 2018-12-12. Use \code{hash_algorithm} instead}
+\item{long_hash_algo}{Deprecated on 2018-12-12. Use \code{hash_algorithm} instead.}
 
-\item{...}{other arguments to the cache constructor}
+\item{...}{other arguments to the cache constructor.}
 
-\item{console_log_file}{character scalar,
+\item{console_log_file}{Character scalar,
 connection object (such as \code{stdout()}) or \code{NULL}.
 If \code{NULL}, console output will be printed
 to the R console using \code{message()}.

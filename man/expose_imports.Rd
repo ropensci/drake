@@ -9,16 +9,16 @@ expose_imports(package, character_only = FALSE, envir = parent.frame(),
   jobs = 1)
 }
 \arguments{
-\item{package}{name of the package, either a symbol or a string,
+\item{package}{Name of the package, either a symbol or a string,
 depending on \code{character_only}.}
 
-\item{character_only}{logical, whether to interpret \code{package}
+\item{character_only}{Logical, whether to interpret \code{package}
 as a character string or a symbol (quoted vs unquoted).}
 
-\item{envir}{environment to load the exposed package imports.
+\item{envir}{Environment to load the exposed package imports.
 You will later pass this \code{envir} to \code{\link[=make]{make()}}.}
 
-\item{jobs}{number of parallel jobs for the parallel processing
+\item{jobs}{Number of parallel jobs for the parallel processing
 of the imports.}
 }
 \value{

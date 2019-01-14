@@ -9,24 +9,24 @@ target(command = NULL, trigger = NULL, retries = NULL,
   worker = NULL, resources = NULL, ...)
 }
 \arguments{
-\item{command}{the command to build the target}
+\item{command}{The command to build the target.}
 
-\item{trigger}{the target's trigger}
+\item{trigger}{The target's trigger.}
 
-\item{retries}{number of retries in case of failure}
+\item{retries}{Number of retries in case of failure.}
 
-\item{timeout}{overall timeout (in seconds) for building a target}
+\item{timeout}{Overall timeout (in seconds) for building a target.}
 
-\item{cpu}{cpu timeout (seconds) for building a target}
+\item{cpu}{cpu Timeout (seconds) for building a target.}
 
-\item{elapsed}{elapsed time (seconds) for building a target}
+\item{elapsed}{Elapsed time (seconds) for building a target.}
 
-\item{priority}{integer giving the build priority of a target.
+\item{priority}{Integer giving the build priority of a target.
 Given two targets about to be built at the same time,
 the one with the lesser priority (numerically speaking)
 will be built first.}
 
-\item{worker}{the preferred worker to be assigned the target
+\item{worker}{The preferred worker to be assigned the target
 (in parallel computing).}
 
 \item{resources}{Experimental, no guarantees that this works all the time.
@@ -38,7 +38,7 @@ Each element is a value passed to a \code{brew} placeholder of a
 \code{batchtools} template file. The list names of \code{resources}
 should be the brew patterns.}
 
-\item{...}{named arguments specifying non-standard
+\item{...}{Named arguments specifying non-standard
 fields of the workflow plan.}
 }
 \value{

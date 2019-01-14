@@ -8,7 +8,7 @@ into a \code{drake} workflow plan data frame.}
 code_to_plan(path)
 }
 \arguments{
-\item{path}{a file path to an R script or \code{knitr} report.}
+\item{path}{A file path to an R script or \code{knitr} report.}
 }
 \description{
 \code{code_to_plan()}, \code{\link[=plan_to_code]{plan_to_code()}}, and

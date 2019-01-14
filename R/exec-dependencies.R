@@ -32,7 +32,7 @@
 #'   network.
 #' @seealso [deps_target()] [make()] [drake_plan()] [drake_config()]
 #' @export
-#' @param x a language object (code), character string (code as text),
+#' @param x A language object (code), character string (code as text),
 #'   or imported function to analyze for dependencies.
 #' @return Names of dependencies listed by type (object, input file, etc).
 #'   The `globals` slot of the output list contains candidate globals only.
@@ -89,10 +89,10 @@ deps_code <- function(x) {
 #'   decides which targets are built and when.
 #' @seealso [deps_code()]
 #' @export
-#' @param target a symbol denoting a target name, or if `character_only`
+#' @param target A symbol denoting a target name, or if `character_only`
 #'   is TRUE, a character scalar denoting a target name.
-#' @param config an output list from [drake_config()]
-#' @param character_only logical, whether to assume target is a character
+#' @param config An output list from [drake_config()].
+#' @param character_only Logical, whether to assume target is a character
 #'   string rather than a symbol.
 #' @return Names of dependencies listed by type (object, input file, etc).
 #' @examples
@@ -136,11 +136,11 @@ deps_target <- function(
 #' @seealso [diagnose()],
 #'   [deps_code()], [make()],
 #'   [drake_config()]
-#' @param target name of the target
-#' @param config configuration list output by
-#'   [drake_config()] or [make()]
-#' @param character_only logical, whether to assume `target`
-#'   is a character string rather than a symbol
+#' @param target Name of the target.
+#' @param config Configuration list output by
+#'   [drake_config()] or [make()].
+#' @param character_only Logical, whether to assume `target`
+#'   is a character string rather than a symbol.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -206,9 +206,8 @@ dependency_profile <- function(
   )
 }
 
-#' @title List the targets and imports
-#'   that are reproducibly tracked.
-#' @description In other words, list all the layout
+#' @title List the targets and imports that are reproducibly tracked.
+#' @description List all the layout
 #' in your project's dependency network.
 #' @export
 #' @return A character vector with the names of reproducibly-tracked targets.

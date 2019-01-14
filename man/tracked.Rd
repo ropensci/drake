@@ -2,8 +2,7 @@
 % Please edit documentation in R/exec-dependencies.R
 \name{tracked}
 \alias{tracked}
-\title{List the targets and imports
-that are reproducibly tracked.}
+\title{List the targets and imports that are reproducibly tracked.}
 \usage{
 tracked(config)
 }
@@ -14,7 +13,7 @@ tracked(config)
 A character vector with the names of reproducibly-tracked targets.
 }
 \description{
-In other words, list all the layout
+List all the layout
 in your project's dependency network.
 }
 \examples{

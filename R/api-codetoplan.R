@@ -18,7 +18,7 @@
 #'     The target/command binding should be permanent.
 #'   3. Keep it simple. Please use the assignment operators rather than 
 #'     `assign()` and similar functions.
-#' @param path a file path to an R script or `knitr` report.
+#' @param path A file path to an R script or `knitr` report.
 #' @examples
 #' plan <- drake_plan(
 #'   raw_data = read_excel(file_in("raw_data.xlsx")),
@@ -70,9 +70,9 @@ node_plan <- function(node) {
 #'   1. You are still responsible for loading your project's
 #'     packages, imported functions, etc.
 #'   2. Triggers disappear.
-#' @param plan workflow plan data frame. See [drake_plan()]
+#' @param plan Workflow plan data frame. See [drake_plan()]
 #'   for details.
-#' @param con a file path or connection to write to.
+#' @param con A file path or connection to write to.
 #' @examples
 #' plan <- drake_plan(
 #'   raw_data = read_excel(file_in("raw_data.xlsx")),

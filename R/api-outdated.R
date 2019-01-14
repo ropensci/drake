@@ -43,15 +43,15 @@ first_outdated <- function(config) {
 #' @seealso [drake_config()], [missed()], [drake_plan()],
 #'   [make()]
 #' @return Character vector of the names of outdated targets.
-#' @param config option internal runtime parameter list
+#' @param config Optional internal runtime parameter list
 #'   produced with [drake_config()].
 #'   You must use a fresh `config` argument with an up-to-date
 #'   `config$targets` element that was never modified by hand.
 #'   If needed, rerun [drake_config()] early and often.
 #'   See the details in the help file for [drake_config()].
-#' @param make_imports logical, whether to make the imports first.
+#' @param make_imports Logical, whether to make the imports first.
 #'   Set to `FALSE` to save some time and risk obsolete output.
-#' @param do_prework, whether to do the `prework`
+#' @param do_prework Whether to do the `prework`
 #'   normally supplied to [make()].
 #' @examples
 #' \dontrun{
@@ -95,7 +95,7 @@ outdated <-  function(
 #' @seealso [outdated()]
 #' @return Character vector of names of missing objects and files.
 #'
-#' @param config internal runtime parameter list
+#' @param config Internal runtime parameter list
 #'   produced by both [drake_config()] and [make()].
 #'
 #' @examples
