@@ -44,3 +44,4 @@ missing input files.
 \seealso{
 \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
 }
+\keyword{internal}

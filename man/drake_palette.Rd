@@ -25,3 +25,4 @@ So if you want to contribute improvements to the palette,
 please both \code{drake_palette()} and
 \code{visNetwork::visNetwork(nodes = legend_nodes())}
 }
+\keyword{internal}

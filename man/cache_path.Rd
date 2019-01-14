@@ -20,3 +20,4 @@ Deprecated on 2019-01-12.
 Currently only works with
 \code{\link[storr:storr_rds]{storr::storr_rds()}} file system caches.
 }
+\keyword{internal}

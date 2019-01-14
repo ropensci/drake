@@ -15,3 +15,4 @@ Deprecated on 2019-01-12.
 \details{
 Tips are usually related to news and usage.
 }
+\keyword{internal}

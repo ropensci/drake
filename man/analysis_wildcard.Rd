@@ -19,3 +19,4 @@ Used to generate workflow plan data frames.
 \seealso{
 \code{\link[=plan_summaries]{plan_summaries()}}
 }
+\keyword{internal}

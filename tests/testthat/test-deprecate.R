@@ -359,3 +359,204 @@ test_with_dir("former external functions that will become internal", {
   expect_warning(recover_cache(), regexp = "deprecated")
   expect_warning(target_namespaces(), regexp = "deprecated")
 })
+
+test_with_dir("analyses and summaries", {
+  datasets <- drake_plan(small = simulate(5), large = simulate(50))
+  methods <- drake_plan(
+    regression1 = reg1(dataset__),
+    regression2 = reg2(dataset__)
+  )
+  analyses <- expect_warning(
+    plan_analyses(methods, datasets = datasets, sep = ".")
+  )
+  x <- weak_tibble(
+    target = c(
+      "regression1.small",
+      "regression1.large",
+      "regression2.small",
+      "regression2.large"
+    ),
+    command = c(
+      "reg1(small)",
+      "reg1(large)",
+      "reg2(small)",
+      "reg2(large)")
+  )
+  expect_equal(analyses, x)
+
+  analyses <- expect_warning(
+    plan_analyses(methods, datasets = datasets)
+  )
+  x <- weak_tibble(
+    target = c(
+      "regression1_small",
+      "regression1_large",
+      "regression2_small",
+      "regression2_large"
+    ),
+    command = c(
+      "reg1(small)",
+      "reg1(large)",
+      "reg2(small)",
+      "reg2(large)")
+  )
+  expect_equal(analyses, x)
+
+  m2 <- drake_plan(regression1 = reg1(n), regression2 = reg2(n))
+  expect_equal(
+    expect_warning(plan_analyses(m2, datasets = datasets)), m2)
+
+  no_analyses <- drake_plan(
+    summ = summary(dataset__),
+    coef = stats::coefficients(dataset__)
+  )
+  suppressWarnings(
+    expect_error(
+      plan_summaries(no_analyses, analyses, datasets)
+    )
+  )
+
+  summary_types <- drake_plan(
+    summ = summary(analysis__),
+    coef = stats::coefficients(analysis__)
+  )
+
+  results <- expect_warning(
+    plan_summaries(
+      summary_types,
+      analyses,
+      datasets,
+      gather = NULL,
+      sep = "."
+    )
+  )
+  x <- weak_tibble(
+    target = c(
+      "summ.regression1_small",
+      "summ.regression1_large",
+      "summ.regression2_small",
+      "summ.regression2_large",
+      "coef.regression1_small",
+      "coef.regression1_large",
+      "coef.regression2_small",
+      "coef.regression2_large"
+    ),
+    command = c(
+      "summary(regression1_small)",
+      "summary(regression1_large)",
+      "summary(regression2_small)",
+      "summary(regression2_large)",
+      "stats::coefficients(regression1_small)",
+      "stats::coefficients(regression1_large)",
+      "stats::coefficients(regression2_small)",
+      "stats::coefficients(regression2_large)"
+    )
+  )
+  expect_equal(results, x)
+
+  results <- expect_warning(
+    plan_summaries(summary_types, analyses, datasets, gather = NULL)
+  )
+  x <- weak_tibble(
+    target = c(
+      "summ_regression1_small",
+      "summ_regression1_large",
+      "summ_regression2_small",
+      "summ_regression2_large",
+      "coef_regression1_small",
+      "coef_regression1_large",
+      "coef_regression2_small",
+      "coef_regression2_large"
+    ),
+    command = c(
+      "summary(regression1_small)",
+      "summary(regression1_large)",
+      "summary(regression2_small)",
+      "summary(regression2_large)",
+      "stats::coefficients(regression1_small)",
+      "stats::coefficients(regression1_large)",
+      "stats::coefficients(regression2_small)",
+      "stats::coefficients(regression2_large)"
+    )
+  )
+  expect_equal(results, x)
+
+  summary_types <- drake_plan(
+    summ = summary(analysis__, dataset__),
+    coef = stats::coefficients(analysis__)
+  )
+  results <- expect_warning(
+    plan_summaries(
+      summary_types,
+      analyses,
+      datasets,
+      gather = c("list", "rbind")
+    )
+  )
+  x <- weak_tibble(
+    target = c(
+      "summ_regression1_small",
+      "summ_regression1_large",
+      "summ_regression2_small",
+      "summ_regression2_large",
+      "coef_regression1_small",
+      "coef_regression1_large",
+      "coef_regression2_small",
+      "coef_regression2_large"
+    ),
+    command = c(
+      "summary(regression1_small, small)",
+      "summary(regression1_large, large)",
+      "summary(regression2_small, small)",
+      "summary(regression2_large, large)",
+      "stats::coefficients(regression1_small)",
+      "stats::coefficients(regression1_large)",
+      "stats::coefficients(regression2_small)",
+      "stats::coefficients(regression2_large)"
+    )
+  )
+  y <- results[-1:-2, ]
+  row.names(x) <- row.names(y) <- NULL
+  expect_equal(x, y)
+  expect_true(grepl("^rbind\\(coef", results$command[1]))
+  expect_true(grepl("^list\\(summ", results$command[2]))
+
+  results <- expect_warning(
+    plan_summaries(summary_types, analyses, datasets)
+  )
+  expect_true(all(grepl("^list\\(", results$command[1:2])))
+
+  results <- expect_warning(
+    plan_summaries(
+      summary_types, analyses, datasets, gather = "my_bind"
+    )
+  )
+  expect_true(all(grepl("^my_bind\\(", results$command[1:2])))
+
+  expect_error(
+    suppressWarnings(
+      nope <- plan_summaries(
+        summary_types,
+        analyses,
+        datasets,
+        gather = rep("list", 37)
+      )
+    )
+  )
+
+  newtypes <- rbind(
+    summary_types,
+    drake_plan(
+      other = myother(dataset__)
+    )
+  )
+  expect_warning(
+    s <- plan_summaries(
+      newtypes,
+      analyses,
+      datasets,
+      gather = NULL
+    )
+  )
+  expect_equal(nrow(s), 8)
+})

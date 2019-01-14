@@ -38,3 +38,4 @@ including any errors, warnings, and messages in the last build.
 \seealso{
 \code{\link[=diagnose]{diagnose()}}, \code{\link[=dependency_profile]{dependency_profile()}}, \code{\link[=make]{make()}}
 }
+\keyword{internal}

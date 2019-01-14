@@ -48,3 +48,4 @@ Similar to \code{\link[=progress]{progress()}}.
 \code{\link[=diagnose]{diagnose()}}, \code{\link[=drake_get_session_info]{drake_get_session_info()}},
 \code{\link[=cached]{cached()}}, \code{\link[=readd]{readd()}}, \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
 }
+\keyword{internal}

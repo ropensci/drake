@@ -64,3 +64,4 @@ in-memory caches such as \code{\link[=storr_environment]{storr_environment()}}.
 \code{\link[=new_cache]{new_cache()}}, \code{\link[=this_cache]{this_cache()}},
 \code{\link[=get_cache]{get_cache()}}
 }
+\keyword{internal}

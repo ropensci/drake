@@ -22,3 +22,4 @@ It is just another window into \code{drake}'s internals.
 \seealso{
 \code{\link[=make]{make()}}
 }
+\keyword{internal}
