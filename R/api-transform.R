@@ -22,6 +22,8 @@ tf_plan(plan)
 
 }
 
+# Iteration over the plan
+
 tf_plan <- function(plan) {
   row <- 1
   attr(plan, "protect") <- colnames(plan)
@@ -30,7 +32,16 @@ tf_plan <- function(plan) {
       row <- row + 1
       next 
     }
-    plan <- tf_row(plan, row)
+    transformed <- tf_row(plan, row)
+
+    browser()
+    
+    plan <- rbind(
+      plan[seq_len(row - 1), ],
+      transformed,
+      plan[seq(row + 1, nrow(plan)), ]
+    )
+    row <- row + nrow(transformed)
   }
 }
 
@@ -43,18 +54,26 @@ tf_row <- function(plan, row) {
   transform(plan, plan$target[[row]], plan$command[[row]], tf_levels(call))
 }
 
+# Supported transformations
+
+tf_cross <- function(plan, target, command, levels) {
+  levels$stringsAsFactors <- FALSE
+  factors <- tf_factors(plan, levels)
+  targets <- apply(cbind(target, factors), 1, paste, collapse = "_")
+  command <- gsub_grid(text = command, factors = factors)
+  out <- weak_tibble(target = targets, command = command)
+  out[[target]] <- targets
+  cbind(out, factors)
+}
+
+# Utils
+
 tf_levels <- function(call) {
   lapply(as.list(call[nzchar(names(call))]), function(x) as.character(x)[-1])
 }
 
 tf_cols <- function(plan) {
   setdiff(colnames(plan), attr(plan, "protect"))
-}
-
-tf_cross <- function(plan, target, command, levels) {
-  levels$stringsAsFactors <- FALSE
-  factors <- tf_factors(plan, levels)
-  gsub_grid(text = command, factors = factors)
 }
 
 tf_factors <- function(plan, levels) {
