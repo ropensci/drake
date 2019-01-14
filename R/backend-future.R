@@ -45,7 +45,7 @@ backend_future <- function(config) {
 #' @export
 #' @return Either the target value or a list of build results.
 #' @param target Name of the target.
-#' @param meta Alist of metadata.
+#' @param meta A list of metadata.
 #' @param config A [drake_config()] list.
 #' @param protect Names of targets that still need their
 #' dependencies available in memory.

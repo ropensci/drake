@@ -439,6 +439,8 @@ test_with_dir("ignore() in imported functions", {
   plan <- drake_plan(x = f(1))
   cache <- storr::storr_environment()
   make(plan, cache = cache)
+  # Because ignore() affects standardization:
+  expect_true(is.character(readd(f, cache = cache)))
   config <- drake_config(plan, cache = cache)
   expect_equal(justbuilt(config), "x")
 

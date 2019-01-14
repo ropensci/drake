@@ -9,7 +9,7 @@ future_build(target, meta, config, protect)
 \arguments{
 \item{target}{Name of the target.}
 
-\item{meta}{Alist of metadata.}
+\item{meta}{A list of metadata.}
 
 \item{config}{A \code{\link[=drake_config]{drake_config()}} list.}
 

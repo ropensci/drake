@@ -25,9 +25,14 @@ standardize_command <- function(x) {
   x
 }
 
-standardize_imported_function <- function(x) {
-  x <- ignore_ignore(x)
-  deparse(unwrap_function(x))
+standardize_imported_function <- function(fun) {
+  fun <- unwrap_function(fun)
+  str <- deparse(fun) # Because the function body still has attributes.
+  if (any(grepl("ignore", str, fixed = TRUE))) {
+    fun <- ignore_ignore(fun)
+    str <- deparse(fun) # Worth it: ignore_ignore is slow.
+  }
+  str
 }
 
 ignore_ignore <- function(x) {
