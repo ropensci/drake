@@ -17,7 +17,7 @@
 #' @export
 #' @return The master internal configuration list of a project.
 #' @seealso [make()], [drake_plan()], [vis_drake_graph()]
-#' @param plan workflow plan data frame.
+#' @param plan Workflow plan data frame.
 #'   A workflow plan data frame is a data frame
 #'   with a `target` column and a `command` column.
 #'   (See the details in the [drake_plan()] help file
@@ -30,13 +30,13 @@
 #'   [expand_plan()], and [gather_plan()] for
 #'   easy ways to generate large workflow plan data frames.
 #'
-#' @param targets character vector, names of targets to build.
+#' @param targets Character vector, names of targets to build.
 #'   Dependencies are built too. Together, the `plan` and
 #'   `targets` comprise the workflow network
 #'   (i.e. the `graph` argument).
 #'   Changing either will change the network.
 #'
-#' @param envir environment to use. Defaults to the current
+#' @param envir Environment to use. Defaults to the current
 #'   workspace, so you should not need to worry about this
 #'   most of the time. A deep copy of `envir` is made,
 #'   so you don't need to worry about your workspace being modified
@@ -45,7 +45,7 @@
 #'   from `envir` and the global environment and
 #'   then reproducibly tracked as dependencies.
 #'
-#' @param verbose logical or numeric, control printing to the console.
+#' @param verbose Logical or numeric, control printing to the console.
 #'   - `0` or `FALSE`: print nothing.
 #'   - `1` or `TRUE`: print only targets to build.
 #'   - `2`: plus checks and cache info.
@@ -56,10 +56,10 @@
 #'
 #' @param hook Deprecated.
 #'
-#' @param skip_targets logical, whether to skip building the targets
+#' @param skip_targets Logical, whether to skip building the targets
 #'   in `plan` and just import objects and files.
 #'
-#' @param parallelism character scalar, type of parallelism to use.
+#' @param parallelism Character scalar, type of parallelism to use.
 #'   For detailed explanations, see the
 #'   [high-performance computing chapter](https://ropenscilabs.github.io/drake-manual/hpc.html)
 #'   of the user manual.
@@ -78,16 +78,16 @@
 #'   know what you are doing and you are willing to suffer setbacks
 #'   whenever `drake`'s unexported core functions are updated.
 #'
-#' @param jobs maximum number of parallel workers for processing the targets.
+#' @param jobs Maximum number of parallel workers for processing the targets.
 #'   You can experiment with [predict_runtime()]
 #'   to help decide on an appropriate number of jobs.
 #'   For details, visit
 #'   <https://ropenscilabs.github.io/drake-manual/time.html>.
 #'
-#' @param jobs_preprocess number of parallel jobs for processing the imports
+#' @param jobs_preprocess Number of parallel jobs for processing the imports
 #'   and doing other preprocessing tasks.
 #'
-#' @param packages character vector packages to load, in the order
+#' @param packages Character vector packages to load, in the order
 #'   they should be loaded. Defaults to `rev(.packages())`, so you
 #'   should not usually need to set this manually. Just call
 #'   [library()] to load your packages before `make()`.
@@ -105,7 +105,7 @@
 #'   initialization and then once again for each target right
 #'   before that target is built.
 #'
-#' @param prework character vector of lines of code to run
+#' @param prework Character vector of lines of code to run
 #'   before build time. This code can be used to
 #'   load packages, set options, etc., although the packages in the
 #'   `packages` argument are loaded before any prework is done.
@@ -114,12 +114,12 @@
 #'   `"Makefile"`, the prework is run once on initialization
 #'   and then once again for each target right before that target is built.
 #'
-#' @param prepend deprecated
-#' @param command deprecated
-#' @param args deprecated
-#' @param recipe_command deprecated
+#' @param prepend Deprecated.
+#' @param command Deprecated.
+#' @param args Deprecated.
+#' @param recipe_command Deprecated.
 #'
-#' @param log_progress logical, whether to log the progress
+#' @param log_progress Logical, whether to log the progress
 #'   of individual targets as they are being built. Progress logging
 #'   creates a lot of little files in the cache, and it may make builds
 #'   a tiny bit slower. So you may see gains in storage efficiency
@@ -131,7 +131,7 @@
 #' @param cache drake cache as created by [new_cache()].
 #'   See also [get_cache()] and [this_cache()].
 #'
-#' @param fetch_cache deprecated
+#' @param fetch_cache Deprecated.
 #'
 #' @param timeout `deprecated`. Use `elapsed` and `cpu` instead.
 #'
@@ -165,16 +165,16 @@
 #'   Ignored if `plan` has a `trigger` column.
 #'   See [trigger()] for details.
 #'
-#' @param skip_imports logical, whether to totally neglect to
+#' @param skip_imports Logical, whether to totally neglect to
 #'   process the imports and jump straight to the targets. This can be useful
 #'   if your imports are massive and you just want to test your project,
 #'   but it is bad practice for reproducible data analysis.
 #'   This argument is overridden if you supply your own `graph` argument.
 #'
-#' @param skip_safety_checks logical, whether to skip the safety checks
+#' @param skip_safety_checks Logical, whether to skip the safety checks
 #'   on your workflow. Use at your own peril.
 #'
-#' @param lazy_load either a character vector or a logical. Choices:
+#' @param lazy_load Either a character vector or a logical. Choices:
 #'   - `"eager"`: no lazy loading. The target is loaded right away
 #'     with [assign()].
 #'   - `"promise"`: lazy loading with [delayedAssign()]
@@ -200,7 +200,7 @@
 #'   Lazy loading may be more memory efficient in some use cases, but
 #'   it may duplicate the loading of dependencies, costing time.
 #'
-#' @param session_info logical, whether to save the `sessionInfo()`
+#' @param session_info Logical, whether to save the `sessionInfo()`
 #'   to the cache. This behavior is recommended for serious [make()]s
 #'   for the sake of reproducibility. This argument only exists to
 #'   speed up tests. Apparently, `sessionInfo()` is a bottleneck
@@ -218,7 +218,7 @@
 #'   over time as the rest of your project changes. Hopefully,
 #'   this is a step in the right direction for data reproducibility.
 #'
-#' @param seed integer, the root pseudo-random number generator
+#' @param seed Integer, the root pseudo-random number generator
 #'   seed to use for your project.
 #'   In [make()], `drake` generates a unique
 #'   local seed for each target using the global seed
@@ -247,7 +247,7 @@
 #'   To reset the random number generator seed for a project,
 #'   use `clean(destroy = TRUE)`.
 #'
-#' @param caching character string, only applies to
+#' @param caching Character string, only applies to
 #'   `"clustermq"`, `"clustermq_staged"`, and `"future"` parallel backends.
 #'   The `caching` argument can be either `"master"` or `"worker"`.
 #'   - `"master"`: Targets are built by remote workers and sent back to
@@ -262,7 +262,7 @@
 #'     of the calling R session. Transferring target data across
 #'     a network can be slow.
 #'
-#' @param keep_going logical, whether to still keep running [make()]
+#' @param keep_going Logical, whether to still keep running [make()]
 #'   if targets fail.
 #'
 #' @param session An optional `callr` function if you want to
@@ -276,7 +276,7 @@
 #'   but it causes [make()] to populate your workspace/environment
 #'   with the last few targets it builds.
 #'
-#' @param pruning_strategy deprecated. See `memory_strategy`.
+#' @param pruning_strategy Deprecated. See `memory_strategy`.
 #'
 #' @param memory_strategy Character scalar, name of the
 #'   strategy `drake` uses to manage targets in memory. For more direct
@@ -313,7 +313,7 @@
 #'   path to the `args` argument so `make` knows where to find it.
 #'   Example: `make(parallelism = "Makefile", makefile_path = ".drake/.makefile", command = "make", args = "--file=.drake/.makefile")`
 #'
-#' @param console_log_file character scalar,
+#' @param console_log_file Character scalar,
 #'   connection object (such as `stdout()`) or `NULL`.
 #'   If `NULL`, console output will be printed
 #'   to the R console using `message()`.
@@ -327,7 +327,7 @@
 #'   (in addition to the usual in-bulk printing
 #'   after each target finishes).
 #'
-#' @param ensure_workers logical, whether the master process
+#' @param ensure_workers Logical, whether the master process
 #'   should wait for the workers to post before assigning them
 #'   targets. Should usually be `TRUE`. Set to `FALSE`
 #'   for `make(parallelism = "future_lapply", jobs = n)`
@@ -336,10 +336,10 @@
 #'   (`make(parallelism = x)`, where `x` could be `"mclapply"`,
 #'   `"parLapply"`, or `"future_lapply"`).
 #'
-#' @param garbage_collection logical, whether to call `gc()` each time
+#' @param garbage_collection Logical, whether to call `gc()` each time
 #'   a target is built during [make()].
 #'
-#' @param template a named list of values to fill in the `{{ ... }}`
+#' @param template A named list of values to fill in the `{{ ... }}`
 #'   placeholders in template files (e.g. from [drake_hpc_template_file()]).
 #'   Same as the `template` argument of `clustermq::Q()` and
 #'   `clustermq::workers`.
@@ -373,7 +373,7 @@
 #'   back-off: say,
 #'   `function(i) { 0.1 + 120 * pexp(i - 1, rate = 0.01) }`.
 #'
-#' @param hasty_build a user-defined function.
+#' @param hasty_build A user-defined function.
 #'   In "hasty mode" (`make(parallelism = "hasty")`)
 #'   this is the function that evaluates a target's command
 #'   and returns the resulting value. The `hasty_build` argument
@@ -389,7 +389,7 @@
 #'   have changed since the last `make()`, do not supply a `layout` argument.
 #'   Otherwise, supplying one could save time.
 #'
-#' @param lock_envir logical, whether to lock `config$envir` during `make()`.
+#' @param lock_envir Logical, whether to lock `config$envir` during `make()`.
 #'   If `TRUE`, `make()` quits in error whenever a command in your
 #'   `drake` plan (or `prework`) tries to add, remove, or modify
 #'   non-hidden variables in your environment/workspace/R session.

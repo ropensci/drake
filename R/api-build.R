@@ -3,10 +3,10 @@
 #' @export
 #' @seealso [drake_debug()]
 #' @return The value of the target right after it is built.
-#' @param target name of the target
-#' @param meta list of metadata that tell which
+#' @param target Name of the target.
+#' @param meta List of metadata that tell which
 #'   targets are up to date (from [drake_meta()]).
-#' @param config internal configuration list
+#' @param config Internal configuration list.
 #' @inheritParams loadd
 #' @inheritParams readd
 #' @examples

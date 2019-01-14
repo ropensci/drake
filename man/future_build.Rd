@@ -7,11 +7,11 @@
 future_build(target, meta, config, protect)
 }
 \arguments{
-\item{target}{name of the target}
+\item{target}{Name of the target.}
 
-\item{meta}{list of metadata}
+\item{meta}{Alist of metadata.}
 
-\item{config}{\code{\link[=drake_config]{drake_config()}} list}
+\item{config}{A \code{\link[=drake_config]{drake_config()}} list.}
 
 \item{protect}{Names of targets that still need their
 dependencies available in memory.}

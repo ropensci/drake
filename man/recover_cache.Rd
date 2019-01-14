@@ -10,20 +10,20 @@ recover_cache(path = NULL, hash_algorithm = NULL,
   verbose = 1L, fetch_cache = NULL, console_log_file = NULL)
 }
 \arguments{
-\item{path}{file path of the cache}
+\item{path}{File path of the cache.}
 
-\item{hash_algorithm}{name of a hash algorithm to use.
+\item{hash_algorithm}{Name of a hash algorithm to use.
 See the \code{algo} argument of the \code{digest} package for your options.}
 
-\item{short_hash_algo}{Deprecated on 2018-12-12. Use \code{hash_algorithm} instead}
+\item{short_hash_algo}{Deprecated on 2018-12-12. Use \code{hash_algorithm} instead.}
 
-\item{long_hash_algo}{Deprecated on 2018-12-12. Use \code{hash_algorithm} instead}
+\item{long_hash_algo}{Deprecated on 2018-12-12. Use \code{hash_algorithm} instead.}
 
-\item{force}{logical, whether to load the cache
+\item{force}{Logical, whether to load the cache
 despite any back compatibility issues with the
 running version of drake.}
 
-\item{verbose}{logical or numeric, control printing to the console.
+\item{verbose}{Logical or numeric, control printing to the console.
 \itemize{
 \item \code{0} or \code{FALSE}: print nothing.
 \item \code{1} or \code{TRUE}: print only targets to build.
@@ -34,9 +34,9 @@ running version of drake.}
 \item \code{6}: plus notifications when targets are being stored.
 }}
 
-\item{fetch_cache}{deprecated}
+\item{fetch_cache}{Deprecated.}
 
-\item{console_log_file}{character scalar,
+\item{console_log_file}{Character scalar,
 connection object (such as \code{stdout()}) or \code{NULL}.
 If \code{NULL}, console output will be printed
 to the R console using \code{message()}.

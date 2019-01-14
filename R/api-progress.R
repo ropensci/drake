@@ -34,7 +34,7 @@ in_progress <- function(path = getwd(), search = TRUE,
 #' @export
 #' @return A character vector of target names.
 #' @inheritParams cached
-#' @param upstream_only deprecated
+#' @param upstream_only Deprecated.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -74,18 +74,18 @@ failed <- function(path = getwd(), search = TRUE,
 #'
 #' @inheritParams cached
 #'
-#' @param ... objects to load from the cache, as names (unquoted)
+#' @param ... Objects to load from the cache, as names (unquoted)
 #'   or character strings (quoted). Similar to `...` in
 #'   `remove()` and `rm()`.
 #'
-#' @param list character vector naming objects to be loaded from the
+#' @param list Character vector naming objects to be loaded from the
 #'   cache. Similar to the `list` argument of [remove()].
 #'
-#' @param no_imported_objects logical, whether to only return information
+#' @param no_imported_objects Logical, whether to only return information
 #'   about imported files and targets with commands (i.e. whether to ignore
 #'   imported objects that are not files).
 #'
-#' @param jobs number of jobs/workers for parallel processing
+#' @param jobs Number of jobs/workers for parallel processing.
 #'
 #' @examples
 #' \dontrun{

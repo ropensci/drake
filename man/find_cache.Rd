@@ -7,7 +7,7 @@
 find_cache(path = getwd(), directory = NULL)
 }
 \arguments{
-\item{path}{starting path for search back for the cache.
+\item{path}{Starting path for search back for the cache.
 Should be a subdirectory of the drake project.}
 
 \item{directory}{Name of the folder containing the cache.}

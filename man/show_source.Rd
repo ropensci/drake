@@ -7,12 +7,12 @@
 show_source(target, config, character_only = FALSE)
 }
 \arguments{
-\item{target}{symbol denoting the target or import
+\item{target}{Symbol denoting the target or import
 or a character vector if character_only is \code{TRUE}.}
 
-\item{config}{a \code{\link[=drake_config]{drake_config()}} list}
+\item{config}{A \code{\link[=drake_config]{drake_config()}} list.}
 
-\item{character_only}{logical, whether to interpret
+\item{character_only}{Logical, whether to interpret
 \code{target} as a symbol (\code{FALSE}) or character vector
 (\code{TRUE}).}
 }

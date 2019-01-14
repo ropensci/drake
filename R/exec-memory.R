@@ -18,11 +18,11 @@ assign_to_envir <- function(target, value, config) {
 #' @export
 #' @keywords internal
 #' @return Nothing.
-#' @param targets character vector of targets
-#' @param config [drake_config()] list
-#' @param downstream optional, character vector of any targets
+#' @param targets Character vector of targets.
+#' @param config [drake_config()] list.
+#' @param downstream Optional, character vector of any targets
 #'   assumed to be downstream.
-#' @param jobs number of jobs for local parallel computing
+#' @param jobs Number of jobs for local parallel computing
 #' @examples
 #' # Users should use make().
 manage_memory <- function(targets, config, downstream = NULL, jobs = 1) {

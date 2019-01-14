@@ -7,13 +7,13 @@
 cmq_build(target, meta, deps, config)
 }
 \arguments{
-\item{target}{target name}
+\item{target}{Target name.}
 
-\item{meta}{list of metadata}
+\item{meta}{List of metadata.}
 
-\item{deps}{named list of target dependencies}
+\item{deps}{Named list of target dependencies.}
 
-\item{config}{a \code{\link[=drake_config]{drake_config()}} list}
+\item{config}{A \code{\link[=drake_config]{drake_config()}} list.}
 }
 \description{
 For internal use only

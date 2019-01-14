@@ -8,13 +8,13 @@ max_useful_jobs(config, imports = c("files", "all", "none"),
   from_scratch = FALSE)
 }
 \arguments{
-\item{config}{internal configuration list of \code{\link{make}(...)},
+\item{config}{Internal configuration list of \code{\link{make}(...)},
 produced also with \code{\link[=drake_config]{drake_config()}}.}
 
 \item{imports}{Set the \code{imports} argument to change your
 assumptions about how fast objects/files are imported.}
 
-\item{from_scratch}{logical, whether to assume
+\item{from_scratch}{Logical, whether to assume
 the next \code{\link[=make]{make()}} will run from scratch
 so that all targets are attempted.}
 }

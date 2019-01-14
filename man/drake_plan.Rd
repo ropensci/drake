@@ -15,11 +15,11 @@ with commands assigned to them. See the examples for details.}
 \item{list}{A named character vector of commands
 with names as targets.}
 
-\item{file_targets}{deprecated}
+\item{file_targets}{Deprecated.}
 
-\item{strings_in_dots}{deprecated}
+\item{strings_in_dots}{Deprecated.}
 
-\item{tidy_evaluation}{logical, whether to use tidy evaluation
+\item{tidy_evaluation}{Logical, whether to use tidy evaluation
 such as quasiquotation
 when evaluating commands passed through the free-form
 \code{...} argument.}

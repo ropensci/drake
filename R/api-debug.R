@@ -8,7 +8,7 @@
 #' @seealso [drake_build()]
 #' @return The value of the target right after it is built.
 #' @inheritParams drake_build
-#' @param verbose logical, whether to print out the target
+#' @param verbose Logical, whether to print out the target
 #'   you are debugging.
 #' @examples
 #' \dontrun{
@@ -99,7 +99,7 @@ debug_command_char <- function(command) {
 #' @seealso [drake_debug()]
 #' @export
 #' @return The return value of `f`.
-#' @param f a function
+#' @param f A function.
 debug_and_run <- function(f) {
   # Tested in tests/testthat/test-always-skipped.R.
   # nocov start

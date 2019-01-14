@@ -10,7 +10,7 @@ predict_runtime(config, targets = NULL, from_scratch = FALSE,
   default_time = 0, warn = TRUE)
 }
 \arguments{
-\item{config}{option internal runtime parameter list of
+\item{config}{Optional internal runtime parameter list of
 produced by both \code{\link[=make]{make()}} and
 \code{\link[=drake_config]{drake_config()}}.}
 
@@ -19,27 +19,27 @@ Predict the runtime of building these targets
 plus dependencies.
 Defaults to all targets.}
 
-\item{from_scratch}{logical, whether to predict a
+\item{from_scratch}{Logical, whether to predict a
 \code{\link[=make]{make()}} build from scratch or to
 take into account the fact that some targets may be
 already up to date and therefore skipped.}
 
-\item{targets_only}{deprecated}
+\item{targets_only}{Deprecated.}
 
-\item{jobs}{the \code{jobs} argument of your next planned
+\item{jobs}{The \code{jobs} argument of your next planned
 \code{make()}. How many targets to do you plan
 to have running simultaneously?}
 
-\item{known_times}{a named numeric vector with targets/imports
+\item{known_times}{A named numeric vector with targets/imports
 as names and values as hypothetical runtimes in seconds.
 Use this argument to overwrite any of the existing build times
 or the \code{default_time}.}
 
-\item{default_time}{number of seconds to assume for any
+\item{default_time}{Number of seconds to assume for any
 target or import with no recorded runtime (from \code{\link[=build_times]{build_times()}})
 or anything in \code{known_times}.}
 
-\item{warn}{logical, whether to warn the user about
+\item{warn}{Logical, whether to warn the user about
 any targets with no available runtime, either in
 \code{known_times} or \code{\link[=build_times]{build_times()}}. The times for these
 targets default to \code{default_time}.}

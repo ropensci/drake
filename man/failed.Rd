@@ -15,7 +15,7 @@ or if \code{search} is \code{TRUE}, either the
 project root or a subdirectory of the project.
 Ignored if a \code{cache} is supplied.}
 
-\item{search}{logical. If \code{TRUE}, search parent directories
+\item{search}{Logical. If \code{TRUE}, search parent directories
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.
 Ignored if a \code{cache} is supplied.}
@@ -23,7 +23,7 @@ Ignored if a \code{cache} is supplied.}
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} and \code{search} are ignored.}
 
-\item{verbose}{logical or numeric, control printing to the console.
+\item{verbose}{Logical or numeric, control printing to the console.
 \itemize{
 \item \code{0} or \code{FALSE}: print nothing.
 \item \code{1} or \code{TRUE}: print only targets to build.
@@ -34,7 +34,7 @@ If supplied, \code{path} and \code{search} are ignored.}
 \item \code{6}: plus notifications when targets are being stored.
 }}
 
-\item{upstream_only}{deprecated}
+\item{upstream_only}{Deprecated.}
 }
 \value{
 A character vector of target names.

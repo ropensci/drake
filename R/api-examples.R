@@ -9,16 +9,16 @@
 #' @seealso [drake_examples()], [make()]
 #' @export
 #' @return `NULL`
-#' @param example name of the example.
+#' @param example Name of the example.
 #'   The possible values are the names of the folders at
 #'   <https://github.com/wlandau/drake-examples>.
 #' @param to Character scalar,
 #'   the folder containing the code files for the example.
 #'   passed to the `exdir` argument of `utils::unzip()`.
-#' @param destination Deprecated, use `to` instead.
+#' @param destination Deprecated; use `to` instead.
 #' @param overwrite Logical, whether to overwrite an existing folder
 #'   with the same name as the drake example.
-#' @param quiet logical, passed to `downloader::download()`
+#' @param quiet Logical, passed to `downloader::download()`
 #'   and thus `utils::download.file()`. Whether
 #'   to download quietly or print progress.
 #' @examples
@@ -65,7 +65,7 @@ drake_example <- function(
 #' @export
 #' @seealso [drake_example()], [make()]
 #' @return Names of all the drake examples.
-#' @param quiet logical, passed to `downloader::download()`
+#' @param quiet Logical, passed to `downloader::download()`
 #'   and thus `utils::download.file()`. Whether
 #'   to download quietly or print progress.
 #' @examples
@@ -116,13 +116,13 @@ drake_examples <- function(quiet = TRUE) {
 #'   Defaults to your workspace.
 #'   For an insulated workspace,
 #'   set `envir = new.env(parent = globalenv())`.
-#' @param report_file where to write the report file. Deprecated.
+#' @param report_file Where to write the report file. Deprecated.
 #'   In a future release, the report file will always be
 #'   `report.Rmd` and will always be written to your
 #'   working directory (current default).
-#' @param overwrite logical, whether to overwrite an
-#'   existing file `report.Rmd`
-#' @param force deprecated
+#' @param overwrite Logical, whether to overwrite an
+#'   existing file `report.Rmd`.
+#' @param force Deprecated.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {

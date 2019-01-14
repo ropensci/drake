@@ -8,9 +8,9 @@ the side effects from your workspace and file system.}
 test_with_dir(desc, ...)
 }
 \arguments{
-\item{desc}{character, description of the test}
+\item{desc}{Character, description of the test.}
 
-\item{...}{code to test}
+\item{...}{Code to test.}
 }
 \value{
 Nothing.

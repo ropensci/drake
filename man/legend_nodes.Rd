@@ -8,7 +8,7 @@ of the graph visualizations.}
 legend_nodes(font_size = 20)
 }
 \arguments{
-\item{font_size}{font size of the node label text}
+\item{font_size}{Font size of the node label text.}
 }
 \value{
 A data frame of legend nodes for the graph visualizations.

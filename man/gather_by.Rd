@@ -8,25 +8,25 @@ gather_by(plan, ..., prefix = "target", gather = "list",
   append = TRUE, filter = NULL, sep = "_")
 }
 \arguments{
-\item{plan}{workflow plan data frame of prespecified targets}
+\item{plan}{Workflow plan data frame of prespecified targets.}
 
 \item{...}{Symbols, columns of \code{plan} to define target groupings.
 A \code{\link[=gather_plan]{gather_plan()}} call is applied for each grouping.
 Groupings with all \code{NA}s in the selector variables are ignored.}
 
-\item{prefix}{character, prefix for naming the new targets.
+\item{prefix}{Character, prefix for naming the new targets.
 Suffixes are generated from the values of the columns
 specified in \code{...}.}
 
-\item{gather}{function used to gather the targets. Should be
+\item{gather}{Function used to gather the targets. Should be
 one of \code{list(...)}, \code{c(...)}, \code{rbind(...)}, or similar.}
 
-\item{append}{logical. If \code{TRUE}, the output will include the
+\item{append}{Logical. If \code{TRUE}, the output will include the
 original rows in the \code{plan} argument.
 If \code{FALSE}, the output will only include the new
 targets and commands.}
 
-\item{filter}{an expression like you would pass to \code{dplyr::filter()}.
+\item{filter}{An expression like you would pass to \code{dplyr::filter()}.
 The rows for which \code{filter} evaluates to \code{TRUE} will be gathered,
 and the rest will be excluded from gathering.
 Why not just call \code{dplyr::filter()} before \code{gather_by()}?
@@ -34,8 +34,8 @@ Because \code{gather_by(append = TRUE, filter = my_column == "my_value")}
 gathers on some targets while including all the original targets
 in the output. See the examples for a demonstration.}
 
-\item{sep}{character scalar, delimiter for creating the names
-of new targets}
+\item{sep}{Character scalar, delimiter for creating the names
+of new targets.}
 }
 \value{
 A workflow plan data frame.

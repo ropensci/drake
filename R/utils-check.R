@@ -6,11 +6,11 @@
 #' @export
 #' @return Invisibly return `plan`.
 #' @inheritParams cached
-#' @param plan workflow plan data frame, possibly from
+#' @param plan Workflow plan data frame, possibly from
 #'   [drake_plan()].
-#' @param targets character vector of targets to make
-#' @param envir environment containing user-defined functions
-#' @param cache optional drake cache. See [new_cache()].
+#' @param targets Character vector of targets to make.
+#' @param envir Environment containing user-defined functions.
+#' @param cache Optional drake cache. See [new_cache()].
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {

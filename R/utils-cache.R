@@ -4,7 +4,7 @@
 #' @return A character vector of `storr` namespaces used for drake.
 #' @description Ordinary users do not need to worry about this function.
 #' It is just another window into `drake`'s internals.
-#' @param default name of the default `storr` namespace
+#' @param default Name of the default `storr` namespace.
 #' @examples
 #' cache_namespaces()
 cache_namespaces <- function(

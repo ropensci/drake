@@ -24,7 +24,7 @@ drake_config(plan, targets = NULL, envir = parent.frame(),
   "lookahead"), layout = NULL, lock_envir = TRUE)
 }
 \arguments{
-\item{plan}{workflow plan data frame.
+\item{plan}{Workflow plan data frame.
 A workflow plan data frame is a data frame
 with a \code{target} column and a \code{command} column.
 (See the details in the \code{\link[=drake_plan]{drake_plan()}} help file
@@ -37,13 +37,13 @@ data frames easily, and see functions \code{\link[=plan_analyses]{plan_analyses(
 \code{\link[=expand_plan]{expand_plan()}}, and \code{\link[=gather_plan]{gather_plan()}} for
 easy ways to generate large workflow plan data frames.}
 
-\item{targets}{character vector, names of targets to build.
+\item{targets}{Character vector, names of targets to build.
 Dependencies are built too. Together, the \code{plan} and
 \code{targets} comprise the workflow network
 (i.e. the \code{graph} argument).
 Changing either will change the network.}
 
-\item{envir}{environment to use. Defaults to the current
+\item{envir}{Environment to use. Defaults to the current
 workspace, so you should not need to worry about this
 most of the time. A deep copy of \code{envir} is made,
 so you don't need to worry about your workspace being modified
@@ -52,7 +52,7 @@ Wherever necessary, objects and functions are imported
 from \code{envir} and the global environment and
 then reproducibly tracked as dependencies.}
 
-\item{verbose}{logical or numeric, control printing to the console.
+\item{verbose}{Logical or numeric, control printing to the console.
 \itemize{
 \item \code{0} or \code{FALSE}: print nothing.
 \item \code{1} or \code{TRUE}: print only targets to build.
@@ -68,9 +68,9 @@ then reproducibly tracked as dependencies.}
 \item{cache}{drake cache as created by \code{\link[=new_cache]{new_cache()}}.
 See also \code{\link[=get_cache]{get_cache()}} and \code{\link[=this_cache]{this_cache()}}.}
 
-\item{fetch_cache}{deprecated}
+\item{fetch_cache}{Deprecated.}
 
-\item{parallelism}{character scalar, type of parallelism to use.
+\item{parallelism}{Character scalar, type of parallelism to use.
 For detailed explanations, see the
 \href{https://ropenscilabs.github.io/drake-manual/hpc.html}{high-performance computing chapter}
 of the user manual.
@@ -91,16 +91,16 @@ know what you are doing and you are willing to suffer setbacks
 whenever \code{drake}'s unexported core functions are updated.
 }}
 
-\item{jobs}{maximum number of parallel workers for processing the targets.
+\item{jobs}{Maximum number of parallel workers for processing the targets.
 You can experiment with \code{\link[=predict_runtime]{predict_runtime()}}
 to help decide on an appropriate number of jobs.
 For details, visit
 \url{https://ropenscilabs.github.io/drake-manual/time.html}.}
 
-\item{jobs_preprocess}{number of parallel jobs for processing the imports
+\item{jobs_preprocess}{Number of parallel jobs for processing the imports
 and doing other preprocessing tasks.}
 
-\item{packages}{character vector packages to load, in the order
+\item{packages}{Character vector packages to load, in the order
 they should be loaded. Defaults to \code{rev(.packages())}, so you
 should not usually need to set this manually. Just call
 \code{\link[=library]{library()}} to load your packages before \code{make()}.
@@ -118,7 +118,7 @@ are loaded once before any targets are built. If \code{parallelism} is
 initialization and then once again for each target right
 before that target is built.}
 
-\item{prework}{character vector of lines of code to run
+\item{prework}{Character vector of lines of code to run
 before build time. This code can be used to
 load packages, set options, etc., although the packages in the
 \code{packages} argument are loaded before any prework is done.
@@ -127,13 +127,13 @@ is run once before any targets are built. If \code{parallelism} is
 \code{"Makefile"}, the prework is run once on initialization
 and then once again for each target right before that target is built.}
 
-\item{prepend}{deprecated}
+\item{prepend}{Deprecated.}
 
-\item{command}{deprecated}
+\item{command}{Deprecated.}
 
-\item{args}{deprecated}
+\item{args}{Deprecated.}
 
-\item{recipe_command}{deprecated}
+\item{recipe_command}{Deprecated.}
 
 \item{timeout}{\code{deprecated}. Use \code{elapsed} and \code{cpu} instead.}
 
@@ -160,7 +160,7 @@ rather than rerun all your targets from scratch.
 If \code{force} is \code{TRUE}, then \code{make()} executes your workflow
 regardless of the version of \code{drake} that last ran \code{make()} on the cache.}
 
-\item{log_progress}{logical, whether to log the progress
+\item{log_progress}{Logical, whether to log the progress
 of individual targets as they are being built. Progress logging
 creates a lot of little files in the cache, and it may make builds
 a tiny bit slower. So you may see gains in storage efficiency
@@ -176,19 +176,19 @@ Supplying a pre-built graph could save time.}
 Ignored if \code{plan} has a \code{trigger} column.
 See \code{\link[=trigger]{trigger()}} for details.}
 
-\item{skip_targets}{logical, whether to skip building the targets
+\item{skip_targets}{Logical, whether to skip building the targets
 in \code{plan} and just import objects and files.}
 
-\item{skip_imports}{logical, whether to totally neglect to
+\item{skip_imports}{Logical, whether to totally neglect to
 process the imports and jump straight to the targets. This can be useful
 if your imports are massive and you just want to test your project,
 but it is bad practice for reproducible data analysis.
 This argument is overridden if you supply your own \code{graph} argument.}
 
-\item{skip_safety_checks}{logical, whether to skip the safety checks
+\item{skip_safety_checks}{Logical, whether to skip the safety checks
 on your workflow. Use at your own peril.}
 
-\item{lazy_load}{either a character vector or a logical. Choices:
+\item{lazy_load}{Either a character vector or a logical. Choices:
 \itemize{
 \item \code{"eager"}: no lazy loading. The target is loaded right away
 with \code{\link[=assign]{assign()}}.
@@ -216,7 +216,7 @@ promises to load any dependencies at the last minute.
 Lazy loading may be more memory efficient in some use cases, but
 it may duplicate the loading of dependencies, costing time.}
 
-\item{session_info}{logical, whether to save the \code{sessionInfo()}
+\item{session_info}{Logical, whether to save the \code{sessionInfo()}
 to the cache. This behavior is recommended for serious \code{\link[=make]{make()}}s
 for the sake of reproducibility. This argument only exists to
 speed up tests. Apparently, \code{sessionInfo()} is a bottleneck
@@ -234,7 +234,7 @@ will give you an easy representation of how your results change
 over time as the rest of your project changes. Hopefully,
 this is a step in the right direction for data reproducibility.}
 
-\item{seed}{integer, the root pseudo-random number generator
+\item{seed}{Integer, the root pseudo-random number generator
 seed to use for your project.
 In \code{\link[=make]{make()}}, \code{drake} generates a unique
 local seed for each target using the global seed
@@ -263,7 +263,7 @@ seed from the project's cache (usually the \code{.drake/} folder).
 To reset the random number generator seed for a project,
 use \code{clean(destroy = TRUE)}.}
 
-\item{caching}{character string, only applies to
+\item{caching}{Character string, only applies to
 \code{"clustermq"}, \code{"clustermq_staged"}, and \code{"future"} parallel backends.
 The \code{caching} argument can be either \code{"master"} or \code{"worker"}.
 \itemize{
@@ -280,7 +280,7 @@ of the calling R session. Transferring target data across
 a network can be slow.
 }}
 
-\item{keep_going}{logical, whether to still keep running \code{\link[=make]{make()}}
+\item{keep_going}{Logical, whether to still keep running \code{\link[=make]{make()}}
 if targets fail.}
 
 \item{session}{An optional \code{callr} function if you want to
@@ -294,7 +294,7 @@ your current R session as the master session. This is slightly faster,
 but it causes \code{\link[=make]{make()}} to populate your workspace/environment
 with the last few targets it builds.}
 
-\item{pruning_strategy}{deprecated. See \code{memory_strategy}.}
+\item{pruning_strategy}{Deprecated. See \code{memory_strategy}.}
 
 \item{makefile_path}{Path to the \code{Makefile} for
 \code{make(parallelism = "Makefile")}. If you set this argument to a
@@ -302,7 +302,7 @@ non-default value, you are responsible for supplying this same
 path to the \code{args} argument so \code{make} knows where to find it.
 Example: \code{make(parallelism = "Makefile", makefile_path = ".drake/.makefile", command = "make", args = "--file=.drake/.makefile")}}
 
-\item{console_log_file}{character scalar,
+\item{console_log_file}{Character scalar,
 connection object (such as \code{stdout()}) or \code{NULL}.
 If \code{NULL}, console output will be printed
 to the R console using \code{message()}.
@@ -316,7 +316,7 @@ warnings and messages are printed to the console in real time
 (in addition to the usual in-bulk printing
 after each target finishes).}
 
-\item{ensure_workers}{logical, whether the master process
+\item{ensure_workers}{Logical, whether the master process
 should wait for the workers to post before assigning them
 targets. Should usually be \code{TRUE}. Set to \code{FALSE}
 for \code{make(parallelism = "future_lapply", jobs = n)}
@@ -325,10 +325,10 @@ This argument only applies to parallel computing with persistent workers
 (\code{make(parallelism = x)}, where \code{x} could be \code{"mclapply"},
 \code{"parLapply"}, or \code{"future_lapply"}).}
 
-\item{garbage_collection}{logical, whether to call \code{gc()} each time
+\item{garbage_collection}{Logical, whether to call \code{gc()} each time
 a target is built during \code{\link[=make]{make()}}.}
 
-\item{template}{a named list of values to fill in the \code{{{ ... }}}
+\item{template}{A named list of values to fill in the \code{{{ ... }}}
 placeholders in template files (e.g. from \code{\link[=drake_hpc_template_file]{drake_hpc_template_file()}}).
 Same as the \code{template} argument of \code{clustermq::Q()} and
 \code{clustermq::workers}.
@@ -362,7 +362,7 @@ and longer workflows, you might use an exponential
 back-off: say,
 \code{function(i) { 0.1 + 120 * pexp(i - 1, rate = 0.01) }}.}
 
-\item{hasty_build}{a user-defined function.
+\item{hasty_build}{A user-defined function.
 In "hasty mode" (\code{make(parallelism = "hasty")})
 this is the function that evaluates a target's command
 and returns the resulting value. The \code{hasty_build} argument
@@ -408,7 +408,7 @@ from a prior call to \code{drake_config()}. If your plan or environment
 have changed since the last \code{make()}, do not supply a \code{layout} argument.
 Otherwise, supplying one could save time.}
 
-\item{lock_envir}{logical, whether to lock \code{config$envir} during \code{make()}.
+\item{lock_envir}{Logical, whether to lock \code{config$envir} during \code{make()}.
 If \code{TRUE}, \code{make()} quits in error whenever a command in your
 \code{drake} plan (or \code{prework}) tries to add, remove, or modify
 non-hidden variables in your environment/workspace/R session.

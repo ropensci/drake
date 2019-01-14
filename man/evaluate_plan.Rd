@@ -10,8 +10,8 @@ evaluate_plan(plan, rules = NULL, wildcard = NULL, values = NULL,
   columns = "command", sep = "_")
 }
 \arguments{
-\item{plan}{workflow plan data frame, similar to one produced by
-\code{\link[=drake_plan]{drake_plan()}}}
+\item{plan}{Workflow plan data frame, similar to one produced by
+\code{\link[=drake_plan]{drake_plan()}}.}
 
 \item{rules}{Named list with wildcards as names and vectors of
 replacements
@@ -20,9 +20,9 @@ When not \code{NULL}, \code{rules} overrules \code{wildcard} and
 \code{values} if
 not \code{NULL}.}
 
-\item{wildcard}{character scalar denoting a wildcard placeholder}
+\item{wildcard}{Character scalar denoting a wildcard placeholder.}
 
-\item{values}{vector of values to replace the wildcard
+\item{values}{Vector of values to replace the wildcard
 in the drake instructions. Will be treated as a character vector.
 Must be the same length as \code{plan$command} if \code{expand} is
 \code{TRUE}.}
@@ -34,19 +34,19 @@ If \code{FALSE}, each occurrence of the wildcard
 is replaced with the next entry in the \code{values} vector,
 and the values are recycled.}
 
-\item{rename}{logical, whether to rename the targets
+\item{rename}{Logical, whether to rename the targets
 based on the values supplied for the wildcards
 (based on \code{values} or \code{rules}).}
 
-\item{trace}{logical, whether to add columns that
+\item{trace}{Logical, whether to add columns that
 trace the wildcard expansion process. These new
 columns indicate which targets were evaluated and with which
 wildcards.}
 
-\item{columns}{character vector of names of columns
+\item{columns}{Character vector of names of columns
 to look for and evaluate the wildcards.}
 
-\item{sep}{character scalar, separator for the names
+\item{sep}{Character scalar, separator for the names
 of the new targets generated. For example, in
 \code{evaluate_plan(drake_plan(x = sqrt(y__)), list(y__ = 1:2), sep = ".")},
 the names of the new targets are \code{x.1} and \code{x.2}.}

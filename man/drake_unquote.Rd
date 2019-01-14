@@ -8,7 +8,7 @@ escaped quotes from character strings.}
 drake_unquote(x = NULL)
 }
 \arguments{
-\item{x}{character vector}
+\item{x}{Character vector.}
 }
 \value{
 Character vector without leading

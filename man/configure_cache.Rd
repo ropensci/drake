@@ -11,29 +11,29 @@ configure_cache(cache = drake::get_cache(verbose = verbose),
   jobs = 1, init_common_values = FALSE)
 }
 \arguments{
-\item{cache}{cache to configure}
+\item{cache}{Cache to configure}
 
-\item{short_hash_algo}{short hash algorithm for drake.
+\item{short_hash_algo}{Short hash algorithm for drake.
 The short algorithm must be among \code{\link[=available_hash_algos]{available_hash_algos()}},
 which is just the collection of algorithms available to the \code{algo}
 argument in \code{\link[digest:digest]{digest::digest()}}.
 See \code{\link[=default_short_hash_algo]{default_short_hash_algo()}} for more.}
 
-\item{long_hash_algo}{long hash algorithm for drake.
+\item{long_hash_algo}{Long hash algorithm for drake.
 The long algorithm must be among \code{\link[=available_hash_algos]{available_hash_algos()}},
 which is just the collection of algorithms available to the \code{algo}
 argument in \code{digest::digest()}.
 See \code{\link[=default_long_hash_algo]{default_long_hash_algo()}} for more.}
 
-\item{log_progress}{deprecated logical.
+\item{log_progress}{Deprecated logical.
 Previously toggled whether to clear the recorded
 build progress if this cache was used for previous calls to
 \code{\link[=make]{make()}}.}
 
-\item{overwrite_hash_algos}{logical, whether to try to overwrite
+\item{overwrite_hash_algos}{Logical, whether to try to overwrite
 the hash algorithms in the cache with any user-specified ones.}
 
-\item{verbose}{logical or numeric, control printing to the console.
+\item{verbose}{Logical or numeric, control printing to the console.
 \itemize{
 \item \code{0} or \code{FALSE}: print nothing.
 \item \code{1} or \code{TRUE}: print only targets to build.
@@ -44,9 +44,9 @@ the hash algorithms in the cache with any user-specified ones.}
 \item \code{6}: plus notifications when targets are being stored.
 }}
 
-\item{jobs}{number of jobs for parallel processing}
+\item{jobs}{Number of jobs for parallel processing}
 
-\item{init_common_values}{logical, whether to set the initial \code{drake}
+\item{init_common_values}{Logical, whether to set the initial \code{drake}
 version in the cache and other common values.
 Not always a thread safe operation, so should only be \code{TRUE}
 on the master process}

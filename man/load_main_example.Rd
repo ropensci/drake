@@ -13,12 +13,12 @@ Defaults to your workspace.
 For an insulated workspace,
 set \code{envir = new.env(parent = globalenv())}.}
 
-\item{report_file}{where to write the report file \code{report.Rmd}.}
+\item{report_file}{Where to write the report file \code{report.Rmd}.}
 
-\item{overwrite}{logical, whether to overwrite an
+\item{overwrite}{Logical, whether to overwrite an
 existing file \code{report.Rmd}}
 
-\item{force}{deprecated}
+\item{force}{Deprecated.}
 }
 \value{
 A \code{\link[=drake_config]{drake_config()}} configuration list.

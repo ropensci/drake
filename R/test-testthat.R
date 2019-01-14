@@ -83,8 +83,8 @@ nobuild <- function(config) {
 #' @export
 #' @keywords internal
 #' @return Nothing.
-#' @param desc character, description of the test
-#' @param ... code to test
+#' @param desc Character, description of the test.
+#' @param ... Code to test.
 #' @examples
 #' \dontrun{
 #' test_with_dir(

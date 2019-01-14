@@ -8,7 +8,7 @@
 #' @seealso [drake_plan()]
 #' @return a character vector of lines of text. This text
 #'   is a call to [drake_plan()] that produces the plan you provide.
-#' @param plan a workflow plan data frame (see [drake_plan()])
+#' @param plan A workflow plan data frame (see [drake_plan()])
 #' @examples
 #' plan <- drake::drake_plan(
 #'   small_data = download_data("https://some_website.com"),

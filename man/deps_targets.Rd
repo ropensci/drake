@@ -7,11 +7,11 @@
 deps_targets(targets, config, reverse = FALSE)
 }
 \arguments{
-\item{targets}{a character vector of target names}
+\item{targets}{A character vector of target names.}
 
-\item{config}{an output list from \code{\link[=drake_config]{drake_config()}}}
+\item{config}{An output list from \code{\link[=drake_config]{drake_config()}}}
 
-\item{reverse}{logical, whether to compute reverse dependencies
+\item{reverse}{Logical, whether to compute reverse dependencies
 (targets immediately downstream) instead of ordinary dependencies.}
 }
 \value{

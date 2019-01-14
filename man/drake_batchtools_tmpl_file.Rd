@@ -8,7 +8,7 @@ drake_batchtools_tmpl_file(example = drake::drake_hpc_template_files(),
   to = getwd(), overwrite = FALSE)
 }
 \arguments{
-\item{example}{name of template file}
+\item{example}{Name of template file.}
 
 \item{to}{Character vector, where to write the file.}
 

@@ -7,7 +7,7 @@
 drake_plan_source(plan)
 }
 \arguments{
-\item{plan}{a workflow plan data frame (see \code{\link[=drake_plan]{drake_plan()}})}
+\item{plan}{A workflow plan data frame (see \code{\link[=drake_plan]{drake_plan()}})}
 }
 \value{
 a character vector of lines of text. This text

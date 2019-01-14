@@ -20,11 +20,11 @@
 #'
 #' @inheritParams cached
 #'
-#' @param target name of the target of the error to get.
+#' @param target Name of the target of the error to get.
 #'   Can be a symbol if `character_only` is `FALSE`,
 #'   must be a character if `character_only` is `TRUE`.
 #'
-#' @param character_only logical, whether `target` should be treated
+#' @param character_only Logical, whether `target` should be treated
 #'   as a character or a symbol.
 #'   Just like `character.only` in [library()].
 #'

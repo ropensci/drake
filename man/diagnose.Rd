@@ -9,11 +9,11 @@ diagnose(target = NULL, character_only = FALSE, path = getwd(),
   verbose = verbose), verbose = 1L)
 }
 \arguments{
-\item{target}{name of the target of the error to get.
+\item{target}{Name of the target of the error to get.
 Can be a symbol if \code{character_only} is \code{FALSE},
 must be a character if \code{character_only} is \code{TRUE}.}
 
-\item{character_only}{logical, whether \code{target} should be treated
+\item{character_only}{Logical, whether \code{target} should be treated
 as a character or a symbol.
 Just like \code{character.only} in \code{\link[=library]{library()}}.}
 
@@ -22,7 +22,7 @@ or if \code{search} is \code{TRUE}, either the
 project root or a subdirectory of the project.
 Ignored if a \code{cache} is supplied.}
 
-\item{search}{logical. If \code{TRUE}, search parent directories
+\item{search}{Logical. If \code{TRUE}, search parent directories
 to find the nearest drake cache. Otherwise, look in the
 current working directory only.
 Ignored if a \code{cache} is supplied.}
@@ -30,7 +30,7 @@ Ignored if a \code{cache} is supplied.}
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} and \code{search} are ignored.}
 
-\item{verbose}{logical or numeric, control printing to the console.
+\item{verbose}{Logical or numeric, control printing to the console.
 \itemize{
 \item \code{0} or \code{FALSE}: print nothing.
 \item \code{1} or \code{TRUE}: print only targets to build.

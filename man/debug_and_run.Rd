@@ -7,7 +7,7 @@
 debug_and_run(f)
 }
 \arguments{
-\item{f}{a function}
+\item{f}{A function.}
 }
 \value{
 The return value of \code{f}.

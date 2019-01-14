@@ -102,10 +102,10 @@ cmq_deps_list <- function(target, config) {
 #' @export
 #' @keywords internal
 #' @inheritParams drake_build
-#' @param target target name
-#' @param meta list of metadata
-#' @param deps named list of target dependencies
-#' @param config a [drake_config()] list
+#' @param target Target name.
+#' @param meta List of metadata.
+#' @param deps Named list of target dependencies.
+#' @param config A [drake_config()] list.
 cmq_build <- function(target, meta, deps, config) {
   if (identical(config$garbage_collection, TRUE)) {
     gc()

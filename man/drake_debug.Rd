@@ -9,28 +9,28 @@ drake_debug(target = NULL, config = NULL, character_only = FALSE,
   verbose = TRUE)
 }
 \arguments{
-\item{target}{name of the target}
+\item{target}{Name of the target.}
 
-\item{config}{internal configuration list}
+\item{config}{Internal configuration list.}
 
-\item{character_only}{logical, whether \code{name} should be treated
+\item{character_only}{Logical, whether \code{name} should be treated
 as a character or a symbol
 (just like \code{character.only} in \code{\link[=library]{library()}}).}
 
-\item{envir}{environment to load objects into. Defaults to the
+\item{envir}{Environment to load objects into. Defaults to the
 calling environment (current workspace).}
 
-\item{jobs}{number of parallel jobs for loading objects. On
+\item{jobs}{Number of parallel jobs for loading objects. On
 non-Windows systems, the loading process for multiple objects
 can be lightly parallelized via \code{parallel::mclapply()}.
 just set jobs to be an integer greater than 1. On Windows,
 \code{jobs} is automatically demoted to 1.}
 
-\item{replace}{logical. If \code{FALSE},
+\item{replace}{Logical. If \code{FALSE},
 items already in your environment
 will not be replaced.}
 
-\item{verbose}{logical, whether to print out the target
+\item{verbose}{Logical, whether to print out the target
 you are debugging.}
 }
 \value{

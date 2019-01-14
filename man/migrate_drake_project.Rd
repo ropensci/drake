@@ -10,7 +10,7 @@ migrate_drake_project(path = NULL, jobs = 1)
 \arguments{
 \item{path}{Full path to the cache.}
 
-\item{jobs}{number of jobs for light parallelism.}
+\item{jobs}{Number of jobs for light parallelism.}
 }
 \description{
 Deprecated on May 4, 2018.

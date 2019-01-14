@@ -22,13 +22,13 @@
 #' @export
 #' @return The environment that the exposed imports are loaded into.
 #'   Defaults to your R workspace.
-#' @param package name of the package, either a symbol or a string,
+#' @param package Name of the package, either a symbol or a string,
 #'   depending on `character_only`.
-#' @param character_only logical, whether to interpret `package`
+#' @param character_only Logical, whether to interpret `package`
 #'   as a character string or a symbol (quoted vs unquoted).
-#' @param envir environment to load the exposed package imports.
+#' @param envir Environment to load the exposed package imports.
 #'   You will later pass this `envir` to [make()].
-#' @param jobs number of parallel jobs for the parallel processing
+#' @param jobs Number of parallel jobs for the parallel processing
 #'   of the imports.
 #' @examples
 #' \dontrun{

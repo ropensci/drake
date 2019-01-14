@@ -58,9 +58,9 @@
 #'   with commands assigned to them. See the examples for details.
 #' @param list A named character vector of commands
 #'   with names as targets.
-#' @param file_targets deprecated
-#' @param strings_in_dots deprecated
-#' @param tidy_evaluation logical, whether to use tidy evaluation
+#' @param file_targets Deprecated.
+#' @param strings_in_dots Deprecated.
+#' @param tidy_evaluation Logical, whether to use tidy evaluation
 #'   such as quasiquotation
 #'   when evaluating commands passed through the free-form
 #'   `...` argument.
@@ -157,7 +157,7 @@ drake_plan <- function(
 #'   correctly fills in missing entries.
 #' @export
 #' @seealso [drake_plan()], [make()]
-#' @param ... workflow plan data frames (see [drake_plan()])
+#' @param ... Workflow plan data frames (see [drake_plan()]).
 #' @examples
 #' # You might need to refresh your data regularly (see ?triggers).
 #' download_plan <- drake_plan(
@@ -364,7 +364,7 @@ knitr_in <- file_in
 #' @export
 #' @seealso [file_in()], [file_out()], [knitr_in()]
 #' @return The argument.
-#' @param x code to ignore
+#' @param x Code to ignore.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Contain side effects", {
@@ -448,17 +448,17 @@ detect_arrow <- function(command) {
 #' @seealso [drake_plan()], [make()]
 #' @return A one-row workflow plan data frame with the named
 #' arguments as columns.
-#' @param command the command to build the target
-#' @param trigger the target's trigger
-#' @param retries number of retries in case of failure
-#' @param timeout overall timeout (in seconds) for building a target
-#' @param cpu cpu timeout (seconds) for building a target
-#' @param elapsed elapsed time (seconds) for building a target
-#' @param priority integer giving the build priority of a target.
+#' @param command The command to build the target.
+#' @param trigger The target's trigger.
+#' @param retries Number of retries in case of failure.
+#' @param timeout Overall timeout (in seconds) for building a target.
+#' @param cpu cpu Timeout (seconds) for building a target.
+#' @param elapsed Elapsed time (seconds) for building a target.
+#' @param priority Integer giving the build priority of a target.
 #'   Given two targets about to be built at the same time,
 #'   the one with the lesser priority (numerically speaking)
 #'   will be built first.
-#' @param worker the preferred worker to be assigned the target
+#' @param worker The preferred worker to be assigned the target
 #'   (in parallel computing).
 #' @param resources Experimental, no guarantees that this works all the time.
 #'   Same as the `resources` argument to `batchtools_slurm()`
@@ -468,7 +468,7 @@ detect_arrow <- function(command) {
 #'   Each element is a value passed to a `brew` placeholder of a
 #'   `batchtools` template file. The list names of `resources`
 #'   should be the brew patterns.
-#' @param ... named arguments specifying non-standard
+#' @param ... Named arguments specifying non-standard
 #'   fields of the workflow plan.
 #' @examples
 #' # Use target() to create your own custom columns in a drake plan.

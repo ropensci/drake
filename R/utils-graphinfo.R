@@ -211,7 +211,7 @@ hover_text <- function(config) {
 #' data frame of nodes. It tells you what
 #' the colors and shapes mean
 #' in the graph visualizations.
-#' @param font_size font size of the node label text
+#' @param font_size Font size of the node label text.
 #' @return A data frame of legend nodes for the graph visualizations.
 #' @examples
 #' \dontrun{
