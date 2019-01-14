@@ -1416,7 +1416,7 @@ analysis_wildcard <- function() {
 #' @details Currently only works with
 #' [storr::storr_rds()] file system caches.
 #' @return File path where the cache is stored.
-#' @param cache the cache whose file path you want to know
+#' @param cache The cache whose file path you want to know.
 cache_path <- function(cache = NULL) {
   .Deprecated(
     "cache_path",
@@ -1431,7 +1431,7 @@ cache_path <- function(cache = NULL) {
 #' @return A character vector of `storr` namespaces used for drake.
 #' @details Ordinary users do not need to worry about this function.
 #' It is just another window into `drake`'s internals.
-#' @param default name of the default `storr` namespace
+#' @param default Name of the default `storr` namespace.
 #' @export
 #' @keywords internal
 #' @seealso [make()]
@@ -1463,11 +1463,11 @@ cache_namespaces <- function(
 #' @keywords internal
 #' @return Invisibly return `plan`.
 #' @inheritParams cached
-#' @param plan workflow plan data frame, possibly from
+#' @param plan Workflow plan data frame, possibly from
 #'   [drake_plan()].
-#' @param targets character vector of targets to make
-#' @param envir environment containing user-defined functions
-#' @param cache optional drake cache. See [new_cache()].
+#' @param targets Character vector of targets to make.
+#' @param envir Environment containing user-defined functions.
+#' @param cache Optional drake cache. See [new_cache()].
 check_plan <- function(
   plan = NULL,
   targets = NULL,
@@ -1628,8 +1628,8 @@ in_progress <- function(
 #' @inheritParams new_cache
 #' @inheritParams this_cache
 #' @inheritParams drake_config
-#' @param path file path of the cache
-#' @param force logical, whether to load the cache
+#' @param path File path of the cache.
+#' @param force Logical, whether to load the cache
 #'   despite any back compatibility issues with the
 #'   running version of drake.
 recover_cache <- function(
@@ -1661,7 +1661,7 @@ recover_cache <- function(
 #'   target-level information.
 #' @details Ordinary users do not need to worry about this function.
 #' It is just another window into `drake`'s internals.
-#' @param default name of the default `storr` namespace
+#' @param default Name of the default `storr` namespace.
 target_namespaces <- function(
   default = storr::storr_environment()$default_namespace
 ) {
@@ -1679,16 +1679,16 @@ target_namespaces <- function(
 #' @export
 #' @keywords internal
 #' @return An evaluated workflow plan data frame of analysis targets.
-#' @param plan workflow plan data frame of analysis methods.
+#' @param plan Workflow plan data frame of analysis methods.
 #'   The commands in the `command` column must
 #'   have the `dataset__` wildcard where the datasets go.
 #'   For example, one command could be `lm(dataset__)`. Then,
 #'   the commands in the output will include `lm(your_dataset_1)`,
 #'   `lm(your_dataset_2)`, etc.
-#' @param datasets workflow plan data frame with instructions
+#' @param datasets Workflow plan data frame with instructions
 #'   to make the datasets.
-#' @param sep character scalar, delimiter for creating
-#'   the names of new targets
+#' @param sep character Scalar, delimiter for creating
+#'   the names of new targets.
 #' @examples
 #' # Deprecated
 plan_analyses <- function(plan, datasets, sep = "_") {
@@ -1717,18 +1717,18 @@ plan_analyses <- function(plan, datasets, sep = "_") {
 #' @return An evaluated workflow plan data frame of instructions
 #'   for computing summaries of analyses and datasets.
 #'   analyses of multiple datasets in multiple ways.
-#' @param plan workflow plan data frame with commands for the summaries.
+#' @param plan Workflow plan data frame with commands for the summaries.
 #'   Use the `analysis__` and `dataset__` wildcards
 #'   just like the `dataset__` wildcard in [plan_analyses()].
-#' @param analyses workflow plan data frame of analysis instructions
-#' @param datasets workflow plan data frame with instructions to make
+#' @param analyses Workflow plan data frame of analysis instructions.
+#' @param datasets Workflow plan data frame with instructions to make
 #'   or import the datasets.
 #' @param gather Character vector, names of functions to gather the
 #'   summaries. If not `NULL`, the length must be the number of
 #'   rows in the `plan`. See the [gather_plan()] function
 #'   for more.
-#' @param sep character scalar, delimiter for creating the
-#'   new target names
+#' @param sep Character scalar, delimiter for creating the
+#'   new target names.
 #' @examples
 #' # Deprecated
 plan_summaries <- function(

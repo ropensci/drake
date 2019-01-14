@@ -10,7 +10,7 @@ recover_cache(path = NULL, hash_algorithm = NULL,
   verbose = 1L, fetch_cache = NULL, console_log_file = NULL)
 }
 \arguments{
-\item{path}{file path of the cache}
+\item{path}{File path of the cache.}
 
 \item{hash_algorithm}{Name of a hash algorithm to use.
 See the \code{algo} argument of the \code{digest} package for your options.}
@@ -19,7 +19,7 @@ See the \code{algo} argument of the \code{digest} package for your options.}
 
 \item{long_hash_algo}{Deprecated on 2018-12-12. Use \code{hash_algorithm} instead.}
 
-\item{force}{logical, whether to load the cache
+\item{force}{Logical, whether to load the cache
 despite any back compatibility issues with the
 running version of drake.}
 

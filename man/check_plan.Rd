@@ -9,14 +9,14 @@ check_plan(plan = NULL, targets = NULL, envir = parent.frame(),
   jobs = 1)
 }
 \arguments{
-\item{plan}{workflow plan data frame, possibly from
+\item{plan}{Workflow plan data frame, possibly from
 \code{\link[=drake_plan]{drake_plan()}}.}
 
-\item{targets}{character vector of targets to make}
+\item{targets}{Character vector of targets to make.}
 
-\item{envir}{environment containing user-defined functions}
+\item{envir}{Environment containing user-defined functions.}
 
-\item{cache}{optional drake cache. See \code{\link[=new_cache]{new_cache()}}.}
+\item{cache}{Optional drake cache. See \code{\link[=new_cache]{new_cache()}}.}
 
 \item{verbose}{Logical or numeric, control printing to the console.
 \itemize{
