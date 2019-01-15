@@ -17,7 +17,11 @@ plan <- drake_plan(
     transform = summarize(data, sum_fun)
   )
 )
-tf_plan(plan)
+p2 <- tf_plan(plan)
+
+config <- drake_config(p2[1:15, ])
+vis_drake_graph(config)
+
 
 }
 
@@ -50,20 +54,13 @@ tf_row <- function(plan, row) {
     paste0("tf_", as.character(call[[1]])),
     envir = getNamespace("drake")
   )
-  
-  if (row > 14) browser()
-  
-  transform(
-    plan,
-    plan$target[[row]],
-    plan$command[[row]],
-    tf_levels(plan, call)
-  )
+  transform(plan, plan$target[[row]], plan$command[[row]], call)
 }
 
 # Supported transformations
 
-tf_cross <- function(plan, target, command, levels) {
+tf_cross <- function(plan, target, command, call) {
+  levels <- tf_levels(plan, call)
   factors <- tf_factors(plan, levels)
   suffixes <- factors[, names(levels)]
   targets <- apply(cbind(target, suffixes), 1, paste, collapse = "_")
@@ -73,14 +70,19 @@ tf_cross <- function(plan, target, command, levels) {
   cbind(out, factors)
 }
 
-tf_summarize <- function(plan, target, command, levels) {
+tf_summarize <- function(plan, target, command, call) {
+
+  
   browser()
-  factors
   
   plan
 }
 
 # Utils
+
+tf_cols <- function(plan) {
+  setdiff(colnames(plan), attr(plan, "protect"))
+}
 
 tf_levels <- function(plan, call) {
   call <- call[-1]
@@ -97,10 +99,6 @@ tf_levels <- function(plan, call) {
     out[[factor]] <- as.character(stats::na.omit(plan[[factor]]))
   }
   out
-}
-
-tf_cols <- function(plan) {
-  setdiff(colnames(plan), attr(plan, "protect"))
 }
 
 tf_factors <- function(plan, levels) {
