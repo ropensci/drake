@@ -26,7 +26,7 @@ tf_plan(plan)
 tf_plan <- function(plan) {
   row <- 1
   attr(plan, "protect") <- colnames(plan)
-  while(row < nrow(plan)) {
+  while (row < nrow(plan)) {
     if (is.na(plan$transform[[row]])) {
       row <- row + 1
       next
