@@ -39,7 +39,7 @@ tf_plan <- function(plan) {
     plan <- bind_plans(
       plan[seq_len(row - 1), ],
       transformed,
-      plan[seq(row + 1, nrow(plan)), ]
+      plan[-seq_len(row), ]
     )
     row <- row + nrow(transformed)
   }
