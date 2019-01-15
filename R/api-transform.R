@@ -39,7 +39,9 @@ tf_plan <- function(plan) {
     )
     row <- row + nrow(transformed)
   }
-  plan
+  out <- plan[, attr(plan, "protect")]
+  attr(out, "protect") <- out$transform <- NULL
+  out
 }
 
 tf_row <- function(plan, row) {
@@ -61,7 +63,8 @@ tf_row <- function(plan, row) {
 tf_cross <- function(plan, target, command, levels) {
   levels$stringsAsFactors <- FALSE
   factors <- tf_factors(plan, levels)
-  targets <- apply(cbind(target, factors), 1, paste, collapse = "_")
+  suffixes <- factors[, intersect(colnames(factors), names(levels))]
+  targets <- apply(cbind(target, suffixes), 1, paste, collapse = "_")
   command <- gsub_grid(text = command, factors = factors)
   out <- weak_tibble(target = targets, command = command)
   out[[target]] <- targets
