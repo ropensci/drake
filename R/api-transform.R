@@ -17,11 +17,10 @@ plan <- drake_plan(
     transform = summarize(data, sum_fun)
   )
 )
-p2 <- tf_plan(plan)
+expanded <- tf_plan(plan)
 
-config <- drake_config(p2[1:15, ])
+config <- drake_config(p2)
 vis_drake_graph(config)
-
 
 } 
 
