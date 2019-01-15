@@ -30,7 +30,7 @@ tf_plan <- function(plan) {
   while(row < nrow(plan)) {
     if (is.na(plan$transform[[row]])) {
       row <- row + 1
-      next 
+      next
     }
     transformed <- tf_row(plan, row)
     plan <- bind_plans(
@@ -53,7 +53,8 @@ tf_row <- function(plan, row) {
     plan,
     plan$target[[row]],
     plan$command[[row]],
-    tf_levels(plan, call)
+    tf_levels(plan, call),
+    tf_concomitant(plan, call)
   )
 }
 
@@ -76,20 +77,8 @@ tf_summarize <- function(plan, target, command, levels) {
 # Utils
 
 tf_levels <- function(plan, call) {
-  out <- lapply(call[-1], as.character)
-  factors <- names(out)
-  if (!length(factors)) {
-    factors <- rep("", length(out))
-  }
-  factors[!nzchar(factors)] <- unlist(lapply(out[!nzchar(factors)], `[[`, 1))
-  names(out) <- factors
-  out <- lapply(out, `[`, -1)
-  for (factor in factors) {
-    if (!length(out[[factor]])) {
-      out[[factor]] <- unique(na.omit(plan[[factor]]))
-    }
-  }
-  out
+  out <- lapply(call[nzchar(names(call))], as.character)
+  lapply(out, `[`, -1)
 }
 
 tf_cols <- function(plan) {
