@@ -49,7 +49,11 @@ test_with_dir("transforming the mtcars plan", {
       summ_residuals_reg_reg2_small = summ_residuals_reg_reg2_small
     )
   )
-  out$command <- lapply(out$command, standardize_command)
-  exp$command <- lapply(exp$command, standardize_command)
-  expect_equal(out[order(out$target), ], exp[order(exp$target), ])
+  out <- out[order(out$target), ]
+  exp <- exp[order(exp$target), ]
+  expect_equal(out$target, exp$target)
+  expect_equal(
+    standardize_command(out$command),
+    standardize_command(exp$command)
+  )
 })
