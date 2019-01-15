@@ -21,6 +21,10 @@ test_with_dir("transforming the mtcars plan", {
     winners = target(
       min(summ),
       transform = summarize(data, sum_fun)
+    ),
+    final_winner = target(
+      min(winners),
+      transform = summarize()
     )
   )
   exp <- drake_plan(
@@ -53,6 +57,12 @@ test_with_dir("transforming the mtcars plan", {
     winners_small_residuals = min(
       summ_residuals_reg_reg1_small = summ_residuals_reg_reg1_small,
       summ_residuals_reg_reg2_small = summ_residuals_reg_reg2_small
+    ),
+    final_winner = min(
+      winners_large_coef = winners_large_coef,
+      winners_small_coef = winners_small_coef,
+      winners_large_residuals = winners_large_residuals,
+      winners_small_residuals = winners_small_residuals
     )
   )
   out <- out[order(out$target), ]
