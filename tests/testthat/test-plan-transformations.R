@@ -1,7 +1,7 @@
 drake_context("plan transformations")
 
 test_with_dir("simple expansion", {
-  plan <- drake_plan(a = target(1 +1, transform = cross(x = c(1, 2))))
+  plan <- drake_plan(a = target(1 + 1, transform = cross(x = c(1, 2))))
   expect_equal(sort(plan$target), sort(c("a_1", "a_2")))
   expect_equal(plan$command, rep("1 + 1", 2))
 })
