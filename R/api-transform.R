@@ -50,7 +50,7 @@ tf_summarize <- function(plan, target, command, transform) {
   fun <- as.character(command[1])
   factors <- as.character(transform[-1])
   groups <- as.character(command[-1])
-  targets <- na.omit(unlist(as.list(plan[, groups]), use.names = FALSE))
+  targets <- na_omit(unlist(as.list(plan[, groups]), use.names = FALSE))
   plan <- plan[plan$target %in% targets, ]
   out <- map_by(
     .x = plan,
@@ -83,7 +83,7 @@ tf_levels <- function(plan, transform) {
     FUN.VALUE = character(1)
   )
   for (factor in planned) {
-    out[[factor]] <- as.character(stats::na.omit(plan[[factor]]))
+    out[[factor]] <- as.character(stats::na_omit(plan[[factor]]))
   }
   out
 }

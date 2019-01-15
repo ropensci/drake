@@ -170,6 +170,10 @@ map_by <- function(.x, .by, .f, ...) {
   do.call(what = rbind, args = out)
 }
 
+na_omit <- function(x) {
+  x[!is.na(x)]
+}
+
 padded_scale <- function(x) {
   r <- range(x)
   pad <- 0.2 * (r[2] - r[1])
