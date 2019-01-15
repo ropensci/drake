@@ -33,10 +33,7 @@ tf_plan <- function(plan) {
       next 
     }
     transformed <- tf_row(plan, row)
-
-    browser()
-    
-    plan <- rbind(
+    plan <- bind_plans(
       plan[seq_len(row - 1), ],
       transformed,
       plan[seq(row + 1, nrow(plan)), ]
@@ -69,7 +66,14 @@ tf_cross <- function(plan, target, command, levels) {
 # Utils
 
 tf_levels <- function(call) {
-  lapply(as.list(call[nzchar(names(call))]), function(x) as.character(x)[-1])
+  out <- lapply(call[-1], as.character)
+  names <- names(out)
+  if (!length(names)) {
+    names <- rep("", length(out))
+  }
+  names[!nzchar(names)] <- unlist(lapply(out[!nzchar(names)], `[[`, 1))
+  names(out) <- names
+  lapply(out, `[`, -1)
 }
 
 tf_cols <- function(plan) {
