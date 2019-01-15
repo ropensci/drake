@@ -50,6 +50,9 @@ tf_row <- function(plan, row) {
     paste0("tf_", as.character(call[[1]])),
     envir = getNamespace("drake")
   )
+  
+  if (row > 14) browser()
+  
   transform(
     plan,
     plan$target[[row]],
@@ -61,9 +64,8 @@ tf_row <- function(plan, row) {
 # Supported transformations
 
 tf_cross <- function(plan, target, command, levels) {
-  levels$stringsAsFactors <- FALSE
   factors <- tf_factors(plan, levels)
-  suffixes <- factors[, intersect(colnames(factors), names(levels))]
+  suffixes <- factors[, names(levels)]
   targets <- apply(cbind(target, suffixes), 1, paste, collapse = "_")
   command <- gsub_grid(text = command, factors = factors)
   out <- weak_tibble(target = targets, command = command)
@@ -73,13 +75,16 @@ tf_cross <- function(plan, target, command, levels) {
 
 tf_summarize <- function(plan, target, command, levels) {
   browser()
+  factors
+  
+  plan
 }
 
 # Utils
 
 tf_levels <- function(plan, call) {
   call <- call[-1]
-  names <- names(call)
+  names <- names(call) %||% rep("", length(call))
   out <- lapply(call[nzchar(names)], function(x) {
     as.character(x)[-1]
   })
@@ -88,8 +93,8 @@ tf_levels <- function(plan, call) {
     as.character,
     FUN.VALUE = character(1)
   )
-  for (x in planned) {
-    out[[planned]] <- as.character(stats::na.omit(plan[[planned]]))
+  for (factor in planned) {
+    out[[factor]] <- as.character(stats::na.omit(plan[[factor]]))
   }
   out
 }
@@ -99,7 +104,8 @@ tf_cols <- function(plan) {
 }
 
 tf_factors <- function(plan, levels) {
-  factors <- do.call(what = expand.grid, args = levels)
+  args <- c(levels, stringsAsFactors = FALSE)
+  factors <- do.call(what = expand.grid, args = args)
   if (length(tf_cols(plan))) {
     factors <- merge(factors, plan[, tf_cols(plan)])
   }
