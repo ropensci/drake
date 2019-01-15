@@ -17,7 +17,6 @@ plan <- drake_plan(
     transform = summarize(data, sum_fun)
   )
 )
-row <- 3
 tf_plan(plan)
 
 }
@@ -97,6 +96,11 @@ tf_cols <- function(plan) {
 }
 
 tf_factors <- function(plan, levels) {
+  
+  browser()
+  
+  # Need to figure out how to join here. Test case: summaries.
+  
   factors <- do.call(what = expand.grid, args = levels)
   factors[, tf_cols(plan)] <- plan[, tf_cols(plan)]
   factors
