@@ -2,7 +2,7 @@
 
 tf_plan <- function(plan) {
   row <- 1
-  attr(plan, "protect") <- colnames(plan)
+  attr(plan, "protect") <- protect <- colnames(plan)
   while (row <= nrow(plan)) {
     if (is.na(plan$transform[[row]])) {
       row <- row + 1
@@ -14,9 +14,10 @@ tf_plan <- function(plan) {
       transformed,
       plan[-seq_len(row), ]
     )
+    attr(plan, "protect") <- protect
     row <- row + nrow(transformed)
   }
-  out <- plan[, attr(plan, "protect")]
+  out <- plan[, intersect(attr(plan, "protect"), colnames(plan))]
   attr(out, "protect") <- out$transform <- NULL
   out
 }
