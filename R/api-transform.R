@@ -63,6 +63,7 @@ tf_summarize <- function(plan, target, command, transform) {
   )
   suffixes <- out[, c("target", intersect(factors, colnames(out)))]
   out$target <- apply(suffixes, 1, paste, collapse = "_")
+  out[[target]] <- out$target
   out
 }
 
