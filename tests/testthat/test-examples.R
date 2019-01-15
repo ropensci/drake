@@ -2,7 +2,11 @@ drake_context("examples")
 
 test_with_dir("examples are listed and written", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_if_not_installed("curl")
   skip_if_not_installed("downloader")
+  if (!curl::has_internet()) {
+    skip("no internet connection")
+  }
   x <- drake_examples()
   expect_true(is.character(x) & length(x) > 0)
   example <- "main"

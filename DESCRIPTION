@@ -80,6 +80,7 @@ Suggests:
   clustermq,
   CodeDepends,
   crayon,
+  curl,
   datasets,
   downloader,
   future,

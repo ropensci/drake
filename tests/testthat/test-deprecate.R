@@ -300,7 +300,11 @@ test_with_dir("pruning_strategy", {
 
 test_with_dir("main example", {
   skip_on_cran()
+  skip_if_not_installed("curl")
   skip_if_not_installed("downloader")
+  if (!curl::has_internet()) {
+    skip("no internet connection")
+  }
   skip_if_not_installed("ggplot2")
   for (file in c("raw_data.xlsx", "report.Rmd")) {
     expect_false(file.exists(file))
