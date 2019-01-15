@@ -53,8 +53,7 @@ tf_row <- function(plan, row) {
     plan,
     plan$target[[row]],
     plan$command[[row]],
-    tf_levels(plan, call),
-    tf_concomitant(plan, call)
+    tf_levels(plan, call)
   )
 }
 
@@ -77,8 +76,20 @@ tf_summarize <- function(plan, target, command, levels) {
 # Utils
 
 tf_levels <- function(plan, call) {
-  out <- lapply(call[nzchar(names(call))], as.character)
-  lapply(out, `[`, -1)
+  call <- call[-1]
+  names <- names(call)
+  out <- lapply(call[nzchar(names)], function(x) {
+    as.character(x)[-1]
+  })
+  planned <- vapply(
+    call[!nzchar(names)],
+    as.character,
+    FUN.VALUE = character(1)
+  )
+  for (x in planned) {
+    out[[planned]] <- as.character(stats::na.omit(plan[[planned]]))
+  }
+  out
 }
 
 tf_cols <- function(plan) {
