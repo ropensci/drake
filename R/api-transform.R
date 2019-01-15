@@ -23,7 +23,7 @@ config <- drake_config(p2[1:15, ])
 vis_drake_graph(config)
 
 
-}
+} 
 
 # Iteration over the plan
 
@@ -71,14 +71,25 @@ tf_cross <- function(plan, target, command, transform) {
 }
 
 tf_summarize <- function(plan, target, command, transform) {
-  browser()
   if (is.character(command)) {
     command <- parse(text = command)[[1]]
   }
   fun <- as.character(command[1])
-  
-  
-  plan
+  factors <- as.character(transform[-1])
+  groups <- as.character(command[-1])
+  targets <- na.omit(unlist(as.list(plan[, groups]), use.names = FALSE))
+  plan <- plan[plan$target %in% targets, ]
+  out <- map_by(
+    .x = plan,
+    .by = factors,
+    .f = gather_plan,
+    target = target,
+    gather = fun,
+    append = FALSE
+  )
+  suffixes <- out[, c("target", intersect(factors, colnames(out)))]
+  out$target <- apply(suffixes, 1, paste, collapse = "_")
+  out
 }
 
 # Utils
