@@ -49,18 +49,18 @@ tf_plan <- function(plan) {
 }
 
 tf_row <- function(plan, row) {
-  call <- parse(text = plan$transform[[row]])[[1]]
-  transform <- get(
-    paste0("tf_", as.character(call[[1]])),
+  transform <- parse(text = plan$transform[[row]])[[1]]
+  transformer <- get(
+    paste0("tf_", as.character(transform[[1]])),
     envir = getNamespace("drake")
   )
-  transform(plan, plan$target[[row]], plan$command[[row]], call)
+  transformer(plan, plan$target[[row]], plan$command[[row]], transform)
 }
 
 # Supported transformations
 
-tf_cross <- function(plan, target, command, call) {
-  levels <- tf_levels(plan, call)
+tf_cross <- function(plan, target, command, transform) {
+  levels <- tf_levels(plan, transform)
   factors <- tf_factors(plan, levels)
   suffixes <- factors[, names(levels)]
   targets <- apply(cbind(target, suffixes), 1, paste, collapse = "_")
@@ -70,11 +70,11 @@ tf_cross <- function(plan, target, command, call) {
   cbind(out, factors)
 }
 
-tf_summarize <- function(plan, target, command, call) {
+tf_summarize <- function(plan, target, command, transform) {
 
-  
+
   browser()
-  
+
   plan
 }
 
@@ -84,14 +84,14 @@ tf_cols <- function(plan) {
   setdiff(colnames(plan), attr(plan, "protect"))
 }
 
-tf_levels <- function(plan, call) {
-  call <- call[-1]
-  names <- names(call) %||% rep("", length(call))
-  out <- lapply(call[nzchar(names)], function(x) {
+tf_levels <- function(plan, transform) {
+  transform <- transform[-1]
+  names <- names(transform) %||% rep("", length(transform))
+  out <- lapply(transform[nzchar(names)], function(x) {
     as.character(x)[-1]
   })
   planned <- vapply(
-    call[!nzchar(names)],
+    transform[!nzchar(names)],
     as.character,
     FUN.VALUE = character(1)
   )
