@@ -83,7 +83,7 @@ tf_levels <- function(plan, transform) {
     FUN.VALUE = character(1)
   )
   for (factor in planned) {
-    out[[factor]] <- as.character(stats::na_omit(plan[[factor]]))
+    out[[factor]] <- as.character(na_omit(plan[[factor]]))
   }
   out
 }
