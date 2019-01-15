@@ -48,7 +48,12 @@ tf_row <- function(plan, row) {
     paste0("tf_", as.character(call[[1]])),
     envir = getNamespace("drake")
   )
-  transform(plan, plan$target[[row]], plan$command[[row]], tf_levels(call))
+  transform(
+    plan,
+    plan$target[[row]],
+    plan$command[[row]],
+    tf_levels(plan, call)
+  )
 }
 
 # Supported transformations
@@ -65,15 +70,20 @@ tf_cross <- function(plan, target, command, levels) {
 
 # Utils
 
-tf_levels <- function(call) {
+tf_levels <- function(plan, call) {
   out <- lapply(call[-1], as.character)
-  names <- names(out)
-  if (!length(names)) {
-    names <- rep("", length(out))
+  factors <- names(out)
+  if (!length(factors)) {
+    factors <- rep("", length(out))
   }
-  names[!nzchar(names)] <- unlist(lapply(out[!nzchar(names)], `[[`, 1))
-  names(out) <- names
-  lapply(out, `[`, -1)
+  factors[!nzchar(factors)] <- unlist(lapply(out[!nzchar(factors)], `[[`, 1))
+  names(out) <- factors
+  out <- lapply(out, `[`, -1)
+  for (factor in factors) {
+    if (!length(out[[factor]])) {
+      out$factor <- unique(na.omit(plan[[factor]]))
+    }
+  }
 }
 
 tf_cols <- function(plan) {
