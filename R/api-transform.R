@@ -40,6 +40,7 @@ tf_plan <- function(plan) {
     )
     row <- row + nrow(transformed)
   }
+  plan
 }
 
 tf_row <- function(plan, row) {
@@ -68,6 +69,10 @@ tf_cross <- function(plan, target, command, levels) {
   cbind(out, factors)
 }
 
+tf_summarize <- function(plan, target, command, levels) {
+  plan
+}
+
 # Utils
 
 tf_levels <- function(plan, call) {
@@ -81,9 +86,10 @@ tf_levels <- function(plan, call) {
   out <- lapply(out, `[`, -1)
   for (factor in factors) {
     if (!length(out[[factor]])) {
-      out$factor <- unique(na.omit(plan[[factor]]))
+      out[[factor]] <- unique(na.omit(plan[[factor]]))
     }
   }
+  out
 }
 
 tf_cols <- function(plan) {
