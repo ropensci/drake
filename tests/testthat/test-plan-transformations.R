@@ -53,7 +53,7 @@ test_with_dir("transforming the mtcars plan", {
   exp <- exp[order(exp$target), ]
   expect_equal(out$target, exp$target)
   expect_equal(
-    standardize_command(out$command),
-    standardize_command(exp$command)
+    lapply(out$command, standardize_command),
+    lapply(exp$command, standardize_command)
   )
 })
