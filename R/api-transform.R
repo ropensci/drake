@@ -71,10 +71,13 @@ tf_cross <- function(plan, target, command, transform) {
 }
 
 tf_summarize <- function(plan, target, command, transform) {
-
-
   browser()
-
+  if (is.character(command)) {
+    command <- parse(text = command)[[1]]
+  }
+  fun <- as.character(command[1])
+  
+  
   plan
 }
 
