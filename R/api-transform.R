@@ -1,30 +1,4 @@
-if (F) {
-
-ld()
-plan <- drake_plan(
-  small = simulate(48),
-  large = simulate(64),
-  reg = target(
-    reg_fun(data),
-    transform = cross(reg_fun = c(reg1, reg2), data = c(small, large))
-  ),
-  summary = target(
-    sum_fun(data, reg),
-    transform = cross(sum_fun = c(coefficients, residuals), reg)
-  ),
-  winners = target(
-    min(summary),
-    transform = summarize(data, sum_fun)
-  )
-)
-expanded <- tf_plan(plan)
-
-config <- drake_config(p2)
-vis_drake_graph(config)
-
-} 
-
-# Iteration over the plan
+# Iteration down the rows of the plan
 
 tf_plan <- function(plan) {
   row <- 1
