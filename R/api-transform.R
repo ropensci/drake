@@ -67,7 +67,7 @@ trf_summarize <- function(plan, target, command, transform) {
 # Utils
 
 trf_check_conflict <- function(plan, cols) {
-  x <- intersect(colnames(plan), cols)
+  x <- intersect(attr(plan, "protect"), cols)
   if (length(x)) {
     stop(
       "variables in `target(transform = ...)` ",
