@@ -20,9 +20,9 @@ test_with_dir("drake_debug()", {
   my_plan$command[2] <- "simulate(48); stop(1234)"
   config <- drake_config(my_plan, lock_envir = TRUE)
   expect_error(make(my_plan), regexp = "1234")
-  expect_error(drake_debug(), regexp = "1234")
-  out <- drake_debug(large, config)
-  out <- drake_debug("large", config, verbose = "false", character_only = TRUE)
+  out <- drake_debug(large, config = config)
+  out <- drake_debug(
+    "large", config = config, verbose = "false", character_only = TRUE)
   expect_true(is.data.frame(out))
   my_plan$command <- lapply(
     X = as.list(my_plan$command),
