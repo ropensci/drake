@@ -1,6 +1,6 @@
 # Iteration down the rows of the plan
 
-tf_plan <- function(plan) {
+trf_plan <- function(plan) {
   row <- 1
   attr(plan, "protect") <- protect <- colnames(plan)
   while (row <= nrow(plan)) {
@@ -8,7 +8,7 @@ tf_plan <- function(plan) {
       row <- row + 1
       next
     }
-    transformed <- tf_row(plan, row)
+    transformed <- trf_row(plan, row)
     plan <- bind_plans(
       plan[seq_len(row - 1), ],
       transformed,
@@ -22,10 +22,10 @@ tf_plan <- function(plan) {
   out
 }
 
-tf_row <- function(plan, row) {
+trf_row <- function(plan, row) {
   transform <- parse(text = plan$transform[[row]])[[1]]
   transformer <- get(
-    paste0("tf_", as.character(transform[[1]])),
+    paste0("trf_", as.character(transform[[1]])),
     envir = getNamespace("drake")
   )
   transformer(plan, plan$target[[row]], plan$command[[row]], transform)
@@ -33,18 +33,18 @@ tf_row <- function(plan, row) {
 
 # Supported transformations
 
-tf_cross <- function(plan, target, command, transform) {
-  levels <- tf_levels(plan, transform)
-  factors <- tf_factors(plan, levels)
-  suffixes <- factors[, names(levels)]
+trf_cross <- function(plan, target, command, transform) {
+  levels <- trf_levels(plan, transform)
+  grid <- trf_grid(plan, levels)
+  suffixes <- grid[, names(levels)]
   targets <- apply(cbind(target, suffixes), 1, paste, collapse = "_")
-  command <- gsub_grid(text = command, factors = factors)
+  command <- gsub_grid(text = command, grid = grid)
   out <- weak_tibble(target = targets, command = command)
   out[[target]] <- targets
-  cbind(out, factors)
+  cbind(out, grid)
 }
 
-tf_summarize <- function(plan, target, command, transform) {
+trf_summarize <- function(plan, target, command, transform) {
   if (is.character(command)) {
     command <- parse(text = command)[[1]]
   }
@@ -69,11 +69,11 @@ tf_summarize <- function(plan, target, command, transform) {
 
 # Utils
 
-tf_cols <- function(plan) {
+trf_cols <- function(plan) {
   setdiff(colnames(plan), attr(plan, "protect"))
 }
 
-tf_levels <- function(plan, transform) {
+trf_levels <- function(plan, transform) {
   transform <- transform[-1]
   names <- names(transform) %||% rep("", length(transform))
   out <- lapply(transform[nzchar(names)], function(x) {
@@ -90,11 +90,11 @@ tf_levels <- function(plan, transform) {
   out
 }
 
-tf_factors <- function(plan, levels) {
+trf_grid <- function(plan, levels) {
   args <- c(levels, stringsAsFactors = FALSE)
-  factors <- do.call(what = expand.grid, args = args)
-  if (length(tf_cols(plan))) {
-    factors <- merge(factors, plan[, tf_cols(plan)])
+  grid <- do.call(what = expand.grid, args = args)
+  if (length(trf_cols(plan))) {
+    grid <- merge(grid, plan[, trf_cols(plan)])
   }
-  factors
+  grid
 }

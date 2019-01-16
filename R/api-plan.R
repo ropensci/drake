@@ -150,7 +150,7 @@ drake_plan <- function(
   }
   plan <- parse_custom_plan_columns(plan)
   if ("transform" %in% colnames(plan)) {
-    plan <- tf_plan(plan)
+    plan <- trf_plan(plan)
   }
   sanitize_plan(plan)
 }
