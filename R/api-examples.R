@@ -208,33 +208,31 @@ populate_mtcars_example_envir <- function(envir) {
 }
 
 mtcars_plan <- function() {
-  simulate <- reg1 <- dataset__ <- reg2 <- analysis__ <- knit <- NULL
-  mtcars <- NULL
-  my_datasets <- drake_plan(
+  drake_plan(
+    report = knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE),
     small = simulate(48),
-    large = simulate(64)
+    large = simulate(64),
+    regression1_small = reg1(small),
+    regression1_large = reg1(large),
+    regression2_small = reg2(small),
+    regression2_large = reg2(large),
+    summ_regression1_small =
+      suppressWarnings(summary(regression1_small$residuals)),
+    summ_regression1_large =
+      suppressWarnings(summary(regression1_large$residuals)),
+    summ_regression2_small =
+      suppressWarnings(summary(regression2_small$residuals)),
+    summ_regression2_large =
+      suppressWarnings(summary(regression2_large$residuals)),
+    coef_regression1_small =
+      suppressWarnings(summary(regression1_small))$coefficients,
+    coef_regression1_large =
+      suppressWarnings(summary(regression1_large))$coefficients,
+    coef_regression2_small =
+      suppressWarnings(summary(regression2_small))$coefficients,
+    coef_regression2_large =
+      suppressWarnings(summary(regression2_large))$coefficients
   )
-  methods <- drake_plan(
-    regression1 = reg1(dataset__),
-    regression2 = reg2(dataset__)
-  )
-  my_analyses <- evaluate_plan(
-    methods, wildcard = "dataset__",
-    values = my_datasets$target
-  )
-  summary_types <- drake_plan(
-    summ = suppressWarnings(summary(analysis__$residuals)),
-    coef = suppressWarnings(summary(analysis__))$coefficients
-  )
-  my_summaries <- evaluate_plan(
-    summary_types,
-    wildcard = "analysis__",
-    values = my_analyses$target
-  )
-  report <- drake_plan(
-    report = knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE)
-  )
-  bind_plans(report, my_datasets, my_analyses, my_summaries)
 }
 
 #' @title Clean the mtcars example from `drake_example("mtcars")`
