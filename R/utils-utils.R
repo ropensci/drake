@@ -53,6 +53,10 @@ clean_nested_char_list <- function(x) {
   x <- unique(x)
 }
 
+complete_cases <- function(x) {
+  !as.logical(Reduce(`|`, lapply(x, is.na)))
+}
+
 exists_tidyselect <- function() {
   suppressWarnings(
     eval(parse(text = "require('tidyselect', quietly = TRUE)"))

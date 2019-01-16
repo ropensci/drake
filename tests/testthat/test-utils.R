@@ -139,7 +139,7 @@ test_with_dir("same with memoization", {
   for (i in 1:3) {
     y <- encode_path(x, config = config)
     z <- encode_namespaced(x, config = config)
-    expect_false(any(y == z))
+    expect_false(any(y == z))  i <- 1
 
     expect_true(all(is_encoded_path(y)))
     expect_false(all(is_encoded_path(z)))
@@ -159,4 +159,14 @@ test_with_dir("safe_get", {
   config <- drake_config(drake_plan(a = 1))
   expect_true(is.na(safe_get("a", "b", config)))
   expect_true(is.na(safe_get_hash("a", "b", config)))
+})
+
+test_with_dir("complete_cases()", {
+  for (empty in list(data.frame(), mtcars[NULL, ], mtcars[, NULL])) {
+    expect_equivalent(complete_cases(empty), logical(0))
+  }
+  x <- data.frame(a = letters, b = LETTERS)
+  expect_equal(complete_cases(x), rep(TRUE, length(letters)))
+  x <- data.frame(a = 1:6, b = c(1:3, rep(NA_integer_, 3)))
+  expect_equal(complete_cases(x), rep(c(TRUE, FALSE), each = 3))
 })

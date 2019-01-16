@@ -54,7 +54,7 @@ trf_summarize <- function(plan, target, command, transform) {
   trf_check_conflict(plan, target)
   factors <- all.vars(transform)
   groups <- intersect(trf_cols(plan), all.vars(parse(text = command)))
-  keep <- complete.cases(plan[, c("target", "command", factors, groups)])
+  keep <- complete_cases(plan[, c("target", "command", factors, groups)])
   plan <- plan[keep, ]
   out <- map_by(
     .x = plan,
