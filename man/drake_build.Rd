@@ -55,7 +55,8 @@ head(out)
 # If you previously called make(),
 # `config` is just read from the cache.
 make(my_plan, verbose = FALSE)
-result <- drake_build(small)
+config <- drake_config(my_plan)
+result <- drake_build(small, config = config)
 head(result)
 })
 }

@@ -172,6 +172,7 @@ readd(file_store("report.md"), character_only = TRUE)
 test_with_dir("Quarantine side effects.", {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 make(my_plan) # Run the projects, build the targets.
+config <- drake_config(my_plan)
 loadd(small) # Load target 'small' into your workspace.
 small
 # For many targets, you can parallelize loadd()
@@ -179,7 +180,7 @@ small
 loadd(list = c("small", "large"), jobs = 2)
 ls()
 # Load the dependencies of the target, coef_regression2_small
-loadd(coef_regression2_small, deps = TRUE)
+loadd(coef_regression2_small, deps = TRUE, config = config)
 ls()
 # Load all the imported objects/functions.
 loadd(imported_only = TRUE)
