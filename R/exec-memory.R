@@ -144,7 +144,7 @@ get_import_from_memory <- function(target, config) {
 drake_envir <- function() {
   envir <- environment()
   for (i in seq_len(getOption("expressions"))) {
-    if (identical(envir[[drake_envir_marker]], TRUE)) {
+    if (exists(drake_plan_marker, envir = envir, inherits = FALSE)) {
       return(envir)
     }
     if (identical(envir, globalenv())) {
