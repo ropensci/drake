@@ -45,23 +45,18 @@ trf_cross <- function(plan, target, command, transform) {
 }
 
 trf_summarize <- function(plan, target, command, transform) {
-  if (is.character(command)) {
-    command <- parse(text = command)[[1]]
-  }
-  fun <- as.character(command[1])
-  factors <- as.character(transform[-1])
-  groups <- as.character(command[-1])
-  targets <- na_omit(unlist(as.list(plan[, groups]), use.names = FALSE))
-  plan <- plan[plan$target %in% targets, ]
+  factors <- all.vars(transform)
+  groups <- intersect(trf_cols(plan), all.vars(parse(text = command))[[1]])
+  keep <- complete.cases(plan[, c("target", "command", factors, groups)])
+  plan <- plan[keep, ]
   out <- map_by(
     .x = plan,
     .by = factors,
-    .f = gather_plan,
-    target = target,
-    gather = fun,
-    append = FALSE
+    .f = trf_group,
+    command = command,
+    groups = groups
   )
-  suffixes <- out[, c("target", intersect(factors, colnames(out)))]
+  suffixes <- cbind(target, out[, intersect(factors, colnames(out))])
   out$target <- apply(suffixes, 1, paste, collapse = "_")
   out[[target]] <- out$target
   out
@@ -71,6 +66,28 @@ trf_summarize <- function(plan, target, command, transform) {
 
 trf_cols <- function(plan) {
   setdiff(colnames(plan), attr(plan, "protect"))
+}
+
+trf_grid <- function(plan, levels) {
+  args <- c(levels, stringsAsFactors = FALSE)
+  grid <- do.call(what = expand.grid, args = args)
+  if (length(trf_cols(plan))) {
+    grid <- merge(grid, plan[, trf_cols(plan)])
+  }
+  grid
+}
+
+trf_group <- function(plan, command, groups) {
+  for (group in groups) {
+    if (any(is.na(plan[[group]]))) {
+      return(data.frame(stringsAsFactors = FALSE))
+    }
+    levels <- unique(plan[[group]])
+    levels <- paste(levels, levels, sep = " = ")
+    levels <- paste(levels, collapse = ", ")
+    command <- gsub(group, levels, command)
+  }
+  data.frame(command = command, stringsAsFactors = FALSE)
 }
 
 trf_levels <- function(plan, transform) {
@@ -88,13 +105,4 @@ trf_levels <- function(plan, transform) {
     out[[factor]] <- as.character(na_omit(plan[[factor]]))
   }
   out
-}
-
-trf_grid <- function(plan, levels) {
-  args <- c(levels, stringsAsFactors = FALSE)
-  grid <- do.call(what = expand.grid, args = args)
-  if (length(trf_cols(plan))) {
-    grid <- merge(grid, plan[, trf_cols(plan)])
-  }
-  grid
 }
