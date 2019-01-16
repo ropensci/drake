@@ -64,9 +64,12 @@
 #'   such as quasiquotation
 #'   when evaluating commands passed through the free-form
 #'   `...` argument.
+#' @param transform Logical, whether to transform targets in the plan
+#'   according to the `transform` and `group` fields identified
+#'   by `target()`. See the examples for details.
 #' @param trace Logical, whether to add columns to show
 #'   what happened during target transformations, e.g.
-#'   `drake_plan(x = target(..., transform = ...))`.
+#'   `drake_plan(x = target(..., transform = ...), transform = TRUE)`.
 #' @examples
 #' test_with_dir("Contain side effects", {
 #' # Create workflow plan data frames.
@@ -178,6 +181,7 @@ drake_plan <- function(
   file_targets = NULL,
   strings_in_dots = NULL,
   tidy_evaluation = TRUE,
+  transform = TRUE,
   trace = FALSE
 ) {
   if (tidy_evaluation) {
@@ -213,7 +217,7 @@ drake_plan <- function(
     )
   }
   plan <- parse_custom_plan_columns(plan)
-  if ("transform" %in% colnames(plan)) {
+  if (transform && ("transform" %in% colnames(plan))) {
     plan <- trf_plan(plan, trace = trace)
   }
   sanitize_plan(plan)

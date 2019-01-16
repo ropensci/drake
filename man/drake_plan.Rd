@@ -6,7 +6,8 @@
 for the \code{plan} argument of \code{\link[=make]{make()}}.}
 \usage{
 drake_plan(..., list = character(0), file_targets = NULL,
-  strings_in_dots = NULL, tidy_evaluation = TRUE, trace = FALSE)
+  strings_in_dots = NULL, tidy_evaluation = TRUE, transform = TRUE,
+  trace = FALSE)
 }
 \arguments{
 \item{...}{A collection of symbols/targets
@@ -24,9 +25,13 @@ such as quasiquotation
 when evaluating commands passed through the free-form
 \code{...} argument.}
 
+\item{transform}{Logical, whether to transform targets in the plan
+according to the \code{transform} and \code{group} fields identified
+by \code{target()}. See the examples for details.}
+
 \item{trace}{Logical, whether to add columns to show
 what happened during target transformations, e.g.
-\code{drake_plan(x = target(..., transform = ...))}.}
+\code{drake_plan(x = target(..., transform = ...), transform = TRUE)}.}
 }
 \value{
 A data frame of targets and commands. See the details

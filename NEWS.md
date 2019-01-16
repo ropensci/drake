@@ -20,7 +20,7 @@
 
 ## New features
 
-- Introduce a new experimental API for generating large plans (#674). It is inspired by the proposed DSL (#233) and the `target()` function, two of @krlmlr's ideas.
+- Introduce a new experimental API for generating large plans (#674). It is inspired by the proposed DSL (#233) and the `target()` function, two of @krlmlr's ideas. Uses custom fields `transform` and `group` in `target()` within `drake_plan()`. New arguments `transform` and `trace` in `drake_plan()` provide some customization.
 - Implement a `lock_envir` argument to safeguard reproducibility. See [this thread](https://github.com/ropensci/drake/issues/615#issuecomment-447585359) for a demonstration of the problem solved by `make(lock_envir = TRUE)`. More discussion: #619, #620.
 
 ## Enhancements
