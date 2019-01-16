@@ -105,3 +105,82 @@ test_with_dir("transforming the mtcars plan", {
     lapply(exp$command, standardize_command)
   )
 })
+
+test_with_dir("conflicts with custom column names", {
+  expect_error(
+    drake_plan(
+      small = target(simulate(48), reg1 = 123),
+      large = simulate(64),
+      reg = target(
+        reg_fun(data),
+        transform = cross(reg_fun = c(reg1, reg2), data = c(small, large))
+      ),
+      summ = target(
+        sum_fun(data, reg),
+        transform = cross(sum_fun = c(coef, residuals), reg)
+      ),
+      winners = target(
+        min(summ),
+        transform = summarize(data, sum_fun)
+      )
+    ),
+    regexp = "cannot also be custom column names in the plan"
+  )
+  expect_error(
+    drake_plan(
+      small = target(simulate(48), data = 123),
+      large = simulate(64),
+      reg = target(
+        reg_fun(data),
+        transform = cross(reg_fun = c(reg1, reg2), data = c(small, large))
+      ),
+      summ = target(
+        sum_fun(data, reg),
+        transform = cross(sum_fun = c(coef, residuals), reg)
+      ),
+      winners = target(
+        min(summ),
+        transform = summarize(data, sum_fun)
+      )
+    ),
+    regexp = "cannot also be custom column names in the plan"
+  )
+  expect_error(
+    drake_plan(
+      small = target(simulate(48), reg = 123),
+      large = simulate(64),
+      reg = target(
+        reg_fun(data),
+        transform = cross(reg_fun = c(reg1, reg2), data = c(small, large))
+      ),
+      summ = target(
+        sum_fun(data, reg),
+        transform = cross(sum_fun = c(coef, residuals), reg)
+      ),
+      winners = target(
+        min(summ),
+        transform = summarize(data, sum_fun)
+      )
+    ),
+    regexp = "cannot also be custom column names in the plan"
+  )
+  expect_error(
+    drake_plan(
+      small = target(simulate(48), sum_fun = 123),
+      large = simulate(64),
+      reg = target(
+        reg_fun(data),
+        transform = cross(reg_fun = c(reg1, reg2), data = c(small, large))
+      ),
+      summ = target(
+        sum_fun(data, reg),
+        transform = cross(sum_fun = c(coef, residuals), reg)
+      ),
+      winners = target(
+        min(summ),
+        transform = summarize(data, sum_fun)
+      )
+    ),
+    regexp = "cannot also be custom column names in the plan"
+  )
+})

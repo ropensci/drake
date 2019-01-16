@@ -35,6 +35,7 @@ trf_row <- function(plan, row) {
 
 trf_cross <- function(plan, target, command, transform) {
   levels <- trf_levels(plan, transform)
+  trf_check_conflict(plan, c(target, names(levels)))
   grid <- trf_grid(plan, levels)
   suffixes <- grid[, names(levels)]
   targets <- apply(cbind(target, suffixes), 1, paste, collapse = "_")
@@ -45,6 +46,7 @@ trf_cross <- function(plan, target, command, transform) {
 }
 
 trf_summarize <- function(plan, target, command, transform) {
+  trf_check_conflict(plan, target)
   factors <- all.vars(transform)
   groups <- intersect(trf_cols(plan), all.vars(parse(text = command)))
   keep <- complete.cases(plan[, c("target", "command", factors, groups)])
@@ -63,6 +65,18 @@ trf_summarize <- function(plan, target, command, transform) {
 }
 
 # Utils
+
+trf_check_conflict <- function(plan, cols) {
+  x <- intersect(colnames(plan), cols)
+  if (length(x)) {
+    stop(
+      "variables in `target(transform = ...)` ",
+      "cannot also be custom column names in the plan:\n",
+      multiline_message(x),
+      call. = FALSE
+    )
+  }
+}
 
 trf_cols <- function(plan) {
   setdiff(colnames(plan), attr(plan, "protect"))
