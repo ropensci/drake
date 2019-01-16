@@ -62,27 +62,33 @@ test_with_dir("transforming the mtcars plan", {
       summ_residuals_reg_reg1_small = summ_residuals_reg_reg1_small,
       summ_residuals_reg_reg2_small = summ_residuals_reg_reg2_small
     ),
-    others_large_coef = analyze(list(c(
-      summ_coef_reg_reg1_large = summ_coef_reg_reg1_large,
-      summ_coef_reg_reg2_large = summ_coef_reg_reg2_large
-    ), c(data))),
-    others_small_coef = analyze(list(c(
-      summ_coef_reg_reg1_small = summ_coef_reg_reg1_small,
-      summ_coef_reg_reg2_small = summ_coef_reg_reg2_small
-    ), c(data))),
+    others_large_coef = analyze(list(
+      c(
+        summ_coef_reg_reg1_large = summ_coef_reg_reg1_large,
+        summ_coef_reg_reg2_large = summ_coef_reg_reg2_large
+      ),
+      c(large = large)
+    )),
+    others_small_coef = analyze(list(
+      c(
+        summ_coef_reg_reg1_small = summ_coef_reg_reg1_small,
+        summ_coef_reg_reg2_small = summ_coef_reg_reg2_small
+      ),
+      c(small = small)
+    )),
     others_large_residuals = analyze(list(
       c(
         summ_residuals_reg_reg1_large = summ_residuals_reg_reg1_large,
         summ_residuals_reg_reg2_large = summ_residuals_reg_reg2_large
       ),
-      c(data)
+      c(large = large)
     )),
     others_small_residuals = analyze(list(
       c(
         summ_residuals_reg_reg1_small = summ_residuals_reg_reg1_small,
         summ_residuals_reg_reg2_small = summ_residuals_reg_reg2_small
       ),
-      c(data)
+      c(small = small)
     )),
     final_winner = min(
       winners_large_coef = winners_large_coef,

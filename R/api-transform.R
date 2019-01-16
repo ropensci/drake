@@ -46,7 +46,7 @@ trf_cross <- function(plan, target, command, transform) {
 
 trf_summarize <- function(plan, target, command, transform) {
   factors <- all.vars(transform)
-  groups <- intersect(trf_cols(plan), all.vars(parse(text = command))[[1]])
+  groups <- intersect(trf_cols(plan), all.vars(parse(text = command)))
   keep <- complete.cases(plan[, c("target", "command", factors, groups)])
   plan <- plan[keep, ]
   out <- map_by(
