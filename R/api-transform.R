@@ -105,7 +105,7 @@ trf_group <- function(plan, command, groups) {
     levels <- unique(plan[[group]])
     levels <- paste(levels, levels, sep = " = ")
     levels <- paste(levels, collapse = ", ")
-    command <- gsub(group, levels, command)
+    command <- gsub(group, levels, command, fixed = TRUE)
   }
   data.frame(command = command, stringsAsFactors = FALSE)
 }

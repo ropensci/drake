@@ -149,7 +149,9 @@ gsub_grid <- function(text, grid) {
   text
 }
 
-gsub_vector <- Vectorize(gsub, c("replacement", "x"), USE.NAMES = FALSE)
+gsub_vector <- Vectorize(function(pattern, replacement, x) {
+  gsub(pattern = pattern, replacement = replacement, x = x, fixed = TRUE)
+}, c("replacement", "x"), USE.NAMES = FALSE)
 
 is_image_filename <- function(x) {
   tolower(file_extn(x)) %in% c("jpg", "jpeg", "pdf", "png")
