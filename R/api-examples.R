@@ -208,6 +208,12 @@ populate_mtcars_example_envir <- function(envir) {
 }
 
 mtcars_plan <- function() {
+  report <- small <- large <- regression1_small <- regression1_large <-
+    regression2_small <- regression2_large <- summ_regression1_small <-
+    summ_regression1_large <- summ_regression2_small <-
+    summ_regression2_large <- coef_regression1_small <-
+    coef_regression1_large <- coef_regression2_small <-
+    coef_regression2_large <- knit <- simulate <- reg1 <- reg2 <- NULL
   drake_plan(
     report = knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE),
     small = simulate(48),

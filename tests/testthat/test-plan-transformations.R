@@ -196,3 +196,27 @@ test_with_dir("transformation trace", {
     ))
   )
 })
+
+test_with_dir("mtcars example transformed", {
+  load_mtcars_example()
+  rm(my_plan)
+  plan <- drake_plan(
+    small = simulate(48),
+    large = simulate(64),
+    reg = target(
+      reg_fun(data),
+      transform = cross(data = c(small, large), reg_fun = c(reg1, reg2))
+    ),
+    summ = target(
+      summary(reg)$sumtype,
+      transform = cross(reg, sumtype = c(residuals, coefficients))
+    )
+  )
+  expect_equal(nrow(plan), 14L)
+  cache <- storr::storr_environment()
+  make(plan, session_info = FALSE, cache = cache)
+  config <- drake_config(plan, cache = cache)
+  expect_equal(sort(justbuilt(config)), sort(plan$target))
+  make(plan, session_info = FALSE, cache = cache)
+  expect_equal(justbuilt(config), character(0))
+})
