@@ -137,10 +137,10 @@ file_extn <- function(x) {
   x[1]
 }
 
-gsub_grid <- function(text, factors) {
-  text <- rep(text, nrow(factors))
-  for (factor in colnames(factors)) {
-    text <- gsub_vector(factor, factors[[factor]], text)
+gsub_grid <- function(text, grid) {
+  text <- rep(text, nrow(grid))
+  for (factor in colnames(grid)) {
+    text <- gsub_vector(factor, grid[[factor]], text)
   }
   text
 }

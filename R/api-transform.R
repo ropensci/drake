@@ -1,6 +1,6 @@
 # Iteration down the rows of the plan
 
-tf_plan <- function(plan) {
+trf_plan <- function(plan) {
   row <- 1
   attr(plan, "protect") <- protect <- colnames(plan)
   while (row <= nrow(plan)) {
@@ -8,7 +8,7 @@ tf_plan <- function(plan) {
       row <- row + 1
       next
     }
-    transformed <- tf_row(plan, row)
+    transformed <- trf_row(plan, row)
     plan <- bind_plans(
       plan[seq_len(row - 1), ],
       transformed,
@@ -22,10 +22,10 @@ tf_plan <- function(plan) {
   out
 }
 
-tf_row <- function(plan, row) {
+trf_row <- function(plan, row) {
   transform <- parse(text = plan$transform[[row]])[[1]]
   transformer <- get(
-    paste0("tf_", as.character(transform[[1]])),
+    paste0("trf_", as.character(transform[[1]])),
     envir = getNamespace("drake")
   )
   transformer(plan, plan$target[[row]], plan$command[[row]], transform)
@@ -33,35 +33,30 @@ tf_row <- function(plan, row) {
 
 # Supported transformations
 
-tf_cross <- function(plan, target, command, transform) {
-  levels <- tf_levels(plan, transform)
-  factors <- tf_factors(plan, levels)
-  suffixes <- factors[, names(levels)]
+trf_cross <- function(plan, target, command, transform) {
+  levels <- trf_levels(plan, transform)
+  grid <- trf_grid(plan, levels)
+  suffixes <- grid[, names(levels)]
   targets <- apply(cbind(target, suffixes), 1, paste, collapse = "_")
-  command <- gsub_grid(text = command, factors = factors)
+  command <- gsub_grid(text = command, grid = grid)
   out <- weak_tibble(target = targets, command = command)
   out[[target]] <- targets
-  cbind(out, factors)
+  cbind(out, grid)
 }
 
-tf_summarize <- function(plan, target, command, transform) {
-  if (is.character(command)) {
-    command <- parse(text = command)[[1]]
-  }
-  fun <- as.character(command[1])
-  factors <- as.character(transform[-1])
-  groups <- as.character(command[-1])
-  targets <- na_omit(unlist(as.list(plan[, groups]), use.names = FALSE))
-  plan <- plan[plan$target %in% targets, ]
+trf_summarize <- function(plan, target, command, transform) {
+  factors <- all.vars(transform)
+  groups <- intersect(trf_cols(plan), all.vars(parse(text = command)))
+  keep <- complete.cases(plan[, c("target", "command", factors, groups)])
+  plan <- plan[keep, ]
   out <- map_by(
     .x = plan,
     .by = factors,
-    .f = gather_plan,
-    target = target,
-    gather = fun,
-    append = FALSE
+    .f = trf_group,
+    command = command,
+    groups = groups
   )
-  suffixes <- out[, c("target", intersect(factors, colnames(out)))]
+  suffixes <- cbind(target, out[, intersect(factors, colnames(out))])
   out$target <- apply(suffixes, 1, paste, collapse = "_")
   out[[target]] <- out$target
   out
@@ -69,11 +64,33 @@ tf_summarize <- function(plan, target, command, transform) {
 
 # Utils
 
-tf_cols <- function(plan) {
+trf_cols <- function(plan) {
   setdiff(colnames(plan), attr(plan, "protect"))
 }
 
-tf_levels <- function(plan, transform) {
+trf_grid <- function(plan, levels) {
+  args <- c(levels, stringsAsFactors = FALSE)
+  grid <- do.call(what = expand.grid, args = args)
+  if (length(trf_cols(plan))) {
+    grid <- merge(grid, plan[, trf_cols(plan)])
+  }
+  grid
+}
+
+trf_group <- function(plan, command, groups) {
+  for (group in groups) {
+    if (any(is.na(plan[[group]]))) {
+      return(data.frame(stringsAsFactors = FALSE))
+    }
+    levels <- unique(plan[[group]])
+    levels <- paste(levels, levels, sep = " = ")
+    levels <- paste(levels, collapse = ", ")
+    command <- gsub(group, levels, command)
+  }
+  data.frame(command = command, stringsAsFactors = FALSE)
+}
+
+trf_levels <- function(plan, transform) {
   transform <- transform[-1]
   names <- names(transform) %||% rep("", length(transform))
   out <- lapply(transform[nzchar(names)], function(x) {
@@ -88,13 +105,4 @@ tf_levels <- function(plan, transform) {
     out[[factor]] <- as.character(na_omit(plan[[factor]]))
   }
   out
-}
-
-tf_factors <- function(plan, levels) {
-  args <- c(levels, stringsAsFactors = FALSE)
-  factors <- do.call(what = expand.grid, args = args)
-  if (length(tf_cols(plan))) {
-    factors <- merge(factors, plan[, tf_cols(plan)])
-  }
-  factors
 }
