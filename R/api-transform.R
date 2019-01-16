@@ -28,7 +28,12 @@ trf_row <- function(plan, row) {
     paste0("trf_", as.character(transform[[1]])),
     envir = getNamespace("drake")
   )
-  transformer(plan, plan$target[[row]], plan$command[[row]], transform)
+  out <- transformer(plan, plan$target[[row]], plan$command[[row]], transform)
+  reappend <- setdiff(attr(plan, "protect"), c("target", "command"))
+  for (col in reappend) {
+    out[[col]] <- rep(unlist(plan[row, col], use.names = FALSE), nrow(out))
+  }
+  out
 }
 
 # Supported transformations

@@ -106,7 +106,7 @@ test_with_dir("transforming the mtcars plan", {
   )
 })
 
-test_with_dir("conflicts with custom column names", {
+test_with_dir("transformations and custom columns", {
   e <- quote(
     drake_plan(
       small = simulate(48),
@@ -117,15 +117,25 @@ test_with_dir("conflicts with custom column names", {
       ),
       summ = target(
         sum_fun(data, reg),
-        transform = cross(sum_fun = c(coef, residuals), reg)
+        transform = cross(sum_fun = c(coef, residuals), reg),
+        custom1 = 123L
       ),
       winners = target(
         min(summ),
-        transform = summarize(data, sum_fun)
+        transform = summarize(data, sum_fun),
+        custom2 = 456L
       )
     )
   )
-  expect_silent(eval(e))
+  expect_silent(plan <- eval(e))
+  expect_equal(
+    plan$custom1,
+    c(rep(NA_integer_, 6), rep(123L, 8), rep(NA_integer_, 4))
+  )
+  expect_equal(
+    plan$custom2,
+    c(rep(NA_integer_, 14), rep(456L, 4))
+  )
   illegals <- list(
     quote(target(simulate(48), data = 123)),
     quote(target(simulate(48), reg = 123)),
