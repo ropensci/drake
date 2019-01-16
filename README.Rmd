@@ -182,7 +182,7 @@ config <- drake_config(plan)
 vis_drake_graph(config) # Interactive graph: hover, zoom, drag, etc.
 ```
 
-<img src="https://ropensci.github.io/drake/images/graph.png" alt="hist1" align="center" style = "border: none; float: center;" width = "500px">
+<img src="https://ropensci.github.io/drake/images/graph.png" alt="hist1" align="center" style = "border: none; float: center;" width = "600px">
 
 The next `make()` just builds `hist` and `report.html`. No point in wasting time on the data or model.
 
