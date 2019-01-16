@@ -93,9 +93,6 @@ trf_grid <- function(plan, levels) {
 
 trf_group <- function(plan, command, groups) {
   for (group in groups) {
-    if (any(is.na(plan[[group]]))) {
-      return(data.frame(stringsAsFactors = FALSE))
-    }
     levels <- unique(plan[[group]])
     levels <- paste(levels, levels, sep = " = ")
     levels <- paste(levels, collapse = ", ")
