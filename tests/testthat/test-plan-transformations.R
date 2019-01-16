@@ -149,3 +149,50 @@ test_with_dir("transformations and custom columns", {
     expect_error(eval(e), regexp = msg)
   })
 })
+
+test_with_dir("transformation trace", {
+  plan <- drake_plan(
+    small = simulate(48),
+    large = simulate(64),
+    reg = target(
+      reg_fun(data),
+      transform = cross(reg_fun = c(reg1, reg2), data = c(small, large))
+    ),
+    summ = target(
+      sum_fun(data, reg),
+      transform = cross(sum_fun = c(coef, residuals), reg)
+    ),
+    winners = target(
+      min(summ),
+      transform = summarize(data, sum_fun)
+    ),
+    trace = FALSE
+  )
+  expect_false("trace" %in% plan$target)
+  expect_equal(sort(colnames(plan)), sort(c("target", "command")))
+  plan <- drake_plan(
+    small = simulate(48),
+    large = simulate(64),
+    reg = target(
+      reg_fun(data),
+      transform = cross(reg_fun = c(reg1, reg2), data = c(small, large))
+    ),
+    summ = target(
+      sum_fun(data, reg),
+      transform = cross(sum_fun = c(coef, residuals), reg)
+    ),
+    winners = target(
+      min(summ),
+      transform = summarize(data, sum_fun)
+    ),
+    trace = TRUE
+  )
+  expect_false("trace" %in% plan$target)
+  expect_equal(
+    sort(colnames(plan)),
+    sort(c(
+      "target", "command", "reg", "reg_fun", "data", "summ",
+      "sum_fun", "winners"
+    ))
+  )
+})

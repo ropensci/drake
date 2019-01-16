@@ -6,7 +6,7 @@
 for the \code{plan} argument of \code{\link[=make]{make()}}.}
 \usage{
 drake_plan(..., list = character(0), file_targets = NULL,
-  strings_in_dots = NULL, tidy_evaluation = TRUE)
+  strings_in_dots = NULL, tidy_evaluation = TRUE, trace = FALSE)
 }
 \arguments{
 \item{...}{A collection of symbols/targets
@@ -23,6 +23,10 @@ with names as targets.}
 such as quasiquotation
 when evaluating commands passed through the free-form
 \code{...} argument.}
+
+\item{trace}{Logical, whether to add columns to show
+what happened during target transformations, e.g.
+\code{drake_plan(x = target(..., transform = ...))}.}
 }
 \value{
 A data frame of targets and commands. See the details
@@ -100,6 +104,45 @@ head(my_plan)
 # There, `drake` sees that `small`, `large`, and `coef_regression2_small`
 # are loaded in with calls to `loadd()` and `readd()`.
 deps_code("report.Rmd")
+
+# Use transformations to generate large plans.
+drake_plan(
+  small = simulate(48),
+  large = simulate(64),
+  reg = target(
+    reg_fun(data),
+   transform = cross(reg_fun = c(reg1, reg2), data = c(small, large))
+  ),
+  summ = target(
+    sum_fun(data, reg),
+   transform = cross(sum_fun = c(coef, residuals), reg)
+  ), 
+  winners = target(
+    min(summ),
+    transform = summarize(data, sum_fun)
+  )
+)
+
+# Set `trace` to `TRUE` to retain information about the
+# transformation process.
+drake_plan(
+  small = simulate(48),
+  large = simulate(64),
+  reg = target(
+    reg_fun(data),
+   transform = cross(reg_fun = c(reg1, reg2), data = c(small, large))
+  ),
+  summ = target(
+    sum_fun(data, reg),
+   transform = cross(sum_fun = c(coef, residuals), reg)
+  ), 
+  winners = target(
+    min(summ),
+    transform = summarize(data, sum_fun)
+  ),
+  trace = TRUE
+)
+
 # You can create your own custom columns too.
 # See ?triggers for more on triggers.
 drake_plan(

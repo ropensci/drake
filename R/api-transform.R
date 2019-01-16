@@ -1,6 +1,6 @@
 # Iteration down the rows of the plan
 
-trf_plan <- function(plan) {
+trf_plan <- function(plan, trace) {
   row <- 1
   attr(plan, "protect") <- protect <- colnames(plan)
   while (row <= nrow(plan)) {
@@ -17,9 +17,11 @@ trf_plan <- function(plan) {
     attr(plan, "protect") <- protect
     row <- row + nrow(transformed)
   }
-  out <- plan[, intersect(attr(plan, "protect"), colnames(plan))]
-  attr(out, "protect") <- out$transform <- NULL
-  out
+  if (!trace) {
+    plan <- plan[, intersect(attr(plan, "protect"), colnames(plan))]
+  }
+  attr(plan, "protect") <- plan$transform <- NULL
+  plan
 }
 
 trf_row <- function(plan, row) {

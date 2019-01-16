@@ -64,6 +64,9 @@
 #'   such as quasiquotation
 #'   when evaluating commands passed through the free-form
 #'   `...` argument.
+#' @param trace Logical, whether to add columns to show
+#'   what happened during target transformations, e.g.
+#'   `drake_plan(x = target(..., transform = ...))`.
 #' @examples
 #' test_with_dir("Contain side effects", {
 #' # Create workflow plan data frames.
@@ -82,6 +85,45 @@
 #' # There, `drake` sees that `small`, `large`, and `coef_regression2_small`
 #' # are loaded in with calls to `loadd()` and `readd()`.
 #' deps_code("report.Rmd")
+#'
+#' # Use transformations to generate large plans.
+#' drake_plan(
+#'   small = simulate(48),
+#'   large = simulate(64),
+#'   reg = target(
+#'     reg_fun(data),
+#'    transform = cross(reg_fun = c(reg1, reg2), data = c(small, large))
+#'   ),
+#'   summ = target(
+#'     sum_fun(data, reg),
+#'    transform = cross(sum_fun = c(coef, residuals), reg)
+#'   ), 
+#'   winners = target(
+#'     min(summ),
+#'     transform = summarize(data, sum_fun)
+#'   )
+#' )
+#'
+#' # Set `trace` to `TRUE` to retain information about the
+#' # transformation process.
+#' drake_plan(
+#'   small = simulate(48),
+#'   large = simulate(64),
+#'   reg = target(
+#'     reg_fun(data),
+#'    transform = cross(reg_fun = c(reg1, reg2), data = c(small, large))
+#'   ),
+#'   summ = target(
+#'     sum_fun(data, reg),
+#'    transform = cross(sum_fun = c(coef, residuals), reg)
+#'   ), 
+#'   winners = target(
+#'     min(summ),
+#'     transform = summarize(data, sum_fun)
+#'   ),
+#'   trace = TRUE
+#' )
+#'
 #' # You can create your own custom columns too.
 #' # See ?triggers for more on triggers.
 #' drake_plan(
@@ -114,7 +156,8 @@ drake_plan <- function(
   list = character(0),
   file_targets = NULL,
   strings_in_dots = NULL,
-  tidy_evaluation = TRUE
+  tidy_evaluation = TRUE,
+  trace = FALSE
 ) {
   if (tidy_evaluation) {
     dots <- rlang::exprs(...) # Enables quasiquotation via rlang.
@@ -150,7 +193,7 @@ drake_plan <- function(
   }
   plan <- parse_custom_plan_columns(plan)
   if ("transform" %in% colnames(plan)) {
-    plan <- trf_plan(plan)
+    plan <- trf_plan(plan, trace = trace)
   }
   sanitize_plan(plan)
 }
