@@ -104,6 +104,27 @@
 #'   )
 #' )
 #'
+#' # Define custom groupings with the `group` field.
+#' drake_plan(
+#'   small = simulate(48),
+#'   large = simulate(64),
+#'   reg1 = target(
+#'     reg_fun(data),
+#'     transform = cross(data = c(small, large)),
+#'     group = reg
+#'   ),
+#'   reg2 = target(
+#'     reg_fun(data),
+#'     transform = cross(data = c(small, large)),
+#'     group = reg
+#'   ),
+#'   winners = target(
+#'     min(reg),
+#'     transform = summarize(data),
+#'     a = 1
+#'   )
+#' )
+#'
 #' # Set `trace` to `TRUE` to retain information about the
 #' # transformation process.
 #' drake_plan(

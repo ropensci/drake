@@ -20,7 +20,7 @@ trf_plan <- function(plan, trace) {
   if (!trace) {
     plan <- plan[, intersect(attr(plan, "protect"), colnames(plan))]
   }
-  attr(plan, "protect") <- plan$transform <- NULL
+  attr(plan, "protect") <- plan$transform <- plan$group <- NULL
   plan
 }
 
@@ -35,6 +35,10 @@ trf_row <- function(plan, row) {
   for (col in reappend) {
     out[[col]] <- rep(unlist(plan[row, col], use.names = FALSE), nrow(out))
   }
+  out[[plan$target[[row]]]] <- out$target
+  if ("group" %in% colnames(plan) && !is.na(plan$group[[row]])) {
+    out[[plan$group[[row]]]] <- out$target
+  }
   out
 }
 
@@ -48,7 +52,6 @@ trf_cross <- function(plan, target, command, transform) {
   targets <- apply(cbind(target, suffixes), 1, paste, collapse = "_")
   command <- gsub_grid(text = command, grid = grid)
   out <- weak_tibble(target = targets, command = command)
-  out[[target]] <- targets
   cbind(out, grid)
 }
 
@@ -67,7 +70,6 @@ trf_summarize <- function(plan, target, command, transform) {
   )
   suffixes <- cbind(target, out[, intersect(factors, colnames(out))])
   out$target <- apply(suffixes, 1, paste, collapse = "_")
-  out[[target]] <- out$target
   out
 }
 

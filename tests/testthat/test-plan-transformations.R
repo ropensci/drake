@@ -220,3 +220,48 @@ test_with_dir("mtcars example transformed", {
   make(plan, session_info = FALSE, cache = cache)
   expect_equal(justbuilt(config), character(0))
 })
+
+test_with_dir("custom columns can define groupings", {
+  out <- drake_plan(
+    small = simulate(48),
+    large = simulate(64),
+    reg1 = target(
+      reg_fun(data),
+      transform = cross(data = c(small, large)),
+      group = reg
+    ),
+    reg2 = target(
+      reg_fun(data),
+      transform = cross(data = c(small, large)),
+      group = reg
+    ),
+    winners = target(
+      min(reg),
+      transform = summarize(data),
+      a = 1
+    )
+  )
+  exp <- drake_plan(
+    small = simulate(48),
+    large = simulate(64),
+    reg1_small = reg_fun(small),
+    reg1_large = reg_fun(large),
+    reg2_large = reg1_large_fun(large),
+    reg2_small = reg1_small_fun(small),
+    winners_large = target(
+      command = min(reg1_large = reg1_large, reg2_large = reg2_large),
+      a = 1
+    ),
+    winners_small = target(
+      command = min(reg1_small = reg1_small, reg2_small = reg2_small),
+      a = 1
+    )
+  )
+  out <- out[order(out$target), ]
+  exp <- exp[order(exp$target), ]
+  expect_equal(out$target, exp$target)
+  expect_equal(
+    lapply(out$command, standardize_command),
+    lapply(exp$command, standardize_command)
+  )
+})
