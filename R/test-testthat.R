@@ -157,14 +157,15 @@ write_v6.2.1_project <- function() { # nolint
 }
 
 equivalent_plans <- function(out, exp) {
+  assert_pkg("testthat")
   out <- out[order(out$target), ]
   exp <- exp[order(exp$target), ]
-  expect_equal(
+  testthat::expect_equal(
     lapply(out$command, standardize_command),
     lapply(exp$command, standardize_command)
   )
   for (col in setdiff(colnames(out), "command")) {
-    expect_equal(out[[col]], exp[[col]])
+    testthat::expect_equal(out[[col]], exp[[col]])
   }
 }
 
