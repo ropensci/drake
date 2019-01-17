@@ -220,12 +220,12 @@ test_with_dir("groupings", {
     small = simulate(48),
     large = simulate(64),
     reg1 = target(
-      reg_fun(data),
+      rgfun(data),
       transform = cross(data = c(small, large)),
       group = c(reg, othergroup)
     ),
     reg2 = target(
-      reg_fun(data),
+      rgfun(data),
       transform = cross(data = c(small, large)),
       group = reg
     ),
@@ -240,27 +240,27 @@ test_with_dir("groupings", {
     small = simulate(48),
     large = simulate(64),
     reg1_small = target(
-      command = reg_fun(small),
+      command = rgfun(small),
       data = "small",
       reg1 = "reg1_small",
       reg = "reg1_small",
       othergroup = "reg1_small"
     ),
     reg1_large = target(
-      command = reg_fun(large),
+      command = rgfun(large),
       data = "large",
       reg1 = "reg1_large",
       reg = "reg1_large",
       othergroup = "reg1_large"
     ),
     reg2_large = target(
-      command = reg1_large_fun(large),
+      command = rgfun(large),
       data = "large",
       reg = "reg2_large",
       reg2 = "reg2_large"
     ),
     reg2_small = target(
-      command = reg1_small_fun(small),
+      command = rgfun(small),
       data = "small",
       reg = "reg2_small",
       reg2 = "reg2_small"
