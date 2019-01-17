@@ -36,8 +36,10 @@ make(plan, cache = cache, session_info = FALSE)
 readd(my_target, cache = cache)
 
 # Why do we care?
-# Because we can customize parallel computing within targets this way.
-# Notice how we treat `mc.cores` for `mclapply()`
+# Because this is a good way to apply parallel computing within targets
+# and keep them up to date even when we change
+# the number of "cores"
+
 plan <- drake_plan(
   a = target(
     parallel::mclapply(1:8, sqrt, mc.cores = from_plan("cores")),
@@ -51,7 +53,20 @@ plan <- drake_plan(
 
 plan
 
-# make(plan) # nolint
+# If make(plan, parallelism = "loop") fails,
+# try make(plan, lock_envir = FALSE)
+# or another parallel computing option like parLapply()
+# or furrr::future_map().
+# See https://github.com/ropensci/drake/issues/675#issuecomment-454403818
+# and the ensuing comments for a discussion.
+
+# But usually, parallelism *among* targets happens through a cluster.
+# drake_hpc_template_file("slurm_clustermq.tmpl") # Edit by hand. # nolint
+# options(
+#   clustermq.scheduler = "slurm",
+#   clustermq.template = "slurm_clustermq.tmpl",
+# )
+# make(plan, parallelism = "clustermq", jobs = 2) # nolint
 
 # Now, if you change the `cores` column of the plan, the parallelism will
 # change, but the targets will stay up to date.
