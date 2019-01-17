@@ -536,15 +536,28 @@ test_with_dir("plan_to_notebook()", {
 })
 
 test_with_dir("can use from_plan() from within make()", {
+  scenario <- get_testing_scenario()
+  e <- eval(parse(text = scenario$envir))
+  jobs <- scenario$jobs
+  parallelism <- scenario$parallelism
+  caching <- scenario$caching
   plan <- drake_plan(my_target = target(from_plan("a"), a = "a_value"))
-  cache <- storr::storr_environment()
-  config <- drake_config(plan, cache = cache)
-  make(plan, cache = cache, session_info = FALSE)
+  cache <- new_cache()
+  config <- drake_config(
+    plan, cache = cache, jobs = jobs,
+    parallelism = parallelism, caching = caching,
+    log_progress = TRUE
+  )
+  make(config = config)
   expect_equal(justbuilt(config), "my_target")
   expect_equal("a_value", readd(my_target, cache = cache))
-  make(plan, cache = cache, session_info = FALSE)
+  make(config = config)
   expect_equal(justbuilt(config), character(0))
   plan <- drake_plan(my_target = target(from_plan("a"), a = "nope"))
-  make(plan, cache = cache, session_info = FALSE)
+  config <- drake_config(
+    plan, cache = cache, jobs = jobs,
+    parallelism = parallelism, caching = caching
+  )
+  make(config = config)
   expect_equal(justbuilt(config), character(0))
 })
