@@ -252,15 +252,6 @@ test_with_dir("self-referential commands and imports", {
   expect_equal(log1, log2)
 })
 
-test_with_dir("._drake_plan and drake_envir() are not dependencies", {
-  deps1 <- deps_code(quote(drake_envir()))$globals
-  deps2 <- deps_code(quote(rm(x, envir = ._drake_plan)))$globals
-  expect_false("drake_envir" %in% deps1)
-  expect_false("drake_envir" %in% deps2)
-  expect_false("._drake_plan" %in% deps1)
-  expect_false("._drake_plan" %in% deps2)
-})
-
 test_with_dir("ignore() suppresses updates", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   cache <- storr::storr_environment()

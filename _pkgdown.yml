@@ -52,6 +52,7 @@ reference:
   - '`knitr_in`'
   - '`ignore`'
   - '`drake_envir`'
+  - '`from_plan`'
   - '`target`'
   - '`code_to_plan`'
   - '`plan_to_code`'

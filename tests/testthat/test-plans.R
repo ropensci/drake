@@ -534,3 +534,17 @@ test_with_dir("plan_to_notebook()", {
   plan <- code_to_plan(path)
   expect_equivalent(plan[order(plan$target), ], plan0[order(plan0$target), ])
 })
+
+test_with_dir("can use from_plan() from within make()", {
+  plan <- drake_plan(my_target = target(from_plan("a"), a = "a_value"))
+  cache <- storr::storr_environment()
+  config <- drake_config(plan, cache = cache)
+  make(plan, cache = cache, session_info = FALSE)
+  expect_equal(justbuilt(config), "my_target")
+  expect_equal("a_value", readd(my_target, cache = cache))
+  make(plan, cache = cache, session_info = FALSE)
+  expect_equal(justbuilt(config), character(0))
+  plan <- drake_plan(my_target = target(from_plan("a"), a = "nope"))
+  make(plan, cache = cache, session_info = FALSE)
+  expect_equal(justbuilt(config), character(0))
+})

@@ -22,6 +22,7 @@
 
 - Introduce a new experimental API for generating large plans (#674). It is inspired by the proposed DSL (#233) and the `target()` function, two of @krlmlr's ideas. Uses custom fields `transform` and `group` in `target()` within `drake_plan()`. New arguments `transform` and `trace` in `drake_plan()` provide some customization.
 - Implement a `lock_envir` argument to safeguard reproducibility. See [this thread](https://github.com/ropensci/drake/issues/615#issuecomment-447585359) for a demonstration of the problem solved by `make(lock_envir = TRUE)`. More discussion: #619, #620.
+- The new `from_plan()` function allows the users to get custom columns of the plan. Changes to these custom columns do not invalidate targets, however, so be careful.
 
 ## Enhancements
 
@@ -42,6 +43,7 @@
 - Ignore the imports when it comes to build times. Functions `build_times()`, `predict_runtime()`, etc. focus on only the targets.
 - Deprecate many functions, including `read_drake_config()`, `read_drake_graph()`, and `read_drake_plan()`.
 - Require a `config` argument to `drake_build()` and `loadd(deps = TRUE)`.
+- `drake_envir()` now throws an error, not a warning, if called in the incorrect context. Should be called only inside commands in the user's `drake` plan.
 
 # Version 6.2.1
 

@@ -32,5 +32,5 @@ plan <- drake_plan(
 make(plan, cache = storr::storr_environment(), session_info = FALSE)
 }
 \seealso{
-\code{\link[=make]{make()}}, \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=target]{target()}}
+\code{\link[=from_plan]{from_plan()}}
 }
