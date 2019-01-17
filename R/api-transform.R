@@ -69,7 +69,14 @@ trf_row <- function(plan, row) {
   }
   out[[plan$target[[row]]]] <- out$target
   if ("group" %in% colnames(plan) && !is.na(plan$group[[row]])) {
-    out[[plan$group[[row]]]] <- out$target
+    groups <- plan$group[[row]]
+    if (is.character(groups)) {
+      groups <- parse(text = groups)
+    }
+    groups <- all.vars(groups)
+    for (group in groups) {
+      out[[group]] <- out$target
+    }
   }
   out
 }

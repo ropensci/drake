@@ -221,19 +221,22 @@ test_with_dir("custom columns can define groupings", {
     large = simulate(64),
     reg1 = target(
       reg_fun(data),
-      transform = cross(data = c(small, large)),
-      group = reg
+      transform = cross(data = c(small, large))
     ),
     reg2 = target(
       reg_fun(data),
-      transform = cross(data = c(small, large)),
-      group = reg
+      transform = cross(data = c(small, large))
     ),
     winners = target(
       min(reg),
       transform = summarize(data),
       a = 1
-    )
+    ),
+    reg1winners = target(
+      min(othergroup),
+      transform = summarize()
+    ),
+    trace = TRUE
   )
   exp <- drake_plan(
     small = simulate(48),
