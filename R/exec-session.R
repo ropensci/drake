@@ -58,7 +58,7 @@ initialize_session <- function(config) {
   runtime_checks(config = config)
   config$cache$set(key = "seed", value = config$seed, namespace = "session")
   init_common_values(config$cache)
-  mark_eval(config)
+  config$eval[[drake_plan_marker]] <- config$plan
   if (config$log_progress) {
     clear_tmp_namespace(
       cache = config$cache,
@@ -80,10 +80,4 @@ conclude_session <- function(config) {
   remove(list = names(config$eval), envir = config$eval)
   console_edge_cases(config)
   invisible()
-}
-
-mark_eval <- function(config) {
-  if (!exists(drake_plan_marker, envir = config$eval, inherits = FALSE)) {
-    assign(x = drake_plan_marker, value = config$plan, envir = config$eval)
-  }
 }
