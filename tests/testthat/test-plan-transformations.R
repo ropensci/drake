@@ -97,13 +97,7 @@ test_with_dir("transforming the mtcars plan", {
       winners_small_residuals = winners_small_residuals
     )
   )
-  out <- out[order(out$target), ]
-  exp <- exp[order(exp$target), ]
-  expect_equal(out$target, exp$target)
-  expect_equal(
-    lapply(out$command, standardize_command),
-    lapply(exp$command, standardize_command)
-  )
+  equivalent_plans(out, exp)
 })
 
 test_with_dir("transformations and custom columns", {
@@ -257,13 +251,7 @@ test_with_dir("custom columns can define groupings", {
       a = 1
     )
   )
-  out <- out[order(out$target), ]
-  exp <- exp[order(exp$target), ]
-  expect_equal(out$target, exp$target)
-  expect_equal(
-    lapply(out$command, standardize_command),
-    lapply(exp$command, standardize_command)
-  )
+  equivalent_plans(out, exp)
 })
 
 test_with_dir("can disable transformations", {
@@ -291,4 +279,55 @@ test_with_dir("can disable transformations", {
     sort(out$target),
     sort(c("small", "large", "reg1", "reg2", "winners"))
   )
+})
+
+test_with_dir("transformation by itself", {
+  plan1 <- drake_plan(
+    analysis = target(
+      analyze_data("source"),
+      transform = cross(source = c(source1, source2))
+    ),
+    transform = FALSE
+  )
+  plan2 <- drake_plan(
+    summarize = target(
+      summarize_analyses(analysis),
+      transform = summarize()
+    ),
+    transform = FALSE
+  )
+  plan <- bind_plans(plan1, plan2)
+  plan
+  out <- transform_plan(plan)
+  exp <- drake_plan(
+    analysis_source1 = analyze_data("source1"),
+    analysis_source2 = analyze_data("source2"),
+    summarize = summarize_analyses(
+      analysis_source1 = analysis_source1,
+      analysis_source2 = analysis_source2
+    )
+  )
+  equivalent_plans(out, exp)
+  out <- transform_plan(plan, trace = TRUE)
+  exp <- drake_plan(
+    analysis_source1 = target(
+      command = analyze_data("source1"),
+      source = "source1",
+      analysis = "analysis_source1"
+    ),
+    analysis_source2 = target(
+      command = analyze_data("source2"),
+      source = "source2",
+      analysis = "analysis_source2"
+    ),
+    summarize = target(
+      command = summarize_analyses(
+        analysis_source1 = analysis_source1,
+        analysis_source2 = analysis_source2
+      ),
+      summarize = "summarize"
+    )
+  )
+  expect_true(ncol(exp) > 2)
+  equivalent_plans(out, exp)
 })

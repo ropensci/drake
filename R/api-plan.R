@@ -50,10 +50,10 @@
 #'   should be the brew patterns.
 #'
 #' @export
-#' @seealso [map_plan()], [reduce_by()], [gather_by()], [reduce_plan()], [gather_plan()],
-#'   [evaluate_plan()], [expand_plan()]
+#' @seealso [transform_plan()]
 #' @return A data frame of targets and commands. See the details
 #' for optional columns you can append manually post-hoc.
+#' @inheritParams transform_plan
 #' @param ... A collection of symbols/targets
 #'   with commands assigned to them. See the examples for details.
 #' @param list A named character vector of commands
@@ -67,9 +67,6 @@
 #' @param transform Logical, whether to transform targets in the plan
 #'   according to the `transform` and `group` fields identified
 #'   by `target()`. See the examples for details.
-#' @param trace Logical, whether to add columns to show
-#'   what happened during target transformations, e.g.
-#'   `drake_plan(x = target(..., transform = ...), transform = TRUE)`.
 #' @examples
 #' test_with_dir("Contain side effects", {
 #' # Create workflow plan data frames.
@@ -218,7 +215,7 @@ drake_plan <- function(
   }
   plan <- parse_custom_plan_columns(plan)
   if (transform && ("transform" %in% colnames(plan))) {
-    plan <- trf_plan(plan, trace = trace)
+    plan <- transform_plan(plan, trace = trace)
   }
   sanitize_plan(plan)
 }

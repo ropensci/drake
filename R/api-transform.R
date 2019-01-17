@@ -1,6 +1,38 @@
-# Iteration down the rows of the plan
-
-trf_plan <- function(plan, trace) {
+#' @title Transform a plan
+#' @description Take an existing `drake` plan with a `transform` column,
+#'   and apply transformations that expand and gather targets.
+#'   Use to generate large plans. `transform_plan()` is useful
+#'   if you generated multiple plans with `drake_plan(transform = FALSE)`
+#'   and and want to combine and transform them later.
+#' @export
+#' @seealso [drake_plan()]
+#' @return A transformed workflow plan data frame
+#' @param plan Workflow plan data frame with a column for targets,
+#'   a column for commands, and a column for transformations.
+#' @param trace Logical, whether to add columns to show
+#'   what happened during target transformations, e.g.
+#'   `drake_plan(x = target(..., transform = ...), transform = TRUE)`.
+#' @examples
+#' plan1 <- drake_plan(
+#'   analysis = target(
+#'     analyze_data("source"),
+#'     transform = cross(source = c(source1, source2))
+#'   ),
+#'   transform = FALSE
+#' )
+#' plan2 <- drake_plan(
+#'   summarize = target(
+#'     summarize_analyses(analysis),
+#'     transform = summarize()
+#'   ),
+#'   transform = FALSE
+#' )
+#' plan <- bind_plans(plan1, plan2)
+#' plan
+#' transform_plan(plan)
+#' transform_plan(plan, trace = TRUE)
+transform_plan <- function(plan, trace = FALSE) {
+  stopifnot("transform" %in% colnames(plan))
   row <- 1
   attr(plan, "protect") <- protect <- colnames(plan)
   while (row <= nrow(plan)) {

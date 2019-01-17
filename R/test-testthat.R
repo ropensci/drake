@@ -156,6 +156,18 @@ write_v6.2.1_project <- function() { # nolint
   unzip(zip, exdir = ".", setTimes = TRUE)
 }
 
+equivalent_plans <- function(out, exp) {
+  out <- out[order(out$target), ]
+  exp <- exp[order(exp$target), ]
+  expect_equal(
+    lapply(out$command, standardize_command),
+    lapply(exp$command, standardize_command)
+  )
+  for (col in setdiff(colnames(out), "command")) {
+    expect_equal(out[[col]], exp[[col]])
+  }
+}
+
 # Some installations of R require the && and || operators
 # to return a result of length 1.
 # For example, `nzchar(letters) && length(letters)` fails on
