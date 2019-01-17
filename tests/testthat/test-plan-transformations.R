@@ -215,43 +215,67 @@ test_with_dir("mtcars example transformed", {
   expect_equal(justbuilt(config), character(0))
 })
 
-test_with_dir("custom columns can define groupings", {
+test_with_dir("groupings", {
   out <- drake_plan(
     small = simulate(48),
     large = simulate(64),
     reg1 = target(
       reg_fun(data),
-      transform = cross(data = c(small, large))
+      transform = cross(data = c(small, large)),
+      group = c(reg, othergroup)
     ),
     reg2 = target(
       reg_fun(data),
-      transform = cross(data = c(small, large))
+      transform = cross(data = c(small, large)),
+      group = reg
     ),
     winners = target(
       min(reg),
       transform = summarize(data),
       a = 1
     ),
-    reg1winners = target(
-      min(othergroup),
-      transform = summarize()
-    ),
     trace = TRUE
   )
   exp <- drake_plan(
     small = simulate(48),
     large = simulate(64),
-    reg1_small = reg_fun(small),
-    reg1_large = reg_fun(large),
-    reg2_large = reg1_large_fun(large),
-    reg2_small = reg1_small_fun(small),
+    reg1_small = target(
+      command = reg_fun(small),
+      data = "small",
+      reg1 = "reg1_small",
+      reg = "reg1_small",
+      othergroup = "reg1_small"
+    ),
+    reg1_large = target(
+      command = reg_fun(large),
+      data = "large",
+      reg1 = "reg1_large",
+      reg = "reg1_large",
+      othergroup = "reg1_large"
+    ),
+    reg2_large = target(
+      command = reg1_large_fun(large),
+      data = "large",
+      reg = "reg2_large",
+      reg2 = "reg2_large"
+    ),
+    reg2_small = target(
+      command = reg1_small_fun(small),
+      data = "small",
+      reg = "reg2_small",
+      reg2 = "reg2_small"
+    ),
     winners_large = target(
       command = min(reg1_large = reg1_large, reg2_large = reg2_large),
-      a = 1
+      a = 1,
+      data = "large",
+      winners = "winners_large"
     ),
     winners_small = target(
       command = min(reg1_small = reg1_small, reg2_small = reg2_small),
-      a = 1
+      a = 1,
+      data = "small",
+      winners = "winners_small"
     )
   )
   equivalent_plans(out, exp)

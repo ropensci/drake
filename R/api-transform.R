@@ -68,15 +68,9 @@ trf_row <- function(plan, row) {
     out[[col]] <- rep(unlist(plan[row, col], use.names = FALSE), nrow(out))
   }
   out[[plan$target[[row]]]] <- out$target
-  if ("group" %in% colnames(plan) && !is.na(plan$group[[row]])) {
-    groups <- plan$group[[row]]
-    if (is.character(groups)) {
-      groups <- parse(text = groups)
-    }
-    groups <- all.vars(groups)
-    for (group in groups) {
-      out[[group]] <- out$target
-    }
+  groups <- trf_parse_custom_groups(plan, row)
+  for (group in groups) {
+    out[[group]] <- out$target
   }
   out
 }
@@ -85,17 +79,19 @@ trf_row <- function(plan, row) {
 
 trf_cross <- function(plan, target, command, transform) {
   levels <- trf_levels(plan, transform)
-  trf_check_conflict(plan, c(target, names(levels)))
+  trf_check_conflicts(plan, c(target, names(levels)))
   grid <- trf_grid(plan, levels)
   suffixes <- grid[, names(levels)]
   targets <- apply(cbind(target, suffixes), 1, paste, collapse = "_")
+  relevant <- vapply(names(grid), grepl, x = command, FUN.VALUE = logical(1))
+  grid <- grid[, relevant, drop = FALSE]
   command <- gsub_grid(text = command, grid = grid)
   out <- weak_tibble(target = targets, command = command)
   cbind(out, grid)
 }
 
 trf_summarize <- function(plan, target, command, transform) {
-  trf_check_conflict(plan, target)
+  trf_check_conflicts(plan, target)
   factors <- all.vars(transform)
   groups <- intersect(trf_cols(plan), all.vars(parse(text = command)))
   keep <- complete_cases(plan[, c("target", "command", factors, groups)])
@@ -103,7 +99,7 @@ trf_summarize <- function(plan, target, command, transform) {
   out <- map_by(
     .x = plan,
     .by = factors,
-    .f = trf_group,
+    .f = trf_aggregate,
     command = command,
     groups = groups
   )
@@ -114,7 +110,18 @@ trf_summarize <- function(plan, target, command, transform) {
 
 # Utils
 
-trf_check_conflict <- function(plan, cols) {
+trf_parse_custom_groups <- function(plan, row) {
+  if (!("group" %in% colnames(plan))) {
+    return(character(0))
+  }
+  groups <- plan$group[[row]]
+  if (is.character(groups)) {
+    groups <- parse(text = groups)
+  }
+  all.vars(groups)
+}
+
+trf_check_conflicts <- function(plan, cols) {
   x <- intersect(attr(plan, "protect"), cols)
   if (length(x)) {
     stop(
@@ -139,7 +146,7 @@ trf_grid <- function(plan, levels) {
   grid
 }
 
-trf_group <- function(plan, command, groups) {
+trf_aggregate <- function(plan, command, groups) {
   for (group in groups) {
     levels <- unique(plan[[group]])
     levels <- paste(levels, levels, sep = " = ")
