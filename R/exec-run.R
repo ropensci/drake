@@ -77,7 +77,7 @@ with_call_stack <- function(target, config) {
     lock_environment(config$envir)
     on.exit(unlock_environment(config$envir))
   }
-  hide_target_in_eval(target, config)
+  config$eval[[drake_target_marker]] <- target
   tidy_expr <- eval(expr = expr, envir = config$eval) # tidy eval prep
   tryCatch(
     withCallingHandlers(
@@ -86,10 +86,6 @@ with_call_stack <- function(target, config) {
     ),
     error = identity
   )
-}
-
-hide_target_in_eval <- function(target, config) {
-  config$eval[[drake_target_marker]] <- target
 }
 
 # Taken from `R.utils::withTimeout()` and simplified.
