@@ -83,7 +83,7 @@ trf_cross <- function(plan, target, command, transform) {
   grid <- trf_grid(plan, levels)
   suffixes <- grid[, names(levels)]
   targets <- apply(cbind(target, suffixes), 1, paste, collapse = "_")
-  relevant <- vapply(names(grid), grepl, x = command, FUN.VALUE = logical(1))
+  relevant <- grepl_vector(names(grid), command)
   grid <- grid[, relevant, drop = FALSE]
   command <- gsub_grid(text = command, grid = grid)
   out <- weak_tibble(target = targets, command = command)
@@ -93,7 +93,8 @@ trf_cross <- function(plan, target, command, transform) {
 trf_summarize <- function(plan, target, command, transform) {
   trf_check_conflicts(plan, target)
   factors <- all.vars(transform)
-  groups <- intersect(trf_cols(plan), all.vars(parse(text = command)))
+  groups <- trf_cols(plan)
+  groups <- groups[grepl_vector(trf_cols(plan), command)]
   keep <- complete_cases(plan[, c("target", "command", factors, groups)])
   plan <- plan[keep, ]
   out <- map_by(
