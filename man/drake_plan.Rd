@@ -25,8 +25,12 @@ such as quasiquotation
 when evaluating commands passed through the free-form
 \code{...} argument.}
 
-\item{transform}{Logical, whether to transform targets in the plan
-according to the \code{transform} and \code{group} fields identified
+\item{transform}{Logical, whether to transform the plan
+into a larger plan with more targets.
+This is still an experimental feature,
+so please check your workflow with \code{vis_drake_graph()}
+before running it with \code{make()}.
+Requires the \code{transform} and \code{group} fields identified
 by \code{target()}. See the examples for details.}
 
 \item{trace}{Logical, whether to add columns to show
@@ -34,8 +38,8 @@ what happened during target transformations, e.g.
 \code{drake_plan(x = target(..., transform = ...), transform = TRUE)}.}
 }
 \value{
-A data frame of targets and commands. See the details
-for optional columns you can append manually post-hoc.
+A data frame of targets, commands, and optional
+custom columns.
 }
 \description{
 Turns a named collection of target/command pairs into
@@ -111,6 +115,9 @@ head(my_plan)
 deps_code("report.Rmd")
 
 # Use transformations to generate large plans.
+# This feature is experimental, so please
+# check your workflow with `vis_drake_graph()`
+# before running `make()`.
 drake_plan(
   small = simulate(48),
   large = simulate(64),
@@ -128,7 +135,8 @@ drake_plan(
   )
 )
 
-# Define custom groupings with the `group` field.
+# Optionally define custom groupings with the `group` field.
+# Again, this is still experimental.
 drake_plan(
   small = simulate(48),
   large = simulate(64),

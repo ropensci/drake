@@ -2,7 +2,7 @@
 % Please edit documentation in R/api-transform.R
 \name{transform_plan}
 \alias{transform_plan}
-\title{Transform a plan}
+\title{Experimental: transform a plan.}
 \usage{
 transform_plan(plan, trace = FALSE)
 }
@@ -18,9 +18,18 @@ what happened during target transformations, e.g.
 A transformed workflow plan data frame
 }
 \description{
-Take an existing \code{drake} plan with a \code{transform} column,
-and apply transformations that expand and gather targets.
-Use to generate large plans. \code{transform_plan()} is useful
+This feature has a lot of promise,
+but it is still experimental.
+Please review your workflow with \code{vis_drake_graph()}
+before you run it.
+}
+\details{
+The \code{transform_plan()} function
+take an existing \code{drake} plan and applies the transformations
+in the optional \code{"transform"} column, expanding and gathering
+targets to create a larger plan. Usually this is done
+inside \code{drake_plan(transform = TRUE)}, but
+\code{transform_plan()} on its own is useful
 if you generated multiple plans with \code{drake_plan(transform = FALSE)}
 and and want to combine and transform them later.
 }
@@ -47,3 +56,4 @@ transform_plan(plan, trace = TRUE)
 \seealso{
 \code{\link[=drake_plan]{drake_plan()}}
 }
+\keyword{experimental}

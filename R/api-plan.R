@@ -51,8 +51,8 @@
 #'
 #' @export
 #' @seealso [transform_plan()]
-#' @return A data frame of targets and commands. See the details
-#' for optional columns you can append manually post-hoc.
+#' @return A data frame of targets, commands, and optional
+#'   custom columns.
 #' @inheritParams transform_plan
 #' @param ... A collection of symbols/targets
 #'   with commands assigned to them. See the examples for details.
@@ -64,8 +64,12 @@
 #'   such as quasiquotation
 #'   when evaluating commands passed through the free-form
 #'   `...` argument.
-#' @param transform Logical, whether to transform targets in the plan
-#'   according to the `transform` and `group` fields identified
+#' @param transform Logical, whether to transform the plan
+#'   into a larger plan with more targets.
+#'   This is still an experimental feature,
+#'   so please check your workflow with `vis_drake_graph()`
+#'   before running it with `make()`.
+#'   Requires the `transform` and `group` fields identified
 #'   by `target()`. See the examples for details.
 #' @examples
 #' test_with_dir("Contain side effects", {
@@ -87,6 +91,9 @@
 #' deps_code("report.Rmd")
 #'
 #' # Use transformations to generate large plans.
+#' # This feature is experimental, so please
+#' # check your workflow with `vis_drake_graph()`
+#' # before running `make()`.
 #' drake_plan(
 #'   small = simulate(48),
 #'   large = simulate(64),
@@ -104,7 +111,8 @@
 #'   )
 #' )
 #'
-#' # Define custom groupings with the `group` field.
+#' # Optionally define custom groupings with the `group` field.
+#' # Again, this is still experimental.
 #' drake_plan(
 #'   small = simulate(48),
 #'   large = simulate(64),

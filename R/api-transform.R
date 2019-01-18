@@ -1,10 +1,18 @@
-#' @title Transform a plan
-#' @description Take an existing `drake` plan with a `transform` column,
-#'   and apply transformations that expand and gather targets.
-#'   Use to generate large plans. `transform_plan()` is useful
+#' @title Experimental: transform a plan.
+#' @description This feature has a lot of promise,
+#'   but it is still experimental.
+#'   Please review your workflow with `vis_drake_graph()`
+#'   before you run it.
+#' @details The `transform_plan()` function
+#'   take an existing `drake` plan and applies the transformations
+#'   in the optional `"transform"` column, expanding and gathering
+#'   targets to create a larger plan. Usually this is done
+#'   inside `drake_plan(transform = TRUE)`, but
+#'   `transform_plan()` on its own is useful
 #'   if you generated multiple plans with `drake_plan(transform = FALSE)`
 #'   and and want to combine and transform them later.
 #' @export
+#' @keywords experimental
 #' @seealso [drake_plan()]
 #' @return A transformed workflow plan data frame
 #' @param plan Workflow plan data frame with a column for targets,
