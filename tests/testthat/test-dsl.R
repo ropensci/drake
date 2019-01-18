@@ -1,4 +1,4 @@
-drake_context("plan transformations")
+drake_context("dsl")
 
 test_with_dir("simple expansion", {
   plan <- drake_plan(a = target(1 + 1, transform = cross(x = c(1, 2))))
@@ -6,7 +6,7 @@ test_with_dir("simple expansion", {
   expect_equal(plan$command, rep("1 + 1", 2))
 })
 
-test_with_dir("transformations with different types", {
+test_with_dir("dsl with different types", {
   plan <- drake_plan(
     a = target(1 + 1, transform = cross(x = c(1, 2))),
     transform = FALSE
@@ -17,7 +17,7 @@ test_with_dir("transformations with different types", {
   expect_equal(plan$command, rep("1 + 1", 2))
 })
 
-test_with_dir("transforming the mtcars plan", {
+test_with_dir("dsl with the mtcars plan", {
   out <- drake_plan(
     small = simulate(48),
     large = simulate(64),
@@ -111,7 +111,7 @@ test_with_dir("transforming the mtcars plan", {
   equivalent_plans(out, exp)
 })
 
-test_with_dir("transformations and custom columns", {
+test_with_dir("dsl and custom columns", {
   e <- quote(
     drake_plan(
       small = simulate(48),
@@ -155,7 +155,7 @@ test_with_dir("transformations and custom columns", {
   })
 })
 
-test_with_dir("transformation trace", {
+test_with_dir("dsl trace", {
   plan <- drake_plan(
     small = simulate(48),
     large = simulate(64),
@@ -202,7 +202,7 @@ test_with_dir("transformation trace", {
   )
 })
 
-test_with_dir("mtcars example transformed", {
+test_with_dir("running a dsl-generated mtcars plan", {
   load_mtcars_example()
   rm(my_plan)
   plan <- drake_plan(
@@ -226,7 +226,7 @@ test_with_dir("mtcars example transformed", {
   expect_equal(justbuilt(config), character(0))
 })
 
-test_with_dir("groupings", {
+test_with_dir("dsl groupings", {
   out <- drake_plan(
     small = simulate(48),
     large = simulate(64),
@@ -292,7 +292,7 @@ test_with_dir("groupings", {
   equivalent_plans(out, exp)
 })
 
-test_with_dir("can disable transformations", {
+test_with_dir("can disable transformations in dsl", {
   out <- drake_plan(
     small = simulate(48),
     large = simulate(64),
@@ -319,7 +319,7 @@ test_with_dir("can disable transformations", {
   )
 })
 
-test_with_dir("transformation by itself", {
+test_with_dir("dsl within quotes", {
   plan1 <- drake_plan(
     analysis = target(
       analyze_data("source"),
