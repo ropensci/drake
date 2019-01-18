@@ -48,7 +48,7 @@ transform_plan <- function(plan, trace = FALSE) {
       row <- row + 1
       next
     }
-    transformed <- trf_row(plan, row)
+    transformed <- dsl_row(plan, row)
     plan <- bind_plans(
       plan[seq_len(row - 1), ],
       transformed,
@@ -64,7 +64,7 @@ transform_plan <- function(plan, trace = FALSE) {
   plan
 }
 
-trf_row <- function(plan, row) {
+dsl_row <- function(plan, row) {
   command <- plan$command[[row]]
   if (is.language(command)) {
     command <- wide_deparse(command)
@@ -74,7 +74,7 @@ trf_row <- function(plan, row) {
     transform <- parse(text = transform)[[1]]
   }
   transformer <- get(
-    paste0("trf_", as.character(transform[[1]])),
+    paste0("dsl_", as.character(transform[[1]])),
     envir = getNamespace("drake")
   )
   out <- transformer(plan, plan$target[[row]], command, transform)
@@ -82,16 +82,16 @@ trf_row <- function(plan, row) {
     out[[col]] <- rep(plan[[col]][row], nrow(out))
   }
   out[[plan$target[[row]]]] <- out$target
-  for (group in trf_parse_custom_groups(plan, row)) {
+  for (group in dsl_parse_custom_groups(plan, row)) {
     out[[group]] <- out$target
   }
   out
 }
 
-trf_cross <- function(plan, target, command, transform) {
-  levels <- trf_levels(plan, transform)
-  trf_check_conflicts(plan, c(target, names(levels)))
-  grid <- trf_grid(plan, levels)
+dsl_cross <- function(plan, target, command, transform) {
+  levels <- dsl_levels(plan, transform)
+  dsl_check_conflicts(plan, c(target, names(levels)))
+  grid <- dsl_grid(plan, levels)
   suffixes <- grid[, names(levels)]
   targets <- apply(cbind(target, suffixes), 1, paste, collapse = "_")
   relevant <- grepl_vector(names(grid), command)
@@ -101,17 +101,17 @@ trf_cross <- function(plan, target, command, transform) {
   cbind(out, grid)
 }
 
-trf_summarize <- function(plan, target, command, transform) {
-  trf_check_conflicts(plan, target)
+dsl_summarize <- function(plan, target, command, transform) {
+  dsl_check_conflicts(plan, target)
   factors <- all.vars(transform)
-  groups <- trf_cols(plan)
-  groups <- groups[grepl_vector(trf_cols(plan), command)]
+  groups <- dsl_cols(plan)
+  groups <- groups[grepl_vector(dsl_cols(plan), command)]
   keep <- complete_cases(plan[, c("target", "command", factors, groups)])
   plan <- plan[keep, ]
   out <- map_by(
     .x = plan,
     .by = factors,
-    .f = trf_aggregate,
+    .f = dsl_aggregate,
     command = command,
     groups = groups
   )

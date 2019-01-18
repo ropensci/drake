@@ -1,4 +1,4 @@
-trf_aggregate <- function(plan, command, groups) {
+dsl_aggregate <- function(plan, command, groups) {
   for (group in groups) {
     levels <- unique(plan[[group]])
     levels <- paste(levels, levels, sep = " = ")
@@ -8,7 +8,7 @@ trf_aggregate <- function(plan, command, groups) {
   data.frame(command = command, stringsAsFactors = FALSE)
 }
 
-trf_check_conflicts <- function(plan, cols) {
+dsl_check_conflicts <- function(plan, cols) {
   x <- intersect(attr(plan, "protect"), cols)
   if (length(x)) {
     stop(
@@ -20,20 +20,20 @@ trf_check_conflicts <- function(plan, cols) {
   }
 }
 
-trf_cols <- function(plan) {
+dsl_cols <- function(plan) {
   setdiff(colnames(plan), attr(plan, "protect"))
 }
 
-trf_grid <- function(plan, levels) {
+dsl_grid <- function(plan, levels) {
   args <- c(levels, stringsAsFactors = FALSE)
   grid <- do.call(what = expand.grid, args = args)
-  if (length(trf_cols(plan))) {
-    grid <- merge(grid, plan[, trf_cols(plan)])
+  if (length(dsl_cols(plan))) {
+    grid <- merge(grid, plan[, dsl_cols(plan)])
   }
   grid
 }
 
-trf_levels <- function(plan, transform) {
+dsl_levels <- function(plan, transform) {
   transform <- transform[-1]
   names <- names(transform) %||% rep("", length(transform))
   out <- lapply(transform[nzchar(names)], function(x) {
@@ -50,7 +50,7 @@ trf_levels <- function(plan, transform) {
   out
 }
 
-trf_parse_custom_groups <- function(plan, row) {
+dsl_parse_custom_groups <- function(plan, row) {
   if (!("group" %in% colnames(plan))) {
     return(character(0))
   }
