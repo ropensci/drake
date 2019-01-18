@@ -331,3 +331,13 @@ weak_as_tibble <- function(..., .force_df = FALSE) {
 wide_deparse <- function(x) {
   paste(deparse(x), collapse = "\n")
 }
+
+named <- function(x) {
+  if (is.null(names(x))) return(NULL)
+  x[names(x) != ""]
+}
+
+unnamed <- function(x) {
+  if (is.null(names(x))) return(x)
+  x[names(x) == ""]
+}
