@@ -6,6 +6,17 @@ test_with_dir("simple expansion", {
   expect_equal(plan$command, rep("1 + 1", 2))
 })
 
+test_with_dir("transformations with different types", {
+  plan <- drake_plan(
+    a = target(1 + 1, transform = cross(x = c(1, 2))),
+    transform = FALSE
+  )
+  plan$command <- list(quote(1 + 1))
+  plan <- transform_plan(plan)
+  expect_equal(sort(plan$target), sort(c("a_1", "a_2")))
+  expect_equal(plan$command, rep("1 + 1", 2))
+})
+
 test_with_dir("transforming the mtcars plan", {
   out <- drake_plan(
     small = simulate(48),

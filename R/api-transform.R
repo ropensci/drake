@@ -65,25 +65,28 @@ transform_plan <- function(plan, trace = FALSE) {
 }
 
 trf_row <- function(plan, row) {
-  transform <- parse(text = plan$transform[[row]])[[1]]
+  command <- plan$command[[row]]
+  if (is.language(command)) {
+    command <- wide_deparse(command)
+  }
+  transform <- plan$transform[[row]]
+  if (is.character(transform)) {
+    transform <- parse(text = transform)[[1]]
+  }
   transformer <- get(
     paste0("trf_", as.character(transform[[1]])),
     envir = getNamespace("drake")
   )
-  out <- transformer(plan, plan$target[[row]], plan$command[[row]], transform)
-  reappend <- setdiff(attr(plan, "protect"), c("target", "command"))
-  for (col in reappend) {
-    out[[col]] <- rep(unlist(plan[row, col], use.names = FALSE), nrow(out))
+  out <- transformer(plan, plan$target[[row]], command, transform)
+  for (col in setdiff(attr(plan, "protect"), c("target", "command"))) {
+    out[[col]] <- rep(plan[[col]][row], nrow(out))
   }
   out[[plan$target[[row]]]] <- out$target
-  groups <- trf_parse_custom_groups(plan, row)
-  for (group in groups) {
+  for (group in trf_parse_custom_groups(plan, row)) {
     out[[group]] <- out$target
   }
   out
 }
-
-# Supported transformations
 
 trf_cross <- function(plan, target, command, transform) {
   levels <- trf_levels(plan, transform)
@@ -114,70 +117,5 @@ trf_summarize <- function(plan, target, command, transform) {
   )
   suffixes <- cbind(target, out[, intersect(factors, colnames(out))])
   out$target <- apply(suffixes, 1, paste, collapse = "_")
-  out
-}
-
-# Utils
-
-trf_parse_custom_groups <- function(plan, row) {
-  if (!("group" %in% colnames(plan))) {
-    return(character(0))
-  }
-  groups <- plan$group[[row]]
-  if (is.character(groups)) {
-    groups <- parse(text = groups)
-  }
-  all.vars(groups)
-}
-
-trf_check_conflicts <- function(plan, cols) {
-  x <- intersect(attr(plan, "protect"), cols)
-  if (length(x)) {
-    stop(
-      "variables in `target(transform = ...)` ",
-      "cannot also be custom column names in the plan:\n",
-      multiline_message(x),
-      call. = FALSE
-    )
-  }
-}
-
-trf_cols <- function(plan) {
-  setdiff(colnames(plan), attr(plan, "protect"))
-}
-
-trf_grid <- function(plan, levels) {
-  args <- c(levels, stringsAsFactors = FALSE)
-  grid <- do.call(what = expand.grid, args = args)
-  if (length(trf_cols(plan))) {
-    grid <- merge(grid, plan[, trf_cols(plan)])
-  }
-  grid
-}
-
-trf_aggregate <- function(plan, command, groups) {
-  for (group in groups) {
-    levels <- unique(plan[[group]])
-    levels <- paste(levels, levels, sep = " = ")
-    levels <- paste(levels, collapse = ", ")
-    command <- gsub(group, levels, command, fixed = TRUE)
-  }
-  data.frame(command = command, stringsAsFactors = FALSE)
-}
-
-trf_levels <- function(plan, transform) {
-  transform <- transform[-1]
-  names <- names(transform) %||% rep("", length(transform))
-  out <- lapply(transform[nzchar(names)], function(x) {
-    as.character(x)[-1]
-  })
-  planned <- vapply(
-    transform[!nzchar(names)],
-    as.character,
-    FUN.VALUE = character(1)
-  )
-  for (factor in planned) {
-    out[[factor]] <- as.character(na_omit(plan[[factor]]))
-  }
   out
 }
