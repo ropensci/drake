@@ -165,7 +165,7 @@ groupings.transform <- function(transform) {
 }
 
 group_names <- function(transform) {
-  as.character(names(groupings(transform)))  
+  as.character(names(groupings(transform)))
 }
 
 symbols <- function(...) UseMethod("symbols")
