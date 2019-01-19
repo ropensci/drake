@@ -54,7 +54,7 @@ transform_plan <- function(plan, trace = FALSE) {
     row <- row + nrow(rows)
   }
   if (!trace) {
-    plan <- plan[, old_cols(plan)]
+    plan <- plan[, intersect(colnames(plan), old_cols(plan))]
   }
   old_cols(plan) <- plan$transform <- plan$group <- NULL
   plan
@@ -228,8 +228,6 @@ check_groupings <- function(groups, protect) {
 }
 
 dsl_new_targets <- function(target, grid) {
-  browser()
-  
   if (any(dim(grid) < 1L)) {
     return(target)
   }
