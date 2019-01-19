@@ -175,13 +175,14 @@ dsl_transform.cross <- function(transform, target, command, plan) {
     what = expand.grid,
     args = c(groupings, stringsAsFactors = FALSE)
   )
-  plan <- plan[, intersect(symbols(command), colnames(plan))]
+  plan <- plan[, setdiff(colnames(plan), names(new_groupings(transform)))]
     
   browser()
   
   # TODO: use the correct join.
-  grid <- merge(grid, plan)
-
+  if (length(intersect(colnames(grid), colnames(plan)))) {
+    grid <- merge(grid, plan)
+  }
   
   new_targets <- dsl_new_targets(target, grid)
   new_commands <- dsl_new_commands(command, grid)
@@ -194,7 +195,11 @@ dsl_transform.cross <- function(transform, target, command, plan) {
 }
 
 dsl_transform.reduce <- function(transform, target, command, plan) {
+  # Need to refactor
   browser()
+  
+  
+  
   groupings <- groupings(transform)
   groupings <- groupings[intersect(names(groupings), symbols(command))]
   
