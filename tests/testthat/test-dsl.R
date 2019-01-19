@@ -20,6 +20,20 @@ test_with_dir("all new crossings", {
   equivalent_plans(out, exp)
 })
 
+test_with_dir("reduction variables are undefined", {
+  out <- drake_plan(
+    small = simulate(48),
+    large = simulate(64),
+    winners = target(min(nobodyhome), transform = reduce(data))
+  )
+  exp <- drake_plan(
+    small = simulate(48),
+    large = simulate(64),
+    winners = min(nobodyhome)
+  )
+  equivalent_plans(out, exp)
+})
+
 test_with_dir("dsl with different types", {
   plan <- drake_plan(
     a = target(1 + 1, transform = cross(x = c(1, 2))),
