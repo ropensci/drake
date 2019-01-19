@@ -63,7 +63,7 @@ transform_plan <- function(plan, trace = FALSE) {
 transform_row <- function(plan, row) {
   target <- plan$target[[row]]
   command <- dsl_parse_command(plan$command[[row]])
-  post_hoc_groups <- dsl_parse_group(plan$group[[row]])
+  post_hoc_groups <- dsl_parse_group(plan[["group"]][[row]])
   transform <- dsl_parse_transform(plan$transform[[row]], plan)
   new_cols <- c(target, post_hoc_groups, group_names(transform))
   check_groupings(new_cols, old_cols(plan))
