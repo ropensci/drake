@@ -207,7 +207,7 @@ dsl_transform.reduce <- function(transform, target, command, plan) {
 dsl_reduction_step <- function(plan, command) {
   reductions <- lapply(plan, function(x) {
     names <- na_omit(unique(x))
-    out <- rlang::syms(names)
+    out <- rlang::syms(as.character(names))
     names(out) <- names
     out
   })
@@ -240,7 +240,7 @@ dsl_new_commands <- function(command, grid) {
     replicate(nrow(grid), command)
   }
   for (i in seq_along(grid)) {
-    grid[[i]] <- rlang::syms(grid[[i]])
+    grid[[i]] <- rlang::syms(as.character(grid[[i]]))
   }
   as.character(lapply(
     seq_len(nrow(grid)),
