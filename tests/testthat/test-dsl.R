@@ -57,56 +57,56 @@ test_with_dir("dsl with the mtcars plan", {
     summ_residuals_reg_reg2_large = residuals(large, reg_reg2_large),
     summ_coef_reg_reg2_small = coef(small, reg_reg2_small),
     summ_residuals_reg_reg2_small = residuals(small, reg_reg2_small),
-    winners_large_coef = min(
+    winners_large_coef = min(list(
       summ_coef_reg_reg1_large = summ_coef_reg_reg1_large,
       summ_coef_reg_reg2_large = summ_coef_reg_reg2_large
-    ),
-    winners_small_coef = min(
+    )),
+    winners_small_coef = min(list(
       summ_coef_reg_reg1_small = summ_coef_reg_reg1_small,
       summ_coef_reg_reg2_small = summ_coef_reg_reg2_small
-    ),
-    winners_large_residuals = min(
+    )),
+    winners_large_residuals = min(list(
       summ_residuals_reg_reg1_large = summ_residuals_reg_reg1_large,
       summ_residuals_reg_reg2_large = summ_residuals_reg_reg2_large
-    ),
-    winners_small_residuals = min(
+    )),
+    winners_small_residuals = min(list(
       summ_residuals_reg_reg1_small = summ_residuals_reg_reg1_small,
       summ_residuals_reg_reg2_small = summ_residuals_reg_reg2_small
-    ),
+    )),
     others_large_coef = analyze(list(
-      c(
+      c(list(
         summ_coef_reg_reg1_large = summ_coef_reg_reg1_large,
         summ_coef_reg_reg2_large = summ_coef_reg_reg2_large
-      ),
-      c(large = large)
+      )),
+      c(list(large = large))
     )),
     others_small_coef = analyze(list(
-      c(
+      c(list(
         summ_coef_reg_reg1_small = summ_coef_reg_reg1_small,
         summ_coef_reg_reg2_small = summ_coef_reg_reg2_small
-      ),
-      c(small = small)
+      )),
+      c(list(small = small))
     )),
     others_large_residuals = analyze(list(
-      c(
+      c(list(
         summ_residuals_reg_reg1_large = summ_residuals_reg_reg1_large,
         summ_residuals_reg_reg2_large = summ_residuals_reg_reg2_large
-      ),
+      )),
       c(large = large)
     )),
     others_small_residuals = analyze(list(
-      c(
+      c(list(
         summ_residuals_reg_reg1_small = summ_residuals_reg_reg1_small,
         summ_residuals_reg_reg2_small = summ_residuals_reg_reg2_small
-      ),
-      c(small = small)
+      )),
+      c(list(small = small))
     )),
-    final_winner = min(
+    final_winner = min(list(
       winners_large_coef = winners_large_coef,
       winners_small_coef = winners_small_coef,
       winners_large_residuals = winners_large_residuals,
       winners_small_residuals = winners_small_residuals
-    )
+    ))
   )
   equivalent_plans(out, exp)
 })

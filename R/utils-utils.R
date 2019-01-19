@@ -320,7 +320,6 @@ weak_tibble <- function(..., .force_df = FALSE) {
 # as.data.frame() if necessary
 weak_as_tibble <- function(..., .force_df = FALSE) {
   no_tibble <- !suppressWarnings(requireNamespace("tibble", quietly = TRUE))
-
   if (.force_df || no_tibble) {
     as.data.frame(..., stringsAsFactors = FALSE)
   } else {
@@ -344,11 +343,15 @@ unnamed <- function(x) {
 
 # The result should just be x with additional columns.
 join_protect_x <- function(x, y) {
+  
+  browser()
+  
   by <- intersect(colnames(x), colnames(y))
   if (!length(by)) {
     return(x)
   }
   dups <- duplicated(y[, by])
   y <- y[!dups, ]
-  merge(x, y)
+  out <- merge(x, y)
+  out[, union(colnames(x), colnames(y))]
 }
