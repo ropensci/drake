@@ -169,13 +169,12 @@ dsl_transform <- function(...) {
 dsl_transform.cross <- function(transform, target, command, plan) {
   groupings <- groupings(transform)
   check_grouping_conflicts(plan, names(groupings))
-  
-  browser()
-  
-  grid <- do.call(what = expand.grid, args = groupings)
+  grid <- dsl_symbol_grid(groupings)
   new_targets <- dsl_new_targets(target, grid)
   new_commands <- dsl_new_commands(command, grid)
   
+  
+  browser()
   
   suffixes <- grid[, names(levels)]
   targets <- apply(cbind(target, suffixes), 1, paste, collapse = "_")
@@ -222,8 +221,6 @@ dsl_new_targets <- function(target, grid) {
 }
 
 dsl_new_commands <- function(command, grid) {
-  
-  browser()
   grid <- grid[, symbols(command)]
   if (any(dim(grid) < 1L)) {
     replicate(nrow(grid), command)
@@ -237,11 +234,16 @@ dsl_new_commands <- function(command, grid) {
 }
 
 dsl_new_command <- function(row, command, grid) {
-  grid <- grid[row, ]
-  for (i in seq_along(grid)) {
-    symbol <- grid[[i]]
-    
-  h}
-  browser()
+  eval(call("substitute", command, unlist(grid[row, ])), envir = baseenv())
+}
 
+dsl_symbol_grid <- function(groupings) {
+  out <- do.call(
+    what = expand.grid,
+    args = c(groupings, stringsAsFactors = FALSE)
+  )
+  for (i in seq_along(out)) {
+    out[[i]] <- rlang::syms(out[[i]])
+  }
+  out
 }
