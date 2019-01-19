@@ -94,7 +94,11 @@ old_cols <- function(plan) {
 dsl_parse_command <- function(command) UseMethod("dsl_parse_command")
 
 dsl_parse_command.character <- function(command) {
-  dsl_parse_command(parse(text = command)[[1]])
+  out <- parse(text = command)
+  if (length(out)) {
+    out <- out[[1]]
+  }
+  dsl_parse_command(out)
 }
 
 dsl_parse_command.default <- function(command) {
@@ -180,7 +184,7 @@ dsl_parse_group.character <- function(group) {
   dsl_parse_character.default(parse(text = group))
 }
 
-dsl_parse_character.default <- function(group) {
+dsl_parse_group.default <- function(group) {
   all.vars(group, functions = FALSE)
 }
 
