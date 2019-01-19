@@ -64,7 +64,7 @@ transform_row <- function(plan, row) {
   target <- plan$target[[row]]
   command <- dsl_parse_command(plan$command[[row]])
   transform <- dsl_parse_transform(plan$transform[[row]], plan)
-  check_groupings(group_names(transform), c(target, old_cols(plan)))
+  check_groupings(c(target, group_names(transform)), old_cols(plan))
   out <- dsl_transform(transform, target, command, plan)
   out[[target]] <- out$target
   old_cols <- setdiff(
@@ -228,7 +228,7 @@ check_groupings <- function(groups, protect) {
 }
 
 dsl_new_targets <- function(target, grid) {
-  if (any(dim(grid) < 1L)) {
+  if (is.null(dim(grid)) || any(dim(grid) < 1L)) {
     return(target)
   }
   make.names(paste(target, apply(grid, 1, paste, collapse = "_"), sep = "_"))
