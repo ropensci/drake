@@ -181,7 +181,7 @@ dsl_parse_group <- function(...) {
 }
 
 dsl_parse_group.character <- function(group) {
-  dsl_parse_character.default(parse(text = group))
+  dsl_parse_group.default(parse(text = group))
 }
 
 dsl_parse_group.default <- function(group) {

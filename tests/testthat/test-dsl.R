@@ -270,11 +270,7 @@ test_with_dir("dsl post-hoc groupings", {
       transform = cross(data = c(small, large)),
       group = reg
     ),
-    winners = target(
-      min(reg),
-      transform = reduce(data),
-      a = 1
-    ),
+    winners = target(min(reg), transform = reduce(), a = 1),
     trace = TRUE
   )
   exp <- drake_plan(
