@@ -180,7 +180,7 @@ dsl_transform.cross <- function(transform, target, command, plan) {
   plan <- plan[, setdiff(colnames(plan), ncl)]
   grid <- join_protect_x(grid, plan)
   suffix_cols <- intersect(colnames(grid), group_names(transform))
-  new_targets <- dsl_new_targets(target, grid[, suffix_cols])
+  new_targets <- dsl_new_targets(target, grid[, suffix_cols, drop = FALSE])
   new_commands <- dsl_new_commands(command, grid)
   out <- data.frame(
     target = new_targets,
@@ -228,6 +228,8 @@ check_groupings <- function(groups, protect) {
 }
 
 dsl_new_targets <- function(target, grid) {
+  browser()
+  
   if (any(dim(grid) < 1L)) {
     return(target)
   }
@@ -235,7 +237,7 @@ dsl_new_targets <- function(target, grid) {
 }
 
 dsl_new_commands <- function(command, grid) {
-  grid <- grid[, intersect(symbols(command), colnames(grid))]
+  grid <- grid[, intersect(symbols(command), colnames(grid)), drop = FALSE]
   if (any(dim(grid) < 1L)) {
     replicate(nrow(grid), command)
   }
