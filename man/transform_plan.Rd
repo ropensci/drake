@@ -42,9 +42,9 @@ plan1 <- drake_plan(
   transform = FALSE
 )
 plan2 <- drake_plan(
-  summarize = target(
+  summaries = target(
     summarize_analyses(analysis),
-    transform = summarize()
+    transform = reduce()
   ),
   transform = FALSE
 )

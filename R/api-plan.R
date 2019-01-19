@@ -107,7 +107,7 @@
 #'   ), 
 #'   winners = target(
 #'     min(summ),
-#'     transform = summarize(data, sum_fun)
+#'     transform = reduce(data, sum_fun)
 #'   )
 #' )
 #'
@@ -128,7 +128,7 @@
 #'   ),
 #'   winners = target(
 #'     min(reg),
-#'     transform = summarize(data),
+#'     transform = reduce(data),
 #'     a = 1
 #'   )
 #' )
@@ -148,7 +148,7 @@
 #'   ), 
 #'   winners = target(
 #'     min(summ),
-#'     transform = summarize(data, sum_fun)
+#'     transform = reduce(data, sum_fun)
 #'   ),
 #'   trace = TRUE
 #' )
