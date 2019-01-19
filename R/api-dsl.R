@@ -64,18 +64,15 @@ transform_row <- function(plan, row) {
   target <- plan$target[[row]]
   command <- dsl_parse_command(plan$command[[row]])
   transform <- dsl_parse_transform(plan$transform[[row]], plan)
-  check_grouping_conflicts(names(groupings(transform)), old_cols(plan))
+  check_groupings(names(groupings(transform)), c(target, old_cols(plan)))
   out <- dsl_transform(transform, target, command, plan)
+  out[[target]] <- out$target
   old_cols <- setdiff(
     old_cols(plan),
     c("target", "command", "transform", "group")
   )
   for (col in old_cols) {
     out[[col]] <- rep(plan[[col]][row], nrow(out))
-  }
-  out[[target]] <- out$target
-  for (group in names(groupings(transform))) {
-    out[[group]] <- out$target
   }
   out
 }
@@ -177,7 +174,12 @@ dsl_transform.cross <- function(transform, target, command, plan) {
   grid <- do.call(
     what = expand.grid,
     args = c(groupings, stringsAsFactors = FALSE)
-  )    
+  )
+  
+  
+  
+  browser()
+  
   new_targets <- dsl_new_targets(target, grid)
   new_commands <- dsl_new_commands(command, grid)
   out <- data.frame(
@@ -214,7 +216,7 @@ dsl_transform.reduce <- function(transform, target, command, plan) {
   out
 }
 
-check_grouping_conflicts <- function(groups, protect) {
+check_groupings <- function(groups, protect) {
   groups <- intersect(groups, protect)
   if (length(groups)) {
     stop(
