@@ -290,29 +290,25 @@ test_with_dir("dsl post-hoc groupings", {
       reg = "reg1_large",
       othergroup = "reg1_large"
     ),
-    reg2_large = target(
-      command = rgfun(large),
-      data = "large",
-      reg = "reg2_large",
-      reg2 = "reg2_large"
-    ),
     reg2_small = target(
       command = rgfun(small),
       data = "small",
       reg = "reg2_small",
       reg2 = "reg2_small"
     ),
-    winners_large = target(
-      command = min(reg1_large = reg1_large, reg2_large = reg2_large),
-      a = 1,
+    reg2_large = target(
+      command = rgfun(large),
       data = "large",
-      winners = "winners_large"
+      reg = "reg2_large",
+      reg2 = "reg2_large"
     ),
-    winners_small = target(
-      command = min(reg1_small = reg1_small, reg2_small = reg2_small),
+    winners = target(
+      command = min(list(
+        reg1_small = reg1_small, reg1_large = reg1_large, reg2_small = reg2_small,
+        reg2_large = reg2_large
+      )),
       a = 1,
-      data = "small",
-      winners = "winners_small"
+      winners = "winners"
     )
   )
   equivalent_plans(out, exp)
