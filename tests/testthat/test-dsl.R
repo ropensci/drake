@@ -339,10 +339,10 @@ test_with_dir("dsl with differently typed group levels", {
       analyze_data(source),
       transform = cross(source = c("source1", source2, 3))
     ),
-    transform = T
+    transform = FALSE
   )
   plan2 <- drake_plan(
-    reduce = target(
+    reducks = target(
       reduce_analyses(analysis),
       transform = reduce()
     ),
@@ -352,32 +352,38 @@ test_with_dir("dsl with differently typed group levels", {
   plan
   out <- transform_plan(plan)
   exp <- drake_plan(
-    analysis_source1 = analyze_data("source1"),
-    analysis_source2 = analyze_data("source2"),
-    reduce = reduce_analyses(
-      analysis_source1 = analysis_source1,
-      analysis_source2 = analysis_source2
-    )
+    analysis_.source1. = analyze_data("source1"),
+    analysis_source2 = analyze_data(source2),
+    analysis_3 = analyze_data(3),
+    reducks = reduce_analyses(list(
+      analysis_.source1. = analysis_.source1.,
+      analysis_source2 = analysis_source2, analysis_3 = analysis_3
+    ))
   )
   equivalent_plans(out, exp)
   out <- transform_plan(plan, trace = TRUE)
   exp <- drake_plan(
-    analysis_source1 = target(
+    analysis_.source1. = target(
       command = analyze_data("source1"),
-      source = "source1",
-      analysis = "analysis_source1"
+      source = "\"source1\"",
+      analysis = "analysis_.source1."
     ),
     analysis_source2 = target(
-      command = analyze_data("source2"),
+      command = analyze_data(source2),
       source = "source2",
       analysis = "analysis_source2"
     ),
-    reduce = target(
-      command = reduce_analyses(
-        analysis_source1 = analysis_source1,
-        analysis_source2 = analysis_source2
-      ),
-      reduce = "reduce"
+    analysis_3 = target(
+      command = analyze_data(3),
+      source = "3",
+      analysis = "analysis_3"
+    ),
+    reducks = target(
+      command = reduce_analyses(list(
+        analysis_.source1. = analysis_.source1.,
+        analysis_source2 = analysis_source2, analysis_3 = analysis_3
+      )),
+      reducks = "reducks"
     )
   )
   expect_true(ncol(exp) > 2)
