@@ -6,6 +6,20 @@ test_with_dir("simple expansion", {
   expect_equal(plan$command, rep("1 + 1", 2))
 })
 
+test_with_dir("all new crossings", {
+  out <- drake_plan(
+    analysis = target(
+      analyze_data(source),
+      transform = cross(source = c(source1, source2))
+    )
+  )
+  exp <- drake_plan(
+    analysis_source1 = analyze_data(source1),
+    analysis_source2 = analyze_data(source2)
+  )
+  equivalent_plans(out, exp)
+})
+
 test_with_dir("dsl with different types", {
   plan <- drake_plan(
     a = target(1 + 1, transform = cross(x = c(1, 2))),
@@ -319,13 +333,13 @@ test_with_dir("can disable transformations in dsl", {
   )
 })
 
-test_with_dir("dsl within quotes", {
+test_with_dir("dsl with differently typed group levels", {
   plan1 <- drake_plan(
     analysis = target(
-      analyze_data("source"),
-      transform = cross(source = c(source1, source2))
+      analyze_data(source),
+      transform = cross(source = c("source1", source2, 3))
     ),
-    transform = FALSE
+    transform = T
   )
   plan2 <- drake_plan(
     reduce = target(

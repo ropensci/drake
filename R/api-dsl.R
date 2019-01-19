@@ -181,7 +181,7 @@ dsl_transform.cross <- function(transform, target, command, plan) {
   grid <- join_protect_x(grid, plan)
   suffix_cols <- intersect(colnames(grid), group_names(transform))
   new_targets <- dsl_new_targets(target, grid[, suffix_cols, drop = FALSE])
-  new_commands <- dsl_new_commands(command, grid)
+  new_commands <- dsl_grid_commands(command, grid)
   out <- data.frame(
     target = new_targets,
     command = new_commands,
@@ -234,22 +234,33 @@ dsl_new_targets <- function(target, grid) {
   make.names(paste(target, apply(grid, 1, paste, collapse = "_"), sep = "_"))
 }
 
-dsl_new_commands <- function(command, grid) {
+dsl_grid_commands <- function(command, grid) {
   grid <- grid[, intersect(symbols(command), colnames(grid)), drop = FALSE]
-  if (any(dim(grid) < 1L)) {
-    replicate(nrow(grid), command)
-  }
   for (i in seq_along(grid)) {
-    grid[[i]] <- rlang::syms(as.character(grid[[i]]))
+    grid[[i]] <- dsl_syms(grid[[i]])
   }
   as.character(lapply(
     seq_len(nrow(grid)),
-    dsl_new_command,
+    dsl_grid_command,
     command = command,
     grid = grid
   ))
 }
 
-dsl_new_command <- function(row, command, grid) {
-  eval(call("substitute", command, unlist(grid[row, ])), envir = baseenv())
+dsl_grid_command <- function(row, command, grid) {
+  sub <- lapply(grid, `[[`, row)
+  eval(call("substitute", command, sub), envir = baseenv())
+}
+
+dsl_syms <- function(x) {
+  out <- lapply(as.character(x), dsl_sym)
+}
+
+dsl_sym <- function(x) {
+  tryCatch(
+    eval(parse(text = x), envir = emptyenv()),
+    error = function(e) {
+      rlang::sym(x)
+    }
+  )
 }
