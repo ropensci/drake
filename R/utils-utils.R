@@ -343,9 +343,6 @@ unnamed <- function(x) {
 
 # The result should just be x with additional columns.
 join_protect_x <- function(x, y) {
-  
-  browser()
-  
   by <- intersect(colnames(x), colnames(y))
   if (!length(by)) {
     return(x)
