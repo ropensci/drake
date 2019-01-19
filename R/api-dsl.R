@@ -42,42 +42,37 @@
 transform_plan <- function(plan, trace = FALSE) {
   stopifnot("transform" %in% colnames(plan))
   row <- 1
-  attr(plan, "protect") <- protect <- colnames(plan)
+  protect <- colnames(plan)
   while (row <= nrow(plan)) {
     if (is.na(plan$transform[[row]])) {
       row <- row + 1
       next
     }
-    transformed <- transform_row(plan, row)
-    plan <- bind_plans(
-      plan[seq_len(row - 1), ],
-      transformed,
-      plan[-seq_len(row), ]
-    )
-    attr(plan, "protect") <- protect
-    row <- row + nrow(transformed)
+    rows <- transform_row(plan, row, protect)
+    plan <- bind_plans(plan[seq_len(row - 1), ], rows, plan[-seq_len(row), ])
+    row <- row + nrow(rows)
   }
   if (!trace) {
-    plan <- plan[, intersect(attr(plan, "protect"), colnames(plan))]
+    plan <- plan[, !protect]
   }
-  attr(plan, "protect") <- plan$transform <- plan$group <- NULL
+  plan$transform <- plan$group <- NULL
   plan
 }
 
-transform_row <- function(plan, row) {
+transform_row <- function(plan, row, protect) {
   target <- plan$target[[row]]
   command <- dsl_parse_command(plan$command[[row]])
   transform <- dsl_parse_transform(plan$transform[[row]], plan)
-  dsl_transform(transform, target, command, plan)
+  check_grouping_conflicts(names(groupings(transform)), protect)
+  out <- dsl_transform(transform, target, command, plan)
+  browser()
 
-  
-  
-  out <- transformer(plan, plan$target[[row]], command, transform)
-  for (col in setdiff(attr(plan, "protect"), c("target", "command"))) {
+  old_cols <- setdiff(protect, c("target", "command", "transform", "group"))
+  for (col in old_cols) {
     out[[col]] <- rep(plan[[col]][row], nrow(out))
   }
-  out[[plan$target[[row]]]] <- out$target
-  for (group in dsl_parse_custom_groups(plan, row)) {
+  out[[target]] <- out$target
+  for (group in names(groupings(transform))) {
     out[[group]] <- out$target
   }
   out
@@ -168,25 +163,21 @@ dsl_transform <- function(...) {
 
 dsl_transform.cross <- function(transform, target, command, plan) {
   groupings <- groupings(transform)
-  check_grouping_conflicts(plan, names(groupings))
-  grid <- dsl_symbol_grid(groupings)
+  grid <- do.call(
+    what = expand.grid,
+    args = c(groupings, stringsAsFactors = FALSE)
+  )    
   new_targets <- dsl_new_targets(target, grid)
   new_commands <- dsl_new_commands(command, grid)
-  
-  
-  browser()
-  
-  suffixes <- grid[, names(levels)]
-  targets <- apply(cbind(target, suffixes), 1, paste, collapse = "_")
-  relevant <- grepl_vector(names(grid), command)
-  grid <- grid[, relevant, drop = FALSE]
-  command <- gsub_grid(text = command, grid = grid)
-  out <- weak_tibble(target = targets, command = command)
+  out <- data.frame(
+    target = new_targets,
+    command = new_commands,
+    stringsAsFactors = FALSE
+  )
   cbind(out, grid)
 }
 
 dsl_summarize <- function(plan, target, command, transform) {
-  dsl_check_conflicts(plan, target)
   factors <- all.vars(transform)
   groups <- dsl_cols(plan)
   groups <- groups[grepl_vector(dsl_cols(plan), command)]
@@ -204,13 +195,13 @@ dsl_summarize <- function(plan, target, command, transform) {
   out
 }
 
-check_grouping_conflicts <- function(plan, groups) {
-  groups <- intersect(attr(plan, "protect"), groups)
+check_grouping_conflicts <- function(groups, protect) {
+  groups <- intersect(groups, protect)
   if (length(groups)) {
     stop(
       "variables in `target(transform = ...)` ",
       "cannot also be custom column names in the plan:\n",
-      multiline_message(x),
+      multiline_message(groups),
       call. = FALSE
     )
   }
@@ -225,25 +216,17 @@ dsl_new_commands <- function(command, grid) {
   if (any(dim(grid) < 1L)) {
     replicate(nrow(grid), command)
   }
-  lapply(
-    seq_along(grid),
+  for (i in seq_along(grid)) {
+    grid[[i]] <- rlang::syms(grid[[i]])
+  }
+  as.character(lapply(
+    seq_len(nrow(grid)),
     dsl_new_command,
     command = command,
     grid = grid
-  )
+  ))
 }
 
 dsl_new_command <- function(row, command, grid) {
   eval(call("substitute", command, unlist(grid[row, ])), envir = baseenv())
-}
-
-dsl_symbol_grid <- function(groupings) {
-  out <- do.call(
-    what = expand.grid,
-    args = c(groupings, stringsAsFactors = FALSE)
-  )
-  for (i in seq_along(out)) {
-    out[[i]] <- rlang::syms(out[[i]])
-  }
-  out
 }

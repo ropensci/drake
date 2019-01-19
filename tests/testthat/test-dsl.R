@@ -23,7 +23,7 @@ test_with_dir("dsl with the mtcars plan", {
     large = simulate(64),
     reg = target(
       reg_fun(data),
-      transform = cross(reg_fun = c(reg1, "reg2"), data = c(small, large))
+      transform = cross(reg_fun = c(reg1, reg2), data = c(small, large))
     ),
     summ = target(
       sum_fun(data, reg),
