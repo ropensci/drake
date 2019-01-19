@@ -341,3 +341,14 @@ unnamed <- function(x) {
   if (is.null(names(x))) return(x)
   x[names(x) == ""]
 }
+
+# The result should just be x with additional columns.
+join_protect_x <- function(x, y) {
+  by <- intersect(colnames(x), colnames(y))
+  if (!length(by)) {
+    return(x)
+  }
+  dups <- duplicated(y[, by])
+  y <- y[!dups, ]
+  merge(x, y)
+}

@@ -171,20 +171,10 @@ dsl_transform <- function(...) {
 
 dsl_transform.cross <- function(transform, target, command, plan) {
   groupings <- groupings(transform)
-  grid <- do.call(
-    what = expand.grid,
-    args = c(groupings, stringsAsFactors = FALSE)
-  )
-  cols_rm <- c(names(new_groupings(transform)), "target", "command")
-  plan <- plan[, setdiff(colnames(plan), cols_rm)]
-  
-  browser()
-  
-  # TODO: use the correct join.
-  if (length(intersect(colnames(grid), colnames(plan)))) {
-    grid <- merge(grid, plan)
-  }
-  
+  grid <- do.call(expand.grid, c(groupings, stringsAsFactors = FALSE))
+  ncl <- c(names(new_groupings(transform)), "target", "command", "transform")
+  plan <- plan[, setdiff(colnames(plan), ncl)]
+  grid <- join_protect_x(grid, plan)
   new_targets <- dsl_new_targets(target, grid)
   new_commands <- dsl_new_commands(command, grid)
   out <- data.frame(
@@ -259,4 +249,14 @@ dsl_new_commands <- function(command, grid) {
 
 dsl_new_command <- function(row, command, grid) {
   eval(call("substitute", command, unlist(grid[row, ])), envir = baseenv())
+}
+
+dsl_aggregate <- function(plan, command, groups) {
+  for (group in groups) {
+    levels <- unique(plan[[group]])
+    levels <- paste(levels, levels, sep = " = ")
+    levels <- paste(levels, collapse = ", ")
+    command <- gsub(group, levels, command, fixed = TRUE)
+  }
+  data.frame(command = command, stringsAsFactors = FALSE)
 }
