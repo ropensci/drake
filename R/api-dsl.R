@@ -42,32 +42,34 @@
 transform_plan <- function(plan, trace = FALSE) {
   stopifnot("transform" %in% colnames(plan))
   row <- 1
-  protect <- colnames(plan)
+  old_cols(plan) <- old_cols <- colnames(plan)
   while (row <= nrow(plan)) {
     if (is.na(plan$transform[[row]])) {
       row <- row + 1
       next
     }
-    rows <- transform_row(plan, row, protect)
+    rows <- transform_row(plan, row)
     plan <- bind_plans(plan[seq_len(row - 1), ], rows, plan[-seq_len(row), ])
+    old_cols(plan) <- old_cols
     row <- row + nrow(rows)
   }
   if (!trace) {
     plan <- plan[, !protect]
   }
-  plan$transform <- plan$group <- NULL
+  old_cols(plan) <- plan$transform <- plan$group <- NULL
   plan
 }
 
-transform_row <- function(plan, row, protect) {
+transform_row <- function(plan, row) {
   target <- plan$target[[row]]
   command <- dsl_parse_command(plan$command[[row]])
   transform <- dsl_parse_transform(plan$transform[[row]], plan)
-  check_grouping_conflicts(names(groupings(transform)), protect)
+  check_grouping_conflicts(names(groupings(transform)), old_cols(plan))
   out <- dsl_transform(transform, target, command, plan)
-  browser()
-
-  old_cols <- setdiff(protect, c("target", "command", "transform", "group"))
+  old_cols <- setdiff(
+    old_cols(plan),
+    c("target", "command", "transform", "group")
+  )
   for (col in old_cols) {
     out[[col]] <- rep(plan[[col]][row], nrow(out))
   }
@@ -76,6 +78,15 @@ transform_row <- function(plan, row, protect) {
     out[[group]] <- out$target
   }
   out
+}
+
+old_cols <- function(plan) {
+  attr(plan, "old_cols")
+}
+
+`old_cols<-` <-  function(plan, value) {
+  attr(plan, "old_cols") <- value
+  plan
 }
 
 dsl_parse_command <- function(command) UseMethod("dsl_parse_command")
@@ -177,15 +188,23 @@ dsl_transform.cross <- function(transform, target, command, plan) {
   cbind(out, grid)
 }
 
-dsl_summarize <- function(plan, target, command, transform) {
+dsl_transform.reduce <- function(transform, target, command, plan) {
+  browser()
+  groupings <- groupings(transform)
+  groupings <- groupings[intersect(names(groupings), symbols(command))]
+  
   factors <- all.vars(transform)
   groups <- dsl_cols(plan)
   groups <- groups[grepl_vector(dsl_cols(plan), command)]
+  
+  
+  cols_keep <- c("target", "command", names(groupings), groups)
+  
   keep <- complete_cases(plan[, c("target", "command", factors, groups)])
   plan <- plan[keep, ]
   out <- map_by(
     .x = plan,
-    .by = factors,
+    .by = names(groupings),
     .f = dsl_aggregate,
     command = command,
     groups = groups
@@ -212,7 +231,7 @@ dsl_new_targets <- function(target, grid) {
 }
 
 dsl_new_commands <- function(command, grid) {
-  grid <- grid[, symbols(command)]
+  grid <- grid[, intersect(symbols(command), colnames(grid))]
   if (any(dim(grid) < 1L)) {
     replicate(nrow(grid), command)
   }
