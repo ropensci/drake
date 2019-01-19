@@ -97,7 +97,15 @@ dsl_parse_command.language <- function(command) {
   )
 }
 
-dsl_parse_command.call <- dsl_parse_command.language
+dsl_parse_command.call <-
+  dsl_parse_command.expression <-
+  dsl_parse_command.language
+
+symbols <- function(command) UseMethod("symbols")
+
+symbols.command <- function(command) {
+  attr(command, "symbols")
+}
 
 dsl_parse_transform <- function(...) {
   UseMethod("dsl_parse_transform")
@@ -110,7 +118,7 @@ dsl_parse_transform.character <- function(transform, plan) {
 dsl_parse_transform.call <- function(transform, plan) {
   structure(
     transform,
-    class = unique(c(deparse(transform[1]), "transform", class(transform))),
+    class = unique(c(deparse(transform[[1]]), "transform", class(transform))),
     new_groupings = new_groupings(transform),
     old_groupings = old_groupings(transform, plan)
   )
@@ -120,7 +128,7 @@ new_groupings <- function(transform) UseMethod("new_groupings")
 
 new_groupings.call <- function(transform) {
   lapply(named(as.list(transform)), function(x) {
-    lapply(as.list(x)[-1], deparse)
+    as.character(lapply(as.list(x)[-1], deparse))
   })
 }
 
@@ -142,17 +150,33 @@ old_groupings.transform <- function(transform) {
   attr(transform, "old_groupings")
 }
 
+groupings <- function(...) {
+  UseMethod("groupings")
+}
+
+groupings.call <- function(transform, plan) {
+  c(new_groupings(transform), old_groupings(transform, plan))
+}
+
+groupings.transform <- function(transform) {
+  c(new_groupings(transform), old_groupings(transform))
+}
+
 dsl_transform <- function(...) {
   UseMethod("dsl_transform")
 }
 
 dsl_transform.cross <- function(transform, target, command, plan) {
+  groupings <- groupings(transform)
+  check_grouping_conflicts(plan, names(groupings))
   
   browser()
   
-  levels <- dsl_levels(plan, transform)
-  dsl_check_conflicts(plan, c(target, names(levels)))
-  grid <- dsl_grid(plan, levels)
+  grid <- do.call(what = expand.grid, args = groupings)
+  new_targets <- dsl_new_targets(target, grid)
+  new_commands <- dsl_new_commands(command, grid)
+  
+  
   suffixes <- grid[, names(levels)]
   targets <- apply(cbind(target, suffixes), 1, paste, collapse = "_")
   relevant <- grepl_vector(names(grid), command)
@@ -179,4 +203,45 @@ dsl_summarize <- function(plan, target, command, transform) {
   suffixes <- cbind(target, out[, intersect(factors, colnames(out))])
   out$target <- apply(suffixes, 1, paste, collapse = "_")
   out
+}
+
+check_grouping_conflicts <- function(plan, groups) {
+  groups <- intersect(attr(plan, "protect"), groups)
+  if (length(groups)) {
+    stop(
+      "variables in `target(transform = ...)` ",
+      "cannot also be custom column names in the plan:\n",
+      multiline_message(x),
+      call. = FALSE
+    )
+  }
+}
+
+dsl_new_targets <- function(target, grid) {
+  make.names(paste(apply(grid, 1, paste, collapse = "_"), sep = "_"))
+}
+
+dsl_new_commands <- function(command, grid) {
+  
+  browser()
+  grid <- grid[, symbols(command)]
+  if (any(dim(grid) < 1L)) {
+    replicate(nrow(grid), command)
+  }
+  lapply(
+    seq_along(grid),
+    dsl_new_command,
+    command = command,
+    grid = grid
+  )
+}
+
+dsl_new_command <- function(row, command, grid) {
+  grid <- grid[row, ]
+  for (i in seq_along(grid)) {
+    symbol <- grid[[i]]
+    
+  h}
+  browser()
+
 }

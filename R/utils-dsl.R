@@ -8,17 +8,7 @@ dsl_aggregate <- function(plan, command, groups) {
   data.frame(command = command, stringsAsFactors = FALSE)
 }
 
-dsl_check_conflicts <- function(plan, cols) {
-  x <- intersect(attr(plan, "protect"), cols)
-  if (length(x)) {
-    stop(
-      "variables in `target(transform = ...)` ",
-      "cannot also be custom column names in the plan:\n",
-      multiline_message(x),
-      call. = FALSE
-    )
-  }
-}
+
 
 dsl_cols <- function(plan) {
   setdiff(colnames(plan), attr(plan, "protect"))
