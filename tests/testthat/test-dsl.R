@@ -304,7 +304,9 @@ test_with_dir("dsl post-hoc groupings", {
     ),
     winners = target(
       command = min(list(
-        reg1_small = reg1_small, reg1_large = reg1_large, reg2_small = reg2_small,
+        reg1_small = reg1_small,
+        reg1_large = reg1_large,
+        reg2_small = reg2_small,
         reg2_large = reg2_large
       )),
       a = 1,
@@ -360,18 +362,18 @@ test_with_dir("dsl with differently typed group levels", {
   plan
   out <- transform_plan(plan)
   exp <- drake_plan(
-    analysis_.source1. = analyze_data("source1"),
+    analysis_.source1. = analyze_data("source1"), # nolint
     analysis_source2 = analyze_data(source2),
     analysis_3 = analyze_data(3),
     reducks = reduce_analyses(list(
-      analysis_.source1. = analysis_.source1.,
+      analysis_.source1. = analysis_.source1., # nolint
       analysis_source2 = analysis_source2, analysis_3 = analysis_3
     ))
   )
   equivalent_plans(out, exp)
   out <- transform_plan(plan, trace = TRUE)
   exp <- drake_plan(
-    analysis_.source1. = target(
+    analysis_.source1. = target( # nolint
       command = analyze_data("source1"),
       source = "\"source1\"",
       analysis = "analysis_.source1."
@@ -388,7 +390,7 @@ test_with_dir("dsl with differently typed group levels", {
     ),
     reducks = target(
       command = reduce_analyses(list(
-        analysis_.source1. = analysis_.source1.,
+        analysis_.source1. = analysis_.source1., # nolint
         analysis_source2 = analysis_source2, analysis_3 = analysis_3
       )),
       reducks = "reducks"
