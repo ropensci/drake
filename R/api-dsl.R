@@ -54,7 +54,7 @@ transform_plan <- function(plan, trace = FALSE) {
     row <- row + nrow(rows)
   }
   if (!trace) {
-    plan <- plan[, intersect(colnames(plan), old_cols(plan))]
+    plan <- plan[, intersect(colnames(plan), old_cols(plan)), drop = FALSE]
   }
   old_cols(plan) <- plan$transform <- plan$group <- NULL
   plan
@@ -144,7 +144,7 @@ old_groupings <- function(...) UseMethod("old_groupings")
 old_groupings.call <- function(transform, plan) {
   group_names <- as.character(unnamed(transform)[-1])
   group_names <- intersect(group_names, names(plan))
-  lapply(plan[, group_names], function(x) {
+  lapply(plan[, group_names, drop = FALSE], function(x) {
     unique(na_omit(x))
   })
 }
@@ -177,7 +177,7 @@ dsl_transform.cross <- function(transform, target, command, plan) {
   groupings <- groupings(transform)
   grid <- do.call(expand.grid, c(groupings, stringsAsFactors = FALSE))
   ncl <- c(names(new_groupings(transform)), "target", "command", "transform")
-  plan <- plan[, setdiff(colnames(plan), ncl)]
+  plan <- plan[, setdiff(colnames(plan), ncl), drop = FALSE]
   grid <- join_protect_x(grid, plan)
   suffix_cols <- intersect(colnames(grid), group_names(transform))
   new_targets <- dsl_new_targets(target, grid[, suffix_cols, drop = FALSE])
@@ -191,8 +191,11 @@ dsl_transform.cross <- function(transform, target, command, plan) {
 }
 
 dsl_transform.reduce <- function(transform, target, command, plan) {
+  
+  browser()
+  
   command_symbols <- intersect(symbols(command), colnames(plan))
-  keep <- complete_cases(plan[, command_symbols])
+  keep <- complete_cases(plan[, command_symbols, drop = FALSE])
   out <- map_by(
     .x = plan[keep, ],
     .by = group_names(transform),
@@ -200,7 +203,7 @@ dsl_transform.reduce <- function(transform, target, command, plan) {
     command = command
   )
   grouping_symbols <- intersect(group_names(transform), colnames(plan))
-  out$target <- dsl_new_targets(target, out[, grouping_symbols])
+  out$target <- dsl_new_targets(target, out[, grouping_symbols, drop = FALSE])
   out
 }
 
