@@ -127,7 +127,7 @@ test_with_dir("dsl and custom columns", {
       ),
       winners = target(
         min(summ),
-        transform = summarize(data, sum_fun),
+        transform = reduce(data, sum_fun),
         custom2 = 456L
       )
     )
@@ -169,7 +169,7 @@ test_with_dir("dsl trace", {
     ),
     winners = target(
       min(summ),
-      transform = summarize(data, sum_fun)
+      transform = reduce(data, sum_fun)
     ),
     trace = FALSE
   )
@@ -188,7 +188,7 @@ test_with_dir("dsl trace", {
     ),
     winners = target(
       min(summ),
-      transform = summarize(data, sum_fun)
+      transform = reduce(data, sum_fun)
     ),
     trace = TRUE
   )
@@ -242,7 +242,7 @@ test_with_dir("dsl groupings", {
     ),
     winners = target(
       min(reg),
-      transform = summarize(data),
+      transform = reduce(data),
       a = 1
     ),
     trace = TRUE
@@ -308,7 +308,7 @@ test_with_dir("can disable transformations in dsl", {
     ),
     winners = target(
       min(reg),
-      transform = summarize(data),
+      transform = reduce(data),
       a = 1
     ),
     transform = FALSE
@@ -328,9 +328,9 @@ test_with_dir("dsl within quotes", {
     transform = FALSE
   )
   plan2 <- drake_plan(
-    summarize = target(
-      summarize_analyses(analysis),
-      transform = summarize()
+    reduce = target(
+      reduce_analyses(analysis),
+      transform = reduce()
     ),
     transform = FALSE
   )
@@ -340,7 +340,7 @@ test_with_dir("dsl within quotes", {
   exp <- drake_plan(
     analysis_source1 = analyze_data("source1"),
     analysis_source2 = analyze_data("source2"),
-    summarize = summarize_analyses(
+    reduce = reduce_analyses(
       analysis_source1 = analysis_source1,
       analysis_source2 = analysis_source2
     )
@@ -358,12 +358,12 @@ test_with_dir("dsl within quotes", {
       source = "source2",
       analysis = "analysis_source2"
     ),
-    summarize = target(
-      command = summarize_analyses(
+    reduce = target(
+      command = reduce_analyses(
         analysis_source1 = analysis_source1,
         analysis_source2 = analysis_source2
       ),
-      summarize = "summarize"
+      reduce = "reduce"
     )
   )
   expect_true(ncol(exp) > 2)
