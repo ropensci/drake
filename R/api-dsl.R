@@ -175,9 +175,9 @@ dsl_transform.cross <- function(transform, target, command, plan) {
     what = expand.grid,
     args = c(groupings, stringsAsFactors = FALSE)
   )
-  # Preserve only nested groupings.
-  plan <- plan[, setdiff(colnames(plan), names(new_groupings(transform)))]
-    
+  cols_rm <- c(names(new_groupings(transform)), "target", "command")
+  plan <- plan[, setdiff(colnames(plan), cols_rm)]
+  
   browser()
   
   # TODO: use the correct join.
