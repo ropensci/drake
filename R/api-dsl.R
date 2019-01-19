@@ -179,7 +179,8 @@ dsl_transform.cross <- function(transform, target, command, plan) {
   ncl <- c(names(new_groupings(transform)), "target", "command", "transform")
   plan <- plan[, setdiff(colnames(plan), ncl)]
   grid <- join_protect_x(grid, plan)
-  new_targets <- dsl_new_targets(target, grid)
+  suffix_cols <- intersect(colnames(grid), group_names(transform))
+  new_targets <- dsl_new_targets(target, grid[, suffix_cols])
   new_commands <- dsl_new_commands(command, grid)
   out <- data.frame(
     target = new_targets,
@@ -227,6 +228,9 @@ check_groupings <- function(groups, protect) {
 }
 
 dsl_new_targets <- function(target, grid) {
+  if (any(dim(grid) < 1L)) {
+    return(target)
+  }
   make.names(paste(target, apply(grid, 1, paste, collapse = "_"), sep = "_"))
 }
 
