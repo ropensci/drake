@@ -54,7 +54,7 @@ transform_plan <- function(plan, trace = FALSE) {
     row <- row + nrow(rows)
   }
   if (!trace) {
-    plan <- plan[, !protect]
+    plan <- plan[, old_cols(plan)]
   }
   old_cols(plan) <- plan$transform <- plan$group <- NULL
   plan
@@ -64,7 +64,7 @@ transform_row <- function(plan, row) {
   target <- plan$target[[row]]
   command <- dsl_parse_command(plan$command[[row]])
   transform <- dsl_parse_transform(plan$transform[[row]], plan)
-  check_groupings(names(groupings(transform)), c(target, old_cols(plan)))
+  check_groupings(group_names(transform), c(target, old_cols(plan)))
   out <- dsl_transform(transform, target, command, plan)
   out[[target]] <- out$target
   old_cols <- setdiff(
@@ -165,6 +165,10 @@ groupings.transform <- function(transform) {
   c(new_groupings(transform), old_groupings(transform))
 }
 
+group_names <- function(transform) {
+  as.character(names(groupings(transform)))  
+}
+
 dsl_transform <- function(...) {
   UseMethod("dsl_transform")
 }
@@ -186,27 +190,28 @@ dsl_transform.cross <- function(transform, target, command, plan) {
 }
 
 dsl_transform.reduce <- function(transform, target, command, plan) {
+  command_symbols <- intersect(symbols(command), colnames(plan))
+  keep <- complete_cases(plan[, command_symbols])
   out <- map_by(
-    .x = plan,
-    .by = names(groupings(transform)),
-    .f = dsl_reduce,
+    .x = plan[keep, ],
+    .by = group_names(transform),
+    .f = dsl_reduction_step,
     command = command
   )
-  
-  
-  suffixes <- cbind(target, out[, intersect(factors, colnames(out))])
-  out$target <- apply(suffixes, 1, paste, collapse = "_")
+  grouping_symbols <- intersect(group_names(transform), colnames(plan))
+  out$target <- dsl_new_targets(target, out[, grouping_symbols])
   out
 }
 
-dsl_reduce <- function(plan, command, reductions) {
+dsl_reduction_step <- function(plan, command) {
   reductions <- lapply(plan, function(x) {
     names <- na_omit(unique(x))
     out <- rlang::syms(names)
     names(out) <- names
     out
   })
-  eval(call("substitute", command, reductions), envir = baseenv())
+  command <- eval(call("substitute", command, reductions), envir = baseenv())
+  data.frame(command = wide_deparse(command), stringsAsFactors = FALSE)
 }
 
 check_groupings <- function(groups, protect) {
@@ -222,7 +227,7 @@ check_groupings <- function(groups, protect) {
 }
 
 dsl_new_targets <- function(target, grid) {
-  make.names(paste(apply(grid, 1, paste, collapse = "_"), sep = "_"))
+  make.names(paste(target, apply(grid, 1, paste, collapse = "_"), sep = "_"))
 }
 
 dsl_new_commands <- function(command, grid) {
