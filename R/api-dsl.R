@@ -193,6 +193,9 @@ dsl_transform.cross <- function(transform, target, command, plan) {
 dsl_transform.reduce <- function(transform, target, command, plan) {
   command_symbols <- intersect(symbols(command), colnames(plan))
   keep <- complete_cases(plan[, command_symbols, drop = FALSE])
+  if (!length(keep)) {
+    return(data.frame(target = target, command = wide_deparse(command)))
+  }
   out <- map_by(
     .x = plan[keep, ],
     .by = group_names(transform),
