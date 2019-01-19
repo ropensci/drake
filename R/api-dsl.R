@@ -186,33 +186,27 @@ dsl_transform.cross <- function(transform, target, command, plan) {
 }
 
 dsl_transform.reduce <- function(transform, target, command, plan) {
-  # Need to refactor
-  browser()
-  
-  
-  
-  groupings <- groupings(transform)
-  groupings <- groupings[intersect(names(groupings), symbols(command))]
-  
-  factors <- all.vars(transform)
-  groups <- dsl_cols(plan)
-  groups <- groups[grepl_vector(dsl_cols(plan), command)]
-  
-  
-  cols_keep <- c("target", "command", names(groupings), groups)
-  
-  keep <- complete_cases(plan[, c("target", "command", factors, groups)])
-  plan <- plan[keep, ]
   out <- map_by(
     .x = plan,
-    .by = names(groupings),
-    .f = dsl_aggregate,
-    command = command,
-    groups = groups
+    .by = names(groupings(transform)),
+    .f = dsl_reduce,
+    command = command
   )
+  
+  
   suffixes <- cbind(target, out[, intersect(factors, colnames(out))])
   out$target <- apply(suffixes, 1, paste, collapse = "_")
   out
+}
+
+dsl_reduce <- function(plan, command, reductions) {
+  reductions <- lapply(plan, function(x) {
+    names <- na_omit(unique(x))
+    out <- rlang::syms(names)
+    names(out) <- names
+    out
+  })
+  eval(call("substitute", command, reductions), envir = baseenv())
 }
 
 check_groupings <- function(groups, protect) {
@@ -249,14 +243,4 @@ dsl_new_commands <- function(command, grid) {
 
 dsl_new_command <- function(row, command, grid) {
   eval(call("substitute", command, unlist(grid[row, ])), envir = baseenv())
-}
-
-dsl_aggregate <- function(plan, command, groups) {
-  for (group in groups) {
-    levels <- unique(plan[[group]])
-    levels <- paste(levels, levels, sep = " = ")
-    levels <- paste(levels, collapse = ", ")
-    command <- gsub(group, levels, command, fixed = TRUE)
-  }
-  data.frame(command = command, stringsAsFactors = FALSE)
 }
