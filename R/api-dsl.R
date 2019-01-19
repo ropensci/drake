@@ -108,14 +108,11 @@ dsl_parse_transform.character <- function(transform, plan) {
 }
 
 dsl_parse_transform.call <- function(transform, plan) {
-  
-  browser()
-  
   structure(
     transform,
     class = unique(c(deparse(transform[1]), "transform", class(transform))),
-    new_groupings = dsl_new_groupings(transform),
-    old_groupings = dsl_old_groupings(transform, plan)
+    new_groupings = new_groupings(transform),
+    old_groupings = old_groupings(transform, plan)
   )
 }
 
@@ -141,14 +138,9 @@ old_groupings.call <- function(transform, plan) {
   })
 }
 
-dsl_old_groupings.transform <- function(transform) {
+old_groupings.transform <- function(transform) {
   attr(transform, "old_groupings")
 }
-
-
-
-
-
 
 dsl_transform <- function(...) {
   UseMethod("dsl_transform")
