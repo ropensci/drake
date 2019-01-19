@@ -20,15 +20,17 @@ test_with_dir("all new crossings", {
   equivalent_plans(out, exp)
 })
 
-test_with_dir("reduction variables are undefined", {
+test_with_dir("groups and command symbols are undefined", {
   out <- drake_plan(
     small = simulate(48),
     large = simulate(64),
+    lots = target(nobody(home), transform = cross(a, b)),
     winners = target(min(nobodyhome), transform = reduce(data))
   )
   exp <- drake_plan(
     small = simulate(48),
     large = simulate(64),
+    lots = nobody(home),
     winners = min(nobodyhome)
   )
   equivalent_plans(out, exp)

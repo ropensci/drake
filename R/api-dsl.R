@@ -175,6 +175,15 @@ dsl_transform <- function(...) {
 
 dsl_transform.cross <- function(transform, target, command, plan) {
   groupings <- groupings(transform)
+  if (!length(groupings)) {
+    return(
+      data.frame(
+        target = target,
+        command = wide_deparse(command),
+        stringsAsFactors = FALSE
+      )
+    )
+  }
   grid <- do.call(expand.grid, c(groupings, stringsAsFactors = FALSE))
   ncl <- c(names(new_groupings(transform)), "target", "command", "transform")
   plan <- plan[, setdiff(colnames(plan), ncl), drop = FALSE]
