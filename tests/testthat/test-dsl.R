@@ -9,7 +9,7 @@ test_with_dir("simple expansion", {
 test_with_dir("dsl with different types", {
   plan <- drake_plan(
     a = target(1 + 1, transform = cross(x = c(1, 2))),
-    transform = FALSE
+    transform = TRUE
   )
   plan$command <- list(quote(1 + 1))
   plan <- transform_plan(plan)
@@ -23,7 +23,7 @@ test_with_dir("dsl with the mtcars plan", {
     large = simulate(64),
     reg = target(
       reg_fun(data),
-      transform = cross(reg_fun = c(reg1, reg2), data = c(small, large))
+      transform = cross(reg_fun = c(reg1, "reg2"), data = c(small, large))
     ),
     summ = target(
       sum_fun(data, reg),

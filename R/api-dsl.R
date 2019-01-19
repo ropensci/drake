@@ -65,18 +65,13 @@ transform_plan <- function(plan, trace = FALSE) {
 }
 
 dsl_row <- function(plan, row) {
-  command <- plan$command[[row]]
-  if (is.language(command)) {
-    command <- wide_deparse(command)
-  }
-  transform <- plan$transform[[row]]
-  if (is.character(transform)) {
-    transform <- parse(text = transform)[[1]]
-  }
-  transformer <- get(
-    paste0("dsl_", as.character(transform[[1]])),
-    envir = getNamespace("drake")
-  )
+  target <- plan$target[[row]]
+  command <- dsl_parse_command(plan$command[[row]])
+  transform <- dsl_parse_transform(plan$transform[[row]])
+  transform(plan, target, command, dsl_groupings(transform))
+
+  
+  
   out <- transformer(plan, plan$target[[row]], command, transform)
   for (col in setdiff(attr(plan, "protect"), c("target", "command"))) {
     out[[col]] <- rep(plan[[col]][row], nrow(out))
@@ -87,6 +82,52 @@ dsl_row <- function(plan, row) {
   }
   out
 }
+
+dsl_parse_command <- function(command) UseMethod("dsl_parse_command")
+
+dsl_parse_command.character <- function(command) {
+  dsl_parse_command(parse(text = command)[[1]])
+}
+
+dsl_parse_command.language <- function(command) {
+  structure(
+    command,
+    symbols = all.names(command),
+    class = unique(c("command", class(command)))
+  )
+}
+
+dsl_parse_command.call <- dsl_parse_command.language
+
+dsl_parse_transform <- function(transform) UseMethod("dsl_parse_transform")
+
+dsl_parse_transform.character <- function(transform) {
+  dsl_parse_transform(parse(text = transform)[[1]])
+}
+
+dsl_parse_transform.language <- function(transform) {
+  structure(
+    transform,
+    class = unique(c(as.character(transform[1]), class(transform))),
+    resolved_groupings = dsl_get_resolved_groupings(transform),
+    unresolved_groupings = dsl_get_unresolved_groupings(transform)
+  )
+}
+
+dsl_parse_transform.call <- dsl_parse_transform.language
+
+dsl_get_resolved_groupings <- function(transform) {
+  lapply(named(as.list(transform)), function(x) {
+    lapply(as.list(x)[-1], deparse)
+  })
+}
+
+dsl_get_unresolved_groupings <- function(transform) {
+  as.character(unnamed(transform)[1])
+}
+
+
+
 
 dsl_cross <- function(plan, target, command, transform) {
   levels <- dsl_levels(plan, transform)
