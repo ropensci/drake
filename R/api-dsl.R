@@ -48,7 +48,7 @@ transform_plan <- function(plan, trace = FALSE) {
       row <- row + 1
       next
     }
-    transformed <- dsl_row(plan, row)
+    transformed <- transform_row(plan, row)
     plan <- bind_plans(
       plan[seq_len(row - 1), ],
       transformed,
@@ -64,11 +64,11 @@ transform_plan <- function(plan, trace = FALSE) {
   plan
 }
 
-dsl_row <- function(plan, row) {
+transform_row <- function(plan, row) {
   target <- plan$target[[row]]
   command <- dsl_parse_command(plan$command[[row]])
-  transform <- dsl_parse_transform(plan$transform[[row]])
-  transform(plan, target, command, dsl_groupings(transform))
+  transform <- dsl_parse_transform(plan$transform[[row]], plan)
+  dsl_transform(transform, target, command, plan)
 
   
   
@@ -99,37 +99,65 @@ dsl_parse_command.language <- function(command) {
 
 dsl_parse_command.call <- dsl_parse_command.language
 
-dsl_parse_transform <- function(transform) UseMethod("dsl_parse_transform")
-
-dsl_parse_transform.character <- function(transform) {
-  dsl_parse_transform(parse(text = transform)[[1]])
+dsl_parse_transform <- function(...) {
+  UseMethod("dsl_parse_transform")
 }
 
-dsl_parse_transform.language <- function(transform) {
+dsl_parse_transform.character <- function(transform, plan) {
+  dsl_parse_transform(parse(text = transform)[[1]], plan)
+}
+
+dsl_parse_transform.call <- function(transform, plan) {
+  
+  browser()
+  
   structure(
     transform,
-    class = unique(c(as.character(transform[1]), class(transform))),
-    resolved_groupings = dsl_get_resolved_groupings(transform),
-    unresolved_groupings = dsl_get_unresolved_groupings(transform)
+    class = unique(c(deparse(transform[1]), "transform", class(transform))),
+    new_groupings = dsl_new_groupings(transform),
+    old_groupings = dsl_old_groupings(transform, plan)
   )
 }
 
-dsl_parse_transform.call <- dsl_parse_transform.language
+new_groupings <- function(transform) UseMethod("new_groupings")
 
-dsl_get_resolved_groupings <- function(transform) {
+new_groupings.call <- function(transform) {
   lapply(named(as.list(transform)), function(x) {
     lapply(as.list(x)[-1], deparse)
   })
 }
 
-dsl_get_unresolved_groupings <- function(transform) {
-  as.character(unnamed(transform)[1])
+new_groupings.transform <- function(transform) {
+  attr(transform, "new_groupings")
+}
+
+old_groupings <- function(...) UseMethod("old_groupings")
+
+old_groupings.call <- function(transform, plan) {
+  group_names <- as.character(unnamed(transform)[-1])
+  group_names <- intersect(group_names, names(plan))
+  lapply(plan[, group_names], function(x) {
+    unique(na_omit(x))
+  })
+}
+
+dsl_old_groupings.transform <- function(transform) {
+  attr(transform, "old_groupings")
 }
 
 
 
 
-dsl_cross <- function(plan, target, command, transform) {
+
+
+dsl_transform <- function(...) {
+  UseMethod("dsl_transform")
+}
+
+dsl_transform.cross <- function(transform, target, command, plan) {
+  
+  browser()
+  
   levels <- dsl_levels(plan, transform)
   dsl_check_conflicts(plan, c(target, names(levels)))
   grid <- dsl_grid(plan, levels)

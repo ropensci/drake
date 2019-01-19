@@ -21,6 +21,13 @@ test_with_dir("dsl with the mtcars plan", {
   out <- drake_plan(
     small = simulate(48),
     large = simulate(64),
+    
+    summ2 = target(
+      sum_fun(data, reg),
+      transform = cross(sum_fun = c(coef, residuals), reg)
+    ),
+    
+    
     reg = target(
       reg_fun(data),
       transform = cross(reg_fun = c(reg1, "reg2"), data = c(small, large))
