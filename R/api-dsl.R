@@ -191,9 +191,6 @@ dsl_transform.cross <- function(transform, target, command, plan) {
 }
 
 dsl_transform.reduce <- function(transform, target, command, plan) {
-  
-  browser()
-  
   command_symbols <- intersect(symbols(command), colnames(plan))
   keep <- complete_cases(plan[, command_symbols, drop = FALSE])
   out <- map_by(
