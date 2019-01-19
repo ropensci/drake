@@ -92,7 +92,7 @@ test_with_dir("dsl with the mtcars plan", {
         summ_residuals_reg_reg1_large = summ_residuals_reg_reg1_large,
         summ_residuals_reg_reg2_large = summ_residuals_reg_reg2_large
       )),
-      c(large = large)
+      c(list(large = large))
     )),
     others_small_residuals = analyze(list(
       c(list(
