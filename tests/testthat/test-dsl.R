@@ -256,7 +256,7 @@ test_with_dir("running a dsl-generated mtcars plan", {
   expect_equal(justbuilt(config), character(0))
 })
 
-test_with_dir("dsl groupings", {
+test_with_dir("dsl post-hoc groupings", {
   out <- drake_plan(
     small = simulate(48),
     large = simulate(64),

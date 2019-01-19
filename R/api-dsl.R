@@ -63,8 +63,10 @@ transform_plan <- function(plan, trace = FALSE) {
 transform_row <- function(plan, row) {
   target <- plan$target[[row]]
   command <- dsl_parse_command(plan$command[[row]])
+  post_hoc_groups <- dsl_parse_group(plan$group[[row]])
   transform <- dsl_parse_transform(plan$transform[[row]], plan)
-  check_groupings(c(target, group_names(transform)), old_cols(plan))
+  new_cols <- c(target, post_hoc_groups, group_names(transform))
+  check_groupings(new_cols, old_cols(plan))
   out <- dsl_transform(transform, target, command, plan)
   out[[target]] <- out$target
   old_cols <- setdiff(
@@ -73,6 +75,9 @@ transform_row <- function(plan, row) {
   )
   for (col in old_cols) {
     out[[col]] <- rep(plan[[col]][row], nrow(out))
+  }
+  for (col in post_hoc_groups) {
+    out[[col]] <- out$target
   }
   out
 }
@@ -92,22 +97,12 @@ dsl_parse_command.character <- function(command) {
   dsl_parse_command(parse(text = command)[[1]])
 }
 
-dsl_parse_command.language <- function(command) {
+dsl_parse_command.default <- function(command) {
   structure(
     command,
     symbols = all.names(command),
     class = unique(c("command", class(command)))
   )
-}
-
-dsl_parse_command.call <-
-  dsl_parse_command.expression <-
-  dsl_parse_command.language
-
-symbols <- function(command) UseMethod("symbols")
-
-symbols.command <- function(command) {
-  attr(command, "symbols")
 }
 
 dsl_parse_transform <- function(...) {
@@ -118,7 +113,7 @@ dsl_parse_transform.character <- function(transform, plan) {
   dsl_parse_transform(parse(text = transform)[[1]], plan)
 }
 
-dsl_parse_transform.call <- function(transform, plan) {
+dsl_parse_transform.default <- function(transform, plan) {
   structure(
     transform,
     class = unique(c(deparse(transform[[1]]), "transform", class(transform))),
@@ -129,14 +124,14 @@ dsl_parse_transform.call <- function(transform, plan) {
 
 new_groupings <- function(transform) UseMethod("new_groupings")
 
-new_groupings.call <- function(transform) {
+new_groupings.transform <- function(transform) {
+  attr(transform, "new_groupings")
+}
+
+new_groupings.default <- function(transform) {
   lapply(named(as.list(transform)), function(x) {
     as.character(lapply(as.list(x)[-1], deparse))
   })
-}
-
-new_groupings.transform <- function(transform) {
-  attr(transform, "new_groupings")
 }
 
 old_groupings <- function(...) UseMethod("old_groupings")
@@ -167,6 +162,26 @@ groupings.transform <- function(transform) {
 
 group_names <- function(transform) {
   as.character(names(groupings(transform)))  
+}
+
+symbols <- function(...) UseMethod("symbols")
+
+symbols.command <- function(x) {
+  attr(x, "symbols")
+}
+
+symbols.group <- symbols.command
+
+dsl_parse_group <- function(...) {
+  UseMethod("dsl_parse_group")
+}
+
+dsl_parse_group.character <- function(group) {
+  dsl_parse_character.default(parse(text = group))
+}
+
+dsl_parse_character.default <- function(group) {
+  all.vars(group, functions = FALSE)
 }
 
 dsl_transform <- function(...) {
