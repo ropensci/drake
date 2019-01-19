@@ -9,7 +9,7 @@ test_with_dir("simple expansion", {
 test_with_dir("dsl with different types", {
   plan <- drake_plan(
     a = target(1 + 1, transform = cross(x = c(1, 2))),
-    transform = TRUE
+    transform = FALSE
   )
   plan$command <- list(quote(1 + 1))
   plan <- transform_plan(plan)
