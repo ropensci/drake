@@ -48,20 +48,23 @@ transform_plan <- function(plan, trace = FALSE) {
 transform_row <- function(plan, row) {
   target <- plan$target[[row]]
   command <- parse_command(plan$command[[row]])
-  post_hoc_groups <- parse_group(plan[["group"]][[row]])
   transform <- parse_transform(plan$transform[[row]], plan)
-  new_cols <- c(target, post_hoc_groups, group_names(transform))
+  new_cols <- c(
+    target,
+    tag_in(transform),
+    tag_out(transform),
+    group_names(transform)
+  )
   check_group_names(new_cols, old_cols(plan))
   out <- dsl_transform(transform, target, command, plan)
   out[[target]] <- out$target
-  old_cols <- setdiff(
-    old_cols(plan),
-    c("target", "command", "transform", "group")
-  )
-  for (col in old_cols) {
+  for (col in setdiff(old_cols(plan), c("target", "command", "transform"))) {
     out[[col]] <- rep(plan[[col]][row], nrow(out))
   }
-  for (col in post_hoc_groups) {
+  for (col in tag_in(transform)) {
+    out[[col]] <- target
+  }
+  for (col in tag_out(transform)) {
     out[[col]] <- out$target
   }
   out
@@ -209,7 +212,9 @@ parse_transform.default <- function(transform, plan) {
     as.expression(transform),
     class = unique(c(deparse(transform[[1]]), "transform", class(transform))),
     new_groupings = new_groupings(transform),
-    old_groupings = old_groupings(transform, plan)
+    old_groupings = old_groupings(transform, plan),
+    tag_in = tag_in(transform),
+    tag_out = tag_out(transform)
   )
 }
 
@@ -220,7 +225,8 @@ new_groupings.transform <- function(transform) {
 }
 
 new_groupings.default <- function(code) {
-  lapply(named(as.list(code)), function(x) {
+  list <- named(as.list(code), exclude = c(".tag_in", ".tag_out"))
+  lapply(list, function(x) {
     if (is.call(x)) {
       x <- x[-1]
     }
@@ -254,24 +260,30 @@ group_names <- function(transform) {
   as.character(names(groupings(transform)))
 }
 
+tag_in <- function(...) UseMethod("tag_in")
+
+tag_in.transform <- function(transform) {
+  attr(transform, "tag_in")
+}
+
+tag_in.default <- function(code) {
+  all.vars(code[[".tag_in"]], functions = FALSE)
+}
+
+tag_out <- function(...) UseMethod("tag_out")
+
+tag_out.transform <- function(transform) {
+  attr(transform, "tag_out")
+}
+
+tag_out.default <- function(code) {
+  all.vars(code[[".tag_out"]], functions = FALSE)
+}
+
 symbols <- function(...) UseMethod("symbols")
 
 symbols.command <- function(x) {
   attr(x, "symbols")
-}
-
-symbols.group <- symbols.command
-
-parse_group <- function(...) {
-  UseMethod("parse_group")
-}
-
-parse_group.character <- function(group) {
-  parse_group.default(parse(text = group))
-}
-
-parse_group.default <- function(group) {
-  all.vars(group, functions = FALSE)
 }
 
 dsl_syms <- function(x) {
