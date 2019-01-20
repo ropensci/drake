@@ -141,26 +141,6 @@ file_extn <- function(x) {
   x[1]
 }
 
-gsub_grid <- function(text, grid) {
-  text <- rep(text, nrow(grid))
-  for (factor in colnames(grid)) {
-    text <- gsub_vector(factor, grid[[factor]], text)
-  }
-  text
-}
-
-gsub_vector <- Vectorize(function(pattern, replacement, x) {
-    gsub(pattern = pattern, replacement = replacement, x = x, fixed = TRUE)
-  },
-  c("replacement", "x"),
-  USE.NAMES = FALSE
-)
-
-grepl_vector <- Vectorize(function(pattern, x) {
-  grepl(pattern = pattern, x = x, fixed = TRUE)
-},
-"pattern", USE.NAMES = FALSE)
-
 is_image_filename <- function(x) {
   tolower(file_extn(x)) %in% c("jpg", "jpeg", "pdf", "png")
 }
@@ -320,7 +300,6 @@ weak_tibble <- function(..., .force_df = FALSE) {
 # as.data.frame() if necessary
 weak_as_tibble <- function(..., .force_df = FALSE) {
   no_tibble <- !suppressWarnings(requireNamespace("tibble", quietly = TRUE))
-
   if (.force_df || no_tibble) {
     as.data.frame(..., stringsAsFactors = FALSE)
   } else {
@@ -330,4 +309,26 @@ weak_as_tibble <- function(..., .force_df = FALSE) {
 
 wide_deparse <- function(x) {
   paste(deparse(x), collapse = "\n")
+}
+
+named <- function(x) {
+  if (is.null(names(x))) return(NULL)
+  x[names(x) != ""]
+}
+
+unnamed <- function(x) {
+  if (is.null(names(x))) return(x)
+  x[names(x) == ""]
+}
+
+# The result should just be x with additional columns.
+join_protect_x <- function(x, y) {
+  by <- intersect(colnames(x), colnames(y))
+  if (!length(by)) {
+    return(x)
+  }
+  dups <- duplicated(y[, by])
+  y <- y[!dups, ]
+  out <- merge(x, y)
+  out[, union(colnames(x), colnames(y))]
 }

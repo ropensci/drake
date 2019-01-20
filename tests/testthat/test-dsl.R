@@ -1,4 +1,13 @@
-drake_context("plan transformations")
+drake_context("dsl")
+
+test_with_dir("empty transformations", {
+  out <- drake_plan(
+    a = target(x, transform = cross()),
+    b = target(y, transform = reduce())
+  )
+  exp <- drake_plan(a = x, b = y)
+  equivalent_plans(out, exp)
+})
 
 test_with_dir("simple expansion", {
   plan <- drake_plan(a = target(1 + 1, transform = cross(x = c(1, 2))))
@@ -6,7 +15,37 @@ test_with_dir("simple expansion", {
   expect_equal(plan$command, rep("1 + 1", 2))
 })
 
-test_with_dir("transformations with different types", {
+test_with_dir("all new crossings", {
+  out <- drake_plan(
+    analysis = target(
+      analyze_data(source),
+      transform = cross(source = c(source1, source2))
+    )
+  )
+  exp <- drake_plan(
+    analysis_source1 = analyze_data(source1),
+    analysis_source2 = analyze_data(source2)
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("groups and command symbols are undefined", {
+  out <- drake_plan(
+    small = simulate(48),
+    large = simulate(64),
+    lots = target(nobody(home), transform = cross(a, b)),
+    winners = target(min(nobodyhome), transform = reduce(data))
+  )
+  exp <- drake_plan(
+    small = simulate(48),
+    large = simulate(64),
+    lots = nobody(home),
+    winners = min(nobodyhome)
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("dsl with different types", {
   plan <- drake_plan(
     a = target(1 + 1, transform = cross(x = c(1, 2))),
     transform = FALSE
@@ -17,7 +56,7 @@ test_with_dir("transformations with different types", {
   expect_equal(plan$command, rep("1 + 1", 2))
 })
 
-test_with_dir("transforming the mtcars plan", {
+test_with_dir("dsl with the mtcars plan", {
   out <- drake_plan(
     small = simulate(48),
     large = simulate(64),
@@ -31,15 +70,15 @@ test_with_dir("transforming the mtcars plan", {
     ),
     winners = target(
       min(summ),
-      transform = summarize(data, sum_fun)
+      transform = reduce(data, sum_fun)
     ),
     others = target(
       analyze(list(c(summ), c(data))),
-      transform = summarize(data, sum_fun)
+      transform = reduce(data, sum_fun)
     ),
     final_winner = target(
       min(winners),
-      transform = summarize()
+      transform = reduce()
     )
   )
   exp <- drake_plan(
@@ -57,61 +96,61 @@ test_with_dir("transforming the mtcars plan", {
     summ_residuals_reg_reg2_large = residuals(large, reg_reg2_large),
     summ_coef_reg_reg2_small = coef(small, reg_reg2_small),
     summ_residuals_reg_reg2_small = residuals(small, reg_reg2_small),
-    winners_large_coef = min(
+    winners_large_coef = min(list(
       summ_coef_reg_reg1_large = summ_coef_reg_reg1_large,
       summ_coef_reg_reg2_large = summ_coef_reg_reg2_large
-    ),
-    winners_small_coef = min(
+    )),
+    winners_small_coef = min(list(
       summ_coef_reg_reg1_small = summ_coef_reg_reg1_small,
       summ_coef_reg_reg2_small = summ_coef_reg_reg2_small
-    ),
-    winners_large_residuals = min(
+    )),
+    winners_large_residuals = min(list(
       summ_residuals_reg_reg1_large = summ_residuals_reg_reg1_large,
       summ_residuals_reg_reg2_large = summ_residuals_reg_reg2_large
-    ),
-    winners_small_residuals = min(
+    )),
+    winners_small_residuals = min(list(
       summ_residuals_reg_reg1_small = summ_residuals_reg_reg1_small,
       summ_residuals_reg_reg2_small = summ_residuals_reg_reg2_small
-    ),
+    )),
     others_large_coef = analyze(list(
-      c(
+      c(list(
         summ_coef_reg_reg1_large = summ_coef_reg_reg1_large,
         summ_coef_reg_reg2_large = summ_coef_reg_reg2_large
-      ),
-      c(large = large)
+      )),
+      c(list(large = large))
     )),
     others_small_coef = analyze(list(
-      c(
+      c(list(
         summ_coef_reg_reg1_small = summ_coef_reg_reg1_small,
         summ_coef_reg_reg2_small = summ_coef_reg_reg2_small
-      ),
-      c(small = small)
+      )),
+      c(list(small = small))
     )),
     others_large_residuals = analyze(list(
-      c(
+      c(list(
         summ_residuals_reg_reg1_large = summ_residuals_reg_reg1_large,
         summ_residuals_reg_reg2_large = summ_residuals_reg_reg2_large
-      ),
-      c(large = large)
+      )),
+      c(list(large = large))
     )),
     others_small_residuals = analyze(list(
-      c(
+      c(list(
         summ_residuals_reg_reg1_small = summ_residuals_reg_reg1_small,
         summ_residuals_reg_reg2_small = summ_residuals_reg_reg2_small
-      ),
-      c(small = small)
+      )),
+      c(list(small = small))
     )),
-    final_winner = min(
+    final_winner = min(list(
       winners_large_coef = winners_large_coef,
       winners_small_coef = winners_small_coef,
       winners_large_residuals = winners_large_residuals,
       winners_small_residuals = winners_small_residuals
-    )
+    ))
   )
   equivalent_plans(out, exp)
 })
 
-test_with_dir("transformations and custom columns", {
+test_with_dir("dsl and custom columns", {
   e <- quote(
     drake_plan(
       small = simulate(48),
@@ -127,7 +166,7 @@ test_with_dir("transformations and custom columns", {
       ),
       winners = target(
         min(summ),
-        transform = summarize(data, sum_fun),
+        transform = reduce(data, sum_fun),
         custom2 = 456L
       )
     )
@@ -155,7 +194,7 @@ test_with_dir("transformations and custom columns", {
   })
 })
 
-test_with_dir("transformation trace", {
+test_with_dir("dsl trace", {
   plan <- drake_plan(
     small = simulate(48),
     large = simulate(64),
@@ -169,7 +208,7 @@ test_with_dir("transformation trace", {
     ),
     winners = target(
       min(summ),
-      transform = summarize(data, sum_fun)
+      transform = reduce(data, sum_fun)
     ),
     trace = FALSE
   )
@@ -188,7 +227,7 @@ test_with_dir("transformation trace", {
     ),
     winners = target(
       min(summ),
-      transform = summarize(data, sum_fun)
+      transform = reduce(data, sum_fun)
     ),
     trace = TRUE
   )
@@ -202,7 +241,7 @@ test_with_dir("transformation trace", {
   )
 })
 
-test_with_dir("mtcars example transformed", {
+test_with_dir("running a dsl-generated mtcars plan", {
   load_mtcars_example()
   rm(my_plan)
   plan <- drake_plan(
@@ -226,7 +265,7 @@ test_with_dir("mtcars example transformed", {
   expect_equal(justbuilt(config), character(0))
 })
 
-test_with_dir("groupings", {
+test_with_dir("dsl post-hoc groupings", {
   out <- drake_plan(
     small = simulate(48),
     large = simulate(64),
@@ -240,11 +279,7 @@ test_with_dir("groupings", {
       transform = cross(data = c(small, large)),
       group = reg
     ),
-    winners = target(
-      min(reg),
-      transform = summarize(data),
-      a = 1
-    ),
+    winners = target(min(reg), transform = reduce(), a = 1),
     trace = TRUE
   )
   exp <- drake_plan(
@@ -264,35 +299,33 @@ test_with_dir("groupings", {
       reg = "reg1_large",
       othergroup = "reg1_large"
     ),
-    reg2_large = target(
-      command = rgfun(large),
-      data = "large",
-      reg = "reg2_large",
-      reg2 = "reg2_large"
-    ),
     reg2_small = target(
       command = rgfun(small),
       data = "small",
       reg = "reg2_small",
       reg2 = "reg2_small"
     ),
-    winners_large = target(
-      command = min(reg1_large = reg1_large, reg2_large = reg2_large),
-      a = 1,
+    reg2_large = target(
+      command = rgfun(large),
       data = "large",
-      winners = "winners_large"
+      reg = "reg2_large",
+      reg2 = "reg2_large"
     ),
-    winners_small = target(
-      command = min(reg1_small = reg1_small, reg2_small = reg2_small),
+    winners = target(
+      command = min(list(
+        reg1_small = reg1_small,
+        reg1_large = reg1_large,
+        reg2_small = reg2_small,
+        reg2_large = reg2_large
+      )),
       a = 1,
-      data = "small",
-      winners = "winners_small"
+      winners = "winners"
     )
   )
   equivalent_plans(out, exp)
 })
 
-test_with_dir("can disable transformations", {
+test_with_dir("can disable transformations in dsl", {
   out <- drake_plan(
     small = simulate(48),
     large = simulate(64),
@@ -308,7 +341,7 @@ test_with_dir("can disable transformations", {
     ),
     winners = target(
       min(reg),
-      transform = summarize(data),
+      transform = reduce(data),
       a = 1
     ),
     transform = FALSE
@@ -319,18 +352,18 @@ test_with_dir("can disable transformations", {
   )
 })
 
-test_with_dir("transformation by itself", {
+test_with_dir("dsl with differently typed group levels", {
   plan1 <- drake_plan(
     analysis = target(
-      analyze_data("source"),
-      transform = cross(source = c(source1, source2))
+      analyze_data(source),
+      transform = cross(source = c("source1", source2, 3))
     ),
     transform = FALSE
   )
   plan2 <- drake_plan(
-    summarize = target(
-      summarize_analyses(analysis),
-      transform = summarize()
+    reducks = target(
+      reduce_analyses(analysis),
+      transform = reduce()
     ),
     transform = FALSE
   )
@@ -338,32 +371,38 @@ test_with_dir("transformation by itself", {
   plan
   out <- transform_plan(plan)
   exp <- drake_plan(
-    analysis_source1 = analyze_data("source1"),
-    analysis_source2 = analyze_data("source2"),
-    summarize = summarize_analyses(
-      analysis_source1 = analysis_source1,
-      analysis_source2 = analysis_source2
-    )
+    analysis_.source1. = analyze_data("source1"), # nolint
+    analysis_source2 = analyze_data(source2),
+    analysis_3 = analyze_data(3),
+    reducks = reduce_analyses(list(
+      analysis_.source1. = analysis_.source1., # nolint
+      analysis_source2 = analysis_source2, analysis_3 = analysis_3
+    ))
   )
   equivalent_plans(out, exp)
   out <- transform_plan(plan, trace = TRUE)
   exp <- drake_plan(
-    analysis_source1 = target(
+    analysis_.source1. = target( # nolint
       command = analyze_data("source1"),
-      source = "source1",
-      analysis = "analysis_source1"
+      source = "\"source1\"",
+      analysis = "analysis_.source1."
     ),
     analysis_source2 = target(
-      command = analyze_data("source2"),
+      command = analyze_data(source2),
       source = "source2",
       analysis = "analysis_source2"
     ),
-    summarize = target(
-      command = summarize_analyses(
-        analysis_source1 = analysis_source1,
-        analysis_source2 = analysis_source2
-      ),
-      summarize = "summarize"
+    analysis_3 = target(
+      command = analyze_data(3),
+      source = "3",
+      analysis = "analysis_3"
+    ),
+    reducks = target(
+      command = reduce_analyses(list(
+        analysis_.source1. = analysis_.source1., # nolint
+        analysis_source2 = analysis_source2, analysis_3 = analysis_3
+      )),
+      reducks = "reducks"
     )
   )
   expect_true(ncol(exp) > 2)
