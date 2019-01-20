@@ -36,16 +36,6 @@ inside \code{drake_plan(transform = TRUE)}, but
 if you generated multiple plans with \code{drake_plan(transform = FALSE)}
 and and want to combine and transform them later.
 }
-\examples{
-plan <- drake_plan(
-  analysis = target(
-    analyze_data(source),
-    transform = map(source = c(source1, source2, source3))
-  ),
-  transform = FALSE
-)
-transform_plan(plan)
-}
 \seealso{
 \code{\link[=drake_plan]{drake_plan()}}
 }

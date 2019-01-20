@@ -22,15 +22,6 @@
 #' @param trace Logical, whether to add columns to show
 #'   what happened during target transformations, e.g.
 #'   `drake_plan(x = target(..., transform = ...), transform = TRUE)`.
-#' @examples
-#' plan <- drake_plan(
-#'   analysis = target(
-#'     analyze_data(source),
-#'     transform = map(source = c(source1, source2, source3))
-#'   ),
-#'   transform = FALSE
-#' )
-#' transform_plan(plan)
 transform_plan <- function(plan, trace = FALSE) {
   if (!("transform" %in% names(plan))) {
     return(plan)
