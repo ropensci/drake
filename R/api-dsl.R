@@ -110,8 +110,12 @@ dsl_grid.cross <- function(transform, groupings) {
 }
 
 dsl_grid.map <- function(transform, groupings) {
-  check_map_groupings(transform, groupings)
-  as.data.frame(groupings)
+  tryCatch(
+    as.data.frame(groupings),
+    error = function(e) {
+      map_grid_error(transform, groupings)
+    }
+  )
 }
 
 grid_commands <- function(command, grid) {
@@ -233,7 +237,10 @@ new_groupings.transform <- function(transform) {
 
 new_groupings.default <- function(code) {
   lapply(named(as.list(code)), function(x) {
-    as.character(lapply(as.list(x)[-1], deparse))
+    if (is.call(x)) {
+      x <- x[-1]
+    }
+    as.character(lapply(as.list(x), deparse))
   })
 }
 
@@ -304,15 +311,15 @@ dsl_default_df <- function(target, command) {
   )
 }
 
-check_map_groupings <- function(transform, groupings) {
-  n <- unique(vapply(groupings, length, FUN.VALUE = integer(1)))
-  if (length(n) > 1) {
-    stop(
-      "uneven groupings in ", char(transform), ":\n",
-      multiline_message(groupings),
-      call. = FALSE
-    )
-  }
+map_grid_error <- function(transform, groupings) {
+  stop(
+    "Failed to make a grid of grouping variables for map().\n",
+    "Grouping variables in map() must have suitable lengths ",
+    "for coercion to a data frame.\n",
+    "Possibly uneven groupings detected in ", char(transform), ":\n",
+    multiline_message(groupings),
+    call. = FALSE
+  )
 }
 
 check_group_names <- function(groups, protect) {

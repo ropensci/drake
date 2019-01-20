@@ -304,20 +304,45 @@ test_with_dir("map with unequal columns", {
       reg = target(
         reg_fun(data),
         transform = map(reg_fun = c(reg1, reg2), data = c(small, large, huge))
-      ),
-      summ = target(
-        sum_fun(data, reg),
-        transform = map(sum_fun = c(coef, residuals), reg),
-        custom1 = 123L
-      ),
-      winners = target(
-        min(summ),
-        transform = reduce(sum_fun, data),
-        custom2 = 456L
       )
     ),
-    regexp = "uneven groupings in map"
+    regexp = "uneven groupings detected in map"
   )
+})
+
+test_with_dir("map with an indicator column", {
+  out <- drake_plan(
+    small = simulate(48),
+    large = simulate(64),
+    reg = target(
+      reg_fun(data),
+      transform = map(reg_fun = reg1, data = c(small, large, huge))
+    ),
+    trace = TRUE
+  )
+  exp <- drake_plan(
+    small = simulate(48),
+    large = simulate(64),
+    reg_reg1_small = target(
+      command = reg1(small),
+      reg_fun = "reg1",
+      data = "small",
+      reg = "reg_reg1_small"
+    ),
+    reg_reg1_large = target(
+      command = reg1(large),
+      reg_fun = "reg1",
+      data = "large",
+      reg = "reg_reg1_large"
+    ),
+    reg_reg1_huge = target(
+      command = reg1(huge),
+      reg_fun = "reg1",
+      data = "huge",
+      reg = "reg_reg1_huge"
+    )
+  )
+  equivalent_plans(out, exp)
 })
 
 test_with_dir("dsl and custom columns", {
