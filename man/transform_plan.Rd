@@ -21,6 +21,8 @@ A transformed workflow plan data frame
 \description{
 This feature has a lot of promise,
 but it is still experimental.
+Read about the details at
+\url{https://ropenscilabs.github.io/drake-manual/plans.html#create-large-plans-the-easy-way} # nolint
 Please review your workflow with \code{vis_drake_graph()}
 before you run it.
 }
@@ -37,15 +39,16 @@ and and want to combine and transform them later.
 \examples{
 plan1 <- drake_plan(
   analysis = target(
-    analyze_data("source"),
-    transform = map(source = c(source1, source2)) # cross() would work too
+    analyze_data(source),
+    transform = map(source = c(source1, source2, source3))
   ),
-  transform = FALSE
+  trace = TRUE
 )
+plan1$data_size <- c("large", "small", "small")
 plan2 <- drake_plan(
   summaries = target(
     summarize_analyses(analysis),
-    transform = reduce()
+    transform = reduce(data_size)
   ),
   transform = FALSE
 )

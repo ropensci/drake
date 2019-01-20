@@ -26,15 +26,16 @@
 #' @examples
 #' plan1 <- drake_plan(
 #'   analysis = target(
-#'     analyze_data("source"),
-#'     transform = map(source = c(source1, source2)) # cross() would work too
+#'     analyze_data(source),
+#'     transform = map(source = c(source1, source2, source3))
 #'   ),
-#'   transform = FALSE
+#'   trace = TRUE
 #' )
+#' plan1$data_size <- c("large", "small", "small")
 #' plan2 <- drake_plan(
 #'   summaries = target(
 #'     summarize_analyses(analysis),
-#'     transform = reduce()
+#'     transform = reduce(data_size)
 #'   ),
 #'   transform = FALSE
 #' )
@@ -43,7 +44,9 @@
 #' transform_plan(plan)
 #' transform_plan(plan, trace = TRUE)
 transform_plan <- function(plan, trace = FALSE) {
-  stopifnot("transform" %in% colnames(plan))
+  if (!("transform" %in% names(plan))) {
+    return(plan)
+  }
   row <- 1
   old_cols(plan) <- old_cols <- colnames(plan)
   while (row <= nrow(plan)) {
@@ -69,7 +72,6 @@ transform_row <- function(plan, row) {
   post_hoc_groups <- parse_group(plan[["group"]][[row]])
   transform <- parse_transform(plan$transform[[row]], plan)
   new_cols <- c(target, post_hoc_groups, group_names(transform))
-  check_group_names(new_cols, old_cols(plan))
   out <- dsl_transform(transform, target, command, plan)
   out[[target]] <- out$target
   old_cols <- setdiff(
@@ -322,16 +324,4 @@ map_grid_error <- function(transform, groupings) {
     multiline_message(groupings),
     call. = FALSE
   )
-}
-
-check_group_names <- function(groups, protect) {
-  groups <- intersect(groups, protect)
-  if (length(groups)) {
-    stop(
-      "variables in `target(transform = ...)` ",
-      "cannot also be custom column names in the plan:\n",
-      multiline_message(groups),
-      call. = FALSE
-    )
-  }
 }

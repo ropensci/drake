@@ -6,6 +6,7 @@ test_with_dir("empty transformations", {
     b = target(y, transform = reduce()),
     c = target(z, transform = map())
   )
+  expect_equal(out, transform_plan(out))
   exp <- drake_plan(a = x, b = y, c = z)
   equivalent_plans(out, exp)
 })
@@ -343,50 +344,6 @@ test_with_dir("map with an indicator column", {
     )
   )
   equivalent_plans(out, exp)
-})
-
-test_with_dir("dsl and custom columns", {
-  e <- quote(
-    drake_plan(
-      small = simulate(48),
-      large = simulate(64),
-      reg = target(
-        reg_fun(data),
-        transform = cross(reg_fun = c(reg1, reg2), data = c(small, large))
-      ),
-      summ = target(
-        sum_fun(data, reg),
-        transform = cross(sum_fun = c(coef, residuals), reg),
-        custom1 = 123L
-      ),
-      winners = target(
-        min(summ),
-        transform = reduce(data, sum_fun),
-        custom2 = 456L
-      )
-    )
-  )
-  expect_silent(plan <- eval(e))
-  expect_equal(
-    plan$custom1,
-    c(rep(NA_integer_, 6), rep(123L, 8), rep(NA_integer_, 4))
-  )
-  expect_equal(
-    plan$custom2,
-    c(rep(NA_integer_, 14), rep(456L, 4))
-  )
-  illegals <- list(
-    quote(target(simulate(48), data = 123)),
-    quote(target(simulate(48), reg = 123)),
-    quote(target(simulate(48), reg_fun = 123)),
-    quote(target(simulate(48), sum_fun = 123)),
-    quote(target(simulate(48), summ = 123))
-  )
-  msg <- "cannot also be custom column names in the plan"
-  lapply(illegals, function(illegal) {
-    e[[2]] <- illegal
-    expect_error(eval(e), regexp = msg)
-  })
 })
 
 test_with_dir("dsl trace", {
