@@ -150,7 +150,10 @@ reduction_step <- function(plan, command) {
     names(out) <- names
     out
   })
-  command <- eval(call("substitute", lang(command), reductions), envir = baseenv())
+  command <- eval(
+    call("substitute", lang(command), reductions),
+    envir = baseenv()
+  )
   data.frame(command = wide_deparse(command), stringsAsFactors = FALSE)
 }
 
