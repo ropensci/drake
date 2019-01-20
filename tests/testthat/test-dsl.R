@@ -254,8 +254,8 @@ test_with_dir("map on mtcars-like workflow", {
     ),
     summ = target(
       sum_fun(data, reg),
-     transform = cross(sum_fun = c(coef, residuals), reg)
-    ), 
+     transform = cross(sum_fun = c(coef, resid), reg)
+    ),
     winners = target(
       min(summ),
       transform = reduce(data, sum_fun)
@@ -269,13 +269,13 @@ test_with_dir("map on mtcars-like workflow", {
     reg_reg1_data_64 = reg1(data_64),
     reg_reg2_data_64 = reg2(data_64),
     summ_coef_reg_reg1_data_48 = coef(data_48, reg_reg1_data_48),
-    summ_residuals_reg_reg1_data_48 = residuals(data_48, reg_reg1_data_48),
+    summ_resid_reg_reg1_data_48 = resid(data_48, reg_reg1_data_48),
     summ_coef_reg_reg1_data_64 = coef(data_64, reg_reg1_data_64),
-    summ_residuals_reg_reg1_data_64 = residuals(data_64, reg_reg1_data_64),
+    summ_resid_reg_reg1_data_64 = resid(data_64, reg_reg1_data_64),
     summ_coef_reg_reg2_data_48 = coef(data_48, reg_reg2_data_48),
-    summ_residuals_reg_reg2_data_48 = residuals(data_48, reg_reg2_data_48),
+    summ_resid_reg_reg2_data_48 = resid(data_48, reg_reg2_data_48),
     summ_coef_reg_reg2_data_64 = coef(data_64, reg_reg2_data_64),
-    summ_residuals_reg_reg2_data_64 = residuals(data_64, reg_reg2_data_64),
+    summ_resid_reg_reg2_data_64 = resid(data_64, reg_reg2_data_64),
     winners_data_48_coef = min(list(
       summ_coef_reg_reg1_data_48 = summ_coef_reg_reg1_data_48,
       summ_coef_reg_reg2_data_48 = summ_coef_reg_reg2_data_48
@@ -284,13 +284,13 @@ test_with_dir("map on mtcars-like workflow", {
       summ_coef_reg_reg1_data_64 = summ_coef_reg_reg1_data_64,
       summ_coef_reg_reg2_data_64 = summ_coef_reg_reg2_data_64
     )),
-    winners_data_48_residuals = min(list(
-      summ_residuals_reg_reg1_data_48 = summ_residuals_reg_reg1_data_48,
-      summ_residuals_reg_reg2_data_48 = summ_residuals_reg_reg2_data_48
+    winners_data_48_resid = min(list(
+      summ_resid_reg_reg1_data_48 = summ_resid_reg_reg1_data_48,
+      summ_resid_reg_reg2_data_48 = summ_resid_reg_reg2_data_48
     )),
-    winners_data_64_residuals = min(list(
-      summ_residuals_reg_reg1_data_64 = summ_residuals_reg_reg1_data_64,
-      summ_residuals_reg_reg2_data_64 = summ_residuals_reg_reg2_data_64
+    winners_data_64_resid = min(list(
+      summ_resid_reg_reg1_data_64 = summ_resid_reg_reg1_data_64,
+      summ_resid_reg_reg2_data_64 = summ_resid_reg_reg2_data_64
     ))
   )
   equivalent_plans(out, exp)
