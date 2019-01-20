@@ -1,5 +1,14 @@
 drake_context("dsl")
 
+test_with_dir("empty transformations", {
+  out <- drake_plan(
+    a = target(x, transform = cross()),
+    b = target(y, transform = reduce())
+  )
+  exp <- drake_plan(a = x, b = y)
+  equivalent_plans(out, exp)
+})
+
 test_with_dir("simple expansion", {
   plan <- drake_plan(a = target(1 + 1, transform = cross(x = c(1, 2))))
   expect_equal(sort(plan$target), sort(c("a_1", "a_2")))
