@@ -66,7 +66,7 @@ transform_row <- function(plan, row) {
   post_hoc_groups <- parse_group(plan[["group"]][[row]])
   transform <- parse_transform(plan$transform[[row]], plan)
   new_cols <- c(target, post_hoc_groups, group_names(transform))
-  check_groupings(new_cols, old_cols(plan))
+  check_group_names(new_cols, old_cols(plan))
   out <- dsl_transform(transform, target, command, plan)
   out[[target]] <- out$target
   old_cols <- setdiff(
@@ -109,6 +109,7 @@ dsl_grid.cross <- function(transform, groupings) {
 }
 
 dsl_grid.map <- function(transform, groupings) {
+  check_map_groupings(transform, groupings)
   as.data.frame(groupings)
 }
 
@@ -301,7 +302,18 @@ dsl_default_df <- function(target, command) {
   )
 }
 
-check_groupings <- function(groups, protect) {
+check_map_groupings <- function(transform, groupings) {
+  n <- unique(vapply(groupings, length, FUN.VALUE = integer(1)))
+  if (length(n) > 1) {
+    stop(
+      "uneven groupings in ", char(transform), ":\n",
+      multiline_message(groupings),
+      call. = FALSE
+    )
+  }
+}
+
+check_group_names <- function(groups, protect) {
   groups <- intersect(groups, protect)
   if (length(groups)) {
     stop(
