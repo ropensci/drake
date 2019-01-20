@@ -17,6 +17,117 @@ test_with_dir("simple expansion", {
   expect_equal(plan$command, rep("1 + 1", 2))
 })
 
+test_with_dir("single tag_in", {
+  out <- drake_plan(
+    x = target(
+      y,
+      transform = cross(
+        x = c(1, 2),
+        .tag_in = single
+      )
+    ),
+    trace = T
+  )
+  exp <- drake_plan(
+    x_1 = target(
+      command = y,
+      x = "x_1",
+      single = "x"
+    ),
+    x_2 = target(
+      command = y,
+      x = "x_2",
+      single = "x"
+    )
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("multiple tag_in", {
+  out <- drake_plan(
+    x = target(
+      y,
+      transform = cross(
+        x = c(1, 2),
+        .tag_in = c(one, second)
+      )
+    ),
+    trace = T
+  )
+  exp <- drake_plan(
+    x_1 = target(
+      command = y,
+      x = "x_1",
+      one = "x",
+      second = "x"
+    ),
+    x_2 = target(
+      command = y,
+      x = "x_2",
+      one = "x",
+      second = "x"
+    )
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("single tag_out", {
+  out <- drake_plan(
+    x = target(
+      y,
+      transform = cross(
+        x = c(1, 2),
+        .tag_out = single
+      )
+    ),
+    trace = T
+  )
+  exp <- drake_plan(
+    x_1 = target(
+      command = y,
+      x = "x_1",
+      single = "x_1"
+    ),
+    x_2 = target(
+      command = y,
+      x = "x_2",
+      single = "x_2"
+    )
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("multiple tag_out", {
+  out <- drake_plan(
+    x = target(
+      y,
+      transform = cross(
+        x = c(1, 2),
+        .tag_out = c(one, second)
+      )
+    ),
+    trace = T
+  )
+  exp <- drake_plan(
+    x_1 = target(
+      command = y,
+      x = "x_1",
+      one = "x_1",
+      second = "x_1"
+    ),
+    x_2 = target(
+      command = y,
+      x = "x_2",
+      one = "x_2",
+      second = "x_2"
+    )
+  )
+  equivalent_plans(out, exp)
+})
+
+
+
+
 test_with_dir("simple map", {
   plan <- drake_plan(a = target(1 + 1, transform = map(x = c(1, 2))))
   expect_equal(sort(plan$target), sort(c("a_1", "a_2")))
