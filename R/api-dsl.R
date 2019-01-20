@@ -82,12 +82,12 @@ transform_row <- function(plan, row) {
   out
 }
 
-dsl_transform.cross <- function(transform, target, command, plan) {
+map_to_grid <- function(transform, target, command, plan) {
   groupings <- groupings(transform)
   if (!length(groupings)) {
     return(dsl_default_df(target, command))
   }
-  grid <- do.call(expand.grid, c(groupings, stringsAsFactors = FALSE))
+  grid <- dsl_grid(transform, groupings)
   ncl <- c(names(new_groupings(transform)), "target", "command", "transform")
   plan <- plan[, setdiff(colnames(plan), ncl), drop = FALSE]
   grid <- join_protect_x(grid, plan)
@@ -100,6 +100,16 @@ dsl_transform.cross <- function(transform, target, command, plan) {
     stringsAsFactors = FALSE
   )
   cbind(out, grid)
+}
+
+dsl_grid <- function(...) UseMethod("dsl_grid")
+
+dsl_grid.cross <- function(transform, groupings) {
+  do.call(expand.grid, c(groupings, stringsAsFactors = FALSE))
+}
+
+dsl_grid.map <- function(transform, groupings) {
+  as.data.frame(groupings)
 }
 
 grid_commands <- function(command, grid) {
@@ -126,6 +136,12 @@ new_targets <- function(target, grid) {
   }
   make.names(paste(target, apply(grid, 1, paste, collapse = "_"), sep = "_"))
 }
+
+dsl_transform <- function(...) {
+  UseMethod("dsl_transform")
+}
+
+dsl_transform.cross <- dsl_transform.map <- map_to_grid
 
 dsl_transform.reduce <- function(transform, target, command, plan) {
   command_symbols <- intersect(symbols(command), colnames(plan))
@@ -262,10 +278,6 @@ parse_group.character <- function(group) {
 
 parse_group.default <- function(group) {
   all.vars(group, functions = FALSE)
-}
-
-dsl_transform <- function(...) {
-  UseMethod("dsl_transform")
 }
 
 dsl_syms <- function(x) {
