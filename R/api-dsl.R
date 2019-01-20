@@ -1,6 +1,8 @@
 #' @title Experimental: transform a plan.
 #' @description This feature has a lot of promise,
 #'   but it is still experimental.
+#'   Read about the details at
+#'   <https://ropenscilabs.github.io/drake-manual/plans.html#create-large-plans-the-easy-way> # nolint
 #'   Please review your workflow with `vis_drake_graph()`
 #'   before you run it.
 #' @details The `transform_plan()` function
