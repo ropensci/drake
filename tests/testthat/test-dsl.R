@@ -125,9 +125,6 @@ test_with_dir("multiple tag_out", {
   equivalent_plans(out, exp)
 })
 
-
-
-
 test_with_dir("simple map", {
   plan <- drake_plan(a = target(1 + 1, transform = map(x = c(1, 2))))
   expect_equal(sort(plan$target), sort(c("a_1", "a_2")))
@@ -584,13 +581,11 @@ test_with_dir("dsl post-hoc groupings", {
     large = simulate(64),
     reg1 = target(
       rgfun(data),
-      transform = cross(data = c(small, large)),
-      group = c(reg, othergroup)
+      transform = cross(data = c(small, large), .tag_out = c(reg, othergroup)),
     ),
     reg2 = target(
       rgfun(data),
-      transform = cross(data = c(small, large)),
-      group = reg
+      transform = cross(data = c(small, large), .tag_out = reg),
     ),
     winners = target(min(reg), transform = reduce(), a = 1),
     trace = TRUE
@@ -741,13 +736,11 @@ test_with_dir("dsl: exact same plan as mtcars", {
     large = simulate(64),
     regression1 = target(
       reg1(data),
-      transform = map(data = c(small, large)),
-      group = reg
+      transform = map(data = c(small, large), .tag_out = reg),
     ),
     regression2 = target(
       reg2(data),
-      transform = map(data),
-      group = reg
+      transform = map(data, .tag_out = reg),
     ),
     summ = target(
       suppressWarnings(summary(reg$residuals)),
@@ -766,18 +759,15 @@ test_with_dir("dsl: no NA levels in reduce()", {
   out <- drake_plan(
     data_sim = target(
       sim_data(mean = x, sd = y),
-      transform = cross(x = c(1, 2), y = c(3, 4)),
-      group = c(data, local)
+      transform = cross(x = c(1, 2), y = c(3, 4), .tag_out = c(data, local)),
     ),
     data_download = target(
       download_data(url = x),
-      transform = map(x = c("http://url_1", "http://url_2")),
-      group = c(real, data)
+      transform = map(x = c("http://url_1", "http://url_2"), c(real, data))
     ),
     data_pkg = target(
       load_data_from_package(pkg = x),
-      transform = map(x = c("gapminder", "Ecdat")),
-      group = c(local, real, data)
+      transform = map(x = c("gapminder", "Ecdat"), c(local, real, data))
     ),
     summaries = target(
       compare_ds(data_sim),
