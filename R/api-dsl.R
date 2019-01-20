@@ -16,7 +16,8 @@
 #' @seealso [drake_plan()]
 #' @return A transformed workflow plan data frame
 #' @param plan Workflow plan data frame with a column for targets,
-#'   a column for commands, and a column for transformations.
+#'   a column for commands, a column for transformations,
+#'   and a column for optional grouping variables.
 #' @param trace Logical, whether to add columns to show
 #'   what happened during target transformations, e.g.
 #'   `drake_plan(x = target(..., transform = ...), transform = TRUE)`.
@@ -24,7 +25,7 @@
 #' plan1 <- drake_plan(
 #'   analysis = target(
 #'     analyze_data("source"),
-#'     transform = cross(source = c(source1, source2))
+#'     transform = map(source = c(source1, source2)) # cross() would work too
 #'   ),
 #'   transform = FALSE
 #' )

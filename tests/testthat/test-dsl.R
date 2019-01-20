@@ -241,6 +241,60 @@ test_with_dir("more map", {
   )
 })
 
+test_with_dir("map on mtcars-like workflow", {
+  out <- drake_plan(
+    data = target(
+      simulate(nrows),
+      transform = map(nrows = c(48, 64))
+    ),
+    reg = target(
+      reg_fun(data),
+     transform = cross(reg_fun = c(reg1, reg2), data)
+    ),
+    summ = target(
+      sum_fun(data, reg),
+     transform = cross(sum_fun = c(coef, residuals), reg)
+    ), 
+    winners = target(
+      min(summ),
+      transform = reduce(data, sum_fun)
+    )
+  )
+  exp <- drake_plan(
+    data_48 = simulate(48),
+    data_64 = simulate(64),
+    reg_reg1_data_48 = reg1(data_48),
+    reg_reg2_data_48 = reg2(data_48),
+    reg_reg1_data_64 = reg1(data_64),
+    reg_reg2_data_64 = reg2(data_64),
+    summ_coef_reg_reg1_data_48 = coef(data_48, reg_reg1_data_48),
+    summ_residuals_reg_reg1_data_48 = residuals(data_48, reg_reg1_data_48),
+    summ_coef_reg_reg1_data_64 = coef(data_64, reg_reg1_data_64),
+    summ_residuals_reg_reg1_data_64 = residuals(data_64, reg_reg1_data_64),
+    summ_coef_reg_reg2_data_48 = coef(data_48, reg_reg2_data_48),
+    summ_residuals_reg_reg2_data_48 = residuals(data_48, reg_reg2_data_48),
+    summ_coef_reg_reg2_data_64 = coef(data_64, reg_reg2_data_64),
+    summ_residuals_reg_reg2_data_64 = residuals(data_64, reg_reg2_data_64),
+    winners_data_48_coef = min(list(
+      summ_coef_reg_reg1_data_48 = summ_coef_reg_reg1_data_48,
+      summ_coef_reg_reg2_data_48 = summ_coef_reg_reg2_data_48
+    )),
+    winners_data_64_coef = min(list(
+      summ_coef_reg_reg1_data_64 = summ_coef_reg_reg1_data_64,
+      summ_coef_reg_reg2_data_64 = summ_coef_reg_reg2_data_64
+    )),
+    winners_data_48_residuals = min(list(
+      summ_residuals_reg_reg1_data_48 = summ_residuals_reg_reg1_data_48,
+      summ_residuals_reg_reg2_data_48 = summ_residuals_reg_reg2_data_48
+    )),
+    winners_data_64_residuals = min(list(
+      summ_residuals_reg_reg1_data_64 = summ_residuals_reg_reg1_data_64,
+      summ_residuals_reg_reg2_data_64 = summ_residuals_reg_reg2_data_64
+    ))
+  )
+  equivalent_plans(out, exp)
+})
+
 test_with_dir("map with unequal columns", {
   expect_error(
     drake_plan(
