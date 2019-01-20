@@ -1,6 +1,6 @@
 #' @title Experimental: transform a plan.
-#' @description This feature has a lot of promise,
-#'   but it is still experimental.
+#' @description This feature is experimental,
+#'   and the `transform_plan()` function is not available to users.
 #'   Read about the details at
 #'   <https://ropenscilabs.github.io/drake-manual/plans.html#create-large-plans-the-easy-way> # nolint
 #'   Please review your workflow with `vis_drake_graph()`
@@ -13,8 +13,7 @@
 #'   `transform_plan()` on its own is useful
 #'   if you generated multiple plans with `drake_plan(transform = FALSE)`
 #'   and and want to combine and transform them later.
-#' @export
-#' @keywords experimental
+#' @keywords experimental internal
 #' @seealso [drake_plan()]
 #' @return A transformed workflow plan data frame
 #' @param plan Workflow plan data frame with a column for targets,
@@ -24,25 +23,14 @@
 #'   what happened during target transformations, e.g.
 #'   `drake_plan(x = target(..., transform = ...), transform = TRUE)`.
 #' @examples
-#' plan1 <- drake_plan(
+#' plan <- drake_plan(
 #'   analysis = target(
 #'     analyze_data(source),
 #'     transform = map(source = c(source1, source2, source3))
 #'   ),
-#'   trace = TRUE
-#' )
-#' plan1$data_size <- c("large", "small", "small")
-#' plan2 <- drake_plan(
-#'   summaries = target(
-#'     summarize_analyses(analysis),
-#'     transform = reduce(data_size)
-#'   ),
 #'   transform = FALSE
 #' )
-#' plan <- bind_plans(plan1, plan2)
-#' plan
 #' transform_plan(plan)
-#' transform_plan(plan, trace = TRUE)
 transform_plan <- function(plan, trace = FALSE) {
   if (!("transform" %in% names(plan))) {
     return(plan)
@@ -72,7 +60,7 @@ transform_row <- function(plan, row) {
   post_hoc_groups <- parse_group(plan[["group"]][[row]])
   transform <- parse_transform(plan$transform[[row]], plan)
   new_cols <- c(target, post_hoc_groups, group_names(transform))
-  check_group_names(new_cols)
+  check_group_names(new_cols, old_cols(plan))
   out <- dsl_transform(transform, target, command, plan)
   out[[target]] <- out$target
   old_cols <- setdiff(
@@ -327,12 +315,13 @@ map_grid_error <- function(transform, groupings) {
   )
 }
 
-check_group_names <- function(groups) {
-  groups <- intersect(groups, c("target", "command", "transform"))
+check_group_names <- function(groups, protect) {
+  groups <- intersect(groups, protect)
   if (length(groups)) {
     stop(
       "variables in `target(transform = ...)` ",
-      "cannot be named 'target', 'command', or 'transform'",
+      "cannot also be custom column names in the plan:\n",
+      multiline_message(groups),
       call. = FALSE
     )
   }
