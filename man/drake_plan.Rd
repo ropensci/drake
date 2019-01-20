@@ -51,8 +51,14 @@ The \code{"command"} column is either a character vector of
 code strings or a list of language objects.
 }
 \details{
-\code{drake} has special syntax for generating large plans,
-and you can read about it at
+\code{drake} has special syntax for generating large plans.
+Your code will look something like
+\code{drake_plan(x = target(cmd, transform = f(y, z), group = g)}
+where \code{f()} is either \code{map()}, \code{cross()}, or \code{reduce()}
+(similar to \code{purrr::pmap()}, \code{tidy::crossing()}, and \code{dplyr::summarize()},
+respectively). These verbs mimic Tidyverse behavior to scale up
+existing plans to large numbers of targets.
+You can read about this interface at
 \url{https://ropenscilabs.github.io/drake-manual/plans.html#create-large-plans-the-easy-way}. # nolint
 
 There is also special syntax for declaring input files,

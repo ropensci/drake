@@ -8,8 +8,14 @@
 #'   The `"command"` column is either a character vector of
 #'   code strings or a list of language objects.
 #'
-#' @details `drake` has special syntax for generating large plans,
-#'  and you can read about it at
+#' @details `drake` has special syntax for generating large plans.
+#'  Your code will look something like
+#'  `drake_plan(x = target(cmd, transform = f(y, z), group = g)`
+#'  where `f()` is either `map()`, `cross()`, or `reduce()`
+#'  (similar to `purrr::pmap()`, `tidy::crossing()`, and `dplyr::summarize()`,
+#'  respectively). These verbs mimic Tidyverse behavior to scale up
+#'  existing plans to large numbers of targets.
+#'  You can read about this interface at
 #'  <https://ropenscilabs.github.io/drake-manual/plans.html#create-large-plans-the-easy-way>. # nolint
 #'
 #' There is also special syntax for declaring input files,
