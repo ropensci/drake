@@ -62,9 +62,9 @@ transform_plan <- function(plan, trace = FALSE) {
 
 transform_row <- function(plan, row) {
   target <- plan$target[[row]]
-  command <- dsl_parse_command(plan$command[[row]])
-  post_hoc_groups <- dsl_parse_group(plan[["group"]][[row]])
-  transform <- dsl_parse_transform(plan$transform[[row]], plan)
+  command <- parse_command(plan$command[[row]])
+  post_hoc_groups <- parse_group(plan[["group"]][[row]])
+  transform <- parse_transform(plan$transform[[row]], plan)
   new_cols <- c(target, post_hoc_groups, group_names(transform))
   check_groupings(new_cols, old_cols(plan))
   out <- dsl_transform(transform, target, command, plan)
@@ -91,17 +91,17 @@ old_cols <- function(plan) {
   plan
 }
 
-dsl_parse_command <- function(command) UseMethod("dsl_parse_command")
+parse_command <- function(command) UseMethod("parse_command")
 
-dsl_parse_command.character <- function(command) {
+parse_command.character <- function(command) {
   out <- parse(text = command)
   if (length(out)) {
     out <- out[[1]]
   }
-  dsl_parse_command(out)
+  parse_command(out)
 }
 
-dsl_parse_command.default <- function(command) {
+parse_command.default <- function(command) {
   structure(
     command,
     symbols = all.names(command),
@@ -109,15 +109,15 @@ dsl_parse_command.default <- function(command) {
   )
 }
 
-dsl_parse_transform <- function(...) {
-  UseMethod("dsl_parse_transform")
+parse_transform <- function(...) {
+  UseMethod("parse_transform")
 }
 
-dsl_parse_transform.character <- function(transform, plan) {
-  dsl_parse_transform(parse(text = transform)[[1]], plan)
+parse_transform.character <- function(transform, plan) {
+  parse_transform(parse(text = transform)[[1]], plan)
 }
 
-dsl_parse_transform.default <- function(transform, plan) {
+parse_transform.default <- function(transform, plan) {
   structure(
     transform,
     class = unique(c(deparse(transform[[1]]), "transform", class(transform))),
@@ -176,15 +176,15 @@ symbols.command <- function(x) {
 
 symbols.group <- symbols.command
 
-dsl_parse_group <- function(...) {
-  UseMethod("dsl_parse_group")
+parse_group <- function(...) {
+  UseMethod("parse_group")
 }
 
-dsl_parse_group.character <- function(group) {
-  dsl_parse_group.default(parse(text = group))
+parse_group.character <- function(group) {
+  parse_group.default(parse(text = group))
 }
 
-dsl_parse_group.default <- function(group) {
+parse_group.default <- function(group) {
   all.vars(group, functions = FALSE)
 }
 
@@ -208,8 +208,8 @@ dsl_transform.cross <- function(transform, target, command, plan) {
   plan <- plan[, setdiff(colnames(plan), ncl), drop = FALSE]
   grid <- join_protect_x(grid, plan)
   suffix_cols <- intersect(colnames(grid), group_names(transform))
-  new_targets <- dsl_new_targets(target, grid[, suffix_cols, drop = FALSE])
-  new_commands <- dsl_grid_commands(command, grid)
+  new_targets <- new_targets(target, grid[, suffix_cols, drop = FALSE])
+  new_commands <- grid_commands(command, grid)
   out <- data.frame(
     target = new_targets,
     command = new_commands,
@@ -227,15 +227,15 @@ dsl_transform.reduce <- function(transform, target, command, plan) {
   out <- map_by(
     .x = plan[keep, ],
     .by = group_names(transform),
-    .f = dsl_reduction_step,
+    .f = reduction_step,
     command = command
   )
   grouping_symbols <- intersect(group_names(transform), colnames(plan))
-  out$target <- dsl_new_targets(target, out[, grouping_symbols, drop = FALSE])
+  out$target <- new_targets(target, out[, grouping_symbols, drop = FALSE])
   out
 }
 
-dsl_reduction_step <- function(plan, command) {
+reduction_step <- function(plan, command) {
   reductions <- lapply(plan, function(x) {
     names <- na_omit(unique(x))
     out <- rlang::syms(as.character(names))
@@ -258,27 +258,27 @@ check_groupings <- function(groups, protect) {
   }
 }
 
-dsl_new_targets <- function(target, grid) {
+new_targets <- function(target, grid) {
   if (is.null(dim(grid)) || any(dim(grid) < 1L)) {
     return(target)
   }
   make.names(paste(target, apply(grid, 1, paste, collapse = "_"), sep = "_"))
 }
 
-dsl_grid_commands <- function(command, grid) {
+grid_commands <- function(command, grid) {
   grid <- grid[, intersect(symbols(command), colnames(grid)), drop = FALSE]
   for (i in seq_along(grid)) {
     grid[[i]] <- dsl_syms(grid[[i]])
   }
   as.character(lapply(
     seq_len(nrow(grid)),
-    dsl_grid_command,
+    grid_command,
     command = command,
     grid = grid
   ))
 }
 
-dsl_grid_command <- function(row, command, grid) {
+grid_command <- function(row, command, grid) {
   sub <- lapply(grid, `[[`, row)
   eval(call("substitute", command, sub), envir = baseenv())
 }
