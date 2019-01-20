@@ -82,6 +82,20 @@ transform_row <- function(plan, row) {
   out
 }
 
+lang <- function(...) UseMethod("lang")
+
+lang.character <- function(x) parse(text = x)[[1]]
+  
+lang.expression <- function(x) x[[1]]
+
+lang.command <- lang.transform <- lang.expression
+
+char <- function(...) UseMethod("char")
+
+char.character <- identity
+
+char.command <- char.transform <- function(x) wide_deparse(lang(x))
+
 old_cols <- function(plan) {
   attr(plan, "old_cols")
 }
@@ -94,16 +108,12 @@ old_cols <- function(plan) {
 parse_command <- function(command) UseMethod("parse_command")
 
 parse_command.character <- function(command) {
-  out <- parse(text = command)
-  if (length(out)) {
-    out <- out[[1]]
-  }
-  parse_command(out)
+  parse_command(parse(text = command))
 }
 
 parse_command.default <- function(command) {
   structure(
-    command,
+    as.expression(command),
     symbols = all.names(command),
     class = unique(c("command", class(command)))
   )
@@ -119,7 +129,7 @@ parse_transform.character <- function(transform, plan) {
 
 parse_transform.default <- function(transform, plan) {
   structure(
-    transform,
+    as.expression(transform),
     class = unique(c(deparse(transform[[1]]), "transform", class(transform))),
     new_groupings = new_groupings(transform),
     old_groupings = old_groupings(transform, plan)
@@ -132,16 +142,16 @@ new_groupings.transform <- function(transform) {
   attr(transform, "new_groupings")
 }
 
-new_groupings.default <- function(transform) {
-  lapply(named(as.list(transform)), function(x) {
+new_groupings.default <- function(transform_code) {
+  lapply(named(as.list(transform_code)), function(x) {
     as.character(lapply(as.list(x)[-1], deparse))
   })
 }
 
 old_groupings <- function(...) UseMethod("old_groupings")
 
-old_groupings.call <- function(transform, plan) {
-  group_names <- as.character(unnamed(transform)[-1])
+old_groupings.default <- function(transform_code, plan) {
+  group_names <- as.character(unnamed(transform_code)[-1])
   group_names <- intersect(group_names, names(plan))
   lapply(plan[, group_names, drop = FALSE], function(x) {
     unique(na_omit(x))
@@ -198,7 +208,7 @@ dsl_transform.cross <- function(transform, target, command, plan) {
     return(
       data.frame(
         target = target,
-        command = wide_deparse(command),
+        command = char(command),
         stringsAsFactors = FALSE
       )
     )
@@ -222,7 +232,7 @@ dsl_transform.reduce <- function(transform, target, command, plan) {
   command_symbols <- intersect(symbols(command), colnames(plan))
   keep <- complete_cases(plan[, command_symbols, drop = FALSE])
   if (!length(keep)) {
-    return(data.frame(target = target, command = wide_deparse(command)))
+    return(data.frame(target = target, command = char(command)))
   }
   out <- map_by(
     .x = plan[keep, ],
@@ -242,8 +252,8 @@ reduction_step <- function(plan, command) {
     names(out) <- names
     out
   })
-  command <- eval(call("substitute", command, reductions), envir = baseenv())
-  data.frame(command = wide_deparse(command), stringsAsFactors = FALSE)
+  command <- eval(call("substitute", lang(command), reductions), envir = baseenv())
+  data.frame(command = char(command), stringsAsFactors = FALSE)
 }
 
 check_groupings <- function(groups, protect) {
@@ -280,7 +290,7 @@ grid_commands <- function(command, grid) {
 
 grid_command <- function(row, command, grid) {
   sub <- lapply(grid, `[[`, row)
-  eval(call("substitute", command, sub), envir = baseenv())
+  eval(call("substitute", lang(command), sub), envir = baseenv())
 }
 
 dsl_syms <- function(x) {
