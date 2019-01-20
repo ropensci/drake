@@ -42,58 +42,27 @@ A data frame of targets, commands, and optional
 custom columns.
 }
 \description{
-Turns a named collection of target/command pairs into
-a workflow plan data frame for \code{\link[=make]{make()}}. You can give the commands
-as named expressions, or you can use the \code{list}
-argument to supply them as character strings.
+A \code{drake} plan is a data frame with columns
+\code{"target"} and \code{"command"}. Each target is an R object
+produced in your workflow, and each command is the
+R code to produce it. The \code{"target"} column has the names
+of the targets, and no duplicate elements are allowed.
+The \code{"command"} column is either a character vector of
+code strings or a list of language objects.
 }
 \details{
-A workflow plan data frame is a data frame
-with a \code{target} column and a \code{command} column.
-Targets are the R objects that \code{drake} generates,
-and commands are the pieces of R code that produce them.
+\code{drake} has special syntax for generating large plans,
+and you can read about it at
+\url{https://ropenscilabs.github.io/drake-manual/plans.html#create-large-plans-the-easy-way}. # nolint
 
-The commands that return targets may also depend on
-external files and create multiple external files.
-To signal that you are creating and/or depending on
-custom files in your commands,
-use the \code{\link[=file_in]{file_in()}}, \code{\link[=knitr_in]{knitr_in()}}, and
-\code{\link[=file_out]{file_out()}} functions in your commands.
-the examples in this help file provide some guidance.
+There is also special syntax for declaring input files,
+output files, and knitr reports so dependencies are
+properly accounted for (\code{\link[=file_in]{file_in()}}, \code{\link[=file_out]{file_out()}}, and
+\code{\link[=knitr_in]{knitr_in()}}, respectively.
 
-Besides the \code{target} and \code{command} columns, there are optional columns
-you may append to your workflow plan data frame:
-\itemize{
-\item \code{trigger}: a character vector of triggers. A trigger is a rule for
-when to cause a target to (re)build. See \code{\link[=triggers]{triggers()}} for your options.
-For a walkthrough, see
-\url{https://ropenscilabs.github.io/drake-manual/debug.html}
-\item \code{retries}: number of times to retry a target if it fails
-to build the first time.
-\item \code{timeout}: Seconds of overall time to allow before imposing
-a timeout on a target.
-Assign target-level timeout times with an optional \code{timeout}
-column in \code{plan}.
-\item \code{cpu}: Seconds of cpu time to allow before imposing
-a timeout on a target.
-Assign target-level cpu timeout times with an optional \code{cpu}
-column in \code{plan}.
-\item \code{elapsed}: Seconds of elapsed time to allow before imposing
-a timeout on a target.
-Assign target-level elapsed timeout times with an optional \code{elapsed}
-column in \code{plan}.
-\item \code{resources}: Experimental, no guarantees that this works all the time.
-\code{resources} is a list column. Each element is a named list,
-same as the \code{resources} argument to \code{batchtools_slurm()}
-and related \code{future.bachtools} functions. See also
-\url{https://github.com/HenrikBengtsson/future.batchtools#examples}. # nolint
-\code{resources[[target_name]]} is a list of
-computing resource parameters for the target.
-Each element is a value passed to a \code{brew} placeholder of a
-\code{batchtools} template file.
-The list names of \code{resources[[target_name]]}
-should be the brew patterns.
-}
+Besides \code{"target"} and \code{"command"}, you may include
+optional columns in your workflow plan. For details, visit
+\url{https://ropenscilabs.github.io/drake-manual/plans.html#special-custom-columns-in-your-plan}
 }
 \examples{
 test_with_dir("Contain side effects", {

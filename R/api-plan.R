@@ -1,53 +1,25 @@
 #' @title Create a workflow plan data frame
 #'   for the `plan` argument of [make()].
-#' @description Turns a named collection of target/command pairs into
-#' a workflow plan data frame for [make()]. You can give the commands
-#' as named expressions, or you can use the `list`
-#' argument to supply them as character strings.
-#' @details A workflow plan data frame is a data frame
-#' with a `target` column and a `command` column.
-#' Targets are the R objects that `drake` generates,
-#' and commands are the pieces of R code that produce them.
+#' @description A `drake` plan is a data frame with columns
+#'   `"target"` and `"command"`. Each target is an R object
+#'   produced in your workflow, and each command is the
+#'   R code to produce it. The `"target"` column has the names
+#'   of the targets, and no duplicate elements are allowed.
+#'   The `"command"` column is either a character vector of
+#'   code strings or a list of language objects.
 #'
-#' The commands that return targets may also depend on
-#' external files and create multiple external files.
-#' To signal that you are creating and/or depending on
-#' custom files in your commands,
-#' use the [file_in()], [knitr_in()], and
-#' [file_out()] functions in your commands.
-#' the examples in this help file provide some guidance.
+#' @details `drake` has special syntax for generating large plans,
+#'  and you can read about it at
+#'  <https://ropenscilabs.github.io/drake-manual/plans.html#create-large-plans-the-easy-way>. # nolint
 #'
-#' Besides the `target` and `command` columns, there are optional columns
-#' you may append to your workflow plan data frame:
-#' - `trigger`: a character vector of triggers. A trigger is a rule for
-#' when to cause a target to (re)build. See [triggers()] for your options.
-#' For a walkthrough, see
-#' <https://ropenscilabs.github.io/drake-manual/debug.html>
-#' - `retries`: number of times to retry a target if it fails
-#'   to build the first time.
-#' - `timeout`: Seconds of overall time to allow before imposing
-#'   a timeout on a target.
-#'   Assign target-level timeout times with an optional `timeout`
-#'   column in `plan`.
-#' - `cpu`: Seconds of cpu time to allow before imposing
-#'   a timeout on a target.
-#'   Assign target-level cpu timeout times with an optional `cpu`
-#'   column in `plan`.
-#' - `elapsed`: Seconds of elapsed time to allow before imposing
-#'   a timeout on a target.
-#'   Assign target-level elapsed timeout times with an optional `elapsed`
-#'   column in `plan`.
-#' - `resources`: Experimental, no guarantees that this works all the time.
-#'   `resources` is a list column. Each element is a named list,
-#'   same as the `resources` argument to `batchtools_slurm()`
-#'   and related `future.bachtools` functions. See also
-#'   <https://github.com/HenrikBengtsson/future.batchtools#examples>. # nolint
-#'   `resources[[target_name]]` is a list of
-#'   computing resource parameters for the target.
-#'   Each element is a value passed to a `brew` placeholder of a
-#'   `batchtools` template file.
-#'   The list names of `resources[[target_name]]`
-#'   should be the brew patterns.
+#' There is also special syntax for declaring input files,
+#'  output files, and knitr reports so dependencies are
+#'  properly accounted for ([file_in()], [file_out()], and
+#'  [knitr_in()], respectively.
+#'
+#' Besides `"target"` and `"command"`, you may include
+#'   optional columns in your workflow plan. For details, visit
+#'   <https://ropenscilabs.github.io/drake-manual/plans.html#special-custom-columns-in-your-plan>
 #'
 #' @export
 #' @seealso [transform_plan()]
