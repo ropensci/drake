@@ -578,3 +578,15 @@ test_with_dir("dsl with differently typed group levels", {
   expect_true(ncol(exp) > 2)
   equivalent_plans(out, exp)
 })
+
+test_with_dir("tidy eval in the DSL", {
+  sms <- rlang::syms(letters)
+  out <- drake_plan(
+    x = target(f(char), transform = map(char = !!sms))
+  )
+  exp <- weak_tibble(
+    target = paste0("x_", letters),
+    command = paste0("f(", letters, ")")
+  )
+  equivalent_plans(out, exp)
+})

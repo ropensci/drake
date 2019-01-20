@@ -165,22 +165,10 @@
 #'   ),
 #'   analysis = analyze(website_data)
 #' )
-#' # Are you a fan of tidy evaluation?
-#' my_variable <- 1
-#' drake_plan(
-#'   a = !!my_variable,
-#'   b = !!my_variable + 1,
-#'   list = c(d = "!!my_variable")
-#' )
-#' drake_plan(
-#'   a = !!my_variable,
-#'   b = !!my_variable + 1,
-#'   list = c(d = "!!my_variable"),
-#'   tidy_evaluation = FALSE
-#' )
-#' # For instances of !! that remain unevaluated in the workflow plan,
-#' # make() will run these commands in tidy fashion,
-#' # evaluating the !! operator using the environment you provided.
+#'
+#' # Tidy evaluation can help generate super large plans.
+#' sms <- rlang::syms(letters) # To sub in character args, skip this.
+#' drake_plan(x = target(f(char), transform = map(char = !!sms)))
 #' })
 drake_plan <- function(
   ...,
