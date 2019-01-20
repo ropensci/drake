@@ -85,13 +85,7 @@ transform_row <- function(plan, row) {
 dsl_transform.cross <- function(transform, target, command, plan) {
   groupings <- groupings(transform)
   if (!length(groupings)) {
-    return(
-      data.frame(
-        target = target,
-        command = char(command),
-        stringsAsFactors = FALSE
-      )
-    )
+    return(dsl_default_df(target, command))
   }
   grid <- do.call(expand.grid, c(groupings, stringsAsFactors = FALSE))
   ncl <- c(names(new_groupings(transform)), "target", "command", "transform")
@@ -124,6 +118,13 @@ grid_commands <- function(command, grid) {
 grid_command <- function(row, command, grid) {
   sub <- lapply(grid, `[[`, row)
   eval(call("substitute", lang(command), sub), envir = baseenv())
+}
+
+new_targets <- function(target, grid) {
+  if (is.null(dim(grid)) || any(dim(grid) < 1L)) {
+    return(target)
+  }
+  make.names(paste(target, apply(grid, 1, paste, collapse = "_"), sep = "_"))
 }
 
 dsl_transform.reduce <- function(transform, target, command, plan) {
@@ -280,11 +281,12 @@ dsl_sym <- function(x) {
   )
 }
 
-new_targets <- function(target, grid) {
-  if (is.null(dim(grid)) || any(dim(grid) < 1L)) {
-    return(target)
-  }
-  make.names(paste(target, apply(grid, 1, paste, collapse = "_"), sep = "_"))
+dsl_default_df <- function(target, command) {
+  data.frame(
+    target = target,
+    command = char(command),
+    stringsAsFactors = FALSE
+  )
 }
 
 check_groupings <- function(groups, protect) {
