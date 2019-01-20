@@ -147,12 +147,13 @@ dsl_transform.cross <- dsl_transform.map <- map_to_grid
 
 dsl_transform.reduce <- function(transform, target, command, plan) {
   command_symbols <- intersect(symbols(command), colnames(plan))
-  keep <- complete_cases(plan[, command_symbols, drop = FALSE])
-  if (!length(keep)) {
+  cols_keep <- union(command_symbols, group_names(transform))
+  rows_keep <- complete_cases(plan[, cols_keep, drop = FALSE])
+  if (!length(rows_keep)) {
     return(dsl_default_df(target, command))
   }
   out <- map_by(
-    .x = plan[keep, ],
+    .x = plan[rows_keep, ],
     .by = group_names(transform),
     .f = reduction_step,
     command = command

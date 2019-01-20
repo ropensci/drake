@@ -618,3 +618,42 @@ test_with_dir("dsl: exact same plan as mtcars", {
   load_mtcars_example()
   equivalent_plans(out, my_plan)
 })
+
+test_with_dir("dsl: no NA levels in reduce()", {
+  out <- drake_plan(
+    data_sim = target(
+      sim_data(mean = x, sd = y),
+      transform = cross(x = c(1, 2), y = c(3, 4)),
+      group = c(data, local)
+    ),
+    data_download = target(
+      download_data(url = x),
+      transform = map(x = c("http://url_1", "http://url_2")),
+      group = c(real, data)
+    ),
+    data_pkg = target(
+      load_data_from_package(pkg = x),
+      transform = map(x = c("gapminder", "Ecdat")),
+      group = c(local, real, data)
+    ),
+    summaries = target(
+      compare_ds(data_sim),
+      transform = reduce(local)
+    )
+  )
+  exp <- drake_plan(
+    data_sim_1_3 = sim_data(mean = 1, sd = 3),
+    data_sim_2_3 = sim_data(mean = 2, sd = 3),
+    data_sim_1_4 = sim_data(mean = 1, sd = 4),
+    data_sim_2_4 = sim_data(mean = 2, sd = 4),
+    data_download_.http...url_1. = download_data(url = "http://url_1"),
+    data_download_.http...url_2. = download_data(url = "http://url_2"),
+    data_pkg_.gapminder. = load_data_from_package(pkg = "gapminder"),
+    data_pkg_.Ecdat. = load_data_from_package(pkg = "Ecdat"),
+    summaries_data_sim_1_3 = compare_ds(list(data_sim_1_3 = data_sim_1_3)),
+    summaries_data_sim_1_4 = compare_ds(list(data_sim_1_4 = data_sim_1_4)),
+    summaries_data_sim_2_3 = compare_ds(list(data_sim_2_3 = data_sim_2_3)),
+    summaries_data_sim_2_4 = compare_ds(list(data_sim_2_4 = data_sim_2_4))
+  )
+  equivalent_plans(out, exp)
+})
