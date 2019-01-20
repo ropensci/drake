@@ -82,6 +82,78 @@ transform_row <- function(plan, row) {
   out
 }
 
+dsl_transform.cross <- function(transform, target, command, plan) {
+  groupings <- groupings(transform)
+  if (!length(groupings)) {
+    return(
+      data.frame(
+        target = target,
+        command = char(command),
+        stringsAsFactors = FALSE
+      )
+    )
+  }
+  grid <- do.call(expand.grid, c(groupings, stringsAsFactors = FALSE))
+  ncl <- c(names(new_groupings(transform)), "target", "command", "transform")
+  plan <- plan[, setdiff(colnames(plan), ncl), drop = FALSE]
+  grid <- join_protect_x(grid, plan)
+  suffix_cols <- intersect(colnames(grid), group_names(transform))
+  new_targets <- new_targets(target, grid[, suffix_cols, drop = FALSE])
+  new_commands <- grid_commands(command, grid)
+  out <- data.frame(
+    target = new_targets,
+    command = new_commands,
+    stringsAsFactors = FALSE
+  )
+  cbind(out, grid)
+}
+
+grid_commands <- function(command, grid) {
+  grid <- grid[, intersect(symbols(command), colnames(grid)), drop = FALSE]
+  for (i in seq_along(grid)) {
+    grid[[i]] <- dsl_syms(grid[[i]])
+  }
+  as.character(lapply(
+    seq_len(nrow(grid)),
+    grid_command,
+    command = command,
+    grid = grid
+  ))
+}
+
+grid_command <- function(row, command, grid) {
+  sub <- lapply(grid, `[[`, row)
+  eval(call("substitute", lang(command), sub), envir = baseenv())
+}
+
+dsl_transform.reduce <- function(transform, target, command, plan) {
+  command_symbols <- intersect(symbols(command), colnames(plan))
+  keep <- complete_cases(plan[, command_symbols, drop = FALSE])
+  if (!length(keep)) {
+    return(data.frame(target = target, command = char(command)))
+  }
+  out <- map_by(
+    .x = plan[keep, ],
+    .by = group_names(transform),
+    .f = reduction_step,
+    command = command
+  )
+  grouping_symbols <- intersect(group_names(transform), colnames(plan))
+  out$target <- new_targets(target, out[, grouping_symbols, drop = FALSE])
+  out
+}
+
+reduction_step <- function(plan, command) {
+  reductions <- lapply(plan, function(x) {
+    names <- na_omit(unique(x))
+    out <- rlang::syms(as.character(names))
+    names(out) <- names
+    out
+  })
+  command <- eval(call("substitute", lang(command), reductions), envir = baseenv())
+  data.frame(command = wide_deparse(command), stringsAsFactors = FALSE)
+}
+
 lang <- function(...) UseMethod("lang")
 
 lang.command <- lang.transform <- function(x) x[[1]]
@@ -196,58 +268,24 @@ dsl_transform <- function(...) {
   UseMethod("dsl_transform")
 }
 
-dsl_transform.cross <- function(transform, target, command, plan) {
-  groupings <- groupings(transform)
-  if (!length(groupings)) {
-    return(
-      data.frame(
-        target = target,
-        command = char(command),
-        stringsAsFactors = FALSE
-      )
-    )
-  }
-  grid <- do.call(expand.grid, c(groupings, stringsAsFactors = FALSE))
-  ncl <- c(names(new_groupings(transform)), "target", "command", "transform")
-  plan <- plan[, setdiff(colnames(plan), ncl), drop = FALSE]
-  grid <- join_protect_x(grid, plan)
-  suffix_cols <- intersect(colnames(grid), group_names(transform))
-  new_targets <- new_targets(target, grid[, suffix_cols, drop = FALSE])
-  new_commands <- grid_commands(command, grid)
-  out <- data.frame(
-    target = new_targets,
-    command = new_commands,
-    stringsAsFactors = FALSE
-  )
-  cbind(out, grid)
+dsl_syms <- function(x) {
+  out <- lapply(as.character(x), dsl_sym)
 }
 
-dsl_transform.reduce <- function(transform, target, command, plan) {
-  command_symbols <- intersect(symbols(command), colnames(plan))
-  keep <- complete_cases(plan[, command_symbols, drop = FALSE])
-  if (!length(keep)) {
-    return(data.frame(target = target, command = char(command)))
-  }
-  out <- map_by(
-    .x = plan[keep, ],
-    .by = group_names(transform),
-    .f = reduction_step,
-    command = command
+dsl_sym <- function(x) {
+  tryCatch(
+    eval(parse(text = x), envir = emptyenv()),
+    error = function(e) {
+      rlang::sym(x)
+    }
   )
-  grouping_symbols <- intersect(group_names(transform), colnames(plan))
-  out$target <- new_targets(target, out[, grouping_symbols, drop = FALSE])
-  out
 }
 
-reduction_step <- function(plan, command) {
-  reductions <- lapply(plan, function(x) {
-    names <- na_omit(unique(x))
-    out <- rlang::syms(as.character(names))
-    names(out) <- names
-    out
-  })
-  command <- eval(call("substitute", lang(command), reductions), envir = baseenv())
-  data.frame(command = wide_deparse(command), stringsAsFactors = FALSE)
+new_targets <- function(target, grid) {
+  if (is.null(dim(grid)) || any(dim(grid) < 1L)) {
+    return(target)
+  }
+  make.names(paste(target, apply(grid, 1, paste, collapse = "_"), sep = "_"))
 }
 
 check_groupings <- function(groups, protect) {
@@ -260,42 +298,4 @@ check_groupings <- function(groups, protect) {
       call. = FALSE
     )
   }
-}
-
-new_targets <- function(target, grid) {
-  if (is.null(dim(grid)) || any(dim(grid) < 1L)) {
-    return(target)
-  }
-  make.names(paste(target, apply(grid, 1, paste, collapse = "_"), sep = "_"))
-}
-
-grid_commands <- function(command, grid) {
-  grid <- grid[, intersect(symbols(command), colnames(grid)), drop = FALSE]
-  for (i in seq_along(grid)) {
-    grid[[i]] <- dsl_syms(grid[[i]])
-  }
-  as.character(lapply(
-    seq_len(nrow(grid)),
-    grid_command,
-    command = command,
-    grid = grid
-  ))
-}
-
-grid_command <- function(row, command, grid) {
-  sub <- lapply(grid, `[[`, row)
-  eval(call("substitute", lang(command), sub), envir = baseenv())
-}
-
-dsl_syms <- function(x) {
-  out <- lapply(as.character(x), dsl_sym)
-}
-
-dsl_sym <- function(x) {
-  tryCatch(
-    eval(parse(text = x), envir = emptyenv()),
-    error = function(e) {
-      rlang::sym(x)
-    }
-  )
 }
