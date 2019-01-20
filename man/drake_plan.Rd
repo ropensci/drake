@@ -119,11 +119,13 @@ deps_code("report.Rmd")
 # check your workflow with `vis_drake_graph()`
 # before running `make()`.
 drake_plan(
-  small = simulate(48),
-  large = simulate(64),
+  data = target(
+    simulate(nrows),
+    transform = map(nrows = c(48, 64))
+  ),
   reg = target(
     reg_fun(data),
-   transform = cross(reg_fun = c(reg1, reg2), data = c(small, large))
+   transform = cross(reg_fun = c(reg1, reg2), data)
   ),
   summ = target(
     sum_fun(data, reg),
@@ -142,7 +144,7 @@ drake_plan(
   large = simulate(64),
   reg1 = target(
     reg_fun(data),
-    transform = cross(data = c(small, large)),
+    transform = map(data = c(small, large)),
     group = reg
   ),
   reg2 = target(

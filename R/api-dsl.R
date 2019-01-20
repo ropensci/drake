@@ -16,7 +16,8 @@
 #' @seealso [drake_plan()]
 #' @return A transformed workflow plan data frame
 #' @param plan Workflow plan data frame with a column for targets,
-#'   a column for commands, and a column for transformations.
+#'   a column for commands, a column for transformations,
+#'   and a column for optional grouping variables.
 #' @param trace Logical, whether to add columns to show
 #'   what happened during target transformations, e.g.
 #'   `drake_plan(x = target(..., transform = ...), transform = TRUE)`.
@@ -24,7 +25,7 @@
 #' plan1 <- drake_plan(
 #'   analysis = target(
 #'     analyze_data("source"),
-#'     transform = cross(source = c(source1, source2))
+#'     transform = map(source = c(source1, source2)) # cross() would work too
 #'   ),
 #'   transform = FALSE
 #' )
@@ -66,7 +67,7 @@ transform_row <- function(plan, row) {
   post_hoc_groups <- parse_group(plan[["group"]][[row]])
   transform <- parse_transform(plan$transform[[row]], plan)
   new_cols <- c(target, post_hoc_groups, group_names(transform))
-  check_groupings(new_cols, old_cols(plan))
+  check_group_names(new_cols, old_cols(plan))
   out <- dsl_transform(transform, target, command, plan)
   out[[target]] <- out$target
   old_cols <- setdiff(
@@ -82,12 +83,12 @@ transform_row <- function(plan, row) {
   out
 }
 
-dsl_transform.cross <- function(transform, target, command, plan) {
+map_to_grid <- function(transform, target, command, plan) {
   groupings <- groupings(transform)
   if (!length(groupings)) {
     return(dsl_default_df(target, command))
   }
-  grid <- do.call(expand.grid, c(groupings, stringsAsFactors = FALSE))
+  grid <- dsl_grid(transform, groupings)
   ncl <- c(names(new_groupings(transform)), "target", "command", "transform")
   plan <- plan[, setdiff(colnames(plan), ncl), drop = FALSE]
   grid <- join_protect_x(grid, plan)
@@ -100,6 +101,17 @@ dsl_transform.cross <- function(transform, target, command, plan) {
     stringsAsFactors = FALSE
   )
   cbind(out, grid)
+}
+
+dsl_grid <- function(...) UseMethod("dsl_grid")
+
+dsl_grid.cross <- function(transform, groupings) {
+  do.call(expand.grid, c(groupings, stringsAsFactors = FALSE))
+}
+
+dsl_grid.map <- function(transform, groupings) {
+  check_map_groupings(transform, groupings)
+  as.data.frame(groupings)
 }
 
 grid_commands <- function(command, grid) {
@@ -126,6 +138,12 @@ new_targets <- function(target, grid) {
   }
   make.names(paste(target, apply(grid, 1, paste, collapse = "_"), sep = "_"))
 }
+
+dsl_transform <- function(...) {
+  UseMethod("dsl_transform")
+}
+
+dsl_transform.cross <- dsl_transform.map <- map_to_grid
 
 dsl_transform.reduce <- function(transform, target, command, plan) {
   command_symbols <- intersect(symbols(command), colnames(plan))
@@ -264,10 +282,6 @@ parse_group.default <- function(group) {
   all.vars(group, functions = FALSE)
 }
 
-dsl_transform <- function(...) {
-  UseMethod("dsl_transform")
-}
-
 dsl_syms <- function(x) {
   out <- lapply(as.character(x), dsl_sym)
 }
@@ -289,7 +303,18 @@ dsl_default_df <- function(target, command) {
   )
 }
 
-check_groupings <- function(groups, protect) {
+check_map_groupings <- function(transform, groupings) {
+  n <- unique(vapply(groupings, length, FUN.VALUE = integer(1)))
+  if (length(n) > 1) {
+    stop(
+      "uneven groupings in ", char(transform), ":\n",
+      multiline_message(groupings),
+      call. = FALSE
+    )
+  }
+}
+
+check_group_names <- function(groups, protect) {
   groups <- intersect(groups, protect)
   if (length(groups)) {
     stop(

@@ -3,15 +3,30 @@ drake_context("dsl")
 test_with_dir("empty transformations", {
   out <- drake_plan(
     a = target(x, transform = cross()),
-    b = target(y, transform = reduce())
+    b = target(y, transform = reduce()),
+    c = target(z, transform = map())
   )
-  exp <- drake_plan(a = x, b = y)
+  exp <- drake_plan(a = x, b = y, c = z)
   equivalent_plans(out, exp)
 })
 
 test_with_dir("simple expansion", {
   plan <- drake_plan(a = target(1 + 1, transform = cross(x = c(1, 2))))
   expect_equal(sort(plan$target), sort(c("a_1", "a_2")))
+  expect_equal(plan$command, rep("1 + 1", 2))
+})
+
+test_with_dir("simple map", {
+  plan <- drake_plan(a = target(1 + 1, transform = map(x = c(1, 2))))
+  expect_equal(sort(plan$target), sort(c("a_1", "a_2")))
+  expect_equal(plan$command, rep("1 + 1", 2))
+})
+
+test_with_dir("simple map with 2 factors", {
+  plan <- drake_plan(
+    a = target(1 + 1, transform = map(x = c(1, 2), y = c(3, 4)))
+  )
+  expect_equal(sort(plan$target), sort(c("a_1_3", "a_2_4")))
   expect_equal(plan$command, rep("1 + 1", 2))
 })
 
@@ -29,17 +44,47 @@ test_with_dir("all new crossings", {
   equivalent_plans(out, exp)
 })
 
+test_with_dir("1 new map", {
+  out <- drake_plan(
+    analysis = target(
+      analyze_data(source),
+      transform = map(source = c(source1, source2))
+    )
+  )
+  exp <- drake_plan(
+    analysis_source1 = analyze_data(source1),
+    analysis_source2 = analyze_data(source2)
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("2 new maps", {
+  out <- drake_plan(
+    analysis = target(
+      analyze_data(source, set),
+      transform = map(source = c(source1, source2), set = c(set1, set2))
+    )
+  )
+  exp <- drake_plan(
+    analysis_source1_set1 = analyze_data(source1, set1),
+    analysis_source2_set2 = analyze_data(source2, set2)
+  )
+  equivalent_plans(out, exp)
+})
+
 test_with_dir("groups and command symbols are undefined", {
   out <- drake_plan(
     small = simulate(48),
     large = simulate(64),
     lots = target(nobody(home), transform = cross(a, b)),
+    mots = target(everyone(out), transform = map(c, d)),
     winners = target(min(nobodyhome), transform = reduce(data))
   )
   exp <- drake_plan(
     small = simulate(48),
     large = simulate(64),
     lots = nobody(home),
+    mots = everyone(out),
     winners = min(nobodyhome)
   )
   equivalent_plans(out, exp)
@@ -148,6 +193,131 @@ test_with_dir("dsl with the mtcars plan", {
     ))
   )
   equivalent_plans(out, exp)
+})
+
+test_with_dir("more map", {
+  out <- drake_plan(
+    small = simulate(48),
+    large = simulate(64),
+    reg = target(
+      reg_fun(data),
+      transform = map(reg_fun = c(reg1, reg2), data = c(small, large))
+    ),
+    summ = target(
+      sum_fun(data, reg),
+      transform = map(sum_fun = c(coef, residuals), reg),
+      custom1 = 123L
+    ),
+    winners = target(
+      min(summ),
+      transform = reduce(sum_fun, data),
+      custom2 = 456L
+    )
+  )
+  exp <- drake_plan(
+    small = simulate(48),
+    large = simulate(64),
+    reg_reg1_small = reg1(small),
+    reg_reg2_large = reg2(large),
+    summ_coef_reg_reg1_small = target(
+      command = coef(small, reg_reg1_small),
+      custom1 = 123L
+    ),
+    summ_residuals_reg_reg2_large = target(
+      command = residuals(large, reg_reg2_large),
+      custom1 = 123L
+    ),
+    winners_residuals_large = target(
+      command = min(
+        list(summ_residuals_reg_reg2_large = summ_residuals_reg_reg2_large)),
+      custom2 = 456L
+    ),
+    winners_coef_small = target(
+      command = min(
+        list(summ_coef_reg_reg1_small = summ_coef_reg_reg1_small)
+      ),
+      custom2 = 456L
+    )
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("map on mtcars-like workflow", {
+  out <- drake_plan(
+    data = target(
+      simulate(nrows),
+      transform = map(nrows = c(48, 64))
+    ),
+    reg = target(
+      reg_fun(data),
+     transform = cross(reg_fun = c(reg1, reg2), data)
+    ),
+    summ = target(
+      sum_fun(data, reg),
+     transform = cross(sum_fun = c(coef, resid), reg)
+    ),
+    winners = target(
+      min(summ),
+      transform = reduce(data, sum_fun)
+    )
+  )
+  exp <- drake_plan(
+    data_48 = simulate(48),
+    data_64 = simulate(64),
+    reg_reg1_data_48 = reg1(data_48),
+    reg_reg2_data_48 = reg2(data_48),
+    reg_reg1_data_64 = reg1(data_64),
+    reg_reg2_data_64 = reg2(data_64),
+    summ_coef_reg_reg1_data_48 = coef(data_48, reg_reg1_data_48),
+    summ_resid_reg_reg1_data_48 = resid(data_48, reg_reg1_data_48),
+    summ_coef_reg_reg1_data_64 = coef(data_64, reg_reg1_data_64),
+    summ_resid_reg_reg1_data_64 = resid(data_64, reg_reg1_data_64),
+    summ_coef_reg_reg2_data_48 = coef(data_48, reg_reg2_data_48),
+    summ_resid_reg_reg2_data_48 = resid(data_48, reg_reg2_data_48),
+    summ_coef_reg_reg2_data_64 = coef(data_64, reg_reg2_data_64),
+    summ_resid_reg_reg2_data_64 = resid(data_64, reg_reg2_data_64),
+    winners_data_48_coef = min(list(
+      summ_coef_reg_reg1_data_48 = summ_coef_reg_reg1_data_48,
+      summ_coef_reg_reg2_data_48 = summ_coef_reg_reg2_data_48
+    )),
+    winners_data_64_coef = min(list(
+      summ_coef_reg_reg1_data_64 = summ_coef_reg_reg1_data_64,
+      summ_coef_reg_reg2_data_64 = summ_coef_reg_reg2_data_64
+    )),
+    winners_data_48_resid = min(list(
+      summ_resid_reg_reg1_data_48 = summ_resid_reg_reg1_data_48,
+      summ_resid_reg_reg2_data_48 = summ_resid_reg_reg2_data_48
+    )),
+    winners_data_64_resid = min(list(
+      summ_resid_reg_reg1_data_64 = summ_resid_reg_reg1_data_64,
+      summ_resid_reg_reg2_data_64 = summ_resid_reg_reg2_data_64
+    ))
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("map with unequal columns", {
+  expect_error(
+    drake_plan(
+      small = simulate(48),
+      large = simulate(64),
+      reg = target(
+        reg_fun(data),
+        transform = map(reg_fun = c(reg1, reg2), data = c(small, large, huge))
+      ),
+      summ = target(
+        sum_fun(data, reg),
+        transform = map(sum_fun = c(coef, residuals), reg),
+        custom1 = 123L
+      ),
+      winners = target(
+        min(summ),
+        transform = reduce(sum_fun, data),
+        custom2 = 456L
+      )
+    ),
+    regexp = "uneven groupings in map"
+  )
 })
 
 test_with_dir("dsl and custom columns", {
