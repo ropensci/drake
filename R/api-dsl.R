@@ -72,6 +72,7 @@ transform_row <- function(plan, row) {
   post_hoc_groups <- parse_group(plan[["group"]][[row]])
   transform <- parse_transform(plan$transform[[row]], plan)
   new_cols <- c(target, post_hoc_groups, group_names(transform))
+  check_group_names(new_cols)
   out <- dsl_transform(transform, target, command, plan)
   out[[target]] <- out$target
   old_cols <- setdiff(
@@ -324,4 +325,15 @@ map_grid_error <- function(transform, groupings) {
     multiline_message(groupings),
     call. = FALSE
   )
+}
+
+check_group_names <- function(groups) {
+  groups <- intersect(groups, c("target", "command", "transform"))
+  if (length(groups)) {
+    stop(
+      "variables in `target(transform = ...)` ",
+      "cannot be named 'target', 'command', or 'transform'",
+      call. = FALSE
+    )
+  }
 }
