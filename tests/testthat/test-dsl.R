@@ -590,3 +590,31 @@ test_with_dir("tidy eval in the DSL", {
   )
   equivalent_plans(out, exp)
 })
+
+test_with_dir("dsl: exact same plan as mtcars", {
+  out <- drake_plan(
+    report = knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE),
+    small = simulate(48),
+    large = simulate(64),
+    regression1 = target(
+      reg1(data),
+      transform = map(data = c(small, large)),
+      group = reg
+    ),
+    regression2 = target(
+      reg2(data),
+      transform = map(data),
+      group = reg
+    ),
+    summ = target(
+      suppressWarnings(summary(reg$residuals)),
+      transform = map(reg)
+    ),
+    coef = target(
+      suppressWarnings(summary(reg))$coefficients,
+      transform = map(reg)
+    )
+  )
+  load_mtcars_example()
+  equivalent_plans(out, my_plan)
+})
