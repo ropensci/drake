@@ -239,6 +239,7 @@ test_with_dir("more map", {
       custom2 = 456L
     )
   )
+  equivalent_plans(out, exp)
 })
 
 test_with_dir("map on mtcars-like workflow", {
