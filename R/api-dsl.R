@@ -116,7 +116,7 @@ dsl_grid.cross <- function(transform, groupings) {
 
 dsl_grid.map <- function(transform, groupings) {
   tryCatch(
-    as.data.frame(groupings),
+    as.data.frame(groupings, stringsAsFactors = FALSE),
     error = function(e) {
       map_grid_error(transform, groupings)
     }

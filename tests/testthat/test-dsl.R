@@ -684,3 +684,57 @@ test_with_dir("dsl: no NA levels in reduce()", {
   )
   equivalent_plans(out, exp)
 })
+
+test_with_dir("ad hoc indicators", {
+  plan1 <- drake_plan(
+    analysis = target(
+      analyze_data(source),
+      transform = map(source = c(source1, source2, source3))
+    ),
+    trace = TRUE
+  )
+  plan1$data_size <- c("large", "small", "small")
+  plan2 <- drake_plan(
+    summaries = target(
+      summarize_analyses(analysis),
+      transform = reduce(data_size)
+    ),
+    transform = FALSE
+  )
+  plan <- bind_plans(plan1, plan2)
+  plan
+  transform_plan(plan)
+  out <- transform_plan(plan, trace = TRUE)
+  exp <- drake_plan(
+    analysis_source1 = target(
+      command = analyze_data(source1),
+      source = "source1",
+      analysis = "analysis_source1",
+      data_size = "large"
+    ),
+    analysis_source2 = target(
+      command = analyze_data(source2),
+      source = "source2",
+      analysis = "analysis_source2",
+      data_size = "small"
+    ),
+    analysis_source3 = target(
+      command = analyze_data(source3),
+      source = "source3",
+      analysis = "analysis_source3",
+      data_size = "small"
+    ),
+    summaries_large = target(
+      command = summarize_analyses(list(analysis_source1 = analysis_source1)),
+      summaries = "summaries_large"
+    ),
+    summaries_small = target(
+      command = summarize_analyses(list(
+        analysis_source2 = analysis_source2,
+        analysis_source3 = analysis_source3
+      )),
+      summaries = "summaries_small"
+    )
+  )
+  equivalent_plans(out, exp)
+})
