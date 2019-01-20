@@ -235,10 +235,6 @@ groupings <- function(...) {
   UseMethod("groupings")
 }
 
-groupings.call <- function(transform, plan) {
-  c(new_groupings(transform), old_groupings(transform, plan))
-}
-
 groupings.transform <- function(transform) {
   c(new_groupings(transform), old_groupings(transform))
 }

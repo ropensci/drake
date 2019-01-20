@@ -141,26 +141,6 @@ file_extn <- function(x) {
   x[1]
 }
 
-gsub_grid <- function(text, grid) {
-  text <- rep(text, nrow(grid))
-  for (factor in colnames(grid)) {
-    text <- gsub_vector(factor, grid[[factor]], text)
-  }
-  text
-}
-
-gsub_vector <- Vectorize(function(pattern, replacement, x) {
-    gsub(pattern = pattern, replacement = replacement, x = x, fixed = TRUE)
-  },
-  c("replacement", "x"),
-  USE.NAMES = FALSE
-)
-
-grepl_vector <- Vectorize(function(pattern, x) {
-  grepl(pattern = pattern, x = x, fixed = TRUE)
-},
-"pattern", USE.NAMES = FALSE)
-
 is_image_filename <- function(x) {
   tolower(file_extn(x)) %in% c("jpg", "jpeg", "pdf", "png")
 }
