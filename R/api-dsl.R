@@ -84,15 +84,9 @@ transform_row <- function(plan, row) {
 
 lang <- function(...) UseMethod("lang")
 
-lang.character <- function(x) parse(text = x)[[1]]
-  
-lang.expression <- function(x) x[[1]]
-
-lang.command <- lang.transform <- lang.expression
+lang.command <- lang.transform <- function(x) x[[1]]
 
 char <- function(...) UseMethod("char")
-
-char.character <- identity
 
 char.command <- char.transform <- function(x) wide_deparse(lang(x))
 
@@ -142,16 +136,16 @@ new_groupings.transform <- function(transform) {
   attr(transform, "new_groupings")
 }
 
-new_groupings.default <- function(transform_code) {
-  lapply(named(as.list(transform_code)), function(x) {
+new_groupings.default <- function(code) {
+  lapply(named(as.list(code)), function(x) {
     as.character(lapply(as.list(x)[-1], deparse))
   })
 }
 
 old_groupings <- function(...) UseMethod("old_groupings")
 
-old_groupings.default <- function(transform_code, plan) {
-  group_names <- as.character(unnamed(transform_code)[-1])
+old_groupings.default <- function(code, plan) {
+  group_names <- as.character(unnamed(code)[-1])
   group_names <- intersect(group_names, names(plan))
   lapply(plan[, group_names, drop = FALSE], function(x) {
     unique(na_omit(x))
@@ -253,7 +247,7 @@ reduction_step <- function(plan, command) {
     out
   })
   command <- eval(call("substitute", lang(command), reductions), envir = baseenv())
-  data.frame(command = char(command), stringsAsFactors = FALSE)
+  data.frame(command = wide_deparse(command), stringsAsFactors = FALSE)
 }
 
 check_groupings <- function(groups, protect) {
