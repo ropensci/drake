@@ -17,6 +17,114 @@ test_with_dir("simple expansion", {
   expect_equal(plan$command, rep("1 + 1", 2))
 })
 
+test_with_dir("single tag_in", {
+  out <- drake_plan(
+    x = target(
+      y,
+      transform = cross(
+        x = c(1, 2),
+        .tag_in = single
+      )
+    ),
+    trace = T
+  )
+  exp <- drake_plan(
+    x_1 = target(
+      command = y,
+      x = "x_1",
+      single = "x"
+    ),
+    x_2 = target(
+      command = y,
+      x = "x_2",
+      single = "x"
+    )
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("multiple tag_in", {
+  out <- drake_plan(
+    x = target(
+      y,
+      transform = cross(
+        x = c(1, 2),
+        .tag_in = c(one, second)
+      )
+    ),
+    trace = T
+  )
+  exp <- drake_plan(
+    x_1 = target(
+      command = y,
+      x = "x_1",
+      one = "x",
+      second = "x"
+    ),
+    x_2 = target(
+      command = y,
+      x = "x_2",
+      one = "x",
+      second = "x"
+    )
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("single tag_out", {
+  out <- drake_plan(
+    x = target(
+      y,
+      transform = cross(
+        x = c(1, 2),
+        .tag_out = single
+      )
+    ),
+    trace = T
+  )
+  exp <- drake_plan(
+    x_1 = target(
+      command = y,
+      x = "x_1",
+      single = "x_1"
+    ),
+    x_2 = target(
+      command = y,
+      x = "x_2",
+      single = "x_2"
+    )
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("multiple tag_out", {
+  out <- drake_plan(
+    x = target(
+      y,
+      transform = cross(
+        x = c(1, 2),
+        .tag_out = c(one, second)
+      )
+    ),
+    trace = T
+  )
+  exp <- drake_plan(
+    x_1 = target(
+      command = y,
+      x = "x_1",
+      one = "x_1",
+      second = "x_1"
+    ),
+    x_2 = target(
+      command = y,
+      x = "x_2",
+      one = "x_2",
+      second = "x_2"
+    )
+  )
+  equivalent_plans(out, exp)
+})
+
 test_with_dir("simple map", {
   plan <- drake_plan(a = target(1 + 1, transform = map(x = c(1, 2))))
   expect_equal(sort(plan$target), sort(c("a_1", "a_2")))
@@ -467,19 +575,17 @@ test_with_dir("running a dsl-generated mtcars plan", {
   expect_equal(justbuilt(config), character(0))
 })
 
-test_with_dir("dsl post-hoc groupings", {
+test_with_dir("dsl .tag_out groupings", {
   out <- drake_plan(
     small = simulate(48),
     large = simulate(64),
     reg1 = target(
       rgfun(data),
-      transform = cross(data = c(small, large)),
-      group = c(reg, othergroup)
+      transform = cross(data = c(small, large), .tag_out = c(reg, othergroup)),
     ),
     reg2 = target(
       rgfun(data),
-      transform = cross(data = c(small, large)),
-      group = reg
+      transform = cross(data = c(small, large), .tag_out = reg),
     ),
     winners = target(min(reg), transform = reduce(), a = 1),
     trace = TRUE
@@ -522,6 +628,78 @@ test_with_dir("dsl post-hoc groupings", {
       )),
       a = 1,
       winners = "winners"
+    )
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("reduce() and tags", {
+  i <- as.numeric(1:3)
+  out <- drake_plan(
+    x = target(1, transform = map(f = !!i, .tag_in = grp, .tag_out = targs)),
+    y = target(1, transform = map(g = !!i, .tag_in = grp, .tag_out = targs)),
+    z = target(
+      min(targs),
+      transform = reduce(grp, .tag_in = im, .tag_out = here)
+    ),
+    trace = TRUE
+  )
+  exp <- drake_plan(
+    x_1 = target(
+      command = 1,
+      f = "1",
+      x = "x_1",
+      grp = "x",
+      targs = "x_1"
+    ),
+    x_2 = target(
+      command = 1,
+      f = "2",
+      x = "x_2",
+      grp = "x",
+      targs = "x_2"
+    ),
+    x_3 = target(
+      command = 1,
+      f = "3",
+      x = "x_3",
+      grp = "x",
+      targs = "x_3"
+    ),
+    y_1 = target(
+      command = 1,
+      grp = "y",
+      targs = "y_1",
+      g = "1",
+      y = "y_1"
+    ),
+    y_2 = target(
+      command = 1,
+      grp = "y",
+      targs = "y_2",
+      g = "2",
+      y = "y_2"
+    ),
+    y_3 = target(
+      command = 1,
+      grp = "y",
+      targs = "y_3",
+      g = "3",
+      y = "y_3"
+    ),
+    z_x = target(
+      command = min(list(x_1 = x_1, x_2 = x_2, x_3 = x_3)),
+      grp = "x",
+      z = "z_x",
+      im = "z",
+      here = "z_x"
+    ),
+    z_y = target(
+      command = min(list(y_1 = y_1, y_2 = y_2, y_3 = y_3)),
+      grp = "y",
+      z = "z_y",
+      im = "z",
+      here = "z_y"
     )
   )
   equivalent_plans(out, exp)
@@ -630,13 +808,11 @@ test_with_dir("dsl: exact same plan as mtcars", {
     large = simulate(64),
     regression1 = target(
       reg1(data),
-      transform = map(data = c(small, large)),
-      group = reg
+      transform = map(data = c(small, large), .tag_out = reg),
     ),
     regression2 = target(
       reg2(data),
-      transform = map(data),
-      group = reg
+      transform = map(data, .tag_out = reg),
     ),
     summ = target(
       suppressWarnings(summary(reg$residuals)),
@@ -655,18 +831,15 @@ test_with_dir("dsl: no NA levels in reduce()", {
   out <- drake_plan(
     data_sim = target(
       sim_data(mean = x, sd = y),
-      transform = cross(x = c(1, 2), y = c(3, 4)),
-      group = c(data, local)
+      transform = cross(x = c(1, 2), y = c(3, 4), .tag_out = c(data, local)),
     ),
     data_download = target(
       download_data(url = x),
-      transform = map(x = c("http://url_1", "http://url_2")),
-      group = c(real, data)
+      transform = map(x = c("http://url_1", "http://url_2"), c(real, data))
     ),
     data_pkg = target(
       load_data_from_package(pkg = x),
-      transform = map(x = c("gapminder", "Ecdat")),
-      group = c(local, real, data)
+      transform = map(x = c("gapminder", "Ecdat"), c(local, real, data))
     ),
     summaries = target(
       compare_ds(data_sim),

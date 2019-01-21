@@ -72,10 +72,13 @@
 #' # This feature is experimental, so please
 #' # check your workflow with `vis_drake_graph()`
 #' # before running `make()`.
+#' # Read more at
+#' # <https://ropenscilabs.github.io/drake-manual/plans.html#create-large-plans-the-easy-way>. # nolint
 #' drake_plan(
 #'   data = target(
 #'     simulate(nrows),
-#'     transform = map(nrows = c(48, 64))
+#'     transform = map(nrows = c(48, 64)),
+#'     custom_column = 123
 #'   ),
 #'   reg = target(
 #'     reg_fun(data),
@@ -91,36 +94,16 @@
 #'   )
 #' )
 #'
-#' # Optionally define custom groupings with the `group` field.
-#' # Again, this is still experimental.
+#' # Set trace = TRUE to show what happened during the transformation process.
 #' drake_plan(
-#'   small = simulate(48),
-#'   large = simulate(64),
-#'   reg1 = target(
-#'     reg_fun(data),
-#'     transform = map(data = c(small, large)),
-#'     group = reg
+#'   data = target(
+#'     simulate(nrows),
+#'     transform = map(nrows = c(48, 64)),
+#'     custom_column = 123
 #'   ),
-#'   reg2 = target(
-#'     reg_fun(data),
-#'     transform = cross(data = c(small, large)),
-#'     group = reg
-#'   ),
-#'   winners = target(
-#'     min(reg),
-#'     transform = reduce(data),
-#'     a = 1
-#'   )
-#' )
-#'
-#' # Set `trace` to `TRUE` to retain information about the
-#' # transformation process.
-#' drake_plan(
-#'   small = simulate(48),
-#'   large = simulate(64),
 #'   reg = target(
 #'     reg_fun(data),
-#'    transform = cross(reg_fun = c(reg1, reg2), data = c(small, large))
+#'    transform = cross(reg_fun = c(reg1, reg2), data)
 #'   ),
 #'   summ = target(
 #'     sum_fun(data, reg),

@@ -311,9 +311,9 @@ wide_deparse <- function(x) {
   paste(deparse(x), collapse = "\n")
 }
 
-named <- function(x) {
+named <- function(x, exclude = character(0)) {
   if (is.null(names(x))) return(NULL)
-  x[names(x) != ""]
+  x[!(names(x) %in% c("", exclude))]
 }
 
 unnamed <- function(x) {
