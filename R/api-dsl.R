@@ -146,7 +146,7 @@ dsl_transform.combine <- function(transform, target, command, plan) {
   out <- map_by(
     .x = plan[rows_keep, ],
     .by = group_names(transform),
-    .f = reduction_step,
+    .f = combine_step,
     command = command
   )
   grouping_symbols <- intersect(group_names(transform), colnames(plan))
@@ -154,15 +154,15 @@ dsl_transform.combine <- function(transform, target, command, plan) {
   out
 }
 
-reduction_step <- function(plan, command) {
-  reductions <- lapply(plan, function(x) {
+combine_step <- function(plan, command) {
+  aggregates <- lapply(plan, function(x) {
     names <- na_omit(unique(x))
     out <- rlang::syms(as.character(names))
     names(out) <- names
     out
   })
   command <- eval(
-    call("substitute", lang(command), reductions),
+    call("substitute", lang(command), aggregates),
     envir = baseenv()
   )
   data.frame(command = wide_deparse(command), stringsAsFactors = FALSE)
