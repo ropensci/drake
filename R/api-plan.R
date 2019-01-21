@@ -457,7 +457,7 @@ warn_arrows <- function(dots) {
 }
 
 detect_arrow <- function(command) {
-  if (length(command) > 2 && deparse(command[[1]]) %in% c("<-", "->")) {
+  if (length(command) > 2 && safe_deparse(command[[1]]) %in% c("<-", "->")) {
     wide_deparse(command)
   } else {
     NULL

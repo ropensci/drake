@@ -109,9 +109,9 @@ get_import_from_memory <- function(target, config) {
   lang <- parsed[[1]]
   is_namespaced <- length(lang) > 1
   if (is_namespaced) {
-    stopifnot(deparse(lang[[1]]) %in% c("::", ":::"))
-    pkg <- deparse(lang[[2]])
-    fun <- deparse(lang[[3]])
+    stopifnot(safe_deparse(lang[[1]]) %in% c("::", ":::"))
+    pkg <- safe_deparse(lang[[2]])
+    fun <- safe_deparse(lang[[3]])
     tryCatch(get(fun, envir = getNamespace(pkg)), error = error_na)
   } else {
     NA_character_

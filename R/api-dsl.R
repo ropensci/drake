@@ -215,7 +215,7 @@ parse_transform.character <- function(transform, plan) {
 parse_transform.default <- function(transform, plan) {
   out <- structure(
     as.expression(transform),
-    class = unique(c(deparse(transform[[1]]), "transform", class(transform)))
+    class = unique(c(safe_deparse(transform[[1]]), "transform", class(transform)))
   )
   assert_good_transform(out)
   structure(

@@ -49,7 +49,7 @@ code_to_plan <- function(path) {
 
 node_plan <- function(node) {
   weak_tibble(
-    target = deparse(node@code[[2]]),
+    target = safe_deparse(node@code[[2]]),
     command = wide_deparse(node@code[[3]])
   )
 }

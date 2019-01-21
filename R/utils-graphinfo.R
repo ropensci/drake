@@ -161,7 +161,7 @@ function_hover_text <- Vectorize(function(function_name, envir) {
     error = function(e) function_name
   )
   x <- unwrap_function(x)
-  x <- deparse(x)
+  x <- safe_deparse(x)
   style_hover_text(x)
 },
 "function_name")

@@ -67,7 +67,7 @@ cdl_imports_kernel <- function(config, imports) {
     X = imports,
     FUN = function(x) {
       if (is.function(x)) {
-        x <- deparse(x)
+        x <- safe_deparse(x)
       }
       x
     },
