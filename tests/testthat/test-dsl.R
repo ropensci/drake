@@ -907,10 +907,10 @@ test_with_dir("combine(.use_names = FALSE)", {
     data_pkg_.gapminder. = load_data_from_package(pkg = "gapminder"),
     data_pkg_.Ecdat. = load_data_from_package(pkg = "Ecdat"),
     summaries_data_download = compare_ds(
-      list(data_download_.http...url_1., data_download_.http...url_2.)
+      list(data_download_.http...url_1., data_download_.http...url_2.) # nolint
     ),
     summaries_data_pkg = compare_ds(
-      list(data_pkg_.gapminder., data_pkg_.Ecdat.)
+      list(data_pkg_.gapminder., data_pkg_.Ecdat.) # nolint
     ),
     summaries_data_sim = compare_ds(
       list(data_sim_1_3, data_sim_2_3, data_sim_1_4, data_sim_2_4)
@@ -962,14 +962,14 @@ test_with_dir("combine(.use_names = FALSE)", {
     data_pkg_.Ecdat. = load_data_from_package(pkg = "Ecdat"),
     summaries_data_download = compare_ds(
       list(
-        data_download_.http...url_1. = data_download_.http...url_1.,
-        data_download_.http...url_2. = data_download_.http...url_2.
+        data_download_.http...url_1. = data_download_.http...url_1., # nolint
+        data_download_.http...url_2. = data_download_.http...url_2. # nolint
       )
     ),
     summaries_data_pkg = compare_ds(
       list(
-        data_pkg_.gapminder. = data_pkg_.gapminder.,
-        data_pkg_.Ecdat. = data_pkg_.Ecdat.
+        data_pkg_.gapminder. = data_pkg_.gapminder., # nolint
+        data_pkg_.Ecdat. = data_pkg_.Ecdat. # nolint
       )
     ),
     summaries_data_sim = compare_ds(
