@@ -634,7 +634,7 @@ test_with_dir("dsl .tag_out groupings", {
 })
 
 test_with_dir("reduce() and tags", {
-  i <- 1:2
+  i <- as.numeric(1:3)
   out <- drake_plan(
     x = target(1, transform = map(f = !!i, .tag_in = grp, .tag_out = targs)),
     y = target(1, transform = map(g = !!i, .tag_in = grp, .tag_out = targs)),
@@ -659,6 +659,13 @@ test_with_dir("reduce() and tags", {
       grp = "x",
       targs = "x_2"
     ),
+    x_3 = target(
+      command = 1,
+      f = "3",
+      x = "x_3",
+      grp = "x",
+      targs = "x_3"
+    ),
     y_1 = target(
       command = 1,
       grp = "y",
@@ -673,15 +680,22 @@ test_with_dir("reduce() and tags", {
       g = "2",
       y = "y_2"
     ),
+    y_3 = target(
+      command = 1,
+      grp = "y",
+      targs = "y_3",
+      g = "3",
+      y = "y_3"
+    ),
     z_x = target(
-      command = min(list(x_1 = x_1, x_2 = x_2)),
+      command = min(list(x_1 = x_1, x_2 = x_2, x_3 = x_3)),
       grp = "x",
       z = "z_x",
       im = "z",
       here = "z_x"
     ),
     z_y = target(
-      command = min(list(y_1 = y_1, y_2 = y_2)),
+      command = min(list(y_1 = y_1, y_2 = y_2, y_3 = y_3)),
       grp = "y",
       z = "z_y",
       im = "z",
