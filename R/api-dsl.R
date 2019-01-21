@@ -147,14 +147,15 @@ dsl_transform.combine <- function(transform, target, command, plan) {
     .x = plan[rows_keep, ],
     .by = group_names(transform),
     .f = combine_step,
-    command = command
+    command = command,
+    transform = transform
   )
   grouping_symbols <- intersect(group_names(transform), colnames(plan))
   out$target <- new_targets(target, out[, grouping_symbols, drop = FALSE])
   out
 }
 
-combine_step <- function(plan, command) {
+combine_step <- function(plan, command, transform) {
   aggregates <- lapply(plan, function(x) {
     names <- na_omit(unique(x))
     out <- rlang::syms(as.character(names))
