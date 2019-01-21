@@ -54,7 +54,7 @@ code strings or a list of language objects.
 \code{drake} has special syntax for generating large plans.
 Your code will look something like
 \code{drake_plan(x = target(cmd, transform = f(y, z), group = g)}
-where \code{f()} is either \code{map()}, \code{cross()}, or \code{reduce()}
+where \code{f()} is either \code{map()}, \code{cross()}, or \code{combine()}
 (similar to \code{purrr::pmap()}, \code{tidy::crossing()}, and \code{dplyr::summarize()},
 respectively). These verbs mimic Tidyverse behavior to scale up
 existing plans to large numbers of targets.
@@ -111,7 +111,7 @@ drake_plan(
   ), 
   winners = target(
     min(summ),
-    transform = reduce(data, sum_fun)
+    transform = combine(data, sum_fun)
   )
 )
 
@@ -132,7 +132,7 @@ drake_plan(
   ), 
   winners = target(
     min(summ),
-    transform = reduce(data, sum_fun)
+    transform = combine(data, sum_fun)
   ),
   trace = TRUE
 )

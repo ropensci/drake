@@ -11,7 +11,7 @@
 #' @details `drake` has special syntax for generating large plans.
 #'  Your code will look something like
 #'  `drake_plan(x = target(cmd, transform = f(y, z), group = g)`
-#'  where `f()` is either `map()`, `cross()`, or `reduce()`
+#'  where `f()` is either `map()`, `cross()`, or `combine()`
 #'  (similar to `purrr::pmap()`, `tidy::crossing()`, and `dplyr::summarize()`,
 #'  respectively). These verbs mimic Tidyverse behavior to scale up
 #'  existing plans to large numbers of targets.
@@ -90,7 +90,7 @@
 #'   ), 
 #'   winners = target(
 #'     min(summ),
-#'     transform = reduce(data, sum_fun)
+#'     transform = combine(data, sum_fun)
 #'   )
 #' )
 #'
@@ -111,7 +111,7 @@
 #'   ), 
 #'   winners = target(
 #'     min(summ),
-#'     transform = reduce(data, sum_fun)
+#'     transform = combine(data, sum_fun)
 #'   ),
 #'   trace = TRUE
 #' )

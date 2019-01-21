@@ -136,7 +136,7 @@ dsl_transform <- function(...) {
 
 dsl_transform.cross <- dsl_transform.map <- map_to_grid
 
-dsl_transform.reduce <- function(transform, target, command, plan) {
+dsl_transform.combine <- function(transform, target, command, plan) {
   command_symbols <- intersect(symbols(command), colnames(plan))
   cols_keep <- union(command_symbols, group_names(transform))
   rows_keep <- complete_cases(plan[, cols_keep, drop = FALSE])

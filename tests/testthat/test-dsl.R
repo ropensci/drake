@@ -3,7 +3,7 @@ drake_context("dsl")
 test_with_dir("empty transformations", {
   out <- drake_plan(
     a = target(x, transform = cross()),
-    b = target(y, transform = reduce()),
+    b = target(y, transform = combine()),
     c = target(z, transform = map())
   )
   expect_equal(out, transform_plan(out))
@@ -187,7 +187,7 @@ test_with_dir("groups and command symbols are undefined", {
     large = simulate(64),
     lots = target(nobody(home), transform = cross(a, b)),
     mots = target(everyone(out), transform = map(c, d)),
-    winners = target(min(nobodyhome), transform = reduce(data))
+    winners = target(min(nobodyhome), transform = combine(data))
   )
   exp <- drake_plan(
     small = simulate(48),
@@ -224,15 +224,15 @@ test_with_dir("dsl with the mtcars plan", {
     ),
     winners = target(
       min(summ),
-      transform = reduce(data, sum_fun)
+      transform = combine(data, sum_fun)
     ),
     others = target(
       analyze(list(c(summ), c(data))),
-      transform = reduce(data, sum_fun)
+      transform = combine(data, sum_fun)
     ),
     final_winner = target(
       min(winners),
-      transform = reduce()
+      transform = combine()
     )
   )
   exp <- drake_plan(
@@ -319,7 +319,7 @@ test_with_dir("more map", {
     ),
     winners = target(
       min(summ),
-      transform = reduce(sum_fun, data),
+      transform = combine(sum_fun, data),
       custom2 = 456L
     )
   )
@@ -367,7 +367,7 @@ test_with_dir("map on mtcars-like workflow", {
     ),
     winners = target(
       min(summ),
-      transform = reduce(data, sum_fun)
+      transform = combine(data, sum_fun)
     )
   )
   exp <- drake_plan(
@@ -470,7 +470,7 @@ test_with_dir("dsl and custom columns", {
       ),
       winners = target(
         min(summ),
-        transform = reduce(data, sum_fun),
+        transform = combine(data, sum_fun),
         custom2 = 456L
       )
     )
@@ -518,7 +518,7 @@ test_with_dir("dsl trace", {
     ),
     winners = target(
       min(summ),
-      transform = reduce(data, sum_fun)
+      transform = combine(data, sum_fun)
     ),
     trace = FALSE
   )
@@ -537,7 +537,7 @@ test_with_dir("dsl trace", {
     ),
     winners = target(
       min(summ),
-      transform = reduce(data, sum_fun)
+      transform = combine(data, sum_fun)
     ),
     trace = TRUE
   )
@@ -587,7 +587,7 @@ test_with_dir("dsl .tag_out groupings", {
       rgfun(data),
       transform = cross(data = c(small, large), .tag_out = reg),
     ),
-    winners = target(min(reg), transform = reduce(), a = 1),
+    winners = target(min(reg), transform = combine(), a = 1),
     trace = TRUE
   )
   exp <- drake_plan(
@@ -633,14 +633,14 @@ test_with_dir("dsl .tag_out groupings", {
   equivalent_plans(out, exp)
 })
 
-test_with_dir("reduce() and tags", {
+test_with_dir("combine() and tags", {
   i <- as.numeric(1:3)
   out <- drake_plan(
     x = target(1, transform = map(f = !!i, .tag_in = grp, .tag_out = targs)),
     y = target(1, transform = map(g = !!i, .tag_in = grp, .tag_out = targs)),
     z = target(
       min(targs),
-      transform = reduce(grp, .tag_in = im, .tag_out = here)
+      transform = combine(grp, .tag_in = im, .tag_out = here)
     ),
     trace = TRUE
   )
@@ -721,7 +721,7 @@ test_with_dir("can disable transformations in dsl", {
     ),
     winners = target(
       min(reg),
-      transform = reduce(data),
+      transform = combine(data),
       a = 1
     ),
     transform = FALSE
@@ -742,8 +742,8 @@ test_with_dir("dsl with differently typed group levels", {
   )
   plan2 <- drake_plan(
     reducks = target(
-      reduce_analyses(analysis),
-      transform = reduce()
+      combine_analyses(analysis),
+      transform = combine()
     ),
     transform = FALSE
   )
@@ -754,7 +754,7 @@ test_with_dir("dsl with differently typed group levels", {
     analysis_.source1. = analyze_data("source1"), # nolint
     analysis_source2 = analyze_data(source2),
     analysis_3 = analyze_data(3),
-    reducks = reduce_analyses(list(
+    reducks = combine_analyses(list(
       analysis_.source1. = analysis_.source1., # nolint
       analysis_source2 = analysis_source2, analysis_3 = analysis_3
     ))
@@ -778,7 +778,7 @@ test_with_dir("dsl with differently typed group levels", {
       analysis = "analysis_3"
     ),
     reducks = target(
-      command = reduce_analyses(list(
+      command = combine_analyses(list(
         analysis_.source1. = analysis_.source1., # nolint
         analysis_source2 = analysis_source2, analysis_3 = analysis_3
       )),
@@ -827,7 +827,7 @@ test_with_dir("dsl: exact same plan as mtcars", {
   equivalent_plans(out, my_plan)
 })
 
-test_with_dir("dsl: no NA levels in reduce()", {
+test_with_dir("dsl: no NA levels in combine()", {
   out <- drake_plan(
     data_sim = target(
       sim_data(mean = x, sd = y),
@@ -843,7 +843,7 @@ test_with_dir("dsl: no NA levels in reduce()", {
     ),
     summaries = target(
       compare_ds(data_sim),
-      transform = reduce(local)
+      transform = combine(local)
     )
   )
   exp <- drake_plan(
