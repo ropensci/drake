@@ -1,4 +1,4 @@
-# Version 6.2.1.9000
+# Version 6.2.1.9002
 
 ## Breaking changes
 
@@ -20,8 +20,7 @@
 
 ## New features
 
-- Introduce a new experimental domain-specific language for generating large plans (#233). Uses optional `transform` and `group` arguments to `target()` from within `drake_plan()`. Supported transformations: `cross()` and `reduce()`.
-- Add a new function `transform_plan()` to do the transformations in the above API with an existing plan. Useful for combining multiple plans that were generated with `drake_plan(transform = FALSE)` so you can generate multiple un-transformed plans, combine them, and then transform the aggregate plan.
+- Introduce a new experimental domain-specific language for generating large plans (#233). Details [here](file:///home/landau/projects/drake-manual/_book/plans.html#create-large-plans-the-easy-way).
 - Implement a `lock_envir` argument to safeguard reproducibility. See [this thread](https://github.com/ropensci/drake/issues/615#issuecomment-447585359) for a demonstration of the problem solved by `make(lock_envir = TRUE)`. More discussion: #619, #620.
 - The new `from_plan()` function allows the users to get custom columns of the plan. Changes to these custom columns do not invalidate targets, however, so be careful.
 
