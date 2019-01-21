@@ -67,7 +67,7 @@ style_recursive <- function(expr, name, append_comma) {
   if (nzchar(name)) {
     head <- paste(name, "= ")
   }
-  head <- paste0(head, wide_deparse(expr[[1]]), "(")
+  head <- paste0(head, safe_deparse(expr[[1]]), "(")
   out <- c(head, paste0("  ", text), ")")
   if (append_comma) {
     out[length(out)] <- paste0(out[length(out)], ",")
@@ -104,7 +104,7 @@ style_recursive_loop <- function(expr) {
 }
 
 style_leaf <- function(name, expr, append_comma) {
-  text <- styler::style_text(wide_deparse(expr))
+  text <- styler::style_text(safe_deparse(expr))
   text[1] <- paste(name, "=", text[1])
   if (append_comma) {
     text[length(text)] <- paste0(text[length(text)], ",")

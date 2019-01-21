@@ -307,13 +307,11 @@ weak_as_tibble <- function(..., .force_df = FALSE) {
   }
 }
 
-wide_deparse <- function(x) {
-  paste(safe_deparse(x), collapse = "\n")
-}
-
-# Just a placeholder. Deparsing varies among R versions.
 safe_deparse <- function(x) {
-  deparse(x)
+  paste(
+    deparse(x, control = c("keepInteger", "keepNA")),
+    collapse = "\n"
+  )
 }
 
 named <- function(x, exclude = character(0)) {

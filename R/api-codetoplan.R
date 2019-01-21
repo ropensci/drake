@@ -50,7 +50,7 @@ code_to_plan <- function(path) {
 node_plan <- function(node) {
   weak_tibble(
     target = safe_deparse(node@code[[2]]),
-    command = wide_deparse(node@code[[3]])
+    command = safe_deparse(node@code[[3]])
   )
 }
 
@@ -154,7 +154,7 @@ plan_to_text <- function(plan) {
   plan <- plan[order, ]
   if (!is.character(plan$command)) {
     plan$command <- vapply(plan$command,
-                           wide_deparse,
+                           safe_deparse,
                            FUN.VALUE = character(1))
   }
   text <- paste(plan$target, "<-", plan$command)

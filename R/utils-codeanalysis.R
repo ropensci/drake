@@ -4,14 +4,14 @@ is_callish <- function(x) {
 
 is_target_call <- function(expr) {
   tryCatch(
-    wide_deparse(expr[[1]]) %in% target_fns,
+    safe_deparse(expr[[1]]) %in% target_fns,
     error = error_false
   )
 }
 
 is_trigger_call <- function(expr) {
   tryCatch(
-    wide_deparse(expr[[1]]) %in% trigger_fns,
+    safe_deparse(expr[[1]]) %in% trigger_fns,
     error = error_false
   )
 }

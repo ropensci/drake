@@ -60,7 +60,7 @@ analyze_function <- function(expr, results, locals, allowed_globals) {
 }
 
 analyze_namespaced <- function(expr, results, locals, allowed_globals) {
-  x <- wide_deparse(expr)
+  x <- safe_deparse(expr)
   if (!ht_exists(locals, x)) {
     ht_set(results$namespaced, encode_namespaced(x))
   }
@@ -143,7 +143,7 @@ walk_code <- function(expr, results, locals, allowed_globals) {
   } else if (is.pairlist(expr)) {
     walk_call(expr, results, locals, allowed_globals)
   } else if (is.language(expr) && (is.call(expr) || is.recursive(expr))) {
-    name <- wide_deparse(expr[[1]])
+    name <- safe_deparse(expr[[1]])
     if (name == "local"){
       locals <- ht_clone(locals)
     }

@@ -49,7 +49,7 @@ repair_target_names <- function(x) {
 
 sanitize_cmd_type <- function(x) {
   if (!is.language(x) && !is.expression(x) && !is.character(x)) {
-    wide_deparse(x)
+    safe_deparse(x)
   } else {
     x
   }

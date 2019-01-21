@@ -146,7 +146,7 @@ drake_plan <- function(
     dots <- match.call(expand.dots = FALSE)$...
   }
   warn_arrows(dots)
-  commands_dots <- lapply(dots, wide_deparse)
+  commands_dots <- lapply(dots, safe_deparse)
   names(commands_dots) <- names(dots)
   commands <- c(commands_dots, list)
   if (!length(commands)) {
@@ -458,7 +458,7 @@ warn_arrows <- function(dots) {
 
 detect_arrow <- function(command) {
   if (length(command) > 2 && safe_deparse(command[[1]]) %in% c("<-", "->")) {
-    wide_deparse(command)
+    safe_deparse(command)
   } else {
     NULL
   }
@@ -546,7 +546,7 @@ target <- function(
     X = out,
     FUN = function(x) {
       if (is.language(x)) {
-        wide_deparse(x)
+        safe_deparse(x)
       } else {
         x
       }

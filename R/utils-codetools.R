@@ -82,5 +82,5 @@ make_assignment_fn <- function(fun) {
 }
 
 dsq <- function(e) {
-  sQuote(wide_deparse(e))
+  sQuote(safe_deparse(e))
 }

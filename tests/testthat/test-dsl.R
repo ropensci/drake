@@ -231,15 +231,15 @@ test_with_dir("dsl with the mtcars plan", {
     ),
     winners = target(
       min(summ),
-      transform = combine(data, sum_fun, .use_names = TRUE)
+      transform = combine(data, sum_fun)
     ),
     others = target(
       analyze(list(c(summ), c(data))),
-      transform = combine(data, .use_names = TRUE, sum_fun)
+      transform = combine(data, sum_fun)
     ),
     final_winner = target(
       min(winners),
-      transform = combine(.use_names = TRUE)
+      transform = combine()
     )
   )
   exp <- drake_plan(
@@ -258,54 +258,54 @@ test_with_dir("dsl with the mtcars plan", {
     summ_coef_reg_reg2_small = coef(small, reg_reg2_small),
     summ_residuals_reg_reg2_small = residuals(small, reg_reg2_small),
     winners_large_coef = min(list(
-      summ_coef_reg_reg1_large = summ_coef_reg_reg1_large,
-      summ_coef_reg_reg2_large = summ_coef_reg_reg2_large
+      summ_coef_reg_reg1_large,
+      summ_coef_reg_reg2_large
     )),
     winners_small_coef = min(list(
-      summ_coef_reg_reg1_small = summ_coef_reg_reg1_small,
-      summ_coef_reg_reg2_small = summ_coef_reg_reg2_small
+      summ_coef_reg_reg1_small,
+      summ_coef_reg_reg2_small
     )),
     winners_large_residuals = min(list(
-      summ_residuals_reg_reg1_large = summ_residuals_reg_reg1_large,
-      summ_residuals_reg_reg2_large = summ_residuals_reg_reg2_large
+      summ_residuals_reg_reg1_large,
+      summ_residuals_reg_reg2_large
     )),
     winners_small_residuals = min(list(
-      summ_residuals_reg_reg1_small = summ_residuals_reg_reg1_small,
-      summ_residuals_reg_reg2_small = summ_residuals_reg_reg2_small
+      summ_residuals_reg_reg1_small,
+      summ_residuals_reg_reg2_small
     )),
     others_large_coef = analyze(list(
       c(list(
-        summ_coef_reg_reg1_large = summ_coef_reg_reg1_large,
-        summ_coef_reg_reg2_large = summ_coef_reg_reg2_large
+        summ_coef_reg_reg1_large,
+        summ_coef_reg_reg2_large
       )),
-      c(list(large = large))
+      c(list(large))
     )),
     others_small_coef = analyze(list(
       c(list(
-        summ_coef_reg_reg1_small = summ_coef_reg_reg1_small,
-        summ_coef_reg_reg2_small = summ_coef_reg_reg2_small
+        summ_coef_reg_reg1_small,
+        summ_coef_reg_reg2_small
       )),
-      c(list(small = small))
+      c(list(small))
     )),
     others_large_residuals = analyze(list(
       c(list(
-        summ_residuals_reg_reg1_large = summ_residuals_reg_reg1_large,
-        summ_residuals_reg_reg2_large = summ_residuals_reg_reg2_large
+        summ_residuals_reg_reg1_large,
+        summ_residuals_reg_reg2_large
       )),
-      c(list(large = large))
+      c(list(large))
     )),
     others_small_residuals = analyze(list(
       c(list(
-        summ_residuals_reg_reg1_small = summ_residuals_reg_reg1_small,
-        summ_residuals_reg_reg2_small = summ_residuals_reg_reg2_small
+        summ_residuals_reg_reg1_small,
+        summ_residuals_reg_reg2_small
       )),
-      c(list(small = small))
+      c(list(small))
     )),
     final_winner = min(list(
-      winners_large_coef = winners_large_coef,
-      winners_small_coef = winners_small_coef,
-      winners_large_residuals = winners_large_residuals,
-      winners_small_residuals = winners_small_residuals
+      winners_large_coef,
+      winners_small_coef,
+      winners_large_residuals,
+      winners_small_residuals
     ))
   )
   equivalent_plans(out, exp)
@@ -326,7 +326,7 @@ test_with_dir("more map", {
     ),
     winners = target(
       min(summ),
-      transform = combine(.use_names = TRUE, sum_fun, data),
+      transform = combine(sum_fun, data),
       custom2 = 456L
     )
   )
@@ -345,12 +345,12 @@ test_with_dir("more map", {
     ),
     winners_residuals_large = target(
       command = min(
-        list(summ_residuals_reg_reg2_large = summ_residuals_reg_reg2_large)),
+        list(summ_residuals_reg_reg2_large)),
       custom2 = 456L
     ),
     winners_coef_small = target(
       command = min(
-        list(summ_coef_reg_reg1_small = summ_coef_reg_reg1_small)
+        list(summ_coef_reg_reg1_small)
       ),
       custom2 = 456L
     )
@@ -374,7 +374,7 @@ test_with_dir("map on mtcars-like workflow", {
     ),
     winners = target(
       min(summ),
-      transform = combine(data, sum_fun, .use_names = TRUE)
+      transform = combine(data, sum_fun)
     )
   )
   exp <- drake_plan(
@@ -393,20 +393,20 @@ test_with_dir("map on mtcars-like workflow", {
     summ_coef_reg_reg2_data_64 = coef(data_64, reg_reg2_data_64),
     summ_resid_reg_reg2_data_64 = resid(data_64, reg_reg2_data_64),
     winners_data_48_coef = min(list(
-      summ_coef_reg_reg1_data_48 = summ_coef_reg_reg1_data_48,
-      summ_coef_reg_reg2_data_48 = summ_coef_reg_reg2_data_48
+      summ_coef_reg_reg1_data_48,
+      summ_coef_reg_reg2_data_48
     )),
     winners_data_64_coef = min(list(
-      summ_coef_reg_reg1_data_64 = summ_coef_reg_reg1_data_64,
-      summ_coef_reg_reg2_data_64 = summ_coef_reg_reg2_data_64
+      summ_coef_reg_reg1_data_64,
+      summ_coef_reg_reg2_data_64
     )),
     winners_data_48_resid = min(list(
-      summ_resid_reg_reg1_data_48 = summ_resid_reg_reg1_data_48,
-      summ_resid_reg_reg2_data_48 = summ_resid_reg_reg2_data_48
+      summ_resid_reg_reg1_data_48,
+      summ_resid_reg_reg2_data_48
     )),
     winners_data_64_resid = min(list(
-      summ_resid_reg_reg1_data_64 = summ_resid_reg_reg1_data_64,
-      summ_resid_reg_reg2_data_64 = summ_resid_reg_reg2_data_64
+      summ_resid_reg_reg1_data_64,
+      summ_resid_reg_reg2_data_64
     ))
   )
   equivalent_plans(out, exp)
@@ -594,7 +594,7 @@ test_with_dir("dsl .tag_out groupings", {
       rgfun(data),
       transform = cross(data = c(small, large), .tag_out = reg),
     ),
-    winners = target(min(reg), transform = combine(.use_names = TRUE), a = 1),
+    winners = target(min(reg), transform = combine(), a = 1),
     trace = TRUE
   )
   exp <- drake_plan(
@@ -628,10 +628,10 @@ test_with_dir("dsl .tag_out groupings", {
     ),
     winners = target(
       command = min(list(
-        reg1_small = reg1_small,
-        reg1_large = reg1_large,
-        reg2_small = reg2_small,
-        reg2_large = reg2_large
+        reg1_small,
+        reg1_large,
+        reg2_small,
+        reg2_large
       )),
       a = 1,
       winners = "winners"
@@ -647,7 +647,7 @@ test_with_dir("combine() and tags", {
     y = target(1, transform = map(g = !!i, .tag_in = grp, .tag_out = targs)),
     z = target(
       min(targs),
-      transform = combine(grp, .tag_in = im, .tag_out = here, .use_names = TRUE)
+      transform = combine(grp, .tag_in = im, .tag_out = here)
     ),
     trace = TRUE
   )
@@ -695,14 +695,14 @@ test_with_dir("combine() and tags", {
       y = "y_3"
     ),
     z_x = target(
-      command = min(list(x_1 = x_1, x_2 = x_2, x_3 = x_3)),
+      command = min(list(x_1, x_2, x_3)),
       grp = "x",
       z = "z_x",
       im = "z",
       here = "z_x"
     ),
     z_y = target(
-      command = min(list(y_1 = y_1, y_2 = y_2, y_3 = y_3)),
+      command = min(list(y_1, y_2, y_3)),
       grp = "y",
       z = "z_y",
       im = "z",
@@ -750,7 +750,7 @@ test_with_dir("dsl with differently typed group levels", {
   plan2 <- drake_plan(
     reducks = target(
       combine_analyses(analysis),
-      transform = combine(.use_names = TRUE)
+      transform = combine()
     ),
     transform = FALSE
   )
@@ -762,9 +762,9 @@ test_with_dir("dsl with differently typed group levels", {
     analysis_source2 = analyze_data(source2),
     analysis_3 = analyze_data(3),
     reducks = combine_analyses(list(
-      analysis_.source1. = analysis_.source1., # nolint
-      analysis_source2 = analysis_source2,
-      analysis_3 = analysis_3
+      analysis_.source1., # nolint
+      analysis_source2,
+      analysis_3
     ))
   )
   equivalent_plans(out, exp)
@@ -787,9 +787,9 @@ test_with_dir("dsl with differently typed group levels", {
     ),
     reducks = target(
       command = combine_analyses(list(
-        analysis_.source1. = analysis_.source1., # nolint
-        analysis_source2 = analysis_source2,
-        analysis_3 = analysis_3
+        analysis_.source1., # nolint
+        analysis_source2,
+        analysis_3
       )),
       reducks = "reducks"
     )
@@ -852,7 +852,7 @@ test_with_dir("dsl: no NA levels in combine()", {
     ),
     summaries = target(
       compare_ds(data_sim),
-      transform = combine(local, .use_names = TRUE)
+      transform = combine(local)
     )
   )
   exp <- drake_plan(
@@ -864,129 +864,10 @@ test_with_dir("dsl: no NA levels in combine()", {
     data_download_.http...url_2. = download_data(url = "http://url_2"),
     data_pkg_.gapminder. = load_data_from_package(pkg = "gapminder"),
     data_pkg_.Ecdat. = load_data_from_package(pkg = "Ecdat"),
-    summaries_data_sim_1_3 = compare_ds(list(data_sim_1_3 = data_sim_1_3)),
-    summaries_data_sim_1_4 = compare_ds(list(data_sim_1_4 = data_sim_1_4)),
-    summaries_data_sim_2_3 = compare_ds(list(data_sim_2_3 = data_sim_2_3)),
-    summaries_data_sim_2_4 = compare_ds(list(data_sim_2_4 = data_sim_2_4))
-  )
-  equivalent_plans(out, exp)
-})
-
-test_with_dir("combine(.use_names = FALSE)", {
-  out <- drake_plan(
-    data_sim = target(
-      sim_data(mean = x, sd = y),
-      transform = cross(
-        x = c(1, 2),
-        y = c(3, 4),
-        .tag_in = data_source,
-        .tag_out = data
-      ),
-    ),
-    data_download = target(
-      download_data(url = x),
-      transform = map(
-        x = c("http://url_1", "http://url_2"),
-        .tag_in = data_source,
-        .tag_out = data
-      )
-    ),
-    data_pkg = target(
-      load_data_from_package(pkg = x),
-      transform = map(
-        x = c("gapminder", "Ecdat"),
-        .tag_in = data_source,
-        .tag_out = data
-      )
-    ),
-    summaries = target(
-      compare_ds(data),
-      transform = combine(data_source, .use_names = FALSE),
-    )
-  )
-  exp <- drake_plan(
-    data_sim_1_3 = sim_data(mean = 1, sd = 3),
-    data_sim_2_3 = sim_data(mean = 2, sd = 3),
-    data_sim_1_4 = sim_data(mean = 1, sd = 4),
-    data_sim_2_4 = sim_data(mean = 2, sd = 4),
-    data_download_.http...url_1. = download_data(url = "http://url_1"),
-    data_download_.http...url_2. = download_data(url = "http://url_2"),
-    data_pkg_.gapminder. = load_data_from_package(pkg = "gapminder"),
-    data_pkg_.Ecdat. = load_data_from_package(pkg = "Ecdat"),
-    summaries_data_download = compare_ds(
-      list(data_download_.http...url_1., data_download_.http...url_2.) # nolint
-    ),
-    summaries_data_pkg = compare_ds(
-      list(data_pkg_.gapminder., data_pkg_.Ecdat.) # nolint
-    ),
-    summaries_data_sim = compare_ds(
-      list(data_sim_1_3, data_sim_2_3, data_sim_1_4, data_sim_2_4)
-    )
-  )
-  equivalent_plans(out, exp)
-})
-
-test_with_dir("combine(.use_names = FALSE)", {
-  out <- drake_plan(
-    data_sim = target(
-      sim_data(mean = x, sd = y),
-      transform = cross(
-        x = c(1, 2),
-        y = c(3, 4),
-        .tag_in = data_source,
-        .tag_out = data
-      ),
-    ),
-    data_download = target(
-      download_data(url = x),
-      transform = map(
-        x = c("http://url_1", "http://url_2"),
-        .tag_in = data_source,
-        .tag_out = data
-      )
-    ),
-    data_pkg = target(
-      load_data_from_package(pkg = x),
-      transform = map(
-        x = c("gapminder", "Ecdat"),
-        .tag_in = data_source,
-        .tag_out = data
-      )
-    ),
-    summaries = target(
-      compare_ds(data),
-      transform = combine(data_source, .use_names = TRUE),
-    )
-  )
-  exp <- drake_plan(
-    data_sim_1_3 = sim_data(mean = 1, sd = 3),
-    data_sim_2_3 = sim_data(mean = 2, sd = 3),
-    data_sim_1_4 = sim_data(mean = 1, sd = 4),
-    data_sim_2_4 = sim_data(mean = 2, sd = 4),
-    data_download_.http...url_1. = download_data(url = "http://url_1"),
-    data_download_.http...url_2. = download_data(url = "http://url_2"),
-    data_pkg_.gapminder. = load_data_from_package(pkg = "gapminder"),
-    data_pkg_.Ecdat. = load_data_from_package(pkg = "Ecdat"),
-    summaries_data_download = compare_ds(
-      list(
-        data_download_.http...url_1. = data_download_.http...url_1., # nolint
-        data_download_.http...url_2. = data_download_.http...url_2. # nolint
-      )
-    ),
-    summaries_data_pkg = compare_ds(
-      list(
-        data_pkg_.gapminder. = data_pkg_.gapminder., # nolint
-        data_pkg_.Ecdat. = data_pkg_.Ecdat. # nolint
-      )
-    ),
-    summaries_data_sim = compare_ds(
-      list(
-        data_sim_1_3 = data_sim_1_3,
-        data_sim_2_3 = data_sim_2_3,
-        data_sim_1_4 = data_sim_1_4,
-        data_sim_2_4 = data_sim_2_4
-      )
-    )
+    summaries_data_sim_1_3 = compare_ds(list(data_sim_1_3)),
+    summaries_data_sim_1_4 = compare_ds(list(data_sim_1_4)),
+    summaries_data_sim_2_3 = compare_ds(list(data_sim_2_3)),
+    summaries_data_sim_2_4 = compare_ds(list(data_sim_2_4))
   )
   equivalent_plans(out, exp)
 })

@@ -315,7 +315,7 @@ test_with_dir("Standardized commands have no attributes", {
 
 test_with_dir("Can standardize commands", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_true(is.language(standardize_command("")))
+  expect_true(is.character(standardize_command("")))
   expect_identical(
     standardize_command("f(x +2) + 2"),
     standardize_command("f(x + 2) + 2")
@@ -416,7 +416,7 @@ test_with_dir("Can standardize commands from expr or lang", {
   y <- standardize_command(x)
   z <- standardize_command(x)
   w <- standardize_command(x[[1]])
-  s <- quote(f(x + 2) + 2)
+  s <- safe_deparse(quote(f(x + 2) + 2))
   expect_equal(y, s)
   expect_equal(z, s)
   expect_equal(w, s)
@@ -437,7 +437,7 @@ test_with_dir("ignore() in imported functions", {
 
   str <- readd(f, cache = cache)
   expect_false(any(grepl("sqrt(x)", str, fixed = TRUE)))
-  expect_equal(str[3], "    (sqrt(ignore() + 123))")
+  expect_true(any(grepl("(sqrt(ignore() + 123))", str, fixed = TRUE)))
   f <- function(x) {
     (sqrt( ignore(sqrt(x) + 8) + 123)) # nolint
   }

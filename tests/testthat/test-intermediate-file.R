@@ -6,15 +6,15 @@ test_with_dir("responses to intermediate file", {
   envir <- dbug_envir(envir)
   dbug_files()
   plan <- dbug_plan()
-  plan$command[6] <- wide_deparse(quote({
+  plan$command[6] <- safe_deparse(quote({
     readRDS(file_in("intermediatefile.rds")) +
     readRDS(file_in("out2.rds"))
   }))
-  command1 <- wide_deparse(quote({
+  command1 <- safe_deparse(quote({
     saveRDS(combined, file_out("intermediatefile.rds"))
     saveRDS(combined + 1, file_out("out2.rds"))
   }))
-  command2 <- wide_deparse(quote({
+  command2 <- safe_deparse(quote({
     saveRDS(combined, "intermediatefile.rds")
     saveRDS(combined + 1, "out2.rds")
     file_out("intermediatefile.rds", "out2.rds")

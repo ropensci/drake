@@ -157,20 +157,13 @@ dsl_transform.combine <- function(transform, target, command, plan) {
 
 combine_step <- function(plan, command, transform) {
   aggregates <- lapply(plan, function(x) {
-    names <- na_omit(unique(x))
-    out <- rlang::syms(as.character(names))
-    if (use_names(transform)) {
-      names(out) <- names
-    } else {
-      names(out) <- NULL
-    }
-    out
+    unname(rlang::syms(as.character(na_omit(unique(x)))))
   })
   command <- eval(
     call("substitute", lang(command), aggregates),
     envir = baseenv()
   )
-  data.frame(command = wide_deparse(command), stringsAsFactors = FALSE)
+  data.frame(command = safe_deparse(command), stringsAsFactors = FALSE)
 }
 
 lang <- function(...) UseMethod("lang")
@@ -179,7 +172,7 @@ lang.command <- lang.transform <- function(x) x[[1]]
 
 char <- function(...) UseMethod("char")
 
-char.command <- char.transform <- function(x) wide_deparse(lang(x))
+char.command <- char.transform <- function(x) safe_deparse(lang(x))
 
 old_cols <- function(plan) {
   attr(plan, "old_cols")
@@ -215,7 +208,7 @@ parse_transform.character <- function(transform, plan) {
 parse_transform.default <- function(transform, plan) {
   out <- structure(
     as.expression(transform),
-    class = unique(c(safe_deparse(transform[[1]]), "transform", class(transform)))
+    class = unique(c(deparse(transform[[1]]), "transform", class(transform)))
   )
   assert_good_transform(out)
   structure(
@@ -223,8 +216,7 @@ parse_transform.default <- function(transform, plan) {
     new_groupings = new_groupings(out),
     old_groupings = old_groupings(out, plan),
     tag_in = tag_in(out),
-    tag_out = tag_out(out),
-    use_names = use_names(out)
+    tag_out = tag_out(out)
   )
 }
 
@@ -246,18 +238,13 @@ new_groupings <- function(transform) UseMethod("new_groupings")
 
 new_groupings.map <- function(transform) {
   attr(transform, "new_groupings") %||%
-    find_new_groupings(lang(transform), exclude = c(".tag_in", ".tag_out"))
-}
-
-new_groupings.cross <- new_groupings.map
-
-new_groupings.combine <- function(transform) {
-  attr(transform, "new_groupings") %||%
     find_new_groupings(
       lang(transform),
-      exclude = c(".tag_in", ".tag_out", ".use_names")
+      exclude = c(".tag_in", ".tag_out")
     )
 }
+
+new_groupings.cross <- new_groupings.combine <- new_groupings.map
 
 find_new_groupings <- function(code, exclude = character(0)) {
   list <- named(as.list(code), exclude)
@@ -308,14 +295,6 @@ tag_out.transform <- function(transform) {
   attr(transform, "tag_out") %||%
     all.vars(lang(transform)[[".tag_out"]], functions = FALSE)
 }
-
-use_names <- function(...) UseMethod("use_names")
-
-use_names.combine <- function(transform) {
-  lang(transform)[[".use_names"]] %||% FALSE
-}
-
-use_names.transform <- function(...) NULL
 
 symbols <- function(...) UseMethod("symbols")
 
