@@ -311,8 +311,9 @@ wide_deparse <- function(x) {
   paste(safe_deparse(x), collapse = "\n")
 }
 
+# Just a placeholder. Deparsing varies among R versions.
 safe_deparse <- function(x) {
-  deparse(x, control = c("keepInteger", "keepNA"))
+  deparse(x)
 }
 
 named <- function(x, exclude = character(0)) {
