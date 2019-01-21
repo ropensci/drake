@@ -575,7 +575,7 @@ test_with_dir("running a dsl-generated mtcars plan", {
   expect_equal(justbuilt(config), character(0))
 })
 
-test_with_dir("dsl post-hoc groupings", {
+test_with_dir("dsl .tag_out groupings", {
   out <- drake_plan(
     small = simulate(48),
     large = simulate(64),
@@ -629,6 +629,24 @@ test_with_dir("dsl post-hoc groupings", {
       a = 1,
       winners = "winners"
     )
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("reduce on tag_in", {
+  i <- 1:2
+  out <- drake_plan(
+    x = target(1, transform = map(f = !!i, .tag_in = grp, .tag_out = targs)),
+    y = target(1, transform = map(g = !!i, .tag_in = grp, .tag_out = targs)),
+    z = target(min(targs), transform = reduce(grp))
+  )
+  exp <- drake_plan(
+    x_1 = 1,
+    x_2 = 1,
+    y_1 = 1,
+    y_2 = 1,
+    z_x = min(list(x_1 = x_1, x_2 = x_2)),
+    z_y = min(list(y_1 = y_1, y_2 = y_2))
   )
   equivalent_plans(out, exp)
 })
