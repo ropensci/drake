@@ -140,7 +140,7 @@ dsl_transform.reduce <- function(transform, target, command, plan) {
   command_symbols <- intersect(symbols(command), colnames(plan))
   cols_keep <- union(command_symbols, group_names(transform))
   rows_keep <- complete_cases(plan[, cols_keep, drop = FALSE])
-  if (!length(rows_keep)) {
+  if (!length(rows_keep) || !any(rows_keep)) {
     return(dsl_default_df(target, command))
   }
   out <- map_by(
