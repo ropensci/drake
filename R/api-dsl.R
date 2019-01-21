@@ -217,6 +217,7 @@ parse_transform.default <- function(transform, plan) {
     as.expression(transform),
     class = unique(c(deparse(transform[[1]]), "transform", class(transform)))
   )
+  assert_good_transform(out)
   structure(
     out,
     new_groupings = new_groupings(out),
@@ -224,6 +225,20 @@ parse_transform.default <- function(transform, plan) {
     tag_in = tag_in(out),
     tag_out = tag_out(out),
     use_names = use_names(out)
+  )
+}
+
+assert_good_transform <- function(...) UseMethod("assert_good_transform")
+
+assert_good_transform.map <-
+  assert_good_transform.cross <-
+  assert_good_transform.combine <- function(...) NULL
+
+assert_good_transform.default <- function(transform, target) {
+  stop(
+    "invalid transform: ", lang(transform),
+    ". Expected: one of map(), cross(), or combine()",
+    call. = FALSE
   )
 }
 

@@ -1,6 +1,6 @@
 drake_context("dsl")
 
-test_with_dir("empty transformations", {
+test_with_dir("empty transforms", {
   out <- drake_plan(
     a = target(x, transform = cross()),
     b = target(y, transform = combine()),
@@ -9,6 +9,13 @@ test_with_dir("empty transformations", {
   expect_equal(out, transform_plan(out))
   exp <- drake_plan(a = x, b = y, c = z)
   equivalent_plans(out, exp)
+})
+
+test_with_dir("bad transform", {
+  expect_error(
+    drake_plan(x = target(1, transform = 132)),
+    regexp = "invalid transform"
+  )
 })
 
 test_with_dir("simple expansion", {
