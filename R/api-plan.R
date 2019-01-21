@@ -88,7 +88,8 @@
 #'   winners = target(
 #'     min(summ),
 #'     transform = reduce(data, sum_fun)
-#'   )
+#'   ),
+#'   trace = TRUE
 #' )
 #'
 #' # Optionally define custom groupings with the `group` field.

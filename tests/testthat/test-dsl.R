@@ -633,20 +633,60 @@ test_with_dir("dsl .tag_out groupings", {
   equivalent_plans(out, exp)
 })
 
-test_with_dir("reduce on tag_in", {
+test_with_dir("reduce() and tags", {
   i <- 1:2
   out <- drake_plan(
     x = target(1, transform = map(f = !!i, .tag_in = grp, .tag_out = targs)),
     y = target(1, transform = map(g = !!i, .tag_in = grp, .tag_out = targs)),
-    z = target(min(targs), transform = reduce(grp))
+    z = target(
+      min(targs),
+      transform = reduce(grp, .tag_in = im, .tag_out = here)
+    ),
+    trace = TRUE
   )
   exp <- drake_plan(
-    x_1 = 1,
-    x_2 = 1,
-    y_1 = 1,
-    y_2 = 1,
-    z_x = min(list(x_1 = x_1, x_2 = x_2)),
-    z_y = min(list(y_1 = y_1, y_2 = y_2))
+    x_1 = target(
+      command = 1,
+      f = "1",
+      x = "x_1",
+      grp = "x",
+      targs = "x_1"
+    ),
+    x_2 = target(
+      command = 1,
+      f = "2",
+      x = "x_2",
+      grp = "x",
+      targs = "x_2"
+    ),
+    y_1 = target(
+      command = 1,
+      grp = "y",
+      targs = "y_1",
+      g = "1",
+      y = "y_1"
+    ),
+    y_2 = target(
+      command = 1,
+      grp = "y",
+      targs = "y_2",
+      g = "2",
+      y = "y_2"
+    ),
+    z_x = target(
+      command = min(list(x_1 = x_1, x_2 = x_2)),
+      grp = "x",
+      z = "z_x",
+      im = "z",
+      here = "z_x"
+    ),
+    z_y = target(
+      command = min(list(y_1 = y_1, y_2 = y_2)),
+      grp = "y",
+      z = "z_y",
+      im = "z",
+      here = "z_y"
+    )
   )
   equivalent_plans(out, exp)
 })
