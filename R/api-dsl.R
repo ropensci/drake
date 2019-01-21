@@ -208,24 +208,38 @@ parse_transform.character <- function(transform, plan) {
 }
 
 parse_transform.default <- function(transform, plan) {
-  structure(
+  out <- structure(
     as.expression(transform),
-    class = unique(c(deparse(transform[[1]]), "transform", class(transform))),
-    new_groupings = new_groupings(transform),
-    old_groupings = old_groupings(transform, plan),
-    tag_in = tag_in(transform),
-    tag_out = tag_out(transform)
+    class = unique(c(deparse(transform[[1]]), "transform", class(transform)))
+  )
+  structure(
+    out,
+    new_groupings = new_groupings(out),
+    old_groupings = old_groupings(out, plan),
+    tag_in = tag_in(out),
+    tag_out = tag_out(out)
   )
 }
 
 new_groupings <- function(transform) UseMethod("new_groupings")
 
-new_groupings.transform <- function(transform) {
-  attr(transform, "new_groupings")
+new_groupings.map <- function(transform) {
+  attr(transform, "new_groupings") %||%
+    find_new_groupings(lang(transform), exclude = c(".tag_in", ".tag_out"))
 }
 
-new_groupings.default <- function(code) {
-  list <- named(as.list(code), exclude = c(".tag_in", ".tag_out"))
+new_groupings.cross <- new_groupings.map
+
+new_groupings.combine <- function(transform) {
+  attr(transform, "new_groupings") %||%
+    find_new_groupings(
+      lang(transform),
+      exclude = c(".tag_in", ".tag_out", ".use_names")
+    )
+}
+
+find_new_groupings <- function(code, exclude = character(0)) {
+  list <- named(as.list(code), exclude)
   lapply(list, function(x) {
     if (is.call(x)) {
       x <- x[-1]
@@ -236,16 +250,16 @@ new_groupings.default <- function(code) {
 
 old_groupings <- function(...) UseMethod("old_groupings")
 
-old_groupings.default <- function(code, plan) {
-  group_names <- as.character(unnamed(code)[-1])
+old_groupings.transform <- function(transform, plan = NULL) {
+  attr(transform, "old_groupings") %||% find_old_groupings(transform, plan)
+}
+
+find_old_groupings <- function(transform, plan) {
+  group_names <- as.character(unnamed(lang(transform))[-1])
   group_names <- intersect(group_names, names(plan))
   lapply(plan[, group_names, drop = FALSE], function(x) {
     unique(na_omit(x))
   })
-}
-
-old_groupings.transform <- function(transform) {
-  attr(transform, "old_groupings")
 }
 
 groupings <- function(...) {
@@ -263,21 +277,15 @@ group_names <- function(transform) {
 tag_in <- function(...) UseMethod("tag_in")
 
 tag_in.transform <- function(transform) {
-  attr(transform, "tag_in")
-}
-
-tag_in.default <- function(code) {
-  all.vars(code[[".tag_in"]], functions = FALSE)
+  attr(transform, "tag_in") %||%
+    all.vars(lang(transform)[[".tag_in"]], functions = FALSE)
 }
 
 tag_out <- function(...) UseMethod("tag_out")
 
 tag_out.transform <- function(transform) {
-  attr(transform, "tag_out")
-}
-
-tag_out.default <- function(code) {
-  all.vars(code[[".tag_out"]], functions = FALSE)
+  attr(transform, "tag_out") %||%
+    all.vars(lang(transform)[[".tag_out"]], functions = FALSE)
 }
 
 symbols <- function(...) UseMethod("symbols")
