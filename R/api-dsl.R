@@ -159,7 +159,11 @@ combine_step <- function(plan, command, transform) {
   aggregates <- lapply(plan, function(x) {
     names <- na_omit(unique(x))
     out <- rlang::syms(as.character(names))
-    names(out) <- names
+    if (use_names(transform)) {
+      names(out) <- names
+    } else {
+      names(out) <- NULL
+    }
     out
   })
   command <- eval(
@@ -218,7 +222,8 @@ parse_transform.default <- function(transform, plan) {
     new_groupings = new_groupings(out),
     old_groupings = old_groupings(out, plan),
     tag_in = tag_in(out),
-    tag_out = tag_out(out)
+    tag_out = tag_out(out),
+    use_names = use_names(out)
   )
 }
 
@@ -288,6 +293,14 @@ tag_out.transform <- function(transform) {
   attr(transform, "tag_out") %||%
     all.vars(lang(transform)[[".tag_out"]], functions = FALSE)
 }
+
+use_names <- function(...) UseMethod("use_names")
+
+use_names.combine <- function(transform) {
+  lang(transform)[[".use_names"]] %||% FALSE
+}
+
+use_names.transform <- function(...) NULL
 
 symbols <- function(...) UseMethod("symbols")
 
