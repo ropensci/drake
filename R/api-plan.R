@@ -469,8 +469,14 @@ detect_arrow <- function(command) {
 #'   custom columns in a workflow plan data frame, both
 #'   inside and outside calls to [drake_plan()].
 #' @details Tidy evaluation is applied to the arguments,
-#'    and the `!!` operator is evaluated immediately
-#'    for expressions and language objects.
+#'   and the `!!` operator is evaluated immediately
+#'   for expressions and language objects.
+#'    
+#'   If you are getting cryptic "Error: Columns must be named"
+#'   errors, that means all the arguments to `target()`
+#'   except `command` must be explicitly named,
+#'   e.g. `target(f(x), trigger = trigger(condition = TRUE)` instead of
+#'   `target(f(x), trigger(condition = TRUE)`.
 #' @export
 #' @seealso [drake_plan()], [make()]
 #' @return A one-row workflow plan data frame with the named

@@ -25,6 +25,12 @@ inside and outside calls to \code{\link[=drake_plan]{drake_plan()}}.
 Tidy evaluation is applied to the arguments,
 and the \code{!!} operator is evaluated immediately
 for expressions and language objects.
+
+If you are getting cryptic "Error: Columns must be named"
+errors, that means all the arguments to \code{target()}
+except \code{command} must be explicitly named,
+e.g. \code{target(f(x), trigger = trigger(condition = TRUE)} instead of
+\code{target(f(x), trigger(condition = TRUE)}.
 }
 \examples{
 # Use target() to create your own custom columns in a drake plan.
