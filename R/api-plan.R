@@ -476,25 +476,6 @@ detect_arrow <- function(command) {
 #' @return A one-row workflow plan data frame with the named
 #' arguments as columns.
 #' @param command The command to build the target.
-#' @param trigger The target's trigger.
-#' @param retries Number of retries in case of failure.
-#' @param timeout Overall timeout (in seconds) for building a target.
-#' @param cpu cpu Timeout (seconds) for building a target.
-#' @param elapsed Elapsed time (seconds) for building a target.
-#' @param priority Integer giving the build priority of a target.
-#'   Given two targets about to be built at the same time,
-#'   the one with the lesser priority (numerically speaking)
-#'   will be built first.
-#' @param worker The preferred worker to be assigned the target
-#'   (in parallel computing).
-#' @param resources Experimental, no guarantees that this works all the time.
-#'   Same as the `resources` argument to `batchtools_slurm()`
-#'   and related `future.bachtools` functions.
-#'   See also <https://github.com/HenrikBengtsson/future.batchtools#examples>. # nolint
-#'   `resources` is a list of computing resource parameters for the target.
-#'   Each element is a value passed to a `brew` placeholder of a
-#'   `batchtools` template file. The list names of `resources`
-#'   should be the brew patterns.
 #' @param ... Named arguments specifying non-standard
 #'   fields of the workflow plan.
 #' @examples
@@ -516,31 +497,12 @@ detect_arrow <- function(command) {
 #'   trigger = "always",
 #'   custom_column = 5
 #' )
-target <- function(
-  command = NULL,
-  trigger = NULL,
-  retries = NULL,
-  timeout = NULL,
-  cpu = NULL,
-  elapsed = NULL,
-  priority = NULL,
-  worker = NULL,
-  resources = NULL,
-  ...
-) {
+target <- function(command = NULL, ...) {
   out <- list(
     # I tried putting quo_squash(enquo()) in its own function,
     # but that function returned the symbols back in cases when it
     # should have just returned NULL.
-    command   = sanitize_cmd_type(rlang::quo_squash(rlang::enquo(command))),
-    trigger   = rlang::quo_squash(rlang::enquo(trigger)),
-    retries   = rlang::quo_squash(rlang::enquo(retries)),
-    timeout   = rlang::quo_squash(rlang::enquo(timeout)),
-    cpu       = rlang::quo_squash(rlang::enquo(cpu)),
-    elapsed   = rlang::quo_squash(rlang::enquo(elapsed)),
-    priority  = rlang::quo_squash(rlang::enquo(priority)),
-    worker    = rlang::quo_squash(rlang::enquo(worker)),
-    resources = rlang::quo_squash(rlang::enquo(resources))
+    command = sanitize_cmd_type(rlang::quo_squash(rlang::enquo(command)))
   )
   out <- c(out, lapply(rlang::enquos(...), rlang::quo_squash))
   out <- select_nonempty(out)

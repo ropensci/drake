@@ -871,3 +871,168 @@ test_with_dir("dsl: no NA levels in combine()", {
   )
   equivalent_plans(out, exp)
 })
+
+test_with_dir("trace has correct provenance", {
+  out <- drake_plan(
+    trace = TRUE,
+    a = target(x, transform = map(x = c(1, 1), y = c(3, 4))),
+    b = target(a, transform = map(a)),
+    c = target(b, transform = map(b)),
+    d = target(b, transform = cross(b, c)),
+    e = target(c, transform = map(c)),
+    f = target(c, transform = map(c)),
+    g = target(b, transform = map(b)),
+    h = target(a, transform = map(a)),
+    i = target(e, transform = combine()),
+    j = target(f, transform = combine())
+  )
+  exp <- drake_plan(
+    a_1_3 = target(
+      command = 1,
+      x = "1",
+      y = "3",
+      a = "a_1_3"
+    ),
+    a_1_4 = target(
+      command = 1,
+      x = "1",
+      y = "4",
+      a = "a_1_4"
+    ),
+    b_a_1_3 = target(
+      command = a_1_3,
+      x = "1",
+      y = "3",
+      a = "a_1_3",
+      b = "b_a_1_3"
+    ),
+    b_a_1_4 = target(
+      command = a_1_4,
+      x = "1",
+      y = "4",
+      a = "a_1_4",
+      b = "b_a_1_4"
+    ),
+    c_b_a_1_3 = target(
+      command = b_a_1_3,
+      x = "1",
+      y = "3",
+      a = "a_1_3",
+      b = "b_a_1_3",
+      c = "c_b_a_1_3"
+    ),
+    c_b_a_1_4 = target(
+      command = b_a_1_4,
+      x = "1",
+      y = "4",
+      a = "a_1_4",
+      b = "b_a_1_4",
+      c = "c_b_a_1_4"
+    ),
+    d_b_a_1_3_c_b_a_1_3 = target(
+      command = b_a_1_3,
+      x = "1",
+      y = "3",
+      a = "a_1_3",
+      b = "b_a_1_3",
+      c = "c_b_a_1_3",
+      d = "d_b_a_1_3_c_b_a_1_3"
+    ),
+    d_b_a_1_3_c_b_a_1_4 = target(
+      command = b_a_1_3,
+      b = "b_a_1_3",
+      c = "c_b_a_1_4",
+      d = "d_b_a_1_3_c_b_a_1_4"
+    ),
+    d_b_a_1_4_c_b_a_1_3 = target(
+      command = b_a_1_4,
+      b = "b_a_1_4",
+      c = "c_b_a_1_3",
+      d = "d_b_a_1_4_c_b_a_1_3"
+    ),
+    d_b_a_1_4_c_b_a_1_4 = target(
+      command = b_a_1_4,
+      x = "1",
+      y = "4",
+      a = "a_1_4",
+      b = "b_a_1_4",
+      c = "c_b_a_1_4",
+      d = "d_b_a_1_4_c_b_a_1_4"
+    ),
+    e_c_b_a_1_3 = target(
+      command = c_b_a_1_3,
+      x = "1",
+      y = "3",
+      a = "a_1_3",
+      b = "b_a_1_3",
+      c = "c_b_a_1_3",
+      e = "e_c_b_a_1_3"
+    ),
+    e_c_b_a_1_4 = target(
+      command = c_b_a_1_4,
+      x = "1",
+      y = "4",
+      a = "a_1_4",
+      b = "b_a_1_4",
+      c = "c_b_a_1_4",
+      e = "e_c_b_a_1_4"
+    ),
+    f_c_b_a_1_3 = target(
+      command = c_b_a_1_3,
+      x = "1",
+      y = "3",
+      a = "a_1_3",
+      b = "b_a_1_3",
+      c = "c_b_a_1_3",
+      f = "f_c_b_a_1_3"
+    ),
+    f_c_b_a_1_4 = target(
+      command = c_b_a_1_4,
+      x = "1",
+      y = "4",
+      a = "a_1_4",
+      b = "b_a_1_4",
+      c = "c_b_a_1_4",
+      f = "f_c_b_a_1_4"
+    ),
+    g_b_a_1_3 = target(
+      command = b_a_1_3,
+      x = "1",
+      y = "3",
+      a = "a_1_3",
+      b = "b_a_1_3",
+      g = "g_b_a_1_3"
+    ),
+    g_b_a_1_4 = target(
+      command = b_a_1_4,
+      x = "1",
+      y = "4",
+      a = "a_1_4",
+      b = "b_a_1_4",
+      g = "g_b_a_1_4"
+    ),
+    h_a_1_3 = target(
+      command = a_1_3,
+      x = "1",
+      y = "3",
+      a = "a_1_3",
+      h = "h_a_1_3"
+    ),
+    h_a_1_4 = target(
+      command = a_1_4,
+      x = "1",
+      y = "4",
+      a = "a_1_4",
+      h = "h_a_1_4"
+    ),
+    i = target(
+      command = list(e_c_b_a_1_3, e_c_b_a_1_4),
+      i = "i"
+    ),
+    j = target(
+      command = list(f_c_b_a_1_3, f_c_b_a_1_4),
+      j = "j"
+    )
+  )
+  equivalent_plans(out, exp)
+})
