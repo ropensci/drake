@@ -324,14 +324,13 @@ unnamed <- function(x) {
   x[names(x) == ""]
 }
 
-# The result should just be x with additional columns.
-join_protect_x <- function(x, y) {
+left_outer_join <- function(x, y) {
   by <- intersect(colnames(x), colnames(y))
   if (!length(by)) {
     return(x)
   }
-  dups <- duplicated(y[, by])
-  y <- y[!dups, ]
-  out <- merge(x, y)
+  # Is merge() a performance bottleneck?
+  # Need to profile.
+  out <- merge(x = x, y = y, by = by, all.x = TRUE)
   out[, union(colnames(x), colnames(y))]
 }

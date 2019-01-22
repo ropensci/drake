@@ -78,7 +78,7 @@ map_to_grid <- function(transform, target, command, plan) {
   grid <- dsl_grid(transform, groupings)
   ncl <- c(names(new_groupings(transform)), "target", "command", "transform")
   plan <- plan[, setdiff(colnames(plan), ncl), drop = FALSE]
-  grid <- join_protect_x(grid, plan)
+  grid <- left_outer_join(grid, plan)
   suffix_cols <- intersect(colnames(grid), group_names(transform))
   new_targets <- new_targets(target, grid[, suffix_cols, drop = FALSE])
   new_commands <- grid_commands(command, grid)
