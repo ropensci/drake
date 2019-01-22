@@ -52,7 +52,7 @@ test_with_dir("triggers in plan override make(trigger = whatever)", {
     x = readRDS(file_in("file.rds")),
     y = target(
       readRDS(file_in("file.rds")),
-      trigger(file = TRUE)
+      trigger = trigger(file = TRUE)
     )
   )
   make(plan, session_info = FALSE)
@@ -70,7 +70,7 @@ test_with_dir("change trigger on a fresh build", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   saveRDS(1, "file.rds")
   plan <- drake_plan(
-    x = target(1 + 1, trigger(
+    x = target(1 + 1, trigger = trigger(
       condition = FALSE,
       command = FALSE,
       depend = FALSE,
@@ -300,14 +300,14 @@ test_with_dir("triggers can be NA in the plan", {
   cache <- storr::storr_environment()
   expect_silent(
     make(
-      drake_plan(x = target(1, NA)),
+      drake_plan(x = target(1, trigger = NA)),
       session_info = FALSE,
       cache = cache,
       verbose = FALSE
     )
   )
   config <- drake_config(
-    drake_plan(x = target(1, NA)),
+    drake_plan(x = target(1, trigger = NA)),
     session_info = FALSE,
     cache = cache,
     verbose = FALSE
@@ -365,30 +365,30 @@ test_with_dir("trigger components react appropriately", {
   plan <- drake_plan(
     missing = target(
       "",
-      trigger(command = FALSE, depend = FALSE, file = FALSE)
+      trigger = trigger(command = FALSE, depend = FALSE, file = FALSE)
     ),
     condition = target(
       "",
-      trigger(
+      trigger = trigger(
         condition = readRDS("condition.rds"),
         command = FALSE, depend = FALSE, file = FALSE
       )
     ),
     command = target(
       "",
-      trigger(command = TRUE, depend = FALSE, file = FALSE)
+      trigger = trigger(command = TRUE, depend = FALSE, file = FALSE)
     ),
     depend = target(
       "",
-      trigger(command = FALSE, depend = TRUE, file = FALSE)
+      trigger = trigger(command = FALSE, depend = TRUE, file = FALSE)
     ),
     file = target(
       "",
-      trigger(command = FALSE, depend = FALSE, file = TRUE)
+      trigger = trigger(command = FALSE, depend = FALSE, file = TRUE)
     ),
     change = target(
       "",
-      trigger(
+      trigger = trigger(
         change = readRDS("change.rds"),
         command = FALSE, depend = FALSE, file = FALSE
       )
