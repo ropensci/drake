@@ -321,7 +321,7 @@ named <- function(x, exclude = character(0)) {
 
 unnamed <- function(x) {
   if (is.null(names(x))) return(x)
-  x[names(x) == ""]
+  x[!nzchar(names(x))]
 }
 
 left_outer_join <- function(x, y) {

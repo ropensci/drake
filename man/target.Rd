@@ -4,39 +4,10 @@
 \alias{target}
 \title{Define custom columns in a \code{\link[=drake_plan]{drake_plan()}}.}
 \usage{
-target(command = NULL, trigger = NULL, retries = NULL,
-  timeout = NULL, cpu = NULL, elapsed = NULL, priority = NULL,
-  worker = NULL, resources = NULL, ...)
+target(command = NULL, ...)
 }
 \arguments{
 \item{command}{The command to build the target.}
-
-\item{trigger}{The target's trigger.}
-
-\item{retries}{Number of retries in case of failure.}
-
-\item{timeout}{Overall timeout (in seconds) for building a target.}
-
-\item{cpu}{cpu Timeout (seconds) for building a target.}
-
-\item{elapsed}{Elapsed time (seconds) for building a target.}
-
-\item{priority}{Integer giving the build priority of a target.
-Given two targets about to be built at the same time,
-the one with the lesser priority (numerically speaking)
-will be built first.}
-
-\item{worker}{The preferred worker to be assigned the target
-(in parallel computing).}
-
-\item{resources}{Experimental, no guarantees that this works all the time.
-Same as the \code{resources} argument to \code{batchtools_slurm()}
-and related \code{future.bachtools} functions.
-See also \url{https://github.com/HenrikBengtsson/future.batchtools#examples}. # nolint
-\code{resources} is a list of computing resource parameters for the target.
-Each element is a value passed to a \code{brew} placeholder of a
-\code{batchtools} template file. The list names of \code{resources}
-should be the brew patterns.}
 
 \item{...}{Named arguments specifying non-standard
 fields of the workflow plan.}
