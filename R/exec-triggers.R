@@ -97,8 +97,8 @@ trigger <- function(
     command = command,
     depend = depend,
     file = file,
-    condition = rlang::enexpr(condition),
-    change = rlang::enexpr(change),
+    condition = rlang::quo_squash(rlang::enquo(condition)),
+    change = rlang::quo_squash(rlang::enquo(change)),
     mode = match.arg(mode)
   )
 }

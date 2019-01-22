@@ -45,7 +45,7 @@
 #'   make_empty_graph make_ego_graph set_vertex_attr simplify
 #'   topo_sort V vertex_attr
 #' @importFrom methods new setRefClass
-#' @importFrom rlang enexpr enexprs enquo eval_tidy expr exprs
+#' @importFrom rlang enquo eval_tidy quo_squash quos
 #' @importFrom storr storr_environment storr_rds
 #' @importFrom utils compareVersion head packageVersion
 #'   read.csv sessionInfo stack type.convert unzip write.table

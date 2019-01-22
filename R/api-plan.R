@@ -141,7 +141,7 @@ drake_plan <- function(
   trace = FALSE
 ) {
   if (tidy_evaluation) {
-    dots <- rlang::exprs(...) # Enables quasiquotation via rlang.
+    dots <- lapply(rlang::quos(...), rlang::quo_squash)
   } else {
     dots <- match.call(expand.dots = FALSE)$...
   }
@@ -529,17 +529,20 @@ target <- function(
   ...
 ) {
   out <- list(
-    command   = sanitize_cmd_type(rlang::enexpr(command)),
-    trigger   = rlang::enexpr(trigger),
-    retries   = rlang::enexpr(retries),
-    timeout   = rlang::enexpr(timeout),
-    cpu       = rlang::enexpr(cpu),
-    elapsed   = rlang::enexpr(elapsed),
-    priority  = rlang::enexpr(priority),
-    worker    = rlang::enexpr(worker),
-    resources = rlang::enexpr(resources)
+    # I tried putting quo_squash(enquo()) in its own function,
+    # but that function returned the symbols back in cases when it
+    # should have just returned NULL.
+    command   = sanitize_cmd_type(rlang::quo_squash(rlang::enquo(command))),
+    trigger   = rlang::quo_squash(rlang::enquo(trigger)),
+    retries   = rlang::quo_squash(rlang::enquo(retries)),
+    timeout   = rlang::quo_squash(rlang::enquo(timeout)),
+    cpu       = rlang::quo_squash(rlang::enquo(cpu)),
+    elapsed   = rlang::quo_squash(rlang::enquo(elapsed)),
+    priority  = rlang::quo_squash(rlang::enquo(priority)),
+    worker    = rlang::quo_squash(rlang::enquo(worker)),
+    resources = rlang::quo_squash(rlang::enquo(resources))
   )
-  out <- c(out, rlang::enexprs(...))
+  out <- c(out, lapply(rlang::enquos(...), rlang::quo_squash))
   out <- select_nonempty(out)
   out[nzchar(names(out))]
   out <- lapply(
