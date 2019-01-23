@@ -24,6 +24,39 @@ test_with_dir("simple expansion", {
   expect_equal(plan$command, rep("1 + 1", 2))
 })
 
+test_with_dir("replicates", {
+  out <- drake_plan(
+    trace = TRUE,
+    a = target(x, transform = map(x = c(1, 1))),
+    b = target(f(a), transform = map(a))
+  )
+  exp <- drake_plan(
+    a_1 = target(
+      command = 1,
+      x = "1",
+      a = "a_1"
+    ),
+    a_1.1 = target(
+      command = 1,
+      x = "1",
+      a = "a_1.1"
+    ),
+    b_a_1 = target(
+      command = f(a_1),
+      x = "1",
+      a = "a_1",
+      b = "b_a_1"
+    ),
+    b_a_1.1 = target(
+      command = f(a_1.1),
+      x = "1",
+      a = "a_1.1",
+      b = "b_a_1.1"
+    )
+  )
+  expect_equal(out, exp)
+})
+
 test_with_dir("single tag_in", {
   out <- drake_plan(
     x = target(

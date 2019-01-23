@@ -231,19 +231,6 @@ fill_cols <- function(x, cols) {
   x
 }
 
-handle_duplicated_targets <- function(plan) {
-  plan <- plan[!duplicated(plan[, c("target", "command")]), ]
-  dups <- duplicated(plan$target)
-  if (any(dups)) {
-    stop(
-      "Duplicated targets with different commands:\n",
-      multiline_message(plan$target[dups]),
-      call. = FALSE
-    )
-  }
-  plan
-}
-
 parse_custom_plan_columns <- function(plan) {
   splits <- split(plan, seq_len(nrow(plan)))
   out <- lapply(splits, parse_custom_plan_row)

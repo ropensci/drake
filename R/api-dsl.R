@@ -127,7 +127,10 @@ new_targets <- function(target, grid) {
   if (is.null(dim(grid)) || any(dim(grid) < 1L)) {
     return(target)
   }
-  make.names(paste(target, apply(grid, 1, paste, collapse = "_"), sep = "_"))
+  make.names(
+    paste(target, apply(grid, 1, paste, collapse = "_"), sep = "_"),
+    unique = TRUE
+  )
 }
 
 dsl_transform <- function(...) {

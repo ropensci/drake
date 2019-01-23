@@ -13,7 +13,7 @@ sanitize_plan <- function(plan, allow_duplicated_targets = FALSE) {
   first <- c("target", "command")
   cols <- c(first, setdiff(colnames(plan), first))
   if (!allow_duplicated_targets) {
-    plan <- handle_duplicated_targets(plan[, cols])
+    plan <- assert_unique_targets(plan[, cols])
   }
   arrange_plan_cols(plan)
 }
@@ -59,4 +59,16 @@ arrange_plan_cols <- function(plan) {
   primary <- c("target", "command")
   others <- setdiff(colnames(plan), primary)
   plan[, c(primary, others)]
+}
+
+assert_unique_targets <- function(plan) {
+  dups <- duplicated(plan$target)
+  if (any(dups)) {
+    stop(
+      "duplicated target names:\n",
+      multiline_message(plan$target[dups]),
+      call. = FALSE
+    )
+  }
+  plan
 }

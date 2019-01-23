@@ -11,6 +11,7 @@
 - Get rid of the "kernels" `storr` namespace. As a result, `drake` is faster, but users will no longer be able to use imported functions loaded from `loadd()` or `readd()`.
 - Deprecate many API functions, including `plan_analyses()`, `plan_summaries()`, `analysis_wildcard()`, `cache_namespaces()`, `cache_path()`, `check_plan()`, `dataset_wildcard()`, `drake_meta()`, `drake_palette()`, `drake_tip()`, `in_progress()`, `recover_cache()`, and `target_namespaces()`.
 - In `target()`, users must now explicitly name all the arguments except `command`, e.g. `target(f(x), trigger = trigger(condition = TRUE))` instead of `target(f(x), trigger(condition = TRUE))`.
+- Fail right away in `bind_plans()` when the result has duplicated target names. This makes `drake`'s API more predictable and helps users catch malformed workflows earlier.
 
 ## Bug fixes
 

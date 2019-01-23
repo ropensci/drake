@@ -1,6 +1,6 @@
 drake_context("plans")
 
-test_with_dir("duplicated targets", {
+test_with_dir("duplicated target names", {
   expect_error(
     drake_plan(
       a = 1,
@@ -9,39 +9,14 @@ test_with_dir("duplicated targets", {
       b = 2,
       c = 3
     ),
-    regexp = "Duplicated targets"
+    regexp = "duplicated target names"
   )
   expect_error(
     bind_plans(
       drake_plan(a = 1, b = 1, c = 1),
       drake_plan(a = 5, b = 2, d = 5)
     ),
-    regexp = "Duplicated targets"
-  )
-  expect_equivalent(
-    bind_plans(
-      drake_plan(a = 1, b = 1, c = 1),
-      drake_plan(a = 1, b = 1, d = 5)
-    ),
-    drake_plan(
-      a = 1,
-      b = 1,
-      c = 1,
-      d = 5
-    )
-  )
-  expect_equivalent(
-    bind_plans(
-      drake_plan(d = f(c, b)),
-      drake_plan(c = f(a), a = 5),
-      drake_plan(b = f(a), a = 5)
-    ),
-    drake_plan(
-      d = f(c, b),
-      c = f(a),
-      a = 5,
-      b = f(a)
-    )
+    regexp = "duplicated target names"
   )
 })
 
@@ -224,13 +199,13 @@ test_with_dir("make() plays nicely with tibbles", {
   expect_silent(make(x, verbose = FALSE, session_info = FALSE))
 })
 
-test_with_dir("plans can have bad symbols", {
+test_with_dir("plans can start with bad symbols", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- weak_tibble(
-    target = c("a'x'", "b'x'", "_a", "a^", "a*", "a-"),
+    target = c("a'x'", "b'x'", "_a", "a^-.*"),
     command = 1)
   y <- drake_config(x)
-  expect_equal(y$plan$target, c("a.x.", "b.x.", "X_a", "a."))
+  expect_equal(y$plan$target, c("a.x.", "b.x.", "X_a", "a...."))
 })
 
 test_with_dir("issue 187 on Github (from Kendon Bell)", {
@@ -275,8 +250,8 @@ test_with_dir("custom column interface", {
     stop(!!tidyvar), worker = !!tidyvar, cpu = 4, custom = stop(), c2 = 5)
   y <- weak_tibble(
     command = "stop(2)",
-    cpu = 4,
     worker = 2,
+    cpu = 4,
     custom = "stop()",
     c2 = 5
   )
@@ -286,8 +261,8 @@ test_with_dir("custom column interface", {
   y <- weak_tibble(
     target = "x",
     command = "stop(2)",
-    cpu = 4,
     worker = 2,
+    cpu = 4,
     custom = "stop()",
     c2 = 5
   )
@@ -320,25 +295,36 @@ test_with_dir("custom column interface", {
 
 test_with_dir("bind_plans()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  plan1 <- drake_plan(x = 1, y = 2)
-  expect_equal(bind_plans(plan1, plan1), plan1) # targets should be unique
-  plan2 <- drake_plan(
+  plan1 <- drake_plan(a = 1, b = 2)
+  plan2 <- drake_plan(c = 3, d = 4)
+  plan3 <- drake_plan(e = 5, f = 6)
+  plan4 <- drake_plan(
+    a = 1,
+    b = 2,
+    c = 3,
+    d = 4,
+    e = 5,
+    f = 6
+  )
+  expect_equal(bind_plans(plan1, plan2), plan4[1:4, ])
+  plan5 <- drake_plan(
     z = target(
       command = download_data(),
       trigger = trigger(condition = TRUE)
     )
   )
-  plan3 <- drake_plan(u = 3, v = 4, w = 5)
-  out <- bind_plans(plan1, plan2)
+  plan6 <- drake_plan(u = 3, v = 4, w = 5)
+  out <- bind_plans(plan5, plan6)
   exp <- weak_tibble(
-    target = c("x", "y", "z"),
-    command = c("1", "2", "download_data()"),
-    trigger = c(NA, NA, "trigger(condition = TRUE)")
+    target = c("z", "u", "v", "w"),
+    command = c("download_data()", "3", "4", "5"),
+    trigger = c("trigger(condition = TRUE)", rep(NA_character_, 3))
   )
   expect_equal(out, exp)
+  plan2$trigger <- c("trigger(condition = TRUE)", NA_character_)
   exp <- weak_tibble(
-    target = c("x", "y", "z", "u", "v", "w"),
-    command = c("1", "2", "download_data()", "3", "4", "5"),
+    target = letters[1:6],
+    command = as.character(1:6),
     trigger = c(NA, NA, "trigger(condition = TRUE)", NA, NA, NA)
   )
   expect_equal(bind_plans(plan1, plan2, plan3), exp)
