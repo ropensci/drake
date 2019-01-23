@@ -905,10 +905,11 @@ test_with_dir("dsl: no NA levels in combine()", {
   equivalent_plans(out, exp)
 })
 
+
 test_with_dir("trace has correct provenance", {
   out <- drake_plan(
     trace = TRUE,
-    a = target(x, transform = map(x = c(1, 1), y = c(3, 4))),
+    a = target(x, transform = map(x = c(1, 1), y = c(3, 3))),
     b = target(a, transform = map(a)),
     c = target(b, transform = map(b)),
     d = target(b, transform = cross(b, c)),
@@ -926,11 +927,11 @@ test_with_dir("trace has correct provenance", {
       y = "3",
       a = "a_1_3"
     ),
-    a_1_4 = target(
+    a_1_3.1 = target(
       command = 1,
       x = "1",
-      y = "4",
-      a = "a_1_4"
+      y = "3",
+      a = "a_1_3.1"
     ),
     b_a_1_3 = target(
       command = a_1_3,
@@ -939,12 +940,12 @@ test_with_dir("trace has correct provenance", {
       a = "a_1_3",
       b = "b_a_1_3"
     ),
-    b_a_1_4 = target(
-      command = a_1_4,
+    b_a_1_3.1 = target(
+      command = a_1_3.1,
       x = "1",
-      y = "4",
-      a = "a_1_4",
-      b = "b_a_1_4"
+      y = "3",
+      a = "a_1_3.1",
+      b = "b_a_1_3.1"
     ),
     c_b_a_1_3 = target(
       command = b_a_1_3,
@@ -954,13 +955,13 @@ test_with_dir("trace has correct provenance", {
       b = "b_a_1_3",
       c = "c_b_a_1_3"
     ),
-    c_b_a_1_4 = target(
-      command = b_a_1_4,
+    c_b_a_1_3.1 = target(
+      command = b_a_1_3.1,
       x = "1",
-      y = "4",
-      a = "a_1_4",
-      b = "b_a_1_4",
-      c = "c_b_a_1_4"
+      y = "3",
+      a = "a_1_3.1",
+      b = "b_a_1_3.1",
+      c = "c_b_a_1_3.1"
     ),
     d_b_a_1_3_c_b_a_1_3 = target(
       command = b_a_1_3,
@@ -971,26 +972,26 @@ test_with_dir("trace has correct provenance", {
       c = "c_b_a_1_3",
       d = "d_b_a_1_3_c_b_a_1_3"
     ),
-    d_b_a_1_3_c_b_a_1_4 = target(
+    d_b_a_1_3_c_b_a_1_3.1 = target(
       command = b_a_1_3,
       b = "b_a_1_3",
-      c = "c_b_a_1_4",
-      d = "d_b_a_1_3_c_b_a_1_4"
+      c = "c_b_a_1_3.1",
+      d = "d_b_a_1_3_c_b_a_1_3.1"
     ),
-    d_b_a_1_4_c_b_a_1_3 = target(
-      command = b_a_1_4,
-      b = "b_a_1_4",
+    d_b_a_1_3.1_c_b_a_1_3 = target(
+      command = b_a_1_3.1,
+      b = "b_a_1_3.1",
       c = "c_b_a_1_3",
-      d = "d_b_a_1_4_c_b_a_1_3"
+      d = "d_b_a_1_3.1_c_b_a_1_3"
     ),
-    d_b_a_1_4_c_b_a_1_4 = target(
-      command = b_a_1_4,
+    d_b_a_1_3.1_c_b_a_1_3.1 = target(
+      command = b_a_1_3.1,
       x = "1",
-      y = "4",
-      a = "a_1_4",
-      b = "b_a_1_4",
-      c = "c_b_a_1_4",
-      d = "d_b_a_1_4_c_b_a_1_4"
+      y = "3",
+      a = "a_1_3.1",
+      b = "b_a_1_3.1",
+      c = "c_b_a_1_3.1",
+      d = "d_b_a_1_3.1_c_b_a_1_3.1"
     ),
     e_c_b_a_1_3 = target(
       command = c_b_a_1_3,
@@ -1001,14 +1002,14 @@ test_with_dir("trace has correct provenance", {
       c = "c_b_a_1_3",
       e = "e_c_b_a_1_3"
     ),
-    e_c_b_a_1_4 = target(
-      command = c_b_a_1_4,
+    e_c_b_a_1_3.1 = target(
+      command = c_b_a_1_3.1,
       x = "1",
-      y = "4",
-      a = "a_1_4",
-      b = "b_a_1_4",
-      c = "c_b_a_1_4",
-      e = "e_c_b_a_1_4"
+      y = "3",
+      a = "a_1_3.1",
+      b = "b_a_1_3.1",
+      c = "c_b_a_1_3.1",
+      e = "e_c_b_a_1_3.1"
     ),
     f_c_b_a_1_3 = target(
       command = c_b_a_1_3,
@@ -1019,14 +1020,14 @@ test_with_dir("trace has correct provenance", {
       c = "c_b_a_1_3",
       f = "f_c_b_a_1_3"
     ),
-    f_c_b_a_1_4 = target(
-      command = c_b_a_1_4,
+    f_c_b_a_1_3.1 = target(
+      command = c_b_a_1_3.1,
       x = "1",
-      y = "4",
-      a = "a_1_4",
-      b = "b_a_1_4",
-      c = "c_b_a_1_4",
-      f = "f_c_b_a_1_4"
+      y = "3",
+      a = "a_1_3.1",
+      b = "b_a_1_3.1",
+      c = "c_b_a_1_3.1",
+      f = "f_c_b_a_1_3.1"
     ),
     g_b_a_1_3 = target(
       command = b_a_1_3,
@@ -1036,13 +1037,13 @@ test_with_dir("trace has correct provenance", {
       b = "b_a_1_3",
       g = "g_b_a_1_3"
     ),
-    g_b_a_1_4 = target(
-      command = b_a_1_4,
+    g_b_a_1_3.1 = target(
+      command = b_a_1_3.1,
       x = "1",
-      y = "4",
-      a = "a_1_4",
-      b = "b_a_1_4",
-      g = "g_b_a_1_4"
+      y = "3",
+      a = "a_1_3.1",
+      b = "b_a_1_3.1",
+      g = "g_b_a_1_3.1"
     ),
     h_a_1_3 = target(
       command = a_1_3,
@@ -1051,19 +1052,19 @@ test_with_dir("trace has correct provenance", {
       a = "a_1_3",
       h = "h_a_1_3"
     ),
-    h_a_1_4 = target(
-      command = a_1_4,
+    h_a_1_3.1 = target(
+      command = a_1_3.1,
       x = "1",
-      y = "4",
-      a = "a_1_4",
-      h = "h_a_1_4"
+      y = "3",
+      a = "a_1_3.1",
+      h = "h_a_1_3.1"
     ),
     i = target(
-      command = list(e_c_b_a_1_3, e_c_b_a_1_4),
+      command = list(e_c_b_a_1_3, e_c_b_a_1_3.1),
       i = "i"
     ),
     j = target(
-      command = list(f_c_b_a_1_3, f_c_b_a_1_4),
+      command = list(f_c_b_a_1_3, f_c_b_a_1_3.1),
       j = "j"
     )
   )
