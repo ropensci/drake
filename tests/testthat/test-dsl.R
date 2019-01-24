@@ -1084,11 +1084,11 @@ test_with_dir("row order does not matter", {
     report = knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE),
     regression1 = target(
       reg1(data),
-      transform = map(data = c(small, large), .tag_out = reg),
+      transform = map(data = c(small, large), .tag_out = reg)
     ),
     regression2 = target(
       reg2(data),
-      transform = map(data = c(small, large), .tag_out = reg),
+      transform = map(data = c(small, large), .tag_out = reg)
     ),
     small = simulate(48),
     large = simulate(64),
@@ -1100,11 +1100,11 @@ test_with_dir("row order does not matter", {
     report = knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE),
     regression2 = target(
       reg2(data),
-      transform = map(data = c(small, large), .tag_out = reg),
+      transform = map(data = c(small, large), .tag_out = reg)
     ),
     regression1 = target(
       reg1(data),
-      transform = map(data = c(small, large), .tag_out = reg),
+      transform = map(data = c(small, large), .tag_out = reg)
     ),
     summ = target(
       suppressWarnings(summary(reg$residuals)),
@@ -1116,5 +1116,59 @@ test_with_dir("row order does not matter", {
     ),
     trace = TRUE
   )
+  expect_equal(nrow(plan1, 15L))
+  equivalent_plans(plan1, plan2)
+})
+
+test_with_dir("same test (row order) different plan", {
+  plan1 <- drake_plan(
+    small = simulate(48),
+    large = simulate(64),
+    reg = target(
+      reg_fun(data),
+      transform = cross(reg_fun = c(reg1, reg2), data = c(small, large))
+    ),
+    summ = target(
+      sum_fun(data, reg),
+      transform = cross(sum_fun = c(coef, residuals), reg)
+    ),
+    winners = target(
+      min(summ),
+      transform = combine(summ, .by = c(data, sum_fun))
+    ),
+    others = target(
+      analyze(list(c(summ), c(data))),
+      transform = combine(summ, data, .by = c(data, sum_fun))
+    ),
+    final_winner = target(
+      min(winners),
+      transform = combine(winners)
+    )
+  )
+  plan2 <- drake_plan(
+    final_winner = target(
+      min(winners),
+      transform = combine(winners)
+    ),
+    reg = target(
+      reg_fun(data),
+      transform = cross(reg_fun = c(reg1, reg2), data = c(small, large))
+    ),
+    small = simulate(48),
+    summ = target(
+      sum_fun(data, reg),
+      transform = cross(sum_fun = c(coef, residuals), reg)
+    ),
+    others = target(
+      analyze(list(c(summ), c(data))),
+      transform = combine(summ, data, .by = c(data, sum_fun))
+    ),
+    winners = target(
+      min(summ),
+      transform = combine(summ, .by = c(data, sum_fun))
+    ),
+    large = simulate(64)
+  )
+  expect_equal(nrow(plan1, 23L))
   equivalent_plans(plan1, plan2)
 })
