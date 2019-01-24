@@ -242,10 +242,10 @@ parse_transform.map <- parse_transform.cross <- function(transform) {
 parse_transform.combine <- function(transform) {
   transform <- structure(
     transform,
-    new_groupings = new_groupings(transform),
+    by = dsl_by(transform),
+    combine = dsl_combine(transform),
     tag_in = tag_in(transform),
-    tag_out = tag_out(transform),
-    by = dsl_by(transform)
+    tag_out = tag_out(transform)
   )
   structure(transform, dsl_deps = dsl_deps(transform))
 }
@@ -286,11 +286,14 @@ dsl_by <- function(...) UseMethod("dsl_by")
 
 dsl_by.combine <- function(transform) {
   attr(transform, "by") %|||%
-    all.vars(transform[[1]]$by, functions = FALSE)
+    all.vars(transform[[1]][".by"], functions = FALSE)
 }
 
-dsl_by.default <- function(transform) {
-  NULL
+dsl_combine <- function(...) UseMethod("dsl_by")
+
+dsl_combine.combine <- function(transform) {
+  attr(transform, "combine") %|||%
+    as.character(unnamed(lang(transform))[-1])
 }
 
 new_groupings <- function(transform) UseMethod("new_groupings")
@@ -305,14 +308,6 @@ new_groupings.map <- function(transform) {
 
 new_groupings.cross <- new_groupings.map
 
-new_groupings.combine <- function(transform) {
-  attr(transform, "new_groupings") %|||%
-    find_new_groupings(
-      lang(transform),
-      exclude = c(".tag_in", ".tag_out", "by")
-    )
-}
-
 find_new_groupings <- function(code, exclude = character(0)) {
   list <- named(as.list(code), exclude)
   lapply(list, function(x) {
@@ -325,9 +320,12 @@ find_new_groupings <- function(code, exclude = character(0)) {
 
 old_groupings <- function(...) UseMethod("old_groupings")
 
-old_groupings.transform <- function(transform, plan = NULL) {
-  attr(transform, "old_groupings") %|||% find_old_groupings(transform, plan)
+old_groupings.map <- old_groupings.cross <- function(transform, plan = NULL) {
+  attr(transform, "old_groupings") %|||%
+    find_old_groupings(transform, plan)
 }
+
+old_groupings.combined <- function(...) character(0)
 
 find_old_groupings <- function(transform, plan) {
   group_names <- as.character(unnamed(lang(transform))[-1])
