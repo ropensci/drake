@@ -1070,3 +1070,51 @@ test_with_dir("trace has correct provenance", {
   )
   equivalent_plans(out, exp)
 })
+
+test_with_dir("row order does not matter", {
+  plan1 <- drake_plan(
+    coef = target(
+      suppressWarnings(summary(reg))$coefficients,
+      transform = map(reg)
+    ),
+    summ = target(
+      suppressWarnings(summary(reg$residuals)),
+      transform = map(reg)
+    ),
+    report = knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE),
+    regression1 = target(
+      reg1(data),
+      transform = map(data = c(small, large), .tag_out = reg),
+    ),
+    regression2 = target(
+      reg2(data),
+      transform = map(data = c(small, large), .tag_out = reg),
+    ),
+    small = simulate(48),
+    large = simulate(64),
+    trace = TRUE
+  )
+  plan2 <- drake_plan(
+    small = simulate(48),
+    large = simulate(64),
+    report = knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE),
+    regression2 = target(
+      reg2(data),
+      transform = map(data = c(small, large), .tag_out = reg),
+    ),
+    regression1 = target(
+      reg1(data),
+      transform = map(data = c(small, large), .tag_out = reg),
+    ),
+    summ = target(
+      suppressWarnings(summary(reg$residuals)),
+      transform = map(reg)
+    ),
+    coef = target(
+      suppressWarnings(summary(reg))$coefficients,
+      transform = map(reg)
+    ),
+    trace = TRUE
+  )
+  equivalent_plans(plan1, plan2)
+})
