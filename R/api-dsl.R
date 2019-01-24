@@ -41,18 +41,6 @@ transform_plan <- function(plan, trace = FALSE) {
   plan
 }
 
-index_can_transform <- function(plan) {
-  vapply(plan$transform, can_transform, FUN.VALUE = logical(1), plan = plan)
-}
-
-can_transform <- function(transform, plan) {
-  if (safe_is_na(transform)) {
-    return(FALSE)
-  }
-  missing_groups <- setdiff(dsl_deps(transform), names(plan))
-  length(missing_groups) < 1L
-}
-
 transform_row <- function(plan, row) {
   target <- plan$target[[row]]
   command <- parse_command(plan$command[[row]])
@@ -76,6 +64,18 @@ transform_row <- function(plan, row) {
     out[[col]] <- out$target
   }
   out
+}
+
+index_can_transform <- function(plan) {
+  vapply(plan$transform, can_transform, FUN.VALUE = logical(1), plan = plan)
+}
+
+can_transform <- function(transform, plan) {
+  if (safe_is_na(transform)) {
+    return(FALSE)
+  }
+  missing_groups <- setdiff(dsl_deps(transform), names(plan))
+  length(missing_groups) < 1L
 }
 
 map_to_grid <- function(transform, target, command, plan) {
@@ -165,7 +165,7 @@ dsl_transform.combine <- function(transform, target, command, plan) {
 
 combine_step <- function(plan, command, transform) {
   aggregates <- lapply(
-    X = plan[, group_names(transform)],
+    X = plan[, dsl_combine(transform)],
     FUN = function(x) {
       unname(rlang::syms(as.character(na_omit(unique(x)))))
     }
@@ -243,6 +243,7 @@ parse_transform.combine <- function(transform) {
   transform <- structure(
     transform,
     by = dsl_by(transform),
+    combine = dsl_combine(transform),
     tag_in = tag_in(transform),
     tag_out = tag_out(transform)
   )
@@ -277,13 +278,22 @@ dsl_deps.combine <- function(transform) {
   )
 }
 
-dsl_deps.default <- function(...) character(0)
+dsl_deps.default <- function(...) {
+  character(0)
+}
 
 dsl_by <- function(...) UseMethod("dsl_by")
 
 dsl_by.combine <- function(transform) {
   attr(transform, "by") %|||%
     all.vars(transform[[1]][".by"], functions = FALSE)
+}
+
+dsl_combine <- function(...) UseMethod("dsl_by")
+
+dsl_combine.combine <- function(transform) {
+  attr(transform, "combine") %|||%
+    as.character(unnamed(lang(transform))[-1])
 }
 
 new_groupings <- function(transform) UseMethod("new_groupings")
@@ -298,7 +308,7 @@ new_groupings.map <- function(transform) {
 
 new_groupings.cross <- new_groupings.map
 
-new_groupings.combine <- function(...) character(0)
+new_groupings.combined <- function(...) character(0)
 
 find_new_groupings <- function(code, exclude = character(0)) {
   list <- named(as.list(code), exclude)
@@ -312,10 +322,12 @@ find_new_groupings <- function(code, exclude = character(0)) {
 
 old_groupings <- function(...) UseMethod("old_groupings")
 
-old_groupings.transform <- function(transform, plan = NULL) {
+old_groupings.map <- old_groupings.cross <- function(transform, plan = NULL) {
   attr(transform, "old_groupings") %|||%
     find_old_groupings(transform, plan)
 }
+
+old_groupings.combined <- function(...) character(0)
 
 find_old_groupings <- function(transform, plan) {
   group_names <- as.character(unnamed(lang(transform))[-1])
@@ -334,9 +346,11 @@ groupings <- function(...) {
   UseMethod("groupings")
 }
 
-groupings.transform <- function(transform) {
+groupings.map <- groupings.cross <- function(transform) {
   c(new_groupings(transform), old_groupings(transform))
 }
+
+groupings.combine <- function(...) character(0)
 
 group_names <- function(transform) {
   as.character(names(groupings(transform)))
