@@ -323,17 +323,3 @@ unnamed <- function(x) {
   if (is.null(names(x))) return(x)
   x[!nzchar(names(x))]
 }
-
-left_outer_join <- function(x, y) {
-  by <- intersect(colnames(x), colnames(y))
-  if (!length(by)) {
-    return(x)
-  }
-  # The output must have the same number of rows as x.
-  dups <- duplicated(y[, by])
-  y <- y[!dups, ]
-  # Is merge() a performance bottleneck?
-  # Need to profile.
-  out <- merge(x = x, y = y, by = by, all.x = TRUE)
-  out[, union(colnames(x), colnames(y))]
-}

@@ -78,7 +78,7 @@ map_to_grid <- function(transform, target, command, plan) {
   grid <- dsl_grid(transform, groupings)
   ncl <- c(names(new_groupings(transform)), "target", "command", "transform")
   plan <- plan[, setdiff(colnames(plan), ncl), drop = FALSE]
-  grid <- left_outer_join(grid, plan)
+  grid <- dsl_left_outer_join(grid, plan)
   suffix_cols <- intersect(colnames(grid), group_names(transform))
   new_targets <- new_targets(target, grid[, suffix_cols, drop = FALSE])
   new_commands <- grid_commands(command, grid)
@@ -324,6 +324,24 @@ dsl_default_df <- function(target, command) {
     command = char(command),
     stringsAsFactors = FALSE
   )
+}
+
+dsl_left_outer_join <- function(x, y) {
+  by <- intersect(colnames(x), colnames(y))
+  if (!length(by)) {
+    return(x)
+  }
+  # The output must have the same number of rows as x.
+  rows_keep <- complete_cases(y[, by])
+  y <- y[rows_keep, ]
+  dups <- duplicated(y[, by])
+  if (any(dups)) {
+    y <- y[!dups, ]
+  }
+  # Is merge() a performance bottleneck?
+  # Need to profile.
+  out <- merge(x = x, y = y, by = by, all.x = TRUE)
+  out[, union(colnames(x), colnames(y))]
 }
 
 map_grid_error <- function(transform, groupings) {
