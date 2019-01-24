@@ -31,8 +31,10 @@ transform_plan <- function(plan, trace = FALSE) {
   while (any(index <- index_can_transform(plan))) {
     rows <- lapply(which(index), transform_row, plan = plan)
     plan <- sub_in_plan(plan, rows, at = which(index))
+    old_cols(plan) <- old_cols
   }
   if (!trace) {
+    keep <- as.character(intersect(colnames(plan), old_cols(plan)))
     plan <- plan[, intersect(colnames(plan), old_cols(plan)), drop = FALSE]
   }
   old_cols(plan) <- plan$transform <- plan$group <- NULL
