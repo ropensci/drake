@@ -26,17 +26,11 @@ transform_plan <- function(plan, trace = FALSE) {
   if (!("transform" %in% names(plan))) {
     return(plan)
   }
-  row <- 1
   old_cols(plan) <- old_cols <- colnames(plan)
-  while (row <= nrow(plan)) {
-    if (is.na(plan$transform[[row]])) {
-      row <- row + 1
-      next
-    }
-    rows <- transform_row(plan, row)
-    plan <- bind_plans(plan[seq_len(row - 1), ], rows, plan[-seq_len(row), ])
-    old_cols(plan) <- old_cols
-    row <- row + nrow(rows)
+  plan$transform <- lapply(plan$transform, parse_transform)
+  while (any(index <- index_can_transform(plan))) {
+    rows <- lapply(which(index), transform_row, plan = plan)
+    plan <- sub_in_plan(plan, rows, at = which(index))
   }
   if (!trace) {
     plan <- plan[, intersect(colnames(plan), old_cols(plan)), drop = FALSE]
@@ -45,10 +39,22 @@ transform_plan <- function(plan, trace = FALSE) {
   plan
 }
 
+index_can_transform <- function(plan) {
+  vapply(plan$transform, can_transform, FUN.VALUE = logical(1), plan = plan)
+}
+
+can_transform <- function(transform, plan) {
+  if (safe_is_na(transform)) {
+    return(FALSE)
+  }
+  missing_groups <- setdiff(unnamed_args(transform), names(plan))
+  length(missing_groups) < 1L
+}
+
 transform_row <- function(plan, row) {
   target <- plan$target[[row]]
   command <- parse_command(plan$command[[row]])
-  transform <- parse_transform(plan$transform[[row]], plan)
+  transform <- set_old_groupings(plan$transform[[row]], plan)
   new_cols <- c(
     target,
     tag_in(transform),
@@ -200,15 +206,18 @@ parse_command.default <- function(command) {
   )
 }
 
-parse_transform <- function(...) {
+parse_transform <- function(transform, ...) {
+  if (safe_is_na(transform)) {
+    return(NA)
+  }
   UseMethod("parse_transform")
 }
 
-parse_transform.character <- function(transform, plan) {
-  parse_transform(parse(text = transform)[[1]], plan)
+parse_transform.character <- function(transform) {
+  parse_transform(parse(text = transform)[[1]])
 }
 
-parse_transform.default <- function(transform, plan) {
+parse_transform.default <- function(transform) {
   out <- structure(
     as.expression(transform),
     class = unique(c(deparse(transform[[1]]), "transform", class(transform)))
@@ -216,8 +225,8 @@ parse_transform.default <- function(transform, plan) {
   assert_good_transform(out)
   structure(
     out,
+    unnamed_args = unnamed_args(out),
     new_groupings = new_groupings(out),
-    old_groupings = old_groupings(out, plan),
     tag_in = tag_in(out),
     tag_out = tag_out(out)
   )
@@ -237,10 +246,21 @@ assert_good_transform.default <- function(transform, target) {
   )
 }
 
+unnamed_args <- function(transform) UseMethod("unnamed_args")
+
+unnamed_args.transform <- function(transform) {
+  attr(transform, "unnamed_args") %|||%
+    as.character(unnamed(as.list(transform[[1]][-1])))
+}
+
+unnamed_args.default <- function(...) {
+  character(0)
+}
+
 new_groupings <- function(transform) UseMethod("new_groupings")
 
 new_groupings.map <- function(transform) {
-  attr(transform, "new_groupings") %||%
+  attr(transform, "new_groupings") %|||%
     find_new_groupings(
       lang(transform),
       exclude = c(".tag_in", ".tag_out")
@@ -262,7 +282,7 @@ find_new_groupings <- function(code, exclude = character(0)) {
 old_groupings <- function(...) UseMethod("old_groupings")
 
 old_groupings.transform <- function(transform, plan = NULL) {
-  attr(transform, "old_groupings") %||% find_old_groupings(transform, plan)
+  attr(transform, "old_groupings") %|||% find_old_groupings(transform, plan)
 }
 
 find_old_groupings <- function(transform, plan) {
@@ -271,6 +291,11 @@ find_old_groupings <- function(transform, plan) {
   lapply(plan[, group_names, drop = FALSE], function(x) {
     unique(na_omit(x))
   })
+}
+
+set_old_groupings <- function(transform, plan) {
+  attr(transform, "old_groupings") <- find_old_groupings(transform, plan)
+  transform
 }
 
 groupings <- function(...) {

@@ -7,6 +7,14 @@
   }
 }
 
+`%|||%` <- function(x, y) {
+  if (is.null(x)) {
+    y
+  } else {
+    x
+  }
+}
+
 `%||NA%` <- function(x, y) {
   if (is.null(x) || length(x) < 1 || anyNA(x)) {
     y
@@ -322,4 +330,16 @@ named <- function(x, exclude = character(0)) {
 unnamed <- function(x) {
   if (is.null(names(x))) return(x)
   x[!nzchar(names(x))]
+}
+
+sub_in_plan <- function(plan, rows, at) {
+  for (index in rev(seq_along(at))) {
+    row <- at[index]
+    plan <- bind_plans(
+      plan[seq_len(row - 1), ],
+      rows[[index]],
+      plan[-seq_len(row), ]
+    )
+  }
+  plan
 }
