@@ -280,10 +280,6 @@ dsl_deps.combine <- function(transform) {
   )
 }
 
-dsl_deps.default <- function(...) {
-  character(0)
-}
-
 dsl_by <- function(...) UseMethod("dsl_by")
 
 dsl_by.combine <- function(transform) {
@@ -310,8 +306,6 @@ new_groupings.map <- function(transform) {
 
 new_groupings.cross <- new_groupings.map
 
-new_groupings.combined <- function(...) character(0)
-
 find_new_groupings <- function(code, exclude = character(0)) {
   list <- named(as.list(code), exclude)
   lapply(list, function(x) {
@@ -328,8 +322,6 @@ old_groupings.map <- old_groupings.cross <- function(transform, plan = NULL) {
   attr(transform, "old_groupings") %|||%
     find_old_groupings(transform, plan)
 }
-
-old_groupings.combined <- function(...) character(0)
 
 find_old_groupings <- function(transform, plan) {
   group_names <- as.character(unnamed(lang(transform))[-1])
@@ -408,9 +400,7 @@ dsl_left_outer_join <- function(x, y) {
   rows_keep <- complete_cases(y[, by])
   y <- y[rows_keep, ]
   dups <- duplicated(y[, by])
-  if (any(dups)) {
-    y <- y[!dups, ]
-  }
+  if (any(dups)) y <- y[!dups, ]
   # Is merge() a performance bottleneck?
   # Need to profile.
   out <- merge(x = x, y = y, by = by, all.x = TRUE)
