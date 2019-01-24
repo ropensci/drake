@@ -854,7 +854,7 @@ test_with_dir("dsl: exact same plan as mtcars", {
     ),
     regression2 = target(
       reg2(data),
-      transform = map(data, .tag_out = reg),
+      transform = map(data = c(small, large), .tag_out = reg),
     ),
     summ = target(
       suppressWarnings(summary(reg$residuals)),
@@ -877,11 +877,17 @@ test_with_dir("dsl: no NA levels in combine()", {
     ),
     data_download = target(
       download_data(url = x),
-      transform = map(x = c("http://url_1", "http://url_2"), c(real, data))
+      transform = map(
+        x = c("http://url_1", "http://url_2"),
+        .tag_out = c(real, data)
+      )
     ),
     data_pkg = target(
       load_data_from_package(pkg = x),
-      transform = map(x = c("gapminder", "Ecdat"), c(local, real, data))
+      transform = map(
+        x = c("gapminder", "Ecdat"),
+        .tag_out = c(local, real, data)
+      )
     ),
     summaries = target(
       compare_ds(data_sim),
