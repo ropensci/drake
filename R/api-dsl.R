@@ -149,7 +149,7 @@ dsl_transform.cross <- dsl_transform.map <- map_to_grid
 
 dsl_transform.combine <- function(transform, target, command, plan) {
   cols_keep <- union(dsl_by(transform), dsl_combine(transform))
-  rows_keep <- complete_cases(plan[, dsl_by(transform), drop = FALSE])
+  rows_keep <- complete_cases(plan[, cols_keep, drop = FALSE])
   if (!length(rows_keep) || !any(rows_keep)) {
     return(dsl_default_df(target, command))
   }

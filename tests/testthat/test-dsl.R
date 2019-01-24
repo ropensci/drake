@@ -264,7 +264,7 @@ test_with_dir("dsl with the mtcars plan", {
     ),
     winners = target(
       min(summ),
-      transform = combine(summ, .by = c(sum_fun, data))
+      transform = combine(summ, .by = c(data, sum_fun))
     ),
     others = target(
       analyze(list(c(summ), c(data))),
