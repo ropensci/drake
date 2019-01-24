@@ -49,7 +49,7 @@ can_transform <- function(transform, plan) {
   if (safe_is_na(transform)) {
     return(FALSE)
   }
-  missing_groups <- setdiff(unnamed_args(transform), names(plan))
+  missing_groups <- setdiff(dsl_deps(transform), names(plan))
   length(missing_groups) < 1L
 }
 
@@ -227,7 +227,7 @@ parse_transform.default <- function(transform) {
   assert_good_transform(out)
   structure(
     out,
-    unnamed_args = unnamed_args(out),
+    dsl_deps = dsl_deps(out),
     new_groupings = new_groupings(out),
     tag_in = tag_in(out),
     tag_out = tag_out(out)
@@ -248,14 +248,18 @@ assert_good_transform.default <- function(transform, target) {
   )
 }
 
-unnamed_args <- function(transform) UseMethod("unnamed_args")
+dsl_deps <- function(transform) UseMethod("dsl_deps")
 
-unnamed_args.transform <- function(transform) {
-  attr(transform, "unnamed_args") %|||%
+dsl_deps.map <- dsl_deps.cross <- function(transform) {
+  attr(transform, "dsl_deps") %|||%
     as.character(unnamed(as.list(transform[[1]][-1])))
 }
 
-unnamed_args.default <- function(...) {
+dsl_deps.combine <- function(transform) {
+  browser()
+}
+
+dsl_deps.default <- function(...) {
   character(0)
 }
 
