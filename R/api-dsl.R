@@ -67,7 +67,12 @@ transform_row <- function(plan, row) {
 }
 
 index_can_transform <- function(plan) {
-  vapply(plan[["transform"]], can_transform, FUN.VALUE = logical(1), plan = plan)
+  vapply(
+    plan[["transform"]],
+    can_transform,
+    FUN.VALUE = logical(1),
+    plan = plan
+  )
 }
 
 can_transform <- function(transform, plan) {
