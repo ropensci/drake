@@ -608,6 +608,7 @@ test_with_dir("dsl trace", {
 })
 
 test_with_dir("running a dsl-generated mtcars plan", {
+  skip_on_cran()
   load_mtcars_example()
   rm(my_plan)
   plan <- drake_plan(
