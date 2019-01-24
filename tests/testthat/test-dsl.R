@@ -264,15 +264,15 @@ test_with_dir("dsl with the mtcars plan", {
     ),
     winners = target(
       min(summ),
-      transform = combine(data, sum_fun)
+      transform = combine(summ, by = c(sum_fun, data))
     ),
     others = target(
       analyze(list(c(summ), c(data))),
-      transform = combine(data, sum_fun)
+      transform = combine(summ, data, by = c(data, sum_fun))
     ),
     final_winner = target(
       min(winners),
-      transform = combine()
+      transform = combine(winners)
     )
   )
   exp <- drake_plan(

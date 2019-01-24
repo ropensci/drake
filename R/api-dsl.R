@@ -148,28 +148,28 @@ dsl_transform <- function(...) {
 dsl_transform.cross <- dsl_transform.map <- map_to_grid
 
 dsl_transform.combine <- function(transform, target, command, plan) {
-  command_symbols <- intersect(symbols(command), colnames(plan))
-  cols_keep <- union(command_symbols, group_names(transform))
-  rows_keep <- complete_cases(plan[, cols_keep, drop = FALSE])
+  rows_keep <- complete_cases(plan[, dsl_by(transform), drop = FALSE])
   if (!length(rows_keep) || !any(rows_keep)) {
     return(dsl_default_df(target, command))
   }
   out <- map_by(
     .x = plan[rows_keep, ],
-    .by = group_names(transform),
+    .by = dsl_by(transform),
     .f = combine_step,
     command = command,
     transform = transform
   )
-  grouping_symbols <- intersect(group_names(transform), colnames(plan))
-  out$target <- new_targets(target, out[, grouping_symbols, drop = FALSE])
+  out$target <- new_targets(target, out[, dsl_by(transform), drop = FALSE])
   out
 }
 
 combine_step <- function(plan, command, transform) {
-  aggregates <- lapply(plan, function(x) {
-    unname(rlang::syms(as.character(na_omit(unique(x)))))
-  })
+  aggregates <- lapply(
+    X = plan[, names(old_groupings(transform))],
+    FUN = function(x) {
+      unname(rlang::syms(as.character(na_omit(unique(x)))))
+    }
+  )
   command <- eval(
     call("substitute", lang(command), aggregates),
     envir = baseenv()
@@ -208,30 +208,46 @@ parse_command.default <- function(command) {
   )
 }
 
-parse_transform <- function(transform, ...) {
-  if (safe_is_na(transform)) {
-    return(NA)
-  }
-  UseMethod("parse_transform")
-}
+parse_transform <- function(transform) UseMethod("parse_transform")
 
 parse_transform.character <- function(transform) {
   parse_transform(parse(text = transform)[[1]])
 }
 
 parse_transform.default <- function(transform) {
-  out <- structure(
+  if (safe_is_na(transform)) {
+    return(NA)
+  }
+  if (is.character(transform)) {
+    transform <- parse(text = transform)[[1]]
+  }
+  transform <- structure(
     as.expression(transform),
     class = unique(c(deparse(transform[[1]]), "transform", class(transform)))
   )
-  assert_good_transform(out)
+  assert_good_transform(transform)
+  parse_transform(transform)
+}
+
+parse_transform.map <- parse_transform.cross <- function(transform) {
   structure(
-    out,
-    dsl_deps = dsl_deps(out),
-    new_groupings = new_groupings(out),
-    tag_in = tag_in(out),
-    tag_out = tag_out(out)
+    transform,
+    deps = dsl_deps(transform),
+    new_groupings = new_groupings(transform),
+    tag_in = tag_in(transform),
+    tag_out = tag_out(transform)
   )
+}
+
+parse_transform.combine <- function(transform) {
+  transform <- structure(
+    transform,
+    new_groupings = new_groupings(transform),
+    tag_in = tag_in(transform),
+    tag_out = tag_out(transform),
+    by = dsl_by(transform)
+  )
+  structure(transform, dsl_deps = dsl_deps(transform))
 }
 
 assert_good_transform <- function(...) UseMethod("assert_good_transform")
@@ -251,16 +267,30 @@ assert_good_transform.default <- function(transform, target) {
 dsl_deps <- function(transform) UseMethod("dsl_deps")
 
 dsl_deps.map <- dsl_deps.cross <- function(transform) {
-  attr(transform, "dsl_deps") %|||%
+  attr(transform, "deps") %|||%
     as.character(unnamed(as.list(transform[[1]][-1])))
 }
 
 dsl_deps.combine <- function(transform) {
-  browser()
+  c(
+    as.character(unnamed(transform[[1]][-1])),
+    dsl_by(transform)
+  )
 }
 
 dsl_deps.default <- function(...) {
   character(0)
+}
+
+dsl_by <- function(...) UseMethod("dsl_by")
+
+dsl_by.combine <- function(transform) {
+  attr(transform, "by") %|||%
+    all.vars(transform[[1]]$by, functions = FALSE)
+}
+
+dsl_by.default <- function(transform) {
+  NULL
 }
 
 new_groupings <- function(transform) UseMethod("new_groupings")
@@ -273,7 +303,15 @@ new_groupings.map <- function(transform) {
     )
 }
 
-new_groupings.cross <- new_groupings.combine <- new_groupings.map
+new_groupings.cross <- new_groupings.map
+
+new_groupings.combine <- function(transform) {
+  attr(transform, "new_groupings") %|||%
+    find_new_groupings(
+      lang(transform),
+      exclude = c(".tag_in", ".tag_out", "by")
+    )
+}
 
 find_new_groupings <- function(code, exclude = character(0)) {
   list <- named(as.list(code), exclude)
