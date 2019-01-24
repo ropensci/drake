@@ -165,7 +165,7 @@ dsl_transform.combine <- function(transform, target, command, plan) {
 
 combine_step <- function(plan, command, transform) {
   aggregates <- lapply(
-    X = plan[, names(old_groupings(transform))],
+    X = plan[, dsl_combine(transform)],
     FUN = function(x) {
       unname(rlang::syms(as.character(na_omit(unique(x)))))
     }
