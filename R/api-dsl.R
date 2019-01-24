@@ -26,29 +26,25 @@ transform_plan <- function(plan, trace = FALSE) {
   if (!("transform" %in% names(plan))) {
     return(plan)
   }
-  row <- 1
   old_cols(plan) <- old_cols <- colnames(plan)
-  while (row <= nrow(plan)) {
-    if (is.na(plan$transform[[row]])) {
-      row <- row + 1
-      next
-    }
-    rows <- transform_row(plan, row)
-    plan <- bind_plans(plan[seq_len(row - 1), ], rows, plan[-seq_len(row), ])
+  plan[["transform"]] <- lapply(plan[["transform"]], parse_transform)
+  while (any(index <- index_can_transform(plan))) {
+    rows <- lapply(which(index), transform_row, plan = plan)
+    plan <- sub_in_plan(plan, rows, at = which(index))
     old_cols(plan) <- old_cols
-    row <- row + nrow(rows)
   }
   if (!trace) {
+    keep <- as.character(intersect(colnames(plan), old_cols(plan)))
     plan <- plan[, intersect(colnames(plan), old_cols(plan)), drop = FALSE]
   }
-  old_cols(plan) <- plan$transform <- plan$group <- NULL
+  old_cols(plan) <- plan[["transform"]] <- NULL
   plan
 }
 
 transform_row <- function(plan, row) {
   target <- plan$target[[row]]
   command <- parse_command(plan$command[[row]])
-  transform <- parse_transform(plan$transform[[row]], plan)
+  transform <- set_old_groupings(plan[["transform"]][[row]], plan)
   new_cols <- c(
     target,
     tag_in(transform),
@@ -68,6 +64,23 @@ transform_row <- function(plan, row) {
     out[[col]] <- out$target
   }
   out
+}
+
+index_can_transform <- function(plan) {
+  vapply(
+    plan[["transform"]],
+    can_transform,
+    FUN.VALUE = logical(1),
+    plan = plan
+  )
+}
+
+can_transform <- function(transform, plan) {
+  if (safe_is_na(transform)) {
+    return(FALSE)
+  }
+  missing_groups <- setdiff(dsl_deps(transform), names(plan))
+  length(missing_groups) < 1L
 }
 
 map_to_grid <- function(transform, target, command, plan) {
@@ -140,28 +153,29 @@ dsl_transform <- function(...) {
 dsl_transform.cross <- dsl_transform.map <- map_to_grid
 
 dsl_transform.combine <- function(transform, target, command, plan) {
-  command_symbols <- intersect(symbols(command), colnames(plan))
-  cols_keep <- union(command_symbols, group_names(transform))
+  cols_keep <- union(dsl_by(transform), dsl_combine(transform))
   rows_keep <- complete_cases(plan[, cols_keep, drop = FALSE])
   if (!length(rows_keep) || !any(rows_keep)) {
     return(dsl_default_df(target, command))
   }
   out <- map_by(
     .x = plan[rows_keep, ],
-    .by = group_names(transform),
+    .by = dsl_by(transform),
     .f = combine_step,
     command = command,
     transform = transform
   )
-  grouping_symbols <- intersect(group_names(transform), colnames(plan))
-  out$target <- new_targets(target, out[, grouping_symbols, drop = FALSE])
+  out$target <- new_targets(target, out[, dsl_by(transform), drop = FALSE])
   out
 }
 
 combine_step <- function(plan, command, transform) {
-  aggregates <- lapply(plan, function(x) {
-    unname(rlang::syms(as.character(na_omit(unique(x)))))
-  })
+  aggregates <- lapply(
+    X = plan[, dsl_combine(transform)],
+    FUN = function(x) {
+      unname(rlang::syms(as.character(na_omit(unique(x)))))
+    }
+  )
   command <- eval(
     call("substitute", lang(command), aggregates),
     envir = baseenv()
@@ -200,27 +214,42 @@ parse_command.default <- function(command) {
   )
 }
 
-parse_transform <- function(...) {
-  UseMethod("parse_transform")
-}
-
-parse_transform.character <- function(transform, plan) {
-  parse_transform(parse(text = transform)[[1]], plan)
-}
-
-parse_transform.default <- function(transform, plan) {
-  out <- structure(
+parse_transform <- function(transform) {
+  if (safe_is_na(transform)) {
+    return(NA)
+  }
+  if (is.character(transform)) {
+    transform <- parse(text = transform)[[1]]
+  }
+  transform <- structure(
     as.expression(transform),
     class = unique(c(deparse(transform[[1]]), "transform", class(transform)))
   )
-  assert_good_transform(out)
+  assert_good_transform(transform)
+  interpret_transform(transform)
+}
+
+interpret_transform <- function(transform) UseMethod("interpret_transform")
+
+interpret_transform.map <- interpret_transform.cross <- function(transform) {
   structure(
-    out,
-    new_groupings = new_groupings(out),
-    old_groupings = old_groupings(out, plan),
-    tag_in = tag_in(out),
-    tag_out = tag_out(out)
+    transform,
+    deps = dsl_deps(transform),
+    new_groupings = new_groupings(transform),
+    tag_in = tag_in(transform),
+    tag_out = tag_out(transform)
   )
+}
+
+interpret_transform.combine <- function(transform) {
+  transform <- structure(
+    transform,
+    by = dsl_by(transform),
+    combine = dsl_combine(transform),
+    tag_in = tag_in(transform),
+    tag_out = tag_out(transform)
+  )
+  structure(transform, dsl_deps = dsl_deps(transform))
 }
 
 assert_good_transform <- function(...) UseMethod("assert_good_transform")
@@ -237,17 +266,45 @@ assert_good_transform.default <- function(transform, target) {
   )
 }
 
+dsl_deps <- function(transform) UseMethod("dsl_deps")
+
+dsl_deps.map <- dsl_deps.cross <- function(transform) {
+  attr(transform, "deps") %|||%
+    as.character(unnamed(as.list(transform[[1]][-1])))
+}
+
+dsl_deps.combine <- function(transform) {
+  c(
+    as.character(unnamed(transform[[1]][-1])),
+    dsl_by(transform)
+  )
+}
+
+dsl_by <- function(...) UseMethod("dsl_by")
+
+dsl_by.combine <- function(transform) {
+  attr(transform, "by") %|||%
+    all.vars(lang(transform)[[".by"]], functions = FALSE)
+}
+
+dsl_combine <- function(...) UseMethod("dsl_combine")
+
+dsl_combine.combine <- function(transform) {
+  attr(transform, "combine") %|||%
+    as.character(unnamed(lang(transform))[-1])
+}
+
 new_groupings <- function(transform) UseMethod("new_groupings")
 
 new_groupings.map <- function(transform) {
-  attr(transform, "new_groupings") %||%
+  attr(transform, "new_groupings") %|||%
     find_new_groupings(
       lang(transform),
       exclude = c(".tag_in", ".tag_out")
     )
 }
 
-new_groupings.cross <- new_groupings.combine <- new_groupings.map
+new_groupings.cross <- new_groupings.map
 
 find_new_groupings <- function(code, exclude = character(0)) {
   list <- named(as.list(code), exclude)
@@ -261,8 +318,9 @@ find_new_groupings <- function(code, exclude = character(0)) {
 
 old_groupings <- function(...) UseMethod("old_groupings")
 
-old_groupings.transform <- function(transform, plan = NULL) {
-  attr(transform, "old_groupings") %||% find_old_groupings(transform, plan)
+old_groupings.map <- old_groupings.cross <- function(transform, plan = NULL) {
+  attr(transform, "old_groupings") %|||%
+    find_old_groupings(transform, plan)
 }
 
 find_old_groupings <- function(transform, plan) {
@@ -273,13 +331,20 @@ find_old_groupings <- function(transform, plan) {
   })
 }
 
+set_old_groupings <- function(transform, plan) {
+  attr(transform, "old_groupings") <- find_old_groupings(transform, plan)
+  transform
+}
+
 groupings <- function(...) {
   UseMethod("groupings")
 }
 
-groupings.transform <- function(transform) {
+groupings.map <- groupings.cross <- function(transform) {
   c(new_groupings(transform), old_groupings(transform))
 }
+
+groupings.combine <- function(...) character(0)
 
 group_names <- function(transform) {
   as.character(names(groupings(transform)))
@@ -334,10 +399,8 @@ dsl_left_outer_join <- function(x, y) {
   # The output must have the same number of rows as x.
   rows_keep <- complete_cases(y[, by])
   y <- y[rows_keep, ]
-  dups <- duplicated(y[, by])
-  if (any(dups)) {
-    y <- y[!dups, ]
-  }
+  # Just a precaution. We should actually be okay by now.
+  y <- y[!duplicated(y[, by]), ]
   # Is merge() a performance bottleneck?
   # Need to profile.
   out <- merge(x = x, y = y, by = by, all.x = TRUE)

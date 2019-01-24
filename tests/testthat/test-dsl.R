@@ -239,6 +239,22 @@ test_with_dir("groups and command symbols are undefined", {
   equivalent_plans(out, exp)
 })
 
+test_with_dir("command symbols are for combine() but the plan has them", {
+  out <- drake_plan(
+    data = target(x, transform = map(x = c(1, 2))),
+    nope = target(x, transform = map(x = c(1, 2))),
+    winners = target(min(data, nope), transform = combine(data))
+  )
+  exp <- drake_plan(
+    data_1 = 1,
+    data_2 = 2,
+    nope_1 = 1,
+    nope_2 = 2,
+    winners = min(list(data_1, data_2), nope)
+  )
+  equivalent_plans(out, exp)
+})
+
 test_with_dir("dsl with different types", {
   plan <- drake_plan(
     a = target(1 + 1, transform = cross(x = c(1, 2))),
@@ -264,15 +280,15 @@ test_with_dir("dsl with the mtcars plan", {
     ),
     winners = target(
       min(summ),
-      transform = combine(data, sum_fun)
+      transform = combine(summ, .by = c(data, sum_fun))
     ),
     others = target(
       analyze(list(c(summ), c(data))),
-      transform = combine(data, sum_fun)
+      transform = combine(summ, data, .by = c(data, sum_fun))
     ),
     final_winner = target(
       min(winners),
-      transform = combine()
+      transform = combine(winners)
     )
   )
   exp <- drake_plan(
@@ -359,7 +375,7 @@ test_with_dir("more map", {
     ),
     winners = target(
       min(summ),
-      transform = combine(sum_fun, data),
+      transform = combine(summ, .by = c(sum_fun, data)),
       custom2 = 456L
     )
   )
@@ -407,7 +423,7 @@ test_with_dir("map on mtcars-like workflow", {
     ),
     winners = target(
       min(summ),
-      transform = combine(data, sum_fun)
+      transform = combine(summ, .by = c(data, sum_fun))
     )
   )
   exp <- drake_plan(
@@ -510,7 +526,7 @@ test_with_dir("dsl and custom columns", {
       ),
       winners = target(
         min(summ),
-        transform = combine(data, sum_fun),
+        transform = combine(summ, .by = c(data, sum_fun)),
         custom2 = 456L
       )
     )
@@ -627,7 +643,7 @@ test_with_dir("dsl .tag_out groupings", {
       rgfun(data),
       transform = cross(data = c(small, large), .tag_out = reg),
     ),
-    winners = target(min(reg), transform = combine(), a = 1),
+    winners = target(min(reg), transform = combine(reg), a = 1),
     trace = TRUE
   )
   exp <- drake_plan(
@@ -680,7 +696,7 @@ test_with_dir("combine() and tags", {
     y = target(1, transform = map(g = !!i, .tag_in = grp, .tag_out = targs)),
     z = target(
       min(targs),
-      transform = combine(grp, .tag_in = im, .tag_out = here)
+      transform = combine(targs, .by = grp, .tag_in = im, .tag_out = here)
     ),
     trace = TRUE
   )
@@ -783,7 +799,7 @@ test_with_dir("dsl with differently typed group levels", {
   plan2 <- drake_plan(
     reducks = target(
       combine_analyses(analysis),
-      transform = combine()
+      transform = combine(analysis)
     ),
     transform = FALSE
   )
@@ -854,7 +870,7 @@ test_with_dir("dsl: exact same plan as mtcars", {
     ),
     regression2 = target(
       reg2(data),
-      transform = map(data, .tag_out = reg),
+      transform = map(data = c(small, large), .tag_out = reg),
     ),
     summ = target(
       suppressWarnings(summary(reg$residuals)),
@@ -877,15 +893,21 @@ test_with_dir("dsl: no NA levels in combine()", {
     ),
     data_download = target(
       download_data(url = x),
-      transform = map(x = c("http://url_1", "http://url_2"), c(real, data))
+      transform = map(
+        x = c("http://url_1", "http://url_2"),
+        .tag_out = c(real, data)
+      )
     ),
     data_pkg = target(
       load_data_from_package(pkg = x),
-      transform = map(x = c("gapminder", "Ecdat"), c(local, real, data))
+      transform = map(
+        x = c("gapminder", "Ecdat"),
+        .tag_out = c(local, real, data)
+      )
     ),
     summaries = target(
       compare_ds(data_sim),
-      transform = combine(local)
+      transform = combine(data_sim, .by = local)
     )
   )
   exp <- drake_plan(
@@ -905,7 +927,6 @@ test_with_dir("dsl: no NA levels in combine()", {
   equivalent_plans(out, exp)
 })
 
-
 test_with_dir("trace has correct provenance", {
   out <- drake_plan(
     trace = TRUE,
@@ -917,8 +938,8 @@ test_with_dir("trace has correct provenance", {
     f = target(c, transform = map(c)),
     g = target(b, transform = map(b)),
     h = target(a, transform = map(a)),
-    i = target(e, transform = combine()),
-    j = target(f, transform = combine())
+    i = target(e, transform = combine(e)),
+    j = target(f, transform = combine(f))
   )
   exp <- drake_plan(
     a_1_3 = target(
@@ -1069,4 +1090,106 @@ test_with_dir("trace has correct provenance", {
     )
   )
   equivalent_plans(out, exp)
+})
+
+test_with_dir("row order does not matter", {
+  plan1 <- drake_plan(
+    coef = target(
+      suppressWarnings(summary(reg))$coefficients,
+      transform = map(reg)
+    ),
+    summ = target(
+      suppressWarnings(summary(reg$residuals)),
+      transform = map(reg)
+    ),
+    report = knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE),
+    regression1 = target(
+      reg1(data),
+      transform = map(data = c(small, large), .tag_out = reg)
+    ),
+    regression2 = target(
+      reg2(data),
+      transform = map(data = c(small, large), .tag_out = reg)
+    ),
+    small = simulate(48),
+    large = simulate(64),
+    trace = TRUE
+  )
+  plan2 <- drake_plan(
+    small = simulate(48),
+    large = simulate(64),
+    report = knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE),
+    regression2 = target(
+      reg2(data),
+      transform = map(data = c(small, large), .tag_out = reg)
+    ),
+    regression1 = target(
+      reg1(data),
+      transform = map(data = c(small, large), .tag_out = reg)
+    ),
+    summ = target(
+      suppressWarnings(summary(reg$residuals)),
+      transform = map(reg)
+    ),
+    coef = target(
+      suppressWarnings(summary(reg))$coefficients,
+      transform = map(reg)
+    ),
+    trace = TRUE
+  )
+  expect_equal(nrow(plan1), 15L)
+  equivalent_plans(plan1, plan2)
+})
+
+test_with_dir("same test (row order) different plan", {
+  plan1 <- drake_plan(
+    small = simulate(48),
+    large = simulate(64),
+    reg = target(
+      reg_fun(data),
+      transform = cross(reg_fun = c(reg1, reg2), data = c(small, large))
+    ),
+    summ = target(
+      sum_fun(data, reg),
+      transform = cross(sum_fun = c(coef, residuals), reg)
+    ),
+    winners = target(
+      min(summ),
+      transform = combine(summ, .by = c(data, sum_fun))
+    ),
+    others = target(
+      analyze(list(c(summ), c(data))),
+      transform = combine(summ, data, .by = c(data, sum_fun))
+    ),
+    final_winner = target(
+      min(winners),
+      transform = combine(winners)
+    )
+  )
+  plan2 <- drake_plan(
+    final_winner = target(
+      min(winners),
+      transform = combine(winners)
+    ),
+    reg = target(
+      reg_fun(data),
+      transform = cross(reg_fun = c(reg1, reg2), data = c(small, large))
+    ),
+    small = simulate(48),
+    summ = target(
+      sum_fun(data, reg),
+      transform = cross(sum_fun = c(coef, residuals), reg)
+    ),
+    others = target(
+      analyze(list(c(summ), c(data))),
+      transform = combine(summ, data, .by = c(data, sum_fun))
+    ),
+    winners = target(
+      min(summ),
+      transform = combine(summ, .by = c(data, sum_fun))
+    ),
+    large = simulate(64)
+  )
+  expect_equal(nrow(plan1), 23L)
+  equivalent_plans(plan1, plan2)
 })

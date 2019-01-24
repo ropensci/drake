@@ -226,8 +226,9 @@ flatten_plan_list <- function(args, plan_env){
 }
 
 fill_cols <- function(x, cols) {
-  na_cols <- setdiff(cols, colnames(x))
-  x[, na_cols] <- NA
+  for (col in setdiff(cols, colnames(x))) {
+    x[[col]] <- rep(NA, nrow(x))
+  }
   x
 }
 
