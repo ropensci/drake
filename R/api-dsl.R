@@ -399,8 +399,8 @@ dsl_left_outer_join <- function(x, y) {
   # The output must have the same number of rows as x.
   rows_keep <- complete_cases(y[, by])
   y <- y[rows_keep, ]
-  dups <- duplicated(y[, by])
-  if (any(dups)) y <- y[!dups, ]
+  # Just a precaution. We should actually be okay by now.
+  y <- y[!duplicated(y[, by]), ]
   # Is merge() a performance bottleneck?
   # Need to profile.
   out <- merge(x = x, y = y, by = by, all.x = TRUE)
