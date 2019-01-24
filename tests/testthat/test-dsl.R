@@ -239,6 +239,22 @@ test_with_dir("groups and command symbols are undefined", {
   equivalent_plans(out, exp)
 })
 
+test_with_dir("command symbols are for combine() but the plan has them", {
+  out <- drake_plan(
+    data = target(x, transform = map(x = c(1, 2))),
+    nope = target(x, transform = map(x = c(1, 2))),
+    winners = target(min(data, nope), transform = combine(data))
+  )
+  exp <- drake_plan(
+    data_1 = 1,
+    data_2 = 2,
+    nope_1 = 1,
+    nope_2 = 2,
+    winners = min(list(data_1, data_2), nope)
+  )
+  equivalent_plans(out, exp)
+})
+
 test_with_dir("dsl with different types", {
   plan <- drake_plan(
     a = target(1 + 1, transform = cross(x = c(1, 2))),
