@@ -27,7 +27,7 @@ transform_plan <- function(plan, trace = FALSE) {
     return(plan)
   }
   old_cols(plan) <- old_cols <- colnames(plan)
-  plan$transform <- lapply(plan$transform, parse_transform)
+  plan[["transform"]] <- lapply(plan[["transform"]], parse_transform)
   while (any(index <- index_can_transform(plan))) {
     rows <- lapply(which(index), transform_row, plan = plan)
     plan <- sub_in_plan(plan, rows, at = which(index))
@@ -37,14 +37,14 @@ transform_plan <- function(plan, trace = FALSE) {
     keep <- as.character(intersect(colnames(plan), old_cols(plan)))
     plan <- plan[, intersect(colnames(plan), old_cols(plan)), drop = FALSE]
   }
-  old_cols(plan) <- plan$transform <- plan$group <- NULL
+  old_cols(plan) <- plan[["transform"]] <- NULL
   plan
 }
 
 transform_row <- function(plan, row) {
   target <- plan$target[[row]]
   command <- parse_command(plan$command[[row]])
-  transform <- set_old_groupings(plan$transform[[row]], plan)
+  transform <- set_old_groupings(plan[["transform"]][[row]], plan)
   new_cols <- c(
     target,
     tag_in(transform),
@@ -67,7 +67,7 @@ transform_row <- function(plan, row) {
 }
 
 index_can_transform <- function(plan) {
-  vapply(plan$transform, can_transform, FUN.VALUE = logical(1), plan = plan)
+  vapply(plan[["transform"]], can_transform, FUN.VALUE = logical(1), plan = plan)
 }
 
 can_transform <- function(transform, plan) {
@@ -209,13 +209,7 @@ parse_command.default <- function(command) {
   )
 }
 
-parse_transform <- function(transform) UseMethod("parse_transform")
-
-parse_transform.character <- function(transform) {
-  parse_transform(parse(text = transform)[[1]])
-}
-
-parse_transform.default <- function(transform) {
+parse_transform <- function(transform) {
   if (safe_is_na(transform)) {
     return(NA)
   }
@@ -227,10 +221,12 @@ parse_transform.default <- function(transform) {
     class = unique(c(deparse(transform[[1]]), "transform", class(transform)))
   )
   assert_good_transform(transform)
-  parse_transform(transform)
+  interpret_transform(transform)
 }
 
-parse_transform.map <- parse_transform.cross <- function(transform) {
+interpret_transform <- function(transform) UseMethod("interpret_transform")
+
+interpret_transform.map <- interpret_transform.cross <- function(transform) {
   structure(
     transform,
     deps = dsl_deps(transform),
@@ -240,7 +236,7 @@ parse_transform.map <- parse_transform.cross <- function(transform) {
   )
 }
 
-parse_transform.combine <- function(transform) {
+interpret_transform.combine <- function(transform) {
   transform <- structure(
     transform,
     by = dsl_by(transform),
