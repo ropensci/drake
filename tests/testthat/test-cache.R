@@ -120,9 +120,11 @@ test_with_dir("can exclude bad targets from loadd()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   plan <- drake_plan(a = TRUE)
   make(plan)
-  loadd(a, b, lazy = FALSE)
-  expect_equal(a, TRUE)
-  expect_error(b)
+  e <- new.env(parent = emptyenv())
+  loadd(a, b, lazy = FALSE, envir = e)
+  expect_true(exists("a", envir = e, inherits = FALSE))
+  expect_equal(e$a, TRUE)
+  expect_false(exists("b", envir = e, inherits = FALSE))
 })
 
 test_with_dir("bad/corrupt caches, no progress, no seed", {
