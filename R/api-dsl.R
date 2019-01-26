@@ -119,7 +119,8 @@ dsl_grid.map <- function(transform, groupings) {
 }
 
 grid_commands <- function(command, grid) {
-  grid <- grid[, intersect(symbols(command), colnames(grid)), drop = FALSE]
+  keep <- intersect(all.names(command, functions = TRUE), colnames(grid))
+  grid <- grid[, keep, drop = FALSE]
   for (i in seq_along(grid)) {
     grid[[i]] <- dsl_syms(grid[[i]])
   }
@@ -133,7 +134,7 @@ grid_commands <- function(command, grid) {
 
 grid_command <- function(row, command, grid) {
   sub <- lapply(grid, `[[`, row)
-  eval(call("substitute", lang(command), sub), envir = baseenv())
+  eval(call("substitute", command, sub), envir = baseenv())
 }
 
 new_targets <- function(target, grid) {
@@ -177,7 +178,7 @@ combine_step <- function(plan, command, transform) {
     }
   )
   command <- eval(
-    call("substitute", lang(command), aggregates),
+    call("substitute", command, aggregates),
     envir = baseenv()
   )
   data.frame(command = safe_deparse(command), stringsAsFactors = FALSE)
@@ -189,7 +190,9 @@ lang.command <- lang.transform <- function(x) x[[1]]
 
 char <- function(...) UseMethod("char")
 
-char.command <- char.transform <- function(x) safe_deparse(lang(x))
+char.transform <- function(x) safe_deparse(lang(x))
+
+char.default <- function(x) safe_deparse(x)
 
 old_cols <- function(plan) {
   attr(plan, "old_cols")
@@ -203,16 +206,10 @@ old_cols <- function(plan) {
 parse_command <- function(command) UseMethod("parse_command")
 
 parse_command.character <- function(command) {
-  parse_command(parse(text = command))
+  parse(text = command)[[1]]
 }
 
-parse_command.default <- function(command) {
-  structure(
-    as.expression(command),
-    symbols = all.names(command),
-    class = unique(c("command", class(command)))
-  )
-}
+parse_command.default <- function(command) command
 
 parse_transform <- function(transform) {
   if (safe_is_na(transform)) {
@@ -362,12 +359,6 @@ tag_out <- function(...) UseMethod("tag_out")
 tag_out.transform <- function(transform) {
   attr(transform, "tag_out") %||%
     all.vars(lang(transform)[[".tag_out"]], functions = FALSE)
-}
-
-symbols <- function(...) UseMethod("symbols")
-
-symbols.command <- function(x) {
-  attr(x, "symbols")
 }
 
 dsl_syms <- function(x) {
