@@ -23,6 +23,8 @@ in the graph visualizations.
 \dontrun{
 # Show the legend nodes used in graph visualizations.
 # For example, you may want to inspect the color palette more closely.
+if (requireNamespace("visNetwork", quietly = TRUE)) {
 visNetwork::visNetwork(nodes = legend_nodes()) # nolint
+}
 }
 }

@@ -16,22 +16,22 @@
 #' config <- drake_config(my_plan)
 #' # Plot the network graph representation of the workflow.
 #' if (requireNamespace("visNetwork", quietly = TRUE)) {
-#'   vis_drake_graph(config, width = '100%') # The width is passed to visNetwork
-#'   make(my_plan) # Run the project, build the targets.
-#'   vis_drake_graph(config) # The red nodes from before are now green.
-#'   # Plot a subgraph of the workflow.
-#'   vis_drake_graph(
-#'     config,
-#'     from = c("small", "reg2"),
-#'     to = "summ_regression2_small"
-#'   )
-#'   # Optionally visualize clusters.
-#'   config$plan$large_data <- grepl("large", config$plan$target)
-#'   vis_drake_graph(
-#'     config, group = "large_data", clusters = c(TRUE, FALSE))
-#'   # You can even use clusters given to you for free in the `graph$nodes`
-#'   # data frame of `drake_graph_info()`.
-#'   vis_drake_graph(config, group = "status", clusters = "imported")
+#' vis_drake_graph(config, width = '100%') # The width is passed to visNetwork
+#' make(my_plan) # Run the project, build the targets.
+#' vis_drake_graph(config) # The red nodes from before are now green.
+#' # Plot a subgraph of the workflow.
+#' vis_drake_graph(
+#'   config,
+#'   from = c("small", "reg2"),
+#'   to = "summ_regression2_small"
+#' )
+#' # Optionally visualize clusters.
+#' config$plan$large_data <- grepl("large", config$plan$target)
+#' vis_drake_graph(
+#'   config, group = "large_data", clusters = c(TRUE, FALSE))
+#' # You can even use clusters given to you for free in the `graph$nodes`
+#' # data frame of `drake_graph_info()`.
+#' vis_drake_graph(config, group = "status", clusters = "imported")
 #' }
 #' })
 #' }
@@ -170,26 +170,26 @@ vis_drake_graph <- function(
 #' test_with_dir("Quarantine side effects.", {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' if (requireNamespace("visNetwork", quietly = TRUE)) {
-#'   # Instead of jumpting right to vis_drake_graph(), get the data frames
-#'   # of nodes, edges, and legend nodes.
-#'   config <- drake_config(my_plan) # Internal configuration list
-#'   vis_drake_graph(config) # Jump straight to the interactive graph.
-#'   # Get the node and edge info that vis_drake_graph() just plotted:
-#'   graph <- drake_graph_info(config)
-#'   # You can pass the data frames right to render_drake_graph()
-#'   # (as in vis_drake_graph()) or you can create
-#'   # your own custom visNewtork graph.
-#'   render_drake_graph(graph, width = '100%') # Width is passed to visNetwork.
-#'   # Optionally visualize clusters.
-#'   config$plan$large_data <- grepl("large", config$plan$target)
-#'   graph <- drake_graph_info(
-#'     config, group = "large_data", clusters = c(TRUE, FALSE))
-#'   render_drake_graph(graph)
-#'   # You can even use clusters given to you for free in the `graph$nodes`
-#'   # data frame.
-#'   graph <- drake_graph_info(
-#'     config, group = "status", clusters = "imported")
-#'   render_drake_graph(graph)
+#' # Instead of jumpting right to vis_drake_graph(), get the data frames
+#' # of nodes, edges, and legend nodes.
+#' config <- drake_config(my_plan) # Internal configuration list
+#' vis_drake_graph(config) # Jump straight to the interactive graph.
+#' # Get the node and edge info that vis_drake_graph() just plotted:
+#' graph <- drake_graph_info(config)
+#' # You can pass the data frames right to render_drake_graph()
+#' # (as in vis_drake_graph()) or you can create
+#' # your own custom visNewtork graph.
+#' render_drake_graph(graph, width = '100%') # Width is passed to visNetwork.
+#' # Optionally visualize clusters.
+#' config$plan$large_data <- grepl("large", config$plan$target)
+#' graph <- drake_graph_info(
+#'   config, group = "large_data", clusters = c(TRUE, FALSE))
+#' render_drake_graph(graph)
+#' # You can even use clusters given to you for free in the `graph$nodes`
+#' # data frame.
+#' graph <- drake_graph_info(
+#'   config, group = "status", clusters = "imported")
+#' render_drake_graph(graph)
 #' }
 #' })
 #' }

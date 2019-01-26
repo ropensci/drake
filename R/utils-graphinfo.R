@@ -217,7 +217,9 @@ hover_text <- function(config) {
 #' \dontrun{
 #' # Show the legend nodes used in graph visualizations.
 #' # For example, you may want to inspect the color palette more closely.
+#' if (requireNamespace("visNetwork", quietly = TRUE)) {
 #' visNetwork::visNetwork(nodes = legend_nodes()) # nolint
+#' }
 #' }
 legend_nodes <- function(font_size = 20) {
   out <- weak_tibble(

@@ -20,7 +20,9 @@
 #' # Show the build times for the mtcars example.
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Build all the targets.
-#' build_times() # Show how long it took to build each target.
+#' if (requireNamespace("lubridate")) {
+#'   print(build_times()) # Show how long it took to build each target.
+#' }
 #' })
 #' }
 build_times <- function(

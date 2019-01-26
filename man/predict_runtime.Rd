@@ -63,6 +63,7 @@ known_times <- rep(7200, nrow(my_plan))
 names(known_times) <- my_plan$target
 known_times
 # Predict the runtime
+if (requireNamespace("lubridate", quietly = TRUE)) {
 predict_runtime(
   config,
   jobs = 7,
@@ -82,6 +83,7 @@ balance <- predict_load_balancing(
   known_times = known_times
 )
 balance
+}
 })
 }
 }

@@ -20,6 +20,7 @@
 #' names(known_times) <- my_plan$target
 #' known_times
 #' # Predict the runtime
+#' if (requireNamespace("lubridate", quietly = TRUE)) {
 #' predict_runtime(
 #'   config,
 #'   jobs = 7,
@@ -39,6 +40,7 @@
 #'   known_times = known_times
 #' )
 #' balance
+#' }
 #' })
 #' }
 predict_runtime <- function(
@@ -83,6 +85,7 @@ predict_runtime <- function(
 #' names(known_times) <- my_plan$target
 #' known_times
 #' # Predict the runtime
+#' if (requireNamespace("lubridate", quietly = TRUE)) {
 #' predict_runtime(
 #'   config = config,
 #'   jobs = 7,
@@ -102,6 +105,7 @@ predict_runtime <- function(
 #'   known_times = known_times
 #' )
 #' balance
+#' }
 #' })
 #' }
 #' @return A list with (1) the total runtime and (2) a list

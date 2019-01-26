@@ -24,11 +24,13 @@
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
+#' if (requireNamespace("downloader")) {
 #' drake_examples() # List all the drake examples.
 #' # Sets up the same example as https://ropenscilabs.github.io/drake-manual/mtcars.html # nolint
 #' drake_example("mtcars")
 #' # Sets up the SLURM example.
 #' drake_example("slurm")
+#' }
 #' })
 #' }
 drake_example <- function(
@@ -71,12 +73,14 @@ drake_example <- function(
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
+#' if (requireNamespace("downloader")) {
 #' drake_examples() # List all the drake examples.
 #' # Sets up the example from
 #' # https://ropenscilabs.github.io/drake-manual/mtcars.html
 #' drake_example("mtcars")
 #' # Sets up the SLURM example.
 #' drake_example("slurm")
+#' }
 #' })
 #' }
 drake_examples <- function(quiet = TRUE) {

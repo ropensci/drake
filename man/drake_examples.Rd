@@ -24,12 +24,14 @@ so you need an internet connection.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
+if (requireNamespace("downloader")) {
 drake_examples() # List all the drake examples.
 # Sets up the example from
 # https://ropenscilabs.github.io/drake-manual/mtcars.html
 drake_example("mtcars")
 # Sets up the SLURM example.
 drake_example("slurm")
+}
 })
 }
 }

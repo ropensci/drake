@@ -158,22 +158,22 @@ load_mtcars_example() # Get the code with drake_example("mtcars").
 config <- drake_config(my_plan)
 # Plot the network graph representation of the workflow.
 if (requireNamespace("visNetwork", quietly = TRUE)) {
-  vis_drake_graph(config, width = '100\%') # The width is passed to visNetwork
-  make(my_plan) # Run the project, build the targets.
-  vis_drake_graph(config) # The red nodes from before are now green.
-  # Plot a subgraph of the workflow.
-  vis_drake_graph(
-    config,
-    from = c("small", "reg2"),
-    to = "summ_regression2_small"
-  )
-  # Optionally visualize clusters.
-  config$plan$large_data <- grepl("large", config$plan$target)
-  vis_drake_graph(
-    config, group = "large_data", clusters = c(TRUE, FALSE))
-  # You can even use clusters given to you for free in the `graph$nodes`
-  # data frame of `drake_graph_info()`.
-  vis_drake_graph(config, group = "status", clusters = "imported")
+vis_drake_graph(config, width = '100\%') # The width is passed to visNetwork
+make(my_plan) # Run the project, build the targets.
+vis_drake_graph(config) # The red nodes from before are now green.
+# Plot a subgraph of the workflow.
+vis_drake_graph(
+  config,
+  from = c("small", "reg2"),
+  to = "summ_regression2_small"
+)
+# Optionally visualize clusters.
+config$plan$large_data <- grepl("large", config$plan$target)
+vis_drake_graph(
+  config, group = "large_data", clusters = c(TRUE, FALSE))
+# You can even use clusters given to you for free in the `graph$nodes`
+# data frame of `drake_graph_info()`.
+vis_drake_graph(config, group = "status", clusters = "imported")
 }
 })
 }
