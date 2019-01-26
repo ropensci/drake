@@ -202,6 +202,10 @@ drake_plan <- function(
 #' your_plan
 #' # make(your_plan) # nolint
 bind_plans <- function(...) {
+  sanitize_plan(bind_plans_raw(...))
+}
+
+bind_plans_raw <- function(...) {
   args <- list(...)
   plan_env <- new.env(parent = emptyenv())
   plan_env$plans <- list()
@@ -212,8 +216,7 @@ bind_plans <- function(...) {
   cols <- lapply(plans, colnames)
   cols <- Reduce(f = union, x = cols)
   plans <- lapply(plans, fill_cols, cols = cols)
-  plan <- do.call(rbind, plans)
-  sanitize_plan(plan)
+  do.call(rbind, plans)
 }
 
 flatten_plan_list <- function(args, plan_env){

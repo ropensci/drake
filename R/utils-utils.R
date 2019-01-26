@@ -335,7 +335,7 @@ unnamed <- function(x) {
 sub_in_plan <- function(plan, rows, at) {
   for (index in rev(seq_along(at))) {
     row <- at[index]
-    plan <- bind_plans(
+    plan <- bind_plans_raw(
       plan[seq_len(row - 1), ],
       rows[[index]],
       plan[-seq_len(row), ]
