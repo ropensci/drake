@@ -203,14 +203,6 @@ old_cols <- function(plan) {
   plan
 }
 
-parse_command <- function(command) UseMethod("parse_command")
-
-parse_command.character <- function(command) {
-  parse(text = command)[[1]]
-}
-
-parse_command.default <- function(command) command
-
 parse_transform <- function(transform) {
   if (safe_is_na(transform)) {
     return(NA)

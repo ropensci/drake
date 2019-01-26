@@ -343,3 +343,15 @@ sub_in_plan <- function(plan, rows, at) {
   }
   plan
 }
+
+parse_command <- function(command) UseMethod("parse_command")
+
+parse_command.character <- function(command) {
+  if (nzchar(command)) {
+    parse(text = command)[[1]]
+  } else {
+    quote({}) # nolint
+  }
+}
+
+parse_command.default <- function(command) command

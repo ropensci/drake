@@ -1,5 +1,11 @@
 drake_context("plans")
 
+test_with_dir("empty commands", {
+  plan <- data.frame(target = "x", command = "", stringsAsFactors = FALSE)
+  out <- drake_plan_source(plan)
+  expect_true(length(out) > 0L)
+})
+
 test_with_dir("duplicated target names", {
   expect_error(
     drake_plan(

@@ -11,6 +11,12 @@ test_with_dir("empty transforms", {
   equivalent_plans(out, exp)
 })
 
+test_with_dir("empty grouping levels", {
+  out <- drake_plan(x = target(y, transform = map(y = c("z", ""))))
+  expect_equal(out$target, c("x_.z.", "x_.."))
+  expect_equal(out$command, c("z", ""))
+})
+
 test_with_dir("bad transform", {
   expect_error(
     drake_plan(x = target(1, transform = 132)),
