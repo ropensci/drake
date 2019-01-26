@@ -76,7 +76,7 @@ index_can_transform <- function(plan) {
 }
 
 can_transform <- function(transform, plan) {
-  if (safe_is_na(transform)) {
+  if (!inherits(transform, "transform")) {
     return(FALSE)
   }
   missing_groups <- setdiff(dsl_deps(transform), names(plan))
