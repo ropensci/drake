@@ -84,7 +84,6 @@ Suggests:
   datasets,
   downloader,
   future,
-  future.apply,
   grDevices,
   ggplot2,
   ggraph,

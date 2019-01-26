@@ -95,6 +95,7 @@ test_with_dir("drake version checks in previous caches", {
   x <- get_cache()
   suppressWarnings(expect_error(drake_session(cache = NULL), regexp = "make"))
   expect_warning(drake_session(cache = x), regexp = "deprecated")
+  skip_if_not_installed("lubridate")
   expect_warning(build_times(targets_only = TRUE), regexp = "deprecated")
   config <- drake_config(plan)
   expect_warning(

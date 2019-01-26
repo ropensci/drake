@@ -491,6 +491,7 @@ test_with_dir("code_to_plan(), one target", {
 
 test_with_dir("plan_to_code()", {
   skip_on_cran()
+  skip_if_not_installed("knitr")
   expect_false(file.exists("report.md"))
   load_mtcars_example()
   plan0 <- my_plan
@@ -507,6 +508,7 @@ test_with_dir("plan_to_code()", {
 
 test_with_dir("plan_to_notebook()", {
   skip_on_cran()
+  skip_if_not_installed("knitr")
   expect_false(file.exists("report.md"))
   load_mtcars_example()
   plan0 <- my_plan

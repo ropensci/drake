@@ -54,7 +54,7 @@ test_with_dir("replicates", {
       b = "b_a_1.1"
     )
   )
-  expect_equal(out, exp)
+  equivalent_plans(out, exp)
 })
 
 test_with_dir("single tag_in", {
@@ -609,6 +609,7 @@ test_with_dir("dsl trace", {
 
 test_with_dir("running a dsl-generated mtcars plan", {
   skip_on_cran()
+  skip_if_not_installed("knitr")
   load_mtcars_example()
   rm(my_plan)
   plan <- drake_plan(
@@ -638,11 +639,11 @@ test_with_dir("dsl .tag_out groupings", {
     large = simulate(64),
     reg1 = target(
       rgfun(data),
-      transform = cross(data = c(small, large), .tag_out = c(reg, othergroup)),
+      transform = cross(data = c(small, large), .tag_out = c(reg, othergroup))
     ),
     reg2 = target(
       rgfun(data),
-      transform = cross(data = c(small, large), .tag_out = reg),
+      transform = cross(data = c(small, large), .tag_out = reg)
     ),
     winners = target(min(reg), transform = combine(reg), a = 1),
     trace = TRUE
@@ -861,17 +862,18 @@ test_with_dir("tidy eval in the DSL", {
 })
 
 test_with_dir("dsl: exact same plan as mtcars", {
+  skip_if_not_installed("knitr")
   out <- drake_plan(
     report = knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE),
     small = simulate(48),
     large = simulate(64),
     regression1 = target(
       reg1(data),
-      transform = map(data = c(small, large), .tag_out = reg),
+      transform = map(data = c(small, large), .tag_out = reg)
     ),
     regression2 = target(
       reg2(data),
-      transform = map(data = c(small, large), .tag_out = reg),
+      transform = map(data = c(small, large), .tag_out = reg)
     ),
     summ = target(
       suppressWarnings(summary(reg$residuals)),

@@ -1,6 +1,7 @@
 drake_context("cache")
 
 test_with_dir("clean() removes the correct files", {
+  skip_if_not_installed("knitr")
   cache <- storr::storr_environment()
   writeLines("123", "a.txt")
   writeLines("123", "b.txt")
@@ -39,6 +40,7 @@ test_with_dir("drake_version", {
 
 test_with_dir("dependency profile", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_if_not_installed("knitr")
   b <- 1
   make(drake_plan(a = b), session_info = FALSE)
   config <- drake_config(drake_plan(a = b), session_info = FALSE)

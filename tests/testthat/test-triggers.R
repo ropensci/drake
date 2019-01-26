@@ -113,6 +113,7 @@ test_with_dir("trigger() function works", {
 
 test_with_dir("can detect trigger deps without reacting to them", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_if_not_installed("knitr")
   writeLines("123", "knitr.Rmd")
   saveRDS(0, "file.rds")
   f <- function(x) {
@@ -155,6 +156,7 @@ test_with_dir("can detect trigger deps without reacting to them", {
 
 test_with_dir("same, but with global trigger", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_if_not_installed("knitr")
   writeLines("123", "knitr.Rmd")
   saveRDS(0, "file.rds")
   f <- function(x) {
@@ -193,6 +195,7 @@ test_with_dir("same, but with global trigger", {
 
 test_with_dir("trigger does not block out command deps", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_if_not_installed("knitr")
   writeLines("123", "knitr.Rmd")
   saveRDS(0, "file.rds")
   f <- function(x) {
@@ -246,6 +249,7 @@ test_with_dir("trigger does not block out command deps", {
 
 test_with_dir("same, but with global change trigger", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_if_not_installed("knitr")
   writeLines("123", "knitr.Rmd")
   saveRDS(0, "file.rds")
   f <- function(x) {
@@ -347,6 +351,7 @@ test_with_dir("deps load into memory for complex triggers", {
 
 test_with_dir("trigger components react appropriately", {
   skip_on_cran()
+  skip_if_not_installed("knitr")
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
   jobs <- scenario$jobs
@@ -791,6 +796,7 @@ test_with_dir("trigger condition mode", {
 
 test_with_dir("files are collected/encoded from all triggers", {
   skip_on_cran()
+  skip_if_not_installed("knitr")
   exp <- sort(c(
     paste0(
       rep(c("command_", "condition_", "change_"), times = 3),

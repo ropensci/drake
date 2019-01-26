@@ -2,6 +2,7 @@ drake_context("knitr")
 
 test_with_dir("codeless knitr report", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_if_not_installed("knitr")
   file <- "codeless.Rmd"
   path <- system.file(
     file.path("testing", "knitr", file),
@@ -64,6 +65,7 @@ test_with_dir("empty cases", {
 
 test_with_dir("knitr_deps() works", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_if_not_installed("knitr")
   expect_equal(knitr_deps(character(0)), list())
   files <- system.file(
     file.path("testing", "knitr", c("nested.Rmd", "test.Rmd")),
@@ -99,6 +101,7 @@ test_with_dir("knitr_deps() works", {
 
 test_with_dir("knitr file deps from commands and functions", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_if_not_installed("knitr")
   load_mtcars_example()
   expect_equal(sort(
     clean_dependency_list(deps_code("knitr_in(\"report.Rmd\")"))), sort(c(

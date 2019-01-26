@@ -27,6 +27,7 @@ test_with_dir("example template files", {
 })
 
 test_with_dir("mtcars example works", {
+  skip_if_not_installed("knitr")
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
   jobs <- scenario$jobs

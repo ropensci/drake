@@ -3,7 +3,6 @@ drake_context("future")
 test_with_dir("future package functionality", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("future")
-  skip_if_not_installed("future.apply")
   future::plan(future::sequential)
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))

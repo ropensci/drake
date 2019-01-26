@@ -108,6 +108,7 @@ test_with_dir("the priority queue works", {
 
 test_with_dir("queues with priorities", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_if_not_installed("knitr")
   load_mtcars_example()
   my_plan$priority <- seq_len(nrow(my_plan))
   config <- drake_config(my_plan, cache = storr::storr_environment())

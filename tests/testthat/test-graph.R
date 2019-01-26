@@ -170,6 +170,7 @@ test_with_dir("clusters", {
 
 test_with_dir("can get the graph info when a file is missing", {
   skip_on_cran()
+  skip_if_not_installed("knitr")
   load_mtcars_example()
   unlink("report.Rmd")
   expect_warning(

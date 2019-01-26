@@ -88,6 +88,7 @@ test_with_dir("manage_memory in full build", {
 
 test_with_dir("all memory strategies work", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_if_not_installed("knitr")
   for (memory_strategy in c("speed", "memory", "lookahead")) {
     envir <- new.env(parent = globalenv())
     cache <- storr::storr_environment()

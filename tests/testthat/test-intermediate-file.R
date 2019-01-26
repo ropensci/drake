@@ -85,6 +85,7 @@ test_with_dir("responses to intermediate file", {
 })
 
 test_with_dir("imported file_in file", {
+  skip_if_not_installed("knitr")
   scenario <- get_testing_scenario()
   envir <- eval(parse(text = scenario$envir))
   envir <- dbug_envir(envir)

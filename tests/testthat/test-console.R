@@ -144,6 +144,7 @@ test_with_dir("console_skip", {
 
 test_with_dir("console to file", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_if_not_installed("knitr")
   load_mtcars_example()
   cache <- storr::storr_environment()
   expect_false(file.exists("log.txt"))

@@ -159,7 +159,7 @@ dsl_transform.combine <- function(transform, target, command, plan) {
     return(dsl_default_df(target, command))
   }
   out <- map_by(
-    .x = plan[rows_keep, ],
+    .x = plan[rows_keep,, drop = FALSE], # nolint
     .by = dsl_by(transform),
     .f = combine_step,
     command = command,
@@ -171,7 +171,7 @@ dsl_transform.combine <- function(transform, target, command, plan) {
 
 combine_step <- function(plan, command, transform) {
   aggregates <- lapply(
-    X = plan[, dsl_combine(transform)],
+    X = plan[, dsl_combine(transform), drop = FALSE],
     FUN = function(x) {
       unname(rlang::syms(as.character(na_omit(unique(x)))))
     }
@@ -397,14 +397,14 @@ dsl_left_outer_join <- function(x, y) {
     return(x)
   }
   # The output must have the same number of rows as x.
-  rows_keep <- complete_cases(y[, by])
-  y <- y[rows_keep, ]
+  rows_keep <- complete_cases(y[, by, drop = FALSE])
+  y <- y[rows_keep,, drop = FALSE] # nolint
   # Just a precaution. We should actually be okay by now.
-  y <- y[!duplicated(y[, by]), ]
+  y <- y[!duplicated(y[, by, drop = FALSE]),, drop = FALSE] # nolint
   # Is merge() a performance bottleneck?
   # Need to profile.
   out <- merge(x = x, y = y, by = by, all.x = TRUE)
-  out[, union(colnames(x), colnames(y))]
+  out[, union(colnames(x), colnames(y)), drop = FALSE]
 }
 
 map_grid_error <- function(transform, groupings) {

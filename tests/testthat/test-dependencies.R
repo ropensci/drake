@@ -37,6 +37,7 @@ test_with_dir("dot symbol is illegal", {
 
 test_with_dir("file_out() and knitr_in(): commands vs imports", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_if_not_installed("knitr")
   cmd <- "file_in(\"x\"); file_out(\"y\"); knitr_in(\"report.Rmd\")"
   f <- function() {
     file_in("x")
@@ -215,6 +216,7 @@ test_with_dir("Vectorized nested functions work", {
 
 test_with_dir("deps_target()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_if_not_installed("knitr")
   load_mtcars_example()
   config <- drake_config(my_plan, cache = storr::storr_environment())
   d1 <- lapply(deps_target(report, config = config), sort)
@@ -454,6 +456,7 @@ test_with_dir("ignore() in imported functions", {
 
 test_with_dir("deps_code() on a knitr file", {
   skip_on_cran()
+  skip_if_not_installed("knitr")
   load_mtcars_example()
   expect_true(is.list(deps_code(file_store("report.Rmd"))))
 })
