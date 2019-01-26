@@ -119,7 +119,7 @@ dsl_grid.map <- function(transform, groupings) {
 }
 
 grid_commands <- function(command, grid) {
-  keep <- intersect(all.names(command, functions = TRUE), colnames(grid))
+  keep <- intersect(all.vars(command, functions = TRUE), colnames(grid))
   grid <- grid[, keep, drop = FALSE]
   for (i in seq_along(grid)) {
     grid[[i]] <- dsl_syms(grid[[i]])
