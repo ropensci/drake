@@ -368,9 +368,7 @@ dsl_syms <- function(x) {
 dsl_sym <- function(x) {
   tryCatch(
     eval(parse(text = x), envir = emptyenv()),
-    error = function(e) {
-      rlang::sym(x)
-    }
+    error = function(e) as.symbol(x)
   )
 }
 
