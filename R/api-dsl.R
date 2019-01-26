@@ -174,7 +174,7 @@ combine_step <- function(plan, command, transform) {
   aggregates <- lapply(
     X = plan[, dsl_combine(transform), drop = FALSE],
     FUN = function(x) {
-      unname(rlang::syms(as.character(na_omit(unique(x)))))
+      unname(lapply(as.character(na_omit(unique(x))), as.symbol))
     }
   )
   command <- eval(
