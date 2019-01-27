@@ -25,6 +25,7 @@ without too much fuss.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
+if (requireNamespace("knitr")) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 # Create a master internal configuration list with prework.
 con <- drake_config(my_plan, prework = c("library(knitr)", "x <- 1"))
@@ -35,6 +36,7 @@ do_prework(config = con, verbose_packages = TRUE)
 # The `eval` element is the environment where the prework
 # and the commands in your workflow plan data frame are executed.
 identical(con$eval$x, 1) # Should be TRUE.
+}
 })
 }
 }

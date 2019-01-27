@@ -53,6 +53,7 @@ force_cache_path <- function(cache = NULL) {
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
+#' if (requireNamespace("knitr")) {
 #' clean(destroy = TRUE)
 #' # No cache is available.
 #' get_cache() # NULL
@@ -61,6 +62,7 @@ force_cache_path <- function(cache = NULL) {
 #' x <- get_cache() # Now, there is a cache.
 #' # List the objects readable from the cache with readd().
 #' x$list() # Or x$list(namespace = x$default_namespace)
+#' }
 #' })
 #' }
 get_cache <- function(
@@ -98,6 +100,7 @@ get_cache <- function(
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
+#' if (requireNamespace("knitr")) {
 #' clean(destroy = TRUE)
 #' try(x <- this_cache(), silent = FALSE) # The cache does not exist yet.
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
@@ -106,6 +109,7 @@ get_cache <- function(
 #' z <- this_cache(".drake") # Same as above.
 #' manual <- new_cache("manual_cache") # Make a new cache.
 #' manual2 <- get_cache("manual_cache") # Get the new cache.
+#' }
 #' })
 #' }
 this_cache <- function(
@@ -293,6 +297,7 @@ recover_cache_ <- function(
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
+#' if (requireNamespace("knitr")) {
 #' # Load drake's canonical example.
 #' load_mtcars_example() # Get the code with drake_example()
 #' # Run the project and save a flat text log file.
@@ -306,6 +311,7 @@ recover_cache_ <- function(
 #' # It shows which targets and imports changed on every commit.
 #' # It is extremely difficult to track your results this way
 #' # by putting the raw '.drake/' cache itself under version control.
+#' }
 #' })
 #' }
 drake_cache_log_file <- function(
@@ -382,6 +388,7 @@ drake_cache_log_file <- function(
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
+#' if (requireNamespace("knitr")) {
 #' # Load drake's canonical example.
 #' load_mtcars_example() # Get the code with drake_example()
 #' # Run the project, build all the targets.
@@ -404,6 +411,7 @@ drake_cache_log_file <- function(
 #' # It shows which targets and imports changed on every commit.
 #' # It is extremely difficult to track your results this way
 #' # by putting the raw '.drake/' cache itself under version control.
+#' }
 #' })
 #' }
 drake_cache_log <- function(
@@ -586,6 +594,8 @@ deprecate_hash_algo_args <- function(
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
+#' if (requireNamespace("knitr")) {
+#' if (requireNamespace("lubridate")) {
 #' load_mtcars_example() # Load drake's canonical example.
 #' make(my_plan) # Run the project, build all the targets.
 #' cached(list = 'reg1') # Is 'reg1' in the cache?
@@ -605,6 +615,8 @@ deprecate_hash_algo_args <- function(
 #' clean(purge = TRUE)
 #' cached(namespace = "build_times")
 #' build_times()
+#' }
+#' }
 #' })
 #' }
 cached <- function(

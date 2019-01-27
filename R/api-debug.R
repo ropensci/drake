@@ -13,6 +13,7 @@
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
+#' if (requireNamespace("knitr")) {
 #' # This example is not really a user-side demonstration.
 #' # It just walks through a dive into the internals.
 #' # Populate your workspace and write 'report.Rmd'.
@@ -30,6 +31,7 @@
 #' make(my_plan, verbose = FALSE)
 #' result <- drake_build(small, config = config)
 #' head(result)
+#' }
 #' })
 #' }
 drake_debug <- function(

@@ -73,6 +73,7 @@ cache normally again.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
+if (requireNamespace("knitr")) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 make(my_plan) # Run the project, build targets. This creates the cache.
 # Remove dangling cache files that could cause errors.
@@ -80,6 +81,7 @@ rescue_cache(jobs = 2)
 # Alternatively, just rescue targets 'small' and 'large'.
 # Rescuing specific targets is usually faster.
 rescue_cache(targets = c("small", "large"))
+}
 })
 }
 }

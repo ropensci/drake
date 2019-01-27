@@ -154,6 +154,7 @@ this function is divided into
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
+if (requireNamespace("knitr")) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 config <- drake_config(my_plan)
 # Plot the network graph representation of the workflow.
@@ -174,6 +175,7 @@ vis_drake_graph(
 # You can even use clusters given to you for free in the `graph$nodes`
 # data frame of `drake_graph_info()`.
 vis_drake_graph(config, group = "status", clusters = "imported")
+}
 }
 })
 }

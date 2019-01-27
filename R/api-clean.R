@@ -57,6 +57,7 @@
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
+#' if (requireNamespace("knitr")) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Run the project, build the targets.
 #' # List objects in the cache, excluding R objects
@@ -86,6 +87,7 @@
 #' build_times()
 #' # Completely remove the entire cache (default: '.drake/' folder).
 #' clean(destroy = TRUE)
+#' }
 #' })
 #' }
 clean <- function(
@@ -176,6 +178,7 @@ clean_single_target <- function(
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
+#' if (requireNamespace("knitr")) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Run the project, build the targets.
 #' # At this point, check the size of the '.drake/' cache folder.
@@ -184,6 +187,7 @@ clean_single_target <- function(
 #' # The '.drake/' cache folder is still about the same size.
 #' drake_gc() # Do garbage collection on the cache.
 #' # The '.drake/' cache folder should have gotten much smaller.
+#' }
 #' })
 #' }
 drake_gc <- function(
@@ -242,6 +246,7 @@ rm_bad_cache_filenames <- function(cache) {
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
+#' if (requireNamespace("knitr")) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Run the project, build targets. This creates the cache.
 #' # Remove dangling cache files that could cause errors.
@@ -249,6 +254,7 @@ rm_bad_cache_filenames <- function(cache) {
 #' # Alternatively, just rescue targets 'small' and 'large'.
 #' # Rescuing specific targets is usually faster.
 #' rescue_cache(targets = c("small", "large"))
+#' }
 #' })
 #' }
 rescue_cache <- function(

@@ -49,6 +49,7 @@ in-memory caches such as \code{storr_environment()}.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
+if (requireNamespace("knitr")) {
 clean(destroy = TRUE)
 try(x <- this_cache(), silent = FALSE) # The cache does not exist yet.
 load_mtcars_example() # Get the code with drake_example("mtcars").
@@ -57,6 +58,7 @@ y <- this_cache() # Now, there is a cache.
 z <- this_cache(".drake") # Same as above.
 manual <- new_cache("manual_cache") # Make a new cache.
 manual2 <- get_cache("manual_cache") # Get the new cache.
+}
 })
 }
 }

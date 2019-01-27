@@ -16,6 +16,7 @@
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
+#' if (requireNamespace("knitr")) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' config <- drake_config(my_plan)
 #' if (requireNamespace("networkD3", quietly = TRUE)) {
@@ -35,6 +36,7 @@
 #' # You can even use clusters given to you for free in the `graph$nodes`
 #' # data frame of `drake_graph_info()`.
 #' sankey_drake_graph(config, group = "status", clusters = "imported")
+#' }
 #' }
 #' }
 #' })
@@ -124,6 +126,7 @@ sankey_drake_graph <- function(
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
+#' if (requireNamespace("knitr")) {
 #' if (requireNamespace("networkD3", quietly = TRUE)) {
 #' if (requireNamespace("visNetwork", quietly = TRUE)) {
 #' # Instead of jumpting right to sankey_drake_graph(), get the data frames
@@ -147,6 +150,7 @@ sankey_drake_graph <- function(
 #' # data frame.
 #' graph <- drake_graph_info(config, group = "status", clusters = "imported")
 #' render_sankey_drake_graph(graph)
+#' }
 #' }
 #' }
 #' })

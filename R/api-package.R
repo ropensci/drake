@@ -9,6 +9,7 @@
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
+#' if (requireNamespace("knitr")) {
 #' library(drake)
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Build everything.
@@ -34,6 +35,7 @@
 #' # make(my_plan, jobs = 4, parallelism = "Makefile") # nolint
 #' clean(destroy = TRUE) # Totally remove the cache.
 #' unlink("report.Rmd") # Clean up the remaining files.
+#' }
 #' })
 #' }
 #' @references <https://github.com/ropensci/drake>

@@ -62,6 +62,7 @@ is a step toward better data versioning tools.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
+if (requireNamespace("knitr")) {
 # Load drake's canonical example.
 load_mtcars_example() # Get the code with drake_example()
 # Run the project and save a flat text log file.
@@ -75,6 +76,7 @@ drake_cache_log_file() # writes drake_cache.log
 # It shows which targets and imports changed on every commit.
 # It is extremely difficult to track your results this way
 # by putting the raw '.drake/' cache itself under version control.
+}
 })
 }
 }

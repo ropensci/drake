@@ -13,6 +13,7 @@
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
+#' if (requireNamespace("knitr")) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Run the project, build the targets.
 #' config <- drake_config(my_plan)
@@ -40,6 +41,7 @@
 #'   known_times = known_times
 #' )
 #' balance
+#' }
 #' }
 #' })
 #' }
@@ -78,6 +80,7 @@ predict_runtime <- function(
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
+#' if (requireNamespace("knitr")) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Run the project, build the targets.
 #' config <- drake_config(my_plan)
@@ -105,6 +108,7 @@ predict_runtime <- function(
 #'   known_times = known_times
 #' )
 #' balance
+#' }
 #' }
 #' })
 #' }

@@ -28,12 +28,12 @@ A workflow plan data frame is a data frame
 with a \code{target} column and a \code{command} column.
 (See the details in the \code{\link[=drake_plan]{drake_plan()}} help file
 for descriptions of the optional columns.)
-Targets are the objects and files that drake generates,
+Targets are the objects that drake generates,
 and commands are the pieces of R code that produce them.
+You can create and track custom files along the way
+(see \code{\link[=file_in]{file_in()}}, \code{\link[=file_out]{file_out()}}, and \code{\link[=knitr_in]{knitr_in()}}).
 Use the function \code{\link[=drake_plan]{drake_plan()}} to generate workflow plan
-data frames easily, and see functions \code{\link[=evaluate_plan]{evaluate_plan()}},
-\code{\link[=expand_plan]{expand_plan()}}, \code{\link[=gather_by]{gather_by()}}, and \code{\link[=map_plan]{map_plan()}} for
-easy ways to generate large workflow plan data frames.}
+data frames.}
 
 \item{targets}{Character vector, names of targets to build.
 Dependencies are built too. Together, the \code{plan} and
@@ -430,6 +430,7 @@ for an overview of the documentation.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
+if (requireNamespace("knitr")) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 config <- drake_config(my_plan)
 outdated(config) # Which targets need to be (re)built?
@@ -449,6 +450,7 @@ make(my_plan, cache_log_file = TRUE) # Write a text log file this time.
 vis_drake_graph(config) # The colors changed in the graph.
 }
 clean() # Start from scratch next time around.
+}
 })
 }
 }

@@ -76,6 +76,7 @@ you can create your own \code{storr} cache and give it a hash algorithm
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
+if (requireNamespace("knitr")) {
 # Load drake's canonical example.
 load_mtcars_example() # Get the code with drake_example()
 # Run the project, build all the targets.
@@ -98,6 +99,7 @@ write.table(
 # It shows which targets and imports changed on every commit.
 # It is extremely difficult to track your results this way
 # by putting the raw '.drake/' cache itself under version control.
+}
 })
 }
 }

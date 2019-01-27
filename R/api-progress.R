@@ -22,6 +22,7 @@ in_progress_ <- function(path = getwd(), search = TRUE,
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
+#' if (requireNamespace("knitr")) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Run the project, build the targets.
 #' failed() # Should show that no targets failed.
@@ -30,6 +31,7 @@ in_progress_ <- function(path = getwd(), search = TRUE,
 #' try(make(bad_plan), silent = TRUE) # error
 #' failed() # "x"
 #' diagnose(x) # Retrieve the cached error log of x.
+#' }
 #' })
 #' }
 failed <- function(path = getwd(), search = TRUE,
@@ -74,6 +76,7 @@ failed <- function(path = getwd(), search = TRUE,
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
+#' if (requireNamespace("knitr")) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Run the project, build the targets.
 #' # Watch the changing progress() as make() is running.
@@ -81,6 +84,7 @@ failed <- function(path = getwd(), search = TRUE,
 #' progress(small, large) # Just see the progress of some targets.
 #' progress(list = c("small", "large")) # Same as above.
 #' progress(no_imported_objects = TRUE) # Ignore imported R objects.
+#' }
 #' })
 #' }
 progress <- function(

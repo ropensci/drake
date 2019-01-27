@@ -48,6 +48,7 @@ the file, \code{report.Rmd}.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
+if (requireNamespace("knitr")) {
 # Populate your workspace and write 'report.Rmd'.
 load_mtcars_example() # Get the code: drake_example("mtcars")
 # Check the dependencies of an imported function.
@@ -67,6 +68,7 @@ outdated(config) # Everything should be up to date.
 readd(coef_regression2_small)
 # Clean up the example.
 clean_mtcars_example()
+}
 })
 }
 }

@@ -144,6 +144,7 @@ deps_target <- function(
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
+#' if (requireNamespace("knitr")) {
 #' load_mtcars_example() # Load drake's canonical example.
 #' make(my_plan) # Run the project, build the targets.
 #' config <- drake_config(my_plan)
@@ -157,6 +158,7 @@ deps_target <- function(
 #' make(my_plan, skip_targets = TRUE)
 #' # The dependency hash changed.
 #' dependency_profile(small, config = config)
+#' }
 #' })
 #' }
 dependency_profile <- function(
@@ -215,10 +217,12 @@ dependency_profile <- function(
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
+#' if (requireNamespace("knitr")) {
 #' load_mtcars_example() # Load the canonical example for drake.
 #' # List all the targets/imports that are reproducibly tracked.
 #' config <- drake_config(my_plan)
 #' tracked(config)
+#' }
 #' })
 #' }
 tracked <- function(config) {

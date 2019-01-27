@@ -78,6 +78,7 @@ call more often.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
+if (requireNamespace("knitr")) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 if (requireNamespace("visNetwork", quietly = TRUE)) {
 # Instead of jumpting right to vis_drake_graph(), get the data frames
@@ -100,6 +101,7 @@ render_drake_graph(graph)
 graph <- drake_graph_info(
   config, group = "status", clusters = "imported")
 render_drake_graph(graph)
+}
 }
 })
 }

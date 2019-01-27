@@ -56,6 +56,7 @@ first_outdated <- function(config) {
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
+#' if (requireNamespace("knitr")) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' # Recopute the config list early and often to have the
 #' # most current information. Do not modify the config list by hand.
@@ -69,6 +70,7 @@ first_outdated <- function(config) {
 #' # See the debugging guide: https://ropenscilabs.github.io/drake-manual/debug.html # nolint
 #' config$trigger <- "always"
 #' outdated(config = config)
+#' }
 #' })
 #' }
 outdated <-  function(
@@ -101,11 +103,13 @@ outdated <-  function(
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
+#' if (requireNamespace("knitr")) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' config <- drake_config(my_plan)
 #' missed(config) # All the imported files and objects should be present.
 #' rm(reg1) # Remove an import dependency from you workspace.
 #' missed(config) # Should report that reg1 is missing.
+#' }
 #' })
 #' }
 missed <- function(config) {

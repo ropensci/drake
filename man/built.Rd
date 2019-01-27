@@ -44,16 +44,6 @@ Deprecated on 2019-01-08.
 Targets are listed in the workflow plan
 data frame (see \code{\link[=drake_plan]{drake_plan()}}.
 }
-\examples{
-\dontrun{
-test_with_dir("Quarantine side effects.", {
-load_mtcars_example() # Load drake's canonical example.
-make(my_plan) # Run the project, build all the targets.
-built() # List all the cached targets (built objects and files).
-# For file targets, only the fingerprints/hashes are stored.
-})
-}
-}
 \seealso{
 \code{\link[=cached]{cached()}}, \code{\link[=loadd]{loadd()}}
 }

@@ -20,6 +20,7 @@
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
+#' if (requireNamespace("knitr")) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' config <- drake_config(my_plan)
 #' outdated(config) # Which targets need to be (re)built?
@@ -39,6 +40,7 @@
 #' vis_drake_graph(config) # The colors changed in the graph.
 #' }
 #' clean() # Start from scratch next time around.
+#' }
 #' })
 #' }
 make <- function(

@@ -42,6 +42,7 @@ See the details in the help file for \code{\link[=drake_config]{drake_config()}}
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
+if (requireNamespace("knitr")) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 # Recopute the config list early and often to have the
 # most current information. Do not modify the config list by hand.
@@ -55,6 +56,7 @@ outdated(config = config)
 # See the debugging guide: https://ropenscilabs.github.io/drake-manual/debug.html # nolint
 config$trigger <- "always"
 outdated(config = config)
+}
 })
 }
 }

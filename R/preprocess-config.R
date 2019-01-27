@@ -22,12 +22,12 @@
 #'   with a `target` column and a `command` column.
 #'   (See the details in the [drake_plan()] help file
 #'   for descriptions of the optional columns.)
-#'   Targets are the objects and files that drake generates,
+#'   Targets are the objects that drake generates,
 #'   and commands are the pieces of R code that produce them.
+#'   You can create and track custom files along the way
+#'   (see [file_in()], [file_out()], and [knitr_in()]).
 #'   Use the function [drake_plan()] to generate workflow plan
-#'   data frames easily, and see functions [evaluate_plan()],
-#'   [expand_plan()], [gather_by()], and [map_plan()] for
-#'   easy ways to generate large workflow plan data frames.
+#'   data frames.
 #'
 #' @param targets Character vector, names of targets to build.
 #'   Dependencies are built too. Together, the `plan` and
@@ -664,6 +664,7 @@ add_packages_to_prework <- function(packages, prework) {
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
+#' if (requireNamespace("knitr")) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' # Create a master internal configuration list with prework.
 #' con <- drake_config(my_plan, prework = c("library(knitr)", "x <- 1"))
@@ -674,6 +675,7 @@ add_packages_to_prework <- function(packages, prework) {
 #' # The `eval` element is the environment where the prework
 #' # and the commands in your workflow plan data frame are executed.
 #' identical(con$eval$x, 1) # Should be TRUE.
+#' }
 #' })
 #' }
 do_prework <- function(config, verbose_packages) {

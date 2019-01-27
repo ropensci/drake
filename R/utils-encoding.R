@@ -115,6 +115,7 @@ display_key <- function(x, config) {
 #'   file_store("my_file.rds") # "'my_file.rds'"
 #'   \dontrun{
 #'   test_with_dir("contain side effects", {
+#'   if (requireNamespace("knitr")) {
 #'   load_mtcars_example() # Get the code with drake_example("mtcars").
 #'   make(my_plan) # Run the workflow to build the targets
 #'   list.files() # Should include input "report.Rmd" and output "report.md".
@@ -130,6 +131,7 @@ display_key <- function(x, config) {
 #'   )
 #'   loadd(list = file_store("report.md"))
 #'   get(file_store("report.md"))
+#'   }
 #'   })
 #'   }
 file_store <- function(x) {

@@ -29,6 +29,8 @@ packages, imported functions, etc.
 }
 }
 \examples{
+if (requireNamespace("CodeDepends")) {
+if (requireNamespace("knitr")) {
 plan <- drake_plan(
   raw_data = read_excel(file_in("raw_data.xlsx")),
   data = raw_data,
@@ -41,8 +43,8 @@ plan_to_notebook(plan, file)
 # Here is what the script looks like.
 cat(readLines(file), sep = "\\n")
 # Convert back to a drake plan.
-if (requireNamespace("CodeDepends")) {
-  code_to_plan(file)
+code_to_plan(file)
+}
 }
 }
 \seealso{

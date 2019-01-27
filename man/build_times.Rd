@@ -59,11 +59,13 @@ Applies to targets in your plan, not imports or files.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
+if (requireNamespace("knitr")) {
+if (requireNamespace("lubridate")) {
 # Show the build times for the mtcars example.
 load_mtcars_example() # Get the code with drake_example("mtcars").
 make(my_plan) # Build all the targets.
-if (requireNamespace("lubridate")) {
-  print(build_times()) # Show how long it took to build each target.
+print(build_times()) # Show how long it took to build each target.
+}
 }
 })
 }

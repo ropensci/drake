@@ -159,6 +159,7 @@ interacting with the cache.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
+if (requireNamespace("knitr")) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 make(my_plan) # Run the project, build the targets.
 readd(reg1) # Return imported object 'reg1' from the cache.
@@ -166,10 +167,12 @@ readd(small) # Return targets 'small' from the cache.
 readd("large", character_only = TRUE) # Return 'large' from the cache.
 # For external files, only the fingerprint/hash is stored.
 readd(file_store("report.md"), character_only = TRUE)
+}
 })
 }
 \dontrun{
 test_with_dir("Quarantine side effects.", {
+if (requireNamespace("knitr")) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 make(my_plan) # Run the projects, build the targets.
 config <- drake_config(my_plan)
@@ -194,6 +197,7 @@ ls()
 loadd(list = file_store("report.md"))
 ls() # Should include "\\"report.md\\"".
 get(file_store("report.md"))
+}
 })
 }
 }

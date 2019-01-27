@@ -47,6 +47,7 @@ for ordinary error messages printed to the console.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
+if (requireNamespace("knitr")) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 make(my_plan) # Run the project, build the targets.
 failed() # Should show that no targets failed.
@@ -55,6 +56,7 @@ bad_plan <- drake_plan(x = function_doesnt_exist())
 try(make(bad_plan), silent = TRUE) # error
 failed() # "x"
 diagnose(x) # Retrieve the cached error log of x.
+}
 })
 }
 }

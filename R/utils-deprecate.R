@@ -900,15 +900,6 @@ drake_strings <- function(...) {
 #' @return Character vector naming the built targets in the cache.
 #' @inheritParams cached
 #' @param jobs Number of jobs/workers for parallel processing.
-#' @examples
-#' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' load_mtcars_example() # Load drake's canonical example.
-#' make(my_plan) # Run the project, build all the targets.
-#' built() # List all the cached targets (built objects and files).
-#' # For file targets, only the fingerprints/hashes are stored.
-#' })
-#' }
 built <- function(
   path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
@@ -946,16 +937,6 @@ built <- function(
 #'   if no drake project is found.
 #' @param path Starting path for search back for the project.
 #'   Should be a subdirectory of the drake project.
-#' @examples
-#' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' make(my_plan) # Run the project, build the target.
-#' # Find the root directory of the current drake project.
-#' # Search up through parent directories if necessary.
-#' find_cache()
-#' })
-#' }
 find_project <- function(path = getwd()) {
   .Deprecated(
     "find_project",
@@ -1316,25 +1297,12 @@ read_drake_plan <- function(
 #' @seealso [cached()], [loadd()]
 #' @export
 #' @return Character vector naming the imports in the cache.
-#'
 #' @inheritParams cached
-#'
 #' @param files_only Logical, whether to show imported files only
 #'   and ignore imported objects. Since all your functions and
 #'   all their global variables are imported, the full list of
 #'   imported objects could get really cumbersome.
-#'
 #' @param jobs Number of jobs/workers for parallel processing.
-#'
-#' @examples
-#' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' load_mtcars_example() # Load the canonical example.
-#' make(my_plan) # Run the project, build the targets.
-#' imported() # List all the imported objects/files in the cache.
-#' # For imported files, only the fingerprints/hashes are stored.
-#' })
-#' }
 imported <- function(
   files_only = FALSE, path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
