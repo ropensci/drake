@@ -136,35 +136,10 @@ drake_plan <- function(
   list = character(0),
   file_targets = NULL,
   strings_in_dots = NULL,
-  tidy_evaluation = TRUE,
+  tidy_evaluation = NULL,
   transform = TRUE,
   trace = FALSE
 ) {
-  if (tidy_evaluation) {
-    dots <- lapply(rlang::quos(...), rlang::quo_squash)
-  } else {
-    dots <- match.call(expand.dots = FALSE)$...
-  }
-  warn_arrows(dots)
-  commands_dots <- lapply(dots, safe_deparse)
-  names(commands_dots) <- names(dots)
-  commands <- c(commands_dots, list)
-  if (!length(commands)) {
-    return(
-      weak_tibble(
-        target = character(0),
-        command = character(0)
-      )
-    )
-  }
-  commands <- complete_target_names(commands)
-  targets <- names(commands)
-  commands <- as.character(commands)
-  plan <- weak_tibble(
-    target = targets,
-    command = commands
-  )
-  from_dots <- plan$target %in% names(commands_dots)
   if (length(file_targets) || length(strings_in_dots)) {
     warning(
       "Arguments `file_targets` and `strings_in_dots` ",
@@ -172,10 +147,31 @@ drake_plan <- function(
       call. = FALSE
     )
   }
+  if (length(list)) {
+    warning(
+      "The `list` argument of `drake_plan()` is deprecated.",
+      call. = FALSE
+    )
+    list <- lapply(list, function(x) parse(text = x)[[1]])
+  }
+  if (tidy_evaluation %||% TRUE) {
+    dots <- lapply(rlang::quos(...), rlang::quo_squash)
+  } else {
+    dots <- match.call(expand.dots = FALSE)$...
+  }
+  warn_arrows(dots)
+  commands <- c(dots, list)
+  if (!length(commands)) {
+    return(weak_tibble(target = character(0), command = character(0)))
+  }
+  commands <- complete_target_names(commands)
+  targets <- names(commands)
+  plan <- weak_tibble(target = targets, command = commands)
   plan <- parse_custom_plan_columns(plan)
   if (transform && ("transform" %in% colnames(plan))) {
     plan <- transform_plan(plan, trace = trace)
   }
+  plan$command <- unlist(lapply(plan$command, safe_deparse))
   sanitize_plan(plan)
 }
 
@@ -242,7 +238,7 @@ parse_custom_plan_columns <- function(plan) {
 }
 
 parse_custom_plan_row <- function(row) {
-  expr <- parse(text = row$command, keep.source = FALSE)
+  expr <- row$command
   if (!length(expr) || !is_target_call(expr[[1]])) {
     return(row)
   }
@@ -496,26 +492,20 @@ detect_arrow <- function(command) {
 #'   trigger = "always",
 #'   custom_column = 5
 #' )
-target <- function(command = NULL, ...) {
-  out <- list(
-    # I tried putting quo_squash(enquo()) in its own function,
-    # but that function returned the symbols back in cases when it
-    # should have just returned NULL.
-    command = sanitize_cmd_type(rlang::quo_squash(rlang::enquo(command)))
-  )
-  out <- c(out, lapply(rlang::enquos(...), rlang::quo_squash))
+target <- function(command = NULL, ..., tidy_evaluation = NULL) {
+  if (tidy_evaluation %||% TRUE) {
+    out <- lapply(rlang::enquos(...), rlang::quo_squash)
+  } else {
+    out <- match.call(expand.dots = FALSE)$...
+  }
   out <- select_nonempty(out)
-  out[nzchar(names(out))]
-  out <- lapply(
-    X = out,
-    FUN = function(x) {
-      if (is.language(x)) {
-        safe_deparse(x)
-      } else {
-        x
-      }
+  out <- out[nzchar(names(out))]
+  out <- c(command = rlang::quo_squash(rlang::enquo(command)), out)
+  for (i in seq_along(out)) {
+    if (is.language(out[[i]])) {
+      out[[i]] <- list(out[[i]])
     }
-  )
+  }
   weak_as_tibble(out)
 }
 
