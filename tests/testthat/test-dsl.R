@@ -268,6 +268,7 @@ test_with_dir("dsl with different types", {
   )
   plan$command <- list(quote(1 + 1))
   plan <- transform_plan(plan)
+  plan$command <- unlist(lapply(plan$command, safe_deparse))
   expect_equal(sort(plan$target), sort(c("a_1", "a_2")))
   expect_equal(plan$command, rep("1 + 1", 2))
 })
@@ -812,7 +813,9 @@ test_with_dir("dsl with differently typed group levels", {
     transform = FALSE
   )
   plan <- bind_plans(plan1, plan2)
-  plan
+  plan$command <- lapply(plan$command, function(x) {
+    parse(text = x)[[1]]
+  })
   out <- transform_plan(plan)
   exp <- drake_plan(
     analysis_.source1. = analyze_data("source1"), # nolint
