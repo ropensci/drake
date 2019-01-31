@@ -43,7 +43,7 @@ transform_plan <- function(plan, trace = FALSE) {
 
 transform_row <- function(plan, row) {
   target <- plan$target[[row]]
-  command <- parse_command(plan$command[[row]])
+  command <- plan$command[[row]]
   transform <- set_old_groupings(plan[["transform"]][[row]], plan)
   new_cols <- c(
     target,
@@ -95,11 +95,8 @@ map_to_grid <- function(transform, target, command, plan) {
   suffix_cols <- intersect(colnames(grid), group_names(transform))
   new_targets <- new_targets(target, grid[, suffix_cols, drop = FALSE])
   new_commands <- grid_commands(command, grid)
-  out <- data.frame(
-    target = new_targets,
-    command = new_commands,
-    stringsAsFactors = FALSE
-  )
+  out <- data.frame(target = new_targets, stringsAsFactors = FALSE)
+  out$command <- new_commands
   cbind(out, grid)
 }
 
@@ -124,12 +121,12 @@ grid_commands <- function(command, grid) {
   for (i in seq_along(grid)) {
     grid[[i]] <- dsl_syms(grid[[i]])
   }
-  as.character(lapply(
+  lapply(
     seq_len(nrow(grid)),
     grid_command,
     command = command,
     grid = grid
-  ))
+  )
 }
 
 grid_command <- function(row, command, grid) {
@@ -181,7 +178,9 @@ combine_step <- function(plan, command, transform) {
     call("substitute", command, aggregates),
     envir = baseenv()
   )
-  data.frame(command = safe_deparse(command), stringsAsFactors = FALSE)
+  out <- data.frame(command = NA, stringsAsFactors = FALSE)
+  out$command <- list(command)
+  out
 }
 
 lang <- function(...) UseMethod("lang")
@@ -206,9 +205,6 @@ old_cols <- function(plan) {
 parse_transform <- function(transform) {
   if (safe_is_na(transform)) {
     return(NA)
-  }
-  if (is.character(transform)) {
-    transform <- parse(text = transform)[[1]]
   }
   transform <- structure(
     as.expression(transform),
@@ -365,11 +361,9 @@ dsl_sym <- function(x) {
 }
 
 dsl_default_df <- function(target, command) {
-  data.frame(
-    target = target,
-    command = char(command),
-    stringsAsFactors = FALSE
-  )
+  out <- data.frame(target = target, stringsAsFactors = FALSE)
+  out$command <- list(command)
+  out
 }
 
 dsl_left_outer_join <- function(x, y) {
