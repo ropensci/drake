@@ -24,7 +24,9 @@ the names of new targets.}
 An evaluated workflow plan data frame of analysis targets.
 }
 \description{
-Use \code{\link[=evaluate_plan]{evaluate_plan()}} and \code{\link[=expand_plan]{expand_plan()}} instead.
+Use \code{\link[=drake_plan]{drake_plan()}} instead.
+See \url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}
+for details.
 }
 \details{
 2019-01-13

@@ -1642,7 +1642,9 @@ target_namespaces <- function(
 }
 
 #' @title Deprecated.
-#' @description Use [evaluate_plan()] and [expand_plan()] instead.
+#' @description Use [drake_plan()] instead.
+#'   See <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>
+#'   for details.
 #' @details 2019-01-13
 #' @export
 #' @keywords internal
@@ -1665,7 +1667,9 @@ plan_analyses <- function(plan, datasets, sep = "_") {
     package = "drake",
     msg = paste(
       "plan_analyses() is deprecated.",
-      "Use evaluate_plan() and expand_plan() instead."
+      "Use drake_plan() with transformations instead. See",
+      "https://ropenscilabs.github.io/drake-manual/plans.html#large-plans",
+      "for details."
     )
   )
   evaluate_plan(
@@ -1677,8 +1681,9 @@ plan_analyses <- function(plan, datasets, sep = "_") {
 }
 
 #' @title Deprecated
-#' @description Use [evaluate_plan()], [expand_plan()],
-#'   and [gather_by()] instead.
+#' @description Use [drake_plan()] with transformations instead. See
+#'   <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>
+#'   for details.
 #' @details 2019-01-13
 #' @export
 #' @keywords internal
@@ -1711,7 +1716,8 @@ plan_summaries <- function(
     package = "drake",
     msg = paste(
       "plan_summaries() is deprecated.",
-      "Use evaluate_plan(), expand_plan(), and gather_by() instead."
+      "Use drake_plan() with transformations instead:",
+      "https://ropenscilabs.github.io/drake-manual/plans.html#large-plans"
     )
   )
   plan <- with_analyses_only(plan)

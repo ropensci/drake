@@ -29,12 +29,18 @@ the \code{fun} and \code{id} arguments as character scalars or symbols.}
 \item{trace}{Logical, whether to append the columns of \code{args}
 to the output workflow plan data frame. The added columns
 help "trace back" the original settings that went into building
-each target. Similar to the \code{trace} argument of \code{\link[=evaluate_plan]{evaluate_plan()}}.}
+each target. Similar to the \code{trace} argument of \code{\link[=drake_plan]{drake_plan()}}.}
 }
 \value{
 A workflow plan data frame.
 }
 \description{
+\code{map_plan()} is no longer recommended.
+Consider using transformations instead. Visit
+\url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}
+for the details.
+}
+\details{
 \code{map_plan()} is like \code{base::Map()}:
 it takes a function name and a grid of arguments, and
 writes out all the commands calls to apply the function to
@@ -69,6 +75,5 @@ make(plan, verbose = FALSE, cache = cache)
 readd(fit_cyl_disp, cache = cache)
 }
 \seealso{
-\code{\link[=drake_plan]{drake_plan()}}, \code{\link[=reduce_by]{reduce_by()}}, \code{\link[=gather_by]{gather_by()}}, \code{\link[=reduce_plan]{reduce_plan()}}, \code{\link[=gather_plan]{gather_plan()}},
-\code{\link[=evaluate_plan]{evaluate_plan()}}, \code{\link[=expand_plan]{expand_plan()}}
+\code{\link[=drake_plan]{drake_plan()}}
 }

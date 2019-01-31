@@ -1,11 +1,14 @@
 #' @title Create a plan that maps a function to a grid of arguments.
-#' @description `map_plan()` is like `base::Map()`:
+#' @description `map_plan()` is no longer recommended.
+#'   Consider using transformations instead. Visit
+#'   <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>
+#'   for the details.
+#' @details `map_plan()` is like `base::Map()`:
 #'   it takes a function name and a grid of arguments, and 
 #'   writes out all the commands calls to apply the function to
 #'   each row of arguments.
 #' @export
-#' @seealso [drake_plan()], [reduce_by()], [gather_by()], [reduce_plan()], [gather_plan()],
-#'   [evaluate_plan()], [expand_plan()]
+#' @seealso [drake_plan()]
 #' @return A workflow plan data frame.
 #' @param args A data frame (or better yet, a `tibble`)
 #'   of function arguments to `fun`.
@@ -25,7 +28,7 @@
 #' @param trace Logical, whether to append the columns of `args`
 #'   to the output workflow plan data frame. The added columns
 #'   help "trace back" the original settings that went into building
-#'   each target. Similar to the `trace` argument of [evaluate_plan()].
+#'   each target. Similar to the `trace` argument of [drake_plan()].
 #' @examples
 #' # For the full tutorial, visit
 #' # https://ropenscilabs.github.io/drake-manual/plans.html#map_plan.
@@ -60,6 +63,7 @@ map_plan <- function(
   character_only = FALSE,
   trace = FALSE
 ) {
+  advertise_dsl()
   args <- weak_as_tibble(args)
   if (!character_only) {
     fun <- as.character(substitute(fun))
@@ -91,11 +95,14 @@ map_plan <- function(
 
 #' @title Write commands to combine several targets into one
 #'   or more overarching targets.
-#' @description Creates a new workflow plan to aggregate
+#' @description `gather_plan()` is no longer recommended.
+#'   Consider using transformations instead. Visit
+#'   <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>
+#'   for the details.
+#' @details Creates a new workflow plan to aggregate
 #'   existing targets in the supplied plan.
 #' @export
-#' @seealso [drake_plan(), [map_plan()], [reduce_by()], [gather_by()], [reduce_plan()],
-#'   [evaluate_plan()], [expand_plan()]
+#' @seealso [drake_plan()]
 #' @return A workflow plan data frame that aggregates multiple
 #'   prespecified targets into one additional target downstream.
 #' @param plan Workflow plan data frame of prespecified targets.
@@ -139,6 +146,7 @@ gather_plan <- function(
   gather = "list",
   append = FALSE
 ) {
+  advertise_dsl()
   command <- paste(plan$target, "=", plan$target)
   command <- paste(command, collapse = ", ")
   command <- paste0(gather, "(", command, ")")
@@ -151,16 +159,19 @@ gather_plan <- function(
 }
 
 #' @title Gather multiple groupings of targets
-#' @description Perform several calls to [gather_plan()]
+#' @description `gather_by()` is no longer recommended.
+#'   Consider using transformations instead. Visit
+#'   <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>
+#'   for the details.
+#' @details Perform several calls to `gather_plan()`
 #'   based on groupings from columns in the plan,
 #'   and then row-bind the new targets to the plan.
 #' @export
-#' @seealso [drake_plan()], [map_plan()], [reduce_by()], [reduce_plan()],
-#'   [gather_plan()], [evaluate_plan()], [expand_plan()]
+#' @seealso [drake_plan()]
 #' @return A workflow plan data frame.
 #' @inheritParams gather_plan
 #' @param ... Symbols, columns of `plan` to define target groupings.
-#'   A [gather_plan()] call is applied for each grouping.
+#'   A `gather_plan()` call is applied for each grouping.
 #'   Groupings with all `NA`s in the selector variables are ignored.
 #' @param prefix Character, prefix for naming the new targets.
 #'   Suffixes are generated from the values of the columns
@@ -208,6 +219,7 @@ gather_by <- function(
   filter = NULL,
   sep = "_"
 ) {
+  advertise_dsl()
   gathered <- plan
   if (!is.null(substitute(filter))) {
     filter <- rlang::enquo(filter)
@@ -239,12 +251,15 @@ gather_by <- function(
 }
 
 #' @title Write commands to reduce several targets down to one.
-#' @description Creates a new workflow plan data frame with the
+#' @description `reduce_plan()` is no longer recommended.
+#'   Consider using transformations instead. Visit
+#'   <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>
+#'   for the details.
+#' @details Creates a new workflow plan data frame with the
 #'   commands to do a reduction (i.e. to repeatedly apply a binary
 #'   operator to pairs of targets to produce one target).
 #' @export
-#' @seealso [drake_plan()], [map_plan()], [reduce_by()], [gather_by()],
-#'   [gather_plan()], [evaluate_plan()], [expand_plan()]
+#' @seealso [drake_plan()]
 #' @return A workflow plan data frame that aggregates multiple
 #'   prespecified targets into one additional target downstream.
 #' @param plan Workflow plan data frame of prespecified targets.
@@ -299,6 +314,7 @@ reduce_plan <- function(
   append = FALSE,
   sep = "_"
 ) {
+  advertise_dsl()
   if (pairwise) {
     pairs <- reduction_pairs(
       x = plan$target,
@@ -327,16 +343,19 @@ reduce_plan <- function(
 }
 
 #' @title Reduce multiple groupings of targets
-#' @description Perform several calls to [reduce_plan()]
+#' @description `reduce_by()` are no longer recommended.
+#'   Consider using transformations instead. Visit
+#'   <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>
+#'   for the details.
+#' @details Perform several calls to `reduce_plan()`
 #'   based on groupings from columns in the plan,
 #'   and then row-bind the new targets to the plan.
 #' @export
-#' @seealso [drake_plan()], [map_plan()], [gather_by()], [reduce_plan()],
-#'   [gather_plan()], [evaluate_plan()], [expand_plan()]
+#' @seealso [drake_plan()]
 #' @return A workflow plan data frame.
 #' @inheritParams reduce_plan
 #' @param ... Symbols, columns of `plan` to define target groupings.
-#'   A [reduce_plan()] call is applied for each grouping.
+#'   A `reduce_plan()` call is applied for each grouping.
 #'   Groupings with all `NA`s in the selector variables are ignored.
 #' @param prefix Character, prefix for naming the new targets.
 #'   Suffixes are generated from the values of the columns
@@ -389,6 +408,7 @@ reduce_by <- function(
   filter = NULL,
   sep = "_"
 ) {
+  advertise_dsl()
   reduced <- plan
   if (!is.null(substitute(filter))) {
     filter <- rlang::enquo(filter)

@@ -55,12 +55,17 @@ the names of the new targets are \code{x.1} and \code{x.2}.}
 A workflow plan data frame with the wildcards evaluated.
 }
 \description{
+Wildcards are no longer recommended.
+Consider using transformations instead. Visit
+\url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}
+for the details.
+}
+\details{
 The commands in workflow plan data frames can have
 wildcard symbols that can stand for datasets, parameters, function
 arguments, etc. These wildcards can be evaluated over a set of
-possible values using \code{evaluate_plan}.
-}
-\details{
+possible values using \code{evaluate_plan()}.
+
 Specify a single wildcard with the \code{wildcard}
 and \code{values} arguments. In each command, the text in
 \code{wildcard} will be replaced by each value in \code{values}
@@ -153,6 +158,5 @@ vis_drake_graph(config, group = "status", clusters = "up to date")
 }
 }
 \seealso{
-\code{\link[=drake_plan]{drake_plan()}}, \code{\link[=map_plan]{map_plan()}}, \code{\link[=reduce_by]{reduce_by()}}, \code{\link[=gather_by]{gather_by()}}, \code{\link[=reduce_plan]{reduce_plan()}},
-\code{\link[=gather_plan]{gather_plan()}}, \code{\link[=evaluate_plan]{evaluate_plan()}}, \code{\link[=expand_plan]{expand_plan()}}
+\code{\link[=drake_plan]{drake_plan()}}
 }

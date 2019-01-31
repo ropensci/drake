@@ -1,10 +1,16 @@
 #' @title Use wildcard templating to create a
 #'   workflow plan data frame from a template data frame.
-#' @description The commands in workflow plan data frames can have
+#' @description Wildcards are no longer recommended.
+#'   Consider using transformations instead. Visit
+#'   <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>
+#'   for the details.
+#'
+#' @details The commands in workflow plan data frames can have
 #' wildcard symbols that can stand for datasets, parameters, function
 #' arguments, etc. These wildcards can be evaluated over a set of
-#' possible values using `evaluate_plan`.
-#' @details Specify a single wildcard with the `wildcard`
+#' possible values using `evaluate_plan()`.
+#' 
+#' Specify a single wildcard with the `wildcard`
 #' and `values` arguments. In each command, the text in
 #' `wildcard` will be replaced by each value in `values`
 #' in turn. Specify multiple wildcards with the `rules` argument,
@@ -12,8 +18,7 @@
 #' not `NULL`. Here, `rules` should be a list with wildcards
 #' as names and vectors of possible values as list elements.
 #' @export
-#' @seealso [drake_plan()], [map_plan()], [reduce_by()], [gather_by()], [reduce_plan()],
-#'   [gather_plan()], [evaluate_plan()], [expand_plan()]
+#' @seealso [drake_plan()]
 #' @return A workflow plan data frame with the wildcards evaluated.
 #'
 #' @param plan Workflow plan data frame, similar to one produced by
@@ -150,6 +155,7 @@ evaluate_plan <- function(
   columns = "command",
   sep = "_"
 ) {
+  advertise_dsl()
   if (!is.null(rules)) {
     check_wildcard_rules(rules)
     evaluate_wildcard_rules(
@@ -293,12 +299,16 @@ check_wildcard_rules <- function(rules) {
 }
 
 #' @title Create replicates of targets.
-#' @description Duplicates the rows of a workflow plan data frame.
+#' @description `expand_plan()` is no longer recommended.
+#'   Consider using transformations instead. Visit
+#'   <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>
+#'   for the details.
+#'
+#' @details Duplicates the rows of a workflow plan data frame.
 #' Prefixes are appended to the new target names
 #' so targets still have unique names.
 #' @export
-#' @seealso [drake_plan()], [map_plan()], [reduce_by()], [gather_by()], [reduce_plan()],
-#'   [gather_plan()], [evaluate_plan()], [expand_plan()]
+#' @seealso [drake_plan()]
 #' @return An expanded workflow plan data frame (with replicated targets).
 #' @param plan Workflow plan data frame.
 #' @param values Values to expand over. These will be appended to
@@ -320,6 +330,7 @@ check_wildcard_rules <- function(rules) {
 #' expand_plan(datasets, values = 1:3, rename = TRUE)
 #' expand_plan(datasets, values = 1:3, rename = FALSE)
 expand_plan <- function(plan, values = NULL, rename = TRUE, sep = "_") {
+  advertise_dsl()
   if (!length(values)) {
     return(plan)
   }

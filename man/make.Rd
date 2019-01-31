@@ -458,7 +458,6 @@ clean() # Start from scratch next time around.
 \code{\link[=drake_plan]{drake_plan()}},
 \code{\link[=drake_config]{drake_config()}},
 \code{\link[=vis_drake_graph]{vis_drake_graph()}},
-\code{\link[=evaluate_plan]{evaluate_plan()}},
 \code{\link[=outdated]{outdated()}},
 \code{\link[=triggers]{triggers()}}
 }

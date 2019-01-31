@@ -12,7 +12,7 @@ reduce_by(plan, ..., prefix = "target", begin = "", op = " + ",
 \item{plan}{Workflow plan data frame of prespecified targets.}
 
 \item{...}{Symbols, columns of \code{plan} to define target groupings.
-A \code{\link[=reduce_plan]{reduce_plan()}} call is applied for each grouping.
+A \code{reduce_plan()} call is applied for each grouping.
 Groupings with all \code{NA}s in the selector variables are ignored.}
 
 \item{prefix}{Character, prefix for naming the new targets.
@@ -51,7 +51,13 @@ of new targets.}
 A workflow plan data frame.
 }
 \description{
-Perform several calls to \code{\link[=reduce_plan]{reduce_plan()}}
+\code{reduce_by()} are no longer recommended.
+Consider using transformations instead. Visit
+\url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}
+for the details.
+}
+\details{
+Perform several calls to \code{reduce_plan()}
 based on groupings from columns in the plan,
 and then row-bind the new targets to the plan.
 }
@@ -84,6 +90,5 @@ reduce_by(
 )
 }
 \seealso{
-\code{\link[=drake_plan]{drake_plan()}}, \code{\link[=map_plan]{map_plan()}}, \code{\link[=gather_by]{gather_by()}}, \code{\link[=reduce_plan]{reduce_plan()}},
-\code{\link[=gather_plan]{gather_plan()}}, \code{\link[=evaluate_plan]{evaluate_plan()}}, \code{\link[=expand_plan]{expand_plan()}}
+\code{\link[=drake_plan]{drake_plan()}}
 }

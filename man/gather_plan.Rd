@@ -26,6 +26,12 @@ A workflow plan data frame that aggregates multiple
 prespecified targets into one additional target downstream.
 }
 \description{
+\code{gather_plan()} is no longer recommended.
+Consider using transformations instead. Visit
+\url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}
+for the details.
+}
+\details{
 Creates a new workflow plan to aggregate
 existing targets in the supplied plan.
 }
@@ -58,6 +64,5 @@ gather_plan(
 )
 }
 \seealso{
-[drake_plan(), \code{\link[=map_plan]{map_plan()}}, \code{\link[=reduce_by]{reduce_by()}}, \code{\link[=gather_by]{gather_by()}}, \code{\link[=reduce_plan]{reduce_plan()}},
-\code{\link[=evaluate_plan]{evaluate_plan()}}, \code{\link[=expand_plan]{expand_plan()}}
+\code{\link[=drake_plan]{drake_plan()}}
 }

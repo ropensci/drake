@@ -36,6 +36,12 @@ A workflow plan data frame that aggregates multiple
 prespecified targets into one additional target downstream.
 }
 \description{
+\code{reduce_plan()} is no longer recommended.
+Consider using transformations instead. Visit
+\url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}
+for the details.
+}
+\details{
 Creates a new workflow plan data frame with the
 commands to do a reduction (i.e. to repeatedly apply a binary
 operator to pairs of targets to produce one target).
@@ -69,6 +75,5 @@ reduce_plan(
 )
 }
 \seealso{
-\code{\link[=drake_plan]{drake_plan()}}, \code{\link[=map_plan]{map_plan()}}, \code{\link[=reduce_by]{reduce_by()}}, \code{\link[=gather_by]{gather_by()}},
-\code{\link[=gather_plan]{gather_plan()}}, \code{\link[=evaluate_plan]{evaluate_plan()}}, \code{\link[=expand_plan]{expand_plan()}}
+\code{\link[=drake_plan]{drake_plan()}}
 }

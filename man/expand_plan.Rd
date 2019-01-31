@@ -23,6 +23,12 @@ target names. Only relevant when \code{rename} is \code{TRUE}.}
 An expanded workflow plan data frame (with replicated targets).
 }
 \description{
+\code{expand_plan()} is no longer recommended.
+Consider using transformations instead. Visit
+\url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}
+for the details.
+}
+\details{
 Duplicates the rows of a workflow plan data frame.
 Prefixes are appended to the new target names
 so targets still have unique names.
@@ -40,6 +46,5 @@ expand_plan(datasets, values = 1:3, rename = TRUE)
 expand_plan(datasets, values = 1:3, rename = FALSE)
 }
 \seealso{
-\code{\link[=drake_plan]{drake_plan()}}, \code{\link[=map_plan]{map_plan()}}, \code{\link[=reduce_by]{reduce_by()}}, \code{\link[=gather_by]{gather_by()}}, \code{\link[=reduce_plan]{reduce_plan()}},
-\code{\link[=gather_plan]{gather_plan()}}, \code{\link[=evaluate_plan]{evaluate_plan()}}, \code{\link[=expand_plan]{expand_plan()}}
+\code{\link[=drake_plan]{drake_plan()}}
 }

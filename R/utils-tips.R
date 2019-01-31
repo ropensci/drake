@@ -1,17 +1,16 @@
 # Output a random tip about drake.
 drake_tip_ <- function() {
   tips <- c(
-    "map_plan() sets up iterative function calls on a grid of arguments
-     to create a drake plan.",
+    "A new and improved way to create large drake plans:
+     https://ropenscilabs.github.io/drake-manual/plans.html#large-plans",
 
-    "Use diagnose() to retrieve diagnostic metadata:
+    "Use diagnose() to retrieve
      errors, warnings, messages, commands, runtimes, etc.",
 
-    "Use drake_example(\"main\") to generate the code files
-     for a friendly example workflow.",
+    "Use drake_example() to download code for a small drake workflow.",
 
-    "Check out the reference website (https://ropensci.github.io/drake/)
-     and user manual (https://ropenscilabs.github.io/drake-manual/).",
+    "Check out the reference website https://ropensci.github.io/drake
+     and user manual https://ropenscilabs.github.io/drake-manual.",
 
     "drake quickstart:
      load_mtcars_example();

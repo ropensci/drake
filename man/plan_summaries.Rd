@@ -31,8 +31,9 @@ for computing summaries of analyses and datasets.
 analyses of multiple datasets in multiple ways.
 }
 \description{
-Use \code{\link[=evaluate_plan]{evaluate_plan()}}, \code{\link[=expand_plan]{expand_plan()}},
-and \code{\link[=gather_by]{gather_by()}} instead.
+Use \code{\link[=drake_plan]{drake_plan()}} with transformations instead. See
+\url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}
+for details.
 }
 \details{
 2019-01-13

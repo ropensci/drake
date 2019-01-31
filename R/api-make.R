@@ -9,7 +9,6 @@
 #'   [drake_plan()],
 #'   [drake_config()],
 #'   [vis_drake_graph()],
-#'   [evaluate_plan()],
 #'   [outdated()],
 #'   [triggers()]
 #' @export
