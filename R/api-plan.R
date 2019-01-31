@@ -147,13 +147,6 @@ drake_plan <- function(
       call. = FALSE
     )
   }
-  if (length(list)) {
-    warning(
-      "The `list` argument of `drake_plan()` is deprecated.",
-      call. = FALSE
-    )
-    list <- lapply(list, function(x) parse(text = x)[[1]])
-  }
   if (tidy_evaluation %||% TRUE) {
     dots <- lapply(rlang::quos(...), rlang::quo_squash)
   } else {
