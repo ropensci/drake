@@ -167,7 +167,7 @@ drake_plan <- function(
       plan[[col]] <- tidyeval_exprs(plan[[col]], envir = envir)
     }
   }
-  for (col in c("command", "trigger")) {
+  for (col in intersect(colnames(plan), c("command", "trigger"))) {
     plan[[col]] <- lapply(plan[[col]], safe_deparse)
   }
   for (col in colnames(plan)) {
