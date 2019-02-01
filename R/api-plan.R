@@ -150,6 +150,7 @@ drake_plan <- function(
   }
   dots <- match.call(expand.dots = FALSE)$...
   warn_arrows(dots)
+  list <- lapply(list, function(x) parse(text = x))
   commands <- c(dots, list)
   if (!length(commands)) {
     return(weak_tibble(target = character(0), command = character(0)))
@@ -165,9 +166,7 @@ drake_plan <- function(
     plan[["command"]] <- tidyeval_exprs(plan[["command"]], envir = envir)
   }
   for (col in c("command", "trigger")) {
-    if (is.list(plan[[col]])) {
-      plan[[col]] <- unlist(lapply(plan[[col]], safe_deparse))
-    }
+    plan[[col]] <- unlist(lapply(plan[[col]], safe_deparse))
   }
   sanitize_plan(plan)
 }

@@ -316,9 +316,6 @@ weak_as_tibble <- function(..., .force_df = FALSE) {
 }
 
 safe_deparse <- function(x) {
-  if (is.character(x)) {
-    return(x)
-  }
   paste(
     deparse(x, control = c("keepInteger", "keepNA")),
     collapse = "\n"
