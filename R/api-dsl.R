@@ -2,8 +2,8 @@ transform_plan <- function(plan, envir, trace = FALSE) {
   if (!("transform" %in% names(plan))) {
     return(plan)
   }
-  plan[["transform"]] <- tidyeval_exprs(plan[["transform"]], envir = envir)
   old_cols(plan) <- old_cols <- colnames(plan)
+  plan[["transform"]] <- tidyeval_exprs(plan[["transform"]], envir = envir)
   plan[["transform"]] <- lapply(plan[["transform"]], parse_transform)
   while (any(index <- index_can_transform(plan))) {
     rows <- lapply(which(index), transform_row, plan = plan)
@@ -21,7 +21,6 @@ transform_plan <- function(plan, envir, trace = FALSE) {
 transform_row <- function(plan, index) {
   row <- plan[index,, drop = FALSE]
   target <- row$target
-  row$target <- NULL
   transform <- set_old_groupings(plan[["transform"]][[index]], plan)
   new_cols <- c(
     target,
@@ -60,7 +59,10 @@ can_transform <- function(transform, plan) {
 
 map_to_grid <- function(transform, target, row, plan) {
   groupings <- groupings(transform)
-  if (!length(groupings)) NULL
+  if (!length(groupings)) {
+    row[["transform"]][[1]] <- NA
+    return(row)
+  }
   grid <- dsl_grid(transform, groupings)
   ncl <- c(names(new_groupings(transform)), old_cols(plan))
   plan <- plan[, setdiff(colnames(plan), ncl), drop = FALSE]
@@ -131,7 +133,8 @@ dsl_transform.combine <- function(transform, target, row, plan) {
   cols_keep <- union(dsl_by(transform), dsl_combine(transform))
   rows_keep <- complete_cases(plan[, cols_keep, drop = FALSE])
   if (!length(rows_keep) || !any(rows_keep)) {
-    return(dsl_default_df(target, command))
+    row[["transform"]][[1]] <- NA
+    return(row)
   }
   out <- map_by(
     .x = plan[rows_keep,, drop = FALSE], # nolint
