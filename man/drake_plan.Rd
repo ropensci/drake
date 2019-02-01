@@ -33,6 +33,9 @@ before running it with \code{make()}.
 Requires the \code{transform} and \code{group} fields identified
 by \code{target()}. See the examples for details.}
 
+\item{trace}{Logical, whether to add columns to show
+what happens during target transformations.}
+
 \item{envir}{Environment for tidy evaluation.}
 }
 \value{

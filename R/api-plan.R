@@ -47,6 +47,8 @@
 #'   before running it with `make()`.
 #'   Requires the `transform` and `group` fields identified
 #'   by `target()`. See the examples for details.
+#' @param trace Logical, whether to add columns to show
+#'   what happens during target transformations.
 #' @param envir Environment for tidy evaluation.
 #' @examples
 #' test_with_dir("Contain side effects", {
