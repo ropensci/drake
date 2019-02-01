@@ -177,8 +177,6 @@ char <- function(...) UseMethod("char")
 
 char.transform <- function(x) safe_deparse(lang(x))
 
-char.default <- function(x) safe_deparse(x)
-
 old_cols <- function(plan) {
   attr(plan, "old_cols")
 }
@@ -344,12 +342,6 @@ dsl_sym <- function(x) {
     eval(parse(text = x), envir = emptyenv()),
     error = function(e) as.symbol(x)
   )
-}
-
-dsl_default_df <- function(target, command) {
-  out <- data.frame(target = target, stringsAsFactors = FALSE)
-  out$command <- list(command)
-  out
 }
 
 dsl_left_outer_join <- function(x, y) {

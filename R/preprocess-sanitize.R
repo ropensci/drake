@@ -47,14 +47,6 @@ repair_target_names <- function(x) {
   make.names(x, unique = FALSE)
 }
 
-sanitize_cmd_type <- function(x) {
-  if (!is.language(x) && !is.expression(x) && !is.character(x)) {
-    safe_deparse(x)
-  } else {
-    x
-  }
-}
-
 arrange_plan_cols <- function(plan) {
   primary <- c("target", "command")
   others <- setdiff(colnames(plan), primary)
