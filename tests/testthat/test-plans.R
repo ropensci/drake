@@ -149,7 +149,7 @@ test_with_dir("plan set 2", {
       a = c,
       b = "c",
       c = d,
-      d = readRDS('e'),
+      d = readRDS("e"),
       tidy_evaluation = tidy_evaluation
     )
     y <- weak_tibble(
@@ -229,9 +229,9 @@ test_with_dir("issue 187 on Github (from Kendon Bell)", {
 test_with_dir("can use semicolons for multi-line commands", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   plan <- drake_plan(
-    x = {a<-1; a},
+    x = {a <- 1; a}, # nolint
     y = {
-      b<-2
+      b <- 2
       b
     }
   )
