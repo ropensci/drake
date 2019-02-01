@@ -6,7 +6,7 @@ test_with_dir("empty transforms", {
     b = target(y, transform = combine()),
     c = target(z, transform = map())
   )
-  expect_equal(out, transform_plan(out))
+  expect_equal(out, transform_plan(out, envir = environment()))
   exp <- drake_plan(a = x, b = y, c = z)
   equivalent_plans(out, exp)
 })
@@ -267,7 +267,7 @@ test_with_dir("dsl with different types", {
     transform = FALSE
   )
   plan$command <- list(quote(1 + 1))
-  plan <- transform_plan(plan)
+  plan <- transform_plan(plan, envir = environment())
   plan$command <- unlist(lapply(plan$command, safe_deparse))
   expect_equal(sort(plan$target), sort(c("a_1", "a_2")))
   expect_equal(plan$command, rep("1 + 1", 2))
@@ -816,7 +816,7 @@ test_with_dir("dsl with differently typed group levels", {
   plan$command <- lapply(plan$command, function(x) {
     parse(text = x)[[1]]
   })
-  out <- transform_plan(plan)
+  out <- transform_plan(plan, envir = environment())
   exp <- drake_plan(
     analysis_.source1. = analyze_data("source1"), # nolint
     analysis_source2 = analyze_data(source2),
@@ -828,7 +828,7 @@ test_with_dir("dsl with differently typed group levels", {
     ))
   )
   equivalent_plans(out, exp)
-  out <- transform_plan(plan, trace = TRUE)
+  out <- transform_plan(plan, envir = environment(), trace = TRUE)
   exp <- drake_plan(
     analysis_.source1. = target( # nolint
       command = analyze_data("source1"),
@@ -1093,11 +1093,11 @@ test_with_dir("trace has correct provenance", {
       h = "h_a_1_3.1"
     ),
     i = target(
-      command = list(e_c_b_a_1_3, e_c_b_a_1_3.1),
+      command = {list(e_c_b_a_1_3, e_c_b_a_1_3.1)},
       i = "i"
     ),
     j = target(
-      command = list(f_c_b_a_1_3, f_c_b_a_1_3.1),
+      command = {list(f_c_b_a_1_3, f_c_b_a_1_3.1)},
       j = "j"
     )
   )

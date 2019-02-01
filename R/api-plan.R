@@ -161,7 +161,6 @@ drake_plan <- function(
   if (transform && ("transform" %in% colnames(plan))) {
     plan <- transform_plan(plan, envir = envir, trace = trace)
   }
-  plan[["transform"]] <- NULL
   if (tidy_evaluation %||% TRUE) {
     plan[["command"]] <- tidyeval_exprs(plan[["command"]], envir = envir)
   }

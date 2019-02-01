@@ -151,6 +151,9 @@ combine_step <- function(plan, command, transform) {
       unname(lapply(as.character(na_omit(unique(x))), as.symbol))
     }
   )
+  if (is.symbol(command)) {
+    command <- as.call(c(quote(`{`), command))
+  }
   command <- eval(
     call("substitute", command, aggregates),
     envir = baseenv()
