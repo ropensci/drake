@@ -1,31 +1,8 @@
-#' @title Experimental: transform a plan.
-#' @description This feature is experimental,
-#'   and the `transform_plan()` function is not available to users.
-#'   Read about the details at
-#'   <https://ropenscilabs.github.io/drake-manual/plans.html#create-large-plans-the-easy-way> # nolint
-#'   Please review your workflow with `vis_drake_graph()`
-#'   before you run it.
-#' @details The `transform_plan()` function
-#'   take an existing `drake` plan and applies the transformations
-#'   in the optional `"transform"` column, expanding and gathering
-#'   targets to create a larger plan. Usually this is done
-#'   inside `drake_plan(transform = TRUE)`, but
-#'   `transform_plan()` on its own is useful
-#'   if you generated multiple plans with `drake_plan(transform = FALSE)`
-#'   and and want to combine and transform them later.
-#' @keywords experimental internal
-#' @seealso [drake_plan()]
-#' @return A transformed workflow plan data frame
-#' @param plan Workflow plan data frame with a column for targets,
-#'   a column for commands, a column for transformations,
-#'   and a column for optional grouping variables.
-#' @param trace Logical, whether to add columns to show
-#'   what happened during target transformations, e.g.
-#'   `drake_plan(x = target(..., transform = ...), transform = TRUE)`.
-transform_plan <- function(plan, trace = FALSE) {
+transform_plan <- function(plan, envir, trace = FALSE) {
   if (!("transform" %in% names(plan))) {
     return(plan)
   }
+  plan[["transform"]] <- tidyeval_exprs(plan[["transform"]], envir = envir)
   old_cols(plan) <- old_cols <- colnames(plan)
   plan[["transform"]] <- lapply(plan[["transform"]], parse_transform)
   while (any(index <- index_can_transform(plan))) {

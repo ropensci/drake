@@ -316,7 +316,7 @@ weak_as_tibble <- function(..., .force_df = FALSE) {
 }
 
 safe_deparse <- function(x) {
-  if (is.character(x)) {
+  if (!is.language(x)) {
     return(x)
   }
   paste(
@@ -358,3 +358,12 @@ parse_command.character <- function(command) {
 }
 
 parse_command.default <- function(command) command
+
+tidyeval_exprs <- function(expr_list, envir) {
+  lapply(expr_list, tidyeval_expr, envir = envir)
+}
+
+tidyeval_expr <- function(expr, envir) {
+  call <- as.call(c(quote(rlang::expr), expr))
+  eval(call, envir = envir)
+}

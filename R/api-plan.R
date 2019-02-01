@@ -28,10 +28,8 @@
 #'   <https://ropenscilabs.github.io/drake-manual/plans.html#special-custom-columns-in-your-plan>
 #'
 #' @export
-#' @seealso [transform_plan()]
 #' @return A data frame of targets, commands, and optional
 #'   custom columns.
-#' @inheritParams transform_plan
 #' @param ... A collection of symbols/targets
 #'   with commands assigned to them. See the examples for details.
 #' @param list A named character vector of commands
@@ -49,6 +47,7 @@
 #'   before running it with `make()`.
 #'   Requires the `transform` and `group` fields identified
 #'   by `target()`. See the examples for details.
+#' @param envir Environment for tidy evaluation.
 #' @examples
 #' test_with_dir("Contain side effects", {
 #' # Create workflow plan data frames.
@@ -138,8 +137,10 @@ drake_plan <- function(
   strings_in_dots = NULL,
   tidy_evaluation = NULL,
   transform = TRUE,
-  trace = FALSE
+  trace = FALSE,
+  envir = parent.frame()
 ) {
+  force(envir)
   if (length(file_targets) || length(strings_in_dots)) {
     warning(
       "Arguments `file_targets` and `strings_in_dots` ",
@@ -147,11 +148,7 @@ drake_plan <- function(
       call. = FALSE
     )
   }
-  if (tidy_evaluation %||% TRUE) {
-    dots <- lapply(rlang::quos(...), rlang::quo_squash)
-  } else {
-    dots <- match.call(expand.dots = FALSE)$...
-  }
+  dots <- match.call(expand.dots = FALSE)$...
   warn_arrows(dots)
   commands <- c(dots, list)
   if (!length(commands)) {
@@ -162,9 +159,17 @@ drake_plan <- function(
   plan <- weak_tibble(target = targets, command = commands)
   plan <- parse_custom_plan_columns(plan)
   if (transform && ("transform" %in% colnames(plan))) {
-    plan <- transform_plan(plan, trace = trace)
+    plan <- transform_plan(plan, envir = envir, trace = trace)
   }
-  plan$command <- unlist(lapply(plan$command, safe_deparse))
+  plan[["transform"]] <- NULL
+  if (tidy_evaluation %||% TRUE) {
+    plan[["command"]] <- tidyeval_exprs(plan[["command"]], envir = envir)
+  }
+  for (col in c("command", "trigger")) {
+    if (is.list(plan[[col]])) {
+      plan[[col]] <- unlist(lapply(plan[[col]], safe_deparse))
+    }
+  }
   sanitize_plan(plan)
 }
 
@@ -447,18 +452,8 @@ detect_arrow <- function(command) {
 }
 
 #' @title Define custom columns in a [drake_plan()].
-#' @description The `target()` function lets you define
-#'   custom columns in a workflow plan data frame, both
-#'   inside and outside calls to [drake_plan()].
-#' @details Tidy evaluation is applied to the arguments,
-#'   and the `!!` operator is evaluated immediately
-#'   for expressions and language objects.
-#'    
-#'   If you are getting cryptic "Error: Columns must be named"
-#'   errors, that means all the arguments to `target()`
-#'   except `command` must be explicitly named,
-#'   e.g. `target(f(x), trigger = trigger(condition = TRUE)` instead of
-#'   `target(f(x), trigger(condition = TRUE)`.
+#' @description Not a user-side function. Please use from within
+#'   [drake_plan()] only.
 #' @export
 #' @seealso [drake_plan()], [make()]
 #' @return A one-row workflow plan data frame with the named
@@ -469,7 +464,7 @@ detect_arrow <- function(command) {
 #' @examples
 #' # Use target() to create your own custom columns in a drake plan.
 #' # See ?triggers for more on triggers.
-#' plan <- drake_plan(
+#' drake_plan(
 #'   website_data = target(
 #'     download_data("www.your_url.com"),
 #'     trigger = "always",
@@ -477,28 +472,16 @@ detect_arrow <- function(command) {
 #'   ),
 #'   analysis = analyze(website_data)
 #' )
-#' plan
-#' # make(plan) # nolint
-#' # Call target() inside or outside drake_plan().
-#' target(
-#'   download_data("www.your_url.com"),
-#'   trigger = "always",
-#'   custom_column = 5
-#' )
-target <- function(command = NULL, ..., tidy_evaluation = NULL) {
-  if (tidy_evaluation %||% TRUE) {
-    out <- lapply(rlang::enquos(...), rlang::quo_squash)
-  } else {
-    out <- match.call(expand.dots = FALSE)$...
-  }
+target <- function(command = NULL, ...) {
+  call <- match.call(expand.dots = FALSE)
+  out <- call$...
   out <- select_nonempty(out)
   out <- out[nzchar(names(out))]
-  out <- c(command = rlang::quo_squash(rlang::enquo(command)), out)
-  for (i in seq_along(out)) {
-    if (is.language(out[[i]])) {
-      out[[i]] <- list(out[[i]])
-    }
-  }
+  out <- c(command = call$command, out)
+  out <- lapply(out, function(x) {
+    if (is.language(x)) x <- list(x)
+    x
+  })
   weak_as_tibble(out)
 }
 

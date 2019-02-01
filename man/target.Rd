@@ -17,39 +17,19 @@ A one-row workflow plan data frame with the named
 arguments as columns.
 }
 \description{
-The \code{target()} function lets you define
-custom columns in a workflow plan data frame, both
-inside and outside calls to \code{\link[=drake_plan]{drake_plan()}}.
-}
-\details{
-Tidy evaluation is applied to the arguments,
-and the \code{!!} operator is evaluated immediately
-for expressions and language objects.
-
-If you are getting cryptic "Error: Columns must be named"
-errors, that means all the arguments to \code{target()}
-except \code{command} must be explicitly named,
-e.g. \code{target(f(x), trigger = trigger(condition = TRUE)} instead of
-\code{target(f(x), trigger(condition = TRUE)}.
+Not a user-side function. Please use from within
+\code{\link[=drake_plan]{drake_plan()}} only.
 }
 \examples{
 # Use target() to create your own custom columns in a drake plan.
 # See ?triggers for more on triggers.
-plan <- drake_plan(
+drake_plan(
   website_data = target(
     download_data("www.your_url.com"),
     trigger = "always",
     custom_column = 5
   ),
   analysis = analyze(website_data)
-)
-plan
-# make(plan) # nolint
-# Call target() inside or outside drake_plan().
-target(
-  download_data("www.your_url.com"),
-  trigger = "always",
-  custom_column = 5
 )
 }
 \seealso{

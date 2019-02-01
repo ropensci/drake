@@ -6,8 +6,8 @@
 for the \code{plan} argument of \code{\link[=make]{make()}}.}
 \usage{
 drake_plan(..., list = character(0), file_targets = NULL,
-  strings_in_dots = NULL, tidy_evaluation = TRUE, transform = TRUE,
-  trace = FALSE)
+  strings_in_dots = NULL, tidy_evaluation = NULL, transform = TRUE,
+  trace = FALSE, envir = parent.frame())
 }
 \arguments{
 \item{...}{A collection of symbols/targets
@@ -33,9 +33,7 @@ before running it with \code{make()}.
 Requires the \code{transform} and \code{group} fields identified
 by \code{target()}. See the examples for details.}
 
-\item{trace}{Logical, whether to add columns to show
-what happened during target transformations, e.g.
-\code{drake_plan(x = target(..., transform = ...), transform = TRUE)}.}
+\item{envir}{Environment for tidy evaluation.}
 }
 \value{
 A data frame of targets, commands, and optional
@@ -152,7 +150,4 @@ drake_plan(
 sms <- rlang::syms(letters) # To sub in character args, skip this.
 drake_plan(x = target(f(char), transform = map(char = !!sms)))
 })
-}
-\seealso{
-\code{\link[=transform_plan]{transform_plan()}}
 }
