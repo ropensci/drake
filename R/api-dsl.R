@@ -18,10 +18,11 @@ transform_plan <- function(plan, envir, trace = FALSE) {
   plan
 }
 
-transform_row <- function(plan, row) {
-  target <- plan$target[[row]]
-  command <- plan$command[[row]]
-  transform <- set_old_groupings(plan[["transform"]][[row]], plan)
+transform_row <- function(plan, index) {
+  row <- plan[index,, drop = FALSE]
+  target <- row$target
+  row$target <- NULL
+  transform <- set_old_groupings(plan[["transform"]][[index]], plan)
   new_cols <- c(
     target,
     tag_in(transform),
@@ -29,11 +30,8 @@ transform_row <- function(plan, row) {
     group_names(transform)
   )
   check_group_names(new_cols, old_cols(plan))
-  out <- dsl_transform(transform, target, command, plan)
+  out <- dsl_transform(transform, target, row, plan)
   out[[target]] <- out$target
-  for (col in setdiff(old_cols(plan), c("target", "command", "transform"))) {
-    out[[col]] <- rep(plan[[col]][row], nrow(out))
-  }
   for (col in tag_in(transform)) {
     out[[col]] <- target
   }
@@ -60,20 +58,19 @@ can_transform <- function(transform, plan) {
   length(missing_groups) < 1L
 }
 
-map_to_grid <- function(transform, target, command, plan) {
+map_to_grid <- function(transform, target, row, plan) {
   groupings <- groupings(transform)
-  if (!length(groupings)) {
-    return(dsl_default_df(target, command))
-  }
+  if (!length(groupings)) NULL
   grid <- dsl_grid(transform, groupings)
-  ncl <- c(names(new_groupings(transform)), "target", "command", "transform")
+  ncl <- c(names(new_groupings(transform)), old_cols(plan))
   plan <- plan[, setdiff(colnames(plan), ncl), drop = FALSE]
   grid <- dsl_left_outer_join(grid, plan)
   suffix_cols <- intersect(colnames(grid), group_names(transform))
   new_targets <- new_targets(target, grid[, suffix_cols, drop = FALSE])
-  new_commands <- grid_commands(command, grid)
   out <- data.frame(target = new_targets, stringsAsFactors = FALSE)
-  out$command <- new_commands
+  for (col in setdiff(old_cols(plan), c("target", "transform"))) {
+    out[[col]] <- grid_subs(row[[col]][[1]], grid)
+  }
   cbind(out, grid)
 }
 
@@ -92,23 +89,26 @@ dsl_grid.map <- function(transform, groupings) {
   )
 }
 
-grid_commands <- function(command, grid) {
-  keep <- intersect(all.vars(command, functions = TRUE), colnames(grid))
+grid_subs <- function(expr, grid) {
+  keep <- intersect(all.vars(expr, functions = TRUE), colnames(grid))
   grid <- grid[, keep, drop = FALSE]
   for (i in seq_along(grid)) {
     grid[[i]] <- dsl_syms(grid[[i]])
   }
   lapply(
     seq_len(nrow(grid)),
-    grid_command,
-    command = command,
+    grid_sub,
+    expr = expr,
     grid = grid
   )
 }
 
-grid_command <- function(row, command, grid) {
-  sub <- lapply(grid, `[[`, row)
-  eval(call("substitute", command, sub), envir = baseenv())
+grid_sub <- function(index, expr, grid) {
+  sub <- lapply(grid, `[[`, index)
+  if (is.symbol(expr)) {
+    expr <- as.call(c(quote(`{`), expr))
+  }
+  eval(call("substitute", expr, sub), envir = baseenv())
 }
 
 new_targets <- function(target, grid) {
@@ -127,7 +127,7 @@ dsl_transform <- function(...) {
 
 dsl_transform.cross <- dsl_transform.map <- map_to_grid
 
-dsl_transform.combine <- function(transform, target, command, plan) {
+dsl_transform.combine <- function(transform, target, row, plan) {
   cols_keep <- union(dsl_by(transform), dsl_combine(transform))
   rows_keep <- complete_cases(plan[, cols_keep, drop = FALSE])
   if (!length(rows_keep) || !any(rows_keep)) {
@@ -137,31 +137,45 @@ dsl_transform.combine <- function(transform, target, command, plan) {
     .x = plan[rows_keep,, drop = FALSE], # nolint
     .by = dsl_by(transform),
     .f = combine_step,
-    command = command,
+    row = row,
     transform = transform
   )
   out$target <- new_targets(target, out[, dsl_by(transform), drop = FALSE])
   out
 }
 
-combine_step <- function(plan, command, transform) {
+combine_step <- function(plan, row, transform) {
   aggregates <- lapply(
     X = plan[, dsl_combine(transform), drop = FALSE],
     FUN = function(x) {
       unname(lapply(as.character(na_omit(unique(x))), as.symbol))
     }
   )
-  if (is.symbol(command)) {
-    command <- as.call(c(quote(`{`), command))
-  }
-  command <- eval(
-    call("substitute", command, aggregates),
-    envir = baseenv()
-  )
   out <- data.frame(command = NA, stringsAsFactors = FALSE)
-  out$command <- list(command)
+  for (col in setdiff(old_cols(plan), c("target", "transform"))) {
+    expr <- row[[col]][[1]]
+    if (is.symbol(expr)) {
+      expr <- as.call(c(quote(`{`), expr))
+    }
+    out[[col]] <- list(
+      eval(call("substitute", expr, aggregates), envir = baseenv())
+    )
+  }
   out
 }
+
+
+grid_sub <- function(index, expr, grid) {
+  sub <- lapply(grid, `[[`, index)
+  if (is.symbol(expr)) {
+    expr <- as.call(c(quote(`{`), expr))
+  }
+  eval(call("substitute", expr, sub), envir = baseenv())
+}
+
+
+
+
 
 lang <- function(...) UseMethod("lang")
 
