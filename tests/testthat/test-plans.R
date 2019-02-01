@@ -148,13 +148,14 @@ test_with_dir("plan set 2", {
     x <- drake_plan(
       a = c,
       b = "c",
-      list = c(c = "d", d = "readRDS('e')"),
+      c = d,
+      d = readRDS('e'),
       tidy_evaluation = tidy_evaluation
     )
     y <- weak_tibble(
       target = letters[1:4],
-      command = c("c", "\"c\"",
-                  "d", "readRDS('e')"))
+      command = c("c", "\"c\"", "d", "readRDS(\"e\")")
+    )
     expect_equal(x, y)
   }
 })
