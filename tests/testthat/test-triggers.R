@@ -844,3 +844,46 @@ test_with_dir("files are collected/encoded from all triggers", {
     sort(c("change_in", "change_knitr_in"))
   )
 })
+
+test_with_dir("GitHub issue #704", {
+  add <- function(a, b) {
+    a + b
+  }
+  square <- function(x) {
+    x ^ 2
+  }
+  rand_is_even <- function(samp_size) {
+    num <- sample(samp_size, 1)
+    if (num %% 2 == 0) {
+      TRUE
+    } else {
+      FALSE
+    }
+  }
+  check_plan <- function(plan) {
+    cache <- storr::storr_environment()
+    make(plan, cache = cache, session_info = FALSE)
+    expect_true(is.numeric(cache$get("first")))
+    expect_true(is.numeric(cache$get("second")))
+  }
+  plan <- drake_plan(
+    first = add(2, 3),
+    second = target(
+      command = square(first),
+      trigger = trigger(
+        condition = rand_is_even(first)
+      )
+    )
+  )
+  check_plan(plan)
+  plan <- drake_plan(
+    first = add(2, 3),
+    second = target(
+      command = square(first),
+      trigger = trigger(
+        change = rand_is_even(first)
+      )
+    )
+  )
+  check_plan(plan)
+})
