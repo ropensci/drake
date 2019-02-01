@@ -418,13 +418,14 @@ warn_arrows <- function(dots) {
   if (!length(dots)) {
     return()
   }
+  check_these <- vapply(
+    names(dots),
+    function(x) !nzchar(x),
+    FUN.VALUE = logical(1)
+  )
   if (is.null(names(dots))) {
-    # Probably not possible, but good to have:
-    names(dots) <- rep("", length(dots)) # nocov
+    check_these <- rep(TRUE, length(dots))
   }
-  check_these <- vapply(names(dots),
-                        function(x) !nzchar(x),
-                        FUN.VALUE = logical(1))
   check_these <- which(check_these)
   # Here we use lapply, not vapply, because don't know whether there any
   # offending commands (and thus don't know size of function return)
@@ -433,7 +434,8 @@ warn_arrows <- function(dots) {
     offending_commands,
     f = function(x) {
       !is.null(x)
-    })
+    }
+  )
   if (length(offending_commands)) {
     warning(
       "Use `=` instead of `<-` or `->` ",

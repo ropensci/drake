@@ -1208,15 +1208,20 @@ test_with_dir("same test (row order) different plan", {
 
 test_with_dir("gh #696", {
   my_split <- function(from, stem, n) {
-    suffixes <- with(expand.grid(y = letters, x = letters),
-                     paste0(x,y))[1:n]
+    suffixes <- with(
+      expand.grid(y = letters, x = letters),
+      paste0(x, y)
+    )[1:n]
     out.files <- paste0(stem, suffixes)
     out <- rlang::quo({
       file_in(!!from)
       file_out(!!out.files)
-      system2("split", c(paste0("-n r/", !!n),
-                         !!from,
-                         !!stem))
+      system2(
+        "split",
+        c(paste0("-n r/", !!n),
+        !!from,
+        !!stem)
+      )
     })
     out <- quo_squash(out)
   }

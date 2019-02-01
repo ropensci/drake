@@ -19,7 +19,7 @@ transform_plan <- function(plan, envir, trace = FALSE) {
 }
 
 transform_row <- function(plan, index) {
-  row <- plan[index,, drop = FALSE]
+  row <- plan[index,, drop = FALSE] # nolint
   target <- row$target
   transform <- set_old_groupings(plan[["transform"]][[index]], plan)
   new_cols <- c(
