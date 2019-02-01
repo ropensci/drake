@@ -316,7 +316,7 @@ weak_as_tibble <- function(..., .force_df = FALSE) {
 }
 
 safe_deparse <- function(x) {
-  if (!is.language(x)) {
+  if (is.character(x)) {
     return(x)
   }
   paste(
