@@ -11,6 +11,20 @@ test_with_dir("empty transforms", {
   equivalent_plans(out, exp)
 })
 
+test_with_dir("1 grouping level", {
+  out <- drake_plan(
+    a = target(x, transform = cross(x = 1)),
+    b = target(a, transform = map(a)),
+    c = target(b, transform = combine(b))
+  )
+  exp <- drake_plan(
+    a_1 = 1,
+    b_a_1 = a_1,
+    c = list(b_a_1)
+  )
+  equivalent_plans(out, exp)
+})
+
 test_with_dir("empty grouping levels", {
   out <- drake_plan(x = target(y, transform = map(y = c(z, NULL))))
   expect_equal(out$target, c("x_z", "x_NULL"))
