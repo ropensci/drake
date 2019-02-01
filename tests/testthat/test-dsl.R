@@ -1209,3 +1209,36 @@ test_with_dir("same test (row order) different plan", {
   expect_equal(nrow(plan1), 23L)
   equivalent_plans(plan1, plan2)
 })
+
+test_with_dir("gh #696", {
+  my_split <- function(from, stem, n) {
+    suffixes <- with(expand.grid(y = letters, x = letters),
+                     paste0(x,y))[1:n]
+    out.files <- paste0(stem, suffixes)
+    out <- rlang::quo({
+      file_in(!!from)
+      file_out(!!out.files)
+      system2("split", c(paste0("-n r/", !!n),
+                         !!from,
+                         !!stem))
+    })
+    out <- quo_squash(out)
+  }
+  manysplits <- paste0("longfile", 1:2, ".txt")
+  out <- drake_plan(
+    splits = target(!!my_split(f, f, 3), transform = map(f = !!manysplits))
+  )
+  exp <- drake_plan(
+    splits_.longfile1.txt. = {
+      file_in("longfile1.txt")
+      file_out(c("longfile1.txtaa", "longfile1.txtab", "longfile1.txtac"))
+      system2("split", c(paste0("-n r/", 3), "longfile1.txt", "longfile1.txt"))
+    },
+    splits_.longfile2.txt. = {
+      file_in("longfile2.txt")
+      file_out(c("longfile2.txtaa", "longfile2.txtab", "longfile2.txtac"))
+      system2("split", c(paste0("-n r/", 3), "longfile2.txt", "longfile2.txt"))
+    }
+  )
+  equivalent_plans(out, exp)
+})
