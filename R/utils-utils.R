@@ -354,4 +354,14 @@ parse_command.character <- function(command) {
   }
 }
 
-parse_command.default <- function(command) command
+# TODO: cover this line. Will probably be covered anyway after gh issue #700.
+parse_command.default <- function(command) command # nocov
+
+tidyeval_exprs <- function(expr_list, envir) {
+  lapply(expr_list, tidyeval_expr, envir = envir)
+}
+
+tidyeval_expr <- function(expr, envir) {
+  call <- as.call(c(quote(rlang::expr), expr))
+  eval(call, envir = envir)
+}

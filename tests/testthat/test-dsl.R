@@ -6,14 +6,28 @@ test_with_dir("empty transforms", {
     b = target(y, transform = combine()),
     c = target(z, transform = map())
   )
-  expect_equal(out, transform_plan(out))
+  expect_equal(out, transform_plan(out, envir = environment()))
   exp <- drake_plan(a = x, b = y, c = z)
   equivalent_plans(out, exp)
 })
 
+test_with_dir("1 grouping level", {
+  out <- drake_plan(
+    a = target(x, transform = cross(x = 1)),
+    b = target(a, transform = map(a)),
+    c = target(b, transform = combine(b))
+  )
+  exp <- drake_plan(
+    a_1 = 1,
+    b_a_1 = a_1,
+    c = list(b_a_1)
+  )
+  equivalent_plans(out, exp)
+})
+
 test_with_dir("empty grouping levels", {
-  out <- drake_plan(x = target(y, transform = map(y = c("z", ""))))
-  expect_equal(out$target, c("x_.z.", "x_.."))
+  out <- drake_plan(x = target(y, transform = map(y = c(z, NULL))))
+  expect_equal(out$target, c("x_z", "x_NULL"))
   expect_equal(out$command, c("z", ""))
 })
 
@@ -267,7 +281,8 @@ test_with_dir("dsl with different types", {
     transform = FALSE
   )
   plan$command <- list(quote(1 + 1))
-  plan <- transform_plan(plan)
+  plan <- transform_plan(plan, envir = environment())
+  plan$command <- unlist(lapply(plan$command, safe_deparse))
   expect_equal(sort(plan$target), sort(c("a_1", "a_2")))
   expect_equal(plan$command, rep("1 + 1", 2))
 })
@@ -812,8 +827,10 @@ test_with_dir("dsl with differently typed group levels", {
     transform = FALSE
   )
   plan <- bind_plans(plan1, plan2)
-  plan
-  out <- transform_plan(plan)
+  plan$command <- lapply(plan$command, function(x) {
+    parse(text = x)[[1]]
+  })
+  out <- transform_plan(plan, envir = environment())
   exp <- drake_plan(
     analysis_.source1. = analyze_data("source1"), # nolint
     analysis_source2 = analyze_data(source2),
@@ -825,7 +842,7 @@ test_with_dir("dsl with differently typed group levels", {
     ))
   )
   equivalent_plans(out, exp)
-  out <- transform_plan(plan, trace = TRUE)
+  out <- transform_plan(plan, envir = environment(), trace = TRUE)
   exp <- drake_plan(
     analysis_.source1. = target( # nolint
       command = analyze_data("source1"),
@@ -858,11 +875,196 @@ test_with_dir("dsl with differently typed group levels", {
 test_with_dir("tidy eval in the DSL", {
   sms <- rlang::syms(letters)
   out <- drake_plan(
-    x = target(f(char), transform = map(char = !!sms))
+    x = target(
+      f(char),
+      trigger = trigger(condition = g(char)),
+      custom = h(char),
+      transform = map(char = !!sms)
+    )
   )
-  exp <- weak_tibble(
-    target = paste0("x_", letters),
-    command = paste0("f(", letters, ")")
+  exp <- drake_plan(
+    x_a = target(
+      command = f(a),
+      trigger = trigger(
+        condition = g(a)
+      ),
+      custom = h(a)
+    ),
+    x_b = target(
+      command = f(b),
+      trigger = trigger(
+        condition = g(b)
+      ),
+      custom = h(b)
+    ),
+    x_c = target(
+      command = f(c),
+      trigger = trigger(
+        condition = g(c)
+      ),
+      custom = h(c)
+    ),
+    x_d = target(
+      command = f(d),
+      trigger = trigger(
+        condition = g(d)
+      ),
+      custom = h(d)
+    ),
+    x_e = target(
+      command = f(e),
+      trigger = trigger(
+        condition = g(e)
+      ),
+      custom = h(e)
+    ),
+    x_f = target(
+      command = f(f),
+      trigger = trigger(
+        condition = g(f)
+      ),
+      custom = h(f)
+    ),
+    x_g = target(
+      command = f(g),
+      trigger = trigger(
+        condition = g(g)
+      ),
+      custom = h(g)
+    ),
+    x_h = target(
+      command = f(h),
+      trigger = trigger(
+        condition = g(h)
+      ),
+      custom = h(h)
+    ),
+    x_i = target(
+      command = f(i),
+      trigger = trigger(
+        condition = g(i)
+      ),
+      custom = h(i)
+    ),
+    x_j = target(
+      command = f(j),
+      trigger = trigger(
+        condition = g(j)
+      ),
+      custom = h(j)
+    ),
+    x_k = target(
+      command = f(k),
+      trigger = trigger(
+        condition = g(k)
+      ),
+      custom = h(k)
+    ),
+    x_l = target(
+      command = f(l),
+      trigger = trigger(
+        condition = g(l)
+      ),
+      custom = h(l)
+    ),
+    x_m = target(
+      command = f(m),
+      trigger = trigger(
+        condition = g(m)
+      ),
+      custom = h(m)
+    ),
+    x_n = target(
+      command = f(n),
+      trigger = trigger(
+        condition = g(n)
+      ),
+      custom = h(n)
+    ),
+    x_o = target(
+      command = f(o),
+      trigger = trigger(
+        condition = g(o)
+      ),
+      custom = h(o)
+    ),
+    x_p = target(
+      command = f(p),
+      trigger = trigger(
+        condition = g(p)
+      ),
+      custom = h(p)
+    ),
+    x_q = target(
+      command = f(q),
+      trigger = trigger(
+        condition = g(q)
+      ),
+      custom = h(q)
+    ),
+    x_r = target(
+      command = f(r),
+      trigger = trigger(
+        condition = g(r)
+      ),
+      custom = h(r)
+    ),
+    x_s = target(
+      command = f(s),
+      trigger = trigger(
+        condition = g(s)
+      ),
+      custom = h(s)
+    ),
+    x_t = target(
+      command = f(t),
+      trigger = trigger(
+        condition = g(t)
+      ),
+      custom = h(t)
+    ),
+    x_u = target(
+      command = f(u),
+      trigger = trigger(
+        condition = g(u)
+      ),
+      custom = h(u)
+    ),
+    x_v = target(
+      command = f(v),
+      trigger = trigger(
+        condition = g(v)
+      ),
+      custom = h(v)
+    ),
+    x_w = target(
+      command = f(w),
+      trigger = trigger(
+        condition = g(w)
+      ),
+      custom = h(w)
+    ),
+    x_x = target(
+      command = f(x),
+      trigger = trigger(
+        condition = g(x)
+      ),
+      custom = h(x)
+    ),
+    x_y = target(
+      command = f(y),
+      trigger = trigger(
+        condition = g(y)
+      ),
+      custom = h(y)
+    ),
+    x_z = target(
+      command = f(z),
+      trigger = trigger(
+        condition = g(z)
+      ),
+      custom = h(z)
+    )
   )
   equivalent_plans(out, exp)
 })
@@ -1201,4 +1403,281 @@ test_with_dir("same test (row order) different plan", {
   )
   expect_equal(nrow(plan1), 23L)
   equivalent_plans(plan1, plan2)
+})
+
+test_with_dir("gh #696", {
+  my_split <- function(from, stem, n) {
+    suffixes <- with(
+      expand.grid(y = letters, x = letters),
+      paste0(x, y)
+    )[1:n]
+    out.files <- paste0(stem, suffixes)
+    out <- rlang::quo({
+      file_in(!!from)
+      file_out(!!out.files)
+      system2(
+        "split",
+        c(paste0("-n r/", !!n),
+        !!from,
+        !!stem)
+      )
+    })
+    out <- quo_squash(out)
+  }
+  manysplits <- paste0("longfile", 1:2, ".txt")
+  out <- drake_plan(
+    splits = target(!!my_split(f, f, 3), transform = map(f = !!manysplits))
+  )
+  exp <- drake_plan(
+    splits_.longfile1.txt. = {
+      file_in("longfile1.txt")
+      file_out(c("longfile1.txtaa", "longfile1.txtab", "longfile1.txtac"))
+      system2("split", c(paste0("-n r/", 3), "longfile1.txt", "longfile1.txt"))
+    },
+    splits_.longfile2.txt. = {
+      file_in("longfile2.txt")
+      file_out(c("longfile2.txtaa", "longfile2.txtab", "longfile2.txtac"))
+      system2("split", c(paste0("-n r/", 3), "longfile2.txt", "longfile2.txt"))
+    }
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("transformations in triggers", {
+  out <- drake_plan(
+    small = simulate(48),
+    large = simulate(64),
+    reg = target(
+      reg_fun(data),
+      trigger = trigger(change = reg_fun(data)),
+      transform = cross(reg_fun = c(reg1, reg2), data = c(small, large))
+    ),
+    summ = target(
+      sum_fun(data, reg),
+      trigger = trigger(change = sum_fun(data, reg)),
+      transform = cross(sum_fun = c(coef, residuals), reg)
+    ),
+    winners = target(
+      min(summ),
+      trigger = trigger(change = min(summ)),
+      transform = combine(summ, .by = c(data, sum_fun))
+    ),
+    others = target(
+      analyze(list(c(summ), c(data))),
+      trigger = trigger(change = analyze(list(c(summ), c(data)))),
+      transform = combine(summ, data, .by = c(data, sum_fun))
+    ),
+    final_winner = target(
+      min(winners),
+      trigger = trigger(change = min(winners)),
+      transform = combine(winners)
+    )
+  )
+  exp <- drake_plan(
+    small = target(
+      command = simulate(48),
+      trigger = NA
+    ),
+    large = target(
+      command = simulate(64),
+      trigger = NA
+    ),
+    reg_reg1_small = target(
+      command = reg1(small),
+      trigger = trigger(
+        change = reg1(small)
+      )
+    ),
+    reg_reg2_small = target(
+      command = reg2(small),
+      trigger = trigger(
+        change = reg2(small)
+      )
+    ),
+    reg_reg1_large = target(
+      command = reg1(large),
+      trigger = trigger(
+        change = reg1(large)
+      )
+    ),
+    reg_reg2_large = target(
+      command = reg2(large),
+      trigger = trigger(
+        change = reg2(large)
+      )
+    ),
+    summ_coef_reg_reg1_large = target(
+      command = coef(large, reg_reg1_large),
+      trigger = trigger(
+        change = coef(large, reg_reg1_large)
+      )
+    ),
+    summ_residuals_reg_reg1_large = target(
+      command = residuals(large, reg_reg1_large),
+      trigger = trigger(
+        change = residuals(large, reg_reg1_large)
+      )
+    ),
+    summ_coef_reg_reg1_small = target(
+      command = coef(small, reg_reg1_small),
+      trigger = trigger(
+        change = coef(small, reg_reg1_small)
+      )
+    ),
+    summ_residuals_reg_reg1_small = target(
+      command = residuals(small, reg_reg1_small),
+      trigger = trigger(
+        change = residuals(small, reg_reg1_small)
+      )
+    ),
+    summ_coef_reg_reg2_large = target(
+      command = coef(large, reg_reg2_large),
+      trigger = trigger(
+        change = coef(large, reg_reg2_large)
+      )
+    ),
+    summ_residuals_reg_reg2_large = target(
+      command = residuals(large, reg_reg2_large),
+      trigger = trigger(
+        change = residuals(large, reg_reg2_large)
+      )
+    ),
+    summ_coef_reg_reg2_small = target(
+      command = coef(small, reg_reg2_small),
+      trigger = trigger(
+        change = coef(small, reg_reg2_small)
+      )
+    ),
+    summ_residuals_reg_reg2_small = target(
+      command = residuals(small, reg_reg2_small),
+      trigger = trigger(
+        change = residuals(small, reg_reg2_small)
+      )
+    ),
+    winners_large_coef = target(
+      command = min(
+        list(
+          summ_coef_reg_reg1_large,
+          summ_coef_reg_reg2_large
+        )
+      ),
+      trigger = trigger(
+        change = min(
+          list(
+            summ_coef_reg_reg1_large,
+            summ_coef_reg_reg2_large
+          )
+        )
+      )
+    ),
+    winners_small_coef = target(
+      command = min(
+        list(
+          summ_coef_reg_reg1_small,
+          summ_coef_reg_reg2_small
+        )
+      ),
+      trigger = trigger(
+        change = min(
+          list(
+            summ_coef_reg_reg1_small,
+            summ_coef_reg_reg2_small
+          )
+        )
+      )
+    ),
+    winners_large_residuals = target(
+      command = min(
+        list(
+          summ_residuals_reg_reg1_large,
+          summ_residuals_reg_reg2_large
+        )
+      ),
+      trigger = trigger(
+        change = min(
+          list(
+            summ_residuals_reg_reg1_large,
+            summ_residuals_reg_reg2_large
+          )
+        )
+      )
+    ),
+    winners_small_residuals = target(
+      command = min(
+        list(
+          summ_residuals_reg_reg1_small,
+          summ_residuals_reg_reg2_small
+        )
+      ),
+      trigger = trigger(
+        change = min(
+          list(
+            summ_residuals_reg_reg1_small,
+            summ_residuals_reg_reg2_small
+          )
+        )
+      )
+    ),
+    others_large_coef = target(
+      command = analyze(list(
+        c(list(summ_coef_reg_reg1_large, summ_coef_reg_reg2_large)),
+        c(list(large))
+      )),
+      trigger = trigger(
+        change = analyze(list(
+          c(list(summ_coef_reg_reg1_large, summ_coef_reg_reg2_large)),
+          c(list(large))
+        ))
+      )
+    ),
+    others_small_coef = target(
+      command = analyze(list(
+        c(list(summ_coef_reg_reg1_small, summ_coef_reg_reg2_small)),
+        c(list(small))
+      )),
+      trigger = trigger(
+        change = analyze(list(
+          c(list(summ_coef_reg_reg1_small, summ_coef_reg_reg2_small)),
+          c(list(small))
+        ))
+      )
+    ),
+    others_large_residuals = target(
+      command = analyze(list(
+        c(list(summ_residuals_reg_reg1_large, summ_residuals_reg_reg2_large)),
+        c(list(large))
+      )),
+      trigger = trigger(
+        change = analyze(list(
+          c(list(summ_residuals_reg_reg1_large, summ_residuals_reg_reg2_large)),
+          c(list(large))
+        ))
+      )
+    ),
+    others_small_residuals = target(
+      command = analyze(list(
+        c(list(summ_residuals_reg_reg1_small, summ_residuals_reg_reg2_small)),
+        c(list(small))
+      )),
+      trigger = trigger(
+        change = analyze(list(
+          c(list(summ_residuals_reg_reg1_small, summ_residuals_reg_reg2_small)),
+          c(list(small))
+        ))
+      )
+    ),
+    final_winner = target(
+      command = min(list(
+        winners_large_coef, winners_small_coef, winners_large_residuals,
+        winners_small_residuals
+      )),
+      trigger = trigger(
+        change = min(list(
+          winners_large_coef, winners_small_coef, winners_large_residuals,
+          winners_small_residuals
+        ))
+      )
+    )
+  )
+  equivalent_plans(out, exp)
 })

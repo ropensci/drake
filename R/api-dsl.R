@@ -1,32 +1,9 @@
-#' @title Experimental: transform a plan.
-#' @description This feature is experimental,
-#'   and the `transform_plan()` function is not available to users.
-#'   Read about the details at
-#'   <https://ropenscilabs.github.io/drake-manual/plans.html#create-large-plans-the-easy-way> # nolint
-#'   Please review your workflow with `vis_drake_graph()`
-#'   before you run it.
-#' @details The `transform_plan()` function
-#'   take an existing `drake` plan and applies the transformations
-#'   in the optional `"transform"` column, expanding and gathering
-#'   targets to create a larger plan. Usually this is done
-#'   inside `drake_plan(transform = TRUE)`, but
-#'   `transform_plan()` on its own is useful
-#'   if you generated multiple plans with `drake_plan(transform = FALSE)`
-#'   and and want to combine and transform them later.
-#' @keywords experimental internal
-#' @seealso [drake_plan()]
-#' @return A transformed workflow plan data frame
-#' @param plan Workflow plan data frame with a column for targets,
-#'   a column for commands, a column for transformations,
-#'   and a column for optional grouping variables.
-#' @param trace Logical, whether to add columns to show
-#'   what happened during target transformations, e.g.
-#'   `drake_plan(x = target(..., transform = ...), transform = TRUE)`.
-transform_plan <- function(plan, trace = FALSE) {
+transform_plan <- function(plan, envir, trace = FALSE) {
   if (!("transform" %in% names(plan))) {
     return(plan)
   }
   old_cols(plan) <- old_cols <- colnames(plan)
+  plan[["transform"]] <- tidyeval_exprs(plan[["transform"]], envir = envir)
   plan[["transform"]] <- lapply(plan[["transform"]], parse_transform)
   while (any(index <- index_can_transform(plan))) {
     rows <- lapply(which(index), transform_row, plan = plan)
@@ -41,10 +18,10 @@ transform_plan <- function(plan, trace = FALSE) {
   plan
 }
 
-transform_row <- function(plan, row) {
-  target <- plan$target[[row]]
-  command <- parse_command(plan$command[[row]])
-  transform <- set_old_groupings(plan[["transform"]][[row]], plan)
+transform_row <- function(plan, index) {
+  row <- plan[index,, drop = FALSE] # nolint
+  target <- row$target
+  transform <- set_old_groupings(plan[["transform"]][[index]], plan)
   new_cols <- c(
     target,
     tag_in(transform),
@@ -52,11 +29,8 @@ transform_row <- function(plan, row) {
     group_names(transform)
   )
   check_group_names(new_cols, old_cols(plan))
-  out <- dsl_transform(transform, target, command, plan)
+  out <- dsl_transform(transform, target, row, plan)
   out[[target]] <- out$target
-  for (col in setdiff(old_cols(plan), c("target", "command", "transform"))) {
-    out[[col]] <- rep(plan[[col]][row], nrow(out))
-  }
   for (col in tag_in(transform)) {
     out[[col]] <- target
   }
@@ -83,23 +57,22 @@ can_transform <- function(transform, plan) {
   length(missing_groups) < 1L
 }
 
-map_to_grid <- function(transform, target, command, plan) {
+map_to_grid <- function(transform, target, row, plan) {
   groupings <- groupings(transform)
   if (!length(groupings)) {
-    return(dsl_default_df(target, command))
+    row[["transform"]][[1]] <- NA
+    return(row)
   }
   grid <- dsl_grid(transform, groupings)
-  ncl <- c(names(new_groupings(transform)), "target", "command", "transform")
+  ncl <- c(names(new_groupings(transform)), old_cols(plan))
   plan <- plan[, setdiff(colnames(plan), ncl), drop = FALSE]
   grid <- dsl_left_outer_join(grid, plan)
   suffix_cols <- intersect(colnames(grid), group_names(transform))
   new_targets <- new_targets(target, grid[, suffix_cols, drop = FALSE])
-  new_commands <- grid_commands(command, grid)
-  out <- data.frame(
-    target = new_targets,
-    command = new_commands,
-    stringsAsFactors = FALSE
-  )
+  out <- data.frame(target = new_targets, stringsAsFactors = FALSE)
+  for (col in setdiff(old_cols(plan), c("target", "transform"))) {
+    out[[col]] <- grid_subs(row[[col]][[1]], grid)
+  }
   cbind(out, grid)
 }
 
@@ -118,23 +91,23 @@ dsl_grid.map <- function(transform, groupings) {
   )
 }
 
-grid_commands <- function(command, grid) {
-  keep <- intersect(all.vars(command, functions = TRUE), colnames(grid))
+grid_subs <- function(expr, grid) {
+  keep <- intersect(all.vars(expr, functions = TRUE), colnames(grid))
   grid <- grid[, keep, drop = FALSE]
   for (i in seq_along(grid)) {
     grid[[i]] <- dsl_syms(grid[[i]])
   }
-  as.character(lapply(
+  lapply(
     seq_len(nrow(grid)),
-    grid_command,
-    command = command,
+    grid_sub,
+    expr = expr,
     grid = grid
-  ))
+  )
 }
 
-grid_command <- function(row, command, grid) {
-  sub <- lapply(grid, `[[`, row)
-  eval(call("substitute", command, sub), envir = baseenv())
+grid_sub <- function(index, expr, grid) {
+  sub <- lapply(grid, `[[`, index)
+  eval(call("substitute", expr, sub), envir = baseenv())
 }
 
 new_targets <- function(target, grid) {
@@ -153,35 +126,47 @@ dsl_transform <- function(...) {
 
 dsl_transform.cross <- dsl_transform.map <- map_to_grid
 
-dsl_transform.combine <- function(transform, target, command, plan) {
+dsl_transform.combine <- function(transform, target, row, plan) {
   cols_keep <- union(dsl_by(transform), dsl_combine(transform))
   rows_keep <- complete_cases(plan[, cols_keep, drop = FALSE])
   if (!length(rows_keep) || !any(rows_keep)) {
-    return(dsl_default_df(target, command))
+    row[["transform"]][[1]] <- NA
+    return(row)
   }
   out <- map_by(
     .x = plan[rows_keep,, drop = FALSE], # nolint
     .by = dsl_by(transform),
     .f = combine_step,
-    command = command,
+    row = row,
     transform = transform
   )
   out$target <- new_targets(target, out[, dsl_by(transform), drop = FALSE])
   out
 }
 
-combine_step <- function(plan, command, transform) {
+combine_step <- function(plan, row, transform) {
   aggregates <- lapply(
     X = plan[, dsl_combine(transform), drop = FALSE],
     FUN = function(x) {
       unname(lapply(as.character(na_omit(unique(x))), as.symbol))
     }
   )
-  command <- eval(
-    call("substitute", command, aggregates),
+  out <- data.frame(command = NA, stringsAsFactors = FALSE)
+  for (col in setdiff(old_cols(plan), c("target", "transform"))) {
+    out[[col]] <- list(substitute_list(row[[col]][[1]], aggregates))
+  }
+  out
+}
+
+substitute_list <- function(expr, env) {
+  out <- eval(
+    call("substitute", expr, env),
     envir = baseenv()
   )
-  data.frame(command = safe_deparse(command), stringsAsFactors = FALSE)
+  if (is.symbol(expr)) {
+    out <- as.call(c(quote(list), out))
+  }
+  out
 }
 
 lang <- function(...) UseMethod("lang")
@@ -191,8 +176,6 @@ lang.command <- lang.transform <- function(x) x[[1]]
 char <- function(...) UseMethod("char")
 
 char.transform <- function(x) safe_deparse(lang(x))
-
-char.default <- function(x) safe_deparse(x)
 
 old_cols <- function(plan) {
   attr(plan, "old_cols")
@@ -206,9 +189,6 @@ old_cols <- function(plan) {
 parse_transform <- function(transform) {
   if (safe_is_na(transform)) {
     return(NA)
-  }
-  if (is.character(transform)) {
-    transform <- parse(text = transform)[[1]]
   }
   transform <- structure(
     as.expression(transform),
@@ -361,14 +341,6 @@ dsl_sym <- function(x) {
   tryCatch(
     eval(parse(text = x), envir = emptyenv()),
     error = function(e) as.symbol(x)
-  )
-}
-
-dsl_default_df <- function(target, command) {
-  data.frame(
-    target = target,
-    command = char(command),
-    stringsAsFactors = FALSE
   )
 }
 
