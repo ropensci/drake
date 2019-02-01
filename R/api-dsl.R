@@ -107,8 +107,7 @@ grid_subs <- function(expr, grid) {
 
 grid_sub <- function(index, expr, grid) {
   sub <- lapply(grid, `[[`, index)
-  expr <- as.call(c(quote(`{`), expr))
-  eval(call("substitute", expr, sub), envir = baseenv())[[-1]]
+  eval(call("substitute", expr, sub), envir = baseenv())
 }
 
 new_targets <- function(target, grid) {
@@ -154,12 +153,18 @@ combine_step <- function(plan, row, transform) {
   )
   out <- data.frame(command = NA, stringsAsFactors = FALSE)
   for (col in setdiff(old_cols(plan), c("target", "transform"))) {
-    expr <- as.call(c(quote(`{`), row[[col]][[1]]))
-    expr <- eval(
-      call("substitute", expr, aggregates),
-      envir = baseenv()
-    )[[-1]]
-    out[[col]] <- list(expr)
+    out[[col]] <- list(substitute_list(row[[col]][[1]], aggregates))
+  }
+  out
+}
+
+substitute_list <- function(expr, env) {
+  out <- eval(
+    call("substitute", expr, env),
+    envir = baseenv()
+  )
+  if (is.symbol(expr)) {
+    out <- as.call(c(quote(list), out))
   }
   out
 }
