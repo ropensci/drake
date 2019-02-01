@@ -163,12 +163,15 @@ drake_plan <- function(
     plan <- transform_plan(plan, envir = envir, trace = trace)
   }
   if (tidy_evaluation %||% TRUE) {
-    for (col in setdiff(old_cols(plan), c("target", "transform"))) {
+    for (col in setdiff(colnames(plan), c("target", "transform"))) {
       plan[[col]] <- tidyeval_exprs(plan[[col]], envir = envir)
     }
   }
   for (col in c("command", "trigger")) {
-    plan[[col]] <- unlist(lapply(plan[[col]], safe_deparse))
+    plan[[col]] <- lapply(plan[[col]], safe_deparse)
+  }
+  for (col in colnames(plan)) {
+    plan[[col]] <- unlist(plan[[col]])
   }
   sanitize_plan(plan)
 }
