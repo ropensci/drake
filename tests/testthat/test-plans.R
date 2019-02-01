@@ -258,7 +258,7 @@ test_with_dir("custom column interface", {
     command = "stop(2)",
     worker = 2,
     cpu = 4,
-    custom = "stop()",
+    custom = list(quote(stop())),
     c2 = 5
   )
   expect_equal(x, y)

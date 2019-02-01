@@ -1093,11 +1093,15 @@ test_with_dir("trace has correct provenance", {
       h = "h_a_1_3.1"
     ),
     i = target(
-      command = {list(e_c_b_a_1_3, e_c_b_a_1_3.1)},
+      command = {
+        list(e_c_b_a_1_3, e_c_b_a_1_3.1)
+      },
       i = "i"
     ),
     j = target(
-      command = {list(f_c_b_a_1_3, f_c_b_a_1_3.1)},
+      command = {
+        list(f_c_b_a_1_3, f_c_b_a_1_3.1)
+      },
       j = "j"
     )
   )
