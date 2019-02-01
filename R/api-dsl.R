@@ -107,10 +107,8 @@ grid_subs <- function(expr, grid) {
 
 grid_sub <- function(index, expr, grid) {
   sub <- lapply(grid, `[[`, index)
-  if (is.symbol(expr)) {
-    expr <- as.call(c(quote(`{`), expr))
-  }
-  eval(call("substitute", expr, sub), envir = baseenv())
+  expr <- as.call(c(quote(`{`), expr))
+  eval(call("substitute", expr, sub), envir = baseenv())[[-1]]
 }
 
 new_targets <- function(target, grid) {
@@ -156,29 +154,11 @@ combine_step <- function(plan, row, transform) {
   )
   out <- data.frame(command = NA, stringsAsFactors = FALSE)
   for (col in setdiff(old_cols(plan), c("target", "transform"))) {
-    expr <- row[[col]][[1]]
-    if (is.symbol(expr)) {
-      expr <- as.call(c(quote(`{`), expr))
-    }
-    out[[col]] <- list(
-      eval(call("substitute", expr, aggregates), envir = baseenv())
-    )
+    expr <- as.call(c(quote(`{`), row[[col]][[1]]))
+    eval(call("substitute", expr, aggregates), envir = baseenv())[[-1]]
   }
   out
 }
-
-
-grid_sub <- function(index, expr, grid) {
-  sub <- lapply(grid, `[[`, index)
-  if (is.symbol(expr)) {
-    expr <- as.call(c(quote(`{`), expr))
-  }
-  eval(call("substitute", expr, sub), envir = baseenv())
-}
-
-
-
-
 
 lang <- function(...) UseMethod("lang")
 
