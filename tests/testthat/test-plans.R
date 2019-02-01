@@ -228,7 +228,13 @@ test_with_dir("issue 187 on Github (from Kendon Bell)", {
 
 test_with_dir("can use semicolons for multi-line commands", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  plan <- drake_plan(list = c(x = "a<-1; a", y = "b<-2\nb"))
+  plan <- drake_plan(
+    x = {a<-1; a},
+    y = {
+      b<-2
+      b
+    }
+  )
   make(plan, verbose = FALSE, session_info = FALSE)
   expect_false(any(c("a", "b") %in% ls()))
   expect_true(all(cached(x, y, search = FALSE)))
@@ -253,16 +259,6 @@ test_with_dir("can use braces for multi-line commands", {
 test_with_dir("custom column interface", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   tidyvar <- 2
-  x <- target(
-    stop(!!tidyvar), worker = !!tidyvar, cpu = 4, custom = stop(), c2 = 5)
-  y <- weak_tibble(
-    command = "stop(2)",
-    worker = 2,
-    cpu = 4,
-    custom = list(quote(stop())),
-    c2 = 5
-  )
-  expect_equal(x, y)
   x <- drake_plan(x = target(
     stop(!!tidyvar), worker = !!tidyvar, cpu = 4, custom = stop(), c2 = 5))
   y <- weak_tibble(
@@ -270,7 +266,7 @@ test_with_dir("custom column interface", {
     command = "stop(2)",
     worker = 2,
     cpu = 4,
-    custom = "stop()",
+    custom = list(quote(stop())),
     c2 = 5
   )
   expect_equal(x, y)
@@ -290,7 +286,7 @@ test_with_dir("custom column interface", {
   plan0 <- weak_tibble(
     target = c("x", "y", "z"),
     command = c("1 + 2", "Sys.sleep(\"not a number\")", "rnorm(10)"),
-    trigger = c("trigger(condition = TRUE)", NA, NA),
+    trigger = c("trigger(condition = TRUE)", "NA", "NA"),
     user_column_1 = c(1, NA, NA),
     user_column_2 = c("some text", NA, NA),
     col3 = c(NA, "some text", NA)
@@ -390,61 +386,6 @@ test_with_dir("bad 'columns' argument to evaluate_plan()", {
   expect_equal(
     plan,
     evaluate_plan(plan, wildcard = "any", values = 1:2, columns = NULL)
-  )
-})
-
-test_with_dir("'columns' argument to evaluate_plan()", {
-  plan <- drake_plan(
-    x = target("always", cpu = "any"),
-    y = target("any", cpu = "always"),
-    z = target("any", cpu = "any")
-  )
-  out <- weak_tibble(
-    target = c("x_1", "x_2", "y_1", "y_2", "z"),
-    command = c(1, 2, rep("any", 3)),
-    cpu = c("any", "any", 1, 2, "any")
-  )
-  expect_equal(
-    evaluate_plan(
-      plan, wildcard = "always", values = 1:2, columns = c("command", "cpu")
-    ),
-    out
-  )
-  out <- weak_tibble(
-    target = c("x", "y_1", "y_2", "z"),
-    command = c("always", rep("any", 3)),
-    cpu = c("any", 1, 2, "any")
-  )
-  expect_equal(
-    evaluate_plan(
-      plan, wildcard = "always", values = 1:2, columns = "cpu"
-    ),
-    out
-  )
-  out <- weak_tibble(
-    target = c("x", "y", "z"),
-    command = c(1, rep("any", 2)),
-    cpu = c("any", 2, "any")
-  )
-  expect_equal(
-    evaluate_plan(
-      plan, wildcard = "always", values = 1:2, columns = c("command", "cpu"),
-      expand = FALSE
-    ),
-    out
-  )
-  rules <- list(always = 1:2, any = 3:4)
-  out <- weak_tibble(
-    target = c(
-      "x_1_3", "x_1_4", "x_2_3", "x_2_4", "y_1_3",
-      "y_1_4", "y_2_3", "y_2_4", "z_3", "z_4"
-    ),
-    command = as.character(c(1, 1, 2, 2, 3, 4, 3, 4, 3, 4)),
-    cpu = as.character(c(3, 4, 3, 4, 1, 1, 2, 2, 3, 4))
-  )
-  expect_equal(
-    evaluate_plan(plan, rules = rules, columns = c("command", "cpu")),
-    out
   )
 })
 

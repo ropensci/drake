@@ -324,3 +324,58 @@ test_with_dir("unconventional wildcards", {
   )
   expect_equal(x, y)
 })
+
+test_with_dir("'columns' argument to evaluate_plan()", {
+  plan <- drake_plan(
+    x = target(always, cpu = "any"),
+    y = target(any, cpu = "always"),
+    z = target(any, cpu = "any")
+  )
+  out <- weak_tibble(
+    target = c("x_1", "x_2", "y_1", "y_2", "z"),
+    command = c(1, 2, rep("any", 3)),
+    cpu = c("any", "any", 1, 2, "any")
+  )
+  expect_equal(
+    evaluate_plan(
+      plan, wildcard = "always", values = 1:2, columns = c("command", "cpu")
+    ),
+    out
+  )
+  out <- weak_tibble(
+    target = c("x", "y_1", "y_2", "z"),
+    command = c("always", rep("any", 3)),
+    cpu = c("any", 1, 2, "any")
+  )
+  expect_equal(
+    evaluate_plan(
+      plan, wildcard = "always", values = 1:2, columns = "cpu"
+    ),
+    out
+  )
+  out <- weak_tibble(
+    target = c("x", "y", "z"),
+    command = c(1, rep("any", 2)),
+    cpu = c("any", 2, "any")
+  )
+  expect_equal(
+    evaluate_plan(
+      plan, wildcard = "always", values = 1:2, columns = c("command", "cpu"),
+      expand = FALSE
+    ),
+    out
+  )
+  rules <- list(always = 1:2, any = 3:4)
+  out <- weak_tibble(
+    target = c(
+      "x_1_3", "x_1_4", "x_2_3", "x_2_4", "y_1_3",
+      "y_1_4", "y_2_3", "y_2_4", "z_3", "z_4"
+    ),
+    command = as.character(c(1, 1, 2, 2, 3, 4, 3, 4, 3, 4)),
+    cpu = as.character(c(3, 4, 3, 4, 1, 1, 2, 2, 3, 4))
+  )
+  expect_equal(
+    evaluate_plan(plan, rules = rules, columns = c("command", "cpu")),
+    out
+  )
+})
