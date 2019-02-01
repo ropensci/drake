@@ -155,7 +155,11 @@ combine_step <- function(plan, row, transform) {
   out <- data.frame(command = NA, stringsAsFactors = FALSE)
   for (col in setdiff(old_cols(plan), c("target", "transform"))) {
     expr <- as.call(c(quote(`{`), row[[col]][[1]]))
-    eval(call("substitute", expr, aggregates), envir = baseenv())[[-1]]
+    expr <- eval(
+      call("substitute", expr, aggregates),
+      envir = baseenv()
+    )[[-1]]
+    out[[col]] <- list(expr)
   }
   out
 }
