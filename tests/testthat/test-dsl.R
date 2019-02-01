@@ -14,7 +14,7 @@ test_with_dir("empty transforms", {
 test_with_dir("empty grouping levels", {
   out <- drake_plan(x = target(y, transform = map(y = c(z, NULL))))
   expect_equal(out$target, c("x_z", "x_NULL"))
-  expect_equal(out$command, c("z", "NULL"))
+  expect_equal(out$command, c("z", ""))
 })
 
 test_with_dir("bad transform", {
