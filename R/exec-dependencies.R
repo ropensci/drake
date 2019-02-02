@@ -72,15 +72,15 @@
 #' }
 deps_code <- function(x) {
   if (is.function(x)) {
-    out <- import_dependencies(x)
-  } else if (all(is_encoded_path(x)) && all(file.exists(decode_path(x)))) {
-    out <- get_knitr_deps(decode_path(x))
-  } else if (is.character(x)) {
-    out <- command_dependencies(x)
-  } else{
-    out <- analyze_code(x)
+    return(import_dependencies(x))
   }
-  decode_deps_list(out)
+  if (is.character(x)) {
+    if (all(is_encoded_path(x)) && all(file.exists(decode_path(x)))) {
+      return(get_knitr_deps(decode_path(x)))
+    }
+    x <- parse(text = x)[[1]]
+  }
+  decode_deps_list(command_dependencies(x))
 }
 
 #' @title List the dependencies of one or more targets
