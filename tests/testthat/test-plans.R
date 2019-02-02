@@ -1,6 +1,8 @@
 drake_context("plans")
 
-test_with_dir("empty commands", {
+test_with_dir("drake_plan_source() in empty commands", {
+  skip_on_cran()
+  skip_if_not_installed("styler")
   plan <- data.frame(target = "x", command = "", stringsAsFactors = FALSE)
   out <- drake_plan_source(plan)
   expect_true(length(out) > 0L)
@@ -444,6 +446,7 @@ test_with_dir("code_to_plan(), one target", {
 test_with_dir("plan_to_code()", {
   skip_on_cran()
   skip_if_not_installed("knitr")
+  skip_if_not_installed("tibble")
   expect_false(file.exists("report.md"))
   load_mtcars_example()
   plan0 <- my_plan
@@ -461,6 +464,7 @@ test_with_dir("plan_to_code()", {
 test_with_dir("plan_to_notebook()", {
   skip_on_cran()
   skip_if_not_installed("knitr")
+  skip_if_not_installed("tibble")
   expect_false(file.exists("report.md"))
   load_mtcars_example()
   plan0 <- my_plan
