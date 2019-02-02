@@ -106,7 +106,10 @@ trigger <- function(
 }
 
 parse_trigger <- function(trigger, envir) {
- if (is.character(trigger)) {
+  if (is.symbol(trigger)) {
+    trigger <- safe_deparse(trigger)
+  }
+  if (is.character(trigger)) {
     trigger <- convert_old_trigger(trigger)
     trigger <- parse(text = trigger)
   }
