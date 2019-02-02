@@ -336,10 +336,11 @@ reduce_plan <- function(
     )
     out <- weak_tibble(target = target, command = command)
   }
+  out <- sanitize_plan(out)
   if (append) {
     out <- bind_plans(plan, out)
   }
-  sanitize_plan(out)
+  out
 }
 
 #' @title Reduce multiple groupings of targets

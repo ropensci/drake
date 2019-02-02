@@ -107,13 +107,13 @@ test_with_dir("reduce_plan()", {
     target = "x_sum",
     command = paste0(x_plan$target, collapse = " + ")
   )
-  expect_equal(x, x0)
+  equivalent_plans(x, x0)
   z <- reduce_plan(
     x_plan, target = "x_sum", pairwise = FALSE,
     begin = "", end = "", append = TRUE
   )
   z0 <- bind_plans(x_plan, x)
-  expect_equal(z, z0)
+  equivalent_plans(z, z0)
   make(rbind(x_plan, x), session_info = FALSE)
   expect_equal(readd(x_sum), sum(1:8))
   clean(destroy = TRUE)
@@ -128,7 +128,7 @@ test_with_dir("reduce_plan()", {
       "x_sum_5 + x_sum_6"
     )
   )
-  expect_equal(x, x0)
+  equivalent_plans(x, x0)
   x <- reduce_plan(
     x_plan, target = "x_sum", pairwise = FALSE,
     begin = "", end = ""
@@ -137,7 +137,7 @@ test_with_dir("reduce_plan()", {
     target = "x_sum",
     command = paste0(x_plan$target, collapse = " + ")
   )
-  expect_equal(x, x0)
+  equivalent_plans(x, x0)
   x <- reduce_plan(x_plan, target = "x_sum", pairwise = TRUE)
   x0 <- weak_tibble(
     target = c(paste0("x_sum_", 1:6), "x_sum"),
@@ -147,7 +147,7 @@ test_with_dir("reduce_plan()", {
       "x_sum_5 + x_sum_6"
     )
   )
-  expect_equal(x, x0)
+  equivalent_plans(x, x0)
   make(rbind(x_plan, x), session_info = FALSE)
   expect_equal(readd(x_sum), sum(1:8))
   clean(destroy = TRUE)
@@ -168,7 +168,7 @@ test_with_dir("reduce_plan()", {
       "x_sum_6 + x_sum_7"
     )
   )
-  expect_equal(x, x0)
+  equivalent_plans(x, x0)
   make(rbind(x_plan, x), session_info = FALSE)
   expect_equal(readd(x_sum), sum(1:9))
   clean(destroy = TRUE)
@@ -192,7 +192,7 @@ test_with_dir("reduce_plan()", {
       "fun(x_sum_5, x_sum_6)"
     )
   )
-  expect_equal(x, x0)
+  equivalent_plans(x, x0)
   make(rbind(x_plan, x))
   out <- fun(
     fun(
@@ -222,10 +222,10 @@ test_with_dir("gather_by()", {
     target = c(plan$target, "target"),
     command = c(
       plan$command,
-      "list(x_1 = x_1, x_2 = x_2, y_a = y_a, y_b = y_b, z = z)"
+      quote(list(x_1 = x_1, x_2 = x_2, y_a = y_a, y_b = y_b, z = z))
     )
   )
-  expect_equivalent(x[, c("target", "command")], y)
+  equivalent_plans(x[, c("target", "command")], y)
   x <- gather_by(plan, append = TRUE, sep = ".")
   expect_equivalent(x[, c("target", "command")], y)
   z <- gather_by(plan, append = FALSE)
@@ -246,6 +246,7 @@ test_with_dir("gather_by()", {
     n__ = NA,
     n___from = c("y", NA)
   )
+  y <- sanitize_plan(y)
   expect_equivalent(x, bind_plans(plan, y))
   x <- gather_by(plan, n___from, prefix = "xyz", gather = "c", append = TRUE)
   y <- weak_tibble(
@@ -256,6 +257,7 @@ test_with_dir("gather_by()", {
     n__ = NA,
     n___from = c("y", NA)
   )
+  y <- sanitize_plan(y)
   expected <- bind_plans(plan, y)
   expect_equivalent(x[order(x$target), ], expected[order(expected$target), ])
   x <- gather_by(plan, m__, n__, prefix = "xyz", gather = "c", append = TRUE)
@@ -273,6 +275,7 @@ test_with_dir("gather_by()", {
     n__ = c(NA, NA, "a", "b", NA),
     n___from = as.character(NA)
   )
+  y <- sanitize_plan(y)
   expected <- bind_plans(plan, y)
   expect_equivalent(x[order(x$target), ], expected[order(expected$target), ])
   plan$n___from <- c("x", "x", "y", "y", NA)
@@ -284,11 +287,9 @@ test_with_dir("gather_by()", {
     append = TRUE,
     filter = n___from == "x"
   )
-  y <- weak_tibble(
-    target = c(plan$target, "xyz_x"),
-    command = c(plan$command, "c(x_1 = x_1, x_2 = x_2)")
-  )
-  expect_equivalent(x[, c("target", "command")], y)
+  new_row <- drake_plan(xyz_x = c(x_1 = x_1, x_2 = x_2))
+  y <- bind_plans(plan, new_row)
+  equivalent_plans(x[, c("target", "command")], y)
 })
 
 test_with_dir("reduce_by()", {
@@ -302,13 +303,11 @@ test_with_dir("reduce_by()", {
     trace = TRUE
   )
   x <- reduce_by(plan, pairwise = FALSE, append = TRUE)
-  y <- weak_tibble(
-    target = c(plan$target, "target"),
-    command = c(plan$command, "x_1 + x_2 + x_3 + x_4 + y_a + y_b + z")
-  )
-  expect_equivalent(x[, c("target", "command")], y)
+  new_row <- drake_plan(target = x_1 + x_2 + x_3 + x_4 + y_a + y_b + z)
+  y <- bind_plans(plan, new_row)
+  equivalent_plans(x[, c("target", "command")], y)
   z <- reduce_by(plan, pairwise = FALSE, append = FALSE)
-  expect_equivalent(z[, c("target", "command")], y[nrow(y), ])
+  equivalent_plans(z[, c("target", "command")], y[nrow(y), ])
   x <- reduce_by(
     plan, m___from,
     prefix = "xyz",
@@ -332,8 +331,9 @@ test_with_dir("reduce_by()", {
     n__ = as.character(NA),
     n___from = as.character(NA)
   )
+  y <- sanitize_plan(y)
   expected <- bind_plans(plan, y)
-  expect_equivalent(x[order(x$target), ], expected[order(expected$target), ])
+  equivalent_plans(x[order(x$target), ], expected[order(expected$target), ])
   x <- reduce_by(
     plan, m___from,
     prefix = "xyz",
@@ -353,6 +353,7 @@ test_with_dir("reduce_by()", {
     n__ = as.character(NA),
     n___from = as.character(NA)
   )
+  y <- sanitize_plan(y)
   expected <- bind_plans(plan, y)
   expect_equivalent(x[order(x$target), ], expected[order(expected$target), ])
   x <- reduce_by(
@@ -367,6 +368,7 @@ test_with_dir("reduce_by()", {
     n__ = as.character(NA),
     n___from = as.character(NA)
   )
+  y <- sanitize_plan(y)
   expected <- bind_plans(plan, y)
   expect_equivalent(x[order(x$target), ], expected[order(expected$target), ])
   x <- reduce_by(plan, m___from, n___from, append = TRUE)
@@ -388,8 +390,9 @@ test_with_dir("reduce_by()", {
     n__ = as.character(NA),
     n___from = c(rep(NA, 3), "y")
   )
+  y <- sanitize_plan(y)
   expected <- bind_plans(plan, y)
-  expect_equivalent(x[order(x$target), ], expected[order(expected$target), ])
+  equivalent_plans(x[order(x$target), ], expected[order(expected$target), ])
   x <- reduce_by(plan, m___from, n___from, pairwise = FALSE, append = TRUE)
   y <- weak_tibble(
     target = c(
@@ -407,8 +410,9 @@ test_with_dir("reduce_by()", {
     n__ = as.character(NA),
     n___from = c(NA, "y", NA)
   )
+  y <- sanitize_plan(y)
   expected <- bind_plans(plan, y)
-  expect_equivalent(x[order(x$target), ], expected[order(expected$target), ])
+  equivalent_plans(x[order(x$target), ], expected[order(expected$target), ])
   plan$from <- c(rep("x", 4), rep("y", 2), NA)
   x <- reduce_by(
     plan,
@@ -418,9 +422,7 @@ test_with_dir("reduce_by()", {
     pairwise = FALSE,
     filter = from == "y"
   )
-  y <- weak_tibble(
-    target = c(plan$target, "xyz_y"),
-    command = c(plan$command, "y_a + y_b")
-  )
-  expect_equivalent(x[, c("target", "command")], y)
+  new_row <- drake_plan(xyz_y = y_a + y_b)
+  y <- bind_plans(plan, new_row)
+  equivalent_plans(x[, c("target", "command")], y)
 })
