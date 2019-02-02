@@ -184,6 +184,8 @@ drake_graph_info <- function(
   }
   config <- get_raw_node_category_data(config)
   network_data <- visNetwork::toVisNetworkData(config$graph)
+  config$plan <- deparse_lang_cols(config$plan)
+  network_data$nodes <- deparse_lang_cols(network_data$nodes)
   config$nodes <- merge(
     x = network_data$nodes,
     y = config$plan,
