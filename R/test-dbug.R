@@ -27,13 +27,14 @@ dbug_envir <- function(envir) {
 }
 
 dbug_plan <- function() {
-  drake_plan(list = c(
-    "saveRDS(combined, file_out(\"intermediatefile.rds\"))",
-    yourinput = "f(1 + 1)",
-    nextone = "myinput + g(7)",
-    combined = "nextone + yourinput",
-    myinput = "readRDS(file_in(\"input.rds\"))",
-    final = "readRDS(file_in(\"intermediatefile.rds\"))"))
+  drake_plan(
+    saveRDS(combined, file_out("intermediatefile.rds")),
+    yourinput = f(1 + 1),
+    nextone = myinput + g(7),
+    combined = nextone + yourinput,
+    myinput = readRDS(file_in("input.rds")),
+    final = readRDS(file_in("intermediatefile.rds"))
+  )
 }
 
 dbug_files <- function() {
