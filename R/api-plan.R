@@ -167,7 +167,8 @@ drake_plan <- function(
   }
   commands <- complete_target_names(commands)
   targets <- names(commands)
-  plan <- weak_tibble(target = targets, command = commands)
+  plan <- weak_tibble(target = targets)
+  plan$command <- commands
   plan <- parse_custom_plan_columns(plan)
   if (transform && ("transform" %in% colnames(plan))) {
     plan <- transform_plan(plan, envir = envir, trace = trace)
