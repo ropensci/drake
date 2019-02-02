@@ -156,9 +156,10 @@ evaluate_plan <- function(
   sep = "_"
 ) {
   advertise_dsl()
+  plan <- deparse_lang_cols(plan)
   if (!is.null(rules)) {
     check_wildcard_rules(rules)
-    evaluate_wildcard_rules(
+    out <- evaluate_wildcard_rules(
       plan = plan,
       rules = rules,
       expand = expand,
@@ -168,7 +169,7 @@ evaluate_plan <- function(
       sep = sep
     )
   } else if (!is.null(wildcard) && !is.null(values)) {
-    evaluate_single_wildcard(
+    out <- evaluate_single_wildcard(
       plan = plan,
       wildcard = wildcard,
       values = values,
@@ -178,9 +179,8 @@ evaluate_plan <- function(
       columns = columns,
       sep = sep
     )
-  } else {
-    plan
   }
+  sanitize_plan(out)
 }
 
 evaluate_single_wildcard <- function(
@@ -224,7 +224,9 @@ evaluate_single_wildcard <- function(
   plan[[minor]] <- plan[[major]]
   matching <- plan[matches, ]
   if (expand) {
-    matching <- expand_plan(matching, values, rename = FALSE)
+    matching <- expand_plan(
+      matching, values, rename = FALSE, sanitize = FALSE
+    )
   }
   matched_targets <- matching$target
   if (rename) {
@@ -250,7 +252,7 @@ evaluate_single_wildcard <- function(
   out[[minor]] <- NULL
   out[[major]] <- NULL
   rownames(out) <- NULL
-  sanitize_plan(out, allow_duplicated_targets = TRUE)
+  out
 }
 
 evaluate_wildcard_rules <- function(
@@ -318,18 +320,22 @@ check_wildcard_rules <- function(rules) {
 #' @param sep Character scalar, delimiter between the original
 #'   target names and the values to append to create the new
 #'   target names. Only relevant when `rename` is `TRUE`.
+#' @param sanitize Logical, whether to sanitize the plan.
 #' @examples
 #' # Create the part of the workflow plan for the datasets.
 #' datasets <- drake_plan(
 #'   small = simulate(5),
-#'   large = simulate(50))
+#'   large = simulate(50)
+#' )
 #' # Create replicates. If you want repeat targets,
 #' # this is convenient.
 #' expand_plan(datasets, values = c("rep1", "rep2", "rep3"))
 #' # Choose whether to rename the targets based on the values.
 #' expand_plan(datasets, values = 1:3, rename = TRUE)
 #' expand_plan(datasets, values = 1:3, rename = FALSE)
-expand_plan <- function(plan, values = NULL, rename = TRUE, sep = "_") {
+expand_plan <- function(
+  plan, values = NULL, rename = TRUE, sep = "_", sanitize = TRUE
+) {
   advertise_dsl()
   if (!length(values)) {
     return(plan)
@@ -343,5 +349,8 @@ expand_plan <- function(plan, values = NULL, rename = TRUE, sep = "_") {
     plan$target <- paste(plan$target, values, sep = sep)
   }
   rownames(plan) <- NULL
-  sanitize_plan(plan, allow_duplicated_targets = TRUE)
+  if (sanitize) {
+    plan <- sanitize_plan(plan, allow_duplicated_targets = TRUE)
+  }
+  plan
 }
