@@ -505,15 +505,19 @@ target <- function(command = NULL, ...) {
     )
   }
   call <- match.call(expand.dots = FALSE)
-  out <- call$...
-  out <- select_nonempty(out)
-  out <- out[nzchar(names(out))]
-  out <- c(command = call$command, out)
-  out <- lapply(out, function(x) {
+  lst <- call$...
+  lst <- select_nonempty(lst)
+  lst <- lst[nzchar(names(lst))]
+  lst <- c(command = call$command, lst)
+  lst <- lapply(lst, function(x) {
     if (is.language(x)) x <- list(x)
     x
   })
-  weak_as_tibble(out)
+  out <- data.frame(command = NA, stringsAsFactors = FALSE)
+  for (col in names(lst)) {
+    out[[col]] <- lst[[col]]
+  }
+  out
 }
 
 #' @title Get the environment where drake builds targets

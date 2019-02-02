@@ -65,12 +65,13 @@ map_to_grid <- function(transform, target, row, plan) {
   }
   grid <- dsl_grid(transform, groupings)
   ncl <- c(names(new_groupings(transform)), old_cols(plan))
+  old_cols <- old_cols(plan)
   plan <- plan[, setdiff(colnames(plan), ncl), drop = FALSE]
   grid <- dsl_left_outer_join(grid, plan)
   suffix_cols <- intersect(colnames(grid), group_names(transform))
   new_targets <- new_targets(target, grid[, suffix_cols, drop = FALSE])
   out <- data.frame(target = new_targets, stringsAsFactors = FALSE)
-  for (col in setdiff(old_cols(plan), c("target", "transform"))) {
+  for (col in setdiff(old_cols, c("target", "transform"))) {
     out[[col]] <- grid_subs(row[[col]][[1]], grid)
   }
   cbind(out, grid)
@@ -127,6 +128,7 @@ dsl_transform <- function(...) {
 dsl_transform.cross <- dsl_transform.map <- map_to_grid
 
 dsl_transform.combine <- function(transform, target, row, plan) {
+  old_cols <- old_cols(plan)
   cols_keep <- union(dsl_by(transform), dsl_combine(transform))
   rows_keep <- complete_cases(plan[, cols_keep, drop = FALSE])
   if (!length(rows_keep) || !any(rows_keep)) {
@@ -138,13 +140,14 @@ dsl_transform.combine <- function(transform, target, row, plan) {
     .by = dsl_by(transform),
     .f = combine_step,
     row = row,
-    transform = transform
+    transform = transform,
+    old_cols
   )
   out$target <- new_targets(target, out[, dsl_by(transform), drop = FALSE])
   out
 }
 
-combine_step <- function(plan, row, transform) {
+combine_step <- function(plan, row, transform, old_cols) {
   aggregates <- lapply(
     X = plan[, dsl_combine(transform), drop = FALSE],
     FUN = function(x) {
@@ -152,7 +155,7 @@ combine_step <- function(plan, row, transform) {
     }
   )
   out <- data.frame(command = NA, stringsAsFactors = FALSE)
-  for (col in setdiff(old_cols(plan), c("target", "transform"))) {
+  for (col in setdiff(old_cols, c("target", "transform"))) {
     out[[col]] <- list(substitute_list(row[[col]][[1]], aggregates))
   }
   out
