@@ -38,7 +38,7 @@ test_with_dir("dot symbol is illegal", {
 test_with_dir("file_out() and knitr_in(): commands vs imports", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("knitr")
-  cmd <- "file_in(\"x\"); file_out(\"y\"); knitr_in(\"report.Rmd\")"
+  cmd <- quote({file_in("x"); file_out("y"); knitr_in("report.Rmd")})
   f <- function() {
     file_in("x")
     file_out("y")
