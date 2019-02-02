@@ -697,7 +697,15 @@ deparse_lang_col <- function(x) {
 }
 
 lang_cols <- function(plan) {
-  intersect(colnames(plan), c("command", "trigger", "transform"))
+  out <- intersect(colnames(plan), c("command", "trigger", "transform"))
+  others <- vapply(
+    plan,
+    function(x) {
+      length(x) && is.list(x) && is.language(x[[1]])
+    },
+    FUN.VALUE = logical(1)
+  )
+  union(out, names(which(others)))
 }
 
 #' @title Internal formatting function.
