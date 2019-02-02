@@ -39,7 +39,7 @@ test_with_dir("clustermq parallelism", {
     )
     expect_equal(justbuilt(config), character(0))
     e$my_plan$command[[2]] <- as.call(
-      c(quote(identity), e$my_plan$command[2])
+      c(quote(identity), unname(e$my_plan$command[2]))
     )
     make(
       e$my_plan,
