@@ -27,8 +27,11 @@ test_with_dir("1 grouping level", {
 
 test_with_dir("empty grouping levels", {
   out <- drake_plan(x = target(y, transform = map(y = c(z, NULL))))
-  expect_equal(out$target, c("x_z", "x_NULL"))
-  expect_equal(out$command, c("z", ""))
+  exp <- weak_tibble(
+    target = c("x_z", "x_NULL"),
+    command = c("z", "")
+  )
+  equivalent_plans(out, exp)
 })
 
 test_with_dir("bad transform", {

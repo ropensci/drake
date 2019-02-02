@@ -22,10 +22,6 @@ sanitize_plan <- function(plan, allow_duplicated_targets = FALSE) {
         parse(text = x, keep.source = FALSE)[[1]]
       })
     }
-    plan[[col]] <- lapply(plan[[col]], function(x) {
-      attributes(x) <- NULL
-      x
-    })
   }
   as_drake_plan(plan)
 }
