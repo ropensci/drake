@@ -18,7 +18,7 @@ test_with_dir("changes to commands are handled well", {
     outdated(config),
     character(0)
   )
-  config$plan$command[2] <- "f(1+ 1) # nothing should rebuild"
+  config$plan$command[[2]] <- parse(text = "f(1+ 1) # nothing should rebuild")
   config$layout <- create_drake_layout(
     plan = config$plan,
     envir = config$envir,
@@ -26,7 +26,8 @@ test_with_dir("changes to commands are handled well", {
   )$layout
   testrun(config)
   nobuild(config)
-  config$plan$command[2] <- "f(1+ 1 -2 + 2) -1 + 1 #only yourinput changed"
+  config$plan$command[[2]] <-
+    parse(text = "f(1+ 1 -2 + 2) -1 + 1 #only yourinput changed")
   config$layout <- create_drake_layout(
     plan = config$plan,
     envir = config$envir,
@@ -43,7 +44,8 @@ test_with_dir("changes to commands are handled well", {
   )
   testrun(config)
   expect_equal(justbuilt(config), "yourinput")
-  config$plan$command[2] <- "f(1+2) # now downstream should rebuild"
+  config$plan$command[[2]] <-
+    parse(text = "f(1+2) # now downstream should rebuild")
   config$layout <- create_drake_layout(
     plan = config$plan,
     envir = config$envir,
@@ -63,8 +65,8 @@ test_with_dir("changes to commands are handled well", {
   nobuild(config)
 
   # command changed for an intermediate file
-  config$plan$command[1] <-
-    "saveRDS(combined + 1, file_out(\"intermediatefile.rds\"))"
+  config$plan$command[[1]] <-
+    parse(text = "saveRDS(combined + 1, file_out(\"intermediatefile.rds\"))")
   config$layout <- create_drake_layout(
     plan = config$plan,
     envir = config$envir,
