@@ -178,7 +178,7 @@ drake_plan <- function(
       plan[[col]] <- tidyeval_exprs(plan[[col]], envir = envir)
     }
   }
-  for (col in colnames(plan)) {
+  for (col in setdiff(colnames(plan), c("target", "command", "trigger"))) {
     plan[[col]] <- unlist(plan[[col]])
   }
   sanitize_plan(plan)
