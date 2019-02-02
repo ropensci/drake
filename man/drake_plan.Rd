@@ -13,8 +13,7 @@ drake_plan(..., list = character(0), file_targets = NULL,
 \item{...}{A collection of symbols/targets
 with commands assigned to them. See the examples for details.}
 
-\item{list}{A named character vector of commands
-with names as targets.}
+\item{list}{Deprecated}
 
 \item{file_targets}{Deprecated.}
 
