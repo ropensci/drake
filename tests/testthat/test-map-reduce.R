@@ -14,10 +14,10 @@ test_with_dir("map_plan()", {
   plan3 <- map_plan(args = args, fun = fn, id = x)
   plan4 <- map_plan(args = args, fun = "fn", id = "x", character_only = TRUE)
   plan5 <- map_plan(args = args, fun = fn, id = x, trace = TRUE)
-  expect_equal(plan1$command, plan2$command)
-  expect_equal(plan2, plan3)
-  expect_equal(plan3, plan4)
-  expect_equal(weak_as_tibble(cbind(plan3, args)), plan5)
+  expect_equal(deparse_lang_col(plan1$command), deparse_lang_col(plan2$command))
+  equivalent_plans(plan2, plan3)
+  equivalent_plans(plan3, plan4)
+  equivalent_plans(weak_as_tibble(cbind(plan3, args)), plan5)
   cache <- storr::storr_environment()
   make(plan2, session_info = FALSE, cache = cache)
   expect_equal(
@@ -67,18 +67,20 @@ test_with_dir("map_plan() with symbols", {
 test_with_dir("gather_plan()", {
   df <- drake_plan(data = simulate(center = MU, scale = SIGMA))
   m0 <- evaluate_plan(df, wildcard = "NULL", values = 1:2)
-  expect_equal(m0, df)
+  equivalent_plans(m0, df)
   m1 <- evaluate_plan(df, rules = list(nothing = 1:2), expand = FALSE)
-  expect_equal(m1, df)
+  equivalent_plans(m1, df)
   x <- expand_plan(df, values = c("rep1", "rep2"))
   x6 <- gather_plan(x, append = FALSE)
-  y <- weak_tibble(
-    target = "target",
-    command = "list(data_rep1 = data_rep1, data_rep2 = data_rep2)"
+  y <- sanitize_plan(
+    weak_tibble(
+      target = "target",
+      command = "list(data_rep1 = data_rep1, data_rep2 = data_rep2)"
+    )
   )
-  expect_equal(x6, y)
+  equivalent_plans(x6, y)
   z <- gather_plan(x, append = TRUE)
-  expect_equal(z, bind_plans(x, y))
+  equivalent_plans(z, bind_plans(x, y))
   x7 <- gather_plan(
     x, target = "my_summaries", gather = "rbind", append = FALSE
   )
@@ -86,7 +88,7 @@ test_with_dir("gather_plan()", {
     target = "my_summaries",
     command = "rbind(data_rep1 = data_rep1, data_rep2 = data_rep2)"
   )
-  expect_equal(x7, y)
+  equivalent_plans(x7, y)
 })
 
 test_with_dir("reduce_plan()", {
