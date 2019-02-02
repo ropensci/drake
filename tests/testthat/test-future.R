@@ -35,7 +35,9 @@ test_with_dir("future package functionality", {
       outdated(config),
       character(0)
     )
-    e$my_plan$command[2] <- paste0("identity(", e$my_plan$command[2], ")")
+    e$my_plan$command[[2]] <- as.call(
+      c(quote(identity), e$my_plan$command[[2]])
+    )
     make(
       e$my_plan,
       envir = e,
@@ -76,7 +78,9 @@ test_with_dir("future package functionality", {
 
   # Workers can wait for dependencies.
   for (i in 1:2) {
-    e$my_plan$command[2] <- "Sys.sleep(2); simulate(48)"
+    e$my_plan$command[[2]] <- as.call(
+      c(quote(identity), quote({Sys.sleep(2); simulate(48)}))
+    )
     future::plan(future::multicore)
     make(
       e$my_plan,
