@@ -235,6 +235,8 @@ fill_cols <- function(x, cols) {
 }
 
 parse_custom_plan_columns <- function(plan) {
+  Sys.setenv("drake_target_silent" = "true")
+  on.exit(Sys.setenv("drake_target_silent" = ""))
   splits <- split(plan, seq_len(nrow(plan)))
   out <- lapply(splits, parse_custom_plan_row)
   do.call(bind_plans, out)
@@ -480,6 +482,19 @@ detect_arrow <- function(command) {
 #'   analysis = analyze(website_data)
 #' )
 target <- function(command = NULL, ...) {
+  # TODO: remove this warning when we unexport target().
+  if (!nzchar(Sys.getenv("drake_target_silent"))) {
+    .Deprecated(
+      "target",
+      package = "drake",
+      msg = paste(
+        "target() is deprecated as a user-side function.",
+        "Use target from inside drake_plan(). See",
+        "https://ropenscilabs.github.io/drake-manual/plans.html#large-plans",
+        "for details."
+      )
+    )
+  }
   call <- match.call(expand.dots = FALSE)
   out <- call$...
   out <- select_nonempty(out)

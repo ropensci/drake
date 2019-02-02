@@ -1,5 +1,9 @@
 drake_context("deprecation")
 
+test_with_dir("deprecation: target()", {
+  expect_warning(target(123), regexp = "deprecated")
+})
+
 test_with_dir("deprecation: fetch_cache", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   dp <- drake_plan(x = 1)
