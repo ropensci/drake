@@ -42,9 +42,12 @@ test_with_dir("bad transform", {
 })
 
 test_with_dir("simple expansion", {
-  plan <- drake_plan(a = target(1 + 1, transform = cross(x = c(1, 2))))
-  expect_equal(sort(plan$target), sort(c("a_1", "a_2")))
-  expect_equal(plan$command, rep("1 + 1", 2))
+  out <- drake_plan(a = target(1 + 1, transform = cross(x = c(1, 2))))
+  exp <- weak_tibble(
+    target = c("a_1", "a_2"),
+    command = rep("1 + 1", 2)
+  )
+  equivalent_plans(out, exp)
 })
 
 test_with_dir("replicates", {
@@ -189,17 +192,23 @@ test_with_dir("multiple tag_out", {
 })
 
 test_with_dir("simple map", {
-  plan <- drake_plan(a = target(1 + 1, transform = map(x = c(1, 2))))
-  expect_equal(sort(plan$target), sort(c("a_1", "a_2")))
-  expect_equal(plan$command, rep("1 + 1", 2))
+  out <- drake_plan(a = target(1 + 1, transform = map(x = c(1, 2))))
+  exp <- weak_tibble(
+    target = c("a_1", "a_2"),
+    command = rep("1 + 1", 2)
+  )
+  equivalent_plans(out, exp)
 })
 
 test_with_dir("simple map with 2 factors", {
-  plan <- drake_plan(
+  out <- drake_plan(
     a = target(1 + 1, transform = map(x = c(1, 2), y = c(3, 4)))
   )
-  expect_equal(sort(plan$target), sort(c("a_1_3", "a_2_4")))
-  expect_equal(plan$command, rep("1 + 1", 2))
+  exp <- weak_tibble(
+    target = c("a_1_3", "a_2_4"),
+    command = rep("1 + 1", 2)
+  )
+  equivalent_plans(out, exp)
 })
 
 test_with_dir("all new crossings", {
@@ -830,9 +839,6 @@ test_with_dir("dsl with differently typed group levels", {
     transform = FALSE
   )
   plan <- bind_plans(plan1, plan2)
-  plan$command <- lapply(plan$command, function(x) {
-    parse(text = x)[[1]]
-  })
   out <- transform_plan(plan, envir = environment())
   exp <- drake_plan(
     analysis_.source1. = analyze_data("source1"), # nolint
@@ -1427,20 +1433,20 @@ test_with_dir("gh #696", {
     })
     out <- quo_squash(out)
   }
-  manysplits <- paste0("longfile", 1:2, ".txt")
+  manysplits <- paste0("lf", 1:2, ".txt")
   out <- drake_plan(
     splits = target(!!my_split(f, f, 3), transform = map(f = !!manysplits))
   )
   exp <- drake_plan(
-    splits_.longfile1.txt. = {
-      file_in("longfile1.txt")
-      file_out(c("longfile1.txtaa", "longfile1.txtab", "longfile1.txtac"))
-      system2("split", c(paste0("-n r/", 3), "longfile1.txt", "longfile1.txt"))
+    splits_.lf1.txt. = {
+      file_in("lf1.txt")
+      file_out(c("lf1.txtaa", "lf1.txtab", "lf1.txtac"))
+      system2("split", c(paste0("-n r/", 3), "lf1.txt", "lf1.txt"))
     },
-    splits_.longfile2.txt. = {
-      file_in("longfile2.txt")
-      file_out(c("longfile2.txtaa", "longfile2.txtab", "longfile2.txtac"))
-      system2("split", c(paste0("-n r/", 3), "longfile2.txt", "longfile2.txt"))
+    splits_.lf2.txt. = {
+      file_in("lf2.txt")
+      file_out(c("lf2.txtaa", "lf2.txtab", "lf2.txtac"))
+      system2("split", c(paste0("-n r/", 3), "lf2.txt", "lf2.txt"))
     }
   )
   equivalent_plans(out, exp)
