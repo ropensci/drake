@@ -158,13 +158,17 @@ write_v6.2.1_project <- function() { # nolint
 
 equivalent_plans <- function(out, exp) {
   assert_pkg("testthat")
+  out <- deparse_lang_cols(out)
+  exp <- deparse_lang_cols(exp)
   out <- out[order(out$target), ]
   exp <- exp[order(exp$target), ]
-  testthat::expect_equal(
-    lapply(out$command, standardize_command),
-    lapply(exp$command, standardize_command)
-  )
-  for (col in setdiff(colnames(out), "command")) {
+  for (col in lang_cols(out)) {
+    testthat::expect_equal(
+      unclass(unname(lapply(out[[col]], standardize_command))),
+      unclass(unname(lapply(exp[[col]], standardize_command)))
+    )
+  }
+  for (col in setdiff(colnames(out), lang_cols(out))) {
     testthat::expect_equal(out[[col]], exp[[col]])
   }
 }
