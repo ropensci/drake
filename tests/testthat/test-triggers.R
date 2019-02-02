@@ -11,8 +11,8 @@ test_with_dir("empty triggers return logical", {
 
 test_with_dir("triggers can be expressions", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  plan <- drake_plan(x = 1)
-  plan$trigger <- expression(trigger(condition = TRUE))
+  plan <- drake_plan(x = target(1, trigger = 123))
+  plan$trigger[[1]] <- expression(trigger(condition = TRUE))
   for (i in 1:3) {
     cache <- storr::storr_environment()
     make(
