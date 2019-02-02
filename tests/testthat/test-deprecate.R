@@ -35,19 +35,20 @@ test_with_dir("deprecation: cache functions", {
 })
 
 test_with_dir("deprecation: built", {
-
   plan <- drake_plan(x = 1)
   make(plan)
   config <- drake_config(plan)
-
   expect_warning(built(cache = NULL))
   expect_equal(
     sort(suppressWarnings(built(search = FALSE))),
     sort(display_keys(config$plan$target))
   )
-  twopiece <- sort(c(suppressWarnings(built(search = FALSE)),
-                     suppressWarnings(imported(search = FALSE,
-                                               files_only = FALSE))))
+  twopiece <- sort(
+    c(
+      suppressWarnings(built(search = FALSE)),
+      suppressWarnings(imported(search = FALSE, files_only = FALSE))
+    )
+  )
   expect_equal(
     sort(cached(search = FALSE)),
     sort(display_keys(twopiece))
@@ -60,8 +61,10 @@ test_with_dir("deprecation: built", {
 })
 
 test_with_dir("deprecation: imported", {
-  expect_identical(suppressWarnings(imported(cache = NULL)),
-                   character(0))
+  expect_identical(
+    suppressWarnings(imported(cache = NULL)),
+    character(0)
+  )
   for (fo in c(FALSE, TRUE)) {
     imp <- suppressWarnings(imported(files_only = fo, search = FALSE))
     expect_equal(
