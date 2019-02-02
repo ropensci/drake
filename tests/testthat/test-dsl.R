@@ -6,7 +6,7 @@ test_with_dir("empty transforms", {
     b = target(y, transform = combine()),
     c = target(z, transform = map())
   )
-  expect_equal(out, transform_plan(out, envir = environment()))
+  equivalent_plans(out, transform_plan(out, envir = environment()))
   exp <- drake_plan(a = x, b = y, c = z)
   equivalent_plans(out, exp)
 })
