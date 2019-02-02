@@ -15,7 +15,8 @@ sanitize_plan <- function(plan, allow_duplicated_targets = FALSE) {
   if (!allow_duplicated_targets) {
     plan <- assert_unique_targets(plan[, cols])
   }
-  arrange_plan_cols(plan)
+  plan <- arrange_plan_cols(plan)
+  as_drake_plan(plan)
 }
 
 sanitize_targets <- function(plan, targets) {

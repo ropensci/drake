@@ -645,3 +645,91 @@ advertise_dsl <- function() {
     "is better than evaluate_plan(), map_plan(), gather_by(), etc."
   )
 }
+
+as_drake_plan <- function(plan, .force_df = FALSE) {
+  no_tibble <- !suppressWarnings(requireNamespace("tibble", quietly = TRUE))
+  if (.force_df || no_tibble) {
+    structure(
+      as.data.frame(plan, stringsAsFactors = FALSE),
+      class = c("drake_plan", "data.frame")
+    )
+  } else {
+    tibble::new_tibble(plan, nrow = nrow(plan), subclass = "drake_plan")
+  }
+}
+
+#' @title Internal formatting function.
+#' @description Internal.
+#' @export
+#' @keywords internal
+#' @param x A `drake` plan.
+#' @param ... Other args.
+print.drake_plan <- function(x, ...) {
+  if (inherits(x, "tbl")) {
+    max_print <- getOption("tibble.print_max") %||% 20L
+    min_print <- getOption("tibble.print_min") %||% 10L
+    rows_print <- nrow(x)
+    if (rows_print > max_print) {
+      rows_print <- min_print
+    }
+  } else {
+    rows_print <- getOption("max.print") %||% 1000L
+  }
+  rows_print <- min(rows_print, nrow(x))
+  x <- x[seq_len(rows_print), ]
+  x <- deparse_lang_cols(x)
+  NextMethod(object = x)
+}
+
+deparse_lang_cols <- function(plan) {
+  for (col in colnames(plan)) {
+    plan[[col]] <- deparse_lang_col(plan[[col]])
+  }
+  plan
+}
+
+deparse_lang_col <- function(x) {
+  if (!length(x) || !is.list(x) || !is.language(x[[1]])) {
+    return(x)
+  }
+  out <- unlist(lapply(x, safe_deparse))
+  as_drake_lang(out)
+}
+
+#' @title Internal formatting function.
+#' @description Internal.
+#' @export
+#' @keywords internal
+#' @param x S3 `drake_lang` character vector.
+as_drake_lang <- function(x) {
+  structure(x, class = "drake_lang")
+}
+
+#' @title Internal formatting function.
+#' @description Internal.
+#' @export
+#' @keywords internal
+#' @param x S3 `drake_lang` character vector.
+#' @param ... Other args
+c.drake_lang <- function(x, ...) {
+  as_drake_lang(NextMethod())
+}
+
+#' @title Internal formatting function.
+#' @description Internal.
+#' @export
+#' @keywords internal
+#' @param x S3 `drake_lang` character vector.
+#' @param i Numeric index.
+`[.drake_lang` <- function(x, i) {
+  as_drake_lang(NextMethod())
+}
+
+#' @title Internal formatting function.
+#' @description Internal.
+#' @export
+#' @keywords internal
+#' @param x S3 `drake_lang` character vector.
+type_sum.drake_lang <- function(x) {
+  "lang"
+}
