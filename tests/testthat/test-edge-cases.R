@@ -203,13 +203,14 @@ test_with_dir("target conflicts with previous import", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   testrun(config)
-  config$plan$command[2] <- "g(1+1)"
-  config$plan <- rbind(config$plan, data.frame(target = "f",
-    command = "1+1"))
+  config$plan$command[[2]] <- quote(g(1+1))
+  config$plan <- bind_plans(config$plan, new_row)
   config$targets <- config$plan$target
   testrun(config)
-  expect_equal(justbuilt(config), sort(c("drake_target_1",
-    "combined", "f", "final", "yourinput")))
+  expect_equal(
+    justbuilt(config),
+    sort(c("drake_target_1", "combined", "f", "final", "yourinput"))
+  )
 })
 
 test_with_dir("true targets can be functions", {
