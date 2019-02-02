@@ -118,21 +118,21 @@ test_with_dir("deps_code() and deps_target()", {
     cache = storr::storr_environment()
   )
   expect_equal(
-    clean_dependency_list(deps_code(my_plan$command[1])), "some_object")
+    clean_dependency_list(deps_code(my_plan$command[[1]])), "some_object")
   expect_equal(sort(
-    clean_dependency_list(deps_code(my_plan$command[2]))),
+    clean_dependency_list(deps_code(my_plan$command[[2]]))),
     sort(c("tracked_input_file.rds", "x", "readRDS")))
   expect_equal(sort(
-    clean_dependency_list(deps_code(my_plan$command[3]))),
+    clean_dependency_list(deps_code(my_plan$command[[3]]))),
     sort(c("f", "g", "w", "x", "y", "z"))
   )
   expect_equal(sort(
     clean_dependency_list(
-      deps_code(my_plan$command[4]))),
+      deps_code(my_plan$command[[4]]))),
     sort(c("read.csv"))
   )
   expect_equal(
-    sort(clean_dependency_list(deps_code(my_plan$command[5]))),
+    sort(clean_dependency_list(deps_code(my_plan$command[[5]]))),
     sort(c("read.table", "file_in")))
   expect_true(!length(deps_target(x, config)))
   expect_equal(sort(

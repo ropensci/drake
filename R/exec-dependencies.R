@@ -78,7 +78,7 @@ deps_code <- function(x) {
     if (all(is_encoded_path(x)) && all(file.exists(decode_path(x)))) {
       return(decode_deps_list(get_knitr_deps(decode_path(x))))
     }
-    x <- parse(text = x)[[1]]
+    x <- parse(text = x)
   }
   decode_deps_list(command_dependencies(x))
 }
