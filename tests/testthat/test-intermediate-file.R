@@ -6,24 +6,24 @@ test_with_dir("responses to intermediate file", {
   envir <- dbug_envir(envir)
   dbug_files()
   plan <- dbug_plan()
-  plan$command[6] <- safe_deparse(quote({
+  plan$command[[6]] <- quote({
     readRDS(file_in("intermediatefile.rds")) +
     readRDS(file_in("out2.rds"))
-  }))
-  command1 <- safe_deparse(quote({
+  })
+  command1 <- quote({
     saveRDS(combined, file_out("intermediatefile.rds"))
     saveRDS(combined + 1, file_out("out2.rds"))
-  }))
-  command2 <- safe_deparse(quote({
+  })
+  command2 <- quote({
     saveRDS(combined, "intermediatefile.rds")
     saveRDS(combined + 1, "out2.rds")
     file_out("intermediatefile.rds", "out2.rds")
-  }))
+  })
   for (command in c(command1, command2)) {
-    plan$command[1] <- command
+    plan$command[[1]] <- command
     config <- drake_config(plan = plan, targets = plan$target,
       envir = envir, parallelism = scenario$parallelism,
-      jobs = scenario$jobs, verbose = FALSE,
+      jobs = scenario$jobs, verbose = TRUE,
       session_info = FALSE,
       log_progress = TRUE,
       caching = scenario$caching
@@ -56,11 +56,9 @@ test_with_dir("responses to intermediate file", {
     }
 
     # change what intermediatefile.rds is supposed to be
-    config$plan$command[1] <- gsub(
-      "combined,",
-      "combined + 5,",
-      config$plan$command[1]
-    )
+    cmd <- safe_deparse(config$plan$command[[1]])
+    cmd <- gsub("combined,", "combined + 5,", cmd)
+    config$plan$command[[1]] <- parse(text = cmd)[[1]]
     testrun(config)
     expect_equal(
       sort(justbuilt(config)),
@@ -71,7 +69,9 @@ test_with_dir("responses to intermediate file", {
     expect_equal(val2, readRDS("out2.rds"))
 
     # change what out2.rds is supposed to be
-    config$plan$command[1] <- gsub("1", "2", config$plan$command[1])
+    cmd <- safe_deparse(config$plan$command[[1]])
+    cmd <- gsub("1", "2", cmd)
+    config$plan$command[[1]] <- parse(text = cmd)[[1]]  
     testrun(config)
     expect_equal(
       sort(justbuilt(config)),
