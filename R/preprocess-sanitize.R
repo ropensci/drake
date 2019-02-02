@@ -16,6 +16,17 @@ sanitize_plan <- function(plan, allow_duplicated_targets = FALSE) {
     plan <- assert_unique_targets(plan[, cols])
   }
   plan <- arrange_plan_cols(plan)
+  for (col in lang_cols(plan)) {
+    if (!is.list(plan[[col]])) {
+      plan[[col]] <- lapply(plan[[col]], function(x) {
+        parse(text = x, keep.source = FALSE)[[1]]
+      })
+    }
+    plan[[col]] <- lapply(plan[[col]], function(x) {
+      attributes(x) <- NULL
+      x
+    })
+  }
   as_drake_plan(plan)
 }
 

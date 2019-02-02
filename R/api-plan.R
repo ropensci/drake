@@ -682,18 +682,22 @@ print.drake_plan <- function(x, ...) {
 }
 
 deparse_lang_cols <- function(plan) {
-  for (col in colnames(plan)) {
+  for (col in lang_cols(plan)) {
     plan[[col]] <- deparse_lang_col(plan[[col]])
   }
   plan
 }
 
 deparse_lang_col <- function(x) {
-  if (!length(x) || !is.list(x) || !is.language(x[[1]])) {
+  if (!length(x) || !is.list(x)) {
     return(x)
   }
   out <- unlist(lapply(x, safe_deparse))
   as_drake_lang(out)
+}
+
+lang_cols <- function(plan) {
+  intersect(colnames(plan), c("command", "trigger", "transform"))
 }
 
 #' @title Internal formatting function.
