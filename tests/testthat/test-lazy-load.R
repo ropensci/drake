@@ -97,7 +97,7 @@ test_with_dir("active bindings", {
 
   # Active bindings react to make()
   old_final <- e$final
-  config$plan$command[6] <- paste0(sum(old_final), "+ 1")
+  config$plan$command[[6]] <- parse(text = paste0(sum(old_final), "+ 1"))[[1]]
   testrun(config)
   expect_equal(e$final, sum(old_final) + 1)
 
