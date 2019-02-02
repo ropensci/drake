@@ -260,7 +260,7 @@ command_dependencies <- function(
     return()
   }
   deps <- analyze_code(
-    expr,
+    command,
     exclude = exclude,
     allowed_globals = allowed_globals
   )
