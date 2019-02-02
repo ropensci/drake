@@ -227,9 +227,9 @@ test_with_dir("gather_by()", {
   )
   equivalent_plans(x[, c("target", "command")], y)
   x <- gather_by(plan, append = TRUE, sep = ".")
-  expect_equivalent(x[, c("target", "command")], y)
+  equivalent_plans(x[, c("target", "command")], y)
   z <- gather_by(plan, append = FALSE)
-  expect_equivalent(z[, c("target", "command")], y[nrow(y), ])
+  equivalent_plans(z[, c("target", "command")], y[nrow(y), ])
   x <- gather_by(
     plan,
     n___from,
@@ -355,7 +355,7 @@ test_with_dir("reduce_by()", {
   )
   y <- sanitize_plan(y)
   expected <- bind_plans(plan, y)
-  expect_equivalent(x[order(x$target), ], expected[order(expected$target), ])
+  equivalent_plans(x[order(x$target), ], expected[order(expected$target), ])
   x <- reduce_by(
     plan, m___from, prefix = "xyz", op = ", ", begin = "c(", end = ")",
     pairwise = FALSE, append = TRUE
@@ -370,7 +370,7 @@ test_with_dir("reduce_by()", {
   )
   y <- sanitize_plan(y)
   expected <- bind_plans(plan, y)
-  expect_equivalent(x[order(x$target), ], expected[order(expected$target), ])
+  equivalent_plans(x[order(x$target), ], expected[order(expected$target), ])
   x <- reduce_by(plan, m___from, n___from, append = TRUE)
   y <- weak_tibble(
     target = c(
