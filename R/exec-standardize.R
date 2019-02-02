@@ -1,9 +1,6 @@
 # Get the command ready for tidy eval prep
 # and then pure eval (no side effects).
 preprocess_command <- function(command, config) {
-  if (is.character(command)){
-    command <- parse(text = command)
-  }
   command <- as.call(c(quote(`{`), command))
   command <- as.call(c(quote(local), command))
   # Here, we really do need expr() instead of quo().
@@ -15,14 +12,10 @@ preprocess_command <- function(command, config) {
 }
 
 standardize_command <- function(x) {
-  look_for_ignore <- TRUE
-  if (is.character(x)) {
-    look_for_ignore <- grepl("ignore", x, fixed = TRUE)
-    x <- parse(text = x, keep.source = FALSE)
-  }
   if (is.expression(x) && length(x) == 1L) {
     x <- x[[1]]
   }
+  look_for_ignore <- "ignore" %in% all.vars(x, functions = TRUE)
   if (look_for_ignore) {
     x <- ignore_ignore(x)
   }

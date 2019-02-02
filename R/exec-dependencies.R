@@ -259,10 +259,6 @@ command_dependencies <- function(
   if (!length(command)) {
     return()
   }
-  expr <- command
-  if (is.character(command)){
-    expr <- parse(text = command, keep.source = FALSE)
-  }
   deps <- analyze_code(
     expr,
     exclude = exclude,
