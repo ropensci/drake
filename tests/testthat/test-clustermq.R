@@ -38,7 +38,9 @@ test_with_dir("clustermq parallelism", {
       lock_envir = TRUE
     )
     expect_equal(justbuilt(config), character(0))
-    e$my_plan$command[2] <- paste0("identity(", e$my_plan$command[2], ")")
+    e$my_plan$command[[2]] <- as.call(
+      c(quote(identity), e$my_plan$command[2])
+    )
     make(
       e$my_plan,
       parallelism = parallelism,
