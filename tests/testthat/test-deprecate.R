@@ -85,11 +85,6 @@ test_with_dir("deprecation: find_project", {
   expect_equal(fp, getwd())
 })
 
-test_with_dir("arg deprecation", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_warning(drake::drake_plan(x = y, file_targets = TRUE))
-})
-
 test_with_dir("drake version checks in previous caches", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   # We need to be able to set the drake version
@@ -169,6 +164,8 @@ test_with_dir("deprecated arguments", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   pl <- drake_plan(a = 1, b = a)
   con <- drake_config(plan = pl)
+  expect_warning(drake::drake_plan(x = y, file_targets = TRUE))
+  expect_warning(drake_plan(list = c(a = "1")), regexp = "deprecated")
   expect_warning(drake_build(a, config = con, meta = list()))
   expect_warning(make(drake_plan(x = 1), recipe_command = "123"))
   expect_warning(make(drake_plan(x = 1), hasty_build = "123"))

@@ -32,8 +32,7 @@
 #'   custom columns.
 #' @param ... A collection of symbols/targets
 #'   with commands assigned to them. See the examples for details.
-#' @param list A named character vector of commands
-#'   with names as targets.
+#' @param list Deprecated
 #' @param file_targets Deprecated.
 #' @param strings_in_dots Deprecated.
 #' @param tidy_evaluation Logical, whether to use tidy evaluation
@@ -142,14 +141,23 @@ drake_plan <- function(
   trace = FALSE,
   envir = parent.frame()
 ) {
-  force(envir)
   if (length(file_targets) || length(strings_in_dots)) {
+    # 2019-02-01 nolint
     warning(
       "Arguments `file_targets` and `strings_in_dots` ",
       "of `drake_plan()` are deprecated.",
       call. = FALSE
     )
   }
+  if (length(list)) {
+    # 2019-02-01 nolint
+    warning(
+      "The `list` argument of `drake_plan()` is deprecated. ",
+      "Use the interface described at ",
+      "https://ropenscilabs.github.io/drake-manual/plans.html#large-plans."
+    )
+  }
+  force(envir)
   dots <- match.call(expand.dots = FALSE)$...
   warn_arrows(dots)
   list <- lapply(list, function(x) parse(text = x))
