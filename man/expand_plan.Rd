@@ -4,7 +4,8 @@
 \alias{expand_plan}
 \title{Create replicates of targets.}
 \usage{
-expand_plan(plan, values = NULL, rename = TRUE, sep = "_")
+expand_plan(plan, values = NULL, rename = TRUE, sep = "_",
+  sanitize = TRUE)
 }
 \arguments{
 \item{plan}{Workflow plan data frame.}
@@ -18,6 +19,8 @@ based on the \code{values}. See the examples for a demo.}
 \item{sep}{Character scalar, delimiter between the original
 target names and the values to append to create the new
 target names. Only relevant when \code{rename} is \code{TRUE}.}
+
+\item{sanitize}{Logical, whether to sanitize the plan.}
 }
 \value{
 An expanded workflow plan data frame (with replicated targets).
@@ -37,7 +40,8 @@ so targets still have unique names.
 # Create the part of the workflow plan for the datasets.
 datasets <- drake_plan(
   small = simulate(5),
-  large = simulate(50))
+  large = simulate(50)
+)
 # Create replicates. If you want repeat targets,
 # this is convenient.
 expand_plan(datasets, values = c("rep1", "rep2", "rep3"))
