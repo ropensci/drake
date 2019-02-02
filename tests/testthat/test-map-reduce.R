@@ -247,7 +247,7 @@ test_with_dir("gather_by()", {
     n___from = c("y", NA)
   )
   y <- sanitize_plan(y)
-  expect_equivalent(x, bind_plans(plan, y))
+  equivalent_plans(x, bind_plans(plan, y))
   x <- gather_by(plan, n___from, prefix = "xyz", gather = "c", append = TRUE)
   y <- weak_tibble(
     target = c("xyz_y", "xyz_NA"),
@@ -259,7 +259,7 @@ test_with_dir("gather_by()", {
   )
   y <- sanitize_plan(y)
   expected <- bind_plans(plan, y)
-  expect_equivalent(x[order(x$target), ], expected[order(expected$target), ])
+  equivalent_plans(x[order(x$target), ], expected[order(expected$target), ])
   x <- gather_by(plan, m__, n__, prefix = "xyz", gather = "c", append = TRUE)
   y <- weak_tibble(
     target = c("xyz_1_NA", "xyz_2_NA", "xyz_NA_a", "xyz_NA_b", "xyz_NA_NA"),
@@ -277,7 +277,7 @@ test_with_dir("gather_by()", {
   )
   y <- sanitize_plan(y)
   expected <- bind_plans(plan, y)
-  expect_equivalent(x[order(x$target), ], expected[order(expected$target), ])
+  equivalent_plans(x[order(x$target), ], expected[order(expected$target), ])
   plan$n___from <- c("x", "x", "y", "y", NA)
   x <- gather_by(
     plan,
