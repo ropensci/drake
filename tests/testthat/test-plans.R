@@ -109,10 +109,8 @@ test_with_dir("edge cases for plans", {
       command = c("a", "b")
     )
   )
-  expect_equal(
-    drake_plan(list = c("a", "b")),
-    drake_plan(a, b)
-  )
+  o <- drake_plan(a, b)
+  expect_equal(sort(o$command), sort(c("a", "b")))
   # incomplete target names
   expect_equal(
     drake_plan(a = 1, b),
@@ -163,8 +161,10 @@ test_with_dir("plan set 2", {
 test_with_dir("drake_plan() trims outer whitespace in target names", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   for (tidy_evaluation in c(TRUE, FALSE)) {
-    x <- drake_plan(list = c(` a` = 1, `b \t\n` = 2),
-                    tidy_evaluation = tidy_evaluation)
+    x <- sanitize_plan(weak_tibble(
+      target = c(" a", "b \t\n"),
+      command = 1:2
+    ))
     y <- drake_plan(a = 1, b = 2, tidy_evaluation = tidy_evaluation)
     expect_equal(x$target, y$target)
   }
