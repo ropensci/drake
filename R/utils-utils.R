@@ -322,6 +322,14 @@ safe_deparse <- function(x) {
   )
 }
 
+safe_parse <- function(x) {
+  out <- parse(text = x, keep.source = FALSE)
+  if (length(out)) {
+    out <- out[[1]]
+  }
+  out
+}
+
 named <- function(x, exclude = character(0)) {
   if (is.null(names(x))) return(NULL)
   x[!(names(x) %in% c("", exclude))]
