@@ -6,7 +6,7 @@ test_with_dir("drake_plan does tidy eval", {
   my_variable <- 5
   plan1 <- drake_plan(a = !!my_variable)
   plan2 <- weak_tibble(target = "a", command = "5")
-  expect_equal(plan1, plan2)
+  equivalent_plans(plan1, plan2)
 })
 
 # From Alex Axthelm: https://github.com/ropensci/drake/issues/200
@@ -26,6 +26,8 @@ test_with_dir("drake_plan tidy eval can be customized and disabled", {
     c = target(1 + 1, custom = !!my_variable),
     tidy_evaluation = TRUE
   )
+  plan1$command <- unclass(deparse_lang_col(plan1$command))
+  plan2$command <- unclass(deparse_lang_col(plan2$command))
   expect_equal(plan1$target, plan2$target)
   expect_equal(
     plan1$command, c("!!my_variable", "!!my_variable + 1", "1 + 1")
