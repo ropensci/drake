@@ -510,3 +510,22 @@ test_with_dir("can use from_plan() from within make()", {
   make(config = config)
   expect_equal(justbuilt(config), character(0))
 })
+
+test_with_dir("commands and triggers can be character strings too", {
+  config <- dbug()
+  config$plan <- deparse_lang_cols(config$plan)
+  for (col in colnames(config$plan)) {
+    config$plan[[col]] <- unclass(config$plan[[col]])
+  }
+  testrun(config)
+  expect_equal(sort(config$plan$target), sort(justbuilt(config)))
+  expect_equal(outdated(config), character(0))
+  testrun(config)
+  expect_equal(character(0), sort(justbuilt(config)))
+  expect_equal(outdated(config), character(0))
+  config$plan$trigger <- "trigger(condition = TRUE)"
+  testrun(config)
+  expect_equal(sort(config$plan$target), sort(justbuilt(config)))
+  testrun(config)
+  expect_equal(sort(config$plan$target), sort(justbuilt(config)))
+})
