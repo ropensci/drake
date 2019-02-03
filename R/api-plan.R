@@ -665,18 +665,6 @@ as_drake_plan <- function(plan, .force_df = FALSE) {
 #' @param x A `drake` plan.
 #' @param ... Other args.
 print.drake_plan <- function(x, ...) {
-  if (inherits(x, "tbl")) {
-    max_print <- getOption("tibble.print_max") %||% 20L
-    min_print <- getOption("tibble.print_min") %||% 10L
-    rows_print <- nrow(x)
-    if (rows_print > max_print) {
-      rows_print <- min_print
-    }
-  } else {
-    rows_print <- getOption("max.print") %||% 1000L
-  }
-  rows_print <- min(rows_print, nrow(x))
-  x <- x[seq_len(rows_print), ]
   x <- deparse_lang_cols(x)
   NextMethod(object = x)
 }
