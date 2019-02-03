@@ -529,3 +529,15 @@ test_with_dir("commands and triggers can be character strings too", {
   testrun(config)
   expect_equal(sort(config$plan$target), sort(justbuilt(config)))
 })
+
+test_with_dir("printing large plans", {
+  tmp <- capture.output({
+    z <- seq_len(1e3)
+    plan <- drake_plan(x = target(y, transform = map(y = !!z)))
+    out <- print(plan)
+    expect_equal(nrow(out), 10L)
+    out <- print(plan[1:5, ])
+    expect_equal(nrow(out), 5L)
+    out <- print(as_drake_plan(plan, .force_df = TRUE))
+  })
+})
