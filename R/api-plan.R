@@ -693,7 +693,7 @@ deparse_lang_col <- function(x) {
     return(x)
   }
   out <- unlist(lapply(x, safe_deparse))
-  as_drake_lang(out)
+  as_langs(out)
 }
 
 lang_cols <- function(plan) {
@@ -712,37 +712,28 @@ lang_cols <- function(plan) {
 #' @description Internal.
 #' @export
 #' @keywords internal
-#' @param x S3 `drake_lang` character vector.
-as_drake_lang <- function(x) {
-  structure(x, class = "drake_lang")
+#' @param x S3 `langs` character vector.
+as_langs <- function(x) {
+  structure(x, class = "langs")
 }
 
 #' @title Internal formatting function.
 #' @description Internal.
 #' @export
 #' @keywords internal
-#' @param x S3 `drake_lang` character vector.
+#' @param x S3 `langs` character vector.
 #' @param ... Other args
-c.drake_lang <- function(x, ...) {
+c.langs <- function(x, ...) {
   # Probably won't be covered, but still necessary.
-  as_drake_lang(NextMethod()) # nocov
+  as_langs(NextMethod()) # nocov
 }
 
 #' @title Internal formatting function.
 #' @description Internal.
 #' @export
 #' @keywords internal
-#' @param x S3 `drake_lang` character vector.
+#' @param x S3 `langs` character vector.
 #' @param i Numeric index.
-`[.drake_lang` <- function(x, i) {
-  as_drake_lang(NextMethod())
-}
-
-#' @title Internal formatting function.
-#' @description Internal.
-#' @export
-#' @keywords internal
-#' @param x S3 `drake_lang` character vector.
-type_sum.drake_lang <- function(x) {
-  "lang"
+`[.langs` <- function(x, i) {
+  as_langs(NextMethod())
 }
