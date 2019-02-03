@@ -3,6 +3,7 @@
 ## Breaking changes
 
 - This release will be version 7.0.0, a major update. It contains tremendous speed improvements, more and better boosts than in any previous release. Unfortunately, some enhancements that increase cache speed also invalidate targets in old projects. Workflows run with drake <= 6.2.1 will need to run from scratch again.
+- In `drake` plans, the `command` and `trigger` columns are now lists of language objects instead of character vectors. `make()` and friends still work if you have character columns, but the default output of `drake_plan()` has changed to this new format.
 - Remove all parallel backends (`parallelism` argument of `make()`) except "clustermq", "future", and "hasty".
 - A large amount of deprecated functionality is removed, including several functions (`built()`, `find_project()`, `imported()`, and `parallel_stages()`) and the single-quoted file API.
 - Set the default value of `lock_envir` to `TRUE` in `make()` and `drake_config()`. So `make()` will automatically quit in error if the act of building a target tries to change upstream dependencies.

@@ -38,7 +38,9 @@ test_with_dir("dot symbol is illegal", {
 test_with_dir("file_out() and knitr_in(): commands vs imports", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("knitr")
-  cmd <- "file_in(\"x\"); file_out(\"y\"); knitr_in(\"report.Rmd\")"
+  cmd <- quote({
+    file_in("x"); file_out("y"); knitr_in("report.Rmd")
+  })
   f <- function() {
     file_in("x")
     file_out("y")
@@ -118,21 +120,21 @@ test_with_dir("deps_code() and deps_target()", {
     cache = storr::storr_environment()
   )
   expect_equal(
-    clean_dependency_list(deps_code(my_plan$command[1])), "some_object")
+    clean_dependency_list(deps_code(my_plan$command[[1]])), "some_object")
   expect_equal(sort(
-    clean_dependency_list(deps_code(my_plan$command[2]))),
+    clean_dependency_list(deps_code(my_plan$command[[2]]))),
     sort(c("tracked_input_file.rds", "x", "readRDS")))
   expect_equal(sort(
-    clean_dependency_list(deps_code(my_plan$command[3]))),
+    clean_dependency_list(deps_code(my_plan$command[[3]]))),
     sort(c("f", "g", "w", "x", "y", "z"))
   )
   expect_equal(sort(
     clean_dependency_list(
-      deps_code(my_plan$command[4]))),
+      deps_code(my_plan$command[[4]]))),
     sort(c("read.csv"))
   )
   expect_equal(
-    sort(clean_dependency_list(deps_code(my_plan$command[5]))),
+    sort(clean_dependency_list(deps_code(my_plan$command[[5]]))),
     sort(c("read.table", "file_in")))
   expect_true(!length(deps_target(x, config)))
   expect_equal(sort(
@@ -317,38 +319,36 @@ test_with_dir("Standardized commands have no attributes", {
 
 test_with_dir("Can standardize commands", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_true(is.character(standardize_command("")))
-  expect_identical(
-    standardize_command("f(x +2) + 2"),
-    standardize_command("f(x + 2) + 2")
-  )
+  expect_true(is.character(standardize_command(parse(text = ""))))
   expect_identical(
     standardize_command(parse(text = "f(x +2) + 2")),
-    standardize_command("f(x + 2) + 2")
+    standardize_command(parse(text = "f(x + 2) + 2"))
   )
   expect_identical(
     standardize_command(quote(f(x + 2) + 2)),
-    standardize_command("f(x + 2) + 2")
+    standardize_command(parse(text = "f(x + 2) + 2"))
   )
   expect_false(
     identical(
-      standardize_command("f(x + 2) + 2"),
-      standardize_command("f(x + 1 - 1) + 2")
+      standardize_command(parse(text = "f(x + 2) + 2")),
+      standardize_command(parse(text = "f(x + 1 - 1) + 2"))
     )
   )
   expect_identical(
-    standardize_command("b->a"),
-    standardize_command("a <- b")
+    standardize_command(parse(text = "b->a")),
+    standardize_command(parse(text = "a <- b"))
   )
   expect_identical(
-    standardize_command("y=sqrt(x=1)"),
-    standardize_command("y = sqrt(x = 1)")
+    standardize_command(parse(text = "y=sqrt(x=1)")),
+    standardize_command(parse(text = "y = sqrt(x = 1)"))
   )
   expect_identical(
-    standardize_command("abcdefg = hijklmnop <- qrstuvwxyz\n\n"),
-    standardize_command("abcdefg = hijklmnop <- qrstuvwxyz")
+    standardize_command(
+      parse(text = "abcdefg = hijklmnop <- qrstuvwxyz\n\n")
+    ),
+    standardize_command(parse(text = "abcdefg = hijklmnop <- qrstuvwxyz"))
   )
-  a <- standardize_command("z = {f('#') # comment
+  a <- standardize_command(parse(text = "z = {f('#') # comment
     x = 5
 
     y <-
@@ -356,21 +356,21 @@ test_with_dir("Can standardize commands", {
     z <- 4
 
     x2 <- 'test2'
-  }")
-  b <- standardize_command("z = {f('#') # comment X
+  }"))
+  b <- standardize_command(parse(text = "z = {f('#') # comment X
   x = 5
 
   y <- 'test'
   z <- 4
   'test2' -> x2
-  }")
-  c <- standardize_command("z = {f('#') # comment X
+  }"))
+  c <- standardize_command(parse(text = "z = {f('#') # comment X
   x = 5
 
   y <- 'test3'
   z <- 4
   'test2' -> x2
-  }")
+  }"))
   expect_identical(a, b)
   expect_false(identical(b, c))
 })
@@ -378,29 +378,44 @@ test_with_dir("Can standardize commands", {
 test_with_dir("standardized commands with ignore()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(
-    standardize_command("f(     sqrt( ignore(fun(arg) + 7) + 123))"),
-    standardize_command("f(sqrt(ignore() + 123))")
+    standardize_command(
+      parse(text = "f(     sqrt( ignore(fun(arg) + 7) + 123))")
+    ),
+    standardize_command(parse(text = "f(sqrt(ignore() + 123))"))
   )
   expect_equal(
-    standardize_command("f(sqrt( ignore  (fun(arg) + 7)+123) ) # noooop"),
-    standardize_command("f(sqrt(ignore() + 123))")
-  )
-
-  expect_equal(
-    standardize_command(" f (sqrt( drake::ignore(fun(arg) + 7) + 123 ))"),
-    standardize_command("f(sqrt(ignore() + 123))")
+    standardize_command(
+      parse(text = "f(sqrt( ignore  (fun(arg) + 7)+123) ) # noooop")
+    ),
+    standardize_command(parse(text = "f(sqrt(ignore() + 123))"))
   )
   expect_equal(
-    standardize_command("\tf(sqrt( drake ::: ignore  (fun(arg) + 7) + 123))"),
-    standardize_command("f(sqrt(ignore() + 123))")
+    standardize_command(
+      parse(text = " f (sqrt( drake::ignore(fun(arg) + 7) + 123 ))")
+    ),
+    standardize_command(parse(text = "f(sqrt(ignore() + 123))"))
   )
   expect_equal(
-    standardize_command("function(x){(sqrt( ignore(fun(arg) + 7) + 123))}"),
-    standardize_command("function(x) {\n    (sqrt(ignore() + 123))\n}")
+    standardize_command(
+      parse(text = "\tf(sqrt( drake ::: ignore  (fun(arg) + 7) + 123))")
+    ),
+    standardize_command(parse(text = "f(sqrt(ignore() + 123))"))
   )
   expect_equal(
-    standardize_command("f(sqrt( ignore(fun(arg) + 7) + 123)); g(ignore(i))"),
-    standardize_command("f(sqrt( ignore() + 123)); g(ignore())")
+    standardize_command(
+      parse(text = "function(x){(sqrt( ignore(fun(arg) + 7) + 123))}")
+    ),
+    standardize_command(
+      parse(text = "function(x) {\n    (sqrt(ignore() + 123))\n}")
+    )
+  )
+  expect_equal(
+    standardize_command(
+      parse(text = "f(sqrt( ignore(fun(arg) + 7) + 123)); g(ignore(i))")
+    ),
+    standardize_command(
+      parse(text = "f(sqrt( ignore() + 123)); g(ignore())")
+    )
   )
   f <- function(x) {
     (sqrt( ignore(fun(arg) + 7) + 123)) # nolint

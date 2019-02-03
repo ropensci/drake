@@ -11,8 +11,8 @@ test_with_dir("empty triggers return logical", {
 
 test_with_dir("triggers can be expressions", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  plan <- drake_plan(x = 1)
-  plan$trigger <- expression(trigger(condition = TRUE))
+  plan <- drake_plan(x = target(1, trigger = 123))
+  plan$trigger[[1]] <- expression(trigger(condition = TRUE))
   for (i in 1:3) {
     cache <- storr::storr_environment()
     make(
@@ -369,42 +369,44 @@ test_with_dir("trigger components react appropriately", {
   saveRDS(TRUE, "condition.rds")
   plan <- drake_plan(
     missing = target(
-      "",
+      NULL,
       trigger = trigger(command = FALSE, depend = FALSE, file = FALSE)
     ),
     condition = target(
-      "",
+      NULL,
       trigger = trigger(
         condition = readRDS("condition.rds"),
         command = FALSE, depend = FALSE, file = FALSE
       )
     ),
     command = target(
-      "",
+      NULL,
       trigger = trigger(command = TRUE, depend = FALSE, file = FALSE)
     ),
     depend = target(
-      "",
+      NULL,
       trigger = trigger(command = FALSE, depend = TRUE, file = FALSE)
     ),
     file = target(
-      "",
+      NULL,
       trigger = trigger(command = FALSE, depend = FALSE, file = TRUE)
     ),
     change = target(
-      "",
+      NULL,
       trigger = trigger(
         change = readRDS("change.rds"),
         command = FALSE, depend = FALSE, file = FALSE
       )
     )
   )
-  plan$command <- paste0("{
+  commands <- paste0("{
     knitr_in(\"report.Rmd\")
     out <- f(readRDS(file_in(\"file.rds\")))
     saveRDS(out, file_out(\"out_", plan$target, ".rds\"))
     out
   }")
+  commands <- lapply(commands, safe_parse)
+  plan$command <- commands
   make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = FALSE, caching = caching, session_info = FALSE
@@ -502,12 +504,14 @@ test_with_dir("trigger components react appropriately", {
   make(config = simple_config)
 
   # Command trigger
-  config$plan$command <- simple_config$plan$command <- paste0("{
+  new_commands <- paste0("{
     knitr_in(\"report.Rmd\")
     out <- f(1 + readRDS(file_in(\"file.rds\")))
     saveRDS(out, file_out(\"out_", plan$target, ".rds\"))
     out
   }")
+  new_commands <- lapply(new_commands, safe_parse)
+  config$plan$command <- simple_config$plan$command <- new_commands
   config$layout <- create_drake_layout(
     plan = config$plan,
     envir = config$envir,

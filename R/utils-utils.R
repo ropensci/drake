@@ -211,7 +211,7 @@ select_valid <- function(x) {
   index <- vapply(
     X = x,
     FUN = function(y) {
-      length(y) > 0 && !is.na(y)
+      length(y) > 0 && !safe_is_na(y)
     },
     FUN.VALUE = logical(1)
   )
@@ -315,11 +315,19 @@ weak_as_tibble <- function(..., .force_df = FALSE) {
   }
 }
 
-safe_deparse <- function(x) {
+safe_deparse <- function(x, collapse = "\n") {
   paste(
     deparse(x, control = c("keepInteger", "keepNA")),
-    collapse = "\n"
+    collapse = collapse
   )
+}
+
+safe_parse <- function(x) {
+  out <- parse(text = x, keep.source = FALSE)
+  if (length(out)) {
+    out <- out[[1]]
+  }
+  out
 }
 
 named <- function(x, exclude = character(0)) {
@@ -343,19 +351,6 @@ sub_in_plan <- function(plan, rows, at) {
   }
   plan
 }
-
-parse_command <- function(command) UseMethod("parse_command")
-
-parse_command.character <- function(command) {
-  if (nzchar(command)) {
-    parse(text = command)[[1]]
-  } else {
-    quote({}) # nolint
-  }
-}
-
-# TODO: cover this line. Will probably be covered anyway after gh issue #700.
-parse_command.default <- function(command) command # nocov
 
 tidyeval_exprs <- function(expr_list, envir) {
   lapply(expr_list, tidyeval_expr, envir = envir)

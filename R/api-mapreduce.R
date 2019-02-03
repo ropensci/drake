@@ -151,6 +151,7 @@ gather_plan <- function(
   command <- paste(command, collapse = ", ")
   command <- paste0(gather, "(", command, ")")
   new_plan <- weak_tibble(target = target, command = command)
+  new_plan <- sanitize_plan(new_plan)
   if (append) {
     bind_plans(plan, new_plan)
   } else {
@@ -335,11 +336,11 @@ reduce_plan <- function(
     )
     out <- weak_tibble(target = target, command = command)
   }
+  out <- sanitize_plan(out)
   if (append) {
-    bind_plans(plan, out)
-  } else{
-    out
+    out <- bind_plans(plan, out)
   }
+  out
 }
 
 #' @title Reduce multiple groupings of targets

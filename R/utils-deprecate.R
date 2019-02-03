@@ -669,9 +669,6 @@ convert_old_trigger <- function(x) {
   if (!is.character(x)) {
     return(x)
   }
-  if (!(x %in% suppressWarnings(triggers()))) {
-    return(x)
-  }
   warning(
     "The old trigger interface is deprecated. ",
     "See the trigger() function (singular) ",

@@ -35,19 +35,20 @@ test_with_dir("deprecation: cache functions", {
 })
 
 test_with_dir("deprecation: built", {
-
   plan <- drake_plan(x = 1)
   make(plan)
   config <- drake_config(plan)
-
   expect_warning(built(cache = NULL))
   expect_equal(
     sort(suppressWarnings(built(search = FALSE))),
     sort(display_keys(config$plan$target))
   )
-  twopiece <- sort(c(suppressWarnings(built(search = FALSE)),
-                     suppressWarnings(imported(search = FALSE,
-                                               files_only = FALSE))))
+  twopiece <- sort(
+    c(
+      suppressWarnings(built(search = FALSE)),
+      suppressWarnings(imported(search = FALSE, files_only = FALSE))
+    )
+  )
   expect_equal(
     sort(cached(search = FALSE)),
     sort(display_keys(twopiece))
@@ -60,8 +61,10 @@ test_with_dir("deprecation: built", {
 })
 
 test_with_dir("deprecation: imported", {
-  expect_identical(suppressWarnings(imported(cache = NULL)),
-                   character(0))
+  expect_identical(
+    suppressWarnings(imported(cache = NULL)),
+    character(0)
+  )
   for (fo in c(FALSE, TRUE)) {
     imp <- suppressWarnings(imported(files_only = fo, search = FALSE))
     expect_equal(
@@ -388,8 +391,7 @@ test_with_dir("analyses and summaries", {
       "reg2(small)",
       "reg2(large)")
   )
-  expect_equal(analyses, x)
-
+  equivalent_plans(x, analyses)
   analyses <- expect_warning(
     plan_analyses(methods, datasets = datasets)
   )
@@ -406,12 +408,10 @@ test_with_dir("analyses and summaries", {
       "reg2(small)",
       "reg2(large)")
   )
-  expect_equal(analyses, x)
-
+  equivalent_plans(analyses, x)
   m2 <- drake_plan(regression1 = reg1(n), regression2 = reg2(n))
-  expect_equal(
-    expect_warning(plan_analyses(m2, datasets = datasets)), m2)
-
+  out <- expect_warning(plan_analyses(m2, datasets = datasets))
+  equivalent_plans(out, m2)
   no_analyses <- drake_plan(
     summ = summary(dataset__),
     coef = stats::coefficients(dataset__)
@@ -421,12 +421,10 @@ test_with_dir("analyses and summaries", {
       plan_summaries(no_analyses, analyses, datasets)
     )
   )
-
   summary_types <- drake_plan(
     summ = summary(analysis__),
     coef = stats::coefficients(analysis__)
   )
-
   results <- expect_warning(
     plan_summaries(
       summary_types,
@@ -458,8 +456,7 @@ test_with_dir("analyses and summaries", {
       "stats::coefficients(regression2_large)"
     )
   )
-  expect_equal(results, x)
-
+  equivalent_plans(results, x)
   results <- expect_warning(
     plan_summaries(summary_types, analyses, datasets, gather = NULL)
   )
@@ -485,8 +482,7 @@ test_with_dir("analyses and summaries", {
       "stats::coefficients(regression2_large)"
     )
   )
-  expect_equal(results, x)
-
+  equivalent_plans(results, x)
   summary_types <- drake_plan(
     summ = summary(analysis__, dataset__),
     coef = stats::coefficients(analysis__)
@@ -523,22 +519,19 @@ test_with_dir("analyses and summaries", {
   )
   y <- results[-1:-2, ]
   row.names(x) <- row.names(y) <- NULL
-  expect_equal(x, y)
+  equivalent_plans(x, y)
   expect_true(grepl("^rbind\\(coef", results$command[1]))
   expect_true(grepl("^list\\(summ", results$command[2]))
-
   results <- expect_warning(
     plan_summaries(summary_types, analyses, datasets)
   )
   expect_true(all(grepl("^list\\(", results$command[1:2])))
-
   results <- expect_warning(
     plan_summaries(
       summary_types, analyses, datasets, gather = "my_bind"
     )
   )
   expect_true(all(grepl("^my_bind\\(", results$command[1:2])))
-
   expect_error(
     suppressWarnings(
       nope <- plan_summaries(
@@ -549,7 +542,6 @@ test_with_dir("analyses and summaries", {
       )
     )
   )
-
   newtypes <- rbind(
     summary_types,
     drake_plan(

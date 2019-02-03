@@ -178,10 +178,7 @@ drake_plan <- function(
       plan[[col]] <- tidyeval_exprs(plan[[col]], envir = envir)
     }
   }
-  for (col in intersect(colnames(plan), c("command", "trigger"))) {
-    plan[[col]] <- lapply(plan[[col]], safe_deparse)
-  }
-  for (col in colnames(plan)) {
+  for (col in setdiff(colnames(plan), c("target", "command", "trigger"))) {
     plan[[col]] <- unlist(plan[[col]])
   }
   sanitize_plan(plan)
@@ -647,4 +644,84 @@ advertise_dsl <- function() {
     "https://ropenscilabs.github.io/drake-manual/plans.html#large-plans ",
     "is better than evaluate_plan(), map_plan(), gather_by(), etc."
   )
+}
+
+as_drake_plan <- function(plan, .force_df = FALSE) {
+  no_tibble <- !suppressWarnings(requireNamespace("tibble", quietly = TRUE))
+  if (.force_df || no_tibble) {
+    structure(
+      as.data.frame(plan, stringsAsFactors = FALSE),
+      class = c("drake_plan", "data.frame")
+    )
+  } else {
+    tibble::new_tibble(plan, nrow = nrow(plan), subclass = "drake_plan")
+  }
+}
+
+#' @title Internal formatting function.
+#' @description Internal.
+#' @export
+#' @keywords internal
+#' @param x A `drake` plan.
+#' @param ... Other args.
+print.drake_plan <- function(x, ...) {
+  x <- deparse_lang_cols(x)
+  NextMethod(object = x)
+}
+
+deparse_lang_cols <- function(plan) {
+  for (col in lang_cols(plan)) {
+    plan[[col]] <- deparse_lang_col(plan[[col]])
+  }
+  plan
+}
+
+deparse_lang_col <- function(x) {
+  if (!length(x) || !is.list(x)) {
+    return(x)
+  }
+  out <- unlist(lapply(x, safe_deparse, collapse = " "))
+  as_langs(out)
+}
+
+lang_cols <- function(plan) {
+  out <- intersect(colnames(plan), c("command", "trigger", "transform"))
+  others <- vapply(
+    plan,
+    function(x) {
+      length(x) && is.list(x) && is.language(x[[1]])
+    },
+    FUN.VALUE = logical(1)
+  )
+  union(out, names(which(others)))
+}
+
+#' @title Internal formatting function.
+#' @description Internal.
+#' @export
+#' @keywords internal
+#' @param x S3 `langs` character vector.
+as_langs <- function(x) {
+  structure(x, class = "langs")
+}
+
+#' @title Internal formatting function.
+#' @description Internal.
+#' @export
+#' @keywords internal
+#' @param x S3 `langs` character vector.
+#' @param ... Other args
+c.langs <- function(x, ...) {
+  # Probably won't be covered, but still necessary.
+  as_langs(NextMethod()) # nocov
+}
+
+#' @title Internal formatting function.
+#' @description Internal.
+#' @export
+#' @keywords internal
+#' @param x S3 `langs` character vector.
+#' @param i Numeric index.
+`[.langs` <- function(x, i) {
+  as_langs(NextMethod())
 }

@@ -72,15 +72,15 @@
 #' }
 deps_code <- function(x) {
   if (is.function(x)) {
-    out <- import_dependencies(x)
-  } else if (all(is_encoded_path(x)) && all(file.exists(decode_path(x)))) {
-    out <- get_knitr_deps(decode_path(x))
-  } else if (is.character(x)) {
-    out <- command_dependencies(x)
-  } else{
-    out <- analyze_code(x)
+    return(decode_deps_list(import_dependencies(x)))
   }
-  decode_deps_list(out)
+  if (is.character(x)) {
+    if (all(is_encoded_path(x)) && all(file.exists(decode_path(x)))) {
+      return(decode_deps_list(get_knitr_deps(decode_path(x))))
+    }
+    x <- parse(text = x)
+  }
+  decode_deps_list(command_dependencies(x))
 }
 
 #' @title List the dependencies of one or more targets
@@ -259,12 +259,8 @@ command_dependencies <- function(
   if (!length(command)) {
     return()
   }
-  expr <- command
-  if (is.character(command)){
-    expr <- parse(text = command, keep.source = FALSE)
-  }
   deps <- analyze_code(
-    expr,
+    command,
     exclude = exclude,
     allowed_globals = allowed_globals
   )

@@ -48,11 +48,11 @@ drake_target_call <- function(...) {
   target <- parse(text = args$target)[[1]]
   args$target <- NULL
   if (is.character(args[["command"]])) {
-    args$command <- parse_command(args[["command"]])
+    args$command <- safe_parse(args[["command"]])
   }
   if ("trigger" %in% names(args)) {
     if (is.character(args[["trigger"]])) {
-      args[["trigger"]] <- parse_command(args[["trigger"]])
+      args[["trigger"]] <- safe_parse(args[["trigger"]])
     }
   }
   if (!identical(names(args), "command")) {
