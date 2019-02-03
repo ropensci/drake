@@ -151,7 +151,7 @@ plan <- drake_plan(
 plan
 #> # A tibble: 5 x 2
 #>   target   command                                                         
-#>   <chr>    <S3: langs>                                                     
+#>   <chr>    <expr>                                                          
 #> 1 raw_data readxl::read_excel(file_in("raw_data.xlsx"))                   …
 #> 2 data     raw_data %>% mutate(Species = forcats::fct_inorder(Species))   …
 #> 3 hist     create_plot(data)                                              …
@@ -332,7 +332,7 @@ Thanks to [Kirill](https://github.com/krlmlr) for preparing a [`drake` cheat she
 Frequently asked questions
 --------------------------
 
-The [FAQ page](https://ropenscilabs.github.io/drake-manual/faq.html) is an index of links to [appropriately-labeled issues on GitHub](https://github.com/ropensci/drake/issues?q=is%3Aissue+is%3Aopen+label%3A%22frequently+asked+question%22). To contribute, please [submit a new issue](https://github.com/ropensci/drake/issues/new) and ask that it be labeled as a frequently asked question.
+The [FAQ page](https://ropenscilabs.github.io/drake-manual/faq.html) is an index of links to [appropriately-labeled issues on GitHub](https://github.com/ropensci/drake/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22frequently+asked+question%22+). To contribute, please [submit a new issue](https://github.com/ropensci/drake/issues/new) and ask that it be labeled as a frequently asked question.
 
 Function reference
 ------------------
@@ -391,7 +391,7 @@ Help and troubleshooting
 
 The following resources document many known issues and challenges.
 
--   [Frequently-asked questions](https://github.com/ropensci/drake/issues?q=is%3Aissue+is%3Aopen+label%3A%22Frequently+Asked+Question%22).
+-   [Frequently-asked questions](https://github.com/ropensci/drake/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22frequently+asked+question%22+).
 -   [Cautionary notes and edge cases](https://ropenscilabs.github.io/drake-manual/caution.html)
 -   [Debugging and testing drake projects](https://ropenscilabs.github.io/drake-manual/debug.html)
 -   [Other known issues](https://github.com/ropensci/drake/issues) (please search both open and closed ones).

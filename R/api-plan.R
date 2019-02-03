@@ -658,12 +658,8 @@ as_drake_plan <- function(plan, .force_df = FALSE) {
   }
 }
 
-#' @title Internal formatting function.
-#' @description Internal.
 #' @export
 #' @keywords internal
-#' @param x A `drake` plan.
-#' @param ... Other args.
 print.drake_plan <- function(x, ...) {
   x <- deparse_lang_cols(x)
   NextMethod(object = x)
@@ -681,7 +677,7 @@ deparse_lang_col <- function(x) {
     return(x)
   }
   out <- unlist(lapply(x, safe_deparse, collapse = " "))
-  as_langs(out)
+  as_expr_list(out)
 }
 
 lang_cols <- function(plan) {
@@ -696,32 +692,28 @@ lang_cols <- function(plan) {
   union(out, names(which(others)))
 }
 
-#' @title Internal formatting function.
-#' @description Internal.
+#' @title Type summary printing
+#' @description Ensures `<expr>` is printed at the top
+#'   of any `drake` plan column that is a list of language objects
+#'   (e.g. `plan$command`).
 #' @export
 #' @keywords internal
-#' @param x S3 `langs` character vector.
-as_langs <- function(x) {
-  structure(x, class = "langs")
+#' @param x List of language objects.
+type_sum.expr_list <- function(x) "expr"
+
+as_expr_list <- function(x) {
+  structure(x, class = "expr_list")
 }
 
-#' @title Internal formatting function.
-#' @description Internal.
 #' @export
 #' @keywords internal
-#' @param x S3 `langs` character vector.
-#' @param ... Other args
-c.langs <- function(x, ...) {
+c.expr_list <- function(x, ...) {
   # Probably won't be covered, but still necessary.
-  as_langs(NextMethod()) # nocov
+  as_expr_list(NextMethod()) # nocov
 }
 
-#' @title Internal formatting function.
-#' @description Internal.
 #' @export
 #' @keywords internal
-#' @param x S3 `langs` character vector.
-#' @param i Numeric index.
-`[.langs` <- function(x, i) {
-  as_langs(NextMethod())
+`[.expr_list` <- function(x, i) {
+  as_expr_list(NextMethod())
 }
