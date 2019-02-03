@@ -218,13 +218,10 @@ test_with_dir("gather_by()", {
     trace = TRUE
   )
   x <- gather_by(plan, append = TRUE)
-  y <- weak_tibble(
-    target = c(plan$target, "target"),
-    command = c(
-      plan$command,
-      quote(list(x_1 = x_1, x_2 = x_2, y_a = y_a, y_b = y_b, z = z))
-    )
+  new_row <- drake_plan(
+    target = list(x_1 = x_1, x_2 = x_2, y_a = y_a, y_b = y_b, z = z)
   )
+  y <- bind_plans(plan, new_row)
   equivalent_plans(x[, c("target", "command")], y)
   x <- gather_by(plan, append = TRUE, sep = ".")
   equivalent_plans(x[, c("target", "command")], y)

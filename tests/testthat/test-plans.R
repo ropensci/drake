@@ -531,6 +531,7 @@ test_with_dir("commands and triggers can be character strings too", {
 })
 
 test_with_dir("printing large plans", {
+  skip_if_not_installed("tibble")
   tmp <- capture.output({
     z <- seq_len(1e3)
     plan <- drake_plan(x = target(y, transform = map(y = !!z)))
@@ -543,6 +544,7 @@ test_with_dir("printing large plans", {
 })
 
 test_with_dir("drake_plan_source() with character columns", {
+  skip_if_not_installed("tibble")
   exp <- dbug_plan()
   config <- dbug()
   config$plan <- deparse_lang_cols(config$plan)
