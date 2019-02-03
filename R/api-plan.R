@@ -692,7 +692,7 @@ deparse_lang_col <- function(x) {
   if (!length(x) || !is.list(x)) {
     return(x)
   }
-  out <- unlist(lapply(x, safe_deparse))
+  out <- unlist(lapply(x, safe_deparse, collapse = " "))
   as_langs(out)
 }
 

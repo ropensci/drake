@@ -315,10 +315,10 @@ weak_as_tibble <- function(..., .force_df = FALSE) {
   }
 }
 
-safe_deparse <- function(x) {
+safe_deparse <- function(x, collapse = "\n") {
   paste(
     deparse(x, control = c("keepInteger", "keepNA")),
-    collapse = "\n"
+    collapse = collapse
   )
 }
 
