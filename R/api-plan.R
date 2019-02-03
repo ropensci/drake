@@ -724,7 +724,8 @@ as_drake_lang <- function(x) {
 #' @param x S3 `drake_lang` character vector.
 #' @param ... Other args
 c.drake_lang <- function(x, ...) {
-  as_drake_lang(NextMethod())
+  # Probably won't be covered, but still necessary.
+  as_drake_lang(NextMethod()) # nocov
 }
 
 #' @title Internal formatting function.

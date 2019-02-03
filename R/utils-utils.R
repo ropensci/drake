@@ -352,19 +352,6 @@ sub_in_plan <- function(plan, rows, at) {
   plan
 }
 
-parse_command <- function(command) UseMethod("parse_command")
-
-parse_command.character <- function(command) {
-  if (nzchar(command)) {
-    parse(text = command)[[1]]
-  } else {
-    quote({}) # nolint
-  }
-}
-
-# TODO: cover this line. Will probably be covered anyway after gh issue #700.
-parse_command.default <- function(command) command # nocov
-
 tidyeval_exprs <- function(expr_list, envir) {
   lapply(expr_list, tidyeval_expr, envir = envir)
 }

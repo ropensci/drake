@@ -541,3 +541,15 @@ test_with_dir("printing large plans", {
     out <- print(as_drake_plan(plan, .force_df = TRUE))
   })
 })
+
+test_with_dir("drake_plan_source() with character columns", {
+  exp <- dbug_plan()
+  config <- dbug()
+  config$plan <- deparse_lang_cols(config$plan)
+  for (col in colnames(config$plan)) {
+    config$plan[[col]] <- unclass(config$plan[[col]])
+  }
+  config$plan$trigger <- "trigger(condition = TRUE)"
+  exp$trigger <- lapply(config$plan$trigger, safe_parse)
+  expect_equal(drake_plan_source(config$plan), drake_plan_source(exp))
+})
