@@ -96,7 +96,7 @@ test_with_dir("File functions handle input", {
 test_with_dir("edge cases for plans", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   # empty plan
-  expect_equal(
+  equivalent_plans(
     drake_plan(),
     weak_tibble(
       target = character(0),
@@ -104,7 +104,7 @@ test_with_dir("edge cases for plans", {
     )
   )
   # no target names
-  expect_equal(
+  equivalent_plans(
     drake_plan(a, b),
     weak_tibble(
       target = c("drake_target_1", "drake_target_2"),
@@ -112,9 +112,12 @@ test_with_dir("edge cases for plans", {
     )
   )
   o <- drake_plan(a, b)
-  expect_equal(sort(o$command), sort(c("a", "b")))
-  # incomplete target names
   expect_equal(
+    sort(unname(unclass(deparse_lang_col(o$command)))),
+    sort(c("a", "b"))
+  )
+  # incomplete target names
+  equivalent_plans(
     drake_plan(a = 1, b),
     weak_tibble(
       target = c("a", "drake_target_1"),
@@ -122,7 +125,7 @@ test_with_dir("edge cases for plans", {
     )
   )
   # multiple file outputs are okay
-  expect_equal(
+  equivalent_plans(
     drake_plan(
       a = file_out("file1", "file2")
     ),
@@ -131,7 +134,7 @@ test_with_dir("edge cases for plans", {
       command = "file_out(\"file1\", \"file2\")"
     )
   )
-  expect_equal(
+  equivalent_plans(
     drake_plan(
       a = file_out(c("file1", "file2"))
     ),
@@ -156,7 +159,7 @@ test_with_dir("plan set 2", {
       target = letters[1:4],
       command = c("c", "\"c\"", "d", "readRDS(\"e\")")
     )
-    expect_equal(x, y)
+    equivalent_plans(x, y)
   }
 })
 
@@ -200,14 +203,6 @@ test_with_dir(
   expect_true(all(letters[1:4] %in% con$plan$target))
 })
 
-test_with_dir("make() plays nicely with tibbles", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  skip_if_not_installed("pillar")
-  skip_if_not_installed("tibble")
-  x <- tibble::tribble(~target, ~command, "nothing", 1)
-  expect_silent(make(x, verbose = FALSE, session_info = FALSE))
-})
-
 test_with_dir("plans can start with bad symbols", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- weak_tibble(
@@ -225,7 +220,7 @@ test_with_dir("issue 187 on Github (from Kendon Bell)", {
     target = c("test_1.4", "test_5.8", "test_9.12"),
     command = c("run_it(1:4)", "run_it(5:8)", "run_it(9:12)")
   )
-  expect_equal(out, out2)
+  equivalent_plans(out, out2)
 })
 
 test_with_dir("can use semicolons for multi-line commands", {
@@ -275,7 +270,7 @@ test_with_dir("custom column interface", {
     custom = "stop()",
     c2 = 5
   )
-  expect_equal(x, y)
+  equivalent_plans(x, y)
   plan <- drake_plan(
     x = target(
       command = 1 + !!tidyvar,
@@ -299,7 +294,7 @@ test_with_dir("custom column interface", {
   )
   cn <- colnames(plan)
   expect_equal(cn, colnames(plan0))
-  expect_equal(plan[, cn], plan0[, cn])
+  equivalent_plans(plan[, cn], plan0[, cn])
 })
 
 test_with_dir("bind_plans()", {
@@ -315,7 +310,7 @@ test_with_dir("bind_plans()", {
     e = 5,
     f = 6
   )
-  expect_equal(bind_plans(plan1, plan2), plan4[1:4, ])
+  equivalent_plans(bind_plans(plan1, plan2), plan4[1:4, ])
   plan5 <- drake_plan(
     z = target(
       command = download_data(),
@@ -329,35 +324,44 @@ test_with_dir("bind_plans()", {
     command = c("download_data()", "3", "4", "5"),
     trigger = c("trigger(condition = TRUE)", rep(NA_character_, 3))
   )
-  expect_equal(out, exp)
+  exp <- sanitize_plan(exp)
+  equivalent_plans(out, exp)
   plan2$trigger <- c("trigger(condition = TRUE)", NA_character_)
+  plan2 <- sanitize_plan(plan2)
   exp <- weak_tibble(
     target = letters[1:6],
     command = as.character(1:6),
     trigger = c(NA, NA, "trigger(condition = TRUE)", NA, NA, NA)
   )
-  expect_equal(bind_plans(plan1, plan2, plan3), exp)
-  expect_equal(bind_plans(list(plan1, plan2, plan3)), exp)
-  expect_equal(bind_plans(list(list(plan1, plan2, plan3))), exp)
-  expect_equal(bind_plans(list(plan1, list(plan2, plan3))), exp)
-  expect_equal(bind_plans(list(plan1, list(plan2, list(plan3)))), exp)
-  expect_equal(bind_plans(list(list(plan1), list(plan2, list(plan3)))), exp)
-  expect_equal(bind_plans(list(list(plan1), list(plan2), list(plan3))), exp)
+  exp <- sanitize_plan(exp)
+  equivalent_plans(bind_plans(plan1, plan2, plan3), exp)
+  equivalent_plans(bind_plans(list(plan1, plan2, plan3)), exp)
+  equivalent_plans(bind_plans(list(list(plan1, plan2, plan3))), exp)
+  equivalent_plans(bind_plans(list(plan1, list(plan2, plan3))), exp)
+  equivalent_plans(bind_plans(list(plan1, list(plan2, list(plan3)))), exp)
+  equivalent_plans(
+    bind_plans(list(list(plan1), list(plan2, list(plan3)))),
+    exp
+  )
+  equivalent_plans(
+    bind_plans(list(list(plan1), list(plan2), list(plan3))),
+    exp
+  )
 })
 
 test_with_dir("spaces in target names are replaced only when appropriate", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   pl <- drake_plan(a = x__, file_out("x__"))
-  pl <- evaluate_plan(pl, wildcard = "x__", values = c("b  \n  x y", "a x"))
-  pl2 <- weak_tibble(
-    target = c(
-      "a_b.....x.y", "a_a.x",
-      "drake_target_1_b.....x.y", "drake_target_1_a.x"),
-    command = c(
-      "b  \n  x y", "a x", "file_out(\"b  \n  x y\")", "file_out(\"a x\")"
-    )
+  pl <- evaluate_plan(pl, wildcard = "x__", values = c("{b  \n  x; y}", "{a; x}"))
+  expect_equal(
+    sort(pl$target),
+    sort(c(
+      "a_.b.....x..y.",
+      "a_.a..x.",
+      "drake_target_1_.b.....x..y.",
+      "drake_target_1_.a..x."
+    ))
   )
-  expect_equal(pl, pl2)
 })
 
 test_with_dir("conflicts in wildcard names/values", {
@@ -400,11 +404,12 @@ test_with_dir("drake_plan_call() produces the correct calls", {
   skip_if_not_installed("styler")
   load_mtcars_example()
   my_plan$trigger <- "NA"
-  my_plan$trigger[4] <- "trigger(condition = is_tuesday(), file = FALSE)"
+  my_plan$trigger[[4]] <- "trigger(condition = is_tuesday(), file = FALSE)"
+  my_plan <- sanitize_plan(my_plan)
   my_plan$non_standard_column <- 1234
   new_plan <- eval(drake_plan_call(my_plan))
   expected <- my_plan
-  expect_equal(
+  equivalent_plans(
     new_plan[, sort(colnames(new_plan))],
     expected[, sort(colnames(expected))]
   )
@@ -440,7 +445,7 @@ test_with_dir("code_to_plan(), one target", {
   skip_if_not_installed("CodeDepends")
   writeLines("a <- 1", "script.R")
   plan <- code_to_plan("script.R")
-  expect_equivalent(plan, weak_tibble(target = "a", command = "1"))
+  equivalent_plans(plan, weak_tibble(target = "a", command = "1"))
 })
 
 test_with_dir("plan_to_code()", {
@@ -450,7 +455,6 @@ test_with_dir("plan_to_code()", {
   expect_false(file.exists("report.md"))
   load_mtcars_example()
   plan0 <- my_plan
-  my_plan$command <- lapply(my_plan$command, rlang::parse_expr)
   path <- tempfile()
   plan_to_code(my_plan, path)
   source(path, local = TRUE)
@@ -458,7 +462,7 @@ test_with_dir("plan_to_code()", {
   expect_true(file.exists("report.md"))
   skip_if_not_installed("CodeDepends")
   plan <- code_to_plan(path)
-  expect_equivalent(plan[order(plan$target), ], plan0[order(plan0$target), ])
+  equivalent_plans(plan[order(plan$target), ], plan0[order(plan0$target), ])
 })
 
 test_with_dir("plan_to_notebook()", {
@@ -468,7 +472,6 @@ test_with_dir("plan_to_notebook()", {
   expect_false(file.exists("report.md"))
   load_mtcars_example()
   plan0 <- my_plan
-  my_plan$command <- lapply(my_plan$command, rlang::parse_expr)
   path <- "my_notebook.Rmd"
   plan_to_notebook(my_plan, path)
   knitr::knit(path, quiet = TRUE)
