@@ -437,7 +437,7 @@ test_with_dir("drake_plan_source()", {
   expect_true(grepl("drake_plan", y[1]))
   writeLines(x, "script.R")
   plan2 <- source("script.R")$value
-  expect_equal(plan, plan2)
+  equivalent_plans(plan, plan2)
 })
 
 test_with_dir("code_to_plan(), one target", {
@@ -479,7 +479,7 @@ test_with_dir("plan_to_notebook()", {
   expect_true(file.exists("report.md"))
   skip_if_not_installed("CodeDepends")
   plan <- code_to_plan(path)
-  expect_equivalent(plan[order(plan$target), ], plan0[order(plan0$target), ])
+  equivalent_plans(plan[order(plan$target), ], plan0[order(plan0$target), ])
 })
 
 test_with_dir("can use from_plan() from within make()", {
