@@ -159,7 +159,7 @@ evaluate_plan <- function(
   plan <- deparse_lang_cols(plan)
   if (!is.null(rules)) {
     check_wildcard_rules(rules)
-    out <- evaluate_wildcard_rules(
+    plan <- evaluate_wildcard_rules(
       plan = plan,
       rules = rules,
       expand = expand,
@@ -169,7 +169,7 @@ evaluate_plan <- function(
       sep = sep
     )
   } else if (!is.null(wildcard) && !is.null(values)) {
-    out <- evaluate_single_wildcard(
+    plan <- evaluate_single_wildcard(
       plan = plan,
       wildcard = wildcard,
       values = values,
@@ -180,7 +180,7 @@ evaluate_plan <- function(
       sep = sep
     )
   }
-  sanitize_plan(out)
+  sanitize_plan(plan)
 }
 
 evaluate_single_wildcard <- function(

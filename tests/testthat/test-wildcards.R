@@ -2,31 +2,31 @@ drake_context("wildcards")
 
 test_with_dir("empty generative args", {
   x <- drake_plan(a = 1, b = FUNCTION())
-  expect_equal(evaluate_plan(x), x)
-  expect_equal(evaluate_wildcard_rules(x, rules = NULL), x)
-  expect_equal(expand_plan(x), x)
+  equivalent_plans(evaluate_plan(x), x)
+  equivalent_plans(evaluate_wildcard_rules(x, rules = NULL), x)
+  equivalent_plans(expand_plan(x), x)
 })
 
 test_with_dir("evaluate and expand", {
   df <- drake_plan(data = simulate(center = MU, scale = SIGMA))
   m0 <- evaluate_plan(df, wildcard = "NULL", values = 1:2)
-  expect_equal(m0, df)
+  equivalent_plans(m0, df)
   m1 <- evaluate_plan(df, rules = list(nothing = 1:2), expand = FALSE)
-  expect_equal(m1, df)
+  equivalent_plans(m1, df)
 
   x <- expand_plan(df, values = c("rep1", "rep2"), sep = ".")
   y <- weak_tibble(
     target = c("data.rep1", "data.rep2"),
     command = rep("simulate(center = MU, scale = SIGMA)", 2)
   )
-  expect_equal(x, y)
+  equivalent_plans(x, y)
 
   x <- expand_plan(df, values = c("rep1", "rep2"))
   y <- weak_tibble(
     target = c("data_rep1", "data_rep2"),
     command = rep("simulate(center = MU, scale = SIGMA)", 2)
   )
-  expect_equal(x, y)
+  equivalent_plans(x, y)
 
   x1 <- expand_plan(df, values = c("rep1", "rep2"), rename = TRUE)
   x2 <- expand_plan(df, values = c("rep1", "rep2"), rename = FALSE)
@@ -34,8 +34,8 @@ test_with_dir("evaluate and expand", {
     target = c("data", "data"),
     command = rep("simulate(center = MU, scale = SIGMA)", 2)
   )
-  expect_equal(x1, y)
-  expect_equal(x2, y2)
+  equivalent_plans(x1, y)
+  equivalent_plans(x2, y2)
 
   x2 <- evaluate_plan(x, wildcard = "MU", values = 1:2, sep = ".")
   y <- weak_tibble(
@@ -47,7 +47,7 @@ test_with_dir("evaluate and expand", {
       "simulate(center = 2, scale = SIGMA)"
     )
   )
-  expect_equal(x2, y)
+  equivalent_plans(x2, y)
 
   x2 <- evaluate_plan(x, wildcard = "MU", values = 1:2)
   y <- weak_tibble(
@@ -59,7 +59,7 @@ test_with_dir("evaluate and expand", {
       "simulate(center = 2, scale = SIGMA)"
     )
   )
-  expect_equal(x2, y)
+  equivalent_plans(x2, y)
 
   x3 <- evaluate_plan(x2, wildcard = "SIGMA", values = letters[1:2],
                       expand = FALSE)
@@ -72,7 +72,7 @@ test_with_dir("evaluate and expand", {
       "simulate(center = 2, scale = b)"
     )
   )
-  expect_equal(x3, y)
+  equivalent_plans(x3, y)
 
   x3a <- evaluate_plan(x2, wildcard = "SIGMA", values = letters[1:2],
                        expand = FALSE, rename = TRUE)
@@ -86,7 +86,7 @@ test_with_dir("evaluate and expand", {
       "simulate(center = 2, scale = b)"
     )
   )
-  expect_equal(x3a, y)
+  equivalent_plans(x3a, y)
 
   x3b <- evaluate_plan(
     x2,
@@ -106,7 +106,7 @@ test_with_dir("evaluate and expand", {
       "simulate(center = 2, scale = b)"
     )
   )
-  expect_equal(x3b, y)
+  equivalent_plans(x3b, y)
 
   x4 <- evaluate_plan(x, rules = list(MU = 1:2, SIGMA = c(0.1, 1)),
                       expand = FALSE)
@@ -117,12 +117,12 @@ test_with_dir("evaluate and expand", {
       "simulate(center = 2, scale = 1)"
     )
   )
-  expect_equal(x4, y)
+  equivalent_plans(x4, y)
 
   x5 <- evaluate_plan(x, rules = list(MU = 1:2, SIGMA = c(0.1, 1, 10)))
-  expect_equal(12, nrow(x5))
-  expect_equal(12, length(unique(x5$target)))
-  expect_equal(6, length(unique(x5$command)))
+  expect_equal(12L, nrow(x5))
+  expect_equal(12L, length(unique(x5$target)))
+  expect_equal(6L, length(unique(x5$command)))
 
   x6 <- evaluate_plan(df, rules = list(MU = 0:1, SIGMA = 1:2), sep = ".")
   y <- weak_tibble(
@@ -134,7 +134,7 @@ test_with_dir("evaluate and expand", {
       "simulate(center = 1, scale = 2)"
     )
   )
-  expect_equal(x6, y)
+  equivalent_plans(x6, y)
 })
 
 test_with_dir("evaluate_plan() and trace", {
@@ -169,7 +169,7 @@ test_with_dir("evaluate_plan() and trace", {
     MU = as.character(c(NA, 1, 2, NA, NA, NA)),
     MU_from = as.character(c(NA, "data", "mus", NA, NA, NA))
   )
-  expect_equal(x, y)
+  equivalent_plans(x, y)
 
   x <- evaluate_plan(
     plan, trace = TRUE, wildcard = "SIGMA", values = 1:2, expand = FALSE)
@@ -193,7 +193,7 @@ test_with_dir("evaluate_plan() and trace", {
     SIGMA = as.character(c(NA, 1, NA, NA, 2, NA)),
     SIGMA_from = as.character(c(NA, "data", NA, NA, "sigmas", NA))
   )
-  expect_equal(x, y)
+  equivalent_plans(x, y)
 
   x <- evaluate_plan(plan, trace = TRUE, wildcard = "MU", values = 1:2)
   y <- weak_tibble(
@@ -220,7 +220,7 @@ test_with_dir("evaluate_plan() and trace", {
     MU = as.character(c(NA, 1, 2, 1, 2, NA, NA, NA)),
     MU_from = as.character(c(NA, "data", "data", "mus", "mus", NA, NA, NA))
   )
-  expect_equal(x, y)
+  equivalent_plans(x, y)
 
   x <- evaluate_plan(
     plan, trace = TRUE, rules = list(MU = 1:2, SIGMA = 3:4), expand = FALSE)
@@ -246,7 +246,7 @@ test_with_dir("evaluate_plan() and trace", {
     SIGMA = as.character(c(NA, 3, NA, NA, 4, NA)),
     SIGMA_from = as.character(c(NA, "data", NA, NA, "sigmas", NA))
   )
-  expect_equal(x, y)
+  equivalent_plans(x, y)
 
   x <- evaluate_plan(plan, trace = TRUE, rules = list(MU = 1:2, SIGMA = 3:4))
   y <- weak_tibble(
@@ -288,7 +288,7 @@ test_with_dir("evaluate_plan() and trace", {
       )
     )
   )
-  expect_equal(x, y)
+  equivalent_plans(x, y)
 })
 
 test_with_dir("make() with wildcard columns", {
@@ -306,7 +306,7 @@ test_with_dir("make() with wildcard columns", {
   make(plan, cache = cache, session_info = FALSE)
   con <- drake_config(plan, cache = cache, session_info = FALSE)
   expect_true(all(plan$target %in% cached(cache = con$cache)))
-  expect_identical(con$plan, plan)
+  equivalent_plans(con$plan, plan)
 })
 
 test_with_dir("unconventional wildcards", {
@@ -322,7 +322,7 @@ test_with_dir("unconventional wildcards", {
       "simulate(center = 2, scale = 1)"
     )
   )
-  expect_equal(x, y)
+  equivalent_plans(x, y)
 })
 
 test_with_dir("'columns' argument to evaluate_plan()", {
@@ -336,7 +336,7 @@ test_with_dir("'columns' argument to evaluate_plan()", {
     command = c(1, 2, rep("any", 3)),
     cpu = c("any", "any", 1, 2, "any")
   )
-  expect_equal(
+  equivalent_plans(
     evaluate_plan(
       plan, wildcard = "always", values = 1:2, columns = c("command", "cpu")
     ),
@@ -347,7 +347,7 @@ test_with_dir("'columns' argument to evaluate_plan()", {
     command = c("always", rep("any", 3)),
     cpu = c("any", 1, 2, "any")
   )
-  expect_equal(
+  equivalent_plans(
     evaluate_plan(
       plan, wildcard = "always", values = 1:2, columns = "cpu"
     ),
@@ -358,7 +358,7 @@ test_with_dir("'columns' argument to evaluate_plan()", {
     command = c(1, rep("any", 2)),
     cpu = c("any", 2, "any")
   )
-  expect_equal(
+  equivalent_plans(
     evaluate_plan(
       plan, wildcard = "always", values = 1:2, columns = c("command", "cpu"),
       expand = FALSE
@@ -374,7 +374,7 @@ test_with_dir("'columns' argument to evaluate_plan()", {
     command = as.character(c(1, 1, 2, 2, 3, 4, 3, 4, 3, 4)),
     cpu = as.character(c(3, 4, 3, 4, 1, 1, 2, 2, 3, 4))
   )
-  expect_equal(
+  equivalent_plans(
     evaluate_plan(plan, rules = rules, columns = c("command", "cpu")),
     out
   )
