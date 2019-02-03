@@ -211,7 +211,7 @@ select_valid <- function(x) {
   index <- vapply(
     X = x,
     FUN = function(y) {
-      length(y) > 0 && !is.na(y)
+      length(y) > 0 && !safe_is_na(y)
     },
     FUN.VALUE = logical(1)
   )

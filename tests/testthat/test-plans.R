@@ -393,7 +393,7 @@ test_with_dir("bad 'columns' argument to evaluate_plan()", {
     evaluate_plan(plan, wildcard = "any", values = 1:2, columns = "nobodyhere"),
     regexp = "not in the plan"
   )
-  expect_equal(
+  equivalent_plans(
     plan,
     evaluate_plan(plan, wildcard = "any", values = 1:2, columns = NULL)
   )
