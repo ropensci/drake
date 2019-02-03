@@ -71,7 +71,7 @@ test_with_dir("responses to intermediate file", {
     # change what out2.rds is supposed to be
     cmd <- safe_deparse(config$plan$command[[1]])
     cmd <- gsub("1", "2", cmd)
-    config$plan$command[[1]] <- parse(text = cmd)[[1]]  
+    config$plan$command[[1]] <- parse(text = cmd)[[1]]
     testrun(config)
     expect_equal(
       sort(justbuilt(config)),

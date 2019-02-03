@@ -50,7 +50,7 @@ test_with_dir("responses to imported objects and functions", {
   expect_true("final" %in% justbuilt(config))
 
   # command depends on imported object k
-  config$plan$command[[2]] <- quote(f(1+1) + k)
+  config$plan$command[[2]] <- quote(f(1 + 1) + k)
   config$envir$k <- 5
   testrun(config)
   final0 <- readd(final, search = FALSE)

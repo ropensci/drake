@@ -352,7 +352,9 @@ test_with_dir("bind_plans()", {
 test_with_dir("spaces in target names are replaced only when appropriate", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   pl <- drake_plan(a = x__, file_out("x__"))
-  pl <- evaluate_plan(pl, wildcard = "x__", values = c("{b  \n  x; y}", "{a; x}"))
+  pl <- evaluate_plan(
+    pl, wildcard = "x__", values = c("{b  \n  x; y}", "{a; x}")
+  )
   expect_equal(
     sort(pl$target),
     sort(c(

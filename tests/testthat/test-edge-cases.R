@@ -203,7 +203,7 @@ test_with_dir("target conflicts with previous import", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   testrun(config)
-  config$plan$command[[2]] <- quote(g(1+1))
+  config$plan$command[[2]] <- quote(g(1 + 1))
   new_row <- drake_plan(f = 1 + 1)
   config$plan <- bind_plans(config$plan, new_row)
   config$targets <- config$plan$target
