@@ -142,7 +142,7 @@ walk_code <- function(expr, results, locals, allowed_globals) {
     }
   } else if (is.pairlist(expr)) {
     walk_call(expr, results, locals, allowed_globals)
-  } else if (is.language(expr) && (is.call(expr) || is.recursive(expr))) {
+  } else if (is.call(expr) || is.recursive(expr)) {
     name <- safe_deparse(expr[[1]])
     if (name == "local"){
       locals <- ht_clone(locals)
