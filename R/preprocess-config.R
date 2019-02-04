@@ -673,7 +673,7 @@ do_prework <- function(config, verbose_packages) {
     expr <- as.call(c(
       quote(require),
       package = package,
-      lib.loc = config$lib_loc,
+      lib.loc = as.call(c(quote(c), config$lib_loc)),
       quietly = TRUE,
       character.only = TRUE
     ))
