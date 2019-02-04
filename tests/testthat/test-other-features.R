@@ -278,11 +278,11 @@ test_with_dir("assert_pkg", {
   )
 })
 
-test_with_dir("packages are loaded in prework", {
+test_with_dir("packages are loaded and prework is run", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("abind")
+  on.exit(options(test_drake_option_12345 = NULL))
 
-  original <- getOption("test_drake_option_12345")
   options(test_drake_option_12345 = "unset")
   expect_equal(getOption("test_drake_option_12345"), "unset")
   config <- dbug()
@@ -302,7 +302,6 @@ test_with_dir("packages are loaded in prework", {
   expect_true(all(c("x", "y") %in% config$cache$list()))
   expect_equal(readd(x, search = FALSE), "set")
   expect_true(length(readd(y, search = FALSE)) > 0)
-  options(test_drake_option_12345 = original)
   clean(search = FALSE)
 
   # load packages the usual way
@@ -333,7 +332,40 @@ test_with_dir("packages are loaded in prework", {
   expect_true(all(c("x", "y") %in% config$cache$list()))
   expect_equal(readd(x, search = FALSE), "set")
   expect_true(length(readd(y, search = FALSE)) > 0)
-  options(test_drake_option_12345 = original)
+})
+
+test_with_dir("prework can be an expression", {
+  on.exit(options(test_drake_option_12345 = NULL))
+  options(test_drake_option_12345 = "unset")
+  expect_equal(getOption("test_drake_option_12345"), "unset")
+  config <- dbug()
+  config$plan <- drake_plan(x = getOption("test_drake_option_12345"))
+  config$targets <- config$plan$target
+  config$prework <- quote(options(test_drake_option_12345 = "set"))
+  testrun(config)
+  expect_equal(readd(x), "set")
+})
+
+test_with_dir("prework can be an expression", {
+  on.exit(
+    options(test_drake_option_12345 = NULL, test_drake_option_6789 = NULL)
+  )
+  options(test_drake_option_12345 = "unset", test_drake_option_6789 = "unset")
+  expect_equal(getOption("test_drake_option_12345"), "unset")
+  expect_equal(getOption("test_drake_option_6789"), "unset")
+  config <- dbug()
+  config$plan <- drake_plan(
+    x = getOption("test_drake_option_12345"),
+    y = getOption("test_drake_option_6789")
+  )
+  config$targets <- config$plan$target
+  config$prework <- list(
+    quote(options(test_drake_option_12345 = "set")),
+    quote(options(test_drake_option_6789 = "set"))
+  )
+  testrun(config)
+  expect_equal(readd(x), "set")
+  expect_equal(readd(y), "set")
 })
 
 test_with_dir("parallelism can be a scheduler function", {
