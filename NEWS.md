@@ -47,7 +47,7 @@
 - Deprecate many functions, including `read_drake_config()`, `read_drake_graph()`, and `read_drake_plan()`.
 - Require a `config` argument to `drake_build()` and `loadd(deps = TRUE)`.
 - `drake_envir()` now throws an error, not a warning, if called in the incorrect context. Should be called only inside commands in the user's `drake` plan.
-- Replace `*expr*()` `rlang` functions with their `*quo*()` counterparts. We still keep `rlang::expr()` in the few places where we know the expressions need to be evalutated in `config$eval`.
+- Replace `*expr*()` `rlang` functions with their `*quo*()` counterparts. We still keep `rlang::expr()` in the few places where we know the expressions need to be evaluated in `config$eval`.
 - The `prework` argument to `make()` and `drake_config()` can now be an expression (language object) or list of expressions. Character vectors are still acceptable.
 
 
