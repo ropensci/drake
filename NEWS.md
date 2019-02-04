@@ -48,6 +48,7 @@
 - Require a `config` argument to `drake_build()` and `loadd(deps = TRUE)`.
 - `drake_envir()` now throws an error, not a warning, if called in the incorrect context. Should be called only inside commands in the user's `drake` plan.
 - Replace `*expr*()` `rlang` functions with their `*quo*()` counterparts. The one place we still keep `rlang::expr()` is a legitimate use case where we need to unquote the expression using `config$eval` as the environment.
+- The `prework` argument to `make()` and `drake_config()` can now be an expression (language object) or list of expressions. Character vectors are still acceptable.
 
 # Version 6.2.1
 

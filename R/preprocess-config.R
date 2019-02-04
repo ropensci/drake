@@ -102,14 +102,12 @@
 #'   Same as in `library()` or `require()`.
 #'   Applies to the `packages` argument (see above).
 #'
-#' @param prework Character vector of lines of code to run
-#'   before build time. This code can be used to
-#'   load packages, set options, etc., although the packages in the
-#'   `packages` argument are loaded before any prework is done.
-#'   If `parallelism` is `"mclapply"`, the `prework`
-#'   is run once before any targets are built. If `parallelism` is
-#'   `"Makefile"`, the prework is run once on initialization
-#'   and then once again for each target right before that target is built.
+#' @param prework Expression (language object), list of expressions,
+#'   or character vector.
+#'   Code to run right before targets build.
+#'   Called only once if `parallelism` is `"loop"`
+#'   and once per target otherwise.
+#'   This code can be used to set global options, etc.
 #'
 #' @param prepend Deprecated.
 #' @param command Deprecated.
