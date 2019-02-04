@@ -97,12 +97,10 @@
 #'   [attachNamespace()] to load any libraries beforehand.
 #'   Just list your packages in the `packages` argument in the order
 #'   you want them to be loaded.
-#'   If `parallelism` is `"mclapply"`,
-#'   the necessary packages
-#'   are loaded once before any targets are built. If `parallelism` is
-#'   `"Makefile"`, the necessary packages are loaded once on
-#'   initialization and then once again for each target right
-#'   before that target is built.
+#'
+#' @param lib_loc Character vector, optional.
+#'   Same as in `library()` or `require()`.
+#'   Applies to the `packages` argument (see above).
 #'
 #' @param prework Character vector of lines of code to run
 #'   before build time. This code can be used to
@@ -426,6 +424,7 @@ drake_config <- function(
   jobs = 1L,
   jobs_preprocess = 1L,
   packages = rev(.packages()),
+  lib_loc = NULL,
   prework = character(0),
   prepend = NULL,
   command = NULL,
@@ -549,10 +548,6 @@ drake_config <- function(
   } else {
     targets <- sanitize_targets(plan, targets)
   }
-  prework <- add_packages_to_prework(
-    packages = packages,
-    prework = prework
-  )
   if (is.null(cache)) {
     cache <- recover_cache_(
       verbose = verbose,
@@ -605,6 +600,8 @@ drake_config <- function(
     jobs = jobs,
     jobs_preprocess = jobs_preprocess,
     verbose = verbose,
+    packages = packages,
+    lib_loc = lib_loc,
     prework = prework,
     layout = layout,
     ht_encode_path = ht_encode_path,
@@ -644,11 +641,6 @@ drake_config <- function(
   out
 }
 
-add_packages_to_prework <- function(packages, prework) {
-  packages <- unique(c("methods", "drake", packages))
-  c(paste0("require(", packages, ")", sep = ""), prework)
-}
-
 #' @title Do the prework in the `prework`
 #'   argument to [make()].
 #' @export
@@ -679,10 +671,26 @@ add_packages_to_prework <- function(packages, prework) {
 #' })
 #' }
 do_prework <- function(config, verbose_packages) {
-  wrapper <- ifelse(verbose_packages, invisible,
-    base::suppressPackageStartupMessages)
-  for (code in config$prework) {
-    wrapper(eval(parse(text = code), envir = config$eval))
+  for (package in union(c("methods", "drake"), config$packages)) {
+    expr <- as.call(c(
+      quote(require),
+      package = package,
+      lib.loc = config$lib_loc,
+      quietly = TRUE,
+      character.only = TRUE
+    ))
+    if (verbose_packages) {
+      expr <- as.call(c(quote(suppressPackageStartupMessages), expr))
+    }
+    eval(expr, envir = config$eval)
+  }
+  if (is.character(config$prework)) {
+    config$prework <- parse(text = config$prework)
+  }
+  if (is.language(config$prework)) {
+    eval(config$prework, envir = config$eval)
+  } else if (is.list(config$prework)) {
+    lapply(config$prework, eval, envir = config$eval)
   }
   invisible()
 }
