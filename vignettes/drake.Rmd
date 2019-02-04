@@ -53,11 +53,13 @@ There are multiple `drake`-powered example projects [available here](https://git
 
 ## Presentations
 
-- [Kirill's `drake` pitch](https://krlmlr.github.io/drake-pitch)
-- [`drake` + cooking with Kirill](https://krlmlr.github.io/slides/drake-sib-zurich)
-- [`drake` + cooking exercises](https://krlmlr.github.io/slides/drake-sib-zurich/cooking.html)
+- [Kirill's `drake` pitch](https://krlmlr.github.io/drake-pitch) ([source](https://github.com/krlmlr/drake-pitch)).
+- [Amanda Dobbyn](https://github.com/aedobbyn)'s [R-Ladies NYC talk on Feb 12, 2018](https://aedobbyn.github.io/nyc-fires/index.html#1) ([source]( https://github.com/aedobbyn/nyc-fires)).
 - [Christine Stawitz](https://github.com/cstawitz)'s [R-Ladies Seattle talk on June 25, 2018](https://github.com/cstawitz/RLadies_Sea_drake)
-- [Sina Rüeger](https://github.com/sinarueeger)'s [Geneva R Users Group presentation on October 4, 2018](https://sinarueeger.github.io/20181004-geneve-rug) ([example code](https://github.com/sinarueeger/workflow-example)). The talk broadly focused on tidy workflows and diversity in the R community.
+- Part of [Sina Rüeger](https://github.com/sinarueeger)'s [Geneva R Users Group presentation on October 4, 2018](https://sinarueeger.github.io/20181004-geneve-rug) ([example code](https://github.com/sinarueeger/workflow-example)).
+- [`drake` + cooking with Kirill](https://krlmlr.github.io/slides/drake-sib-zurich) ([exercises](https://krlmlr.github.io/slides/drake-sib-zurich/cooking.html), [slide source](https://github.com/krlmlr/drake-sib-zurich)).
+- [R in Pharma 2018](https://wlandau.github.io/drake-talk) ([source](https://github.com/wlandau/drake-talk)).
+- [Harvard DataFest 2019](https://wlandau.github.io/drake-datafest-2019) ([source](https://github.com/wlandau/drake-datafest-2019)).
 
 ## Real example projects
 
