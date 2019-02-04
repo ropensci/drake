@@ -8,15 +8,16 @@ make(plan, targets = NULL, envir = parent.frame(), verbose = 1L,
   hook = NULL, cache = drake::get_cache(verbose = verbose,
   console_log_file = console_log_file), fetch_cache = NULL,
   parallelism = "loop", jobs = 1L, jobs_preprocess = 1L,
-  packages = rev(.packages()), prework = character(0),
-  prepend = NULL, command = NULL, args = NULL,
-  recipe_command = NULL, log_progress = TRUE, skip_targets = FALSE,
-  timeout = NULL, cpu = Inf, elapsed = Inf, retries = 0,
-  force = FALSE, graph = NULL, trigger = drake::trigger(),
-  skip_imports = FALSE, skip_safety_checks = FALSE, config = NULL,
-  lazy_load = "eager", session_info = TRUE, cache_log_file = NULL,
-  seed = NULL, caching = "master", keep_going = FALSE,
-  session = NULL, pruning_strategy = NULL, makefile_path = NULL,
+  packages = rev(.packages()), lib_loc = NULL,
+  prework = character(0), prepend = NULL, command = NULL,
+  args = NULL, recipe_command = NULL, log_progress = TRUE,
+  skip_targets = FALSE, timeout = NULL, cpu = Inf, elapsed = Inf,
+  retries = 0, force = FALSE, graph = NULL,
+  trigger = drake::trigger(), skip_imports = FALSE,
+  skip_safety_checks = FALSE, config = NULL, lazy_load = "eager",
+  session_info = TRUE, cache_log_file = NULL, seed = NULL,
+  caching = "master", keep_going = FALSE, session = NULL,
+  pruning_strategy = NULL, makefile_path = NULL,
   console_log_file = NULL, ensure_workers = TRUE,
   garbage_collection = FALSE, template = list(), sleep = function(i)
   0.01, hasty_build = NULL, memory_strategy = c("speed", "memory",
@@ -108,22 +109,18 @@ in a certain order, especially if \code{parallelism} is
 or \code{\link[=require]{require()}} or \code{\link[=loadNamespace]{loadNamespace()}} or
 \code{\link[=attachNamespace]{attachNamespace()}} to load any libraries beforehand.
 Just list your packages in the \code{packages} argument in the order
-you want them to be loaded.
-If \code{parallelism} is \code{"mclapply"},
-the necessary packages
-are loaded once before any targets are built. If \code{parallelism} is
-\code{"Makefile"}, the necessary packages are loaded once on
-initialization and then once again for each target right
-before that target is built.}
+you want them to be loaded.}
 
-\item{prework}{Character vector of lines of code to run
-before build time. This code can be used to
-load packages, set options, etc., although the packages in the
-\code{packages} argument are loaded before any prework is done.
-If \code{parallelism} is \code{"mclapply"}, the \code{prework}
-is run once before any targets are built. If \code{parallelism} is
-\code{"Makefile"}, the prework is run once on initialization
-and then once again for each target right before that target is built.}
+\item{lib_loc}{Character vector, optional.
+Same as in \code{library()} or \code{require()}.
+Applies to the \code{packages} argument (see above).}
+
+\item{prework}{Expression (language object), list of expressions,
+or character vector.
+Code to run right before targets build.
+Called only once if \code{parallelism} is \code{"loop"}
+and once per target otherwise.
+This code can be used to set global options, etc.}
 
 \item{prepend}{Deprecated.}
 
