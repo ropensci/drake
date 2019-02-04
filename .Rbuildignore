@@ -21,9 +21,6 @@ pkgdown.R
 pkgdown.sh
 paper.bib
 paper.md
-README.md
-README.Rmd
-README.html
 TESTS.md
 TODO.md
 TROUBLESHOOTING.md
