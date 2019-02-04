@@ -543,6 +543,7 @@ test_with_dir("printing large plans", {
 })
 
 test_with_dir("drake_plan_source() with character columns", {
+  skip_if_not_installed("styler")
   skip_if_not_installed("tibble")
   exp <- dbug_plan()
   config <- dbug()
