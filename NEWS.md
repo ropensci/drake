@@ -4,7 +4,7 @@
 
 - This release will be version 7.0.0, a major update. It contains tremendous speed improvements, more and better boosts than in any previous release. Unfortunately, some enhancements that increase cache speed also invalidate targets in old projects. Workflows run with drake <= 6.2.1 will need to run from scratch again.
 - In `drake` plans, the `command` and `trigger` columns are now lists of language objects instead of character vectors. `make()` and friends still work if you have character columns, but the default output of `drake_plan()` has changed to this new format.
-- Remove all parallel backends (`parallelism` argument of `make()`) except "clustermq", "future", and "hasty".
+- Remove all parallel backends (`parallelism` argument of `make()`) except "clustermq" and "future".
 - A large amount of deprecated functionality is removed, including several functions (`built()`, `find_project()`, `imported()`, and `parallel_stages()`) and the single-quoted file API.
 - Set the default value of `lock_envir` to `TRUE` in `make()` and `drake_config()`. So `make()` will automatically quit in error if the act of building a target tries to change upstream dependencies.
 - `make()` no longer returns a value. Users will need to call `drake_config()` separately to get the old return value of `make()`.
@@ -25,7 +25,7 @@
 
 - Introduce a new experimental domain-specific language for generating large plans (#233). Details [here](file:///home/landau/projects/drake-manual/_book/plans.html#create-large-plans-the-easy-way).
 - Implement a `lock_envir` argument to safeguard reproducibility. See [this thread](https://github.com/ropensci/drake/issues/615#issuecomment-447585359) for a demonstration of the problem solved by `make(lock_envir = TRUE)`. More discussion: #619, #620.
-- The new `from_plan()` function allows the users to get custom columns of the plan. Changes to these custom columns do not invalidate targets, however, so be careful.
+- The new `from_plan()` function allows the users to get custom columns of the plan. Changes to these custom columns do not invalidate targets. (Be careful).
 
 ## Enhancements
 
@@ -47,12 +47,14 @@
 - Deprecate many functions, including `read_drake_config()`, `read_drake_graph()`, and `read_drake_plan()`.
 - Require a `config` argument to `drake_build()` and `loadd(deps = TRUE)`.
 - `drake_envir()` now throws an error, not a warning, if called in the incorrect context. Should be called only inside commands in the user's `drake` plan.
-- Replace `*expr*()` `rlang` functions with their `*quo*()` counterparts. The one place we still keep `rlang::expr()` is a legitimate use case where we need to unquote the expression using `config$eval` as the environment.
+- Replace `*expr*()` `rlang` functions with their `*quo*()` counterparts. We still keep `rlang::expr()` in the few places where we know the expressions need to be evalutated in `config$eval`.
 - The `prework` argument to `make()` and `drake_config()` can now be an expression (language object) or list of expressions. Character vectors are still acceptable.
+
 
 # Version 6.2.1
 
 Version 6.2.1 is a hotfix to address the failing automated CRAN checks for 6.2.0. Chiefly, in CRAN's Debian R-devel (2018-12-10) check platform, errors of the form "length > 1 in coercion to logical" occurred when either argument to `&&` or `||` was not of length 1 (e.g. `nzchar(letters) && length(letters)`). In addition to fixing these errors, version 6.2.1 also removes a problematic link from the vignette.
+
 
 # Version 6.2.0
 
