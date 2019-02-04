@@ -21,10 +21,10 @@ pkgdown.R
 pkgdown.sh
 paper.bib
 paper.md
+README.Rmd
 TESTS.md
 TODO.md
 TROUBLESHOOTING.md
-tests/back_compatibility
 vignettes/.*\.html
 vignettes/.*\.md
 vignettes/.*\.log
