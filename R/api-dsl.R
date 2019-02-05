@@ -198,6 +198,11 @@ parse_transform <- function(transform) {
     class = unique(c(deparse(transform[[1]]), "transform", class(transform)))
   )
   assert_good_transform(transform)
+  transform <- structure(
+    transform,
+    tag_in = tag_in(transform),
+    tag_out = tag_out(transform)
+  )
   interpret_transform(transform)
 }
 
@@ -206,22 +211,18 @@ interpret_transform <- function(transform) UseMethod("interpret_transform")
 interpret_transform.map <- interpret_transform.cross <- function(transform) {
   structure(
     transform,
-    deps = dsl_deps(transform),
     new_groupings = new_groupings(transform),
-    tag_in = tag_in(transform),
-    tag_out = tag_out(transform)
+    deps = dsl_deps(transform)
   )
 }
 
 interpret_transform.combine <- function(transform) {
   transform <- structure(
     transform,
-    by = dsl_by(transform),
     combine = dsl_combine(transform),
-    tag_in = tag_in(transform),
-    tag_out = tag_out(transform)
+    by = dsl_by(transform)
   )
-  structure(transform, dsl_deps = dsl_deps(transform))
+  structure(transform, deps = dsl_deps(transform))
 }
 
 assert_good_transform <- function(...) UseMethod("assert_good_transform")
@@ -246,7 +247,7 @@ dsl_deps.map <- dsl_deps.cross <- function(transform) {
 }
 
 dsl_deps.combine <- function(transform) {
-  c(
+  attr(transform, "deps") %|||% c(
     as.character(unnamed(transform[[1]][-1])),
     dsl_by(transform)
   )
