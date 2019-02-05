@@ -69,7 +69,9 @@ map_to_grid <- function(transform, target, row, plan) {
   plan <- plan[, setdiff(colnames(plan), ncl), drop = FALSE]
   grid <- dsl_left_outer_join(grid, plan)
   suffix_cols <- intersect(colnames(grid), group_names(transform))
-  new_targets <- new_targets(target, grid[, suffix_cols, drop = FALSE])
+  new_targets <- new_targets(
+    target, grid[, suffix_cols, drop = FALSE], short_names(transform)
+  )
   out <- data.frame(target = new_targets, stringsAsFactors = FALSE)
   for (col in setdiff(old_cols, c("target", "transform"))) {
     out[[col]] <- grid_subs(row[[col]][[1]], grid)
@@ -111,14 +113,19 @@ grid_sub <- function(index, expr, grid) {
   eval(call("substitute", expr, sub), envir = baseenv())
 }
 
-new_targets <- function(target, grid) {
+new_targets <- function(target, grid, short_names) {
   if (is.null(dim(grid)) || any(dim(grid) < 1L)) {
     return(target)
   }
-  make.names(
-    paste(target, apply(grid, 1, paste, collapse = "_"), sep = "_"),
-    unique = TRUE
-  )
+  suffixes <- apply(grid, 1, paste, collapse = "_")
+  if (short_names) {
+    suffixes <- vapply(suffixes,
+      digest::digest,
+      FUN.VALUE = character(1),
+      algo = "xxhash32"
+    )
+  }
+  make.names(paste(target, "_", suffixes), unique = TRUE)
 }
 
 dsl_transform <- function(...) {
@@ -143,7 +150,9 @@ dsl_transform.combine <- function(transform, target, row, plan) {
     transform = transform,
     old_cols
   )
-  out$target <- new_targets(target, out[, dsl_by(transform), drop = FALSE])
+  out$target <- new_targets(
+    target, out[, dsl_by(transform), drop = FALSE], short_names(transform)
+  )
   out
 }
 
@@ -200,6 +209,7 @@ parse_transform <- function(transform) {
   assert_good_transform(transform)
   transform <- structure(
     transform,
+    short_names = short_names(transform),
     tag_in = tag_in(transform),
     tag_out = tag_out(transform)
   )
@@ -273,7 +283,7 @@ new_groupings.map <- function(transform) {
   attr(transform, "new_groupings") %|||%
     find_new_groupings(
       lang(transform),
-      exclude = c(".tag_in", ".tag_out")
+      exclude = c(".short_names", ".tag_in", ".tag_out")
     )
 }
 
@@ -321,6 +331,14 @@ groupings.combine <- function(...) character(0)
 
 group_names <- function(transform) {
   as.character(names(groupings(transform)))
+}
+
+short_names <- function(...) UseMethod("short_names")
+
+short_names.transform <- function(transform) {
+  attr(transform, "short_names") %||%
+    as.logical(lang(transform)[[".short_names"]]) %||%
+    FALSE
 }
 
 tag_in <- function(...) UseMethod("tag_in")
