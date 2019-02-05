@@ -685,7 +685,7 @@ lang_cols <- function(plan) {
   others <- vapply(
     plan,
     function(x) {
-      length(x) && is.list(x) && is.language(x[[1]])
+      as.logical(length(x)) && is.list(x) && is.language(x[[1]])
     },
     FUN.VALUE = logical(1)
   )
