@@ -85,6 +85,7 @@ test_with_dir("checksum functionality", {
 })
 
 test_with_dir("direct users to GitHub issue #675", {
+  skip_on_cran()
   plan <- drake_plan(
     # If base R is patched, mclapply may not always give this warning.
     x = warning("all scheduled cores encountered errors in user code")
