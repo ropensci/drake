@@ -71,7 +71,8 @@ test_with_dir("forks + lock_envir = informative error msg", {
   )
   future::plan(future::multicore)
   plan <- drake_plan(
-    # install.packages("furrr")
+    # install.packages("furrr") # nolint
+    # Not in "Suggests"
     x = eval(parse(text = "furrr::future_map(1:2, identity)"))
   )
   expect_error(
