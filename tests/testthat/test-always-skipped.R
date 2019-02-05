@@ -59,4 +59,25 @@ test_with_dir("clustermq error messages get back to master", {
   }
 })
 
+test_with_dir("forks + lock_envir = informative error msg", {
+  # Don't run this test for real because (1) we would have to add
+  # furrr to "Suggests" and (2) at some point, base R may be patched
+  # so forking in the parallel package does not give this warning anyway.
+  regexp <- "workaround"
+  plan <- drake_plan(x = parallel::mclapply(1:2, identity, mc.cores = 2))
+  expect_warning(
+    make(plan, envir = globalenv(), lock_envir = TRUE),
+    regexp = regexp
+  )
+  future::plan(future::multicore)
+  plan <- drake_plan(
+    # install.packages("furrr")
+    x = eval(parse(text = "furrr::future_map(1:2, identity)"))
+  )
+  expect_error(
+    make(plan, envir = globalenv(), lock_envir = TRUE),
+    regexp = regexp
+  )
+})
+
 }

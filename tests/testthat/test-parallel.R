@@ -83,3 +83,16 @@ test_with_dir("checksum functionality", {
     mc_wait_outfile_checksum(
       target = "combined", checksum = bad, config = config, timeout = 0.1))
 })
+
+test_with_dir("direct users to GitHub issue #675", {
+  plan <- drake_plan(
+    # If base R is patched, mclapply may not always give this warning.
+    x = warning("all scheduled cores encountered errors in user code")
+  )
+  cache <- storr::storr_environment()
+  regexp <- "workaround"
+  expect_warning(
+    make(plan, envir = globalenv(), session_info = FALSE, cache = cache),
+    regexp = regexp
+  )
+})

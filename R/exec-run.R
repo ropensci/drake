@@ -36,9 +36,10 @@ with_handling <- function(target, meta, config) {
     }
   )
   meta$time_command <- proc.time() - start
-  meta$warnings <- warnings
+  meta$warnings <- prepend_fork_advice(warnings)
   meta$messages <- messages
   if (inherits(value, "error")) {
+    value$message <- prepend_fork_advice(value$message)
     meta$error <- value
     value <- NULL
   }

@@ -85,3 +85,26 @@ locked_envir_msg <- paste(
   "Use make(lock_envir = FALSE) to avoid this error",
   "(not recommended)."
 )
+
+prepend_fork_advice <- function(msg) {
+  if (!length(msg)) {
+    return(msg)
+  }
+  # Loop so we can use fixed = TRUE, which is fast. # nolint
+  fork_error <- sum(vapply(
+    c("parallel", "core"),
+    function(pattern) any(grepl(pattern, msg, fixed = TRUE)),
+    FUN.VALUE = logical(1)
+  ))
+  if (!fork_error) {
+    return(msg)
+  }
+  out <- paste(
+    "\n Having problems with parallel::mclapply(),",
+    "future::future(), or furrr::future_map() in drake?",
+    "Try one of the workarounds at",
+    "https://ropenscilabs.github.io/drake-manual/hpc.html#parallel-computing-within-targets", # nolint
+    "or https://github.com/ropensci/drake/issues/675. \n\n"
+  )
+  c(out, msg)
+}
