@@ -312,9 +312,13 @@ find_old_groupings <- function(...) UseMethod("find_old_groupings")
 find_old_groupings.map <- function(transform, plan) {
   group_names <- as.character(unnamed(lang(transform))[-1])
   group_names <- intersect(group_names, names(plan))
-  lapply(plan[, group_names, drop = FALSE], function(x){
-    na_omit(x)
-  })
+  subplan <- plan[, group_names, drop = FALSE]
+  if (any(dim(subplan) < 1L)) {
+    return(list())
+  }
+  subplan <- subplan[complete_cases(subplan),, drop = FALSE]
+  subplan <- subplan[!duplicated(subplan),, drop = FALSE]
+  as.list(subplan) # nolint
 }
 
 find_old_groupings.cross <- function(transform, plan) {
