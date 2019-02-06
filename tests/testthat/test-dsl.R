@@ -581,9 +581,9 @@ test_with_dir("dsl and custom columns", {
     c(rep(NA_integer_, 14), rep(456L, 4))
   )
   illegals <- list(
-    quote(target(simulate(48), transform = map(target))),
     quote(target(simulate(48), transform = map(command))),
     quote(target(simulate(48), transform = map(transform))),
+    quote(target(simulate(48), transform = map(target))),
     quote(target(simulate(48), transform = map(target = 123))),
     quote(target(simulate(48), transform = map(command = 123))),
     quote(target(simulate(48), transform = map(transform = 123))),
@@ -594,10 +594,14 @@ test_with_dir("dsl and custom columns", {
     quote(target(simulate(48), summ = 123))
   )
   msg <- "cannot also be custom column names in the plan"
-  lapply(illegals, function(illegal) {
+  for (illegal in illegals[1:2]) {
+    e[[2]] <- illegal
+    expect_error(eval(e))
+  }
+  for (illegal in illegals[-1:-2]) {
     e[[2]] <- illegal
     expect_error(eval(e), regexp = msg)
-  })
+  }
 })
 
 test_with_dir("dsl trace", {
