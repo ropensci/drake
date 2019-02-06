@@ -316,8 +316,9 @@ find_old_groupings.map <- function(transform, plan) {
   if (any(dim(subplan) < 1L)) {
     return(list())
   }
-  good_rows <- complete_cases(subplan)
-  as.list(subplan[good_rows,, drop = FALSE]) # nolint
+  subplan <- subplan[complete_cases(subplan),, drop = FALSE]
+  subplan <- subplan[!duplicated(subplan),, drop = FALSE]
+  as.list(subplan) # nolint
 }
 
 find_old_groupings.cross <- function(transform, plan) {
