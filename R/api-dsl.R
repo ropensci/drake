@@ -59,19 +59,18 @@ can_transform <- function(transform, plan) {
 
 map_to_grid <- function(transform, target, row, plan) {
   groupings <- groupings(transform)
-  if (!length(groupings)) {
+  grid <- dsl_grid(transform, groupings)
+  if (any(dim(grid) < 1L)) {
     row[["transform"]][[1]] <- NA
     return(row)
   }
-  grid <- dsl_grid(transform, groupings)
   ncl <- c(names(new_groupings(transform)), old_cols(plan))
   old_cols <- old_cols(plan)
   plan <- plan[, setdiff(colnames(plan), ncl), drop = FALSE]
   grid <- dsl_left_outer_join(grid, plan)
-  suffix_cols <- intersect(colnames(grid), group_names(transform))
-  new_targets <- new_targets(
-    target, grid[, suffix_cols, drop = FALSE], dsl_id(transform)
-  )
+  sub_cols <- intersect(colnames(grid), group_names(transform))
+  sub_grid <- grid[, sub_cols, drop = FALSE]
+  new_targets <- new_targets(target, sub_grid, dsl_id(transform))
   out <- data.frame(target = new_targets, stringsAsFactors = FALSE)
   for (col in setdiff(old_cols, c("target", "transform"))) {
     out[[col]] <- grid_subs(row[[col]][[1]], grid)
@@ -117,12 +116,16 @@ new_targets <- function(target, grid, id) {
   if (is.null(dim(grid)) || any(dim(grid) < 1L)) {
     return(target)
   }
-  if (identical(id, TRUE)) {
-    suffixes <- apply(grid, 1, paste, collapse = "_")
-    out <- paste0(target, "_", suffixes)
-  } else {
-    out <- rep(target, nrow(grid))
+  if (is.character(id)) {
+    cols <- intersect(id, colnames(grid))
+    grid <- grid[, cols, drop = FALSE]
   }
+  if (identical(id, FALSE) || any(dim(grid) < 1L)) {
+    out <- rep(target, nrow(grid))
+    return(make.names(out, unique = TRUE))
+  }
+  suffixes <- apply(grid, 1, paste, collapse = "_")
+  out <- paste0(target, "_", suffixes)
   make.names(out, unique = TRUE)
 }
 
@@ -304,13 +307,25 @@ old_groupings.map <- old_groupings.cross <- function(transform, plan = NULL) {
     find_old_groupings(transform, plan)
 }
 
-find_old_groupings <- function(transform, plan) {
+find_old_groupings <- function(...) UseMethod("find_old_groupings")
+
+find_old_groupings.map <- function(transform, plan) {
+  group_names <- as.character(unnamed(lang(transform))[-1])
+  group_names <- intersect(group_names, names(plan))
+  lapply(plan[, group_names, drop = FALSE], function(x){
+    na_omit(x)
+  })
+}
+
+find_old_groupings.cross <- function(transform, plan) {
   group_names <- as.character(unnamed(lang(transform))[-1])
   group_names <- intersect(group_names, names(plan))
   lapply(plan[, group_names, drop = FALSE], function(x) {
     unique(na_omit(x))
   })
 }
+
+find_old_groupings.combine <- function(transform, plan) NULL
 
 set_old_groupings <- function(transform, plan) {
   attr(transform, "old_groupings") <- find_old_groupings(transform, plan)
@@ -334,9 +349,14 @@ group_names <- function(transform) {
 dsl_id <- function(...) UseMethod("dsl_id")
 
 dsl_id.transform <- function(transform) {
-  attr(transform, "id") %||%
-    as.logical(lang(transform)[[".id"]]) %||%
-    TRUE
+  if (!is.null(attr(transform, "id"))) {
+    return(attr(transform, "id"))
+  }
+  out <- lang(transform)[[".id"]]
+  if (all(is.logical(out))) {
+    return(out)
+  }
+  all.vars(out, functions = FALSE) %||% TRUE
 }
 
 tag_in <- function(...) UseMethod("tag_in")
