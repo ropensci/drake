@@ -316,9 +316,13 @@ find_old_groupings.map <- function(transform, plan) {
   if (any(dim(subplan) < 1L)) {
     return(list())
   }
-  subplan <- subplan[complete_cases(subplan),, drop = FALSE]
-  subplan <- subplan[!duplicated(subplan),, drop = FALSE]
-  as.list(subplan) # nolint
+  out <- select_nonempty(lapply(subplan, na_omit))
+  min_length <- min(vapply(out, length, FUN.VALUE = integer(1)))
+  out <- as.data.frame(
+    lapply(out, head, n = min_length),
+    stringsAsFactors = FALSE
+  )
+  as.list(out[!duplicated(out),, drop = FALSE]) # nolint
 }
 
 find_old_groupings.cross <- function(transform, plan) {
