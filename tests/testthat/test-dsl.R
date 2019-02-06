@@ -1765,6 +1765,29 @@ test_with_dir("(1) .id = syms. (2) map() finds the correct cross() syms", {
   equivalent_plans(out, exp)
 })
 
+test_with_dir("repeated maps do not duplicate targets", {
+  x_ <- rep("a", 2)
+  y_ <- rep("b", 2)
+  out <- drake_plan(
+    A = target(x, transform = map(x = !!x_, .id = FALSE)),
+    B = target(c(A, x), transform = map(A, x, .id = FALSE)),
+    C = target(y, transform = map(y = !!y_, .id = FALSE)),
+    D = target(c(A, B, C, x, y), transform = map(A, B, C, x, y, .id = FALSE))
+  )
+  exp <- drake_plan(
+    A = "a",
+    A.1 = "a",
+    B = c(A, "a"),
+    B.1 = c(A.1, "a"),
+    C = "b",
+    C.1 = "b",
+    D = c(A, B, C, "a", "b"),
+    D.1 = c(A.1, B.1, C.1, "a", "b")
+  )
+  
+  equivalent_plans(out, exp)
+})
+    
 test_with_dir("unequal trace vars are not duplicated in map()", {
   inputs <- lapply(LETTERS[1:4], as.symbol)
   types <- rep(c(1, 2), each = 2)
