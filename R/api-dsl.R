@@ -172,13 +172,13 @@ combine_step <- function(plan, row, transform, old_cols) {
 }
 
 substitute_list <- function(expr, env) {
+  env <- lapply(env, function(lst) {
+    as.call(c(quote(list), lst))
+  })
   out <- eval(
     call("substitute", expr, env),
     envir = baseenv()
   )
-  if (is.symbol(expr)) {
-    out <- as.call(c(quote(list), out))
-  }
   out
 }
 

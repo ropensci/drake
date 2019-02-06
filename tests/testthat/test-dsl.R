@@ -1798,3 +1798,19 @@ test_with_dir("unequal trace vars are not duplicated in map()", {
   )
   equivalent_plans(out, exp)
 })
+
+test_with_dir("commands from combine() produce the correct values", {
+  skip_on_cran()
+  x_ <- letters[1:2]
+  plan <- drake_plan(
+    A = target(x, transform = map(x = !!x_)),
+    B = target(A, transform = combine(A)),
+    C = target(c(A), transform = combine(A)),
+    trace = TRUE
+  )
+  cache <- storr::storr_environment()
+  make(plan, cache = cache, session_info = FALSE)
+  exp <- list("a", "b")
+  expect_equal(unname(readd(B, cache = cache)), exp)
+  expect_equal(unname(readd(C, cache = cache)), exp)
+})
