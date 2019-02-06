@@ -1690,3 +1690,26 @@ test_with_dir("transformations in triggers", {
   )
   equivalent_plans(out, exp)
 })
+
+test_with_dir("id = FALSE", {
+  x_ <- letters[1:2]
+  y_ <- letters[3:4]
+  out <- drake_plan(
+    a = target(c(x, y), transform = cross(x = !!x_, y = !!y_, .id = FALSE)),
+    b = target(a, transform = map(a, .id = FALSE)),
+    c = target(b, transform = combine(b, .by = x, .id = FALSE))
+  )
+  exp <- drake_plan(
+    a = c("a", "c"),
+    a.1 = c("b", "c"),
+    a.2 = c("a", "d"),
+    a.3 = c("b", "d"),
+    b = a,
+    b.1 = a.1,
+    b.2 = a.2,
+    b.3 = a.3,
+    c = list(b, b.2),
+    c.1 = list(b.1, b.3)
+  )
+  equivalent_plans(out, exp)
+})
