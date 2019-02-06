@@ -1760,3 +1760,37 @@ test_with_dir("(1) .id = syms. (2) map() finds the correct cross() syms", {
   # nolint end
   equivalent_plans(out, exp)
 })
+
+test_with_dir("unequal trace vars are not duplicated in map()", {
+  inputs <- lapply(LETTERS[1:4], as.symbol)
+  types <- rep(c(1, 2), each = 2)
+  out <- drake_plan(
+    wide1 = target(
+      ez_parallel(a),
+      transform = map(a = !!inputs, type = !!types) ),
+    prelim = target(
+      preliminary(wide1),
+      transform = combine(wide1, .by = type) ),
+    main = target(
+      expensive_calc(prelim),
+      transform = map(prelim)
+    ),
+    format = target(
+      postformat(prelim, main),
+      transform = map(prelim, main)
+    )
+  )
+  exp <- drake_plan(
+    wide1_A_1 = ez_parallel(A),
+    wide1_B_1 = ez_parallel(B),
+    wide1_C_2 = ez_parallel(C),
+    wide1_D_2 = ez_parallel(D),
+    prelim_1 = preliminary(list(wide1_A_1, wide1_B_1)),
+    prelim_2 = preliminary(list(wide1_C_2, wide1_D_2)),
+    main_prelim_1 = expensive_calc(prelim_1),
+    main_prelim_2 = expensive_calc(prelim_2),
+    format_prelim_1_main_prelim_1 = postformat(prelim_1, main_prelim_1),
+    format_prelim_2_main_prelim_2 = postformat(prelim_2, main_prelim_2)
+  )
+  equivalent_plans(out, exp)
+})
