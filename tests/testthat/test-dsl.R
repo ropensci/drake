@@ -1784,10 +1784,10 @@ test_with_dir("repeated maps do not duplicate targets", {
     D = c(A, B, C, "a", "b"),
     D.1 = c(A.1, B.1, C.1, "a", "b")
   )
-  
+
   equivalent_plans(out, exp)
 })
-    
+
 test_with_dir("unequal trace vars are not duplicated in map()", {
   inputs <- lapply(LETTERS[1:4], as.symbol)
   types <- rep(c(1, 2), each = 2)
