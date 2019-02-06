@@ -11,6 +11,13 @@ test_with_dir("empty transforms", {
   equivalent_plans(out, exp)
 })
 
+test_with_dir("more empty transforms", {
+  x_vals <- NULL
+  out <- drake_plan(a = target(x, transform = map(x = !!x_vals)))
+  exp <- drake_plan(a = x)
+  equivalent_plans(out, exp)
+})
+
 test_with_dir("1 grouping level", {
   out <- drake_plan(
     a = target(x, transform = cross(x = 1)),
@@ -1688,5 +1695,68 @@ test_with_dir("transformations in triggers", {
       )
     )
   )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir(".id = FALSE", {
+  x_ <- letters[1:2]
+  y_ <- letters[3:4]
+  z_ <- letters[11:14]
+  out <- drake_plan(
+    a = target(c(x, y), transform = cross(x = !!x_, y = !!y_, .id = FALSE)),
+    b = target(c(a, z), transform = map(a, z = !!z_, .id = FALSE)),
+    d = target(b, transform = combine(b, .by = x, .id = FALSE))
+  )
+  exp <- drake_plan(
+    a = c("a", "c"),
+    a.1 = c("b", "c"),
+    a.2 = c("a", "d"),
+    a.3 = c("b", "d"),
+    b = c(a, "k"),
+    b.1 = c(a.1, "l"),
+    b.2 = c(a.2, "m"),
+    b.3 = c(a.3, "n"),
+    d = list(b, b.2),
+    d.1 = list(b.1, b.3)
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("(1) .id = syms. (2) map() finds the correct cross() syms", {
+  x_ <- letters[1:2]
+  y_ <- letters[3:4]
+  z_ <- letters[11:12]
+  out <- drake_plan(
+    A = target(
+      c(x, y, z),
+      transform = cross(x = !!x_, y = !!y_, z = !!z_, .id = z)
+    ),
+    B = target(c(A, y, z), transform = map(A, y, z, .id = c(y, z))),
+    C = target(B, transform = combine(B, .by = c(x, y), .id = bad))
+  )
+  # nolint start
+  exp <- drake_plan(
+    A_.k. = c("a", "c", "k"),
+    A_.k..1 = c("b", "c", "k"),
+    A_.k..2 = c("a", "d", "k"),
+    A_.k..3 = c("b", "d", "k"),
+    A_.l. = c("a", "c", "l"),
+    A_.l..1 = c("b", "c", "l"),
+    A_.l..2 = c("a", "d", "l"),
+    A_.l..3 = c("b", "d", "l"),
+    B_.c._.k. = c(A_.k., "c", "k"),
+    B_.c._.k..1 = c(A_.k..1, "c", "k"),
+    B_.d._.k. = c(A_.k..2, "d", "k"),
+    B_.d._.k..1 = c(A_.k..3, "d", "k"),
+    B_.c._.l. = c(A_.l., "c", "l"),
+    B_.c._.l..1 = c(A_.l..1, "c", "l"),
+    B_.d._.l. = c(A_.l..2, "d", "l"),
+    B_.d._.l..1 = c(A_.l..3, "d", "l"),
+    C = list(B_.c._.k., B_.c._.l.),
+    C.1 = list(B_.c._.k..1, B_.c._.l..1),
+    C.2 = list(B_.d._.k., B_.d._.l.),
+    C.3 = list(B_.d._.k..1, B_.d._.l..1)
+  )
+  # nolint end
   equivalent_plans(out, exp)
 })
