@@ -221,7 +221,7 @@ parse_transform <- function(transform, envir) {
   interpret_transform(transform, envir)
 }
 
-interpret_transform <- function(transform, envir) UseMethod("interpret_transform")
+interpret_transform <- function(...) UseMethod("interpret_transform")
 
 interpret_transform.map <- function(transform, envir) {
   structure(
@@ -287,12 +287,24 @@ dsl_combine.combine <- function(transform) {
 new_groupings <- function(...) UseMethod("new_groupings")
 
 new_groupings.map <- function(transform, envir) {
-  attr(transform, "new_groupings") %|||%
-    explicit_new_groupings(
-      lang(transform),
-      envir,
-      exclude = c(".id", ".tag_in", ".tag_out")
-    )
+  attr <- attr(transform, "new_groupings")
+  if (!is.null(attr)) {
+    return(attr)
+  }
+  transform <- lang(transform)
+  explicit <- explicit_new_groupings(
+    transform,
+    exclude = c(".data", ".id", ".tag_in", ".tag_out")
+  )
+  data_arg <- transform[[".data"]]
+  if (is.null(data_arg)) {
+    return(explicit)
+  }
+  data_arg <- eval(data_arg, envir = envir)
+  data_arg <- lapply(data_arg, function(x){
+    vapply(x, safe_deparse, FUN.VALUE = character(1))
+  })
+  c(explicit, data_arg)
 }
 
 new_groupings.cross <- new_groupings.map
