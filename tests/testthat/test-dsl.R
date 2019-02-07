@@ -1837,3 +1837,113 @@ test_with_dir("commands from combine() produce the correct values", {
   expect_equal(unname(readd(B, cache = cache)), exp)
   expect_equal(unname(readd(C, cache = cache)), exp)
 })
+
+test_with_dir("grids", {
+  grid <- data.frame(
+    z = c(5, 6),
+    w = c("7", "8"),
+    v = c("a", "b"),
+    stringsAsFactors = FALSE
+  )
+  grid$v <- rlang::syms(grid$v)
+  out <- drake_plan(
+    a = target(
+      1 + f(x, y, z, w, v),
+      transform = map(x = c(1, 2), y = c(3, 4), .data = !!grid)
+    )
+  )
+  exp <- drake_plan(
+    a_1_3_5_.7._a = 1 + f(1, 3, 5, "7", a),
+    a_2_4_6_.8._b = 1 + f(2, 4, 6, "8", b)
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("empty grids", {
+  grid <- data.frame(
+    z = c(5, 6),
+    w = c("7", "8"),
+    v = c("a", "b"),
+    stringsAsFactors = FALSE
+  )
+  grid$v <- rlang::syms(grid$v)
+  out <- drake_plan(
+    a = target(
+      1 + f(x, y, z, w, v),
+      transform = map(
+        x = c(),
+        y = c(),
+        .data = !!grid[logical(0), , drop = FALSE] # nolint
+      )
+    )
+  )
+  exp <- drake_plan(a = 1 + f(x, y, z, w, v))
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("grid for GitHub issue 697", {
+  grid <- expand.grid(
+    group = c("G1", "G2"),
+    rep = c("R1", "R2", "R3", "R4", "R5", "R6"),
+    stringsAsFactors = FALSE
+  )
+  grid <- grid[!(grid$group == "G2" & grid$rep %in% c("R5", "R6")), ]
+  out <- drake_plan(
+    s_load = target(load_csv(group, rep), transform = map(.data = !!grid))
+  )
+  exp <- drake_plan(
+    s_load_.G1._.R1. = load_csv("G1", "R1"),
+    s_load_.G2._.R1. = load_csv("G2", "R1"),
+    s_load_.G1._.R2. = load_csv("G1", "R2"),
+    s_load_.G2._.R2. = load_csv("G2", "R2"),
+    s_load_.G1._.R3. = load_csv("G1", "R3"),
+    s_load_.G2._.R3. = load_csv("G2", "R3"),
+    s_load_.G1._.R4. = load_csv("G1", "R4"),
+    s_load_.G2._.R4. = load_csv("G2", "R4"),
+    s_load_.G1._.R5. = load_csv("G1", "R5"),
+    s_load_.G1._.R6. = load_csv("G1", "R6")
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("grid for GitHub issue 710", {
+  inputs <- lapply(LETTERS[1:5], as.symbol)
+  types <- rep(c(1, 2), length.out = 5)
+  df <- data.frame(
+    serial_ = paste0("serial_", types),
+    wide_ = paste0("wide_", inputs),
+    stringsAsFactors = FALSE
+  )
+  for (col in colnames(df)) {
+    df[[col]] <- rlang::syms(df[[col]])
+  }
+  out <- drake_plan(
+    wide = target(
+      ez_parallel(a),
+      transform = map(a = !!inputs, type = !!types)
+    ),
+    serial = target(
+      expensive_calc(wide),
+      transform = combine(wide, .by = type)
+    ),
+    dist = target(
+      distribute_results(serial_, wide_),
+      transform = map(.data = !!df)
+    )
+  )
+  exp <- drake_plan(
+    wide_A_1 = ez_parallel(A),
+    wide_B_2 = ez_parallel(B),
+    wide_C_1 = ez_parallel(C),
+    wide_D_2 = ez_parallel(D),
+    wide_E_1 = ez_parallel(E),
+    serial_1 = expensive_calc(list(wide_A_1, wide_C_1, wide_E_1)),
+    serial_2 = expensive_calc(list(wide_B_2, wide_D_2)),
+    dist_serial_1_wide_A = distribute_results(serial_1, wide_A),
+    dist_serial_2_wide_B = distribute_results(serial_2, wide_B),
+    dist_serial_1_wide_C = distribute_results(serial_1, wide_C),
+    dist_serial_2_wide_D = distribute_results(serial_2, wide_D),
+    dist_serial_1_wide_E = distribute_results(serial_1, wide_E)
+  )
+  equivalent_plans(out, exp)
+})

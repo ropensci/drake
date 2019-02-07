@@ -175,11 +175,7 @@ substitute_list <- function(expr, env) {
   env <- lapply(env, function(lst) {
     as.call(c(quote(list), lst))
   })
-  out <- eval(
-    call("substitute", expr, env),
-    envir = baseenv()
-  )
-  out
+  eval(call("substitute", expr, env), envir = baseenv())
 }
 
 lang <- function(...) UseMethod("lang")
@@ -217,9 +213,9 @@ parse_transform <- function(transform) {
   interpret_transform(transform)
 }
 
-interpret_transform <- function(transform) UseMethod("interpret_transform")
+interpret_transform <- function(...) UseMethod("interpret_transform")
 
-interpret_transform.map <- interpret_transform.cross <- function(transform) {
+interpret_transform.map <- function(transform) {
   structure(
     transform,
     new_groupings = new_groupings(transform),
@@ -227,7 +223,9 @@ interpret_transform.map <- interpret_transform.cross <- function(transform) {
   )
 }
 
-interpret_transform.combine <- function(transform) {
+interpret_transform.cross <- interpret_transform.map
+
+interpret_transform.combine <- function(transform, ...) {
   transform <- structure(
     transform,
     combine = dsl_combine(transform),
@@ -278,19 +276,37 @@ dsl_combine.combine <- function(transform) {
     as.character(unnamed(lang(transform))[-1])
 }
 
-new_groupings <- function(transform) UseMethod("new_groupings")
+new_groupings <- function(...) UseMethod("new_groupings")
 
 new_groupings.map <- function(transform) {
+  attr <- attr(transform, "new_groupings")
+  if (!is.null(attr)) {
+    return(attr)
+  }
+  transform <- lang(transform)
+  explicit <- explicit_new_groupings(
+    transform,
+    exclude = c(".data", ".id", ".tag_in", ".tag_out")
+  )
+  data_arg <- transform[[".data"]]
+  if (is.null(data_arg)) {
+    return(explicit)
+  }
+  data_arg <- lapply(data_arg, function(x){
+    vapply(x, safe_deparse, FUN.VALUE = character(1))
+  })
+  c(explicit, data_arg)
+}
+
+new_groupings.cross <- function(transform) {
   attr(transform, "new_groupings") %|||%
-    find_new_groupings(
+    explicit_new_groupings(
       lang(transform),
       exclude = c(".id", ".tag_in", ".tag_out")
     )
 }
 
-new_groupings.cross <- new_groupings.map
-
-find_new_groupings <- function(code, exclude = character(0)) {
+explicit_new_groupings <- function(code, exclude = character(0)) {
   list <- named(as.list(code), exclude)
   lapply(list, function(x) {
     if (is.call(x)) {
