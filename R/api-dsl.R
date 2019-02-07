@@ -298,7 +298,13 @@ new_groupings.map <- function(transform) {
   c(explicit, data_arg)
 }
 
-new_groupings.cross <- new_groupings.map
+new_groupings.cross <- function(transform) {
+  attr(transform, "new_groupings") %|||%
+    find_new_groupings(
+      lang(transform),
+      exclude = c(".id", ".tag_in", ".tag_out")
+    )
+}
 
 explicit_new_groupings <- function(code, exclude = character(0)) {
   list <- named(as.list(code), exclude)
