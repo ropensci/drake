@@ -4,11 +4,7 @@ transform_plan <- function(plan, envir, trace = FALSE) {
   }
   old_cols(plan) <- old_cols <- colnames(plan)
   plan[["transform"]] <- tidyeval_exprs(plan[["transform"]], envir = envir)
-  plan[["transform"]] <- lapply(
-    plan[["transform"]],
-    parse_transform,
-    envir = envir
-  )
+  plan[["transform"]] <- lapply(plan[["transform"]], parse_transform)
   while (any(index <- index_can_transform(plan))) {
     rows <- lapply(which(index), transform_row, plan = plan)
     plan <- sub_in_plan(plan, rows, at = which(index))
@@ -179,11 +175,7 @@ substitute_list <- function(expr, env) {
   env <- lapply(env, function(lst) {
     as.call(c(quote(list), lst))
   })
-  out <- eval(
-    call("substitute", expr, env),
-    envir = baseenv()
-  )
-  out
+  eval(call("substitute", expr, env), envir = baseenv())
 }
 
 lang <- function(...) UseMethod("lang")
@@ -203,7 +195,7 @@ old_cols <- function(plan) {
   plan
 }
 
-parse_transform <- function(transform, envir) {
+parse_transform <- function(transform) {
   if (safe_is_na(transform)) {
     return(NA)
   }
@@ -218,15 +210,15 @@ parse_transform <- function(transform, envir) {
     tag_in = tag_in(transform),
     tag_out = tag_out(transform)
   )
-  interpret_transform(transform, envir)
+  interpret_transform(transform)
 }
 
 interpret_transform <- function(...) UseMethod("interpret_transform")
 
-interpret_transform.map <- function(transform, envir) {
+interpret_transform.map <- function(transform) {
   structure(
     transform,
-    new_groupings = new_groupings(transform, envir),
+    new_groupings = new_groupings(transform),
     deps = dsl_deps(transform)
   )
 }
@@ -286,7 +278,7 @@ dsl_combine.combine <- function(transform) {
 
 new_groupings <- function(...) UseMethod("new_groupings")
 
-new_groupings.map <- function(transform, envir) {
+new_groupings.map <- function(transform) {
   attr <- attr(transform, "new_groupings")
   if (!is.null(attr)) {
     return(attr)
@@ -300,7 +292,6 @@ new_groupings.map <- function(transform, envir) {
   if (is.null(data_arg)) {
     return(explicit)
   }
-  data_arg <- eval(data_arg, envir = envir)
   data_arg <- lapply(data_arg, function(x){
     vapply(x, safe_deparse, FUN.VALUE = character(1))
   })
@@ -309,7 +300,7 @@ new_groupings.map <- function(transform, envir) {
 
 new_groupings.cross <- new_groupings.map
 
-explicit_new_groupings <- function(code, envir, exclude = character(0)) {
+explicit_new_groupings <- function(code, exclude = character(0)) {
   list <- named(as.list(code), exclude)
   lapply(list, function(x) {
     if (is.call(x)) {

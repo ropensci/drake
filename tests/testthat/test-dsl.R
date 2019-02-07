@@ -1849,7 +1849,7 @@ test_with_dir("grids", {
   out <- drake_plan(
     a = target(
       1 + f(x, y, z, w, v),
-      transform = map(x = c(1, 2), y = c(3, 4), .data = grid)
+      transform = map(x = c(1, 2), y = c(3, 4), .data = !!grid)
     )
   )
   exp <- drake_plan(
@@ -1870,7 +1870,11 @@ test_with_dir("empty grids", {
   out <- drake_plan(
     a = target(
       1 + f(x, y, z, w, v),
-      transform = map(x = c(), y = c(), .data = grid[logical(0), , drop = FALSE]) # nolint
+      transform = map(
+        x = c(),
+        y = c(),
+        .data = !!grid[logical(0), , drop = FALSE] # nolint
+      )
     )
   )
   exp <- drake_plan(a = 1 + f(x, y, z, w, v))
@@ -1885,7 +1889,7 @@ test_with_dir("grid for GitHub issue 697", {
   )
   grid <- grid[!(grid$group == "G2" & grid$rep %in% c("R5", "R6")), ]
   out <- drake_plan(
-    s_load = target(load_csv(group, rep), transform = map(.data = grid))
+    s_load = target(load_csv(group, rep), transform = map(.data = !!grid))
   )
   exp <- drake_plan(
     s_load_.G1._.R1. = load_csv("G1", "R1"),
@@ -1913,7 +1917,7 @@ test_with_dir("grid for GitHub issue 710", {
   for (col in colnames(df)) {
     df[[col]] <- rlang::syms(df[[col]])
   }
-  plan <- drake_plan(
+  out <- drake_plan(
     wide = target(
       ez_parallel(a),
       transform = map(a = !!inputs, type = !!types)
@@ -1924,7 +1928,22 @@ test_with_dir("grid for GitHub issue 710", {
     ),
     dist = target(
       distribute_results(serial_, wide_),
-      transform = map(.data = df)
+      transform = map(.data = !!df)
     )
   )
+  exp <- drake_plan(
+    wide_A_1 = ez_parallel(A),
+    wide_B_2 = ez_parallel(B),
+    wide_C_1 = ez_parallel(C),
+    wide_D_2 = ez_parallel(D),
+    wide_E_1 = ez_parallel(E),
+    serial_1 = expensive_calc(list(wide_A_1, wide_C_1, wide_E_1)),
+    serial_2 = expensive_calc(list(wide_B_2, wide_D_2)),
+    dist_serial_1_wide_A = distribute_results(serial_1, wide_A),
+    dist_serial_2_wide_B = distribute_results(serial_2, wide_B),
+    dist_serial_1_wide_C = distribute_results(serial_1, wide_C),
+    dist_serial_2_wide_D = distribute_results(serial_2, wide_D),
+    dist_serial_1_wide_E = distribute_results(serial_1, wide_E)
+  )
+  equivalent_plans(out, exp)
 })
