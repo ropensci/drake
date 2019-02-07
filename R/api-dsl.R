@@ -300,7 +300,7 @@ new_groupings.map <- function(transform) {
 
 new_groupings.cross <- function(transform) {
   attr(transform, "new_groupings") %|||%
-    find_new_groupings(
+    explicit_new_groupings(
       lang(transform),
       exclude = c(".id", ".tag_in", ".tag_out")
     )
