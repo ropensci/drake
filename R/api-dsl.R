@@ -4,7 +4,11 @@ transform_plan <- function(plan, envir, trace = FALSE) {
   }
   old_cols(plan) <- old_cols <- colnames(plan)
   plan[["transform"]] <- tidyeval_exprs(plan[["transform"]], envir = envir)
-  plan[["transform"]] <- lapply(plan[["transform"]], parse_transform)
+  plan[["transform"]] <- lapply(
+    plan[["transform"]],
+    parse_transform,
+    envir = envir
+  )
   while (any(index <- index_can_transform(plan))) {
     rows <- lapply(which(index), transform_row, plan = plan)
     plan <- sub_in_plan(plan, rows, at = which(index))
@@ -199,7 +203,7 @@ old_cols <- function(plan) {
   plan
 }
 
-parse_transform <- function(transform) {
+parse_transform <- function(transform, envir) {
   if (safe_is_na(transform)) {
     return(NA)
   }
@@ -214,20 +218,22 @@ parse_transform <- function(transform) {
     tag_in = tag_in(transform),
     tag_out = tag_out(transform)
   )
-  interpret_transform(transform)
+  interpret_transform(transform, envir)
 }
 
-interpret_transform <- function(transform) UseMethod("interpret_transform")
+interpret_transform <- function(transform, envir) UseMethod("interpret_transform")
 
-interpret_transform.map <- interpret_transform.cross <- function(transform) {
+interpret_transform.map <- function(transform, envir) {
   structure(
     transform,
-    new_groupings = new_groupings(transform),
+    new_groupings = new_groupings(transform, envir),
     deps = dsl_deps(transform)
   )
 }
 
-interpret_transform.combine <- function(transform) {
+interpret_transform.cross <- interpret_transform.map
+
+interpret_transform.combine <- function(transform, ...) {
   transform <- structure(
     transform,
     combine = dsl_combine(transform),
@@ -278,19 +284,20 @@ dsl_combine.combine <- function(transform) {
     as.character(unnamed(lang(transform))[-1])
 }
 
-new_groupings <- function(transform) UseMethod("new_groupings")
+new_groupings <- function(...) UseMethod("new_groupings")
 
-new_groupings.map <- function(transform) {
+new_groupings.map <- function(transform, envir) {
   attr(transform, "new_groupings") %|||%
-    find_new_groupings(
+    explicit_new_groupings(
       lang(transform),
+      envir,
       exclude = c(".id", ".tag_in", ".tag_out")
     )
 }
 
 new_groupings.cross <- new_groupings.map
 
-find_new_groupings <- function(code, exclude = character(0)) {
+explicit_new_groupings <- function(code, envir, exclude = character(0)) {
   list <- named(as.list(code), exclude)
   lapply(list, function(x) {
     if (is.call(x)) {
