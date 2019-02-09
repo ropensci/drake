@@ -315,6 +315,36 @@ weak_as_tibble <- function(..., .force_df = FALSE) {
   }
 }
 
+drake_bind_rows <- function(...) {
+  args <- list(...)
+  df_env <- new.env(parent = emptyenv())
+  df_env$dfs <- list()
+  flatten_df_list(args, df_env = df_env)
+  dfs <- df_env$dfs
+  dfs <- Filter(f = nrow, x = dfs)
+  dfs <- Filter(f = ncol, x = dfs)
+  cols <- lapply(dfs, colnames)
+  cols <- Reduce(f = union, x = cols)
+  dfs <- lapply(dfs, fill_cols, cols = cols)
+  do.call(rbind, dfs)
+}
+
+flatten_df_list <- function(args, df_env){
+  if (!is.null(dim(args))) {
+    index <- length(df_env$dfs) + 1
+    df_env$dfs[[index]] <- weak_as_tibble(args)
+  } else {
+    lapply(args, flatten_df_list, df_env = df_env)
+  }
+}
+
+fill_cols <- function(x, cols) {
+  for (col in setdiff(cols, colnames(x))) {
+    x[[col]] <- rep(NA, nrow(x))
+  }
+  x
+}
+
 safe_deparse <- function(x, collapse = "\n") {
   paste(
     deparse(x, control = c("keepInteger", "keepNA")),
@@ -343,7 +373,7 @@ unnamed <- function(x) {
 sub_in_plan <- function(plan, rows, at) {
   for (index in rev(seq_along(at))) {
     row <- at[index]
-    plan <- bind_plans_raw(
+    plan <- drake_bind_rows(
       plan[seq_len(row - 1), ],
       rows[[index]],
       plan[-seq_len(row), ]

@@ -9,10 +9,16 @@ cache_vers_check <- function(cache) {
       old, ".\nYour cache is not compatible with the current ",
       "version of drake (",
       packageVersion("drake"), ").\nTo run your project with version ",
-      packageVersion("drake"), ", use make(force = TRUE).\n",
-      "But be warned: if you do that, ",
-      "all you targets will run from scratch.\nYou may instead wish to ",
-      "downgrade drake to version ", old, "."
+      packageVersion("drake"), ", either:\n",
+      "    1. Run `clean(destroy = TRUE)` ",
+      "to clear the cache first (recommended) or\n",
+      "    2. Run `make(force = TRUE)` ",
+      "to overwrite targets in the cache on the fly (which saves more ",
+      "of your work but may cause issues like ",
+      " https://github.com/ropensci/drake/issues/725).\n",
+      "Be warned: if you do either, ",
+      "all you targets will run from scratch.\nYou may wish to ",
+      "downgrade drake to version ", old, " instead."
     )
   } else {
     character(0)

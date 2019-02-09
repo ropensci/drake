@@ -247,7 +247,7 @@ evaluate_single_wildcard <- function(
   rownames(matching) <- NULL
   rownames(plan) <- NULL
   matching[[minor]] <- seq_len(nrow(matching))
-  out <- bind_plans_raw(matching, plan[!matches, ])
+  out <- drake_bind_rows(matching, plan[!matches, ])
   out <- out[order(out[[major]], out[[minor]]), ]
   out[[minor]] <- NULL
   out[[major]] <- NULL

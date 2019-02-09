@@ -207,37 +207,7 @@ drake_plan <- function(
 #' your_plan
 #' # make(your_plan) # nolint
 bind_plans <- function(...) {
-  sanitize_plan(bind_plans_raw(...))
-}
-
-bind_plans_raw <- function(...) {
-  args <- list(...)
-  plan_env <- new.env(parent = emptyenv())
-  plan_env$plans <- list()
-  flatten_plan_list(args, plan_env = plan_env)
-  plans <- plan_env$plans
-  plans <- Filter(f = nrow, x = plans)
-  plans <- Filter(f = ncol, x = plans)
-  cols <- lapply(plans, colnames)
-  cols <- Reduce(f = union, x = cols)
-  plans <- lapply(plans, fill_cols, cols = cols)
-  do.call(rbind, plans)
-}
-
-flatten_plan_list <- function(args, plan_env){
-  if (!is.null(dim(args))) {
-    index <- length(plan_env$plans) + 1
-    plan_env$plans[[index]] <- weak_as_tibble(args)
-  } else {
-    lapply(args, flatten_plan_list, plan_env = plan_env)
-  }
-}
-
-fill_cols <- function(x, cols) {
-  for (col in setdiff(cols, colnames(x))) {
-    x[[col]] <- rep(NA, nrow(x))
-  }
-  x
+  sanitize_plan(drake_bind_rows(...))
 }
 
 parse_custom_plan_columns <- function(plan) {

@@ -69,8 +69,8 @@ build_times <- function(
     type = type
   )
   out <- parallel_filter(out, f = is.data.frame, jobs = jobs)
-  out <- do.call(rbind, out)
-  out <- rbind(out, empty_times())
+  out <- do.call(drake_bind_rows, out)
+  out <- drake_bind_rows(out, empty_times())
   out <- round_times(out, digits = digits)
   out <- to_build_duration_df(out)
   out <- out[order(out$target), ]
