@@ -343,27 +343,16 @@ test_with_dir("cache functions work from various working directories", {
   rm(list = list, envir = envir)
   expect_error(h(1))
   expect_true(is.numeric(readd(final, search = FALSE)))
-  expect_error(loadd(yourinput, myinput, search = FALSE, imported_only = TRUE))
-  loadd(h, i, j, c, jobs = 2, search = FALSE, envir = envir)
-  expect_true(is.character(h))
-  rm(h, i, j, c, envir = envir)
-  expect_error(h(1))
 
-  # test loadd imported_only and loadd() everything safe
-  e <- new.env()
-  loadd(imported_only = TRUE, envir = e)
-  should_have_loaded <- setdiff(
-    setdiff(cached(), cached(no_imported_objects = TRUE)),
-    c("readRDS", "saveRDS")
-  )
-  expect_true(all(should_have_loaded %in% display_keys(ls(envir = e))))
+  loadd(yourinput, nextone, jobs = 2, search = FALSE, envir = envir)
+  expect_true(is.numeric(envir[["yourinput"]]))
+  expect_true(is.numeric(envir[["nextone"]]))
+  rm(yourinput, nextone, envir = envir)
+
+  # test loadd loadd() everything
   e <- new.env()
   loadd(search = FALSE, envir = e)
-  should_have_loaded <- setdiff(
-    config$cache$list(),
-    c("readRDS", "saveRDS")
-  )
-  expect_true(all(should_have_loaded %in% ls(envir = e)))
+  expect_equal(sort(config$plan$target), sort(ls(envir = e)))
 
   # search from a different directory
   if (!file.exists("searchfrom")) {
@@ -408,11 +397,11 @@ test_with_dir("cache functions work from various working directories", {
 
   # load and read stuff
   expect_true(is.numeric(readd(a, path = s, search = TRUE)))
-  expect_error(h(1))
-  expect_error(j(1))
-  loadd(h, i, j, c, path = s, search = TRUE, envir = envir)
-  expect_true(is.character(h))
-  rm(h, i, j, c, envir = envir)
+
+  loadd(yourinput, nextone, jobs = 2, search = TRUE, path = s, envir = envir)
+  expect_true(is.numeric(envir[["yourinput"]]))
+  expect_true(is.numeric(envir[["nextone"]]))
+  rm(yourinput, nextone, envir = envir)
 
   # load dependencies
   e <- new.env()
@@ -501,4 +490,21 @@ test_with_dir("run make() from subdir", {
     make(plan)
     make(plan, cache = storr::storr_environment())
   })
+})
+
+test_with_dir("loadd() does not load imports", {
+  f <- function(x) {
+    x + 1
+  }
+  plan <- drake_plan(y = f(1))
+  cache <- storr::storr_environment()
+  make(plan, cache = cache, session_info = FALSE)
+  e <- new.env(parent = emptyenv())
+  rm(f)
+  loadd(envir = e, cache = cache)
+  expect_equal(ls(e), "y")
+  expect_error(
+    loadd(f, envir = e, cache = cache),
+    regexp = "no targets to load"
+  )
 })

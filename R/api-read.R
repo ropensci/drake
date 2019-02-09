@@ -110,8 +110,7 @@ readd <- function(
 #' @param list Character vector naming targets to be loaded from the
 #'   cache. Similar to the `list` argument of [remove()].
 #'
-#' @param imported_only Logical, whether only imported objects
-#'   should be loaded.
+#' @param imported_only Logical, deprecated.
 #'
 #' @param envir Environment to load objects into. Defaults to the
 #'   calling environment (current workspace).
@@ -173,25 +172,19 @@ readd <- function(
 #' # Load the dependencies of the target, coef_regression2_small
 #' loadd(coef_regression2_small, deps = TRUE, config = config)
 #' ls()
-#' # Load all the imported objects/functions.
-#' loadd(imported_only = TRUE)
-#' ls()
 #' # Load all the targets listed in the workflow plan
 #' # of the previous `make()`.
+#' # If you do not supply any target names, `loadd()` loads all the targets.
 #' # Be sure your computer has enough memory.
 #' loadd()
 #' ls()
-#' # With files, you just get the fingerprint.
-#' loadd(list = file_store("report.md"))
-#' ls() # Should include "\"report.md\"".
-#' get(file_store("report.md"))
 #' }
 #' })
 #' }
 loadd <- function(
   ...,
   list = character(0),
-  imported_only = FALSE,
+  imported_only = NULL,
   path = getwd(),
   search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
@@ -235,11 +228,13 @@ loadd <- function(
   if (!length(targets) && !length(list(...))) {
     targets <- cache$list()
   }
-  if (imported_only) {
-    targets <- imported_only(targets = targets, cache = cache, jobs = jobs)
-  }
-  if (!length(targets)) {
-    stop("no targets to load.")
+  if (!is.null(imported_only)) {
+    warning(
+      "The `imported_only` argument of `loadd()` is deprecated. ",
+      "In drake >= 7.0.0, loadd() only loads targets listed in the plan. ",
+      "Imports and files are deliberately ignored.",
+      call. = FALSE
+    )
   }
   if (deps) {
     if (is.null(config)) {
@@ -258,6 +253,10 @@ loadd <- function(
   )
   exists <- unlist(exists)
   targets <- targets[exists]
+  targets <- targets_only(targets, cache = cache, jobs = jobs)
+  if (!length(targets) && !deps) {
+    stop("no targets to load.")
+  }
   if (!replace) {
     targets <- setdiff(targets, names(envir))
   }

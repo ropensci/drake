@@ -176,6 +176,7 @@ test_with_dir("deprecated arguments", {
   expect_warning(drake_build("a", config = con, envir = 123))
   expect_warning(failed(upstream_only = TRUE))
   expect_error(expect_warning(loadd(list = "a", deps = TRUE)))
+  expect_warning(loadd(imported_only = TRUE), regexp = "deprecated")
 })
 
 test_with_dir("example template files (deprecated)", {

@@ -9,12 +9,12 @@ readd(target, character_only = FALSE, path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose =
   verbose), namespace = NULL, verbose = 1L, show_source = FALSE)
 
-loadd(..., list = character(0), imported_only = FALSE,
-  path = getwd(), search = TRUE, cache = drake::get_cache(path =
-  path, search = search, verbose = verbose), namespace = NULL,
-  envir = parent.frame(), jobs = 1, verbose = 1L, deps = FALSE,
-  lazy = "eager", graph = NULL, replace = TRUE,
-  show_source = FALSE, tidyselect = TRUE, config = NULL)
+loadd(..., list = character(0), imported_only = NULL, path = getwd(),
+  search = TRUE, cache = drake::get_cache(path = path, search = search,
+  verbose = verbose), namespace = NULL, envir = parent.frame(),
+  jobs = 1, verbose = 1L, deps = FALSE, lazy = "eager",
+  graph = NULL, replace = TRUE, show_source = FALSE,
+  tidyselect = TRUE, config = NULL)
 }
 \arguments{
 \item{target}{If \code{character_only} is \code{TRUE}, then
@@ -65,8 +65,7 @@ commands such as \code{starts_with()}, \code{ends_with()}, and \code{one_of()}.}
 \item{list}{Character vector naming targets to be loaded from the
 cache. Similar to the \code{list} argument of \code{\link[=remove]{remove()}}.}
 
-\item{imported_only}{Logical, whether only imported objects
-should be loaded.}
+\item{imported_only}{Logical, deprecated.}
 
 \item{envir}{Environment to load objects into. Defaults to the
 calling environment (current workspace).}
@@ -185,18 +184,12 @@ ls()
 # Load the dependencies of the target, coef_regression2_small
 loadd(coef_regression2_small, deps = TRUE, config = config)
 ls()
-# Load all the imported objects/functions.
-loadd(imported_only = TRUE)
-ls()
 # Load all the targets listed in the workflow plan
 # of the previous `make()`.
+# If you do not supply any target names, `loadd()` loads all the targets.
 # Be sure your computer has enough memory.
 loadd()
 ls()
-# With files, you just get the fingerprint.
-loadd(list = file_store("report.md"))
-ls() # Should include "\\"report.md\\"".
-get(file_store("report.md"))
 }
 })
 }

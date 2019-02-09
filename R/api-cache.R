@@ -686,11 +686,12 @@ targets_from_dots <- function(dots, list) {
   standardize_key(targets)
 }
 
-imported_only <- function(targets, cache, jobs) {
+targets_only <- function(targets, cache, jobs) {
   parallel_filter(
     x = targets,
     f = function(target) {
-      is_imported_cache(target = target, cache = cache)
+      !is_imported_cache(target = target, cache = cache) &&
+        !is_encoded_path(target)
     },
     jobs = jobs
   )
