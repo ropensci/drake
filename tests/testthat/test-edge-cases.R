@@ -63,7 +63,8 @@ test_with_dir("skip everything", {
     pl,
     session_info = FALSE,
     skip_targets = TRUE,
-    skip_imports = TRUE
+    skip_imports = TRUE,
+    verbose = 2
   )
   con <- drake_config(
     pl,

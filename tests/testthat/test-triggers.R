@@ -409,11 +409,11 @@ test_with_dir("trigger components react appropriately", {
   plan$command <- commands
   make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = FALSE, caching = caching, session_info = FALSE
+    verbose = 6, caching = caching, session_info = FALSE
   )
   config <- drake_config(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = FALSE, caching = caching, session_info = FALSE,
+    verbose = 6, caching = caching, session_info = FALSE,
     log_progress = TRUE
   )
   expect_equal(sort(justbuilt(config)), sort(config$plan$target))
