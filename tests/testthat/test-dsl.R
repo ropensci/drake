@@ -1968,3 +1968,47 @@ test_with_dir("grid for GitHub issue 710", {
   )
   equivalent_plans(out, exp)
 })
+
+test_with_dir("combine() with symbols instead of calls", {
+  out <- drake_plan(
+    data = target(
+      get_data(param),
+      transform = map(param = c(1, 2))
+    ),
+    results = target(
+      .data %>%
+        data,
+      transform = combine(data = select)
+    )
+  )
+  exp <- drake_plan(
+    data_1 = get_data(1),
+    data_2 = get_data(2),
+    results = .data %>% select(data_1, data_2)
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("combine() with complicated calls", {
+  out <- drake_plan(
+    data = target(
+      get_data(param),
+      transform = map(param = c(1, 2))
+    ),
+    results = target(
+      .data %>%
+        c(data, 2, data),
+      transform = combine(data = min(0, na.rm = FALSE))
+    )
+  )
+  exp <- drake_plan(
+    data_1 = get_data(1),
+    data_2 = get_data(2),
+    results = .data %>% c(
+      min(data_1, data_2, 0, na.rm = FALSE),
+      2,
+      min(data_1, data_2, 0, na.rm = FALSE)
+    )
+  )
+  equivalent_plans(out, exp)
+})
