@@ -10,6 +10,7 @@ transform_plan <- function(plan, envir, trace = FALSE) {
     plan <- sub_in_plan(plan, rows, at = which(index))
     old_cols(plan) <- old_cols
   }
+  assert_transforms_completed(plan)
   if (!trace) {
     keep <- as.character(intersect(colnames(plan), old_cols(plan)))
     plan <- plan[, intersect(colnames(plan), old_cols(plan)), drop = FALSE]
@@ -259,10 +260,12 @@ assert_good_transform.default <- function(transform, target) {
 
 dsl_deps <- function(transform) UseMethod("dsl_deps")
 
-dsl_deps.map <- dsl_deps.cross <- function(transform) {
+dsl_deps.map <- function(transform) {
   attr(transform, "deps") %|||%
     as.character(unnamed(as.list(transform[[1]][-1])))
 }
+  
+dsl_deps.cross <- dsl_deps.map
 
 dsl_deps.combine <- function(transform) {
   attr(transform, "deps") %|||% c(
@@ -474,6 +477,27 @@ check_group_names <- function(groups, protect) {
       call. = FALSE
     )
   }
+}
+
+assert_transforms_completed <- function(plan) {
+  completed <- vapply(
+    plan[["transform"]],
+    safe_is_na,
+    FUN.VALUE = logical(1)
+  )
+  if (all(completed)) {
+    return()
+  }
+  targets <- plan[["target"]][!completed]
+  stop(
+    "The transformations of some targets cannot run, ",
+    "probably because the promised grouping variables are undefined. ",
+    "For example, if you write map(x) or combine(x = fn()), ",
+    "then you need to define x in a different transformation. ",
+    "Problematic targets:\n",
+    multiline_message(targets),
+    call. = FALSE
+  )
 }
 
 dsl_all_special <- c(".id", ".tag_in", ".tag_out")

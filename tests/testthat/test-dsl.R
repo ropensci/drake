@@ -261,21 +261,16 @@ test_with_dir("2 new maps", {
 })
 
 test_with_dir("groups and command symbols are undefined", {
-  out <- drake_plan(
-    small = simulate(48),
-    large = simulate(64),
-    lots = target(nobody(home), transform = cross(a, b)),
-    mots = target(everyone(out), transform = map(c, d)),
-    winners = target(min(nobodyhome), transform = combine(data = list()))
+  expect_error(
+    drake_plan(
+      small = simulate(48),
+      large = simulate(64),
+      lots = target(nobody(home), transform = cross(a, b)),
+      mots = target(everyone(out), transform = map(c, d)),
+      winners = target(min(nobodyhome), transform = combine(data = list()))
+    ),
+    regexp = "transformations of some targets cannot run"
   )
-  exp <- drake_plan(
-    small = simulate(48),
-    large = simulate(64),
-    lots = nobody(home),
-    mots = everyone(out),
-    winners = min(nobodyhome)
-  )
-  equivalent_plans(out, exp)
 })
 
 test_with_dir("command symbols are for combine() but the plan has them", {
