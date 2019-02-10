@@ -266,7 +266,7 @@ test_with_dir("groups and command symbols are undefined", {
     large = simulate(64),
     lots = target(nobody(home), transform = cross(a, b)),
     mots = target(everyone(out), transform = map(c, d)),
-    winners = target(min(nobodyhome), transform = combine(data))
+    winners = target(min(nobodyhome), transform = combine(data = list()))
   )
   exp <- drake_plan(
     small = simulate(48),
@@ -282,7 +282,7 @@ test_with_dir("command symbols are for combine() but the plan has them", {
   out <- drake_plan(
     data = target(x, transform = map(x = c(1, 2))),
     nope = target(x, transform = map(x = c(1, 2))),
-    winners = target(min(data, nope), transform = combine(data))
+    winners = target(min(data, nope), transform = combine(data = list()))
   )
   exp <- drake_plan(
     data_1 = 1,
@@ -320,15 +320,19 @@ test_with_dir("dsl with the mtcars plan", {
     ),
     winners = target(
       min(summ),
-      transform = combine(summ, .by = c(data, sum_fun))
+      transform = combine(summ = list(), .by = c(data, sum_fun))
     ),
     others = target(
       analyze(list(c(summ), c(data))),
-      transform = combine(summ, data, .by = c(data, sum_fun))
+      transform = combine(
+        summ = list(),
+        data = list(),
+        .by = c(data, sum_fun)
+      )
     ),
     final_winner = target(
       min(winners),
-      transform = combine(winners)
+      transform = combine(winners = list())
     )
   )
   exp <- drake_plan(
@@ -415,7 +419,7 @@ test_with_dir("more map", {
     ),
     winners = target(
       min(summ),
-      transform = combine(summ, .by = c(sum_fun, data)),
+      transform = combine(summ = list(), .by = c(sum_fun, data)),
       custom2 = 456L
     )
   )
@@ -463,7 +467,7 @@ test_with_dir("map on mtcars-like workflow", {
     ),
     winners = target(
       min(summ),
-      transform = combine(summ, .by = c(data, sum_fun))
+      transform = combine(summ = list(), .by = c(data, sum_fun))
     )
   )
   exp <- drake_plan(
@@ -566,7 +570,7 @@ test_with_dir("dsl and custom columns", {
       ),
       winners = target(
         min(summ),
-        transform = combine(summ, .by = c(data, sum_fun)),
+        transform = combine(summ = list(), .by = c(data, sum_fun)),
         custom2 = 456L
       )
     )
@@ -618,7 +622,7 @@ test_with_dir("dsl trace", {
     ),
     winners = target(
       min(summ),
-      transform = combine(data, sum_fun)
+      transform = combine(data = list(), sum_fun = list())
     ),
     trace = FALSE
   )
@@ -637,7 +641,7 @@ test_with_dir("dsl trace", {
     ),
     winners = target(
       min(summ),
-      transform = combine(data, sum_fun)
+      transform = combine(data = list(), sum_fun = list())
     ),
     trace = TRUE
   )
@@ -689,7 +693,7 @@ test_with_dir("dsl .tag_out groupings", {
       rgfun(data),
       transform = cross(data = c(small, large), .tag_out = reg)
     ),
-    winners = target(min(reg), transform = combine(reg), a = 1),
+    winners = target(min(reg), transform = combine(reg = list()), a = 1),
     trace = TRUE
   )
   exp <- drake_plan(
@@ -742,7 +746,12 @@ test_with_dir("combine() and tags", {
     y = target(1, transform = map(g = !!i, .tag_in = grp, .tag_out = targs)),
     z = target(
       min(targs),
-      transform = combine(targs, .by = grp, .tag_in = im, .tag_out = here)
+      transform = combine(
+        targs = list(),
+        .by = grp,
+        .tag_in = im,
+        .tag_out = here
+      )
     ),
     trace = TRUE
   )
@@ -823,7 +832,7 @@ test_with_dir("can disable transformations in dsl", {
     ),
     winners = target(
       min(reg),
-      transform = combine(data),
+      transform = combine(data = list()),
       a = 1
     ),
     transform = FALSE
@@ -845,7 +854,7 @@ test_with_dir("dsl with differently typed group levels", {
   plan2 <- drake_plan(
     reducks = target(
       combine_analyses(analysis),
-      transform = combine(analysis)
+      transform = combine(analysis = list())
     ),
     transform = FALSE
   )
@@ -1120,7 +1129,7 @@ test_with_dir("dsl: no NA levels in combine()", {
   out <- drake_plan(
     data_sim = target(
       sim_data(mean = x, sd = y),
-      transform = cross(x = c(1, 2), y = c(3, 4), .tag_out = c(data, local)),
+      transform = cross(x = c(1, 2), y = c(3, 4), .tag_out = c(data, local))
     ),
     data_download = target(
       download_data(url = x),
@@ -1138,7 +1147,7 @@ test_with_dir("dsl: no NA levels in combine()", {
     ),
     summaries = target(
       compare_ds(data_sim),
-      transform = combine(data_sim, .by = local)
+      transform = combine(data_sim = list(), .by = local)
     )
   )
   exp <- drake_plan(
@@ -1169,8 +1178,8 @@ test_with_dir("trace has correct provenance", {
     f = target(c, transform = map(c)),
     g = target(b, transform = map(b)),
     h = target(a, transform = map(a)),
-    i = target(e, transform = combine(e)),
-    j = target(f, transform = combine(f))
+    i = target(e, transform = combine(e = list())),
+    j = target(f, transform = combine(f = list()))
   )
   exp <- drake_plan(
     a_1_3 = target(
@@ -1386,21 +1395,25 @@ test_with_dir("same test (row order) different plan", {
     ),
     winners = target(
       min(summ),
-      transform = combine(summ, .by = c(data, sum_fun))
+      transform = combine(summ = list(), .by = c(data, sum_fun))
     ),
     others = target(
       analyze(list(c(summ), c(data))),
-      transform = combine(summ, data, .by = c(data, sum_fun))
+      transform = combine(
+        summ = list(),
+        data = list(),
+        .by = c(data, sum_fun)
+      )
     ),
     final_winner = target(
       min(winners),
-      transform = combine(winners)
+      transform = combine(winners = list())
     )
   )
   plan2 <- drake_plan(
     final_winner = target(
       min(winners),
-      transform = combine(winners)
+      transform = combine(winners = list())
     ),
     reg = target(
       reg_fun(data),
@@ -1413,11 +1426,15 @@ test_with_dir("same test (row order) different plan", {
     ),
     others = target(
       analyze(list(c(summ), c(data))),
-      transform = combine(summ, data, .by = c(data, sum_fun))
+      transform = combine(
+        summ = list(),
+        data = list(),
+        .by = c(data, sum_fun)
+      )
     ),
     winners = target(
       min(summ),
-      transform = combine(summ, .by = c(data, sum_fun))
+      transform = combine(summ = list(), .by = c(data, sum_fun))
     ),
     large = simulate(64)
   )
@@ -1480,17 +1497,21 @@ test_with_dir("transformations in triggers", {
     winners = target(
       min(summ),
       trigger = trigger(change = min(summ)),
-      transform = combine(summ, .by = c(data, sum_fun))
+      transform = combine(summ = list(), .by = c(data, sum_fun))
     ),
     others = target(
       analyze(list(c(summ), c(data))),
       trigger = trigger(change = analyze(list(c(summ), c(data)))),
-      transform = combine(summ, data, .by = c(data, sum_fun))
+      transform = combine(
+        summ = list(),
+        data = list(),
+        .by = c(data, sum_fun)
+      )
     ),
     final_winner = target(
       min(winners),
       trigger = trigger(change = min(winners)),
-      transform = combine(winners)
+      transform = combine(winners = list())
     )
   )
   exp <- drake_plan(
@@ -1709,7 +1730,7 @@ test_with_dir(".id = FALSE", {
   out <- drake_plan(
     a = target(c(x, y), transform = cross(x = !!x_, y = !!y_, .id = FALSE)),
     b = target(c(a, z), transform = map(a, z = !!z_, .id = FALSE)),
-    d = target(b, transform = combine(b, .by = x, .id = FALSE))
+    d = target(b, transform = combine(b = list(), .by = x, .id = FALSE))
   )
   exp <- drake_plan(
     a = c("a", "c"),
@@ -1736,7 +1757,7 @@ test_with_dir("(1) .id = syms. (2) map() finds the correct cross() syms", {
       transform = cross(x = !!x_, y = !!y_, z = !!z_, .id = z)
     ),
     B = target(c(A, y, z), transform = map(A, y, z, .id = c(y, z))),
-    C = target(B, transform = combine(B, .by = c(x, y), .id = bad))
+    C = target(B, transform = combine(B = list(), .by = c(x, y), .id = bad))
   )
   # nolint start
   exp <- drake_plan(
@@ -1797,7 +1818,7 @@ test_with_dir("unequal trace vars are not duplicated in map()", {
       transform = map(a = !!inputs, type = !!types) ),
     prelim = target(
       preliminary(wide1),
-      transform = combine(wide1, .by = type) ),
+      transform = combine(wide1 = list(), .by = type) ),
     main = target(
       expensive_calc(prelim),
       transform = map(prelim)
@@ -1827,8 +1848,8 @@ test_with_dir("commands from combine() produce the correct values", {
   x_ <- letters[1:2]
   plan <- drake_plan(
     A = target(x, transform = map(x = !!x_)),
-    B = target(A, transform = combine(A)),
-    C = target(c(A), transform = combine(A)),
+    B = target(A, transform = combine(A = list())),
+    C = target(c(A), transform = combine(A = list())),
     trace = TRUE
   )
   cache <- storr::storr_environment()
@@ -1924,7 +1945,7 @@ test_with_dir("grid for GitHub issue 710", {
     ),
     serial = target(
       expensive_calc(wide),
-      transform = combine(wide, .by = type)
+      transform = combine(wide = list(), .by = type)
     ),
     dist = target(
       distribute_results(serial_, wide_),

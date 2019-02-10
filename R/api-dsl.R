@@ -293,8 +293,8 @@ dsl_combine.combine <- function(transform) {
     )
   }
   named <- named(as.list(expr))
-  names <- names(named)
   named <- named[setdiff(names(named), c(".by", dsl_all_special))]
+  names <- names(named)
   named <- lapply(named, function(x) {
     if (is.symbol(x)) {
       x <- as.call(c(x))
