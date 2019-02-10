@@ -289,6 +289,37 @@ test_with_dir("command symbols are for combine() but the plan has them", {
   equivalent_plans(out, exp)
 })
 
+test_with_dir("combine different groups together", {
+  out <- drake_plan(
+    data_group1 = target(
+      sim_data(mean = x, sd = y),
+      transform = map(x = c(1, 2), y = c(3, 4))
+    ),
+    data_group2 = target(
+      pull_data(url),
+      transform = map(url = c("example1.com", "example2.com"))
+    ),
+    larger = target(
+      list(data_group1, data_group2),
+      transform = combine(
+        data_group1 = bind_rows(),
+        data_group2 = bind_rows()
+      )
+    )
+  )
+  exp <- drake_plan(
+    data_group1_1_3 = sim_data(mean = 1, sd = 3),
+    data_group1_2_4 = sim_data(mean = 2, sd = 4),
+    data_group2_.example1.com. = pull_data("example1.com"),
+    data_group2_.example2.com. = pull_data("example2.com"),
+    larger = list(
+      bind_rows(data_group1_1_3, data_group1_2_4),
+      bind_rows(data_group2_.example1.com., data_group2_.example2.com.) # nolint
+    )
+  )
+  equivalent_plans(out, exp)
+})
+
 test_with_dir("dsl with different types", {
   plan <- drake_plan(
     a = target(1 + 1, transform = cross(x = c(1, 2))),

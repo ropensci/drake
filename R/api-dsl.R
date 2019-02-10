@@ -137,29 +137,43 @@ dsl_transform <- function(...) {
 dsl_transform.cross <- dsl_transform.map <- map_to_grid
 
 dsl_transform.combine <- function(transform, target, row, plan) {
-  old_cols <- old_cols(plan)
-  cols_keep <- union(dsl_by(transform), names(dsl_combine(transform)))
-  rows_keep <- complete_cases(plan[, cols_keep, drop = FALSE])
-  if (!length(rows_keep) || !any(rows_keep)) {
+  plan <- valid_splitting_plan(plan, transform)
+  if (!nrow(plan)) {
     row[["transform"]][[1]] <- NA
     return(row)
   }
   out <- map_by(
-    .x = plan[rows_keep,, drop = FALSE], # nolint
+    .x = plan,
     .by = dsl_by(transform),
     .f = combine_step,
     row = row,
     transform = transform,
-    old_cols
+    old_cols = old_cols(plan)
   )
+  if (!nrow(out)) {
+    row[["transform"]][[1]] <- NA
+    return(row)
+  }
   out$target <- new_targets(
     target, out[, dsl_by(transform), drop = FALSE], dsl_id(transform)
   )
   out
 }
 
+valid_splitting_plan <- function(plan, transform) {
+  cols <- dsl_by(transform)
+  if (!length(cols)) {
+    return(plan)
+  }
+  rows_keep <- complete_cases(plan[, dsl_by(transform), drop = FALSE])
+  plan[rows_keep,, drop = FALSE] # nolint
+}
+
 combine_step <- function(plan, row, transform, old_cols) {
   env <- env_combine(plan, transform)
+  if (!length(env)) {
+    return(data.frame())
+  }
   out <- data.frame(command = NA, stringsAsFactors = FALSE)
   for (col in setdiff(old_cols, c("target", "transform"))) {
     out[[col]] <- list(
@@ -177,14 +191,17 @@ env_combine <- function(plan, transform) {
     transform = transform
   )
   names(out) <- names(dsl_combine(transform))
-  out
+  select_nonempty(out)
 }
 
 env_combine_entry <- function(name, transform, plan) {
-  grouping_call <- dsl_combine(transform)[[name]]
   levels <- unname(
     lapply(as.character(na_omit(unique(plan[[name]]))), as.symbol)
   )
+  if (!length(levels)) {
+    return(NULL)
+  }
+  grouping_call <- dsl_combine(transform)[[name]]
   as.call(c(grouping_call[[1]], levels, as.list(grouping_call[-1])))
 }
 
