@@ -320,6 +320,42 @@ test_with_dir("combine different groups together", {
   equivalent_plans(out, exp)
 })
 
+test_with_dir("multiple groups and multiple splits", {
+  out <- drake_plan(
+    data_group1 = target(
+      sim(mean = x, sd = y),
+      transform = cross(x = c(1, 2), y = c(3, 4))
+    ),
+    data_group2 = target(
+      pull(mean = x, sd = y),
+      transform = cross(x = c(1, 2), y = c(3, 4))
+    ),
+    larger = target(
+      list(data_group1, data_group2),
+      transform = combine(
+        data_group1 = bind_rows(),
+        data_group2 = bind_rows(),
+        .by = c(x, y)
+      )
+    )
+  )
+  exp <- drake_plan(
+    data_group1_1_3 = sim(mean = 1, sd = 3),
+    data_group1_2_3 = sim(mean = 2, sd = 3),
+    data_group1_1_4 = sim(mean = 1, sd = 4),
+    data_group1_2_4 = sim(mean = 2, sd = 4),
+    data_group2_1_3 = pull(mean = 1, sd = 3),
+    data_group2_2_3 = pull(mean = 2, sd = 3),
+    data_group2_1_4 = pull(mean = 1, sd = 4),
+    data_group2_2_4 = pull(mean = 2, sd = 4),
+    larger_1_3 = list(bind_rows(data_group1_1_3), bind_rows(data_group2_1_3)),
+    larger_2_3 = list(bind_rows(data_group1_2_3), bind_rows(data_group2_2_3)),
+    larger_1_4 = list(bind_rows(data_group1_1_4), bind_rows(data_group2_1_4)),
+    larger_2_4 = list(bind_rows(data_group1_2_4), bind_rows(data_group2_2_4))
+  )
+  equivalent_plans(out, exp)
+})
+
 test_with_dir("dsl with different types", {
   plan <- drake_plan(
     a = target(1 + 1, transform = cross(x = c(1, 2))),
