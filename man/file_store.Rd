@@ -44,8 +44,6 @@ files and generic R objects.
     config = config,
     character_only = TRUE
   )
-  loadd(list = file_store("report.md"))
-  get(file_store("report.md"))
   }
   })
   }
