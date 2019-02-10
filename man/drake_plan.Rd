@@ -111,7 +111,7 @@ drake_plan(
   ), 
   winners = target(
     min(summ),
-    transform = combine(data, sum_fun)
+    transform = combine(data = list(), sum_fun = list())
   )
 )
 
@@ -132,7 +132,7 @@ drake_plan(
   ), 
   winners = target(
     min(summ),
-    transform = combine(data, sum_fun)
+    transform = combine(data = list(), sum_fun = list())
   ),
   trace = TRUE
 )
