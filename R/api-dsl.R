@@ -286,7 +286,7 @@ new_groupings.map <- function(transform) {
   transform <- lang(transform)
   explicit <- explicit_new_groupings(
     transform,
-    exclude = c(".data", ".id", ".tag_in", ".tag_out")
+    exclude = c(".data", dsl_all_special)
   )
   data_arg <- transform[[".data"]]
   if (is.null(data_arg)) {
@@ -302,7 +302,7 @@ new_groupings.cross <- function(transform) {
   attr(transform, "new_groupings") %|||%
     explicit_new_groupings(
       lang(transform),
-      exclude = c(".id", ".tag_in", ".tag_out")
+      exclude = dsl_all_special
     )
 }
 
@@ -446,3 +446,5 @@ check_group_names <- function(groups, protect) {
     )
   }
 }
+
+dsl_all_special <- c(".id", ".tag_in", ".tag_out")
