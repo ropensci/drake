@@ -13,13 +13,7 @@ new_priority_queue <- function(config, jobs = config$jobs_preprocess) {
       )
     )
   }
-  ndeps <- lightly_parallelize(
-    X = targets,
-    FUN = function(target) {
-      igraph::degree(config$schedule, v = target, mode = "in")
-    },
-    jobs = jobs
-  )
+  ndeps <- igraph::degree(graph = config$schedule, v = targets, mode = "in")
   ndeps <- unlist(ndeps)
   priority <- rep(Inf, length(targets))
   names(priority) <- targets

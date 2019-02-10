@@ -46,3 +46,4 @@ vignettes/.*_files
 ^images\.R$
 ^_pkgdown\.yml$
 ^codemeta\.json$
+^\.httr-oauth$

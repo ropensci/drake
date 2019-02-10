@@ -203,7 +203,6 @@ test_with_dir("subspaces", {
   expect_equal(sort(lst), c("a", "b"))
 })
 
-
 test_with_dir("get_cache() can search", {
   dir.create(file.path("w"))
   dir.create(file.path("w", "x"))

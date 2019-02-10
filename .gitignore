@@ -34,3 +34,4 @@ vignettes/*.html
 vignettes/*.md
 vignettes/*_files
 inst/doc
+.httr-oauth
