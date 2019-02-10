@@ -80,6 +80,6 @@ conclude_session <- function(config) {
     jobs = config$jobs
   )
   remove(list = names(config$eval), envir = config$eval)
-  console_edge_cases(config)
+  console_final_notes(config)
   invisible()
 }

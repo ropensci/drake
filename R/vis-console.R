@@ -123,8 +123,8 @@ console_up_to_date <- function(config) {
   }
 }
 
-console_edge_cases <- function(config) {
-  if (config$verbose < 1L) {
+console_final_notes <- function(config) {
+  if (config$verbose < 2L) {
     return()
   }
   if (config$skip_imports) {
@@ -150,10 +150,7 @@ console_skipped_imports <- function(config) {
 
 console_custom_triggers <- function(config) {
   out <- color(
-    paste(
-      "Used non-default triggers.",
-      "Some targets may not be up to date."
-    ),
+    paste("Used non-default triggers."),
     colors["trigger"]
   )
   drake_message(out, config = config)
