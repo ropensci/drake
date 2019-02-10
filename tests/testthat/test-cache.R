@@ -502,8 +502,8 @@ test_with_dir("loadd() does not load imports", {
   rm(f)
   loadd(envir = e, cache = cache)
   expect_equal(ls(e), "y")
-  expect_error(
-    loadd(f, envir = e, cache = cache),
-    regexp = "no targets to load"
+  expect_message(
+    loadd(f, envir = e, cache = cache, verbose = TRUE),
+    regexp = "No targets to load"
   )
 })

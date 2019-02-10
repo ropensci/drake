@@ -232,7 +232,10 @@ loadd <- function(
     warning(
       "The `imported_only` argument of `loadd()` is deprecated. ",
       "In drake >= 7.0.0, loadd() only loads targets listed in the plan. ",
-      "Imports and files are deliberately ignored.",
+      "Do not give the names of imports or files ",
+      "except to list them as dependencies ",
+      "from within an R Markdown/knitr report. ",
+      "Otherwise, imports and files are deliberately ignored.",
       call. = FALSE
     )
   }
@@ -255,7 +258,10 @@ loadd <- function(
   targets <- targets[exists]
   targets <- targets_only(targets, cache = cache, jobs = jobs)
   if (!length(targets) && !deps) {
-    stop("no targets to load.")
+    if (verbose) {
+      message("No targets to load in loadd().")
+    }
+    stop(return(invisible))
   }
   if (!replace) {
     targets <- setdiff(targets, names(envir))
