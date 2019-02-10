@@ -2012,3 +2012,20 @@ test_with_dir("combine() with complicated calls", {
   )
   equivalent_plans(out, exp)
 })
+
+test_with_dir("each grouping var in combine() needs a grouping fn", {
+  expect_error(
+    drake_plan(
+      data = target(
+        get_data(param),
+        transform = map(param = c(1, 2))
+      ),
+      results = target(
+        .data %>%
+          data,
+        transform = combine(data)
+      )
+    ),
+    regexp = "please supply a grouping function to each grouping variable"
+  )
+})
