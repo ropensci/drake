@@ -6,7 +6,7 @@ transform_plan <- function(plan, envir, trace = FALSE) {
   plan[["transform"]] <- tidyeval_exprs(plan[["transform"]], envir = envir)
   plan[["transform"]] <- lapply(plan[["transform"]], parse_transform)
   graph <- dsl_graph(plan)
-  while(gorder(graph)) {
+  while (gorder(graph)) {
     targets <- leaf_nodes(graph)
     graph <- igraph::delete_vertices(graph, v = targets)
     index <- which(plan$target %in% targets)
@@ -31,9 +31,14 @@ dsl_graph <- function(plan) {
     return(igraph::make_empty_graph())
   }
   graph <- igraph::graph_from_data_frame(edges)
-  keep <- !vapply(plan$target, function(v) {
-    safe_is_na(plan[["transform"]][plan$target == v])
-  }, FUN.VALUE = logical(1), USE.NAMES = TRUE)
+  keep <- !vapply(
+    plan$target,
+    function(v) {
+      safe_is_na(plan[["transform"]][plan$target == v])
+    },
+    FUN.VALUE = logical(1),
+    USE.NAMES = TRUE
+  )
   keep <- names(which(keep, useNames = TRUE))
   graph <- trim_vs_keep_cons(graph, keep = keep)
   graph <- igraph::simplify(graph)
