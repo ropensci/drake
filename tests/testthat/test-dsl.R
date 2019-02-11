@@ -282,14 +282,14 @@ test_with_dir("command symbols are for combine() but the plan has them", {
   out <- drake_plan(
     data = target(x, transform = map(x = c(1, 2))),
     nope = target(x, transform = map(x = c(1, 2))),
-    winners = target(min(data, nope), transform = combine(data = list()))
+    winners = target(min(data, nope), transform = combine(data))
   )
   exp <- drake_plan(
     data_1 = 1,
     data_2 = 2,
     nope_1 = 1,
     nope_2 = 2,
-    winners = min(list(data_1, data_2), nope)
+    winners = min(data_1, data_2, nope)
   )
   equivalent_plans(out, exp)
 })
@@ -305,10 +305,10 @@ test_with_dir("combine different groups together", {
       transform = map(url = c("example1.com", "example2.com"))
     ),
     larger = target(
-      list(data_group1, data_group2),
+      bind_rows(data_group1, data_group2),
       transform = combine(
-        data_group1 = bind_rows(),
-        data_group2 = bind_rows()
+        data_group1,
+        data_group2
       )
     )
   )
@@ -317,9 +317,9 @@ test_with_dir("combine different groups together", {
     data_group1_2_4 = sim_data(mean = 2, sd = 4),
     data_group2_.example1.com. = pull_data("example1.com"),
     data_group2_.example2.com. = pull_data("example2.com"),
-    larger = list(
-      bind_rows(data_group1_1_3, data_group1_2_4),
-      bind_rows(data_group2_.example1.com., data_group2_.example2.com.) # nolint
+    larger = bind_rows(
+      data_group1_1_3, data_group1_2_4,
+      data_group2_.example1.com., data_group2_.example2.com. # nolint
     )
   )
   equivalent_plans(out, exp)
@@ -336,10 +336,10 @@ test_with_dir("multiple groups and multiple splits", {
       transform = cross(x = c(1, 2), y = c(3, 4))
     ),
     larger = target(
-      list(data_group1, data_group2),
+      bind_rows(data_group1, data_group2),
       transform = combine(
-        data_group1 = bind_rows(),
-        data_group2 = bind_rows(),
+        data_group1,
+        data_group2,
         .by = c(x, y)
       )
     )
@@ -353,10 +353,10 @@ test_with_dir("multiple groups and multiple splits", {
     data_group2_2_3 = pull(mean = 2, sd = 3),
     data_group2_1_4 = pull(mean = 1, sd = 4),
     data_group2_2_4 = pull(mean = 2, sd = 4),
-    larger_1_3 = list(bind_rows(data_group1_1_3), bind_rows(data_group2_1_3)),
-    larger_2_3 = list(bind_rows(data_group1_2_3), bind_rows(data_group2_2_3)),
-    larger_1_4 = list(bind_rows(data_group1_1_4), bind_rows(data_group2_1_4)),
-    larger_2_4 = list(bind_rows(data_group1_2_4), bind_rows(data_group2_2_4))
+    larger_1_3 = bind_rows(data_group1_1_3, data_group2_1_3),
+    larger_2_3 = bind_rows(data_group1_2_3, data_group2_2_3),
+    larger_1_4 = bind_rows(data_group1_1_4, data_group2_1_4),
+    larger_2_4 = bind_rows(data_group1_2_4, data_group2_2_4)
   )
   equivalent_plans(out, exp)
 })
@@ -387,19 +387,19 @@ test_with_dir("dsl with a version of the mtcars plan", {
     ),
     winners = target(
       min(summ),
-      transform = combine(summ = list(), .by = c(data, sum_fun))
+      transform = combine(summ, .by = c(data, sum_fun))
     ),
     others = target(
-      analyze(list(c(summ), c(data))),
+      analyze(list(c(summ, data))) + 1,
       transform = combine(
-        summ = list(),
-        data = list(),
+        summ,
+        data,
         .by = c(data, sum_fun)
       )
     ),
     final_winner = target(
       min(winners),
-      transform = combine(winners = list())
+      transform = combine(winners)
     )
   )
   exp <- drake_plan(
@@ -417,56 +417,48 @@ test_with_dir("dsl with a version of the mtcars plan", {
     summ_residuals_reg_reg2_large = residuals(large, reg_reg2_large),
     summ_coef_reg_reg2_small = coef(small, reg_reg2_small),
     summ_residuals_reg_reg2_small = residuals(small, reg_reg2_small),
-    winners_large_coef = min(list(
+    winners_large_coef = min(
       summ_coef_reg_reg1_large,
       summ_coef_reg_reg2_large
-    )),
-    winners_small_coef = min(list(
+    ),
+    winners_small_coef = min(
       summ_coef_reg_reg1_small,
       summ_coef_reg_reg2_small
-    )),
-    winners_large_residuals = min(list(
+    ),
+    winners_large_residuals = min(
       summ_residuals_reg_reg1_large,
       summ_residuals_reg_reg2_large
-    )),
-    winners_small_residuals = min(list(
+    ),
+    winners_small_residuals = min(
       summ_residuals_reg_reg1_small,
       summ_residuals_reg_reg2_small
-    )),
-    others_large_coef = analyze(list(
-      c(list(
-        summ_coef_reg_reg1_large,
-        summ_coef_reg_reg2_large
-      )),
-      c(list(large))
-    )),
-    others_small_coef = analyze(list(
-      c(list(
-        summ_coef_reg_reg1_small,
-        summ_coef_reg_reg2_small
-      )),
-      c(list(small))
-    )),
-    others_large_residuals = analyze(list(
-      c(list(
-        summ_residuals_reg_reg1_large,
-        summ_residuals_reg_reg2_large
-      )),
-      c(list(large))
-    )),
-    others_small_residuals = analyze(list(
-      c(list(
-        summ_residuals_reg_reg1_small,
-        summ_residuals_reg_reg2_small
-      )),
-      c(list(small))
-    )),
-    final_winner = min(list(
+    ),
+    others_large_coef = analyze(list(c(
+      summ_coef_reg_reg1_large,
+      summ_coef_reg_reg2_large,
+      large
+    ))) + 1,
+    others_small_coef = analyze(list(c(
+      summ_coef_reg_reg1_small,
+      summ_coef_reg_reg2_small,
+      small
+    ))) + 1,
+    others_large_residuals = analyze(list(c(
+      summ_residuals_reg_reg1_large,
+      summ_residuals_reg_reg2_large,
+      large
+    ))) + 1,
+    others_small_residuals = analyze(list(c(
+      summ_residuals_reg_reg1_small,
+      summ_residuals_reg_reg2_small,
+      small
+    ))) + 1,
+    final_winner = min(
       winners_large_coef,
       winners_small_coef,
       winners_large_residuals,
       winners_small_residuals
-    ))
+    )
   )
   equivalent_plans(out, exp)
 })
