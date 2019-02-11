@@ -1771,7 +1771,7 @@ test_with_dir(".id = FALSE", {
   out <- drake_plan(
     a = target(c(x, y), transform = cross(x = !!x_, y = !!y_, .id = FALSE)),
     b = target(c(a, z), transform = map(a, z = !!z_, .id = FALSE)),
-    d = target(b, transform = combine(b = list(), .by = x, .id = FALSE))
+    d = target(b, transform = combine(b, .by = x, .id = FALSE))
   )
   exp <- drake_plan(
     a = c("a", "c"),
@@ -1798,7 +1798,7 @@ test_with_dir("(1) .id = syms. (2) map() finds the correct cross() syms", {
       transform = cross(x = !!x_, y = !!y_, z = !!z_, .id = z)
     ),
     B = target(c(A, y, z), transform = map(A, y, z, .id = c(y, z))),
-    C = target(B, transform = combine(B = list(), .by = c(x, y), .id = bad))
+    C = target(B, transform = combine(B, .by = c(x, y), .id = bad))
   )
   # nolint start
   exp <- drake_plan(
@@ -1846,7 +1846,6 @@ test_with_dir("repeated maps do not duplicate targets", {
     D = c(A, B, C, "a", "b"),
     D.1 = c(A.1, B.1, C.1, "a", "b")
   )
-
   equivalent_plans(out, exp)
 })
 
@@ -1859,7 +1858,7 @@ test_with_dir("unequal trace vars are not duplicated in map()", {
       transform = map(a = !!inputs, type = !!types) ),
     prelim = target(
       preliminary(wide1),
-      transform = combine(wide1 = list(), .by = type) ),
+      transform = combine(wide1, .by = type) ),
     main = target(
       expensive_calc(prelim),
       transform = map(prelim)
@@ -1874,8 +1873,8 @@ test_with_dir("unequal trace vars are not duplicated in map()", {
     wide1_B_1 = ez_parallel(B),
     wide1_C_2 = ez_parallel(C),
     wide1_D_2 = ez_parallel(D),
-    prelim_1 = preliminary(list(wide1_A_1, wide1_B_1)),
-    prelim_2 = preliminary(list(wide1_C_2, wide1_D_2)),
+    prelim_1 = preliminary(wide1_A_1, wide1_B_1),
+    prelim_2 = preliminary(wide1_C_2, wide1_D_2),
     main_prelim_1 = expensive_calc(prelim_1),
     main_prelim_2 = expensive_calc(prelim_2),
     format_prelim_1_main_prelim_1 = postformat(prelim_1, main_prelim_1),
@@ -1889,8 +1888,8 @@ test_with_dir("commands from combine() produce the correct values", {
   x_ <- letters[1:2]
   plan <- drake_plan(
     A = target(x, transform = map(x = !!x_)),
-    B = target(A, transform = combine(A = list())),
-    C = target(c(A), transform = combine(A = list())),
+    B = target(A, transform = combine(A)),
+    C = target(list(A), transform = combine(A)),
     trace = TRUE
   )
   cache <- storr::storr_environment()
@@ -1986,7 +1985,7 @@ test_with_dir("grid for GitHub issue 710", {
     ),
     serial = target(
       expensive_calc(wide),
-      transform = combine(wide = list(), .by = type)
+      transform = combine(wide, .by = type)
     ),
     dist = target(
       distribute_results(serial_, wide_),
@@ -1999,8 +1998,8 @@ test_with_dir("grid for GitHub issue 710", {
     wide_C_1 = ez_parallel(C),
     wide_D_2 = ez_parallel(D),
     wide_E_1 = ez_parallel(E),
-    serial_1 = expensive_calc(list(wide_A_1, wide_C_1, wide_E_1)),
-    serial_2 = expensive_calc(list(wide_B_2, wide_D_2)),
+    serial_1 = expensive_calc(wide_A_1, wide_C_1, wide_E_1),
+    serial_2 = expensive_calc(wide_B_2, wide_D_2),
     dist_serial_1_wide_A = distribute_results(serial_1, wide_A),
     dist_serial_2_wide_B = distribute_results(serial_2, wide_B),
     dist_serial_1_wide_C = distribute_results(serial_1, wide_C),
@@ -2018,8 +2017,8 @@ test_with_dir("combine() with symbols instead of calls", {
     ),
     results = target(
       .data %>%
-        data,
-      transform = combine(data = select)
+        select(data),
+      transform = combine(data)
     )
   )
   exp <- drake_plan(
@@ -2038,37 +2037,16 @@ test_with_dir("combine() with complicated calls", {
     ),
     results = target(
       .data %>%
-        c(data, 2, data),
-      transform = combine(data = min(0, na.rm = FALSE))
+        c(min(0, data, na.rm = FALSE), 2),
+      transform = combine(data)
     )
   )
   exp <- drake_plan(
     data_1 = get_data(1),
     data_2 = get_data(2),
-    results = .data %>% c(
-      min(data_1, data_2, 0, na.rm = FALSE),
-      2,
-      min(data_1, data_2, 0, na.rm = FALSE)
-    )
+    results = .data %>% c(min(0, data_1, data_2, na.rm = FALSE), 2)
   )
   equivalent_plans(out, exp)
-})
-
-test_with_dir("each grouping var in combine() needs a grouping fn", {
-  expect_error(
-    drake_plan(
-      data = target(
-        get_data(param),
-        transform = map(param = c(1, 2))
-      ),
-      results = target(
-        .data %>%
-          data,
-        transform = combine(data)
-      )
-    ),
-    regexp = "please supply a grouping function to each grouping variable"
-  )
 })
 
 test_with_dir("invalid splitting var", {
