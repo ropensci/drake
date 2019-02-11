@@ -34,9 +34,9 @@ dsl_graph <- function(plan) {
   keep <- !vapply(
     plan[["transform"]],
     safe_is_na,
-    FUN.VALUE = logical(1),
-    USE.NAMES = TRUE
+    FUN.VALUE = logical(1)
   )
+  names(keep) <- plan$target
   keep <- names(which(keep, useNames = TRUE))
   edges <- trim_vs_protect_cons(edges, keep)
   graph <- igraph::graph_from_data_frame(edges)
