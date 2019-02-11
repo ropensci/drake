@@ -107,7 +107,11 @@ map_to_grid <- function(transform, target, row, plan) {
   new_targets <- new_targets(target, sub_grid, dsl_id(transform))
   out <- data.frame(target = new_targets, stringsAsFactors = FALSE)
   for (col in setdiff(old_cols, c("target", "transform"))) {
-    out[[col]] <- unlist(grid_subs(row[[col]][[1]], grid))
+    if (is.language(row[[col]][[1]])) {
+      out[[col]] <- grid_subs(row[[col]][[1]], grid)
+    } else {
+      out[[col]] <- row[[col]][[1]]
+    }
   }
   cbind(out, grid)
 }
