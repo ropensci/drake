@@ -889,13 +889,11 @@ test_with_dir("can disable transformations in dsl", {
     large = simulate(64),
     reg1 = target(
       reg_fun(data),
-      transform = cross(data = c(small, large)),
-      group = reg
+      transform = cross(data = c(small, large), .tag_out = reg)
     ),
     reg2 = target(
       reg_fun(data),
-      transform = cross(data = c(small, large)),
-      group = reg
+      transform = cross(data = c(small, large), .tag_out = reg)
     ),
     winners = target(
       min(reg),
