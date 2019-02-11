@@ -373,7 +373,7 @@ test_with_dir("dsl with different types", {
   expect_equal(plan$command, rep("1 + 1", 2))
 })
 
-test_with_dir("dsl with the mtcars plan", {
+test_with_dir("dsl with a version of the mtcars plan", {
   out <- drake_plan(
     small = simulate(48),
     large = simulate(64),
@@ -722,7 +722,7 @@ test_with_dir("dsl trace", {
   )
 })
 
-test_with_dir("running a dsl-generated mtcars plan", {
+test_with_dir("running a dsl-generated mtcars-like plan", {
   skip_on_cran()
   skip_if_not_installed("knitr")
   load_mtcars_example()
