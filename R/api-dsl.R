@@ -107,7 +107,7 @@ map_to_grid <- function(transform, target, row, plan) {
   new_targets <- new_targets(target, sub_grid, dsl_id(transform))
   out <- data.frame(target = new_targets, stringsAsFactors = FALSE)
   for (col in setdiff(old_cols, c("target", "transform"))) {
-    out[[col]] <- grid_subs(row[[col]][[1]], grid)
+    out[[col]] <- unlist(grid_subs(row[[col]][[1]], grid))
   }
   cbind(out, grid)
 }
@@ -209,9 +209,11 @@ combine_step <- function(plan, row, transform, old_cols) {
   }
   out <- data.frame(command = NA, stringsAsFactors = FALSE)
   for (col in setdiff(old_cols, c("target", "transform"))) {
-    out[[col]] <- list(
-      splice_args(row[[col]][[1]], args)
-    )
+    if (is.language(row[[col]][[1]])) {
+      out[[col]] <- list(splice_args(row[[col]][[1]], args))
+    } else {
+      out[[col]] <- row[[col]]
+    }
   }
   out
 }

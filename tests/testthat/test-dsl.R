@@ -478,7 +478,7 @@ test_with_dir("more map", {
     ),
     winners = target(
       min(summ),
-      transform = combine(summ = list(), .by = c(sum_fun, data)),
+      transform = combine(summ, .by = c(sum_fun, data)),
       custom2 = 456L
     )
   )
@@ -497,12 +497,12 @@ test_with_dir("more map", {
     ),
     winners_residuals_large = target(
       command = min(
-        list(summ_residuals_reg_reg2_large)),
+        summ_residuals_reg_reg2_large),
       custom2 = 456L
     ),
     winners_coef_small = target(
       command = min(
-        list(summ_coef_reg_reg1_small)
+        summ_coef_reg_reg1_small
       ),
       custom2 = 456L
     )
