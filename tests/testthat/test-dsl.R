@@ -2096,3 +2096,19 @@ test_with_dir("each grouping var in combine() needs a grouping fn", {
     regexp = "please supply a grouping function to each grouping variable"
   )
 })
+
+test_with_dir("invalid splitting var", {
+  out <- drake_plan(
+    data = target(x, transform = map(x = c(1, 2)), nothing = NA),
+    results = target(
+      data,
+      transform = combine(data = list(), .by = nothing)
+    )
+  )
+  out <- out[, c("target", "command")]
+  exp <- drake_plan(
+    data_1 = 1,
+    data_2 = 2,
+    results = data
+  )
+})
