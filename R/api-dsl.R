@@ -32,10 +32,8 @@ dsl_graph <- function(plan) {
     return(igraph::make_empty_graph()) # nocov
   }
   keep <- !vapply(
-    plan$target,
-    function(v) {
-      safe_is_na(plan[["transform"]][plan$target == v])
-    },
+    plan[["transform"]],
+    safe_is_na,
     FUN.VALUE = logical(1),
     USE.NAMES = TRUE
   )
