@@ -170,3 +170,16 @@ test_with_dir("complete_cases()", {
   x <- data.frame(a = 1:6, b = c(1:3, rep(NA_integer_, 3)))
   expect_equal(complete_cases(x), rep(c(TRUE, FALSE), each = 3))
 })
+
+test_with_dir("splice_args()", {
+  out <- splice_args(
+    quote(1 + g(f(h(y), z), z)), 
+    list(y = list(1, 2), z = list(4, quote(x)))
+  )
+  expect_equal(deparse(out), "1 + g(f(h(1, 2), 4, x), 4, x)")
+  out <- splice_args(
+    quote(f(x, 5)),
+    list(x = list(a = 1, b = quote(sym), c = "char"))
+  )
+  expect_equal(deparse(out), "f(a = 1, b = sym, c = \"char\", 5)")
+})

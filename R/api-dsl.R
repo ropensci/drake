@@ -107,7 +107,11 @@ map_to_grid <- function(transform, target, row, plan) {
   new_targets <- new_targets(target, sub_grid, dsl_id(transform))
   out <- data.frame(target = new_targets, stringsAsFactors = FALSE)
   for (col in setdiff(old_cols, c("target", "transform"))) {
-    out[[col]] <- grid_subs(row[[col]][[1]], grid)
+    if (is.language(row[[col]][[1]])) {
+      out[[col]] <- grid_subs(row[[col]][[1]], grid)
+    } else {
+      out[[col]] <- row[[col]][[1]]
+    }
   }
   cbind(out, grid)
 }
@@ -203,39 +207,34 @@ valid_splitting_plan <- function(plan, transform) {
 }
 
 combine_step <- function(plan, row, transform, old_cols) {
-  env <- env_combine(plan, transform)
-  if (!length(env)) {
+  args <- args_combine(plan, transform)
+  if (!length(args)) {
     return(data.frame())
   }
   out <- data.frame(command = NA, stringsAsFactors = FALSE)
   for (col in setdiff(old_cols, c("target", "transform"))) {
-    out[[col]] <- list(
-      eval(call("substitute", row[[col]][[1]], env), envir = baseenv())
-    )
+    if (is.language(row[[col]][[1]])) {
+      out[[col]] <- list(splice_args(row[[col]][[1]], args))
+    } else {
+      out[[col]] <- row[[col]]
+    }
   }
   out
 }
 
-env_combine <- function(plan, transform) {
+args_combine <- function(plan, transform) {
   out <- lapply(
-    names(dsl_combine(transform)),
-    env_combine_entry,
+    dsl_combine(transform),
+    args_combine_entry,
     plan = plan,
     transform = transform
   )
-  names(out) <- names(dsl_combine(transform))
+  names(out) <- dsl_combine(transform)
   select_nonempty(out)
 }
 
-env_combine_entry <- function(name, transform, plan) {
-  levels <- unname(
-    lapply(as.character(na_omit(unique(plan[[name]]))), as.symbol)
-  )
-  if (!length(levels)) {
-    return(NULL)
-  }
-  grouping_call <- dsl_combine(transform)[[name]]
-  as.call(c(grouping_call[[1]], levels, as.list(grouping_call[-1])))
+args_combine_entry <- function(name, transform, plan) {
+  lapply(as.character(na_omit(unique(plan[[name]]))), as.symbol)
 }
 
 lang <- function(...) UseMethod("lang")
@@ -324,7 +323,7 @@ dsl_deps.cross <- dsl_deps.map
 
 dsl_deps.combine <- function(transform) {
   attr(transform, "deps") %|||% c(
-    names(dsl_combine(transform)),
+    dsl_combine(transform),
     dsl_by(transform)
   )
 }
@@ -358,28 +357,8 @@ dsl_by.combine <- function(transform) {
 dsl_combine <- function(...) UseMethod("dsl_combine")
 
 dsl_combine.combine <- function(transform) {
-  if (!is.null(attr(transform, "combine"))) {
-    return(attr(transform, "combine"))
-  }
-  expr <- lang(transform)
-  if (length(as.character(unnamed(expr)[-1]))) {
-    stop(
-      "please supply a grouping function to each grouping variable in ",
-      "combine(), e.g. combine(data = list()) instead of combine(data).",
-      call. = FALSE
-    )
-  }
-  named <- named(as.list(expr))
-  named <- named[setdiff(names(named), c(".by", dsl_all_special))]
-  names <- names(named)
-  named <- lapply(named, function(x) {
-    if (is.symbol(x)) {
-      x <- as.call(c(x))
-    }
-    x
-  })
-  names(named) <- names
-  named
+  attr(transform, "combine") %|||%
+    as.character(unnamed(lang(transform))[-1])
 }
 
 new_groupings <- function(...) UseMethod("new_groupings")

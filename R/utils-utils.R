@@ -390,3 +390,35 @@ tidyeval_expr <- function(expr, envir) {
   call <- as.call(c(quote(rlang::expr), expr))
   eval(call, envir = envir)
 }
+
+# From https://stackoverflow.com/a/54623901/3704549
+splice_inner <- function(x, replacements) {
+  if (is.call(x)) {
+    as.call(
+      do.call(
+        "c",
+        lapply(as.list(x), splice_inner, replacements),
+        quote = TRUE
+      )
+    )
+  } else if (is.name(x)) {
+    nm <- deparse(x)
+    if (nm %in% names(replacements)) {
+      return(replacements[[nm]])
+    } else {
+      list(x)
+    }
+  } else {
+    list(x)
+  }
+}
+
+splice_args <- function(x, replacements) {
+  out <- splice_inner(x, replacements)
+  # Avoid edge cases like #715
+  out <- parse(text = safe_deparse(out)) # safe_deparse() is internal to drake.
+  if (length(out)) {
+    out <- out[[1]]
+  }
+  out
+}
