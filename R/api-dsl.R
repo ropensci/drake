@@ -28,7 +28,8 @@ dsl_graph <- function(plan) {
   })
   edges <- do.call(rbind, edges)
   if (!length(edges) || !nrow(edges)) {
-    return(igraph::make_empty_graph())
+    # Not run but better to keep:
+    return(igraph::make_empty_graph()) # nocov
   }
   keep <- !vapply(
     plan$target,
