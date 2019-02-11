@@ -391,6 +391,7 @@ tidyeval_expr <- function(expr, envir) {
   eval(call, envir = envir)
 }
 
+# From https://stackoverflow.com/a/54623901/3704549
 splice_inner <- function(x, replacements) {
   if (is.call(x)) {
     as.call(
