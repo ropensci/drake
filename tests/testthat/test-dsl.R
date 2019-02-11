@@ -2111,4 +2111,5 @@ test_with_dir("invalid splitting var", {
     data_2 = 2,
     results = data
   )
+  equivalent_plans(out, exp)
 })

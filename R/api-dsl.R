@@ -30,7 +30,6 @@ dsl_graph <- function(plan) {
   if (!length(edges) || !nrow(edges)) {
     return(igraph::make_empty_graph())
   }
-  graph <- igraph::graph_from_data_frame(edges)
   keep <- !vapply(
     plan$target,
     function(v) {
@@ -40,7 +39,8 @@ dsl_graph <- function(plan) {
     USE.NAMES = TRUE
   )
   keep <- names(which(keep, useNames = TRUE))
-  graph <- trim_vs_keep_cons(graph, keep = keep)
+  edges <- trim_vs_protect_cons(edges, keep)
+  graph <- igraph::graph_from_data_frame(edges)
   graph <- igraph::simplify(graph)
   stopifnot(igraph::is_dag(graph))
   graph
@@ -52,7 +52,9 @@ dsl_target_edges <- function(transform, target) {
   }
   from <- dsl_deps(transform)
   to <- dsl_revdeps(transform)
-  edges <- NULL
+  edges <- data.frame(
+    from = target, to = target, stringsAsFactors = FALSE
+  )
   if (length(from)) {
     edges <- rbind(edges, data.frame(
       from = from, to = target, stringsAsFactors = FALSE

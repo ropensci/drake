@@ -64,33 +64,21 @@ subset_graph <- function(graph, subset) {
   igraph::induced_subgraph(graph = graph, vids = subset)
 }
 
-trim_vs_keep_cons <- function(graph, keep) {
-  graph <- igraph::set_vertex_attr(
-    graph,
-    name = "delete",
-    value = TRUE
-  )
-  graph <- igraph::set_vertex_attr(
-    graph,
-    name = "delete",
-    index = intersect(igraph::V(graph)$name, keep),
-    value = FALSE
-  )
-  delete <- igraph::V(graph)$name[igraph::V(graph)$delete]
+trim_vs_protect_cons <- function(edges, keep) {
+  delete <- unique(setdiff(c(edges$from, edges$to), keep))
   for (v in delete) {
-    graph <- delete_v_keep_con(graph, v)
+    edges <- delete_v_protect_con(edges, v)
   }
-  graph
+  edges
 }
 
-delete_v_keep_con <- function(graph, v) {
-  from <- drake_adjacent_vertices(graph, v, "in")
-  to <- drake_adjacent_vertices(graph, v, "out")
-  graph <- igraph::delete_vertices(graph, v = v)
+delete_v_protect_con <- function(edges, v) {
+  from <- edges$from[edges$to == v]
+  to <- edges$to[edges$from == v]
+  edges <- edges[edges$from != v & edges$to != v, ]
   if (!length(from) || !length(to)) {
-    return(graph)
+    return(edges)
   }
   nbhd_edges <- expand.grid(from = from, to = to, stringsAsFactors = FALSE)
-  nbhd_graph <- igraph::graph_from_data_frame(nbhd_edges)
-  igraph::union(graph, nbhd_graph)
+  rbind(edges, nbhd_edges)
 }
