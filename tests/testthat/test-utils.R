@@ -173,7 +173,7 @@ test_with_dir("complete_cases()", {
 
 test_with_dir("splice_args()", {
   out <- splice_args(
-    quote(1 + g(f(h(y), z), z)), 
+    quote(1 + g(f(h(y), z), z)),
     list(y = list(1, 2), z = list(4, quote(x)))
   )
   expect_equal(deparse(out), "1 + g(f(h(1, 2), 4, x), 4, x)")
