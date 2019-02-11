@@ -358,7 +358,7 @@ dsl_combine <- function(...) UseMethod("dsl_combine")
 
 dsl_combine.combine <- function(transform) {
   attr(transform, "combine") %|||%
-    all.vars(transform, functions = FALSE)
+    as.character(unnamed(lang(transform))[-1])
 }
 
 new_groupings <- function(...) UseMethod("new_groupings")

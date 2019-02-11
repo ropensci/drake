@@ -90,7 +90,7 @@
 #'   ), 
 #'   winners = target(
 #'     min(summ),
-#'     transform = combine(data = list(), sum_fun = list())
+#'     transform = combine(summ, .by = c(data, sum_fun))
 #'   )
 #' )
 #'
@@ -111,7 +111,7 @@
 #'   ), 
 #'   winners = target(
 #'     min(summ),
-#'     transform = combine(data = list(), sum_fun = list())
+#'     transform = combine(summ, .by = c(data, sum_fun))
 #'   ),
 #'   trace = TRUE
 #' )

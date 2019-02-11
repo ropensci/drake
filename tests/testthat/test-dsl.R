@@ -629,7 +629,7 @@ test_with_dir("dsl and custom columns", {
       ),
       winners = target(
         min(summ),
-        transform = combine(summ = list(), .by = c(data, sum_fun)),
+        transform = combine(summ, .by = c(data, sum_fun)),
         custom2 = 456L
       )
     )
