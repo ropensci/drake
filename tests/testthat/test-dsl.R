@@ -22,7 +22,7 @@ test_with_dir("1 grouping level", {
   out <- drake_plan(
     a = target(x, transform = cross(x = 1)),
     b = target(a, transform = map(a)),
-    c = target(b, transform = combine(b = list()))
+    c = target(b, transform = combine(b))
   )
   exp <- drake_plan(
     a_1 = 1,
