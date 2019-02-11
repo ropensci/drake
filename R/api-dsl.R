@@ -5,11 +5,13 @@ transform_plan <- function(plan, envir, trace = FALSE) {
   old_cols(plan) <- old_cols <- colnames(plan)
   plan[["transform"]] <- tidyeval_exprs(plan[["transform"]], envir = envir)
   plan[["transform"]] <- lapply(plan[["transform"]], parse_transform)
-  order <- dsl_order(plan)
-  for (target in order) {
-    index <- which(target == plan$target)
-    row <- transform_row(plan, index)
-    plan <- sub_in_plan(plan, list(row), at = index)
+  graph <- dsl_graph(plan)
+  while(gorder(graph)) {
+    targets <- leaf_nodes(graph)
+    graph <- igraph::delete_vertices(graph, v = targets)
+    index <- which(plan$target %in% targets)
+    rows <- lapply(index, transform_row, plan = plan)
+    plan <- sub_in_plan(plan, rows, at = index)
     old_cols(plan) <- old_cols
   }
   if (!trace) {
@@ -20,41 +22,40 @@ transform_plan <- function(plan, envir, trace = FALSE) {
   plan
 }
 
-dsl_order <- function(plan) {
+dsl_graph <- function(plan) {
   edges <- lapply(seq_len(nrow(plan)), function(index) {
     dsl_target_edges(plan[["transform"]][[index]], plan[["target"]][[index]])
   })
   edges <- do.call(rbind, edges)
   if (!length(edges) || !nrow(edges)) {
-    return(character(0))
+    return(igraph::make_empty_graph())
   }
   graph <- igraph::graph_from_data_frame(edges)
-  out <- igraph::topo_sort(graph)$name
-  has_transform <- !vapply(
-    plan[["transform"]],
-    safe_is_na,
-    FUN.VALUE = logical(1)
-  )
-  intersect(out, plan$target[has_transform])
+  keep <- !vapply(plan$target, function(v) {
+    safe_is_na(plan[["transform"]][plan$target == v])
+  }, FUN.VALUE = logical(1), USE.NAMES = TRUE)
+  keep <- names(which(keep, useNames = TRUE))
+  graph <- trim_vs_keep_cons(graph, keep = keep)
+  graph <- igraph::simplify(graph)
+  stopifnot(igraph::is_dag(graph))
+  graph
 }
 
 dsl_target_edges <- function(transform, target) {
   if (safe_is_na(transform)) {
     return(NULL)
   }
+  from <- dsl_deps(transform)
+  to <- dsl_revdeps(transform)
   edges <- NULL
-  if (length(dsl_deps(transform))) {
+  if (length(from)) {
     edges <- rbind(edges, data.frame(
-      from = dsl_deps(transform),
-      to = target,
-      stringsAsFactors = FALSE
+      from = from, to = target, stringsAsFactors = FALSE
     ))
   }
-  if (length(dsl_revdeps(transform))) {
+  if (length(to)) {
     edges <- rbind(edges, data.frame(
-      from = target,
-      to = dsl_revdeps(transform),
-      stringsAsFactors = FALSE
+      from = target, to = to, stringsAsFactors = FALSE
     ))
   }
   edges
