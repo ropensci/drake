@@ -5,18 +5,59 @@ transform_plan <- function(plan, envir, trace = FALSE) {
   old_cols(plan) <- old_cols <- colnames(plan)
   plan[["transform"]] <- tidyeval_exprs(plan[["transform"]], envir = envir)
   plan[["transform"]] <- lapply(plan[["transform"]], parse_transform)
-  while (any(index <- index_can_transform(plan))) {
-    rows <- lapply(which(index), transform_row, plan = plan)
-    plan <- sub_in_plan(plan, rows, at = which(index))
+  order <- dsl_order(plan)
+  for (target in order) {
+    index <- which(target == plan$target)
+    row <- transform_row(plan, index)
+    plan <- sub_in_plan(plan, list(row), at = index)
     old_cols(plan) <- old_cols
   }
-  assert_transforms_completed(plan)
   if (!trace) {
     keep <- as.character(intersect(colnames(plan), old_cols(plan)))
     plan <- plan[, intersect(colnames(plan), old_cols(plan)), drop = FALSE]
   }
   old_cols(plan) <- plan[["transform"]] <- NULL
   plan
+}
+
+dsl_order <- function(plan) {
+  edges <- lapply(seq_len(nrow(plan)), function(index) {
+    dsl_target_edges(plan[["transform"]][[index]], plan[["target"]][[index]])
+  })
+  edges <- do.call(rbind, edges)
+  if (!length(edges) || !nrow(edges)) {
+    return(character(0))
+  }
+  graph <- igraph::graph_from_data_frame(edges)
+  out <- igraph::topo_sort(graph)$name
+  has_transform <- !vapply(
+    plan[["transform"]],
+    safe_is_na,
+    FUN.VALUE = logical(1)
+  )
+  intersect(out, plan$target[has_transform])
+}
+
+dsl_target_edges <- function(transform, target) {
+  if (safe_is_na(transform)) {
+    return(NULL)
+  }
+  edges <- NULL
+  if (length(dsl_deps(transform))) {
+    edges <- rbind(edges, data.frame(
+      from = dsl_deps(transform),
+      to = target,
+      stringsAsFactors = FALSE
+    ))
+  }
+  if (length(dsl_revdeps(transform))) {
+    edges <- rbind(edges, data.frame(
+      from = target,
+      to = dsl_revdeps(transform),
+      stringsAsFactors = FALSE
+    ))
+  }
+  edges
 }
 
 transform_row <- function(plan, index) {
@@ -39,23 +80,6 @@ transform_row <- function(plan, index) {
     out[[col]] <- out$target
   }
   out
-}
-
-index_can_transform <- function(plan) {
-  vapply(
-    plan[["transform"]],
-    can_transform,
-    FUN.VALUE = logical(1),
-    plan = plan
-  )
-}
-
-can_transform <- function(transform, plan) {
-  if (!inherits(transform, "transform")) {
-    return(FALSE)
-  }
-  missing_groups <- setdiff(dsl_deps(transform), names(plan))
-  length(missing_groups) < 1L
 }
 
 map_to_grid <- function(transform, target, row, plan) {
@@ -222,7 +246,7 @@ old_cols <- function(plan) {
   plan
 }
 
-parse_transform <- function(transform) {
+parse_transform <- function(transform, target) {
   if (safe_is_na(transform)) {
     return(NA)
   }
@@ -237,7 +261,12 @@ parse_transform <- function(transform) {
     tag_in = tag_in(transform),
     tag_out = tag_out(transform)
   )
-  interpret_transform(transform)
+  transform <- interpret_transform(transform)
+  structure(
+    transform,
+    deps = dsl_deps(transform),
+    revdeps = dsl_revdeps(transform)
+  )
 }
 
 interpret_transform <- function(...) UseMethod("interpret_transform")
@@ -245,20 +274,18 @@ interpret_transform <- function(...) UseMethod("interpret_transform")
 interpret_transform.map <- function(transform) {
   structure(
     transform,
-    new_groupings = new_groupings(transform),
-    deps = dsl_deps(transform)
+    new_groupings = new_groupings(transform)
   )
 }
 
 interpret_transform.cross <- interpret_transform.map
 
 interpret_transform.combine <- function(transform, ...) {
-  transform <- structure(
+  structure(
     transform,
     combine = dsl_combine(transform),
     by = dsl_by(transform)
   )
-  structure(transform, deps = dsl_deps(transform))
 }
 
 assert_good_transform <- function(...) UseMethod("assert_good_transform")
@@ -278,16 +305,37 @@ assert_good_transform.default <- function(transform, target) {
 dsl_deps <- function(transform) UseMethod("dsl_deps")
 
 dsl_deps.map <- function(transform) {
-  attr(transform, "deps") %|||%
-    as.character(unnamed(as.list(transform[[1]][-1])))
+  attr(transform, "deps") %|||% c(
+    as.character(unnamed(as.list(transform[[1]][-1]))),
+    unname(unlist(new_groupings(transform)))
+  )
 }
-  
+
 dsl_deps.cross <- dsl_deps.map
 
 dsl_deps.combine <- function(transform) {
   attr(transform, "deps") %|||% c(
     names(dsl_combine(transform)),
     dsl_by(transform)
+  )
+}
+
+dsl_revdeps <- function(transform) UseMethod("dsl_revdeps")
+
+dsl_revdeps.map <- function(transform) {
+  attr(transform, "revdeps") %|||% c(
+    names(new_groupings(transform)),
+    tag_in(transform),
+    tag_out(transform)
+  )
+}
+  
+dsl_revdeps.cross <- dsl_revdeps.map
+
+dsl_revdeps.combine <- function(transform) {
+  attr(transform, "revdeps") %|||% c(
+    tag_in(transform),
+    tag_out(transform)
   )
 }
 
@@ -494,27 +542,6 @@ check_group_names <- function(groups, protect) {
       call. = FALSE
     )
   }
-}
-
-assert_transforms_completed <- function(plan) {
-  completed <- vapply(
-    plan[["transform"]],
-    safe_is_na,
-    FUN.VALUE = logical(1)
-  )
-  if (all(completed)) {
-    return()
-  }
-  targets <- plan[["target"]][!completed]
-  stop(
-    "The transformations of some targets cannot run, ",
-    "probably because the promised grouping variables are undefined. ",
-    "For example, if you write map(x) or combine(x = fn()), ",
-    "then you need to define x in a different transformation. ",
-    "Problematic targets:\n",
-    multiline_message(targets),
-    call. = FALSE
-  )
 }
 
 dsl_all_special <- c(".id", ".tag_in", ".tag_out")
