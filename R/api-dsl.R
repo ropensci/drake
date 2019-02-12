@@ -55,14 +55,16 @@ dsl_target_edges <- function(transform, target) {
     from = target, to = target, stringsAsFactors = FALSE
   )
   if (length(from)) {
-    edges <- rbind(edges, data.frame(
-      from = from, to = target, stringsAsFactors = FALSE
-    ))
+    edges <- rbind(
+      edges,
+      data.frame(from = from, to = target, stringsAsFactors = FALSE)
+    )
   }
   if (length(to)) {
-    edges <- rbind(edges, data.frame(
-      from = target, to = to, stringsAsFactors = FALSE
-    ))
+    edges <- rbind(
+      edges,
+      data.frame(from = target, to = to, stringsAsFactors = FALSE)
+    )
   }
   edges
 }
