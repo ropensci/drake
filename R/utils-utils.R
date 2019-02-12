@@ -316,13 +316,11 @@ weak_as_tibble <- function(..., .force_df = FALSE) {
 }
 
 drake_bind_rows <- function(...) {
-  args <- list(...)
+  args <- select_nonempty(list(...))
   df_env <- new.env(parent = emptyenv())
   df_env$dfs <- list()
   flatten_df_list(args, df_env = df_env)
   dfs <- df_env$dfs
-  dfs <- Filter(f = nrow, x = dfs)
-  dfs <- Filter(f = ncol, x = dfs)
   cols <- lapply(dfs, colnames)
   cols <- Reduce(f = union, x = cols)
   dfs <- lapply(dfs, fill_cols, cols = cols)

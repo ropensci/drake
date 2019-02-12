@@ -81,6 +81,9 @@ transform_row <- function(plan, index) {
   )
   check_group_names(new_cols, old_cols(plan))
   out <- dsl_transform(transform, target, row, plan)
+  if (is.null(out)) {
+    return()
+  }
   out[[target]] <- out$target
   for (col in tag_in(transform)) {
     out[[col]] <- target
@@ -95,8 +98,7 @@ map_to_grid <- function(transform, target, row, plan) {
   groupings <- groupings(transform)
   grid <- dsl_grid(transform, groupings)
   if (any(dim(grid) < 1L)) {
-    row[["transform"]][[1]] <- NA
-    return(row)
+    return()
   }
   ncl <- c(names(new_groupings(transform)), old_cols(plan))
   old_cols <- old_cols(plan)
@@ -176,8 +178,7 @@ dsl_transform.cross <- dsl_transform.map <- map_to_grid
 dsl_transform.combine <- function(transform, target, row, plan) {
   plan <- valid_splitting_plan(plan, transform)
   if (!nrow(plan)) {
-    row[["transform"]][[1]] <- NA
-    return(row)
+    return()
   }
   out <- map_by(
     .x = plan,
@@ -188,8 +189,7 @@ dsl_transform.combine <- function(transform, target, row, plan) {
     old_cols = old_cols(plan)
   )
   if (!nrow(out)) {
-    row[["transform"]][[1]] <- NA
-    return(row)
+    return()
   }
   out$target <- new_targets(
     target, out[, dsl_by(transform), drop = FALSE], dsl_id(transform)
@@ -202,7 +202,7 @@ valid_splitting_plan <- function(plan, transform) {
   if (!length(cols)) {
     return(plan)
   }
-  rows_keep <- complete_cases(plan[, dsl_by(transform), drop = FALSE])
+  rows_keep <- complete_cases(plan[, cols, drop = FALSE])
   plan[rows_keep,, drop = FALSE] # nolint
 }
 

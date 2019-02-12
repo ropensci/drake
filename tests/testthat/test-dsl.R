@@ -6,16 +6,13 @@ test_with_dir("empty transforms", {
     b = target(y, transform = combine()),
     c = target(z, transform = map())
   )
-  equivalent_plans(out, transform_plan(out, envir = environment()))
-  exp <- drake_plan(a = x, b = y, c = z)
-  equivalent_plans(out, exp)
+  equivalent_plans(out, drake_plan())
 })
 
 test_with_dir("more empty transforms", {
   x_vals <- NULL
   out <- drake_plan(a = target(x, transform = map(x = !!x_vals)))
-  exp <- drake_plan(a = x)
-  equivalent_plans(out, exp)
+  equivalent_plans(out, drake_plan())
 })
 
 test_with_dir("1 grouping level", {
@@ -270,10 +267,7 @@ test_with_dir("groups and command symbols are undefined", {
   )
   exp <- drake_plan(
     small = simulate(48),
-    large = simulate(64),
-    lots = nobody(home),
-    mots = everyone(out),
-    winners = min(nobodyhome)
+    large = simulate(64)
   )
   equivalent_plans(out, exp)
 })
@@ -700,7 +694,7 @@ test_with_dir("dsl trace", {
     ),
     winners = target(
       min(summ),
-      transform = combine(data = list(), sum_fun = list())
+      transform = combine(data, sum_fun)
     ),
     trace = TRUE
   )
@@ -1938,8 +1932,7 @@ test_with_dir("empty grids", {
       )
     )
   )
-  exp <- drake_plan(a = 1 + f(x, y, z, w, v))
-  equivalent_plans(out, exp)
+  equivalent_plans(out, drake_plan())
 })
 
 test_with_dir("grid for GitHub issue 697", {
@@ -2054,14 +2047,13 @@ test_with_dir("invalid splitting var", {
     data = target(x, transform = map(x = c(1, 2)), nothing = NA),
     results = target(
       data,
-      transform = combine(data = list(), .by = nothing)
+      transform = combine(data, .by = nothing)
     )
   )
   out <- out[, c("target", "command")]
   exp <- drake_plan(
     data_1 = 1,
-    data_2 = 2,
-    results = data
+    data_2 = 2
   )
   equivalent_plans(out, exp)
 })
