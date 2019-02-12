@@ -98,6 +98,7 @@ map_to_grid <- function(transform, target, row, plan) {
   groupings <- groupings(transform)
   grid <- dsl_grid(transform, groupings)
   if (any(dim(grid) < 1L)) {
+    warn_empty_transform(target)
     return()
   }
   ncl <- c(names(new_groupings(transform)), old_cols(plan))
@@ -178,6 +179,7 @@ dsl_transform.cross <- dsl_transform.map <- map_to_grid
 dsl_transform.combine <- function(transform, target, row, plan) {
   plan <- valid_splitting_plan(plan, transform)
   if (!nrow(plan)) {
+    warn_empty_transform(target)
     return()
   }
   out <- map_by(
@@ -189,6 +191,7 @@ dsl_transform.combine <- function(transform, target, row, plan) {
     old_cols = old_cols(plan)
   )
   if (!nrow(out)) {
+    warn_empty_transform(target)
     return()
   }
   out$target <- new_targets(
@@ -208,7 +211,8 @@ valid_splitting_plan <- function(plan, transform) {
 
 combine_step <- function(plan, row, transform, old_cols) {
   args <- args_combine(plan, transform)
-  if (!length(args)) {
+  any_empty <- any(!vapply(args, length, FUN.VALUE = integer(1)))
+  if (!length(args) || any_empty) {
     return(data.frame())
   }
   out <- data.frame(command = NA, stringsAsFactors = FALSE)
@@ -230,7 +234,7 @@ args_combine <- function(plan, transform) {
     transform = transform
   )
   names(out) <- dsl_combine(transform)
-  select_nonempty(out)
+  out
 }
 
 args_combine_entry <- function(name, transform, plan) {
@@ -530,6 +534,15 @@ check_group_names <- function(groups, protect) {
       call. = FALSE
     )
   }
+}
+
+warn_empty_transform <- function(target) {
+  warning(
+    "A grouping or splitting variable for target ", shQuote(target),
+    " is missing or undefined. Transformation skipped ",
+    "and target deleted.",
+    call. = FALSE
+  )
 }
 
 dsl_all_special <- c(".id", ".tag_in", ".tag_out")

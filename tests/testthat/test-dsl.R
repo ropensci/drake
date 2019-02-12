@@ -1,17 +1,35 @@
 drake_context("dsl")
 
 test_with_dir("empty transforms", {
-  out <- drake_plan(
-    a = target(x, transform = cross()),
-    b = target(y, transform = combine()),
-    c = target(z, transform = map())
+  expect_warning(
+    out <- drake_plan(
+      a = target(x, transform = cross()),
+      b = target(y, transform = combine()),
+      c = target(z, transform = map())
+    ),
+    regexp = "grouping or splitting variable"
   )
   equivalent_plans(out, drake_plan())
+  expect_warning(
+    out <- drake_plan(a = target(x, transform = cross())),
+    regexp = "grouping or splitting variable"
+  )
+  expect_warning(
+    out <- drake_plan(b = target(y, transform = combine())),
+    regexp = "grouping or splitting variable"
+  )
+  expect_warning(
+    out <- drake_plan(c = target(z, transform = map())),
+    regexp = "grouping or splitting variable"
+  )
 })
 
 test_with_dir("more empty transforms", {
   x_vals <- NULL
-  out <- drake_plan(a = target(x, transform = map(x = !!x_vals)))
+  expect_warning(
+    out <- drake_plan(a = target(x, transform = map(x = !!x_vals))),
+    regexp = "grouping or splitting variable"
+  )
   equivalent_plans(out, drake_plan())
 })
 
@@ -258,12 +276,15 @@ test_with_dir("2 new maps", {
 })
 
 test_with_dir("groups and command symbols are undefined", {
-  out <- drake_plan(
-    small = simulate(48),
-    large = simulate(64),
-    lots = target(nobody(home), transform = cross(a, b)),
-    mots = target(everyone(out), transform = map(c, d)),
-    winners = target(min(nobodyhome), transform = combine(data = list()))
+  expect_warning(
+    out <- drake_plan(
+      small = simulate(48),
+      large = simulate(64),
+      lots = target(nobody(home), transform = cross(a, b)),
+      mots = target(everyone(out), transform = map(c, d)),
+      winners = target(min(nobodyhome), transform = combine(data))
+    ),
+    regexp = "grouping or splitting variable"
   )
   exp <- drake_plan(
     small = simulate(48),
@@ -675,7 +696,7 @@ test_with_dir("dsl trace", {
     ),
     winners = target(
       min(summ),
-      transform = combine(data = list(), sum_fun = list())
+      transform = combine(data, sum_fun)
     ),
     trace = FALSE
   )
@@ -1922,15 +1943,18 @@ test_with_dir("empty grids", {
     stringsAsFactors = FALSE
   )
   grid$v <- rlang::syms(grid$v)
-  out <- drake_plan(
-    a = target(
-      1 + f(x, y, z, w, v),
-      transform = map(
-        x = c(),
-        y = c(),
-        .data = !!grid[logical(0), , drop = FALSE] # nolint
+  expect_warning(
+    out <- drake_plan(
+      a = target(
+        1 + f(x, y, z, w, v),
+        transform = map(
+          x = c(),
+          y = c(),
+          .data = !!grid[logical(0), , drop = FALSE] # nolint
+        )
       )
-    )
+    ),
+    regexp = "grouping or splitting variable"
   )
   equivalent_plans(out, drake_plan())
 })
@@ -2043,17 +2067,54 @@ test_with_dir("combine() with complicated calls", {
 })
 
 test_with_dir("invalid splitting var", {
-  out <- drake_plan(
-    data = target(x, transform = map(x = c(1, 2)), nothing = NA),
-    results = target(
-      data,
-      transform = combine(data, .by = nothing)
-    )
+  expect_warning(
+    out <- drake_plan(
+      data = target(x, transform = map(x = c(1, 2)), nothing = NA),
+      results = target(
+        data,
+        transform = combine(data, .by = nothing)
+      )
+    ),
+    regexp = "grouping or splitting variable"
   )
   out <- out[, c("target", "command")]
   exp <- drake_plan(
     data_1 = 1,
     data_2 = 2
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("uneven combinations", {
+  out <- drake_plan(
+    data1 = target(
+      sim_data1(mean = x, sd = y, skew = z),
+      transform = map(x = c(1, 2), y = c(3, 4))
+    ),
+    data2 = target(
+      sim_data2(mean = x, sd = y, skew = z),
+      transform = cross(x = c(1, 2), y = c(3, 4))
+    ),
+    combined = target(
+      bind_rows(data1, data2, .id = "id") %>%
+        arrange(sd) %>%
+        head(n = 400),
+      transform = combine(data1, data2, .by = c(x, y))
+    )
+  )
+  exp <- drake_plan(
+    data1_1_3 = sim_data1(mean = 1, sd = 3, skew = z),
+    data1_2_4 = sim_data1(mean = 2, sd = 4, skew = z),
+    data2_1_3 = sim_data2(mean = 1, sd = 3, skew = z),
+    data2_2_3 = sim_data2(mean = 2, sd = 3, skew = z),
+    data2_1_4 = sim_data2(mean = 1, sd = 4, skew = z),
+    data2_2_4 = sim_data2(mean = 2, sd = 4, skew = z),
+    combined_1_3 = bind_rows(data1_1_3, data2_1_3, .id = "id") %>%
+      arrange(sd) %>%
+      head(n = 400),
+    combined_2_4 = bind_rows(data1_2_4, data2_2_4, .id = "id") %>%
+      arrange(sd) %>%
+      head(n = 400)
   )
   equivalent_plans(out, exp)
 })
