@@ -6,12 +6,11 @@ transform_plan <- function(plan, envir, trace = FALSE) {
   plan[["transform"]] <- tidyeval_exprs(plan[["transform"]], envir = envir)
   plan[["transform"]] <- lapply(plan[["transform"]], parse_transform)
   graph <- dsl_graph(plan)
-  while (gorder(graph)) {
-    targets <- leaf_nodes(graph)
-    graph <- igraph::delete_vertices(graph, v = targets)
-    index <- which(plan$target %in% targets)
-    rows <- lapply(index, transform_row, plan = plan)
-    plan <- sub_in_plan(plan, rows, at = index)
+  order <- igraph::topo_sort(graph)$name
+  for (target in order) {
+    index <- which(target == plan$target)
+    rows <- transform_row(plan, index)
+    plan <- sub_in_plan(plan, rows, index)
     old_cols(plan) <- old_cols
   }
   if (!trace) {

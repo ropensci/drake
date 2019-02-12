@@ -368,15 +368,12 @@ unnamed <- function(x) {
   x[!nzchar(names(x))]
 }
 
-sub_in_plan <- function(plan, rows, at) {
-  for (index in rev(seq_along(at))) {
-    row <- at[index]
-    plan <- drake_bind_rows(
-      plan[seq_len(row - 1), ],
-      rows[[index]],
-      plan[-seq_len(row), ]
-    )
-  }
+sub_in_plan <- function(plan, rows, index) {
+  plan <- drake_bind_rows(
+    plan[seq_len(index - 1), ],
+    rows,
+    plan[-seq_len(index), ]
+  )
   plan
 }
 
