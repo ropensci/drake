@@ -1,5 +1,11 @@
 drake_context("dsl")
 
+test_with_dir("nothing to transform", {
+  exp <- drake_plan(a = 1)
+  out <- transform_plan(exp)
+  equivalent_plans(out, exp)
+})
+
 test_with_dir("empty transforms", {
   expect_warning(
     out <- drake_plan(

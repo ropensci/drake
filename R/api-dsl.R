@@ -213,7 +213,7 @@ combine_step <- function(plan, row, transform, old_cols) {
   args <- args_combine(plan, transform)
   any_empty <- any(!vapply(args, length, FUN.VALUE = integer(1)))
   if (!length(args) || any_empty) {
-    return(data.frame())
+    return(data.frame(stringsAsFactors = FALSE))
   }
   out <- data.frame(command = NA, stringsAsFactors = FALSE)
   for (col in setdiff(old_cols, c("target", "transform"))) {
