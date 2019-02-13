@@ -35,9 +35,8 @@ test_with_dir("function_dependencies() works on :: and :::", {
     sort(c(ns, "g", "myfun1", "sqrt", "local"))
   )
   command <- "pkgx::pkgx(mypkg1::myfun3(myfun1(mypkg1::myfun2(100))))"
-  d <- sort(clean_dependency_list(deps_code(command)))
   expect_equal(
-    d,
+    sort(deps_code(command)$target),
     sort(
       c(
         "pkgx::pkgx",
