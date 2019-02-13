@@ -163,7 +163,7 @@ drake_plan <- function(
   list <- lapply(list, function(x) parse(text = x))
   commands <- c(dots, list)
   if (!length(commands)) {
-    return(weak_tibble(target = character(0), command = character(0)))
+    return(weak_tibble(target = character(0), command = list()))
   }
   commands <- complete_target_names(commands)
   targets <- names(commands)
