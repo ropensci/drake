@@ -98,7 +98,7 @@ progress <- function(
   jobs = 1
 ) {
   if (is.null(cache)) {
-    return(character(0))
+    return(weak_tibble(target = character(0), progress = character(0)))
   }
   if (!is.null(no_imported_objects)) {
     warning(
@@ -130,7 +130,7 @@ get_progress_single <- function(target, cache) {
 }
 
 set_progress <- function(target, meta, value, config) {
-  if (!config$log_progress || meta$imported) {
+  if (!config$log_progress || (meta$imported %||% FALSE)) {
     return()
   }
   config$cache$duplicate(
