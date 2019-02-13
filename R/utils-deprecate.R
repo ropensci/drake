@@ -319,6 +319,7 @@ drake_batchtools_tmpl_file <- function(
 #' @description Deprecated. Use [drake_get_session_info()] instead.
 #' @details Deprecated on 2018-12-06.
 #' @export
+#' @keywords internal
 #' @return [sessionInfo()] of the last call to [make()]
 #' @inheritParams cached
 #' @examples
@@ -894,6 +895,7 @@ drake_strings <- function(...) {
 #' data frame (see [drake_plan()].
 #' @seealso [cached()], [loadd()]
 #' @export
+#' @keywords internal
 #' @return Character vector naming the built targets in the cache.
 #' @inheritParams cached
 #' @param jobs Number of jobs/workers for parallel processing.
@@ -929,6 +931,7 @@ built <- function(
 #' @details Only works if the cache is a file system
 #' in a folder named `.drake` (default).
 #' @export
+#' @keywords internal
 #' @seealso [drake_plan()], [make()]
 #' @return File path of the nearest drake project or `NULL`
 #'   if no drake project is found.
@@ -1293,6 +1296,7 @@ read_drake_plan <- function(
 #' may depend on imports.
 #' @seealso [cached()], [loadd()]
 #' @export
+#' @keywords internal
 #' @return Character vector naming the imports in the cache.
 #' @inheritParams cached
 #' @param files_only Logical, whether to show imported files only
@@ -1790,4 +1794,23 @@ analysis_wildcard_ <- function() {
 # [plan_analyses()] and [plan_summaries()].
 dataset_wildcard_ <- function() {
   "dataset__"
+}
+
+#' @title Deprecated utility function
+#' @description 2019-02-13
+#' @export
+#' @keywords internal
+#' @return A character vector of `storr` namespaces
+#'   that are cleaned during [clean()].
+#' @param default Name of the default `storr` namespace.
+cleaned_namespaces <- function(
+  default = storr::storr_environment()$default_namespace
+) {
+  .Deprecated(
+    "cleaned_namespaces",
+    package = "drake",
+    msg = "cleaned_namespaces() is deprecated."
+  )
+  out <- c(default, "meta")
+  sort(out)
 }

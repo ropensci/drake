@@ -47,3 +47,4 @@ data frame (see \code{\link[=drake_plan]{drake_plan()}}.
 \seealso{
 \code{\link[=cached]{cached()}}, \code{\link[=loadd]{loadd()}}
 }
+\keyword{internal}

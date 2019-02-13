@@ -55,3 +55,4 @@ may depend on imports.
 \seealso{
 \code{\link[=cached]{cached()}}, \code{\link[=loadd]{loadd()}}
 }
+\keyword{internal}

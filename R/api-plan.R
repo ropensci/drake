@@ -440,6 +440,7 @@ detect_arrow <- function(command) {
 #' @description Not a user-side function. Please use from within
 #'   [drake_plan()] only.
 #' @export
+#' @keywords internal
 #' @seealso [drake_plan()], [make()]
 #' @return A one-row workflow plan data frame with the named
 #' arguments as columns.

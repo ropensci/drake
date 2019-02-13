@@ -124,7 +124,7 @@ clean <- function(
   if (purge) {
     namespaces <- target_namespaces_(default = cache$default_namespace)
   } else {
-    namespaces <- cleaned_namespaces(default = cache$default_namespace)
+    namespaces <- cleaned_namespaces_(default = cache$default_namespace)
   }
   lightly_parallelize(
     X = targets,

@@ -35,3 +35,4 @@ drake_plan(
 \seealso{
 \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
 }
+\keyword{internal}

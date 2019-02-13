@@ -342,12 +342,13 @@ test_with_dir("deprecated check_plan()", {
   expect_error(tmp <- capture.output(suppressWarning(check_plan(x))))
 })
 
-test_with_dir("deprecated cache_ and target_namespaces()", {
+test_with_dir("deprecated cache_ and target_namespaces() etc.", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- suppressWarnings(cache_namespaces())
   y <- suppressWarnings(target_namespaces())
   expect_true(all(y %in% x))
   expect_false(all(x %in% y))
+  expect_warning(cleaned_namespaces(), regexp = "deprecated")
 })
 
 test_with_dir("deprecated drake_tip()", {
