@@ -95,7 +95,7 @@ test_with_dir("timeouts", {
       )
     )
   )
-  expect_false(cached(x))
+  expect_false("x" %in% cached())
 
   # Should time out too. The workflow plan should override
   # the arguments to make().
@@ -116,6 +116,6 @@ test_with_dir("timeouts", {
         do.call(what = make, args = args)
       )
     )
-    expect_false(cached(x))
+    expect_false("x" %in% cached())
   }
 })

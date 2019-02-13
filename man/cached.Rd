@@ -2,28 +2,24 @@
 % Please edit documentation in R/api-cache.R
 \name{cached}
 \alias{cached}
-\title{Enumerate cached targets or check if a target is cached.}
+\title{List targets in the cache.}
 \usage{
 cached(..., list = character(0), no_imported_objects = FALSE,
   path = getwd(), search = TRUE, cache = NULL, verbose = 1L,
-  namespace = NULL, jobs = 1)
+  namespace = NULL, jobs = 1, targets_only = TRUE)
 }
 \arguments{
-\item{...}{Objects to load from the cache, as names (unquoted)
+\item{...}{Deprecated. Do not use.
+Objects to load from the cache, as names (unquoted)
 or character strings (quoted). Similar to \code{...} in
 \code{remove()}.}
 
-\item{list}{Character vector naming objects to be loaded from the
+\item{list}{Deprecated. Do not use.
+Character vector naming objects to be loaded from the
 cache. Similar to the \code{list} argument of \code{\link[=remove]{remove()}}.}
 
-\item{no_imported_objects}{Logical, applies only when
-no targets are specified and a list of cached targets is returned.
-If \code{no_imported_objects} is \code{TRUE}, then \code{cached()}
-shows built targets (with commands) plus imported files,
-ignoring imported objects. Otherwise, the full collection of
-all cached objects will be listed. Since all your functions and
-all their global variables are imported, the full list of
-imported objects could get really cumbersome.}
+\item{no_imported_objects}{Logical, deprecated. Use
+\code{targets_only} instead.}
 
 \item{path}{Root directory of the drake project,
 or if \code{search} is \code{TRUE}, either the
@@ -53,6 +49,9 @@ If supplied, \code{path} and \code{search} are ignored.}
 to use for listing objects.}
 
 \item{jobs}{Number of jobs/workers for parallel processing.}
+
+\item{targets_only}{Logical. If \code{TRUE} just list the targets.
+If \code{FALSE}, list files and imported objects too.}
 }
 \value{
 Either a named logical indicating whether the given
@@ -60,7 +59,7 @@ targets or cached or a character vector listing all cached
 items, depending on whether any targets are specified.
 }
 \description{
-Read/load a cached item with \code{\link[=readd]{readd()}}
+Tip: read/load a cached item with \code{\link[=readd]{readd()}}
 or \code{\link[=loadd]{loadd()}}.
 }
 \examples{
@@ -70,29 +69,14 @@ if (requireNamespace("knitr")) {
 if (requireNamespace("lubridate")) {
 load_mtcars_example() # Load drake's canonical example.
 make(my_plan) # Run the project, build all the targets.
-cached(list = 'reg1') # Is 'reg1' in the cache?
-# List all the targets and imported files in the cache.
-# Exclude R objects imported from your workspace.
-cached(no_imported_objects = TRUE)
-# List all targets and imports in the cache.
 cached()
-# Clean the main data.
-clean()
-# The targets and imports are gone.
-cached()
-# But there is still metadata.
-build_times()
-cached(namespace = "build_times")
-# Clear that too.
-clean(purge = TRUE)
-cached(namespace = "build_times")
-build_times()
+cached(targets_only = FALSE)
 }
 }
 })
 }
 }
 \seealso{
-\code{\link[=cached]{cached()}}, \code{\link[=readd]{readd()}}, \code{\link[=loadd]{loadd()}},
+\code{\link[=readd]{readd()}}, \code{\link[=loadd]{loadd()}},
 \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
 }
