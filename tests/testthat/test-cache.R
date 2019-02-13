@@ -357,11 +357,11 @@ test_with_dir("cache functions work from various working directories", {
   # cached and diagnose
   expect_equal(diagnose(search = TRUE), character(0))
   expect_equal(
-    sort(cached(targets_only = TRUE, path = s, search = T)),
+    sort(cached(targets_only = TRUE, path = s, search = TRUE)),
     sort(config$plan$target)
   )
   expect_equal(
-    length(cached(targets_only = FALSE, path = s, search = T)),
+    length(cached(targets_only = FALSE, path = s, search = TRUE)),
     length(config$cache$list())
   )
   expect_true(inherits(rescue_cache(path = s, search = TRUE), "storr"))
@@ -394,7 +394,7 @@ test_with_dir("cache functions work from various working directories", {
         garbage_collection = TRUE)
   targs <- setdiff(config$plan$target, "final")
   expect_true(all(targs %in% cached(path = s, search = TRUE)))
-  drake_gc(path = s, search = T)
+  drake_gc(path = s, search = TRUE)
 
   # Test purging
   prog <- progress(search = TRUE, path = s)
@@ -407,7 +407,7 @@ test_with_dir("cache functions work from various working directories", {
 
   # More cleaning checks
   clean(path = s, search = TRUE, garbage_collection = FALSE)
-  expect_equal(cached(path = s, search = T), character(0))
+  expect_equal(cached(path = s, search = TRUE), character(0))
   where <- file.path(scratch, cache_dir)
   expect_true(file.exists(where))
   clean(path = s, search = FALSE, destroy = TRUE)

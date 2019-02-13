@@ -19,7 +19,7 @@ test_with_dir("lock_envir works", {
     parallelism = parallelism,
     caching = caching,
     lock_envir = TRUE,
-    verbose = T,
+    verbose = TRUE,
     session_info = FALSE
   )
   e$a <- 123
