@@ -417,3 +417,20 @@ splice_args <- function(x, replacements) {
   }
   out
 }
+
+# from base::remove()
+targets_from_dots <- function(dots, list) {
+  valid <- vapply(
+    dots,
+    function(x) is.symbol(x) || is.character(x),
+    NA,
+    USE.NAMES = FALSE
+  )
+  invalid <- length(dots) && !all(valid)
+  if (invalid) {
+    stop("... must contain names or character strings", call. = FALSE)
+  }
+  names <- vapply(dots, as.character, "")
+  targets <- unique(c(names, list))
+  standardize_key(targets)
+}

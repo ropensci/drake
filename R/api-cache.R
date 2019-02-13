@@ -545,10 +545,10 @@ deprecate_hash_algo_args <- function(
   }
 }
 
-#' @title Enumerate cached targets or check if a target is cached.
-#' @description Read/load a cached item with [readd()]
-#' or [loadd()].
-#' @seealso [cached()], [readd()], [loadd()],
+#' @title List targets in the cache.
+#' @description Tip: read/load a cached item with [readd()]
+#'   or [loadd()].
+#' @seealso [readd()], [loadd()],
 #'   [drake_plan()], [make()]
 #' @export
 #' @return Either a named logical indicating whether the given
@@ -557,21 +557,17 @@ deprecate_hash_algo_args <- function(
 #'
 #' @inheritParams drake_config
 #'
-#' @param ... Objects to load from the cache, as names (unquoted)
+#' @param ... Deprecated. Do not use.
+#'   Objects to load from the cache, as names (unquoted)
 #'   or character strings (quoted). Similar to `...` in
 #'   `remove()`.
 #'
-#' @param list Character vector naming objects to be loaded from the
+#' @param list Deprecated. Do not use.
+#'   Character vector naming objects to be loaded from the
 #'   cache. Similar to the `list` argument of [remove()].
 #'
-#' @param no_imported_objects Logical, applies only when
-#'   no targets are specified and a list of cached targets is returned.
-#'   If `no_imported_objects` is `TRUE`, then `cached()`
-#'   shows built targets (with commands) plus imported files,
-#'   ignoring imported objects. Otherwise, the full collection of
-#'   all cached objects will be listed. Since all your functions and
-#'   all their global variables are imported, the full list of
-#'   imported objects could get really cumbersome.
+#' @param targets_only Logical. If `TRUE` just list the targets.
+#'   If `FALSE`, list files and imported objects too.
 #'
 #' @param cache drake cache. See [new_cache()].
 #'   If supplied, `path` and `search` are ignored.
@@ -598,23 +594,8 @@ deprecate_hash_algo_args <- function(
 #' if (requireNamespace("lubridate")) {
 #' load_mtcars_example() # Load drake's canonical example.
 #' make(my_plan) # Run the project, build all the targets.
-#' cached(list = 'reg1') # Is 'reg1' in the cache?
-#' # List all the targets and imported files in the cache.
-#' # Exclude R objects imported from your workspace.
-#' cached(no_imported_objects = TRUE)
-#' # List all targets and imports in the cache.
 #' cached()
-#' # Clean the main data.
-#' clean()
-#' # The targets and imports are gone.
-#' cached()
-#' # But there is still metadata.
-#' build_times()
-#' cached(namespace = "build_times")
-#' # Clear that too.
-#' clean(purge = TRUE)
-#' cached(namespace = "build_times")
-#' build_times()
+#' cached(targets_only = FALSE)
 #' }
 #' }
 #' })
@@ -639,51 +620,20 @@ cached <- function(
   if (is.null(namespace)) {
     namespace <- cache$default_namespace
   }
-  dots <- match.call(expand.dots = FALSE)$...
-  targets <- targets_from_dots(dots, list)
+  targets <- c(list, match.call(expand.dots = FALSE)$...)
   if (!length(targets)) {
-    list_cache(no_imported_objects = no_imported_objects,
-      cache = cache, namespace = namespace, jobs = jobs)
-  } else {
-    is_cached(targets = targets, no_imported_objects = no_imported_objects,
-      cache = cache, namespace = namespace, jobs = jobs)
+    warning(
+      "The `...` and `list` arguments of `cached()` are deprecated.",
+      "`cached()` no longer accepts target names. It just lists ",
+      "the targets in the cache.",
+      call. = FALSE
+    )
   }
-}
-
-is_cached <- function(targets, no_imported_objects, cache, namespace, jobs) {
-  if (no_imported_objects)
-    targets <- no_imported_objects(
-      targets = targets, cache = cache, jobs = jobs)
-  inclusion <- lightly_parallelize(
-    X = targets,
-    FUN = function(target) {
-      cache$exists(key = target, namespace = namespace)
-    },
-    jobs = jobs
-  )
-  inclusion <- unlist(inclusion)
-  names(inclusion) <- display_keys(targets)
-  inclusion
-}
-
-list_cache <- function(no_imported_objects, cache, namespace, jobs) {
   targets <- cache$list(namespace = namespace)
-  if (no_imported_objects) {
-    targets <- no_imported_objects(
-      targets = targets, cache = cache, jobs = jobs)
+  if (!targets_only) {
+    targets <- targets_only(targets, cache, jobs)
   }
   display_keys(targets)
-}
-
-# from base::remove()
-targets_from_dots <- function(dots, list) {
-  if (length(dots) && !all(vapply(dots, function(x) is.symbol(x) ||
-    is.character(x), NA, USE.NAMES = FALSE))) {
-    stop("... must contain names or character strings", call. = FALSE)
-  }
-  names <- vapply(dots, as.character, "")
-  targets <- unique(c(names, list))
-  standardize_key(targets)
 }
 
 targets_only <- function(targets, cache, jobs) {
@@ -697,16 +647,6 @@ targets_only <- function(targets, cache, jobs) {
   )
 }
 
-no_imported_objects <- function(targets, cache, jobs) {
-  parallel_filter(
-    x = targets,
-    f = function(target) {
-      is_built_or_imported_file(target = target, cache = cache)
-    },
-    jobs = jobs
-  )
-}
-
 is_imported_cache <- Vectorize(function(target, cache) {
   cache$exists(key = target) &&
   diagnose(
@@ -714,11 +654,5 @@ is_imported_cache <- Vectorize(function(target, cache) {
     character_only = TRUE,
     cache = cache
   )$imported
-},
-"target", SIMPLIFY = TRUE)
-
-is_built_or_imported_file <- Vectorize(function(target, cache) {
-  imported <- is_imported_cache(target = target, cache = cache)
-  !imported | (imported & is_encoded_path(target))
 },
 "target", SIMPLIFY = TRUE)
