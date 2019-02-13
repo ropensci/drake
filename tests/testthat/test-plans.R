@@ -98,10 +98,7 @@ test_with_dir("edge cases for plans", {
   # empty plan
   equivalent_plans(
     drake_plan(),
-    weak_tibble(
-      target = character(0),
-      command = character(0)
-    )
+    weak_tibble(target = character(0), command = list())
   )
   # no target names
   equivalent_plans(
