@@ -96,10 +96,7 @@ test_with_dir("File functions handle input", {
 test_with_dir("edge cases for plans", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   # empty plan
-  equivalent_plans(
-    drake_plan(),
-    weak_tibble(target = character(0), command = list())
-  )
+  equivalent_plans(drake_plan(), empty_plan())
   # no target names
   equivalent_plans(
     drake_plan(a, b),
