@@ -60,8 +60,8 @@ test_with_dir("arbitrary storr in-memory cache", {
 
   imp <- setdiff(cached(), cached(no_imported_objects = TRUE))
   expect_equal(length(imp), 0)
-  imp <- setdiff(cached(cache = cache),
-                 cached(cache = cache, no_imported_objects = TRUE))
+  imp <- setdiff(cached(cache = cache, targets_only = FALSE),
+                 cached(cache = cache, targets_only = TRUE))
   expect_true(length(imp) > 0)
   expect_false(file.exists(default_cache_path()))
 
