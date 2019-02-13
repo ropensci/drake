@@ -38,14 +38,13 @@ drake_debug <- function(
   target = NULL,
   config = NULL,
   character_only = FALSE,
-  envir = parent.frame(),
+  envir = NULL,
   jobs = 1,
   replace = FALSE,
   verbose = TRUE
 ) {
   # Tested in tests/testthat/test-always-skipped.R.
   # nocov start
-  force(envir)
   if (!is.null(envir)) {
     warning("the `envir` argument of drake_debug() is deprecated")
   }
@@ -63,7 +62,6 @@ drake_debug <- function(
     deps = TRUE,
     envir = config$eval,
     cache = config$cache,
-    graph = config$graph,
     jobs = jobs,
     replace = replace,
     tidyselect = FALSE,

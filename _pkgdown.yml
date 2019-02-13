@@ -37,7 +37,7 @@ reference:
   - '`drake_config`'
   - '`drake_build`'
   - '`drake_debug`'
-- title: Workflow plan data frames
+- title: `drake` plans
   contents:
   - '`drake_plan`'
   - '`bind_plans`'
@@ -58,8 +58,6 @@ reference:
   - '`plan_to_code`'
   - '`plan_to_notebook`'
   - '`drake_plan_source`'
-  - '`evaluate_plan`'
-  - '`expand_plan`'
 - title: Network graphs and visualization
   contents:
   - '`vis_drake_graph`'
@@ -92,23 +90,33 @@ reference:
   - '`predict_load_balancing`'
 - title: Caches
   contents:
-  - '`new_cache`'
-  - '`this_cache`'
+  - '`loadd`'
+  - '`readd`'
   - '`cached`'
   - '`clean`'
+  - '`progress`'
+  - '`in_progress`'
+  - '`failed`'
+  - '`get_cache()`'
+  - '`this_cache`'
+  - '`new_cache`'
+  - '`find_cache`'
   - '`drake_cache_log`'
   - '`drake_cache_log_file`'
   - '`drake_gc`'
   - '`drake_get_session_info`'
-  - '`failed`'
-  - '`find_cache`'
   - '`get_cache`'
-  - '`loadd`'
-  - '`progress`'
-  - '`readd`'
   - '`rescue_cache`'
   - '`show_source`'
   - '`read_drake_seed`'
 - title: Environments
   contents:
   - '`expose_imports`'
+- title: Wildcard interface
+  - '`map_plan`'
+  - '`gather_plan`'
+  - '`gather_by`'
+  - '`reduce_plan`'
+  - '`reduce_by`'
+  - '`evaluate_plan`'
+  - '`expand_plan`'
