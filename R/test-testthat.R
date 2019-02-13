@@ -163,10 +163,7 @@ equivalent_plans <- function(out, exp) {
   out <- out[order(out$target), ]
   exp <- exp[order(exp$target), ]
   for (col in lang_cols(out)) {
-    testthat::expect_equal(
-      unclass(unname(lapply(out[[col]], standardize_command))),
-      unclass(unname(lapply(exp[[col]], standardize_command)))
-    )
+    testthat::expect_equal(unclass(out[[col]]), unclass(exp[[col]]))
   }
   for (col in setdiff(colnames(out), lang_cols(out))) {
     testthat::expect_equal(out[[col]], exp[[col]])

@@ -108,8 +108,7 @@ map_to_grid <- function(transform, target, row, plan, graph) {
     warn_empty_transform(target)
     return()
   }
-  cols <- c(colnames(grid), upstream_trace_vars(target, plan, graph))
-  cols <- intersect(cols, colnames(plan))
+  cols <- upstream_trace_vars(target, plan, graph)
   grid <- dsl_left_outer_join(grid, plan[, cols, drop = FALSE])
   sub_cols <- intersect(colnames(grid), group_names(transform))
   sub_grid <- grid[, sub_cols, drop = FALSE]
@@ -133,7 +132,8 @@ upstream_trace_vars <- function(target, plan, graph) {
   }
   transforms <- igraph::vertex_attr(graph, "transform", index = targets)
   revdeps <- unique(unlist(lapply(transforms, dsl_revdeps)))
-  c(targets, revdeps)
+  out <- c(targets, revdeps)
+  intersect(out, colnames(plan))
 }
 
 dsl_grid <- function(...) UseMethod("dsl_grid")
