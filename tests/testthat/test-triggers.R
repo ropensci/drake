@@ -342,7 +342,7 @@ test_with_dir("deps load into memory for complex triggers", {
       plan, envir = e, jobs = jobs, parallelism = parallelism,
       verbose = FALSE, caching = caching, session_info = FALSE
     )
-    expect_true(all(cached(list = plan$target)))
+    expect_true(all(plan$target %in% cached()))
   }
   config <- drake_config(plan)
   expect_equal(config$layout[["psi_2"]]$deps_condition$memory, "psi_1")

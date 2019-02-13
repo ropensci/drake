@@ -26,7 +26,7 @@ test_with_dir("retries", {
 
   debrief_retries <- function() {
     expect_true(file.exists("failed_once.txt"))
-    expect_true(cached(x))
+    expect_true("x" %in% cached())
     expect_null(diagnose(x)$error)
   }
 
