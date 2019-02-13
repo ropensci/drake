@@ -3,13 +3,13 @@ transform_plan <- function(plan, envir, trace = FALSE) {
     return(plan)
   }
   old_cols(plan) <- old_cols <- colnames(plan)
-  plan[["transform"]] <- tidyeval_exprs(plan[["transform"]], envir = envir)
-  plan[["transform"]] <- lapply(plan[["transform"]], parse_transform)
+  plan$transform <- tidyeval_exprs(plan$transform, envir = envir)
+  plan$transform <- lapply(plan$transform, parse_transform)
   graph <- dsl_graph(plan)
   order <- igraph::topo_sort(graph)$name
   for (target in order) {
     index <- which(target == plan$target)
-    rows <- transform_row(plan, index)
+    rows <- transform_row(index, plan, graph)
     plan <- sub_in_plan(plan, rows, index)
     old_cols(plan) <- old_cols
   }
@@ -17,13 +17,38 @@ transform_plan <- function(plan, envir, trace = FALSE) {
     keep <- as.character(intersect(colnames(plan), old_cols(plan)))
     plan <- plan[, intersect(colnames(plan), old_cols(plan)), drop = FALSE]
   }
-  old_cols(plan) <- plan[["transform"]] <- NULL
+  old_cols(plan) <- plan$transform <- NULL
   plan
+}
+
+transform_row <- function(index, plan, graph) {
+  row <- plan[index,, drop = FALSE] # nolint
+  target <- row$target
+  transform <- set_old_groupings(plan$transform[[index]], plan)
+  new_cols <- c(
+    target,
+    tag_in(transform),
+    tag_out(transform),
+    group_names(transform)
+  )
+  check_group_names(new_cols, old_cols(plan))
+  out <- dsl_transform(transform, target, row, plan, graph)
+  if (is.null(out)) {
+    return()
+  }
+  out[[target]] <- out$target
+  for (col in tag_in(transform)) {
+    out[[col]] <- target
+  }
+  for (col in tag_out(transform)) {
+    out[[col]] <- out$target
+  }
+  out
 }
 
 dsl_graph <- function(plan) {
   edges <- lapply(seq_len(nrow(plan)), function(index) {
-    dsl_target_edges(plan[["transform"]][[index]], plan[["target"]][[index]])
+    dsl_target_edges(plan$transform[[index]], plan$target[[index]])
   })
   edges <- do.call(rbind, edges)
   if (!length(edges) || !nrow(edges)) {
@@ -31,7 +56,7 @@ dsl_graph <- function(plan) {
     return(igraph::make_empty_graph()) # nocov
   }
   keep <- !vapply(
-    plan[["transform"]],
+    plan$transform,
     safe_is_na,
     FUN.VALUE = logical(1)
   )
@@ -41,7 +66,15 @@ dsl_graph <- function(plan) {
   graph <- igraph::graph_from_data_frame(edges)
   graph <- igraph::simplify(graph)
   stopifnot(igraph::is_dag(graph))
-  graph
+  transforms <- plan$transform
+  names(transforms) <- plan$target
+  transforms <- transforms[igraph::V(graph)$name]
+  igraph::set_vertex_attr(
+    graph,
+    name = "transform",
+    index = igraph::V(graph)$name,
+    value = transforms
+  )
 }
 
 dsl_target_edges <- function(transform, target) {
@@ -68,47 +101,21 @@ dsl_target_edges <- function(transform, target) {
   edges
 }
 
-transform_row <- function(plan, index) {
-  row <- plan[index,, drop = FALSE] # nolint
-  target <- row$target
-  transform <- set_old_groupings(plan[["transform"]][[index]], plan)
-  new_cols <- c(
-    target,
-    tag_in(transform),
-    tag_out(transform),
-    group_names(transform)
-  )
-  check_group_names(new_cols, old_cols(plan))
-  out <- dsl_transform(transform, target, row, plan)
-  if (is.null(out)) {
-    return()
-  }
-  out[[target]] <- out$target
-  for (col in tag_in(transform)) {
-    out[[col]] <- target
-  }
-  for (col in tag_out(transform)) {
-    out[[col]] <- out$target
-  }
-  out
-}
-
-map_to_grid <- function(transform, target, row, plan) {
+map_to_grid <- function(transform, target, row, plan, graph) {
   groupings <- groupings(transform)
   grid <- dsl_grid(transform, groupings)
   if (any(dim(grid) < 1L)) {
     warn_empty_transform(target)
     return()
   }
-  ncl <- c(names(new_groupings(transform)), old_cols(plan))
-  old_cols <- old_cols(plan)
-  plan <- plan[, setdiff(colnames(plan), ncl), drop = FALSE]
-  grid <- dsl_left_outer_join(grid, plan)
+  cols <- c(colnames(grid), upstream_trace_vars(target, plan, graph))
+  cols <- intersect(cols, colnames(plan))
+  grid <- dsl_left_outer_join(grid, plan[, cols, drop = FALSE])
   sub_cols <- intersect(colnames(grid), group_names(transform))
   sub_grid <- grid[, sub_cols, drop = FALSE]
   new_targets <- new_targets(target, sub_grid, dsl_id(transform))
   out <- data.frame(target = new_targets, stringsAsFactors = FALSE)
-  for (col in setdiff(old_cols, c("target", "transform"))) {
+  for (col in setdiff(old_cols(plan), c("target", "transform"))) {
     if (is.language(row[[col]][[1]])) {
       out[[col]] <- grid_subs(row[[col]][[1]], grid)
     } else {
@@ -116,6 +123,17 @@ map_to_grid <- function(transform, target, row, plan) {
     }
   }
   cbind(out, grid)
+}
+
+upstream_trace_vars <- function(target, plan, graph) {
+  targets <- igraph::subcomponent(graph, v = target, mode = "in")$name
+  targets <- setdiff(targets, target)
+  if (!length(targets)) {
+    return(character(0))
+  }
+  transforms <- igraph::vertex_attr(graph, "transform", index = targets)
+  revdeps <- unique(unlist(lapply(transforms, dsl_revdeps)))
+  c(targets, revdeps)
 }
 
 dsl_grid <- function(...) UseMethod("dsl_grid")
@@ -175,7 +193,7 @@ dsl_transform <- function(...) {
 
 dsl_transform.cross <- dsl_transform.map <- map_to_grid
 
-dsl_transform.combine <- function(transform, target, row, plan) {
+dsl_transform.combine <- function(transform, target, row, plan, graph) {
   plan <- valid_splitting_plan(plan, transform)
   if (!nrow(plan)) {
     warn_empty_transform(target)
