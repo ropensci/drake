@@ -396,3 +396,13 @@ test_with_dir("parallelism can be a scheduler function", {
   expect_true(file.exists("x"))
   expect_false(config$cache$exists("x"))
 })
+
+test_with_dir("running()", {
+  skip_on_cran()
+  plan <- drake_plan(a = 1)
+  cache <- storr::storr_environment()
+  make(plan, session_info = FALSE, cache = cache)
+  expect_equal(running(cache = cache), character(0))
+  cache$set(key = "a", value = "running", namespace = "progress")
+  expect_equal(running(cache = cache), "a")
+})

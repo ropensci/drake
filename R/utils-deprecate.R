@@ -1574,9 +1574,9 @@ in_progress <- function(
   .Deprecated(
     "in_progress",
     package = "drake",
-    msg = "in_progress() is deprecated."
+    msg = "in_progress() is deprecated. Use running() instead."
   )
-  in_progress_(path, search, cache, verbose )
+  running(path, search, cache, verbose )
 }
 
 #' @title Deprecated. Load an existing drake files system cache 

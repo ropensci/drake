@@ -5,7 +5,7 @@
 \title{Get the build progress of your targets
 during a \code{\link[=make]{make()}}.}
 \usage{
-progress(..., list = character(0), no_imported_objects = FALSE,
+progress(..., list = character(0), no_imported_objects = NULL,
   path = getwd(), search = TRUE, cache = drake::get_cache(path =
   path, search = search, verbose = verbose), verbose = 1L, jobs = 1)
 }
@@ -53,7 +53,7 @@ the current \code{\link[=make]{make()}} so far.
 }
 \description{
 Objects that drake imported, built, or attempted
-to build are listed as \code{"finished"} or \code{"in progress"}.
+to build are listed as \code{"done"} or \code{"running"}.
 Skipped objects are not listed.
 }
 \examples{

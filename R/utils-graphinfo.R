@@ -169,7 +169,7 @@ function_hover_text <- Vectorize(function(function_name, envir) {
 get_raw_node_category_data <- function(config) {
   all_labels <- V(config$graph)$name
   config$outdated <- resolve_graph_outdated(config = config)
-  config$in_progress <- in_progress_(cache = config$cache)
+  config$in_progress <- running(cache = config$cache)
   config$failed <- failed(cache = config$cache)
   config$files <- parallel_filter(
     x = all_labels, f = is_encoded_path, jobs = config$jobs)

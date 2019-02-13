@@ -1,51 +1,3 @@
-# List the targets that either (1) are currently being built, or
-# were being built if the last make quit unexpectedly.
-in_progress_ <- function(path = getwd(), search = TRUE,
-  cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = 1L
-) {
-  prog <- progress(path = path, search = search, cache = cache)
-  prog$target[prog$progress == "running"]
-}
-
-#' @title List the targets that failed in the last call
-#'   to [make()].
-#' @description Together, functions `failed` and
-#' [diagnose()] should eliminate the strict need
-#' for ordinary error messages printed to the console.
-#' @seealso [diagnose()], [drake_get_session_info()],
-#'   [cached()], [readd()], [drake_plan()], [make()]
-#' @export
-#' @return A character vector of target names.
-#' @inheritParams cached
-#' @param upstream_only Deprecated.
-#' @examples
-#' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' if (requireNamespace("knitr")) {
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' make(my_plan) # Run the project, build the targets.
-#' failed() # Should show that no targets failed.
-#' # Build a workflow plan doomed to fail:
-#' bad_plan <- drake_plan(x = function_doesnt_exist())
-#' try(make(bad_plan), silent = TRUE) # error
-#' failed() # "x"
-#' diagnose(x) # Retrieve the cached error log of x.
-#' }
-#' })
-#' }
-failed <- function(path = getwd(), search = TRUE,
-  cache = drake::get_cache(path = path, search = search, verbose = verbose),
-  verbose = 1L,
-  upstream_only = NULL
-) {
-  if (!is.null(upstream_only)) {
-    warning("argument upstream_only is deprecated.")
-  }
-  prog <- progress(path = path, search = search, cache = cache)
-  prog$target[prog$progress == "failed"]
-}
-
 #' @title Get the build progress of your targets
 #'   during a [make()].
 #' @description Objects that drake imported, built, or attempted
@@ -119,6 +71,81 @@ progress <- function(
     FUN.VALUE = character(1)
   )
   weak_tibble(target = targets, progress = progress)
+}
+
+#' @title List running targets.
+#' @description List the targets that either
+#'   (1) are currently being built during a call to [make()], or
+#'   (2) if [make()] was interrupted, the targets that were running
+#'     at the time.
+#' @seealso [failed()], [make()]
+#' @export
+#' @return A character vector of target names.
+#' @inheritParams cached
+#' @examples
+#' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
+#' if (requireNamespace("knitr")) {
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
+#' make(my_plan) # Run the project, build the targets.
+#' running() # Everything should be done.
+#' # nolint start
+#' # Run make() in one R session...
+#' # slow_plan <- drake_plan(x = Sys.sleep(2))
+#' # make(slow_plan)
+#' # and see the progress in another session.
+#' # running()
+#' # nolint end
+#' }
+#' })
+#' }
+running <- function(
+  path = getwd(),
+  search = TRUE,
+  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  verbose = 1L
+) {
+  prog <- progress(path = path, search = search, cache = cache)
+  prog$target[prog$progress == "running"]
+}
+
+#' @title List failed targets.
+#'   to [make()].
+#' @description Together, functions `failed()` and
+#' [diagnose()] should eliminate the strict need
+#' for ordinary error messages printed to the console.
+#' @seealso [running()], [make()]
+#' @export
+#' @return A character vector of target names.
+#' @inheritParams cached
+#' @param upstream_only Deprecated.
+#' @examples
+#' \dontrun{
+#' test_with_dir("Quarantine side effects.", {
+#' if (requireNamespace("knitr")) {
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
+#' make(my_plan) # Run the project, build the targets.
+#' failed() # Should show that no targets failed.
+#' # Build a workflow plan doomed to fail:
+#' bad_plan <- drake_plan(x = function_doesnt_exist())
+#' try(make(bad_plan), silent = TRUE) # error
+#' failed() # "x"
+#' diagnose(x) # Retrieve the cached error log of x.
+#' }
+#' })
+#' }
+failed <- function(
+  path = getwd(),
+  search = TRUE,
+  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  verbose = 1L,
+  upstream_only = NULL
+) {
+  if (!is.null(upstream_only)) {
+    warning("argument upstream_only is deprecated.")
+  }
+  prog <- progress(path = path, search = search, cache = cache)
+  prog$target[prog$progress == "failed"]
 }
 
 get_progress_single <- function(target, cache) {
