@@ -23,7 +23,7 @@
 #' })
 #' }
 knitr_deps <- function(target) {
-  decode_deps_list(get_knitr_deps(target))
+  display_deps_list(decode_deps_list(get_knitr_deps(target)))
 }
 
 get_knitr_deps <- function(target) {

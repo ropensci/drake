@@ -15,10 +15,9 @@ test_with_dir("codeless knitr report", {
     overwrite = TRUE
   ))
   expect_true(file.exists(file))
-  expect_equal(
-    deps_code(quote(knitr_in("codeless.Rmd"))),
-    list(knitr_in = file)
-  )
+  deps <- deps_code(quote(knitr_in("codeless.Rmd")))
+  expect_equal(deps$target, "codeless.Rmd")
+  expect_equal(deps$type, "knitr_in")
   expect_silent(
     make(
       drake_plan(x = knitr_in("codeless.Rmd")),
@@ -66,7 +65,7 @@ test_with_dir("empty cases", {
 test_with_dir("knitr_deps() works", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("knitr")
-  expect_equal(knitr_deps(character(0)), list())
+  expect_true(!nrow(knitr_deps(character(0))))
   files <- system.file(
     file.path("testing", "knitr", c("nested.Rmd", "test.Rmd")),
     package = "drake", mustWork = TRUE
@@ -83,32 +82,32 @@ test_with_dir("knitr_deps() works", {
     "input.txt", "output.txt", "nested.Rmd", "nested"
   ))
   out <- knitr_deps("test.Rmd")
-  expect_equal(sort(clean_dependency_list(out)), ans)
+  expect_equal(sort(out$target), ans)
   expect_false(file.exists("test.md"))
-  expect_warning(x <- sort(clean_dependency_list(knitr_deps("report.Rmd"))))
-  expect_warning(expect_equal(x, sort(
+  expect_warning(x <- knitr_deps("report.Rmd"))
+  expect_warning(expect_equal(x$target, sort(
     clean_dependency_list(knitr_deps(encode_path("report.Rmd"))))))
-  expect_equal(x, character(0))
+  expect_true(!nrow(x))
   load_mtcars_example()
-  w <- clean_dependency_list(deps_code("funct(knitr_in(report.Rmd))"))
+  w <- deps_code("funct(knitr_in(report.Rmd))")
   x <- knitr_deps("report.Rmd")
   real_deps <- c(
     "small", "coef_regression2_small", "large"
   )
-  expect_equal(sort(w), sort(c("funct")))
-  expect_equal(sort(clean_dependency_list(x)), sort(real_deps))
+  expect_equal(sort(w$target), sort(c("funct")))
+  expect_equal(sort(x$target), sort(real_deps))
 })
 
 test_with_dir("knitr file deps from commands and functions", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("knitr")
   load_mtcars_example()
-  expect_equal(sort(
-    clean_dependency_list(deps_code("knitr_in(\"report.Rmd\")"))), sort(c(
-    "coef_regression2_small", "large", "small", "report.Rmd"
-  )))
+  expect_equal(
+    sort(deps_code("knitr_in(\"report.Rmd\")")$target),
+    sort(c("coef_regression2_small", "large", "small", "report.Rmd"))
+  )
   f <- function(x) {
     knit(x)
   }
-  expect_equal(clean_dependency_list(deps_code(f)), "knit")
+  expect_equal(deps_code(f)$target, "knit")
 })

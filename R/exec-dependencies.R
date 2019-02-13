@@ -120,6 +120,9 @@ deps_target <- function(
 }
 
 display_deps_list <- function(x) {
+  if (!length(x)) {
+    return(weak_tibble(target = character(0), type = character(0)))
+  }
   x$memory <- NULL
   out <- lapply(names(x), function(n) {
     weak_tibble(target = x[[n]], type = n)
