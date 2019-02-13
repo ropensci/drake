@@ -37,7 +37,7 @@ reference:
   - '`drake_config`'
   - '`drake_build`'
   - '`drake_debug`'
-- title: `drake` plans
+- title: drake plans
   contents:
   - '`drake_plan`'
   - '`bind_plans`'
@@ -109,6 +109,7 @@ reference:
   contents:
   - '`expose_imports`'
 - title: Wildcard interface
+  contents:
   - '`map_plan`'
   - '`gather_plan`'
   - '`gather_by`'
