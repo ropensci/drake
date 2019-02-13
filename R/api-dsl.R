@@ -172,9 +172,6 @@ grid_sub <- function(index, expr, grid) {
 }
 
 new_targets <- function(target, grid, cols, id) {
-  if (is.null(dim(grid)) || any(dim(grid) < 1L)) {
-    return(target)
-  }
   if (is.character(id)) {
     cols <- intersect(id, colnames(grid))
   }
