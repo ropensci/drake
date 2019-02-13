@@ -235,7 +235,7 @@ test_with_dir("cache functions work from various working directories", {
   setwd(scratch) # nolint
   owd <- getwd()
   expect_equal(nrow(build_times(search = FALSE)), 0)
-  expect_equal(progress(search = FALSE), character(0))
+  expect_equal(nrow(progress(search = FALSE)), 0)
   expect_false(any("in progress" %in% progress(search = FALSE)))
   expect_error(readd(search = FALSE))
   config <- dbug()
