@@ -131,7 +131,7 @@ upstream_trace_vars <- function(target, plan, graph) {
     return(character(0))
   }
   transforms <- igraph::vertex_attr(graph, "transform", index = targets)
-  revdeps <- unique(unlist(lapply(transforms, dsl_revdeps)))
+  revdeps <- unique(unlist(lapply(transforms, function(x) dsl_revdeps(x))))
   out <- c(targets, revdeps)
   intersect(out, colnames(plan))
 }
@@ -349,7 +349,7 @@ dsl_deps.combine <- function(transform) {
   )
 }
 
-dsl_revdeps <- function(transform) UseMethod("dsl_revdeps")
+dsl_revdeps <- function(...) UseMethod("dsl_revdeps")
 
 dsl_revdeps.map <- function(transform) {
   attr(transform, "revdeps") %|||% c(
