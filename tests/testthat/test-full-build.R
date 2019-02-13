@@ -62,7 +62,7 @@ test_with_dir("scratch build with custom filesystem cache.", {
 
   # clean removes imported functions and cleans up 'functions'
   # namespace
-  expect_true(cached(f, cache = cache))
+  expect_true("f" %in% cached(targets_only = FALSE, cache = cache))
   expect_true("f" %in% config$cache$list())
   clean(f, cache = cache)
   expect_false("f" %in% config$cache$list())
