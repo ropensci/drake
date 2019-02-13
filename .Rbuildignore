@@ -35,6 +35,7 @@ vignettes/.*_files
 ^.*\.js$
 ^.*\.log$
 ^.*\.out$
+^.*\.nfs.*$
 ^.*\.Rproj$
 ^.*\.svg$
 ^\.Rproj\.user$
