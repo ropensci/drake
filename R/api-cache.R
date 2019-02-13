@@ -569,6 +569,9 @@ deprecate_hash_algo_args <- function(
 #' @param targets_only Logical. If `TRUE` just list the targets.
 #'   If `FALSE`, list files and imported objects too.
 #'
+#' @param no_imported_objects Logical, deprecated. Use
+#'   `targets_only` instead.
+#'
 #' @param cache drake cache. See [new_cache()].
 #'   If supplied, `path` and `search` are ignored.
 #'
@@ -609,7 +612,8 @@ cached <- function(
   cache = NULL,
   verbose = 1L,
   namespace = NULL,
-  jobs = 1
+  jobs = 1,
+  targets_only = TRUE
 ) {
   if (is.null(cache)) {
     cache <- get_cache(path = path, search = search, verbose = verbose)
@@ -630,7 +634,7 @@ cached <- function(
     )
   }
   targets <- cache$list(namespace = namespace)
-  if (!targets_only) {
+  if (targets_only) {
     targets <- targets_only(targets, cache, jobs)
   }
   display_keys(targets)
