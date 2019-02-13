@@ -114,7 +114,7 @@ test_with_dir("make() with skip_targets", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_silent(make(drake_plan(x = 1), skip_targets = TRUE,
     verbose = FALSE, session_info = FALSE))
-  expect_false(cached(x))
+  expect_false("x" %in% cached())
 })
 
 test_with_dir("warnings and messages are caught", {
@@ -235,7 +235,7 @@ test_with_dir("make(..., skip_imports = TRUE) works", {
     )
   })
   expect_equal(
-    sort(cached()),
+    sort(cached(targets_only = FALSE)),
     sort(display_keys(
       c(encode_path("intermediatefile.rds"), con$plan$target)
     ))
