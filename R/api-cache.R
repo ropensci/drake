@@ -625,7 +625,7 @@ cached <- function(
     namespace <- cache$default_namespace
   }
   targets <- c(list, match.call(expand.dots = FALSE)$...)
-  if (!length(targets)) {
+  if (length(targets)) {
     warning(
       "The `...` and `list` arguments of `cached()` are deprecated.",
       "`cached()` no longer accepts target names. It just lists ",
