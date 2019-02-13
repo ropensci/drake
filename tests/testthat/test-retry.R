@@ -79,7 +79,7 @@ test_with_dir("timeouts", {
       session_info = FALSE
     )
   )
-  expect_true(cached(x))
+  expect_true("x" %in% cached())
 
   # Should time out.
   clean()
