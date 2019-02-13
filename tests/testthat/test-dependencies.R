@@ -1,5 +1,7 @@
 drake_context("dependencies")
 
+if(F){
+
 test_with_dir("unparsable commands are handled correctly", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- "bluh$"
@@ -475,3 +477,5 @@ test_with_dir("deps_code() on a knitr file", {
   load_mtcars_example()
   expect_true(is.list(deps_code(file_store("report.Rmd"))))
 })
+
+}
