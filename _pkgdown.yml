@@ -31,7 +31,7 @@ reference:
   - '`drake_examples`'
   - '`load_mtcars_example`'
   - '`clean_mtcars_example`'
-- title: Run stuff
+- title: Build targets
   contents:
   - '`make`'
   - '`drake_config`'
@@ -41,23 +41,18 @@ reference:
   contents:
   - '`drake_plan`'
   - '`bind_plans`'
-  - '`map_plan`'
-  - '`gather_plan`'
-  - '`gather_by`'
-  - '`reduce_plan`'
-  - '`reduce_by`'
-  - '`file_in`'
-  - '`file_out`'
-  - '`file_store`'
-  - '`knitr_in`'
-  - '`ignore`'
-  - '`drake_envir`'
-  - '`from_plan`'
-  - '`target`'
   - '`code_to_plan`'
   - '`plan_to_code`'
   - '`plan_to_notebook`'
   - '`drake_plan_source`'
+- title: Special functions for commands
+  contents:
+  - '`file_in`'
+  - '`file_out`'
+  - '`knitr_in`'
+  - '`ignore`'
+  - '`drake_envir`'
+  - '`from_plan`'
 - title: Network graphs and visualization
   contents:
   - '`vis_drake_graph`'
@@ -88,16 +83,16 @@ reference:
   - '`build_times`'
   - '`predict_runtime`'
   - '`predict_load_balancing`'
-- title: Caches
+- title: Cache utilities
   contents:
   - '`loadd`'
   - '`readd`'
   - '`cached`'
   - '`clean`'
   - '`progress`'
-  - '`in_progress`'
+  - '`running`'
   - '`failed`'
-  - '`get_cache()`'
+  - '`get_cache`'
   - '`this_cache`'
   - '`new_cache`'
   - '`find_cache`'
@@ -109,6 +104,7 @@ reference:
   - '`rescue_cache`'
   - '`show_source`'
   - '`read_drake_seed`'
+  - '`file_store`'
 - title: Environments
   contents:
   - '`expose_imports`'
