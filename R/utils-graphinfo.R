@@ -226,7 +226,7 @@ legend_nodes <- function(font_size = 20) {
     label = c(
       "Up to date",
       "Outdated",
-      "In progress",
+      "Running",
       "Failed",
       "Imported",
       "Missing",
