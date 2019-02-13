@@ -72,15 +72,17 @@
 #' }
 deps_code <- function(x) {
   if (is.function(x)) {
-    return(decode_deps_list(import_dependencies(x)))
-  }
-  if (is.character(x)) {
+    out <- import_dependencies(x)
+  } else if (is.character(x)) {
     if (all(is_encoded_path(x)) && all(file.exists(decode_path(x)))) {
-      return(decode_deps_list(get_knitr_deps(decode_path(x))))
+      out <- get_knitr_deps(decode_path(x))
+    } else {
+      out <- command_dependencies(parse(text = x))
     }
-    x <- parse(text = x)
+  } else {
+    out <- command_dependencies(x)
   }
-  decode_deps_list(command_dependencies(x))
+  display_deps_list(decode_deps_list(out))
 }
 
 #' @title List the dependencies of one or more targets
@@ -94,7 +96,8 @@ deps_code <- function(x) {
 #' @param config An output list from [drake_config()].
 #' @param character_only Logical, whether to assume target is a character
 #'   string rather than a symbol.
-#' @return Names of dependencies listed by type (object, input file, etc).
+#' @return A data frame with the dependencies listed by type
+#'   (globals, files, etc).
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -113,7 +116,15 @@ deps_target <- function(
   }
   out <- config$layout[[target]]$deps_build
   out <- decode_deps_list(out)
-  select_nonempty(out)
+  display_deps_list(select_nonempty(out))
+}
+
+display_deps_list <- function(x) {
+  x$memory <- NULL
+  out <- lapply(names(x), function(n) {
+    weak_tibble(target = x[[n]], type = n)
+  })
+  do.call(rbind, out)
 }
 
 #' @title Find out why a target is out of date.
