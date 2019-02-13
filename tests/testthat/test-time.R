@@ -143,3 +143,14 @@ test_with_dir("runtime predictions", {
   expect_equal(p6, 70, tolerance = 1e-6)
   expect_equal(p7, 43, tolerance = 1e-6)
 })
+
+test_with_dir("predict_load_balancing()", {
+  load_mtcars_example()
+  cache <- storr::storr_environment()
+  config <- drake_config(my_plan, cache = cache, session_info = FALSE)
+  make(my_plan, cache = config$cache)
+  out <- predict_load_balancing(config, jobs = 4)
+  expect_equal(sort(unique(out$worker)), sort(as.integer(1:4)))
+  expect_equal(dim(out), dim(config$plan))
+  expect_equal(sort(colnames(out)), sort(c("target", "worker")))
+})

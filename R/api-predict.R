@@ -55,7 +55,7 @@ predict_runtime <- function(
   default_time = 0,
   warn = TRUE
 ) {
-  predict_load_balancing(
+  load_balancing_info(
     config = config,
     targets = targets,
     from_scratch = from_scratch,
@@ -151,6 +151,28 @@ predict_load_balancing <- function(
   default_time = 0,
   warn = TRUE
 ) {
+  load_balancing_info(
+    config,
+    targets = targets,
+    from_scratch = from_scratch,
+    targets_only = targets_only,
+    jobs = jobs,
+    known_times = known_times,
+    default_time = default_time,
+    warn = warn
+  )$workers
+}
+   
+load_balancing_info <- function(
+  config,
+  targets = NULL,
+  from_scratch = FALSE,
+  targets_only = NULL,
+  jobs = 1,
+  known_times = numeric(0),
+  default_time = 0,
+  warn = TRUE
+) {
   deprecate_targets_only(targets_only) # 2019-01-03 # nolint
   if (!is.null(targets)) {
     config$schedule <- nbhd_graph(
@@ -202,6 +224,10 @@ predict_load_balancing <- function(
     )
     running <- running[-1, ]
   }
+  workers <- lapply(seq_along(workers), function(index) {
+    weak_tibble(target = workers[[index]], worker = index)
+  })
+  workers <- do.call(rbind, workers)
   list(time = lubridate::dseconds(time), workers = workers)
 }
 
