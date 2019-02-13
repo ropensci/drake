@@ -111,8 +111,9 @@ map_to_grid <- function(transform, target, row, plan, graph) {
   cols <- upstream_trace_vars(target, plan, graph)
   grid <- dsl_left_outer_join(grid, plan[, cols, drop = FALSE])
   sub_cols <- intersect(colnames(grid), group_names(transform))
-  sub_grid <- grid[, sub_cols, drop = FALSE]
-  new_targets <- new_targets(target, sub_grid, dsl_id(transform))
+  new_targets <- new_targets(
+    target, grid, cols = sub_cols, id = dsl_id(transform)
+  )
   out <- data.frame(target = new_targets, stringsAsFactors = FALSE)
   for (col in setdiff(old_cols(plan), c("target", "transform"))) {
     if (is.language(row[[col]][[1]])) {
@@ -170,14 +171,14 @@ grid_sub <- function(index, expr, grid) {
   eval(call("substitute", expr, sub), envir = baseenv())
 }
 
-new_targets <- function(target, grid, id) {
+new_targets <- function(target, grid, cols, id) {
   if (is.null(dim(grid)) || any(dim(grid) < 1L)) {
     return(target)
   }
   if (is.character(id)) {
     cols <- intersect(id, colnames(grid))
-    grid <- grid[, cols, drop = FALSE]
   }
+  grid <- grid[, cols, drop = FALSE]
   if (identical(id, FALSE) || any(dim(grid) < 1L)) {
     out <- rep(target, nrow(grid))
     return(make.names(out, unique = TRUE))
@@ -212,7 +213,7 @@ dsl_transform.combine <- function(transform, target, row, plan, graph) {
     return()
   }
   out$target <- new_targets(
-    target, out[, dsl_by(transform), drop = FALSE], dsl_id(transform)
+    target, out, cols = dsl_by(transform), id = dsl_id(transform)
   )
   out
 }

@@ -1848,6 +1848,46 @@ test_with_dir("(1) .id = syms. (2) map() finds the correct cross() syms", {
   equivalent_plans(out, exp)
 })
 
+test_with_dir("upstream .id columns are available", {
+  factor_a_ <- c(0.4, 0.5, 0.6, 0.7, 0.8)
+  factor_b_ <- 0.1
+  out <- drake_plan(
+    raw_data = get_data(),
+    data = clean_data(raw_data),
+    analysis = target(
+      data %>%
+        filter(factor_a == factor_a_ & factor_b == factor_b_),
+      transform = cross(factor_a_ = !!factor_a_, factor_b_ = !!factor_b_)
+    ),
+    summary = target(
+      my_summarize(analysis),
+      transform = map(analysis, .id = c(factor_a_, factor_b_))
+    ),
+    results = target(bind_rows(summary), transform = combine(summary))
+  )
+  # nolint start
+  exp <- drake_plan(
+    raw_data = get_data(),
+    data = clean_data(raw_data),
+    analysis_0.4_0.1 = data %>% filter(factor_a == 0.4 & factor_b == 0.1),
+    analysis_0.5_0.1 = data %>% filter(factor_a == 0.5 & factor_b == 0.1),
+    analysis_0.6_0.1 = data %>% filter(factor_a == 0.6 & factor_b == 0.1),
+    analysis_0.7_0.1 = data %>% filter(factor_a == 0.7 & factor_b == 0.1),
+    analysis_0.8_0.1 = data %>% filter(factor_a == 0.8 & factor_b == 0.1),
+    summary_0.4_0.1 = my_summarize(analysis_0.4_0.1),
+    summary_0.5_0.1 = my_summarize(analysis_0.5_0.1),
+    summary_0.6_0.1 = my_summarize(analysis_0.6_0.1),
+    summary_0.7_0.1 = my_summarize(analysis_0.7_0.1),
+    summary_0.8_0.1 = my_summarize(analysis_0.8_0.1),
+    results = bind_rows(
+      summary_0.4_0.1, summary_0.5_0.1, summary_0.6_0.1,
+      summary_0.7_0.1, summary_0.8_0.1
+    )
+  )
+  # nolint end
+  equivalent_plans(out, exp)
+})
+
 test_with_dir("repeated maps do not duplicate targets", {
   x_ <- rep("a", 2)
   y_ <- rep("b", 2)
