@@ -45,9 +45,8 @@ any targets with no available runtime, either in
 targets default to \code{default_time}.}
 }
 \value{
-A list with (1) the total runtime and (2) a list
-of the names of the targets assigned to each worker.
-For each worker, targets are listed in the order they are assigned.
+A data frame showing one likely arrangement
+of targets assigned to parallel workers.
 }
 \description{
 Take the past recorded runtimes times from

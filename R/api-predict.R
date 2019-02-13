@@ -8,6 +8,7 @@
 #'   Predictions only include the time it takes to run the targets,
 #'   not overhead/preprocessing from `drake` itself.
 #' @export
+#' @return Predicted total runtime of the next call to [make()].
 #' @inheritParams predict_load_balancing
 #' @seealso [predict_load_balancing()], [build_times()], [make()]
 #' @examples
@@ -112,9 +113,8 @@ predict_runtime <- function(
 #' }
 #' })
 #' }
-#' @return A list with (1) the total runtime and (2) a list
-#'   of the names of the targets assigned to each worker.
-#'   For each worker, targets are listed in the order they are assigned.
+#' @return A data frame showing one likely arrangement
+#'   of targets assigned to parallel workers.
 #' @param config Optional internal runtime parameter list of
 #'   produced by both [make()] and
 #'   [drake_config()].

@@ -44,6 +44,9 @@ any targets with no available runtime, either in
 \code{known_times} or \code{\link[=build_times]{build_times()}}. The times for these
 targets default to \code{default_time}.}
 }
+\value{
+Predicted total runtime of the next call to \code{\link[=make]{make()}}.
+}
 \description{
 Take the past recorded runtimes times from
 \code{\link[=build_times]{build_times()}} and use them to predict how the targets

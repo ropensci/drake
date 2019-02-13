@@ -16,7 +16,8 @@ is TRUE, a character scalar denoting a target name.}
 string rather than a symbol.}
 }
 \value{
-Names of dependencies listed by type (object, input file, etc).
+A data frame with the dependencies listed by type
+(globals, files, etc).
 }
 \description{
 Intended for debugging and checking your project.
