@@ -42,7 +42,7 @@ categorize_nodes <- function(config) {
     nodes[targets, "status"] <- "up to date"
     nodes[missing, "status"] <- "missing"
     nodes[outdated, "status"] <- "outdated"
-    nodes[in_progress, "status"] <- "in progress"
+    nodes[in_progress, "status"] <- "running"
     nodes[failed, "status"] <- "failed"
     nodes$type <- "object"
     nodes[is_encoded_path(nodes$id), "type"] <- "file"
@@ -87,7 +87,7 @@ cluster_status <- function(statuses) {
     "up to date",
     "missing",
     "outdated",
-    "in progress",
+    "running",
     "failed"
   )
   out <- "other"
@@ -324,7 +324,7 @@ style_nodes <- function(config) {
   with(config, {
     nodes$font.size <- font_size # nolint
     nodes[nodes$status == "imported", "color"] <- color_of("import_node")
-    nodes[nodes$status == "in progress", "color"] <- color_of("in_progress")
+    nodes[nodes$status == "running", "color"] <- color_of("in_progress")
     nodes[nodes$status == "failed", "color"] <- color_of("failed")
     nodes[nodes$status == "missing", "color"] <- color_of("missing_node")
     nodes[nodes$status == "outdated", "color"] <- color_of("outdated")

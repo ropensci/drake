@@ -76,7 +76,8 @@ finalize_storage <- function(target, value, meta, config, verbose) {
   config$cache$set(key = target, value = meta, namespace = "meta")
   set_progress(
     target = target,
-    value = "finished",
+    meta = meta,
+    value = "done",
     config = config
   )
   if (!meta$imported && verbose) {
@@ -122,6 +123,7 @@ store_function <- function(target, value, meta, config) {
 store_failure <- function(target, meta, config) {
   set_progress(
     target = target,
+    meta = meta,
     value = "failed",
     config = config
   )

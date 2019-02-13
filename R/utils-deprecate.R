@@ -1413,7 +1413,7 @@ cache_namespaces <- function(
     "change",   # value returned by the "change" trigger
     "config",   # elements of the config list
     "memoize",  # for the memoization in preprocessing
-    "progress", # build progress: in progress, finished, failed, etc.
+    "progress", # build progress: running, done, failed, etc.
     "session"   # session info
   )
   sort(out)

@@ -5,7 +5,7 @@ in_progress_ <- function(path = getwd(), search = TRUE,
   verbose = 1L
 ) {
   prog <- progress(path = path, search = search, cache = cache)
-  as.character(names(which(prog == "in progress")))
+  as.character(names(which(prog == "running")))
 }
 
 #' @title List the targets that failed in the last call
@@ -49,7 +49,7 @@ failed <- function(path = getwd(), search = TRUE,
 #' @title Get the build progress of your targets
 #'   during a [make()].
 #' @description Objects that drake imported, built, or attempted
-#' to build are listed as `"finished"` or `"in progress"`.
+#' to build are listed as `"done"` or `"running"`.
 #' Skipped objects are not listed.
 #' @seealso [diagnose()], [drake_get_session_info()],
 #'   [cached()], [readd()], [drake_plan()], [make()]
@@ -90,7 +90,7 @@ failed <- function(path = getwd(), search = TRUE,
 progress <- function(
   ...,
   list = character(0),
-  no_imported_objects = FALSE,
+  no_imported_objects = NULL,
   path = getwd(),
   search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
@@ -100,71 +100,37 @@ progress <- function(
   if (is.null(cache)) {
     return(character(0))
   }
+  if (!is.null(no_imported_objects)) {
+    warning(
+      "Argument `no_imported_objects` of progress() is deprecated. ",
+      "Only targets are returned now.",
+      call. = FALSE
+    )
+  }
   dots <- match.call(expand.dots = FALSE)$...
   targets <- targets_from_dots(dots, list)
   if (!length(targets)) {
-    return(
-      list_progress(
-        no_imported_objects = no_imported_objects,
-        cache = cache,
-        jobs = jobs
-      )
-    )
+    targets <- cache$list(namespace = "progress")
   }
-  get_progress(targets = targets, cache = cache, jobs = jobs)
-}
-
-list_progress <- function(no_imported_objects, cache, jobs) {
-  all_marked <- cache$list(namespace = "progress")
-  all_progress <- get_progress(
-    targets = all_marked,
+  progress <- vapply(
+    targets,
+    get_progress_single,
     cache = cache,
-    jobs = jobs
+    FUN.VALUE = character(1)
   )
-  abridged_marked <- parallel_filter(
-    all_marked,
-    f = function(target) {
-      is_built_or_imported_file(target = target, cache = cache)
-    },
-    jobs = jobs
-  )
-  abridged_progress <- all_progress[abridged_marked]
-  if (no_imported_objects) {
-    out <- abridged_progress
-  } else{
-    out <- all_progress
-  }
-  if (!length(out)) {
-    out <- as.character(out)
-  }
-  return(out)
-}
-
-get_progress <- function(targets, cache, jobs) {
-  if (!length(targets)) {
-    return(character(0))
-  }
-  out <- lightly_parallelize(
-    X = targets,
-    FUN = get_progress_single,
-    jobs = jobs,
-    cache = cache
-  )
-  out <- unlist(out)
-  names(out) <- targets
-  out
+  weak_tibble(target = targets, progress = progress)
 }
 
 get_progress_single <- function(target, cache) {
   if (cache$exists(key = target, namespace = "progress")) {
     cache$get(key = target, namespace = "progress")
   } else{
-    "not built or imported"
+    "none"
   }
 }
 
-set_progress <- function(target, value, config) {
-  if (!config$log_progress) {
+set_progress <- function(target, meta, value, config) {
+  if (!config$log_progress || meta$imported) {
     return()
   }
   config$cache$duplicate(

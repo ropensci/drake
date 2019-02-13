@@ -64,7 +64,7 @@ justbuilt <- function(config) {
   out <- Filter(
     all,
     f = function(x) {
-      x == "finished"
+      x == "done"
     }
   )
   sort(intersect(names(out), y = config$plan$target))

@@ -13,7 +13,7 @@ get_assigned_var <- function(e) {
   } else {
     while (typeof(v) == "language") {
       if (length(v) < 2) {
-        stop(paste("unfinished code:", dsq(e)), call. = FALSE)
+        stop(paste("undone code:", dsq(e)), call. = FALSE)
       }
       v <- v[[2]]
       if (missing(v)) {

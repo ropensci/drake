@@ -1,7 +1,8 @@
 announce_build <- function(target, meta, config) {
   set_progress(
     target = target,
-    value = "in progress",
+    meta = meta,
+    value = "running",
     config = config
   )
   console(imported = meta$imported, target = target, config = config)
