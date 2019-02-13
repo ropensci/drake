@@ -9,7 +9,7 @@ test_with_dir("scratch build with custom filesystem cache.", {
     hash_algorithm = "murmur32"
   )
   expect_error(drake_get_session_info(cache = cache))
-  expect_true(length(progress(cache = cache)) == 0)
+  expect_true(nrow(progress(cache = cache)) == 0)
   expect_equal(config$cache$list(), character(0))
 
   testrun(config)

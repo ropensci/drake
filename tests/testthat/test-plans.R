@@ -176,9 +176,9 @@ test_with_dir(
                   command = 1)
   expect_silent(make(x, verbose = FALSE, session_info = FALSE))
   expect_equal(sort(cached()), letters[1:4])
-  stat <- c(a = "finished", b = "finished", c = "finished",
-            d = "finished")
-  expect_equal(progress(), stat)
+  prog <- progress()
+  expect_equal(sort(prog$target), letters[1:4])
+  expect_true(all(prog$progress == "done"))
   expect_warning({
     make(
       x,

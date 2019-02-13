@@ -80,7 +80,7 @@ test_with_dir("arbitrary storr in-memory cache", {
   p1 <- progress(verbose = FALSE)
   unlink(default_cache_path(), recursive = TRUE)
   p2 <- progress(cache = cache, verbose = FALSE)
-  expect_true(length(p2) > length(p1))
+  expect_true(nrow(p2) > nrow(p1))
   expect_false(file.exists(default_cache_path()))
 
   expect_error(readd(small, verbose = FALSE))

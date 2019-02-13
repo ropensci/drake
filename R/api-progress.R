@@ -5,7 +5,7 @@ in_progress_ <- function(path = getwd(), search = TRUE,
   verbose = 1L
 ) {
   prog <- progress(path = path, search = search, cache = cache)
-  as.character(names(which(prog == "running")))
+  prog$target[prog$progress == "running"]
 }
 
 #' @title List the targets that failed in the last call
@@ -43,7 +43,7 @@ failed <- function(path = getwd(), search = TRUE,
     warning("argument upstream_only is deprecated.")
   }
   prog <- progress(path = path, search = search, cache = cache)
-  as.character(names(which(prog == "failed")))
+  prog$target[prog$progress == "failed"]
 }
 
 #' @title Get the build progress of your targets

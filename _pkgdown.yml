@@ -31,7 +31,7 @@ reference:
   - '`drake_examples`'
   - '`load_mtcars_example`'
   - '`clean_mtcars_example`'
-- title: Basic
+- title: Run stuff
   contents:
   - '`make`'
   - '`drake_config`'
