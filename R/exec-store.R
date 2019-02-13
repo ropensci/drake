@@ -34,6 +34,12 @@ store_outputs <- function(target, value, meta, config) {
     config = config,
     verbose = TRUE
   )
+  set_progress(
+    target = target,
+    meta = meta,
+    value = "done",
+    config = config
+  )
 }
 
 store_single_output <- function(target, value, meta, config, verbose = FALSE) {
@@ -74,12 +80,6 @@ finalize_storage <- function(target, value, meta, config, verbose) {
     config = config
   )
   config$cache$set(key = target, value = meta, namespace = "meta")
-  set_progress(
-    target = target,
-    meta = meta,
-    value = "done",
-    config = config
-  )
   if (!meta$imported && verbose) {
     console_time(target, meta, config)
   }

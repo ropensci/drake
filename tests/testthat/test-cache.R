@@ -290,15 +290,12 @@ test_with_dir("cache functions work from various working directories", {
   # find stuff in current directory session, progress
   expect_equal(read_drake_seed(search = FALSE), config$seed)
   expect_true(is.list(drake_get_session_info(search = FALSE)))
-  expect_true(all(progress(search = FALSE) == "finished"))
-  expect_false(any("in progress" %in% progress(search = FALSE)))
-  expect_equal(sort(names(progress(search = FALSE))), all)
-  expect_equal(
-    sort(names(progress(search = FALSE, no_imported_objects = TRUE))),
-    sort(c(encode_path("input.rds"), out_files, builds)))
-  expect_equal(progress(bla, f, list = c("h", "final"), search = FALSE),
-               c(bla = "not built or imported", f = "finished", h = "finished",
-                 final = "finished"))
+  expect_true(all(progress(search = FALSE)$progress == "done"))
+  expect_false(any("running" %in% progress(search = FALSE)))
+  expect_equal(sort(progress(search = FALSE)$target), sort(config$plan$target))
+  exp <- weak_tibble(target = "final", progress = "done")
+  expect_equal(progress(final, search = FALSE), exp)
+  expect_equal(progress(list = "final", search = FALSE), exp)
 
   # cached, diagnose, rescue
   expect_true(length(diagnose(search = FALSE)) > length(config$plan$target))
@@ -364,21 +361,11 @@ test_with_dir("cache functions work from various working directories", {
 
   # progress, session
   expect_true(is.list(drake_get_session_info(search = TRUE, path = s)))
-  expect_equal(sort(names(progress(search = TRUE, path = s))),
-               sort(all))
-  expect_equal(
-    sort(
-      names(
-        progress(no_imported_objects = TRUE, search = TRUE, path = s)
-      )
-    ),
-    sort(c(encode_path("input.rds"), out_files, builds))
-  )
-  expect_equal(sort(progress(search = TRUE, path = s, bla, f,
-                             list = c("h", "final"))),
-               sort(c(bla = "not built or imported",
-                      f = "finished", h = "finished", final = "finished")))
-  expect_false(any("in progress" %in% progress(search = TRUE, path = s)))
+  prog <- progress(search = TRUE, path = s)
+  expect_equal(sort(prog$target), sort(config$plan$target))
+  expect_true(all(prog$progress == "done"))
+  prog <- progress(nothing, search = TRUE, path = s)
+  expect_equal(prog, weak_tibble(target = "nothing", progress = "none"))
 
   # cached and diagnose
   expect_equal(diagnose(search = TRUE), character(0))
@@ -423,12 +410,12 @@ test_with_dir("cache functions work from various working directories", {
 
   # Test purging
   prog <- progress(search = TRUE, path = s)
-  expect_true("final" %in% names(prog))
+  expect_true("final" %in% prog$target)
 
   clean(final, path = s, search = TRUE, jobs = 2,
         garbage_collection = TRUE, purge = TRUE)
   prog <- progress(search = TRUE, path = s)
-  expect_false("final" %in% names(prog))
+  expect_false("final" %in% prog$target)
 
   # More cleaning checks
   clean(path = s, search = TRUE, garbage_collection = FALSE)
