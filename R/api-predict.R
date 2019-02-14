@@ -9,8 +9,8 @@
 #'   not overhead/preprocessing from `drake` itself.
 #' @export
 #' @return Predicted total runtime of the next call to [make()].
-#' @inheritParams predict_load_balancing
-#' @seealso [predict_load_balancing()], [build_times()], [make()]
+#' @inheritParams predict_workers
+#' @seealso [predict_workers()], [build_times()], [make()]
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -35,7 +35,7 @@
 #'   from_scratch = TRUE,
 #'   known_times = known_times
 #' )
-#' balance <- predict_load_balancing(
+#' balance <- predict_workers(
 #'   config,
 #'   jobs = 7,
 #'   from_scratch = TRUE,
@@ -56,7 +56,7 @@ predict_runtime <- function(
   default_time = 0,
   warn = TRUE
 ) {
-  load_balancing_info(
+  worker_prediction_info(
     config = config,
     targets = targets,
     from_scratch = from_scratch,
@@ -102,7 +102,7 @@ predict_runtime <- function(
 #'   from_scratch = TRUE,
 #'   known_times = known_times
 #' )
-#' balance <- predict_load_balancing(
+#' balance <- predict_workers(
 #'   config,
 #'   jobs = 7,
 #'   from_scratch = TRUE,
@@ -141,7 +141,7 @@ predict_runtime <- function(
 #'   any targets with no available runtime, either in
 #'   `known_times` or [build_times()]. The times for these
 #'   targets default to `default_time`.
-predict_load_balancing <- function(
+predict_workers <- function(
   config,
   targets = NULL,
   from_scratch = FALSE,
@@ -151,7 +151,7 @@ predict_load_balancing <- function(
   default_time = 0,
   warn = TRUE
 ) {
-  load_balancing_info(
+  worker_prediction_info(
     config,
     targets = targets,
     from_scratch = from_scratch,
@@ -163,7 +163,7 @@ predict_load_balancing <- function(
   )$workers
 }
    
-load_balancing_info <- function(
+worker_prediction_info <- function(
   config,
   targets = NULL,
   from_scratch = FALSE,

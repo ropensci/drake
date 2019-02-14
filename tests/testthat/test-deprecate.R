@@ -176,6 +176,7 @@ test_with_dir("deprecate misc utilities", {
   expect_warning(read_drake_graph())
   expect_warning(read_drake_plan())
   expect_warning(prune_drake_graph(config$graph, "small"))
+  expect_warning(predict_load_balancing(config), regexp = "deprecated")
 })
 
 test_with_dir("deprecated arguments", {

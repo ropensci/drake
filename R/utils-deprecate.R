@@ -1860,3 +1860,40 @@ dependency_profile <- function(
     character_only = TRUE
   )
 }
+
+#' @title Deprecated in favor of [predict_workers()]
+#' @description Deprecated on 2019-02-14.
+#' @export
+#' @keywords internal
+#' @return A data frame showing one likely arrangement
+#'   of targets assigned to parallel workers.
+#' @inheritParams predict_workers
+predict_load_balancing <- function(
+  config,
+  targets = NULL,
+  from_scratch = FALSE,
+  targets_only = NULL,
+  jobs = 1,
+  known_times = numeric(0),
+  default_time = 0,
+  warn = TRUE
+) {
+  .Deprecated(
+    "predict_load_balancing",
+    package = "drake",
+    msg = paste(
+      "predict_load_balancing() is deprecated.",
+      "Use predict_workers() instead."
+    )
+  )
+  worker_prediction_info(
+    config,
+    targets = targets,
+    from_scratch = from_scratch,
+    targets_only = targets_only,
+    jobs = jobs,
+    known_times = known_times,
+    default_time = default_time,
+    warn = warn
+  )$workers
+}

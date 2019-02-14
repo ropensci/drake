@@ -55,6 +55,7 @@
 - Deprecate and rename  `in_progress()` to `running()`.
 - Deprecate and rename  `knitr_deps()` to `deps_knitr()`.
 - Deprecate and rename  `dependency_profile()` to `deps_profile()`.
+- Deprecate and rename  `predict_load_balancing()` to `predict_workers()`.
 
 # Version 6.2.1
 
