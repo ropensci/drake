@@ -97,7 +97,8 @@ get_cache <- function(
 #'   if no cache is found.
 #' @param path Starting path for search back for the cache.
 #'   Should be a subdirectory of the drake project.
-#' @param directory Name of the folder containing the cache.
+#' @param dir Character, name of the folder containing the cache.
+#' @param directory Deprecated. Use `dir`.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -112,17 +113,25 @@ get_cache <- function(
 #' }
 find_cache <- function(
   path = getwd(),
+  dir = NULL,
   directory = NULL
 ) {
-  directory <- directory %||% basename(default_cache_path())
-  while (!(directory %in% list.files(path = path, all.files = TRUE))) {
+  if (!is.null(directory)) {
+    warning(
+      "Argument `directory` of find_cache() is deprecated. ",
+      "use `dir` instead.",
+      call. = FALSE
+    )
+  }
+  dir <- dir %||% basename(default_cache_path())
+  while (!(dir %in% list.files(path = path, all.files = TRUE))) {
     path <- dirname(path)
     # If we can search no higher...
     if (path == dirname(path)) {
       return(NULL) # The cache does not exist
     }
   }
-  file.path(path, directory)
+  file.path(path, dir)
 }
 
 #' @title Get the cache at the exact file path specified.
