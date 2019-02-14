@@ -70,7 +70,9 @@ progress <- function(
     cache = cache,
     FUN.VALUE = character(1)
   )
-  weak_tibble(target = targets, progress = progress)
+  out <- weak_tibble(target = targets, progress = progress)
+  rownames(out) <- NULL
+  out
 }
 
 #' @title List running targets.
