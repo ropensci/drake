@@ -145,6 +145,8 @@ test_with_dir("runtime predictions", {
 })
 
 test_with_dir("predict_load_balancing()", {
+  skip_on_cran()
+  skip_if_not_installed("knitr")
   load_mtcars_example()
   cache <- storr::storr_environment()
   config <- drake_config(my_plan, cache = cache, session_info = FALSE)
