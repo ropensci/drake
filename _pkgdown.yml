@@ -31,12 +31,13 @@ reference:
   - '`drake_examples`'
   - '`load_mtcars_example`'
   - '`clean_mtcars_example`'
-- title: Build targets
+- title: Top level
   contents:
   - '`make`'
   - '`drake_config`'
   - '`drake_build`'
-  - '`drake_debug`'
+  - '`outdated`'
+  - '`missed`'
 - title: drake plans
   contents:
   - '`drake_plan`'
@@ -45,7 +46,7 @@ reference:
   - '`plan_to_code`'
   - '`plan_to_notebook`'
   - '`drake_plan_source`'
-- title: Special functions for commands
+- title: Special functions within plans
   contents:
   - '`file_in`'
   - '`file_out`'
@@ -53,6 +54,7 @@ reference:
   - '`ignore`'
   - '`drake_envir`'
   - '`from_plan`'
+  - '`trigger`'
 - title: Network graphs and visualization
   contents:
   - '`vis_drake_graph`'
@@ -69,11 +71,9 @@ reference:
   - '`deps_code`'
   - '`deps_target`'
   - '`diagnose`'
+  - '`drake_debug`'
   - '`knitr_deps`'
-  - '`missed`'
-  - '`outdated`'
   - '`tracked`'
-  - '`trigger`'
 - title: High-performance computing
   contents:
   - '`drake_hpc_template_file`'
