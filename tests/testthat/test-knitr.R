@@ -111,5 +111,5 @@ test_with_dir("knitr file deps from commands and functions", {
   f <- function(x) {
     knit(x)
   }
-  expect_equal(deps_code(f)$target, "knit")
+  expect_equal(deps_code(f)$name, "knit")
 })

@@ -2,7 +2,7 @@
 % Please edit documentation in R/exec-dependencies.R
 \name{deps_target}
 \alias{deps_target}
-\title{List the dependencies of one or more targets}
+\title{List the dependencies of a target}
 \usage{
 deps_target(target, config, character_only = FALSE)
 }
@@ -34,5 +34,5 @@ deps_target("regression1_small", config = config)
 }
 }
 \seealso{
-\code{\link[=deps_code]{deps_code()}}
+\code{\link[=deps_code]{deps_code()}}, \code{\link[=deps_knitr]{deps_knitr()}}
 }

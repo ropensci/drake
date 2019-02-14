@@ -2,52 +2,19 @@
 % Please edit documentation in R/exec-dependencies.R
 \name{deps_code}
 \alias{deps_code}
-\title{List the dependencies of a function, workflow plan command,
-or knitr report source file.}
+\title{List the dependencies of a function or command}
 \usage{
 deps_code(x)
 }
 \arguments{
-\item{x}{A language object (code), character string (code as text),
-or imported function to analyze for dependencies.}
+\item{x}{A function, expression, or text.}
 }
 \value{
-Names of dependencies listed by type (object, input file, etc).
-The \code{globals} slot of the output list contains candidate globals only.
-Each global will be treated as an actual dependency if and only if
-it is either a target or an item in the \code{envir} argument to \code{\link[=make]{make()}}.
+A data frame of the dependencies.
 }
 \description{
-Intended for debugging and checking your project.
-The dependency structure of the components of your analysis
-decides which targets are built and when.
-}
-\details{
-The \code{globals} slot of the output list contains candidate globals only.
-Each global will be treated as an actual dependency if and only if
-it is either a target or an item in the \code{envir} argument to \code{\link[=make]{make()}}.
-
-If the argument is a \code{knitr} report
-(for example, \code{file_store("report.Rmd")} or \code{"\"report.Rmd\""})
-the the dependencies of the expected compiled
-output will be given. For example, \code{deps_code(file_store("report.Rmd"))}
-will return target names found in calls to \code{\link[=loadd]{loadd()}}
-and \code{\link[=readd]{readd()}} in active code chunks.
-These \code{\link[=loadd]{loadd()}}/\code{\link[=readd]{readd()}} targets are needed
-in order to run \code{knit(knitr_in("report.Rmd"))}
-to produce the output file \code{"report.md"}, so technically,
-they are dependencies of \code{"report.md"}, not \code{"report.Rmd"}.
-
-The \code{\link[=file_store]{file_store()}} function
-alerts \code{drake} utility functions to file names by
-enclosing them in literal double quotes.
-(For example, \code{file_store("report.Rmd")} is just \code{"\"report.Rmd\""}.)
-
-\code{drake} takes special precautions so that a target/import
-does not depend on itself. For example, \code{deps_code(f)`` might return }"f"\code{if}f()` is a recursive function, but \code{\link[=make]{make()}} just ignores
-this conflict and runs as expected. In other words, \code{\link[=make]{make()}}
-automatically removes all self-referential loops in the dependency
-network.
+Functions are assumed to be imported,
+and language/text are assumed to be commands in a plan.
 }
 \examples{
 # Your workflow likely depends on functions in your workspace.
@@ -68,20 +35,13 @@ my_plan <- drake_plan(
 # Get the dependencies of workflow plan commands.
 # Here, the dependencies could be R functions/objects from your workspace
 # or packages, imported files, or other targets in the workflow plan.
-deps_code(my_plan$command[1])
-deps_code(my_plan$command[2])
-deps_code(my_plan$command[3])
-# New: you can also supply language objects.
-deps_code(expression(x + 123))
-\dontrun{
-test_with_dir("Quarantine side effects.", {
-load_mtcars_example() # Get the code with drake_example("mtcars").
-# Dependencies of the knitr-generated targets like 'report.md'
-# include targets/imports referenced with `readd()` or `loadd()`.
-deps_code(file_store("report.Rmd"))
-})
-}
+deps_code(my_plan$command[[1]])
+deps_code(my_plan$command[[2]])
+deps_code(my_plan$command[[3]])
+# You can also supply expressions or text.
+deps_code(quote(x + y + 123))
+deps_code("x + y + 123")
 }
 \seealso{
-\code{\link[=deps_target]{deps_target()}} \code{\link[=make]{make()}} \code{\link[=drake_plan]{drake_plan()}} \code{\link[=drake_config]{drake_config()}}
+\code{\link[=deps_target]{deps_target()}}, \code{\link[=deps_knitr]{deps_knitr()}}
 }

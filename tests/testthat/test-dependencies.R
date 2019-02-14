@@ -227,7 +227,7 @@ test_with_dir("deps_target()", {
   d1 <- deps_target(report, config = config)
   d1 <- as.data.frame(d1[order(d1$name), ])
   d2 <- data.frame(
-    name <- c(
+    name = c(
       "coef_regression2_small", "large", "report.md", "report.Rmd", "small"
     ),
     type = c("readd", "loadd", "file_out", "knitr_in", "readd"),

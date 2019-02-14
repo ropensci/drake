@@ -71,7 +71,7 @@ reference:
   - '`dependency_profile`'
   - '`deps_code`'
   - '`deps_target`'
-  - '`knitr_deps`'
+  - '`deps_knitr`'
 - title: Debugging and testing
   contents:
   - '`diagnose`'
