@@ -122,7 +122,7 @@
 #'   `make(..., log_progress = FALSE)`.
 #'
 #' @param cache drake cache as created by [new_cache()].
-#'   See also [get_cache()] and [this_cache()].
+#'   See also [get_cache()].
 #'
 #' @param fetch_cache Deprecated.
 #'

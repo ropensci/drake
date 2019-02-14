@@ -26,20 +26,21 @@ force_cache_path <- function(cache = NULL) {
 #' @description Only works if the cache
 #' is in a folder called `.drake/`. See the description of the
 #' `path` argument for details.
-#' @seealso [this_cache()], [new_cache()], [drake_config()]
+#' @seealso [new_cache()], [drake_config()]
 #' @export
 #' @return A drake/storr cache in a folder called `.drake/`,
 #'   if available. `NULL` otherwise.
 #' @inheritParams cached
 #' @inheritParams drake_config
-#' @param path If `search = FALSE`, `path` must be the root
-#'   directory of a `drake` project (a folder containing a `.drake` cache).
-#'   For example, if your cache is a folder called
-#'   `/home/you/my_project/.drake`, then
-#'   `get_cache(path = "/home/you/my_project", search = FALSE)`
-#'   will return the cache.
-#'   Otherwise, if `search = TRUE`, you can specify any
-#'   subdirectory of the project. The following are equivalent and correct:
+#' @param path Character, either the root file path of a `drake` project
+#'   or a folder containing the root (top-level working directory
+#'   where you plan to call [make()]).
+#'   If this is too confusing, feel free to just use `storr::storr_rds()`
+#'   to get the cache.
+#'   If `search = FALSE`, `path` must be the root.
+#'   If `search = TRUE`, you can specify any
+#'   subdirectory of the project. Let's say `"/home/you/my_project"`
+#'   is the root. The following are equivalent and correct:
 #'   - `get_cache(path = "/home/you/my_project", search = FALSE)`
 #'   - `get_cache(path = "/home/you/my_project", search = TRUE)`
 #'   - `get_cache(path = "/home/you/my_project/subdir/x", search = TRUE)`
@@ -60,8 +61,9 @@ force_cache_path <- function(cache = NULL) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Run the project, build the targets.
 #' x <- get_cache() # Now, there is a cache.
+#' y <- storr::storr_rds(".drake") # Equivalent.
 #' # List the objects readable from the cache with readd().
-#' x$list() # Or x$list(namespace = x$default_namespace)
+#' x$list()
 #' }
 #' })
 #' }
@@ -80,7 +82,7 @@ get_cache <- function(
   } else {
     path <- default_cache_path(root = path)
   }
-  this_cache(
+  this_cache_(
     path = path,
     verbose = verbose,
     fetch_cache = fetch_cache,
@@ -134,31 +136,7 @@ find_cache <- function(
   file.path(path, dir)
 }
 
-#' @title Get the cache at the exact file path specified.
-#' @export
-#' @description This function does not apply to
-#' in-memory caches such as `storr_environment()`.
-#' @return A drake/storr cache at the specified path, if it exists.
-#' @inheritParams cached
-#' @inheritParams drake_config
-#' @param path File path of the cache.
-#' @param force Deprecated.
-#' @examples
-#' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' if (suppressWarnings(require("knitr"))) {
-#' clean(destroy = TRUE)
-#' try(x <- this_cache(), silent = FALSE) # The cache does not exist yet.
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' make(my_plan) # Run the project, build the targets.
-#' y <- this_cache() # Now, there is a cache.
-#' z <- this_cache(".drake") # Same as above.
-#' manual <- new_cache("manual_cache") # Make a new cache.
-#' manual2 <- get_cache("manual_cache") # Get the new cache.
-#' }
-#' })
-#' }
-this_cache <- function(
+this_cache_ <- function(
   path = NULL,
   force = FALSE,
   verbose = 1L,
@@ -293,7 +271,7 @@ recover_cache_ <- function(
   deprecate_fetch_cache(fetch_cache)
   deprecate_hash_algo_args(short_hash_algo, long_hash_algo)
   hash_algorithm <- set_hash_algorithm(hash_algorithm)
-  cache <- this_cache(
+  cache <- this_cache_(
     path = path,
     verbose = verbose,
     fetch_cache = fetch_cache,

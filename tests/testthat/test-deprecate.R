@@ -178,6 +178,7 @@ test_with_dir("deprecate misc utilities", {
   expect_warning(read_drake_plan())
   expect_warning(prune_drake_graph(config$graph, "small"))
   expect_warning(predict_load_balancing(config), regexp = "deprecated")
+  expect_warning(tmp <- this_cache(), regexp = "deprecated")
 })
 
 test_with_dir("deprecated arguments", {
@@ -211,11 +212,9 @@ test_with_dir("force with a non-back-compatible cache", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(cache_vers_check(NULL), character(0))
   expect_null(get_cache())
-  expect_null(this_cache())
   expect_true(inherits(suppressWarnings(recover_cache()), "storr"))
   write_v6.2.1_project() # nolint
   expect_warning(get_cache(), regexp = "compatible")
-  expect_warning(this_cache(), regexp = "compatible")
   expect_warning(recover_cache(), regexp = "compatible")
   suppressWarnings(
     expect_error(drake_config(drake_plan(x = 1)), regexp = "compatible")
@@ -225,12 +224,10 @@ test_with_dir("force with a non-back-compatible cache", {
   )
   expect_warning(make(drake_plan(x = 1), force = TRUE), regexp = "compatible")
   expect_silent(tmp <- get_cache())
-  expect_silent(tmp <- this_cache())
 })
 
 test_with_dir("deprecate the `force` argument", {
   expect_warning(tmp <- get_cache(force = TRUE), regexp = "deprecated")
-  expect_warning(tmp <- this_cache(force = TRUE), regexp = "deprecated")
   expect_warning(tmp <- recover_cache(force = TRUE), regexp = "deprecated")
   expect_warning(load_mtcars_example(force = TRUE), regexp = "deprecated")
 })

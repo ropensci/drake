@@ -18,14 +18,15 @@ as well as true targets.
 If \code{targets} is \code{NULL}, everything in the
 cache is rescued.}
 
-\item{path}{If \code{search = FALSE}, \code{path} must be the root
-directory of a \code{drake} project (a folder containing a \code{.drake} cache).
-For example, if your cache is a folder called
-\code{/home/you/my_project/.drake}, then
-\code{get_cache(path = "/home/you/my_project", search = FALSE)}
-will return the cache.
-Otherwise, if \code{search = TRUE}, you can specify any
-subdirectory of the project. The following are equivalent and correct:
+\item{path}{Character, either the root file path of a \code{drake} project
+or a folder containing the root (top-level working directory
+where you plan to call \code{\link[=make]{make()}}).
+If this is too confusing, feel free to just use \code{storr::storr_rds()}
+to get the cache.
+If \code{search = FALSE}, \code{path} must be the root.
+If \code{search = TRUE}, you can specify any
+subdirectory of the project. Let's say \code{"/home/you/my_project"}
+is the root. The following are equivalent and correct:
 \itemize{
 \item \code{get_cache(path = "/home/you/my_project", search = FALSE)}
 \item \code{get_cache(path = "/home/you/my_project", search = TRUE)}

@@ -56,6 +56,7 @@
 - Deprecate and rename  `knitr_deps()` to `deps_knitr()`.
 - Deprecate and rename  `dependency_profile()` to `deps_profile()`.
 - Deprecate and rename  `predict_load_balancing()` to `predict_workers()`.
+- Deprecate `this_cache()` and defer to `get_cache()` and `storr::storr_rds()` for simplicity.
 
 # Version 6.2.1
 

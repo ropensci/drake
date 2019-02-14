@@ -1588,14 +1588,13 @@ in_progress <- function(
 #' @description Deprecated on 2019-01-13.
 #' @export
 #' @keywords internal
-#' @seealso [new_cache()], [this_cache()],
-#'   [get_cache()]
+#' @seealso [new_cache()], [get_cache()]
 #' @details Does not work with
 #' in-memory caches such as [storr_environment()].
 #' @return A drake/storr cache.
 #' @inheritParams cached
 #' @inheritParams new_cache
-#' @inheritParams this_cache
+#' @inheritParams get_cache
 #' @inheritParams drake_config
 #' @param path File path of the cache.
 #' @param force Logical, whether to load the cache
@@ -1896,4 +1895,37 @@ predict_load_balancing <- function(
     default_time = default_time,
     warn = warn
   )$workers
+}
+
+#' @title Get the cache at the exact file path specified.
+#' @export
+#' @description This function does not apply to
+#' in-memory caches such as `storr_environment()`.
+#' @return A drake/storr cache at the specified path, if it exists.
+#' @inheritParams cached
+#' @inheritParams drake_config
+#' @param path File path of the cache.
+#' @param force Deprecated.
+this_cache <- function(
+  path = NULL,
+  force = FALSE,
+  verbose = 1L,
+  fetch_cache = NULL,
+  console_log_file = NULL
+) {
+  .Deprecated(
+    "this_cache",
+    package = "drake",
+    msg = paste(
+      "this_cache() is deprecated.",
+      "Use get_cache() or storr::storr_rds() instead."
+    )
+  )
+  this_cache_(
+    path = path,
+    force = force,
+    verbose = verbose,
+    fetch_cache = fetch_cache,
+    console_log_file = console_log_file
+  )
 }

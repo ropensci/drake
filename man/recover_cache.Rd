@@ -34,7 +34,10 @@ running version of drake.}
 \item \code{6}: plus notifications when targets are being stored.
 }}
 
-\item{fetch_cache}{Deprecated.}
+\item{fetch_cache}{Character vector containing lines of code.
+The purpose of this code is to fetch the \code{storr} cache
+with a command like \code{storr_rds()} or \code{storr_dbi()},
+but customized. This feature is experimental.}
 
 \item{console_log_file}{Character scalar,
 connection object (such as \code{stdout()}) or \code{NULL}.
@@ -61,7 +64,6 @@ Does not work with
 in-memory caches such as \code{\link[=storr_environment]{storr_environment()}}.
 }
 \seealso{
-\code{\link[=new_cache]{new_cache()}}, \code{\link[=this_cache]{this_cache()}},
-\code{\link[=get_cache]{get_cache()}}
+\code{\link[=new_cache]{new_cache()}}, \code{\link[=get_cache]{get_cache()}}
 }
 \keyword{internal}

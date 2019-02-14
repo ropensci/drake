@@ -18,7 +18,7 @@ test_with_dir("Pick the hash", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- new_cache("new", hash_algorithm = "murmur32")
   expect_true(file.exists("new"))
-  y <- this_cache(path = "new")
+  y <- storr::storr_rds(path = "new")
   expect_true(file.exists("new"))
   expect_equal(y$driver$hash_algorithm, "murmur32")
 })

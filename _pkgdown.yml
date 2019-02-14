@@ -95,7 +95,6 @@ reference:
   - '`running`'
   - '`failed`'
   - '`get_cache`'
-  - '`this_cache`'
   - '`new_cache`'
   - '`find_cache`'
   - '`drake_cache_log`'

@@ -65,7 +65,7 @@ then reproducibly tracked as dependencies.}
 \item{hook}{Deprecated.}
 
 \item{cache}{drake cache as created by \code{\link[=new_cache]{new_cache()}}.
-See also \code{\link[=get_cache]{get_cache()}} and \code{\link[=this_cache]{this_cache()}}.}
+See also \code{\link[=get_cache]{get_cache()}}.}
 
 \item{fetch_cache}{Deprecated.}
 
