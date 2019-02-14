@@ -1494,7 +1494,7 @@ dataset_wildcard <- function() {
 #' builds it.
 #' See [diagnose()] to read the final metadata of a target,
 #' including any errors, warnings, and messages in the last build.
-#' @seealso [diagnose()], [dependency_profile()], [make()]
+#' @seealso [diagnose()], [deps_profile()], [make()]
 #' @export
 #' @keywords internal
 #' @return A list of metadata on a target. Does not include
@@ -1824,10 +1824,39 @@ cleaned_namespaces <- function(
 #' @return Data frame of dependencies
 #' @param target Encoded file path
 knitr_deps <- function(target) {
-    .Deprecated(
+  .Deprecated(
     "knitr_deps",
     package = "drake",
     msg = "knitr_deps() is deprecated. Use deps_knitr() instead."
   )
   deps_knitr(target)
+}
+
+#' @title Deprecated in favor of [deps_profile()].
+#' @description Deprecated on 2019-02-14.
+#' @return A data frame of the old hashes and
+#'   new hashes of the data frame, along with
+#'   an indication of which hashes changed since
+#'   the last [make()].
+#' @export
+#' @keywords internal
+#' @inheritParams deps_profile
+dependency_profile <- function(
+  target,
+  config,
+  character_only = FALSE
+) {
+  .Deprecated(
+    "dependency_profile",
+    package = "drake",
+    msg = "dependency_profile() is deprecated. Use deps_profile() instead."
+  )
+  if (!character_only) {
+    target <- as.character(substitute(target))
+  }
+  deps_profile(
+    target = target,
+    config = config,
+    character_only = TRUE
+  )
 }

@@ -97,7 +97,7 @@ display_deps_list <- function(x) {
 #'     the imports need to be up to date in the cache,
 #'     which you can do with `outdated()` or
 #'     `make(skip_targets = TRUE)`.
-#'   Unfortunately, `dependency_profile()` does not
+#'   Unfortunately, `deps_profile()` does not
 #'   currently get more specific than that.
 #' @return A data frame of the old hashes and
 #'   new hashes of the data frame, along with
@@ -120,19 +120,19 @@ display_deps_list <- function(x) {
 #' make(my_plan) # Run the project, build the targets.
 #' config <- drake_config(my_plan)
 #' # Get some example dependency profiles of targets.
-#' dependency_profile(small, config = config)
+#' deps_profile(small, config = config)
 #' # Change a dependency.
 #' simulate <- function(x) {}
 #' # Update the in-memory imports in the cache
-#' # so dependency_profile can detect changes to them.
+#' # so deps_profile can detect changes to them.
 #' # Changes to targets are already cached.
 #' make(my_plan, skip_targets = TRUE)
 #' # The dependency hash changed.
-#' dependency_profile(small, config = config)
+#' deps_profile(small, config = config)
 #' }
 #' })
 #' }
-dependency_profile <- function(
+deps_profile <- function(
   target,
   config,
   character_only = FALSE

@@ -36,6 +36,6 @@ See \code{\link[=diagnose]{diagnose()}} to read the final metadata of a target,
 including any errors, warnings, and messages in the last build.
 }
 \seealso{
-\code{\link[=diagnose]{diagnose()}}, \code{\link[=dependency_profile]{dependency_profile()}}, \code{\link[=make]{make()}}
+\code{\link[=diagnose]{diagnose()}}, \code{\link[=deps_profile]{deps_profile()}}, \code{\link[=make]{make()}}
 }
 \keyword{internal}

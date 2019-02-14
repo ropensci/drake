@@ -124,7 +124,7 @@ display_key <- function(x, config) {
 #'   readd(file_store("report.md"), character_only = TRUE) # File fingerprint.
 #'   deps_code(file_store("report.Rmd"))
 #'   config <- drake_config(my_plan)
-#'   dependency_profile(
+#'   deps_profile(
 #'     file_store("report.Rmd"),
 #'     config = config,
 #'     character_only = TRUE

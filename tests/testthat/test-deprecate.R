@@ -14,8 +14,21 @@ test_with_dir("deprecation: fetch_cache", {
 
 test_with_dir("deprecation: deps_targets() and knitr_deps()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  config <- drake_config(drake_plan(x = 1))
+  config <- drake_config(
+    drake_plan(x = 1),
+    cache = storr::storr_environment(),
+    session_info = FALSE
+  )
   expect_warning(deps_targets("x", config), regexp = "deprecated")
+  make(config = config)
+  expect_warning(
+    dependency_profile(x, config, character_only = FALSE),
+    regexp = "deprecated"
+  )
+  expect_warning(
+    dependency_profile("x", config, character_only = TRUE),
+    regexp = "deprecated"
+  )
   load_mtcars_example()
   expect_warning(knitr_deps("report.Rmd"), regexp = "deprecated")
 })

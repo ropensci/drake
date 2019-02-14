@@ -45,15 +45,15 @@ test_with_dir("dependency profile", {
   make(drake_plan(a = b), session_info = FALSE)
   config <- drake_config(drake_plan(a = b), session_info = FALSE)
   expect_error(
-    dependency_profile(target = missing, config = config),
+    deps_profile(target = missing, config = config),
     regexp = "no recorded metadata"
   )
-  expect_false(any(dependency_profile(target = a, config = config)$changed))
+  expect_false(any(deps_profile(target = a, config = config)$changed))
   b <- 2
-  expect_false(any(dependency_profile(target = a, config = config)$changed))
+  expect_false(any(deps_profile(target = a, config = config)$changed))
   config$skip_targets <- TRUE
   make(config = config)
-  dp <- dependency_profile(target = a, config = config)
+  dp <- deps_profile(target = a, config = config)
   expect_true(as.logical(dp[dp$hash == "depend", "changed"]))
   expect_equal(sum(dp$changed), 1)
   config$plan$command <- "b + c"
@@ -62,7 +62,7 @@ test_with_dir("dependency profile", {
     envir = config$envir,
     cache = config$cache
   )$layout
-  dp <- dependency_profile(target = a, config = config)
+  dp <- deps_profile(target = a, config = config)
   expect_true(as.logical(dp[dp$hash == "command", "changed"]))
   expect_equal(sum(dp$changed), 2)
   load_mtcars_example()
@@ -73,7 +73,7 @@ test_with_dir("dependency profile", {
     session_info = FALSE
   )
   make(config = config)
-  out <- dependency_profile(
+  out <- deps_profile(
     file_store("report.Rmd"),
     character_only = TRUE,
     config

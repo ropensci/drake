@@ -54,6 +54,7 @@
 - At the end of `make()`, print messages about triggers etc. only if `verbose >= 2L`.
 - Deprecate and rename  `in_progress()` to `running()`.
 - Deprecate and rename  `knitr_deps()` to `deps_knitr()`.
+- Deprecate and rename  `dependency_profile()` to `deps_profile()`.
 
 # Version 6.2.1
 

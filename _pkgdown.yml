@@ -36,7 +36,7 @@ reference:
   - '`make`'
   - '`drake_config`'
   - '`drake_build`'
-- title: drake plans
+- title: `drake` plans
   contents:
   - '`drake_plan`'
   - '`drake_plan_source`'
@@ -68,10 +68,10 @@ reference:
   - '`outdated`'
   - '`missed`'
   - '`tracked`'
-  - '`dependency_profile`'
   - '`deps_code`'
   - '`deps_target`'
   - '`deps_knitr`'
+  - '`deps_profile`'
 - title: Debugging and testing
   contents:
   - '`diagnose`'
@@ -107,7 +107,7 @@ reference:
   - '`show_source`'
   - '`read_drake_seed`'
   - '`file_store`'
-- title: Environments
+- title: R packages as `drake` workflows
   contents:
   - '`expose_imports`'
 - title: Wildcard interface

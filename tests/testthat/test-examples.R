@@ -50,7 +50,7 @@ test_with_dir("mtcars example works", {
   testrun(config)
   con <- testconfig(config)
 
-  expect_true(is.list(dependency_profile(
+  expect_true(is.list(deps_profile(
     target = "small", config = con)))
   expect_equal(parallelism == "Makefile", file.exists("Makefile"))
 
