@@ -36,7 +36,7 @@ reference:
   - '`make`'
   - '`drake_config`'
   - '`drake_build`'
-- title: `drake` plans
+- title: drake plans
   contents:
   - '`drake_plan`'
   - '`drake_plan_source`'
@@ -107,7 +107,7 @@ reference:
   - '`show_source`'
   - '`read_drake_seed`'
   - '`file_store`'
-- title: R packages as `drake` workflows
+- title: R packages as drake workflows
   contents:
   - '`expose_imports`'
 - title: Wildcard interface
