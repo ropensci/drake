@@ -48,7 +48,7 @@ but you can see what all the colors mean with
 \dontrun{
 test_with_dir("Quarantine side effects.", {
 load_mtcars_example() # Get the code with drake_example("mtcars").
-if (requireNamespace("knitr")) {
+if (suppressWarnings(require("knitr"))) {
 if (requireNamespace("networkD3", quietly = TRUE)) {
 if (requireNamespace("visNetwork", quietly = TRUE)) {
 # Instead of jumpting right to sankey_drake_graph(), get the data frames

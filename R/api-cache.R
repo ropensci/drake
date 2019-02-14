@@ -53,7 +53,7 @@ force_cache_path <- function(cache = NULL) {
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' if (requireNamespace("knitr")) {
+#' if (suppressWarnings(require("knitr"))) {
 #' clean(destroy = TRUE)
 #' # No cache is available.
 #' get_cache() # NULL
@@ -100,7 +100,7 @@ get_cache <- function(
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' if (requireNamespace("knitr")) {
+#' if (suppressWarnings(require("knitr"))) {
 #' clean(destroy = TRUE)
 #' try(x <- this_cache(), silent = FALSE) # The cache does not exist yet.
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
@@ -297,7 +297,7 @@ recover_cache_ <- function(
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' if (requireNamespace("knitr")) {
+#' if (suppressWarnings(require("knitr"))) {
 #' # Load drake's canonical example.
 #' load_mtcars_example() # Get the code with drake_example()
 #' # Run the project and save a flat text log file.
@@ -388,7 +388,7 @@ drake_cache_log_file <- function(
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' if (requireNamespace("knitr")) {
+#' if (suppressWarnings(require("knitr"))) {
 #' # Load drake's canonical example.
 #' load_mtcars_example() # Get the code with drake_example()
 #' # Run the project, build all the targets.
@@ -593,7 +593,7 @@ deprecate_hash_algo_args <- function(
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' if (requireNamespace("knitr")) {
+#' if (suppressWarnings(require("knitr"))) {
 #' if (requireNamespace("lubridate")) {
 #' load_mtcars_example() # Load drake's canonical example.
 #' make(my_plan) # Run the project, build all the targets.

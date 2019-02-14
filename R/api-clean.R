@@ -57,7 +57,7 @@
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' if (requireNamespace("knitr")) {
+#' if (suppressWarnings(require("knitr"))) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Run the project, build the targets.
 #' # List objects in the cache, excluding R objects
@@ -178,7 +178,7 @@ clean_single_target <- function(
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' if (requireNamespace("knitr")) {
+#' if (suppressWarnings(require("knitr"))) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Run the project, build the targets.
 #' # At this point, check the size of the '.drake/' cache folder.
@@ -246,7 +246,7 @@ rm_bad_cache_filenames <- function(cache) {
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' if (requireNamespace("knitr")) {
+#' if (suppressWarnings(require("knitr"))) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Run the project, build targets. This creates the cache.
 #' # Remove dangling cache files that could cause errors.

@@ -103,7 +103,7 @@ you can plot your own custom \code{visNetwork} graph.
 \dontrun{
 test_with_dir("Quarantine side effects.", {
 if (requireNamespace("visNetwork", quietly = TRUE)) {
-if (requireNamespace("knitr")) {
+if (suppressWarnings(require("knitr"))) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 config <- drake_config(my_plan) # my_plan loaded with load_mtcars_example()
 vis_drake_graph(config) # Jump straight to the interactive graph.

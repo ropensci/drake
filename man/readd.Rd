@@ -158,7 +158,7 @@ interacting with the cache.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-if (requireNamespace("knitr")) {
+if (suppressWarnings(require("knitr"))) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 make(my_plan) # Run the project, build the targets.
 readd(reg1) # Return imported object 'reg1' from the cache.
@@ -171,7 +171,7 @@ readd(file_store("report.md"), character_only = TRUE)
 }
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-if (requireNamespace("knitr")) {
+if (suppressWarnings(require("knitr"))) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 make(my_plan) # Run the projects, build the targets.
 config <- drake_config(my_plan)

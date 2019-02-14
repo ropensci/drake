@@ -59,7 +59,7 @@ first_outdated <- function(config) {
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' if (requireNamespace("knitr")) {
+#' if (suppressWarnings(require("knitr"))) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' # Recopute the config list early and often to have the
 #' # most current information. Do not modify the config list by hand.
@@ -106,7 +106,7 @@ outdated <-  function(
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' if (requireNamespace("knitr")) {
+#' if (suppressWarnings(require("knitr"))) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' config <- drake_config(my_plan)
 #' missed(config) # All the imported files and objects should be present.

@@ -22,7 +22,7 @@ for a full explanation.
 \examples{
 \dontrun{
 test_with_dir("Contain side effects", {
-if (requireNamespace("knitr")) {
+if (suppressWarnings(require("knitr"))) {
 # `knitr_in()` is like `file_in()`
 # except that it analyzes active code chunks in your `knitr`
 # source file and detects non-file dependencies.

@@ -62,7 +62,7 @@
 #' trigger(condition = today() == "Tuesday", change = get_online_dataset())
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' if (requireNamespace("knitr")) {
+#' if (suppressWarnings(require("knitr"))) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' # You can use a global trigger argument:
 #' # for example, to always run everything.

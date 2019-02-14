@@ -76,7 +76,7 @@ you can create your own \code{storr} cache and give it a hash algorithm
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-if (requireNamespace("knitr")) {
+if (suppressWarnings(require("knitr"))) {
 # Load drake's canonical example.
 load_mtcars_example() # Get the code with drake_example()
 # Run the project, build all the targets.

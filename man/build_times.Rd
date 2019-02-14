@@ -59,7 +59,7 @@ Applies to targets in your plan, not imports or files.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-if (requireNamespace("knitr")) {
+if (suppressWarnings(require("knitr"))) {
 if (requireNamespace("lubridate")) {
 # Show the build times for the mtcars example.
 load_mtcars_example() # Get the code with drake_example("mtcars").

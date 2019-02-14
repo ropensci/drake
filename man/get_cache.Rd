@@ -73,7 +73,7 @@ is in a folder called \code{.drake/}. See the description of the
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-if (requireNamespace("knitr")) {
+if (suppressWarnings(require("knitr"))) {
 clean(destroy = TRUE)
 # No cache is available.
 get_cache() # NULL

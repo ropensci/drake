@@ -12,7 +12,7 @@
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' if (requireNamespace("knitr")) {
+#' if (suppressWarnings(require("knitr"))) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Run the project, build the targets.
 #' drake_get_session_info() # Get the cached sessionInfo() of the last make().

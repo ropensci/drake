@@ -49,7 +49,7 @@ in-memory caches such as \code{storr_environment()}.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-if (requireNamespace("knitr")) {
+if (suppressWarnings(require("knitr"))) {
 clean(destroy = TRUE)
 try(x <- this_cache(), silent = FALSE) # The cache does not exist yet.
 load_mtcars_example() # Get the code with drake_example("mtcars").

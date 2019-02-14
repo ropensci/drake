@@ -427,7 +427,7 @@ for an overview of the documentation.
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-if (requireNamespace("knitr")) {
+if (suppressWarnings(require("knitr"))) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 config <- drake_config(my_plan)
 outdated(config) # Which targets need to be (re)built?

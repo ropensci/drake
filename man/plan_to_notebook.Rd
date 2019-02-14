@@ -30,7 +30,7 @@ packages, imported functions, etc.
 }
 \examples{
 if (requireNamespace("CodeDepends")) {
-if (requireNamespace("knitr")) {
+if (suppressWarnings(require("knitr"))) {
 plan <- drake_plan(
   raw_data = read_excel(file_in("raw_data.xlsx")),
   data = raw_data,

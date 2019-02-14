@@ -45,7 +45,7 @@ store the target's value in the cache
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {
-if (requireNamespace("knitr")) {
+if (suppressWarnings(require("knitr"))) {
 # This example is not really a user-side demonstration.
 # It just walks through a dive into the internals.
 # Populate your workspace and write 'report.Rmd'.

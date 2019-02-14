@@ -130,7 +130,7 @@ drake_examples <- function(quiet = TRUE) {
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' if (requireNamespace("knitr")) {
+#' if (suppressWarnings(require("knitr"))) {
 #' # Populate your workspace and write 'report.Rmd'.
 #' load_mtcars_example() # Get the code: drake_example("mtcars")
 #' # Check the dependencies of an imported function.
@@ -259,7 +259,7 @@ mtcars_plan <- function() {
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
-#' if (requireNamespace("knitr")) {
+#' if (suppressWarnings(require("knitr"))) {
 #' # Populate your workspace and write 'report.Rmd'.
 #' load_mtcars_example() # Get the code: drake_example("mtcars")
 #' # Check the dependencies of an imported function.
