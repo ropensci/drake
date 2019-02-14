@@ -125,7 +125,7 @@ display_deps_list <- function(x) {
   }
   x$memory <- NULL
   out <- lapply(names(x), function(n) {
-    weak_tibble(target = x[[n]], type = n)
+    weak_tibble(dependency = x[[n]], type = n)
   })
   do.call(rbind, out)
 }
