@@ -69,7 +69,7 @@ test_with_dir("deprecation: imported", {
     imp <- suppressWarnings(imported(files_only = fo, search = FALSE))
     expect_equal(
       sort(imp),
-      sort(setdiff(cached(), cached(no_imported_objects = TRUE))),
+      sort(setdiff(cached(targets_only = FALSE), cached(targets_only = TRUE))),
       info = paste("files_only =", fo)
     )
   }

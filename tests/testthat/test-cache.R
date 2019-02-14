@@ -321,8 +321,10 @@ test_with_dir("cache functions work from various working directories", {
   expect_true(is.numeric(readd(a, search = FALSE)))
 
   # load and read stuff
-  list <- intersect(setdiff(cached(), cached(no_imported_objects = TRUE)),
-                    ls(envir = envir))
+  list <- intersect(
+    setdiff(cached(targets_only = FALSE), cached(targets_only = TRUE)),
+    ls(envir = envir)
+  )
   rm(list = list, envir = envir)
   expect_error(h(1))
   expect_true(is.numeric(readd(final, search = FALSE)))
