@@ -143,12 +143,12 @@ test_with_dir("mtcars example works", {
   suppressWarnings(con <- drake_config(plan = x))
   for (target in c("a")) {
     expect_true(
-      "small" %in% unlist(deps_target(target, con, character_only = TRUE))
+      "small" %in% deps_target(target, con, character_only = TRUE)$name
     )
   }
   for (target in c("b", "c")) {
     expect_false(
-      "small" %in% unlist(deps_target(target, con, character_only = TRUE))
+      "small" %in% deps_target(target, con, character_only = TRUE)$name
     )
   }
 

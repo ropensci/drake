@@ -1,43 +1,10 @@
-#' @title List the dependencies of a function, workflow plan command,
-#'   or knitr report source file.
-#' @description Intended for debugging and checking your project.
-#'   The dependency structure of the components of your analysis
-#'   decides which targets are built and when.
-#' @details
-#'   The `globals` slot of the output list contains candidate globals only.
-#'   Each global will be treated as an actual dependency if and only if
-#'   it is either a target or an item in the `envir` argument to [make()].
-#'
-#'   If the argument is a `knitr` report
-#'   (for example, `file_store("report.Rmd")` or `"\"report.Rmd\""`)
-#'   the the dependencies of the expected compiled
-#'   output will be given. For example, `deps_code(file_store("report.Rmd"))`
-#'   will return target names found in calls to [loadd()]
-#'   and [readd()] in active code chunks.
-#'   These [loadd()]/[readd()] targets are needed
-#'   in order to run `knit(knitr_in("report.Rmd"))`
-#'   to produce the output file `"report.md"`, so technically,
-#'   they are dependencies of `"report.md"`, not `"report.Rmd"`.
-#'
-#'   The [file_store()] function
-#'   alerts `drake` utility functions to file names by
-#'   enclosing them in literal double quotes.
-#'   (For example, `file_store("report.Rmd")` is just `"\"report.Rmd\""`.)
-#'
-#'   `drake` takes special precautions so that a target/import
-#'   does not depend on itself. For example, `deps_code(f)`` might return
-#'   `"f"` if `f()` is a recursive function, but [make()] just ignores
-#'   this conflict and runs as expected. In other words, [make()]
-#'   automatically removes all self-referential loops in the dependency
-#'   network.
-#' @seealso [deps_target()] [make()] [drake_plan()] [drake_config()]
+#' @title List the dependencies of a function or command
+#' @description Functions are assumed to be imported,
+#'   and language/text are assumed to be commands in a plan.
+#' @seealso [deps_target()], [deps_knitr()]
 #' @export
-#' @param x A language object (code), character string (code as text),
-#'   or imported function to analyze for dependencies.
-#' @return Names of dependencies listed by type (object, input file, etc).
-#'   The `globals` slot of the output list contains candidate globals only.
-#'   Each global will be treated as an actual dependency if and only if
-#'   it is either a target or an item in the `envir` argument to [make()].
+#' @param x A function, expression, or text.
+#' @return A data frame of the dependencies.
 #' @examples
 #' # Your workflow likely depends on functions in your workspace.
 #' f <- function(x, y) {
@@ -57,39 +24,29 @@
 #' # Get the dependencies of workflow plan commands.
 #' # Here, the dependencies could be R functions/objects from your workspace
 #' # or packages, imported files, or other targets in the workflow plan.
-#' deps_code(my_plan$command[1])
-#' deps_code(my_plan$command[2])
-#' deps_code(my_plan$command[3])
-#' # New: you can also supply language objects.
-#' deps_code(expression(x + 123))
-#' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' # Dependencies of the knitr-generated targets like 'report.md'
-#' # include targets/imports referenced with `readd()` or `loadd()`.
-#' deps_code(file_store("report.Rmd"))
-#' })
-#' }
+#' deps_code(my_plan$command[[1]])
+#' deps_code(my_plan$command[[2]])
+#' deps_code(my_plan$command[[3]])
+#' # You can also supply expressions or text.
+#' deps_code(quote(x + y + 123))
+#' deps_code("x + y + 123")
 deps_code <- function(x) {
   if (is.function(x)) {
     out <- import_dependencies(x)
-  } else if (is.character(x)) {
-    if (all(is_encoded_path(x)) && all(file.exists(decode_path(x)))) {
-      out <- get_deps_knitr(decode_path(x))
-    } else {
-      out <- command_dependencies(parse(text = x))
-    }
   } else {
+    if (is.character(x)) {
+      x <- parse(text = x)
+    }
     out <- command_dependencies(x)
   }
   display_deps_list(decode_deps_list(out))
 }
 
-#' @title List the dependencies of one or more targets
+#' @title List the dependencies of a target
 #' @description Intended for debugging and checking your project.
 #'   The dependency structure of the components of your analysis
 #'   decides which targets are built and when.
-#' @seealso [deps_code()]
+#' @seealso [deps_code()], [deps_knitr()]
 #' @export
 #' @param target A symbol denoting a target name, or if `character_only`
 #'   is TRUE, a character scalar denoting a target name.
@@ -125,7 +82,7 @@ display_deps_list <- function(x) {
   }
   x$memory <- NULL
   out <- lapply(names(x), function(n) {
-    weak_tibble(dependency = x[[n]], type = n)
+    weak_tibble(name = x[[n]], type = n)
   })
   do.call(rbind, out)
 }

@@ -288,7 +288,7 @@ test_with_dir("imported functions cannot depend on targets", {
     session_info = FALSE
   )
   deps <- deps_target("my_fun", config)
-  expect_equal(deps$target, "global_import")
+  expect_equal(deps$name, "global_import")
 })
 
 test_with_dir("case sensitivity", {

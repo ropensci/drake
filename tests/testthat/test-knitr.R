@@ -16,7 +16,7 @@ test_with_dir("codeless knitr report", {
   ))
   expect_true(file.exists(file))
   deps <- deps_code(quote(knitr_in("codeless.Rmd")))
-  expect_equal(deps$target, "codeless.Rmd")
+  expect_equal(deps$name, "codeless.Rmd")
   expect_equal(deps$type, "knitr_in")
   expect_silent(
     make(
@@ -82,11 +82,13 @@ test_with_dir("deps_knitr() works", {
     "input.txt", "output.txt", "nested.Rmd", "nested"
   ))
   out <- deps_knitr("test.Rmd")
-  expect_equal(sort(out$target), ans)
+  out2 <- deps_knitr(file_store("test.Rmd"))
+  expect_equal(out, out2)
+  expect_equal(sort(out$name), ans)
   expect_false(file.exists("test.md"))
   expect_warning(x <- deps_knitr("report.Rmd"))
-  expect_warning(expect_equal(x$target, sort(
-    clean_dependency_list(deps_knitr(encode_path("report.Rmd"))))))
+  expect_warning(expect_equal(x$name, sort(
+    deps_knitr(encode_path("report.Rmd"))$name)))
   expect_true(!nrow(x))
   load_mtcars_example()
   w <- deps_code("funct(knitr_in(report.Rmd))")
@@ -94,8 +96,8 @@ test_with_dir("deps_knitr() works", {
   real_deps <- c(
     "small", "coef_regression2_small", "large"
   )
-  expect_equal(sort(w$target), sort(c("funct")))
-  expect_equal(sort(x$target), sort(real_deps))
+  expect_equal(sort(w$name), sort(c("funct")))
+  expect_equal(sort(x$name), sort(real_deps))
 })
 
 test_with_dir("knitr file deps from commands and functions", {
@@ -103,7 +105,7 @@ test_with_dir("knitr file deps from commands and functions", {
   skip_if_not_installed("knitr")
   load_mtcars_example()
   expect_equal(
-    sort(deps_code("knitr_in(\"report.Rmd\")")$target),
+    sort(deps_code("knitr_in(\"report.Rmd\")")$name),
     sort(c("coef_regression2_small", "large", "small", "report.Rmd"))
   )
   f <- function(x) {
