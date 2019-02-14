@@ -1,32 +1,23 @@
 #' @title Find the drake dependencies of a dynamic knitr report target.
 #' @export
-#' @seealso [deps_code()],
-#'   [make()], [load_mtcars_example()]
-#' @description To enable drake to watch for the dependencies
-#' of a knitr report, the command in your workflow plan data frame
-#' must call [knitr::knit()] directly.
-#' In other words,
-#' the command must look something like
-#' `knit("your_report.Rmd")` or
-#' `knit("your_report.Rmd", quiet = TRUE)`.
-#' @return A character vector of the names of dependencies.
-#' @details drake looks for dependencies in the document by
-#' analyzing evaluated code chunks for other targets/imports
-#' mentioned in [loadd()] and [readd()].
-#' @param target File path to the file or name of the file target,
-#'   source text of the document.
+#' @seealso [deps_code()], [deps_target()]
+#' @description Dependencies in `knitr` reports are marked
+#'   by [loadd()] and [readd()] in active code chunks.
+#' @return A data frame of dependencies.
+#' @param path Encoded file path to the `knitr`/R Markdown document.
+#'   Wrap paths in [file_store()] to encode.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' knitr_deps(file_store("report.Rmd"))
+#' deps_knitr("report.Rmd")
 #' })
 #' }
-knitr_deps <- function(target) {
-  display_deps_list(decode_deps_list(get_knitr_deps(target)))
+deps_knitr <- function(path) {
+  display_deps_list(decode_deps_list(get_deps_knitr(path)))
 }
 
-get_knitr_deps <- function(target) {
+get_deps_knitr <- function(target) {
   if (!length(target)) {
     return(list())
   }

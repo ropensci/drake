@@ -1814,3 +1814,20 @@ cleaned_namespaces <- function(
   out <- c(default, "meta")
   sort(out)
 }
+
+#' @title Deprecated in favor of [deps_knitr()]
+#' @export
+#' @keywords internal
+#' @description Deprecated on 2019-02-14
+#' `knit("your_report.Rmd")` or
+#' `knit("your_report.Rmd", quiet = TRUE)`.
+#' @return Data frame of dependencies
+#' @param target Encoded file path
+knitr_deps <- function(target) {
+    .Deprecated(
+    "knitr_deps",
+    package = "drake",
+    msg = "knitr_deps() is deprecated. Use deps_knitr() instead."
+  )
+  deps_knitr(target)
+}

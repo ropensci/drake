@@ -62,10 +62,10 @@ test_with_dir("empty cases", {
   expect_silent(tmp <- analyze_knitr_file(NULL, NULL))
 })
 
-test_with_dir("knitr_deps() works", {
+test_with_dir("deps_knitr() works", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("knitr")
-  expect_true(!nrow(knitr_deps(character(0))))
+  expect_true(!nrow(deps_knitr(character(0))))
   files <- system.file(
     file.path("testing", "knitr", c("nested.Rmd", "test.Rmd")),
     package = "drake", mustWork = TRUE
@@ -81,16 +81,16 @@ test_with_dir("knitr_deps() works", {
     paste0("\"file", seq_len(6), "\""),
     "input.txt", "output.txt", "nested.Rmd", "nested"
   ))
-  out <- knitr_deps("test.Rmd")
+  out <- deps_knitr("test.Rmd")
   expect_equal(sort(out$target), ans)
   expect_false(file.exists("test.md"))
-  expect_warning(x <- knitr_deps("report.Rmd"))
+  expect_warning(x <- deps_knitr("report.Rmd"))
   expect_warning(expect_equal(x$target, sort(
-    clean_dependency_list(knitr_deps(encode_path("report.Rmd"))))))
+    clean_dependency_list(deps_knitr(encode_path("report.Rmd"))))))
   expect_true(!nrow(x))
   load_mtcars_example()
   w <- deps_code("funct(knitr_in(report.Rmd))")
-  x <- knitr_deps("report.Rmd")
+  x <- deps_knitr("report.Rmd")
   real_deps <- c(
     "small", "coef_regression2_small", "large"
   )

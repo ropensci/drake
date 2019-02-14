@@ -12,10 +12,12 @@ test_with_dir("deprecation: fetch_cache", {
   expect_warning(get_cache(fetch_cache = ""), regexp = "deprecated")
 })
 
-test_with_dir("deprecation: deps_targets()", {
+test_with_dir("deprecation: deps_targets() and knitr_deps()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- drake_config(drake_plan(x = 1))
   expect_warning(deps_targets("x", config), regexp = "deprecated")
+  load_mtcars_example()
+  expect_warning(knitr_deps("report.Rmd"), regexp = "deprecated")
 })
 
 test_with_dir("deprecation: cache functions", {
