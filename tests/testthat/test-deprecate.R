@@ -1,5 +1,11 @@
 drake_context("deprecation")
 
+test_with_dir("defunct functions", {
+  expect_error(drake_defunct(), regexp = "defunct")
+  expect_error(drake_defunct(), regexp = "drake_defunct")
+  expect_error(analyses(), regexp = "analyses")
+})
+
 test_with_dir("deprecation: target()", {
   expect_warning(target(123), regexp = "deprecated")
 })
@@ -141,8 +147,6 @@ test_with_dir("deprecate misc utilities", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("lubridate")
   skip_if_not_installed("visNetwork")
-  expect_error(parallel_stages(1), regexp = "parallelism")
-  expect_error(rate_limiting_times(1), regexp = "parallelism")
   expect_warning(drake_unquote("x"))
   expect_warning(drake_quotes(character(0)))
   expect_warning(drake_quotes(""))
