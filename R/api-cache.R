@@ -465,6 +465,7 @@ drake_cache_log <- function(
   if (targets_only) {
     out <- out[out$type == "target", ]
   }
+  out$name <- display_keys(out$name)
   out
 }
 
