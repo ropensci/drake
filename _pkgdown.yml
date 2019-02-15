@@ -84,7 +84,7 @@ reference:
   contents:
   - '`build_times`'
   - '`predict_runtime`'
-  - '`predict_load_balancing`'
+  - '`predict_workers`'
 - title: Cache utilities
   contents:
   - '`loadd`'
