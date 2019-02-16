@@ -73,7 +73,7 @@ mention_pure_functions <- function(e) {
 }
 
 locked_envir_msg <- paste(
-  "One of your targets tried to modify your environment,",
+  "\nOne of your targets tried to modify your environment,",
   "which could invalidate other targets",
   "and undermine reproducibility (example: ",
   "https://github.com/ropensci/drake/issues/664#issuecomment-453163562).", # nolint
