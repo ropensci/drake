@@ -73,17 +73,13 @@ mention_pure_functions <- function(e) {
 }
 
 locked_envir_msg <- paste(
-  "Your `drake` code tried to modify some pre-existing data",
-  "in your environment.",
-  "This sort of thing undermines reproducibility",
-  "(example: https://github.com/ropensci/drake/issues/664#issuecomment-453163562)", # nolint
-  "so `drake` stops you by default.",
-  "All your commands and functions should return *new* output",
-  "and never modify existing targets or potential imports.",
-  "Beware <<-, ->>, attach(), and data().",
-  "Also please try to avoid options() even though drake does not stop you.",
-  "Use make(lock_envir = FALSE) to avoid this error",
-  "(not recommended)."
+  "One of your targets tried to modify your environment,",
+  "which could invalidate other targets",
+  "and undermine reproducibility (example: ",
+  "https://github.com/ropensci/drake/issues/664#issuecomment-453163562).", # nolint
+  "Beware <<-, ->>, attach(), data(), and side effects in general.",
+  "Use make(lock_envir = FALSE) to avoid this error (not recommended).",
+  sep = "\n"
 )
 
 prepend_fork_advice <- function(msg) {
