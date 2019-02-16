@@ -2,20 +2,18 @@
 
 ## Breaking changes
 
-- This release will be version 7.0.0, a major update. It contains tremendous speed improvements, more and better boosts than in any previous release. Unfortunately, some enhancements that increase cache speed also invalidate targets in old projects. Workflows run with drake <= 6.2.1 will need to run from scratch again.
+- The enhancements that increase cache access speed also invalidate targets in old projects. Workflows built with drake <= 6.2.1 will need to run from scratch again.
 - In `drake` plans, the `command` and `trigger` columns are now lists of language objects instead of character vectors. `make()` and friends still work if you have character columns, but the default output of `drake_plan()` has changed to this new format.
-- Remove all parallel backends (`parallelism` argument of `make()`) except "clustermq" and "future".
-- A large amount of deprecated functionality is removed, including several functions (`built()`, `find_project()`, `imported()`, and `parallel_stages()`) and the single-quoted file API.
+- All parallel backends (`parallelism` argument of `make()`) except "clustermq" and "future" are removed. A new "loop" backend covers local serial execution.
+- A large amount of deprecated functionality is now defunct, including several functions (`built()`, `find_project()`, `imported()`, and `parallel_stages()`; [full list here](https://github.com/ropensci/drake/issues/564)) and the single-quoted file API.
 - Set the default value of `lock_envir` to `TRUE` in `make()` and `drake_config()`. So `make()` will automatically quit in error if the act of building a target tries to change upstream dependencies.
 - `make()` no longer returns a value. Users will need to call `drake_config()` separately to get the old return value of `make()`.
-- Make `jobs` a scalar argument to `make()` and `drake_config()`. To parallelize the imports and other preprocessing tasks, use `jobs_preprocess`.
-- Get rid of the "kernels" `storr` namespace. As a result, `drake` is faster, but users will no longer be able to use imported functions loaded from `loadd()` or `readd()`.
-- Deprecate many API functions, including `plan_analyses()`, `plan_summaries()`, `analysis_wildcard()`, `cache_namespaces()`, `cache_path()`, `check_plan()`, `dataset_wildcard()`, `drake_meta()`, `drake_palette()`, `drake_tip()`, `recover_cache()`, `cleaned_namespaces()`, and `target_namespaces()`.
+- Require the `jobs` argument to be of length 1 (`make()` and `drake_config()`). To parallelize the imports and other preprocessing steps, use `jobs_preprocess`, also of length 1.
+- Get rid of the "kernels" `storr` namespace. As a result, `drake` is faster, but users will no longer be able to load imported functions using `loadd()` or `readd()`.
 - In `target()`, users must now explicitly name all the arguments except `command`, e.g. `target(f(x), trigger = trigger(condition = TRUE))` instead of `target(f(x), trigger(condition = TRUE))`.
 - Fail right away in `bind_plans()` when the result has duplicated target names. This makes `drake`'s API more predictable and helps users catch malformed workflows earlier.
 - `loadd()` only loads targets listed in the plan. It no longer loads imports or file hashes.
 - The return values of `progress()`, `deps_code()`, `deps_target()`, and `predict_workers()` are now data frames.
-- Transition the [functions listed here](https://github.com/ropensci/drake/issues/564) from deprecated to defunct.
 
 ## Bug fixes
 
@@ -23,12 +21,13 @@
 - Ensure that `get_cache(path = "non/default/path", search = FALSE)` looks for the cache in `"non/default/path"` instead of `getwd()`.
 - Remove strict dependencies on package `tibble`.
 - Pass the correct data structure to `ensure_loaded()` in `meta.R` and `triggers.R` when ensuring the dependencies of the `condition` and `change` triggers are loaded.
+- Require a `config` argument to `drake_build()` and `loadd(deps = TRUE)`.
 
 ## New features
 
-- Introduce a new experimental domain-specific language for generating large plans (#233). Details [here](file:///home/landau/projects/drake-manual/_book/plans.html#create-large-plans-the-easy-way).
+- Introduce a new experimental domain-specific language for generating large plans (#233). Details [here](file:///home/landau/projects/drake-manual/_book/plans.html#large-plans).
 - Implement a `lock_envir` argument to safeguard reproducibility. See [this thread](https://github.com/ropensci/drake/issues/615#issuecomment-447585359) for a demonstration of the problem solved by `make(lock_envir = TRUE)`. More discussion: #619, #620.
-- The new `from_plan()` function allows the users to get custom columns of the plan. Changes to these custom columns do not invalidate targets. (Be careful).
+- The new `from_plan()` function allows the users to reference custom plan columns from within commands. Changes to values in these columns columns do not invalidate targets.
 
 ## Enhancements
 
@@ -47,8 +46,8 @@
 - Increase options for the `verbose` argument, including the option to print execution and total build times.
 - Separate the building of targets from the processing of imports. Imports are processed with rudimentary staged parallelism (`mclapply()` or `parLapply()`, depending on the operating system).
 - Ignore the imports when it comes to build times. Functions `build_times()`, `predict_runtime()`, etc. focus on only the targets.
-- Deprecate many functions, including `read_drake_config()`, `read_drake_graph()`, and `read_drake_plan()`.
-- Require a `config` argument to `drake_build()` and `loadd(deps = TRUE)`.
+- Deprecate many API functions, including `plan_analyses()`, `plan_summaries()`, `analysis_wildcard()`, `cache_namespaces()`, `cache_path()`, `check_plan()`, `dataset_wildcard()`, `drake_meta()`, `drake_palette()`, `drake_tip()`, `recover_cache()`, `cleaned_namespaces()`, `target_namespaces()`, `read_drake_config()`, `read_drake_graph()`, and `read_drake_plan()`.
+- Deprecate `target()` as a user-side function. From now on, it should only be called from within `drake_plan()`.
 - `drake_envir()` now throws an error, not a warning, if called in the incorrect context. Should be called only inside commands in the user's `drake` plan.
 - Replace `*expr*()` `rlang` functions with their `*quo*()` counterparts. We still keep `rlang::expr()` in the few places where we know the expressions need to be evaluated in `config$eval`.
 - The `prework` argument to `make()` and `drake_config()` can now be an expression (language object) or list of expressions. Character vectors are still acceptable.
@@ -58,6 +57,7 @@
 - Deprecate and rename  `dependency_profile()` to `deps_profile()`.
 - Deprecate and rename  `predict_load_balancing()` to `predict_workers()`.
 - Deprecate `this_cache()` and defer to `get_cache()` and `storr::storr_rds()` for simplicity.
+
 
 # Version 6.2.1
 
