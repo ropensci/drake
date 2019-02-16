@@ -13,9 +13,9 @@ cache_vers_check <- function(cache) {
       "    1. Run `clean(destroy = TRUE)` ",
       "to clear the cache first (recommended) or\n",
       "    2. Run `make(force = TRUE)` ",
-      "to overwrite targets in the cache on the fly (which saves more ",
-      "of your work but may cause issues like ",
-      " https://github.com/ropensci/drake/issues/725).\n",
+      "to overwrite targets in the cache on the fly\n",
+      "       (which saves more of your work but may cause issues like\n",
+      "       https://github.com/ropensci/drake/issues/725).\n",
       "Be warned: if you do either, ",
       "all you targets will run from scratch.\nYou may wish to ",
       "downgrade drake to version ", old, " instead."
