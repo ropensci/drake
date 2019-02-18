@@ -8,7 +8,7 @@ of your drake project.}
 vis_drake_graph(config, file = character(0), selfcontained = FALSE,
   build_times = "build", digits = 3, targets_only = FALSE,
   font_size = 20, layout = "layout_with_sugiyama", main = NULL,
-  direction = "LR", hover = TRUE, navigationButtons = TRUE,
+  direction = "LR", hover = FALSE, navigationButtons = TRUE,
   from = NULL, mode = c("out", "in", "all"), order = NULL,
   subset = NULL, ncol_legend = 1, full_legend = FALSE,
   make_imports = TRUE, from_scratch = FALSE, group = NULL,
@@ -70,9 +70,8 @@ Options include 'LR', 'RL', 'DU', and 'UD'.
 At the time of writing this, the letters must be capitalized,
 but this may not always be the case ;) in the future.}
 
-\item{hover}{Logical, whether to show the command that generated the target
-when you hover over a node with the mouse. For imports, the label does not
-change with hovering.}
+\item{hover}{Logical, whether to show text (file contents,
+commands, etc.) when you hover your cursor over a node.}
 
 \item{navigationButtons}{Logical, whether to add navigation buttons with
 \code{visNetwork::visInteraction(navigationButtons = TRUE)}}

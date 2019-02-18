@@ -9,7 +9,7 @@ drake_graph_info(config, from = NULL, mode = c("out", "in", "all"),
   order = NULL, subset = NULL, build_times = "build", digits = 3,
   targets_only = FALSE, font_size = 20, from_scratch = FALSE,
   make_imports = TRUE, full_legend = FALSE, group = NULL,
-  clusters = NULL, show_output_files = TRUE)
+  clusters = NULL, show_output_files = TRUE, hover = FALSE)
 }
 \arguments{
 \item{config}{A \code{\link[=drake_config]{drake_config()}} configuration list.
@@ -88,6 +88,9 @@ that you specify in the \code{group} argument to \code{drake_graph_info()}.}
 
 \item{show_output_files}{Logical, whether to include
 \code{\link[=file_out]{file_out()}} files in the graph.}
+
+\item{hover}{Logical, whether to show text (file contents,
+commands, etc.) when you hover your cursor over a node.}
 }
 \value{
 A list of three data frames: one for nodes,
