@@ -89,8 +89,10 @@ test_with_dir("we can generate different visNetwork dependency graphs", {
     targets_only = TRUE)
   tmp6 <- drake_graph_info(config = config, build_times = "build",
     targets_only = TRUE, from_scratch = FALSE)
+  tmp7 <- drake_graph_info(config = config, build_times = "build",
+    targets_only = TRUE, from_scratch = FALSE, hover = TRUE)
   expect_error(
-    tmp7 <- drake_graph_info(config = config, build_times = "none",
+    tmp8 <- drake_graph_info(config = config, build_times = "none",
                              from = "not_found")
   )
   expect_equal(nrow(tmp0$nodes), 2)
@@ -102,12 +104,10 @@ test_with_dir("we can generate different visNetwork dependency graphs", {
   expect_false(identical(tmp$nodes, tmp4$nodes))
   expect_false(identical(tmp$nodes, tmp5$nodes))
   expect_false(identical(tmp$nodes, tmp6$nodes))
-
-  expect_false(file.exists("Makefile"))
+  expect_false(identical(tmp$nodes, tmp7$nodes))
   expect_true(is.data.frame(tmp$nodes))
   expect_equal(sort(outdated(config = config)),
                sort(c(config$plan$target)))
-  expect_false(file.exists("Makefile"))
 })
 
 test_with_dir("clusters", {
