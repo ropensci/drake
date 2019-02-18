@@ -161,7 +161,6 @@ function_hover_text <- Vectorize(function(function_name, envir) {
     error = function(e) function_name
   )
   x <- unwrap_function(x)
-  x <- safe_deparse(x)
   style_hover_text(x)
 },
 "function_name")
@@ -270,8 +269,11 @@ null_graph <- function() {
 # I would use styler for indentation here,
 # but it adds a lot of processing time
 # for large functions.
-style_hover_text <- function(lines) {
-  x <- crop_lines(lines, n = hover_lines)
+style_hover_text <- function(x) {
+  if (!is.character(x)) {
+    x <- safe_deparse(x)
+  }
+  x <- crop_lines(x, n = hover_lines)
   x <- crop_text(x, width = hover_width)
   x <- gsub(pattern = " ", replacement = "&nbsp;", x = x)
   x <- gsub(pattern = "\n", replacement = "<br>", x = x)
