@@ -47,7 +47,8 @@ vis_drake_graph <- function(
   font_size = 20,
   layout = "layout_with_sugiyama",
   main = NULL,
-  direction = "LR", hover = TRUE,
+  direction = "LR",
+  hover = FALSE,
   navigationButtons = TRUE, # nolint
   from = NULL, mode = c("out", "in", "all"),
   order = NULL,
@@ -78,7 +79,8 @@ vis_drake_graph <- function(
     full_legend = full_legend,
     group = group,
     clusters = clusters,
-    show_output_files = show_output_files
+    show_output_files = show_output_files,
+    hover = hover
   )
   if (is.null(main)) {
     main <- graph_info$default_title

@@ -191,6 +191,11 @@ get_raw_node_category_data <- function(config) {
 
 hover_text <- function(config) {
   with(config, {
+    if (!hover) {
+      nodes$title <-
+        "Call drake_graph_info(hover = TRUE) for informative text."
+      return(nodes)
+    }
     nodes$title <- nodes$id
     import_files <- setdiff(files, targets)
     nodes[import_files, "title"] <-

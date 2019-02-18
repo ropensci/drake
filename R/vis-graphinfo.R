@@ -85,6 +85,9 @@
 #' @param show_output_files Logical, whether to include
 #'   [file_out()] files in the graph.
 #'
+#' @param hover Logical, whether to show text (file contents,
+#'   commands, etc.) when you hover your cursor over a node.
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -141,7 +144,8 @@ drake_graph_info <- function(
   full_legend = FALSE,
   group = NULL,
   clusters = NULL,
-  show_output_files = TRUE
+  show_output_files = TRUE,
+  hover = FALSE
 ) {
   assert_pkg("visNetwork")
   if (!length(V(config$graph)$name)) {
@@ -154,6 +158,7 @@ drake_graph_info <- function(
   config$make_imports <- make_imports
   config$group <- group
   config$clusters <- clusters
+  config$hover <- hover
   config$file_out <- lapply(config$plan$target, function(target) {
     config$layout[[target]]$deps_build$file_out
   })

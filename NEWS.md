@@ -14,6 +14,7 @@
 - Fail right away in `bind_plans()` when the result has duplicated target names. This makes `drake`'s API more predictable and helps users catch malformed workflows earlier.
 - `loadd()` only loads targets listed in the plan. It no longer loads imports or file hashes.
 - The return values of `progress()`, `deps_code()`, `deps_target()`, and `predict_workers()` are now data frames.
+- Change the default value of `hover` to `FALSE` in visualization functions. Improves speed.
 
 ## Bug fixes
 
@@ -57,6 +58,7 @@
 - Deprecate and rename  `dependency_profile()` to `deps_profile()`.
 - Deprecate and rename  `predict_load_balancing()` to `predict_workers()`.
 - Deprecate `this_cache()` and defer to `get_cache()` and `storr::storr_rds()` for simplicity.
+- Change the default value of `hover` to `FALSE` in visualization functions. Improves speed. Also a breaking change.
 
 
 # Version 6.2.1
