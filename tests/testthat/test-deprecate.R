@@ -260,7 +260,7 @@ test_with_dir("old trigger interface", {
         session_info = FALSE,
         cache = cache
       ),
-      regexp = "old trigger interface is deprecated"
+      regexp = "old trigger interface in drake is deprecated"
     )
     suppressWarnings(
       config <- drake_config(

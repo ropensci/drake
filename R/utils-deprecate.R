@@ -9,7 +9,7 @@ available_hash_algos <- function() {
   .Deprecated(
     new = "",
     package = "drake",
-    msg = "drake::available_hash_algos() is deprecated."
+    msg = "available_hash_algos() in drake is deprecated."
   )
   eval(formals(digest::digest)$algo)
 }
@@ -37,7 +37,7 @@ build_drake_graph <- function(
     new = "drake_config",
     package = "drake",
     msg = paste(
-      "drake::build_drake_graph() is deprecated.",
+      "drake::build_drake_graph() in drake is deprecated.",
       "Use drake_config()$graph instead."
     )
   )
@@ -109,7 +109,7 @@ configure_cache <- function(
   .Deprecated(
     new = "",
     package = "drake",
-    msg = "configure_cache() is deprecated."
+    msg = "configure_cache() in drake is deprecated."
   )
   short_hash_algo <- match.arg(short_hash_algo,
                                choices = available_hash_algos())
@@ -161,7 +161,7 @@ default_long_hash_algo <- function(cache = NULL) {
   .Deprecated(
     new = "",
     package = "drake",
-    msg = "default_long_hash_algo() is deprecated."
+    msg = "default_long_hash_algo() in drake is deprecated."
   )
   # nocov start
   out <- "sha256"
@@ -195,7 +195,7 @@ default_short_hash_algo <- function(cache = NULL) {
   .Deprecated(
     new = "",
     package = "drake",
-    msg = "default_short_hash_algo() is deprecated."
+    msg = "default_short_hash_algo() in drake is deprecated."
   )
   # nocov start
   out <- "xxhash64"
@@ -219,7 +219,7 @@ default_short_hash_algo <- function(cache = NULL) {
 deprecate_force <- function(force) {
   if (!identical(force, FALSE)) {
     warning(
-      "Argument `force` is deprecated.",
+      "Argument `force` is deprecated in small drake utility functions.",
       call. = FALSE
     )
   }
@@ -247,7 +247,7 @@ deps <- function(x) {
     new = "deps_code",
     package = "drake",
     msg = paste(
-      "drake::deps() is deprecated.",
+      "deps() in drake is deprecated.",
       "Use deps_code() or deps_target() instead."
     )
   )
@@ -282,7 +282,7 @@ deps_targets <- function(
     new = "deps_target",
     package = "drake",
     msg = paste(
-      "drake::deps_targets() is deprecated.",
+      "deps_targets() in drake is deprecated.",
       "Use deps_target() (singular) instead."
     )
   )
@@ -359,7 +359,7 @@ long_hash <- function(
   .Deprecated(
     new = "",
     package = "drake",
-    msg = "long_hash() is deprecated."
+    msg = "long_hash() in drake is deprecated."
   )
   # nocov start
   if (!cache$exists(key = "long_hash_algo", namespace = "config")) {
@@ -401,7 +401,7 @@ max_useful_jobs <- function(
     new = "predict_runtime",
     package = "drake",
     msg = c(
-      "Do not use max_useful_jobs(). ",
+      "Do not use max_useful_jobs() in drake. ",
       "drake's parallel scheduling algorithm has changed, ",
       "so max_useful_jobs() will give you the wrong idea about ",
       "how many jobs to assign to `make()`. For a better estimate, ",
@@ -448,7 +448,7 @@ migrate_drake_project <- function(
     package = "drake",
     msg = c(
       "migrate_drake_project() is deprecated. Please run ",
-      "make() again on projects built with drake version <= 4.4.0"
+      "make() again on projects built with drake version <= 6.2.1"
     )
   )
 }
@@ -494,7 +494,7 @@ short_hash <- function(
   .Deprecated(
     new = "",
     package = "drake",
-    msg = "short_hash() is deprecated."
+    msg = "short_hash() in drake is deprecated."
   )
   # nocov start
   if (!cache$exists(key = "short_hash_algo", namespace = "config")) {
@@ -573,7 +573,7 @@ triggers <- function() {
     new = "",
     package = "drake",
     msg = paste(
-      "drake::triggers() is deprecated",
+      "triggers() in drake is deprecated",
       "and the trigger interface has changed.",
       "See trigger() (singular) for details."
     )
@@ -594,7 +594,7 @@ convert_old_trigger <- function(x) {
     return(x)
   }
   warning(
-    "The old trigger interface is deprecated. ",
+    "The old trigger interface in drake is deprecated. ",
     "See the trigger() function (singular) ",
     "to learn about the new trigger interface.",
     call. = FALSE
@@ -677,7 +677,7 @@ load_main_example <- function(
   .Deprecated(
     new = "drake_example",
     package = "drake",
-    msg = paste("load_main_example() is deprecated.",
+    msg = paste("load_main_example() in drake is deprecated.",
                 'Use drake_example("main") instead.')
   )
   dir <- tempfile()
@@ -723,7 +723,7 @@ clean_main_example <- function() {
   .Deprecated(
     new = "clean",
     package = "drake",
-    msg = paste("clean_main_example() is deprecated.")
+    msg = paste("clean_main_example() in drake is deprecated.")
   )
   clean(destroy = TRUE, search = FALSE)
   unlink(c("report.Rmd", "raw_data.xlsx"))
@@ -739,7 +739,7 @@ default_verbose <- function() {
   .Deprecated(
     new = "",
     package = "drake",
-    msg = paste("default_verbose() is deprecated.")
+    msg = paste("default_verbose() in drake is deprecated.")
   )
   1L
 }
@@ -832,7 +832,7 @@ built <- function(
     new = "",
     package = "drake",
     msg = paste(
-      "built() is deprecated.",
+      "built() in drake is deprecated.",
       "Use cached(targets_only = TRUE)) instead."
     )
   )
@@ -867,7 +867,7 @@ find_project <- function(path = getwd()) {
     "find_cache",
     package = "drake",
     msg = paste(
-      "find_project() is deprecated.",
+      "find_project() in drake is deprecated.",
       "Use find_cache() instead."
     )
   )
@@ -893,7 +893,7 @@ default_Makefile_args <- function(jobs, verbose) {
     package = "drake",
     msg = paste(
       "default_Makefile_args() and",
-      "Makefile parallelism are deprecated."
+      "Makefile parallelism in drake are deprecated."
     )
   )
   out <- paste0("--jobs=", head(jobs, 1))
@@ -916,7 +916,7 @@ default_Makefile_command <- function() {
     package = "drake",
     msg = paste(
       "default_Makefile_command() and",
-      "Makefile parallelism are deprecated."
+      "Makefile parallelism in drake are deprecated."
     )
   )
   "make"
@@ -942,7 +942,7 @@ Makefile_recipe <- function( # nolint
     package = "drake",
     msg = paste(
       "Makefile_recipe() and",
-      "Makefile parallelism are deprecated."
+      "Makefile parallelism in drake are deprecated."
     )
   )
   character(0)
@@ -961,7 +961,7 @@ default_recipe_command <- function() {
     package = "drake",
     msg = paste(
       "default_recipe_command() and",
-      "Makefile parallelism are deprecated."
+      "Makefile parallelism in drake are deprecated."
     )
   )
   paste0("Rscript -e '", r_recipe_wildcard(), "'")
@@ -980,7 +980,7 @@ r_recipe_wildcard <- function() {
     package = "drake",
     msg = paste(
       "r_recipe_wildcard() and",
-      "Makefile parallelism are deprecated."
+      "Makefile parallelism in drake are deprecated."
     )
   )
   "R_RECIPE"
@@ -1000,7 +1000,7 @@ parallelism_choices <- function(distributed_only = FALSE) {
     package = "drake",
     msg = paste(
       "parallelism_choices() and",
-      "Makefile parallelism are deprecated."
+      "Makefile parallelism in drake are deprecated."
     )
   )
   local <- c(
@@ -1037,7 +1037,7 @@ shell_file <- function(
     package = "drake",
     msg = paste(
       "shell_file() and",
-      "Makefile parallelism are deprecated."
+      "Makefile parallelism in drake are deprecated."
     )
   )
   FALSE
@@ -1055,7 +1055,7 @@ default_parallelism <- function() {
     new = "",
     package = "drake",
     msg = paste(
-      "default_parallelism() is deprecated."
+      "default_parallelism() in drake is deprecated."
     )
   )
   "loop"
@@ -1075,7 +1075,7 @@ make_imports <- function(config) {
     new = "make",
     package = "drake",
     msg = paste(
-      "make_imports() is deprecated. Use make()."
+      "make_imports() in drake is deprecated. Use make()."
     )
   )
   config$skip_imports <- FALSE
@@ -1097,7 +1097,7 @@ make_targets <- function(config) {
     new = "make",
     package = "drake",
     msg = paste(
-      "make_targets() is deprecated. Use make()."
+      "make_targets() in drake is deprecated. Use make()."
     )
   )
   config$skip_imports <- TRUE
@@ -1119,7 +1119,7 @@ make_with_config <- function(config) {
     new = "make",
     package = "drake",
     msg = paste(
-      "make_with_config() is deprecated. Use make()."
+      "make_with_config() in drake is deprecated. Use make()."
     )
   )
   make(config = config)
@@ -1240,7 +1240,7 @@ imported <- function(
     new = "cached",
     package = "drake",
     msg = paste(
-      "imported() is deprecated. Instead, use ",
+      "imported() in drake is deprecated. Instead, use ",
       "setdiff(cached(targets_only = FALSE), cached(targets_only = TRUE))."
     )
   )
@@ -1298,7 +1298,7 @@ analysis_wildcard <- function() {
   .Deprecated(
     new = "",
     package = "drake",
-    msg = "analysis_wildcard() is deprecated."
+    msg = "analysis_wildcard() in drake is deprecated."
   )
   analysis_wildcard_()
 } #
@@ -1316,7 +1316,7 @@ cache_path <- function(cache = NULL) {
   .Deprecated(
     new = "",
     package = "drake",
-    msg = "cache_path() is deprecated."
+    msg = "cache_path() in drake is deprecated."
   )
   cache_path_(cache)
 }
@@ -1336,7 +1336,7 @@ cache_namespaces <- function(
   .Deprecated(
     new = "",
     package = "drake",
-    msg = "cache_namespaces() is deprecated."
+    msg = "cache_namespaces() in drake is deprecated."
   )
   out <- c(
     target_namespaces_(default = default),
@@ -1374,7 +1374,7 @@ check_plan <- function(
   .Deprecated(
     new = "",
     package = "drake",
-    msg = "check_plan() is deprecated."
+    msg = "check_plan() in drake is deprecated."
   )
   force(envir)
   config <- drake_config(
@@ -1402,7 +1402,7 @@ dataset_wildcard <- function() {
   .Deprecated(
     new = "",
     package = "drake",
-    msg = "dataset_wildcard() is deprecated."
+    msg = "dataset_wildcard() in drake is deprecated."
   )
   dataset_wildcard_()
 }
@@ -1504,7 +1504,7 @@ in_progress <- function(
   .Deprecated(
     new = "running",
     package = "drake",
-    msg = "in_progress() is deprecated. Use running() instead."
+    msg = "in_progress() in drake is deprecated. Use progress() instead."
   )
   running(path, search, cache, verbose )
 }
@@ -1539,7 +1539,7 @@ recover_cache <- function(
   .Deprecated(
     new = "get_cache",
     package = "drake",
-    msg = "recover_cache() is deprecated. Use get_cache() instead."
+    msg = "recover_cache() in drake is deprecated. Use get_cache() instead."
   )
   recover_cache_(path, hash_algorithm, short_hash_algo, long_hash_algo,
                  force, verbose, fetch_cache, console_log_file)
@@ -1562,7 +1562,7 @@ target_namespaces <- function(
   .Deprecated(
     new = "",
     package = "drake",
-    msg = "target_namespaces() is deprecated."
+    msg = "target_namespaces() in drake is deprecated."
   )
   target_namespaces_(default)
 }
@@ -1592,7 +1592,7 @@ plan_analyses <- function(plan, datasets, sep = "_") {
     new = "",
     package = "drake",
     msg = paste(
-      "plan_analyses() is deprecated.",
+      "plan_analyses() in drake is deprecated.",
       "Use drake_plan() with transformations instead. See",
       "https://ropenscilabs.github.io/drake-manual/plans.html#large-plans",
       "for details."
@@ -1641,7 +1641,7 @@ plan_summaries <- function(
     new = "",
     package = "drake",
     msg = paste(
-      "plan_summaries() is deprecated.",
+      "plan_summaries() in drake is deprecated.",
       "Use drake_plan() with transformations instead:",
       "https://ropenscilabs.github.io/drake-manual/plans.html#large-plans"
     )
@@ -1734,7 +1734,7 @@ cleaned_namespaces <- function(
   .Deprecated(
     new = "",
     package = "drake",
-    msg = "cleaned_namespaces() is deprecated."
+    msg = "cleaned_namespaces() in drake is deprecated."
   )
   out <- c(default, "meta")
   sort(out)
@@ -1752,7 +1752,7 @@ knitr_deps <- function(target) {
   .Deprecated(
     new = "deps_knitr",
     package = "drake",
-    msg = "knitr_deps() is deprecated. Use deps_knitr() instead."
+    msg = "knitr_deps() in drake is deprecated. Use deps_knitr() instead."
   )
   deps_knitr(target)
 }
@@ -1774,7 +1774,10 @@ dependency_profile <- function(
   .Deprecated(
     new = "deps_profile",
     package = "drake",
-    msg = "dependency_profile() is deprecated. Use deps_profile() instead."
+    msg = paste(
+      "dependency_profile() in drake is deprecated.",
+      "Use deps_profile() instead."
+    )
   )
   if (!character_only) {
     target <- as.character(substitute(target))
@@ -1807,7 +1810,7 @@ predict_load_balancing <- function(
     new = "predict_workers",
     package = "drake",
     msg = paste(
-      "predict_load_balancing() is deprecated.",
+      "predict_load_balancing() in drake is deprecated.",
       "Use predict_workers() instead."
     )
   )
@@ -1843,7 +1846,7 @@ this_cache <- function(
     new = "get_cache",
     package = "drake",
     msg = paste(
-      "this_cache() is deprecated.",
+      "this_cache() in drake is deprecated.",
       "Use get_cache() or storr::storr_rds() instead."
     )
   )
