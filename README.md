@@ -227,8 +227,6 @@ plan <- drake_plan(
   )
 )
 plan
-#> Warning in seq.default(along = x): partial argument match of 'along' to
-#> 'along.with'
 #> # A tibble: 5 x 2
 #>   target   command                                                         
 #>   <chr>    <expr>                                                          
