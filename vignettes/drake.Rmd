@@ -53,13 +53,16 @@ There are multiple `drake`-powered example projects [available here](https://git
 
 ## Presentations
 
-- [Kirill's `drake` pitch](https://krlmlr.github.io/drake-pitch) ([source](https://github.com/krlmlr/drake-pitch)).
-- [Amanda Dobbyn](https://github.com/aedobbyn)'s [R-Ladies NYC talk on Feb 12, 2018](https://aedobbyn.github.io/nyc-fires/index.html#1) ([source]( https://github.com/aedobbyn/nyc-fires)).
-- [Christine Stawitz](https://github.com/cstawitz)'s [R-Ladies Seattle talk on June 25, 2018](https://github.com/cstawitz/RLadies_Sea_drake)
-- Part of [Sina Rüeger](https://github.com/sinarueeger)'s [Geneva R Users Group presentation on October 4, 2018](https://sinarueeger.github.io/20181004-geneve-rug) ([example code](https://github.com/sinarueeger/workflow-example)).
-- [`drake` + cooking with Kirill](https://krlmlr.github.io/slides/drake-sib-zurich) ([exercises](https://krlmlr.github.io/slides/drake-sib-zurich/cooking.html), [slide source](https://github.com/krlmlr/drake-sib-zurich)).
-- [R in Pharma 2018](https://wlandau.github.io/drake-talk) ([source](https://github.com/wlandau/drake-talk)).
-- [Harvard DataFest 2019](https://wlandau.github.io/drake-datafest-2019) ([source](https://github.com/wlandau/drake-datafest-2019)).
+| Author | Venue  | Date   | Materials |
+|--------|--------|--------|-----------|
+| [Amanda Dobbyn](https://github.com/aedobbyn) | [R-Ladies NYC](http://www.rladiesnyc.org/) | 2019-02-12 | [slides](https://aedobbyn.github.io/nyc-fires/index.html#1), [source](https://github.com/aedobbyn/nyc-fires) |
+| [Will Landau](https://github.com/wlandau) | [Harvard DataFest](https://projects.iq.harvard.edu/datafest2019/home) | 2019-01-22 | [slides](https://wlandau.github.io/drake-datafest-2019), [source](https://github.com/wlandau/drake-datafest-2019) |
+| [Karthik Ram](http://github.com/karthik) | [RStudio Conference](https://www.rstudio.com/conference) | 2019-01-18  | [video](https://resources.rstudio.com/rstudio-conf-2019/a-guide-to-modern-reproducible-data-science-with-r), [slides](http://inundata.org/talks/rstd19/#/),  [resources](https://github.com/karthik/rstudio2019) |
+| [Sina Rüeger](https://github.com/sinarueeger) | [Geneva R User Group](https://www.meetup.com/Geneve-R-User-Group) | 2018-10-04 | [slides](https://sinarueeger.github.io/20181004-geneve-rug), [example code](https://github.com/sinarueeger/workflow-example) |
+| [Will Landau](https://github.com/wlandau) | [R in Pharma](http://rinpharma.com/) | 2018-08-16 | [video](https://ropenscilabs.github.io/drake-manual/), [slides](https://wlandau.github.io/drake-talk), [source](https://github.com/wlandau/drake-talk) |
+| [Christine Stawitz](https://github.com/cstawitz) | [R-Ladies Seattle](https://www.meetup.com/rladies-seattle) | 2018-06-25 | [materials](https://github.com/cstawitz/RLadies_Sea_drake) |
+| [Kirill Müller](https://github.com/krlmlr) | [Swiss Institute of Bioinformatics](https://www.sib.swiss) | 2018-03-05 | [workshop](https://www.sib.swiss/training/course/2018-03-remake), [slides](https://krlmlr.github.io/slides/drake-sib-zurich), [source](https://github.com/krlmlr/drake-sib-zurich),  [exercises](https://krlmlr.github.io/slides/drake-sib-zurich/cooking.html) |
+| [Kirill Müller](https://github.com/krlmlr) | [RStudio Conference](https://www.rstudio.com/conference) | 2018-02-01 | [slides](https://krlmlr.github.io/drake-pitch), [source](http://github.com/krlmlr/drake-pitch) |
 
 ## Real example projects
 
