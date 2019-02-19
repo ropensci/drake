@@ -14,11 +14,7 @@ vignette: >
 
 # Learn about drake
 
-The main resources to learn `drake` are
-
-1. The [full manual](https://ropenscilabs.github.io/drake-manual/)
-2. The [package website](https://ropensci.github.io/drake/)
-3. [Kirill Müller](https://github.com/krlmlr)'s [`drake` workshop from March 5, 2018](https://github.com/krlmlr/drake-sib-zurich).
+The main resources to learn `drake` are the [user manual](https://ropenscilabs.github.io/drake-manual/) and the [reference website](https://ropensci.github.io/drake/). Others are below.
 
 ## Cheat sheet
 

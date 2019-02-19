@@ -227,6 +227,8 @@ plan <- drake_plan(
   )
 )
 plan
+#> Warning in seq.default(along = x): partial argument match of 'along' to
+#> 'along.with'
 #> # A tibble: 5 x 2
 #>   target   command                                                         
 #>   <chr>    <expr>                                                          
@@ -458,15 +460,9 @@ A few technical details:
 
 # Documentation
 
-The main resources to learn `drake` are
-
-1.  The [user manual](https://ropenscilabs.github.io/drake-manual/),
-    which contains a friendly introduction and several long-form
-    tutorials.
-2.  The [documentation website](https://ropensci.github.io/drake/),
-    which serves as a quicker reference.
-3.  [Kirill Müller](https://github.com/krlmlr)’s [`drake` workshop from
-    March 5, 2018](https://github.com/krlmlr/drake-sib-zurich).
+The main resources to learn `drake` are the [user
+manual](https://ropenscilabs.github.io/drake-manual/) and the [reference
+website](https://ropensci.github.io/drake/). Others are below.
 
 ## Cheat sheet
 
