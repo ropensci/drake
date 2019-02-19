@@ -10,6 +10,10 @@ test_with_dir("console_cache", {
   expect_message(console_cache(config = list(verbose = 2)))
 })
 
+test_with_dir("crop_lines() crops lines", {
+  expect_equal(length(crop_lines(letters, n = 10)), 10)
+})
+
 test_with_dir("console_up_to_date", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   pl <- drake_plan(a = 1)
