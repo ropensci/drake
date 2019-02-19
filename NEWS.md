@@ -36,7 +36,7 @@
 - Exclude symbols `.`, `..`, and `.gitignore` from being target names (consequence of the above).
 - Use only one hash algorithm per `drake` cache, which the user can set with the `hash_algorithm` argument of `new_cache()`, `storr::storr_rds()`, and various other cache functions. Thus, the concepts of a "short hash algorithm" and "long hash algorithm" are deprecated, and the functions `long_hash()`, `short_hash()`, `default_long_hash_algo()`, `default_short_hash_algo()`, and `available_hash_algos()` are deprecated. Caches are still back-compatible with `drake` > 5.4.0 and <= 6.2.1.
 - Allow the `magrittr` dot symbol to appear in some commands sometimes.
-- Deprecate the `fetch_cache` argument in all functions 
+- Deprecate the `fetch_cache` argument in all functions.
 - Remove packages `DBI` and `RSQLite` from "Suggests".
 - Define a special `config$eval <- new.env(parent = config$envir)` for storing built targets and evaluating commands in the plan. Now, `make()` no longer modifies the user's environment. This move is a long-overdue step toward purity.
 - Remove dependency on the `codetools` package.
@@ -196,7 +196,7 @@ to tell the user if the command, a dependency, an input file, or an output file 
 - Internally refactor the `igraph` attributes of the dependency graph to allow for smarter dependency/memory management during `make()`.
 - Enable `vis_drake_graph()` and `sankey_drake_graph()` to save static image files via `webshot`.
 - Deprecate `static_drake_graph()` and `render_static_drake_graph()` in favor of `drake_ggraph()` and `render_drake_ggraph()`.
-- Add a `columns` argument to `evaluate_plan()` so users can evaluate wildcards in columns other than the `command` column of `plan`. 
+- Add a `columns` argument to `evaluate_plan()` so users can evaluate wildcards in columns other than the `command` column of `plan`.
 - Name the arguments of `target()` so users do not have to (explicitly).
 - Lay the groundwork for a special pretty print method for workflow plan data frames.
 
@@ -384,7 +384,7 @@ across R sessions.
 - Add new examples in 'inst/examples', most of them demonstrating how to use the `"future_lapply"` backends.
 - New support for timeouts and retries when it comes to building targets.
 - Failed targets are now recorded during the build process. You can see them in `plot_graph()` and `progress()`. Also see the new `failed()` function, which is similar to `in_progress()`.
-- Speed up the overhead of `parLapply` parallelism. The downside to this fix is that `drake` has to be properly installed. It should not be loaded with `devtools::load_all()`. The speedup comes from lightening the first `clusterExport()` call in `run_parLapply()`. Previously, we exported every single individual `drake` function to all the workers, which created a bottleneck. Now, we just load `drake` itself in each of the workers, which works because `build()` and `do_prework()` are exported. 
+- Speed up the overhead of `parLapply` parallelism. The downside to this fix is that `drake` has to be properly installed. It should not be loaded with `devtools::load_all()`. The speedup comes from lightening the first `clusterExport()` call in `run_parLapply()`. Previously, we exported every single individual `drake` function to all the workers, which created a bottleneck. Now, we just load `drake` itself in each of the workers, which works because `build()` and `do_prework()` are exported.
 - Change default value of `overwrite` to `FALSE` in `load_basic_example()`.
 - Warn when overwriting an existing `report.Rmd` in `load_basic_example()`.
 - Tell the user the location of the cache using a console message. Happens on every call to `get_cache(..., verbose = TRUE)`.
