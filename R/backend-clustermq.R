@@ -107,9 +107,6 @@ cmq_deps_list <- function(target, config) {
 #' @param deps Named list of target dependencies.
 #' @param config A [drake_config()] list.
 cmq_build <- function(target, meta, deps, config) {
-  if (identical(config$garbage_collection, TRUE)) {
-    gc()
-  }
   do_prework(config = config, verbose_packages = FALSE)
   if (identical(config$caching, "master")) {
     for (dep in names(deps)) {

@@ -26,6 +26,9 @@ assign_to_envir <- function(target, value, config) {
 #' @examples
 #' # Users should use make().
 manage_memory <- function(targets, config, downstream = NULL, jobs = 1) {
+  if (identical(config$garbage_collection, TRUE)) {
+    gc()
+  }
   if (identical(config$memory_strategy, "lookahead")) {
     downstream <- downstream %||% downstream_nodes(config$graph, targets)
     downstream_deps <- deps_memory(targets = downstream, config = config)
