@@ -4,7 +4,7 @@
 init:
   ps: |
         $ErrorActionPreference = "Stop"
-        Invoke-WebRequest http://raw.github.com/krlmlr/r-appveyor/master/scripts/appveyor-tool.ps1 -OutFile "..\appveyor-tool.ps1"
+        Invoke-WebRequest https://raw.githubusercontent.com/krlmlr/r-appveyor/master/scripts/appveyor-tool.ps1 -OutFile "..\appveyor-tool.ps1"
         Import-Module '..\appveyor-tool.ps1'
 
 install:
