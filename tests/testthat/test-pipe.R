@@ -4,14 +4,28 @@ test_with_dir("%dp% really is a pipe", {
   out <- drake_plan(
     result = data %dp%
       task1() %dp%
-      task2() %dp%
+      task2(data = my_data, ., x = .) %dp%
       task3()
   )
   exp <- drake_plan(
     result.3 = data,
     result.2 = task1(result.3),
-    result.1 = task2(result.2),
+    result.1 = task2(data = my_data, result.2, x = result.2),
     result = task3(result.1)
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("%dp% understands symbols", {
+  out <- drake_plan(
+    result = data %dp%
+      task1 %dp%
+      task2
+  )
+  exp <- drake_plan(
+    result.2 = data,
+    result.1 = task1(result.2),
+    result = task2(result.1)
   )
   equivalent_plans(out, exp)
 })

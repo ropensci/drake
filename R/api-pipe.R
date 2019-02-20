@@ -1,4 +1,4 @@
-split_dp_chain <- function (expr) {
+split_dp_chain <- function (expr, envir) {
   links <- list()
   i <- 1L
   while (is.call(expr) && identical(expr[[1L]], quote(`%dp%`))) {
@@ -16,9 +16,9 @@ split_dp_chain <- function (expr) {
   rev(links)
 }
 
-resolve_drake_pipe_row <- function(plan, row) {
+resolve_drake_pipe_row <- function(plan, row, envir) {
   plan <- plan[row,, drop = FALSE] # nolint
-  commands <- split_dp_chain(plan$command[[1]])
+  commands <- split_dp_chain(plan$command[[1]], envir)
   if (length(commands) < 2L) {
     return(plan)
   }
@@ -39,10 +39,15 @@ resolve_drake_pipe_row <- function(plan, row) {
   do.call(rbind, out)
 }
 
-resolve_drake_pipe <- function(plan) {
+resolve_drake_pipe <- function(plan, envir) {
   if (!nrow(plan)) {
     return(plan)
   }
-  out <- lapply(seq_len(nrow(plan)), resolve_drake_pipe_row, plan = plan)
+  out <- lapply(
+    seq_len(nrow(plan)),
+    resolve_drake_pipe_row,
+    plan = plan,
+    envir = envir
+  )
   drake_bind_rows(out)
 }
