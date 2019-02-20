@@ -115,6 +115,33 @@ test_with_dir("%dp% and transforms", {
   equivalent_plans(out, exp)
 })
 
+test_with_dir("%dp% does not mess with the trace", {
+  out <- drake_plan(
+    result = target(
+      task1(data, analysis) %dp%
+        task2() %dp%
+        task3(),
+      transform = map(analysis = c("bayes", "freq"))
+    ),
+    end = target(
+      list(result),
+      transform = combine(result)
+    )
+  )
+  # nolint start
+  exp <- drake_plan(
+    result_.bayes..2 = task1(data, "bayes"),
+    result_.bayes..1 = task2(result_.bayes..2),
+    result_.bayes. = task3(result_.bayes..1),
+    result_.freq..2 = task1(data, "freq"),
+    result_.freq..1 = task2(result_.freq..2),
+    result_.freq. = task3(result_.freq..1),
+    end = list(result_.bayes., result_.freq.)
+  )
+  # nolint end
+  equivalent_plans(out, exp)
+})
+
 test_with_dir("%dp% and a busy first call", {
   out <- drake_plan(
     x = (f(g(1)) + h(2)) %dp% # Need parens. So does magrittr.
