@@ -3,12 +3,12 @@ split_dp_chain <- function (expr, envir) {
   i <- 1L
   while (is.call(expr) && identical(expr[[1L]], quote(`%dp%`))) {
     link <- expr[[3L]]
-    if (is.call(link) && identical(link[[1]], quote(`(`))) {
+    if (is_parenthesized(link)) {
       link <- eval(link, envir = envir, enclos = envir)
     }
-    if (is.symbol(link) || is.function(link)) {
+    if (not_call(link)) {
       link <- as.call(list(link, quote(.)))
-    } else if (!any(vapply(link[-1], identical, logical(1), quote(.)))) {
+    } else if (no_dot_arg(link)) {
       link <- as.call(c(link[[1]], quote(.), as.list(link[-1])))
     }
     if (is.call(link) && identical(link[[1L]], quote(`function`))) {
@@ -56,4 +56,16 @@ resolve_drake_pipe <- function(plan, envir) {
     envir = envir
   )
   drake_bind_rows(out)
+}
+
+is_parenthesized <- function(expr) {
+  is.call(expr) && identical(expr[[1]], quote(`(`))
+}
+
+not_call <- function(expr) {
+  is.symbol(expr) || is.function(expr)
+}
+
+no_dot_arg <- function(expr) {
+  !any(vapply(expr[-1], identical, logical(1), quote(.)))  
 }
