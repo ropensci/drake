@@ -40,6 +40,9 @@ resolve_drake_pipe_row <- function(plan, row) {
 }
 
 resolve_drake_pipe <- function(plan) {
+  if (!nrow(plan)) {
+    return(plan)
+  }
   out <- lapply(seq_len(nrow(plan)), resolve_drake_pipe_row, plan = plan)
   drake_bind_rows(out)
 }
