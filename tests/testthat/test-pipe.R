@@ -138,6 +138,7 @@ test_with_dir("%dp% and anonymous functions", {
     gsub(" |\n", "", safe_deparse(out$command[[2]])),
     "(function(x){process_stuff(x)})(x.1)"
   )
+  expect_equal(nrow(out), 2L)
   expect_error(
     drake_plan(
       x = data %dp% function (x) {
