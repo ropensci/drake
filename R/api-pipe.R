@@ -67,5 +67,5 @@ not_call <- function(expr) {
 }
 
 no_dot_arg <- function(expr) {
-  !any(vapply(expr[-1], identical, logical(1), quote(.)))  
+  !any(vapply(expr[-1], identical, logical(1), quote(.)))
 }
