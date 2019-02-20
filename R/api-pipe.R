@@ -1,3 +1,6 @@
+# Functionality taken from magrittr:::split_chain()
+# under the MIT license.
+# https://github.com/tidyverse/magrittr/blob/4104d6b593e409859befd0076ddc1abd0417d793/R/split_chain.R#L10-L45 # nolint
 split_dp_chain <- function (expr, envir) {
   links <- list()
   i <- 1L
