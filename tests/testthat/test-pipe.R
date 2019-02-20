@@ -2,6 +2,22 @@ drake_context("pipe")
 
 test_with_dir("%dp% really is a pipe", {
   out <- drake_plan(
+    result = data %dp%
+      task1() %dp%
+      task2() %dp%
+      task3()
+  )
+  exp <- drake_plan(
+    result.3 = data,
+    result.2 = task1(result.3),
+    result.1 = task2(result.2),
+    result = task3(result.1)
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("%dp% with other custom columns", {
+  out <- drake_plan(
     x = 1,
     result = target(
       data %dp%
