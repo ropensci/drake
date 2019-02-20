@@ -3,10 +3,16 @@ split_dp_chain <- function (expr, envir) {
   i <- 1L
   while (is.call(expr) && identical(expr[[1L]], quote(`%dp%`))) {
     link <- expr[[3L]]
+    if (is.call(link) && identical(link[[1]], quote(`(`))) {
+      link <- eval(link, envir = envir, enclos = envir)
+    }
     if (is.symbol(link) || is.function(link)) {
       link <- as.call(list(link, quote(.)))
     } else if (!any(vapply(link[-1], identical, logical(1), quote(.)))) {
       link <- as.call(c(link[[1]], quote(.), as.list(link[-1])))
+    }
+    if (is.call(link) && identical(link[[1L]], quote(`function`))) {
+      stop("Anonymous functions must be parenthesized", call. = FALSE)
     }
     links[[i]] <- link
     expr <- expr[[2L]]

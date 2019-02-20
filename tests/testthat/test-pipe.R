@@ -127,3 +127,23 @@ test_with_dir("%dp% and a busy first call", {
     x = task_3(x.1)
   )
 })
+
+test_with_dir("%dp% and anonymous functions", {
+  out <- drake_plan(
+    x = data %dp% (function (x) {
+        process_stuff(x)
+      })
+  )
+  expect_equal(
+    gsub(" |\n", "", safe_deparse(out$command[[2]])),
+    "(function(x){process_stuff(x)})(x.1)"
+  )
+  expect_error(
+    drake_plan(
+      x = data %dp% function (x) {
+        process_stuff(x)
+      }
+    ),
+    regexp = "parenthesized"
+  )
+})
