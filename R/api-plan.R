@@ -181,6 +181,7 @@ drake_plan <- function(
   for (col in setdiff(colnames(plan), c("target", "command", "trigger"))) {
     plan[[col]] <- unlist(plan[[col]])
   }
+  plan <- resolve_drake_pipe(plan)
   sanitize_plan(plan)
 }
 

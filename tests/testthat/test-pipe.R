@@ -1,0 +1,86 @@
+drake_context("pipe")
+
+test_with_dir("%dp% really is a pipe", {
+  out <- drake_plan(
+    x = 1,
+    result = target(
+      data %dp%
+        task1() %dp%
+        task2() %dp%
+        task3(),
+      timeout = 123
+    ),
+    other = target(
+      data %dp%
+        task1(x, .) %dp%
+        task2(task3(.), .) %dp%
+        task4(),
+      timeout = 456
+    ),
+    y = 3
+  )
+  exp <- drake_plan(
+    x = 1,
+    result.3 = target(
+      command = data,
+      timeout = 123
+    ),
+    result.2 = target(
+      command = task1(result.3),
+      timeout = 123
+    ),
+    result.1 = target(
+      command = task2(result.2),
+      timeout = 123
+    ),
+    result = target(
+      command = task3(result.1),
+      timeout = 123
+    ),
+    other.3 = target(
+      command = data,
+      timeout = 456
+    ),
+    other.2 = target(
+      command = task1(x, other.3),
+      timeout = 456
+    ),
+    other.1 = target(
+      command = task2(task3(other.2), other.2),
+      timeout = 456
+    ),
+    other = target(
+      command = task4(other.1),
+      timeout = 456
+    ),
+    y = 3
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("%dp% and transforms", {
+  out <- drake_plan(
+    x = 1,
+    result = target(
+      data %dp%
+        task1() %dp%
+        task2(x, .) %dp%
+        task3(),
+      transform = map(x = c(1, 2))
+    ),
+    y = 3
+  )
+  exp <- drake_plan(
+    x = 1,
+    result_1.3 = data,
+    result_1.2 = task1(result_1.3),
+    result_1.1 = task2(1, result_1.2),
+    result_1 = task3(result_1.1),
+    result_2.3 = data,
+    result_2.2 = task1(result_2.3),
+    result_2.1 = task2(2, result_2.2),
+    result_2 = task3(result_2.1),
+    y = 3
+  )
+  equivalent_plans(out, exp)
+})
