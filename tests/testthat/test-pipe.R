@@ -100,3 +100,16 @@ test_with_dir("%dp% and transforms", {
   )
   equivalent_plans(out, exp)
 })
+
+test_with_dir("%dp% and a busy first call", {
+  out <- drake_plan(
+    x = (f(g(1)) + h(2)) %dp% # Need parens. So does magrittr.
+      task_2() %dp%
+      task_3()
+  )
+  exp <- drake_plan(
+    x.2 = (f(g(1)) + h(2)),
+    x.1 = task_2(x.2),
+    x = task_3(x.1)
+  )
+})
