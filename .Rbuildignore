@@ -1,6 +1,7 @@
 Thumbs.db
 ^build_site.R$
-^images$
+^man/figures$
+^pkgdown$
 ^reference$
 .DS_Store
 \.drake$
@@ -22,9 +23,7 @@ pkgdown.sh
 paper.bib
 paper.md
 README.Rmd
-TESTS.md
-TODO.md
-TROUBLESHOOTING.md
+README.md
 vignettes/.*\.html
 vignettes/.*\.md
 vignettes/.*\.log
@@ -44,7 +43,6 @@ vignettes/.*_files
 ^CONDUCT\.md$
 ^docs$
 ^docs\.R$
-^images\.R$
 ^_pkgdown\.yml$
 ^codemeta\.json$
 ^\.httr-oauth$

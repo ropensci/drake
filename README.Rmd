@@ -428,7 +428,7 @@ Many thanks to [Julia Lowndes](https://github.com/jules32), [Ben Marwick](https:
 - [Kirill M&uuml;ller](https://github.com/krlmlr)
 - [Michael Schubert](http://github.com/mschubert)
 
-Credit for images is [attributed here](https://github.com/ropensci/drake/blob/master/images/image-credit.md).
+Credit for images is [attributed here](https://ropensci.github.io/drake/images/image-credit.md).
 
 [![ropensci_footer](http://ropensci.org/public_images/github_footer.png)](https://ropensci.org)
 
