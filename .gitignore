@@ -6,6 +6,7 @@ Thumbs.db
 *.dcf
 *.gcda
 *.gcno
+*.httr-oauth
 *.log
 *.nav
 *.out
@@ -25,6 +26,7 @@ Thumbs.db
 .Rhistory
 .Rproj*
 .Rproj.user
+docs
 inst/doc
 Makefile
 Rbuildignore/*.pdf
@@ -33,5 +35,3 @@ README.html
 vignettes/*.html
 vignettes/*.md
 vignettes/*_files
-inst/doc
-.httr-oauth
