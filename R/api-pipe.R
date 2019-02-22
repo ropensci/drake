@@ -29,7 +29,8 @@ resolve_drake_pipe_row <- function(plan, row, envir) {
   plan <- plan[row,, drop = FALSE] # nolint
   commands <- split_dp_chain(plan$command[[1]], envir)
   if (length(commands) < 2L) {
-    return(plan)
+    # Should not reach but still good to have.
+    return(plan) # nocov
   }
   targets <- make.unique(rep(plan$target[1], length(commands)))
   targets <- c(targets[-1], targets[1])
