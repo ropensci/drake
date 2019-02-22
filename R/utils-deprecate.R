@@ -1828,6 +1828,7 @@ predict_load_balancing <- function(
 
 #' @title Get the cache at the exact file path specified.
 #' @export
+#' @keywords internal
 #' @description This function does not apply to
 #' in-memory caches such as `storr_environment()`.
 #' @return A drake/storr cache at the specified path, if it exists.

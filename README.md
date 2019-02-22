@@ -3,7 +3,7 @@
 
 <center>
 
-<img src="https://ropensci.github.io/drake/images/infographic.svg" alt="infographic" align="center" style = "border: none; float: center;">
+<img src="https://ropensci.github.io/drake/figures/infographic.svg" alt="infographic" align="center" style = "border: none; float: center;">
 
 </center>
 
@@ -131,7 +131,7 @@ Development
 
 <br>
 
-# The drake R package <img src="https://ropensci.github.io/drake/images/logo.svg" align="right" alt="logo" width="120" height = "139" style = "border: none; float: right;">
+# The drake R package <img src="https://ropensci.github.io/drake/figures/logo.svg" align="right" alt="logo" width="120" height = "139" style = "border: none; float: right;">
 
 `drake` — or, Data Frames in R for Make — is a general-purpose workflow
 manager for data-driven tasks. It rebuilds intermediate data objects
@@ -149,7 +149,7 @@ introduction.
 <center>
 
 <a href="https://ropenscilabs.github.io/drake-manual">
-<img src="https://ropensci.github.io/drake/images/video.png" alt="video" align="center" style = "border: none; float: center;">
+<img src="https://ropensci.github.io/drake/figures/video.png" alt="video" align="center" style = "border: none; float: center;">
 </a>
 
 </center>
@@ -171,7 +171,7 @@ Ordinarily, it is hard to avoid rerunning the code from scratch.
 
 <center>
 
-<img src="https://ropensci.github.io/drake/images/tweet.png" alt="tweet" align="center" style = "border: none; float: center;">
+<img src="https://ropensci.github.io/drake/figures/tweet.png" alt="tweet" align="center" style = "border: none; float: center;">
 
 </center>
 
@@ -278,7 +278,7 @@ readd(hist)
 #> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-<img src="https://ropensci.github.io/drake/images/hist1.png" alt="hist1" align="center" style = "border: none; float: center;" width = "500px">
+<img src="https://ropensci.github.io/drake/figures/hist1.png" alt="hist1" align="center" style = "border: none; float: center;" width = "500px">
 
 So let’s fix the plotting function.
 
@@ -297,7 +297,7 @@ config <- drake_config(plan)
 vis_drake_graph(config) # Interactive graph: zoom, drag, etc.
 ```
 
-<img src="https://ropensci.github.io/drake/images/graph.png" alt="hist1" align="center" style = "border: none; float: center;" width = "600px">
+<img src="https://ropensci.github.io/drake/figures/graph.png" alt="hist1" align="center" style = "border: none; float: center;" width = "600px">
 
 The next `make()` just builds `hist` and `report.html`. No point in
 wasting time on the data or model.
@@ -313,7 +313,7 @@ loadd(hist)
 hist
 ```
 
-<img src="https://ropensci.github.io/drake/images/hist2.png" alt="hist1" align="center" style = "border: none; float: center;" width = "500px">
+<img src="https://ropensci.github.io/drake/figures/hist2.png" alt="hist1" align="center" style = "border: none; float: center;" width = "500px">
 
 # Reproducibility with confidence
 
@@ -807,6 +807,6 @@ early in development.
   - [Michael Schubert](http://github.com/mschubert)
 
 Credit for images is [attributed
-here](https://ropensci.github.io/drake/images/image-credit.md).
+here](https://ropensci.github.io/drake/figures/image-credit.md).
 
 [![ropensci\_footer](http://ropensci.org/public_images/github_footer.png)](https://ropensci.org)

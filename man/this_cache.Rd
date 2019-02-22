@@ -46,3 +46,4 @@ A drake/storr cache at the specified path, if it exists.
 This function does not apply to
 in-memory caches such as \code{storr_environment()}.
 }
+\keyword{internal}
