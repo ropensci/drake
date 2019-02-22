@@ -179,7 +179,7 @@ create_plot <- function(data) {
 
 ```{r visdrakegraphreadme, eval = FALSE}
 config <- drake_config(plan)
-vis_drake_graph(config) # Interactive graph: hover, zoom, drag, etc.
+vis_drake_graph(config) # Interactive graph: zoom, drag, etc.
 ```
 
 <img src="https://ropensci.github.io/drake/images/graph.png" alt="hist1" align="center" style = "border: none; float: center;" width = "600px">
@@ -303,7 +303,14 @@ Thanks to [Kirill](https://github.com/krlmlr) for constructing two interactive [
 
 ## Examples
 
-There are multiple `drake`-powered example projects [available here](https://github.com/wlandau/drake-examples), ranging from beginner-friendly stubs to demonstrations of high-performance computing. You can generate the files for a project with `drake_example()` (e.g. `drake_example("gsp")`), and you can list the available projects with `drake_examples()`. You can contribute your own example project with a [fork and pull request](https://github.com/wlandau/drake-examples/pulls).
+Here are some real-world applications of `drake` in the wild.
+
+- [efcaguab/demografia-del-voto](https://github.com/efcaguab/demografia-del-voto)
+- [efcaguab/great-white-shark-nsw](https://github.com/efcaguab/great-white-shark-nsw)
+- [IndianaCHE/Detailed-SSP-Reports](https://github.com/IndianaCHE/Detailed-SSP-Reports)
+- [tiernanmartin/home-and-hope](https://github.com/tiernanmartin/home-and-hope)
+
+There are also multiple `drake`-powered example projects [available here](https://github.com/wlandau/drake-examples), ranging from beginner-friendly stubs to demonstrations of high-performance computing. You can generate the files for a project with `drake_example()` (e.g. `drake_example("gsp")`), and you can list the available projects with `drake_examples()`. You can contribute your own example project with a [fork and pull request](https://github.com/wlandau/drake-examples/pulls).
 
 ## Presentations
 
@@ -317,17 +324,6 @@ There are multiple `drake`-powered example projects [available here](https://git
 | [Christine Stawitz](https://github.com/cstawitz) | [R-Ladies Seattle](https://www.meetup.com/rladies-seattle) | 2018-06-25 | [materials](https://github.com/cstawitz/RLadies_Sea_drake) |
 | [Kirill Müller](https://github.com/krlmlr) | [Swiss Institute of Bioinformatics](https://www.sib.swiss) | 2018-03-05 | [workshop](https://www.sib.swiss/training/course/2018-03-remake), [slides](https://krlmlr.github.io/slides/drake-sib-zurich), [source](https://github.com/krlmlr/drake-sib-zurich),  [exercises](https://krlmlr.github.io/slides/drake-sib-zurich/cooking.html) |
 | [Kirill Müller](https://github.com/krlmlr) | [RStudio Conference](https://www.rstudio.com/conference) | 2018-02-01 | [slides](https://krlmlr.github.io/drake-pitch), [source](http://github.com/krlmlr/drake-pitch) |
-
-## Real example projects
-
-Here are some real-world applications of `drake` in the wild.
-
-- [efcaguab/demografia-del-voto](https://github.com/efcaguab/demografia-del-voto)
-- [efcaguab/great-white-shark-nsw](https://github.com/efcaguab/great-white-shark-nsw)
-- [IndianaCHE/Detailed-SSP-Reports](https://github.com/IndianaCHE/Detailed-SSP-Reports)
-- [tiernanmartin/home-and-hope](https://github.com/tiernanmartin/home-and-hope)
-
-If you have a project of your own, we would love to add it. [Click here to edit the `README.Rmd` file](https://github.com/ropensci/drake/edit/master/README.Rmd).
 
 ## Context and history
 
