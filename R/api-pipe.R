@@ -4,7 +4,7 @@
 split_dp_chain <- function (expr, envir) {
   links <- list()
   i <- 1L
-  while (is.call(expr) && identical(expr[[1L]], quote(`%dp%`))) {
+  while (has_pipe(expr)) {
     link <- expr[[3L]]
     if (is_parenthesized(link)) {
       link <- eval(link, envir = envir, enclos = envir)
@@ -53,13 +53,21 @@ resolve_drake_pipe <- function(plan, envir) {
   if (!nrow(plan)) {
     return(plan)
   }
-  out <- lapply(
-    seq_len(nrow(plan)),
+  has_pipe <- which(vapply(plan$command, has_pipe, FUN.VALUE = logical(1)))
+  resolved <- lapply(
+    has_pipe,
     resolve_drake_pipe_row,
     plan = plan,
     envir = envir
   )
-  drake_bind_rows(out)
+  for (index in rev(seq_along(has_pipe))) {
+    plan <- sub_in_plan(plan, resolved[[index]], has_pipe[index])
+  }
+  plan
+}
+
+has_pipe <- function(expr) {
+  is.call(expr) && identical(expr[[1L]], quote(`%dp%`))
 }
 
 is_parenthesized <- function(expr) {
