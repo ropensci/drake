@@ -1,1 +1,1 @@
-watch -n .1 tail -n 30 $1
+watch -n .1 tail -n 30 tests.Rout
