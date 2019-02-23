@@ -35,6 +35,7 @@ test_with_dir("deprecation: deps_targets() and knitr_deps()", {
     dependency_profile("x", config, character_only = TRUE),
     regexp = "deprecated"
   )
+  skip_if_not_installed("knitr")
   load_mtcars_example()
   expect_warning(knitr_deps("report.Rmd"), regexp = "deprecated")
 })
