@@ -1,8 +1,7 @@
-^man/figures$
-Thumbs.db
+^Thumbs\.db$
 ^build_site.R$
 ^pkgdown$
-.DS_Store
+\.DS_Store
 \.drake$
 \.future$
 \.git$
@@ -13,11 +12,11 @@ Thumbs.db
 \.Rbuildignore$
 \.Rhistory$
 \.lintr$
-pkgdown.R
-pkgdown.sh
-paper.bib
-paper.md
-^README.Rmd$
+^pkgdown\.R$
+^pkgdown\.sh$
+^paper\.bib$
+^paper\.md$
+^README\.Rmd$
 vignettes/.*\.html
 vignettes/.*\.md
 vignettes/.*\.log
@@ -36,7 +35,6 @@ vignettes/.*_files
 ^.*\.yml$
 ^CONDUCT\.md$
 ^docs$
-^docs\.R$
 ^_pkgdown\.yml$
 ^codemeta\.json$
 ^\.httr-oauth$
