@@ -1,8 +1,7 @@
+^man/figures$
 Thumbs.db
 ^build_site.R$
-^man/figures$
 ^pkgdown$
-^reference$
 .DS_Store
 \.drake$
 \.future$
@@ -14,16 +13,11 @@ Thumbs.db
 \.Rbuildignore$
 \.Rhistory$
 \.lintr$
-cran-comments.md
-cran-comments.html
-CONTRIBUTING.md
-CONTRIBUTING.html
 pkgdown.R
 pkgdown.sh
 paper.bib
 paper.md
-README.Rmd
-README.md
+^README.Rmd$
 vignettes/.*\.html
 vignettes/.*\.md
 vignettes/.*\.log
