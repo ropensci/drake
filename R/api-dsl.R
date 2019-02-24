@@ -221,7 +221,10 @@ valid_splitting_plan <- function(plan, transform) {
     return(plan)
   }
   rows_keep <- complete_cases(plan[, cols, drop = FALSE])
-  plan[rows_keep,, drop = FALSE] # nolint
+  old_cols <- old_cols(plan)
+  out <- plan[rows_keep,, drop = FALSE] # nolint
+  old_cols(out) <- old_cols
+  out
 }
 
 combine_step <- function(plan, row, transform, old_cols) {
