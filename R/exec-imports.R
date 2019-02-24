@@ -1,5 +1,5 @@
 process_imports <- function(config) {
-  if (on_windows() && config$jobs > 1L) {
+  if (on_windows() && config$jobs_preprocess > 1L) {
     process_imports_parLapply(config) # nocov
   } else {
     process_imports_mclapply(config)
