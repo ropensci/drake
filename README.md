@@ -42,7 +42,7 @@ Development
 </tr>
 <tr class="odd">
 <td align="left">
-<a href="https://cran.rstudio.com/package=drake"><img src="https://cranlogs.r-pkg.org/badges/drake" alt="downloads"></a>
+<a href="https://CRAN.R-project.org/package=drake"><img src="https://cranlogs.r-pkg.org/badges/drake" alt="downloads"></a>
 </td>
 <td align="left">
 <a href="https://cran.r-project.org/package=drake"><img src="https://www.r-pkg.org/badges/version/drake" alt="CRAN"></a>

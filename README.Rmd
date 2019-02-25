@@ -46,7 +46,7 @@ invisible(file.copy("main/report.Rmd", ".", overwrite = TRUE))
 <td align="left"><a href="https://ci.appveyor.com/project/ropensci/drake"><img src="https://ci.appveyor.com/api/projects/status/4ypc9xnmqt70j94e?svg=true&amp;branch=master" alt="AppVeyor"></a></td>
 </tr>
 <tr class="odd">
-<td align="left"><a href="https://cran.rstudio.com/package=drake"><img src="https://cranlogs.r-pkg.org/badges/drake" alt="downloads"></a></td>
+<td align="left"><a href="https://CRAN.R-project.org/package=drake"><img src="https://cranlogs.r-pkg.org/badges/drake" alt="downloads"></a></td>
 <td align="left"><a href="https://cran.r-project.org/package=drake"><img src="https://www.r-pkg.org/badges/version/drake" alt="CRAN"></a></td>
 <td align="left"><a href="https://codecov.io/github/ropensci/drake?branch=master"><img src="https://codecov.io/github/ropensci/drake/coverage.svg?branch=master" alt="Codecov"></a></td>
 </tr>
