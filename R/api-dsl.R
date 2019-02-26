@@ -178,11 +178,11 @@ new_targets <- function(target, grid, cols, id) {
   grid <- grid[, cols, drop = FALSE]
   if (identical(id, FALSE) || any(dim(grid) < 1L)) {
     out <- rep(target, nrow(grid))
-    return(make.names(out, unique = TRUE))
+    return(make_unique(make.names(out, unique = FALSE, allow_ = TRUE)))
   }
   suffixes <- apply(grid, 1, paste, collapse = "_")
   out <- paste0(target, "_", suffixes)
-  make.names(out, unique = TRUE)
+  make_unique(make.names(out, unique = FALSE, allow_ = TRUE))
 }
 
 dsl_transform <- function(...) {

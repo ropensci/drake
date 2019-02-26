@@ -442,7 +442,12 @@ make_unique <- function(x) {
   ord <- order(x)
   y <- x[ord]
   dup <- duplicated(y)
-  suffix <- as.integer(do.call(c, tapply(dup, y, FUN = cumsum)))
+  if (!any(dup)) {
+    return(x)
+  }
+  suffix <- as.integer(
+    do.call(c, tapply(dup, y, FUN = cumsum, simplify = FALSE))
+  )
   i <- suffix > 0L
   suffix <- suffix + i
   y[i] <- paste(y[i], suffix[i], sep = "_")

@@ -187,6 +187,7 @@ test_with_dir("splice_args()", {
 test_with_dir("make_unique()", {
   skip_on_cran()
   expect_equal(make_unique(character(0)), character(0))
+  expect_equal(make_unique(letters), letters)
   x <- c("d", "c", "b", "b", "b", "d", "a", "a", "c", "d")
   out <- make_unique(x)
   exp <- c("d", "c", "b", "b_2", "b_3", "d_2", "a", "a_2", "c_2", "d_3")

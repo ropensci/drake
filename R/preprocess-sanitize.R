@@ -50,7 +50,7 @@ sanitize_nodes <- function(nodes, choices) {
 }
 
 repair_target_names <- function(x) {
-  make.names(x, unique = FALSE)
+  make.names(x, unique = FALSE, allow_ = TRUE)
 }
 
 arrange_plan_cols <- function(plan) {
