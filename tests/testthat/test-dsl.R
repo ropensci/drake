@@ -90,10 +90,10 @@ test_with_dir("replicates", {
       x = "1",
       a = "a_1"
     ),
-    a_1.1 = target(
+    a_1_2 = target(
       command = 1,
       x = "1",
-      a = "a_1.1"
+      a = "a_1_2"
     ),
     b_a_1 = target(
       command = f(a_1),
@@ -101,11 +101,11 @@ test_with_dir("replicates", {
       a = "a_1",
       b = "b_a_1"
     ),
-    b_a_1.1 = target(
-      command = f(a_1.1),
+    b_a_1_2 = target(
+      command = f(a_1_2),
       x = "1",
-      a = "a_1.1",
-      b = "b_a_1.1"
+      a = "a_1_2",
+      b = "b_a_1_2"
     )
   )
   equivalent_plans(out, exp)
@@ -1266,11 +1266,11 @@ test_with_dir("trace has correct provenance", {
       y = "3",
       a = "a_1_3"
     ),
-    a_1_3.1 = target(
+    a_1_3_2 = target(
       command = 1,
       x = "1",
       y = "3",
-      a = "a_1_3.1"
+      a = "a_1_3_2"
     ),
     b_a_1_3 = target(
       command = a_1_3,
@@ -1279,12 +1279,12 @@ test_with_dir("trace has correct provenance", {
       a = "a_1_3",
       b = "b_a_1_3"
     ),
-    b_a_1_3.1 = target(
-      command = a_1_3.1,
+    b_a_1_3_2 = target(
+      command = a_1_3_2,
       x = "1",
       y = "3",
-      a = "a_1_3.1",
-      b = "b_a_1_3.1"
+      a = "a_1_3_2",
+      b = "b_a_1_3_2"
     ),
     c_b_a_1_3 = target(
       command = b_a_1_3,
@@ -1294,13 +1294,13 @@ test_with_dir("trace has correct provenance", {
       b = "b_a_1_3",
       c = "c_b_a_1_3"
     ),
-    c_b_a_1_3.1 = target(
-      command = b_a_1_3.1,
+    c_b_a_1_3_2 = target(
+      command = b_a_1_3_2,
       x = "1",
       y = "3",
-      a = "a_1_3.1",
-      b = "b_a_1_3.1",
-      c = "c_b_a_1_3.1"
+      a = "a_1_3_2",
+      b = "b_a_1_3_2",
+      c = "c_b_a_1_3_2"
     ),
     d_b_a_1_3_c_b_a_1_3 = target(
       command = b_a_1_3,
@@ -1311,26 +1311,26 @@ test_with_dir("trace has correct provenance", {
       c = "c_b_a_1_3",
       d = "d_b_a_1_3_c_b_a_1_3"
     ),
-    d_b_a_1_3_c_b_a_1_3.1 = target(
+    d_b_a_1_3_c_b_a_1_3_2 = target(
       command = b_a_1_3,
       b = "b_a_1_3",
-      c = "c_b_a_1_3.1",
-      d = "d_b_a_1_3_c_b_a_1_3.1"
+      c = "c_b_a_1_3_2",
+      d = "d_b_a_1_3_c_b_a_1_3_2"
     ),
-    d_b_a_1_3.1_c_b_a_1_3 = target(
-      command = b_a_1_3.1,
-      b = "b_a_1_3.1",
+    d_b_a_1_3_2_c_b_a_1_3 = target(
+      command = b_a_1_3_2,
+      b = "b_a_1_3_2",
       c = "c_b_a_1_3",
-      d = "d_b_a_1_3.1_c_b_a_1_3"
+      d = "d_b_a_1_3_2_c_b_a_1_3"
     ),
-    d_b_a_1_3.1_c_b_a_1_3.1 = target(
-      command = b_a_1_3.1,
+    d_b_a_1_3_2_c_b_a_1_3_2 = target(
+      command = b_a_1_3_2,
       x = "1",
       y = "3",
-      a = "a_1_3.1",
-      b = "b_a_1_3.1",
-      c = "c_b_a_1_3.1",
-      d = "d_b_a_1_3.1_c_b_a_1_3.1"
+      a = "a_1_3_2",
+      b = "b_a_1_3_2",
+      c = "c_b_a_1_3_2",
+      d = "d_b_a_1_3_2_c_b_a_1_3_2"
     ),
     e_c_b_a_1_3 = target(
       command = c_b_a_1_3,
@@ -1341,14 +1341,14 @@ test_with_dir("trace has correct provenance", {
       c = "c_b_a_1_3",
       e = "e_c_b_a_1_3"
     ),
-    e_c_b_a_1_3.1 = target(
-      command = c_b_a_1_3.1,
+    e_c_b_a_1_3_2 = target(
+      command = c_b_a_1_3_2,
       x = "1",
       y = "3",
-      a = "a_1_3.1",
-      b = "b_a_1_3.1",
-      c = "c_b_a_1_3.1",
-      e = "e_c_b_a_1_3.1"
+      a = "a_1_3_2",
+      b = "b_a_1_3_2",
+      c = "c_b_a_1_3_2",
+      e = "e_c_b_a_1_3_2"
     ),
     f_c_b_a_1_3 = target(
       command = c_b_a_1_3,
@@ -1359,14 +1359,14 @@ test_with_dir("trace has correct provenance", {
       c = "c_b_a_1_3",
       f = "f_c_b_a_1_3"
     ),
-    f_c_b_a_1_3.1 = target(
-      command = c_b_a_1_3.1,
+    f_c_b_a_1_3_2 = target(
+      command = c_b_a_1_3_2,
       x = "1",
       y = "3",
-      a = "a_1_3.1",
-      b = "b_a_1_3.1",
-      c = "c_b_a_1_3.1",
-      f = "f_c_b_a_1_3.1"
+      a = "a_1_3_2",
+      b = "b_a_1_3_2",
+      c = "c_b_a_1_3_2",
+      f = "f_c_b_a_1_3_2"
     ),
     g_b_a_1_3 = target(
       command = b_a_1_3,
@@ -1376,13 +1376,13 @@ test_with_dir("trace has correct provenance", {
       b = "b_a_1_3",
       g = "g_b_a_1_3"
     ),
-    g_b_a_1_3.1 = target(
-      command = b_a_1_3.1,
+    g_b_a_1_3_2 = target(
+      command = b_a_1_3_2,
       x = "1",
       y = "3",
-      a = "a_1_3.1",
-      b = "b_a_1_3.1",
-      g = "g_b_a_1_3.1"
+      a = "a_1_3_2",
+      b = "b_a_1_3_2",
+      g = "g_b_a_1_3_2"
     ),
     h_a_1_3 = target(
       command = a_1_3,
@@ -1391,19 +1391,19 @@ test_with_dir("trace has correct provenance", {
       a = "a_1_3",
       h = "h_a_1_3"
     ),
-    h_a_1_3.1 = target(
-      command = a_1_3.1,
+    h_a_1_3_2 = target(
+      command = a_1_3_2,
       x = "1",
       y = "3",
-      a = "a_1_3.1",
-      h = "h_a_1_3.1"
+      a = "a_1_3_2",
+      h = "h_a_1_3_2"
     ),
     i = target(
-      command = list(e_c_b_a_1_3, e_c_b_a_1_3.1),
+      command = list(e_c_b_a_1_3, e_c_b_a_1_3_2),
       i = "i"
     ),
     j = target(
-      command = list(f_c_b_a_1_3, f_c_b_a_1_3.1),
+      command = list(f_c_b_a_1_3, f_c_b_a_1_3_2),
       j = "j"
     )
   )
@@ -1796,15 +1796,15 @@ test_with_dir(".id = FALSE", {
   )
   exp <- drake_plan(
     a = c("a", "c"),
-    a.1 = c("b", "c"),
-    a.2 = c("a", "d"),
-    a.3 = c("b", "d"),
+    a_2 = c("b", "c"),
+    a_3 = c("a", "d"),
+    a_4 = c("b", "d"),
     b = c(a, "k"),
-    b.1 = c(a.1, "l"),
-    b.2 = c(a.2, "m"),
-    b.3 = c(a.3, "n"),
-    d = list(b, b.2),
-    d.1 = list(b.1, b.3)
+    b_2 = c(a_2, "l"),
+    b_3 = c(a_3, "m"),
+    b_4 = c(a_4, "n"),
+    d = list(b, b_3),
+    d_2 = list(b_2, b_4)
   )
   equivalent_plans(out, exp)
 })
@@ -1824,33 +1824,33 @@ test_with_dir("(1) .id = syms. (2) map() finds the correct cross() syms", {
   # nolint start
   exp <- drake_plan(
     A_.k. = c("a", "c", "k"),
-    A_.k..1 = c("b", "c", "k"),
-    A_.k..2 = c("a", "d", "k"),
-    A_.k..3 = c("b", "d", "k"),
+    A_.k._2 = c("b", "c", "k"),
+    A_.k._3 = c("a", "d", "k"),
+    A_.k._4 = c("b", "d", "k"),
     A_.l. = c("a", "c", "l"),
-    A_.l..1 = c("b", "c", "l"),
-    A_.l..2 = c("a", "d", "l"),
-    A_.l..3 = c("b", "d", "l"),
+    A_.l._2 = c("b", "c", "l"),
+    A_.l._3 = c("a", "d", "l"),
+    A_.l._4 = c("b", "d", "l"),
     B_.c._.k. = c(A_.k., "c", "k"),
-    B_.c._.k..1 = c(A_.k..1, "c", "k"),
-    B_.d._.k. = c(A_.k..2, "d", "k"),
-    B_.d._.k..1 = c(A_.k..3, "d", "k"),
+    B_.c._.k._2 = c(A_.k._2, "c", "k"),
+    B_.d._.k. = c(A_.k._3, "d", "k"),
+    B_.d._.k._2 = c(A_.k._4, "d", "k"),
     B_.c._.l. = c(A_.l., "c", "l"),
-    B_.c._.l..1 = c(A_.l..1, "c", "l"),
-    B_.d._.l. = c(A_.l..2, "d", "l"),
-    B_.d._.l..1 = c(A_.l..3, "d", "l"),
+    B_.c._.l._2 = c(A_.l._2, "c", "l"),
+    B_.d._.l. = c(A_.l._3, "d", "l"),
+    B_.d._.l._2 = c(A_.l._4, "d", "l"),
     C = list(B_.c._.k., B_.c._.l.),
-    C.1 = list(B_.c._.k..1, B_.c._.l..1),
-    C.2 = list(B_.d._.k., B_.d._.l.),
-    C.3 = list(B_.d._.k..1, B_.d._.l..1)
+    C_2 = list(B_.c._.k._2, B_.c._.l._2),
+    C_3 = list(B_.d._.k., B_.d._.l.),
+    C_4 = list(B_.d._.k._2, B_.d._.l._2)
   )
   # nolint end
   equivalent_plans(out, exp)
 })
 
 test_with_dir("upstream .id columns are available", {
-  factor_a_ <- c(0.4, 0.5, 0.6, 0.7, 0.8)
-  factor_b_ <- 0.1
+  factor_a_ <- as.character(c(4, 5, 6, 7, 8))
+  factor_b_ <- "2"
   out <- drake_plan(
     raw_data = get_data(),
     data = clean_data(raw_data),
@@ -1869,19 +1869,19 @@ test_with_dir("upstream .id columns are available", {
   exp <- drake_plan(
     raw_data = get_data(),
     data = clean_data(raw_data),
-    analysis_0.4_0.1 = data %>% filter(factor_a == 0.4 & factor_b == 0.1),
-    analysis_0.5_0.1 = data %>% filter(factor_a == 0.5 & factor_b == 0.1),
-    analysis_0.6_0.1 = data %>% filter(factor_a == 0.6 & factor_b == 0.1),
-    analysis_0.7_0.1 = data %>% filter(factor_a == 0.7 & factor_b == 0.1),
-    analysis_0.8_0.1 = data %>% filter(factor_a == 0.8 & factor_b == 0.1),
-    summary_0.4_0.1 = my_summarize(analysis_0.4_0.1),
-    summary_0.5_0.1 = my_summarize(analysis_0.5_0.1),
-    summary_0.6_0.1 = my_summarize(analysis_0.6_0.1),
-    summary_0.7_0.1 = my_summarize(analysis_0.7_0.1),
-    summary_0.8_0.1 = my_summarize(analysis_0.8_0.1),
+    analysis_.4._.2. = data %>% filter(factor_a == "4" & factor_b == "2"),
+    analysis_.5._.2. = data %>% filter(factor_a == "5" & factor_b == "2"),
+    analysis_.6._.2. = data %>% filter(factor_a == "6" & factor_b == "2"),
+    analysis_.7._.2. = data %>% filter(factor_a == "7" & factor_b == "2"),
+    analysis_.8._.2. = data %>% filter(factor_a == "8" & factor_b == "2"),
+    summary_.4._.2. = my_summarize(analysis_.4._.2.),
+    summary_.5._.2. = my_summarize(analysis_.5._.2.),
+    summary_.6._.2. = my_summarize(analysis_.6._.2.),
+    summary_.7._.2. = my_summarize(analysis_.7._.2.),
+    summary_.8._.2. = my_summarize(analysis_.8._.2.),
     results = bind_rows(
-      summary_0.4_0.1, summary_0.5_0.1, summary_0.6_0.1,
-      summary_0.7_0.1, summary_0.8_0.1
+      summary_.4._.2., summary_.5._.2., summary_.6._.2.,
+      summary_.7._.2., summary_.8._.2.
     )
   )
   # nolint end
@@ -1899,13 +1899,13 @@ test_with_dir("repeated maps do not duplicate targets", {
   )
   exp <- drake_plan(
     A = "a",
-    A.1 = "a",
+    A_2 = "a",
     B = c(A, "a"),
-    B.1 = c(A.1, "a"),
+    B_2 = c(A_2, "a"),
     C = "b",
-    C.1 = "b",
+    C_2 = "b",
     D = c(A, B, C, "a", "b"),
-    D.1 = c(A.1, B.1, C.1, "a", "b")
+    D_2 = c(A_2, B_2, C_2, "a", "b")
   )
   equivalent_plans(out, exp)
 })
