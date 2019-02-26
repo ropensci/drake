@@ -183,3 +183,26 @@ test_with_dir("splice_args()", {
   )
   expect_equal(deparse(out), "f(a = 1, b = sym, c = \"char\", 5)")
 })
+
+test_with_dir("make_unique()", {
+  skip_on_cran()
+  expect_equal(make_unique(character(0)), character(0))
+  x <- c("d", "c", "b", "b", "b", "d", "a", "a", "c", "d")
+  out <- make_unique(x)
+  exp <- c("d", "c", "b", "b_2", "b_3", "d_2", "a", "a_2", "c_2", "d_3")
+  expect_equal(out, exp)
+  set.seed(0)
+  x <- sample(letters[seq_len(4)], size = 1e3, replace = TRUE)
+  out <- make_unique(x)
+  out <- vapply(out, function(x) {
+    y <- strsplit(x, split = "_")[[1]]
+    if (length(y) == 1L) {
+      return(y)
+    }
+    suffix <- as.integer(y[2])
+    expect_true(suffix > 1L)
+    paste(y[1], suffix - 1L, sep = ".") 
+  }, FUN.VALUE = character(1), USE.NAMES = FALSE)
+  exp <- make.unique(x, sep = ".")
+  expect_equal(out, exp)
+})
