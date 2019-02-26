@@ -218,8 +218,8 @@ evaluate_single_wildcard <- function(
   if (!any(matches)) {
     return(plan)
   }
-  major <- make.names(tempfile())
-  minor <- make.names(tempfile())
+  major <- make.names(tempfile(), unique = FALSE, allow_ = TRUE)
+  minor <- make.names(tempfile(), unique = FALSE, allow_ = TRUE)
   plan[[major]] <- seq_len(nrow(plan))
   plan[[minor]] <- plan[[major]]
   matching <- plan[matches, ]

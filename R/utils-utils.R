@@ -434,3 +434,22 @@ targets_from_dots <- function(dots, list) {
   targets <- unique(c(names, list))
   standardize_key(targets)
 }
+
+make_unique <- function(x) {
+  if (!length(x)) {
+    return(character(0))
+  }
+  ord <- order(x)
+  y <- x[ord]
+  dup <- duplicated(y)
+  if (!any(dup)) {
+    return(x)
+  }
+  suffix <- as.integer(
+    do.call(c, tapply(dup, y, FUN = cumsum, simplify = FALSE))
+  )
+  i <- suffix > 0L
+  suffix <- suffix + i
+  y[i] <- paste(y[i], suffix[i], sep = "_")
+  y[order(ord)]
+}
