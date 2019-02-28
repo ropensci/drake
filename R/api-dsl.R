@@ -509,10 +509,7 @@ dsl_syms <- function(x) {
 }
 
 dsl_sym <- function(x) {
-  tryCatch(
-    eval(parse(text = x), envir = emptyenv()),
-    error = function(e) as.symbol(x)
-  )
+  tryCatch(parse(text = x)[[1]], error = function(e) as.symbol(x))
 }
 
 dsl_left_outer_join <- function(x, y) {
