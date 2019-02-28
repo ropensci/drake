@@ -2166,14 +2166,12 @@ test_with_dir("uneven combinations", {
 })
 
 test_with_dir("dates in the DSL", {
+  skip_on_cran()
   dates <- seq(as.Date("2019-01-01"), as.Date("2019-01-03"), by = 1)
-  out <- drake_plan(
-    y = target(f(d), transform = map(d = !!dates, .id = FALSE))
+  plan <- drake_plan(
+    y = target(d, transform = map(d = !!dates, .id = FALSE))
   )
-  exp <- drake_plan(
-    y = f(structure(17897, class = "Date")),
-    y_2 = f(structure(17898, class = "Date")),
-    y_3 = f(structure(17899, class = "Date"))
-  )
-  equivalent_plans(out, exp)
+  cache <- storr::storr_environment()
+  make(plan, cache = cache, session_info = FALSE)
+  expect_true(inherits(cache$get("y"), "Date"))
 })
