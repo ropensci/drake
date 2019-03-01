@@ -360,8 +360,8 @@ drake_cache_log_file <- function(
     jobs = jobs,
     targets_only = targets_only
   )
-  write.table(
-    out,
+  write_table(
+    x = out,
     file = file,
     quote = FALSE,
     row.names = FALSE
