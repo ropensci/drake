@@ -549,3 +549,11 @@ test_with_dir("drake_plan_source() with character columns", {
   exp$trigger <- lapply(config$plan$trigger, safe_parse)
   expect_equal(drake_plan_source(config$plan), drake_plan_source(exp))
 })
+
+test_with_dir("handle weird missing symbols", {
+  out <- drake_plan(
+    ,a = 1,,b=f(x),,, # nolint
+  )
+  exp <- drake_plan(a = 1, b = f(x))
+  equivalent_plans(out, exp)
+})

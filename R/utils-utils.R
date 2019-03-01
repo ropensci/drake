@@ -197,14 +197,25 @@ safe_is_na <- function(x) {
 }
 
 select_nonempty <- function(x) {
-  index <- vapply(
+  keep <- vapply(
     X = x,
     FUN = function(y) {
       length(y) > 0
     },
     FUN.VALUE = logical(1)
   )
-  x[index]
+  x[keep]
+}
+
+select_valid_lang <- function(x) {
+  discard <- vapply(
+    X = x,
+    FUN = function(y) {
+      identical(y, substitute())
+    },
+    FUN.VALUE = logical(1)
+  )
+  x[!discard]
 }
 
 select_valid <- function(x) {
