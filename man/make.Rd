@@ -165,6 +165,10 @@ to keep \code{make()} from mangling your project.
 and some targets are outdated,
 then \code{make()} pauses with a menu to check if you really want to
 proceed. Ref: \url{https://github.com/ropensci/drake/issues/761}.
+You can also disable this menu with
+\code{options(drake_force_interactive = TRUE)}.
+Save \code{options(drake_force_interactive = TRUE)} in your
+\code{~/.Rprofile} file to never see the menu.
 \item If the cache was created with an old
 and incompatible version of drake, \code{make()} stops to
 give you an opportunity to

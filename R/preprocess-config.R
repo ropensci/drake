@@ -150,6 +150,10 @@
 #'   and some targets are outdated,
 #'   then `make()` pauses with a menu to check if you really want to
 #'   proceed. Ref: <https://github.com/ropensci/drake/issues/761>.
+#'   You can also disable this menu with
+#'   `options(drake_force_interactive = TRUE)`.
+#'   Save `options(drake_force_interactive = TRUE)` in your
+#'   `~/.Rprofile` file to never see the menu.
 #'   2. If the cache was created with an old
 #'   and incompatible version of drake, `make()` stops to
 #'   give you an opportunity to
