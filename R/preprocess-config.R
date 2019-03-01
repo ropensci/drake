@@ -432,7 +432,7 @@ drake_config <- function(
   cpu = Inf,
   elapsed = Inf,
   retries = 0,
-  force = FALSE,
+  force = NULL,
   log_progress = FALSE,
   graph = NULL,
   trigger = drake::trigger(),
@@ -553,7 +553,7 @@ drake_config <- function(
       console_log_file = console_log_file
     )
   }
-  if (force) {
+  if (force %||% FALSE) {
     drake_set_session_info(cache = cache, full = session_info)
   }
   seed <- choose_seed(supplied = seed, cache = cache)
@@ -632,7 +632,8 @@ drake_config <- function(
     template = template,
     sleep = sleep,
     hasty_build = hasty_build,
-    lock_envir = lock_envir
+    lock_envir = lock_envir,
+    force = force
   )
   out <- enforce_compatible_config(out)
   config_checks(out)

@@ -11,7 +11,6 @@ run_native_backend <- function(config) {
     config$parallelism,
     c("loop", "clustermq", "future")
   )
-  config$schedule <- pretrim_schedule(config)
   if (igraph::gorder(config$schedule)) {
     get(
       paste0("backend_", parallelism),

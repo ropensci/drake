@@ -12,7 +12,7 @@ make(plan, targets = NULL, envir = parent.frame(), verbose = 1L,
   prework = character(0), prepend = NULL, command = NULL,
   args = NULL, recipe_command = NULL, log_progress = TRUE,
   skip_targets = FALSE, timeout = NULL, cpu = Inf, elapsed = Inf,
-  retries = 0, force = FALSE, graph = NULL,
+  retries = 0, force = NULL, graph = NULL,
   trigger = drake::trigger(), skip_imports = FALSE,
   skip_safety_checks = FALSE, config = NULL, lazy_load = "eager",
   session_info = TRUE, cache_log_file = NULL, seed = NULL,
@@ -455,6 +455,5 @@ clean() # Start from scratch next time around.
 \code{\link[=drake_plan]{drake_plan()}},
 \code{\link[=drake_config]{drake_config()}},
 \code{\link[=vis_drake_graph]{vis_drake_graph()}},
-\code{\link[=outdated]{outdated()}},
-\code{\link[=triggers]{triggers()}}
+\code{\link[=outdated]{outdated()}}
 }

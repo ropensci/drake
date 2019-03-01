@@ -83,3 +83,26 @@ conclude_session <- function(config) {
   console_final_notes(config)
   invisible()
 }
+
+check_intv_make <- function(config) {
+  force_intv <- config$force %||%
+    getOption("drake_force_interactive") %||%
+    FALSE
+  interactive() &&
+    igraph::gorder(config$schedule) &&
+    !identical(force_intv, TRUE)
+}
+
+abort_intv_make <- function(config) {
+  # nocov start
+  title <- paste(
+    paste(igraph::gorder(config$schedule), "outdated targets:"),
+    multiline_message(igraph::V(config$schedule)$name),
+    "\nReally run make() in interactive mode?",
+    "Considerations: https://github.com/ropensci/drake/issues/761",
+    sep = "\n"
+  )
+  out <- utils::menu(choices = c("yes", "no"), title = title)
+  identical(as.integer(out), 2L)
+  # nocov end
+}

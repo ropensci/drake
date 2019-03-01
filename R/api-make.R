@@ -9,8 +9,7 @@
 #'   [drake_plan()],
 #'   [drake_config()],
 #'   [vis_drake_graph()],
-#'   [outdated()],
-#'   [triggers()]
+#'   [outdated()]
 #' @export
 #' @return nothing
 #' @inheritParams drake_config
@@ -69,7 +68,7 @@ make <- function(
   cpu = Inf,
   elapsed = Inf,
   retries = 0,
-  force = FALSE,
+  force = NULL,
   graph = NULL,
   trigger = drake::trigger(),
   skip_imports = FALSE,
@@ -150,6 +149,16 @@ make <- function(
   on.exit(ht_clear(config$ht_get_hash)) # Needs to be empty afterwards.
   if (!config$skip_imports) {
     process_imports(config)
+  }
+  if (is.character(config$parallelism)) {
+    config$schedule <- pretrim_schedule(config)
+  }
+  abort <- FALSE
+  if (check_intv_make(config)) {
+    abort <- abort_intv_make(config) # nocov
+  }
+  if (abort) {
+    return(invisible()) # nocov
   }
   if (!config$skip_targets) {
     process_targets(config)
