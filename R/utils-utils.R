@@ -464,10 +464,3 @@ make_unique <- function(x) {
   y[i] <- paste(y[i], suffix[i], sep = "_")
   y[order(ord)]
 }
-
-write_table <- function(...) {
-  with_options(
-    list(warnPartialMatchArgs = FALSE),
-    write.table(...)
-  )
-}

@@ -360,11 +360,14 @@ drake_cache_log_file <- function(
     jobs = jobs,
     targets_only = targets_only
   )
-  write_table(
-    x = out,
-    file = file,
-    quote = FALSE,
-    row.names = FALSE
+  # Suppress partial arg match warnings.
+  suppressWarnings(
+    write.table(
+      x = out,
+      file = file,
+      quote = FALSE,
+      row.names = FALSE
+    )
   )
 }
 
@@ -421,12 +424,15 @@ drake_cache_log_file <- function(
 #' # If you want a changelog, be sure to do this after every make().
 #' cache_log <- drake_cache_log()
 #' head(cache_log)
-#' # Save the hash log as a flat text file.
-#' write.table(
-#'   x = cache_log,
-#'   file = "drake_cache.log",
-#'   quote = FALSE,
-#'   row.names = FALSE
+#' # Suppress partial arg match warnings.
+#' suppressWarnings(
+#'   # Save the hash log as a flat text file.
+#'   write.table(
+#'     x = cache_log,
+#'     file = "drake_cache.log",
+#'     quote = FALSE,
+#'     row.names = FALSE
+#'   )
 #' )
 #' # At this point, put drake_cache.log under version control
 #' # (e.g. with 'git add drake_cache.log') alongside your code.
