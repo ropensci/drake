@@ -146,14 +146,21 @@ column in \code{plan}.}
 Assign target-level retries with an optional \code{retries}
 column in \code{plan}.}
 
-\item{force}{Logical. If \code{FALSE} (default) then \code{drake} will stop you
-if the cache was created with an old
-and incompatible version of drake.
-This gives you an opportunity to
+\item{force}{Logical. If \code{FALSE} (default) then \code{drake}
+imposes the following safeguards
+to keep \code{make()} from mangling your project.
+\enumerate{
+\item If you are running an interactive session
+(i.e. if \code{interactive()} is \code{TRUE})
+and some targets are outdated,
+then \code{make()} pauses with a menu to check if you really want to
+proceed. Ref: \url{https://github.com/ropensci/drake/issues/761}.
+\item If the cache was created with an old
+and incompatible version of drake, \code{make()} stops to
+give you an opportunity to
 downgrade \code{drake} to a compatible version
 rather than rerun all your targets from scratch.
-If \code{force} is \code{TRUE}, then \code{make()} executes your workflow
-regardless of the version of \code{drake} that last ran \code{make()} on the cache.}
+}}
 
 \item{log_progress}{Logical, whether to log the progress
 of individual targets as they are being built. Progress logging

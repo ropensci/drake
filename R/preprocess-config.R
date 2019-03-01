@@ -142,14 +142,19 @@
 #'   Assign target-level retries with an optional `retries`
 #'   column in `plan`.
 #'
-#' @param force Logical. If `FALSE` (default) then `drake` will stop you
-#'   if the cache was created with an old
-#'   and incompatible version of drake.
-#'   This gives you an opportunity to
+#' @param force Logical. If `FALSE` (default) then `drake` 
+#'   imposes the following safeguards
+#'   to keep `make()` from mangling your project.
+#'   1. If you are running an interactive session
+#'   (i.e. if `interactive()` is `TRUE`)
+#'   and some targets are outdated,
+#'   then `make()` pauses with a menu to check if you really want to
+#'   proceed. Ref: <https://github.com/ropensci/drake/issues/761>.
+#'   2. If the cache was created with an old
+#'   and incompatible version of drake, `make()` stops to
+#'   give you an opportunity to
 #'   downgrade `drake` to a compatible version
 #'   rather than rerun all your targets from scratch.
-#'   If `force` is `TRUE`, then `make()` executes your workflow
-#'   regardless of the version of `drake` that last ran `make()` on the cache.
 #'
 #' @param graph An `igraph` object from the previous `make()`.
 #'   Supplying a pre-built graph could save time.
