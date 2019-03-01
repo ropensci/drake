@@ -12,7 +12,7 @@ make(plan, targets = NULL, envir = parent.frame(), verbose = 1L,
   prework = character(0), prepend = NULL, command = NULL,
   args = NULL, recipe_command = NULL, log_progress = TRUE,
   skip_targets = FALSE, timeout = NULL, cpu = Inf, elapsed = Inf,
-  retries = 0, force = FALSE, graph = NULL,
+  retries = 0, force = NULL, graph = NULL,
   trigger = drake::trigger(), skip_imports = FALSE,
   skip_safety_checks = FALSE, config = NULL, lazy_load = "eager",
   session_info = TRUE, cache_log_file = NULL, seed = NULL,
@@ -156,14 +156,25 @@ column in \code{plan}.}
 Assign target-level retries with an optional \code{retries}
 column in \code{plan}.}
 
-\item{force}{Logical. If \code{FALSE} (default) then \code{drake} will stop you
-if the cache was created with an old
-and incompatible version of drake.
-This gives you an opportunity to
+\item{force}{Logical. If \code{FALSE} (default) then \code{drake}
+imposes the following safeguards
+to keep \code{make()} from mangling your project.
+\enumerate{
+\item If you are running an interactive session
+(i.e. if \code{interactive()} is \code{TRUE})
+and some targets are outdated,
+then \code{make()} pauses with a menu to check if you really want to
+proceed. Ref: \url{https://github.com/ropensci/drake/issues/761}.
+You can also disable this menu with
+\code{options(drake_force_interactive = TRUE)}.
+Save \code{options(drake_force_interactive = TRUE)} in your
+\code{~/.Rprofile} file to never see the menu.
+\item If the cache was created with an old
+and incompatible version of drake, \code{make()} stops to
+give you an opportunity to
 downgrade \code{drake} to a compatible version
 rather than rerun all your targets from scratch.
-If \code{force} is \code{TRUE}, then \code{make()} executes your workflow
-regardless of the version of \code{drake} that last ran \code{make()} on the cache.}
+}}
 
 \item{graph}{An \code{igraph} object from the previous \code{make()}.
 Supplying a pre-built graph could save time.}
@@ -455,6 +466,5 @@ clean() # Start from scratch next time around.
 \code{\link[=drake_plan]{drake_plan()}},
 \code{\link[=drake_config]{drake_config()}},
 \code{\link[=vis_drake_graph]{vis_drake_graph()}},
-\code{\link[=outdated]{outdated()}},
-\code{\link[=triggers]{triggers()}}
+\code{\link[=outdated]{outdated()}}
 }

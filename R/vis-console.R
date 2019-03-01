@@ -123,7 +123,25 @@ console_up_to_date <- function(config) {
   }
 }
 
+console_interactive <- function(config) {
+  if (!interactive()) {
+    return()
+  }
+  # nocov start
+  msg <- paste0(
+    "make() in interactive mode requires extra care:\n",
+    "https://github.com/ropensci/drake/issues/761"
+  )
+  out <- color(msg, colors["interactive"])
+  drake_message(out, config = config)
+  # nocov end
+}
+
 console_final_notes <- function(config) {
+  if (config$verbose < 1L) {
+    return()
+  }
+  console_interactive(config)
   if (config$verbose < 2L) {
     return()
   }

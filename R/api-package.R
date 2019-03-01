@@ -49,6 +49,6 @@
 #' @importFrom methods new setRefClass
 #' @importFrom rlang enquo eval_tidy expr quo_squash quos
 #' @importFrom storr storr_environment storr_rds
-#' @importFrom utils compareVersion head packageVersion
+#' @importFrom utils compareVersion head menu packageVersion
 #'   read.csv sessionInfo stack type.convert unzip write.table
 NULL

@@ -142,14 +142,23 @@
 #'   Assign target-level retries with an optional `retries`
 #'   column in `plan`.
 #'
-#' @param force Logical. If `FALSE` (default) then `drake` will stop you
-#'   if the cache was created with an old
-#'   and incompatible version of drake.
-#'   This gives you an opportunity to
+#' @param force Logical. If `FALSE` (default) then `drake` 
+#'   imposes the following safeguards
+#'   to keep `make()` from mangling your project.
+#'   1. If you are running an interactive session
+#'   (i.e. if `interactive()` is `TRUE`)
+#'   and some targets are outdated,
+#'   then `make()` pauses with a menu to check if you really want to
+#'   proceed. Ref: <https://github.com/ropensci/drake/issues/761>.
+#'   You can also disable this menu with
+#'   `options(drake_force_interactive = TRUE)`.
+#'   Save `options(drake_force_interactive = TRUE)` in your
+#'   `~/.Rprofile` file to never see the menu.
+#'   2. If the cache was created with an old
+#'   and incompatible version of drake, `make()` stops to
+#'   give you an opportunity to
 #'   downgrade `drake` to a compatible version
 #'   rather than rerun all your targets from scratch.
-#'   If `force` is `TRUE`, then `make()` executes your workflow
-#'   regardless of the version of `drake` that last ran `make()` on the cache.
 #'
 #' @param graph An `igraph` object from the previous `make()`.
 #'   Supplying a pre-built graph could save time.
@@ -432,7 +441,7 @@ drake_config <- function(
   cpu = Inf,
   elapsed = Inf,
   retries = 0,
-  force = FALSE,
+  force = NULL,
   log_progress = FALSE,
   graph = NULL,
   trigger = drake::trigger(),
@@ -553,7 +562,7 @@ drake_config <- function(
       console_log_file = console_log_file
     )
   }
-  if (force) {
+  if (force %||% FALSE) {
     drake_set_session_info(cache = cache, full = session_info)
   }
   seed <- choose_seed(supplied = seed, cache = cache)
@@ -632,7 +641,8 @@ drake_config <- function(
     template = template,
     sleep = sleep,
     hasty_build = hasty_build,
-    lock_envir = lock_envir
+    lock_envir = lock_envir,
+    force = force
   )
   out <- enforce_compatible_config(out)
   config_checks(out)
