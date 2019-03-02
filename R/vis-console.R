@@ -129,8 +129,7 @@ console_interactive <- function(config) {
   }
   # nocov start
   msg <- paste0(
-    "make() in interactive mode requires extra care:\n",
-    "https://github.com/ropensci/drake/issues/761"
+    "Please read the \"Interactive mode\" section of the make() help file."
   )
   out <- color(msg, colors["interactive"])
   drake_message(out, config = config)

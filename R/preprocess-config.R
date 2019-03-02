@@ -13,7 +13,7 @@
 #' to make sure the internal workflow network has all the targets you need.
 #' Modifying the `targets` element afterwards will have no effect
 #' and it could lead to false negative results from
-#' [outdated()]
+#' [outdated()].
 #' @export
 #' @return The master internal configuration list of a project.
 #' @seealso [make()], [drake_plan()], [vis_drake_graph()]
@@ -143,19 +143,9 @@
 #'   column in `plan`.
 #'
 #' @param force Logical. If `FALSE` (default) then `drake` 
-#'   imposes the following safeguards
-#'   to keep `make()` from mangling your project.
-#'   1. If you are running an interactive session
-#'   (i.e. if `interactive()` is `TRUE`)
-#'   and some targets are outdated,
-#'   then `make()` pauses with a menu to check if you really want to
-#'   proceed. Ref: <https://github.com/ropensci/drake/issues/761>.
-#'   You can also disable this menu with
-#'   `options(drake_force_interactive = TRUE)`.
-#'   Save `options(drake_force_interactive = TRUE)` in your
-#'   `~/.Rprofile` file to never see the menu.
-#'   2. If the cache was created with an old
-#'   and incompatible version of drake, `make()` stops to
+#'   imposes checks if the cache was created with an old
+#'   and incompatible version of drake.
+#'   If there is an incompatibility, `make()` stops to
 #'   give you an opportunity to
 #'   downgrade `drake` to a compatible version
 #'   rather than rerun all your targets from scratch.
@@ -441,7 +431,7 @@ drake_config <- function(
   cpu = Inf,
   elapsed = Inf,
   retries = 0,
-  force = NULL,
+  force = FALSE,
   log_progress = FALSE,
   graph = NULL,
   trigger = drake::trigger(),
@@ -562,7 +552,7 @@ drake_config <- function(
       console_log_file = console_log_file
     )
   }
-  if (force %||% FALSE) {
+  if (identical(force, TRUE)) {
     drake_set_session_info(cache = cache, full = session_info)
   }
   seed <- choose_seed(supplied = seed, cache = cache)

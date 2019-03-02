@@ -5,6 +5,26 @@
 #' that is already up to date.
 #' See <https://github.com/ropensci/drake/blob/master/README.md#documentation>
 #' for an overview of the documentation.
+#' @section Interactive mode:
+#' A serious drake workflow should be consistent and reliable,
+#' ideally with the help of a master R script.
+#' This script should begin in a fresh R session,
+#' load your packages and functions in a dependable manner,
+#' and then run `make()`. Example:
+#' <https://github.com/wlandau/drake-examples/tree/master/gsp>.
+#' Batch mode, especially within a container, is particularly helpful.
+#'
+#' Interactive R sessions are still useful,
+#' but they easily grow stale.
+#' Targets can falsely invalidate if you accidentally change
+#' a function or data object in your environment.
+#' So in interactive mode, `make()` now pauses with a menu
+#' to protect you from environment-related instability.
+#'
+#' You can control this menu with the `drake_make_menu` global option.
+#' Run `options(drake_make_menu = TRUE)` to show the menu once per session
+#' and `options(drake_make_menu = FALSE)` to disable it entirely.
+#' You may wish to add a call to `options()` in your local `.Rprofile` file.
 #' @seealso
 #'   [drake_plan()],
 #'   [drake_config()],
@@ -68,7 +88,7 @@ make <- function(
   cpu = Inf,
   elapsed = Inf,
   retries = 0,
-  force = NULL,
+  force = FALSE,
   graph = NULL,
   trigger = drake::trigger(),
   skip_imports = FALSE,
@@ -154,7 +174,7 @@ make <- function(
     config$schedule <- pretrim_schedule(config)
   }
   abort <- FALSE
-  if (check_intv_make(config)) {
+  if (prompt_intv_make(config)) {
     abort <- abort_intv_make(config) # nocov
   }
   if (abort) {

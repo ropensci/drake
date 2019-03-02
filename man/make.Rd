@@ -12,7 +12,7 @@ make(plan, targets = NULL, envir = parent.frame(), verbose = 1L,
   prework = character(0), prepend = NULL, command = NULL,
   args = NULL, recipe_command = NULL, log_progress = TRUE,
   skip_targets = FALSE, timeout = NULL, cpu = Inf, elapsed = Inf,
-  retries = 0, force = NULL, graph = NULL,
+  retries = 0, force = FALSE, graph = NULL,
   trigger = drake::trigger(), skip_imports = FALSE,
   skip_safety_checks = FALSE, config = NULL, lazy_load = "eager",
   session_info = TRUE, cache_log_file = NULL, seed = NULL,
@@ -157,24 +157,12 @@ Assign target-level retries with an optional \code{retries}
 column in \code{plan}.}
 
 \item{force}{Logical. If \code{FALSE} (default) then \code{drake}
-imposes the following safeguards
-to keep \code{make()} from mangling your project.
-\enumerate{
-\item If you are running an interactive session
-(i.e. if \code{interactive()} is \code{TRUE})
-and some targets are outdated,
-then \code{make()} pauses with a menu to check if you really want to
-proceed. Ref: \url{https://github.com/ropensci/drake/issues/761}.
-You can also disable this menu with
-\code{options(drake_force_interactive = TRUE)}.
-Save \code{options(drake_force_interactive = TRUE)} in your
-\code{~/.Rprofile} file to never see the menu.
-\item If the cache was created with an old
-and incompatible version of drake, \code{make()} stops to
+imposes checks if the cache was created with an old
+and incompatible version of drake.
+If there is an incompatibility, \code{make()} stops to
 give you an opportunity to
 downgrade \code{drake} to a compatible version
-rather than rerun all your targets from scratch.
-}}
+rather than rerun all your targets from scratch.}
 
 \item{graph}{An \code{igraph} object from the previous \code{make()}.
 Supplying a pre-built graph could save time.}
@@ -435,6 +423,29 @@ that is already up to date.
 See \url{https://github.com/ropensci/drake/blob/master/README.md#documentation}
 for an overview of the documentation.
 }
+\section{Interactive mode}{
+
+A serious drake workflow should be consistent and reliable,
+ideally with the help of a master R script.
+This script should begin in a fresh R session,
+load your packages and functions in a dependable manner,
+and then run \code{make()}. Example:
+\url{https://github.com/wlandau/drake-examples/tree/master/gsp}.
+Batch mode, especially within a container, is particularly helpful.
+
+Interactive R sessions are still useful,
+but they easily grow stale.
+Targets can falsely invalidate if you accidentally change
+a function or data object in your environment.
+So in interactive mode, \code{make()} now pauses with a menu
+to protect you from environment-related instability.
+
+You can control this menu with the \code{drake_make_menu} global option.
+Run \code{options(drake_make_menu = TRUE)} to show the menu once per session
+and \code{options(drake_make_menu = FALSE)} to disable it entirely.
+You may wish to add a call to \code{options()} in your local \code{.Rprofile} file.
+}
+
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {

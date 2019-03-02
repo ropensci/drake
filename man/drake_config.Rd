@@ -12,7 +12,7 @@ drake_config(plan, targets = NULL, envir = parent.frame(),
   packages = rev(.packages()), lib_loc = NULL,
   prework = character(0), prepend = NULL, command = NULL,
   args = NULL, recipe_command = NULL, timeout = NULL, cpu = Inf,
-  elapsed = Inf, retries = 0, force = NULL, log_progress = FALSE,
+  elapsed = Inf, retries = 0, force = FALSE, log_progress = FALSE,
   graph = NULL, trigger = drake::trigger(), skip_targets = FALSE,
   skip_imports = FALSE, skip_safety_checks = FALSE,
   lazy_load = "eager", session_info = TRUE, cache_log_file = NULL,
@@ -147,24 +147,12 @@ Assign target-level retries with an optional \code{retries}
 column in \code{plan}.}
 
 \item{force}{Logical. If \code{FALSE} (default) then \code{drake}
-imposes the following safeguards
-to keep \code{make()} from mangling your project.
-\enumerate{
-\item If you are running an interactive session
-(i.e. if \code{interactive()} is \code{TRUE})
-and some targets are outdated,
-then \code{make()} pauses with a menu to check if you really want to
-proceed. Ref: \url{https://github.com/ropensci/drake/issues/761}.
-You can also disable this menu with
-\code{options(drake_force_interactive = TRUE)}.
-Save \code{options(drake_force_interactive = TRUE)} in your
-\code{~/.Rprofile} file to never see the menu.
-\item If the cache was created with an old
-and incompatible version of drake, \code{make()} stops to
+imposes checks if the cache was created with an old
+and incompatible version of drake.
+If there is an incompatibility, \code{make()} stops to
 give you an opportunity to
 downgrade \code{drake} to a compatible version
-rather than rerun all your targets from scratch.
-}}
+rather than rerun all your targets from scratch.}
 
 \item{log_progress}{Logical, whether to log the progress
 of individual targets as they are being built. Progress logging
@@ -438,7 +426,7 @@ specifically, it is important to recompute the config list
 to make sure the internal workflow network has all the targets you need.
 Modifying the \code{targets} element afterwards will have no effect
 and it could lead to false negative results from
-\code{\link[=outdated]{outdated()}}
+\code{\link[=outdated]{outdated()}}.
 }
 \examples{
 \dontrun{

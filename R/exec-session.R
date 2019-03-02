@@ -84,22 +84,31 @@ conclude_session <- function(config) {
   invisible()
 }
 
-check_intv_make <- function(config) {
-  force_intv <- config$force %||%
-    getOption("drake_force_interactive") %||%
-    FALSE
+prompt_intv_make <- function(config) {
+  show_menu <- .pkg_envir[["drake_make_menu"]] %||%
+    getOption("drake_make_menu") %||%
+    TRUE
   interactive() &&
     igraph::gorder(config$schedule) &&
-    !identical(force_intv, TRUE)
+    show_menu
 }
 
 abort_intv_make <- function(config) {
   # nocov start
+  on.exit(
+    assign(
+      x = "drake_make_menu",
+      value = FALSE,
+      envir = .pkg_envir,
+      inherits = FALSE
+    )
+  )
   title <- paste(
     paste(igraph::gorder(config$schedule), "outdated targets:"),
     multiline_message(igraph::V(config$schedule)$name),
+    "\nPlease read the \"Interactive mode\" section of the make() help file.",
+    "This prompt only appears once per session.",
     "\nReally run make() in interactive mode?",
-    "Considerations: https://github.com/ropensci/drake/issues/761",
     sep = "\n"
   )
   out <- utils::menu(choices = c("yes", "no"), title = title)
