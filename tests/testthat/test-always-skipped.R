@@ -82,7 +82,7 @@ test_with_dir("forks + lock_envir = informative error msg", {
 })
 
 test_with_dir("make() in interactive mode", {
-  # Must run this test in an interactive session.
+  # Must run this test in a fresh new interactive session.
   # Cannot be fully automated like the other tests.
   load_mtcars_example()
   config <- drake_config(my_plan)
@@ -90,22 +90,16 @@ test_with_dir("make() in interactive mode", {
   expect_equal(cached(), character(0))
   expect_equal(sort(outdated(config)), sort(my_plan$target))
   expect_equal(sort(justbuilt(config)), character(0))
-  make(my_plan, console_log_file = "log.txt") # No menu
+  make(my_plan) # No menu
   expect_equal(cached(), sort(my_plan$target))
   expect_equal(sort(outdated(config)), character(0))
   expect_equal(sort(justbuilt(config)), sort(my_plan$target))
-  lines <- readLines("log.txt")
-  expect_true(any(grepl("Please read", lines)))
-  expect_false(any(grepl("up to date", lines)))
   clean()
   .pkg_envir$drake_make_menu <- NULL
-  make(my_plan, console_log_file = "log.txt") # Select 1.
+  make(my_plan) # Select 1.
   expect_equal(cached(), sort(my_plan$target))
   expect_equal(sort(outdated(config)), character(0))
   expect_equal(sort(justbuilt(config)), sort(my_plan$target))
-  lines <- readLines("log.txt")
-  expect_true(any(grepl("Please read", lines)))
-  expect_false(any(grepl("up to date", lines)))
   clean()
   .pkg_envir$drake_make_menu <- NULL
   options(drake_make_menu = FALSE)
