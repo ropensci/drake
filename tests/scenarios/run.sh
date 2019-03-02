@@ -1,1 +1,1 @@
-nohup R CMD BATCH tests.R &
+nohup R CMD BATCH tests-separate.R &

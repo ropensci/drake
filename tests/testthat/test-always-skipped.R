@@ -84,6 +84,7 @@ test_with_dir("forks + lock_envir = informative error msg", {
 test_with_dir("make() in interactive mode", {
   # Must run this test in a fresh new interactive session.
   # Cannot be fully automated like the other tests.
+  options(drake_make_menu = TRUE)
   load_mtcars_example()
   config <- drake_config(my_plan)
   make(my_plan) # Select 2.
