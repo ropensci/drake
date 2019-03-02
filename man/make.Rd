@@ -446,6 +446,30 @@ and \code{options(drake_make_menu = FALSE)} to disable it entirely.
 You may wish to add a call to \code{options()} in your local \code{.Rprofile} file.
 }
 
+\section{Self-invalidation}{
+
+It is possible to construct a workflow that tries to invalidate itself.
+Example:\preformatted{plan <- drake_plan(
+  x = {
+    data(mtcars)
+    mtcars$mpg
+  },
+  y = mean(x)
+)
+}
+
+In this plan, the very act of building \code{x}
+changes the dependencies of \code{x}.
+In other words, without safeguards, \code{x} would not be up to date at
+the end of \code{make(plan)}.
+Please try to avoid workflows that modify the global environment.
+Otherwise, \code{make(plan)} will throw an error.
+To avoid this error, you can run \code{make(plan, lock_envir = FALSE)}.
+There are legitimate use cases for \code{lock_envir = FALSE}
+(example: \url{https://ropenscilabs.github.io/drake-manual/hpc.html#parallel-computing-within-targets}) # nolint
+but most workflows should stick with the default \code{lock_envir = TRUE}.
+}
+
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {

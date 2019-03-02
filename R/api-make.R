@@ -25,6 +25,28 @@
 #' Run `options(drake_make_menu = TRUE)` to show the menu once per session
 #' and `options(drake_make_menu = FALSE)` to disable it entirely.
 #' You may wish to add a call to `options()` in your local `.Rprofile` file.
+#' @section Self-invalidation:
+#' It is possible to construct a workflow that tries to invalidate itself.
+#' Example:
+#' ```r
+#' plan <- drake_plan(
+#'   x = {
+#'     data(mtcars)
+#'     mtcars$mpg
+#'   },
+#'   y = mean(x)
+#' )
+#' ```
+#' In this plan, the very act of building `x`
+#' changes the dependencies of `x`.
+#' In other words, without safeguards, `x` would not be up to date at
+#' the end of `make(plan)`. 
+#' Please try to avoid workflows that modify the global environment.
+#' Otherwise, `make(plan)` will throw an error.
+#' To avoid this error, you can run `make(plan, lock_envir = FALSE)`.
+#' There are legitimate use cases for `lock_envir = FALSE`
+#' (example: <https://ropenscilabs.github.io/drake-manual/hpc.html#parallel-computing-within-targets>) # nolint
+#' but most workflows should stick with the default `lock_envir = TRUE`.
 #' @seealso
 #'   [drake_plan()],
 #'   [drake_config()],

@@ -49,7 +49,7 @@ test_with_dir("Try to modify a locked environment", {
   })
   expect_error(
     make(plan, session_info = FALSE, cache = storr::storr_environment()),
-    regexp = "reproducibility"
+    regexp = "Self-invalidation"
   )
 })
 

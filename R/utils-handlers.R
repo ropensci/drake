@@ -73,13 +73,8 @@ mention_pure_functions <- function(e) {
 }
 
 locked_envir_msg <- paste(
-  "\nOne of your targets tried to modify your environment,",
-  "which could invalidate other targets",
-  "and undermine reproducibility (example: ",
-  "https://github.com/ropensci/drake/issues/664#issuecomment-453163562).", # nolint
-  "Beware <<-, ->>, attach(), data(), and side effects in general.",
-  "Use make(lock_envir = FALSE) to avoid this error (not recommended).",
-  sep = "\n"
+  "\nPlease read the \"Self-invalidation\"",
+  "section of the make() help file."
 )
 
 prepend_fork_advice <- function(msg) {
