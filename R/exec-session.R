@@ -107,9 +107,8 @@ abort_intv_make <- function(config) {
     paste(igraph::gorder(config$schedule), "outdated targets:"),
     multiline_message(igraph::V(config$schedule)$name),
     "\nPlease read the \"Interactive mode\" section of the make() help file.",
-    "\nIn interactive mode, r_make() is more reproducible than make().",
     "This prompt only appears once per session.",
-    "\nReally run make() in interactive mode?",
+    "\nReally run make() instead of r_make() in interactive mode?",
     sep = "\n"
   )
   out <- utils::menu(choices = c("yes", "no"), title = title)
