@@ -109,7 +109,7 @@ test_with_dir("r_make() loads packages and sets options", {
       "plan <- drake_plan(x = abind(1L, getOption(\"drake_abind_opt\")))",
       "drake_config(plan, console_log_file = \"log.txt\")"
     ),
-    "_drake.R"
+    default_drake_source
   )
   options(drake_abind_opt = NULL)
   expect_null(getOption("drake_abind_opt"))
