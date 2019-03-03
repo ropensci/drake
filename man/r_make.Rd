@@ -11,9 +11,9 @@
 \alias{r_drake_ggraph}
 \alias{r_predict_runtime}
 \alias{r_predict_workers}
-\title{Experimental: call a drake function in a fresh new session.}
+\title{Experimental: reproducible R session management for drake functions}
 \usage{
-r_make(..., source = NULL, r_fn = NULL, r_args = list())
+r_make(source = NULL, r_fn = NULL, r_args = list())
 
 r_drake_build(..., source = NULL, r_fn = NULL, r_args = list())
 
@@ -35,10 +35,6 @@ r_predict_runtime(..., source = NULL, r_fn = NULL, r_args = list())
 r_predict_workers(..., source = NULL, r_fn = NULL, r_args = list())
 }
 \arguments{
-\item{...}{Arguments to the inner function. For example, if you want to call
-\code{\link[=r_vis_drake_graph]{r_vis_drake_graph()}}, the inner function is \code{\link[=vis_drake_graph]{vis_drake_graph()}}, and
-\code{selfcontained} is an example argument you could supply to the ellipsis.}
-
 \item{source}{Path to an R script file that
 loads packages, functions, etc. and returns a \code{\link[=drake_config]{drake_config()}} object.
 There are 3 ways to set this path.
@@ -54,6 +50,10 @@ Example: \code{r_make(r_fn = callr::r)}.}
 
 \item{r_args}{List of arguments to \code{r_fn}, not including \code{func} or \code{args}.
 Example: \code{r_make(r_fn = callr::r_bg, r_args = list(stdout = "stdout.log"))}.}
+
+\item{...}{Arguments to the inner function. For example, if you want to call
+\code{\link[=r_vis_drake_graph]{r_vis_drake_graph()}}, the inner function is \code{\link[=vis_drake_graph]{vis_drake_graph()}}, and
+\code{selfcontained} is an example argument you could supply to the ellipsis.}
 }
 \description{
 A word of caution: \code{\link[=r_make]{r_make()}} and friends are still

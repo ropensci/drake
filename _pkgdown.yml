@@ -36,7 +36,7 @@ reference:
   - '`make`'
   - '`drake_config`'
   - '`drake_build`'
-- title: drake in a clean reproducible session
+- title: Reproducible R session management
   contents:
   - '`r_make`'
   - '`r_drake_build`'

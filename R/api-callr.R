@@ -13,7 +13,7 @@ r_drake <- function(source, d_fn, d_args, r_fn, r_args) {
   do.call(r_fn, r_args)
 }
 
-#' @title Experimental: call a drake function in a fresh new session.
+#' @title Experimental: reproducible R session management for drake functions
 #' @description A word of caution: [r_make()] and friends are still
 #'   new and experimental.
 #'
@@ -65,8 +65,8 @@ r_drake <- function(source, d_fn, d_args, r_fn, r_args) {
 #' r_outdated()
 #' })
 #' }
-r_make <- function(..., source = NULL, r_fn = NULL, r_args = list()) {
-  invisible(r_drake(source, drake::make, list(...), r_fn, r_args))
+r_make <- function(source = NULL, r_fn = NULL, r_args = list()) {
+  invisible(r_drake(source, drake::make, list(), r_fn, r_args))
 }
 
 #' @rdname r_make
