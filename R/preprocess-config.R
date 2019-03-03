@@ -257,16 +257,7 @@
 #' @param keep_going Logical, whether to still keep running [make()]
 #'   if targets fail.
 #'
-#' @param session An optional `callr` function if you want to
-#'   build all your targets in a separate master session:
-#'   for example, `make(plan = my_plan, session = callr::r_vanilla)`.
-#'   Running `make()` in a clean, isolated
-#'   session can enhance reproducibility.
-#'   But be warned: if you do this, [make()] will take longer to start.
-#'   If `session` is `NULL` (default), then [make()] will just use
-#'   your current R session as the master session. This is slightly faster,
-#'   but it causes [make()] to populate your workspace/environment
-#'   with the last few targets it builds.
+#' @param session Deprecated. Has no effect now.
 #'
 #' @param pruning_strategy Deprecated. See `memory_strategy`.
 #'
