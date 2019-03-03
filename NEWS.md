@@ -1,3 +1,10 @@
+# Version 7.0.0.9000
+
+## New features
+
+- Add new API functions `r_make()`, `r_outdated()`, etc. to run `drake` functions more reproducibly in a clean session. See the help file of `r_make()` for details.
+
+
 # Version 6.2.1.9005
 
 ## Breaking changes

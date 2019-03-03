@@ -6,6 +6,10 @@
 #' See <https://github.com/ropensci/drake/blob/master/README.md#documentation>
 #' for an overview of the documentation.
 #' @section Interactive mode:
+#' In interactive sessions, consider [r_make()], [r_outdated()], etc.
+#' rather than [make()], [outdated()], etc. The `r_*()` `drake` functions
+#' are more reproducible when the session is interactive.
+#'
 #' A serious drake workflow should be consistent and reliable,
 #' ideally with the help of a master R script.
 #' This script should begin in a fresh R session,

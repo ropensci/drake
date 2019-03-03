@@ -1,4 +1,5 @@
 devtools::load_all()
+Sys.setenv(drake_skip_callr = "true")
 for (scenario in sort(testing_scenario_names())){
   cat(scenario, "\n")
   system2(
