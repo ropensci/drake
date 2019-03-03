@@ -97,6 +97,7 @@ test_with_dir("supply the source explicitly", {
 
 test_with_dir("r_make() loads packages and sets options", {
   skip_on_cran()
+  skip_if_not_installed("abind")
   skip_if_not_installed("callr")
   if (identical(Sys.getenv("drake_skip_callr"), "true")) {
     skip("Skipping callr tests.")
