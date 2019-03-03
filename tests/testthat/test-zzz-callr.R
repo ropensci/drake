@@ -79,7 +79,7 @@ test_with_dir("supply the source explicitly", {
     c(
       "library(drake)",
       "load_mtcars_example()",
-      "drake_config(my_plan)"
+      "drake_config(my_plan, console_log_file = \"log.txt\")"
     ),
     "my_script.R"
   )
@@ -90,7 +90,32 @@ test_with_dir("supply the source explicitly", {
   expect_false(file.exists("overridden.R"))
   expect_true(length(r_outdated(source = "my_script.R")) > 1)
   expect_equal(r_missed(source = "my_script.R"), character(0))
+  expect_false(file.exists("log.txt"))
   r_make(source = "my_script.R")
+  expect_true(file.exists("log.txt"))
   expect_true(is.data.frame(readd(small)))
   expect_equal(r_outdated(source = "my_script.R"), character(0))
+})
+
+test_with_dir("r_make() loads packages and sets options", {
+  skip_on_cran()
+  skip_if_not_installed("callr")
+  if (identical(Sys.getenv("drake_skip_callr"), "true")) {
+    skip("Skipping callr tests.")
+  }
+  writeLines(
+    c(
+      "library(drake)",
+      "library(abind)",
+      "options(drake_abind_opt = 2L)",
+      "plan <- drake_plan(x = abind(1L, getOption(\"drake_abind_opt\")))",
+      "drake_config(plan, console_log_file = \"log.txt\")"
+    ),
+    "_drake.R"
+  )
+  options(drake_abind_opt = NULL)
+  expect_null(getOption("drake_abind_opt"))
+  r_make()
+  expect_equal(sort(as.integer(readd(x))), sort(c(1L, 2L)))
+  options(drake_abind_opt = NULL)
 })
