@@ -11,7 +11,7 @@
 \alias{r_drake_ggraph}
 \alias{r_predict_runtime}
 \alias{r_predict_workers}
-\title{Call a drake function in a fresh new session.}
+\title{Experimental: call a drake function in a fresh new session.}
 \usage{
 r_make(..., source = NULL, r_fn = NULL, r_args = list())
 
@@ -49,13 +49,16 @@ There are 3 ways to set this path.
 and supply nothing to \code{source}.
 }}
 
-\item{r_fn}{A \code{callr} function such as \code{r}, \code{r_bg}, or \code{r_vanilla}.
-Example: \code{r_make(r_fn = callr::r_bg)}.}
+\item{r_fn}{A \code{callr} function such as \code{callr::r} or \code{callr::r_bg}.
+Example: \code{r_make(r_fn = callr::r)}.}
 
 \item{r_args}{List of arguments to \code{r_fn}, not including \code{func} or \code{args}.
 Example: \code{r_make(r_fn = callr::r_bg, r_args = list(stdout = "stdout.log"))}.}
 }
 \description{
+A word of caution: \code{\link[=r_make]{r_make()}} and friends are still
+new and experimental.
+
 \code{drake} searches your environment
 to detect dependencies, so functions like \code{\link[=make]{make()}}, \code{\link[=outdated]{outdated()}}, etc.
 are designed to run in fresh clean R sessions. Wrappers \code{\link[=r_make]{r_make()}},
@@ -66,7 +69,7 @@ is old and stale.
 \code{\link[=r_outdated]{r_outdated()}} runs the four steps below.
 \code{\link[=r_make]{r_make()}} etc. are similar.
 \enumerate{
-\item Launch a new \code{callr::r_vanilla()} session.
+\item Launch a new \code{callr::r()} session.
 \item In that fresh session, run the R script from the \code{source} argument.
 This script loads packages, functions, global options, etc.
 and returns a \code{\link[=drake_config]{drake_config()}} object.
