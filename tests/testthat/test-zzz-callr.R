@@ -1,5 +1,11 @@
 drake_context("callr")
 
+test_with_dir("config file missing", {
+  skip_on_cran()
+  skip_if_not_installed("callr")
+  expect_error(r_make(), "need an R script file")
+})
+
 test_with_dir("basic functions with default _drake.R file", {
   skip_on_cran()
   skip_if_not_installed("callr")
@@ -77,7 +83,8 @@ test_with_dir("supply the source explicitly", {
   writeLines(
     c(
       "library(drake)",
-      "load_mtcars_example()",
+      "load_m
+      tcars_example()",
       "drake_config(my_plan, console_log_file = \"log.txt\")"
     ),
     "my_script.R"
