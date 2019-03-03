@@ -83,8 +83,7 @@ test_with_dir("supply the source explicitly", {
   writeLines(
     c(
       "library(drake)",
-      "load_m
-      tcars_example()",
+      "load_mtcars_example()",
       "drake_config(my_plan, console_log_file = \"log.txt\")"
     ),
     "my_script.R"
