@@ -337,6 +337,7 @@ The [reference section](https://ropensci.github.io/drake/reference/index.html) l
 
 -   `drake_plan()`: create a workflow data frame (like `my_plan`).
 -   `make()`: build your project.
+-   `r_make()`: launch a fresh [`callr::r()`](https://github.com/r-lib/callr) process to build your project. Called from an interactive R session, `r_make()` is more reproducible than `make()`.
 -   `loadd()`: load one or more built targets into your R session.
 -   `readd()`: read and return a built target.
 -   `drake_config()`: create a master configuration list for other user-side functions.

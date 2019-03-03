@@ -109,4 +109,48 @@ test_with_dir("make() in interactive mode", {
   expect_equal(sort(justbuilt(config)), sort(my_plan$target))
 })
 
+test_with_dir("r_make() + clustermq", {
+  skip_on_cran()
+  skip_on_os("windows")
+  skip_if_not_installed("callr")
+  if (identical(Sys.getenv("drake_skip_callr"), "true")) {
+    skip("Skipping callr tests.")
+  }
+  writeLines(
+    c(
+      "library(drake)",
+      "load_mtcars_example()",
+      "options(clustermq.scheduler = \"multicore\")",
+      "drake_config(my_plan, parallelism = \"clustermq\", jobs = 2)"
+    ),
+    "_drake.R"
+  )
+  expect_true(length(r_outdated()) > 1)
+  r_make()
+  expect_true(is.data.frame(readd(small)))
+  expect_equal(r_outdated(), character(0))
+})
+
+test_with_dir("r_make() + multicore future", {
+  skip_on_cran()
+  skip_on_os("windows")
+  skip_if_not_installed("callr")
+  if (identical(Sys.getenv("drake_skip_callr"), "true")) {
+    skip("Skipping callr tests.")
+  }
+  writeLines(
+    c(
+      "library(drake)",
+      "load_mtcars_example()",
+      "future::plan(future::multicore)",
+      "drake_config(my_plan, parallelism = \"future\", jobs = 2)"
+    ),
+    "_drake.R"
+  )
+  expect_true(length(r_outdated()) > 1)
+  r_make()
+  expect_true(is.data.frame(readd(small)))
+  expect_equal(r_outdated(), character(0))
+})
+
 }

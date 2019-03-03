@@ -416,6 +416,10 @@ for an overview of the documentation.
 }
 \section{Interactive mode}{
 
+In interactive sessions, consider \code{\link[=r_make]{r_make()}}, \code{\link[=r_outdated]{r_outdated()}}, etc.
+rather than \code{\link[=make]{make()}}, \code{\link[=outdated]{outdated()}}, etc. The \code{r_*()} \code{drake} functions
+are more reproducible when the session is interactive.
+
 A serious drake workflow should be consistent and reliable,
 ideally with the help of a master R script.
 This script should begin in a fresh R session,

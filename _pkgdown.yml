@@ -36,6 +36,18 @@ reference:
   - '`make`'
   - '`drake_config`'
   - '`drake_build`'
+- title: drake in a clean reproducible session
+  contents:
+  - '`r_make`'
+  - '`r_drake_build`'
+  - '`r_outdated`'
+  - '`r_missed`'
+  - '`r_drake_graph_info`'
+  - '`r_vis_drake_graph`'
+  - '`r_sankey_drake_graph`'
+  - '`r_drake_ggraph`'
+  - '`r_predict_runtime`'
+  - '`r_predict_workers`'
 - title: drake plans
   contents:
   - '`drake_plan`'
