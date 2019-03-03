@@ -117,3 +117,25 @@ test_with_dir("r_make() loads packages and sets options", {
   expect_equal(sort(as.integer(readd(x))), sort(c(1L, 2L)))
   options(drake_abind_opt = NULL)
 })
+
+test_with_dir("configuring callr", {
+  skip_on_cran()
+  skip_if_not_installed("callr")
+  skip_if_not_installed("knitr")
+  if (identical(Sys.getenv("drake_skip_callr"), "true")) {
+    skip("Skipping callr tests.")
+  }
+  writeLines(
+    c(
+      "library(drake)",
+      "load_mtcars_example()",
+      "drake_config(my_plan, verbose = 6)"
+    ),
+    default_drake_source
+  )
+  expect_false(file.exists("stdout.log"))
+  r_make(r_fn = callr::r, r_args = list(stdout = "stdout.log"))
+  expect_true(file.exists("stdout.log"))
+  expect_true(is.data.frame(readd(small)))
+  expect_equal(r_outdated(), character(0))
+})
