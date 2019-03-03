@@ -682,7 +682,8 @@ load_main_example <- function(
   )
   dir <- tempfile()
   drake_example(example = "main", to = dir)
-  source(file.path(dir, "main", "R", "setup.R"), local = envir)
+  source(file.path(dir, "main", "R", "packages.R"), local = envir)
+  source(file.path(dir, "main", "R", "functions.R"), local = envir)
   envir$plan <- source(
     file.path(dir, "main", "R", "plan.R"),
     local = TRUE
