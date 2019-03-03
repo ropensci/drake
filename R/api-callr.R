@@ -9,7 +9,7 @@ r_drake <- function(source, d_fn, d_args, r_fn, r_args) {
   source <- source %||% getOption("drake_source") %||% default_drake_source
   stopifnot(file.exists(source))
   r_args$args <- list(source = source, d_fn = d_fn, d_args = d_args)
-  r_fn <- r_fn %||% callr::r_vanilla
+  r_fn <- r_fn %||% callr::r
   do.call(r_fn, r_args)
 }
 
@@ -21,7 +21,7 @@ r_drake <- function(source, d_fn, d_args, r_fn, r_args) {
 #'   is old and stale.
 #' @details [r_outdated()] runs the four steps below.
 #'   [r_make()] etc. are similar.
-#'   1. Launch a new `callr::r_vanilla()` session.
+#'   1. Launch a new `callr::r()` session.
 #'   2. In that fresh session, run the R script from the `source` argument.
 #'     This script loads packages, functions, global options, etc.
 #'     and returns a [drake_config()] object.
@@ -41,8 +41,8 @@ r_drake <- function(source, d_fn, d_args, r_fn, r_args) {
 #'   2. Call `options(drake_source = "path_to_your_script.R")`.
 #'   3. Just create a file called "_drake.R" in your working directory
 #'     and supply nothing to `source`.
-#' @param r_fn A `callr` function such as `r`, `r_bg`, or `r_vanilla`.
-#'   Example: `r_make(r_fn = callr::r_bg)`.
+#' @param r_fn A `callr` function such as `callr::r` or `callr::r_bg`.
+#'   Example: `r_make(r_fn = callr::r)`.
 #' @param r_args List of arguments to `r_fn`, not including `func` or `args`.
 #'   Example: `r_make(r_fn = callr::r_bg, r_args = list(stdout = "stdout.log"))`.
 #' @examples
