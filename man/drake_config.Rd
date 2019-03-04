@@ -404,20 +404,17 @@ and the reproducibility/credibility/trust you can place in your project.
 The master internal configuration list of a project.
 }
 \description{
-This configuration list
-is also required for functions such as \code{\link[=outdated]{outdated()}}.
-It is meant to be specific to
-a single call to \code{\link[=make]{make()}}, and you should not modify
-it by hand afterwards. If you later plan to call \code{\link[=make]{make()}}
-with different arguments (especially \code{targets}),
-you should refresh the config list with another call to
-\code{\link[=drake_config]{drake_config()}}. For changes to the
-\code{targets} argument
-specifically, it is important to recompute the config list
-to make sure the internal workflow network has all the targets you need.
-Modifying the \code{targets} element afterwards will have no effect
-and it could lead to false negative results from
-\code{\link[=outdated]{outdated()}}.
+\code{\link[=drake_config]{drake_config()}} collects and sanitizes the multitude of
+parameters and settings that \code{\link[=make]{make()}} needs to do its job:
+the plan, packages,
+the environment of functions and initial data objects,
+parallel computing instructions,
+verbosity level, etc. Other functions such as \code{\link[=outdated]{outdated()}},
+\code{\link[=vis_drake_graph]{vis_drake_graph()}}, and \code{\link[=predict_runtime]{predict_runtime()}} require output from
+\code{\link[=drake_config]{drake_config()}} for the \code{config} argument.
+If you supply a \code{\link[=drake_config]{drake_config()}} object to the \code{config}
+argument of \code{\link[=make]{make()}}, then \code{drake} will ignore all the other arguments
+because it already has everything it needs in \code{config}.
 }
 \examples{
 \dontrun{

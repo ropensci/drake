@@ -1,19 +1,16 @@
 #' @title Create the internal runtime parameter list
 #'   used internally in [make()].
-#' @description This configuration list
-#' is also required for functions such as [outdated()].
-#' It is meant to be specific to
-#' a single call to [make()], and you should not modify
-#' it by hand afterwards. If you later plan to call [make()]
-#' with different arguments (especially `targets`),
-#' you should refresh the config list with another call to
-#' [drake_config()]. For changes to the
-#' `targets` argument
-#' specifically, it is important to recompute the config list
-#' to make sure the internal workflow network has all the targets you need.
-#' Modifying the `targets` element afterwards will have no effect
-#' and it could lead to false negative results from
-#' [outdated()].
+#' @description [drake_config()] collects and sanitizes the multitude of
+#'   parameters and settings that [make()] needs to do its job:
+#'   the plan, packages,
+#'   the environment of functions and initial data objects,
+#'   parallel computing instructions,
+#'   verbosity level, etc. Other functions such as [outdated()],
+#'   [vis_drake_graph()], and [predict_runtime()] require output from
+#'   [drake_config()] for the `config` argument.
+#'   If you supply a [drake_config()] object to the `config`
+#'   argument of [make()], then `drake` will ignore all the other arguments
+#'   because it already has everything it needs in `config`.
 #' @export
 #' @return The master internal configuration list of a project.
 #' @seealso [make()], [drake_plan()], [vis_drake_graph()]
