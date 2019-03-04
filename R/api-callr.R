@@ -123,6 +123,8 @@ r_drake_graph_info <- function(
 r_vis_drake_graph <- function(
   ..., source = NULL, r_fn = NULL, r_args = list()
 ) {
+  assert_pkg("visNetwork")
+  requireNamespace("visNetwork")
   r_drake(source, drake::vis_drake_graph, list(...), r_fn, r_args)
 }
 
@@ -132,6 +134,8 @@ r_vis_drake_graph <- function(
 r_sankey_drake_graph <- function(
   ..., source = NULL, r_fn = NULL, r_args = list()
 ) {
+  assert_pkg("networkD3")
+  requireNamespace("networkD3")
   r_drake(source, drake::sankey_drake_graph, list(...), r_fn, r_args)
 }
 
@@ -148,6 +152,8 @@ r_drake_ggraph <- function(..., source = NULL, r_fn = NULL, r_args = list()) {
 r_predict_runtime <- function(
   ..., source = NULL, r_fn = NULL, r_args = list()
 ) {
+  assert_pkg("lubridate")
+  requireNamespace("lubridate")
   r_drake(source, drake::predict_runtime, list(...), r_fn, r_args)
 }
 
