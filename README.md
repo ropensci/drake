@@ -69,7 +69,9 @@ Development
 The drake R package <img src="https://ropensci.github.io/drake/figures/logo.svg" align="right" alt="logo" width="120" height = "139" style = "border: none; float: right;">
 ===========================================================================================================================================================================
 
-Data analysis can be slow. A round of scientific computation may take several minutes, hours, or even days to complete. After it finishes, if you update your code or data, your hard-earned results may no longer be valid. How much of that valuable output can you keep, and how much runtime must you endure all over again? For projects in R, the `drake` package can help. It [analyzes your workflow](https://ropenscilabs.github.io/drake-manual/plans.html), skips steps with up-to-date results, and orchestrates the rest with [optional distributed computing](https://ropenscilabs.github.io/drake-manual/hpc.html). At the end, `drake` provides evidence that your results match the underlying code and data, which increases your ability to trust your research.
+Data analysis can be slow. A round of scientific computation can take several minutes, hours, or even days to complete. After it finishes, if you update your code or data, your hard-earned results may no longer be valid. How much of that valuable output can you keep, and how much must you discard? How much runtime must you endure all over again?
+
+For projects in R, the `drake` package can help. It [analyzes your workflow](https://ropenscilabs.github.io/drake-manual/plans.html), skips steps with up-to-date results, and orchestrates the rest with [optional distributed computing](https://ropenscilabs.github.io/drake-manual/hpc.html). At the end, `drake` provides evidence that your results match the underlying code and data, which increases your ability to trust your research.
 
 6-minute video
 ==============
