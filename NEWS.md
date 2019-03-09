@@ -31,6 +31,8 @@
 - The new `from_plan()` function allows the users to reference custom plan columns from within commands. Changes to values in these columns columns do not invalidate targets.
 - Add a menu prompt (https://github.com/ropensci/drake/pull/762) to safeguard against `make()` pitfalls in interactive mode (https://github.com/ropensci/drake/issues/761). Appears once per session. Disable with `options(drake_make_menu = FALSE)`.
 - Add new API functions `r_make()`, `r_outdated()`, etc. to run `drake` functions more reproducibly in a clean session. See the help file of `r_make()` for details.
+- `progress()` gains a `progress` argument for filtering results. For example, `progress(progress = "failed")` will report targets that failed.
+
 
 ## Enhancements
 
