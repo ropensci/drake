@@ -484,3 +484,37 @@ test_with_dir("loadd() does not load imports", {
     regexp = "No targets to load"
   )
 })
+
+test_with_dir("can filter progress", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  plan <- drake_plan(a = TRUE, b = TRUE, c = stop())
+  expect_error(make(plan))
+
+  out <- progress(a, b, c, d)
+  exp <- weak_tibble(
+    target = c("a", "b", "c", "d"),
+    progress = c("done", "done", "failed", "none")
+  )
+  expect_equivalent(out, exp)
+
+  exp1 <- weak_tibble(
+    target = c("a", "b", "c"),
+    progress = c("done", "done", "failed")
+  )
+  exp2 <- weak_tibble(
+    target = c("a", "b"),
+    progress = c("done", "done")
+  )
+  exp3 <- weak_tibble(
+    target = "c",
+    progress = "failed"
+  )
+
+  expect_equivalent(progress(progress = c("done", "failed")), exp1)
+  expect_equivalent(progress(progress = "done"), exp2)
+  expect_equivalent(progress(progress = "failed"), exp3)
+
+  expect_error(
+    progress(progress = "stuck"),
+    "should be one of")
+})

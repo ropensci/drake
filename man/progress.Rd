@@ -7,7 +7,8 @@ during a \code{\link[=make]{make()}}.}
 \usage{
 progress(..., list = character(0), no_imported_objects = NULL,
   path = getwd(), search = TRUE, cache = drake::get_cache(path =
-  path, search = search, verbose = verbose), verbose = 1L, jobs = 1)
+  path, search = search, verbose = verbose), verbose = 1L, jobs = 1,
+  progress = NULL)
 }
 \arguments{
 \item{...}{Objects to load from the cache, as names (unquoted)
@@ -46,6 +47,10 @@ If supplied, \code{path} and \code{search} are ignored.}
 }}
 
 \item{jobs}{Number of jobs/workers for parallel processing.}
+
+\item{progress}{Character vector for filtering the build progress results.
+Defaults to \code{NULL} (no filtering) to report progress of all objects.
+Supported filters are \code{"done"}, \code{"running"}, \code{"failed"} and \code{"none"}.}
 }
 \value{
 The build progress of each target reached by

@@ -53,12 +53,19 @@ Authors@R: c(
     email = "slaughter@nceas.ucsb.edu",
     role = "rev"
   ),
-    person(
+  person(
     family = "Bond-Lamberty",
     given = "Ben",
     email = "bondlamberty@pnnl.gov",
     role = "ctb",
     comment = c(ORCID = "0000-0001-9525-4633")
+  ),
+  person(
+    family = "Mahr",
+    given = "Tristan",
+    email = "tristan.mahr@wisc.edu",
+    role = "ctb",
+    comment = c(ORCID = "0000-0002-8890-5116")
   ),
   person(
     family = "Eli Lilly and Company",
