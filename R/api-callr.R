@@ -9,6 +9,7 @@ r_drake <- function(source, d_fn, d_args, r_fn, r_args) {
   source <- source %||% getOption("drake_source") %||% default_drake_source
   r_assert_source(source)
   r_args$args <- list(source = source, d_fn = d_fn, d_args = d_args)
+  r_args$show <- r_args$show %||% TRUE
   r_fn <- r_fn %||% callr::r
   do.call(r_fn, r_args)
 }
