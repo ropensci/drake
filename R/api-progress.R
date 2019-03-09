@@ -78,14 +78,17 @@ progress <- function(
   out <- weak_tibble(target = targets, progress = progress_results)
   rownames(out) <- NULL
 
-  if (!is.null(progress)) {
-    progress <- match.arg(
-      progress,
-      choices = c("done", "running", "failed", "none"),
-      several.ok = TRUE)
-    out <- out[out$progress %in% progress, ]
+  if (is.null(progress)) {
+    return(out)
   }
 
+  progress <- match.arg(
+    progress,
+    choices = c("done", "running", "failed", "none"),
+    several.ok = TRUE
+  )
+
+  out <- out[out$progress %in% progress, ]
   out
 }
 
