@@ -308,11 +308,11 @@ Thanks to [Kirill](https://github.com/krlmlr) for constructing two interactive [
 
 Here are some real-world applications of `drake` in the wild.
 
+- [sol-eng/tensorflow-w-r](https://github.com/sol-eng/tensorflow-w-r)
 - [efcaguab/demografia-del-voto](https://github.com/efcaguab/demografia-del-voto)
 - [efcaguab/great-white-shark-nsw](https://github.com/efcaguab/great-white-shark-nsw)
 - [IndianaCHE/Detailed-SSP-Reports](https://github.com/IndianaCHE/Detailed-SSP-Reports)
 - [tiernanmartin/home-and-hope](https://github.com/tiernanmartin/home-and-hope)
-- [sol-eng/tensorflow-w-r](https://github.com/sol-eng/tensorflow-w-r)
 
 There are also multiple `drake`-powered example projects [available here](https://github.com/wlandau/drake-examples), ranging from beginner-friendly stubs to demonstrations of high-performance computing. You can generate the files for a project with `drake_example()` (e.g. `drake_example("gsp")`), and you can list the available projects with `drake_examples()`. You can contribute your own example project with a [fork and pull request](https://github.com/wlandau/drake-examples/pulls).
 
