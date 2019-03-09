@@ -488,18 +488,18 @@ test_with_dir("loadd() does not load imports", {
 test_with_dir("can filter progress", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   plan <- drake_plan(a = TRUE, b = TRUE, c = stop())
-  
+
   expect_error(make(plan))
-  
+
   expect_equal(nrow(progress()), 3)
   expect_equal(nrow(progress(progress = c("done", "failed"))), 3)
   expect_equal(nrow(progress(progress = "done")), 2)
   expect_equal(nrow(progress(progress = "failed")), 1)
-  
+
   # nonexistent target gets "none"
   expect_equal(nrow(progress(fake, progress = "none")), 1)
-  
-  expect_warning(
-    progress(progress = "stuck"), 
-    "Unsupported progress filter")
+
+  expect_error(
+    progress(progress = "stuck"),
+    "should be one of")
 })

@@ -24,7 +24,7 @@
 #'   imported objects that are not files).
 #'
 #' @param jobs Number of jobs/workers for parallel processing.
-#' 
+#'
 #' @param progress Character vector for filtering the build progress results.
 #'   Defaults to `NULL` (no filtering) to report progress of all objects.
 #'   Supported filters are `"done"`, `"running"`, `"failed"` and `"none"`.
@@ -77,30 +77,15 @@ progress <- function(
   )
   out <- weak_tibble(target = targets, progress = progress_results)
   rownames(out) <- NULL
-  
-  # Check then apply progress filters
+
   if (!is.null(progress)) {
-    progress <- unique(progress)
-    valid_filters <- c("done", "running", "failed", "none")
-    
-    if (!all(progress %in% valid_filters)) {
-      invalid_filters <- setdiff(progress, valid_filters)
-      
-      l1_filter <- ngettext(length(progress), "filter", "filters")
-      line1 <- paste0(
-        "Unsupported progress ", l1_filter, ": ", 
-        "`", rlang::expr_text(invalid_filters), "`."
-      )
-      line2 <- paste0(
-        "Use `NULL` for no filtering or one of ", 
-        "`", rlang::expr_text(valid_filters), "`."
-      )
-      warning(line1, "\n  ", line2)
-    }
-    
+    progress <- match.arg(
+      progress,
+      choices = c("done", "running", "failed", "none"),
+      several.ok = TRUE)
     out <- out[out$progress %in% progress, ]
   }
-  
+
   out
 }
 
