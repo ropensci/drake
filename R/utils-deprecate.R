@@ -1899,5 +1899,5 @@ drake_cache_log_file <- function(
     )
   )
 
-  drake_cache_log_file_(file, path, search, cache, verbale, jobs, targets_only)
+  drake_cache_log_file_(file, path, search, cache, verbose, jobs, targets_only)
 }
