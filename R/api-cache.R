@@ -303,7 +303,7 @@ drake_cache_log_file_ <- function(
   if (!length(file) || identical(file, FALSE)) {
     return(invisible())
   } else if (identical(file, TRUE)) {
-    file <- formals(drake_cache_log_file)$file
+    file <- formals(drake_cache_log_file_)$file
   }
   out <- drake_cache_log(
     path = path,
