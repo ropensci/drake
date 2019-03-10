@@ -110,7 +110,6 @@ reference:
   - '`new_cache`'
   - '`find_cache`'
   - '`drake_cache_log`'
-  - '`drake_cache_log_file`'
   - '`drake_gc`'
   - '`drake_get_session_info`'
   - '`get_cache`'
