@@ -1,4 +1,4 @@
-# Version 6.2.1.9006
+# Version 7.0.0
 
 ## Breaking changes
 
