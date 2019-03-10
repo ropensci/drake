@@ -63,6 +63,7 @@
 - Deprecate and rename  `predict_load_balancing()` to `predict_workers()`.
 - Deprecate `this_cache()` and defer to `get_cache()` and `storr::storr_rds()` for simplicity.
 - Change the default value of `hover` to `FALSE` in visualization functions. Improves speed. Also a breaking change.
+- Deprecate `drake_cache_log_file()`. We recommend using `make()` with the `cache_log_file` argument to create the cache log. This way ensures that the log is always up to date with `make()` results.
 
 
 # Version 6.2.1
