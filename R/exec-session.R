@@ -74,7 +74,7 @@ initialize_session <- function(config) {
 }
 
 conclude_session <- function(config) {
-  drake_cache_log_file(
+  drake_cache_log_file_(
     file = config$cache_log_file,
     cache = config$cache,
     jobs = config$jobs

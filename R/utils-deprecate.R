@@ -1899,26 +1899,5 @@ drake_cache_log_file <- function(
     )
   )
 
-  if (!length(file) || identical(file, FALSE)) {
-    return(invisible())
-  } else if (identical(file, TRUE)) {
-    file <- formals(drake_cache_log_file)$file
-  }
-  out <- drake_cache_log(
-    path = path,
-    search = search,
-    cache = cache,
-    verbose = verbose,
-    jobs = jobs,
-    targets_only = targets_only
-  )
-  # Suppress partial arg match warnings.
-  suppressWarnings(
-    write.table(
-      x = out,
-      file = file,
-      quote = FALSE,
-      row.names = FALSE
-    )
-  )
+  drake_cache_log_file_(file, path, search, cache, verbale, jobs, targets_only)
 }

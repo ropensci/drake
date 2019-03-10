@@ -258,7 +258,7 @@ test_with_dir("cache functions work from various working directories", {
   n_s <- nrow(some_hashes)
   expect_true(n_a > n_s && n_s > 0)
   expect_false(file.exists("log.txt"))
-  drake_cache_log_file(file = "log.txt")
+  drake_cache_log_file_(file = "log.txt")
   expect_true(file.exists("log.txt"))
 
   # drake_gc() should not remove any important targets/imports.
