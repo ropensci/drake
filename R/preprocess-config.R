@@ -139,7 +139,7 @@
 #'   Assign target-level retries with an optional `retries`
 #'   column in `plan`.
 #'
-#' @param force Logical. If `FALSE` (default) then `drake` 
+#' @param force Logical. If `FALSE` (default) then `drake`
 #'   imposes checks if the cache was created with an old
 #'   and incompatible version of drake.
 #'   If there is an incompatibility, `make()` stops to
@@ -198,8 +198,7 @@
 #' @param cache_log_file Name of the cache log file to write.
 #'   If `TRUE`, the default file name is used (`drake_cache.log`).
 #'   If `NULL`, no file is written.
-#'   If activated, this option uses
-#'   [drake_cache_log_file()] to write a flat text file
+#'   If activated, this option writes a flat text file
 #'   to represent the state of the cache
 #'   (fingerprints of all the targets and imports).
 #'   If you put the log file under version control, your commit history
@@ -311,7 +310,7 @@
 #'   should wait for the workers to post before assigning them
 #'   targets. Should usually be `TRUE`. Set to `FALSE`
 #'   for `make(parallelism = "future_lapply", jobs = n)`
-#'   (`n > 1`) when combined with `future::plan(future::sequential)`. 
+#'   (`n > 1`) when combined with `future::plan(future::sequential)`.
 #'   This argument only applies to parallel computing with persistent workers
 #'   (`make(parallelism = x)`, where `x` could be `"mclapply"`,
 #'   `"parLapply"`, or `"future_lapply"`).

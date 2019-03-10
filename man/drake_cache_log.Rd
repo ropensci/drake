@@ -107,5 +107,5 @@ suppressWarnings(
 }
 }
 \seealso{
-\code{\link[=drake_cache_log_file]{drake_cache_log_file()}}, \code{\link[=cached]{cached()}}, \code{\link[=get_cache]{get_cache()}}
+\code{\link[=cached]{cached()}}, \code{\link[=get_cache]{get_cache()}}
 }

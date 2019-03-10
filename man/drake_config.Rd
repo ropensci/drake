@@ -217,8 +217,7 @@ for small \code{\link[=make]{make()}}s.}
 \item{cache_log_file}{Name of the cache log file to write.
 If \code{TRUE}, the default file name is used (\code{drake_cache.log}).
 If \code{NULL}, no file is written.
-If activated, this option uses
-\code{\link[=drake_cache_log_file]{drake_cache_log_file()}} to write a flat text file
+If activated, this option writes a flat text file
 to represent the state of the cache
 (fingerprints of all the targets and imports).
 If you put the log file under version control, your commit history

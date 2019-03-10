@@ -290,7 +290,6 @@ recover_cache_ <- function(
   cache
 }
 
-
 #' @title Get a table that represents the state of the cache.
 #' @description
 #' This functionality is like
@@ -318,7 +317,7 @@ recover_cache_ <- function(
 #' of your cache. To define your own hash algorithm,
 #' you can create your own `storr` cache and give it a hash algorithm
 #' (e.g. `storr_rds(hash_algorithm = "murmur32")`)
-#' @seealso [drake_cache_log_file()], [cached()], [get_cache()]
+#' @seealso [cached()], [get_cache()]
 #' @export
 #' @return Data frame of the hash keys of the targets and imports
 #'   in the cache
