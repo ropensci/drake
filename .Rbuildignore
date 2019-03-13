@@ -34,7 +34,6 @@ vignettes/.*_files
 ^\.Rproj\.user$
 ^.*\.yaml$
 ^.*\.yml$
-^CONDUCT\.md$
 ^docs$
 ^_pkgdown\.yml$
 ^codemeta\.json$
