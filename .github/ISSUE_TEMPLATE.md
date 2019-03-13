@@ -1,6 +1,6 @@
 # Code of Conduct
 
-You must obey this repository's [code of conduct](https://github.com/ropensci/drake/blob/master/CONDUCT.md), as must everyone who responds to you on the issue tracker.
+You must obey this repository's [code of conduct](https://github.com/ropensci/drake/blob/master/CODE_OF_CONDUCT.md), as must everyone who responds to you on the issue tracker.
 
 # Before posting
 

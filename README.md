@@ -463,7 +463,7 @@ Development is a community effort, and we encourage participation.
 Code of Conduct
 ---------------
 
-The environment for collaboration should be friendly, inclusive, respectful, and safe for everyone, so all participants must obey [this repository's code of conduct](https://github.com/ropensci/drake/blob/master/CONDUCT.md).
+The environment for collaboration should be friendly, inclusive, respectful, and safe for everyone, so all participants must obey [this repository's code of conduct](https://github.com/ropensci/drake/blob/master/CODE_OF_CONDUCT.md).
 
 Issues
 ------
