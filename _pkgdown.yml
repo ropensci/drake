@@ -97,26 +97,32 @@ reference:
   - '`build_times`'
   - '`predict_runtime`'
   - '`predict_workers`'
-- title: Cache utilities
+- title: Caches
+  contents:
+  - '`get_cache`'
+  - '`new_cache`'
+  - '`find_cache`'
+- title: Cache inspection
   contents:
   - '`loadd`'
   - '`readd`'
   - '`cached`'
+  - '`drake_cache_log`'
+  - '`drake_cache_log_file`'
+  - '`drake_get_session_info`'
+  - '`read_drake_seed`'
+  - '`show_source`'
+  - '`file_store`'
+- title: Cache maintenance
+  contents:
   - '`clean`'
+  - '`drake_gc`'
+  - '`rescue_cache`'
+- title: Progress
+  contents:
   - '`progress`'
   - '`running`'
   - '`failed`'
-  - '`get_cache`'
-  - '`new_cache`'
-  - '`find_cache`'
-  - '`drake_cache_log`'
-  - '`drake_gc`'
-  - '`drake_get_session_info`'
-  - '`get_cache`'
-  - '`rescue_cache`'
-  - '`show_source`'
-  - '`read_drake_seed`'
-  - '`file_store`'
 - title: R packages as drake workflows
   contents:
   - '`expose_imports`'
