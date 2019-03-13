@@ -1,5 +1,9 @@
 # Version 7.0.0.9000
 
+## Enhancements
+
+- Improve `drake_ggraph()`: hide node labels by default and render the arrows behind the nodes.
+
 
 # Version 7.0.0
 

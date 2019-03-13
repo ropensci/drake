@@ -35,7 +35,8 @@ drake_ggraph <- function(
   full_legend = FALSE,
   group = NULL,
   clusters = NULL,
-  show_output_files = TRUE
+  show_output_files = TRUE,
+  label_nodes = FALSE
 ) {
   assert_pkg("ggplot2")
   assert_pkg("ggraph")
@@ -58,7 +59,7 @@ drake_ggraph <- function(
   if (is.null(main)) {
     main <- graph_info$default_title
   }
-  render_drake_ggraph(graph_info, main = main)
+  render_drake_ggraph(graph_info, main = main, label_nodes = label_nodes)
 }
 
 #' @title Render a static `ggplot2`/`ggraph` visualization from
@@ -75,6 +76,9 @@ drake_ggraph <- function(
 #'   There should be 3 data frames: `nodes`, `edges`,
 #'   and `legend_nodes`.
 #' @param main Character string, title of the graph.
+#' @param label_nodes Logical, whether to label the nodes.
+#'   If `FALSE`, the graph will not have any text next to the nodes,
+#'   which is recommended for large graphs with lots of targets.
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -92,7 +96,8 @@ drake_ggraph <- function(
 #' }
 render_drake_ggraph <- function(
   graph_info,
-  main = graph_info$default_title
+  main = graph_info$default_title,
+  label_nodes = FALSE
 ) {
   assert_pkg("ggplot2")
   assert_pkg("ggraph")
@@ -112,16 +117,15 @@ render_drake_ggraph <- function(
   layout$y <- tmp
   layout$label <- paste0("\n\n", layout$label)
   status <- type <- label <- node1.name <- node2.name <- NULL
-  ggraph::ggraph(layout) +
+  out <- ggraph::ggraph(layout) +
+    ggraph::geom_edge_link(
+      arrow = ggplot2::arrow(length = ggplot2::unit(4, "mm")),
+      alpha = 0.25
+    ) +
     ggraph::geom_node_point(
       ggplot2::aes(color = status, shape = type),
       size = 5,
       alpha = 0.5
-    ) +
-    ggraph::geom_node_text(ggplot2::aes(label = label)) +
-    ggraph::geom_edge_link(
-      arrow = ggplot2::arrow(length = ggplot2::unit(4, "mm")),
-      alpha = 0.25
     ) +
     ggplot2::xlim(padded_scale(layout$x)) +
     ggplot2::ylim(padded_scale(layout$y)) +
@@ -129,4 +133,8 @@ render_drake_ggraph <- function(
     ggplot2::scale_shape_manual(values = shapes) +
     ggplot2::ggtitle(main) +
     ggplot2::labs(x = "", y = "")
+  if (label_nodes) {
+    out <- out + ggraph::geom_node_text(ggplot2::aes(label = label))
+  }
+  out
 }

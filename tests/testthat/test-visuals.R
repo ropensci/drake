@@ -51,7 +51,8 @@ test_with_dir("ggraphs", {
   load_mtcars_example()
   config <- drake_config(
     my_plan, cache = storr::storr_environment(), session_info = FALSE)
-  gg <- drake_ggraph(config)
+  gg <- drake_ggraph(config, label_nodes = FALSE)
+  gg <- drake_ggraph(config, label_nodes = TRUE)
   expect_true(inherits(gg, "ggplot"))
   make(config = config)
   gg <- drake_ggraph(config)
