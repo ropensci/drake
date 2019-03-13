@@ -17,6 +17,7 @@
 ^paper\.bib$
 ^paper\.md$
 ^README\.Rmd$
+^LICENSE\.md$
 vignettes/.*\.html
 vignettes/.*\.md
 vignettes/.*\.log
