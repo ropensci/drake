@@ -1,5 +1,9 @@
 # Version 7.0.0.9000
 
+## Bug fixes
+
+- In `drake` 7.0.0, if you run `make()` in interactive mode and respond to the menu prompt with an option other than `1` or `2`, targets will still build. 
+
 ## Enhancements
 
 - Improve `drake_ggraph()`: hide node labels by default and render the arrows behind the nodes.

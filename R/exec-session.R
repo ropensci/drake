@@ -85,12 +85,12 @@ conclude_session <- function(config) {
 }
 
 prompt_intv_make <- function(config) {
-  show_menu <- .pkg_envir[["drake_make_menu"]] %||%
+  menu_enabled <- .pkg_envir[["drake_make_menu"]] %||%
     getOption("drake_make_menu") %||%
     TRUE
   interactive() &&
     igraph::gorder(config$schedule) &&
-    show_menu
+    menu_enabled
 }
 
 abort_intv_make <- function(config) {
@@ -112,6 +112,6 @@ abort_intv_make <- function(config) {
     sep = "\n"
   )
   out <- utils::menu(choices = c("yes", "no"), title = title)
-  identical(as.integer(out), 2L)
+  !identical(as.integer(out), 1L)
   # nocov end
 }

@@ -95,18 +95,50 @@ test_with_dir("make() in interactive mode", {
   expect_equal(cached(), sort(my_plan$target))
   expect_equal(sort(outdated(config)), character(0))
   expect_equal(sort(justbuilt(config)), sort(my_plan$target))
-  clean()
+  clean() # Select 1.
   .pkg_envir$drake_make_menu <- NULL
   make(my_plan) # Select 1.
   expect_equal(cached(), sort(my_plan$target))
   expect_equal(sort(outdated(config)), character(0))
   expect_equal(sort(justbuilt(config)), sort(my_plan$target))
-  clean()
+  clean() # No menu
   .pkg_envir$drake_make_menu <- NULL
   options(drake_make_menu = FALSE)
   make(my_plan) # No menu.
   expect_equal(sort(outdated(config)), character(0))
   expect_equal(sort(justbuilt(config)), sort(my_plan$target))
+  unlink(".drake", recursive = TRUE)
+  .pkg_envir$drake_make_menu <- NULL
+  options(drake_make_menu = TRUE)
+  make(my_plan) # Select 0.
+  expect_equal(sort(outdated(config)), sort(my_plan$target))
+  expect_equal(sort(justbuilt(config)), character(0))
+})
+
+test_with_dir("clean() in interactive mode", {
+  # Must run this test in a fresh new interactive session.
+  # Cannot be fully automated like the other tests.
+  load_mtcars_example()
+  config <- drake_config(my_plan)
+  make(my_plan) # Select 1.
+  expect_equal(sort(cached()), sort(my_plan$target))
+  clean() # Select 2.
+  expect_equal(sort(cached()), sort(my_plan$target))
+  .pkg_envir$drake_clean_menu <- NULL
+  clean() # Select 0.
+  expect_equal(sort(cached()), sort(my_plan$target))
+  .pkg_envir$drake_clean_menu <- NULL
+  clean() # Select 1.
+  expect_equal(sort(cached()), character(0))
+  make(my_plan)
+  expect_equal(sort(cached()), sort(my_plan$target))
+  clean() # No menu.
+  expect_equal(sort(cached()), character(0))
+  make(my_plan)
+  .pkg_envir$drake_clean_menu <- NULL
+  options(drake_clean_menu = FALSE)
+  clean() # No menu.
+  expect_equal(sort(cached()), character(0))
 })
 
 test_with_dir("r_make() + clustermq", {
