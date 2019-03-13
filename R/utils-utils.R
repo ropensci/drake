@@ -34,7 +34,8 @@ assert_config_not_plan <- function(config) {
     shQuote("drake_config()"),
     " on the plan and then supply the return value to ",
     shQuote("config"),
-    "."
+    ".",
+    call. = FALSE
   )
 }
 

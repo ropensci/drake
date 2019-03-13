@@ -7,6 +7,7 @@
 ## Enhancements
 
 - Improve `drake_ggraph()`: hide node labels by default and render the arrows behind the nodes.
+- Print an informative error message when the user supplies a `drake` plan to the `config` argument of a function.
 
 
 # Version 7.0.0
