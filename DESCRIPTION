@@ -106,6 +106,7 @@ Suggests:
   tidyselect (>= 0.2.4),
   rmarkdown,
   styler,
+  usethis,
   visNetwork,
   webshot
 VignetteBuilder: knitr
