@@ -162,7 +162,7 @@ predict_workers <- function(
     warn = warn
   )$workers
 }
-   
+
 worker_prediction_info <- function(
   config,
   targets = NULL,
@@ -173,6 +173,7 @@ worker_prediction_info <- function(
   default_time = 0,
   warn = TRUE
 ) {
+  assert_config_not_plan(config)
   deprecate_targets_only(targets_only) # 2019-01-03 # nolint
   if (!is.null(targets)) {
     config$schedule <- nbhd_graph(

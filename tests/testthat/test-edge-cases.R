@@ -314,3 +314,8 @@ test_with_dir("case sensitivity", {
 test_with_dir("empty deps_graph()", {
   expect_equal(deps_graph(NULL, 1, 2), character(0))
 })
+
+test_with_dir("supplied a plan instead of a config", {
+  plan <- drake_plan(x = 1)
+  expect_error(vis_drake_graph(plan), regexp = "supplied a drake plan")
+})

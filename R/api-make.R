@@ -44,7 +44,7 @@
 #' In this plan, the very act of building `x`
 #' changes the dependencies of `x`.
 #' In other words, without safeguards, `x` would not be up to date at
-#' the end of `make(plan)`. 
+#' the end of `make(plan)`.
 #' Please try to avoid workflows that modify the global environment.
 #' Otherwise, `make(plan)` will throw an error.
 #' To avoid this error, you can run `make(plan, lock_envir = FALSE)`.
@@ -200,6 +200,7 @@ make <- function(
       lock_envir = lock_envir
     )
   }
+  assert_config_not_plan(config)
   initialize_session(config = config)
   config$ht_get_hash <- ht_new() # Memoize getting hashes from the cache.
   on.exit(ht_clear(config$ht_get_hash)) # Needs to be empty afterwards.

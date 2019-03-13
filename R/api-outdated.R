@@ -81,6 +81,7 @@ outdated <-  function(
   make_imports = TRUE,
   do_prework = TRUE
 ) {
+  assert_config_not_plan(config)
   if (do_prework) {
     do_prework(config = config, verbose_packages = config$verbose)
   }
@@ -116,6 +117,7 @@ outdated <-  function(
 #' })
 #' }
 missed <- function(config) {
+  assert_config_not_plan(config)
   imports <- igraph::V(config$imports)$name
   is_missing <- lightly_parallelize(
     X = imports,

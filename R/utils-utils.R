@@ -23,6 +23,21 @@
   }
 }
 
+assert_config_not_plan <- function(config) {
+  if (!inherits(config, "drake_plan")) {
+    return()
+  }
+  stop(
+    "You supplied a drake plan to the ",
+    shQuote("config"),
+    " argument of a function. Instead, please call ",
+    shQuote("drake_config()"),
+    " on the plan and then supply the return value to ",
+    shQuote("config"),
+    "."
+  )
+}
+
 assert_pkg <- function(pkg, version = NULL, install = "install.packages") {
   if (!requireNamespace(pkg, quietly = TRUE)) {
     stop(
