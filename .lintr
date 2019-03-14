@@ -1,3 +1,9 @@
+exclusions: list(
+  "inst/templates/usedrake/make.R",
+  "inst/templates/usedrake/_drake.R",
+  "inst/templates/usedrake/R/packages.R",
+  "inst/templates/usedrake/R/functions.R",
+  "inst/templates/usedrake/R/plan.R")
 linters: with_defaults(
   camel_case_linter = NULL,
   object_name_linter = NULL,
