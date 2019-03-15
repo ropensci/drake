@@ -163,6 +163,7 @@ test_with_dir("mtcars example works", {
 })
 
 test_with_dir("use_drake()", {
+  skip_if_not_installed("usethis")
   usethis::create_project(".")
   files <- c("make.R", "_drake.R")
   for (file in files) {

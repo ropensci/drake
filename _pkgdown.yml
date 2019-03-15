@@ -27,6 +27,7 @@ reference:
   - '`drake-package`'
 - title: Examples
   contents:
+  - '`use_drake`'
   - '`drake_example`'
   - '`drake_examples`'
   - '`load_mtcars_example`'
