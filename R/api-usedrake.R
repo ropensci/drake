@@ -19,12 +19,11 @@
 #' @export
 #' @param open Logical, whether to open `make.R` for editing.
 #' @examples
-#' \dontrun{
-#' drake::test_with_dir("Contain side-effects", {
-#' use_drake(open = FALSE)
-#' })
-#' }
+#' # use_drake(open = FALSE)
 use_drake <- function(open = interactive()) {
+  # Covered in tests/testthat/test-always-skipped.R.
+  # Reason: https://github.com/r-lib/usethis/issues/347
+  # nocov
   assert_pkg("usethis")
   usethis::use_template(
     file.path("usedrake", "_drake.R"),
@@ -39,4 +38,5 @@ use_drake <- function(open = interactive()) {
     open = open
   )
   invisible()
+  # nocov
 }

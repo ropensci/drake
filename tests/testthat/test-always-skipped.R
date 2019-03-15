@@ -2,6 +2,24 @@ if (FALSE) {
 
 drake_context("always skipped")
 
+test_with_dir("use_drake()", {
+  # Load drake with library(drake)
+  # and not with devtools::load_all().
+  # Reason: https://github.com/r-lib/usethis/issues/347
+  # If that problem is ever solved, we should move this test
+  # to tests/testthat/test-examples.R.
+  skip_if_not_installed("usethis")
+  usethis::create_project(".", open = FALSE, rstudio = FALSE)
+  files <- c("make.R", "_drake.R")
+  for (file in files) {
+    expect_false(file.exists(file))
+  }
+  use_drake(open = FALSE)
+  for (file in files) {
+    expect_true(file.exists(file))
+  }
+})
+
 test_with_dir("can keep going in parallel", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   plan <- drake_plan(

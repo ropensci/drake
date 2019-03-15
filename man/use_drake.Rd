@@ -35,9 +35,5 @@ and download examples with \code{\link[=drake_example]{drake_example()}}
 }
 }
 \examples{
-\dontrun{
-drake::test_with_dir("Contain side-effects", {
-use_drake(open = FALSE)
-})
-}
+# use_drake(open = FALSE)
 }
