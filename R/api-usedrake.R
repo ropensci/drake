@@ -19,7 +19,7 @@
 #' @export
 #' @param open Logical, whether to open `make.R` for editing.
 #' @examples
-#' # use_drake(open = FALSE)
+#' # use_drake(open = FALSE) # nolint
 use_drake <- function(open = interactive()) {
   # Covered in tests/testthat/test-always-skipped.R.
   # Reason: https://github.com/r-lib/usethis/issues/347
