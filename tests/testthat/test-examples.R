@@ -161,3 +161,15 @@ test_with_dir("mtcars example works", {
     expect_false(file.exists(file))
   }
 })
+
+test_with_dir("use_drake()", {
+  usethis::create_project(".")
+  files <- c("make.R", "_drake.R")
+  for (file in files) {
+    expect_false(file.exists(file))
+  }
+  use_drake()
+  for (file in files) {
+    expect_true(file.exists(file))
+  }
+})

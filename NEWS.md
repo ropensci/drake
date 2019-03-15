@@ -4,6 +4,10 @@
 
 - In `drake` 7.0.0, if you run `make()` in interactive mode and respond to the menu prompt with an option other than `1` or `2`, targets will still build. 
 
+## New features
+
+- Add a new `use_drake()` function to write the `make.R` and `_drake.R` files from the [main example](https://github.com/wlandau/drake-examples/tree/master/main). Does not write other supporting scripts.
+
 ## Enhancements
 
 - Improve `drake_ggraph()`: hide node labels by default and render the arrows behind the nodes.
