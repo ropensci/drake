@@ -23,7 +23,7 @@
 use_drake <- function(open = interactive()) {
   # Covered in tests/testthat/test-always-skipped.R.
   # Reason: https://github.com/r-lib/usethis/issues/347
-  # nocov
+  # nocov start
   assert_pkg("usethis")
   usethis::use_template(
     file.path("usedrake", "_drake.R"),
@@ -38,5 +38,5 @@ use_drake <- function(open = interactive()) {
     open = open
   )
   invisible()
-  # nocov
+  # nocov end
 }
