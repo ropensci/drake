@@ -12,6 +12,8 @@
 \.Rbuildignore$
 \.Rhistory$
 \.lintr$
+^CODE_OF_CONDUCT.md$
+^CONTRIBUTING.md$
 ^pkgdown\.R$
 ^pkgdown\.sh$
 ^paper\.bib$
