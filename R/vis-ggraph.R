@@ -120,7 +120,8 @@ render_drake_ggraph <- function(
   out <- ggraph::ggraph(layout) +
     ggraph::geom_edge_link(
       arrow = ggplot2::arrow(length = ggplot2::unit(4, "mm")),
-      alpha = 0.25
+      alpha = 0.5,
+      color = "gray"
     ) +
     ggraph::geom_node_point(
       ggplot2::aes(color = status, shape = type),
