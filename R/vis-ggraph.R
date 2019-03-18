@@ -133,7 +133,12 @@ render_drake_ggraph <- function(
     ggplot2::scale_color_manual(values = colors) +
     ggplot2::scale_shape_manual(values = shapes) +
     ggplot2::ggtitle(main) +
-    ggplot2::labs(x = "", y = "")
+    ggplot2::labs(x = "", y = "") +
+    ggplot2::theme_bw() +
+    ggplot2::theme(
+      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank()
+    )
   if (label_nodes) {
     out <- out + ggraph::geom_node_text(ggplot2::aes(label = label))
   }

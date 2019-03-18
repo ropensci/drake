@@ -3,6 +3,7 @@
 ## Bug fixes
 
 - In `drake` 7.0.0, if you run `make()` in interactive mode and respond to the menu prompt with an option other than `1` or `2`, targets will still build. 
+- Make sure file outputs show up in `drake_graph()`. The bug came from `append_output_file_nodes()`, a utility function of `drake_graph_info()`.
 
 ## New features
 
@@ -10,8 +11,10 @@
 
 ## Enhancements
 
-- Improve `drake_ggraph()`: hide node labels by default and render the arrows behind the nodes.
-- Print an informative error message when the user supplies a `drake` plan to the `config` argument of a function.
+- Improve `drake_ggraph()`
+  - Hide node labels by default and render the arrows behind the nodes.
+  - Print an informative error message when the user supplies a `drake` plan to the `config` argument of a function.
+  - By default, use gray arrows and a black-and-white background with no gridlines.
 
 
 # Version 7.0.0

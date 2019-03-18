@@ -23,7 +23,7 @@ append_build_times <- function(config) {
 
 append_output_file_nodes <- function(config) {
   with(config, {
-    cols <- setdiff(colnames(nodes), c("id", "label", "level", "shape"))
+    cols <- setdiff(colnames(nodes), c("id", "label", "level", "shape", "type"))
     for (target in intersect(names(file_out), nodes$id)) {
       files <- intersect(file_out[[target]], nodes$id)
       if (length(files)){
