@@ -42,7 +42,7 @@
 
 ## New features
 
-- Introduce a new experimental domain-specific language for generating large plans (#233). Details [here](file:///home/landau/projects/drake-manual/_book/plans.html#large-plans).
+- Introduce a new experimental domain-specific language for generating large plans (#233). Details [here](https://ropenscilabs.github.io/drake-manual/plans.html#large-plans).
 - Implement a `lock_envir` argument to safeguard reproducibility. See [this thread](https://github.com/ropensci/drake/issues/615#issuecomment-447585359) for a demonstration of the problem solved by `make(lock_envir = TRUE)`. More discussion: #619, #620.
 - The new `from_plan()` function allows the users to reference custom plan columns from within commands. Changes to values in these columns columns do not invalidate targets.
 - Add a menu prompt (https://github.com/ropensci/drake/pull/762) to safeguard against `make()` pitfalls in interactive mode (https://github.com/ropensci/drake/issues/761). Appears once per session. Disable with `options(drake_make_menu = FALSE)`.
