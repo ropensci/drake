@@ -162,6 +162,7 @@ drake_plan <- function(
   warn_arrows(dots)
   list <- lapply(list, function(x) parse(text = x))
   commands <- c(dots, list)
+  commands <- select_valid_lang(commands)
   if (!length(commands)) {
     return(empty_plan())
   }

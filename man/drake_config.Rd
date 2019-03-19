@@ -146,14 +146,13 @@ column in \code{plan}.}
 Assign target-level retries with an optional \code{retries}
 column in \code{plan}.}
 
-\item{force}{Logical. If \code{FALSE} (default) then \code{drake} will stop you
-if the cache was created with an old
+\item{force}{Logical. If \code{FALSE} (default) then \code{drake}
+imposes checks if the cache was created with an old
 and incompatible version of drake.
-This gives you an opportunity to
+If there is an incompatibility, \code{make()} stops to
+give you an opportunity to
 downgrade \code{drake} to a compatible version
-rather than rerun all your targets from scratch.
-If \code{force} is \code{TRUE}, then \code{make()} executes your workflow
-regardless of the version of \code{drake} that last ran \code{make()} on the cache.}
+rather than rerun all your targets from scratch.}
 
 \item{log_progress}{Logical, whether to log the progress
 of individual targets as they are being built. Progress logging
@@ -218,8 +217,7 @@ for small \code{\link[=make]{make()}}s.}
 \item{cache_log_file}{Name of the cache log file to write.
 If \code{TRUE}, the default file name is used (\code{drake_cache.log}).
 If \code{NULL}, no file is written.
-If activated, this option uses
-\code{\link[=drake_cache_log_file]{drake_cache_log_file()}} to write a flat text file
+If activated, this option writes a flat text file
 to represent the state of the cache
 (fingerprints of all the targets and imports).
 If you put the log file under version control, your commit history
@@ -276,16 +274,7 @@ a network can be slow.
 \item{keep_going}{Logical, whether to still keep running \code{\link[=make]{make()}}
 if targets fail.}
 
-\item{session}{An optional \code{callr} function if you want to
-build all your targets in a separate master session:
-for example, \code{make(plan = my_plan, session = callr::r_vanilla)}.
-Running \code{make()} in a clean, isolated
-session can enhance reproducibility.
-But be warned: if you do this, \code{\link[=make]{make()}} will take longer to start.
-If \code{session} is \code{NULL} (default), then \code{\link[=make]{make()}} will just use
-your current R session as the master session. This is slightly faster,
-but it causes \code{\link[=make]{make()}} to populate your workspace/environment
-with the last few targets it builds.}
+\item{session}{Deprecated. Has no effect now.}
 
 \item{pruning_strategy}{Deprecated. See \code{memory_strategy}.}
 
@@ -414,20 +403,17 @@ and the reproducibility/credibility/trust you can place in your project.
 The master internal configuration list of a project.
 }
 \description{
-This configuration list
-is also required for functions such as \code{\link[=outdated]{outdated()}}.
-It is meant to be specific to
-a single call to \code{\link[=make]{make()}}, and you should not modify
-it by hand afterwards. If you later plan to call \code{\link[=make]{make()}}
-with different arguments (especially \code{targets}),
-you should refresh the config list with another call to
-\code{\link[=drake_config]{drake_config()}}. For changes to the
-\code{targets} argument
-specifically, it is important to recompute the config list
-to make sure the internal workflow network has all the targets you need.
-Modifying the \code{targets} element afterwards will have no effect
-and it could lead to false negative results from
-\code{\link[=outdated]{outdated()}}
+\code{\link[=drake_config]{drake_config()}} collects and sanitizes the multitude of
+parameters and settings that \code{\link[=make]{make()}} needs to do its job:
+the plan, packages,
+the environment of functions and initial data objects,
+parallel computing instructions,
+verbosity level, etc. Other functions such as \code{\link[=outdated]{outdated()}},
+\code{\link[=vis_drake_graph]{vis_drake_graph()}}, and \code{\link[=predict_runtime]{predict_runtime()}} require output from
+\code{\link[=drake_config]{drake_config()}} for the \code{config} argument.
+If you supply a \code{\link[=drake_config]{drake_config()}} object to the \code{config}
+argument of \code{\link[=make]{make()}}, then \code{drake} will ignore all the other arguments
+because it already has everything it needs in \code{config}.
 }
 \examples{
 \dontrun{

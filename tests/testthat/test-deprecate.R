@@ -35,6 +35,7 @@ test_with_dir("deprecation: deps_targets() and knitr_deps()", {
     dependency_profile("x", config, character_only = TRUE),
     regexp = "deprecated"
   )
+  skip_if_not_installed("knitr")
   load_mtcars_example()
   expect_warning(knitr_deps("report.Rmd"), regexp = "deprecated")
 })
@@ -183,6 +184,7 @@ test_with_dir("deprecate misc utilities", {
   expect_warning(prune_drake_graph(config$graph, "small"))
   expect_warning(predict_load_balancing(config), regexp = "deprecated")
   expect_warning(tmp <- this_cache(), regexp = "deprecated")
+  expect_warning(drake_cache_log_file(), regexp = "deprecated")
 })
 
 test_with_dir("deprecated arguments", {

@@ -9,7 +9,7 @@ drake_ggraph(config, build_times = "build", digits = 3,
   targets_only = FALSE, main = NULL, from = NULL, mode = c("out",
   "in", "all"), order = NULL, subset = NULL, make_imports = TRUE,
   from_scratch = FALSE, full_legend = FALSE, group = NULL,
-  clusters = NULL, show_output_files = TRUE)
+  clusters = NULL, show_output_files = TRUE, label_nodes = FALSE)
 }
 \arguments{
 \item{config}{A \code{\link[=drake_config]{drake_config()}} configuration list.
@@ -88,6 +88,10 @@ that you specify in the \code{group} argument to \code{drake_graph_info()}.}
 
 \item{show_output_files}{Logical, whether to include
 \code{\link[=file_out]{file_out()}} files in the graph.}
+
+\item{label_nodes}{Logical, whether to label the nodes.
+If \code{FALSE}, the graph will not have any text next to the nodes,
+which is recommended for large graphs with lots of targets.}
 }
 \value{
 A \code{ggplot2} object, which you can modify with more layers,

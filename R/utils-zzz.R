@@ -16,3 +16,5 @@
   }
   invisible()
 }
+
+.pkg_envir <- new.env(parent = emptyenv())

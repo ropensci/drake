@@ -148,6 +148,7 @@ drake_graph_info <- function(
   hover = FALSE
 ) {
   assert_pkg("visNetwork")
+  assert_config_not_plan(config)
   if (!length(V(config$graph)$name)) {
     return(null_graph())
   }

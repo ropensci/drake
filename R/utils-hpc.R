@@ -34,12 +34,16 @@ drake_hpc_template_file <- function(
 ) {
   file <- match.arg(file)
   dir <- system.file(
-    "hpc_template_files",
+    file.path("templates", "hpc"),
     package = "drake",
     mustWork = TRUE
   )
-  file.copy(from = file.path(dir, file), to = to,
-            overwrite = overwrite, recursive = TRUE)
+  file.copy(
+    from = file.path(dir, file),
+    to = to,
+    overwrite = overwrite,
+    recursive = TRUE
+  )
   invisible()
 }
 
@@ -70,7 +74,7 @@ drake_hpc_template_file <- function(
 drake_hpc_template_files <- function() {
   dir(
     system.file(
-      "hpc_template_files",
+      file.path("templates", "hpc"),
       package = "drake",
       mustWork = TRUE
     )

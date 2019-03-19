@@ -178,11 +178,11 @@ new_targets <- function(target, grid, cols, id) {
   grid <- grid[, cols, drop = FALSE]
   if (identical(id, FALSE) || any(dim(grid) < 1L)) {
     out <- rep(target, nrow(grid))
-    return(make.names(out, unique = TRUE))
+    return(make_unique(make.names(out, unique = FALSE, allow_ = TRUE)))
   }
   suffixes <- apply(grid, 1, paste, collapse = "_")
   out <- paste0(target, "_", suffixes)
-  make.names(out, unique = TRUE)
+  make_unique(make.names(out, unique = FALSE, allow_ = TRUE))
 }
 
 dsl_transform <- function(...) {
@@ -221,7 +221,10 @@ valid_splitting_plan <- function(plan, transform) {
     return(plan)
   }
   rows_keep <- complete_cases(plan[, cols, drop = FALSE])
-  plan[rows_keep,, drop = FALSE] # nolint
+  old_cols <- old_cols(plan)
+  out <- plan[rows_keep,, drop = FALSE] # nolint
+  old_cols(out) <- old_cols
+  out
 }
 
 combine_step <- function(plan, row, transform, old_cols) {
@@ -356,7 +359,7 @@ dsl_revdeps.map <- function(transform) {
     tag_out(transform)
   )
 }
-  
+
 dsl_revdeps.cross <- dsl_revdeps.map
 
 dsl_revdeps.combine <- function(transform) {
@@ -506,10 +509,7 @@ dsl_syms <- function(x) {
 }
 
 dsl_sym <- function(x) {
-  tryCatch(
-    eval(parse(text = x), envir = emptyenv()),
-    error = function(e) as.symbol(x)
-  )
+  tryCatch(parse(text = x)[[1]], error = function(e) as.symbol(x))
 }
 
 dsl_left_outer_join <- function(x, y) {
@@ -524,7 +524,7 @@ dsl_left_outer_join <- function(x, y) {
   y <- y[!duplicated(y[, by, drop = FALSE]),, drop = FALSE] # nolint
   # Is merge() a performance bottleneck?
   # Need to profile.
-  out <- merge(x = x, y = y, by = by, all.x = TRUE)
+  out <- merge(x = x, y = y, by = by, all.x = TRUE, sort = FALSE)
   out[, union(colnames(x), colnames(y)), drop = FALSE]
 }
 

@@ -14,6 +14,7 @@ colors <- c(
   launch = "#ff9933",
   load = "#ff9933",
   unload = "#ff7221",
+  interactive = "#ff7221",
   trigger = "maroon",
   skip = "skyblue1",
   store = "skyblue1",

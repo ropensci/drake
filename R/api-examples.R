@@ -96,7 +96,7 @@ drake_examples <- function(quiet = TRUE) {
   sort(out)
 }
 
-#' @title Load the mtcars example. 
+#' @title Load the mtcars example.
 #' @description Is there an association between
 #' the weight and the fuel efficiency of cars?
 #' To find out, we use the mtcars example from `drake_example("mtcars")`.
@@ -176,7 +176,7 @@ load_mtcars_example <- function(
     warning("Overwriting file ", report_file, call. = FALSE)
   }
   report_path <- system.file(
-    file.path("examples", "mtcars", "report.Rmd"),
+    file.path("rmarkdown", "examples", "mtcars", "report.Rmd"),
     package = "drake",
     mustWork = TRUE
   )

@@ -50,6 +50,7 @@ Econometrics
 econometrics
 efcaguab
 else's
+eng
 envir
 ETag
 Factual's
@@ -57,6 +58,7 @@ Falster
 faq
 FitzJohn
 flowlines
+Genotype
 ggplot
 github
 globals
@@ -89,6 +91,7 @@ Makefiles
 Marwick
 mbostock
 mc
+md
 mclapply
 memoise
 Memoise
@@ -121,6 +124,7 @@ parLapply
 Payseur
 PhantomJS
 Pharma
+Phylogenetic
 phyloQTLpaper
 Pinnoi
 pre
@@ -169,6 +173,7 @@ Subgraphs
 sugiyama
 Sungjin
 templating
+tensorflow
 tibble
 tibbles
 tidyeval

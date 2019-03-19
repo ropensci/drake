@@ -1,5 +1,5 @@
 process_imports <- function(config) {
-  if (on_windows() && config$jobs > 1L) {
+  if (on_windows() && config$jobs_preprocess > 1L) {
     process_imports_parLapply(config) # nocov
   } else {
     process_imports_mclapply(config)
@@ -44,7 +44,7 @@ process_imports_mclapply <- function(config) {
     imports <- leaf_nodes(config$imports)
     lightly_parallelize(
       X = imports,
-      FUN = process_import,
+      FUN = drake::process_import,
       config = config,
       jobs = config$jobs_preprocess
     )
@@ -78,7 +78,7 @@ process_imports_parLapply <- function(config) { # nolint
   )
   parallel::clusterCall(
     cl = config$cluster,
-    fun = do_prework,
+    fun = drake::do_prework,
     config = config,
     verbose_packages = FALSE
   )
@@ -88,7 +88,7 @@ process_imports_parLapply <- function(config) { # nolint
       cl = config$cluster,
       X = imports,
       fun = function(import, config) {
-        process_import(import = import, config = config)
+        drake::process_import(import = import, config = config)
       },
       config = config
     )

@@ -257,9 +257,6 @@ test_with_dir("cache functions work from various working directories", {
   n_a <- nrow(all_hashes)
   n_s <- nrow(some_hashes)
   expect_true(n_a > n_s && n_s > 0)
-  expect_false(file.exists("log.txt"))
-  drake_cache_log_file(file = "log.txt")
-  expect_true(file.exists("log.txt"))
 
   # drake_gc() should not remove any important targets/imports.
   x <- cached()
@@ -483,4 +480,61 @@ test_with_dir("loadd() does not load imports", {
     loadd(f, envir = e, cache = cache, verbose = TRUE),
     regexp = "No targets to load"
   )
+})
+
+test_with_dir("can filter progress", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  plan <- drake_plan(a = TRUE, b = TRUE, c = stop())
+  expect_error(make(plan))
+
+  out <- progress(a, b, c, d)
+  exp <- weak_tibble(
+    target = c("a", "b", "c", "d"),
+    progress = c("done", "done", "failed", "none")
+  )
+  expect_equivalent(out, exp)
+
+  exp1 <- weak_tibble(
+    target = c("a", "b", "c"),
+    progress = c("done", "done", "failed")
+  )
+  exp2 <- weak_tibble(
+    target = c("a", "b"),
+    progress = c("done", "done")
+  )
+  exp3 <- weak_tibble(
+    target = "c",
+    progress = "failed"
+  )
+
+  expect_equivalent(progress(progress = c("done", "failed")), exp1)
+  expect_equivalent(progress(progress = "done"), exp2)
+  expect_equivalent(progress(progress = "failed"), exp3)
+
+  expect_error(
+    progress(progress = "stuck"),
+    "should be one of")
+})
+
+test_with_dir("make() writes a cache log file", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  plan <- drake_plan(a = TRUE, b = TRUE)
+  expect_false(file.exists("log.txt"))
+  make(plan, cache_log_file = "log.txt")
+  expect_true(file.exists("log.txt"))
+
+  # Check structure of cache
+  log1 <- read.table("log.txt", header = TRUE, stringsAsFactors = FALSE)
+  expect_equal(log1$type, c("target", "target"))
+  expect_equal(log1$name, c("a", "b"))
+
+  # Change plan so cache has to change.
+  plan <- drake_plan(a = TRUE, b = FALSE)
+  make(plan, cache_log_file = "log.txt")
+  log2 <- read.table("log.txt", header = TRUE, stringsAsFactors = FALSE)
+
+  expect_equal(log1$hash[1], log2$hash[1])
+
+  # Changed parts of cache are different.
+  expect_false(log1$hash[2] == log2$hash[2])
 })

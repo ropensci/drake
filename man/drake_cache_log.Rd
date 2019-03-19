@@ -85,12 +85,15 @@ make(my_plan)
 # If you want a changelog, be sure to do this after every make().
 cache_log <- drake_cache_log()
 head(cache_log)
-# Save the hash log as a flat text file.
-write.table(
-  x = cache_log,
-  file = "drake_cache.log",
-  quote = FALSE,
-  row.names = FALSE
+# Suppress partial arg match warnings.
+suppressWarnings(
+  # Save the hash log as a flat text file.
+  write.table(
+    x = cache_log,
+    file = "drake_cache.log",
+    quote = FALSE,
+    row.names = FALSE
+  )
 )
 # At this point, put drake_cache.log under version control
 # (e.g. with 'git add drake_cache.log') alongside your code.
@@ -104,5 +107,5 @@ write.table(
 }
 }
 \seealso{
-\code{\link[=drake_cache_log_file]{drake_cache_log_file()}}, \code{\link[=cached]{cached()}}, \code{\link[=get_cache]{get_cache()}}
+\code{\link[=cached]{cached()}}, \code{\link[=get_cache]{get_cache()}}
 }

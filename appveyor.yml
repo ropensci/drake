@@ -19,6 +19,7 @@ branches:
 
 build_script:
   - travis-tool.sh install_deps
+  - travis-tool.sh install_github ropensci/drake
 
 test_script:
   - travis-tool.sh run_tests

@@ -74,7 +74,7 @@ initialize_session <- function(config) {
 }
 
 conclude_session <- function(config) {
-  drake_cache_log_file(
+  drake_cache_log_file_(
     file = config$cache_log_file,
     cache = config$cache,
     jobs = config$jobs
@@ -82,4 +82,36 @@ conclude_session <- function(config) {
   remove(list = names(config$eval), envir = config$eval)
   console_final_notes(config)
   invisible()
+}
+
+prompt_intv_make <- function(config) {
+  menu_enabled <- .pkg_envir[["drake_make_menu"]] %||%
+    getOption("drake_make_menu") %||%
+    TRUE
+  interactive() &&
+    igraph::gorder(config$schedule) &&
+    menu_enabled
+}
+
+abort_intv_make <- function(config) {
+  # nocov start
+  on.exit(
+    assign(
+      x = "drake_make_menu",
+      value = FALSE,
+      envir = .pkg_envir,
+      inherits = FALSE
+    )
+  )
+  title <- paste(
+    paste(igraph::gorder(config$schedule), "outdated targets:"),
+    multiline_message(igraph::V(config$schedule)$name),
+    "\nPlease read the \"Interactive mode\" section of the make() help file.",
+    "This prompt only appears once per session.",
+    "\nReally run make() instead of r_make() in interactive mode?",
+    sep = "\n"
+  )
+  out <- utils::menu(choices = c("yes", "no"), title = title)
+  !identical(as.integer(out), 1L)
+  # nocov end
 }

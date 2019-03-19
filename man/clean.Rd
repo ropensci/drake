@@ -88,6 +88,16 @@ which includes
 file targets as well as the entire drake cache. Only use \code{clean()}
 if you're sure you won't lose anything important.
 }
+\section{Safeguards}{
+
+If you run \code{\link[=clean]{clean()}} with no arguments, \code{drake}'s response is to
+remove all the targets etc. from the cache. To prevent you from
+doing this accidentally in an interactive session, \code{\link[=clean]{clean()}}
+prompts you with a menu to confirm. The menu only appears
+once per session. You can disable it with
+\code{options(drake_clean_menu = FALSE)}.
+}
+
 \examples{
 \dontrun{
 test_with_dir("Quarantine side effects.", {

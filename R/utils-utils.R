@@ -23,6 +23,22 @@
   }
 }
 
+assert_config_not_plan <- function(config) {
+  if (!inherits(config, "drake_plan")) {
+    return()
+  }
+  stop(
+    "You supplied a drake plan to the ",
+    shQuote("config"),
+    " argument of a function. Instead, please call ",
+    shQuote("drake_config()"),
+    " on the plan and then supply the return value to ",
+    shQuote("config"),
+    ".",
+    call. = FALSE
+  )
+}
+
 assert_pkg <- function(pkg, version = NULL, install = "install.packages") {
   if (!requireNamespace(pkg, quietly = TRUE)) {
     stop(
@@ -197,14 +213,25 @@ safe_is_na <- function(x) {
 }
 
 select_nonempty <- function(x) {
-  index <- vapply(
+  keep <- vapply(
     X = x,
     FUN = function(y) {
       length(y) > 0
     },
     FUN.VALUE = logical(1)
   )
-  x[index]
+  x[keep]
+}
+
+select_valid_lang <- function(x) {
+  discard <- vapply(
+    X = x,
+    FUN = function(y) {
+      identical(y, substitute())
+    },
+    FUN.VALUE = logical(1)
+  )
+  x[!discard]
 }
 
 select_valid <- function(x) {
@@ -433,4 +460,23 @@ targets_from_dots <- function(dots, list) {
   names <- vapply(dots, as.character, "")
   targets <- unique(c(names, list))
   standardize_key(targets)
+}
+
+make_unique <- function(x) {
+  if (!length(x)) {
+    return(character(0))
+  }
+  ord <- order(x)
+  y <- x[ord]
+  dup <- duplicated(y)
+  if (!any(dup)) {
+    return(x)
+  }
+  suffix <- as.integer(
+    do.call(c, tapply(dup, y, FUN = cumsum, simplify = FALSE))
+  )
+  i <- suffix > 0L
+  suffix <- suffix + i
+  y[i] <- paste(y[i], suffix[i], sep = "_")
+  y[order(ord)]
 }

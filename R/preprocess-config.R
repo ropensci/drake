@@ -1,19 +1,16 @@
 #' @title Create the internal runtime parameter list
 #'   used internally in [make()].
-#' @description This configuration list
-#' is also required for functions such as [outdated()].
-#' It is meant to be specific to
-#' a single call to [make()], and you should not modify
-#' it by hand afterwards. If you later plan to call [make()]
-#' with different arguments (especially `targets`),
-#' you should refresh the config list with another call to
-#' [drake_config()]. For changes to the
-#' `targets` argument
-#' specifically, it is important to recompute the config list
-#' to make sure the internal workflow network has all the targets you need.
-#' Modifying the `targets` element afterwards will have no effect
-#' and it could lead to false negative results from
-#' [outdated()]
+#' @description [drake_config()] collects and sanitizes the multitude of
+#'   parameters and settings that [make()] needs to do its job:
+#'   the plan, packages,
+#'   the environment of functions and initial data objects,
+#'   parallel computing instructions,
+#'   verbosity level, etc. Other functions such as [outdated()],
+#'   [vis_drake_graph()], and [predict_runtime()] require output from
+#'   [drake_config()] for the `config` argument.
+#'   If you supply a [drake_config()] object to the `config`
+#'   argument of [make()], then `drake` will ignore all the other arguments
+#'   because it already has everything it needs in `config`.
 #' @export
 #' @return The master internal configuration list of a project.
 #' @seealso [make()], [drake_plan()], [vis_drake_graph()]
@@ -142,14 +139,13 @@
 #'   Assign target-level retries with an optional `retries`
 #'   column in `plan`.
 #'
-#' @param force Logical. If `FALSE` (default) then `drake` will stop you
-#'   if the cache was created with an old
+#' @param force Logical. If `FALSE` (default) then `drake`
+#'   imposes checks if the cache was created with an old
 #'   and incompatible version of drake.
-#'   This gives you an opportunity to
+#'   If there is an incompatibility, `make()` stops to
+#'   give you an opportunity to
 #'   downgrade `drake` to a compatible version
 #'   rather than rerun all your targets from scratch.
-#'   If `force` is `TRUE`, then `make()` executes your workflow
-#'   regardless of the version of `drake` that last ran `make()` on the cache.
 #'
 #' @param graph An `igraph` object from the previous `make()`.
 #'   Supplying a pre-built graph could save time.
@@ -202,8 +198,7 @@
 #' @param cache_log_file Name of the cache log file to write.
 #'   If `TRUE`, the default file name is used (`drake_cache.log`).
 #'   If `NULL`, no file is written.
-#'   If activated, this option uses
-#'   [drake_cache_log_file()] to write a flat text file
+#'   If activated, this option writes a flat text file
 #'   to represent the state of the cache
 #'   (fingerprints of all the targets and imports).
 #'   If you put the log file under version control, your commit history
@@ -258,16 +253,7 @@
 #' @param keep_going Logical, whether to still keep running [make()]
 #'   if targets fail.
 #'
-#' @param session An optional `callr` function if you want to
-#'   build all your targets in a separate master session:
-#'   for example, `make(plan = my_plan, session = callr::r_vanilla)`.
-#'   Running `make()` in a clean, isolated
-#'   session can enhance reproducibility.
-#'   But be warned: if you do this, [make()] will take longer to start.
-#'   If `session` is `NULL` (default), then [make()] will just use
-#'   your current R session as the master session. This is slightly faster,
-#'   but it causes [make()] to populate your workspace/environment
-#'   with the last few targets it builds.
+#' @param session Deprecated. Has no effect now.
 #'
 #' @param pruning_strategy Deprecated. See `memory_strategy`.
 #'
@@ -324,7 +310,7 @@
 #'   should wait for the workers to post before assigning them
 #'   targets. Should usually be `TRUE`. Set to `FALSE`
 #'   for `make(parallelism = "future_lapply", jobs = n)`
-#'   (`n > 1`) when combined with `future::plan(future::sequential)`. 
+#'   (`n > 1`) when combined with `future::plan(future::sequential)`.
 #'   This argument only applies to parallel computing with persistent workers
 #'   (`make(parallelism = x)`, where `x` could be `"mclapply"`,
 #'   `"parLapply"`, or `"future_lapply"`).
@@ -553,7 +539,7 @@ drake_config <- function(
       console_log_file = console_log_file
     )
   }
-  if (force) {
+  if (identical(force, TRUE)) {
     drake_set_session_info(cache = cache, full = session_info)
   }
   seed <- choose_seed(supplied = seed, cache = cache)
@@ -632,7 +618,8 @@ drake_config <- function(
     template = template,
     sleep = sleep,
     hasty_build = hasty_build,
-    lock_envir = lock_envir
+    lock_envir = lock_envir,
+    force = force
   )
   out <- enforce_compatible_config(out)
   config_checks(out)

@@ -35,6 +35,8 @@ r_github_packages:
   - r-lib/covr
 
 before_script:
+  - R -q -e 'install.packages("remotes")'
+  - R -q -e 'remotes::install_github("ropenscilabs/rotemplate")'
   - chmod +x ./pkgdown.sh
 
 # From Jim Hester, for avoiding timeouts

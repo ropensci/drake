@@ -1,4 +1,24 @@
-# Version 6.2.1.9004
+# Version 7.0.0.9000
+
+## Bug fixes
+
+- In `drake` 7.0.0, if you run `make()` in interactive mode and respond to the menu prompt with an option other than `1` or `2`, targets will still build. 
+- Make sure file outputs show up in `drake_graph()`. The bug came from `append_output_file_nodes()`, a utility function of `drake_graph_info()`.
+
+## New features
+
+- Add a new `use_drake()` function to write the `make.R` and `_drake.R` files from the [main example](https://github.com/wlandau/drake-examples/tree/master/main). Does not write other supporting scripts.
+
+## Enhancements
+
+- Improve `drake_ggraph()`
+  - Hide node labels by default and render the arrows behind the nodes.
+  - Print an informative error message when the user supplies a `drake` plan to the `config` argument of a function.
+  - By default, use gray arrows and a black-and-white background with no gridlines.
+- For the `map()` and `cross()` transformations in the DSL, prevent the [accidental sorting of targets by name](https://github.com/ropensci/drake/issues/786). Needed `merge(sort = FALSE)` in `dsl_left_outer_join()`.
+
+
+# Version 7.0.0
 
 ## Breaking changes
 
@@ -26,9 +46,13 @@
 
 ## New features
 
-- Introduce a new experimental domain-specific language for generating large plans (#233). Details [here](file:///home/landau/projects/drake-manual/_book/plans.html#large-plans).
+- Introduce a new experimental domain-specific language for generating large plans (#233). Details [here](https://ropenscilabs.github.io/drake-manual/plans.html#large-plans).
 - Implement a `lock_envir` argument to safeguard reproducibility. See [this thread](https://github.com/ropensci/drake/issues/615#issuecomment-447585359) for a demonstration of the problem solved by `make(lock_envir = TRUE)`. More discussion: #619, #620.
 - The new `from_plan()` function allows the users to reference custom plan columns from within commands. Changes to values in these columns columns do not invalidate targets.
+- Add a menu prompt (https://github.com/ropensci/drake/pull/762) to safeguard against `make()` pitfalls in interactive mode (https://github.com/ropensci/drake/issues/761). Appears once per session. Disable with `options(drake_make_menu = FALSE)`.
+- Add new API functions `r_make()`, `r_outdated()`, etc. to run `drake` functions more reproducibly in a clean session. See the help file of `r_make()` for details.
+- `progress()` gains a `progress` argument for filtering results. For example, `progress(progress = "failed")` will report targets that failed.
+
 
 ## Enhancements
 
@@ -59,6 +83,7 @@
 - Deprecate and rename  `predict_load_balancing()` to `predict_workers()`.
 - Deprecate `this_cache()` and defer to `get_cache()` and `storr::storr_rds()` for simplicity.
 - Change the default value of `hover` to `FALSE` in visualization functions. Improves speed. Also a breaking change.
+- Deprecate `drake_cache_log_file()`. We recommend using `make()` with the `cache_log_file` argument to create the cache log. This way ensures that the log is always up to date with `make()` results.
 
 
 # Version 6.2.1

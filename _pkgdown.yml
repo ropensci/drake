@@ -1,5 +1,7 @@
 url: https://ropensci.github.io/drake
 destination: docs/
+template:
+  package: rotemplate
 navbar:
   title: drake
   type: default
@@ -27,6 +29,7 @@ reference:
   - '`drake-package`'
 - title: Examples
   contents:
+  - '`use_drake`'
   - '`drake_example`'
   - '`drake_examples`'
   - '`load_mtcars_example`'
@@ -36,6 +39,18 @@ reference:
   - '`make`'
   - '`drake_config`'
   - '`drake_build`'
+- title: Reproducible R session management
+  contents:
+  - '`r_make`'
+  - '`r_drake_build`'
+  - '`r_outdated`'
+  - '`r_missed`'
+  - '`r_drake_graph_info`'
+  - '`r_vis_drake_graph`'
+  - '`r_sankey_drake_graph`'
+  - '`r_drake_ggraph`'
+  - '`r_predict_runtime`'
+  - '`r_predict_workers`'
 - title: drake plans
   contents:
   - '`drake_plan`'
@@ -85,27 +100,32 @@ reference:
   - '`build_times`'
   - '`predict_runtime`'
   - '`predict_workers`'
-- title: Cache utilities
+- title: Caches
+  contents:
+  - '`get_cache`'
+  - '`new_cache`'
+  - '`find_cache`'
+- title: Cache inspection
   contents:
   - '`loadd`'
   - '`readd`'
   - '`cached`'
+  - '`drake_cache_log`'
+  - '`drake_cache_log_file`'
+  - '`drake_get_session_info`'
+  - '`read_drake_seed`'
+  - '`show_source`'
+  - '`file_store`'
+- title: Cache maintenance
+  contents:
   - '`clean`'
+  - '`drake_gc`'
+  - '`rescue_cache`'
+- title: Progress
+  contents:
   - '`progress`'
   - '`running`'
   - '`failed`'
-  - '`get_cache`'
-  - '`new_cache`'
-  - '`find_cache`'
-  - '`drake_cache_log`'
-  - '`drake_cache_log_file`'
-  - '`drake_gc`'
-  - '`drake_get_session_info`'
-  - '`get_cache`'
-  - '`rescue_cache`'
-  - '`show_source`'
-  - '`read_drake_seed`'
-  - '`file_store`'
 - title: R packages as drake workflows
   contents:
   - '`expose_imports`'

@@ -104,7 +104,11 @@ test_with_dir <- function(desc, ...) {
   }
   dir.create(new)
   with_dir(new = new, {
-    with_options(new = list(clustermq.scheduler = "multicore"), {
+    opts <- list(
+      clustermq.scheduler = "multicore",
+      drake_make_menu = FALSE
+    )
+    with_options(new = opts, {
       set_test_backend()
       testthat::test_that(desc = desc, ...)
     })

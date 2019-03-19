@@ -25,6 +25,10 @@
 #'
 #' @param jobs Number of jobs/workers for parallel processing.
 #'
+#' @param progress Character vector for filtering the build progress results.
+#'   Defaults to `NULL` (no filtering) to report progress of all objects.
+#'   Supported filters are `"done"`, `"running"`, `"failed"` and `"none"`.
+#'
 #' @examples
 #' \dontrun{
 #' test_with_dir("Quarantine side effects.", {
@@ -47,7 +51,8 @@ progress <- function(
   search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
   verbose = 1L,
-  jobs = 1
+  jobs = 1,
+  progress = NULL
 ) {
   if (is.null(cache)) {
     return(weak_tibble(target = character(0), progress = character(0)))
@@ -64,14 +69,26 @@ progress <- function(
   if (!length(targets)) {
     targets <- cache$list(namespace = "progress")
   }
-  progress <- vapply(
+  progress_results <- vapply(
     targets,
     get_progress_single,
     cache = cache,
     FUN.VALUE = character(1)
   )
-  out <- weak_tibble(target = targets, progress = progress)
+  out <- weak_tibble(target = targets, progress = progress_results)
   rownames(out) <- NULL
+
+  if (is.null(progress)) {
+    return(out)
+  }
+
+  progress <- match.arg(
+    progress,
+    choices = c("done", "running", "failed", "none"),
+    several.ok = TRUE
+  )
+
+  out <- out[out$progress %in% progress, ]
   out
 }
 
