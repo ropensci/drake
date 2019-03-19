@@ -359,7 +359,7 @@ dsl_revdeps.map <- function(transform) {
     tag_out(transform)
   )
 }
-  
+
 dsl_revdeps.cross <- dsl_revdeps.map
 
 dsl_revdeps.combine <- function(transform) {
@@ -524,7 +524,7 @@ dsl_left_outer_join <- function(x, y) {
   y <- y[!duplicated(y[, by, drop = FALSE]),, drop = FALSE] # nolint
   # Is merge() a performance bottleneck?
   # Need to profile.
-  out <- merge(x = x, y = y, by = by, all.x = TRUE)
+  out <- merge(x = x, y = y, by = by, all.x = TRUE, sort = FALSE)
   out[, union(colnames(x), colnames(y)), drop = FALSE]
 }
 
