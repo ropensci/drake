@@ -32,7 +32,7 @@ resolve_drake_pipe_row <- function(plan, row, envir) {
     # Should not reach but still good to have.
     return(plan) # nocov
   }
-  targets <- make.unique(rep(plan$target[1], length(commands)))
+  targets <- make_unique(rep(plan$target[1], length(commands)))
   targets <- c(targets[-1], targets[1])
   for (i in seq(2, length(targets))) {
     sub <- list(. = as.name(targets[i - 1]))

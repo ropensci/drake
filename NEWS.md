@@ -8,6 +8,7 @@
 ## New features
 
 - Add a new `use_drake()` function to write the `make.R` and `_drake.R` files from the [main example](https://github.com/wlandau/drake-examples/tree/master/main). Does not write other supporting scripts.
+- Add a `%dp%` pipe to generate targets more easily and compactly inside `drake_plan()` ([#746](https://github.com/ropensci/drake/issues/746), [#748](https://github.com/ropensci/drake/pull/748)).
 
 ## Enhancements
 
