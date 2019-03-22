@@ -128,13 +128,43 @@ rehash_storage <- function(target, config) {
     return(NA_character_)
   }
   file <- decode_path(target, config)
-  if (!file.exists(file) || file.info(file)$isdir) {
+  if (!file.exists(file)) {
     return(NA_character_)
   }
+  if (dir.exists(file)) {
+    rehash_dir(file, config)
+  } else {
+    rehash_file(file, config)
+  }
+}
+
+rehash_file <- function(file, config) {
   digest::digest(
     object = file,
     algo = config$cache$driver$hash_algorithm,
     file = TRUE,
+    serialize = FALSE
+  )
+}
+
+rehash_dir <- function(dir, config) {
+  files <- list.files(
+    path = dir,
+    all.files = TRUE,
+    full.names = TRUE,
+    recursive = TRUE,
+    include.dirs = FALSE
+  )
+  out <- vapply(
+    files,
+    rehash_file,
+    FUN.VALUE = character(1),
+    config = config
+  )
+  out <- paste(out, collapse = "")
+  digest::digest(
+    out,
+    algo = config$cache$driver$hash_algorithm,
     serialize = FALSE
   )
 }

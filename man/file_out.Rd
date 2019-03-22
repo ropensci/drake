@@ -2,33 +2,31 @@
 % Please edit documentation in R/api-plan.R
 \name{file_out}
 \alias{file_out}
-\title{Declare the file outputs of a workflow plan command.}
+\title{Declare output files and directories.}
 \usage{
 file_out(...)
 }
 \arguments{
-\item{...}{Character vector of output file paths.}
+\item{...}{Character vector, paths to files and directories.}
 }
 \value{
-A character vector of declared output file paths.
+A character vector of declared output file or directory paths.
 }
 \description{
-Use this function to help write the commands
-in your workflow plan data frame. You can only specify
-one file output per command. See the examples
-for a full explanation.
+\code{file_in()} marks individual files
+(and whole directories) that your targets create.
 }
 \examples{
 \dontrun{
 test_with_dir("Contain side effects", {
 # The `file_out()` and `file_in()` functions
 # just takes in strings and returns them.
-file_out("summaries.txt", "output.csv")
+file_out("summaries.txt")
 # Their main purpose is to orchestrate your custom files
 # in your workflow plan data frame.
 suppressWarnings(
   plan <- drake_plan(
-    write.csv(mtcars, file_out("mtcars.csv")),
+    out = write.csv(mtcars, file_out("mtcars.csv")),
     contents = read.csv(file_in("mtcars.csv"))
   )
 )
@@ -37,14 +35,29 @@ plan
 # and a dependency of `contents`. See for yourself:
 make(plan)
 file.exists("mtcars.csv")
-# See also `knitr_in()`. `knitr_in()` is like `file_in()`
-# except that it analyzes active code chunks in your `knitr`
-# source file and detects non-file dependencies.
-# That way, updates to the right dependencies trigger rebuilds
-# in your report.
+# You can also work with entire directories this way.
+# However, in `file_out("your_directory")`, the directory
+# becomes an entire unit. Thus, `file_in("your_directory")`
+# is more appropriate for subsequent steps than
+# `file_in("your_directory/file_inside.txt")`.
+suppressWarnings(
+  plan <- drake_plan(
+    out = {
+      dir.create(file_out("dir"))
+      write.csv(mtcars, "dir/mtcars.csv")
+    },
+    contents = read.csv(file.path(file_in("dir"), "mtcars.csv"))
+  )
+)
+plan
+make(plan)
+# See the connections that the file relationships create:
+# config <- drake_config(plan) # nolint
+# vis_drake_graph(config)      # nolint
+file.exists("dir/mtcars.csv")
 })
 }
 }
 \seealso{
-\code{\link[=file_in]{file_in()}}, \code{\link[=knitr_in]{knitr_in()}}, \code{\link[=ignore]{ignore()}}
+\code{\link[=file_out]{file_out()}}, \code{\link[=knitr_in]{knitr_in()}}, \code{\link[=ignore]{ignore()}}
 }
