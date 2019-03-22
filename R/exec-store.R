@@ -92,7 +92,7 @@ store_object <- function(target, value, meta, config) {
 store_file <- function(target, meta, config) {
   store_object(
     target = target,
-    value = safe_rehash_file(target = target, config = config),
+    value = safe_rehash_storage(target = target, config = config),
     meta = meta,
     config = config
   )
@@ -102,7 +102,7 @@ store_output_files <- function(files, meta, config) {
   meta$isfile <- TRUE
   for (file in files) {
     meta$name <- file
-    meta$mtime <- file.mtime(decode_path(file, config))
+    meta$mtime <- storage_mtime(decode_path(file, config))
     meta$isfile <- TRUE
     store_single_output(
       target = file,

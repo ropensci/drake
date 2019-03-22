@@ -19,7 +19,7 @@ drake_meta_ <- function(target, config) {
   }
   # For imported files.
   if (meta$isfile) {
-    meta$mtime <- file.mtime(decode_path(target, config))
+    meta$mtime <- storage_mtime(decode_path(target, config))
   }
   if (meta$trigger$command) {
     meta$command <- layout$command_standardized
@@ -76,7 +76,7 @@ self_hash <- function(target, config) {
 input_file_hash <- function(
   target,
   config,
-  size_cutoff = rehash_file_size_cutoff
+  size_cutoff = rehash_storage_size_cutoff
 ) {
   deps <- config$layout[[target]]$deps_build
   files <- sort(unique(as.character(c(deps$file_in, deps$knitr_in))))
@@ -101,7 +101,7 @@ input_file_hash <- function(
 output_file_hash <- function(
   target,
   config,
-  size_cutoff = rehash_file_size_cutoff
+  size_cutoff = rehash_storage_size_cutoff
 ) {
   deps <- config$layout[[target]]$deps_build
   files <- sort(unique(as.character(deps$file_out)))
@@ -123,7 +123,7 @@ output_file_hash <- function(
   )
 }
 
-rehash_file <- function(target, config) {
+rehash_storage <- function(target, config) {
   if (!is_encoded_path(target)) {
     return(NA_character_)
   }
@@ -139,15 +139,15 @@ rehash_file <- function(target, config) {
   )
 }
 
-safe_rehash_file <- function(target, config) {
+safe_rehash_storage <- function(target, config) {
   if (file.exists(decode_path(target, config))) {
-    rehash_file(target = target, config = config)
+    rehash_storage(target = target, config = config)
   } else {
     NA_character_
   }
 }
 
-should_rehash_file <- function(filename, new_mtime, old_mtime,
+should_rehash_storage <- function(filename, new_mtime, old_mtime,
   size_cutoff) {
   do_rehash <- file.size(filename) < size_cutoff | new_mtime > old_mtime
   if (safe_is_na(do_rehash)) {
@@ -159,7 +159,7 @@ should_rehash_file <- function(filename, new_mtime, old_mtime,
 file_hash <- function(
   target,
   config,
-  size_cutoff = rehash_file_size_cutoff
+  size_cutoff = rehash_storage_size_cutoff
 ) {
   if (!is_encoded_path(target)) {
     return(NA_character_)
@@ -183,16 +183,35 @@ file_hash <- function(
     ),
     -Inf
   )
-  new_mtime <- file.mtime(filename)
-  do_rehash <- should_rehash_file(
+  new_mtime <- storage_mtime(filename)
+  do_rehash <- should_rehash_storage(
     filename = filename,
     new_mtime = new_mtime,
     old_mtime = old_mtime,
     size_cutoff = size_cutoff)
   old_hash_exists <- config$cache$exists(key = target)
   if (do_rehash || !old_hash_exists) {
-    rehash_file(target = target, config = config)
+    rehash_storage(target = target, config = config)
   } else {
     config$cache$get(key = target)
   }
+}
+
+storage_mtime <- function(x) {
+  if (dir.exists(x)) {
+    dir_mtime(x)
+  } else {
+    file.mtime(x)
+  }
+}
+
+dir_mtime <- function(x) {
+  files <- list.files(
+    path = x,
+    all.files = TRUE,
+    full.names = TRUE,
+    recursive = TRUE,
+    include.dirs = FALSE
+  )
+  max(vapply(files, file.mtime, FUN.VALUE = numeric(1)))
 }
