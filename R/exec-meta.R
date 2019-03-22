@@ -149,7 +149,7 @@ safe_rehash_storage <- function(target, config) {
 
 should_rehash_storage <- function(filename, new_mtime, old_mtime,
   size_cutoff) {
-  do_rehash <- file.size(filename) < size_cutoff | new_mtime > old_mtime
+  do_rehash <- storage_size(filename) < size_cutoff | new_mtime > old_mtime
   if (safe_is_na(do_rehash)) {
     do_rehash <- TRUE
   }
@@ -205,6 +205,14 @@ storage_mtime <- function(x) {
   }
 }
 
+storage_size <- function(x) {
+  if (dir.exists(x)) {
+    dir_size(x)
+  } else {
+    file.size(x)
+  }
+}
+
 dir_mtime <- function(x) {
   files <- list.files(
     path = x,
@@ -214,4 +222,15 @@ dir_mtime <- function(x) {
     include.dirs = FALSE
   )
   max(vapply(files, file.mtime, FUN.VALUE = numeric(1)))
+}
+
+dir_size <- function(x) {
+  files <- list.files(
+    path = x,
+    all.files = TRUE,
+    full.names = TRUE,
+    recursive = TRUE,
+    include.dirs = FALSE
+  )
+  max(vapply(files, file.size, FUN.VALUE = numeric(1)))
 }
