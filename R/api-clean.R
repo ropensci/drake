@@ -169,7 +169,7 @@ clean_single_target <- function(
     }
   }
   if (length(files)) {
-    unlink(decode_path(files))
+    unlink(decode_path(files), recursive = TRUE)
   }
 }
 
