@@ -343,11 +343,16 @@ file_in <- function(...) {
 #' }
 file_out <- file_in
 
-#' @title Declare the `knitr`/`rmarkdown` source files
-#'   of a workflow plan command.
-#' @description Use this function to help write the commands
-#'   in your workflow plan data frame. See the examples
-#'   for a full explanation.
+#' @title Declare `knitr`/`rmarkdown` source files
+#'   as dependencies.
+#' @description `knitr_in()` marks individual `knitr`/R Markdown
+#'   reports as dependencies. In `drake`, these reports are pieces
+#'   of the pipeline. R Markdown is a great tool for *displaying*
+#'   precomputed results, but not for running a large workflow
+#'   from end to end. These reports should do as little
+#'   computation as possible.
+#' @details Unlike [file_in()] and [file_out()], `knitr_in()`
+#'   does not work with entire directories.
 #' @export
 #' @seealso [file_in()], [file_out()], [ignore()]
 #' @return A character vector of declared input file paths.

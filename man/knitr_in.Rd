@@ -2,8 +2,8 @@
 % Please edit documentation in R/api-plan.R
 \name{knitr_in}
 \alias{knitr_in}
-\title{Declare the \code{knitr}/\code{rmarkdown} source files
-of a workflow plan command.}
+\title{Declare \code{knitr}/\code{rmarkdown} source files
+as dependencies.}
 \usage{
 knitr_in(...)
 }
@@ -15,9 +15,16 @@ source files supplied to a command in your workflow plan data frame.}
 A character vector of declared input file paths.
 }
 \description{
-Use this function to help write the commands
-in your workflow plan data frame. See the examples
-for a full explanation.
+\code{knitr_in()} marks individual \code{knitr}/R Markdown
+reports as dependencies. In \code{drake}, these reports are pieces
+of the pipeline. R Markdown is a great tool for \emph{displaying}
+precomputed results, but not for running a large workflow
+from end to end. These reports should do as little
+computation as possible.
+}
+\details{
+Unlike \code{\link[=file_in]{file_in()}} and \code{\link[=file_out]{file_out()}}, \code{knitr_in()}
+does not work with entire directories.
 }
 \examples{
 \dontrun{

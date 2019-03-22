@@ -11,6 +11,7 @@
 
 ## Enhancements
 
+- `file_in()` and `file_out()` can now handle entire directories, e.g. `file_in("your_folder_of_input_data_files")` and `file_out("directory_with_a_bunch_of_output_files")`.
 - Improve `drake_ggraph()`
   - Hide node labels by default and render the arrows behind the nodes.
   - Print an informative error message when the user supplies a `drake` plan to the `config` argument of a function.
