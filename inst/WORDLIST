@@ -62,6 +62,7 @@ Genotype
 ggplot
 github
 globals
+gridlines
 gsp
 Halotype
 hotfix
@@ -129,6 +130,7 @@ phyloQTLpaper
 Pinnoi
 pre
 preCCProbPaper
+precomputed
 Preprocess
 prettycode
 prework

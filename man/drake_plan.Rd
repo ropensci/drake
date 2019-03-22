@@ -108,7 +108,7 @@ drake_plan(
   summ = target(
     sum_fun(data, reg),
    transform = cross(sum_fun = c(coef, residuals), reg)
-  ), 
+  ),
   winners = target(
     min(summ),
     transform = combine(summ, .by = c(data, sum_fun))
@@ -129,7 +129,7 @@ drake_plan(
   summ = target(
     sum_fun(data, reg),
    transform = cross(sum_fun = c(coef, residuals), reg)
-  ), 
+  ),
   winners = target(
     min(summ),
     transform = combine(summ, .by = c(data, sum_fun))

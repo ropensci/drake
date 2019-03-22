@@ -16,7 +16,7 @@ mc_get_outfile_checksum <- function(target, config) {
   files <- sort(unique(as.character(deps$file_out)))
   out <- vapply(
     X = files,
-    FUN = rehash_file,
+    FUN = rehash_storage,
     FUN.VALUE = character(1),
     config = config
   )

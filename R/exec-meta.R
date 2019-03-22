@@ -19,7 +19,7 @@ drake_meta_ <- function(target, config) {
   }
   # For imported files.
   if (meta$isfile) {
-    meta$mtime <- file.mtime(decode_path(target, config))
+    meta$mtime <- storage_mtime(decode_path(target, config))
   }
   if (meta$trigger$command) {
     meta$command <- layout$command_standardized
@@ -76,7 +76,7 @@ self_hash <- function(target, config) {
 input_file_hash <- function(
   target,
   config,
-  size_cutoff = rehash_file_size_cutoff
+  size_cutoff = rehash_storage_size_cutoff
 ) {
   deps <- config$layout[[target]]$deps_build
   files <- sort(unique(as.character(c(deps$file_in, deps$knitr_in))))
@@ -86,7 +86,7 @@ input_file_hash <- function(
   out <- ht_memo(
     ht = config$ht_get_hash,
     x = files,
-    fun = file_hash,
+    fun = storage_hash,
     config = config,
     size_cutoff = size_cutoff
   )
@@ -101,7 +101,7 @@ input_file_hash <- function(
 output_file_hash <- function(
   target,
   config,
-  size_cutoff = rehash_file_size_cutoff
+  size_cutoff = rehash_storage_size_cutoff
 ) {
   deps <- config$layout[[target]]$deps_build
   files <- sort(unique(as.character(deps$file_out)))
@@ -110,7 +110,7 @@ output_file_hash <- function(
   }
   out <- vapply(
     X = files,
-    FUN = file_hash,
+    FUN = storage_hash,
     FUN.VALUE = character(1),
     config = config,
     size_cutoff = size_cutoff
@@ -123,14 +123,22 @@ output_file_hash <- function(
   )
 }
 
-rehash_file <- function(target, config) {
+rehash_storage <- function(target, config) {
   if (!is_encoded_path(target)) {
     return(NA_character_)
   }
   file <- decode_path(target, config)
-  if (!file.exists(file) || file.info(file)$isdir) {
+  if (!file.exists(file)) {
     return(NA_character_)
   }
+  if (dir.exists(file)) {
+    rehash_dir(file, config)
+  } else {
+    rehash_file(file, config)
+  }
+}
+
+rehash_file <- function(file, config) {
   digest::digest(
     object = file,
     algo = config$cache$driver$hash_algorithm,
@@ -139,27 +147,49 @@ rehash_file <- function(target, config) {
   )
 }
 
-safe_rehash_file <- function(target, config) {
+rehash_dir <- function(dir, config) {
+  files <- list.files(
+    path = dir,
+    all.files = TRUE,
+    full.names = TRUE,
+    recursive = TRUE,
+    include.dirs = FALSE
+  )
+  out <- vapply(
+    files,
+    rehash_file,
+    FUN.VALUE = character(1),
+    config = config
+  )
+  out <- paste(out, collapse = "")
+  digest::digest(
+    out,
+    algo = config$cache$driver$hash_algorithm,
+    serialize = FALSE
+  )
+}
+
+safe_rehash_storage <- function(target, config) {
   if (file.exists(decode_path(target, config))) {
-    rehash_file(target = target, config = config)
+    rehash_storage(target = target, config = config)
   } else {
     NA_character_
   }
 }
 
-should_rehash_file <- function(filename, new_mtime, old_mtime,
+should_rehash_storage <- function(filename, new_mtime, old_mtime,
   size_cutoff) {
-  do_rehash <- file.size(filename) < size_cutoff | new_mtime > old_mtime
+  do_rehash <- storage_size(filename) < size_cutoff | new_mtime > old_mtime
   if (safe_is_na(do_rehash)) {
     do_rehash <- TRUE
   }
   do_rehash
 }
 
-file_hash <- function(
+storage_hash <- function(
   target,
   config,
-  size_cutoff = rehash_file_size_cutoff
+  size_cutoff = rehash_storage_size_cutoff
 ) {
   if (!is_encoded_path(target)) {
     return(NA_character_)
@@ -183,16 +213,56 @@ file_hash <- function(
     ),
     -Inf
   )
-  new_mtime <- file.mtime(filename)
-  do_rehash <- should_rehash_file(
+  new_mtime <- storage_mtime(filename)
+  do_rehash <- should_rehash_storage(
     filename = filename,
     new_mtime = new_mtime,
     old_mtime = old_mtime,
     size_cutoff = size_cutoff)
   old_hash_exists <- config$cache$exists(key = target)
   if (do_rehash || !old_hash_exists) {
-    rehash_file(target = target, config = config)
+    rehash_storage(target = target, config = config)
   } else {
     config$cache$get(key = target)
   }
+}
+
+storage_mtime <- function(x) {
+  if (dir.exists(x)) {
+    dir_mtime(x)
+  } else {
+    file.mtime(x)
+  }
+}
+
+storage_size <- function(x) {
+  if (dir.exists(x)) {
+    dir_size(x)
+  } else {
+    file.size(x)
+  }
+}
+
+dir_mtime <- function(x) {
+  files <- list.files(
+    path = x,
+    all.files = TRUE,
+    full.names = TRUE,
+    recursive = TRUE,
+    include.dirs = FALSE
+  )
+  times <- vapply(files, file.mtime, FUN.VALUE = numeric(1))
+  max(times %||% Inf)
+}
+
+dir_size <- function(x) {
+  files <- list.files(
+    path = x,
+    all.files = TRUE,
+    full.names = TRUE,
+    recursive = TRUE,
+    include.dirs = FALSE
+  )
+  sizes <- vapply(files, file.size, FUN.VALUE = numeric(1))
+  max(sizes %||% 0)
 }

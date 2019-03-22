@@ -87,7 +87,7 @@
 #'   summ = target(
 #'     sum_fun(data, reg),
 #'    transform = cross(sum_fun = c(coef, residuals), reg)
-#'   ), 
+#'   ),
 #'   winners = target(
 #'     min(summ),
 #'     transform = combine(summ, .by = c(data, sum_fun))
@@ -108,7 +108,7 @@
 #'   summ = target(
 #'     sum_fun(data, reg),
 #'    transform = cross(sum_fun = c(coef, residuals), reg)
-#'   ), 
+#'   ),
 #'   winners = target(
 #'     min(summ),
 #'     transform = combine(summ, .by = c(data, sum_fun))
@@ -239,15 +239,13 @@ complete_target_names <- function(commands_list) {
   commands_list
 }
 
-#' @title Declare the file inputs of a workflow plan command.
-#' @description Use this function to help write the commands
-#'   in your workflow plan data frame. See the examples
-#'   for a full explanation.
+#' @title Declare input files and directories.
+#' @description `file_in()` marks individual files
+#'   (and whole directories) that your targets depend on.
 #' @export
 #' @seealso [file_out()], [knitr_in()], [ignore()]
-#' @return A character vector of declared input file paths.
-#' @param ... Character strings. File paths of input files
-#'   to a command in your workflow plan data frame.
+#' @return A character vector of declared input file or directory paths.
+#' @param ... Character vector, paths to files and directories.
 #' @export
 #' @examples
 #' \dontrun{
@@ -259,7 +257,7 @@ complete_target_names <- function(commands_list) {
 #' # in your workflow plan data frame.
 #' suppressWarnings(
 #'   plan <- drake_plan(
-#'     write.csv(mtcars, file_out("mtcars.csv")),
+#'     out = write.csv(mtcars, file_out("mtcars.csv")),
 #'     contents = read.csv(file_in("mtcars.csv"))
 #'   )
 #' )
@@ -268,37 +266,51 @@ complete_target_names <- function(commands_list) {
 #' # and a dependency of `contents`. See for yourself:
 #' make(plan)
 #' file.exists("mtcars.csv")
-#' # See also `knitr_in()`. `knitr_in()` is like `file_in()`
-#' # except that it analyzes active code chunks in your `knitr`
-#' # source file and detects non-file dependencies.
-#' # That way, updates to the right dependencies trigger rebuilds
-#' # in your report.
+#' # You can also work with entire directories this way.
+#' # However, in `file_out("your_directory")`, the directory
+#' # becomes an entire unit. Thus, `file_in("your_directory")`
+#' # is more appropriate for subsequent steps than
+#' # `file_in("your_directory/file_inside.txt")`.
+#' suppressWarnings(
+#'   plan <- drake_plan(
+#'     out = {
+#'       dir.create(file_out("dir"))
+#'       write.csv(mtcars, "dir/mtcars.csv")
+#'     },
+#'     contents = read.csv(file.path(file_in("dir"), "mtcars.csv"))
+#'   )
+#' )
+#' plan
+#' make(plan)
+#' file.exists("dir/mtcars.csv")
+#' # See the connections that the file relationships create:
+#' # config <- drake_config(plan) # nolint
+#' # vis_drake_graph(config)      # nolint
 #' })
 #' }
 file_in <- function(...) {
   as.character(c(...))
 }
 
-#' @title Declare the file outputs of a workflow plan command.
-#' @description Use this function to help write the commands
-#'   in your workflow plan data frame. You can only specify
-#'   one file output per command. See the examples
-#'   for a full explanation.
+#' @title Declare output files and directories.
+#' @description `file_in()` marks individual files
+#'   (and whole directories) that your targets create.
 #' @export
-#' @seealso [file_in()], [knitr_in()], [ignore()]
-#' @return A character vector of declared output file paths.
-#' @param ... Character vector of output file paths.
+#' @seealso [file_out()], [knitr_in()], [ignore()]
+#' @return A character vector of declared output file or directory paths.
+#' @param ... Character vector, paths to files and directories.
+#' @export
 #' @examples
 #' \dontrun{
 #' test_with_dir("Contain side effects", {
 #' # The `file_out()` and `file_in()` functions
 #' # just takes in strings and returns them.
-#' file_out("summaries.txt", "output.csv")
+#' file_out("summaries.txt")
 #' # Their main purpose is to orchestrate your custom files
 #' # in your workflow plan data frame.
 #' suppressWarnings(
 #'   plan <- drake_plan(
-#'     write.csv(mtcars, file_out("mtcars.csv")),
+#'     out = write.csv(mtcars, file_out("mtcars.csv")),
 #'     contents = read.csv(file_in("mtcars.csv"))
 #'   )
 #' )
@@ -307,20 +319,40 @@ file_in <- function(...) {
 #' # and a dependency of `contents`. See for yourself:
 #' make(plan)
 #' file.exists("mtcars.csv")
-#' # See also `knitr_in()`. `knitr_in()` is like `file_in()`
-#' # except that it analyzes active code chunks in your `knitr`
-#' # source file and detects non-file dependencies.
-#' # That way, updates to the right dependencies trigger rebuilds
-#' # in your report.
+#' # You can also work with entire directories this way.
+#' # However, in `file_out("your_directory")`, the directory
+#' # becomes an entire unit. Thus, `file_in("your_directory")`
+#' # is more appropriate for subsequent steps than
+#' # `file_in("your_directory/file_inside.txt")`.
+#' suppressWarnings(
+#'   plan <- drake_plan(
+#'     out = {
+#'       dir.create(file_out("dir"))
+#'       write.csv(mtcars, "dir/mtcars.csv")
+#'     },
+#'     contents = read.csv(file.path(file_in("dir"), "mtcars.csv"))
+#'   )
+#' )
+#' plan
+#' make(plan)
+#' # See the connections that the file relationships create:
+#' # config <- drake_config(plan) # nolint
+#' # vis_drake_graph(config)      # nolint
+#' file.exists("dir/mtcars.csv")
 #' })
 #' }
 file_out <- file_in
 
-#' @title Declare the `knitr`/`rmarkdown` source files
-#'   of a workflow plan command.
-#' @description Use this function to help write the commands
-#'   in your workflow plan data frame. See the examples
-#'   for a full explanation.
+#' @title Declare `knitr`/`rmarkdown` source files
+#'   as dependencies.
+#' @description `knitr_in()` marks individual `knitr`/R Markdown
+#'   reports as dependencies. In `drake`, these reports are pieces
+#'   of the pipeline. R Markdown is a great tool for *displaying*
+#'   precomputed results, but not for running a large workflow
+#'   from end to end. These reports should do as little
+#'   computation as possible.
+#' @details Unlike [file_in()] and [file_out()], `knitr_in()`
+#'   does not work with entire directories.
 #' @export
 #' @seealso [file_in()], [file_out()], [ignore()]
 #' @return A character vector of declared input file paths.

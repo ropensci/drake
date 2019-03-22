@@ -84,7 +84,92 @@ test_with_dir("responses to intermediate file", {
   }
 })
 
-test_with_dir("imported file_in file", {
+test_with_dir("same with a directory", {
+  scenario <- get_testing_scenario()
+  envir <- eval(parse(text = scenario$envir))
+  envir <- dbug_envir(envir)
+  dbug_files()
+  dir.create("scratch")
+  plan <- dbug_plan()
+  plan$command[[1]] <- quote({
+    file_out("scratch")
+    saveRDS(combined, "scratch/intermediatefile.rds")
+    saveRDS(combined + 1, "scratch/out2.rds")
+  })
+  plan$command[[6]] <- quote({
+    file_in("scratch")
+    readRDS("scratch/intermediatefile.rds") +
+      readRDS("scratch/out2.rds")
+  })
+  config <- drake_config(
+    plan = plan,
+    targets = plan$target,
+    envir = envir,
+    parallelism = scenario$parallelism,
+    jobs = scenario$jobs,
+    verbose = TRUE,
+    session_info = FALSE,
+    log_progress = TRUE,
+    caching = scenario$caching
+  )
+  testrun(config)
+  expect_equal(justbuilt(config), sort(config$plan$target))
+  expect_equal(outdated(config), character(0))
+  final0 <- readd(final, search = FALSE)
+  val <- readRDS("scratch/intermediatefile.rds")
+  val2 <- readRDS("scratch/out2.rds")
+  expect_equal(as.integer(val) + 1L, as.integer(val2))
+
+  # actually change a file
+  for (file in c("scratch/intermediatefile.rds", "scratch/out2.rds")) {
+    saveRDS(sum(val) + 100, file)
+    testrun(config)
+    expect_equal(justbuilt(config), "drake_target_1")
+    expect_equal(final0, readd(final, search = FALSE))
+    expect_equal(val, readRDS("scratch/intermediatefile.rds"))
+    expect_equal(val2, readRDS("scratch/out2.rds"))
+  }
+
+  # break a file
+  for (file in c("scratch/intermediatefile.rds", "scratch/out2.rds")) {
+    unlink(file, force = TRUE)
+    testrun(config)
+    expect_equal(justbuilt(config), "drake_target_1")
+    expect_equal(final0, readd(final, search = FALSE))
+    expect_equal(val, readRDS("scratch/intermediatefile.rds"))
+    expect_equal(val2, readRDS("scratch/out2.rds"))
+  }
+
+  # change what intermediatefile.rds is supposed to be
+  cmd <- safe_deparse(config$plan$command[[1]])
+  cmd <- gsub("combined,", "combined + 5,", cmd)
+  config$plan$command[[1]] <- parse(text = cmd)[[1]]
+  testrun(config)
+  expect_equal(
+    sort(justbuilt(config)),
+    sort(c("drake_target_1", "final"))
+  )
+  expect_equal(final0 + 5, readd(final, search = FALSE))
+  expect_equal(val + 5, readRDS("scratch/intermediatefile.rds"))
+  expect_equal(val2, readRDS("scratch/out2.rds"))
+
+  # change what out2.rds is supposed to be
+  cmd <- safe_deparse(config$plan$command[[1]])
+  cmd <- gsub("1", "2", cmd)
+  config$plan$command[[1]] <- parse(text = cmd)[[1]]
+  testrun(config)
+  expect_equal(
+    sort(justbuilt(config)),
+    sort(c("drake_target_1", "final"))
+  )
+  expect_equal(final0 + 6, readd(final, search = FALSE))
+  expect_equal(val + 5, readRDS("scratch/intermediatefile.rds"))
+  expect_equal(val2 + 1, readRDS("scratch/out2.rds"))
+  clean(destroy = TRUE)
+})
+
+
+test_with_dir("imported files in imported functions", {
   skip_if_not_installed("knitr")
   scenario <- get_testing_scenario()
   envir <- eval(parse(text = scenario$envir))

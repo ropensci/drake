@@ -2,21 +2,19 @@
 % Please edit documentation in R/api-plan.R
 \name{file_in}
 \alias{file_in}
-\title{Declare the file inputs of a workflow plan command.}
+\title{Declare input files and directories.}
 \usage{
 file_in(...)
 }
 \arguments{
-\item{...}{Character strings. File paths of input files
-to a command in your workflow plan data frame.}
+\item{...}{Character vector, paths to files and directories.}
 }
 \value{
-A character vector of declared input file paths.
+A character vector of declared input file or directory paths.
 }
 \description{
-Use this function to help write the commands
-in your workflow plan data frame. See the examples
-for a full explanation.
+\code{file_in()} marks individual files
+(and whole directories) that your targets depend on.
 }
 \examples{
 \dontrun{
@@ -28,7 +26,7 @@ file_out("summaries.txt")
 # in your workflow plan data frame.
 suppressWarnings(
   plan <- drake_plan(
-    write.csv(mtcars, file_out("mtcars.csv")),
+    out = write.csv(mtcars, file_out("mtcars.csv")),
     contents = read.csv(file_in("mtcars.csv"))
   )
 )
@@ -37,11 +35,26 @@ plan
 # and a dependency of `contents`. See for yourself:
 make(plan)
 file.exists("mtcars.csv")
-# See also `knitr_in()`. `knitr_in()` is like `file_in()`
-# except that it analyzes active code chunks in your `knitr`
-# source file and detects non-file dependencies.
-# That way, updates to the right dependencies trigger rebuilds
-# in your report.
+# You can also work with entire directories this way.
+# However, in `file_out("your_directory")`, the directory
+# becomes an entire unit. Thus, `file_in("your_directory")`
+# is more appropriate for subsequent steps than
+# `file_in("your_directory/file_inside.txt")`.
+suppressWarnings(
+  plan <- drake_plan(
+    out = {
+      dir.create(file_out("dir"))
+      write.csv(mtcars, "dir/mtcars.csv")
+    },
+    contents = read.csv(file.path(file_in("dir"), "mtcars.csv"))
+  )
+)
+plan
+make(plan)
+file.exists("dir/mtcars.csv")
+# See the connections that the file relationships create:
+# config <- drake_config(plan) # nolint
+# vis_drake_graph(config)      # nolint
 })
 }
 }
