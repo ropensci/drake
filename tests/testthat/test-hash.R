@@ -12,7 +12,7 @@ test_with_dir("illegal hashes", {
   )
 })
 
-test_with_dir("stress test file hash", {
+test_with_dir("stress test storage hash", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("knitr")
   load_mtcars_example()
@@ -21,11 +21,11 @@ test_with_dir("stress test file hash", {
     cache = storr::storr_environment()
   )
   make(config = con)
-  # Can debug file_hash() to make sure hashing is skipped
+  # Can debug storage_hash() to make sure hashing is skipped
   # at the appropriate times.
   for (file in file_store(c("report.Rmd"))) {
-    expect_true(is.character(file_hash(file, config = con, 0)))
-    expect_true(is.character(file_hash(file, config = con, Inf)))
+    expect_true(is.character(storage_hash(file, config = con, 0)))
+    expect_true(is.character(storage_hash(file, config = con, Inf)))
   }
 })
 

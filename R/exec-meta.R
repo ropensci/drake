@@ -86,7 +86,7 @@ input_file_hash <- function(
   out <- ht_memo(
     ht = config$ht_get_hash,
     x = files,
-    fun = file_hash,
+    fun = storage_hash,
     config = config,
     size_cutoff = size_cutoff
   )
@@ -110,7 +110,7 @@ output_file_hash <- function(
   }
   out <- vapply(
     X = files,
-    FUN = file_hash,
+    FUN = storage_hash,
     FUN.VALUE = character(1),
     config = config,
     size_cutoff = size_cutoff
@@ -186,7 +186,7 @@ should_rehash_storage <- function(filename, new_mtime, old_mtime,
   do_rehash
 }
 
-file_hash <- function(
+storage_hash <- function(
   target,
   config,
   size_cutoff = rehash_storage_size_cutoff
