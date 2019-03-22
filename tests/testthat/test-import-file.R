@@ -26,3 +26,35 @@ test_with_dir("responses to imported file", {
     "drake_target_1", "combined", "final", "myinput", "nextone")))
   expect_false(length(final0) == length(readd(final, search = FALSE)))
 })
+
+test_with_dir("same with an imported directory", {
+  scenario <- get_testing_scenario()
+  envir <- eval(parse(text = scenario$envir))
+  envir <- dbug_envir(envir)
+  dbug_files()
+  dir.create("inputdir")
+  tmp <- file.copy("input.rds", "inputdir/input.rds")
+  tmp <- file.remove("input.rds")
+  plan <- dbug_plan()
+  plan$command[plan$target == "myinput"][[1]] <- quote(
+    readRDS(file.path(file_in("inputdir"), "input.rds"))
+  )
+  config <- drake_config(
+    plan = plan,
+    targets = plan$target,
+    envir = envir,
+    parallelism = scenario$parallelism,
+    jobs = scenario$jobs,
+    verbose = FALSE,
+    session_info = FALSE,
+    log_progress = TRUE,
+    caching = scenario$caching
+  )
+  testrun(config)
+  final0 <- readd(final)
+  # add another file to the directory
+  saveRDS(2:10, "inputdir/otherinput.rds")
+  testrun(config)
+  expect_equal(justbuilt(config), "myinput")
+  expect_equal(length(final0), length(readd(final, search = FALSE)))
+})
