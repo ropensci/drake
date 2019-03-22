@@ -251,7 +251,8 @@ dir_mtime <- function(x) {
     recursive = TRUE,
     include.dirs = FALSE
   )
-  max(vapply(files, file.mtime, FUN.VALUE = numeric(1)))
+  times <- vapply(files, file.mtime, FUN.VALUE = numeric(1))
+  max(times %||% Inf)
 }
 
 dir_size <- function(x) {
@@ -262,5 +263,6 @@ dir_size <- function(x) {
     recursive = TRUE,
     include.dirs = FALSE
   )
-  max(vapply(files, file.size, FUN.VALUE = numeric(1)))
+  sizes <- vapply(files, file.size, FUN.VALUE = numeric(1))
+  max(sizes %||% 0)
 }
