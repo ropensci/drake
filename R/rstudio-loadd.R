@@ -31,7 +31,7 @@ rs_addin_loadd <- function(context = NULL){
 }
 
 rs_get_symbol_at_cursor <- function(context) {
-  if(identical(context$id, "#console")) {
+  if (identical(context$id, "#console")) {
     return(NULL)
   }
   cursor_pos <- context$selection[[1]]$range$start
