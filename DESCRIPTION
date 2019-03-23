@@ -110,7 +110,8 @@ Suggests:
   styler,
   usethis,
   visNetwork,
-  webshot
+  webshot,
+  rstudioapi
 VignetteBuilder: knitr
 Encoding: UTF-8
 Language: en-US
