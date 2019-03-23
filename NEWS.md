@@ -8,6 +8,7 @@
 ## New features
 
 - Add a new `use_drake()` function to write the `make.R` and `_drake.R` files from the [main example](https://github.com/wlandau/drake-examples/tree/master/main). Does not write other supporting scripts.
+- Add a new RStudio addin: 'loadd target at cursor' which can be bound a keyboard shortcut to load the target identified by the symbol at the cursor position to the global environment.
 
 ## Enhancements
 
