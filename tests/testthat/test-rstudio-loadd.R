@@ -81,7 +81,7 @@ test_with_dir("loading targets at cursor works under a real conditions", {
         loadd_middle <- rs_addin_loadd(
                           make_context(
                             test_text,
-                            column_pos + floor(target_length/2)
+                            column_pos + floor(target_length / 2)
                             )
                           )
         loadd_end <- rs_addin_loadd(
