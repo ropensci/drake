@@ -107,3 +107,31 @@ test_with_dir("loading targets at cursor works under a real conditions", {
 
   expect_identical(outcome, rep(TRUE, nrow(target_test_grid)))
 })
+
+test_with_dir("do nothing if the cursor is in the console", {
+  console_context <- structure(list(
+    id = "#console",
+    path = "",
+    contents = "NOTARGET",
+    selection = structure(list(list(
+      range = structure(list(
+        start = structure(c(row = 1,
+                            column = 1), class = "document_position"),
+        end = structure(c(row = 1,
+                          column = 1), class = "document_position")
+      ), class = "document_range"),
+      text = ""
+    )), .Names = "", class = "document_selection")
+  ),
+  class = "document_context")
+  make(drake_plan(TARGET = "value"))
+  result <- rs_addin_loadd(console_context)
+  expect_null(result)
+  expect_error(
+    get(
+      "NOTARGET",
+      envir = globalenv()
+    ),
+    regexp = "object 'NOTARGET' not found"
+  )
+})
