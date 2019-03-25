@@ -19,12 +19,12 @@ Describe the bottleneck clearly and concisely.
 
 ## Reproducible example
 
-Provide a minimal example with code that reproduces the slowdown.
+Provide a minimal example with code that reproduces the problem.
 
 ## Benchmarks
 
 How poorly does `drake` perform? Please share benchmarks: runtimes, memory consumption, [flame graphs](https://github.com/ropensci/drake/issues/647#issuecomment-451760866), etc. Tools to consider:
 
--  [`Rprof()`](https://stat.ethz.ch/R-manual/R-devel/library/utils/html/Rprof.html), [`jointprof`](https://github.com/r-prof/jointprof), [`profile`](https://github.com/r-prof/profile), [`pprof`](https://github.com/google/pprof). Example with `drake` [here](https://github.com/wlandau/drake-examples/tree/master/overhead).
+-  [`Rprof()`](https://stat.ethz.ch/R-manual/R-devel/library/utils/html/Rprof.html), [`jointprof`](https://github.com/r-prof/jointprof), [`profile`](https://github.com/r-prof/profile), and [`pprof`](https://github.com/google/pprof). [Example here](https://github.com/wlandau/drake-examples/tree/master/overhead).
 - [`profvis`](https://github.com/rstudio/profvis), though beware https://github.com/rstudio/profvis/issues/104.
 - [`microbenchmark`](https://github.com/joshuaulrich/microbenchmark) and [`bench`](https://github.com/r-lib/bench).
