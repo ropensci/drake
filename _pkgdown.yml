@@ -8,10 +8,12 @@ navbar:
   left:
   - icon: fa-home fa-lg
     href: index.html
-  - text: Get Started
-    href: articles/drake.html
-  - text: Reference
+  - text: Functions
     href: reference/index.html
+  - text: Resources
+    href: articles/drake.html
+  - text: Full manual
+    href: https://ropenscilabs.github.io/drake-manual
   - text: FAQ
     href: https://ropenscilabs.github.io/drake-manual/faq.html
   - text: News
