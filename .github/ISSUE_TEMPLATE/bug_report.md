@@ -7,20 +7,14 @@ assignees: wlandau
 
 ---
 
+## Prework
+
+- [ ] Read and abide by `drake`'s [code of conduct](https://github.com/ropensci/drake/blob/master/CODE_OF_CONDUCT.md).
+- [ ] Search the [existing issues](https://github.com/ropensci/drake/issues), both open and closed, to ensure your thread does not already exist.
+
 ## Description
 
 Describe the bug clearly and concisely. 
-
-## Development version (for advanced users)
-
-If you can, please verify that the bug still persists in the most recent development version of `drake`.
-
-```r
-install.packages("remotes")
-remotes::install_github("ropensci/drake")
-```
-
-Also, if you can, please include the [Git SHA-1 hash](https://git-scm.com/book/en/v1/Getting-Started-Git-Basics#Git-Has-Integrity) of the [Git commit you just installed](https://github.com/ropensci/drake/commits/master).
 
 ## Reproducible example
 
