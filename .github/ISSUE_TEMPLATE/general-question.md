@@ -1,9 +1,9 @@
 ---
-name: Question
+name: General question
 about: Ask a question.
 title: ''
 labels: 'type: question'
-assignees: wlandau
+assignees: ''
 
 ---
 
