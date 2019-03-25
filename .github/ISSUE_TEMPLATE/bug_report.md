@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Report something wrong with drake.
+about: You found something wrong with drake.
 title: ''
 labels: 'type: bug'
 assignees: wlandau
