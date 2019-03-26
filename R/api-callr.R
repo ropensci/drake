@@ -9,8 +9,10 @@ r_drake <- function(source, d_fn, d_args, r_fn, r_args) {
   source <- source %||% getOption("drake_source") %||% default_drake_source
   r_assert_source(source)
   r_args$args <- list(source = source, d_fn = d_fn, d_args = d_args)
-  r_args$show <- r_args$show %||% TRUE
   r_fn <- r_fn %||% callr::r
+  if ("show" %in% names(formals(r_fn))) {
+    r_args$show <- r_args$show %||% TRUE
+  }
   do.call(r_fn, r_args)
 }
 
@@ -40,7 +42,7 @@ r_assert_source <- function(source) {
 #'   to detect dependencies, so functions like [make()], [outdated()], etc.
 #'   are designed to run in fresh clean R sessions. Wrappers [r_make()],
 #'   [r_outdated()], etc. run reproducibly even if your current R session
-#'   is old and stale. 
+#'   is old and stale.
 #' @details [r_outdated()] runs the four steps below.
 #'   [r_make()] etc. are similar.
 #'   1. Launch a new `callr::r()` session.

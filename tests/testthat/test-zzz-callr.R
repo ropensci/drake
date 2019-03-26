@@ -135,7 +135,7 @@ test_with_dir("r_make() loads packages and sets options", {
   options(drake_abind_opt = NULL)
 })
 
-test_with_dir("configuring callr", {
+test_with_dir("configuring a background callr process", {
   skip_on_cran()
   skip_if_not_installed("callr")
   skip_if_not_installed("knitr")
@@ -151,7 +151,10 @@ test_with_dir("configuring callr", {
     default_drake_source
   )
   expect_false(file.exists("stdout.log"))
-  r_make(r_fn = callr::r, r_args = list(stdout = "stdout.log", show = FALSE))
+  px <- r_make(r_fn = callr::r_bg, r_args = list(stdout = "stdout.log"))
+  while (px$is_alive()) {
+    Sys.sleep(1e-2)
+  }
   expect_true(file.exists("stdout.log"))
   expect_true(is.data.frame(readd(small)))
   expect_equal(r_outdated(r_args = list(show = FALSE)), character(0))
