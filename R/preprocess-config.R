@@ -68,7 +68,6 @@
 #'   - `backend_loop()`
 #'   - `backend_clustermq()`
 #'   - `backend_future()`
-#'   - `backend_hasty()` (unofficial)
 #'   However, this functionality is really a back door
 #'   and should not be used for production purposes unless you really
 #'   know what you are doing and you are willing to suffer setbacks
@@ -219,9 +218,8 @@
 #'   `drake` workflows. Conversely, `make()` does not usually
 #'   change `.Random.seed`,
 #'   even when pseudo-random numbers are generated.
-#'   The exceptions to this last point are
-#'   `make(parallelism = "clustermq")` and
-#'   `make(parallelism = "clustermq_staged")`,
+#'   The exception to this last point is
+#'   `make(parallelism = "clustermq")`
 #'   because the `clustermq` package needs to generate random numbers
 #'   to set up ports and sockets for ZeroMQ.
 #'
@@ -235,9 +233,7 @@
 #'   To reset the random number generator seed for a project,
 #'   use `clean(destroy = TRUE)`.
 #'
-#' @param caching Character string, only applies to
-#'   `"clustermq"`, `"clustermq_staged"`, and `"future"` parallel backends.
-#'   The `caching` argument can be either `"master"` or `"worker"`.
+#' @param caching Character string, either `"master"` or `"worker"`.
 #'   - `"master"`: Targets are built by remote workers and sent back to
 #'     the master process. Then, the master process saves them to the
 #'     cache (`config$cache`, usually a file system `storr`).
@@ -322,7 +318,7 @@
 #'   placeholders in template files (e.g. from [drake_hpc_template_file()]).
 #'   Same as the `template` argument of `clustermq::Q()` and
 #'   `clustermq::workers`.
-#'   Enabled for `clustermq` only (`make(parallelism = "clustermq_staged")`),
+#'   Enabled for `clustermq` only (`make(parallelism = "clustermq")`),
 #'   not `future` or `batchtools` so far.
 #'   For more information, see the `clustermq` package:
 #'   <https://github.com/mschubert/clustermq>.

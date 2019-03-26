@@ -83,7 +83,6 @@ from \code{drake}'s internals are the \code{backend_*()} functions:
 \item \code{backend_loop()}
 \item \code{backend_clustermq()}
 \item \code{backend_future()}
-\item \code{backend_hasty()} (unofficial)
 However, this functionality is really a back door
 and should not be used for production purposes unless you really
 know what you are doing and you are willing to suffer setbacks
@@ -251,9 +250,8 @@ To ensure reproducibility across different R sessions,
 \code{drake} workflows. Conversely, \code{make()} does not usually
 change \code{.Random.seed},
 even when pseudo-random numbers are generated.
-The exceptions to this last point are
-\code{make(parallelism = "clustermq")} and
-\code{make(parallelism = "clustermq_staged")},
+The exception to this last point is
+\code{make(parallelism = "clustermq")}
 because the \code{clustermq} package needs to generate random numbers
 to set up ports and sockets for ZeroMQ.
 
@@ -267,9 +265,7 @@ seed from the project's cache (usually the \code{.drake/} folder).
 To reset the random number generator seed for a project,
 use \code{clean(destroy = TRUE)}.}
 
-\item{caching}{Character string, only applies to
-\code{"clustermq"}, \code{"clustermq_staged"}, and \code{"future"} parallel backends.
-The \code{caching} argument can be either \code{"master"} or \code{"worker"}.
+\item{caching}{Character string, either \code{"master"} or \code{"worker"}.
 \itemize{
 \item \code{"master"}: Targets are built by remote workers and sent back to
 the master process. Then, the master process saves them to the
@@ -327,7 +323,7 @@ a target is built during \code{\link[=make]{make()}}.}
 placeholders in template files (e.g. from \code{\link[=drake_hpc_template_file]{drake_hpc_template_file()}}).
 Same as the \code{template} argument of \code{clustermq::Q()} and
 \code{clustermq::workers}.
-Enabled for \code{clustermq} only (\code{make(parallelism = "clustermq_staged")}),
+Enabled for \code{clustermq} only (\code{make(parallelism = "clustermq")}),
 not \code{future} or \code{batchtools} so far.
 For more information, see the \code{clustermq} package:
 \url{https://github.com/mschubert/clustermq}.
