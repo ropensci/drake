@@ -9,6 +9,7 @@ backend_clustermq <- function(config) {
       n_jobs = config$jobs,
       template = config$template
     )
+    config$cache$flush_cache()
     cmq_set_common_data(config)
     config$counter <- new.env(parent = emptyenv())
     config$counter$remaining <- config$queue$size()
