@@ -173,7 +173,7 @@ render_sankey_drake_graph <- function(
   edges <- as.data.frame(graph_info$edges)
   edges$src <- as.integer(match(edges$from, table = nodes$id) - 1)
   edges$target <- as.integer(match(edges$to, table = nodes$id) - 1)
-  edges$value <- 1
+  edges$value <- rep(1, nrow(edges))
   colordf <- nodes[, c("status", "color")]
   colordf <- colordf[!duplicated(colordf), ]
   domain <- paste(paste0("'", colordf$status, "'"), collapse = ", ")

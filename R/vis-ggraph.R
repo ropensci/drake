@@ -118,11 +118,6 @@ render_drake_ggraph <- function(
   layout$label <- paste0("\n\n", layout$label)
   status <- type <- label <- node1.name <- node2.name <- NULL
   out <- ggraph::ggraph(layout) +
-    ggraph::geom_edge_link(
-      arrow = ggplot2::arrow(length = ggplot2::unit(4, "mm")),
-      alpha = 0.5,
-      color = "gray"
-    ) +
     ggraph::geom_node_point(
       ggplot2::aes(color = status, shape = type),
       size = 5,
@@ -139,6 +134,13 @@ render_drake_ggraph <- function(
       panel.grid.major = ggplot2::element_blank(),
       panel.grid.minor = ggplot2::element_blank()
     )
+  if (nrow(graph_info$edges)) {
+    out <- out + ggraph::geom_edge_link(
+      arrow = ggplot2::arrow(length = ggplot2::unit(4, "mm")),
+      alpha = 0.5,
+      color = "gray"
+    )
+  }
   if (label_nodes) {
     out <- out + ggraph::geom_node_text(ggplot2::aes(label = label))
   }

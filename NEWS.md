@@ -5,6 +5,7 @@
 - In `drake` 7.0.0, if you run `make()` in interactive mode and respond to the menu prompt with an option other than `1` or `2`, targets will still build. 
 - Make sure file outputs show up in `drake_graph()`. The bug came from `append_output_file_nodes()`, a utility function of `drake_graph_info()`.
 - Repair `r_make(r_fn = callr::r_bg())` re https://github.com/ropensci/drake/issues/799.
+- Allow `drake_ggraph()` and `sankey_drake_graph()` to work when the graph has no edges.
 
 ## New features
 
