@@ -25,8 +25,8 @@ backend_future <- function(config) {
         }
         running <- running_targets(workers = workers, config = config)
         protect <- c(running, queue$list())
-        if (identical(config$layout[[target]]$hpc, FALSE)) {
-          future_local_build(target, config, queue, protect)
+        if (identical(config$layout[[next_target]]$hpc, FALSE)) {
+          future_local_build(next_target, config, queue, protect)
         } else {
           workers[[id]] <- new_worker(id, next_target, config, protect)
         }
