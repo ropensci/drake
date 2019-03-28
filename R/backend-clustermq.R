@@ -107,6 +107,7 @@ cmq_deps_list <- function(target, config) {
 }
 
 cmq_local_build <- function(target, config) {
+  config$workers$send_wait()
   loop_build(target, config, downstream = NULL)
   cmq_conclude_target(target = target, config = config)
 }
