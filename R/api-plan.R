@@ -547,7 +547,7 @@ target <- function(command = NULL, ...) {
 drake_envir <- function() {
   envir <- environment()
   for (i in seq_len(getOption("expressions"))) {
-    if (exists(drake_plan_marker, envir = envir, inherits = FALSE)) {
+    if (exists(drake_envir_marker, envir = envir, inherits = FALSE)) {
       return(envir)
     }
     if (identical(envir, globalenv())) {
@@ -563,79 +563,7 @@ drake_envir <- function() {
   )
 }
 
-#' @title Get a target's plan info from inside a plan's command.
-#' @description Call this function inside the commands in your plan
-#'   to get an entry from any column in the plan. Changes to custom
-#'   columns referred to this way
-#'   (for example, `a` in `drake_plan(x = target(from_plan("a"), a = 123))`)
-#'   do not invalidate targets, so be careful. Only use `from_plan()`
-#'   to reference data that does not actually affect the output value
-#'   of the target. For example, you might use `from_plan()` to set the
-#'   number of parallel workers within a target:
-#'   `drake_plan(x = target(mclapply(..., from_plan("cores"), cores = 4))`.
-#'   Now, if you change the `cores` column of the plan, the parallelism will
-#'   change, but the target `x` will stay up to date.
-#' @export
-#' @seealso [drake_envir()]
-#' @return `plan[target, column]`, where `plan` is your workflow
-#'   plan data frame, `target` is the target being built,
-#'   and `column` is the name of the column of the plan you provide.
-#' @param column Character, name of a column in your `drake` plan.
-#' @examples
-#' plan <- drake_plan(my_target = target(from_plan("a"), a = "a_value"))
-#' plan
-#'
-#' cache <- storr::storr_environment()
-#' make(plan, cache = cache, session_info = FALSE)
-#' readd(my_target, cache = cache)
-#'
-#' # Why do we care?
-#' # Because this is a good way to apply parallel computing within targets
-#' # and keep them up to date even when we change
-#' # the number of "cores"
-#'
-#' plan <- drake_plan(
-#'   a = target(
-#'     parallel::mclapply(1:8, sqrt, mc.cores = from_plan("cores")),
-#'     cores = 4
-#'   ),
-#'   b = target(
-#'     parallel::mclapply(1:4, sqrt, mc.cores = from_plan("cores")),
-#'     cores = 2
-#'   )
-#' )
-#'
-#' plan
-#'
-#' # If make(plan, parallelism = "loop") fails,
-#' # try make(plan, lock_envir = FALSE)
-#' # or another parallel computing option like parLapply()
-#' # or furrr::future_map().
-#' # See https://github.com/ropensci/drake/issues/675#issuecomment-454403818
-#' # and the ensuing comments for a discussion.
-#'
-#' # But usually, parallelism *among* targets happens through a cluster.
-#' # drake_hpc_template_file("slurm_clustermq.tmpl") # Edit by hand. # nolint
-#' # options(
-#' #   clustermq.scheduler = "slurm",
-#' #   clustermq.template = "slurm_clustermq.tmpl",
-#' # )
-#' # make(plan, parallelism = "clustermq", jobs = 2) # nolint
-#'
-#' # Now, if you change the `cores` column of the plan, the parallelism will
-#' # change, but the targets will stay up to date.
-#' plan$cores <- c(1, 1)
-#' plan
-#'
-#' # make(plan) # nolint
-from_plan <- function(column) {
-  envir <- drake_envir()
-  plan <- get(drake_plan_marker, envir = envir)
-  target <- get(drake_target_marker, envir = envir)
-  plan[[column]][plan$target == target]
-}
-
-drake_plan_marker <- "._drake_plan"
+drake_envir_marker <- "._drake_envir"
 drake_target_marker <- "._drake_target"
 
 advertise_dsl <- function() {

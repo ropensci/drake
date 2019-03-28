@@ -185,6 +185,7 @@ test_with_dir("deprecate misc utilities", {
   expect_warning(predict_load_balancing(config), regexp = "deprecated")
   expect_warning(tmp <- this_cache(), regexp = "deprecated")
   expect_warning(drake_cache_log_file(), regexp = "deprecated")
+  expect_error(from_plan(), regexp = "defunct")
 })
 
 test_with_dir("deprecated arguments", {
