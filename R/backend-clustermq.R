@@ -75,6 +75,11 @@ cmq_send_target <- function(config) {
   } else {
     deps <- NULL
   }
+  if (identical(config$layout[[target]]$hpc, FALSE)) {
+    config$workers$send_wait()
+    cmq_local_build(target = target, meta = meta, config = config)
+    return()
+  }
   config$workers$send_call(
     expr = drake::cmq_build(
       target = target,
@@ -123,6 +128,16 @@ cmq_build <- function(target, meta, deps, config) {
   }
   conclude_build(build = build, config = config)
   list(target = target, checksum = mc_get_checksum(target, config))
+}
+
+cmq_local_build <- function(target, meta, config) {
+  do_prework(config = config, verbose_packages = FALSE)
+  if (!identical(config$caching, "master")) {
+    manage_memory(targets = target, config = config, jobs = 1)
+  }
+  build <- build_target(target = target, meta = meta, config = config)
+  conclude_build(build = build, config = config)
+  cmq_conclude_target(target = target, config = config)
 }
 
 cmq_conclude_build <- function(msg, config) {
