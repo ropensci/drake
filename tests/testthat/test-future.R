@@ -7,6 +7,7 @@ test_with_dir("future package functionality", {
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
   load_mtcars_example(envir = e)
+  e$my_plan$hpc <- e$my_plan$target != "report"
   backends <- rep("future", 2)
   caching <- c("master", "worker")
   for (i in seq_along(backends)) {

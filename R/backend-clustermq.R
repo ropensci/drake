@@ -41,7 +41,11 @@ cmq_master <- function(config) {
     if (!identical(msg$token, "set_common_data_token")) {
       config$workers$send_common_data()
     } else if (!config$queue$empty()) {
-      cmq_send_target(config)
+      if (identical(config$layout[[target]]$hpc, FALSE)) {
+        cmq_local_build(target = target, config = config)
+      } else {
+        cmq_send_target(config)
+      }
     } else {
       config$workers$send_shutdown_worker()
     }
@@ -74,11 +78,6 @@ cmq_send_target <- function(config) {
     deps <- cmq_deps_list(target = target, config = config)
   } else {
     deps <- NULL
-  }
-  if (identical(config$layout[[target]]$hpc, FALSE)) {
-    config$workers$send_wait()
-    cmq_local_build(target = target, meta = meta, config = config)
-    return()
   }
   config$workers$send_call(
     expr = drake::cmq_build(
@@ -130,13 +129,8 @@ cmq_build <- function(target, meta, deps, config) {
   list(target = target, checksum = mc_get_checksum(target, config))
 }
 
-cmq_local_build <- function(target, meta, config) {
-  do_prework(config = config, verbose_packages = FALSE)
-  if (!identical(config$caching, "master")) {
-    manage_memory(targets = target, config = config, jobs = 1)
-  }
-  build <- build_target(target = target, meta = meta, config = config)
-  conclude_build(build = build, config = config)
+cmq_local_build <- function(target, config) {
+  loop_build(target, config, downstream = NULL)
   cmq_conclude_target(target = target, config = config)
 }
 
