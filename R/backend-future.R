@@ -29,7 +29,13 @@ backend_future <- function(config) {
         if (identical(config$layout[[next_target]]$hpc, FALSE)) {
           future_local_build(next_target, config, queue, protect)
         } else {
-          workers[[id]] <- new_worker(id, next_target, config, ft_config, protect)
+          workers[[id]] <- new_worker(
+            id,
+            next_target,
+            config,
+            ft_config,
+            protect
+          )
         }
       }
     }
