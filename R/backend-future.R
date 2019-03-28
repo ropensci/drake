@@ -25,12 +25,11 @@ backend_future <- function(config) {
         }
         running <- running_targets(workers = workers, config = config)
         protect <- c(running, queue$list())
-        workers[[id]] <- new_worker(
-          id = id,
-          target = next_target,
-          config = config,
-          protect = protect
-        )
+        if (identical(config$layout[[next_target]]$hpc, FALSE)) {
+          future_local_build(next_target, config, queue, protect)
+        } else {
+          workers[[id]] <- new_worker(id, next_target, config, protect)
+        }
       }
     }
     Sys.sleep(config$sleep(max(0L, i)))
@@ -61,6 +60,11 @@ future_build <- function(target, meta, config, protect) {
   }
   conclude_build(build = build, config = config)
   list(target = target, checksum = mc_get_checksum(target, config))
+}
+
+future_local_build <- function(target, config, queue, protect) {
+  loop_build(target, config, downstream = protect)
+  decrease_revdep_keys(queue, target, config)
 }
 
 new_worker <- function(id, target, config, protect) {

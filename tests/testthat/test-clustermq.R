@@ -12,6 +12,7 @@ test_with_dir("clustermq parallelism", {
   e <- eval(parse(text = scenario$envir))
   jobs <- scenario$jobs # ignoring for now, using 2 jobs
   load_mtcars_example(envir = e)
+  e$my_plan$hpc <- e$my_plan$target != "regression1_large"
   parallelism <- "clustermq"
   for (caching in c("master", "worker")) {
     clean(destroy = TRUE)

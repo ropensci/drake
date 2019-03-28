@@ -41,7 +41,7 @@ cmq_master <- function(config) {
     if (!identical(msg$token, "set_common_data_token")) {
       config$workers$send_common_data()
     } else if (!config$queue$empty()) {
-      cmq_send_target(config)
+      cmq_next_target(config)
     } else {
       config$workers$send_shutdown_worker()
     }
@@ -51,13 +51,21 @@ cmq_master <- function(config) {
   }
 }
 
-cmq_send_target <- function(config) {
+cmq_next_target <- function(config) {
   target <- config$queue$pop0()
   # Longer tests will catch this:
   if (!length(target)) {
     config$workers$send_wait() # nocov
     return() # nocov
   }
+  if (identical(config$layout[[target]]$hpc, FALSE)) {
+    cmq_local_build(target, config)
+  } else {
+    cmq_send_target(target, config)
+  }
+}
+
+cmq_send_target <- function(target, config) {
   meta <- drake_meta_(target = target, config = config)
   # Target should not even be in the priority queue
   # nocov start
@@ -96,6 +104,12 @@ cmq_deps_list <- function(target, config) {
   )
   names(out) <- deps
   out
+}
+
+cmq_local_build <- function(target, config) {
+  config$workers$send_wait()
+  loop_build(target, config, downstream = NULL)
+  cmq_conclude_target(target = target, config = config)
 }
 
 #' @title Build a target using the clustermq backend
