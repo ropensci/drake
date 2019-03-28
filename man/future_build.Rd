@@ -4,7 +4,7 @@
 \alias{future_build}
 \title{Task passed to individual futures in the \code{"future"} backend}
 \usage{
-future_build(target, meta, config, protect)
+future_build(target, meta, config, layout, protect)
 }
 \arguments{
 \item{target}{Name of the target.}
