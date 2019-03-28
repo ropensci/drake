@@ -478,33 +478,6 @@ test_with_dir("plan_to_notebook()", {
   equivalent_plans(plan[order(plan$target), ], plan0[order(plan0$target), ])
 })
 
-test_with_dir("can use from_plan() from within make()", {
-  scenario <- get_testing_scenario()
-  e <- eval(parse(text = scenario$envir))
-  jobs <- scenario$jobs
-  parallelism <- scenario$parallelism
-  caching <- scenario$caching
-  plan <- drake_plan(my_target = target(from_plan("a"), a = "a_value"))
-  cache <- new_cache()
-  config <- drake_config(
-    plan, cache = cache, jobs = jobs,
-    parallelism = parallelism, caching = caching,
-    log_progress = TRUE
-  )
-  make(config = config)
-  expect_equal(justbuilt(config), "my_target")
-  expect_equal("a_value", readd(my_target, cache = cache))
-  make(config = config)
-  expect_equal(justbuilt(config), character(0))
-  plan <- drake_plan(my_target = target(from_plan("a"), a = "nope"))
-  config <- drake_config(
-    plan, cache = cache, jobs = jobs,
-    parallelism = parallelism, caching = caching
-  )
-  make(config = config)
-  expect_equal(justbuilt(config), character(0))
-})
-
 test_with_dir("commands and triggers can be character strings too", {
   config <- dbug()
   config$plan <- deparse_lang_cols(config$plan)

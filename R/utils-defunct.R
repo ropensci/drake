@@ -8,6 +8,26 @@ drake_defunct <- function(...) {
 
 # nocov start
 
+#' @title Defunct function.
+#' @description The `from_plan()` function is now defunct
+#'   in order to reduce the demands on memory usage.
+#' @details 2019-03-28
+#' @export
+#' @keywords internal
+#' @seealso [drake_envir()]
+#' @param column Character, name of a column in your `drake` plan.
+from_plan <- function(column) {
+  .Defunct(
+    new = "",
+    package = "drake",
+    msg = c(
+      "Function from_plan() in drake is now defunct ",
+      "in order to reduce memory usage."
+    )
+  )
+  NULL
+}
+
 #' @title Defunct function
 #' @description 2019-02-15
 #' @export

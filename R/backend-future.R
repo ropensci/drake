@@ -4,6 +4,7 @@ backend_future <- function(config) {
   workers <- initialize_workers(config)
   # While any targets are queued or running...
   i <- 1
+  ft_config <- ft_config(config)
   while (work_remains(queue = queue, workers = workers, config = config)) {
     for (id in seq_along(workers)) {
       if (is_idle(workers[[id]])) {
@@ -28,7 +29,13 @@ backend_future <- function(config) {
         if (identical(config$layout[[next_target]]$hpc, FALSE)) {
           future_local_build(next_target, config, queue, protect)
         } else {
-          workers[[id]] <- new_worker(id, next_target, config, protect)
+          workers[[id]] <- new_worker(
+            id,
+            next_target,
+            config,
+            ft_config,
+            protect
+          )
         }
       }
     }
@@ -48,7 +55,9 @@ backend_future <- function(config) {
 #' @param config A [drake_config()] list.
 #' @param protect Names of targets that still need their
 #' dependencies available in memory.
-future_build <- function(target, meta, config, protect) {
+future_build <- function(target, meta, config, layout, protect) {
+  config$layout <- list()
+  config$layout[[target]] <- layout
   if (identical(config$caching, "worker")) {
     manage_memory(targets = target, config = config, downstream = protect)
   }
@@ -67,7 +76,7 @@ future_local_build <- function(target, config, queue, protect) {
   decrease_revdep_keys(queue, target, config)
 }
 
-new_worker <- function(id, target, config, protect) {
+new_worker <- function(id, target, config, ft_config, protect) {
   meta <- drake_meta_(target = target, config = config)
   if (!should_build_target(target, meta, config)) {
     console_skip(target = target, config = config)
@@ -81,20 +90,22 @@ new_worker <- function(id, target, config, protect) {
   # Avoid potential name conflicts with other globals.
   # When we solve #296, need for such a clumsy workaround
   # should go away.
+  layout <- config$layout[[target]]
   globals <- future_globals(
     target = target,
     meta = meta,
-    config = config,
+    config = ft_config,
+    layout = layout,
     protect = protect
   )
   announce_build(target = target, meta = meta, config = config)
-  layout <- config$layout[[target]]
   structure(
     future::future(
       expr = drake::future_build(
         target = DRAKE_GLOBALS__$target,
         meta = DRAKE_GLOBALS__$meta,
         config = DRAKE_GLOBALS__$config,
+        layout = DRAKE_GLOBALS__$layout,
         protect = DRAKE_GLOBALS__$protect
       ),
       globals = globals,
@@ -105,12 +116,13 @@ new_worker <- function(id, target, config, protect) {
   )
 }
 
-future_globals <- function(target, meta, config, protect) {
+future_globals <- function(target, meta, config, layout, protect) {
   globals <- list(
     DRAKE_GLOBALS__ = list(
       target = target,
       meta = meta,
       config = config,
+      layout = layout,
       protect = protect
     )
   )
@@ -193,6 +205,22 @@ initialize_workers <- function(config) {
   for (i in seq_len(config$jobs))
     out[[i]] <- empty_worker(target = NA_character_)
   out
+}
+
+ft_config <- function(config) {
+  discard <- c(
+    "imports",
+    "layout",
+    "plan",
+    "graph",
+    "schedule",
+    "targets",
+    "trigger"
+  )
+  for (x in discard) {
+    config[[x]] <- NULL
+  }
+  config
 }
 
 ft_decrease_revdep_keys <- function(worker, config, queue) {

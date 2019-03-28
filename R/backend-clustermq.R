@@ -22,7 +22,7 @@ cmq_set_common_data <- function(config) {
   if (identical(config$envir, globalenv())) {
     export <- as.list(config$envir, all.names = TRUE) # nocov
   }
-  export$config <- config
+  export$config <- cmq_config(config)
   config$workers$set_common_data(
     export = export,
     fun = identity,
@@ -83,15 +83,32 @@ cmq_send_target <- function(target, config) {
   } else {
     deps <- NULL
   }
+  layout <- config$layout[[target]]
   config$workers$send_call(
     expr = drake::cmq_build(
       target = target,
       meta = meta,
       deps = deps,
+      layout = layout,
       config = config
     ),
-    env = list(target = target, meta = meta, deps = deps)
+    env = list(target = target, meta = meta, deps = deps, layout = layout)
   )
+}
+
+cmq_config <- function(config) {
+  discard <- c(
+    "imports",
+    "layout",
+    "plan",
+    "schedule",
+    "targets",
+    "trigger"
+  )
+  for (x in discard) {
+    config[[x]] <- NULL
+  }
+  config
 }
 
 cmq_deps_list <- function(target, config) {
@@ -121,7 +138,9 @@ cmq_local_build <- function(target, config) {
 #' @param meta List of metadata.
 #' @param deps Named list of target dependencies.
 #' @param config A [drake_config()] list.
-cmq_build <- function(target, meta, deps, config) {
+cmq_build <- function(target, meta, deps, layout, config) {
+  config$layout <- list()
+  config$layout[[target]] <- layout
   do_prework(config = config, verbose_packages = FALSE)
   if (identical(config$caching, "master")) {
     for (dep in names(deps)) {

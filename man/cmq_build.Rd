@@ -4,7 +4,7 @@
 \alias{cmq_build}
 \title{Build a target using the clustermq backend}
 \usage{
-cmq_build(target, meta, deps, config)
+cmq_build(target, meta, deps, layout, config)
 }
 \arguments{
 \item{target}{Target name.}
