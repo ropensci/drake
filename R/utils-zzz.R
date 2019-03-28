@@ -10,7 +10,11 @@
     warning(
       "Auto-saved workspace file '.RData' detected. ",
       "This is bad for reproducible code. ",
-      "You can remove it with unlink(\".RData\").",
+      "You can remove it with unlink(\".RData\"). ",
+      "To avoid generating '.RData' files, ",
+      "start your session with 'R --no-save'",
+      "or disable the saving of workspace images ",
+      "in the RStudio IDE settings.",
       call. = FALSE
     )
   }
