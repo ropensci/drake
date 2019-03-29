@@ -91,10 +91,14 @@ test_with_dir("show_source()", {
   expect_message(
     show_source("base::sqrt", config, character_only = TRUE), regexp = "import"
   )
-  expect_silent(loadd(x, cache = cache, show_source = FALSE))
-  expect_silent(readd(x, cache = cache, show_source = FALSE))
-  expect_message(loadd(x, cache = cache, show_source = TRUE))
-  expect_message(y <- readd(x, cache = cache, show_source = TRUE))
+  expect_message(
+    loadd(x, cache = cache, show_source = TRUE),
+    regexp = "was built from command"
+  )
+  expect_message(
+    y <- readd(x, cache = cache, show_source = TRUE),
+    regexp = "was built from command"
+  )
   expect_true(is.numeric(x))
   expect_true(is.numeric(y))
 })

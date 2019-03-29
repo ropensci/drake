@@ -19,7 +19,7 @@ drake_log <- function(..., config) {
     return()
   }
   write(
-    x = crop_text(paste(...)),
+    x = paste(...),
     file = config$console_log_file,
     append = TRUE
   )
@@ -38,7 +38,7 @@ console_time <- function(target, meta, config) {
 }
 
 drake_message <- function(..., config) {
-  drake_log(paste(...), config = config)
+  drake_log(..., config = config)
   message(...)
 }
 
@@ -106,6 +106,6 @@ show_source <- function(target, config, character_only = FALSE) {
     command <- gsub("^\\{\n ", "", meta$command)
     command <- gsub(" \n\\}$", "", command)
     message(
-      prefix, target, " was build from command:\n  ", target, " = ", command)
+      prefix, target, " was built from command:\n  ", target, " = ", command)
   }
 }
