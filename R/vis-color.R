@@ -7,19 +7,6 @@ colors <- c(
   fail = "red",
   aux = "dodgerblue3",
   target = "green3",
-  check = "skyblue1",
-  analyze = "skyblue1",
-  construct = "skyblue1",
-  trim = "skyblue1",
-  encode = "skyblue1",
-  launch = "#ff9933",
-  load = "#ff9933",
-  unload = "#ff7221",
-  interactive = "#ff7221",
-  trigger = "maroon",
-  skip = "skyblue1",
-  store = "skyblue1",
-  time = "#ff7221",
   up_to_date = "forestgreen",
   outdated = "#000000",
   failed = "#aa0000",
@@ -31,14 +18,10 @@ colors <- c(
 
 # Show drake's color palette.
 drake_palette_ <- function() {
-  out <- lapply(
-    sort(names(colors)),
-    function(x) {
-      color(x, color = colors[x])
-    }
-  )
-  out <- paste(out, collapse = "\n")
-  message(out)
+  assert_pkg("crayon")
+  for (i in seq_along(colors)) {
+    message(crayon::make_style(colors[i])(names(colors)[i]))
+  }
 }
 
 color_of <- Vectorize(function(x) {

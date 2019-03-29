@@ -230,7 +230,7 @@ test_with_dir("force with a non-back-compatible cache", {
     expect_error(make(drake_plan(x = 1)), regexp = "compatible")
   )
   expect_warning(make(drake_plan(x = 1), force = TRUE), regexp = "compatible")
-  expect_silent(tmp <- get_cache())
+  tmp <- get_cache()
 })
 
 test_with_dir("deprecate the `force` argument", {
