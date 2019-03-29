@@ -38,6 +38,11 @@ up_to_date_msg <- try_style("All targets are already up to date.", "green3")
 cache_msg <- try_style("cache", "skyblue1")
 analyze_msg <- try_style("analyze", "skyblue1")
 connect_msg <- try_style("connect", "skyblue1")
+file_out_msg <- try_style("file_out", "skyblue1")
+finalize_msg <- try_style("finalize", "skyblue1")
+create_msg <- try_style("create", "skyblue1")
+process_msg <- try_style("process", "skyblue1")
+find_msg <- try_style("find", "skyblue1")
 
 # Show drake's color palette.
 drake_palette_ <- function() {
