@@ -10,7 +10,7 @@ announce_build <- function(target, meta, config) {
     target,
     config = config,
     color = colors["target"],
-    newline = TRUE
+    tier = 1L
   )
 }
 
@@ -31,7 +31,7 @@ build_target <- function(target, meta, config) {
         max_retries,
         config = config,
         color = colors["retry"],
-        newline = TRUE
+        tier = 1L
       )
     }
     build <- with_seed_timeout(

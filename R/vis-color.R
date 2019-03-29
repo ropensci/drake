@@ -2,11 +2,11 @@
 # "fail" are for the console. The rest
 # are for graph visualizations.
 colors <- c(
+  default = "dodgerblue3",
+  target = "green3",
   retry = "#9400d3",
   missing = "#9400d3",
   fail = "red",
-  aux = "dodgerblue3",
-  target = "green3",
   up_to_date = "forestgreen",
   outdated = "#000000",
   failed = "#aa0000",

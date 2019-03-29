@@ -1,29 +1,25 @@
-log_msg <- function(
-  ...,
-  config,
-  newline = config$verbose > 1L,
-  color = colors["aux"]
-) {
-  if (is.null(config$verbose) || as.integer(config$verbose) < 1L) {
-    return(invisible())
+log_msg <- function(..., config, tier = 2L, color = colors["default"]) {
+  drake_log(..., config = config)
+  if (is.null(config$verbose) || as.integer(config$verbose) < tier) {
+    return()
   }
-  msg <- crop_text(paste(...))
-  drake_log(msg, config = config)
+  if (tier > 1L) {
+    message("spinner...")
+    return()
+  }
+  msg <- c(...)
   if (!is.null(color) && requireNamespace("crayon", quietly = TRUE)) {
-    msg <- crayon::make_style(color)(msg)
+    msg[1] <- crayon::make_style(color)(msg[1])
   }
-  utils::flush.console()
-  tmp <- paste0(c("\r", rep(" ", getOption("width")), "\r"), collapse = "")
-  message(tmp, appendLF = FALSE)
-  message(msg, appendLF = newline)
+  message(crop_text(paste(msg, collapse = " ")))
 }
 
-drake_log <- function(msg, config) {
+drake_log <- function(..., config) {
   if (is.null(config$console_log_file)) {
     return()
   }
   write(
-    x = msg,
+    x = crop_text(paste(...)),
     file = config$console_log_file,
     append = TRUE
   )
@@ -38,7 +34,7 @@ console_time <- function(target, meta, config) {
   } else {
     tail <- " (install lubridate)" # nocov
   }
-  log_msg("time  ", target, tail = tail, config = config)
+  log_msg("time ", target, tail = tail, config = config)
 }
 
 drake_message <- function(..., config) {

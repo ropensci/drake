@@ -16,17 +16,11 @@ run_native_backend <- function(config) {
       paste0("backend_", parallelism),
       envir = getNamespace("drake")
     )(config)
-    log_msg(
-      "\u2713",
-      config = config,
-      newline = TRUE,
-      color = colors["target"]
-    )
   } else {
     log_msg(
       "All targets are already up to date.",
       config = config,
-      newline = TRUE
+      tier = 1L
     )
   }
 }
