@@ -5,7 +5,7 @@ announce_build <- function(target, meta, config) {
     value = "running",
     config = config
   )
-  console_msg(
+  log_msg(
     "target",
     target,
     config = config,
@@ -23,7 +23,7 @@ build_target <- function(target, meta, config) {
   max_retries <- as.numeric(layout$retries %||NA% config$retries)
   while (retries <= max_retries) {
     if (retries > 0L) {
-      console_msg(
+      log_msg(
         "retry",
         target,
         retries,

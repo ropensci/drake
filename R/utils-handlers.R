@@ -17,7 +17,7 @@ handle_build_exceptions <- function(target, meta, config) {
     )
   }
   if (inherits(meta$error, "error")) {
-    console_msg(
+    log_msg(
       "fail",
       target,
       config = config,

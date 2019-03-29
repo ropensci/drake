@@ -41,7 +41,7 @@ manage_memory <- function(targets, config, downstream = NULL, jobs = 1) {
     keep_these <- c(target_deps, downstream_deps)
     discard_these <- setdiff(x = already_loaded, y = keep_these)
     if (length(discard_these)) {
-      console_msg("unload", discard_these, config = config)
+      log_msg("unload", discard_these, config = config)
       rm(list = discard_these, envir = config$eval)
     }
   }
@@ -63,7 +63,7 @@ deps_memory <- function(targets, config) {
 try_load <- function(targets, config, jobs = 1) {
   if (length(targets)) {
     if (config$lazy_load == "eager") {
-      console_msg("load", targets, config = config)
+      log_msg("load", targets, config = config)
     }
     lapply(
       X = targets,

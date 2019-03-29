@@ -1,4 +1,4 @@
-console_msg <- function(
+log_msg <- function(
   ...,
   config,
   newline = config$verbose > 1L,
@@ -38,7 +38,7 @@ console_time <- function(target, meta, config) {
   } else {
     tail <- " (install lubridate)" # nocov
   }
-  console_msg("time  ", target, tail = tail, config = config)
+  log_msg("time  ", target, tail = tail, config = config)
 }
 
 drake_message <- function(..., config) {

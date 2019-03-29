@@ -16,14 +16,14 @@ run_native_backend <- function(config) {
       paste0("backend_", parallelism),
       envir = getNamespace("drake")
     )(config)
-    console_msg(
+    log_msg(
       "\u2713",
       config = config,
       newline = TRUE,
       color = colors["target"]
     )
   } else {
-    console_msg(
+    log_msg(
       "All targets are already up to date.",
       config = config,
       newline = TRUE
@@ -46,6 +46,6 @@ run_external_backend <- function(config) {
 
 pretrim_schedule <- function(config) {
   outdated <- outdated(config, do_prework = FALSE, make_imports = FALSE)
-  console_msg("trim schedule", config = config)
+  log_msg("trim schedule", config = config)
   igraph::induced_subgraph(graph = config$schedule, vids = outdated)
 }
