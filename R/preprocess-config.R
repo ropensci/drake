@@ -41,14 +41,10 @@
 #'   from `envir` and the global environment and
 #'   then reproducibly tracked as dependencies.
 #'
-#' @param verbose Logical or numeric, control printing to the console.
-#'   - `0` or `FALSE`: print nothing.
-#'   - `1` or `TRUE`: print only targets to build.
-#'   - `2`: plus checks and cache info.
-#'   - `3`: plus missing imports.
-#'   - `4`: plus all imports.
-#'   - `5`: plus execution and total build times for targets.
-#'   - `6`: plus notifications when targets are being stored.
+#' @param verbose Integer, control printing to the console/terminal.
+#'   - `0`: print nothing.
+#'   - `1`: print targets, retries, and failures.
+#'   - `2`: also show a spinner when preprocessing tasks are underway.
 #'
 #' @param hook Deprecated.
 #'
@@ -288,19 +284,9 @@
 #'   path to the `args` argument so `make` knows where to find it.
 #'   Example: `make(parallelism = "Makefile", makefile_path = ".drake/.makefile", command = "make", args = "--file=.drake/.makefile")`
 #'
-#' @param console_log_file Character scalar,
-#'   connection object (such as `stdout()`) or `NULL`.
-#'   If `NULL`, console output will be printed
-#'   to the R console using `message()`.
-#'   If a character scalar, `console_log_file`
-#'   should be the name of a flat file, and
-#'   console output will be appended to that file.
-#'   If a connection object (e.g. `stdout()`)
-#'   warnings and messages will be sent to the connection.
-#'   For example, if `console_log_file` is `stdout()`,
-#'   warnings and messages are printed to the console in real time
-#'   (in addition to the usual in-bulk printing
-#'   after each target finishes).
+#' @param console_log_file Optional character scalar of a file name or
+#'   connection object (such as `stdout()`) to dump maximally verbose
+#'   log information for [make()]. Independent of the `verbose` argument.
 #'
 #' @param ensure_workers Logical, whether the master process
 #'   should wait for the workers to post before assigning them
