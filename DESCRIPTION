@@ -85,6 +85,7 @@ Suggests:
   abind,
   bindr,
   callr,
+  cli,
   clustermq,
   CodeDepends,
   crayon,
