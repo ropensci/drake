@@ -104,6 +104,7 @@ test_with_dir("show_source()", {
 })
 
 test_with_dir("spinner (or lack thereof) does not break things", {
+  skip_on_cran()
   config <- drake_config(
     drake_plan(a = 1, b = a),
     verbose = 2L,

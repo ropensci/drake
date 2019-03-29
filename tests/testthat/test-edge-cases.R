@@ -320,3 +320,19 @@ test_with_dir("supplied a plan instead of a config", {
   plan <- drake_plan(x = 1)
   expect_error(vis_drake_graph(plan), regexp = "supplied a drake plan")
 })
+
+test_with_dir("standardizing Rcpp functions", {
+  skip_on_cran()
+  skip_if_not_installed("Rcpp")
+  f <- Rcpp::cppFunction(
+    "int add(int x, int y, int z) {
+      int sum = x + y + z;
+      return sum;
+    }"
+  )
+  x <- standardize_imported_function(f)
+  expect_true(grepl("function", x))
+  expect_true(grepl("Call", x))
+  expect_false(grepl("pointer: 0x", x))
+  expect_true(grepl("pointer: 0x", safe_deparse(f)))
+})

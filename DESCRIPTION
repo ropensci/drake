@@ -101,6 +101,7 @@ Suggests:
   networkD3,
   parallel,
   prettycode,
+  Rcpp,
   stats,
   testthat,
   tibble,
