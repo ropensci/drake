@@ -1,12 +1,37 @@
-console <- function(imported, target, config) {
-  if (is.na(imported)) {
-    console_missing(target = target, config = config)
-  } else if (imported) {
-    console_import(target = target, config = config)
-  } else {
-    console_target(target = target, config = config)
+console_msg <- function(..., tier, config) {
+  if (is.null(config$verbose) || config$verbose < tier) {
+    return(invisible())
   }
+  msg <- crop_text(paste(...))
+  if (!is.null(config$console_log_file)) {
+    with_options(
+      list(crayon.enabled = FALSE),
+      write(msg, file = config$console_log_file)
+    )
+  }
+  message(msg)
 }
+
+
+
+
+
+
+drake_log <- function(..., prefix, config) {
+  text <- paste0(prefix, ...)
+  if (requireNamespace("crayon", quietly = TRUE)) {
+    text <- crayon::strip_style(text)
+  }
+  if (!is.null(config$console_log_file)) {
+    write(
+      x = text,
+      file = config$console_log_file,
+      append = TRUE
+    )
+  }
+  invisible()
+}
+
 
 console_generic <- function(
   target,
@@ -28,20 +53,12 @@ console_missing <- function(target, config) {
   console_generic(target, config, 3L, "missing")
 }
 
-console_import <- function(target, config) {
-  console_generic(target, config, 4L, "import")
-}
-
 console_skip <- function(target, config) {
   console_generic(target, config, 4L, "skip")
 }
 
 console_store <- function(target, config) {
   console_generic(target, config, 6L, "store")
-}
-
-console_target <- function(target, config) {
-  console_generic(target, config, 1L, "target")
 }
 
 console_time <- function(target, meta, config) {
@@ -105,22 +122,6 @@ console_many_targets <- function(
 console_parLapply <- function(config) { # nolint
   text <- paste("load parallel socket cluster with", config$jobs, "workers")
   finish_console(text = text, pattern = "load", config = config)
-}
-
-console_retry <- function(target, error, retries, config) {
-  if (retries <= config$retries) {
-    text <- paste0("retry ", target, ": ", retries, " of ", config$retries)
-    finish_console(text = text, pattern = "retry", config = config)
-  }
-}
-
-console_up_to_date <- function(config) {
-  if (!config$verbose) {
-    return(invisible())
-  } else {
-    out <- color("All targets are already up to date.", colors["target"])
-    drake_message(out, config = config)
-  }
 }
 
 console_final_notes <- function(config) {

@@ -5,17 +5,28 @@ announce_build <- function(target, meta, config) {
     value = "running",
     config = config
   )
-  console(imported = meta$imported, target = target, config = config)
+  console_msg(target_msg, target, tier = 1L, config = config)
 }
 
 build_target <- function(target, meta, config) {
   if (identical(config$garbage_collection, TRUE)) {
     on.exit(gc())
   }
-  retries <- 0
+  retries <- 0L
   layout <- config$layout[[target]] %||% list()
   max_retries <- as.numeric(layout$retries %||NA% config$retries)
   while (retries <= max_retries) {
+    if (retries > 0L) {
+      console_msg(
+        retry_msg,
+        target,
+        retries,
+        "of",
+        max_retries,
+        tier = 1L,
+        config = config
+      )
+    }
     build <- with_seed_timeout(
       target = target,
       meta = meta,
@@ -24,8 +35,7 @@ build_target <- function(target, meta, config) {
     if (!inherits(build$meta$error, "error")) {
       return(build)
     }
-    retries <- retries + 1
-    console_retry(target = target, retries = retries, config = config)
+    retries <- retries + 1L
   }
   build
 }

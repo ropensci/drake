@@ -15,6 +15,12 @@ process_imports <- function(config) {
 #' @examples
 #' # Not a user-side function.
 process_import <- function(import, config) {
+  console_msg(
+    import_msg,
+    display_key(import, config),
+    tier = 2L,
+    config = config
+  )
   meta <- drake_meta_(import, config)
   if (meta$isfile) {
     value <- NA_character_
@@ -22,11 +28,6 @@ process_import <- function(import, config) {
   } else {
     value <- get_import_from_memory(import, config = config)
     is_missing <- identical(value, NA_character_)
-  }
-  if (is_missing) {
-    console_missing(target = import, config = config)
-  } else {
-    console_import(target = import, config = config)
   }
   store_single_output(
     target = import,

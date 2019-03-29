@@ -17,7 +17,7 @@ run_native_backend <- function(config) {
       envir = getNamespace("drake")
     )(config)
   } else {
-    console_up_to_date(config = config)
+    console_msg(up_to_date_msg, tier = 1L, config = config)
   }
 }
 

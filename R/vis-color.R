@@ -2,9 +2,6 @@
 # "fail" are for the console. The rest
 # are for graph visualizations.
 colors <- c(
-  target = "green3",
-  import = "dodgerblue3",
-  missing = "darkorchid3",
   cache = "skyblue1",
   check = "skyblue1",
   analyze = "skyblue1",
@@ -19,8 +16,6 @@ colors <- c(
   skip = "skyblue1",
   store = "skyblue1",
   time = "#ff7221",
-  retry = "forestgreen",
-  fail = "red",
   up_to_date = "forestgreen",
   outdated = "#000000",
   failed = "#aa0000",
@@ -29,6 +24,18 @@ colors <- c(
   in_progress = "#ff7221",
   other = "#888888"
 )
+
+try_style <- function(text, color) {
+  if (requireNamespace("crayon")) {
+    crayon::make_style(color)(text)
+  }
+}
+
+target_msg <- try_style("target", "green3")
+import_msg <- try_style("import", "dodgerblue3")
+retry_msg <- try_style("retry", "#9400d3")
+fail_msg <- try_style("fail", "red")
+up_to_date_msg <- try_style("All targets are already up to date.", "green3")
 
 # Show drake's color palette.
 drake_palette_ <- function() {
