@@ -76,16 +76,6 @@ console_time <- function(target, meta, config) {
   console_generic(target, config, tol, "time", tail = tail)
 }
 
-console_cache <- function(config) {
-  if (config$verbose < 2) {
-    return()
-  }
-  if (is.null(config$cache_path)) {
-    config$cache_path <- default_cache_path()
-  }
-  out <- paste("cache", config$cache_path)
-  finish_console(out, pattern = "cache", config = config)
-}
 
 console_preprocess <- function(text, config) {
   if (!length(config$verbose) || config$verbose < 2) {

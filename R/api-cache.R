@@ -151,9 +151,11 @@ this_cache_ <- function(
     return(NULL)
   }
   if (!is.null(path)) {
-    console_cache(
+    console_msg(
+      cache_msg,
+      path,
+      tier = 2L,
       config = list(
-        cache_path = path,
         verbose = verbose,
         console_log_file = console_log_file
       )
@@ -244,9 +246,11 @@ new_cache <- function(
     text = c("*", "!/.gitignore"),
     con = file.path(path, ".gitignore")
   )
-  console_cache(
+  console_msg(
+    cache_msg,
+    path,
+    tier = 2L,
     config = list(
-      cache_path = cache_path_(cache),
       verbose = verbose,
       console_log_file = console_log_file
     )

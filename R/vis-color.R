@@ -2,7 +2,6 @@
 # "fail" are for the console. The rest
 # are for graph visualizations.
 colors <- c(
-  cache = "skyblue1",
   check = "skyblue1",
   analyze = "skyblue1",
   construct = "skyblue1",
@@ -36,6 +35,7 @@ import_msg <- try_style("import", "dodgerblue3")
 retry_msg <- try_style("retry", "#9400d3")
 fail_msg <- try_style("fail", "red")
 up_to_date_msg <- try_style("All targets are already up to date.", "green3")
+cache_msg <- try_style("cache", "skyblue1")
 
 # Show drake's color palette.
 drake_palette_ <- function() {
