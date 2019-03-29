@@ -102,3 +102,9 @@ test_with_dir("show_source()", {
   expect_true(is.numeric(x))
   expect_true(is.numeric(y))
 })
+
+test_with_dir("spinner does not break things", {
+  config <- dbug()
+  config$verbose = 2L
+  testrun(config)
+})

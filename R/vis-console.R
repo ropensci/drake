@@ -112,19 +112,18 @@ show_source <- function(target, config, character_only = FALSE) {
   }
 }
 
-new_spinner <- function(force = FALSE) {
+new_spinner <- function() {
   on.exit(.pkg_envir$drake_spinner_msg <- FALSE)
   if (identical(.pkg_envir$drake_spinner_msg, FALSE)){
     return()
   }
-  if (requireNamespace("cli")) {
+  if (requireNamespace("cli", quietly = TRUE)) {
     return(cli::make_spinner())
   }
-  if (!force) {
-    message(
-      "Install the ", shQuote("cli"), " package to show a console spinner",
-      " when ", shQuote("verbose"),  " is 2."
-    )
-    return()
-  }
+  # nocov start
+  message(
+    "Install the ", shQuote("cli"), " package to show a console spinner",
+    " when ", shQuote("verbose"),  " is 2."
+  )
+  # nocov end
 }
