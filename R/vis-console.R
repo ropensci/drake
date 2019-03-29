@@ -1,24 +1,20 @@
 console_msg <- function(
   ...,
   config,
-  tier = 3L,
-  rewind = TRUE,
-  newline = FALSE,
+  newline = config$verbose > 1L,
   color = colors["aux"]
 ) {
-  if (is.null(config$verbose) || config$verbose < tier) {
+  if (is.null(config$verbose) || as.integer(config$verbose) < 1L) {
     return(invisible())
   }
   msg <- crop_text(paste(...))
   drake_log(msg, config = config)
-  spaces <- rep(" ", getOption("width") - nchar(msg))
-  msg <- paste(c(msg, spaces), collapse = "")
   if (!is.null(color) && requireNamespace("crayon", quietly = TRUE)) {
     msg <- crayon::make_style(color)(msg)
   }
-  if (rewind) {
-    msg <- c("\r", msg)
-  }
+  utils::flush.console()
+  tmp <- paste0(c("\r", rep(" ", getOption("width")), "\r"), collapse = "")
+  message(tmp, appendLF = FALSE)
   message(msg, appendLF = newline)
 }
 
@@ -34,168 +30,29 @@ drake_log <- function(msg, config) {
   invisible()
 }
 
-
-
-
-console_generic <- function(
-  target,
-  config,
-  cutoff = 1,
-  pattern = "target",
-  tail = ""
-) {
-  if (config$verbose < cutoff) {
-    return()
-  }
-  text <- display_keys(target, config)
-  text <- paste0(pattern, " ", text, tail)
-  finish_console(text = text, pattern = pattern, config = config)
-
-}
-
-console_missing <- function(target, config) {
-  console_generic(target, config, 3L, "missing")
-}
-
-console_skip <- function(target, config) {
-  console_generic(target, config, 4L, "skip")
-}
-
-console_store <- function(target, config) {
-  console_generic(target, config, 6L, "store")
-}
-
 console_time <- function(target, meta, config) {
-  tol <- 5L
-  if (config$verbose < tol) {
-    return()
-  }
   if (requireNamespace("lubridate", quietly = TRUE)) {
     exec <- round(lubridate::dseconds(meta$time_command$elapsed), 3)
     total <- round(lubridate::dseconds( meta$time_build$elapsed), 3)
-    tail <- paste("", exec, "(exec)", total, "(total)")
+    tail <- paste("", exec, "|", total, " (exec | total)")
   } else {
     tail <- " (install lubridate)" # nocov
   }
-  console_generic(target, config, tol, "time", tail = tail)
-}
-
-
-console_preprocess <- function(text, config) {
-  if (!length(config$verbose) || config$verbose < 2) {
-    return()
-  }
-  finish_console(
-    text = text,
-    pattern = strsplit(text, " ")[[1]][1],
-    config = config
-  )
-}
-
-console_many_targets <- function(
-  targets, pattern, config, color = color_of(pattern), type = "item"
-) {
-  if (config$verbose < 2) {
-    return()
-  }
-  n <- length(targets)
-  if (n < 1) {
-    return(invisible())
-  }
-  targets <- display_keys(targets, config)
-  out <- paste0(
-    pattern,
-    " ", n, " ", type,
-    ifelse(n == 1, "", "s"),
-    ": ",
-    paste(targets, collapse = ", ")
-  )
-  finish_console(out, pattern = pattern, config = config)
-}
-
-console_parLapply <- function(config) { # nolint
-  text <- paste("load parallel socket cluster with", config$jobs, "workers")
-  finish_console(text = text, pattern = "load", config = config)
-}
-
-console_final_notes <- function(config) {
-  if (config$verbose < 2L) {
-    return()
-  }
-  if (config$skip_imports) {
-    console_skipped_imports(config = config)
-  }
-  custom_triggers <- "trigger" %in% colnames(config$plan) ||
-    !identical(config$trigger, trigger())
-  if (custom_triggers) {
-    console_custom_triggers(config)
-  }
-}
-
-console_skipped_imports <- function(config) {
-  out <- color(
-    paste(
-      "Skipped the imports.",
-      "If some imports are not already cached, targets could be out of date."
-    ),
-    colors["trigger"]
-  )
-  drake_message(out, config = config)
-}
-
-console_custom_triggers <- function(config) {
-  out <- color(
-    paste("Used non-default triggers."),
-    colors["trigger"]
-  )
-}
-
-console_persistent_workers <- function(config) {
-  if (config$verbose < 2) {
-    return()
-  }
-  finish_console(
-    text = paste("launch", config$jobs, "persistent workers + master"),
-    pattern = "launch",
-    config = config
-  )
-}
-
-finish_console <- function(text, pattern, config) {
-  if (is.null(config$verbose) || config$verbose < 1) {
-    return(invisible())
-  }
-  msg <- crop_text(x = text)
-  msg <- color_grep(msg, pattern = pattern, color = color_of(pattern))
-  drake_message(msg, config = config)
-}
-
-
-
-drake_log_message <- function(..., config) {
-  drake_log(..., config = config)
-}
-
-drake_log_warning <- function(..., config) {
-  drake_log("Warning:", ..., config = config)
-}
-
-drake_log_error <- function(..., config) {
-  drake_log("Error:", ..., config = config)
+  console_msg("time  ", target, tail = tail, config = config)
 }
 
 drake_message <- function(..., config) {
-  drake_log_message(..., config = config)
-  message(..., sep = "")
+  drake_log(paste(...), config = config)
+  message(...)
 }
 
 drake_warning <- function(..., config) {
-  drake_log_warning(..., config = config)
+  drake_log(paste("Warning:", ...), config = config)
   warning(..., call. = FALSE)
 }
 
 drake_error <- function(..., config) {
-  drake_log_error(..., config = config)
+  drake_log(paste("Error:", ...), config = config)
   stop(..., call. = FALSE)
 }
 

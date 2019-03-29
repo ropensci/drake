@@ -3,6 +3,7 @@
 # are for graph visualizations.
 colors <- c(
   retry = "#9400d3",
+  missing = "#9400d3",
   fail = "red",
   aux = "dodgerblue3",
   target = "green3",

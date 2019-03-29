@@ -43,7 +43,7 @@ cdg_create_edges <- function(config, layout) {
 }
 
 cdg_node_to_edges <- function(node, config) {
-  console_msg("connect", node$target, tier = 3L, config = config)
+  console_msg("connect", node$target, config = config)
   file_out <- node$deps_build$file_out
   node$deps_build$file_out <- NULL
   inputs <- clean_nested_char_list(
@@ -70,7 +70,7 @@ cdg_node_to_edges <- function(node, config) {
 }
 
 cdg_edges_thru_file_out <- function(edges, config) {
-  console_msg("connect output files", tier = 3L, config = config)
+  console_msg("connect output files", config = config)
   file_out <- edges$to[is_encoded_path(edges$to)]
   file_out_edges <- lapply(
     X = file_out,
@@ -87,7 +87,6 @@ cdg_transitive_edges <- function(vertex, edges, config) {
   console_msg(
     "file_out",
     display_key(vertex, config),
-    tier = 3L,
     config = config
   )
   from <- unique(edges$from[edges$to == vertex])
@@ -96,19 +95,19 @@ cdg_transitive_edges <- function(vertex, edges, config) {
 }
 
 cdg_finalize_graph <- function(edges, targets, config) {
-  console_msg("finalize graph edges", tier = 3L, config = config)
+  console_msg("finalize graph edges", config = config)
   file_out <- edges$to[edges$from %in% targets & is_encoded_path(edges$to)]
   to <- union(targets, file_out)
-  console_msg("create igraph", tier = 3L, config = config)
+  console_msg("create igraph", config = config)
   graph <- igraph::graph_from_data_frame(edges)
-  console_msg("trim neighborhoods", tier = 3L, config = config)
+  console_msg("trim neighborhoods", config = config)
   graph <- nbhd_graph(
     graph = graph,
     vertices = to,
     mode = "in",
     order = igraph::gorder(graph)
   )
-  console_msg("add igraph attributes", tier = 3L, config = config)
+  console_msg("add igraph attributes", config = config)
   graph <- igraph::set_vertex_attr(graph, "imported", value = TRUE)
   index <- c(config$plan$target, file_out)
   index <- intersect(index, igraph::V(graph)$name)
@@ -118,7 +117,7 @@ cdg_finalize_graph <- function(edges, targets, config) {
     index = index,
     value = FALSE
   )
-  console_msg("finalize igraph", tier = 3L, config = config)
+  console_msg("finalize igraph", config = config)
   igraph::simplify(
     graph,
     remove.loops = TRUE,

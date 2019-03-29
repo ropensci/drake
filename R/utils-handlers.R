@@ -20,7 +20,6 @@ handle_build_exceptions <- function(target, meta, config) {
     console_msg(
       "fail",
       target,
-      tier = 1L,
       config = config,
       color = colors["fail"],
       newline = TRUE

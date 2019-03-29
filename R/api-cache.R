@@ -150,6 +150,8 @@ this_cache_ <- function(
   if (usual_path_missing) {
     return(NULL)
   }
+  config <- list(verbose = verbose, console_log_file = console_log_file)
+  console_msg("cache", path, config = config)
   cache <- drake_try_fetch_rds(path = path)
   cache_vers_warn(cache = cache)
   cache
@@ -226,6 +228,8 @@ new_cache <- function(
     )
   }
   deprecate_hash_algo_args(short_hash_algo, long_hash_algo)
+  config <- list(verbose = verbose, console_log_file = console_log_file)
+  console_msg("cache", path, config = config)
   cache <- storr::storr_rds(
     path = path,
     mangle_key = FALSE,
