@@ -105,6 +105,6 @@ test_with_dir("show_source()", {
 
 test_with_dir("spinner does not break things", {
   config <- dbug()
-  config$verbose = 2L
+  config$verbose <- 2L
   testrun(config)
 })
