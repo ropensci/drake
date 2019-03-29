@@ -601,8 +601,7 @@ drake_config <- function(
     sleep = sleep,
     hasty_build = hasty_build,
     lock_envir = lock_envir,
-    force = force,
-    spinner = new_spinner()
+    force = force
   )
   out <- enforce_compatible_config(out)
   config_checks(out)

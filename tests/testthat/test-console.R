@@ -104,7 +104,11 @@ test_with_dir("show_source()", {
 })
 
 test_with_dir("spinner does not break things", {
-  config <- dbug()
-  config$verbose <- 2L
-  testrun(config)
+  config <- drake_config(
+    drake_plan(a = 1, b = a),
+    verbose = 2L,
+    cache = storr::storr_environment(),
+    session_info = FALSE
+  )
+  expect_equal(config$verbose, 2L)
 })

@@ -16,7 +16,7 @@ create_drake_graph <- function(
   edges <- memo_expr(
     cdg_create_edges(config, layout),
     cache,
-    config,
+    plan,
     layout
   )
   memo_expr(

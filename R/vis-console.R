@@ -4,9 +4,7 @@ log_msg <- function(..., config, tier = 2L, color = colors["default"]) {
     return()
   }
   if (tier > 1L) {
-    if (!is.null(config$spinner)) {
-      config$spinner$spin()
-    }
+    .pkg_envir$spinner$spin()
     return()
   }
   msg <- c(...)
@@ -37,11 +35,6 @@ console_time <- function(target, meta, config) {
     tail <- " (install lubridate)" # nocov
   }
   log_msg("time ", target, tail = tail, config = config)
-}
-
-drake_message <- function(..., config) {
-  drake_log(..., config = config)
-  message(...)
 }
 
 drake_warning <- function(..., config) {
@@ -110,20 +103,4 @@ show_source <- function(target, config, character_only = FALSE) {
     message(
       prefix, target, " was built from command:\n  ", target, " = ", command)
   }
-}
-
-new_spinner <- function() {
-  on.exit(.pkg_envir$drake_spinner_msg <- FALSE)
-  if (identical(.pkg_envir$drake_spinner_msg, FALSE)){
-    return()
-  }
-  if (requireNamespace("cli", quietly = TRUE)) {
-    return(cli::make_spinner())
-  }
-  # nocov start
-  message(
-    "Install the ", shQuote("cli"), " package to show a console spinner",
-    " when ", shQuote("verbose"),  " is 2."
-  )
-  # nocov end
 }

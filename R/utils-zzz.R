@@ -21,4 +21,20 @@
   invisible()
 }
 
+new_spinner <- function() {
+  on.exit(.pkg_envir$drake_spinner_msg <- FALSE)
+  if (requireNamespace("cli", quietly = TRUE)) {
+    return(cli::make_spinner())
+  }
+}
+
 .pkg_envir <- new.env(parent = emptyenv())
+
+if (requireNamespace("cli", quietly = TRUE)) {
+  .pkg_envir$spinner <- cli::make_spinner()
+} else {
+  message(
+    "Install the ", shQuote("cli"), " package to show a console spinner",
+    "for make(verbose = 2)."
+  )
+}
