@@ -41,14 +41,6 @@ drake_palette_ <- function() {
   message(out)
 }
 
-color <- function(x, color) {
-  if (is.null(color) || !requireNamespace("crayon", quietly = TRUE)) {
-    x
-  } else {
-    crayon::make_style(color)(x)
-  }
-}
-
 color_of <- Vectorize(function(x) {
   available <- x %in% names(colors)
   if (!available) {
@@ -57,15 +49,6 @@ color_of <- Vectorize(function(x) {
   col2hex(colors[x])
 },
 "x", USE.NAMES = FALSE)
-
-color_grep <- function(text, pattern, color) {
-  colored_pattern <- color(x = pattern, color = color)
-  gsub(
-    pattern = paste0("^", pattern, " "),
-    replacement = paste0(colored_pattern, " "),
-    x = text
-  )
-}
 
 # copied from the gtools package
 col2hex <- function(cname) {
