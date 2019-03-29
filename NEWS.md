@@ -21,7 +21,7 @@
   - Print an informative error message when the user supplies a `drake` plan to the `config` argument of a function.
   - By default, use gray arrows and a black-and-white background with no gridlines.
 - For the `map()` and `cross()` transformations in the DSL, prevent the [accidental sorting of targets by name](https://github.com/ropensci/drake/issues/786). Needed `merge(sort = FALSE)` in `dsl_left_outer_join()`.
-
+- Simplify verbosity in the terminal and expand verbosity in the console log file.
 
 # Version 7.0.0
 

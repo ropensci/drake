@@ -1505,7 +1505,7 @@ in_progress <- function(
   .Deprecated(
     new = "running",
     package = "drake",
-    msg = "in_progress() in drake is deprecated. Use progress() instead."
+    msg = "in_progress() in drake is deprecated. Use running() instead."
   )
   running(path, search, cache, verbose )
 }

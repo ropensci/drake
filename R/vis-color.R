@@ -12,7 +12,7 @@ colors <- c(
   failed = "#aa0000",
   import_node = "dodgerblue3",
   missing_node = "darkorchid3",
-  in_progress = "#ff7221",
+  running = "#ff7221",
   other = "#888888"
 )
 
