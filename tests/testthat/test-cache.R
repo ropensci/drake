@@ -156,17 +156,17 @@ test_with_dir("bad/corrupt caches, no progress, no seed", {
   expect_null(drake_fetch_rds("sldkfjlke"))
   expect_warning(new_cache(type = "nope"))
   x <- drake_plan(a = 1)
-  make(x, verbose = FALSE, session_info = FALSE, log_progress = FALSE)
+  make(x, verbose = 0L, session_info = FALSE, log_progress = FALSE)
   expect_equal(get_cache()$list(namespace = "progress"), character(0))
   clean()
-  make(x, verbose = FALSE, session_info = FALSE, log_progress = TRUE)
+  make(x, verbose = 0L, session_info = FALSE, log_progress = TRUE)
   expect_equal(get_cache()$list(namespace = "progress"), "a")
   path <- file.path(default_cache_path(), "config", "hash_algorithm")
   expect_true(file.exists(path))
   unlink(path)
   expect_false(file.exists(path))
   expect_warning(expect_error(
-    make(x, verbose = FALSE, session_info = FALSE)))
+    make(x, verbose = 0L, session_info = FALSE)))
   expect_error(
     read_drake_seed(cache = storr::storr_environment()),
     regexp = "random seed not found"
@@ -498,7 +498,7 @@ test_with_dir("loadd() does not load imports", {
   loadd(envir = e, cache = cache)
   expect_equal(ls(e), "y")
   expect_message(
-    loadd(f, envir = e, cache = cache, verbose = TRUE),
+    loadd(f, envir = e, cache = cache, verbose = 1L),
     regexp = "No targets to load"
   )
 })

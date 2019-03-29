@@ -19,7 +19,7 @@ test_with_dir("lock_envir works", {
     parallelism = parallelism,
     caching = caching,
     lock_envir = TRUE,
-    verbose = TRUE,
+    verbose = 1L,
     session_info = FALSE
   )
   e$a <- 123
@@ -34,7 +34,7 @@ test_with_dir("lock_envir works", {
     parallelism = parallelism,
     caching = caching,
     lock_envir = FALSE,
-    verbose = FALSE,
+    verbose = 0L,
     session_info = FALSE
   )
   expect_true("x" %in% cached())
@@ -64,7 +64,7 @@ test_with_dir("skip everything", {
     session_info = FALSE,
     skip_targets = TRUE,
     skip_imports = TRUE,
-    verbose = 2
+    verbose = 1L
   )
   con <- drake_config(
     pl,
@@ -103,7 +103,7 @@ test_with_dir("can keep going", {
       plan,
       keep_going = TRUE,
       parallelism = parallelism,
-      verbose = FALSE,
+      verbose = 0L,
       jobs = jobs,
       envir = e,
       session_info = FALSE
@@ -146,16 +146,16 @@ test_with_dir("config and make without safety checks", {
   x <- drake_plan(
     file = readRDS(file_in("my_file.rds"))
   )
-  tmp <- drake_config(x, verbose = FALSE)
+  tmp <- drake_config(x, verbose = 0L)
   expect_silent(
-    tmp <- drake_config(x, skip_safety_checks = TRUE, verbose = FALSE))
+    tmp <- drake_config(x, skip_safety_checks = TRUE, verbose = 0L))
   expect_silent(config_checks(config = tmp))
 })
 
 test_with_dir("Strings stay strings, not symbols", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_silent(x <- drake_plan(a = "A"))
-  expect_silent(make(x, verbose = FALSE, session_info = FALSE))
+  expect_silent(make(x, verbose = 0L, session_info = FALSE))
 })
 
 test_with_dir("error handlers", {
@@ -182,7 +182,7 @@ test_with_dir("stringsAsFactors can be TRUE", {
     stringsAsFactors = TRUE)
   expect_true(is.factor(myplan$target))
   expect_true(is.factor(myplan$command))
-  make(myplan, verbose = FALSE, session_info = FALSE)
+  make(myplan, verbose = 0L, session_info = FALSE)
   expect_equal(readd(a), "helloworld")
 })
 
@@ -221,8 +221,8 @@ test_with_dir("true targets can be functions", {
     x + 1
   })
   plan <- drake_plan(myfunction = generator(), output = myfunction(1))
-  make(plan, verbose = FALSE, session_info = FALSE)
-  config <- drake_config(plan, verbose = FALSE, session_info = FALSE)
+  make(plan, verbose = 0L, session_info = FALSE)
+  config <- drake_config(plan, verbose = 0L, session_info = FALSE)
   expect_equal(readd(output), 2)
   expect_true(is.function(config$cache$get("myfunction")))
   myfunction <- readd(myfunction)

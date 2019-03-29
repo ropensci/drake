@@ -5,6 +5,7 @@ first_outdated <- function(config) {
   out <- character(0)
   old_leaves <- NULL
   while (TRUE) {
+    log_msg("find outdated targets", config = config)
     new_leaves <- setdiff(leaf_nodes(schedule), out)
     do_build <- lightly_parallelize(
       X = new_leaves,
@@ -89,6 +90,7 @@ outdated <-  function(
     process_imports(config = config)
   }
   from <- first_outdated(config = config)
+  log_msg("find downstream targets", config = config)
   to <- downstream_nodes(config$schedule, from)
   sort(unique(as.character(c(from, to))))
 }

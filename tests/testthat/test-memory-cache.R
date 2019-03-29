@@ -7,9 +7,9 @@ test_with_dir("storr_environment is usable", {
   expect_equal(x$driver$hash_algorithm, "murmur32")
   expect_error(drake_get_session_info(cache = x))
   pln <- drake_plan(y = 1)
-  make(pln, cache = x, verbose = FALSE, session_info = FALSE)
+  make(pln, cache = x, verbose = 0L, session_info = FALSE)
   config <- drake_config(
-    pln, cache = x, verbose = FALSE, session_info = FALSE)
+    pln, cache = x, verbose = 0L, session_info = FALSE)
   expect_equal(cached(cache = x), "y")
   expect_false(file.exists(default_cache_path()))
   expect_equal(outdated(config), character(0))
@@ -32,7 +32,7 @@ test_with_dir("arbitrary storr in-memory cache", {
     cache = cache,
     parallelism = parallelism,
     jobs = jobs,
-    verbose = FALSE
+    verbose = 0L
   )
   con <- drake_config(
     my_plan,
@@ -40,7 +40,7 @@ test_with_dir("arbitrary storr in-memory cache", {
     cache = cache,
     parallelism = parallelism,
     jobs = jobs,
-    verbose = FALSE
+    verbose = 0L
   )
   envir$reg2 <- function(d) {
     d$x3 <- d$x ^ 3
@@ -49,13 +49,13 @@ test_with_dir("arbitrary storr in-memory cache", {
   expect_false(file.exists(default_cache_path()))
   expect_equal(con$cache$driver$hash_algorithm, "murmur32")
 
-  expect_equal(cached(verbose = FALSE), character(0))
+  expect_equal(cached(verbose = 0L), character(0))
   targets <- con$plan$target
-  expect_true(all(targets %in% cached(cache = cache, verbose = FALSE)))
+  expect_true(all(targets %in% cached(cache = cache, verbose = 0L)))
   expect_false(file.exists(default_cache_path()))
 
-  expect_error(drake_get_session_info(verbose = FALSE))
-  expect_true(is.list(drake_get_session_info(cache = cache, verbose = FALSE)))
+  expect_error(drake_get_session_info(verbose = 0L))
+  expect_true(is.list(drake_get_session_info(cache = cache, verbose = 0L)))
   expect_false(file.exists(default_cache_path()))
 
   imp <- setdiff(cached(targets_only = FALSE), cached(targets_only = TRUE))
@@ -65,11 +65,11 @@ test_with_dir("arbitrary storr in-memory cache", {
   expect_true(length(imp) > 0)
   expect_false(file.exists(default_cache_path()))
 
-  expect_equal(length(cached(verbose = FALSE)), 0)
+  expect_equal(length(cached(verbose = 0L)), 0)
   expect_true(length(cached(cache = cache)) > 0)
   expect_false(file.exists(default_cache_path()))
 
-  expect_equal(nrow(build_times(verbose = FALSE)), 0)
+  expect_equal(nrow(build_times(verbose = 0L)), 0)
   expect_true(nrow(build_times(cache = cache)) > 0)
   expect_false(file.exists(default_cache_path()))
 
@@ -77,18 +77,18 @@ test_with_dir("arbitrary storr in-memory cache", {
   expect_equal(length(o1), 7)
   expect_false(file.exists(default_cache_path()))
 
-  p1 <- progress(verbose = FALSE)
+  p1 <- progress(verbose = 0L)
   unlink(default_cache_path(), recursive = TRUE)
-  p2 <- progress(cache = cache, verbose = FALSE)
+  p2 <- progress(cache = cache, verbose = 0L)
   expect_true(nrow(p2) > nrow(p1))
   expect_false(file.exists(default_cache_path()))
 
-  expect_error(readd(small, verbose = FALSE))
-  expect_true(is.data.frame(readd(small, cache = cache, verbose = FALSE)))
+  expect_error(readd(small, verbose = 0L))
+  expect_true(is.data.frame(readd(small, cache = cache, verbose = 0L)))
   expect_false(file.exists(default_cache_path()))
 
-  expect_error(loadd(large, verbose = FALSE))
-  expect_silent(loadd(large, cache = cache, verbose = FALSE))
+  expect_error(loadd(large, verbose = 0L))
+  expect_silent(loadd(large, cache = cache, verbose = 0L))
   expect_true(nrow(large) > 0)
   rm(large)
   expect_false(file.exists(default_cache_path()))

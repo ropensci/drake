@@ -150,15 +150,8 @@ this_cache_ <- function(
   if (usual_path_missing) {
     return(NULL)
   }
-  if (!is.null(path)) {
-    console_cache(
-      config = list(
-        cache_path = path,
-        verbose = verbose,
-        console_log_file = console_log_file
-      )
-    )
-  }
+  config <- list(verbose = verbose, console_log_file = console_log_file)
+  log_msg("cache", path, config = config)
   cache <- drake_try_fetch_rds(path = path)
   cache_vers_warn(cache = cache)
   cache
@@ -235,6 +228,8 @@ new_cache <- function(
     )
   }
   deprecate_hash_algo_args(short_hash_algo, long_hash_algo)
+  config <- list(verbose = verbose, console_log_file = console_log_file)
+  log_msg("cache", path, config = config)
   cache <- storr::storr_rds(
     path = path,
     mangle_key = FALSE,
@@ -243,13 +238,6 @@ new_cache <- function(
   writeLines(
     text = c("*", "!/.gitignore"),
     con = file.path(path, ".gitignore")
-  )
-  console_cache(
-    config = list(
-      cache_path = cache_path_(cache),
-      verbose = verbose,
-      console_log_file = console_log_file
-    )
   )
   cache
 }

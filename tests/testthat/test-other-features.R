@@ -113,7 +113,7 @@ test_with_dir("shapes", {
 test_with_dir("make() with skip_targets", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_silent(make(drake_plan(x = 1), skip_targets = TRUE,
-    verbose = FALSE, session_info = FALSE))
+    verbose = 0L, session_info = FALSE))
   expect_false("x" %in% cached())
 })
 
@@ -128,7 +128,7 @@ test_with_dir("warnings and messages are caught", {
     123
   }
   bad_plan <- drake_plan(x = f(), y = x)
-  expect_warning(make(bad_plan, verbose = TRUE, session_info = FALSE))
+  expect_warning(make(bad_plan, verbose = 1L, session_info = FALSE))
   x <- diagnose(x)
   expect_true(grepl("my first warn", x$warnings[1], fixed = TRUE))
   expect_true(grepl("my second warn", x$warnings[2], fixed = TRUE))
@@ -174,19 +174,19 @@ test_with_dir("config_checks() via make()", {
   y <- data.frame(x = 1, y = 2)
   suppressWarnings(
     expect_error(
-      make(y, envir = config$envir, session_info = FALSE, verbose = FALSE)))
+      make(y, envir = config$envir, session_info = FALSE, verbose = 0L)))
   y <- data.frame(target = character(0), command = character(0))
   suppressWarnings(
     expect_error(
       make(y, envir = config$envir,
-           session_info = FALSE, verbose = FALSE)))
+           session_info = FALSE, verbose = 0L)))
   suppressWarnings(expect_error(
     make(
       config$plan,
       targets = character(0),
       envir = config$envir,
       session_info = FALSE,
-      verbose = FALSE
+      verbose = 0L
     )
   ))
 })
@@ -243,8 +243,8 @@ test_with_dir("make(..., skip_imports = TRUE) works", {
 
   # If the imports are already cached, the targets built with
   # skip_imports = TRUE should be up to date.
-  make(con$plan, verbose = FALSE, envir = con$envir, session_info = FALSE)
-  clean(list = con$plan$target, verbose = FALSE)
+  make(con$plan, verbose = 0L, envir = con$envir, session_info = FALSE)
+  clean(list = con$plan$target, verbose = 0L)
   suppressMessages({
     make(
       con$plan, parallelism = con$parallelism,
@@ -321,7 +321,7 @@ test_with_dir("packages are loaded and prework is run", {
       plan = config$plan,
       targets = config$targets,
       envir = config$envir,
-      verbose = FALSE,
+      verbose = 0L,
       parallelism = scenario$parallelism,
       jobs = scenario$jobs,
       prework = config$prework,
@@ -380,7 +380,7 @@ test_with_dir("parallelism can be a scheduler function", {
   loop_ <- function(config) {
     targets <- igraph::topo_sort(config$schedule)$name
     for (target in targets) {
-      console_target(target = target, config = config)
+      log_msg(target, config = config, newline = TRUE)
       config$eval[[target]] <- build_(
         target = target,
         config = config

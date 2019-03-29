@@ -33,15 +33,11 @@ build progress if this cache was used for previous calls to
 \item{overwrite_hash_algos}{Logical, whether to try to overwrite
 the hash algorithms in the cache with any user-specified ones.}
 
-\item{verbose}{Logical or numeric, control printing to the console.
+\item{verbose}{Integer, control printing to the console/terminal.
 \itemize{
-\item \code{0} or \code{FALSE}: print nothing.
-\item \code{1} or \code{TRUE}: print only targets to build.
-\item \code{2}: plus checks and cache info.
-\item \code{3}: plus missing imports.
-\item \code{4}: plus all imports.
-\item \code{5}: plus execution and total build times for targets.
-\item \code{6}: plus notifications when targets are being stored.
+\item \code{0}: print nothing.
+\item \code{1}: print targets, retries, and failures.
+\item \code{2}: also show a spinner when preprocessing tasks are underway.
 }}
 
 \item{jobs}{Number of jobs for parallel processing}

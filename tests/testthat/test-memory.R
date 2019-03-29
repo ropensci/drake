@@ -61,7 +61,7 @@ test_with_dir("manage_memory in full build", {
     plan,
     targets = plan$target,
     envir = new.env(parent = globalenv()),
-    verbose = FALSE,
+    verbose = 0L,
     memory_strategy = "lookahead"
   )
 

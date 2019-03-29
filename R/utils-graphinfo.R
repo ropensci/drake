@@ -42,7 +42,7 @@ categorize_nodes <- function(config) {
     nodes[targets, "status"] <- "up to date"
     nodes[missing, "status"] <- "missing"
     nodes[outdated, "status"] <- "outdated"
-    nodes[in_progress, "status"] <- "running"
+    nodes[running, "status"] <- "running"
     nodes[failed, "status"] <- "failed"
     nodes$type <- "object"
     nodes[is_encoded_path(nodes$id), "type"] <- "file"
@@ -168,7 +168,7 @@ function_hover_text <- Vectorize(function(function_name, envir) {
 get_raw_node_category_data <- function(config) {
   all_labels <- V(config$graph)$name
   config$outdated <- resolve_graph_outdated(config = config)
-  config$in_progress <- running(cache = config$cache)
+  config$running <- running(cache = config$cache)
   config$failed <- failed(cache = config$cache)
   config$files <- parallel_filter(
     x = all_labels, f = is_encoded_path, jobs = config$jobs)
@@ -242,7 +242,7 @@ legend_nodes <- function(font_size = 20) {
     color = color_of(c(
       "up_to_date",
       "outdated",
-      "in_progress",
+      "running",
       "failed",
       "import_node",
       "missing_node",
@@ -331,7 +331,7 @@ style_nodes <- function(config) {
   with(config, {
     nodes$font.size <- font_size # nolint
     nodes[nodes$status == "imported", "color"] <- color_of("import_node")
-    nodes[nodes$status == "running", "color"] <- color_of("in_progress")
+    nodes[nodes$status == "running", "color"] <- color_of("running")
     nodes[nodes$status == "failed", "color"] <- color_of("failed")
     nodes[nodes$status == "missing", "color"] <- color_of("missing_node")
     nodes[nodes$status == "outdated", "color"] <- color_of("outdated")
@@ -355,7 +355,7 @@ target_hover_text <- function(targets, plan) {
 
 trim_node_categories <- function(config) {
   elts <- c(
-    "failed", "files", "functions", "in_progress", "missing",
+    "failed", "files", "functions", "running", "missing",
     "outdated", "targets"
   )
   for (elt in elts) {

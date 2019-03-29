@@ -32,7 +32,7 @@ test_with_dir("retries", {
 
   make(
     pl, parallelism = parallelism, jobs = jobs,
-    envir = e, retries = 10, verbose = FALSE,
+    envir = e, retries = 10, verbose = 0L,
     session_info = FALSE
   )
   debrief_retries()
@@ -44,7 +44,7 @@ test_with_dir("retries", {
   pl$retries <- 10
   make(
     pl, parallelism = parallelism, jobs = jobs,
-    envir = e, retries = 0, verbose = FALSE,
+    envir = e, retries = 0, verbose = 0L,
     session_info = FALSE
   )
   debrief_retries()
@@ -56,7 +56,7 @@ test_with_dir("retries", {
   pl$retries <- NA
   make(
     pl, parallelism = parallelism, jobs = jobs,
-    envir = e, retries = 10, verbose = FALSE,
+    envir = e, retries = 10, verbose = 0L,
     session_info = FALSE
   )
   debrief_retries()
@@ -75,7 +75,7 @@ test_with_dir("timeouts", {
     make(
       pl,
       envir = e,
-      verbose = FALSE,
+      verbose = 0L,
       session_info = FALSE
     )
   )
@@ -88,7 +88,7 @@ test_with_dir("timeouts", {
       make(
         pl,
         envir = e,
-        verbose = FALSE,
+        verbose = 0L,
         elapsed = 1e-3,
         retries = 2,
         session_info = FALSE
@@ -107,7 +107,7 @@ test_with_dir("timeouts", {
     args <- list(
       plan = pl2,
       envir = e,
-      verbose = FALSE,
+      verbose = 0L,
       retries = 2
     )
     args[[field]] <- Inf

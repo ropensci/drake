@@ -174,7 +174,7 @@ test_with_dir(
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- weak_tibble(target = c("a\n", "  b", "c ", "\t  d   "),
                   command = 1)
-  expect_silent(make(x, verbose = FALSE, session_info = FALSE))
+  expect_silent(make(x, verbose = 0L, session_info = FALSE))
   expect_equal(sort(cached()), letters[1:4])
   prog <- progress()
   expect_equal(sort(prog$target), letters[1:4])
@@ -182,13 +182,13 @@ test_with_dir(
   expect_warning({
     make(
       x,
-      verbose = FALSE,
+      verbose = 0L,
       targets = c("a", "nobody_home"),
       session_info = FALSE
     )
     con <- drake_config(
       x,
-      verbose = FALSE,
+      verbose = 0L,
       targets = c("a", "nobody_home"),
       session_info = FALSE
     )
@@ -226,7 +226,7 @@ test_with_dir("can use semicolons for multi-line commands", {
       b
     }
   )
-  make(plan, verbose = FALSE, session_info = FALSE)
+  make(plan, verbose = 0L, session_info = FALSE)
   expect_false(any(c("a", "b") %in% ls()))
   expect_true(all(c("x", "y") %in% cached(search = FALSE)))
   expect_equal(cached(search = FALSE), c("x", "y"))

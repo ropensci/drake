@@ -70,7 +70,7 @@ cmq_send_target <- function(target, config) {
   # Target should not even be in the priority queue
   # nocov start
   if (!should_build_target(target, meta, config)) {
-    console_skip(target = target, config = config)
+    log_msg("skip", target, config = config)
     cmq_conclude_target(target = target, config = config)
     config$workers$send_wait()
     return()

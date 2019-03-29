@@ -98,12 +98,15 @@ test_with_dir("supply the source explicitly", {
     ),
     "my_script.R"
   )
+  expect_false(file.exists("log.txt"))
   old <- getOption("drake_source")
   options(drake_source = "overridden.R")
   on.exit(options(drake_source = old))
   expect_false(file.exists(default_drake_source))
   expect_false(file.exists("overridden.R"))
   expect_true(length(r_outdated(source = "my_script.R")) > 1)
+  expect_true(file.exists("log.txt"))
+  unlink("log.txt")
   expect_false(file.exists("log.txt"))
   r_make(source = "my_script.R", r_args = list(show = FALSE))
   expect_true(file.exists("log.txt"))
@@ -146,7 +149,7 @@ test_with_dir("configuring a background callr process", {
     c(
       "library(drake)",
       "load_mtcars_example()",
-      "drake_config(my_plan, verbose = 6)"
+      "drake_config(my_plan, verbose = 1L)"
     ),
     default_drake_source
   )

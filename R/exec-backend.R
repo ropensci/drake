@@ -17,7 +17,11 @@ run_native_backend <- function(config) {
       envir = getNamespace("drake")
     )(config)
   } else {
-    console_up_to_date(config = config)
+    log_msg(
+      "All targets are already up to date.",
+      config = config,
+      tier = 1L
+    )
   }
 }
 
@@ -35,7 +39,7 @@ run_external_backend <- function(config) {
 }
 
 pretrim_schedule <- function(config) {
-  console_preprocess(text = "trim schedule", config = config)
   outdated <- outdated(config, do_prework = FALSE, make_imports = FALSE)
+  log_msg("trim schedule", config = config)
   igraph::induced_subgraph(graph = config$schedule, vids = outdated)
 }

@@ -16,7 +16,7 @@ create_drake_graph <- function(
   edges <- memo_expr(
     cdg_create_edges(config, layout),
     cache,
-    config,
+    plan,
     layout
   )
   memo_expr(
@@ -28,21 +28,22 @@ create_drake_graph <- function(
 }
 
 cdg_create_edges <- function(config, layout) {
-  console_preprocess(text = "construct graph edges", config = config)
   edges <- lightly_parallelize(
     X = layout,
     FUN = cdg_node_to_edges,
-    jobs = config$jobs
+    jobs = config$jobs,
+    config = config
   )
   edges <- data.frame(
     from = unlist(lapply(edges, `[[`, "from")),
     to = unlist(lapply(edges, `[[`, "to")),
     stringsAsFactors = FALSE
   )
-  cdg_edges_thru_file_out(edges)
+  cdg_edges_thru_file_out(edges, config)
 }
 
-cdg_node_to_edges <- function(node) {
+cdg_node_to_edges <- function(node, config) {
+  log_msg("connect", node$target, config = config)
   file_out <- node$deps_build$file_out
   node$deps_build$file_out <- NULL
   inputs <- clean_nested_char_list(
@@ -68,35 +69,45 @@ cdg_node_to_edges <- function(node) {
   out
 }
 
-cdg_edges_thru_file_out <- function(edges) {
+cdg_edges_thru_file_out <- function(edges, config) {
+  log_msg("connect output files", config = config)
   file_out <- edges$to[is_encoded_path(edges$to)]
   file_out_edges <- lapply(
     X = file_out,
     FUN = cdg_transitive_edges,
-    edges = edges
+    edges = edges,
+    config = config
   )
   file_out_edges <- do.call(what = rbind, args = file_out_edges)
   edges <- rbind(edges, file_out_edges)
   edges[!duplicated(edges), ]
 }
 
-cdg_transitive_edges <- function(vertex, edges) {
+cdg_transitive_edges <- function(vertex, edges, config) {
+  log_msg(
+    "file_out",
+    display_key(vertex, config),
+    config = config
+  )
   from <- unique(edges$from[edges$to == vertex])
   to <- unique(edges$to[edges$from == vertex])
   expand.grid(from = from, to = to, stringsAsFactors = FALSE)
 }
 
 cdg_finalize_graph <- function(edges, targets, config) {
-  console_preprocess(text = "construct graph", config = config)
+  log_msg("finalize graph edges", config = config)
   file_out <- edges$to[edges$from %in% targets & is_encoded_path(edges$to)]
   to <- union(targets, file_out)
+  log_msg("create igraph", config = config)
   graph <- igraph::graph_from_data_frame(edges)
+  log_msg("trim neighborhoods", config = config)
   graph <- nbhd_graph(
     graph = graph,
     vertices = to,
     mode = "in",
     order = igraph::gorder(graph)
   )
+  log_msg("add igraph attributes", config = config)
   graph <- igraph::set_vertex_attr(graph, "imported", value = TRUE)
   index <- c(config$plan$target, file_out)
   index <- intersect(index, igraph::V(graph)$name)
@@ -106,6 +117,7 @@ cdg_finalize_graph <- function(edges, targets, config) {
     index = index,
     value = FALSE
   )
+  log_msg("finalize igraph", config = config)
   igraph::simplify(
     graph,
     remove.loops = TRUE,

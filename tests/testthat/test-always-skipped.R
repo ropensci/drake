@@ -27,7 +27,7 @@ test_with_dir("can keep going in parallel", {
     b = a + 1
   )
   make(
-    plan, jobs = 2, session_info = FALSE, keep_going = TRUE, verbose = FALSE)
+    plan, jobs = 2, session_info = FALSE, keep_going = TRUE, verbose = 0L)
   expect_error(readd(a))
   expect_equal(readd(b), numeric(0))
 })
@@ -40,7 +40,7 @@ test_with_dir("drake_debug()", {
   expect_error(make(my_plan), regexp = "1234")
   out <- drake_debug(large, config = config)
   out <- drake_debug(
-    "large", config = config, verbose = "false", character_only = TRUE)
+    "large", config = config, verbose = 0L, character_only = TRUE)
   expect_true(is.data.frame(out))
   my_plan$command <- lapply(
     X = as.list(my_plan$command),

@@ -21,15 +21,11 @@ Ignored if a \code{cache} is supplied.}
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} and \code{search} are ignored.}
 
-\item{verbose}{Logical or numeric, control printing to the console.
+\item{verbose}{Integer, control printing to the console/terminal.
 \itemize{
-\item \code{0} or \code{FALSE}: print nothing.
-\item \code{1} or \code{TRUE}: print only targets to build.
-\item \code{2}: plus checks and cache info.
-\item \code{3}: plus missing imports.
-\item \code{4}: plus all imports.
-\item \code{5}: plus execution and total build times for targets.
-\item \code{6}: plus notifications when targets are being stored.
+\item \code{0}: print nothing.
+\item \code{1}: print targets, retries, and failures.
+\item \code{2}: also show a spinner when preprocessing tasks are underway.
 }}
 }
 \description{

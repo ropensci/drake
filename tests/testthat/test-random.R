@@ -37,7 +37,7 @@ test_with_dir("Random targets are reproducible", {
     envir = env,
     parallelism = parallelism,
     jobs = jobs,
-    verbose = FALSE,
+    verbose = 0L,
     session_info = FALSE
   )
   con <- drake_config(
@@ -45,7 +45,7 @@ test_with_dir("Random targets are reproducible", {
     envir = env,
     parallelism = parallelism,
     jobs = jobs,
-    verbose = FALSE,
+    verbose = 0L,
     session_info = FALSE
   )
   # clustermq modifies the global random seed
@@ -66,7 +66,7 @@ test_with_dir("Random targets are reproducible", {
     envir = env,
     parallelism = parallelism,
     jobs = jobs,
-    verbose = FALSE,
+    verbose = 0L,
     session_info = FALSE
   )
   con2 <- drake_config(
@@ -74,7 +74,7 @@ test_with_dir("Random targets are reproducible", {
     envir = env,
     parallelism = parallelism,
     jobs = jobs,
-    verbose = FALSE,
+    verbose = 0L,
     session_info = FALSE
   )
 
@@ -95,7 +95,7 @@ test_with_dir("Random targets are reproducible", {
     envir = env,
     parallelism = parallelism,
     jobs = jobs,
-    verbose = FALSE,
+    verbose = 0L,
     session_info = FALSE
   )
   con3 <- drake_config(
@@ -103,7 +103,7 @@ test_with_dir("Random targets are reproducible", {
     envir = env,
     parallelism = parallelism,
     jobs = jobs,
-    verbose = FALSE,
+    verbose = 0L,
     session_info = FALSE
   )
   expect_equal(justbuilt(con3), "y")
@@ -121,7 +121,7 @@ test_with_dir("Random targets are reproducible", {
     seed = con2$seed,
     parallelism = parallelism,
     jobs = jobs,
-    verbose = FALSE,
+    verbose = 0L,
     session_info = FALSE
   )
   con4 <- drake_config(
@@ -130,7 +130,7 @@ test_with_dir("Random targets are reproducible", {
     seed = con2$seed,
     parallelism = parallelism,
     jobs = jobs,
-    verbose = FALSE,
+    verbose = 0L,
     session_info = FALSE
   )
   expect_equal(justbuilt(con4), "y")
@@ -148,7 +148,7 @@ test_with_dir("Random targets are reproducible", {
     seed = con2$seed + 1,
     parallelism = parallelism,
     jobs = jobs,
-    verbose = FALSE,
+    verbose = 0L,
     session_info = FALSE
   )
   con5 <- drake_config(
@@ -157,7 +157,7 @@ test_with_dir("Random targets are reproducible", {
     seed = con2$seed + 1,
     parallelism = parallelism,
     jobs = jobs,
-    verbose = FALSE,
+    verbose = 0L,
     session_info = FALSE
   )
   expect_equal(sort(justbuilt(con5)), sort(con5$plan$target))
@@ -177,7 +177,7 @@ test_with_dir("Random targets are reproducible", {
       seed = con5$seed + 1,
       parallelism = parallelism,
       jobs = jobs,
-      verbose = FALSE,
+      verbose = 0L,
       session_info = FALSE
     ),
     regexp = "already has a different seed"

@@ -18,7 +18,7 @@ test_with_dir("future package functionality", {
       parallelism = backends[i],
       caching = caching[i],
       jobs = 1,
-      verbose = FALSE,
+      verbose = 0L,
       session_info = FALSE,
       lock_envir = TRUE
     )
@@ -28,7 +28,7 @@ test_with_dir("future package functionality", {
       parallelism = backends[i],
       caching = caching[i],
       jobs = 1,
-      verbose = FALSE,
+      verbose = 0L,
       session_info = FALSE,
       lock_envir = TRUE
     )
@@ -45,7 +45,7 @@ test_with_dir("future package functionality", {
       parallelism = backends[i],
       caching = caching[i],
       jobs = 1,
-      verbose = FALSE,
+      verbose = 0L,
       session_info = FALSE,
       lock_envir = TRUE
     )
@@ -60,7 +60,7 @@ test_with_dir("future package functionality", {
       parallelism = backends[i],
       caching = caching[i],
       jobs = 1,
-      verbose = FALSE,
+      verbose = 0L,
       session_info = FALSE,
       lock_envir = TRUE
     )
@@ -70,7 +70,7 @@ test_with_dir("future package functionality", {
       parallelism = backends[i],
       caching = caching[i],
       jobs = 1,
-      verbose = FALSE,
+      verbose = 0L,
       session_info = FALSE,
       lock_envir = TRUE
     )
@@ -91,7 +91,7 @@ test_with_dir("future package functionality", {
       parallelism = backends[i],
       caching = caching[i],
       jobs = 2,
-      verbose = FALSE,
+      verbose = 0L,
       session_info = FALSE,
       ensure_workers = FALSE
     )

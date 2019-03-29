@@ -1,5 +1,5 @@
 new_priority_queue <- function(config, jobs = config$jobs_preprocess) {
-  console_preprocess(text = "construct priority queue", config = config)
+  log_msg(text = "construct priority queue", config = config)
   targets <- igraph::V(config$schedule)$name
   if (!length(targets)) {
     return(

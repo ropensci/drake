@@ -12,15 +12,11 @@ new_cache(path = NULL, verbose = 1L, type = NULL,
 \item{path}{File path to the cache if the cache
 is a file system cache.}
 
-\item{verbose}{Logical or numeric, control printing to the console.
+\item{verbose}{Integer, control printing to the console/terminal.
 \itemize{
-\item \code{0} or \code{FALSE}: print nothing.
-\item \code{1} or \code{TRUE}: print only targets to build.
-\item \code{2}: plus checks and cache info.
-\item \code{3}: plus missing imports.
-\item \code{4}: plus all imports.
-\item \code{5}: plus execution and total build times for targets.
-\item \code{6}: plus notifications when targets are being stored.
+\item \code{0}: print nothing.
+\item \code{1}: print targets, retries, and failures.
+\item \code{2}: also show a spinner when preprocessing tasks are underway.
 }}
 
 \item{type}{Deprecated argument. Once stood for cache type.
@@ -35,19 +31,9 @@ See the \code{algo} argument of the \code{digest} package for your options.}
 
 \item{...}{other arguments to the cache constructor.}
 
-\item{console_log_file}{Character scalar,
-connection object (such as \code{stdout()}) or \code{NULL}.
-If \code{NULL}, console output will be printed
-to the R console using \code{message()}.
-If a character scalar, \code{console_log_file}
-should be the name of a flat file, and
-console output will be appended to that file.
-If a connection object (e.g. \code{stdout()})
-warnings and messages will be sent to the connection.
-For example, if \code{console_log_file} is \code{stdout()},
-warnings and messages are printed to the console in real time
-(in addition to the usual in-bulk printing
-after each target finishes).}
+\item{console_log_file}{Optional character scalar of a file name or
+connection object (such as \code{stdout()}) to dump maximally verbose
+log information for \code{\link[=make]{make()}}. Independent of the \code{verbose} argument.}
 }
 \value{
 A newly created drake cache as a storr object.

@@ -307,14 +307,14 @@ test_with_dir("triggers can be NA in the plan", {
       drake_plan(x = target(1, trigger = NA)),
       session_info = FALSE,
       cache = cache,
-      verbose = FALSE
+      verbose = 0L
     )
   )
   config <- drake_config(
     drake_plan(x = target(1, trigger = NA)),
     session_info = FALSE,
     cache = cache,
-    verbose = FALSE
+    verbose = 0L
   )
   expect_equal(justbuilt(config), "x")
 })
@@ -340,7 +340,7 @@ test_with_dir("deps load into memory for complex triggers", {
   for (i in 1:3) {
     make(
       plan, envir = e, jobs = jobs, parallelism = parallelism,
-      verbose = FALSE, caching = caching, session_info = FALSE
+      verbose = 0L, caching = caching, session_info = FALSE
     )
     expect_true(all(plan$target %in% cached()))
   }
@@ -409,11 +409,11 @@ test_with_dir("trigger components react appropriately", {
   plan$command <- commands
   make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 6, caching = caching, session_info = FALSE
+    verbose = 1L, caching = caching, session_info = FALSE
   )
   config <- drake_config(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 6, caching = caching, session_info = FALSE,
+    verbose = 1L, caching = caching, session_info = FALSE,
     log_progress = TRUE
   )
   expect_equal(sort(justbuilt(config)), sort(config$plan$target))
@@ -422,11 +422,11 @@ test_with_dir("trigger components react appropriately", {
   simple_plan$trigger <- NULL
   make(
     simple_plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = FALSE, caching = caching, session_info = FALSE
+    verbose = 0L, caching = caching, session_info = FALSE
   )
   simple_config <- drake_config(
     simple_plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = FALSE, caching = caching, session_info = FALSE,
+    verbose = 0L, caching = caching, session_info = FALSE,
     log_progress = TRUE
   )
 
@@ -492,13 +492,13 @@ test_with_dir("trigger components react appropriately", {
   plan <- plan[1:5, ]
   config <- drake_config(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = FALSE, caching = caching, log_progress = TRUE,
+    verbose = 0L, caching = caching, log_progress = TRUE,
     session_info = FALSE
   )
   simple_plan <- simple_plan[1:5, ]
   simple_config <- drake_config(
     simple_plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = FALSE, caching = caching, log_progress = TRUE,
+    verbose = 0L, caching = caching, log_progress = TRUE,
     session_info = FALSE
   )
   make(config = simple_config)
@@ -568,33 +568,33 @@ test_with_dir("trigger whitelist mode", {
   plan <- drake_plan(y = f(1))
   make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE
+    verbose = 1L, caching = caching, session_info = FALSE
   )
   config <- drake_config(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE
+    verbose = 1L, caching = caching, session_info = FALSE
   )
   expect_equal(justbuilt(config), "y")
   expect_equal(outdated(config), character(0))
   make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE,
+    verbose = 1L, caching = caching, session_info = FALSE,
     trigger = trigger(condition = FALSE, mode = "whitelist")
   )
   config <- drake_config(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE,
+    verbose = 1L, caching = caching, session_info = FALSE,
     trigger = trigger(condition = FALSE, mode = "whitelist")
   )
   expect_equal(justbuilt(config), character(0))
   make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE,
+    verbose = 1L, caching = caching, session_info = FALSE,
     trigger = trigger(condition = TRUE, mode = "whitelist")
   )
   config <- drake_config(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE,
+    verbose = 1L, caching = caching, session_info = FALSE,
     trigger = trigger(condition = TRUE, mode = "whitelist")
   )
   expect_equal(justbuilt(config), "y")
@@ -606,12 +606,12 @@ test_with_dir("trigger whitelist mode", {
   )
   make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE,
+    verbose = 1L, caching = caching, session_info = FALSE,
     trigger = trigger(condition = FALSE, mode = "whitelist")
   )
   config <- drake_config(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE,
+    verbose = 1L, caching = caching, session_info = FALSE,
     trigger = trigger(condition = FALSE, mode = "whitelist")
   )
   expect_equal(justbuilt(config), "y")
@@ -623,12 +623,12 @@ test_with_dir("trigger whitelist mode", {
   )
   make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE,
+    verbose = 1L, caching = caching, session_info = FALSE,
     trigger = trigger(condition = TRUE, mode = "whitelist")
   )
   config <- drake_config(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE,
+    verbose = 1L, caching = caching, session_info = FALSE,
     trigger = trigger(condition = TRUE, mode = "whitelist")
   )
   expect_equal(justbuilt(config), "y")
@@ -650,33 +650,33 @@ test_with_dir("trigger blacklist mode", {
   plan <- drake_plan(y = f(1))
   make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE
+    verbose = 1L, caching = caching, session_info = FALSE
   )
   config <- drake_config(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE
+    verbose = 1L, caching = caching, session_info = FALSE
   )
   expect_equal(justbuilt(config), "y")
   expect_equal(outdated(config), character(0))
   make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE,
+    verbose = 1L, caching = caching, session_info = FALSE,
     trigger = trigger(condition = FALSE, mode = "blacklist")
   )
   config <- drake_config(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE,
+    verbose = 1L, caching = caching, session_info = FALSE,
     trigger = trigger(condition = FALSE, mode = "blacklist")
   )
   expect_equal(justbuilt(config), character(0))
   make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE,
+    verbose = 1L, caching = caching, session_info = FALSE,
     trigger = trigger(condition = TRUE, mode = "blacklist")
   )
   config <- drake_config(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE,
+    verbose = 1L, caching = caching, session_info = FALSE,
     trigger = trigger(condition = TRUE, mode = "blacklist")
   )
   expect_equal(justbuilt(config), character(0))
@@ -688,12 +688,12 @@ test_with_dir("trigger blacklist mode", {
   )
   make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE,
+    verbose = 1L, caching = caching, session_info = FALSE,
     trigger = trigger(condition = FALSE, mode = "blacklist")
   )
   config <- drake_config(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE,
+    verbose = 1L, caching = caching, session_info = FALSE,
     trigger = trigger(condition = FALSE, mode = "blacklist")
   )
   expect_equal(justbuilt(config), character(0))
@@ -705,12 +705,12 @@ test_with_dir("trigger blacklist mode", {
   )
   make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE,
+    verbose = 1L, caching = caching, session_info = FALSE,
     trigger = trigger(condition = TRUE, mode = "blacklist")
   )
   config <- drake_config(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE,
+    verbose = 1L, caching = caching, session_info = FALSE,
     trigger = trigger(condition = TRUE, mode = "blacklist")
   )
   expect_equal(justbuilt(config), "y")
@@ -732,33 +732,33 @@ test_with_dir("trigger condition mode", {
   plan <- drake_plan(y = f(1))
   make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE
+    verbose = 1L, caching = caching, session_info = FALSE
   )
   config <- drake_config(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE
+    verbose = 1L, caching = caching, session_info = FALSE
   )
   expect_equal(justbuilt(config), "y")
   expect_equal(outdated(config), character(0))
   make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE,
+    verbose = 1L, caching = caching, session_info = FALSE,
     trigger = trigger(condition = FALSE, mode = "condition")
   )
   config <- drake_config(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE,
+    verbose = 1L, caching = caching, session_info = FALSE,
     trigger = trigger(condition = FALSE, mode = "condition")
   )
   expect_equal(justbuilt(config), character(0))
   make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE,
+    verbose = 1L, caching = caching, session_info = FALSE,
     trigger = trigger(condition = TRUE, mode = "condition")
   )
   config <- drake_config(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE,
+    verbose = 1L, caching = caching, session_info = FALSE,
     trigger = trigger(condition = TRUE, mode = "condition")
   )
   expect_equal(justbuilt(config), "y")
@@ -770,12 +770,12 @@ test_with_dir("trigger condition mode", {
   )
   make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE,
+    verbose = 1L, caching = caching, session_info = FALSE,
     trigger = trigger(condition = FALSE, mode = "condition")
   )
   config <- drake_config(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE,
+    verbose = 1L, caching = caching, session_info = FALSE,
     trigger = trigger(condition = FALSE, mode = "condition")
   )
   expect_equal(justbuilt(config), character(0))
@@ -787,12 +787,12 @@ test_with_dir("trigger condition mode", {
   )
   make(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE,
+    verbose = 1L, caching = caching, session_info = FALSE,
     trigger = trigger(condition = TRUE, mode = "condition")
   )
   config <- drake_config(
     plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 4, caching = caching, session_info = FALSE,
+    verbose = 1L, caching = caching, session_info = FALSE,
     trigger = trigger(condition = TRUE, mode = "condition")
   )
   expect_equal(justbuilt(config), "y")

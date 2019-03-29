@@ -59,7 +59,7 @@ test_with_dir("map_plan() with symbols", {
   args$data <- rlang::syms(rep("mtcars", nrow(args)))
   plan <- map_plan(args, my_model_fit)
   cache <- storr::storr_environment()
-  make(plan, verbose = FALSE, cache = cache)
+  make(plan, verbose = 0L, cache = cache)
   x <- readd(plan$target[1], character_only = TRUE, cache = cache)
   expect_true(is.numeric(stats::coefficients(x)))
 })

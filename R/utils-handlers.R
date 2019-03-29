@@ -17,10 +17,13 @@ handle_build_exceptions <- function(target, meta, config) {
     )
   }
   if (inherits(meta$error, "error")) {
-    if (config$verbose) {
-      text <- paste("fail", target)
-      finish_console(text = text, pattern = "fail", config = config)
-    }
+    log_msg(
+      "fail",
+      target,
+      config = config,
+      color = colors["fail"],
+      tier = 1L
+    )
     store_failure(target = target, meta = meta, config = config)
     if (!config$keep_going) {
       drake_error(

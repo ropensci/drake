@@ -18,7 +18,7 @@ loop_build <- function(target, config, downstream) {
   config$lock_envir <- FALSE # Already locked it in backend_loop().
   meta <- drake_meta_(target = target, config = config)
   if (!should_build_target(target, meta, config)) {
-    console_skip(target = target, config = config)
+    log_msg("skip", target, config = config)
     return()
   }
   announce_build(target, meta, config)
