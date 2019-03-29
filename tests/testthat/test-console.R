@@ -103,7 +103,7 @@ test_with_dir("show_source()", {
   expect_true(is.numeric(y))
 })
 
-test_with_dir("spinner does not break things", {
+test_with_dir("spinner (or lack thereof) does not break things", {
   config <- drake_config(
     drake_plan(a = 1, b = a),
     verbose = 2L,

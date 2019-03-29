@@ -4,7 +4,9 @@ log_msg <- function(..., config, tier = 2L, color = colors["default"]) {
     return()
   }
   if (tier > 1L) {
-    .pkg_envir$spinner$spin()
+    if (!is.null(.pkg_envir$spinner)) {
+      .pkg_envir$spinner$spin()
+    }
     return()
   }
   msg <- c(...)

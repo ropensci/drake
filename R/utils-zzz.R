@@ -33,8 +33,10 @@ new_spinner <- function() {
 if (requireNamespace("cli", quietly = TRUE)) {
   .pkg_envir$spinner <- cli::make_spinner()
 } else {
+  # nocov start
   message(
     "Install the ", shQuote("cli"), " package to show a console spinner",
     "for make(verbose = 2)."
   )
+  # nocov end
 }
