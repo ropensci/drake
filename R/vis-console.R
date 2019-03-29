@@ -4,7 +4,9 @@ log_msg <- function(..., config, tier = 2L, color = colors["default"]) {
     return()
   }
   if (tier > 1L) {
-    message("spinner...")
+    if (!is.null(config$spinner)) {
+      config$spinner$spin()
+    }
     return()
   }
   msg <- c(...)
@@ -107,5 +109,22 @@ show_source <- function(target, config, character_only = FALSE) {
     command <- gsub(" \n\\}$", "", command)
     message(
       prefix, target, " was built from command:\n  ", target, " = ", command)
+  }
+}
+
+new_spinner <- function(force = FALSE) {
+  on.exit(.pkg_envir$drake_spinner_msg <- FALSE)
+  if (identical(.pkg_envir$drake_spinner_msg, FALSE)){
+    return()
+  }
+  if (requireNamespace("cli")) {
+    return(cli::make_spinner())
+  }
+  if (!force) {
+    message(
+      "Install the ", shQuote("cli"), " package to show a console spinner",
+      " when ", shQuote("verbose"),  " is 2."
+    )
+    return()
   }
 }
