@@ -169,7 +169,7 @@ drake_log_warning <- function(..., config) {
 }
 
 drake_log_error <- function(..., config) {
-  drake_log("Error: ", ..., config = config)
+  drake_log("Error:", ..., config = config)
 }
 
 drake_message <- function(..., config) {
