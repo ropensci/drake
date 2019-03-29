@@ -42,7 +42,7 @@ cdl_prepare_imports <- function(config) {
   console_msg(
     analyze_msg,
     "environment",
-    tier = 2L,
+    tier = 3L,
     config = config
   )
   imports <- as.list(config$envir)
@@ -90,7 +90,7 @@ cdl_analyze_imports <- function(config, imports) {
       console_msg(
         analyze_msg,
         names[i],
-        tier = 2L,
+        tier = 3L,
         config = config
       )
       list(
@@ -142,7 +142,7 @@ cdl_prepare_layout <- function(layout, config){
   console_msg(
     analyze_msg,
     layout$target,
-    tier = 2L,
+    tier = 3L,
     config = config
   )
   layout$deps_build <- command_dependencies(

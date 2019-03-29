@@ -43,7 +43,7 @@ cdg_create_edges <- function(config, layout) {
 }
 
 cdg_node_to_edges <- function(node, config) {
-  console_msg(connect_msg, node$target, tier = 2L, config = config)
+  console_msg(connect_msg, node$target, tier = 3L, config = config)
   file_out <- node$deps_build$file_out
   node$deps_build$file_out <- NULL
   inputs <- clean_nested_char_list(
@@ -70,7 +70,7 @@ cdg_node_to_edges <- function(node, config) {
 }
 
 cdg_edges_thru_file_out <- function(edges, config) {
-  console_msg(connect_msg, "output files", tier = 2L, config = config)
+  console_msg(connect_msg, "output files", tier = 3L, config = config)
   file_out <- edges$to[is_encoded_path(edges$to)]
   file_out_edges <- lapply(
     X = file_out,
@@ -83,26 +83,26 @@ cdg_edges_thru_file_out <- function(edges, config) {
 }
 
 cdg_transitive_edges <- function(vertex, edges) {
-  console_msg(file_out_msg, vertex, tier = 2L, config = config)
+  console_msg(file_out_msg, vertex, tier = 3L, config = config)
   from <- unique(edges$from[edges$to == vertex])
   to <- unique(edges$to[edges$from == vertex])
   expand.grid(from = from, to = to, stringsAsFactors = FALSE)
 }
 
 cdg_finalize_graph <- function(edges, targets, config) {
-  console_msg(finalize_msg, "graph edges", tier = 2L, config = config)
+  console_msg(finalize_msg, "graph edges", tier = 3L, config = config)
   file_out <- edges$to[edges$from %in% targets & is_encoded_path(edges$to)]
   to <- union(targets, file_out)
-  console_msg(create_msg, "igraph", tier = 2L, config = config)
+  console_msg(create_msg, "igraph", tier = 3L, config = config)
   graph <- igraph::graph_from_data_frame(edges)
-  console_msg(process_msg, "neighborhoods", tier = 2L, config = config)
+  console_msg(process_msg, "neighborhoods", tier = 3L, config = config)
   graph <- nbhd_graph(
     graph = graph,
     vertices = to,
     mode = "in",
     order = igraph::gorder(graph)
   )
-  console_msg(process_msg, "igraph attributes", tier = 2L, config = config)
+  console_msg(process_msg, "igraph attributes", tier = 3L, config = config)
   graph <- igraph::set_vertex_attr(graph, "imported", value = TRUE)
   index <- c(config$plan$target, file_out)
   index <- intersect(index, igraph::V(graph)$name)
@@ -112,7 +112,7 @@ cdg_finalize_graph <- function(edges, targets, config) {
     index = index,
     value = FALSE
   )
-  console_msg(finalize_msg, "igraph", tier = 2L, config = config)
+  console_msg(finalize_msg, "igraph", tier = 3L, config = config)
   igraph::simplify(
     graph,
     remove.loops = TRUE,

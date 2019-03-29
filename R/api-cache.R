@@ -154,7 +154,7 @@ this_cache_ <- function(
     console_msg(
       cache_msg,
       path,
-      tier = 2L,
+      tier = 3L,
       config = list(
         verbose = verbose,
         console_log_file = console_log_file
@@ -249,7 +249,7 @@ new_cache <- function(
   console_msg(
     cache_msg,
     path,
-    tier = 2L,
+    tier = 3L,
     config = list(
       verbose = verbose,
       console_log_file = console_log_file

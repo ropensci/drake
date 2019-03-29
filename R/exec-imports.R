@@ -18,7 +18,7 @@ process_import <- function(import, config) {
   console_msg(
     import_msg,
     display_key(import, config),
-    tier = 2L,
+    tier = 3L,
     config = config
   )
   meta <- drake_meta_(import, config)

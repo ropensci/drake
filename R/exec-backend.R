@@ -36,6 +36,6 @@ run_external_backend <- function(config) {
 
 pretrim_schedule <- function(config) {
   outdated <- outdated(config, do_prework = FALSE, make_imports = FALSE)
-  console_msg(process_msg, "schedule", tier = 2L, config = config)
+  console_msg(process_msg, "schedule", tier = 3L, config = config)
   igraph::induced_subgraph(graph = config$schedule, vids = outdated)
 }
