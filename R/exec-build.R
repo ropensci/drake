@@ -5,7 +5,14 @@ announce_build <- function(target, meta, config) {
     value = "running",
     config = config
   )
-  console_msg(target_msg, target, tier = 1L, config = config)
+  console_msg(
+    "target",
+    target,
+    tier = 1L,
+    config = config,
+    color = colors["target"],
+    newline = TRUE
+  )
 }
 
 build_target <- function(target, meta, config) {
@@ -18,13 +25,15 @@ build_target <- function(target, meta, config) {
   while (retries <= max_retries) {
     if (retries > 0L) {
       console_msg(
-        retry_msg,
+        "retry",
         target,
         retries,
         "of",
         max_retries,
         tier = 1L,
-        config = config
+        config = config,
+        color = colors["retry"],
+        newline = TRUE
       )
     }
     build <- with_seed_timeout(

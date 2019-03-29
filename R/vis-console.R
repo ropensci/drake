@@ -1,24 +1,36 @@
-console_msg <- function(..., tier, config) {
+console_msg <- function(
+  ...,
+  config,
+  tier = 3L,
+  rewind = TRUE,
+  newline = FALSE,
+  color = colors["aux"]
+) {
   if (is.null(config$verbose) || config$verbose < tier) {
     return(invisible())
   }
   msg <- crop_text(paste(...))
-  drake_log(..., config)
-  message(msg)
+  drake_log(msg, config = config)
+  spaces <- rep(" ", getOption("width") - nchar(msg))
+  msg <- paste(c(msg, spaces), collapse = "")
+  if (!is.null(color) && requireNamespace("crayon", quietly = TRUE)) {
+    msg <- crayon::make_style(color)(msg)
+  }
+  if (rewind) {
+    msg <- c("\r", msg)
+  }
+  message(msg, appendLF = newline)
 }
 
-drake_log <- function(..., config) {
-  text <- paste(...)
-  if (requireNamespace("crayon", quietly = TRUE)) {
-    text <- crayon::strip_style(text)
+drake_log <- function(msg, config) {
+  if (is.null(config$console_log_file)) {
+    return()
   }
-  if (!is.null(config$console_log_file)) {
-    write(
-      x = text,
-      file = config$console_log_file,
-      append = TRUE
-    )
-  }
+  write(
+    x = msg,
+    file = config$console_log_file,
+    append = TRUE
+  )
   invisible()
 }
 

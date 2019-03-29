@@ -150,17 +150,6 @@ this_cache_ <- function(
   if (usual_path_missing) {
     return(NULL)
   }
-  if (!is.null(path)) {
-    console_msg(
-      cache_msg,
-      path,
-      tier = 3L,
-      config = list(
-        verbose = verbose,
-        console_log_file = console_log_file
-      )
-    )
-  }
   cache <- drake_try_fetch_rds(path = path)
   cache_vers_warn(cache = cache)
   cache
@@ -245,15 +234,6 @@ new_cache <- function(
   writeLines(
     text = c("*", "!/.gitignore"),
     con = file.path(path, ".gitignore")
-  )
-  console_msg(
-    cache_msg,
-    path,
-    tier = 3L,
-    config = list(
-      verbose = verbose,
-      console_log_file = console_log_file
-    )
   )
   cache
 }

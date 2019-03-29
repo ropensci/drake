@@ -17,7 +17,14 @@ handle_build_exceptions <- function(target, meta, config) {
     )
   }
   if (inherits(meta$error, "error")) {
-    console_msg(fail_msg, target, tier = 1L, config = config)
+    console_msg(
+      "fail",
+      target,
+      tier = 1L,
+      config = config,
+      color = colors["fail"],
+      newline = TRUE
+    )
     store_failure(target = target, meta = meta, config = config)
     if (!config$keep_going) {
       drake_error(

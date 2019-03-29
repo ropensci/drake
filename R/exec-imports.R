@@ -15,12 +15,7 @@ process_imports <- function(config) {
 #' @examples
 #' # Not a user-side function.
 process_import <- function(import, config) {
-  console_msg(
-    import_msg,
-    display_key(import, config),
-    tier = 3L,
-    config = config
-  )
+  console_msg("import", display_key(import, config), config = config)
   meta <- drake_meta_(import, config)
   if (meta$isfile) {
     value <- NA_character_
