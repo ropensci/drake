@@ -39,7 +39,12 @@ create_drake_layout <- function(
 }
 
 cdl_prepare_imports <- function(config) {
-  console_preprocess(text = "analyze environment", config = config)
+  console_msg(
+    analyze_msg,
+    "environment",
+    tier = 2L,
+    config = config
+  )
   imports <- as.list(config$envir)
   cdl_unload_conflicts(
     imports = names(imports),
@@ -79,15 +84,15 @@ cdl_imports_kernel <- function(config, imports) {
 
 cdl_analyze_imports <- function(config, imports) {
   names <-  names(imports)
-  console_many_targets(
-    targets = names,
-    pattern = "analyze",
-    type = "import",
-    config = config
-  )
   out <- lightly_parallelize(
     X = seq_along(imports),
     FUN = function(i) {
+      console_msg(
+        analyze_msg,
+        names[i],
+        tier = 2L,
+        config = config
+      )
       list(
         target = names[i],
         deps_build = import_dependencies(
@@ -105,12 +110,6 @@ cdl_analyze_imports <- function(config, imports) {
 }
 
 cdl_analyze_commands <- function(config) {
-  console_many_targets(
-    targets = config$plan$target,
-    pattern = "analyze",
-    type = "target",
-    config = config
-  )
   config$plan$imported <- FALSE
   if ("trigger" %in% colnames(config$plan)) {
     config$plan$trigger <- lapply(
@@ -140,6 +139,12 @@ cdl_analyze_commands <- function(config) {
 }
 
 cdl_prepare_layout <- function(layout, config){
+  console_msg(
+    analyze_msg,
+    layout$target,
+    tier = 2L,
+    config = config
+  )
   layout$deps_build <- command_dependencies(
     command = layout$command,
     exclude = layout$target,

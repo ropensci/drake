@@ -36,6 +36,8 @@ retry_msg <- try_style("retry", "#9400d3")
 fail_msg <- try_style("fail", "red")
 up_to_date_msg <- try_style("All targets are already up to date.", "green3")
 cache_msg <- try_style("cache", "skyblue1")
+analyze_msg <- try_style("analyze", "skyblue1")
+connect_msg <- try_style("connect", "skyblue1")
 
 # Show drake's color palette.
 drake_palette_ <- function() {
