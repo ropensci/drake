@@ -21,13 +21,6 @@
   invisible()
 }
 
-new_spinner <- function() {
-  on.exit(.pkg_envir$drake_spinner_msg <- FALSE)
-  if (requireNamespace("cli", quietly = TRUE)) {
-    return(cli::make_spinner())
-  }
-}
-
 .pkg_envir <- new.env(parent = emptyenv())
 
 if (requireNamespace("cli", quietly = TRUE)) {
