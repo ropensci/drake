@@ -81,7 +81,7 @@ test_with_dir("scratch build with custom filesystem cache.", {
 test_with_dir("clean in full build.", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
-  make(config$plan, envir = config$envir, verbose = FALSE)
+  make(config$plan, envir = config$envir, verbose = 0L)
   expect_true("final" %in% config$cache$list())
   clean(final, search = TRUE)
   expect_false("final" %in% config$cache$list())

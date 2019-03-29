@@ -23,7 +23,7 @@ test_with_dir("codeless knitr report", {
       drake_plan(x = knitr_in("codeless.Rmd")),
       session_info = FALSE,
       cache = storr::storr_environment(),
-      verbose = FALSE
+      verbose = 0L
     )
   )
 })
@@ -50,7 +50,7 @@ test_with_dir("bad knitr report", {
       ),
       session_info = FALSE,
       cache = storr::storr_environment(),
-      verbose = FALSE
+      verbose = 0L
     ),
     regexp = "dependencies could not be extracted"
   )

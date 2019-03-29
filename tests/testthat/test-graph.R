@@ -27,7 +27,7 @@ test_with_dir("circular non-DAG drake_plans quit in error", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- drake_plan(a = b, b = c, c = a)
   expect_error(
-    make(x, verbose = FALSE, session_info = FALSE),
+    make(x, verbose = 0L, session_info = FALSE),
     regexp = "[Cc]ircular workflow"
   )
   x <- drake_plan(
@@ -35,7 +35,7 @@ test_with_dir("circular non-DAG drake_plans quit in error", {
     Aa = Bb, Bb = Cc, Cc = Aa, mytarget = e
   )
   expect_error(
-    make(x, verbose = FALSE, session_info = FALSE),
+    make(x, verbose = 0L, session_info = FALSE),
     regexp = "[Cc]ircular workflow"
   )
 })
@@ -43,13 +43,13 @@ test_with_dir("circular non-DAG drake_plans quit in error", {
 test_with_dir("Supplied graph disagrees with the workflow plan", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   con <- dbug()
-  con2 <- drake_config(drake_plan(a = 1), verbose = FALSE)
+  con2 <- drake_config(drake_plan(a = 1), verbose = 0L)
   expect_warning(
     make(
       plan = con$plan,
       envir = con$envir,
       graph = con2$graph,
-      verbose = FALSE,
+      verbose = 0L,
       session_info = FALSE
     )
   )

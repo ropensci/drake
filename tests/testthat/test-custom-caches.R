@@ -37,7 +37,7 @@ test_with_dir("totally off the default cache", {
   make(
     con$plan,
     cache = con$cache,
-    verbose = FALSE,
+    verbose = 0L,
     parallelism = get_testing_scenario()$parallelism,
     jobs = get_testing_scenario()$jobs,
     session_info = FALSE
@@ -68,7 +68,7 @@ test_with_dir("use two differnt file system caches", {
     my_plan,
     cache = cache,
     envir = envir,
-    verbose = FALSE,
+    verbose = 0L,
     parallelism = parallelism,
     jobs = jobs,
     session_info = FALSE
@@ -77,7 +77,7 @@ test_with_dir("use two differnt file system caches", {
     my_plan,
     cache = cache,
     envir = envir,
-    verbose = FALSE,
+    verbose = 0L,
     parallelism = parallelism,
     jobs = jobs,
     session_info = FALSE
@@ -102,7 +102,7 @@ test_with_dir("use two differnt file system caches", {
     my_plan,
     cache = cache2,
     envir = envir,
-    verbose = FALSE,
+    verbose = 0L,
     parallelism = parallelism,
     jobs = jobs,
     session_info = FALSE
@@ -111,7 +111,7 @@ test_with_dir("use two differnt file system caches", {
     my_plan,
     cache = cache2,
     envir = envir,
-    verbose = FALSE,
+    verbose = 0L,
     parallelism = parallelism,
     jobs = jobs,
     session_info = FALSE

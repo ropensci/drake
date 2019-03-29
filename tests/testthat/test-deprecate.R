@@ -44,7 +44,7 @@ test_with_dir("deprecation: cache functions", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   plan <- drake_plan(x = 1)
   expect_error(expect_warning(tmp <- read_drake_meta(search = FALSE)))
-  expect_silent(make(plan, verbose = FALSE, session_info = FALSE))
+  expect_silent(make(plan, verbose = 0L, session_info = FALSE))
   expect_true(is.numeric(readd(x, search = FALSE)))
   expect_equal(cached(), "x")
   cache <- get_cache()
@@ -115,7 +115,7 @@ test_with_dir("drake version checks in previous caches", {
   # We need to be able to set the drake version
   # to check back compatibility.
   plan <- drake_plan(x = 1)
-  expect_silent(make(plan, verbose = FALSE))
+  expect_silent(make(plan, verbose = 0L))
   x <- get_cache()
   suppressWarnings(expect_error(drake_session(cache = NULL), regexp = "make"))
   expect_warning(drake_session(cache = x), regexp = "deprecated")

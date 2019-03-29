@@ -42,7 +42,7 @@ test_with_dir("mtcars example works", {
   my_plan <- e$my_plan
   config <- drake_config(my_plan, envir = e,
                          jobs = jobs, parallelism = parallelism,
-                         verbose = FALSE, caching = caching)
+                         verbose = 0L, caching = caching)
   expect_false(file.exists("Makefile"))
 
   dats <- c("small", "large")
@@ -69,7 +69,7 @@ test_with_dir("mtcars example works", {
     target = encode_path("report.Rmd"), config = con, size_cutoff = -1)))
   config <- drake_config(
     my_plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = FALSE)
+    verbose = 0L)
   expect_equal(outdated(config), character(0))
 
   # Change an imported function
@@ -79,7 +79,7 @@ test_with_dir("mtcars example works", {
   }
   config <- drake_config(
     my_plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = FALSE)
+    verbose = 0L)
   to_build <- sort(c(
     "report", "coef_regression2_large",
     "coef_regression2_small", "regression2_large", "regression2_small",
@@ -90,7 +90,7 @@ test_with_dir("mtcars example works", {
   expect_equal(sort(justbuilt(config)), to_build)
   config <- drake_config(
     my_plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = FALSE)
+    verbose = 0L)
   expect_equal(sort(outdated(config = config)), character(0))
 
   # Take this opportunity to test tidyselect API. Saves test time that way.

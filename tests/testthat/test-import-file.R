@@ -45,7 +45,7 @@ test_with_dir("same with an imported directory", {
     envir = envir,
     parallelism = scenario$parallelism,
     jobs = scenario$jobs,
-    verbose = FALSE,
+    verbose = 0L,
     session_info = FALSE,
     log_progress = TRUE,
     caching = scenario$caching

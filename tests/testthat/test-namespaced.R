@@ -63,7 +63,7 @@ test_with_dir("namespaced drake_plan works", {
     envir = envir,
     jobs = scenarios$jobs,
     parallelism = scenarios$parallelism,
-    verbose = FALSE,
+    verbose = 0L,
     session_info = FALSE
   )
   config <- drake_config(
@@ -71,7 +71,7 @@ test_with_dir("namespaced drake_plan works", {
     envir = envir,
     jobs = scenarios$jobs,
     parallelism = scenarios$parallelism,
-    verbose = FALSE,
+    verbose = 0L,
     session_info = FALSE
   )
   fromcache <- readd("base::list", character_only = TRUE)

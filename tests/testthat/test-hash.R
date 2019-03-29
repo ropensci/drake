@@ -17,7 +17,7 @@ test_with_dir("stress test storage hash", {
   skip_if_not_installed("knitr")
   load_mtcars_example()
   con <- drake_config(
-    my_plan, verbose = FALSE, session_info = FALSE,
+    my_plan, verbose = 0L, session_info = FALSE,
     cache = storr::storr_environment()
   )
   make(config = con)
@@ -36,7 +36,7 @@ test_with_dir("same with a directory", {
   writeLines("456", "dir/b.txt")
   plan <- drake_plan(x = file_in("dir"))
   con <- drake_config(
-    plan, verbose = FALSE, session_info = FALSE,
+    plan, verbose = 0L, session_info = FALSE,
     cache = storr::storr_environment()
   )
   make(config = con)

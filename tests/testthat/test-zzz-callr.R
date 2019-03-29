@@ -149,7 +149,7 @@ test_with_dir("configuring a background callr process", {
     c(
       "library(drake)",
       "load_mtcars_example()",
-      "drake_config(my_plan, verbose = 6)"
+      "drake_config(my_plan, verbose = 1L)"
     ),
     default_drake_source
   )

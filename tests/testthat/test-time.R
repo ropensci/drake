@@ -4,7 +4,7 @@ test_with_dir("can ignore a bad time", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("lubridate")
   x <- drake_plan(a = 1, b = 2)
-  make(x, verbose = FALSE)
+  make(x, verbose = 0L)
   cache <- get_cache()
   expect_equal(nrow(build_times()), 2)
   set_in_subspaces(
@@ -42,7 +42,7 @@ test_with_dir("build times works if no targets are built", {
   expect_equal(cached(), character(0))
   expect_equal(nrow(build_times(search = FALSE)), 0)
   my_plan <- drake_plan(x = 1)
-  con <- drake_config(my_plan, verbose = FALSE)
+  con <- drake_config(my_plan, verbose = 0L)
   process_imports(con)
   expect_equal(nrow(build_times(search = FALSE)), 0)
 })
@@ -51,14 +51,14 @@ test_with_dir("build time the same after superfluous make", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("lubridate")
   x <- drake_plan(y = Sys.sleep(0.25))
-  make(x, verbose = FALSE, session_info = FALSE)
-  c1 <- drake_config(x, verbose = FALSE, session_info = FALSE)
+  make(x, verbose = 0L, session_info = FALSE)
+  c1 <- drake_config(x, verbose = 0L, session_info = FALSE)
   expect_equal(justbuilt(c1), "y")
   b1 <- build_times(search = FALSE)
   expect_true(all(complete.cases(b1)))
 
-  make(x, verbose = FALSE, session_info = FALSE)
-  c2 <- drake_config(x, verbose = FALSE, session_info = FALSE)
+  make(x, verbose = 0L, session_info = FALSE)
+  c2 <- drake_config(x, verbose = 0L, session_info = FALSE)
   expect_equal(justbuilt(c2), character(0))
   b2 <- build_times(search = FALSE)
   expect_true(all(complete.cases(b2)))

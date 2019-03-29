@@ -25,15 +25,15 @@ test_with_dir("console to file", {
   expect_false(file.exists("log.txt"))
   tmp <- capture.output({
       make(
-        my_plan, cache = cache, verbose = 6, session_info = FALSE,
+        my_plan, cache = cache, verbose = 1L, session_info = FALSE,
         console_log_file = "log.txt"
       )
       make(
-        my_plan, cache = cache, verbose = 6, session_info = FALSE,
+        my_plan, cache = cache, verbose = 1L, session_info = FALSE,
         console_log_file = "log.txt"
       )
       make(
-        my_plan, cache = cache, verbose = 6, session_info = FALSE,
+        my_plan, cache = cache, verbose = 1L, session_info = FALSE,
         trigger = trigger(condition = TRUE), console_log_file = "log.txt"
       )
     },
@@ -58,7 +58,7 @@ test_with_dir("drake_warning() and drake_error()", {
       make(
         plan, cache = cache,
         session_info = FALSE,
-        verbose = 2L
+        verbose = 1L
       ),
       regexp = "some_warning"
     ),

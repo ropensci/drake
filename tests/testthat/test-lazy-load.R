@@ -50,7 +50,7 @@ test_with_dir("lazy loading is actually lazy", {
     plan = config$plan,
     targets = "combined",
     envir = config$envir,
-    verbose = FALSE,
+    verbose = 0L,
     session_info = FALSE
   )
   config$eval <- eval
@@ -85,7 +85,7 @@ test_with_dir("active bindings", {
   expect_message(
     loadd(
       final, envir = config$envir, lazy = "bind",
-      verbose = FALSE, cache = config$cache),
+      verbose = 0L, cache = config$cache),
     regexp = "active binding"
   )
 
@@ -93,7 +93,7 @@ test_with_dir("active bindings", {
   e <- new.env(parent = globalenv())
   loadd(
     final, envir = e, lazy = "bind",
-    verbose = FALSE, cache = config$cache)
+    verbose = 0L, cache = config$cache)
 
   # Active bindings react to make()
   old_final <- e$final

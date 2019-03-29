@@ -24,7 +24,7 @@ test_with_dir("clustermq parallelism", {
       jobs = jobs,
       caching = caching,
       envir = e,
-      verbose = 4,
+      verbose = 1L,
       garbage_collection = TRUE,
       lock_envir = TRUE
     )
@@ -35,7 +35,7 @@ test_with_dir("clustermq parallelism", {
       jobs = jobs,
       caching = caching,
       envir = e,
-      verbose = 4,
+      verbose = 1L,
       lock_envir = TRUE
     )
     expect_equal(justbuilt(config), character(0))
@@ -48,7 +48,7 @@ test_with_dir("clustermq parallelism", {
       jobs = jobs,
       caching = caching,
       envir = e,
-      verbose = 4,
+      verbose = 1L,
       lock_envir = TRUE
     )
     expect_equal(justbuilt(config), "small")
