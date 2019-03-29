@@ -3,22 +3,12 @@ console_msg <- function(..., tier, config) {
     return(invisible())
   }
   msg <- crop_text(paste(...))
-  if (!is.null(config$console_log_file)) {
-    with_options(
-      list(crayon.enabled = FALSE),
-      write(msg, file = config$console_log_file)
-    )
-  }
+  drake_log(..., config)
   message(msg)
 }
 
-
-
-
-
-
-drake_log <- function(..., prefix, config) {
-  text <- paste0(prefix, ...)
+drake_log <- function(..., config) {
+  text <- paste(...)
   if (requireNamespace("crayon", quietly = TRUE)) {
     text <- crayon::strip_style(text)
   }
@@ -31,6 +21,8 @@ drake_log <- function(..., prefix, config) {
   }
   invisible()
 }
+
+
 
 
 console_generic <- function(
@@ -144,7 +136,6 @@ console_custom_triggers <- function(config) {
     paste("Used non-default triggers."),
     colors["trigger"]
   )
-  drake_message(out, config = config)
 }
 
 console_persistent_workers <- function(config) {
@@ -167,31 +158,18 @@ finish_console <- function(text, pattern, config) {
   drake_message(msg, config = config)
 }
 
-drake_log <- function(..., prefix, config) {
-  text <- paste0(prefix, ...)
-  if (requireNamespace("crayon", quietly = TRUE)) {
-    text <- crayon::strip_style(text)
-  }
-  if (!is.null(config$console_log_file)) {
-    write(
-      x = text,
-      file = config$console_log_file,
-      append = TRUE
-    )
-  }
-  invisible()
-}
+
 
 drake_log_message <- function(..., config) {
-  drake_log(..., prefix = "", config = config)
+  drake_log(..., config = config)
 }
 
 drake_log_warning <- function(..., config) {
-  drake_log(..., prefix = "Warning: ", config = config)
+  drake_log("Warning:", ..., config = config)
 }
 
 drake_log_error <- function(..., config) {
-  drake_log(..., prefix = "Error: ", config = config)
+  drake_log("Error: ", ..., config = config)
 }
 
 drake_message <- function(..., config) {
