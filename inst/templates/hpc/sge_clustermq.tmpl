@@ -6,6 +6,6 @@
 #$ -cwd                            # use pwd as work dir
 #$ -V                              # use environment variable
 #$ -pe smp 1                       # request 1 core per job
-module load R
+# module load R                    # Uncomment if R is an environment module.
 ulimit -v $(( 1024 * {{ memory | 4096 }} ))
 CMQ_AUTH={{ auth }} R --no-save --no-restore -e 'clustermq:::worker("{{ master }}")'

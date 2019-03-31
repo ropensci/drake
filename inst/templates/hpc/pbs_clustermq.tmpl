@@ -1,10 +1,10 @@
 # From https://github.com/mschubert/clustermq/wiki/PBS
-#PBS -N {{ job_name }}
-#PBS -l select=1:ncpus={{ cores | 1 }}
-#PBS -l walltime={{ walltime | 1:00:00 }}
-#PBS -q default
-#PBS -o {{ log_file | /dev/null }}
-#PBS -j oe
-module load R
+#PBS -N {{ job_name }}                    # job name
+#PBS -l select=1:ncpus={{ cores | 1 }}    # cores
+#PBS -l walltime={{ walltime | 1:00:00 }} # wall time
+#PBS -q default                           # job queue
+#PBS -o {{ log_file | /dev/null }}        # output file
+#PBS -j oe                                # join stdour and stderr streams
+# module load R                           # Uncomment if R is an environment module.
 ulimit -v $(( 1024 * {{ memory | 4096 }} ))
 CMQ_AUTH={{ auth }} R --no-save --no-restore -e 'clustermq:::worker("{{ master }}")'

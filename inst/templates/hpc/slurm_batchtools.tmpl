@@ -1,22 +1,5 @@
 #!/bin/bash
-
-## Modified from  https://github.com/mllg/batchtools/blob/master/inst/templates/
-## Job Resource Interface Definition
-##
-## ntasks [integer(1)]:       Number of required tasks,
-##                            Set larger than 1 if you want to further parallelize
-##                            with MPI within your job.
-## ncpus [integer(1)]:        Number of required cpus per task,
-##                            Set larger than 1 if you want to further parallelize
-##                            with multicore/parallel within each task.
-## walltime [integer(1)]:     Walltime for this job, in minutes.
-##                            Must be at least 1 minute.
-## memory   [integer(1)]:     Memory in megabytes for each cpu.
-##                            Must be at least 100 (when I tried lower values my
-##                            jobs did not start at all).
-##
-## Default resources can be set in your .batchtools.conf.R by defining the variable
-## 'default.resources' as a named list.
+# From https://github.com/mllg/batchtools/blob/master/inst/templates/
 
 <%
 # relative paths are not handled well by Slurm
@@ -39,10 +22,19 @@ if (!"walltime" %in% names(resources)) {
 #SBATCH --job-name=<%= job.name %>
 #SBATCH --output=<%= log.file %>
 #SBATCH --error=<%= log.file %>
-#SBATCH --time=<%= ceiling(resources$walltime / 60) %>
 #SBATCH --ntasks=1
+
+<%= if (!is.null(resources$walltime)) { %>
+#SBATCH --time=<%= ceiling(resources$walltime / 60) %>
+<%= } %>
+
+<%= if (!is.null(resources$ncpus)) { %>
 #SBATCH --cpus-per-task=<%= resources$ncpus %>
+<%= } %>
+
+<%= if (!is.null(resources$memory)) { %>
 #SBATCH --mem-per-cpu=<%= resources$memory %>
+<%= } %>
 
 <%= if (array.jobs) sprintf("#SBATCH --array=1-%i", nrow(jobs)) else "" %>
 
@@ -50,12 +42,5 @@ if (!"walltime" %in% names(resources)) {
 ## source /etc/profile
 source /etc/profile
 
-## module add ...
-
-# Load R if we are using the built-in R module.
-# Comment out if using a custom compiled version of R.
-# module load R
-
-## Run R:
-## we merge R output with stdout from SLURM, which gets then logged via --output option
+# module load R # Uncomment if R is an environment module.
 Rscript -e 'batchtools::doJobCollection("<%= uri %>")'

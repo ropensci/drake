@@ -1,9 +1,9 @@
 # From https://github.com/mschubert/clustermq/wiki/Torque
-#PBS -N {{ job_name }}
-#PBS -l nodes={{ n_jobs }}:ppn=1,walltime={{ walltime | 30:00 }}
-#PBS -o {{ log_file | /dev/null }}
-#PBS -q default
-#PBS -j oe
-module load R
+#PBS -N {{ job_name }}                                           # job name
+#PBS -l nodes={{ n_jobs }}:ppn=1,walltime={{ walltime | 30:00 }} # job array and walltime
+#PBS -o {{ log_file | /dev/null }}                               # log file
+#PBS -q default                                                  # job queue
+#PBS -j oe                                                       # Merge stdout and stderr streams.
+# module load R                                                  # Uncomment if R is an environment module.
 ulimit -v $(( 1024 * {{ memory | 4096 }} ))
 CMQ_AUTH={{ auth }} R --no-save --no-restore -e 'clustermq:::worker("{{ master }}")'

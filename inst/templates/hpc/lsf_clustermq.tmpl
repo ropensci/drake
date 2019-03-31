@@ -5,6 +5,6 @@
 #BSUB-R rusage[mem={{ memory | 4096 }}] # Memory requirements in Mbytes
 ##BSUB-q default                        # name of the queue (uncomment)
 ##BSUB-W {{ walltime | 6:00 }}          # walltime (uncomment)
-module load R
+# module load R                         # Uncomment if R is an environment module
 ulimit -v $(( 1024 * {{ memory | 4096 }} ))
 CMQ_AUTH={{ auth }} R --no-save --no-restore -e 'clustermq:::worker("{{ master }}")'
