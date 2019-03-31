@@ -13,7 +13,10 @@ log_msg <- function(..., config, tier = 2L, color = colors["default"]) {
   if (!is.null(color) && requireNamespace("crayon", quietly = TRUE)) {
     msg[1] <- crayon::make_style(color)(msg[1])
   }
-  message("\r", crop_text(paste(msg, collapse = " ")))
+  if (config$verbose > 1L) {
+    msg[1] <- paste0("\r", msg[1])
+  }
+  message(crop_text(paste(msg, collapse = " ")))
 }
 
 drake_log <- function(..., config) {
