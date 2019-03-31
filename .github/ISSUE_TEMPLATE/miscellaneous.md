@@ -1,5 +1,5 @@
 ---
-name: Issue
+name: Miscellaneous
 about: Suggest an idea or raise a concern.
 title: ''
 labels: ''

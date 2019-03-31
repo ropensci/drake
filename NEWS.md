@@ -23,6 +23,7 @@
 - For the `map()` and `cross()` transformations in the DSL, prevent the [accidental sorting of targets by name](https://github.com/ropensci/drake/issues/786). Needed `merge(sort = FALSE)` in `dsl_left_outer_join()`.
 - Simplify verbosity. The `verbose` argument of `make()` now takes values 0, 1, and 2, and maximum verbosity in the console prints targets, retries, failures, and a spinner. The console log file, on the other hand, dumps maximally verbose runtime info regardless of the `verbose` argument.
 - In previous versions, functions generated with `f <- Rcpp::cppFunction(...)` did not stay up to date from session to session because the addresses corresponding to anonymous pointers were showing up in `deparse(f)`. Now, `drake` ignores those pointers, and `Rcpp` functions compiled inline appear to stay up to date. This problem was more of an edge case than a bug.
+- Prepend time stamps with sub-second times to the lines of the console log file.
 
 # Version 7.0.0
 

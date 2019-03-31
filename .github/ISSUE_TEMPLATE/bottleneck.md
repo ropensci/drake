@@ -25,6 +25,7 @@ Provide a minimal example with code that reproduces the problem.
 
 How poorly does `drake` perform? Please share benchmarks: runtimes, memory consumption, [flame graphs](https://github.com/ropensci/drake/issues/647#issuecomment-451760866), etc. Tools to consider:
 
+- In development `drake`, `make(console_log_file = "log.txt")` now prepends sub-second time stamps to each line of `log.txt`. It is a super convenient way to see how fast things are going.
 -  [`Rprof()`](https://stat.ethz.ch/R-manual/R-devel/library/utils/html/Rprof.html), [`jointprof`](https://github.com/r-prof/jointprof), [`profile`](https://github.com/r-prof/profile), and [`pprof`](https://github.com/google/pprof). [Example here](https://github.com/wlandau/drake-examples/tree/master/overhead).
 - [`profvis`](https://github.com/rstudio/profvis), though beware https://github.com/rstudio/profvis/issues/104.
 - [`microbenchmark`](https://github.com/joshuaulrich/microbenchmark) and [`bench`](https://github.com/r-lib/bench).
