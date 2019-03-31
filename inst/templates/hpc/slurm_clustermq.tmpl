@@ -6,6 +6,6 @@
 #SBATCH --error={{ log_file | /dev/null }}  # log file
 #SBATCH --mem-per-cpu={{ memory | 4096 }}   # memory
 #SBATCH --array=1-{{ n_jobs }}              # job array
-# module load R                               # Uncomment if R is an environment module.
+# module load R                             # Uncomment if R is an environment module.
 ulimit -v $(( 1024 * {{ memory | 4096 }} ))
 CMQ_AUTH={{ auth }} R --no-save --no-restore -e 'clustermq:::worker("{{ master }}")'
