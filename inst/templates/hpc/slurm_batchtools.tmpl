@@ -2,19 +2,11 @@
 # From https://github.com/mllg/batchtools/blob/master/inst/templates/
 
 <%
-# relative paths are not handled well by Slurm
 log.file = normalizePath(log.file, winslash = "/", mustWork = FALSE)
-
-#########################
-# Set defaults if needed.
-
 if (!"ncpus" %in% names(resources)) {
   resources$ncpus = 1
 }
-
 if (!"walltime" %in% names(resources)) {
-  # Default time format is minutes but we later divide by 60 so set time in secs.
-  # Set 48 hours by default. This is excessive for drake's built-in examples.
   resources$walltime = 48 * 3600
 }
 -%>
