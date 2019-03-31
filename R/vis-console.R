@@ -24,7 +24,7 @@ drake_log <- function(..., config) {
     return()
   }
   write(
-    x = paste(...),
+    x = paste(microtimestamp(), "|", ...),
     file = config$console_log_file,
     append = TRUE
   )

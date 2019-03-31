@@ -480,3 +480,7 @@ make_unique <- function(x) {
   y[i] <- paste(y[i], suffix[i], sep = "_")
   y[order(ord)]
 }
+
+microtimestamp <- function() {
+  format(Sys.time(), "%Y-%m-%d %H:%M:%OS9")
+}
