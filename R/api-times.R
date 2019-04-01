@@ -45,6 +45,7 @@ build_times <- function(
     return(weak_as_tibble(empty_times()))
   }
   eval(parse(text = "require(methods, quietly = TRUE)")) # needed for lubridate
+  targets <- c(as.character(match.call(expand.dots = FALSE)$...), list)
   if (requireNamespace("tidyselect", quietly = TRUE)) {
     targets <- drake_tidyselect_cache(
       ...,
@@ -52,8 +53,6 @@ build_times <- function(
       cache = cache,
       namespaces = "meta"
     )
-  } else {
-    targets <- c(as.character(match.call(expand.dots = FALSE)$...), list)
   }
   if (!length(targets)) {
     targets <- parallel_filter(

@@ -117,6 +117,7 @@ clean <- function(
   if (is.null(cache)) {
     return(invisible())
   }
+  targets <- c(as.character(match.call(expand.dots = FALSE)$...), list)
   if (requireNamespace("tidyselect", quietly = TRUE)) {
     targets <- drake_tidyselect_cache(
       ...,
@@ -124,8 +125,6 @@ clean <- function(
       cache = cache,
       namespaces = target_namespaces_()
     )
-  } else {
-    targets <- c(as.character(match.call(expand.dots = FALSE)$...), list)
   }
   if (!length(targets) && is.null(c(...))) {
     if (abort_full_clean()) {
