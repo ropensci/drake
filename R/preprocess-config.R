@@ -509,11 +509,7 @@ drake_config <- function(
     )
   }
   plan <- sanitize_plan(plan)
-  if (is.null(targets)) {
-    targets <- plan$target
-  } else {
-    targets <- sanitize_targets(plan, targets)
-  }
+  targets <- sanitize_targets(targets, plan)
   if (is.null(cache)) {
     cache <- recover_cache_(
       verbose = verbose,

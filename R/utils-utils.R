@@ -81,12 +81,6 @@ complete_cases <- function(x) {
   !as.logical(Reduce(`|`, lapply(x, is.na)))
 }
 
-exists_tidyselect <- function() {
-  suppressWarnings(
-    eval(parse(text = "require('tidyselect', quietly = TRUE)"))
-  )
-}
-
 # Simple version of purrr::pmap for use in drake
 # Applies function .f to list .l elements in parallel, i.e.
 # .f(.l[[1]][1], .l[[2]][1], ..., .l[[n]][1]) and then
@@ -120,7 +114,11 @@ drake_tidyselect_cache <- function(
   cache,
   namespaces = cache$default_namespace
 ) {
-  suppressPackageStartupMessages(require("tidyselect", quietly = TRUE)) # nolint
+  suppressPackageStartupMessages(
+    suppressWarnings(
+      eval(parse(text = "require('tidyselect', quietly = TRUE)"))
+    )
+  )
   out <- tidyselect::vars_select(
     .vars = list_multiple_namespaces(cache = cache, namespaces = namespaces),
     ...,

@@ -103,7 +103,7 @@ test_with_dir("mtcars example works", {
       "coef_regression2_small"
     )
   )
-  if (exists_tidyselect()) {
+  if (requireNamespace("tidyselect", quietly = TRUE)) {
     e <- new.env(parent = globalenv())
     expect_error(loadd(not_a_target, envir = e))
     expect_equal(ls(envir = e), character(0))

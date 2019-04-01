@@ -8,7 +8,7 @@ sanitize_plan <- function(plan, allow_duplicated_targets = FALSE) {
       }
     }
   }
-  plan$target <- repair_target_names(plan$target)
+  plan$target <- make.names(plan$target, unique = FALSE, allow_ = TRUE)
   plan <- plan[nzchar(plan$target), ]
   first <- c("target", "command")
   cols <- c(first, setdiff(colnames(plan), first))
@@ -24,33 +24,20 @@ sanitize_plan <- function(plan, allow_duplicated_targets = FALSE) {
   as_drake_plan(plan)
 }
 
-sanitize_targets <- function(plan, targets) {
-  targets <- repair_target_names(targets)
-  sanitize_nodes(nodes = targets, choices = plan$target)
-}
-
-sanitize_nodes <- function(nodes, choices) {
-  if (!any(nodes %in% choices)) {
-    stop(
-      "All import/target names are invalid ",
-      "in argument 'targets', 'from', or 'subset' ",
-      "for make() or similar function.",
-      call. = FALSE
-    )
+sanitize_targets <- function(targets, plan) {
+  if (is.null(try(targets, silent = TRUE))) {
+    return(plan$target)
   }
-  diffs <- setdiff(nodes, choices)
-  if (length(diffs)) {
+  targets <- make.names(targets, unique = FALSE, allow_ = TRUE)
+  not_found <- setdiff(targets, plan$target)
+  if (length(not_found)) {
     warning(
-      "Ignoring imports/targets that were requested but not found:\n",
-      multiline_message(diffs),
+      "ignoring targets not in the drake plan:\n",
+      multiline_message(not_found),
       call. = FALSE
     )
   }
-  unique(intersect(nodes, choices))
-}
-
-repair_target_names <- function(x) {
-  make.names(x, unique = FALSE, allow_ = TRUE)
+  unique(intersect(targets, plan$target))
 }
 
 arrange_plan_cols <- function(plan) {
