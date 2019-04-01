@@ -214,16 +214,15 @@ loadd <- function(
   if (is.null(namespace)) {
     namespace <- cache$default_namespace
   }
-  targets <- c(as.character(match.call(expand.dots = FALSE)$...), list)
-  if (tidyselect) {
-    if (exists_tidyselect()) {
-      targets <- drake_tidyselect(
-        cache = cache,
-        ...,
-        namespaces = namespace,
-        list = list
-      )
-    }
+  if (tidyselect && requireNamespace("tidyselect", quietly = TRUE)) {
+    targets <- drake_tidyselect_cache(
+      ...,
+      list = list,
+      cache = cache,
+      namespaces = namespace
+    )
+  } else {
+    targets <- c(as.character(match.call(expand.dots = FALSE)$...), list)
   }
   if (!length(targets) && !length(list(...))) {
     targets <- cache$list()

@@ -7,7 +7,7 @@
 build_times(..., path = getwd(), search = TRUE, digits = 3,
   cache = get_cache(path = path, search = search, verbose = verbose),
   targets_only = NULL, verbose = 1L, jobs = 1, type = c("build",
-  "command"))
+  "command"), list = character(0))
 }
 \arguments{
 \item{...}{Targets to load from the cache: as names (symbols) or
@@ -45,6 +45,8 @@ If supplied, \code{path} and \code{search} are ignored.}
 for the full build time including the time it took to
 store the target, or \code{"command"} for the time it took
 just to run the command.}
+
+\item{list}{Character vector of targets to select.}
 }
 \value{
 A data frame of times, each from \code{\link[=system.time]{system.time()}}.

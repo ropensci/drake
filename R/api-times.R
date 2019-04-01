@@ -8,6 +8,7 @@
 #'   character strings. If the `tidyselect` package is installed,
 #'   you can also supply `dplyr`-style `tidyselect`
 #'   commands such as `starts_with()`, `ends_with()`, and `one_of()`.
+#' @param list Character vector of targets to select.
 #' @param targets_only Deprecated.
 #' @param digits How many digits to round the times to.
 #' @param type Type of time you want: either `"build"`
@@ -36,16 +37,23 @@ build_times <- function(
   targets_only = NULL,
   verbose = 1L,
   jobs = 1,
-  type = c("build", "command")
+  type = c("build", "command"),
+  list = character(0)
 ) {
   deprecate_targets_only(targets_only) # 2019-01-03 # nolint
   if (is.null(cache)) {
     return(weak_as_tibble(empty_times()))
   }
   eval(parse(text = "require(methods, quietly = TRUE)")) # needed for lubridate
-  targets <- as.character(match.call(expand.dots = FALSE)$...)
-  if (exists_tidyselect()) {
-    targets <- drake_tidyselect(cache = cache, ..., namespaces = "meta")
+  if (requireNamespace("tidyselect", quietly = TRUE)) {
+    targets <- drake_tidyselect_cache(
+      ...,
+      list = list,
+      cache = cache,
+      namespaces = "meta"
+    )
+  } else {
+    targets <- c(as.character(match.call(expand.dots = FALSE)$...), list)
   }
   if (!length(targets)) {
     targets <- parallel_filter(

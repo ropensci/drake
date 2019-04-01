@@ -114,33 +114,13 @@ drake_pmap <- function(.l, .f, jobs = 1, ...) {
     jobs = jobs)
 }
 
-drake_tidyselect <- function(
-  cache,
+drake_tidyselect_cache <- function(
   ...,
-  namespaces = cache$default_namespace,
-  list = character(0)
-) {
-  tryCatch(
-    drake_tidyselect_attempt(
-      cache = cache, ..., namespaces = namespaces, list = list
-    ),
-    error = function(e){
-      # nocov start
-      eval(parse(text = "require(tidyselect)"))
-      drake_tidyselect_attempt(
-        cache = cache, ..., namespaces = namespaces, list = list
-      )
-      # nocov end
-    }
-  )
-}
-
-drake_tidyselect_attempt <- function(
+  list = character(0),
   cache,
-  ...,
-  namespaces = cache$default_namespace,
-  list = character(0)
+  namespaces = cache$default_namespace
 ) {
+  suppressPackageStartupMessages(require("tidyselect", quietly = TRUE)) # nolint
   out <- tidyselect::vars_select(
     .vars = list_multiple_namespaces(cache = cache, namespaces = namespaces),
     ...,
