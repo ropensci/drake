@@ -52,6 +52,17 @@ test_with_dir("clustermq parallelism", {
       lock_envir = TRUE
     )
     expect_equal(justbuilt(config), "small")
+    clean(small, cache = config$cache)
+    make(
+      e$my_plan,
+      parallelism = parallelism,
+      jobs = jobs,
+      caching = caching,
+      envir = e,
+      verbose = 1L,
+      lock_envir = TRUE
+    )
+    expect_equal(justbuilt(config), "small")
   }
   if ("package:clustermq" %in% search()) {
     detach("package:clustermq", unload = TRUE) # nolint

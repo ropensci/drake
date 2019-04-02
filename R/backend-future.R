@@ -72,6 +72,7 @@ future_build <- function(target, meta, config, layout, protect) {
 }
 
 future_local_build <- function(target, config, queue, protect) {
+  log_msg("local target", target, config = config)
   loop_build(target, config, downstream = protect)
   decrease_revdep_keys(queue, target, config)
 }

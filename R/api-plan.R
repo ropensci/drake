@@ -36,9 +36,9 @@
 #' @param file_targets Deprecated.
 #' @param strings_in_dots Deprecated.
 #' @param tidy_evaluation Logical, whether to use tidy evaluation
-#'   such as quasiquotation
-#'   when evaluating commands passed through the free-form
-#'   `...` argument.
+#'   (e.g. unquoting/`!!`) when resolving commands.
+#'   Tidy evaluation in transformations is always turned on
+#'   regardless of the value you supply to this argument.
 #' @param transform Logical, whether to transform the plan
 #'   into a larger plan with more targets.
 #'   This is still an experimental feature,

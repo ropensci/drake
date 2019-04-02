@@ -9,6 +9,7 @@ backend_clustermq <- function(config) {
       n_jobs = config$jobs,
       template = config$template
     )
+    log_msg("setting common data", config = config)
     config$cache$flush_cache()
     cmq_set_common_data(config)
     config$counter <- new.env(parent = emptyenv())
@@ -35,10 +36,12 @@ cmq_set_common_data <- function(config) {
 
 cmq_master <- function(config) {
   on.exit(config$workers$finalize())
+  log_msg("begin scheduling targets", config = config)
   while (config$counter$remaining > 0) {
     msg <- config$workers$receive_data()
     cmq_conclude_build(msg = msg, config = config)
     if (!identical(msg$token, "set_common_data_token")) {
+      log_msg("sending common data", config = config)
       config$workers$send_common_data()
     } else if (!config$queue$empty()) {
       cmq_next_target(config)
@@ -67,15 +70,12 @@ cmq_next_target <- function(config) {
 
 cmq_send_target <- function(target, config) {
   meta <- drake_meta_(target = target, config = config)
-  # Target should not even be in the priority queue
-  # nocov start
   if (!should_build_target(target, meta, config)) {
     log_msg("skip", target, config = config)
     cmq_conclude_target(target = target, config = config)
     config$workers$send_wait()
     return()
   }
-  # nocov end
   announce_build(target = target, meta = meta, config = config)
   if (identical(config$caching, "master")) {
     manage_memory(targets = target, config = config, jobs = 1)
@@ -124,6 +124,7 @@ cmq_deps_list <- function(target, config) {
 }
 
 cmq_local_build <- function(target, config) {
+  log_msg("local target", target, config = config)
   config$workers$send_wait()
   loop_build(target, config, downstream = NULL)
   cmq_conclude_target(target = target, config = config)

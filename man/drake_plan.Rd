@@ -20,9 +20,9 @@ with commands assigned to them. See the examples for details.}
 \item{strings_in_dots}{Deprecated.}
 
 \item{tidy_evaluation}{Logical, whether to use tidy evaluation
-such as quasiquotation
-when evaluating commands passed through the free-form
-\code{...} argument.}
+(e.g. unquoting/\code{!!}) when resolving commands.
+Tidy evaluation in transformations is always turned on
+regardless of this argument.}
 
 \item{transform}{Logical, whether to transform the plan
 into a larger plan with more targets.
