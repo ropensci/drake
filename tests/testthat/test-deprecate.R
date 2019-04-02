@@ -190,7 +190,10 @@ test_with_dir("deprecate misc utilities", {
 
 test_with_dir("deprecated arguments", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  pl <- drake_plan(a = 1, b = a)
+  expect_warning(
+    pl <- drake_plan(a = 1, b = a, tidy_evaluation = TRUE),
+    regexp = "deprecated"
+  )
   con <- drake_config(plan = pl)
   expect_warning(drake::drake_plan(x = y, file_targets = TRUE))
   expect_warning(drake_plan(list = c(a = "1")), regexp = "deprecated")
