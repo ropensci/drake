@@ -7,7 +7,7 @@ for the \code{plan} argument of \code{\link[=make]{make()}}.}
 \usage{
 drake_plan(..., list = character(0), file_targets = NULL,
   strings_in_dots = NULL, tidy_evaluation = NULL, transform = TRUE,
-  trace = FALSE, envir = parent.frame())
+  trace = FALSE, envir = parent.frame(), tidy_eval = TRUE)
 }
 \arguments{
 \item{...}{A collection of symbols/targets
@@ -19,10 +19,7 @@ with commands assigned to them. See the examples for details.}
 
 \item{strings_in_dots}{Deprecated.}
 
-\item{tidy_evaluation}{Logical, whether to use tidy evaluation
-(e.g. unquoting/\code{!!}) when resolving commands.
-Tidy evaluation in transformations is always turned on
-regardless of this argument.}
+\item{tidy_evaluation}{Deprecated. Use \code{tidy_eval} instead.}
 
 \item{transform}{Logical, whether to transform the plan
 into a larger plan with more targets.
@@ -36,6 +33,11 @@ by \code{target()}. See the examples for details.}
 what happens during target transformations.}
 
 \item{envir}{Environment for tidy evaluation.}
+
+\item{tidy_eval}{Logical, whether to use tidy evaluation
+(e.g. unquoting/\code{!!}) when resolving commands.
+Tidy evaluation in transformations is always turned on
+regardless of the value you supply to this argument.}
 }
 \value{
 A data frame of targets, commands, and optional

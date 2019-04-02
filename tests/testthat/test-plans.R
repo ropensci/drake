@@ -141,13 +141,13 @@ test_with_dir("edge cases for plans", {
 
 test_with_dir("plan set 2", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  for (tidy_evaluation in c(TRUE, FALSE)) {
+  for (tidy_eval in c(TRUE, FALSE)) {
     x <- drake_plan(
       a = c,
       b = "c",
       c = d,
       d = readRDS("e"),
-      tidy_evaluation = tidy_evaluation
+      tidy_eval = tidy_eval
     )
     y <- weak_tibble(
       target = letters[1:4],
@@ -159,12 +159,12 @@ test_with_dir("plan set 2", {
 
 test_with_dir("drake_plan() trims outer whitespace in target names", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  for (tidy_evaluation in c(TRUE, FALSE)) {
+  for (tidy_eval in c(TRUE, FALSE)) {
     x <- sanitize_plan(weak_tibble(
       target = c(" a", "b \t\n"),
       command = 1:2
     ))
-    y <- drake_plan(a = 1, b = 2, tidy_evaluation = tidy_evaluation)
+    y <- drake_plan(a = 1, b = 2, tidy_eval = tidy_eval)
     expect_equal(x$target, y$target)
   }
 })

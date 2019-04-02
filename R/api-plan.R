@@ -35,10 +35,7 @@
 #' @param list Deprecated
 #' @param file_targets Deprecated.
 #' @param strings_in_dots Deprecated.
-#' @param tidy_evaluation Logical, whether to use tidy evaluation
-#'   (e.g. unquoting/`!!`) when resolving commands.
-#'   Tidy evaluation in transformations is always turned on
-#'   regardless of the value you supply to this argument.
+#' @param tidy_evaluation Deprecated. Use `tidy_eval` instead.
 #' @param transform Logical, whether to transform the plan
 #'   into a larger plan with more targets.
 #'   This is still an experimental feature,
@@ -49,6 +46,10 @@
 #' @param trace Logical, whether to add columns to show
 #'   what happens during target transformations.
 #' @param envir Environment for tidy evaluation.
+#' @param tidy_eval Logical, whether to use tidy evaluation
+#'   (e.g. unquoting/`!!`) when resolving commands.
+#'   Tidy evaluation in transformations is always turned on
+#'   regardless of the value you supply to this argument.
 #' @examples
 #' test_with_dir("Contain side effects", {
 #' # Create workflow plan data frames.
@@ -139,7 +140,8 @@ drake_plan <- function(
   tidy_evaluation = NULL,
   transform = TRUE,
   trace = FALSE,
-  envir = parent.frame()
+  envir = parent.frame(),
+  tidy_eval = TRUE
 ) {
   if (length(file_targets) || length(strings_in_dots)) {
     # 2019-02-01 nolint
@@ -156,6 +158,14 @@ drake_plan <- function(
       "Use the interface described at ",
       "https://ropenscilabs.github.io/drake-manual/plans.html#large-plans."
     )
+  }
+  if (!is.null(tidy_evaluation)) {
+    # 2019-04-02 nolint
+    warning(
+      "The `tidy_evaluation` argument of `drake_plan()` is deprecated. ",
+      "Use the `tidy_eval` argument instead."
+    )
+    tidy_eval <- tidy_evaluation
   }
   force(envir)
   dots <- match.call(expand.dots = FALSE)$...
@@ -174,7 +184,7 @@ drake_plan <- function(
   if (transform && ("transform" %in% colnames(plan))) {
     plan <- transform_plan(plan, envir = envir, trace = trace)
   }
-  if (tidy_evaluation %||% TRUE) {
+  if (tidy_eval) {
     for (col in setdiff(colnames(plan), c("target", "transform"))) {
       plan[[col]] <- tidyeval_exprs(plan[[col]], envir = envir)
     }

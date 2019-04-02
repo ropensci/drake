@@ -17,14 +17,14 @@ test_with_dir("drake_plan tidy eval can be customized and disabled", {
     a = !!my_variable,
     b = !!my_variable + 1,
     c = target(1 + 1, custom = !!my_variable),
-    tidy_evaluation = FALSE
+    tidy_eval = FALSE
   )
   plan1$custom <- unlist(lapply(plan1[["custom"]], rlang::expr_text))
   plan2 <- drake_plan(
     a = !!my_variable,
     b = !!my_variable + 1,
     c = target(1 + 1, custom = !!my_variable),
-    tidy_evaluation = TRUE
+    tidy_eval = TRUE
   )
   plan1$command <- unclass(deparse_lang_col(plan1$command))
   plan2$command <- unclass(deparse_lang_col(plan2$command))
@@ -41,7 +41,7 @@ test_with_dir("make() does tidy eval in commands", {
   plan <- drake_plan(
     little_b = "b",
     letter = !!little_b,
-    tidy_evaluation = FALSE
+    tidy_eval = FALSE
   )
   make(plan)
   expect_equal(readd(letter), "b")
