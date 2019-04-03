@@ -10,7 +10,6 @@ backend_clustermq <- function(config) {
       template = config$template
     )
     log_msg("setting common data", config = config)
-    config$cache$flush_cache()
     cmq_set_common_data(config)
     config$counter <- new.env(parent = emptyenv())
     config$counter$remaining <- config$queue$size()
@@ -108,6 +107,7 @@ cmq_config <- function(config) {
   for (x in discard) {
     config[[x]] <- NULL
   }
+  config$cache$flush_cache()
   config
 }
 
