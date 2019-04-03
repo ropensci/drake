@@ -303,7 +303,10 @@ For more information, see the \code{clustermq} package:
 Some template placeholders such as \code{{{ job_name }}} and \code{{{ n_jobs }}}
 cannot be set this way.}
 
-\item{sleep}{In its parallel processing, \code{drake} uses
+\item{sleep}{Function on a single parameter \code{i}.
+Default: \code{function(i) 0.01}.
+
+For parallel processing, \code{drake} uses
 a central master process to check what the parallel
 workers are doing, and for the affected high-performance
 computing workflows, wait for data to arrive over a network.

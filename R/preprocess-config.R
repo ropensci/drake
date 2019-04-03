@@ -311,7 +311,10 @@
 #'   Some template placeholders such as `{{ job_name }}` and `{{ n_jobs }}`
 #'   cannot be set this way.
 #'
-#' @param sleep In its parallel processing, `drake` uses
+#' @param sleep Function on a single parameter `i`.
+#'   Default: `function(i) 0.01`.
+#'
+#'   For parallel processing, `drake` uses
 #'   a central master process to check what the parallel
 #'   workers are doing, and for the affected high-performance
 #'   computing workflows, wait for data to arrive over a network.
@@ -426,8 +429,6 @@ drake_config <- function(
   layout = NULL,
   lock_envir = TRUE
 ) {
-  force(envir)
-  unlink(console_log_file)
   deprecate_fetch_cache(fetch_cache)
   if (!is.null(hook)) {
     warning(
@@ -466,7 +467,6 @@ drake_config <- function(
       # 2018-12-19 # nolint
     )
   }
-  deprecate_fetch_cache(fetch_cache)
   if (!is.null(timeout)) {
     warning(
       "Argument `timeout` is deprecated. ",
@@ -510,6 +510,10 @@ drake_config <- function(
   }
   plan <- sanitize_plan(plan)
   targets <- sanitize_targets(targets, plan)
+  force(envir)
+  unlink(console_log_file)
+  trigger <- convert_old_trigger(trigger)
+  sleep <- `environment<-`(sleep, baseenv())
   if (is.null(cache)) {
     cache <- recover_cache_(
       verbose = verbose,
@@ -517,11 +521,10 @@ drake_config <- function(
       console_log_file = console_log_file
     )
   }
+  seed <- choose_seed(supplied = seed, cache = cache)
   if (identical(force, TRUE)) {
     drake_set_session_info(cache = cache, full = session_info)
   }
-  seed <- choose_seed(supplied = seed, cache = cache)
-  trigger <- convert_old_trigger(trigger)
   layout <- create_drake_layout(
     plan = plan,
     envir = envir,
