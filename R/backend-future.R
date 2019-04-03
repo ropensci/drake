@@ -86,7 +86,6 @@ new_worker <- function(id, target, config, ft_config, protect) {
   if (identical(config$caching, "master")) {
     manage_memory(targets = target, config = config, downstream = protect)
   }
-  config$cache$flush_cache() # Less data to pass this way.
   DRAKE_GLOBALS__ <- NULL # Fixes warning about undefined globals.
   # Avoid potential name conflicts with other globals.
   # When we solve #296, need for such a clumsy workaround
@@ -221,6 +220,7 @@ ft_config <- function(config) {
   for (x in discard) {
     config[[x]] <- NULL
   }
+  config$cache$flush_cache() # Less data to pass this way.
   config
 }
 
