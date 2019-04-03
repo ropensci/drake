@@ -220,7 +220,7 @@ ft_config <- function(config) {
   for (x in discard) {
     config[[x]] <- NULL
   }
-  config$cache$flush_cache() # Less data to pass this way.
+  config$cache$flush_cache()
   config
 }
 
