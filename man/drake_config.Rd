@@ -303,8 +303,12 @@ For more information, see the \code{clustermq} package:
 Some template placeholders such as \code{{{ job_name }}} and \code{{{ n_jobs }}}
 cannot be set this way.}
 
-\item{sleep}{Function on a single parameter \code{i}.
+\item{sleep}{Optional function on a single numeric argument \code{i}.
 Default: \code{function(i) 0.01}.
+
+To conserve memory, \code{drake} assigns a brand new closure to
+\code{sleep}, so your custom function should not depend on in-memory data
+except from loaded packages.
 
 For parallel processing, \code{drake} uses
 a central master process to check what the parallel

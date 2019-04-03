@@ -311,8 +311,12 @@
 #'   Some template placeholders such as `{{ job_name }}` and `{{ n_jobs }}`
 #'   cannot be set this way.
 #'
-#' @param sleep Function on a single parameter `i`.
+#' @param sleep Optional function on a single numeric argument `i`.
 #'   Default: `function(i) 0.01`.
+#'
+#'   To conserve memory, `drake` assigns a brand new closure to
+#'   `sleep`, so your custom function should not depend on in-memory data
+#'   except from loaded packages.
 #'
 #'   For parallel processing, `drake` uses
 #'   a central master process to check what the parallel
@@ -513,7 +517,7 @@ drake_config <- function(
   force(envir)
   unlink(console_log_file)
   trigger <- convert_old_trigger(trigger)
-  sleep <- `environment<-`(sleep, baseenv())
+  sleep <- `environment<-`(sleep, new.env(parent = globalenv()))
   if (is.null(cache)) {
     cache <- recover_cache_(
       verbose = verbose,
