@@ -251,7 +251,7 @@ to tell the user if the command, a dependency, an input file, or an output file 
 - Skip more tests on CRAN. White-list tests instead of blacklisting them in order to try to keep check time under the official 10-minute cap.
 - Disallow wildcard names to grep-match other wildcard names or any replacement values. This will prevent careless mistakes and confusion when generating `drake_plan()`s.
 - Prevent persistent workers from hanging when a target fails.
-- Move the example template files [here](https://github.com/ropensci/drake/tree/master/inst/hpc_template_files).
+- Move the example template files to `inst/hpc_template_files`.
 - Deprecate `drake_batchtools_tmpl_file()` in favor of `drake_hpc_template_file()` and `drake_hpc_template_files()`.
 - Add a `garbage_collection` argument to `make()`. If `TRUE`, `gc()` is called after every new build of a target.
 - Remove redundant calls to `sanitize_plan()` in `make()`.
