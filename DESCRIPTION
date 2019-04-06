@@ -74,7 +74,7 @@ Authors@R: c(
   person(
   family = "McBain",
   given = "Miles",
-  email = "miles.mcbain@gmail.com"
+  email = "miles.mcbain@gmail.com",
   role = "ctb",
   comment = c(ORCID = "0000-0003-2865-2548")
   ))
