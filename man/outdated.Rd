@@ -32,7 +32,7 @@ Outdated targets will be rebuilt in the next
 described at
 \url{https://ropenscilabs.github.io/drake-manual/debug.html}.
 For example, even if \code{outdated(...)} shows everything up to date,
-\code{outdated(..., trigger = "always")} will show
+\code{outdated(..., trigger = trigger(condition = TRUE))} will show
 all targets out of date.
 You must use a fresh \code{config} argument with an up-to-date
 \code{config$targets} element that was never modified by hand.
@@ -51,10 +51,6 @@ outdated(config = config) # Which targets are out of date?
 make(my_plan) # Run the projects, build the targets.
 config <- drake_config(my_plan)
 # Now, everything should be up to date (no targets listed).
-outdated(config = config)
-# outdated() is sensitive to triggers.
-# See the debugging guide: https://ropenscilabs.github.io/drake-manual/debug.html # nolint
-config$trigger <- "always"
 outdated(config = config)
 }
 })

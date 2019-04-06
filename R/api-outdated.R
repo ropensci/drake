@@ -5,7 +5,7 @@
 #' described at
 #' <https://ropenscilabs.github.io/drake-manual/debug.html>.
 #' For example, even if `outdated(...)` shows everything up to date,
-#' `outdated(..., trigger = "always")` will show
+#' `outdated(..., trigger = trigger(condition = TRUE))` will show
 #' all targets out of date.
 #' You must use a fresh `config` argument with an up-to-date
 #' `config$targets` element that was never modified by hand.
@@ -37,10 +37,6 @@
 #' make(my_plan) # Run the projects, build the targets.
 #' config <- drake_config(my_plan)
 #' # Now, everything should be up to date (no targets listed).
-#' outdated(config = config)
-#' # outdated() is sensitive to triggers.
-#' # See the debugging guide: https://ropenscilabs.github.io/drake-manual/debug.html # nolint
-#' config$trigger <- "always"
 #' outdated(config = config)
 #' }
 #' })
