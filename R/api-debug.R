@@ -45,6 +45,13 @@ drake_debug <- function(
 ) {
   # Tested in tests/testthat/test-always-skipped.R.
   # nocov start
+  if (is.null(config)) {
+    stop(
+      "In `drake_debug()`, you must supply a `drake_config()` ",
+      "object to the `config` argument.",
+      call. = FALSE
+    )
+  }
   if (!is.null(envir)) {
     warning("the `envir` argument of drake_debug() is deprecated")
   }
