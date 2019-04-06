@@ -58,3 +58,4 @@ rs_get_symbol_at_cursor <- function(context) {
     stop = match_ends[match_index]
   )
 }
+
