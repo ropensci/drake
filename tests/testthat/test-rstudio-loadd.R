@@ -1,7 +1,7 @@
-drake_context("rstudio")
+drake_context("rstudio loadd")
 
 test_with_dir("loading targets at cursor works under a real conditions", {
-
+  skip_on_cran()
   ## Template for context content. We're testing the addin on target names in
   ## every position occupied by the "%s" placeholder.
   content_template <- c(
@@ -110,6 +110,7 @@ test_with_dir("loading targets at cursor works under a real conditions", {
 })
 
 test_with_dir("do nothing if the cursor is in the console", {
+  skip_on_cran()
   console_context <- structure(list(
     id = "#console",
     path = "",
