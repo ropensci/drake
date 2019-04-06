@@ -48,6 +48,10 @@ rs_get_symbol_at_cursor <- function(context) {
     cursor_column >= match_starts &
       cursor_column <= match_ends
   )
+  if (length(match_index) == 0){
+    message("Couldn't find an object name at cursor position.")
+    return(NULL)
+  }
   substr(
     context$contents[cursor_line],
     start = match_starts[match_index],
