@@ -70,6 +70,13 @@ Authors@R: c(
   person(
     family = "Eli Lilly and Company",
     role = "cph"
+  ),
+  person(
+  family = "McBain",
+  given = "Miles",
+  email = "miles.mcbain@gmail.com"
+  role = "ctb",
+  comment = c(ORCID = "0000-0003-2865-2548")
   ))
 Depends:
   R (>= 3.3.0)
