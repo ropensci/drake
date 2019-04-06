@@ -317,6 +317,7 @@ test_with_dir("empty deps_graph()", {
 })
 
 test_with_dir("supplied a plan instead of a config", {
+  skip_if_not_installed("visNetwork")
   plan <- drake_plan(x = 1)
   expect_error(vis_drake_graph(plan), regexp = "supplied a drake plan")
 })
