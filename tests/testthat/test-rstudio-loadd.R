@@ -13,7 +13,8 @@ test_with_dir("loading targets at cursor works under a real conditions", {
     "    if(!%s|TRUE) \"bar\"",
     "  a <- 1; %s <- \"foo\"",
     "    b[%s] <- \"foo\"",
-    "    print(%s[\"foo\"])"
+    "    print(%s[\"foo\"])",
+    "xyz <- %s"
   )
 
   placeholder_column_pos <- unlist(
@@ -134,4 +135,47 @@ test_with_dir("do nothing if the cursor is in the console", {
     ),
     regexp = "object 'NOTARGET' not found"
   )
+})
+
+test_with_dir("graceful handling of no symbol at cursor.", {
+  skip_on_cran()
+  whitespace_context <- structure(list(
+    id = "966E9371",
+    path = "",
+    contents = "  ",
+    selection = structure(list(list(
+      range = structure(list(
+        start = structure(c(row = 1,
+                            column = 1), class = "document_position"),
+        end = structure(c(row = 1,
+                          column = 1), class = "document_position")
+      ), class = "document_range"),
+      text = ""
+    )), .Names = "", class = "document_selection")
+  ),
+  class = "document_context")
+
+  expect_message({result <- rs_addin_loadd(whitespace_context)},
+                 "Couldn't find an object name at cursor position.")
+  expect_null(result)
+
+  after_symbol_context <- structure(list(
+    id = "966E9371",
+    path = "",
+    contents = "NOTARGET",
+    selection = structure(list(list(
+      range = structure(list(
+        start = structure(c(row = 1,
+                            column = 9), class = "document_position"),
+        end = structure(c(row = 1,
+                          column = 9), class = "document_position")
+      ), class = "document_range"),
+      text = ""
+    )), .Names = "", class = "document_selection")
+  ),
+  class = "document_context")
+
+  expect_message({result <- rs_addin_loadd(after_symbol_context)},
+                 "Couldn't find an object name at cursor position.")
+  expect_null(result)
 })
