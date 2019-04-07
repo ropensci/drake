@@ -2,6 +2,7 @@ drake_context("rstudio loadd")
 
 test_with_dir("loading targets at cursor works under a real conditions", {
   skip_on_cran()
+  skip_if_not_installed("rstudioapi")
   ## Template for context content. We're testing the addin on target names in
   ## every position occupied by the "%s" placeholder.
   content_template <- c(
@@ -111,6 +112,7 @@ test_with_dir("loading targets at cursor works under a real conditions", {
 
 test_with_dir("do nothing if the cursor is in the console", {
   skip_on_cran()
+  skip_if_not_installed("rstudioapi")
   console_context <- structure(list(
     id = "#console",
     path = "",
@@ -140,6 +142,7 @@ test_with_dir("do nothing if the cursor is in the console", {
 
 test_with_dir("graceful handling of no symbol at cursor.", {
   skip_on_cran()
+  skip_if_not_installed("rstudioapi")
   whitespace_context <- structure(list(
     id = "966E9371",
     path = "",
