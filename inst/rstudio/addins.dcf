@@ -1,0 +1,4 @@
+Name: loadd target at cursor
+Description: Load the target identified by the symbol under the cursor position from the drake cache.
+Binding: rs_addin_loadd
+Interactive: false
