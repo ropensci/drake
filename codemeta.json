@@ -10,14 +10,14 @@
   "codeRepository": "https://github.com/ropensci/drake",
   "issueTracker": "https://github.com/ropensci/drake/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "6.2.1.9001",
+  "version": "7.1.0",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
-    "version": "3.5.2",
+    "version": "3.5.3",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 3.5.2 (2018-12-20)",
+  "runtimePlatform": "R version 3.5.3 (2019-03-11)",
   "provider": {
     "@id": "https://cran.r-project.org",
     "@type": "Organization",
@@ -58,6 +58,20 @@
       "familyName": "Bond-Lamberty",
       "email": "bondlamberty@pnnl.gov",
       "@id": "https://orcid.org/0000-0001-9525-4633"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Tristan",
+      "familyName": "Mahr",
+      "email": "tristan.mahr@wisc.edu",
+      "@id": "https://orcid.org/0000-0002-8890-5116"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Miles",
+      "familyName": "McBain",
+      "email": "miles.mcbain@gmail.com",
+      "@id": "https://orcid.org/0000-0003-2865-2548"
     }
   ],
   "copyrightHolder": [
@@ -102,6 +116,30 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "callr",
+      "name": "callr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=callr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "cli",
+      "name": "cli",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=cli"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "clustermq",
       "name": "clustermq",
       "provider": {
@@ -138,6 +176,18 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "curl",
+      "name": "curl",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=curl"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "datasets",
       "name": "datasets"
     },
@@ -167,23 +217,6 @@
     },
     {
       "@type": "SoftwareApplication",
-      "identifier": "future.apply",
-      "name": "future.apply",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=future.apply"
-    },
-    {
-      "@type": "SoftwareApplication",
-      "identifier": "grDevices",
-      "name": "grDevices"
-    },
-    {
-      "@type": "SoftwareApplication",
       "identifier": "ggplot2",
       "name": "ggplot2",
       "provider": {
@@ -205,6 +238,11 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=ggraph"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "grDevices",
+      "name": "grDevices"
     },
     {
       "@type": "SoftwareApplication",
@@ -261,8 +299,56 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "Rcpp",
+      "name": "Rcpp",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=Rcpp"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "rmarkdown",
+      "name": "rmarkdown",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=rmarkdown"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "rstudioapi",
+      "name": "rstudioapi",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=rstudioapi"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "stats",
       "name": "stats"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "styler",
+      "name": "styler",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=styler"
     },
     {
       "@type": "SoftwareApplication",
@@ -303,27 +389,15 @@
     },
     {
       "@type": "SoftwareApplication",
-      "identifier": "rmarkdown",
-      "name": "rmarkdown",
+      "identifier": "usethis",
+      "name": "usethis",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
         "name": "Comprehensive R Archive Network (CRAN)",
         "url": "https://cran.r-project.org"
       },
-      "sameAs": "https://CRAN.R-project.org/package=rmarkdown"
-    },
-    {
-      "@type": "SoftwareApplication",
-      "identifier": "styler",
-      "name": "styler",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=styler"
+      "sameAs": "https://CRAN.R-project.org/package=usethis"
     },
     {
       "@type": "SoftwareApplication",
@@ -430,9 +504,9 @@
       "name": "utils"
     }
   ],
-  "releaseNotes": "https://github.com/bpbond/drake/blob/master/NEWS.md",
-  "readme": "https://github.com/bpbond/drake/blob/master/README.md",
-  "fileSize": "337.847KB",
+  "releaseNotes": "https://github.com/ropensci/drake/blob/master/NEWS.md",
+  "readme": "https://github.com/ropensci/drake/blob/master/README.md",
+  "fileSize": "887.719KB",
   "contIntegration": [
     "https://ci.appveyor.com/project/ropensci/drake",
     "https://travis-ci.org/ropensci/drake",
@@ -459,5 +533,6 @@
     "ropensci",
     "peer-reviewed"
   ],
-  "relatedLink": "https://CRAN.R-project.org/package=drake"
+  "relatedLink": "https://CRAN.R-project.org/package=drake",
+  "funder": {}
 }
