@@ -42,18 +42,6 @@ Authors@R: c(
     role = "ctb"
   ),
   person(
-    family = "Marwick",
-    given = "Ben",
-    email = "bmarwick@uw.edu",
-    role = "rev"
-  ),
-  person(
-    family = "Slaughter",
-    given = "Peter",
-    email = "slaughter@nceas.ucsb.edu",
-    role = "rev"
-  ),
-  person(
     family = "Bond-Lamberty",
     given = "Ben",
     email = "bondlamberty@pnnl.gov",
@@ -68,15 +56,27 @@ Authors@R: c(
     comment = c(ORCID = "0000-0002-8890-5116")
   ),
   person(
-    family = "Eli Lilly and Company",
-    role = "cph"
+    family = "McBain",
+    given = "Miles",
+    email = "miles.mcbain@gmail.com",
+    role = "ctb",
+    comment = c(ORCID = "0000-0003-2865-2548")
   ),
   person(
-  family = "McBain",
-  given = "Miles",
-  email = "miles.mcbain@gmail.com",
-  role = "ctb",
-  comment = c(ORCID = "0000-0003-2865-2548")
+    family = "Marwick",
+    given = "Ben",
+    email = "bmarwick@uw.edu",
+    role = "rev"
+  ),
+  person(
+    family = "Slaughter",
+    given = "Peter",
+    email = "slaughter@nceas.ucsb.edu",
+    role = "rev"
+  ),
+  person(
+    family = "Eli Lilly and Company",
+    role = "cph"
   ))
 Depends:
   R (>= 3.3.0)
@@ -100,25 +100,25 @@ Suggests:
   datasets,
   downloader,
   future,
-  grDevices,
   ggplot2,
   ggraph,
+  grDevices,
   knitr,
   lubridate,
   networkD3,
   parallel,
   prettycode,
   Rcpp,
+  rmarkdown,
+  rstudioapi,
   stats,
+  styler,
   testthat,
   tibble,
   tidyselect (>= 0.2.4),
-  rmarkdown,
-  styler,
   usethis,
   visNetwork,
-  webshot,
-  rstudioapi
+  webshot
 VignetteBuilder: knitr
 Encoding: UTF-8
 Language: en-US
