@@ -18,3 +18,4 @@ This function provides an RStudio addin that will load the target at the
 current cursor location from the cache into the global environment. This is
 convenient during pipeline development when building off established targets.
 }
+\keyword{internal}

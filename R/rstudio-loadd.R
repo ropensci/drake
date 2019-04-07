@@ -8,6 +8,7 @@
 #'   not supplied. This is used for testing purposes.
 #'
 #' @return Nothing.
+#' @keywords internal
 #' @export
 rs_addin_loadd <- function(context = NULL){
   assert_pkg("rstudioapi")
