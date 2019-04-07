@@ -7,7 +7,7 @@
 rs_addin_loadd(context = NULL)
 }
 \arguments{
-\item{context}{an RStudio docuement context. Read from the active document if
+\item{context}{an RStudio document context. Read from the active document if
 not supplied. This is used for testing purposes.}
 }
 \value{

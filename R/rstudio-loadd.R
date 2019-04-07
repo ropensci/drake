@@ -4,7 +4,7 @@
 #' current cursor location from the cache into the global environment. This is
 #' convenient during pipeline development when building off established targets.
 #'
-#' @param context an RStudio docuement context. Read from the active document if
+#' @param context an RStudio document context. Read from the active document if
 #'   not supplied. This is used for testing purposes.
 #'
 #' @return Nothing.
