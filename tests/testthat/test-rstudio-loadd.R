@@ -156,8 +156,7 @@ test_with_dir("graceful handling of no symbol at cursor.", {
   ),
   class = "document_context")
 
-  expect_message(
-    {
+  expect_message({
       result <- rs_addin_loadd(whitespace_context)
     },
     "Couldn't find an object name at cursor position."
@@ -180,8 +179,7 @@ test_with_dir("graceful handling of no symbol at cursor.", {
   ),
   class = "document_context")
 
-  expect_message(
-    {
+  expect_message({
       result <- rs_addin_loadd(after_symbol_context)
     },
     "Couldn't find an object name at cursor position."
