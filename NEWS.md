@@ -2,7 +2,7 @@
 
 ## New features
 
-- In the DSL, allow reference to a target's own name with a special `.id_chr` symbol.
+- In `drake_plan()` transformations, allow the user to refer to a target's own name using a special `.id_chr` symbol, which is treated like a character vector.
 
 
 # Version 7.1.0
