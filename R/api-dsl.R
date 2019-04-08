@@ -114,8 +114,8 @@ map_to_grid <- function(transform, target, row, plan, graph) {
   new_targets <- new_targets(
     target, grid, cols = sub_cols, id = dsl_id(transform)
   )
-  grid$.id_chr <- sprintf("\"%s\"", new_targets)
   out <- data.frame(target = new_targets, stringsAsFactors = FALSE)
+  grid$.id_chr <- sprintf("\"%s\"", new_targets)
   for (col in setdiff(old_cols(plan), c("target", "transform"))) {
     if (is.language(row[[col]][[1]])) {
       out[[col]] <- grid_subs(row[[col]][[1]], grid)
@@ -123,6 +123,7 @@ map_to_grid <- function(transform, target, row, plan, graph) {
       out[[col]] <- row[[col]][[1]]
     }
   }
+  grid$.id_chr <- NULL
   cbind(out, grid)
 }
 
