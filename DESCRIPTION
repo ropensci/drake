@@ -92,7 +92,7 @@ Suggests:
   abind,
   bindr,
   callr,
-  cli,
+  cli (>= 1.1.0),
   clustermq,
   CodeDepends,
   crayon,
