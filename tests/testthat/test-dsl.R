@@ -2175,3 +2175,38 @@ test_with_dir("dates in the DSL", {
   make(plan, cache = cache, session_info = FALSE)
   expect_true(inherits(cache$get("y"), "Date"))
 })
+
+test_with_dir(".id_chr", {
+  skip_on_cran()
+  out <- drake_plan(
+    data = target(
+      get_data(param),
+      transform = map(param = c(123, 456))
+    ),
+    model = target(
+      save_model_hdf5(fit_model(data), file_out(!!sprintf("%s.h5", .id_chr))),
+      transform = map(data, .id = param)
+    ),
+    result = target(
+      predict(load_model_hdf5(file_in(
+        !!sprintf("%s.h5", deparse(substitute(model)))
+      ))),
+      transform = map(model, .id = param)
+    )
+  )
+  exp <- drake_plan(
+    data_123 = get_data(123),
+    data_456 = get_data(456),
+    model_123 = save_model_hdf5(
+      fit_model(data_123),
+      file_out("model_123.h5")
+    ),
+    model_456 = save_model_hdf5(
+      fit_model(data_456),
+      file_out("model_456.h5")
+    ),
+    result_123 = predict(load_model_hdf5(file_in("model_123.h5"))),
+    result_456 = predict(load_model_hdf5(file_in("model_456.h5")))
+  )
+  equivalent_plans(out, exp)
+})

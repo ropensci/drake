@@ -1,5 +1,9 @@
 # Version 7.1.0.9000
 
+## New features
+
+- In the DSL, allow reference to a target's own name with a special `.id_chr` symbol.
+
 
 # Version 7.1.0
 
