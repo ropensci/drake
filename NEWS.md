@@ -1,5 +1,9 @@
 # Version 7.1.0.9000
 
+## Bug fixes
+
+- Minor: avoid printing messages and warnings twice to the console ([#829](https://github.com/ropensci/drake/issues/829)).
+
 ## New features
 
 - In `drake_plan()` transformations, allow the user to refer to a target's own name using a special `.id_chr` symbol, which is treated like a character vector.
