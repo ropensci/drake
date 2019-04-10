@@ -124,15 +124,16 @@ readd <- function(
 #' @param deps Logical, whether to load any cached
 #'   dependencies of the targets
 #'   instead of the targets themselves.
-#'   This is useful if you know your
-#'   target failed and you want to debug the command in an interactive
-#'   session with the dependencies in your workspace.
-#'   One caveat: to find the dependencies,
-#'   [loadd()] uses information that was stored
-#'   in a [drake_config()] list and cached
-#'   during the last [make()].
-#'   That means you need to have already called [make()]
-#'   if you set `deps` to `TRUE`.
+#'
+#'   Important note:
+#'   `deps = TRUE` disables `tidyselect` functionality. For example,
+#'   `loadd(starts_with("model_"), config = config, deps = TRUE)`
+#'   does not work. For the selection mechanism to work,
+#'   the `model_*` targets to need to already be in the cache,
+#'   which is not always the case when you are debugging your projects.
+#'   To help `drake` understand what you mean,
+#'   you must name the targets *explicitly* when `deps` is `TRUE`, e.g.
+#'   `loadd(model_A, model_B, config = config, deps = TRUE)`.
 #'
 #' @param lazy Either a string or a logical. Choices:
 #'   - `"eager"`: no lazy loading. The target is loaded right away
@@ -197,7 +198,7 @@ loadd <- function(
   graph = NULL,
   replace = TRUE,
   show_source = FALSE,
-  tidyselect = TRUE,
+  tidyselect = !deps,
   config = NULL
 ) {
   force(envir)
@@ -213,6 +214,13 @@ loadd <- function(
   }
   if (is.null(namespace)) {
     namespace <- cache$default_namespace
+  }
+  if (tidyselect && deps) {
+    tidyselect <- FALSE
+    message(
+      "Disabling `tidyselect` in `loadd()` because `deps` is `TRUE`. ",
+      "For details, see the `deps` argument in the `loadd()` help file."
+    )
   }
   if (tidyselect && requireNamespace("tidyselect", quietly = TRUE)) {
     targets <- drake_tidyselect_cache(

@@ -3,6 +3,7 @@
 ## Bug fixes
 
 - Minor: avoid printing messages and warnings twice to the console ([#829](https://github.com/ropensci/drake/issues/829)).
+- Allow `loadd(x, deps = TRUE, config = your_config)` to work even if `x` is not cached ([#830](https://github.com/ropensci/drake/issues/830)). Required disabling `tidyselect` functionality when `deps` `TRUE`. There is a new note in the help file about this, and an informative console message prints out on `loadd(deps = TRUE, tidyselect = TRUE)`. The default value of `tidyselect` is now `!deps`.
 
 ## New features
 

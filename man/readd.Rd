@@ -14,7 +14,7 @@ loadd(..., list = character(0), imported_only = NULL, path = getwd(),
   verbose = verbose), namespace = NULL, envir = parent.frame(),
   jobs = 1, verbose = 1L, deps = FALSE, lazy = "eager",
   graph = NULL, replace = TRUE, show_source = FALSE,
-  tidyselect = TRUE, config = NULL)
+  tidyselect = !deps, config = NULL)
 }
 \arguments{
 \item{target}{If \code{character_only} is \code{TRUE}, then
@@ -75,15 +75,16 @@ just set jobs to be an integer greater than 1. On Windows,
 \item{deps}{Logical, whether to load any cached
 dependencies of the targets
 instead of the targets themselves.
-This is useful if you know your
-target failed and you want to debug the command in an interactive
-session with the dependencies in your workspace.
-One caveat: to find the dependencies,
-\code{\link[=loadd]{loadd()}} uses information that was stored
-in a \code{\link[=drake_config]{drake_config()}} list and cached
-during the last \code{\link[=make]{make()}}.
-That means you need to have already called \code{\link[=make]{make()}}
-if you set \code{deps} to \code{TRUE}.}
+
+Important note:
+\code{deps = TRUE} disables \code{tidyselect} functionality. For example,
+\code{loadd(starts_with("model_"), config = config, deps = TRUE)}
+does not work. For the selection mechanism to work,
+the \code{model_*} targets to need to already be in the cache,
+which is not always the case when you are debugging your projects.
+To help \code{drake} understand what you mean,
+you must name the targets \emph{explicitly} when \code{deps} is \code{TRUE}, e.g.
+\code{loadd(model_A, model_B, config = config, deps = TRUE)}.}
 
 \item{lazy}{Either a string or a logical. Choices:
 \itemize{

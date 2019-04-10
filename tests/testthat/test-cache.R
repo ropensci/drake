@@ -559,3 +559,18 @@ test_with_dir("make() writes a cache log file", {
   # Changed parts of cache are different.
   expect_false(log1$hash[2] == log2$hash[2])
 })
+
+test_with_dir("loadd(x, deps = TRUE) when x is not cached", {
+  plan <- drake_plan(x = "abc", y = x + 1)
+  expect_error(make(plan, session_info = FALSE))
+  config <- drake_config(plan, session_info = FALSE)
+  e <- new.env(parent = emptyenv())
+  expect_equal(ls(e), character(0))
+  loadd(y, envir = e, config = config, deps = TRUE)
+  expect_equal(ls(e), "x")
+  expect_equal(e$x, "abc")
+  expect_message(
+    loadd(y, envir = e, config = config, deps = TRUE, tidyselect = TRUE),
+    regexp = "Disabling"
+  )
+})
