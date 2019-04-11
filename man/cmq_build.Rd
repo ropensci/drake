@@ -13,6 +13,8 @@ cmq_build(target, meta, deps, layout, config)
 
 \item{deps}{Named list of target dependencies.}
 
+\item{layout}{Internal, part of the full \code{config$layout}.}
+
 \item{config}{A \code{\link[=drake_config]{drake_config()}} list.}
 }
 \description{
