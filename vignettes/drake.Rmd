@@ -67,7 +67,6 @@ There are also multiple `drake`-powered example projects [available here](https:
 | [Will Landau](https://github.com/wlandau) | [R in Pharma](http://rinpharma.com/) | 2018-08-16 | [video](https://ropenscilabs.github.io/drake-manual/), [slides](https://wlandau.github.io/drake-talk), [source](https://github.com/wlandau/drake-talk) |
 | [Christine Stawitz](https://github.com/cstawitz) | [R-Ladies Seattle](https://www.meetup.com/rladies-seattle) | 2018-06-25 | [materials](https://github.com/cstawitz/RLadies_Sea_drake) |
 | [Kirill Müller](https://github.com/krlmlr) | [Swiss Institute of Bioinformatics](https://www.sib.swiss) | 2018-03-05 | [workshop](https://www.sib.swiss/training/course/2018-03-remake), [slides](https://krlmlr.github.io/slides/drake-sib-zurich), [source](https://github.com/krlmlr/drake-sib-zurich),  [exercises](https://krlmlr.github.io/slides/drake-sib-zurich/cooking.html) |
-| [Kirill Müller](https://github.com/krlmlr) | [RStudio Conference](https://www.rstudio.com/conference) | 2018-02-01 | [slides](https://krlmlr.github.io/drake-pitch), [source](https://github.com/krlmlr/drake-pitch) |
 
 ## Context and history
 

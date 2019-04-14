@@ -429,12 +429,6 @@ Presentations
 <td>2018-03-05</td>
 <td><a href="https://www.sib.swiss/training/course/2018-03-remake">workshop</a>, <a href="https://krlmlr.github.io/slides/drake-sib-zurich">slides</a>, <a href="https://github.com/krlmlr/drake-sib-zurich">source</a>, <a href="https://krlmlr.github.io/slides/drake-sib-zurich/cooking.html">exercises</a></td>
 </tr>
-<tr class="even">
-<td><a href="https://github.com/krlmlr">Kirill Müller</a></td>
-<td><a href="https://www.rstudio.com/conference">RStudio Conference</a></td>
-<td>2018-02-01</td>
-<td><a href="https://krlmlr.github.io/drake-pitch">slides</a>, <a href="https://github.com/krlmlr/drake-pitch">source</a></td>
-</tr>
 </tbody>
 </table>
 

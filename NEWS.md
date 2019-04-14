@@ -292,7 +292,7 @@ to tell the user if the command, a dependency, an input file, or an output file 
 - Deprecate `max_useful_jobs()`.
 - For non-distributed parallel backends, stop waiting for all the imports to finish before the targets begin.
 - Add an `upstream_only` argument to `failed()` so users can list failed targets that do not have any failed dependencies. Naturally accompanies `make(keep_going = TRUE)`.
-- Add an RStudio R Markdown template compatible with https://krlmlr.github.io/drake-pitch/.
+- Add an RStudio R Markdown template.
 - Remove `plyr` as a dependency.
 - Handle duplicated targets better in `drake_plan()` and `bind_plans()`.
 - Add a true function `target()` to help create drake plans with custom columns.
