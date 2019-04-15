@@ -341,6 +341,10 @@ test_with_dir("bind_plans()", {
     bind_plans(list(list(plan1), list(plan2), list(plan3))),
     exp
   )
+  equivalent_plans(
+    bind_plans(,drake_plan(x = 1, y = 2),,drake_plan(z = 3),,,), # nolint
+    drake_plan(x = 1, y = 2, z = 3)
+  )
 })
 
 test_with_dir("spaces in target names are replaced only when appropriate", {

@@ -321,7 +321,7 @@ weak_as_tibble <- function(..., .force_df = FALSE) {
 }
 
 drake_bind_rows <- function(...) {
-  args <- select_nonempty(list(...))
+  args <- rlang::dots_list(..., .ignore_empty = "all")
   df_env <- new.env(parent = emptyenv())
   df_env$dfs <- list()
   flatten_df_list(args, df_env = df_env)
