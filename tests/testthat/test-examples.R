@@ -49,7 +49,6 @@ test_with_dir("mtcars example works", {
     caching = caching
   )
   config$plan <- my_plan
-  expect_false(file.exists("Makefile"))
 
   dats <- c("small", "large")
   config$targets <- dats
@@ -64,7 +63,7 @@ test_with_dir("mtcars example works", {
   rm(list = remove_these, envir = config$envir)
   config$targets <- config$plan$target
   testrun(config)
-  jb <- justbuilt(con)
+  jb <- justbuilt(config)
   expect_true("report" %in% jb)
   expect_false(any(dats %in% jb))
 
@@ -74,7 +73,7 @@ test_with_dir("mtcars example works", {
     target = encode_path("report.Rmd"), config = con, size_cutoff = -1)))
   config <- drake_config(
     my_plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 0L)
+    verbose = 1L)
   expect_equal(outdated(config), character(0))
 
   # Change an imported function
@@ -84,18 +83,19 @@ test_with_dir("mtcars example works", {
   }
   config <- drake_config(
     my_plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 0L)
+    verbose = 1L)
   to_build <- sort(c(
     "report", "coef_regression2_large",
     "coef_regression2_small", "regression2_large", "regression2_small",
     "summ_regression2_large", "summ_regression2_small"
   ))
   expect_equal(sort(outdated(config = config)), to_build)
+  config$plan <- my_plan
   testrun(config)
   expect_equal(sort(justbuilt(config)), to_build)
   config <- drake_config(
     my_plan, envir = e, jobs = jobs, parallelism = parallelism,
-    verbose = 0L)
+    verbose = 1L)
   expect_equal(sort(outdated(config = config)), character(0))
 
   # Take this opportunity to test tidyselect API. Saves test time that way.
@@ -121,7 +121,7 @@ test_with_dir("mtcars example works", {
     # build_times() # nolint
     skip_if_not_installed("lubridate")
     all_times <- build_times()
-    expect_true(nrow(all_times) >= nrow(config$plan))
+    expect_true(nrow(all_times) >= nrow(my_plan))
     some_times <- build_times(starts_with("coef"))
     expect_equal(sort(some_times$target), coefs)
 
