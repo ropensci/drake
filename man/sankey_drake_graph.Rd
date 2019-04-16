@@ -87,8 +87,8 @@ Makes all targets outdated, but keeps information about
 build progress in previous \code{\link[=make]{make()}}s.}
 
 \item{group}{Optional character scalar, name of the column used to
-group nodes into columns. All the columns names of your \code{config$plan}
-are choices. The other choices (such as \code{"status"}) are column names
+group nodes into columns. All the columns names of your original \code{drake}
+plan are choices. The other choices (such as \code{"status"}) are column names
 in the \code{nodes} . To group nodes into clusters in the graph,
 you must also supply the \code{clusters} argument.}
 
@@ -130,13 +130,6 @@ make(my_plan) # Run the project, build the targets.
 sankey_drake_graph(config) # The black nodes from before are now green.
 # Plot a subgraph of the workflow.
 sankey_drake_graph(config, from = c("small", "reg2"))
-# Optionally visualize clusters.
-config$plan$large_data <- grepl("large", config$plan$target)
-sankey_drake_graph(
-  config, group = "large_data", clusters = c(TRUE, FALSE))
-# You can even use clusters given to you for free in the `graph$nodes`
-# data frame of `drake_graph_info()`.
-sankey_drake_graph(config, group = "status", clusters = "imported")
 }
 }
 }
