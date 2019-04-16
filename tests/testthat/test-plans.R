@@ -194,7 +194,7 @@ test_with_dir(
     )
   })
   expect_true(all(letters[1:4] %in% cached()))
-  expect_true(all(letters[1:4] %in% con$plan$target))
+  expect_true(all(letters[1:4] %in% names(con$layout)))
 })
 
 test_with_dir("plans can start with bad symbols", {
@@ -203,7 +203,9 @@ test_with_dir("plans can start with bad symbols", {
     target = c("a'x'", "b'x'", "_a", "a^-.*"),
     command = 1)
   y <- drake_config(x)
-  expect_equal(y$plan$target, c("a.x.", "b.x.", "X_a", "a...."))
+  out <- sort(c("a.x.", "b.x.", "X_a", "a...."))
+  expect_equal(sort(y$targets), out)
+  expect_true(all(out %in% names(y$layout)))
 })
 
 test_with_dir("issue 187 on Github (from Kendon Bell)", {
