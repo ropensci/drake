@@ -42,7 +42,7 @@ for ordinary error messages printed to the console.
 }
 \examples{
 \dontrun{
-test_with_dir("Quarantine side effects.", {
+isolate_example("Quarantine side effects.", {
 if (suppressWarnings(require("knitr"))) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 make(my_plan) # Run the project, build the targets.

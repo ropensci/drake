@@ -73,7 +73,7 @@ optional columns in your workflow plan. For details, visit
 \url{https://ropenscilabs.github.io/drake-manual/plans.html#special-custom-columns-in-your-plan}
 }
 \examples{
-test_with_dir("Contain side effects", {
+isolate_example("Contain side effects", {
 # Create workflow plan data frames.
 mtcars_plan <- drake_plan(
   write.csv(mtcars[, c("mpg", "cyl")], file_out("mtcars.csv")),

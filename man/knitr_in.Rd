@@ -28,7 +28,7 @@ does not work with entire directories.
 }
 \examples{
 \dontrun{
-test_with_dir("Contain side effects", {
+isolate_example("Contain side effects", {
 if (suppressWarnings(require("knitr"))) {
 # `knitr_in()` is like `file_in()`
 # except that it analyzes active code chunks in your `knitr`

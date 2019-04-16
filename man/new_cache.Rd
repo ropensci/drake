@@ -44,7 +44,7 @@ from the \code{storr} package.
 }
 \examples{
 \dontrun{
-test_with_dir("Quarantine new_cache() side effects.", {
+isolate_example("Quarantine new_cache() side effects.", {
 clean(destroy = TRUE) # Should not be necessary.
 unlink("not_hidden", recursive = TRUE) # Should not be necessary.
 cache1 <- new_cache() # Creates a new hidden '.drake' folder.

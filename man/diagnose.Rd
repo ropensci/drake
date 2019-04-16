@@ -57,7 +57,7 @@ without an error.
 }
 \examples{
 \dontrun{
-test_with_dir("Quarantine side effects.", {
+isolate_example("Quarantine side effects.", {
 diagnose() # List all the targets with recorded error logs.
 # Define a function doomed to failure.
 f <- function() {

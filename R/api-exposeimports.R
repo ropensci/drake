@@ -32,7 +32,7 @@
 #'   of the imports.
 #' @examples
 #' \dontrun{
-#' test_with_dir("contain this example's side effects", {
+#' isolate_example("contain this example's side effects", {
 #' # Suppose you have a workflow that uses the `digest()` function,
 #' # which computes the hash of an object.
 #'

@@ -38,7 +38,7 @@ currently get more specific than that.
 }
 \examples{
 \dontrun{
-test_with_dir("Quarantine side effects.", {
+isolate_example("Quarantine side effects.", {
 if (suppressWarnings(require("knitr"))) {
 load_mtcars_example() # Load drake's canonical example.
 make(my_plan) # Run the project, build the targets.

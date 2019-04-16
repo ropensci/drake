@@ -30,7 +30,7 @@ Install them with \code{install.packages(c("ggplot2", "ggraph"))}.
 }
 \examples{
 \dontrun{
-test_with_dir("Quarantine side effects.", {
+isolate_example("Quarantine side effects.", {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 if (requireNamespace("ggraph", quietly = TRUE)) {
   # Instead of jumpting right to vis_drake_graph(), get the data frames

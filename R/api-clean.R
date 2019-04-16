@@ -63,7 +63,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
+#' isolate_example("Quarantine side effects.", {
 #' if (suppressWarnings(require("knitr"))) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Run the project, build the targets.
@@ -188,7 +188,7 @@ clean_single_target <- function(
 #'   running version of drake.
 #' @examples
 #' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
+#' isolate_example("Quarantine side effects.", {
 #' if (suppressWarnings(require("knitr"))) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Run the project, build the targets.
@@ -256,7 +256,7 @@ rm_bad_cache_filenames <- function(cache) {
 #'   for details.
 #' @examples
 #' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
+#' isolate_example("Quarantine side effects.", {
 #' if (suppressWarnings(require("knitr"))) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Run the project, build targets. This creates the cache.

@@ -18,7 +18,7 @@ in your project's dependency network.
 }
 \examples{
 \dontrun{
-test_with_dir("Quarantine side effects.", {
+isolate_example("Quarantine side effects.", {
 if (suppressWarnings(require("knitr"))) {
 load_mtcars_example() # Load the canonical example for drake.
 # List all the targets/imports that are reproducibly tracked.

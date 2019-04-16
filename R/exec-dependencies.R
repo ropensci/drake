@@ -57,7 +57,7 @@ deps_code <- function(x) {
 #'   (globals, files, etc).
 #' @examples
 #' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
+#' isolate_example("Quarantine side effects.", {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' config <- drake_config(my_plan)
 #' deps_target("regression1_small", config = config)
@@ -114,7 +114,7 @@ display_deps_list <- function(x) {
 #'   is a character string rather than a symbol.
 #' @examples
 #' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
+#' isolate_example("Quarantine side effects.", {
 #' if (suppressWarnings(require("knitr"))) {
 #' load_mtcars_example() # Load drake's canonical example.
 #' make(my_plan) # Run the project, build the targets.
@@ -187,7 +187,7 @@ deps_profile <- function(
 #' @param config An output list from [drake_config()].
 #' @examples
 #' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
+#' isolate_example("Quarantine side effects.", {
 #' if (suppressWarnings(require("knitr"))) {
 #' load_mtcars_example() # Load the canonical example for drake.
 #' # List all the targets/imports that are reproducibly tracked.

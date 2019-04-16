@@ -81,7 +81,7 @@ with the \code{config} argument from step 2.
 }
 \examples{
 \dontrun{
-test_with_dir("quarantine side effects", {
+isolate_example("quarantine side effects", {
 writeLines(
   c(
     "library(drake)",

@@ -13,7 +13,7 @@
 #' @seealso [predict_workers()], [build_times()], [make()]
 #' @examples
 #' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
+#' isolate_example("Quarantine side effects.", {
 #' if (suppressWarnings(require("knitr"))) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Run the project, build the targets.
@@ -80,7 +80,7 @@ predict_runtime <- function(
 #' @seealso [predict_runtime()], [build_times()], [make()]
 #' @examples
 #' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
+#' isolate_example("Quarantine side effects.", {
 #' if (suppressWarnings(require("knitr"))) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Run the project, build the targets.

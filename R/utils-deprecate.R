@@ -266,7 +266,7 @@ deps <- function(x) {
 #' @return Names of dependencies listed by type (object, input file, etc).
 #' @examples
 #' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
+#' isolate_example("Quarantine side effects.", {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' config <- drake_config(my_plan)
 #' deps_targets("regression1_small", config = config)

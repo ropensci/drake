@@ -23,7 +23,7 @@
 #'   to download quietly or print progress.
 #' @examples
 #' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
+#' isolate_example("Quarantine side effects.", {
 #' if (requireNamespace("downloader")) {
 #' drake_examples() # List all the drake examples.
 #' # Sets up the same example as https://ropenscilabs.github.io/drake-manual/mtcars.html # nolint
@@ -72,7 +72,7 @@ drake_example <- function(
 #'   to download quietly or print progress.
 #' @examples
 #' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
+#' isolate_example("Quarantine side effects.", {
 #' if (requireNamespace("downloader")) {
 #' drake_examples() # List all the drake examples.
 #' # Sets up the example from
@@ -129,7 +129,7 @@ drake_examples <- function(quiet = TRUE) {
 #' @param force Deprecated.
 #' @examples
 #' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
+#' isolate_example("Quarantine side effects.", {
 #' if (suppressWarnings(require("knitr"))) {
 #' # Populate your workspace and write 'report.Rmd'.
 #' load_mtcars_example() # Get the code: drake_example("mtcars")
@@ -258,7 +258,7 @@ mtcars_plan <- function() {
 #' @seealso [load_mtcars_example()], [clean()]
 #' @examples
 #' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
+#' isolate_example("Quarantine side effects.", {
 #' if (suppressWarnings(require("knitr"))) {
 #' # Populate your workspace and write 'report.Rmd'.
 #' load_mtcars_example() # Get the code: drake_example("mtcars")

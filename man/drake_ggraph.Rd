@@ -103,7 +103,7 @@ Install them with \code{install.packages(c("ggplot2", "ggraph"))}.
 }
 \examples{
 \dontrun{
-test_with_dir("Quarantine side effects.", {
+isolate_example("Quarantine side effects.", {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 config <- drake_config(my_plan)
 # Plot the network graph representation of the workflow.

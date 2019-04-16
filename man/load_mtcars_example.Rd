@@ -47,7 +47,7 @@ the file, \code{report.Rmd}.
 }
 \examples{
 \dontrun{
-test_with_dir("Quarantine side effects.", {
+isolate_example("Quarantine side effects.", {
 if (suppressWarnings(require("knitr"))) {
 # Populate your workspace and write 'report.Rmd'.
 load_mtcars_example() # Get the code: drake_example("mtcars")

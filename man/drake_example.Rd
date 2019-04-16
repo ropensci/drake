@@ -39,7 +39,7 @@ in the \code{example} argument.)
 }
 \examples{
 \dontrun{
-test_with_dir("Quarantine side effects.", {
+isolate_example("Quarantine side effects.", {
 if (requireNamespace("downloader")) {
 drake_examples() # List all the drake examples.
 # Sets up the same example as https://ropenscilabs.github.io/drake-manual/mtcars.html # nolint

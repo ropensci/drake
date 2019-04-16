@@ -8,7 +8,7 @@
 #'   Wrap paths in [file_store()] to encode.
 #' @examples
 #' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
+#' isolate_example("Quarantine side effects.", {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' deps_knitr("report.Rmd")
 #' })

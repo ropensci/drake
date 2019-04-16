@@ -75,24 +75,6 @@ nobuild <- function(config) {
   testthat::expect_true(length(justbuilt(config)) < 1)
 }
 
-#' @title Run a unit test in a way that quarantines
-#'   the side effects from your workspace and file system.
-#' @description Typical users of drake should not need this function.
-#' It is exported so it can be used to quarantine the side effects
-#' of the examples in the help files.
-#' @export
-#' @keywords internal
-#' @return Nothing.
-#' @param desc Character, description of the test.
-#' @param ... Code to test.
-#' @examples
-#' \dontrun{
-#' test_with_dir(
-#'   "Write a file to a temporary folder",
-#'   writeLines("hello", "world.txt")
-#' )
-#' file.exists("world.txt") # FALSE
-#' }
 test_with_dir <- function(desc, ...) {
   assert_pkg("testthat")
   old <- Sys.getenv("drake_warn_subdir")
@@ -115,6 +97,17 @@ test_with_dir <- function(desc, ...) {
   })
   invisible()
 }
+
+#' @title Isolate the side effects of an example.
+#' @description Runs code in a temporary directory
+#'   in a controlled environment with a controlled
+#'   set of options.
+#' @export
+#' @keywords internal
+#' @return Nothing.
+#' @param desc Character, description of the test.
+#' @param ... Code to test.
+isolate_example <- test_with_dir
 
 restore_options <- function(old) {
   current <- options()

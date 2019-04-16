@@ -114,7 +114,7 @@ display_key <- function(x, config) {
 #'   # Wraps the string in single quotes.
 #'   file_store("my_file.rds") # "'my_file.rds'"
 #'   \dontrun{
-#'   test_with_dir("contain side effects", {
+#'   isolate_example("contain side effects", {
 #'   if (suppressWarnings(require("knitr"))) {
 #'   load_mtcars_example() # Get the code with drake_example("mtcars").
 #'   make(my_plan) # Run the workflow to build the targets

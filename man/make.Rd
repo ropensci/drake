@@ -465,7 +465,7 @@ but most workflows should stick with the default \code{lock_envir = TRUE}.
 
 \examples{
 \dontrun{
-test_with_dir("Quarantine side effects.", {
+isolate_example("Quarantine side effects.", {
 if (suppressWarnings(require("knitr"))) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 config <- drake_config(my_plan)

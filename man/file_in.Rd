@@ -18,7 +18,7 @@ A character vector of declared input file or directory paths.
 }
 \examples{
 \dontrun{
-test_with_dir("Contain side effects", {
+isolate_example("Contain side effects", {
 # The `file_out()` and `file_in()` functions
 # just takes in strings and returns them.
 file_out("summaries.txt")

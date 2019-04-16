@@ -41,7 +41,7 @@ See the details in the help file for \code{\link[=drake_config]{drake_config()}}
 }
 \examples{
 \dontrun{
-test_with_dir("Quarantine side effects.", {
+isolate_example("Quarantine side effects.", {
 if (suppressWarnings(require("knitr"))) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 # Recopute the config list early and often to have the

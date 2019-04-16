@@ -24,7 +24,7 @@ deciding which target are out of date.
 }
 \examples{
 \dontrun{
-test_with_dir("Contain side effects", {
+isolate_example("Contain side effects", {
 # Normally, `drake` reacts to changes in dependencies.
 x <- 4
 make(plan = drake_plan(y = sqrt(x)))

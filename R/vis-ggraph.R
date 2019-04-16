@@ -11,7 +11,7 @@
 #' @inheritParams render_drake_ggraph
 #' @examples
 #' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
+#' isolate_example("Quarantine side effects.", {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' config <- drake_config(my_plan)
 #' # Plot the network graph representation of the workflow.
@@ -81,7 +81,7 @@ drake_ggraph <- function(
 #'   which is recommended for large graphs with lots of targets.
 #' @examples
 #' \dontrun{
-#' test_with_dir("Quarantine side effects.", {
+#' isolate_example("Quarantine side effects.", {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' if (requireNamespace("ggraph", quietly = TRUE)) {
 #'   # Instead of jumpting right to vis_drake_graph(), get the data frames

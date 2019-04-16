@@ -59,7 +59,7 @@ is in a folder called \code{.drake/}. See the description of the
 }
 \examples{
 \dontrun{
-test_with_dir("Quarantine side effects.", {
+isolate_example("Quarantine side effects.", {
 if (suppressWarnings(require("knitr"))) {
 clean(destroy = TRUE)
 # No cache is available.

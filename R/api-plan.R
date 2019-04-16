@@ -51,7 +51,7 @@
 #'   Tidy evaluation in transformations is always turned on
 #'   regardless of the value you supply to this argument.
 #' @examples
-#' test_with_dir("Contain side effects", {
+#' isolate_example("Contain side effects", {
 #' # Create workflow plan data frames.
 #' mtcars_plan <- drake_plan(
 #'   write.csv(mtcars[, c("mpg", "cyl")], file_out("mtcars.csv")),
@@ -259,7 +259,7 @@ complete_target_names <- function(commands_list) {
 #' @export
 #' @examples
 #' \dontrun{
-#' test_with_dir("Contain side effects", {
+#' isolate_example("Contain side effects", {
 #' # The `file_out()` and `file_in()` functions
 #' # just takes in strings and returns them.
 #' file_out("summaries.txt")
@@ -312,7 +312,7 @@ file_in <- function(...) {
 #' @export
 #' @examples
 #' \dontrun{
-#' test_with_dir("Contain side effects", {
+#' isolate_example("Contain side effects", {
 #' # The `file_out()` and `file_in()` functions
 #' # just takes in strings and returns them.
 #' file_out("summaries.txt")
@@ -370,7 +370,7 @@ file_out <- file_in
 #'   source files supplied to a command in your workflow plan data frame.
 #' @examples
 #' \dontrun{
-#' test_with_dir("Contain side effects", {
+#' isolate_example("Contain side effects", {
 #' if (suppressWarnings(require("knitr"))) {
 #' # `knitr_in()` is like `file_in()`
 #' # except that it analyzes active code chunks in your `knitr`
@@ -407,7 +407,7 @@ knitr_in <- file_in
 #' @param x Code to ignore.
 #' @examples
 #' \dontrun{
-#' test_with_dir("Contain side effects", {
+#' isolate_example("Contain side effects", {
 #' # Normally, `drake` reacts to changes in dependencies.
 #' x <- 4
 #' make(plan = drake_plan(y = sqrt(x)))

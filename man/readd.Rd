@@ -154,7 +154,7 @@ interacting with the cache.
 }
 \examples{
 \dontrun{
-test_with_dir("Quarantine side effects.", {
+isolate_example("Quarantine side effects.", {
 if (suppressWarnings(require("knitr"))) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 make(my_plan) # Run the project, build the targets.
@@ -167,7 +167,7 @@ readd(file_store("report.md"), character_only = TRUE)
 })
 }
 \dontrun{
-test_with_dir("Quarantine side effects.", {
+isolate_example("Quarantine side effects.", {
 if (suppressWarnings(require("knitr"))) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 make(my_plan) # Run the projects, build the targets.

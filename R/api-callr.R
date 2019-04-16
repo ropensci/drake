@@ -71,7 +71,7 @@ r_assert_source <- function(source) {
 #'   Example: `r_make(r_fn = callr::r_bg, r_args = list(stdout = "stdout.log"))`.
 #' @examples
 #' \dontrun{
-#' test_with_dir("quarantine side effects", {
+#' isolate_example("quarantine side effects", {
 #' writeLines(
 #'   c(
 #'     "library(drake)",
