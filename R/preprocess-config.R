@@ -513,6 +513,7 @@ drake_config <- function(
     )
   }
   plan <- sanitize_plan(plan)
+  plan_checks(plan)
   targets <- sanitize_targets(targets, plan)
   force(envir)
   unlink(console_log_file)
