@@ -153,6 +153,6 @@ test_with_dir("predict_workers()", {
   make(my_plan, cache = config$cache)
   out <- predict_workers(config, jobs = 4)
   expect_equal(sort(unique(out$worker)), sort(as.integer(1:4)))
-  expect_equal(dim(out), dim(config$plan))
+  expect_equal(dim(out), dim(my_plan))
   expect_equal(sort(colnames(out)), sort(c("target", "worker")))
 })
