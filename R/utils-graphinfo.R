@@ -165,6 +165,16 @@ function_hover_text <- Vectorize(function(function_name, envir) {
 },
 "function_name")
 
+get_cluster_grouping <- function(config, group) {
+  vapply(
+    X = config$nodes$id,
+    FUN = function(x) {
+      as.character(config$layout[[x]][[group]] %||% NA)
+    },
+    FUN.VALUE = character(1)
+  )
+}
+
 get_raw_node_category_data <- function(config) {
   all_labels <- V(config$graph)$name
   config$outdated <- resolve_graph_outdated(config = config)

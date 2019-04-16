@@ -5,7 +5,7 @@ drake_context <- function(x) {
 }
 
 testconfig <- function(config) {
-  drake_config(
+  out <- drake_config(
     plan = config$plan,
     targets = config$targets,
     envir = config$envir,
@@ -23,6 +23,8 @@ testconfig <- function(config) {
     caching = config$caching,
     lock_envir = !any(grepl("staged", config$parallelism))
   )
+  out$plan <- config$plan
+  out
 }
 
 testrun <- function(config) {

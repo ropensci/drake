@@ -179,13 +179,9 @@ drake_graph_info <- function(
   config <- get_raw_node_category_data(config)
   network_data <- visNetwork::toVisNetworkData(config$graph)
   config$nodes <- network_data$nodes
-  config$nodes[[group]] <- vapply(
-    X = config$nodes$id,
-    FUN = function(x) {
-      as.character(config$layout[[x]][[group]] %||% NA)
-    },
-    FUN.VALUE = character(1)
-  )
+  if (!is.null(group)) {
+    config$nodes[[group]] <- get_cluster_grouping(config, group)
+  }
   for (col in lang_cols(config$nodes)) {
     config$nodes[[col]] <- NULL
   }
