@@ -416,7 +416,7 @@ test_with_dir("trigger components react appropriately", {
     verbose = 1L, caching = caching, session_info = FALSE,
     log_progress = TRUE
   )
-  expect_equal(sort(justbuilt(config)), sort(config$plan$target))
+  expect_equal(sort(justbuilt(config)), sort(plan$target))
   expect_equal(outdated(config), "condition")
   simple_plan <- plan
   simple_plan$trigger <- NULL
@@ -460,7 +460,7 @@ test_with_dir("trigger components react appropriately", {
   expect_equal(sort(justbuilt(config)), "file")
   expect_equal(
     sort(outdated(simple_config)),
-    sort(setdiff(config$plan$target, "file"))
+    sort(setdiff(plan$target, "file"))
   )
   expect_equal(outdated(config), character(0))
 
@@ -471,7 +471,7 @@ test_with_dir("trigger components react appropriately", {
   expect_equal(sort(justbuilt(config)), "file")
   expect_equal(
     sort(outdated(simple_config)),
-    sort(setdiff(config$plan$target, "file"))
+    sort(setdiff(plan$target, "file"))
   )
   expect_equal(outdated(config), character(0))
 
@@ -484,7 +484,7 @@ test_with_dir("trigger components react appropriately", {
   expect_equal(sort(justbuilt(config)), "file")
   expect_equal(
     sort(outdated(simple_config)),
-    sort(setdiff(config$plan$target, "file"))
+    sort(setdiff(plan$target, "file"))
   )
   expect_equal(outdated(config), character(0))
 
@@ -511,23 +511,23 @@ test_with_dir("trigger components react appropriately", {
     out
   }")
   new_commands <- lapply(new_commands, safe_parse)
-  config$plan$command <- simple_config$plan$command <- new_commands
-  config$layout <- create_drake_layout(
-    plan = config$plan,
-    envir = config$envir,
-    cache = config$cache
+  plan$command <- simple_plan$command <- new_commands
+  config <- drake_config(
+    plan, envir = e, jobs = jobs, parallelism = parallelism,
+    verbose = 0L, caching = caching, log_progress = TRUE,
+    session_info = FALSE
   )
-  simple_config$layout <- create_drake_layout(
-    plan = simple_config$plan,
-    envir = simple_config$envir,
-    cache = simple_config$cache
+  simple_config <- drake_config(
+    simple_plan, envir = e, jobs = jobs, parallelism = parallelism,
+    verbose = 0L, caching = caching, log_progress = TRUE,
+    session_info = FALSE
   )
   expect_equal(sort(outdated(config)), "command")
   make(config = config)
   expect_equal(sort(justbuilt(config)), "command")
   expect_equal(
     sort(outdated(simple_config)),
-    sort(setdiff(config$plan$target, "command"))
+    sort(setdiff(plan$target, "command"))
   )
   expect_equal(outdated(config), character(0))
   make(config = simple_config)
@@ -545,7 +545,7 @@ test_with_dir("trigger components react appropriately", {
   expect_equal(sort(justbuilt(config)), "depend")
   expect_equal(
     sort(outdated(simple_config)),
-    sort(setdiff(config$plan$target, "depend"))
+    sort(setdiff(plan$target, "depend"))
   )
   expect_equal(outdated(config), character(0))
   make(config = simple_config)
