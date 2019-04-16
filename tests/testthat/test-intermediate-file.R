@@ -28,6 +28,7 @@ test_with_dir("responses to intermediate file", {
       log_progress = TRUE,
       caching = scenario$caching
     )
+    config$plan <- plan
     testrun(config)
     expect_equal(justbuilt(config), sort(config$plan$target))
     expect_equal(outdated(config), character(0))
@@ -112,6 +113,7 @@ test_with_dir("same with a directory", {
     log_progress = TRUE,
     caching = scenario$caching
   )
+  config$plan <- plan
   testrun(config)
   expect_equal(justbuilt(config), sort(config$plan$target))
   expect_equal(outdated(config), character(0))
@@ -187,6 +189,7 @@ test_with_dir("imported files in imported functions", {
   }
   load_mtcars_example() # for report.Rmd
   config <- drake_config(dbug_plan(), envir = envir, verbose = 0L)
+  config$plan <- dbug_plan()
   testrun(config)
   for (file in paste0(letters[1:2], ".rds")) {
     saveRDS(2, file)
