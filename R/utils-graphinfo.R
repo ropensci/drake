@@ -203,7 +203,7 @@ hover_text <- function(config) {
     nodes[functions, "title"] <-
       function_hover_text(function_name = functions, envir = config$envir)
     nodes[targets, "title"] <-
-      target_hover_text(targets = targets, plan = config$plan)
+      target_hover_text(targets = targets, config = config)
     nodes
   })
 }
@@ -304,7 +304,7 @@ resolve_build_times <- function(build_times) {
 
 resolve_graph_outdated <- function(config) {
   if (config$from_scratch) {
-    config$outdated <- config$plan$target
+    config$outdated <- all_targets(config)
   } else {
     config$outdated <- outdated(
       config = config,
@@ -344,9 +344,17 @@ style_nodes <- function(config) {
   })
 }
 
-target_hover_text <- function(targets, plan) {
+target_hover_text <- function(targets, config) {
+  commands <- vapply(
+    X = targets,
+    FUN = function(target) {
+      config$layout[[target]]$command_standardized
+    },
+    FUN.VALUE = character(1),
+    USE.NAMES = FALSE
+  )
   vapply(
-    X = plan$command[plan$target %in% targets],
+    X = commands,
     FUN = style_hover_text,
     FUN.VALUE = character(1),
     USE.NAMES = FALSE

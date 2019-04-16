@@ -267,7 +267,7 @@ timing_assumptions <- function(
   assumptions[times$target] <- times$elapsed
   assumptions[names(known_times)] <- known_times
   if (!from_scratch) {
-    skip <- setdiff(config$plan$target, outdated)
+    skip <- setdiff(all_targets(config), outdated)
     assumptions[skip] <- 0
   }
   assumptions

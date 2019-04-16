@@ -67,7 +67,7 @@ justbuilt <- function(config) {
       x == "done"
     }
   )
-  sort(intersect(names(out), y = config$plan$target))
+  sort(intersect(names(out), y = all_targets(config)))
 }
 
 nobuild <- function(config) {
