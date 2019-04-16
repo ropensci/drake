@@ -209,6 +209,7 @@ test_with_dir("target conflicts with previous import", {
   config$plan <- bind_plans(config$plan, new_row)
   config$targets <- config$plan$target
   testrun(config)
+  config <- drake_config(config$plan)
   expect_equal(
     justbuilt(config),
     sort(c("drake_target_1", "combined", "f", "final", "yourinput"))

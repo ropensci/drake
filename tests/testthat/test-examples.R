@@ -40,9 +40,15 @@ test_with_dir("mtcars example works", {
     regexp = "Overwriting"
   )
   my_plan <- e$my_plan
-  config <- drake_config(my_plan, envir = e,
-                         jobs = jobs, parallelism = parallelism,
-                         verbose = 0L, caching = caching)
+  config <- drake_config(
+    my_plan,
+    envir = e,
+    jobs = jobs,
+    parallelism = parallelism,
+    verbose = 0L,
+    caching = caching
+  )
+  config$plan <- my_plan
   expect_false(file.exists("Makefile"))
 
   dats <- c("small", "large")
@@ -52,7 +58,6 @@ test_with_dir("mtcars example works", {
 
   expect_true(is.list(deps_profile(
     target = "small", config = con)))
-  expect_equal(parallelism == "Makefile", file.exists("Makefile"))
 
   expect_equal(sort(justbuilt(con)), sort(dats))
   remove_these <- intersect(dats, ls(config$envir))
