@@ -32,6 +32,10 @@ drake_log <- function(..., config) {
 }
 
 console_time <- function(target, meta, config) {
+  if (is.null(config$console_log_file)) {
+    log_msg(config = config)
+    return()
+  }
   if (requireNamespace("lubridate", quietly = TRUE)) {
     exec <- round(lubridate::dseconds(meta$time_command$elapsed), 3)
     total <- round(lubridate::dseconds( meta$time_build$elapsed), 3)
