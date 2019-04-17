@@ -178,7 +178,8 @@ drake_graph_info <- function(
   }
   config <- get_raw_node_category_data(config)
   network_data <- visNetwork::toVisNetworkData(config$graph)
-  config$nodes <- network_data$nodes
+  network_data$nodes
+  config$nodes <- network_data$nodes[igraph::topo_sort(config$graph)$name, ]
   if (!is.null(group)) {
     config$nodes[[group]] <- get_cluster_grouping(config, group)
   }
