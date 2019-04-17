@@ -8,6 +8,7 @@
 ## New features
 
 - In `drake_plan()` transformations, allow the user to refer to a target's own name using a special `.id_chr` symbol, which is treated like a character vector.
+- Add a `transparency` argument to `drake_ggraph()` and `render_drake_ggraph()` to disable transparency in the rendered graph. Useful for R installations without transparency support.
 
 ## Enhancements
 

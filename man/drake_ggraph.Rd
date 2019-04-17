@@ -9,7 +9,8 @@ drake_ggraph(config, build_times = "build", digits = 3,
   targets_only = FALSE, main = NULL, from = NULL, mode = c("out",
   "in", "all"), order = NULL, subset = NULL, make_imports = TRUE,
   from_scratch = FALSE, full_legend = FALSE, group = NULL,
-  clusters = NULL, show_output_files = TRUE, label_nodes = FALSE)
+  clusters = NULL, show_output_files = TRUE, label_nodes = FALSE,
+  transparency = TRUE)
 }
 \arguments{
 \item{config}{A \code{\link[=drake_config]{drake_config()}} configuration list.
@@ -92,6 +93,10 @@ that you specify in the \code{group} argument to \code{drake_graph_info()}.}
 \item{label_nodes}{Logical, whether to label the nodes.
 If \code{FALSE}, the graph will not have any text next to the nodes,
 which is recommended for large graphs with lots of targets.}
+
+\item{transparency}{Logical, whether to allow transparency in
+the rendered graph. Set to \code{FALSE} if you get warnings
+like "semi-transparency is not supported on this device".}
 }
 \value{
 A \code{ggplot2} object, which you can modify with more layers,

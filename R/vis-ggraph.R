@@ -36,7 +36,8 @@ drake_ggraph <- function(
   group = NULL,
   clusters = NULL,
   show_output_files = TRUE,
-  label_nodes = FALSE
+  label_nodes = FALSE,
+  transparency = TRUE
 ) {
   assert_pkg("ggplot2")
   assert_pkg("ggraph")
@@ -59,7 +60,12 @@ drake_ggraph <- function(
   if (is.null(main)) {
     main <- graph_info$default_title
   }
-  render_drake_ggraph(graph_info, main = main, label_nodes = label_nodes)
+  render_drake_ggraph(
+    graph_info,
+    main = main,
+    label_nodes = label_nodes,
+    transparency = transparency
+  )
 }
 
 #' @title Render a static `ggplot2`/`ggraph` visualization from
@@ -79,6 +85,9 @@ drake_ggraph <- function(
 #' @param label_nodes Logical, whether to label the nodes.
 #'   If `FALSE`, the graph will not have any text next to the nodes,
 #'   which is recommended for large graphs with lots of targets.
+#' @param transparency Logical, whether to allow transparency in
+#'   the rendered graph. Set to `FALSE` if you get warnings
+#'   like "semi-transparency is not supported on this device".
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {
@@ -97,7 +106,8 @@ drake_ggraph <- function(
 render_drake_ggraph <- function(
   graph_info,
   main = graph_info$default_title,
-  label_nodes = FALSE
+  label_nodes = FALSE,
+  transparency = TRUE
 ) {
   assert_pkg("ggplot2")
   assert_pkg("ggraph")
@@ -117,11 +127,12 @@ render_drake_ggraph <- function(
   layout$y <- tmp
   layout$label <- paste0("\n\n", layout$label)
   status <- type <- label <- node1.name <- node2.name <- NULL
+  alpha <- ifelse(transparency, 0.5, 1L)
   out <- ggraph::ggraph(layout)
   if (nrow(graph_info$edges)) {
     out <- out + ggraph::geom_edge_link(
       arrow = ggplot2::arrow(length = ggplot2::unit(2, "mm")),
-      alpha = 0.5,
+      alpha = alpha,
       color = "gray"
     )
   }
@@ -129,7 +140,7 @@ render_drake_ggraph <- function(
     ggraph::geom_node_point(
       ggplot2::aes(color = status, shape = type),
       size = 5,
-      alpha = 0.5
+      alpha = alpha
     ) +
     ggplot2::xlim(padded_scale(layout$x)) +
     ggplot2::ylim(padded_scale(layout$y)) +
