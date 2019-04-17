@@ -24,7 +24,7 @@ Development
 <a href="https://www.gnu.org/licenses/gpl-3.0.en.html"><img src="https://img.shields.io/badge/licence-GPL--3-blue.svg" alt="Licence"></a>
 </td>
 <td align="left">
-<a href="https://doi.org/10.21105/joss.00550"><img src="https://joss.theoj.org/papers/10.21105/joss.00550/status.svg" alt="JOSS"></a>
+<a href="https://cran.r-project.org/package=drake"><img src="https://www.r-pkg.org/badges/version/drake" alt="CRAN"></a>
 </td>
 <td align="left">
 <a href="https://travis-ci.org/ropensci/drake"><img src="https://travis-ci.org/ropensci/drake.svg?branch=master" alt="Travis"></a>
@@ -46,7 +46,7 @@ Development
 <a href="https://CRAN.R-project.org/package=drake"><img src="https://cranlogs.r-pkg.org/badges/drake" alt="downloads"></a>
 </td>
 <td align="left">
-<a href="https://cran.r-project.org/package=drake"><img src="https://www.r-pkg.org/badges/version/drake" alt="CRAN"></a>
+<a href="https://doi.org/10.21105/joss.00550"><img src="https://joss.theoj.org/papers/10.21105/joss.00550/status.svg" alt="JOSS"></a>
 </td>
 <td align="left">
 <a href="https://codecov.io/github/ropensci/drake?branch=master"><img src="https://codecov.io/github/ropensci/drake/coverage.svg?branch=master" alt="Codecov"></a>
