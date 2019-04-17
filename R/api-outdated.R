@@ -8,7 +8,7 @@
 #' `outdated(..., trigger = trigger(condition = TRUE))` will show
 #' all targets out of date.
 #' You must use a fresh `config` argument with an up-to-date
-#' `config$targets` element that was never modified by hand.
+#' dependency graph that was never modified by hand.
 #' If needed, rerun [drake_config()] early and often.
 #' See the details in the help file for [drake_config()].
 #' @export
@@ -18,7 +18,7 @@
 #' @param config Optional internal runtime parameter list
 #'   produced with [drake_config()].
 #'   You must use a fresh `config` argument with an up-to-date
-#'   `config$targets` element that was never modified by hand.
+#'   dependency graph that was never modified by hand.
 #'   If needed, rerun [drake_config()] early and often.
 #'   See the details in the help file for [drake_config()].
 #' @param make_imports Logical, whether to make the imports first.

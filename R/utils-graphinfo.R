@@ -181,6 +181,7 @@ get_cluster_grouping <- function(config, group) {
 
 get_raw_node_category_data <- function(config) {
   all_labels <- V(config$graph)$name
+  config$targets <- all_targets(config)
   config$outdated <- resolve_graph_outdated(config = config)
   config$running <- running(cache = config$cache)
   config$failed <- failed(cache = config$cache)

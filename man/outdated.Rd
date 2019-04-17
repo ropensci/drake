@@ -10,7 +10,7 @@ outdated(config, make_imports = TRUE, do_prework = TRUE)
 \item{config}{Optional internal runtime parameter list
 produced with \code{\link[=drake_config]{drake_config()}}.
 You must use a fresh \code{config} argument with an up-to-date
-\code{config$targets} element that was never modified by hand.
+dependency graph that was never modified by hand.
 If needed, rerun \code{\link[=drake_config]{drake_config()}} early and often.
 See the details in the help file for \code{\link[=drake_config]{drake_config()}}.}
 
@@ -35,7 +35,7 @@ For example, even if \code{outdated(...)} shows everything up to date,
 \code{outdated(..., trigger = trigger(condition = TRUE))} will show
 all targets out of date.
 You must use a fresh \code{config} argument with an up-to-date
-\code{config$targets} element that was never modified by hand.
+dependency graph that was never modified by hand.
 If needed, rerun \code{\link[=drake_config]{drake_config()}} early and often.
 See the details in the help file for \code{\link[=drake_config]{drake_config()}}.
 }

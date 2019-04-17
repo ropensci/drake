@@ -204,7 +204,6 @@ test_with_dir("plans can start with bad symbols", {
     command = 1)
   y <- drake_config(x)
   out <- sort(c("a.x.", "b.x.", "X_a", "a...."))
-  expect_equal(sort(y$targets), out)
   expect_true(all(out %in% names(y$layout)))
 })
 

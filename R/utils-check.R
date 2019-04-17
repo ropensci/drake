@@ -2,7 +2,6 @@ config_checks <- function(config) {
   if (identical(config$skip_safety_checks, TRUE)) {
     return(invisible())
   }
-  stopifnot(length(config$targets) > 0)
   check_case_sensitivity(config)
   check_drake_graph(graph = config$graph)
   cache_vers_stop(config$cache)

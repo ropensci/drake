@@ -24,6 +24,7 @@ testconfig <- function(config) {
     lock_envir = !any(grepl("staged", config$parallelism))
   )
   out$plan <- config$plan
+  out$targets <- config$targets
   out
 }
 

@@ -37,7 +37,11 @@ sanitize_targets <- function(targets, plan) {
       call. = FALSE
     )
   }
-  unique(intersect(targets, plan$target))
+  out <- unique(intersect(targets, plan$target))
+  if (!length(out)) {
+    stop("no valid targets specified.", call. = FALSE)
+  }
+  out
 }
 
 arrange_plan_cols <- function(plan) {

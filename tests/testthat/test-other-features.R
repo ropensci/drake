@@ -187,7 +187,8 @@ test_with_dir("config_checks() via make()", {
       envir = config$envir,
       session_info = FALSE,
       verbose = 0L
-    )
+    ),
+    regexp = "valid targets"
   ))
 })
 
@@ -212,7 +213,7 @@ test_with_dir("misc utils", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(pair_text("x", c("y", "z")), c("xy", "xz"))
   config <- list()
-  expect_error(config_checks(config), regexp = "length")
+  expect_error(config_checks(config))
   expect_error(plan_checks(data.frame(x = 1, y = 2)), "columns")
   expect_error(targets_from_dots(123, NULL), regexp = "must contain names")
 })
