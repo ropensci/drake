@@ -136,6 +136,8 @@ test_with_dir("deprecated graphing functions", {
   skip_if_not_installed("lubridate")
   skip_if_not_installed("visNetwork")
   skip_if_not_installed("ggraph")
+  expect_warning(out <- vis_drake_graph(config = con, direction = "LR"))
+  expect_warning(out <- vis_drake_graph(config = con, layout = "sugiyama"))
   expect_warning(out <- static_drake_graph(config = con))
   expect_true(inherits(out, "gg"))
   df <- drake_graph_info(config = con)

@@ -14,6 +14,9 @@
 
 - Do not keep `drake` plans (`drake_plan()`) inside `drake_config()` objects. When other bottlenecks are removed, this will reduce the burden on memory (re [#800](https://github.com/ropensci/drake/issues/800)).
 - Do not retain the `targets` argument inside `drake_config()` objects. This is to reduce memory consumption.
+- Enforce a 1:1 aspect ratio in `vis_drake_graph()` and `render_drake_graph()`.
+- Allow nodes to be dragged horizontally in `vis_drake_graph()` and `render_drake_graph()`.
+- Deprecate the `layout` and `direction` arguments of `vis_drake_graph()` and `render_drake_graph()`. Direction is now always left to right and the layout is always Sugiyama.
 
 # Version 7.1.0
 

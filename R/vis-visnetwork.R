@@ -38,9 +38,9 @@ vis_drake_graph <- function(
   digits = 3,
   targets_only = FALSE,
   font_size = 20,
-  layout = "layout_with_sugiyama",
+  layout = NULL,
   main = NULL,
-  direction = "LR",
+  direction = NULL,
   hover = FALSE,
   navigationButtons = TRUE, # nolint
   from = NULL, mode = c("out", "in", "all"),
@@ -122,11 +122,7 @@ vis_drake_graph <- function(
 #'   extension, an HTML file will be saved, and you can open the
 #'   interactive graph using a web browser.
 #'
-#' @param layout Name of an igraph layout to use,
-#'   such as 'layout_with_sugiyama'
-#'   or 'layout_as_tree'.
-#'   Be careful with 'layout_as_tree': the graph is a directed
-#'   acyclic graph, but not necessarily a tree.
+#' @param layout Deprecated.
 #'
 #' @param selfcontained Logical, whether
 #'   to save the `file` as a self-contained
@@ -137,11 +133,7 @@ vis_drake_graph <- function(
 #'   PNG, PDF, or JPEG file, for instance,
 #'   the point is moot.
 #'
-#' @param direction An argument to `visNetwork::visHierarchicalLayout()`
-#'   indicating the direction of the graph.
-#'   Options include 'LR', 'RL', 'DU', and 'UD'.
-#'   At the time of writing this, the letters must be capitalized,
-#'   but this may not always be the case ;) in the future.
+#' @param direction Deprecated.
 #'
 #' @param navigationButtons Logical, whether to add navigation buttons with
 #'   `visNetwork::visInteraction(navigationButtons = TRUE)`
@@ -184,8 +176,11 @@ vis_drake_graph <- function(
 #' }
 render_drake_graph <- function(
   graph_info, file = character(0),
-  layout = "layout_with_sugiyama", direction = "LR", hover = TRUE,
-  main = graph_info$default_title, selfcontained = FALSE,
+  layout = NULL,
+  direction = NULL,
+  hover = TRUE,
+  main = graph_info$default_title,
+  selfcontained = FALSE,
   navigationButtons = TRUE, # nolint
   ncol_legend = 1,
   collapse = TRUE,
@@ -195,13 +190,29 @@ render_drake_graph <- function(
   if (!hover) {
     graph_info$nodes$title <- NULL
   }
+  if (!is.null(direction)) {
+    # 2019-04-16 # nolint
+    warning(
+      "the `direction` argument of `vis_drake_graph()` ",
+      "and `render_drake_graph()` is deprecated.",
+      call. = FALSE
+    )
+  }
+  if (!is.null(layout)) {
+    # 2019-04-16 # nolint
+    warning(
+      "the `layout` argument of `vis_drake_graph()` ",
+      "and `render_drake_graph()` is deprecated.",
+      call. = FALSE
+    )
+  }
   out <- visNetwork::visNetwork(
     nodes = graph_info$nodes,
     edges = graph_info$edges,
     main = main,
     ...
   )
-  out <- visNetwork::visHierarchicalLayout(out, direction = direction)
+  out <- visNetwork::visNodes(out, physics = FALSE)
   if (collapse) {
     out <- visNetwork::visOptions(out, collapse = TRUE)
   }
@@ -218,8 +229,12 @@ render_drake_graph <- function(
       graph = out,
       physics = FALSE,
       randomSeed = 2017,
-      layout = layout
+      layout = "layout_with_sugiyama"
     )
+    out <- visNetwork::visEdges(out, physics = FALSE)
+    tmp <- out$x$nodes$x
+    out$x$nodes$x <- out$x$nodes$y
+    out$x$nodes$y <- tmp
   }
   if (navigationButtons) { # nolint
     out <- visNetwork::visInteraction(out, navigationButtons = TRUE) # nolint

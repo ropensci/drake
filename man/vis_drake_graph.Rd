@@ -7,12 +7,12 @@ of your drake project.}
 \usage{
 vis_drake_graph(config, file = character(0), selfcontained = FALSE,
   build_times = "build", digits = 3, targets_only = FALSE,
-  font_size = 20, layout = "layout_with_sugiyama", main = NULL,
-  direction = "LR", hover = FALSE, navigationButtons = TRUE,
-  from = NULL, mode = c("out", "in", "all"), order = NULL,
-  subset = NULL, ncol_legend = 1, full_legend = FALSE,
-  make_imports = TRUE, from_scratch = FALSE, group = NULL,
-  clusters = NULL, show_output_files = TRUE, collapse = TRUE, ...)
+  font_size = 20, layout = NULL, main = NULL, direction = NULL,
+  hover = FALSE, navigationButtons = TRUE, from = NULL,
+  mode = c("out", "in", "all"), order = NULL, subset = NULL,
+  ncol_legend = 1, full_legend = FALSE, make_imports = TRUE,
+  from_scratch = FALSE, group = NULL, clusters = NULL,
+  show_output_files = TRUE, collapse = TRUE, ...)
 }
 \arguments{
 \item{config}{A \code{\link[=drake_config]{drake_config()}} configuration list.
@@ -56,19 +56,11 @@ targets in the workflow plan.}
 
 \item{font_size}{Numeric, font size of the node labels in the graph}
 
-\item{layout}{Name of an igraph layout to use,
-such as 'layout_with_sugiyama'
-or 'layout_as_tree'.
-Be careful with 'layout_as_tree': the graph is a directed
-acyclic graph, but not necessarily a tree.}
+\item{layout}{Deprecated.}
 
 \item{main}{Character string, title of the graph.}
 
-\item{direction}{An argument to \code{visNetwork::visHierarchicalLayout()}
-indicating the direction of the graph.
-Options include 'LR', 'RL', 'DU', and 'UD'.
-At the time of writing this, the letters must be capitalized,
-but this may not always be the case ;) in the future.}
+\item{direction}{Deprecated.}
 
 \item{hover}{Logical, whether to show text (file contents,
 commands, etc.) when you hover your cursor over a node.}
