@@ -235,6 +235,7 @@ render_drake_graph <- function(
     tmp <- out$x$nodes$x
     out$x$nodes$x <- out$x$nodes$y
     out$x$nodes$y <- tmp
+    out$x$nodes <- adjust_y(out$x$nodes)
   }
   if (navigationButtons) { # nolint
     out <- visNetwork::visInteraction(out, navigationButtons = TRUE) # nolint
@@ -253,4 +254,17 @@ render_drake_graph <- function(
     return(invisible())
   }
   out
+}
+
+adjust_y <- function(nodes) {
+  range <- range(nodes$y)
+  splits <- split(nodes, nodes$x)
+  out <- lapply(splits, adjust_y_stage, range = range)
+  do.call(rbind, out)
+}
+
+adjust_y_stage <- function(nodes, range) {
+  y <- seq(from = range[1], to = range[2], length.out = nrow(nodes) + 2)
+  nodes$y <- y[c(-1, -length(y))]
+  nodes
 }
