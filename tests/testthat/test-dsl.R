@@ -336,11 +336,11 @@ test_with_dir("combine different groups together", {
   exp <- drake_plan(
     data_group1_1_3 = sim_data(mean = 1, sd = 3),
     data_group1_2_4 = sim_data(mean = 2, sd = 4),
-    data_group2_.example1.com. = pull_data("example1.com"),
-    data_group2_.example2.com. = pull_data("example2.com"),
+    data_group2_example1.com = pull_data("example1.com"),
+    data_group2_example2.com = pull_data("example2.com"),
     larger = bind_rows(
       data_group1_1_3, data_group1_2_4,
-      data_group2_.example1.com., data_group2_.example2.com. # nolint
+      data_group2_example1.com, data_group2_example2.com # nolint
     )
   )
   equivalent_plans(out, exp)
@@ -939,11 +939,11 @@ test_with_dir("dsl with differently typed group levels", {
   plan <- bind_plans(plan1, plan2)
   out <- transform_plan(plan, envir = environment())
   exp <- drake_plan(
-    analysis_.source1. = analyze_data("source1"), # nolint
+    analysis_source1 = analyze_data("source1"), # nolint
     analysis_source2 = analyze_data(source2),
     analysis_3 = analyze_data(3),
     reducks = combine_analyses(
-      analysis_.source1., # nolint
+      analysis_source1, # nolint
       analysis_source2,
       analysis_3
     )
@@ -951,10 +951,10 @@ test_with_dir("dsl with differently typed group levels", {
   equivalent_plans(out, exp)
   out <- transform_plan(plan, envir = environment(), trace = TRUE)
   exp <- drake_plan(
-    analysis_.source1. = target( # nolint
+    analysis_source1 = target( # nolint
       command = analyze_data("source1"),
       source = "\"source1\"",
-      analysis = "analysis_.source1."
+      analysis = "analysis_source1"
     ),
     analysis_source2 = target(
       command = analyze_data(source2),
@@ -968,7 +968,7 @@ test_with_dir("dsl with differently typed group levels", {
     ),
     reducks = target(
       command = combine_analyses(
-        analysis_.source1., # nolint
+        analysis_source1, # nolint
         analysis_source2,
         analysis_3
       ),
@@ -1233,10 +1233,10 @@ test_with_dir("dsl: no NA levels in combine()", {
     data_sim_2_3 = sim_data(mean = 2, sd = 3),
     data_sim_1_4 = sim_data(mean = 1, sd = 4),
     data_sim_2_4 = sim_data(mean = 2, sd = 4),
-    data_download_.http...url_1. = download_data(url = "http://url_1"),
-    data_download_.http...url_2. = download_data(url = "http://url_2"),
-    data_pkg_.gapminder. = load_data_from_package(pkg = "gapminder"),
-    data_pkg_.Ecdat. = load_data_from_package(pkg = "Ecdat"),
+    data_download_http...url_1 = download_data(url = "http://url_1"),
+    data_download_http...url_2 = download_data(url = "http://url_2"),
+    data_pkg_gapminder = load_data_from_package(pkg = "gapminder"),
+    data_pkg_Ecdat = load_data_from_package(pkg = "Ecdat"),
     summaries_data_sim_1_3 = compare_ds(data_sim_1_3),
     summaries_data_sim_1_4 = compare_ds(data_sim_1_4),
     summaries_data_sim_2_3 = compare_ds(data_sim_2_3),
@@ -1544,12 +1544,12 @@ test_with_dir("gh #696", {
     splits = target(!!my_split(f, f, 3), transform = map(f = !!manysplits))
   )
   exp <- drake_plan(
-    splits_.lf1.txt. = {
+    splits_lf1.txt = {
       file_in("lf1.txt")
       file_out(c("lf1.txtaa", "lf1.txtab", "lf1.txtac"))
       system2("split", c(paste0("-n r/", 3), "lf1.txt", "lf1.txt"))
     },
-    splits_.lf2.txt. = {
+    splits_lf2.txt = {
       file_in("lf2.txt")
       file_out(c("lf2.txtaa", "lf2.txtab", "lf2.txtac"))
       system2("split", c(paste0("-n r/", 3), "lf2.txt", "lf2.txt"))
@@ -1823,26 +1823,26 @@ test_with_dir("(1) .id = syms. (2) map() finds the correct cross() syms", {
   )
   # nolint start
   exp <- drake_plan(
-    A_.k. = c("a", "c", "k"),
-    A_.k._2 = c("b", "c", "k"),
-    A_.k._3 = c("a", "d", "k"),
-    A_.k._4 = c("b", "d", "k"),
-    A_.l. = c("a", "c", "l"),
-    A_.l._2 = c("b", "c", "l"),
-    A_.l._3 = c("a", "d", "l"),
-    A_.l._4 = c("b", "d", "l"),
-    B_.c._.k. = c(A_.k., "c", "k"),
-    B_.c._.k._2 = c(A_.k._2, "c", "k"),
-    B_.d._.k. = c(A_.k._3, "d", "k"),
-    B_.d._.k._2 = c(A_.k._4, "d", "k"),
-    B_.c._.l. = c(A_.l., "c", "l"),
-    B_.c._.l._2 = c(A_.l._2, "c", "l"),
-    B_.d._.l. = c(A_.l._3, "d", "l"),
-    B_.d._.l._2 = c(A_.l._4, "d", "l"),
-    C = list(B_.c._.k., B_.c._.l.),
-    C_2 = list(B_.c._.k._2, B_.c._.l._2),
-    C_3 = list(B_.d._.k., B_.d._.l.),
-    C_4 = list(B_.d._.k._2, B_.d._.l._2)
+    A_k = c("a", "c", "k"),
+    A_k_2 = c("b", "c", "k"),
+    A_k_3 = c("a", "d", "k"),
+    A_k_4 = c("b", "d", "k"),
+    A_l = c("a", "c", "l"),
+    A_l_2 = c("b", "c", "l"),
+    A_l_3 = c("a", "d", "l"),
+    A_l_4 = c("b", "d", "l"),
+    B_c_k = c(A_k, "c", "k"),
+    B_c_k_2 = c(A_k_2, "c", "k"),
+    B_d_k = c(A_k_3, "d", "k"),
+    B_d_k_2 = c(A_k_4, "d", "k"),
+    B_c_l = c(A_l, "c", "l"),
+    B_c_l_2 = c(A_l_2, "c", "l"),
+    B_d_l = c(A_l_3, "d", "l"),
+    B_d_l_2 = c(A_l_4, "d", "l"),
+    C = list(B_c_k, B_c_l),
+    C_2 = list(B_c_k_2, B_c_l_2),
+    C_3 = list(B_d_k, B_d_l),
+    C_4 = list(B_d_k_2, B_d_l_2)
   )
   # nolint end
   equivalent_plans(out, exp)
@@ -1869,19 +1869,19 @@ test_with_dir("upstream .id columns are available", {
   exp <- drake_plan(
     raw_data = get_data(),
     data = clean_data(raw_data),
-    analysis_.4._.2. = data %>% filter(factor_a == "4" & factor_b == "2"),
-    analysis_.5._.2. = data %>% filter(factor_a == "5" & factor_b == "2"),
-    analysis_.6._.2. = data %>% filter(factor_a == "6" & factor_b == "2"),
-    analysis_.7._.2. = data %>% filter(factor_a == "7" & factor_b == "2"),
-    analysis_.8._.2. = data %>% filter(factor_a == "8" & factor_b == "2"),
-    summary_.4._.2. = my_summarize(analysis_.4._.2.),
-    summary_.5._.2. = my_summarize(analysis_.5._.2.),
-    summary_.6._.2. = my_summarize(analysis_.6._.2.),
-    summary_.7._.2. = my_summarize(analysis_.7._.2.),
-    summary_.8._.2. = my_summarize(analysis_.8._.2.),
+    analysis_4_2 = data %>% filter(factor_a == "4" & factor_b == "2"),
+    analysis_5_2 = data %>% filter(factor_a == "5" & factor_b == "2"),
+    analysis_6_2 = data %>% filter(factor_a == "6" & factor_b == "2"),
+    analysis_7_2 = data %>% filter(factor_a == "7" & factor_b == "2"),
+    analysis_8_2 = data %>% filter(factor_a == "8" & factor_b == "2"),
+    summary_4_2 = my_summarize(analysis_4_2),
+    summary_5_2 = my_summarize(analysis_5_2),
+    summary_6_2 = my_summarize(analysis_6_2),
+    summary_7_2 = my_summarize(analysis_7_2),
+    summary_8_2 = my_summarize(analysis_8_2),
     results = bind_rows(
-      summary_.4._.2., summary_.5._.2., summary_.6._.2.,
-      summary_.7._.2., summary_.8._.2.
+      summary_4_2, summary_5_2, summary_6_2,
+      summary_7_2, summary_8_2
     )
   )
   # nolint end
@@ -1975,8 +1975,8 @@ test_with_dir("grids", {
     )
   )
   exp <- drake_plan(
-    a_1_3_5_.7._a = 1 + f(1, 3, 5, "7", a),
-    a_2_4_6_.8._b = 1 + f(2, 4, 6, "8", b)
+    a_1_3_5_7_a = 1 + f(1, 3, 5, "7", a),
+    a_2_4_6_8_b = 1 + f(2, 4, 6, "8", b)
   )
   equivalent_plans(out, exp)
 })
@@ -2016,16 +2016,16 @@ test_with_dir("grid for GitHub issue 697", {
     s_load = target(load_csv(group, rep), transform = map(.data = !!grid))
   )
   exp <- drake_plan(
-    s_load_.G1._.R1. = load_csv("G1", "R1"),
-    s_load_.G2._.R1. = load_csv("G2", "R1"),
-    s_load_.G1._.R2. = load_csv("G1", "R2"),
-    s_load_.G2._.R2. = load_csv("G2", "R2"),
-    s_load_.G1._.R3. = load_csv("G1", "R3"),
-    s_load_.G2._.R3. = load_csv("G2", "R3"),
-    s_load_.G1._.R4. = load_csv("G1", "R4"),
-    s_load_.G2._.R4. = load_csv("G2", "R4"),
-    s_load_.G1._.R5. = load_csv("G1", "R5"),
-    s_load_.G1._.R6. = load_csv("G1", "R6")
+    s_load_G1_R1 = load_csv("G1", "R1"),
+    s_load_G2_R1 = load_csv("G2", "R1"),
+    s_load_G1_R2 = load_csv("G1", "R2"),
+    s_load_G2_R2 = load_csv("G2", "R2"),
+    s_load_G1_R3 = load_csv("G1", "R3"),
+    s_load_G2_R3 = load_csv("G2", "R3"),
+    s_load_G1_R4 = load_csv("G1", "R4"),
+    s_load_G2_R4 = load_csv("G2", "R4"),
+    s_load_G1_R5 = load_csv("G1", "R5"),
+    s_load_G1_R6 = load_csv("G1", "R6")
   )
   equivalent_plans(out, exp)
 })

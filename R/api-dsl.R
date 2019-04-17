@@ -183,6 +183,7 @@ new_targets <- function(target, grid, cols, id) {
     return(make_unique(make.names(out, unique = FALSE, allow_ = TRUE)))
   }
   suffixes <- apply(grid, 1, paste, collapse = "_")
+  suffixes <- gsub("\"", "", suffixes, fixed = TRUE)
   out <- paste0(target, "_", suffixes)
   make_unique(make.names(out, unique = FALSE, allow_ = TRUE))
 }
