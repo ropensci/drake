@@ -534,7 +534,7 @@ drake_config <- function(
     plan = plan,
     envir = envir,
     verbose = verbose,
-    jobs = jobs,
+    jobs = jobs_preprocess,
     console_log_file = console_log_file,
     trigger = trigger,
     cache = cache

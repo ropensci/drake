@@ -186,20 +186,23 @@ get_raw_node_category_data <- function(config) {
   config$running <- running(cache = config$cache)
   config$failed <- failed(cache = config$cache)
   config$files <- parallel_filter(
-    x = all_labels, f = is_encoded_path, jobs = config$jobs)
+    x = all_labels,
+    f = is_encoded_path,
+    jobs = config$jobs_preprocess
+  )
   config$functions <- parallel_filter(
     x = config$import_names,
     f = function(x) {
       is.function(get_import_from_memory(x, config = config))
     },
-    jobs = config$jobs
+    jobs = config$jobs_preprocess
   )
   config$missing <- parallel_filter(
     x = config$import_names,
     f = function(x) {
       missing_import(x, config = config)
     },
-    jobs = config$jobs
+    jobs = config$jobs_preprocess
   )
   config
 }

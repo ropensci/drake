@@ -54,13 +54,12 @@ testrun <- function(config) {
 
 justbuilt <- function(config) {
   recorded <- config$cache$list(namespace = "progress")
-  all <- lightly_parallelize(
+  all <- lapply(
     X = recorded,
     FUN = function(target) {
       config$cache$get(
         key = target, namespace = "progress", use_cache = FALSE)
-    },
-    jobs = config$jobs
+    }
   )
   names(all) <- recorded
   all <- unlist(all)

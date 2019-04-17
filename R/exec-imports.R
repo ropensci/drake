@@ -62,7 +62,7 @@ process_imports_parLapply <- function(config) { # nolint
   assert_pkg("parallel")
   log_msg(
     "load parallel socket cluster with",
-    config$jobs,
+    config$jobs_preprocess,
     "workers",
     config = config
   )

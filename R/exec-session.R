@@ -77,7 +77,7 @@ conclude_session <- function(config) {
   drake_cache_log_file_(
     file = config$cache_log_file,
     cache = config$cache,
-    jobs = config$jobs
+    jobs = config$jobs_preprocess
   )
   remove(list = names(config$eval), envir = config$eval)
   invisible()

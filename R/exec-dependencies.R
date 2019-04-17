@@ -205,7 +205,7 @@ tracked <- function(config) {
       out <- unlist(out)
       c(out, target)
     },
-    jobs = config$jobs
+    jobs = config$jobs_preprocess
   )
   display_keys(clean_dependency_list(out), config)
 }

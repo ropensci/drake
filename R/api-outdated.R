@@ -122,7 +122,7 @@ missed <- function(config) {
     FUN = function(x) {
       missing_import(x, config = config)
     },
-    jobs = config$jobs
+    jobs = config$jobs_preprocess
   )
   is_missing <- as.logical(is_missing)
   if (!any(is_missing)) {
