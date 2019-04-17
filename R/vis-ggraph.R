@@ -122,9 +122,8 @@ render_drake_ggraph <- function(
   names(shapes) <- graph_info$nodes$type
   shapes <- gsub("dot", "circle", shapes)
   layout <- ggraph::create_layout(graph, layout = "sugiyama")
-  tmp <- layout$x
-  layout$x <- -layout$y
-  layout$y <- tmp
+  layout$x <- graph_info$nodes$x
+  layout$y <- graph_info$nodes$y
   layout$label <- paste0("\n\n", layout$label)
   status <- type <- label <- node1.name <- node2.name <- NULL
   alpha <- ifelse(transparency, 0.5, 1L)
