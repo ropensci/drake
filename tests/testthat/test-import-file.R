@@ -50,6 +50,7 @@ test_with_dir("same with an imported directory", {
     log_progress = TRUE,
     caching = scenario$caching
   )
+  config$plan <- plan
   testrun(config)
   final0 <- readd(final)
 

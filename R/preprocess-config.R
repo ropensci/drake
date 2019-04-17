@@ -513,6 +513,7 @@ drake_config <- function(
     )
   }
   plan <- sanitize_plan(plan)
+  plan_checks(plan)
   targets <- sanitize_targets(targets, plan)
   force(envir)
   unlink(console_log_file)
@@ -559,7 +560,6 @@ drake_config <- function(
   ht_encode_namespaced <- ht_new()
   ht_decode_namespaced <- ht_new()
   out <- list(
-    plan = plan,
     targets = targets,
     envir = envir,
     eval = new.env(parent = envir),

@@ -29,13 +29,6 @@
 #' sankey_drake_graph(config) # The black nodes from before are now green.
 #' # Plot a subgraph of the workflow.
 #' sankey_drake_graph(config, from = c("small", "reg2"))
-#' # Optionally visualize clusters.
-#' config$plan$large_data <- grepl("large", config$plan$target)
-#' sankey_drake_graph(
-#'   config, group = "large_data", clusters = c(TRUE, FALSE))
-#' # You can even use clusters given to you for free in the `graph$nodes`
-#' # data frame of `drake_graph_info()`.
-#' sankey_drake_graph(config, group = "status", clusters = "imported")
 #' }
 #' }
 #' }
@@ -141,15 +134,6 @@ sankey_drake_graph <- function(
 #' # (as in sankey_drake_graph()) or you can create
 #' # your own custom visNewtork graph.
 #' render_sankey_drake_graph(graph, width = '100%') # Width is passed to visNetwork.
-#' # Optionally visualize clusters.
-#' config$plan$large_data <- grepl("large", config$plan$target)
-#' graph <- drake_graph_info(
-#' config, group = "large_data", clusters = c(TRUE, FALSE))
-#' render_sankey_drake_graph(graph)
-#' # You can even use clusters given to you for free in the `graph$nodes`
-#' # data frame.
-#' graph <- drake_graph_info(config, group = "status", clusters = "imported")
-#' render_sankey_drake_graph(graph)
 #' }
 #' }
 #' }

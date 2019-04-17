@@ -17,7 +17,7 @@ test_with_dir("clustermq parallelism", {
   for (caching in c("master", "worker")) {
     clean(destroy = TRUE)
     config <- drake_config(e$my_plan, envir = e)
-    expect_equal(length(outdated(config)), nrow(config$plan))
+    expect_equal(length(outdated(config)), nrow(e$my_plan))
     make(
       e$my_plan,
       parallelism = parallelism,

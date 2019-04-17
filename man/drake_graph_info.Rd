@@ -77,8 +77,8 @@ are printed in the legend. If \code{FALSE}, only the
 node types used are printed in the legend.}
 
 \item{group}{Optional character scalar, name of the column used to
-group nodes into columns. All the columns names of your \code{config$plan}
-are choices. The other choices (such as \code{"status"}) are column names
+group nodes into columns. All the columns names of your original \code{drake}
+plan are choices. The other choices (such as \code{"status"}) are column names
 in the \code{nodes} . To group nodes into clusters in the graph,
 you must also supply the \code{clusters} argument.}
 
@@ -127,18 +127,6 @@ str(raw_graph)
 library(visNetwork)
 graph <- visNetwork(nodes = raw_graph$nodes, edges = raw_graph$edges)
 visHierarchicalLayout(graph, direction = 'UD')
-# Optionally visualize clusters.
-config$plan$large_data <- grepl("large", config$plan$target)
-graph <- drake_graph_info(
-  config, group = "large_data", clusters = c(TRUE, FALSE))
-tail(graph$nodes)
-render_drake_graph(graph)
-# You can even use clusters given to you for free in the `graph$nodes`
-# data frame.
-graph <- drake_graph_info(
-  config, group = "status", clusters = "imported")
-tail(graph$nodes)
-render_drake_graph(graph)
 }
 }
 })

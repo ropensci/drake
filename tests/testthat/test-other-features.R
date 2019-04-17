@@ -211,52 +211,49 @@ test_with_dir("file_store quotes properly", {
 test_with_dir("misc utils", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(pair_text("x", c("y", "z")), c("xy", "xz"))
-  config <- list(plan = data.frame(x = 1, y = 2))
-  expect_error(config_checks(config), regexp = "columns")
+  config <- list()
+  expect_error(config_checks(config), regexp = "length")
+  expect_error(plan_checks(data.frame(x = 1, y = 2)), "columns")
   expect_error(targets_from_dots(123, NULL), regexp = "must contain names")
 })
 
 test_with_dir("make(..., skip_imports = TRUE) works", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   con <- dbug()
-  verbose <- max(con$jobs) < 2
-  suppressMessages({
-    make(
-      con$plan, parallelism = con$parallelism,
-      envir = con$envir, jobs = con$jobs, verbose = verbose,
-      skip_imports = TRUE,
-      session_info = FALSE
-    )
-    con <- drake_config(
-      con$plan, parallelism = con$parallelism,
-      envir = con$envir, jobs = con$jobs, verbose = verbose,
-      skip_imports = TRUE,
-      session_info = FALSE
-    )
-  })
+  plan <- dbug_plan()
+  make(
+    plan, parallelism = con$parallelism,
+    envir = con$envir, jobs = con$jobs,
+    skip_imports = TRUE,
+    session_info = FALSE
+  )
+  con <- drake_config(
+    plan, parallelism = con$parallelism,
+    envir = con$envir, jobs = con$jobs,
+    skip_imports = TRUE,
+    session_info = FALSE
+  )
   expect_equal(
     sort(cached(targets_only = FALSE)),
     sort(display_keys(
-      c(encode_path("intermediatefile.rds"), con$plan$target)
+      c(encode_path("intermediatefile.rds"), plan$target)
     ))
   )
 
   # If the imports are already cached, the targets built with
   # skip_imports = TRUE should be up to date.
-  make(con$plan, verbose = 0L, envir = con$envir, session_info = FALSE)
-  clean(list = con$plan$target, verbose = 0L)
-  suppressMessages({
-    make(
-      con$plan, parallelism = con$parallelism,
-      envir = con$envir, jobs = con$jobs, verbose = verbose,
-      skip_imports = TRUE, session_info = FALSE
-    )
-    con <- drake_config(
-      con$plan, parallelism = con$parallelism,
-      envir = con$envir, jobs = con$jobs, verbose = verbose,
-      skip_imports = TRUE, session_info = FALSE
-    )
-  })
+  make(plan, envir = con$envir, session_info = FALSE)
+  clean(list = plan$target)
+  make(
+    plan, parallelism = con$parallelism,
+    envir = con$envir, jobs = con$jobs,
+    skip_imports = TRUE, session_info = FALSE
+  )
+  con <- drake_config(
+    plan, parallelism = con$parallelism,
+    envir = con$envir, jobs = con$jobs,
+    skip_imports = TRUE, session_info = FALSE
+  )
   out <- outdated(con)
   expect_equal(out, character(0))
 })

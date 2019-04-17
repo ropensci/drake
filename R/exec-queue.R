@@ -15,14 +15,8 @@ new_priority_queue <- function(config, jobs = config$jobs_preprocess) {
   }
   ndeps <- igraph::degree(graph = config$schedule, v = targets, mode = "in")
   ndeps <- unlist(ndeps)
-  priority <- rep(Inf, length(targets))
+  priority <- rep(Inf, length(targets)) # deprecated, 2019-04-16
   names(priority) <- targets
-  if ("priority" %in% colnames(config$plan)) {
-    prioritized <- intersect(targets, config$plan$target)
-    set_priority <- config$plan$priority
-    names(set_priority) <- config$plan$target
-    priority[prioritized] <- set_priority[prioritized]
-  }
   queue <- refclass_priority_queue$new(
     data = data.frame(
       target = as.character(targets),

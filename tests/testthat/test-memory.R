@@ -66,6 +66,7 @@ test_with_dir("manage_memory in full build", {
   )
 
   # actually run
+  config$plan <- plan
   testrun(config)
   expect_true(all(plan$target %in% cached()))
 

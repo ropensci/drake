@@ -73,8 +73,8 @@
 #'   node types used are printed in the legend.
 #'
 #' @param group Optional character scalar, name of the column used to
-#'   group nodes into columns. All the columns names of your `config$plan`
-#'   are choices. The other choices (such as `"status"`) are column names
+#'   group nodes into columns. All the columns names of your original `drake`
+#'   plan are choices. The other choices (such as `"status"`) are column names
 #'   in the `nodes` . To group nodes into clusters in the graph,
 #'   you must also supply the `clusters` argument.
 #'
@@ -113,18 +113,6 @@
 #' library(visNetwork)
 #' graph <- visNetwork(nodes = raw_graph$nodes, edges = raw_graph$edges)
 #' visHierarchicalLayout(graph, direction = 'UD')
-#' # Optionally visualize clusters.
-#' config$plan$large_data <- grepl("large", config$plan$target)
-#' graph <- drake_graph_info(
-#'   config, group = "large_data", clusters = c(TRUE, FALSE))
-#' tail(graph$nodes)
-#' render_drake_graph(graph)
-#' # You can even use clusters given to you for free in the `graph$nodes`
-#' # data frame.
-#' graph <- drake_graph_info(
-#'   config, group = "status", clusters = "imported")
-#' tail(graph$nodes)
-#' render_drake_graph(graph)
 #' }
 #' }
 #' })
@@ -157,13 +145,13 @@ drake_graph_info <- function(
   config$font_size <- font_size
   config$from_scratch <- from_scratch
   config$make_imports <- make_imports
-  config$group <- group
-  config$clusters <- clusters
+  config$group <- as.character(group)
+  config$clusters <- as.character(clusters)
   config$hover <- hover
-  config$file_out <- lapply(config$plan$target, function(target) {
+  config$file_out <- lapply(all_targets(config), function(target) {
     config$layout[[target]]$deps_build$file_out
   })
-  names(config$file_out) <- config$plan$target
+  names(config$file_out) <- all_targets(config)
   if (!show_output_files) {
     vertices <- igraph::V(config$graph)$name
     imported <- igraph::V(config$graph)$imported
@@ -190,13 +178,10 @@ drake_graph_info <- function(
   }
   config <- get_raw_node_category_data(config)
   network_data <- visNetwork::toVisNetworkData(config$graph)
-  config$nodes <- merge(
-    x = network_data$nodes,
-    y = config$plan,
-    by.x = "id",
-    by.y = "target",
-    all.x = TRUE
-  )
+  config$nodes <- network_data$nodes
+  if (!is.null(group)) {
+    config$nodes[[group]] <- get_cluster_grouping(config, group)
+  }
   for (col in lang_cols(config$nodes)) {
     config$nodes[[col]] <- NULL
   }

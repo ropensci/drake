@@ -306,7 +306,6 @@ test_with_dir("make() with wildcard columns", {
   make(plan, cache = cache, session_info = FALSE)
   con <- drake_config(plan, cache = cache, session_info = FALSE)
   expect_true(all(plan$target %in% cached(cache = con$cache)))
-  equivalent_plans(con$plan, plan)
 })
 
 test_with_dir("unconventional wildcards", {
