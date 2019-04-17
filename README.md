@@ -3,6 +3,7 @@
 <center>
 <img src="https://ropensci.github.io/drake/figures/infographic.svg" alt="infographic" align="center" style = "border: none; float: center;">
 </center>
+
 <table class="table">
 <thead>
 <tr class="header">
@@ -57,6 +58,15 @@ Development
 </td>
 <td align="left">
 <a href="https://zenodo.org/badge/latestdoi/82609103"><img src="https://zenodo.org/badge/82609103.svg" alt="Zenodo"></a>
+</td>
+<td align="left">
+<a href="https://bestpractices.coreinfrastructure.org/projects/2135"><img src="https://bestpractices.coreinfrastructure.org/projects/2135/badge"></a>
+</td>
+</tr>
+<tr class="odd">
+<td align="left">
+</td>
+<td align="left">
 </td>
 <td align="left">
 <a href="https://www.repostatus.org/#active"><img src="https://www.repostatus.org/badges/latest/active.svg" alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed." /></a>
