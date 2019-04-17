@@ -151,7 +151,10 @@ render_drake_ggraph <- function(
     ggplot2::theme_bw() +
     ggplot2::theme(
       panel.grid.major = ggplot2::element_blank(),
-      panel.grid.minor = ggplot2::element_blank()
+      panel.grid.minor = ggplot2::element_blank(),
+      axis.text = ggplot2::element_blank(),
+      axis.ticks = ggplot2::element_blank(),
+      panel.border = ggplot2::element_blank()
     )
   if (label_nodes) {
     out <- out + ggraph::geom_node_text(ggplot2::aes(label = label))
