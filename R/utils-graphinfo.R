@@ -117,18 +117,25 @@ coord_set <- function(nodes) {
   nodes
 }
 
-coord_x <- function(nodes, min = -1, max = 1) {
-  x <- nodes$level - min(nodes$level)
+coord_rescale <- function(x, min, max) {
+  x <- x - min(x)
   x <- x / max(x)
   x <- x * (max - min)
-  nodes$x <- x
+  x <- x + min
+  x
+}
+
+coord_x <- function(nodes, min = -1, max = 1) {
+  nodes$x <- coord_rescale(nodes$level, min = min, max = max)
   nodes
 }
 
 coord_y <- function(nodes, min = -1, max = 1) {
   splits <- split(nodes, nodes$x)
   out <- lapply(splits, coord_y_stage, min = min, max = max)
-  do.call(rbind, out)
+  out <- do.call(rbind, out)
+  out$y <- coord_rescale(out$y, min = min, max = max)
+  out
 }
 
 coord_y_stage <- function(nodes, min, max) {
