@@ -169,7 +169,11 @@ get_cluster_grouping <- function(config, group) {
   vapply(
     X = config$nodes$id,
     FUN = function(x) {
-      as.character(config$layout[[x]][[group]] %||% NA)
+      out <- config$layout[[x]][[group]]
+      if (!is.character(out)) {
+        out <- safe_deparse(out)
+      }
+      out %||% NA_character_
     },
     FUN.VALUE = character(1)
   )

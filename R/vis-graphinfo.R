@@ -182,9 +182,6 @@ drake_graph_info <- function(
   if (!is.null(group)) {
     config$nodes[[group]] <- get_cluster_grouping(config, group)
   }
-  for (col in lang_cols(config$nodes)) {
-    config$nodes[[col]] <- NULL
-  }
   config <- trim_node_categories(config)
   config$nodes <- configure_nodes(config = config)
   if (show_output_files) {

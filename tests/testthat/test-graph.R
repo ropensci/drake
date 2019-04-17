@@ -23,14 +23,14 @@ test_with_dir("null graph", {
   expect_equal(x, null_graph())
 })
 
-test_with_dir("language cols are ignored in drake_graph_info()", {
+test_with_dir("lang cluster cols", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("lubridate")
   skip_if_not_installed("visNetwork")
-  plan <- drake_plan(x = target(1, col = quote(f(x))))
+  plan <- drake_plan(x = target(1, col = g(f(x))))
   config <- drake_config(plan)
-  x <- drake_graph_info(config = config)
-  expect_false("col" %in% colnames(x$nodes))
+  x <- drake_graph_info(config = config, group = "col")
+  expect_equal(x$nodes$col, "g(f(x))")
 })
 
 test_with_dir("circular non-DAG drake_plans quit in error", {
