@@ -13,6 +13,7 @@
 
 ## Enhancements
 
+- Use a custom layout to improve node positions and aspect ratios of `vis_drake_graph()` displays.
 - Do not keep `drake` plans (`drake_plan()`) inside `drake_config()` objects. When other bottlenecks are removed, this will reduce the burden on memory (re [#800](https://github.com/ropensci/drake/issues/800)).
 - Do not retain the `targets` argument inside `drake_config()` objects. This is to reduce memory consumption.
 - Enforce a 1:1 aspect ratio in `vis_drake_graph()` and `render_drake_graph()`.
