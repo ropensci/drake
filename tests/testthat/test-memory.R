@@ -15,45 +15,52 @@ test_with_dir("manage_memory() warns if loading missing deps", {
 
 test_with_dir("manage_memory in full build", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  # drake_plan with lots of nested deps This will fail if
-  # manage_memory() doesn't work.
-  datasets <- drake_plan(x = 1, y = 2, z = 3)
-  methods <- drake_plan(
-    a = dataset__,
-    b = dataset__,
-    c = dataset__
-  )
-  analyses <- evaluate_plan(
-    methods,
-    wildcard = "dataset__",
-    values = datasets$target
-  )
-  heuristics <- drake_plan(
-    s = c(dataset__, analysis__),
-    t = analysis__)
-  h <- evaluate_plan(
-    heuristics,
-    wildcard = "analysis__",
-    values = analyses$target
-  )
-  h <- evaluate_plan(
-    h,
-    wildcard = "dataset__",
-    values = datasets$target,
-    expand = FALSE
-  )
-  summaries <- rbind(
-    gather_plan(h[1:9, ], target = "s", gather = "c"),
-    gather_plan(h[10:18, ], target = "t", gather = "c"),
-    h
-  )
-  output <- drake_plan(
+  plan <- drake_plan(
+    x = 1,
+    y = 2,
+    z = 3,
+    a_x = x,
+    a_y = y,
+    a_z = z,
+    b_x = x,
+    b_y = y,
+    b_z = z,
+    c_x = x,
+    c_y = y,
+    c_z = z,
+    s = c(
+      s_a_x = s_a_x, s_a_y = s_a_y, s_a_z = s_a_z, s_b_x = s_b_x,
+      s_b_y = s_b_y, s_b_z = s_b_z, s_c_x = s_c_x, s_c_y = s_c_y,
+      s_c_z = s_c_z
+    ),
+    t = c(
+      t_a_x = t_a_x, t_a_y = t_a_y, t_a_z = t_a_z, t_b_x = t_b_x,
+      t_b_y = t_b_y, t_b_z = t_b_z, t_c_x = t_c_x, t_c_y = t_c_y,
+      t_c_z = t_c_z
+    ),
+    s_a_x = c(x, a_x),
+    s_a_y = c(y, a_y),
+    s_a_z = c(z, a_z),
+    s_b_x = c(x, b_x),
+    s_b_y = c(y, b_y),
+    s_b_z = c(z, b_z),
+    s_c_x = c(x, c_x),
+    s_c_y = c(y, c_y),
+    s_c_z = c(z, c_z),
+    t_a_x = a_x,
+    t_a_y = a_y,
+    t_a_z = a_z,
+    t_b_x = b_x,
+    t_b_y = b_y,
+    t_b_z = b_z,
+    t_c_x = c_x,
+    t_c_y = c_y,
+    t_c_z = c_z,
     final1 = mean(s) + mean(t),
     final2 = mean(s) - mean(t),
     waitforme = c(a_x, c_y, s_b_x, t_a_z),
     waitformetoo = c(waitforme, y)
   )
-  plan <- rbind(datasets, analyses, summaries, output)
 
   # set up a workspace to test manage_memory()
   # set verbose to TRUE to see log of loading
@@ -74,9 +81,12 @@ test_with_dir("manage_memory in full build", {
   # are discarded
   remove(list = ls(config$eval), envir = config$eval)
   expect_equal(ls(config$eval), character(0))
-  manage_memory(datasets$target, config)
+  manage_memory(c("x", "y", "z"), config)
   expect_equal(ls(config$eval), character(0))
-  manage_memory(analyses$target, config)
+  manage_memory(
+    c("a_x", "a_y", "a_z", "b_x", "b_y", "b_z", "c_x", "c_y", "c_z"),
+    config
+  )
   expect_equal(ls(config$eval), c("x", "y", "z"))
   manage_memory("waitforme", config)
 

@@ -378,3 +378,49 @@ test_with_dir("'columns' argument to evaluate_plan()", {
     out
   )
 })
+
+test_with_dir("issue 187 on Github (from Kendon Bell)", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  test <- drake_plan(test = run_it(wc__))
+  out <- evaluate_plan(test, rules = list(wc__ = list(1:4, 5:8, 9:12)))
+  out2 <- weak_tibble(
+    target = c("test_1.4", "test_5.8", "test_9.12"),
+    command = c("run_it(1:4)", "run_it(5:8)", "run_it(9:12)")
+  )
+  equivalent_plans(out, out2)
+})
+
+test_with_dir("conflicts in wildcard names/values", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  plan <- drake_plan(a = 1, b = 2)
+  rules1 <- list(plant = 1:2, seed = 3:4, plantseed = 5:6)
+  rules2 <- list(
+    plant = c("grow", "tall"),
+    bean = c("legume", "stalk"),
+    example = c("bean", "stalk")
+  )
+  expect_error(
+    evaluate_plan(plan, rules = rules1), regexp = "wildcard name")
+  expect_error(
+    evaluate_plan(plan, rules = rules2), regexp = "replacement value")
+})
+
+test_with_dir("bad 'columns' argument to evaluate_plan()", {
+  plan <- drake_plan(
+    x = target("always", cpu = "any"),
+    y = target("any", cpu = "always"),
+    z = target("any", cpu = "any")
+  )
+  expect_error(
+    evaluate_plan(plan, wildcard = "any", values = 1:2, columns = "target"),
+    regexp = "argument of evaluate_plan"
+  )
+  expect_error(
+    evaluate_plan(plan, wildcard = "any", values = 1:2, columns = "nobodyhere"),
+    regexp = "not in the plan"
+  )
+  equivalent_plans(
+    plan,
+    evaluate_plan(plan, wildcard = "any", values = 1:2, columns = NULL)
+  )
+})

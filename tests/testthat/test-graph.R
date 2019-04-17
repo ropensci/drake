@@ -122,8 +122,12 @@ test_with_dir("we can generate different visNetwork dependency graphs", {
 
 test_with_dir("clusters", {
   skip_on_cran()
-  plan <- drake_plan(x = rnorm(n__), y = rexp(n__))
-  plan <- evaluate_plan(plan, wildcard = "n__", values = 1:2, trace = TRUE)
+  plan <- drake_plan(
+    x_1 = target(command = rnorm(1), n__ = "1"),
+    x_2 = target(command = rnorm(2), n__ = "2"),
+    y_1 = target(command = rnorm(1), n__ = "1"),
+    y_2 = target(command = rnorm(2), n__ = "2")
+  )
   cache <- storr::storr_environment()
   config <- drake_config(plan, cache = cache)
   skip_if_not_installed("lubridate")
