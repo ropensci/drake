@@ -190,7 +190,6 @@ drake_graph_info <- function(
   config$edges <- network_data$edges
   if (nrow(config$edges)) {
     config$edges$arrows <- "to"
-    config$edges$smooth <- TRUE
   }
   if (length(config$group)) {
     config <- cluster_nodes(config)
