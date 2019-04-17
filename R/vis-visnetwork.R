@@ -231,8 +231,8 @@ render_drake_graph <- function(
       randomSeed = 2017,
       layout = "layout_with_sugiyama"
     )
-    out$x$nodes <- coord_x(out$x$nodes)
-    out$x$nodes <- coord_y(out$x$nodes)
+    out$x$nodes$x <- graph_info$nodes$x
+    out$x$nodes$y <- graph_info$nodes$y
   }
   if (navigationButtons) { # nolint
     out <- visNetwork::visInteraction(out, navigationButtons = TRUE) # nolint
@@ -251,24 +251,4 @@ render_drake_graph <- function(
     return(invisible())
   }
   out
-}
-
-coord_x <- function(nodes, min = -1, max = 1) {
-  x <- nodes$level - min(nodes$level)
-  x <- x / max(x)
-  x <- x * (max - min)
-  nodes$x <- x
-  nodes
-}
-
-coord_y <- function(nodes, min = -1, max = 1) {
-  splits <- split(nodes, nodes$x)
-  out <- lapply(splits, coord_y_stage, min = min, max = max)
-  do.call(rbind, out)
-}
-
-coord_y_stage <- function(nodes, min, max) {
-  y <- seq(from = min, to = max, length.out = nrow(nodes) + 2)
-  nodes$y <- y[c(-1, -length(y))]
-  nodes
 }

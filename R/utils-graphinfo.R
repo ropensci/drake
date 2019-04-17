@@ -111,6 +111,32 @@ configure_nodes <- function(config) {
   hover_text(config = config)
 }
 
+coord_set <- function(nodes) {
+  nodes <- coord_x(nodes)
+  nodes <- coord_y(nodes)
+  nodes
+}
+
+coord_x <- function(nodes, min = -1, max = 1) {
+  x <- nodes$level - min(nodes$level)
+  x <- x / max(x)
+  x <- x * (max - min)
+  nodes$x <- x
+  nodes
+}
+
+coord_y <- function(nodes, min = -1, max = 1) {
+  splits <- split(nodes, nodes$x)
+  out <- lapply(splits, coord_y_stage, min = min, max = max)
+  do.call(rbind, out)
+}
+
+coord_y_stage <- function(nodes, min, max) {
+  y <- seq(from = min, to = max, length.out = nrow(nodes) + 2)
+  nodes$y <- y[c(-1, -length(y))]
+  nodes
+}
+
 #' @title Return the default title for graph visualizations
 #' @description For internal use only.
 #' @export

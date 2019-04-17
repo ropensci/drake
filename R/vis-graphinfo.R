@@ -188,6 +188,7 @@ drake_graph_info <- function(
   if (show_output_files) {
     config$nodes <- append_output_file_nodes(config)
   }
+  config$nodes <- coord_set(config$nodes)
   config$edges <- network_data$edges
   if (nrow(config$edges)) {
     config$edges$arrows <- "to"
