@@ -7,9 +7,9 @@ test_with_dir("lock_envir works", {
   parallelism <- scenario$parallelism
   caching <- scenario$caching
   plan <- drake_plan(
-    x = testthat::expect_error(
-      assign("a", 1, envir = parent.env(drake_envir())),
-      regexp = "binding"
+    x = try(
+      assign("a", 1L, envir = parent.env(drake_envir())),
+      silent = TRUE
     )
   )
   make(
@@ -22,6 +22,7 @@ test_with_dir("lock_envir works", {
     verbose = 1L,
     session_info = FALSE
   )
+  expect_true(inherits(readd(x), "try-error"))
   e$a <- 123
   e$plan$four <- "five"
   plan <- drake_plan(
@@ -38,6 +39,7 @@ test_with_dir("lock_envir works", {
     session_info = FALSE
   )
   expect_true("x" %in% cached())
+  expect_equal(readd(x), 1L)
 })
 
 test_with_dir("Try to modify a locked environment", {
