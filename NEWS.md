@@ -1,5 +1,9 @@
 # Version 7.1.0.9000
 
+## Mildly breaking changes
+
+- In the DSL (e.g. `drake_plan(x = target(..., transform = map(...)))` avoid inserting extra dots in target names when the grouping variables are character vectors ([#847](https://github.com/ropensci/drake/issues/847)). Target names come out much nicer this way, but those name changes will invalidate some targets (i.e. they need to be rebuilt with `make()`).
+
 ## Bug fixes
 
 - Use `config$jobs_preprocess` (local jobs) in several places where `drake` was incorrectly using `config$jobs` (meant for targets).
