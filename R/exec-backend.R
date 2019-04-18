@@ -11,7 +11,7 @@ run_native_backend <- function(config) {
     config$parallelism,
     c("loop", "clustermq", "future")
   )
-  if (igraph::gorder(config$schedule)) {
+  if (igraph::gorder(config$graph)) {
     get(
       paste0("backend_", parallelism),
       envir = getNamespace("drake")
@@ -38,8 +38,8 @@ run_external_backend <- function(config) {
   config$parallelism(config = config)
 }
 
-as_schedule <- function(config) {
+outdated_subgraph <- function(config) {
   outdated <- outdated(config, do_prework = FALSE, make_imports = FALSE)
-  log_msg("trim schedule", config = config)
-  igraph::induced_subgraph(graph = config$schedule, vids = outdated)
+  log_msg("isolate oudated targets", config = config)
+  igraph::induced_subgraph(graph = config$graph, vids = outdated)
 }

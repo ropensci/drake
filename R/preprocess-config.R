@@ -550,7 +550,6 @@ drake_config <- function(
   )
   import_names <- igraph::V(graph)$name[igraph::V(graph)$imported]
   imports <- subset_graph(graph, import_names)
-  schedule <- subset_graph(graph, plan$target)
   cache_path <- force_cache_path(cache)
   lazy_load <- parse_lazy_arg(lazy_load)
   memory_strategy <- match.arg(memory_strategy)
@@ -578,7 +577,6 @@ drake_config <- function(
     ht_decode_namespaced = ht_decode_namespaced,
     graph = graph,
     imports = imports,
-    schedule = schedule,
     seed = seed,
     trigger = trigger,
     timeout = timeout,

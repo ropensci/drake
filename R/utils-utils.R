@@ -28,6 +28,10 @@ all_targets <- function(config) {
   out[!is_encoded_path(out)]
 }
 
+all_imports <- function(config) {
+  V(config$graph)$name[V(config$graph)$imported]
+}
+
 assert_config_not_plan <- function(config) {
   if (!inherits(config, "drake_plan")) {
     return()

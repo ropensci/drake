@@ -55,19 +55,20 @@ outdated <-  function(
   }
   from <- first_outdated(config = config)
   log_msg("find downstream outdated targets", config = config)
-  to <- downstream_nodes(config$schedule, from)
-  sort(unique(as.character(c(from, to))))
+  to <- downstream_nodes(config$graph, from)
+  out <- sort(unique(as.character(c(from, to))))
+  out[!is_encoded_path(out)]
 }
 
 first_outdated <- function(config) {
   config$ht_get_hash <- ht_new() # Memoize getting hashes from the cache.
   on.exit(ht_clear(config$ht_get_hash)) # Needs to be empty afterwards.
-  schedule <- config$schedule
   out <- character(0)
   old_leaves <- NULL
+  config$graph <- subset_graph(config$graph, all_targets(config))
   while (TRUE) {
     log_msg("find more outdated targets", config = config)
-    new_leaves <- setdiff(leaf_nodes(schedule), out)
+    new_leaves <- setdiff(leaf_nodes(config$graph), out)
     do_build <- lightly_parallelize(
       X = new_leaves,
       FUN = function(target) {
@@ -84,7 +85,7 @@ first_outdated <- function(config) {
     if (all(do_build)) {
       break
     } else {
-      schedule <- delete_vertices(schedule, v = new_leaves[!do_build])
+      config$graph <- delete_vertices(config$graph, v = new_leaves[!do_build])
     }
     old_leaves <- new_leaves
   }
@@ -116,7 +117,7 @@ first_outdated <- function(config) {
 #' }
 missed <- function(config) {
   assert_config_not_plan(config)
-  imports <- igraph::V(config$imports)$name
+  imports <- all_imports(config)
   is_missing <- lightly_parallelize(
     X = imports,
     FUN = function(x) {

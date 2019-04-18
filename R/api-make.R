@@ -208,7 +208,7 @@ make <- function(
     process_imports(config)
   }
   if (is.character(config$parallelism)) {
-    config$schedule <- as_schedule(config)
+    config$graph <- outdated_subgraph(config)
   }
   abort <- FALSE
   if (prompt_intv_make(config)) {

@@ -213,7 +213,6 @@ ft_config <- function(config) {
     "layout",
     "plan",
     "graph",
-    "schedule",
     "targets",
     "trigger"
   )

@@ -1,6 +1,6 @@
 new_priority_queue <- function(config, jobs = config$jobs_preprocess) {
   log_msg(text = "construct priority queue", config = config)
-  targets <- igraph::V(config$schedule)$name
+  targets <- igraph::V(config$graph)$name
   if (!length(targets)) {
     return(
       refclass_priority_queue$new(
@@ -13,7 +13,7 @@ new_priority_queue <- function(config, jobs = config$jobs_preprocess) {
       )
     )
   }
-  ndeps <- igraph::degree(graph = config$schedule, v = targets, mode = "in")
+  ndeps <- igraph::degree(graph = config$graph, v = targets, mode = "in")
   ndeps <- unlist(ndeps)
   priority <- rep(Inf, length(targets)) # deprecated, 2019-04-16
   names(priority) <- targets
@@ -91,7 +91,7 @@ refclass_priority_queue <- methods::setRefClass(
 decrease_revdep_keys <- function(queue, target, config) {
   revdeps <- deps_graph(
     targets = target,
-    graph = config$schedule,
+    graph = config$graph,
     reverse = TRUE
   )
   revdeps <- intersect(revdeps, queue$list())

@@ -45,15 +45,16 @@ process_imports_mclapply <- function(config) {
   if (config$jobs_preprocess > 1L) {
     assert_pkg("parallel")
   }
-  while (length(V(config$imports)$name)) {
-    imports <- leaf_nodes(config$imports)
+  imports_graph <- subset_graph(config$graph, all_imports(config))
+  while (length(V(imports_graph)$name)) {
+    imports <- leaf_nodes(imports_graph)
     lightly_parallelize(
       X = imports,
       FUN = drake::process_import,
       config = config,
       jobs = config$jobs_preprocess
     )
-    config$imports <- delete_vertices(config$imports, v = imports)
+    imports_graph <- delete_vertices(imports_graph, v = imports)
   }
   invisible()
 }
@@ -92,8 +93,9 @@ process_imports_parLapply <- function(config) { # nolint
     config = config,
     verbose_packages = FALSE
   )
-  while (length(V(config$imports)$name)) {
-    imports <- leaf_nodes(config$imports)
+  imports_graph <- subset_graph(config$graph, all_imports(config))
+  while (length(V(imports_graph)$name)) {
+    imports <- leaf_nodes(imports_graph)
     parallel::parLapply(
       cl = config$cluster,
       X = imports,
@@ -102,7 +104,7 @@ process_imports_parLapply <- function(config) { # nolint
       },
       config = config
     )
-    config$imports <- delete_vertices(config$imports, v = imports)
+    imports_graph <- delete_vertices(imports_graph, v = imports)
   }
   invisible()
 }

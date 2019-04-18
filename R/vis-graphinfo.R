@@ -169,7 +169,7 @@ drake_graph_info <- function(
   if (!is.null(subset)) {
     config$graph <- subset_graph(graph = config$graph, subset = subset)
   }
-  config$import_names <- igraph::V(config$imports)$name
+  config$import_names <- all_imports(config)
   if (targets_only) {
     config$graph <- igraph::delete_vertices(
       graph = config$graph,

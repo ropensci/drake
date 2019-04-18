@@ -88,7 +88,7 @@ prompt_intv_make <- function(config) {
     getOption("drake_make_menu") %||%
     TRUE
   interactive() &&
-    igraph::gorder(config$schedule) &&
+    igraph::gorder(config$graph) &&
     menu_enabled
 }
 
@@ -103,8 +103,8 @@ abort_intv_make <- function(config) {
     )
   )
   title <- paste(
-    paste(igraph::gorder(config$schedule), "outdated targets:"),
-    multiline_message(igraph::V(config$schedule)$name),
+    paste(igraph::gorder(config$graph), "outdated targets:"),
+    multiline_message(igraph::V(config$graph)$name),
     "\nPlease read the \"Interactive mode\" section of the make() help file.",
     "This prompt only appears once per session.",
     "\nReally run make() instead of r_make() in interactive mode?",

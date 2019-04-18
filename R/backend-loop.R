@@ -3,7 +3,7 @@ backend_loop <- function(config) {
     lock_environment(config$envir)
     on.exit(unlock_environment(config$envir))
   }
-  targets <- igraph::topo_sort(config$schedule)$name
+  targets <- igraph::topo_sort(config$graph)$name
   for (i in seq_along(targets)) {
     loop_build(
       target = targets[i],

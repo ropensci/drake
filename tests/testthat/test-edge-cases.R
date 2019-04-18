@@ -237,16 +237,8 @@ test_with_dir("GitHub issue 460", {
     targets = "b",
     cache = storr::storr_environment()
   )
-  expect_equal(sort(igraph::V(config$schedule)$name), sort(letters[1:2]))
-  expect_equal(
-    intersect(
-      igraph::V(config$schedule)$name,
-      igraph::V(config$imports)$name
-    ),
-    character(0)
-  )
-  expect_true(
-    encode_namespaced("base::sqrt") %in% igraph::V(config$imports)$name)
+  exp <- c(letters[1:2], encode_namespaced("base::sqrt"))
+  expect_true(all(exp %in% igraph::V(config$graph)$name))
   process_targets(config)
 })
 

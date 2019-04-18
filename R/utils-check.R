@@ -37,7 +37,7 @@ runtime_checks <- function(config) {
 
 missing_input_files <- function(config) {
   files <- parallel_filter(
-    igraph::V(config$imports)$name,
+    all_imports(config),
     f = is_encoded_path,
     jobs = config$jobs_preprocess
   )

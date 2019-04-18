@@ -100,7 +100,6 @@ cmq_config <- function(config) {
     "imports",
     "layout",
     "plan",
-    "schedule",
     "targets",
     "trigger"
   )
