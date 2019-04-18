@@ -122,6 +122,7 @@ coord_rescale <- function(x, min, max) {
   x <- x / max(x)
   x <- x * (max - min)
   x <- x + min
+  x [!is.finite(x)] <- (min + max) / 2
   x
 }
 
