@@ -545,14 +545,14 @@ test_with_dir("make() writes a cache log file", {
   expect_true(file.exists("log.txt"))
 
   # Check structure of cache
-  log1 <- read.table("log.txt", header = TRUE, stringsAsFactors = FALSE)
+  log1 <- read.csv("log.txt", header = TRUE, stringsAsFactors = FALSE)
   expect_equal(log1$type, c("target", "target"))
   expect_equal(log1$name, c("a", "b"))
 
   # Change plan so cache has to change.
   plan <- drake_plan(a = TRUE, b = FALSE)
   make(plan, cache_log_file = "log.txt")
-  log2 <- read.table("log.txt", header = TRUE, stringsAsFactors = FALSE)
+  log2 <- read.csv("log.txt", header = TRUE, stringsAsFactors = FALSE)
 
   expect_equal(log1$hash[1], log2$hash[1])
 

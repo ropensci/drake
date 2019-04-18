@@ -190,8 +190,8 @@
 #'   speed up tests. Apparently, `sessionInfo()` is a bottleneck
 #'   for small [make()]s.
 #'
-#' @param cache_log_file Name of the cache log file to write.
-#'   If `TRUE`, the default file name is used (`drake_cache.log`).
+#' @param cache_log_file Name of the CSV cache log file to write.
+#'   If `TRUE`, the default file name is used (`drake_cache.CSV`).
 #'   If `NULL`, no file is written.
 #'   If activated, this option writes a flat text file
 #'   to represent the state of the cache

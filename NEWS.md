@@ -5,6 +5,7 @@
 - Use `config$jobs_preprocess` (local jobs) in several places where `drake` was incorrectly using `config$jobs` (meant for targets).
 - Allow `loadd(x, deps = TRUE, config = your_config)` to work even if `x` is not cached ([#830](https://github.com/ropensci/drake/issues/830)). Required disabling `tidyselect` functionality when `deps` `TRUE`. There is a new note in the help file about this, and an informative console message prints out on `loadd(deps = TRUE, tidyselect = TRUE)`. The default value of `tidyselect` is now `!deps`.
 - Minor: avoid printing messages and warnings twice to the console ([#829](https://github.com/ropensci/drake/issues/829)).
+- Write the cache log file in CSV format (now `drake_cache.csv` by default) to avoid issues with spaces (e.g. entry names with spaces in them, such as "file report.Rmd")`.
 
 ## New features
 

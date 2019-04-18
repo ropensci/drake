@@ -222,8 +222,8 @@ for the sake of reproducibility. This argument only exists to
 speed up tests. Apparently, \code{sessionInfo()} is a bottleneck
 for small \code{\link[=make]{make()}}s.}
 
-\item{cache_log_file}{Name of the cache log file to write.
-If \code{TRUE}, the default file name is used (\code{drake_cache.log}).
+\item{cache_log_file}{Name of the CSV cache log file to write.
+If \code{TRUE}, the default file name is used (\code{drake_cache.CSV}).
 If \code{NULL}, no file is written.
 If activated, this option writes a flat text file
 to represent the state of the cache
@@ -482,7 +482,7 @@ make(my_plan) # Rebuild just the outdated targets.
 outdated(config) # Everything is up to date again.
 if (requireNamespace("visNetwork", quietly = TRUE)) {
 vis_drake_graph(config) # See how they fit in an interactive graph.
-make(my_plan, cache_log_file = TRUE) # Write a text log file this time.
+make(my_plan, cache_log_file = TRUE) # Write a CSV log file this time.
 vis_drake_graph(config) # The colors changed in the graph.
 }
 clean() # Start from scratch next time around.

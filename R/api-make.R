@@ -90,7 +90,7 @@
 #' outdated(config) # Everything is up to date again.
 #' if (requireNamespace("visNetwork", quietly = TRUE)) {
 #' vis_drake_graph(config) # See how they fit in an interactive graph.
-#' make(my_plan, cache_log_file = TRUE) # Write a text log file this time.
+#' make(my_plan, cache_log_file = TRUE) # Write a CSV log file this time.
 #' vis_drake_graph(config) # The colors changed in the graph.
 #' }
 #' clean() # Start from scratch next time around.

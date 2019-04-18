@@ -278,9 +278,9 @@ recover_cache_ <- function(
   cache
 }
 
-# Generate a flat text log file to represent the state of the cache.
+# Generate a flat csv log file to represent the state of the cache.
 drake_cache_log_file_ <- function(
-  file = "drake_cache.log",
+  file = "drake_cache.csv",
   path = getwd(),
   search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose = verbose),
@@ -307,7 +307,8 @@ drake_cache_log_file_ <- function(
       x = out,
       file = file,
       quote = FALSE,
-      row.names = FALSE
+      row.names = FALSE,
+      sep = ","
     )
   )
 }
