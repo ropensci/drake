@@ -38,7 +38,7 @@ run_external_backend <- function(config) {
   config$parallelism(config = config)
 }
 
-pretrim_schedule <- function(config) {
+as_schedule <- function(config) {
   outdated <- outdated(config, do_prework = FALSE, make_imports = FALSE)
   log_msg("trim schedule", config = config)
   igraph::induced_subgraph(graph = config$schedule, vids = outdated)

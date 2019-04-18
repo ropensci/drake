@@ -208,7 +208,7 @@ make <- function(
     process_imports(config)
   }
   if (is.character(config$parallelism)) {
-    config$schedule <- pretrim_schedule(config)
+    config$schedule <- as_schedule(config)
   }
   abort <- FALSE
   if (prompt_intv_make(config)) {
