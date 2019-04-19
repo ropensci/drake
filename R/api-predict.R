@@ -175,15 +175,6 @@ worker_prediction_info <- function(
 ) {
   assert_config_not_plan(config)
   deprecate_targets_only(targets_only) # 2019-01-03 # nolint
-  config$graph <- subset_graph(config$graph, all_targets(config))
-  if (!is.null(targets)) {
-    config$graph <- nbhd_graph(
-      config$graph,
-      vertices = targets,
-      mode = "in",
-      order = igraph::gorder(config$graph)
-    )
-  }
   assumptions <- timing_assumptions(
     config = config,
     targets = targets,
@@ -193,6 +184,15 @@ worker_prediction_info <- function(
     default_time = default_time,
     warn = warn
   )
+  config$graph <- subset_graph(config$graph, all_targets(config))
+  if (!is.null(targets)) {
+    config$graph <- nbhd_graph(
+      config$graph,
+      vertices = targets,
+      mode = "in",
+      order = igraph::gorder(config$graph)
+    )
+  }
   queue <- new_priority_queue(config, jobs = 1)
   running <- data.frame(
     target = character(0),
@@ -247,7 +247,7 @@ timing_assumptions <- function(
     outdated <- outdated(config)
   }
   times <- build_times(cache = config$cache)
-  vertices <- igraph::V(config$graph)$name
+  vertices <- all_targets(config)
   times <- times[times$target %in% vertices, ]
   untimed <- setdiff(vertices, times$target)
   untimed <- setdiff(untimed, names(known_times))
