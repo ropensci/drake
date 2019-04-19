@@ -4,16 +4,36 @@ backend_clustermq <- function(config) {
     config = config,
     jobs = config$jobs_preprocess
   )
-  if (!config$queue$empty()) {
-    config$workers <- clustermq::workers(
-      n_jobs = config$jobs,
-      template = config$template
-    )
-    log_msg("setting common data", config = config)
-    cmq_set_common_data(config)
-    config$counter <- new.env(parent = emptyenv())
-    config$counter$remaining <- config$queue$size()
-    cmq_master(config)
+  cmq_local_master(config)
+  if (config$queue$empty()) {
+    return()
+  }
+  config$workers <- clustermq::workers(
+    n_jobs = config$jobs,
+    template = config$template
+  )
+  log_msg("setting common data", config = config)
+  cmq_set_common_data(config)
+  config$counter <- new.env(parent = emptyenv())
+  config$counter$remaining <- config$queue$size()
+  cmq_master(config)
+}
+
+cmq_local_master <- function(config) {
+  while (!config$queue$empty()) {
+    target <- config$queue$peek0()
+    if (identical(config$layout[[target]]$hpc, FALSE)) {
+      config$queue$pop0()
+      cmq_local_build(target, config)
+      next
+    }
+    meta <- drake_meta_(target = target, config = config)
+    if (should_build_target(target, meta, config)) {
+      return()
+    }
+    log_msg("skip", target, config = config)
+    config$queue$pop0()
+    cmq_conclude_target(target, config)
   }
 }
 
@@ -61,6 +81,7 @@ cmq_next_target <- function(config) {
     return() # nocov
   }
   if (identical(config$layout[[target]]$hpc, FALSE)) {
+    config$workers$send_wait()
     cmq_local_build(target, config)
   } else {
     cmq_send_target(target, config)
@@ -124,7 +145,6 @@ cmq_deps_list <- function(target, config) {
 
 cmq_local_build <- function(target, config) {
   log_msg("local target", target, config = config)
-  config$workers$send_wait()
   loop_build(target, config, downstream = NULL)
   cmq_conclude_target(target = target, config = config)
 }
