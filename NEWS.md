@@ -1,4 +1,4 @@
-# Version 7.1.0.9000
+# Version 7.2.0
 
 ## Mildly breaking changes
 
@@ -9,20 +9,20 @@
 - Use `config$jobs_preprocess` (local jobs) in several places where `drake` was incorrectly using `config$jobs` (meant for targets).
 - Allow `loadd(x, deps = TRUE, config = your_config)` to work even if `x` is not cached ([#830](https://github.com/ropensci/drake/issues/830)). Required disabling `tidyselect` functionality when `deps` `TRUE`. There is a new note in the help file about this, and an informative console message prints out on `loadd(deps = TRUE, tidyselect = TRUE)`. The default value of `tidyselect` is now `!deps`.
 - Minor: avoid printing messages and warnings twice to the console ([#829](https://github.com/ropensci/drake/issues/829)).
+- Ensure compatibility with `testthat` >= 2.0.1.9000.
 
 ## New features
 
-- In `drake_plan()` transformations, allow the user to refer to a target's own name using a special `.id_chr` symbol, which is treated like a character vector.
+- In `drake_plan()` transformations, allow the user to refer to a target's own name using a special `.id_chr` symbol, which is treated like a character string.
 - Add a `transparency` argument to `drake_ggraph()` and `render_drake_ggraph()` to disable transparency in the rendered graph. Useful for R installations without transparency support.
 
 ## Enhancements
 
-- Use a custom layout to improve node positions and aspect ratios of `vis_drake_graph()` and `drake_ggraph()` displays.
+- Use a custom layout to improve node positions and aspect ratios of `vis_drake_graph()` and `drake_ggraph()` displays. Only activated in `vis_drake_graph()` when there are at least 10 nodes distributed in both the vertical and horizontal directions.
+- Allow nodes to be dragged both vertically and horizontally in `vis_drake_graph()` and `render_drake_graph()`.
 - Prevent dots from showing up in target names when you supply grouping variables to transforms in `drake_plan()` ([#847](https://github.com/ropensci/drake/issues/847)).
 - Do not keep `drake` plans (`drake_plan()`) inside `drake_config()` objects. When other bottlenecks are removed, this will reduce the burden on memory (re [#800](https://github.com/ropensci/drake/issues/800)).
 - Do not retain the `targets` argument inside `drake_config()` objects. This is to reduce memory consumption.
-- Enforce a 1:1 aspect ratio in `vis_drake_graph()` and `render_drake_graph()`.
-- Allow nodes to be dragged horizontally in `vis_drake_graph()` and `render_drake_graph()`.
 - Deprecate the `layout` and `direction` arguments of `vis_drake_graph()` and `render_drake_graph()`. Direction is now always left to right and the layout is always Sugiyama.
 - Write the cache log file in CSV format (now `drake_cache.csv` by default) to avoid issues with spaces (e.g. entry names with spaces in them, such as "file report.Rmd")`.
 
