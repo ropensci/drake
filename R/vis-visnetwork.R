@@ -224,16 +224,22 @@ render_drake_graph <- function(
       ncol = ncol_legend
     )
   }
-  if (nrow(graph_info$edges)) {
+  sugiyama <- nrow(graph_info$edges) &&
+    nrow(graph_info$nodes) > 10 &&
+    abs(diff(range(graph_info$nodes$x))) > 0.1 &&
+    abs(diff(range(graph_info$nodes$x))) > 0.1
+  if (sugiyama) {
     out <- visNetwork::visIgraphLayout(
       graph = out,
       physics = FALSE,
       randomSeed = 2017,
       layout = "layout_with_sugiyama"
     )
-    out$x$nodes$x <- graph_info$nodes$x
-    out$x$nodes$y <- graph_info$nodes$y
+  } else {
+    out <- visNetwork::visHierarchicalLayout(out, direction = "LR")
   }
+  out$x$nodes$x <- graph_info$nodes$x
+  out$x$nodes$y <- graph_info$nodes$y
   if (navigationButtons) { # nolint
     out <- visNetwork::visInteraction(out, navigationButtons = TRUE) # nolint
   }
