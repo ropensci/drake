@@ -70,7 +70,7 @@ test_with_dir("clustermq parallelism", {
 })
 
 test_with_dir("No hpc targets? No workers.", {
-  plan <- drake_plan(x = target(1, hpc = FALSE), y = target(x, hpc = FALSE))
+  plan <- drake_plan(x = target(1L, hpc = FALSE), y = target(x, hpc = FALSE))
   drake:::with_options(
     list(clustermq.scheduler = "does_not_exist"),
     make(
@@ -81,6 +81,32 @@ test_with_dir("No hpc targets? No workers.", {
       cache = storr::storr_environment()
     )
   )
+})
+
+test_with_dir("All hpc targets up to date? No workers.", {
+  plan <- drake_plan(x = target(1L, hpc = FALSE), y = target(x, hpc = TRUE))
+  cache <- storr::storr_environment()
+  make(plan, session_info = FALSE, cache = cache)
+  config <- drake_config(plan, cache = cache)
+  expect_equal(sort(justbuilt(config)), c("x", "y"))
+  expect_equal(outdated(config), character(0))
+  plan <- drake_plan(
+    x = target(2L - 1L, hpc = FALSE),
+    y = target(x, hpc = TRUE)
+  )
+  config <- drake_config(plan, cache = cache)
+  expect_equal(sort(outdated(config)), c("x", "y"))
+  drake:::with_options(
+    list(clustermq.scheduler = "does_not_exist"),
+    make(
+      plan,
+      parallelism = "clustermq",
+      jobs = 2,
+      session_info = FALSE,
+      cache = cache
+    )
+  )
+  expect_equal(justbuilt(config), "x")
 })
 
 test_with_dir("Start off with non-HPC targets, then go to HPC targets.", {
@@ -96,6 +122,8 @@ test_with_dir("Start off with non-HPC targets, then go to HPC targets.", {
   jobs <- scenario$jobs # ignoring for now, using 2 jobs
   load_mtcars_example(envir = e)
   e$my_plan$hpc <- !(e$my_plan$target %in% c("small", "large"))
+  # Run interactively with 1 job to verify that clustermq workers
+  # only get submitted after targets `large` and `small` are built.
   make(
     e$my_plan,
     parallelism = "clustermq",
