@@ -1,6 +1,6 @@
 # Version 7.2.0.9000
 
-## Bugfixes
+## Bug fixes
 
 - Move "`config$lock_envir <- FALSE`" from `loop_build()` to  `backend_loop()`.
 
