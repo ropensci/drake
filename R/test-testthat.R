@@ -178,7 +178,7 @@ equivalent_plans <- function(out, exp) {
 # Below, toggle the if() condition on in test mode
 # and off in production mode.
 # nocov start
-if (FALSE) {
+if (TRUE) {
   `&&` <- function(x, y) {
     if (length(x) != 1) {
       stop("length x not 1")

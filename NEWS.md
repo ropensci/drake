@@ -1,5 +1,14 @@
 # Version 7.2.0.9000
 
+## Bug fixes
+
+- Move "`config$lock_envir <- FALSE`" from `loop_build()` to  `backend_loop()`. This makes sure `config$envir` is correctly locked in `make(parallelism = "clustermq")`.
+
+## Enhancements
+
+- Delay the initialization of `clustermq` workers for as long as possible. Before launching them, build/check targets locally until we reach an outdated target with `hpc` equal to `FALSE`. In other words, if no targets actually require `clustermq` workers, no workers get created.
+- In `make(parallelism = "future")`, reset the `config$sleep()` backoff interval whenever a new target gets checked.
+
 
 # Version 7.2.0
 

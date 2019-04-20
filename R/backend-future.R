@@ -8,7 +8,6 @@ backend_future <- function(config) {
   while (work_remains(queue = queue, workers = workers, config = config)) {
     for (id in seq_along(workers)) {
       if (is_idle(workers[[id]])) {
-        i <- 1
         # Also calls decrease-key on the queue.
         workers[[id]] <- conclude_worker(
           worker = workers[[id]],
@@ -22,8 +21,13 @@ backend_future <- function(config) {
           # suitable enough for unit testing, but
           # I did artificially stall targets and verified that this line
           # is reached in the future::multisession backend as expected.
-          next # nocov
+          # nocov start
+          Sys.sleep(config$sleep(max(0L, i)))
+          i <- i + 1
+          next
+          # nocov end
         }
+        i <- 1
         running <- running_targets(workers = workers, config = config)
         protect <- c(running, queue$list())
         if (identical(config$layout[[next_target]]$hpc, FALSE)) {
@@ -39,8 +43,6 @@ backend_future <- function(config) {
         }
       }
     }
-    Sys.sleep(config$sleep(max(0L, i)))
-    i <- i + 1
   }
 }
 
