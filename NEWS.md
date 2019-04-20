@@ -2,7 +2,7 @@
 
 ## Bug fixes
 
-- Move "`config$lock_envir <- FALSE`" from `loop_build()` to  `backend_loop()`.
+- Move "`config$lock_envir <- FALSE`" from `loop_build()` to  `backend_loop()`. This makes sure `config$envir` is correctly locked in `make(parallelism = "clustermq")`.
 
 ## Enhancements
 
