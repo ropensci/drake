@@ -40,7 +40,8 @@ text_drake_graph <- function(
   group = NULL,
   clusters = NULL,
   show_output_files = TRUE,
-  nchar = 1L
+  nchar = 1L,
+  print = TRUE
 ) {
   assert_pkg("visNetwork")
   graph_info <- drake_graph_info(
@@ -61,7 +62,11 @@ text_drake_graph <- function(
     show_output_files = show_output_files,
     hover = FALSE
   )
-  render_text_drake_graph(graph_info = graph_info, nchar = nchar)
+  render_text_drake_graph(
+    graph_info = graph_info,
+    nchar = nchar,
+    print = print
+  )
 }
 
 #' @title Render a text-based visualization of drake's dependency graph
@@ -72,7 +77,7 @@ text_drake_graph <- function(
 #' @export
 #' @seealso [text_drake_graph()], [vis_drake_graph()],
 #'   [sankey_drake_graph()], [drake_ggraph()]
-#' @return Text printed to your terminal window.
+#' @return The lines of text in the visualization.
 #'
 #' @inheritParams drake_graph_info
 #'
@@ -85,6 +90,12 @@ text_drake_graph <- function(
 #'   to show. Can be 0, in which case each node is a colored box
 #'   instead of a node label.
 #'   Caution: `nchar` > 0 will mess with the layout.
+#'
+#' @param print Logical. If `TRUE`, the graph will print to the console
+#'   via `message()`. If `FALSE`, nothing is printed. However, you still
+#'   have the visualization because `text_drake_graph()` and
+#'   `render_text_drake_graph()` still invisibly return a character string
+#'   that you can print yourself with `message()`.
 #'
 #' @examples
 #' \dontrun{
@@ -106,7 +117,7 @@ text_drake_graph <- function(
 #' }
 #' })
 #' }
-render_text_drake_graph <- function(graph_info, nchar = 1L) {
+render_text_drake_graph <- function(graph_info, nchar = 1L, print = TRUE) {
   assert_pkg("txtplot")
   pch <- apply(
     X = graph_info$nodes,
@@ -132,6 +143,8 @@ render_text_drake_graph <- function(graph_info, nchar = 1L) {
   txt <- gsub("^[^\\|]*\\|", "", txt)
   txt <- gsub("\\|", "", txt)
   txt <- paste(txt, collapse = "\n")
-  message(txt)
-  invisible()
+  if (print) {
+    message(txt)
+  }
+  invisible(txt)
 }

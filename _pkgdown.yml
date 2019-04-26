@@ -51,6 +51,7 @@ reference:
   - '`r_vis_drake_graph`'
   - '`r_sankey_drake_graph`'
   - '`r_drake_ggraph`'
+  - '`r_text_drake_graph`'
   - '`r_predict_runtime`'
   - '`r_predict_workers`'
 - title: drake plans
@@ -73,10 +74,12 @@ reference:
   contents:
   - '`vis_drake_graph`'
   - '`sankey_drake_graph`'
+  - '`drake_ggraph`'
+  - '`text_drake_graph`'
   - '`render_drake_graph`'
   - '`render_sankey_drake_graph`'
   - '`render_drake_ggraph`'
-  - '`drake_ggraph`'
+  - '`render_text_drake_graph`'
   - '`drake_graph_info`'
   - '`legend_nodes`'
 - title: Target status

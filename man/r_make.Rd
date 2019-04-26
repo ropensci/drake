@@ -9,6 +9,7 @@
 \alias{r_vis_drake_graph}
 \alias{r_sankey_drake_graph}
 \alias{r_drake_ggraph}
+\alias{r_text_drake_graph}
 \alias{r_predict_runtime}
 \alias{r_predict_workers}
 \title{Experimental: reproducible R session management for drake functions}
@@ -29,6 +30,8 @@ r_sankey_drake_graph(..., source = NULL, r_fn = NULL,
   r_args = list())
 
 r_drake_ggraph(..., source = NULL, r_fn = NULL, r_args = list())
+
+r_text_drake_graph(..., source = NULL, r_fn = NULL, r_args = list())
 
 r_predict_runtime(..., source = NULL, r_fn = NULL, r_args = list())
 

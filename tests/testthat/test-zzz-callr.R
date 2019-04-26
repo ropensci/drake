@@ -45,6 +45,7 @@ test_with_dir("basic functions with default _drake.R file", {
   # need automated visual tests
   skip_if_not_installed("ggraph")
   skip_if_not_installed("networkD3")
+  skip_if_not_installed("txtplot")
   expect_silent({
     r_vis_drake_graph(r_args = list(show = FALSE))
     r_vis_drake_graph(
@@ -54,6 +55,7 @@ test_with_dir("basic functions with default _drake.R file", {
     )
     r_sankey_drake_graph(r_args = list(show = FALSE))
     r_drake_ggraph(r_args = list(show = FALSE))
+    r_text_drake_graph(r_args = list(show = FALSE))
     invisible()
   })
 })

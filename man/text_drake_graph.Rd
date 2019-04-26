@@ -8,7 +8,8 @@ your workflow's dependency graph in your terminal window.}
 text_drake_graph(config, from = NULL, mode = c("out", "in", "all"),
   order = NULL, subset = NULL, targets_only = FALSE,
   make_imports = TRUE, from_scratch = FALSE, group = NULL,
-  clusters = NULL, show_output_files = TRUE, nchar = 1L)
+  clusters = NULL, show_output_files = TRUE, nchar = 1L,
+  print = TRUE)
 }
 \arguments{
 \item{config}{A \code{\link[=drake_config]{drake_config()}} configuration list.
@@ -74,6 +75,12 @@ that you specify in the \code{group} argument to \code{drake_graph_info()}.}
 to show. Can be 0, in which case each node is a colored box
 instead of a node label.
 Caution: \code{nchar} > 0 will mess with the layout.}
+
+\item{print}{Logical. If \code{TRUE}, the graph will print to the console
+via \code{message()}. If \code{FALSE}, nothing is printed. However, you still
+have the visualization because \code{text_drake_graph()} and
+\code{render_text_drake_graph()} still invisibly return a character string
+that you can print yourself with \code{message()}.}
 }
 \value{
 A \code{visNetwork} graph.

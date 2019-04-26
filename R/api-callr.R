@@ -146,7 +146,36 @@ r_sankey_drake_graph <- function(
 #' @export
 #' @inheritParams r_make
 r_drake_ggraph <- function(..., source = NULL, r_fn = NULL, r_args = list()) {
+  assert_pkg("ggraph")
+  requireNamespace("ggraph")
   r_drake(source, drake::drake_ggraph, list(...), r_fn, r_args)
+}
+
+#' @rdname r_make
+#' @export
+#' @inheritParams r_make
+r_text_drake_graph <- function(
+  ...,
+  source = NULL,
+  r_fn = NULL,
+  r_args = list()
+) {
+  assert_pkg("txtplot")
+  args <- list(...)
+  args$crayon <- getOption("crayon.enabled") %||% TRUE
+  out <- r_drake(
+    source,
+    function(..., crayon) {
+      with_options(
+        list(crayon.enabled = crayon),
+        drake::text_drake_graph(...)
+      )
+    },
+    args,
+    r_fn,
+    r_args
+  )
+  invisible(out)
 }
 
 #' @rdname r_make
