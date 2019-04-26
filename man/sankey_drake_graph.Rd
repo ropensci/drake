@@ -138,5 +138,5 @@ sankey_drake_graph(config, from = c("small", "reg2"))
 }
 \seealso{
 \code{\link[=render_sankey_drake_graph]{render_sankey_drake_graph()}}, \code{\link[=vis_drake_graph]{vis_drake_graph()}},
-\code{\link[=drake_ggraph]{drake_ggraph()}}
+\code{\link[=drake_ggraph]{drake_ggraph()}}, \code{\link[=text_drake_graph]{text_drake_graph()}}
 }

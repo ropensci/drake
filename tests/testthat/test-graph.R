@@ -442,3 +442,19 @@ test_with_dir("same, but with an extra edge not due to files", {
       paste0("out", 3:4, ".txt")), "status: up to date", "target2"))
   )
 })
+
+test_with_dir("text graph", {
+  skip_on_cran()
+  skip_if_not_installed("crayon")
+  skip_if_not_installed("txtplot")
+  skip_if_not_installed("visNetwork")
+  load_mtcars_example()
+  config <- drake_config(
+    my_plan,
+    session_info = FALSE,
+    cache = storr::storr_environment()
+  )
+  expect_message(text_drake_graph(config))
+  expect_message(text_drake_graph(config, nchar = 0L))
+  expect_message(text_drake_graph(config, nchar = 5L))
+})

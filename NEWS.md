@@ -9,6 +9,7 @@
 - Delay the initialization of `clustermq` workers for as long as possible. Before launching them, build/check targets locally until we reach an outdated target with `hpc` equal to `FALSE`. In other words, if no targets actually require `clustermq` workers, no workers get created.
 - In `make(parallelism = "future")`, reset the `config$sleep()` backoff interval whenever a new target gets checked.
 - Add a "done" message to the console log file when the workflow has completed.
+- Add `text_drake_graph()`. Uses text art to print a dependency graph to the terminal window. Handy for when users SSH into remote machines without X Window support.
 
 
 # Version 7.2.0

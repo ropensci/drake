@@ -9,7 +9,7 @@
 #' `visNetwork::visNetwork(drake::legend_nodes())`.
 #' @export
 #' @seealso [render_sankey_drake_graph()], [vis_drake_graph()],
-#'   [drake_ggraph()]
+#'   [drake_ggraph()], [text_drake_graph()]
 #' @return A `visNetwork` graph.
 #' @inheritParams drake_graph_info
 #' @inheritParams render_sankey_drake_graph

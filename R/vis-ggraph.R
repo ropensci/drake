@@ -4,7 +4,7 @@
 #'   Install them with `install.packages(c("ggplot2", "ggraph"))`.
 #' @export
 #' @seealso [vis_drake_graph()], [sankey_drake_graph()],
-#'   [render_drake_ggraph()]
+#'   [render_drake_ggraph()], [text_drake_graph()]
 #' @return A `ggplot2` object, which you can modify with more layers,
 #'   show with `plot()`, or save as a file with `ggsave()`.
 #' @inheritParams drake_graph_info
