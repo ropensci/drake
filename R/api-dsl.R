@@ -1,4 +1,4 @@
-transform_plan <- function(plan, envir, trace = FALSE) {
+transform_plan <- function(plan, envir, trace, max_expand) {
   if (!("transform" %in% names(plan))) {
     return(plan)
   }
@@ -9,7 +9,7 @@ transform_plan <- function(plan, envir, trace = FALSE) {
   order <- igraph::topo_sort(graph)$name
   for (target in order) {
     index <- which(target == plan$target)
-    rows <- transform_row(index, plan, graph)
+    rows <- transform_row(index, plan, graph, max_expand)
     plan <- sub_in_plan(plan, rows, index)
     old_cols(plan) <- old_cols
   }
@@ -21,7 +21,7 @@ transform_plan <- function(plan, envir, trace = FALSE) {
   plan
 }
 
-transform_row <- function(index, plan, graph) {
+transform_row <- function(index, plan, graph, max_expand) {
   row <- plan[index,, drop = FALSE] # nolint
   target <- row$target
   transform <- set_old_groupings(plan$transform[[index]], plan)
@@ -32,7 +32,7 @@ transform_row <- function(index, plan, graph) {
     group_names(transform)
   )
   check_group_names(new_cols, old_cols(plan))
-  out <- dsl_transform(transform, target, row, plan, graph)
+  out <- dsl_transform(transform, target, row, plan, graph, max_expand)
   if (is.null(out)) {
     return()
   }
@@ -101,8 +101,9 @@ dsl_target_edges <- function(transform, target) {
   edges
 }
 
-map_to_grid <- function(transform, target, row, plan, graph) {
+map_to_grid <- function(transform, target, row, plan, graph, max_expand) {
   groupings <- groupings(transform)
+  groupings <- thin_groupings(groupings, max_expand)
   grid <- dsl_grid(transform, groupings)
   if (any(dim(grid) < 1L)) {
     warn_empty_transform(target)
@@ -194,7 +195,7 @@ dsl_transform <- function(...) {
 
 dsl_transform.cross <- dsl_transform.map <- map_to_grid
 
-dsl_transform.combine <- function(transform, target, row, plan, graph) {
+dsl_transform.combine <- function(transform, target, row, plan, graph, ...) {
   plan <- valid_splitting_plan(plan, transform)
   if (!nrow(plan)) {
     warn_empty_transform(target)
@@ -398,22 +399,20 @@ new_groupings.map <- function(transform) {
     transform,
     exclude = c(".data", dsl_all_special)
   )
-  data_arg <- transform[[".data"]]
-  if (is.null(data_arg)) {
-    return(explicit)
-  }
-  data_arg <- lapply(data_arg, function(x){
-    vapply(x, safe_deparse, FUN.VALUE = character(1))
-  })
+  data_arg <- data_arg_groupings(transform[[".data"]])
   c(explicit, data_arg)
 }
 
-new_groupings.cross <- function(transform) {
-  attr(transform, "new_groupings") %|||%
-    explicit_new_groupings(
-      lang(transform),
-      exclude = dsl_all_special
-    )
+new_groupings.cross <- new_groupings.map
+
+data_arg_groupings <- function(data_arg) {
+  if (is.null(data_arg)) {
+    return(list())
+  }
+  lapply(data_arg, function(x){
+    x <- factor_to_character(x)
+    vapply(x, safe_deparse, FUN.VALUE = character(1))
+  })
 }
 
 explicit_new_groupings <- function(code, exclude = character(0)) {
@@ -478,6 +477,21 @@ groupings.combine <- function(...) character(0)
 
 group_names <- function(transform) {
   as.character(names(groupings(transform)))
+}
+
+thin_groupings <- function(groupings, max_expand) {
+  if (is.null(max_expand)) {
+    return(groupings)
+  }
+  lapply(groupings, thin_grouping, max_expand = max_expand)
+}
+
+thin_grouping <- function(x, max_expand) {
+  len <- min(length(x), max_expand)
+  i <- seq(from = 1L, to = length(x), length.out = len)
+  i <- floor(i)
+  i <- unique(i)
+  x[i]
 }
 
 dsl_id <- function(...) UseMethod("dsl_id")

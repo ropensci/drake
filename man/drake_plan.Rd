@@ -7,7 +7,8 @@ for the \code{plan} argument of \code{\link[=make]{make()}}.}
 \usage{
 drake_plan(..., list = character(0), file_targets = NULL,
   strings_in_dots = NULL, tidy_evaluation = NULL, transform = TRUE,
-  trace = FALSE, envir = parent.frame(), tidy_eval = TRUE)
+  trace = FALSE, envir = parent.frame(), tidy_eval = TRUE,
+  max_expand = NULL)
 }
 \arguments{
 \item{...}{A collection of symbols/targets
@@ -38,6 +39,12 @@ what happens during target transformations.}
 (e.g. unquoting/\code{!!}) when resolving commands.
 Tidy evaluation in transformations is always turned on
 regardless of the value you supply to this argument.}
+
+\item{max_expand}{Positive integer, optional upper bound on the lengths
+of grouping variables for \code{map()} and \code{cross()}. Comes in handy
+when you have a massive number of targets and you want to test
+on a miniature version of your workflow before you scale up
+to production.}
 }
 \value{
 A data frame of targets, commands, and optional

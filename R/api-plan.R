@@ -50,6 +50,11 @@
 #'   (e.g. unquoting/`!!`) when resolving commands.
 #'   Tidy evaluation in transformations is always turned on
 #'   regardless of the value you supply to this argument.
+#' @param max_expand Positive integer, optional upper bound on the lengths
+#'   of grouping variables for `map()` and `cross()`. Comes in handy
+#'   when you have a massive number of targets and you want to test
+#'   on a miniature version of your workflow before you scale up
+#'   to production.
 #' @examples
 #' isolate_example("Contain side effects", {
 #' # Create workflow plan data frames.
@@ -141,7 +146,8 @@ drake_plan <- function(
   transform = TRUE,
   trace = FALSE,
   envir = parent.frame(),
-  tidy_eval = TRUE
+  tidy_eval = TRUE,
+  max_expand = NULL
 ) {
   if (length(file_targets) || length(strings_in_dots)) {
     # 2019-02-01 nolint
@@ -182,7 +188,12 @@ drake_plan <- function(
   plan$command <- commands
   plan <- parse_custom_plan_columns(plan)
   if (transform && ("transform" %in% colnames(plan))) {
-    plan <- transform_plan(plan, envir = envir, trace = trace)
+    plan <- transform_plan(
+      plan = plan,
+      envir = envir,
+      trace = trace,
+      max_expand = max_expand
+    )
   }
   if (tidy_eval) {
     for (col in setdiff(colnames(plan), c("target", "transform"))) {

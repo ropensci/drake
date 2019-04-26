@@ -388,7 +388,12 @@ test_with_dir("dsl with different types", {
     transform = FALSE
   )
   plan$command <- list(quote(1 + 1))
-  plan <- transform_plan(plan, envir = environment())
+  plan <- transform_plan(
+    plan,
+    envir = environment(),
+    trace = FALSE,
+    max_expand = NULL
+  )
   plan$command <- unlist(lapply(plan$command, safe_deparse))
   expect_equal(sort(plan$target), sort(c("a_1", "a_2")))
   expect_equal(plan$command, rep("1 + 1", 2))
@@ -937,7 +942,12 @@ test_with_dir("dsl with differently typed group levels", {
     transform = FALSE
   )
   plan <- bind_plans(plan1, plan2)
-  out <- transform_plan(plan, envir = environment())
+  out <- transform_plan(
+    plan,
+    envir = environment(),
+    trace = FALSE,
+    max_expand = NULL
+  )
   exp <- drake_plan(
     analysis_source1 = analyze_data("source1"), # nolint
     analysis_source2 = analyze_data(source2),
@@ -949,7 +959,12 @@ test_with_dir("dsl with differently typed group levels", {
     )
   )
   equivalent_plans(out, exp)
-  out <- transform_plan(plan, envir = environment(), trace = TRUE)
+  out <- transform_plan(
+    plan,
+    envir = environment(),
+    trace = TRUE,
+    max_expand = NULL
+  )
   exp <- drake_plan(
     analysis_source1 = target( # nolint
       command = analyze_data("source1"),
@@ -2207,6 +2222,138 @@ test_with_dir(".id_chr", {
     ),
     result_123 = predict(load_model_hdf5(file_in("model_123.h5"))),
     result_456 = predict(load_model_hdf5(file_in("model_456.h5")))
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("max_expand", {
+  skip_on_cran()
+  out <- drake_plan(
+    data = target(
+      get_data(source),
+      transform = map(source = !!seq_len(100))
+    ),
+    analysis = target(
+      fn(data, param),
+      transform = cross(data, fn = !!letters, param = !!seq_len(100)),
+    ),
+    result = target(
+      bind_rows(analysis),
+      transform = combine(analysis, .by = fn)
+    ),
+    max_expand = 3
+  )
+  exp <- drake_plan(
+    data_1L = get_data(1L),
+    data_50L = get_data(50L),
+    data_100L = get_data(100L),
+    analysis_a_1L_data_1L = a(data_1L, 1L),
+    analysis_m_1L_data_1L = m(data_1L, 1L),
+    analysis_z_1L_data_1L = z(data_1L, 1L),
+    analysis_a_50L_data_1L = a(data_1L, 50L),
+    analysis_m_50L_data_1L = m(data_1L, 50L),
+    analysis_z_50L_data_1L = z(data_1L, 50L),
+    analysis_a_100L_data_1L = a(data_1L, 100L),
+    analysis_m_100L_data_1L = m(data_1L, 100L),
+    analysis_z_100L_data_1L = z(data_1L, 100L),
+    analysis_a_1L_data_50L = a(data_50L, 1L),
+    analysis_m_1L_data_50L = m(data_50L, 1L),
+    analysis_z_1L_data_50L = z(data_50L, 1L),
+    analysis_a_50L_data_50L = a(data_50L, 50L),
+    analysis_m_50L_data_50L = m(data_50L, 50L),
+    analysis_z_50L_data_50L = z(data_50L, 50L),
+    analysis_a_100L_data_50L = a(data_50L, 100L),
+    analysis_m_100L_data_50L = m(data_50L, 100L),
+    analysis_z_100L_data_50L = z(data_50L, 100L),
+    analysis_a_1L_data_100L = a(data_100L, 1L),
+    analysis_m_1L_data_100L = m(data_100L, 1L),
+    analysis_z_1L_data_100L = z(data_100L, 1L),
+    analysis_a_50L_data_100L = a(data_100L, 50L),
+    analysis_m_50L_data_100L = m(data_100L, 50L),
+    analysis_z_50L_data_100L = z(data_100L, 50L),
+    analysis_a_100L_data_100L = a(data_100L, 100L),
+    analysis_m_100L_data_100L = m(data_100L, 100L),
+    analysis_z_100L_data_100L = z(data_100L, 100L),
+    result_a = bind_rows(
+      analysis_a_1L_data_1L,
+      analysis_a_50L_data_1L,
+      analysis_a_100L_data_1L,
+      analysis_a_1L_data_50L,
+      analysis_a_50L_data_50L,
+      analysis_a_100L_data_50L,
+      analysis_a_1L_data_100L,
+      analysis_a_50L_data_100L,
+      analysis_a_100L_data_100L
+    ),
+    result_m = bind_rows(
+      analysis_m_1L_data_1L,
+      analysis_m_50L_data_1L,
+      analysis_m_100L_data_1L,
+      analysis_m_1L_data_50L,
+      analysis_m_50L_data_50L,
+      analysis_m_100L_data_50L,
+      analysis_m_1L_data_100L,
+      analysis_m_50L_data_100L,
+      analysis_m_100L_data_100L
+    ),
+    result_z = bind_rows(
+      analysis_z_1L_data_1L,
+      analysis_z_50L_data_1L,
+      analysis_z_100L_data_1L,
+      analysis_z_1L_data_50L,
+      analysis_z_50L_data_50L,
+      analysis_z_100L_data_50L,
+      analysis_z_1L_data_100L,
+      analysis_z_50L_data_100L,
+      analysis_z_100L_data_100L
+    )
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("max_expand with a .data grid for map()", {
+  skip_on_cran()
+  args <- data.frame(x = 1:26, y = letters, stringsAsFactors = TRUE)
+  out <- drake_plan(
+    data = target(
+      get_data(x, y),
+      transform = map(.data = !!args)
+    ),
+    max_expand = 5
+  )
+  exp <- drake_plan(
+    data_1L_a = get_data(1L, "a"),
+    data_7L_g = get_data(7L, "g"),
+    data_13L_m = get_data(13L, "m"),
+    data_19L_s = get_data(19L, "s"),
+    data_26L_z = get_data(26L, "z")
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("max_expand with a .data grid for cross()", {
+  skip_on_cran()
+  args <- data.frame(x = seq_len(26), y = letters, stringsAsFactors = TRUE)
+  out <- drake_plan(
+    data = target(
+      get_data(x, y, z),
+      transform = cross(
+        .data = !!args,
+        z = c(5L, 6L, 7L, 8L),
+        .id = c(x, y, z)
+      )
+    ),
+    max_expand = 2
+  )
+  exp <- drake_plan(
+    data_1L_a_5L = get_data(1L, "a", 5L),
+    data_1L_a_8L = get_data(1L, "a", 8L),
+    data_26L_a_5L = get_data(26L, "a", 5L),
+    data_26L_a_8L = get_data(26L, "a", 8L),
+    data_1L_z_5L = get_data(1L, "z", 5L),
+    data_1L_z_8L = get_data(1L, "z", 8L),
+    data_26L_z_5L = get_data(26L, "z", 5L),
+    data_26L_z_8L = get_data(26L, "z", 8L)
   )
   equivalent_plans(out, exp)
 })

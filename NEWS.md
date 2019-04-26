@@ -3,13 +3,19 @@
 ## Bug fixes
 
 - Move "`config$lock_envir <- FALSE`" from `loop_build()` to  `backend_loop()`. This makes sure `config$envir` is correctly locked in `make(parallelism = "clustermq")`.
+- Convert factors to characters in the optional `.data` argument of `map()` and `cross()` in the DSL.
+- In the DSL of `drake_plan()`, repair `cross(.data = !!args)`, where `args` is an optional data frame of grouping variables.
+
+## New features
+
+- Add functions `text_drake_graph()` (and `r_text_drake_graph()` and `render_text_drake_graph()`). Uses text art to print a dependency graph to the terminal window. Handy for when users SSH into remote machines without X Window support.
+- Add a new `max_expand` argument to `drake_plan()`, an optional upper bound on the lengths of grouping variables for `map()` and `cross()` in the DSL. Comes in handy when you have a massive number of targets and you want to test on a miniature version of your workflow before you scale up to production.
 
 ## Enhancements
 
 - Delay the initialization of `clustermq` workers for as long as possible. Before launching them, build/check targets locally until we reach an outdated target with `hpc` equal to `FALSE`. In other words, if no targets actually require `clustermq` workers, no workers get created.
 - In `make(parallelism = "future")`, reset the `config$sleep()` backoff interval whenever a new target gets checked.
 - Add a "done" message to the console log file when the workflow has completed.
-- Add `text_drake_graph()` (and `r_text_drake_graph()` and `render_text_drake_graph()`). Uses text art to print a dependency graph to the terminal window. Handy for when users SSH into remote machines without X Window support.
 
 
 # Version 7.2.0
