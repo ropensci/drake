@@ -116,7 +116,8 @@ render_text_drake_graph <- function(graph_info, nchar = 1L) {
       id <- substr(x = id, start = 0L, stop = nchar)
       id <- ifelse(nchar > 0, id, " ")
       if (requireNamespace("crayon", quietly = TRUE)) {
-        id <- crayon::make_style(node["color"], bg = nchar < 1L)(id)
+        cl <- gsub("000000", "666666", node["color"])
+        id <- crayon::make_style(cl, bg = nchar < 1L)(id)
       }
       id
     }
