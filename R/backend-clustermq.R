@@ -144,7 +144,7 @@ cmq_deps_list <- function(target, config) {
 }
 
 cmq_local_build <- function(target, config) {
-  log_msg("local target", target, config = config)
+  log_msg("build", target, "locally", config = config)
   loop_build(target, config, downstream = NULL)
   cmq_conclude_target(target = target, config = config)
 }
@@ -160,6 +160,7 @@ cmq_local_build <- function(target, config) {
 #' @param layout Internal, part of the full `config$layout`.
 #' @param config A [drake_config()] list.
 cmq_build <- function(target, meta, deps, layout, config) {
+  log_msg("build", target, "on an hpc worker", config = config)
   config$layout <- list()
   config$layout[[target]] <- layout
   do_prework(config = config, verbose_packages = FALSE)
