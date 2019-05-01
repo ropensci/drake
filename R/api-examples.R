@@ -2,10 +2,11 @@
 #'   `drake`-powered project.
 #' @description The `drake_example()` function downloads a
 #'   folder from <https://github.com/wlandau/drake-examples>.
-#'   (Really, it downloads one of the zip files listed at
-#'   <https://github.com/wlandau/drake-examples/tree/gh-pages>
-#'   and unzips it. Do not include the `.zip` extension
-#'   in the `example` argument.)
+#'   By default, it creates a new folder with the example name
+#'   in your current working directory. After the files are written,
+#'   have a look at the enclosed `README` file.
+#'   Other instructions are available in the files at
+#'   <https://github.com/wlandau/drake-examples>.
 #' @seealso [drake_examples()], [make()]
 #' @export
 #' @return `NULL`
