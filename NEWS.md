@@ -5,6 +5,7 @@
 - Move "`config$lock_envir <- FALSE`" from `loop_build()` to  `backend_loop()`. This makes sure `config$envir` is correctly locked in `make(parallelism = "clustermq")`.
 - Convert factors to characters in the optional `.data` argument of `map()` and `cross()` in the DSL.
 - In the DSL of `drake_plan()`, repair `cross(.data = !!args)`, where `args` is an optional data frame of grouping variables.
+- Handle trailing slashes from `file_in()`/`file_out()` directories on Windows ([#855](https://github.com/ropensci/drake/issues/855)).
 
 ## New features
 

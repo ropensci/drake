@@ -100,12 +100,14 @@ analyze_readd <- function(expr, results, allowed_globals) {
 
 analyze_file_in <- function(expr, results) {
   x <- analyze_strings(expr[-1])
+  x <- file.path(x)
   x <- encode_path(x)
   ht_set(results$file_in, x)
 }
 
 analyze_file_out <- function(expr, results) {
   x <- analyze_strings(expr[-1])
+  x <- file.path(x)
   x <- encode_path(x)
   ht_set(results$file_out, x)
 }

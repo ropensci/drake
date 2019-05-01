@@ -332,3 +332,30 @@ test_with_dir("standardizing Rcpp functions", {
   expect_false(grepl("pointer: 0x", x))
   expect_true(grepl("pointer: 0x", safe_deparse(f)))
 })
+
+
+test_with_dir("Trailing slashes in file paths on Windows", {
+  skip_on_cran()
+  skip_if_not_installed("knitr")
+  dir.create("in")
+  dir.create("knitr")
+  writeLines("abc", "in/abc.txt")
+  plan <- drake_plan(
+    x = {
+      file_in("in/")
+      file_out("out/")
+      dir.create("out")
+      writeLines("123", "out/out.txt")
+      123
+    }
+  )
+  # Should produce warnings if the bug comes back:
+  make(
+    plan,
+    cache = storr::storr_environment(),
+    session_info = FALSE,
+    log_progress = FALSE,
+    verbose = 0L
+  )
+  expect_true(file.exists("out/out.txt"))
+})
