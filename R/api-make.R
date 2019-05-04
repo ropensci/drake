@@ -41,13 +41,17 @@
 #'   y = mean(x)
 #' )
 #' ```
-#' In this plan, the very act of building `x`
-#' changes the dependencies of `x`.
+#' Here, because `data()` loads `mtcars` into the global environment,
+#' the very act of building `x` changes the dependencies of `x`.
 #' In other words, without safeguards, `x` would not be up to date at
 #' the end of `make(plan)`.
 #' Please try to avoid workflows that modify the global environment.
-#' Otherwise, `make(plan)` will throw an error.
-#' To avoid this error, you can run `make(plan, lock_envir = FALSE)`.
+#' Functions such as `data()` belong in your setup scripts
+#' prior to `make()`, not in any functions or commands that get called
+#' during `make()` itself.
+#'
+#' To avoid environment-locking errors,
+#' you can run `make(plan, lock_envir = FALSE)`.
 #' There are legitimate use cases for `lock_envir = FALSE`
 #' (example: <https://ropenscilabs.github.io/drake-manual/hpc.html#parallel-computing-within-targets>) # nolint
 #' but most workflows should stick with the default `lock_envir = TRUE`.

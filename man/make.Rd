@@ -451,13 +451,17 @@ Example:\preformatted{plan <- drake_plan(
 )
 }
 
-In this plan, the very act of building \code{x}
-changes the dependencies of \code{x}.
+Here, because \code{data()} loads \code{mtcars} into the global environment,
+the very act of building \code{x} changes the dependencies of \code{x}.
 In other words, without safeguards, \code{x} would not be up to date at
 the end of \code{make(plan)}.
 Please try to avoid workflows that modify the global environment.
-Otherwise, \code{make(plan)} will throw an error.
-To avoid this error, you can run \code{make(plan, lock_envir = FALSE)}.
+Functions such as \code{data()} belong in your setup scripts
+prior to \code{make()}, not in any functions or commands that get called
+during \code{make()} itself.
+
+To avoid environment-locking errors,
+you can run \code{make(plan, lock_envir = FALSE)}.
 There are legitimate use cases for \code{lock_envir = FALSE}
 (example: \url{https://ropenscilabs.github.io/drake-manual/hpc.html#parallel-computing-within-targets}) # nolint
 but most workflows should stick with the default \code{lock_envir = TRUE}.
