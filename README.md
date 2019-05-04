@@ -3,7 +3,6 @@
 <center>
 <img src="https://ropensci.github.io/drake/figures/infographic.svg" alt="infographic" align="center" style = "border: none; float: center;">
 </center>
-
 <table class="table">
 <thead>
 <tr class="header">
@@ -32,7 +31,7 @@ Development
 </tr>
 <tr class="even">
 <td align="left">
-<a href="https://cran.r-project.org/"><img src="https://img.shields.io/badge/R%3E%3D-3.4.0-blue.svg" alt="minimal R version"></a>
+<a href="https://cran.r-project.org/"><img src="https://img.shields.io/badge/R%3E%3D-3.3.0-blue.svg" alt="minimal R version"></a>
 </td>
 <td align="left">
 <a href="https://github.com/ropensci/onboarding/issues/156"><img src="https://badges.ropensci.org/156_status.svg" alt="rOpenSci"></a>
@@ -43,7 +42,7 @@ Development
 </tr>
 <tr class="odd">
 <td align="left">
-<a href="https://CRAN.R-project.org/package=drake"><img src="https://cranlogs.r-pkg.org/badges/drake" alt="downloads"></a>
+<a href="https://CRAN.R-project.org/package=drake"><img src="https://tinyverse.netlify.com/badge/drake"></a>
 </td>
 <td align="left">
 <a href="https://doi.org/10.21105/joss.00550"><img src="https://joss.theoj.org/papers/10.21105/joss.00550/status.svg" alt="JOSS"></a>
@@ -54,7 +53,7 @@ Development
 </tr>
 <tr class="even">
 <td align="left">
-<a href="https://saythanks.io/to/drake-r-package-feedback"><img src="https://img.shields.io/badge/Say-Thanks-blue.svg" alt="SayThanks"></a>
+<a href="https://CRAN.R-project.org/package=drake"><img src="https://cranlogs.r-pkg.org/badges/drake" alt="downloads"></a>
 </td>
 <td align="left">
 <a href="https://zenodo.org/badge/latestdoi/82609103"><img src="https://zenodo.org/badge/82609103.svg" alt="Zenodo"></a>
@@ -65,6 +64,7 @@ Development
 </tr>
 <tr class="odd">
 <td align="left">
+<a href="https://saythanks.io/to/drake-r-package-feedback"><img src="https://img.shields.io/badge/Say-Thanks-blue.svg" alt="SayThanks"></a>
 </td>
 <td align="left">
 </td>
