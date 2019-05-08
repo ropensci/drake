@@ -1,7 +1,6 @@
 # Get the command ready for tidy eval prep
 # and then pure eval (no side effects).
 preprocess_command <- function(command, config) {
-  command <- as.call(c(quote(`{`), command))
   command <- as.call(c(quote(local), command))
   # Here, we really do need expr() instead of quo().
   # `!!` needs to unquote symbols using config$eval instead of

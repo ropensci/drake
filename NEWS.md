@@ -2,6 +2,7 @@
 
 ## Bug fixes
 
+- Core `make()` functionality
 - Move "`config$lock_envir <- FALSE`" from `loop_build()` to  `backend_loop()`. This makes sure `config$envir` is correctly locked in `make(parallelism = "clustermq")`.
 - Convert factors to characters in the optional `.data` argument of `map()` and `cross()` in the DSL.
 - In the DSL of `drake_plan()`, repair `cross(.data = !!args)`, where `args` is an optional data frame of grouping variables.
