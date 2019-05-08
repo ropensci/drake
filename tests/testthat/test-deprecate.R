@@ -1,9 +1,14 @@
 drake_context("deprecation")
 
 test_with_dir("defunct functions", {
-  expect_error(drake_defunct(), regexp = "defunct")
-  expect_error(drake_defunct(), regexp = "drake_defunct")
-  expect_error(analyses(), regexp = "analyses")
+  expect_condition(drake_defunct(), regexp = "defunct", class = "defunctError")
+  expect_condition(
+    drake_defunct(),
+    regexp = "drake_defunct",
+    class = "defunctError"
+  )
+  expect_condition(analyses(), regexp = "analyses", class = "defunctError")
+  expect_condition(from_plan(), regexp = "defunct", class = "defunctError")
 })
 
 test_with_dir("deprecation: target()", {
@@ -187,7 +192,6 @@ test_with_dir("deprecate misc utilities", {
   expect_warning(predict_load_balancing(config), regexp = "deprecated")
   expect_warning(tmp <- this_cache(), regexp = "deprecated")
   expect_warning(drake_cache_log_file(), regexp = "deprecated")
-  expect_error(from_plan(), regexp = "defunct")
 })
 
 test_with_dir("deprecated arguments", {
