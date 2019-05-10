@@ -2,6 +2,7 @@
 
 ## Bug fixes
 
+- Accommodate `rlang`'s new interpolation operator `{{`, which was causing `make()` to fail when `drake_plan()` commands are enclosed in curly braces ([#864](https://github.com/ropensci/drake/issues/864)).
 - Move "`config$lock_envir <- FALSE`" from `loop_build()` to  `backend_loop()`. This makes sure `config$envir` is correctly locked in `make(parallelism = "clustermq")`.
 - Convert factors to characters in the optional `.data` argument of `map()` and `cross()` in the DSL.
 - In the DSL of `drake_plan()`, repair `cross(.data = !!args)`, where `args` is an optional data frame of grouping variables.
