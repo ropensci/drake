@@ -8,6 +8,7 @@
 - In the DSL of `drake_plan()`, repair `cross(.data = !!args)`, where `args` is an optional data frame of grouping variables.
 - Handle trailing slashes in `file_in()`/`file_out()` directories for Windows ([#855](https://github.com/ropensci/drake/issues/855)).
 - Make `.id_chr` work with `combine()` in the DSL ([#867](https://github.com/ropensci/drake/issues/867)).
+- Do not try `make_spinner()` unless the version of `cli` is at least 1.1.0.
 
 ## New features
 
