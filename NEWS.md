@@ -7,6 +7,7 @@
 - Convert factors to characters in the optional `.data` argument of `map()` and `cross()` in the DSL.
 - In the DSL of `drake_plan()`, repair `cross(.data = !!args)`, where `args` is an optional data frame of grouping variables.
 - Handle trailing slashes in `file_in()`/`file_out()` directories for Windows ([#855](https://github.com/ropensci/drake/issues/855)).
+- Make `.id_chr` work with `combine()` in the DSL ([#867](https://github.com/ropensci/drake/issues/867)).
 
 ## New features
 

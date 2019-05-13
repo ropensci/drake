@@ -155,6 +155,21 @@ dsl_grid.map <- function(transform, groupings) {
   )
 }
 
+id_chr_sub <- function(plan, cols, .id_chr) {
+  grid <- data.frame(.id_chr = .id_chr, stringsAsFactors = FALSE)
+  for (col in setdiff(cols, c("target", "transform"))) {
+    if (is.language(plan[[col]][[1]])) {
+      plan[[col]] <- lapply(
+        seq_len(nrow(plan)),
+        function(index) {
+          grid_sub(index, expr = plan[[col]][[index]], grid = grid)
+        }
+      )
+    }
+  }
+  plan
+}
+
 grid_subs <- function(expr, grid) {
   keep <- intersect(all.vars(expr, functions = TRUE), colnames(grid))
   grid <- grid[, keep, drop = FALSE]
@@ -216,6 +231,7 @@ dsl_transform.combine <- function(transform, target, row, plan, graph, ...) {
   out$target <- new_targets(
     target, out, cols = dsl_by(transform), id = dsl_id(transform)
   )
+  out <- id_chr_sub(plan = out, cols = old_cols(plan), .id_chr = out$target)
   out
 }
 

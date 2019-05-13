@@ -2191,7 +2191,7 @@ test_with_dir("dates in the DSL", {
   expect_true(inherits(cache$get("y"), "Date"))
 })
 
-test_with_dir(".id_chr", {
+test_with_dir(".id_chr with map()", {
   skip_on_cran()
   out <- drake_plan(
     data = target(
@@ -2222,6 +2222,37 @@ test_with_dir(".id_chr", {
     ),
     result_123 = predict(load_model_hdf5(file_in("model_123.h5"))),
     result_456 = predict(load_model_hdf5(file_in("model_456.h5")))
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir(".id_chr with combine()", {
+  out <- drake_plan(
+    y = target(
+      f(x),
+      transform = cross(f = c(a, b), x = c(1, 2))
+    ),
+    report = target(
+      rmarkdown::render(
+        knitr_in(!!paste0(.id_chr, ".Rmd")),
+        file_out(!!paste0(.id_chr, ".html"))
+      ),
+      transform = combine(y, .by = f)
+    )
+  )
+  exp <- drake_plan(
+    y_a_1 = a(1),
+    y_b_1 = b(1),
+    y_a_2 = a(2),
+    y_b_2 = b(2),
+    report_a = rmarkdown::render(
+      knitr_in("report_a.Rmd"),
+      file_out("report_a.html")
+    ),
+    report_b = rmarkdown::render(
+      knitr_in("report_b.Rmd"),
+      file_out("report_b.html")
+    )
   )
   equivalent_plans(out, exp)
 })
