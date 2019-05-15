@@ -16,6 +16,16 @@ vignette: >
 
 The main resources to learn `drake` are the [user manual](https://ropenscilabs.github.io/drake-manual/) and the [reference website](https://ropensci.github.io/drake/). Others are below.
 
+## Shiny app
+
+The Shiny app at [wlandau.shinyapps.io/drakeplanner](https://wlandau.shinyapps.io/drakeplanner) makes it easier to learn `drake` and create new `drake`-powered projects. If you have trouble accessing it, you can install and run it locally.
+
+```{r, eval = FALSE}
+install.packages("remotes")
+remotes::install_github("wlandau/drakeplanner")
+drakeplanner::drakeplanner()
+```
+
 ## Cheat sheet
 
 Thanks to [Kirill](https://github.com/krlmlr) for preparing a [`drake` cheat sheet](https://github.com/krlmlr/drake-sib-zurich/blob/master/cheat-sheet.pdf) for the [workshop](https://github.com/krlmlr/drake-sib-zurich).
