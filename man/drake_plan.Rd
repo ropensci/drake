@@ -24,11 +24,8 @@ with commands assigned to them. See the examples for details.}
 
 \item{transform}{Logical, whether to transform the plan
 into a larger plan with more targets.
-This is still an experimental feature,
-so please check your workflow with \code{vis_drake_graph()}
-before running it with \code{make()}.
-Requires the \code{transform} and \code{group} fields identified
-by \code{target()}. See the examples for details.}
+Requires the \code{transform} field in
+\code{target()}. See the examples for details.}
 
 \item{trace}{Logical, whether to add columns to show
 what happens during target transformations.}
@@ -99,9 +96,6 @@ head(my_plan)
 deps_code("report.Rmd")
 
 # Use transformations to generate large plans.
-# This feature is experimental, so please
-# check your workflow with `vis_drake_graph()`
-# before running `make()`.
 # Read more at
 # <https://ropenscilabs.github.io/drake-manual/plans.html#create-large-plans-the-easy-way>. # nolint
 drake_plan(

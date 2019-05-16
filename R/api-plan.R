@@ -38,11 +38,8 @@
 #' @param tidy_evaluation Deprecated. Use `tidy_eval` instead.
 #' @param transform Logical, whether to transform the plan
 #'   into a larger plan with more targets.
-#'   This is still an experimental feature,
-#'   so please check your workflow with `vis_drake_graph()`
-#'   before running it with `make()`.
-#'   Requires the `transform` and `group` fields identified
-#'   by `target()`. See the examples for details.
+#'   Requires the `transform` field in
+#'   `target()`. See the examples for details.
 #' @param trace Logical, whether to add columns to show
 #'   what happens during target transformations.
 #' @param envir Environment for tidy evaluation.
@@ -75,9 +72,6 @@
 #' deps_code("report.Rmd")
 #'
 #' # Use transformations to generate large plans.
-#' # This feature is experimental, so please
-#' # check your workflow with `vis_drake_graph()`
-#' # before running `make()`.
 #' # Read more at
 #' # <https://ropenscilabs.github.io/drake-manual/plans.html#create-large-plans-the-easy-way>. # nolint
 #' drake_plan(

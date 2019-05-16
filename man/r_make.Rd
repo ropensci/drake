@@ -12,7 +12,7 @@
 \alias{r_text_drake_graph}
 \alias{r_predict_runtime}
 \alias{r_predict_workers}
-\title{Experimental: reproducible R session management for drake functions}
+\title{Reproducible R session management for drake functions}
 \usage{
 r_make(source = NULL, r_fn = NULL, r_args = list())
 
@@ -59,9 +59,6 @@ Example: \code{r_make(r_fn = callr::r_bg, r_args = list(stdout = "stdout.log"))}
 \code{selfcontained} is an example argument you could supply to the ellipsis.}
 }
 \description{
-A word of caution: \code{\link[=r_make]{r_make()}} and friends are still
-new and experimental.
-
 \code{drake} searches your environment
 to detect dependencies, so functions like \code{\link[=make]{make()}}, \code{\link[=outdated]{outdated()}}, etc.
 are designed to run in fresh clean R sessions. Wrappers \code{\link[=r_make]{r_make()}},

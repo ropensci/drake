@@ -39,10 +39,7 @@ Ignored if a \code{cache} is supplied.}
 
 \item{force}{Deprecated.}
 
-\item{fetch_cache}{Character vector containing lines of code.
-The purpose of this code is to fetch the \code{storr} cache
-with a command like \code{storr_rds()} or \code{storr_dbi()},
-but customized. This feature is experimental.}
+\item{fetch_cache}{Deprecated.}
 
 \item{console_log_file}{Optional character scalar of a file name or
 connection object (such as \code{stdout()}) to dump maximally verbose

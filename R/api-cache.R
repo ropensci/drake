@@ -47,10 +47,7 @@ force_cache_path <- function(cache = NULL) {
 #'   - `get_cache(path = "/home/you/my_project/.drake", search = TRUE)`
 #'   - `get_cache(path = "/home/you/my_project/.drake/keys", search = TRUE)`
 #' @param force Deprecated.
-#' @param fetch_cache Character vector containing lines of code.
-#'   The purpose of this code is to fetch the `storr` cache
-#'   with a command like `storr_rds()` or `storr_dbi()`,
-#'   but customized. This feature is experimental.
+#' @param fetch_cache Deprecated.
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {

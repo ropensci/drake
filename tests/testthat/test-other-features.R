@@ -268,11 +268,11 @@ test_with_dir("assert_pkg", {
   )
   expect_error(
     assert_pkg(
-      "CodeDepends",
+      "impossible",
       version = "9999.9999.9999",
-      install = "BiocManager::install"
+      install = "installer::install"
     ),
-    regexp = "with BiocManager::install"
+    regexp = "with installer::install"
   )
 })
 

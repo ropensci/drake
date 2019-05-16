@@ -94,7 +94,6 @@ Suggests:
   callr,
   cli (>= 1.1.0),
   clustermq,
-  CodeDepends,
   crayon,
   curl,
   datasets,

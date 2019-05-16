@@ -627,7 +627,7 @@ predecessor, [remake](https://github.com/richfitz/remake). In fact,
 [drake](https://github.com/ropensci/drake) owes its core ideas to
 [remake](https://github.com/richfitz/remake) and [Rich
 FitzJohn](https://github.com/richfitz/remake).
-[Remake](https://github.com/richfitz/remake)’s development repository
+[Remake](https://github.com/richfitz/remake)'s development repository
 lists several [real-world
 applications](https://github.com/richfitz/remake/blob/master/README.md#real-world-examples).
 [drake](https://github.com/ropensci/drake) surpasses
@@ -635,14 +635,14 @@ applications](https://github.com/richfitz/remake/blob/master/README.md#real-worl
 including but not limited to the following.
 
 1.  High-performance computing.
-    [Remake](https://github.com/richfitz/remake) has no native parallel
-    computing support. [drake](https://github.com/ropensci/drake), on
+    [`Remake`](https://github.com/richfitz/remake) has no native parallel
+    computing support. [`drake`](https://github.com/ropensci/drake), on
     the other hand, has a thorough selection of parallel computing
     technologies and scheduling algorithms. Thanks to
-    [future](github.com/HenrikBengtsson/future),
-    [future.batchtools](github.com/HenrikBengtsson/future.batchtools),
-    and [batchtools](github.com/mllg/batchtools), it is straightforward
-    to configure a [drake](https://github.com/ropensci/drake) project
+    [`future`](github.com/HenrikBengtsson/future),
+    [`future.batchtools`](github.com/HenrikBengtsson/future.batchtools),
+    and [`batchtools`](github.com/mllg/batchtools), it is straightforward
+    to configure a [`drake`](https://github.com/ropensci/drake) project
     for most popular job schedulers, such as
     [SLURM](https://slurm.schedmd.com/),
     [TORQUE](https://www.adaptivecomputing.com/products/torque/), and
@@ -651,17 +651,15 @@ including but not limited to the following.
     as well as systems contained in [Docker
     images](https://www.docker.com/).
 2.  A friendly interface. In
-    [remake](https://github.com/richfitz/remake), the user must manually
+    [`remake`](https://github.com/richfitz/remake), the user must manually
     write a
     [YAML](https://github.com/richfitz/remake/blob/master/doc/remake.yml)
     configuration file to arrange the steps of a workflow, which leads
     to some of the same scalability problems as
     [Make](https://www.gnu.org/software/make/).
-    [drake](https://github.com/ropensci/drake)’s data-frame-based
-    interface and [wildcard templating
-    functionality](https://ropenscilabs.github.io/drake-manual/mtcars.html#generate-the-workflow-plan)
-    easily generate workflows at scale.
-3.  Thorough documentation. [drake](https://github.com/ropensci/drake)
+    [`drake`](https://github.com/ropensci/drake)'s [domain-specific language](https://ropenscilabs.github.io/drake-manual/plans.html#large-plans)
+    easily generates workflows at scale.
+3.  Thorough documentation. [`drake`](https://github.com/ropensci/drake)
     contains [thorough user
     manual](https://ropenscilabs.github.io/drake-manual/), a [reference
     website](https://ropensci.github.io/drake/), a [comprehensive
@@ -674,9 +672,9 @@ including but not limited to the following.
     [issues](https://github.com/ropensci/drake/issues) are usually
     addressed promptly.
 5.  Presence on CRAN. At the time of writing,
-    [drake](https://github.com/ropensci/drake) is [available on
+    [`drake`](https://github.com/ropensci/drake) is [available on
     CRAN](https://cran.r-project.org/package=drake), but
-    [remake](https://github.com/richfitz/remake) is not.
+    [`remake`](https://github.com/richfitz/remake) is not.
 
 ## Memoise
 

@@ -406,7 +406,6 @@ test_with_dir("drake_plan_source()", {
 
 test_with_dir("code_to_plan(), one target", {
   skip_on_cran()
-  skip_if_not_installed("CodeDepends")
   writeLines("a <- 1", "script.R")
   plan <- code_to_plan("script.R")
   equivalent_plans(plan, weak_tibble(target = "a", command = "1"))
@@ -424,7 +423,6 @@ test_with_dir("plan_to_code()", {
   source(path, local = TRUE)
   expect_true(is.numeric(coef_regression2_large))
   expect_true(file.exists("report.md"))
-  skip_if_not_installed("CodeDepends")
   plan <- code_to_plan(path)
   equivalent_plans(plan[order(plan$target), ], plan0[order(plan0$target), ])
 })
@@ -441,7 +439,6 @@ test_with_dir("plan_to_notebook()", {
   knitr::knit(path, quiet = TRUE)
   expect_true(is.numeric(coef_regression2_large))
   expect_true(file.exists("report.md"))
-  skip_if_not_installed("CodeDepends")
   plan <- code_to_plan(path)
   equivalent_plans(plan[order(plan$target), ], plan0[order(plan0$target), ])
 })

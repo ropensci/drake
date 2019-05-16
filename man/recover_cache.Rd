@@ -30,10 +30,7 @@ running version of drake.}
 \item \code{2}: also show a spinner when preprocessing tasks are underway.
 }}
 
-\item{fetch_cache}{Character vector containing lines of code.
-The purpose of this code is to fetch the \code{storr} cache
-with a command like \code{storr_rds()} or \code{storr_dbi()},
-but customized. This feature is experimental.}
+\item{fetch_cache}{Deprecated.}
 
 \item{console_log_file}{Optional character scalar of a file name or
 connection object (such as \code{stdout()}) to dump maximally verbose

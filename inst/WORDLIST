@@ -1,3 +1,5 @@
+’
+’s
 Acknowledgements
 ailProbPaper
 acyclic
@@ -51,6 +53,7 @@ devtools
 Dobbyn
 dplyr
 DSL
+drakeplanner
 Ecdat
 Econometrics
 econometrics
@@ -171,6 +174,7 @@ Sankey
 Saunak
 scalability
 scalable
+shinyapps
 Sina
 SLURM
 SSP
@@ -212,6 +216,7 @@ webshot
 whitelist
 widehat
 withTimeout
+wlandau
 YAML
 Yub
 zeromq
