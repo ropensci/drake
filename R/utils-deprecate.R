@@ -1787,3 +1787,907 @@ drake_cache_log_file <- function(
   )
   drake_cache_log_file_(file, path, search, cache, verbose, jobs, targets_only)
 }
+
+#' @title Deprecated: use wildcard templating to create a
+#'   workflow plan data frame from a template data frame.
+#' @description Deprecated on 2019-05-16. Use [drake_plan()]
+#'   transformations instead. See
+#'   <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>
+#'   for the details.
+#'
+#' @details The commands in workflow plan data frames can have
+#' wildcard symbols that can stand for datasets, parameters, function
+#' arguments, etc. These wildcards can be evaluated over a set of
+#' possible values using `evaluate_plan()`.
+#'
+#' Specify a single wildcard with the `wildcard`
+#' and `values` arguments. In each command, the text in
+#' `wildcard` will be replaced by each value in `values`
+#' in turn. Specify multiple wildcards with the `rules` argument,
+#' which overrules `wildcard` and `values` if
+#' not `NULL`. Here, `rules` should be a list with wildcards
+#' as names and vectors of possible values as list elements.
+#' @export
+#' @seealso [drake_plan()]
+#' @return A workflow plan data frame with the wildcards evaluated.
+#'
+#' @param plan Workflow plan data frame, similar to one produced by
+#'   [drake_plan()].
+#'
+#' @param rules Named list with wildcards as names and vectors of
+#'   replacements
+#'   as values. This is a way to evaluate multiple wildcards at once.
+#'   When not `NULL`, `rules` overrules `wildcard` and
+#'   `values` if
+#'   not `NULL`.
+#'
+#' @param wildcard Character scalar denoting a wildcard placeholder.
+#'
+#' @param values Vector of values to replace the wildcard
+#'   in the drake instructions. Will be treated as a character vector.
+#'   Must be the same length as `plan$command` if `expand` is
+#'   `TRUE`.
+#'
+#' @param expand If `TRUE`, create a new rows in the workflow plan
+#'   data frame
+#'   if multiple values are assigned to a single wildcard.
+#'   If `FALSE`, each occurrence of the wildcard
+#'   is replaced with the next entry in the `values` vector,
+#'   and the values are recycled.
+#'
+#' @param rename Logical, whether to rename the targets
+#'   based on the values supplied for the wildcards
+#'   (based on `values` or `rules`).
+#'
+#' @param trace Logical, whether to add columns that
+#'   trace the wildcard expansion process. These new
+#'   columns indicate which targets were evaluated and with which
+#'   wildcards.
+#'
+#' @param columns Character vector of names of columns
+#'   to look for and evaluate the wildcards.
+#'
+#' @param sep Character scalar, separator for the names
+#'   of the new targets generated. For example, in
+#'   `evaluate_plan(drake_plan(x = sqrt(y__)), list(y__ = 1:2), sep = ".")`,
+#'   the names of the new targets are `x.1` and `x.2`.
+#'
+#' @examples
+#' \dontrun{
+#' suppressWarnings({
+#' # Create the part of the workflow plan for the datasets.
+#' datasets <- drake_plan(
+#'   small = simulate(5),
+#'   large = simulate(50)
+#' )
+#' # Create a template workflow plan for the analyses.
+#' methods <- drake_plan(
+#'   regression1 = reg1(dataset__),
+#'   regression2 = reg2(dataset__)
+#' )
+#' # Evaluate the wildcards in the template
+#' # to produce the actual part of the workflow plan
+#' # that encodes the analyses of the datasets.
+#' # Create one analysis for each combination of dataset and method.
+#' evaluate_plan(
+#'   methods,
+#'   wildcard = "dataset__",
+#'   values = datasets$target
+#' )
+#' # Only choose some combinations of dataset and analysis method.
+#' ans <- evaluate_plan(
+#'   methods,
+#'   wildcard = "dataset__",
+#'   values = datasets$target,
+#'   expand = FALSE
+#' )
+#' ans
+#' # For the complete workflow plan, row bind the pieces together.
+#' my_plan <- rbind(datasets, ans)
+#' my_plan
+#' # Wildcards for evaluate_plan() do not need the double-underscore suffix.
+#' # Any valid symbol will do.
+#' plan <- drake_plan(
+#'   numbers = sample.int(n = `{Number}`, size = ..size)
+#' )
+#' evaluate_plan(
+#'   plan,
+#'   rules = list(
+#'     "`{Number}`" = c(10, 13),
+#'     ..size = c(3, 4)
+#'   )
+#' )
+#' # Workflow plans can have multiple wildcards.
+#' # Each combination of wildcard values will be used
+#' # Except when expand is FALSE.
+#' x <- drake_plan(draws = sample.int(n = N, size = Size))
+#' evaluate_plan(x, rules = list(N = 10:13, Size = 1:2))
+#' # You can use wildcards on columns other than "command"
+#' evaluate_plan(
+#'   drake_plan(
+#'     x = target("1 + 1", cpu = "any"),
+#'     y = target("sqrt(4)", cpu = "always"),
+#'     z = target("sqrt(16)", cpu = "any")
+#'   ),
+#'   rules = list(always = 1:2),
+#'   columns = c("command", "cpu")
+#' )
+#' # With the `trace` argument,
+#' # you can generate columns that show how the wildcards
+#' # were evaluated.
+#' plan <- drake_plan(x = sample.int(n__), y = sqrt(n__))
+#' plan <- evaluate_plan(plan, wildcard = "n__", values = 1:2, trace = TRUE)
+#' print(plan)
+#' # With the `trace` argument,
+#' # you can generate columns that show how the wildcards
+#' # were evaluated. Then you can visualize the wildcard groups
+#' # as clusters.
+#' plan <- drake_plan(x = sqrt(n__), y = sample.int(n__))
+#' plan <- evaluate_plan(plan, wildcard = "n__", values = 1:2, trace = TRUE)
+#' print(plan)
+#' cache <- storr::storr_environment()
+#' config <- drake_config(plan, cache = cache)
+#' if (requireNamespace("visNetwork", quietly = TRUE)) {
+#' vis_drake_graph(config, group = "n__", clusters = "1")
+#' vis_drake_graph(config, group = "n__", clusters = c("1", "2"))
+#' make(plan, targets = c("x_1", "y_2"), cache = cache)
+#' # Optionally cluster on columns supplied by `drake_graph_info()$nodes`.
+#' vis_drake_graph(config, group = "status", clusters = "up to date")
+#' }
+#' })
+#' }
+evaluate_plan <- function(
+  plan,
+  rules = NULL,
+  wildcard = NULL,
+  values = NULL,
+  expand = TRUE,
+  rename = expand,
+  trace = FALSE,
+  columns = "command",
+  sep = "_"
+) {
+  .Deprecated(
+    new = "",
+    package = "drake",
+    msg = paste(
+      "evaluate_plan() is deprecated. For the new interface, visit",
+      "https://ropenscilabs.github.io/drake-manual/plans.html#large-plans"
+    )
+  )
+  plan <- deparse_lang_cols(plan)
+  if (!is.null(rules)) {
+    check_wildcard_rules(rules)
+    plan <- evaluate_wildcard_rules(
+      plan = plan,
+      rules = rules,
+      expand = expand,
+      rename = rename,
+      trace = trace,
+      columns = columns,
+      sep = sep
+    )
+  } else if (!is.null(wildcard) && !is.null(values)) {
+    plan <- evaluate_single_wildcard(
+      plan = plan,
+      wildcard = wildcard,
+      values = values,
+      expand = expand,
+      rename = rename,
+      trace = trace,
+      columns = columns,
+      sep = sep
+    )
+  }
+  sanitize_plan(plan)
+}
+
+evaluate_single_wildcard <- function(
+  plan,
+  wildcard,
+  values,
+  expand,
+  rename,
+  trace,
+  columns,
+  sep
+) {
+  if (!length(columns)) {
+    return(plan)
+  }
+  if ("target" %in% columns) {
+    stop(
+      "'target' cannot be in the `columns` argument of evaluate_plan().",
+      call = FALSE
+    )
+  }
+  missing_cols <- setdiff(columns, colnames(plan))
+  if (length(missing_cols)) {
+    stop(
+      "some columns you selected for evaluate_plan() are not in the plan:\n",
+      multiline_message(missing_cols),
+      call. = FALSE
+    )
+  }
+  values <- as.character(values)
+  matches <- rep(FALSE, nrow(plan))
+  for (col in columns) {
+    matches <- matches | grepl(wildcard, plan[[col]], fixed = TRUE)
+  }
+  if (!any(matches)) {
+    return(plan)
+  }
+  major <- make.names(tempfile(), unique = FALSE, allow_ = TRUE)
+  minor <- make.names(tempfile(), unique = FALSE, allow_ = TRUE)
+  plan[[major]] <- seq_len(nrow(plan))
+  plan[[minor]] <- plan[[major]]
+  matching <- plan[matches, ]
+  if (expand) {
+    matching <- expand_plan(
+      matching, values, rename = FALSE, sanitize = FALSE
+    )
+  }
+  matched_targets <- matching$target
+  if (rename) {
+    matching$target <- paste(matching$target, values, sep = sep)
+  }
+  values <- rep(values, length.out = nrow(matching))
+  for (col in columns) {
+    matching[[col]] <- Vectorize(
+      function(value, command) {
+        gsub(wildcard, value, command, fixed = TRUE)
+      }
+    )(values, matching[[col]])
+  }
+  if (trace) {
+    matching[[wildcard]] <- values
+    matching[[paste0(wildcard, "_from")]] <- matched_targets
+  }
+  rownames(matching) <- NULL
+  rownames(plan) <- NULL
+  matching[[minor]] <- seq_len(nrow(matching))
+  out <- drake_bind_rows(matching, plan[!matches, ])
+  out <- out[order(out[[major]], out[[minor]]), ]
+  out[[minor]] <- NULL
+  out[[major]] <- NULL
+  rownames(out) <- NULL
+  out
+}
+
+evaluate_wildcard_rules <- function(
+  plan, rules, expand, rename, trace, columns, sep
+) {
+  for (index in seq_len(length(rules))) {
+    plan <- evaluate_single_wildcard(
+      plan,
+      wildcard = names(rules)[index],
+      values = rules[[index]],
+      expand = expand,
+      rename = rename,
+      trace = trace,
+      columns = columns,
+      sep = sep
+    )
+  }
+  plan
+}
+
+check_wildcard_rules <- function(rules) {
+  stopifnot(is.list(rules))
+  wildcards <- names(rules)
+  all_values <- unlist(rules)
+  for (i in seq_along(wildcards)) {
+    matches <- grep(wildcards[i], all_values, fixed = TRUE, value = TRUE)
+    if (length(matches)) {
+      stop(
+        "No wildcard name can match the name of any replacement value. ",
+        "Conflicts: \"", wildcards[i], "\" with:\n",
+        multiline_message(paste0("\"", matches, "\"")),
+        call. = FALSE
+      )
+    }
+    matches <- grep(wildcards[i], wildcards[-i], fixed = TRUE, value = TRUE)
+    if (length(matches)) {
+      stop(
+        "The name of a wildcard cannot be a substring ",
+        "of any other wildcard name. ",
+        "Conflicts: \"", wildcards[i], "\" with:\n",
+        multiline_message(paste0("\"", matches, "\"")),
+        call. = FALSE
+      )
+    }
+  }
+}
+
+#' @title Deprecated: create replicates of targets.
+#' @description Deprecated on 2019-05-16. Use [drake_plan()]
+#'   transformations instead. See
+#'   <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>
+#'   for the details.
+#'
+#' @details Duplicates the rows of a workflow plan data frame.
+#' Prefixes are appended to the new target names
+#' so targets still have unique names.
+#' @export
+#' @seealso [drake_plan()]
+#' @return An expanded workflow plan data frame (with replicated targets).
+#' @param plan Workflow plan data frame.
+#' @param values Values to expand over. These will be appended to
+#'   the names of the new targets.
+#' @param rename Logical, whether to rename the targets
+#'   based on the `values`. See the examples for a demo.
+#' @param sep Character scalar, delimiter between the original
+#'   target names and the values to append to create the new
+#'   target names. Only relevant when `rename` is `TRUE`.
+#' @param sanitize Logical, whether to sanitize the plan.
+#' @examples
+#' \dontrun{
+#' suppressWarnings({
+#' # Create the part of the workflow plan for the datasets.
+#' datasets <- drake_plan(
+#'   small = simulate(5),
+#'   large = simulate(50)
+#' )
+#' # Create replicates. If you want repeat targets,
+#' # this is convenient.
+#' expand_plan(datasets, values = c("rep1", "rep2", "rep3"))
+#' # Choose whether to rename the targets based on the values.
+#' expand_plan(datasets, values = 1:3, rename = TRUE)
+#' expand_plan(datasets, values = 1:3, rename = FALSE)
+#' })
+#' }
+expand_plan <- function(
+  plan, values = NULL, rename = TRUE, sep = "_", sanitize = TRUE
+) {
+  .Deprecated(
+    new = "",
+    package = "drake",
+    msg = paste(
+      "expand_plan() is deprecated. For the new interface, visit",
+      "https://ropenscilabs.github.io/drake-manual/plans.html#large-plans"
+    )
+  )
+  if (!length(values)) {
+    return(plan)
+  }
+  nrows <- nrow(plan)
+  repeat_targets <- rep(seq_len(nrows), each = length(values))
+  plan <- plan[repeat_targets, ]
+  values <- as.character(values)
+  values <- rep(values, times = nrows)
+  if (rename) {
+    plan$target <- paste(plan$target, values, sep = sep)
+  }
+  rownames(plan) <- NULL
+  if (sanitize) {
+    plan <- sanitize_plan(plan, allow_duplicated_targets = TRUE)
+  }
+  plan
+}
+
+#' @title Deprecated:
+#'   create a plan that maps a function to a grid of arguments.
+#' @description Deprecated on 2019-05-16. Use [drake_plan()]
+#'   transformations instead. See
+#'   <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>
+#'   for the details.
+#' @details `map_plan()` is like `base::Map()`:
+#'   it takes a function name and a grid of arguments, and
+#'   writes out all the commands calls to apply the function to
+#'   each row of arguments.
+#' @export
+#' @seealso [drake_plan()]
+#' @return A workflow plan data frame.
+#' @param args A data frame (or better yet, a `tibble`)
+#'   of function arguments to `fun`.
+#'   Here, the column names should be the names of the arguments
+#'   of `fun`, and each row of `args` corresponds to a
+#'   call to `fun`.
+#' @param fun Name of a function to apply the arguments
+#'   row-by-row. Supply a symbol if `character_only` is
+#'   `FALSE` and a character scalar otherwise.
+#' @param id Name of an optional column in `args`
+#'   giving the names of the targets. If not supplied,
+#'   target names will be generated automatically.
+#'   `id` should be a symbol if `character_only` is `FALSE`
+#'   and a character scalar otherwise.
+#' @param character_only Logical, whether to interpret
+#'   the `fun` and `id` arguments as character scalars or symbols.
+#' @param trace Logical, whether to append the columns of `args`
+#'   to the output workflow plan data frame. The added columns
+#'   help "trace back" the original settings that went into building
+#'   each target. Similar to the `trace` argument of [drake_plan()].
+#' @examples
+#' \dontrun{
+#' suppressWarnings({
+#' # For the full tutorial, visit
+#' # https://ropenscilabs.github.io/drake-manual/plans.html#map_plan.
+#' my_model_fit <- function(x1, x2, data) {
+#'   lm(as.formula(paste("mpg ~", x1, "+", x1)), data = data)
+#' }
+#' covariates <- setdiff(colnames(mtcars), "mpg")
+#' args <- t(combn(covariates, 2))
+#' colnames(args) <- c("x1", "x2")
+#' # Use tibble::as_tibble(args) for better printing # nolint
+#' # Below, stringsAsFactors = FALSE is very important! # nolint
+#' args <- as.data.frame(args, stringsAsFactors = FALSE)
+#' args$data <- "mtcars"
+#' args$data <- rlang::syms(args$data)
+#' args$id <- paste0("fit_", args$x1, "_", args$x2)
+#' # print(args) # Requires `args` to be a tibble # nolint
+#' plan <- map_plan(args, my_model_fit)
+#' plan
+#' # Consider `trace = TRUE` to include the columns in `args`
+#' # in your plan.
+#' plan <- map_plan(args, my_model_fit, trace = TRUE)
+#' # print(plan) # If you have tibble installed # nolint
+#' # And of course, you can execute the plan and
+#' # inspect your results.
+#' cache <- storr::storr_environment()
+#' make(plan, verbose = FALSE, cache = cache)
+#' readd(fit_cyl_disp, cache = cache)
+#' })
+#' }
+map_plan <- function(
+  args,
+  fun,
+  id = "id",
+  character_only = FALSE,
+  trace = FALSE
+) {
+  .Deprecated(
+    new = "",
+    package = "drake",
+    msg = paste(
+      "map_plan() is deprecated. For the new interface, visit",
+      "https://ropenscilabs.github.io/drake-manual/plans.html#large-plans"
+    )
+  )
+  args <- weak_as_tibble(args)
+  if (!character_only) {
+    fun <- as.character(substitute(fun))
+    id <- as.character(substitute(id))
+  }
+  cols <- setdiff(colnames(args), id)
+  if (id %in% colnames(args)) {
+    target <- args[[id]]
+  } else {
+    target <- paste0(
+      fun, "_",
+      apply(X = args, MARGIN = 1, FUN = digest::digest, algo = "murmur32")
+    )
+  }
+  command <- as.character(unlist(drake_pmap(
+    .l = args[, cols],
+    .f = function(...) {
+      out <- list(as.name(fun), ...)
+      out <- as.call(out)
+      safe_deparse(out)
+    }
+  )))
+  out <- weak_tibble(target = target, command = command)
+  if (trace) {
+    out <- weak_as_tibble(cbind(out, args))
+  }
+  sanitize_plan(out)
+}
+
+#' @title Deprecated:
+#'   write commands to combine several targets into one
+#'   or more overarching targets.
+#' @description Deprecated on 2019-05-16. Use [drake_plan()]
+#'   transformations instead. See
+#'   <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>
+#'   for the details.
+#' @details Creates a new workflow plan to aggregate
+#'   existing targets in the supplied plan.
+#' @export
+#' @seealso [drake_plan()]
+#' @return A workflow plan data frame that aggregates multiple
+#'   prespecified targets into one additional target downstream.
+#' @param plan Workflow plan data frame of prespecified targets.
+#' @param target Name of the new aggregated target.
+#' @param gather Function used to gather the targets. Should be
+#'   one of `list(...)`, `c(...)`, `rbind(...)`, or similar.
+#' @param append Logical. If `TRUE`, the output will include the
+#'   original rows in the `plan` argument.
+#'   If `FALSE`, the output will only include the new
+#'   targets and commands.
+#' @examples
+#' \dontrun{
+#' suppressWarnings({
+#' # Workflow plan for datasets:
+#' datasets <- drake_plan(
+#'   small = simulate(5),
+#'   large = simulate(50)
+#' )
+#' # Create a new target that brings the datasets together.
+#' gather_plan(datasets, target = "my_datasets", append = FALSE)
+#' # This time, the new target just appends the rows of 'small' and 'large'
+#' # into a single matrix or data frame.
+#' gathered <- gather_plan(
+#'   datasets,
+#'   target = "aggregated_data",
+#'   gather = "rbind",
+#'   append = FALSE
+#' )
+#' gathered
+#' # For the complete workflow plan, row bind the pieces together.
+#' bind_plans(datasets, gathered)
+#' # Alternatively, you can set `append = TRUE` to incorporate
+#' # the new targets automatically.
+#' gather_plan(
+#'   datasets,
+#'   target = "aggregated_data",
+#'   gather = "rbind",
+#'   append = TRUE
+#' )
+#' })
+#' }
+gather_plan <- function(
+  plan = NULL,
+  target = "target",
+  gather = "list",
+  append = FALSE
+) {
+  .Deprecated(
+    new = "",
+    package = "drake",
+    msg = paste(
+      "gather_plan() is deprecated. For the new interface, visit",
+      "https://ropenscilabs.github.io/drake-manual/plans.html#large-plans"
+    )
+  )
+  command <- paste(plan$target, "=", plan$target)
+  command <- paste(command, collapse = ", ")
+  command <- paste0(gather, "(", command, ")")
+  new_plan <- weak_tibble(target = target, command = command)
+  new_plan <- sanitize_plan(new_plan)
+  if (append) {
+    bind_plans(plan, new_plan)
+  } else {
+    new_plan
+  }
+}
+
+#' @title Deprecated:
+#'   gather multiple groupings of targets
+#' @description Deprecated on 2019-05-16. Use [drake_plan()]
+#'   transformations instead. See
+#'   <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>
+#'   for the details.
+#' @details Perform several calls to `gather_plan()`
+#'   based on groupings from columns in the plan,
+#'   and then row-bind the new targets to the plan.
+#' @export
+#' @seealso [drake_plan()]
+#' @return A workflow plan data frame.
+#' @inheritParams gather_plan
+#' @param ... Symbols, columns of `plan` to define target groupings.
+#'   A `gather_plan()` call is applied for each grouping.
+#'   Groupings with all `NA`s in the selector variables are ignored.
+#' @param prefix Character, prefix for naming the new targets.
+#'   Suffixes are generated from the values of the columns
+#'   specified in `...`.
+#' @param filter An expression like you would pass to `dplyr::filter()`.
+#'   The rows for which `filter` evaluates to `TRUE` will be gathered,
+#'   and the rest will be excluded from gathering.
+#'   Why not just call `dplyr::filter()` before `gather_by()`?
+#'   Because `gather_by(append = TRUE, filter = my_column == "my_value")`
+#'   gathers on some targets while including all the original targets
+#'   in the output. See the examples for a demonstration.
+#' @param sep Character scalar, delimiter for creating the names
+#'   of new targets.
+#' @examples
+#' \dontrun{
+#' suppressWarnings({
+#' plan <- drake_plan(
+#'   data = get_data(),
+#'   informal_look = inspect_data(data, mu = mu__),
+#'   bayes_model = bayesian_model_fit(data, prior_mu = mu__)
+#' )
+#' plan <- evaluate_plan(plan, rules = list(mu__ = 1:2), trace = TRUE)
+#' plan
+#' gather_by(plan, mu___from, gather = "rbind")
+#' gather_by(plan, mu___from, append = TRUE)
+#' gather_by(plan, mu___from, append = FALSE)
+#' gather_by(plan, mu__, mu___from, prefix = "x")
+#' gather_by(plan) # Gather everything and append a row.
+#' # You can filter out the informal_look_* targets beforehand
+#' # if you only want the bayes_model_* ones to be gathered.
+#' # The advantage here is that if you also need `append = TRUE`,
+#' # only the bayes_model_* targets will be gathered, but
+#' # the informal_look_* targets will still be included
+#' # in the output.
+#' gather_by(
+#'   plan,
+#'   mu___from,
+#'   append = TRUE,
+#'   filter = mu___from == "bayes_model"
+#' )
+#' })
+#' }
+gather_by <- function(
+  plan,
+  ...,
+  prefix = "target",
+  gather = "list",
+  append = TRUE,
+  filter = NULL,
+  sep = "_"
+) {
+  .Deprecated(
+    new = "",
+    package = "drake",
+    msg = paste(
+      "gather_by() is deprecated. For the new interface, visit",
+      "https://ropenscilabs.github.io/drake-manual/plans.html#large-plans"
+    )
+  )
+  gathered <- plan
+  if (!is.null(substitute(filter))) {
+    filter <- rlang::enquo(filter)
+    selection <- rlang::eval_tidy(expr = filter, data = gathered)
+    selection[is.na(selection)] <- FALSE
+    gathered <- gathered[selection, ]
+  }
+  col_names <- as.character(match.call(expand.dots = FALSE)$...)
+  gathered <- map_by(
+    .x = gathered,
+    .by = col_names,
+    .f = gather_plan,
+    target = prefix,
+    gather = gather,
+    append = FALSE
+  )
+  cols <- gathered[, col_names, drop = FALSE]
+  suffix <- apply(X = cols, MARGIN = 1, FUN = paste, collapse = sep)
+  if (length(suffix)) {
+    suffix[nzchar(suffix)] <- paste0(sep, suffix[nzchar(suffix)])
+    gathered$target <- paste0(gathered$target, suffix)
+  }
+  if (append) {
+    out <- bind_plans(plan, gathered)
+  } else {
+    out <- gathered
+  }
+  arrange_plan_cols(out)
+}
+
+#' @title Deprecated:
+#'   write commands to reduce several targets down to one.
+#' @description Deprecated on 2019-05-16. Use [drake_plan()]
+#'   transformations instead. See
+#'   <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>
+#'   for the details.
+#' @details Creates a new workflow plan data frame with the
+#'   commands to do a reduction (i.e. to repeatedly apply a binary
+#'   operator to pairs of targets to produce one target).
+#' @export
+#' @seealso [drake_plan()]
+#' @return A workflow plan data frame that aggregates multiple
+#'   prespecified targets into one additional target downstream.
+#' @param plan Workflow plan data frame of prespecified targets.
+#' @param target Name of the new reduced target.
+#' @param begin Character, code to place at the beginning
+#'   of each step in the reduction.
+#' @param op Binary operator to apply in the reduction
+#' @param end Character, code to place at the end
+#'   of each step in the reduction.
+#' @param pairwise Logical, whether to create multiple
+#'   new targets, one for each pair/step in the reduction (`TRUE`),
+#'   or to do the reduction all in one command.
+#' @param append Logical. If `TRUE`, the output will include the
+#'   original rows in the `plan` argument.
+#'   If `FALSE`, the output will only include the new
+#'   targets and commands.
+#' @param sep Character scalar, delimiter for creating new target names.
+#' @examples
+#' \dontrun{
+#' suppressWarnings({
+#' # Workflow plan for datasets:
+#' x_plan <- evaluate_plan(
+#'   drake_plan(x = VALUE),
+#'   wildcard = "VALUE",
+#'   values = 1:8
+#' )
+#' x_plan
+#' # Create a new target from the sum of the others.
+#' reduce_plan(x_plan, target = "x_sum", pairwise = FALSE, append = FALSE)
+#' # Optionally include the original rows with `append = TRUE`.
+#' reduce_plan(x_plan, target = "x_sum", pairwise = FALSE, append = TRUE)
+#' # For memory efficiency and parallel computing,
+#' # reduce pairwise:
+#' reduce_plan(x_plan, target = "x_sum", pairwise = TRUE, append = FALSE)
+#' # Optionally define your own function and use it as the
+#' # binary operator in the reduction.
+#' x_plan <- evaluate_plan(
+#'   drake_plan(x = VALUE),
+#'   wildcard = "VALUE",
+#'   values = 1:9
+#' )
+#' x_plan
+#' reduce_plan(
+#'   x_plan, target = "x_sum", pairwise = TRUE,
+#'   begin = "fun(", op = ", ", end = ")"
+#' )
+#' })
+#' }
+reduce_plan <- function(
+  plan = NULL,
+  target = "target",
+  begin = "",
+  op = " + ",
+  end = "",
+  pairwise = TRUE,
+  append = FALSE,
+  sep = "_"
+) {
+  .Deprecated(
+    new = "",
+    package = "drake",
+    msg = paste(
+      "reduce_plan() is deprecated. For the new interface, visit",
+      "https://ropenscilabs.github.io/drake-manual/plans.html#large-plans"
+    )
+  )
+  if (pairwise) {
+    pairs <- reduction_pairs(
+      x = plan$target,
+      base_name = paste0(target, sep)
+    )
+    pairs$names[nrow(pairs)] <- target
+    command <- paste0(begin, pairs$odds, op, pairs$evens, end)
+    out <- weak_tibble(
+      target = pairs$names,
+      command = command[seq_len(length(pairs$names))]
+    )
+  } else {
+    command <- Reduce(
+      x = plan$target,
+      f = function(x, y) {
+        paste0(begin, x, op, y, end)
+      }
+    )
+    out <- weak_tibble(target = target, command = command)
+  }
+  out <- sanitize_plan(out)
+  if (append) {
+    out <- bind_plans(plan, out)
+  }
+  out
+}
+
+#' @title Deprecated: reduce multiple groupings of targets
+#' @description Deprecated on 2019-05-16. Use [drake_plan()]
+#'   transformations instead. See
+#'   <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>
+#'   for the details.
+#' @details Perform several calls to `reduce_plan()`
+#'   based on groupings from columns in the plan,
+#'   and then row-bind the new targets to the plan.
+#' @export
+#' @seealso [drake_plan()]
+#' @return A workflow plan data frame.
+#' @inheritParams reduce_plan
+#' @param ... Symbols, columns of `plan` to define target groupings.
+#'   A `reduce_plan()` call is applied for each grouping.
+#'   Groupings with all `NA`s in the selector variables are ignored.
+#' @param prefix Character, prefix for naming the new targets.
+#'   Suffixes are generated from the values of the columns
+#'   specified in `...`.
+#' @param filter An expression like you would pass to `dplyr::filter()`.
+#'   The rows for which `filter` evaluates to `TRUE` will be gathered,
+#'   and the rest will be excluded from gathering.
+#'   Why not just call `dplyr::filter()` before `gather_by()`?
+#'   Because `gather_by(append = TRUE, filter = my_column == "my_value")`
+#'   gathers on some targets while including all the original targets
+#'   in the output. See the examples for a demonstration.
+#' @param sep Character scalar, delimiter for creating the names
+#'   of new targets.
+#' @examples
+#' \dontrun{
+#' suppressWarnings({
+#' plan <- drake_plan(
+#'   data = get_data(),
+#'   informal_look = inspect_data(data, mu = mu__),
+#'   bayes_model = bayesian_model_fit(data, prior_mu = mu__)
+#' )
+#' plan <- evaluate_plan(plan, rules = list(mu__ = 1:2), trace = TRUE)
+#' plan
+#' reduce_by(plan, mu___from, begin = "list(", end = ")", op = ", ")
+#' reduce_by(plan, mu__)
+#' reduce_by(plan, mu__, append = TRUE)
+#' reduce_by(plan, mu__, append = FALSE)
+#' reduce_by(plan) # Reduce all the targets.
+#' reduce_by(plan, append = FALSE)
+#' reduce_by(plan, pairwise = FALSE)
+#' # You can filter out the informal_look_* targets beforehand
+#' # if you only want the bayes_model_* ones to be reduced.
+#' # The advantage here is that if you also need `append = TRUE`,
+#' # only the bayes_model_* targets will be reduced, but
+#' # the informal_look_* targets will still be included
+#' # in the output.
+#' reduce_by(
+#'   plan,
+#'   mu___from,
+#'   append = TRUE,
+#'   filter = mu___from == "bayes_model"
+#' )
+#' })
+#' }
+reduce_by <- function(
+  plan,
+  ...,
+  prefix = "target",
+  begin = "",
+  op = " + ",
+  end = "",
+  pairwise = TRUE,
+  append = TRUE,
+  filter = NULL,
+  sep = "_"
+) {
+  .Deprecated(
+    new = "",
+    package = "drake",
+    msg = paste(
+      "reduce_by() is deprecated. For the new interface, visit",
+      "https://ropenscilabs.github.io/drake-manual/plans.html#large-plans"
+    )
+  )
+  reduced <- plan
+  if (!is.null(substitute(filter))) {
+    filter <- rlang::enquo(filter)
+    selection <- rlang::eval_tidy(expr = filter, data = reduced)
+    selection[is.na(selection)] <- FALSE
+    reduced <- reduced[selection, ]
+  }
+  col_names <- as.character(match.call(expand.dots = FALSE)$...)
+  reduced <- map_by(
+    .x = reduced,
+    .by = col_names,
+    .f = reduce_plan,
+    target = prefix,
+    begin = begin,
+    op = op,
+    end = end,
+    pairwise = pairwise,
+    append = FALSE,
+    sep = sep
+  )
+  cols <- reduced[, col_names, drop = FALSE]
+  suffix <- apply(X = cols, MARGIN = 1, FUN = paste, collapse = sep)
+  if (length(suffix)) {
+    suffix[nzchar(suffix)] <- paste0(sep, suffix[nzchar(suffix)])
+    reduced$target <- paste0(reduced$target, suffix)
+  }
+  if (append) {
+    out <- bind_plans(plan, reduced)
+  } else {
+    out <- reduced
+  }
+  arrange_plan_cols(out)
+}
+
+reduction_pairs <- function(x, pairs = NULL, base_name = "reduced_") {
+  if (length(x) < 2) {
+    return(pairs)
+  }
+  evens <- x[seq(from = 2, to = length(x), by = 2)]
+  odds <- x[seq(from = 1, to = length(x), by = 2)]
+  names <- new_x <- paste0(base_name, seq_along(odds) + (nrow(pairs) %||% 0))
+  if (length(odds) > length(evens)) {
+    evens[length(evens) + 1] <- names[1]
+    new_x <- new_x[-1]
+  }
+  new_pairs <- data.frame(
+    names = names, odds = odds, evens = evens,
+    stringsAsFactors = FALSE
+  )
+  reduction_pairs(
+    x = new_x,
+    pairs = rbind(pairs, new_pairs),
+    base_name = base_name
+  )
+}
