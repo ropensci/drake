@@ -226,35 +226,6 @@ deprecate_force <- function(force) {
 }
 
 #' @title Deprecated.
-#'   List the dependencies of a function, workflow plan command,
-#'   or knitr report source file.
-#' @description Deprecated. Use [deps_code()] or [deps_target()] instead.
-#'   These functions are intended for debugging and checking your project.
-#'   The dependency structure of the components of your analysis
-#'   decides which targets are built and when.
-#' @details Deprecated on 2018-05-08.
-#' @export
-#' @keywords internal
-#' @param x Either a function or a string.
-#'   Strings are commands from your workflow plan data frame.
-#' @return A character vector, names of dependencies.
-#'   Files wrapped in single quotes.
-#'   The other names listed are functions or generic R objects.
-#' @examples
-#' # See deps_code() for examples.
-deps <- function(x) {
-  .Deprecated(
-    new = "deps_code",
-    package = "drake",
-    msg = paste(
-      "deps() in drake is deprecated.",
-      "Use deps_code() or deps_target() instead."
-    )
-  )
-  deps_code(x)
-}
-
-#' @title Deprecated.
 #' @description Deprecated. Use [deps_target()] (singular) instead.
 #' @details Deprecated on 2018-08-30.
 #' @export
@@ -369,94 +340,10 @@ long_hash <- function(
   # nocov end
 }
 
-#' @title Deprecated function
-#' @description Do not use this function. `drake`'s parallel algorithm
-#'   has changed since version 5.1.2, so `max_useful_jobs()`
-#'   will give you the wrong idea of how many jobs to use. Instead,
-#'   use the [predict_runtime()] function with a sensible value
-#'   for `known_times` and `default_time`
-#'   to cover any targets not built so far.
-#' @details Deprecated on May 4, 2018.
-#' @export
-#' @keywords internal
-#' @return A numeric scalar, the maximum number of useful jobs for
-#'   \code{\link{make}(..., jobs = ...)}.
-#' @param config Internal configuration list of \code{\link{make}(...)},
-#'   produced also with [drake_config()].
-#' @param imports Set the `imports` argument to change your
-#'   assumptions about how fast objects/files are imported.
-#' @param from_scratch Logical, whether to assume
-#'   the next [make()] will run from scratch
-#'   so that all targets are attempted.
-#' @examples
-#' # Do not use this function. Use predict_runtime() instead.
-#' # Pay special attention to the force_times and default_time
-#' # arguments.
-max_useful_jobs <- function(
-  config,
-  imports = c("files", "all", "none"),
-  from_scratch = FALSE
-) {
-  .Deprecated(
-    new = "predict_runtime",
-    package = "drake",
-    msg = c(
-      "Do not use max_useful_jobs() in drake. ",
-      "drake's parallel scheduling algorithm has changed, ",
-      "so max_useful_jobs() will give you the wrong idea about ",
-      "how many jobs to assign to `make()`. For a better estimate, ",
-      "play around with predict_runtime() with sensible values, ",
-      "for force_times and default_time."
-    )
-  )
-  # nocov start
-  imports <- match.arg(imports)
-  nodes <- drake_graph_info(config, from_scratch = from_scratch)$nodes
-  if (imports == "none") {
-    nodes <- nodes[nodes$status != "imported", ]
-  } else if (imports == "files") {
-    nodes <- nodes[nodes$status != "imported" | nodes$type == "file", ]
-  }
-  if (!from_scratch) {
-    nodes <- nodes[nodes$status != "outdated", ]
-  }
-  if (!nrow(nodes)) {
-    return(0)
-  }
-  per_level <- split(x = nodes, f = nodes$level)
-  max(vapply(per_level, nrow, FUN.VALUE = integer(1)))
-  # nocov end
-}
-
-#' @title Deprecated: reconfigure an old project (built with drake <= 4.4.0)
-#'   to be compatible with later versions of drake.
-#' @export
-#' @keywords internal
-#' @param path Full path to the cache.
-#' @param jobs Number of jobs for light parallelism.
-#' @description Deprecated on May 4, 2018.
-#' This function was intended to migrate a project/cache from
-#' drake 4.4.0 or earlier
-#' to be compatible with the version of drake on your system.
-#' @examples
-#' # This function is deprecated.
-migrate_drake_project <- function(
-  path = NULL, jobs = 1
-) {
-  .Deprecated(
-    new = "",
-    package = "drake",
-    msg = c(
-      "migrate_drake_project() is deprecated. Please run ",
-      "make() again on projects built with drake version <= 6.2.1"
-    )
-  )
-}
-
 #' @title Deprecated: render a `ggraph`/`ggplot2` representation
 #'   of your drake project.
 #' @description Use [render_drake_ggraph()] instead.
-#' @details Deprecated on 2018-25-07.
+#' @details Deprecated on 2018-07-25.
 #' @export
 #' @keywords internal
 #' @return A `ggplot2` object, which you can modify with more layers,
@@ -508,7 +395,7 @@ short_hash <- function(
 #' @title Deprecated: show a `ggraph`/`ggplot2` representation
 #'   of your drake project.
 #' @description Use [drake_ggraph()] instead.
-#' @details Deprecated on 2018-25-07.
+#' @details Deprecated on 2018-07-25.
 #' @export
 #' @keywords internal
 #' @return A `ggplot2` object, which you can modify with more layers,
@@ -658,7 +545,7 @@ deprecate_targets_only <- function(targets_only) {
 #'   existing file `report.Rmd`
 #' @param force Deprecated.
 #' @keywords internal
-#' @details Deprecated December 2018.
+#' @details Deprecated 2018-12-31.
 #' @examples
 #' \dontrun{
 #' # The code for this example is hosted at
@@ -710,7 +597,7 @@ load_main_example <- function(
 #' @export
 #' @return Nothing.
 #' @keywords internal
-#' @details Deprecated December 2018.
+#' @details Deprecated 2018-12-31.
 #' @examples
 #' \dontrun{
 #' # The code for this example is hosted at
@@ -1898,6 +1785,5 @@ drake_cache_log_file <- function(
       "`make()` with the `cache_log_file` argument."
     )
   )
-
   drake_cache_log_file_(file, path, search, cache, verbose, jobs, targets_only)
 }

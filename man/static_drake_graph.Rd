@@ -94,7 +94,7 @@ show with \code{plot()}, or save as a file with \code{ggsave()}.
 Use \code{\link[=drake_ggraph]{drake_ggraph()}} instead.
 }
 \details{
-Deprecated on 2018-25-07.
+Deprecated on 2018-07-25.
 }
 \examples{
 # See drake_ggraph()

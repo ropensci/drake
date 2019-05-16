@@ -17,7 +17,7 @@ in the current working directory. Your working directory
 \code{load_main_example()} and \code{make(my_plan)}.
 }
 \details{
-Deprecated December 2018.
+Deprecated 2018-12-31.
 }
 \examples{
 \dontrun{

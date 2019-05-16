@@ -34,7 +34,7 @@ This function also writes/overwrites
 the files \code{report.Rmd} and \code{raw_data.xlsx}.
 }
 \details{
-Deprecated December 2018.
+Deprecated 2018-12-31.
 }
 \examples{
 \dontrun{

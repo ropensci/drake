@@ -23,7 +23,7 @@ show with \code{plot()}, or save as a file with \code{ggsave()}.
 Use \code{\link[=render_drake_ggraph]{render_drake_ggraph()}} instead.
 }
 \details{
-Deprecated on 2018-25-07.
+Deprecated on 2018-07-25.
 }
 \examples{
 # See render_drake_ggraph()

@@ -99,6 +99,13 @@ default_system2_args <- drake_defunct
 deprecate_wildcard <- drake_defunct
 
 #' @title Defunct function
+#' @description 2019-05-16
+#' @export
+#' @keywords internal
+#' @param ... Arguments
+deps <- drake_defunct
+
+#' @title Defunct function
 #' @description 2019-02-15
 #' @export
 #' @keywords internal
@@ -160,6 +167,20 @@ is_function_call <- drake_defunct
 #' @keywords internal
 #' @param ... Arguments
 load_basic_example <- drake_defunct
+
+#' @title Defunct function
+#' @description 2019-05-16
+#' @export
+#' @keywords internal
+#' @param ... Arguments
+max_useful_jobs <- drake_defunct
+
+#' @title Defunct function
+#' @description 2019-05-16
+#' @export
+#' @keywords internal
+#' @param ... Arguments
+migrate_drake_project <- drake_defunct
 
 #' @title Defunct function
 #' @description 2019-02-15

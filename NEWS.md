@@ -23,6 +23,7 @@
 - Replace `CodeDepends` with a base R solution in `code_to_plan()`. Fixes a CRAN note.
 - The DSL (transformations in `drake_plan()`) is no longer experimental.
 - The `callr` API (`r_make()` and friends) is no longer experimental.
+- Change some deprecated functions to defunct: `deps()`, `max_useful_jobs()`, and `migrate_drake_project()`.
 
 # Version 7.2.0
 
