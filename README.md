@@ -4,12 +4,6 @@
 <center>
 <img src="https://ropensci.github.io/drake/figures/infographic.svg" alt="infographic" align="center" style = "border: none; float: center;">
 </center>
-<table class="table">
-<thead>
-<tr class="header">
-<th align="left">
-
-Usage
 
 <table class="table">
 <thead>
