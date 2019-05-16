@@ -2,7 +2,7 @@
 % Please edit documentation in R/api-wildcards.R
 \name{evaluate_plan}
 \alias{evaluate_plan}
-\title{Use wildcard templating to create a
+\title{Deprecated: use wildcard templating to create a
 workflow plan data frame from a template data frame.}
 \usage{
 evaluate_plan(plan, rules = NULL, wildcard = NULL, values = NULL,
@@ -55,8 +55,8 @@ the names of the new targets are \code{x.1} and \code{x.2}.}
 A workflow plan data frame with the wildcards evaluated.
 }
 \description{
-Wildcards are no longer recommended.
-Consider using transformations instead. Visit
+Deprecated on 2019-05-16. Use \code{\link[=drake_plan]{drake_plan()}}
+transformations instead. See
 \url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}
 for the details.
 }
@@ -75,6 +75,8 @@ not \code{NULL}. Here, \code{rules} should be a list with wildcards
 as names and vectors of possible values as list elements.
 }
 \examples{
+\dontrun{
+suppressWarnings({
 # Create the part of the workflow plan for the datasets.
 datasets <- drake_plan(
   small = simulate(5),
@@ -147,7 +149,6 @@ plan <- evaluate_plan(plan, wildcard = "n__", values = 1:2, trace = TRUE)
 print(plan)
 cache <- storr::storr_environment()
 config <- drake_config(plan, cache = cache)
-\dontrun{
 if (requireNamespace("visNetwork", quietly = TRUE)) {
 vis_drake_graph(config, group = "n__", clusters = "1")
 vis_drake_graph(config, group = "n__", clusters = c("1", "2"))
@@ -155,6 +156,7 @@ make(plan, targets = c("x_1", "y_2"), cache = cache)
 # Optionally cluster on columns supplied by `drake_graph_info()$nodes`.
 vis_drake_graph(config, group = "status", clusters = "up to date")
 }
+})
 }
 }
 \seealso{

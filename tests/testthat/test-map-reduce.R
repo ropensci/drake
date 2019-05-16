@@ -1,6 +1,6 @@
 drake_context("map reduce")
 
-test_with_dir("map_plan()", {
+test_with_dir("map_plan()", suppressWarnings({
   skip_on_cran()
   fn <- function(a, b) {
     a + b
@@ -27,9 +27,9 @@ test_with_dir("map_plan()", {
     ),
     as.integer(args$a + args$b)
   )
-})
+}))
 
-test_with_dir("map_plan() onto a matrix", {
+test_with_dir("map_plan() onto a matrix", suppressWarnings({
   skip_on_cran()
   skip_if_not_installed("datasets")
   my_model_fit <- function(x1, x2) {
@@ -43,9 +43,9 @@ test_with_dir("map_plan() onto a matrix", {
   make(plan, cache = cache, session_info = FALSE)
   x <- readd(plan$target[1], character_only = TRUE, cache = cache)
   expect_true(is.numeric(stats::coefficients(x)))
-})
+}))
 
-test_with_dir("map_plan() with symbols", {
+test_with_dir("map_plan() with symbols", suppressWarnings({
   skip_on_cran()
   skip_if_not_installed("datasets")
   my_model_fit <- function(x1, x2, data) {
@@ -62,9 +62,10 @@ test_with_dir("map_plan() with symbols", {
   make(plan, verbose = 0L, cache = cache)
   x <- readd(plan$target[1], character_only = TRUE, cache = cache)
   expect_true(is.numeric(stats::coefficients(x)))
-})
+}))
 
-test_with_dir("gather_plan()", {
+test_with_dir("gather_plan()", suppressWarnings({
+  skip_on_cran()
   df <- drake_plan(data = simulate(center = MU, scale = SIGMA))
   m0 <- evaluate_plan(df, wildcard = "NULL", values = 1:2)
   equivalent_plans(m0, df)
@@ -89,9 +90,9 @@ test_with_dir("gather_plan()", {
     command = "rbind(data_rep1 = data_rep1, data_rep2 = data_rep2)"
   )
   equivalent_plans(x7, y)
-})
+}))
 
-test_with_dir("reduce_plan()", {
+test_with_dir("reduce_plan()", suppressWarnings({
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   # Non-pairwise reduce
   x_plan <- evaluate_plan(
@@ -205,9 +206,9 @@ test_with_dir("reduce_plan()", {
     )
   )
   expect_equal(readd(x_sum), out)
-})
+}))
 
-test_with_dir("gather_by()", {
+test_with_dir("gather_by()", suppressWarnings({
   skip_on_cran()
   plan <- evaluate_plan(
     drake_plan(x = rnorm(m__), y = rexp(n__), z = 10),
@@ -287,9 +288,9 @@ test_with_dir("gather_by()", {
   new_row <- drake_plan(xyz_x = c(x_1 = x_1, x_2 = x_2))
   y <- bind_plans(plan, new_row)
   equivalent_plans(x[, c("target", "command")], y)
-})
+}))
 
-test_with_dir("reduce_by()", {
+test_with_dir("reduce_by()", suppressWarnings({
   skip_on_cran()
   plan <- evaluate_plan(
     drake_plan(x = rnorm(m__), y = rexp(n__), z = 10),
@@ -422,4 +423,4 @@ test_with_dir("reduce_by()", {
   new_row <- drake_plan(xyz_y = y_a + y_b)
   y <- bind_plans(plan, new_row)
   equivalent_plans(x[, c("target", "command")], y)
-})
+}))

@@ -2,7 +2,7 @@
 % Please edit documentation in R/api-mapreduce.R
 \name{reduce_by}
 \alias{reduce_by}
-\title{Reduce multiple groupings of targets}
+\title{Deprecated: reduce multiple groupings of targets}
 \usage{
 reduce_by(plan, ..., prefix = "target", begin = "", op = " + ",
   end = "", pairwise = TRUE, append = TRUE, filter = NULL,
@@ -51,8 +51,8 @@ of new targets.}
 A workflow plan data frame.
 }
 \description{
-\code{reduce_by()} are no longer recommended.
-Consider using transformations instead. Visit
+Deprecated on 2019-05-16. Use \code{\link[=drake_plan]{drake_plan()}}
+transformations instead. See
 \url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}
 for the details.
 }
@@ -62,6 +62,8 @@ based on groupings from columns in the plan,
 and then row-bind the new targets to the plan.
 }
 \examples{
+\dontrun{
+suppressWarnings({
 plan <- drake_plan(
   data = get_data(),
   informal_look = inspect_data(data, mu = mu__),
@@ -88,6 +90,8 @@ reduce_by(
   append = TRUE,
   filter = mu___from == "bayes_model"
 )
+})
+}
 }
 \seealso{
 \code{\link[=drake_plan]{drake_plan()}}

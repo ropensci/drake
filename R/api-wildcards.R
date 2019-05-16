@@ -1,7 +1,7 @@
-#' @title Use wildcard templating to create a
+#' @title Deprecated: use wildcard templating to create a
 #'   workflow plan data frame from a template data frame.
-#' @description Wildcards are no longer recommended.
-#'   Consider using transformations instead. Visit
+#' @description Deprecated on 2019-05-16. Use [drake_plan()]
+#'   transformations instead. See
 #'   <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>
 #'   for the details.
 #'
@@ -9,7 +9,7 @@
 #' wildcard symbols that can stand for datasets, parameters, function
 #' arguments, etc. These wildcards can be evaluated over a set of
 #' possible values using `evaluate_plan()`.
-#' 
+#'
 #' Specify a single wildcard with the `wildcard`
 #' and `values` arguments. In each command, the text in
 #' `wildcard` will be replaced by each value in `values`
@@ -53,7 +53,7 @@
 #'   trace the wildcard expansion process. These new
 #'   columns indicate which targets were evaluated and with which
 #'   wildcards.
-#'   
+#'
 #' @param columns Character vector of names of columns
 #'   to look for and evaluate the wildcards.
 #'
@@ -63,6 +63,8 @@
 #'   the names of the new targets are `x.1` and `x.2`.
 #'
 #' @examples
+#' \dontrun{
+#' suppressWarnings({
 #' # Create the part of the workflow plan for the datasets.
 #' datasets <- drake_plan(
 #'   small = simulate(5),
@@ -135,7 +137,6 @@
 #' print(plan)
 #' cache <- storr::storr_environment()
 #' config <- drake_config(plan, cache = cache)
-#' \dontrun{
 #' if (requireNamespace("visNetwork", quietly = TRUE)) {
 #' vis_drake_graph(config, group = "n__", clusters = "1")
 #' vis_drake_graph(config, group = "n__", clusters = c("1", "2"))
@@ -143,6 +144,7 @@
 #' # Optionally cluster on columns supplied by `drake_graph_info()$nodes`.
 #' vis_drake_graph(config, group = "status", clusters = "up to date")
 #' }
+#' })
 #' }
 evaluate_plan <- function(
   plan,
@@ -155,7 +157,14 @@ evaluate_plan <- function(
   columns = "command",
   sep = "_"
 ) {
-  advertise_dsl()
+  .Deprecated(
+    new = "",
+    package = "drake",
+    msg = paste(
+      "evaluate_plan() is deprecated. For the new interface, visit",
+      "https://ropenscilabs.github.io/drake-manual/plans.html#large-plans"
+    )
+  )
   plan <- deparse_lang_cols(plan)
   if (!is.null(rules)) {
     check_wildcard_rules(rules)
@@ -300,9 +309,9 @@ check_wildcard_rules <- function(rules) {
   }
 }
 
-#' @title Create replicates of targets.
-#' @description `expand_plan()` is no longer recommended.
-#'   Consider using transformations instead. Visit
+#' @title Deprecated: create replicates of targets.
+#' @description Deprecated on 2019-05-16. Use [drake_plan()]
+#'   transformations instead. See
 #'   <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>
 #'   for the details.
 #'
@@ -322,6 +331,8 @@ check_wildcard_rules <- function(rules) {
 #'   target names. Only relevant when `rename` is `TRUE`.
 #' @param sanitize Logical, whether to sanitize the plan.
 #' @examples
+#' \dontrun{
+#' suppressWarnings({
 #' # Create the part of the workflow plan for the datasets.
 #' datasets <- drake_plan(
 #'   small = simulate(5),
@@ -333,10 +344,19 @@ check_wildcard_rules <- function(rules) {
 #' # Choose whether to rename the targets based on the values.
 #' expand_plan(datasets, values = 1:3, rename = TRUE)
 #' expand_plan(datasets, values = 1:3, rename = FALSE)
+#' })
+#' }
 expand_plan <- function(
   plan, values = NULL, rename = TRUE, sep = "_", sanitize = TRUE
 ) {
-  advertise_dsl()
+  .Deprecated(
+    new = "",
+    package = "drake",
+    msg = paste(
+      "expand_plan() is deprecated. For the new interface, visit",
+      "https://ropenscilabs.github.io/drake-manual/plans.html#large-plans"
+    )
+  )
   if (!length(values)) {
     return(plan)
   }

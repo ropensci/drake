@@ -1,13 +1,15 @@
 drake_context("wildcards")
 
-test_with_dir("empty generative args", {
+test_with_dir("empty generative args", suppressWarnings({
+  skip_on_cran()
   x <- drake_plan(a = 1, b = FUNCTION())
   equivalent_plans(evaluate_plan(x), x)
   equivalent_plans(evaluate_wildcard_rules(x, rules = NULL), x)
   equivalent_plans(expand_plan(x), x)
-})
+}))
 
-test_with_dir("evaluate and expand", {
+test_with_dir("evaluate and expand", suppressWarnings({
+  skip_on_cran()
   df <- drake_plan(data = simulate(center = MU, scale = SIGMA))
   m0 <- evaluate_plan(df, wildcard = "NULL", values = 1:2)
   equivalent_plans(m0, df)
@@ -135,9 +137,10 @@ test_with_dir("evaluate and expand", {
     )
   )
   equivalent_plans(x6, y)
-})
+}))
 
-test_with_dir("evaluate_plan() and trace", {
+test_with_dir("evaluate_plan() and trace", suppressWarnings({
+  skip_on_cran()
   plan <- drake_plan(
     top = 3,
     data = simulate(center = MU, scale = SIGMA),
@@ -289,9 +292,10 @@ test_with_dir("evaluate_plan() and trace", {
     )
   )
   equivalent_plans(x, y)
-})
+}))
 
-test_with_dir("make() with wildcard columns", {
+test_with_dir("make() with wildcard columns", suppressWarnings({
+  skip_on_cran()
   plan <- evaluate_plan(
     drake_plan(x = rnorm(n__)),
     wildcard = "n__",
@@ -306,9 +310,10 @@ test_with_dir("make() with wildcard columns", {
   make(plan, cache = cache, session_info = FALSE)
   con <- drake_config(plan, cache = cache, session_info = FALSE)
   expect_true(all(plan$target %in% cached(cache = con$cache)))
-})
+}))
 
-test_with_dir("unconventional wildcards", {
+test_with_dir("unconventional wildcards", suppressWarnings({
+  skip_on_cran()
   df <- drake_plan(data = simulate(center = .MU., scale = `{SIGMA}`)) # nolint
   x0 <- expand_plan(df, values = c("rep1", "rep2"))
   x <- evaluate_plan(
@@ -322,9 +327,10 @@ test_with_dir("unconventional wildcards", {
     )
   )
   equivalent_plans(x, y)
-})
+}))
 
-test_with_dir("'columns' argument to evaluate_plan()", {
+test_with_dir("'columns' argument to evaluate_plan()", suppressWarnings({
+  skip_on_cran()
   plan <- drake_plan(
     x = target(always, cpu = "any"),
     y = target(any, cpu = "always"),
@@ -377,9 +383,9 @@ test_with_dir("'columns' argument to evaluate_plan()", {
     evaluate_plan(plan, rules = rules, columns = c("command", "cpu")),
     out
   )
-})
+}))
 
-test_with_dir("issue 187 on Github (from Kendon Bell)", {
+test_with_dir("issue 187 on Github (from Kendon Bell)", suppressWarnings({
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   test <- drake_plan(test = run_it(wc__))
   out <- evaluate_plan(test, rules = list(wc__ = list(1:4, 5:8, 9:12)))
@@ -388,9 +394,9 @@ test_with_dir("issue 187 on Github (from Kendon Bell)", {
     command = c("run_it(1:4)", "run_it(5:8)", "run_it(9:12)")
   )
   equivalent_plans(out, out2)
-})
+}))
 
-test_with_dir("conflicts in wildcard names/values", {
+test_with_dir("conflicts in wildcard names/values", suppressWarnings({
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   plan <- drake_plan(a = 1, b = 2)
   rules1 <- list(plant = 1:2, seed = 3:4, plantseed = 5:6)
@@ -403,9 +409,10 @@ test_with_dir("conflicts in wildcard names/values", {
     evaluate_plan(plan, rules = rules1), regexp = "wildcard name")
   expect_error(
     evaluate_plan(plan, rules = rules2), regexp = "replacement value")
-})
+}))
 
-test_with_dir("bad 'columns' argument to evaluate_plan()", {
+test_with_dir("bad 'columns' argument to evaluate_plan()", suppressWarnings({
+  skip_on_cran()
   plan <- drake_plan(
     x = target("always", cpu = "any"),
     y = target("any", cpu = "always"),
@@ -423,4 +430,4 @@ test_with_dir("bad 'columns' argument to evaluate_plan()", {
     plan,
     evaluate_plan(plan, wildcard = "any", values = 1:2, columns = NULL)
   )
-})
+}))

@@ -2,7 +2,8 @@
 % Please edit documentation in R/api-mapreduce.R
 \name{gather_by}
 \alias{gather_by}
-\title{Gather multiple groupings of targets}
+\title{Deprecated:
+gather multiple groupings of targets}
 \usage{
 gather_by(plan, ..., prefix = "target", gather = "list",
   append = TRUE, filter = NULL, sep = "_")
@@ -41,8 +42,8 @@ of new targets.}
 A workflow plan data frame.
 }
 \description{
-\code{gather_by()} is no longer recommended.
-Consider using transformations instead. Visit
+Deprecated on 2019-05-16. Use \code{\link[=drake_plan]{drake_plan()}}
+transformations instead. See
 \url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}
 for the details.
 }
@@ -52,6 +53,8 @@ based on groupings from columns in the plan,
 and then row-bind the new targets to the plan.
 }
 \examples{
+\dontrun{
+suppressWarnings({
 plan <- drake_plan(
   data = get_data(),
   informal_look = inspect_data(data, mu = mu__),
@@ -76,6 +79,8 @@ gather_by(
   append = TRUE,
   filter = mu___from == "bayes_model"
 )
+})
+}
 }
 \seealso{
 \code{\link[=drake_plan]{drake_plan()}}

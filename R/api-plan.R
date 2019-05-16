@@ -581,18 +581,6 @@ drake_envir <- function() {
 drake_envir_marker <- "._drake_envir"
 drake_target_marker <- "._drake_target"
 
-advertise_dsl <- function() {
-  on.exit(Sys.setenv(drake_dsl_advertised = "true"))
-  if (nchar(Sys.getenv("drake_dsl_advertised"))) {
-    return(invisible())
-  }
-  message(
-    "The interface at ",
-    "https://ropenscilabs.github.io/drake-manual/plans.html#large-plans ",
-    "is better than evaluate_plan(), map_plan(), gather_by(), etc."
-  )
-}
-
 as_drake_plan <- function(plan, .force_df = FALSE) {
   no_tibble <- !suppressWarnings(requireNamespace("tibble", quietly = TRUE))
   if (.force_df || no_tibble) {

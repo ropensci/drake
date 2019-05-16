@@ -593,3 +593,14 @@ test_with_dir("analyses and summaries", {
   )
   expect_equal(nrow(s), 8)
 })
+
+test_with_dir("wildcards", {
+  plan <- drake_plan(x = 1)
+  expect_warning(map_plan(data.frame(x = 1), f), regexp = "deprecated")
+  expect_warning(gather_plan(plan), regexp = "deprecated")
+  expect_warning(gather_by(plan), regexp = "deprecated")
+  expect_warning(reduce_plan(plan), regexp = "deprecated")
+  expect_warning(reduce_by(plan), regexp = "deprecated")
+  expect_warning(evaluate_plan(plan), regexp = "deprecated")
+  expect_warning(expand_plan(plan), regexp = "deprecated")
+})

@@ -1,10 +1,11 @@
-#' @title Create a plan that maps a function to a grid of arguments.
-#' @description `map_plan()` is no longer recommended.
-#'   Consider using transformations instead. Visit
+#' @title Deprecated:
+#'   create a plan that maps a function to a grid of arguments.
+#' @description Deprecated on 2019-05-16. Use [drake_plan()]
+#'   transformations instead. See
 #'   <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>
 #'   for the details.
 #' @details `map_plan()` is like `base::Map()`:
-#'   it takes a function name and a grid of arguments, and 
+#'   it takes a function name and a grid of arguments, and
 #'   writes out all the commands calls to apply the function to
 #'   each row of arguments.
 #' @export
@@ -30,6 +31,8 @@
 #'   help "trace back" the original settings that went into building
 #'   each target. Similar to the `trace` argument of [drake_plan()].
 #' @examples
+#' \dontrun{
+#' suppressWarnings({
 #' # For the full tutorial, visit
 #' # https://ropenscilabs.github.io/drake-manual/plans.html#map_plan.
 #' my_model_fit <- function(x1, x2, data) {
@@ -56,6 +59,8 @@
 #' cache <- storr::storr_environment()
 #' make(plan, verbose = FALSE, cache = cache)
 #' readd(fit_cyl_disp, cache = cache)
+#' })
+#' }
 map_plan <- function(
   args,
   fun,
@@ -63,7 +68,14 @@ map_plan <- function(
   character_only = FALSE,
   trace = FALSE
 ) {
-  advertise_dsl()
+  .Deprecated(
+    new = "",
+    package = "drake",
+    msg = paste(
+      "map_plan() is deprecated. For the new interface, visit",
+      "https://ropenscilabs.github.io/drake-manual/plans.html#large-plans"
+    )
+  )
   args <- weak_as_tibble(args)
   if (!character_only) {
     fun <- as.character(substitute(fun))
@@ -93,10 +105,11 @@ map_plan <- function(
   sanitize_plan(out)
 }
 
-#' @title Write commands to combine several targets into one
+#' @title Deprecated:
+#'   write commands to combine several targets into one
 #'   or more overarching targets.
-#' @description `gather_plan()` is no longer recommended.
-#'   Consider using transformations instead. Visit
+#' @description Deprecated on 2019-05-16. Use [drake_plan()]
+#'   transformations instead. See
 #'   <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>
 #'   for the details.
 #' @details Creates a new workflow plan to aggregate
@@ -114,6 +127,8 @@ map_plan <- function(
 #'   If `FALSE`, the output will only include the new
 #'   targets and commands.
 #' @examples
+#' \dontrun{
+#' suppressWarnings({
 #' # Workflow plan for datasets:
 #' datasets <- drake_plan(
 #'   small = simulate(5),
@@ -140,13 +155,22 @@ map_plan <- function(
 #'   gather = "rbind",
 #'   append = TRUE
 #' )
+#' })
+#' }
 gather_plan <- function(
   plan = NULL,
   target = "target",
   gather = "list",
   append = FALSE
 ) {
-  advertise_dsl()
+  .Deprecated(
+    new = "",
+    package = "drake",
+    msg = paste(
+      "gather_plan() is deprecated. For the new interface, visit",
+      "https://ropenscilabs.github.io/drake-manual/plans.html#large-plans"
+    )
+  )
   command <- paste(plan$target, "=", plan$target)
   command <- paste(command, collapse = ", ")
   command <- paste0(gather, "(", command, ")")
@@ -159,9 +183,10 @@ gather_plan <- function(
   }
 }
 
-#' @title Gather multiple groupings of targets
-#' @description `gather_by()` is no longer recommended.
-#'   Consider using transformations instead. Visit
+#' @title Deprecated:
+#'   gather multiple groupings of targets
+#' @description Deprecated on 2019-05-16. Use [drake_plan()]
+#'   transformations instead. See
 #'   <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>
 #'   for the details.
 #' @details Perform several calls to `gather_plan()`
@@ -187,6 +212,8 @@ gather_plan <- function(
 #' @param sep Character scalar, delimiter for creating the names
 #'   of new targets.
 #' @examples
+#' \dontrun{
+#' suppressWarnings({
 #' plan <- drake_plan(
 #'   data = get_data(),
 #'   informal_look = inspect_data(data, mu = mu__),
@@ -211,6 +238,8 @@ gather_plan <- function(
 #'   append = TRUE,
 #'   filter = mu___from == "bayes_model"
 #' )
+#' })
+#' }
 gather_by <- function(
   plan,
   ...,
@@ -220,7 +249,14 @@ gather_by <- function(
   filter = NULL,
   sep = "_"
 ) {
-  advertise_dsl()
+  .Deprecated(
+    new = "",
+    package = "drake",
+    msg = paste(
+      "gather_by() is deprecated. For the new interface, visit",
+      "https://ropenscilabs.github.io/drake-manual/plans.html#large-plans"
+    )
+  )
   gathered <- plan
   if (!is.null(substitute(filter))) {
     filter <- rlang::enquo(filter)
@@ -251,9 +287,10 @@ gather_by <- function(
   arrange_plan_cols(out)
 }
 
-#' @title Write commands to reduce several targets down to one.
-#' @description `reduce_plan()` is no longer recommended.
-#'   Consider using transformations instead. Visit
+#' @title Deprecated:
+#'   write commands to reduce several targets down to one.
+#' @description Deprecated on 2019-05-16. Use [drake_plan()]
+#'   transformations instead. See
 #'   <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>
 #'   for the details.
 #' @details Creates a new workflow plan data frame with the
@@ -279,6 +316,8 @@ gather_by <- function(
 #'   targets and commands.
 #' @param sep Character scalar, delimiter for creating new target names.
 #' @examples
+#' \dontrun{
+#' suppressWarnings({
 #' # Workflow plan for datasets:
 #' x_plan <- evaluate_plan(
 #'   drake_plan(x = VALUE),
@@ -305,6 +344,8 @@ gather_by <- function(
 #'   x_plan, target = "x_sum", pairwise = TRUE,
 #'   begin = "fun(", op = ", ", end = ")"
 #' )
+#' })
+#' }
 reduce_plan <- function(
   plan = NULL,
   target = "target",
@@ -315,7 +356,14 @@ reduce_plan <- function(
   append = FALSE,
   sep = "_"
 ) {
-  advertise_dsl()
+  .Deprecated(
+    new = "",
+    package = "drake",
+    msg = paste(
+      "reduce_plan() is deprecated. For the new interface, visit",
+      "https://ropenscilabs.github.io/drake-manual/plans.html#large-plans"
+    )
+  )
   if (pairwise) {
     pairs <- reduction_pairs(
       x = plan$target,
@@ -343,9 +391,9 @@ reduce_plan <- function(
   out
 }
 
-#' @title Reduce multiple groupings of targets
-#' @description `reduce_by()` are no longer recommended.
-#'   Consider using transformations instead. Visit
+#' @title Deprecated: reduce multiple groupings of targets
+#' @description Deprecated on 2019-05-16. Use [drake_plan()]
+#'   transformations instead. See
 #'   <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>
 #'   for the details.
 #' @details Perform several calls to `reduce_plan()`
@@ -371,6 +419,8 @@ reduce_plan <- function(
 #' @param sep Character scalar, delimiter for creating the names
 #'   of new targets.
 #' @examples
+#' \dontrun{
+#' suppressWarnings({
 #' plan <- drake_plan(
 #'   data = get_data(),
 #'   informal_look = inspect_data(data, mu = mu__),
@@ -397,6 +447,8 @@ reduce_plan <- function(
 #'   append = TRUE,
 #'   filter = mu___from == "bayes_model"
 #' )
+#' })
+#' }
 reduce_by <- function(
   plan,
   ...,
@@ -409,7 +461,14 @@ reduce_by <- function(
   filter = NULL,
   sep = "_"
 ) {
-  advertise_dsl()
+  .Deprecated(
+    new = "",
+    package = "drake",
+    msg = paste(
+      "reduce_by() is deprecated. For the new interface, visit",
+      "https://ropenscilabs.github.io/drake-manual/plans.html#large-plans"
+    )
+  )
   reduced <- plan
   if (!is.null(substitute(filter))) {
     filter <- rlang::enquo(filter)

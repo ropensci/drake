@@ -2,7 +2,8 @@
 % Please edit documentation in R/api-mapreduce.R
 \name{reduce_plan}
 \alias{reduce_plan}
-\title{Write commands to reduce several targets down to one.}
+\title{Deprecated:
+write commands to reduce several targets down to one.}
 \usage{
 reduce_plan(plan = NULL, target = "target", begin = "", op = " + ",
   end = "", pairwise = TRUE, append = FALSE, sep = "_")
@@ -36,8 +37,8 @@ A workflow plan data frame that aggregates multiple
 prespecified targets into one additional target downstream.
 }
 \description{
-\code{reduce_plan()} is no longer recommended.
-Consider using transformations instead. Visit
+Deprecated on 2019-05-16. Use \code{\link[=drake_plan]{drake_plan()}}
+transformations instead. See
 \url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}
 for the details.
 }
@@ -47,6 +48,8 @@ commands to do a reduction (i.e. to repeatedly apply a binary
 operator to pairs of targets to produce one target).
 }
 \examples{
+\dontrun{
+suppressWarnings({
 # Workflow plan for datasets:
 x_plan <- evaluate_plan(
   drake_plan(x = VALUE),
@@ -73,6 +76,8 @@ reduce_plan(
   x_plan, target = "x_sum", pairwise = TRUE,
   begin = "fun(", op = ", ", end = ")"
 )
+})
+}
 }
 \seealso{
 \code{\link[=drake_plan]{drake_plan()}}

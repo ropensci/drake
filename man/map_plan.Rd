@@ -2,7 +2,8 @@
 % Please edit documentation in R/api-mapreduce.R
 \name{map_plan}
 \alias{map_plan}
-\title{Create a plan that maps a function to a grid of arguments.}
+\title{Deprecated:
+create a plan that maps a function to a grid of arguments.}
 \usage{
 map_plan(args, fun, id = "id", character_only = FALSE, trace = FALSE)
 }
@@ -35,8 +36,8 @@ each target. Similar to the \code{trace} argument of \code{\link[=drake_plan]{dr
 A workflow plan data frame.
 }
 \description{
-\code{map_plan()} is no longer recommended.
-Consider using transformations instead. Visit
+Deprecated on 2019-05-16. Use \code{\link[=drake_plan]{drake_plan()}}
+transformations instead. See
 \url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}
 for the details.
 }
@@ -47,6 +48,8 @@ writes out all the commands calls to apply the function to
 each row of arguments.
 }
 \examples{
+\dontrun{
+suppressWarnings({
 # For the full tutorial, visit
 # https://ropenscilabs.github.io/drake-manual/plans.html#map_plan.
 my_model_fit <- function(x1, x2, data) {
@@ -73,6 +76,8 @@ plan <- map_plan(args, my_model_fit, trace = TRUE)
 cache <- storr::storr_environment()
 make(plan, verbose = FALSE, cache = cache)
 readd(fit_cyl_disp, cache = cache)
+})
+}
 }
 \seealso{
 \code{\link[=drake_plan]{drake_plan()}}

@@ -2,7 +2,8 @@
 % Please edit documentation in R/api-mapreduce.R
 \name{gather_plan}
 \alias{gather_plan}
-\title{Write commands to combine several targets into one
+\title{Deprecated:
+write commands to combine several targets into one
 or more overarching targets.}
 \usage{
 gather_plan(plan = NULL, target = "target", gather = "list",
@@ -26,8 +27,8 @@ A workflow plan data frame that aggregates multiple
 prespecified targets into one additional target downstream.
 }
 \description{
-\code{gather_plan()} is no longer recommended.
-Consider using transformations instead. Visit
+Deprecated on 2019-05-16. Use \code{\link[=drake_plan]{drake_plan()}}
+transformations instead. See
 \url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}
 for the details.
 }
@@ -36,6 +37,8 @@ Creates a new workflow plan to aggregate
 existing targets in the supplied plan.
 }
 \examples{
+\dontrun{
+suppressWarnings({
 # Workflow plan for datasets:
 datasets <- drake_plan(
   small = simulate(5),
@@ -62,6 +65,8 @@ gather_plan(
   gather = "rbind",
   append = TRUE
 )
+})
+}
 }
 \seealso{
 \code{\link[=drake_plan]{drake_plan()}}

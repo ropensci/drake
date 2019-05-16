@@ -2,7 +2,7 @@
 % Please edit documentation in R/api-wildcards.R
 \name{expand_plan}
 \alias{expand_plan}
-\title{Create replicates of targets.}
+\title{Deprecated: create replicates of targets.}
 \usage{
 expand_plan(plan, values = NULL, rename = TRUE, sep = "_",
   sanitize = TRUE)
@@ -26,8 +26,8 @@ target names. Only relevant when \code{rename} is \code{TRUE}.}
 An expanded workflow plan data frame (with replicated targets).
 }
 \description{
-\code{expand_plan()} is no longer recommended.
-Consider using transformations instead. Visit
+Deprecated on 2019-05-16. Use \code{\link[=drake_plan]{drake_plan()}}
+transformations instead. See
 \url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}
 for the details.
 }
@@ -37,6 +37,8 @@ Prefixes are appended to the new target names
 so targets still have unique names.
 }
 \examples{
+\dontrun{
+suppressWarnings({
 # Create the part of the workflow plan for the datasets.
 datasets <- drake_plan(
   small = simulate(5),
@@ -48,6 +50,8 @@ expand_plan(datasets, values = c("rep1", "rep2", "rep3"))
 # Choose whether to rename the targets based on the values.
 expand_plan(datasets, values = 1:3, rename = TRUE)
 expand_plan(datasets, values = 1:3, rename = FALSE)
+})
+}
 }
 \seealso{
 \code{\link[=drake_plan]{drake_plan()}}
