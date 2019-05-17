@@ -6,9 +6,6 @@ cache: packages
 repos:
   CRAN: https://cloud.r-project.org
 
-bioc_packages:
-  - graph
-
 # Added manually by Will Landau
 branches:
   except:
