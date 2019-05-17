@@ -34,7 +34,15 @@
 #' # Convert back to a drake plan.
 #' code_to_plan(file)
 code_to_plan <- function(path) {
-  nodes <- get_tangled_frags(path)
+  stopifnot(file.exists(path))
+  txt <- readLines(path)
+  # From CodeDepends: https://github.com/duncantl/CodeDepends/blob/7c9cf7eceffaea1d26fe25836c7a455f059e13c1/R/frags.R#L74 # nolint
+  # Checks if the file is a knitr report.
+  if (any(grepl("^(### chunk number|<<[^>]*>>=|```\\{r.*\\})", txt))) { # nolint
+    nodes <- get_tangled_frags(path)
+  } else {
+    nodes <- parse(text = txt)
+  }
   out <- lapply(nodes, node_plan)
   out <- do.call(rbind, out)
   out <- parse_custom_plan_columns(out)
