@@ -133,12 +133,3 @@ reference:
 - title: R packages as drake workflows
   contents:
   - '`expose_imports`'
-- title: Wildcard interface
-  contents:
-  - '`map_plan`'
-  - '`gather_plan`'
-  - '`gather_by`'
-  - '`reduce_plan`'
-  - '`reduce_by`'
-  - '`evaluate_plan`'
-  - '`expand_plan`'
