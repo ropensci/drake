@@ -20,7 +20,7 @@
 #' # Plot the network graph representation of the workflow.
 #' pkg <- requireNamespace("txtplot", quietly = TRUE) &&
 #'   requireNamespace("visNetwork", quietly = TRUE)
-#' if () {
+#' if (pkg) {
 #' text_drake_graph(config)
 #' make(my_plan) # Run the project, build the targets.
 #' text_drake_graph(config) # The black nodes from before are now green.
