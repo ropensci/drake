@@ -23,6 +23,7 @@
 - Replace `CodeDepends` with a base R solution in `code_to_plan()`. Fixes a CRAN note.
 - The DSL (transformations in `drake_plan()`) is no longer experimental.
 - The `callr` API (`r_make()` and friends) is no longer experimental.
+- Deprecate the wildcard/text-based functions for creating plans: `evaluate_plan()`, `expand_plan()`, `map_plan()`, `gather_plan()`, `gather_by()`, `reduce_plan()`, `reduce_by()`. 
 - Change some deprecated functions to defunct: `deps()`, `max_useful_jobs()`, and `migrate_drake_project()`.
 
 # Version 7.2.0
