@@ -96,3 +96,4 @@ reduce_by(
 \seealso{
 \code{\link[=drake_plan]{drake_plan()}}
 }
+\keyword{internal}

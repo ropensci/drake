@@ -82,3 +82,4 @@ readd(fit_cyl_disp, cache = cache)
 \seealso{
 \code{\link[=drake_plan]{drake_plan()}}
 }
+\keyword{internal}

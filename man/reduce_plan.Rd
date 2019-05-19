@@ -82,3 +82,4 @@ reduce_plan(
 \seealso{
 \code{\link[=drake_plan]{drake_plan()}}
 }
+\keyword{internal}

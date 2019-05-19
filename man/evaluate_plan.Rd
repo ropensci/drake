@@ -162,3 +162,4 @@ vis_drake_graph(config, group = "status", clusters = "up to date")
 \seealso{
 \code{\link[=drake_plan]{drake_plan()}}
 }
+\keyword{internal}

@@ -1808,6 +1808,7 @@ drake_cache_log_file <- function(
 #' not `NULL`. Here, `rules` should be a list with wildcards
 #' as names and vectors of possible values as list elements.
 #' @export
+#' @keywords internal
 #' @seealso [drake_plan()]
 #' @return A workflow plan data frame with the wildcards evaluated.
 #'
@@ -2109,6 +2110,7 @@ check_wildcard_rules <- function(rules) {
 #' Prefixes are appended to the new target names
 #' so targets still have unique names.
 #' @export
+#' @keywords internal
 #' @seealso [drake_plan()]
 #' @return An expanded workflow plan data frame (with replicated targets).
 #' @param plan Workflow plan data frame.
@@ -2176,6 +2178,7 @@ expand_plan <- function(
 #'   writes out all the commands calls to apply the function to
 #'   each row of arguments.
 #' @export
+#' @keywords internal
 #' @seealso [drake_plan()]
 #' @return A workflow plan data frame.
 #' @param args A data frame (or better yet, a `tibble`)
@@ -2282,6 +2285,7 @@ map_plan <- function(
 #' @details Creates a new workflow plan to aggregate
 #'   existing targets in the supplied plan.
 #' @export
+#' @keywords internal
 #' @seealso [drake_plan()]
 #' @return A workflow plan data frame that aggregates multiple
 #'   prespecified targets into one additional target downstream.
@@ -2360,6 +2364,7 @@ gather_plan <- function(
 #'   based on groupings from columns in the plan,
 #'   and then row-bind the new targets to the plan.
 #' @export
+#' @keywords internal
 #' @seealso [drake_plan()]
 #' @return A workflow plan data frame.
 #' @inheritParams gather_plan
@@ -2464,6 +2469,7 @@ gather_by <- function(
 #'   commands to do a reduction (i.e. to repeatedly apply a binary
 #'   operator to pairs of targets to produce one target).
 #' @export
+#' @keywords internal
 #' @seealso [drake_plan()]
 #' @return A workflow plan data frame that aggregates multiple
 #'   prespecified targets into one additional target downstream.
@@ -2567,6 +2573,7 @@ reduce_plan <- function(
 #'   based on groupings from columns in the plan,
 #'   and then row-bind the new targets to the plan.
 #' @export
+#' @keywords internal
 #' @seealso [drake_plan()]
 #' @return A workflow plan data frame.
 #' @inheritParams reduce_plan

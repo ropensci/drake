@@ -56,3 +56,4 @@ expand_plan(datasets, values = 1:3, rename = FALSE)
 \seealso{
 \code{\link[=drake_plan]{drake_plan()}}
 }
+\keyword{internal}
