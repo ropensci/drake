@@ -4,7 +4,6 @@
 <center>
 <img src="https://ropensci.github.io/drake/figures/infographic.svg" alt="infographic" align="center" style = "border: none; float: center;">
 </center>
-
 <table class="table">
 <thead>
 <tr class="header">
@@ -375,10 +374,12 @@ for all the details.
 make(plan, jobs = 4)
 
 # Or scale up to a supercomputer.
-drake_batchtools_tmpl_file("slurm") # https://slurm.schedmd.com/
-library(future.batchtools)
-future::plan(batchtools_slurm, template = "batchtools.slurm.tmpl", workers = 100)
-make(plan, parallelism = "future_lapply")
+drake_hpc_template_file("slurm_clustermq.tmpl") # https://slurm.schedmd.com/
+options(
+  clustermq.scheduler = "clustermq",
+  clustermq.template = "slurm_clustermq.tmpl"
+)
+make(plan, parallelism = "clustermq", jobs = 4)
 ```
 
 # Installation
@@ -398,61 +399,7 @@ library(devtools)
 install_github("ropensci/drake")
 ```
 
-A few technical details:
-
-  - You must properly install `drake` using `install.packages()`,
-    `devtools::install_github()`, or similar. It is not enough to use
-    `devtools::load_all()`, particularly for the parallel computing
-    functionality, in which multiple R sessions initialize and then try
-    to `require(drake)`.
-  - For `make(parallelism = "Makefile")`, Windows users may need to
-    download and install
-    [`Rtools`](https://cran.r-project.org/bin/windows/Rtools/).
-  - To use `make(parallelism = "future")` or `make(parallelism =
-    "future_lapply")` to deploy your work to a computing cluster (see
-    the [high-performance computing
-    guide](https://ropenscilabs.github.io/drake-manual/hpc.html)), you
-    will need the
-    [`future.batchtools`](https://github.com/HenrikBengtsson/future.batchtools)
-    package.
-
-# Documentation
-
-The main resources to learn `drake` are the [user
-manual](https://ropenscilabs.github.io/drake-manual/) and the [reference
-website](https://ropensci.github.io/drake/). Others are below.
-
-## Shiny app
-
-The Shiny app at
-[wlandau.shinyapps.io/drakeplanner](https://wlandau.shinyapps.io/drakeplanner)
-makes it easier to learn `drake` and create new `drake`-powered
-projects. If you have trouble accessing it, you can install and run it
-locally.
-
-``` r
-install.packages("remotes")
-remotes::install_github("wlandau/drakeplanner")
-drakeplanner::drakeplanner()
-```
-
-## Cheat sheet
-
-Thanks to [Kirill](https://github.com/krlmlr) for preparing a [`drake`
-cheat
-sheet](https://github.com/krlmlr/drake-sib-zurich/blob/master/cheat-sheet.pdf)
-for the [workshop](https://github.com/krlmlr/drake-sib-zurich).
-
-## Frequently asked questions
-
-The [FAQ page](https://ropenscilabs.github.io/drake-manual/faq.html) is
-an index of links to [appropriately-labeled issues on
-GitHub](https://github.com/ropensci/drake/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22frequently+asked+question%22+).
-To contribute, please [submit a new
-issue](https://github.com/ropensci/drake/issues/new) and ask that it be
-labeled as a frequently asked question.
-
-## Function reference
+# Function reference
 
 The [reference
 section](https://ropensci.github.io/drake/reference/index.html) lists
@@ -477,23 +424,38 @@ all the available functions. Here are the most important ones.
   - `diagnose()`: return the full context of a build, including errors,
     warnings, and messages.
 
-## Tutorials
+# Documentation
 
-Thanks to [Kirill](https://github.com/krlmlr) for constructing two
-interactive [`learnr`](https://rstudio.github.io/learnr/) tutorials:
-[one supporting `drake`
-itself](https://krlmlr.shinyapps.io/cooking-drake-tutorial/), and a
-[prerequisite
-walkthrough](https://krlmlr.shinyapps.io/cooking-tutorial/) of the
-[`cooking` package](https://github.com/krlmlr/cooking).
+  - The [user manual](https://ropenscilabs.github.io/drake-manual/)
+  - The [reference website](https://ropensci.github.io/drake/).
+  - The [official repository of example
+    code](https://github.com/wlandau/drake-examples). Download an
+    example workflow from here with `drake_example()`.
+  - [`drakeplanner`](https://github.com/wlandau/drakeplanner), an
+    R/Shiny app to help learn `drake` and create new projects. Run
+    locally with `drakeplanner::drakeplanner()` or access it at
+    <https://wlandau.shinyapps.io/drakeplanner>.
+  - Presentations and workshops by [Will
+    Landau](https://github.com/wlandau), [Kirill
+    Müller](https://github.com/krlmlr), [Amanda
+    Dobbyn](https://github.com/aedobbyn), [Karthik
+    Ram](http://github.com/karthik), [Sina
+    Rüeger](https://github.com/sinarueeger), [Christine
+    Stawitz](https://github.com/cstawitz), and others. See specific
+    links at
+    <https://ropenscilabs.github.io/drake-manual/index.html#presentations>
+  - The [FAQ
+    page](https://ropenscilabs.github.io/drake-manual/faq.html), which
+    links to [appropriately-labeled issues on
+    GitHub](https://github.com/ropensci/drake/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22frequently+asked+question%22+).
 
-## Examples
+## Use cases
 
 The official [rOpenSci use cases](https://ropensci.org/usecases/) and
 [associated discussion threads](https://discuss.ropensci.org/c/usecases)
 describe applications of `drake` in action. Here are some more
-real-world sightings of `drake` in the
-    wild.
+applications of `drake` in real-world
+    projects.
 
   - [efcaguab/demografia-del-voto](https://github.com/efcaguab/demografia-del-voto)
   - [efcaguab/great-white-shark-nsw](https://github.com/efcaguab/great-white-shark-nsw)
@@ -501,34 +463,6 @@ real-world sightings of `drake` in the
   - [pat-s/pathogen-modeling](https://github.com/pat-s/pathogen-modeling)
   - [sol-eng/tensorflow-w-r](https://github.com/sol-eng/tensorflow-w-r)
   - [tiernanmartin/home-and-hope](https://github.com/tiernanmartin/home-and-hope)
-
-There are also multiple `drake`-powered example projects [available
-here](https://github.com/wlandau/drake-examples), ranging from
-beginner-friendly stubs to demonstrations of high-performance computing.
-You can generate the files for a project with `drake_example()` (e.g.
-`drake_example("gsp")`), and you can list the available projects with
-`drake_examples()`. You can contribute your own example project with a
-[fork and pull
-request](https://github.com/wlandau/drake-examples/pulls).
-
-## Presentations
-
-| Author                                           | Venue                                                                 | Date       | Materials                                                                                                                                                                                                                                                      |
-| ------------------------------------------------ | --------------------------------------------------------------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Amanda Dobbyn](https://github.com/aedobbyn)     | [R-Ladies NYC](https://www.rladiesnyc.org/)                           | 2019-02-12 | [slides](https://aedobbyn.github.io/nyc-fires/index.html#1), [source](https://github.com/aedobbyn/nyc-fires)                                                                                                                                                   |
-| [Will Landau](https://github.com/wlandau)        | [Harvard DataFest](https://projects.iq.harvard.edu/datafest2019/home) | 2019-01-22 | [slides](https://wlandau.github.io/drake-datafest-2019), [source](https://github.com/wlandau/drake-datafest-2019)                                                                                                                                              |
-| [Karthik Ram](https://github.com/karthik)        | [RStudio Conference](https://www.rstudio.com/conference)              | 2019-01-18 | [video](https://resources.rstudio.com/rstudio-conf-2019/a-guide-to-modern-reproducible-data-science-with-r), [slides](http://inundata.org/talks/rstd19/#/), [resources](https://github.com/karthik/rstudio2019)                                                |
-| [Sina Rüeger](https://github.com/sinarueeger)    | [Geneva R User Group](https://www.meetup.com/Geneve-R-User-Group)     | 2018-10-04 | [slides](https://sinarueeger.github.io/20181004-geneve-rug), [example code](https://github.com/sinarueeger/workflow-example)                                                                                                                                   |
-| [Will Landau](https://github.com/wlandau)        | [R in Pharma](http://rinpharma.com/)                                  | 2018-08-16 | [video](https://ropenscilabs.github.io/drake-manual/), [slides](https://wlandau.github.io/drake-talk), [source](https://github.com/wlandau/drake-talk)                                                                                                         |
-| [Christine Stawitz](https://github.com/cstawitz) | [R-Ladies Seattle](https://www.meetup.com/rladies-seattle)            | 2018-06-25 | [materials](https://github.com/cstawitz/RLadies_Sea_drake)                                                                                                                                                                                                     |
-| [Kirill Müller](https://github.com/krlmlr)       | [Swiss Institute of Bioinformatics](https://www.sib.swiss)            | 2018-03-05 | [workshop](https://www.sib.swiss/training/course/2018-03-remake), [slides](https://krlmlr.github.io/slides/drake-sib-zurich), [source](https://github.com/krlmlr/drake-sib-zurich), [exercises](https://krlmlr.github.io/slides/drake-sib-zurich/cooking.html) |
-
-## Context and history
-
-For context and history, check out [this post on the rOpenSci
-blog](https://ropensci.org/blog/2018/02/06/drake/) and [episode 22 of
-the R
-Podcast](https://www.r-podcast.org/episode/022-diving-in-to-drake-with-will-landau/).
 
 # Help and troubleshooting
 
@@ -627,7 +561,7 @@ predecessor, [remake](https://github.com/richfitz/remake). In fact,
 [drake](https://github.com/ropensci/drake) owes its core ideas to
 [remake](https://github.com/richfitz/remake) and [Rich
 FitzJohn](https://github.com/richfitz/remake).
-[Remake](https://github.com/richfitz/remake)'s development repository
+[Remake](https://github.com/richfitz/remake)’s development repository
 lists several [real-world
 applications](https://github.com/richfitz/remake/blob/master/README.md#real-world-examples).
 [drake](https://github.com/ropensci/drake) surpasses
@@ -635,29 +569,31 @@ applications](https://github.com/richfitz/remake/blob/master/README.md#real-worl
 including but not limited to the following.
 
 1.  High-performance computing.
-    [`Remake`](https://github.com/richfitz/remake) has no native parallel
-    computing support. [`drake`](https://github.com/ropensci/drake), on
-    the other hand, has a thorough selection of parallel computing
-    technologies and scheduling algorithms. Thanks to
+    [`Remake`](https://github.com/richfitz/remake) has no native
+    parallel computing support.
+    [`drake`](https://github.com/ropensci/drake), on the other hand, has
+    a thorough selection of parallel computing technologies and
+    scheduling algorithms. Thanks to
     [`future`](github.com/HenrikBengtsson/future),
     [`future.batchtools`](github.com/HenrikBengtsson/future.batchtools),
-    and [`batchtools`](github.com/mllg/batchtools), it is straightforward
-    to configure a [`drake`](https://github.com/ropensci/drake) project
-    for most popular job schedulers, such as
-    [SLURM](https://slurm.schedmd.com/),
+    and [`batchtools`](github.com/mllg/batchtools), it is
+    straightforward to configure a
+    [`drake`](https://github.com/ropensci/drake) project for most
+    popular job schedulers, such as [SLURM](https://slurm.schedmd.com/),
     [TORQUE](https://www.adaptivecomputing.com/products/torque/), and
     the [Grid
     Engine](https://www.oracle.com/technetwork/oem/grid-engine-166852.html),
     as well as systems contained in [Docker
     images](https://www.docker.com/).
 2.  A friendly interface. In
-    [`remake`](https://github.com/richfitz/remake), the user must manually
-    write a
+    [`remake`](https://github.com/richfitz/remake), the user must
+    manually write a
     [YAML](https://github.com/richfitz/remake/blob/master/doc/remake.yml)
     configuration file to arrange the steps of a workflow, which leads
     to some of the same scalability problems as
     [Make](https://www.gnu.org/software/make/).
-    [`drake`](https://github.com/ropensci/drake)'s [domain-specific language](https://ropenscilabs.github.io/drake-manual/plans.html#large-plans)
+    [`drake`](https://github.com/ropensci/drake)’s [domain-specific
+    language](https://ropenscilabs.github.io/drake-manual/plans.html#large-plans)
     easily generates workflows at scale.
 3.  Thorough documentation. [`drake`](https://github.com/ropensci/drake)
     contains [thorough user
@@ -667,7 +603,7 @@ including but not limited to the following.
     examples in the help files of user-side functions, and [accessible
     example code](https://github.com/wlandau/drake-examples) that users
     can write with `drake::example_drake()`.
-4.  Active maintenance. [drake](https://github.com/ropensci/drake) is
+4.  Active maintenance. [`drake`](https://github.com/ropensci/drake) is
     actively developed and maintained, and
     [issues](https://github.com/ropensci/drake/issues) are usually
     addressed promptly.
