@@ -2227,6 +2227,17 @@ test_with_dir(".id_chr with map()", {
 })
 
 test_with_dir(".id_chr with combine()", {
+  skip_on_cran()
+  if (!grepl("!!", deparse(quote(!!x)), fixed = TRUE)) {
+    skip(
+      paste(
+        "R version",
+        paste0(R.version$major, ".", R.version$minor),
+        "deparses !!x to",
+        deparse(quote(!!x))
+      )
+    )
+  }
   out <- drake_plan(
     y = target(
       f(x),
