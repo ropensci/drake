@@ -95,7 +95,8 @@ test_with_dir("good URL", {
     # Now disconnect from the internet.
     expect_warning(
       make(config = config),
-      regexp = "previous makeß"
+      regexp = "previous make"
     )
+    expect_equal(justbuilt(config), character(0))
   }
 })

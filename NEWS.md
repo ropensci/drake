@@ -3,7 +3,7 @@
 ## New features
 
 - Add `drake_slice()` to help split data across multiple targets. Related: [#77](https://github.com/ropensci/drake/issues/77), [#685](https://github.com/ropensci/drake/issues/685), [#833](https://github.com/ropensci/drake/issues/833).
-
+- Add experimental support for URLs in `file_in()` and `file_out()`. If `drake` detects a file name beginning with "http://", "https://", or "ftp://", it tries to get an ETag to track the remote data. If it cannot find one, it warns the user and tries to avoid invalidating the target.
 
 # Version 7.3.0
 

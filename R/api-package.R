@@ -41,6 +41,7 @@
 #' @references <https://github.com/ropensci/drake>
 #' @useDynLib drake, .registration = TRUE
 #' @importFrom base64url base32_decode base32_encode
+#' @importFrom curl curl_fetch_memory has_internet parse_headers
 #' @importFrom digest digest
 #' @importFrom igraph adjacent_vertices as_ids components delete_vertices
 #'   degree gorder igraph_opt igraph_options induced_subgraph is_dag

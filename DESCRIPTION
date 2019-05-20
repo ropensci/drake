@@ -82,6 +82,7 @@ Depends:
   R (>= 3.3.0)
 Imports:
   base64url,
+  curl,
   digest,
   igraph,
   methods,
