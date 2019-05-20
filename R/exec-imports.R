@@ -18,7 +18,8 @@ process_import <- function(import, config) {
   meta <- drake_meta_(import, config)
   if (meta$isfile) {
     value <- NA_character_
-    is_missing <- !file.exists(decode_path(import, config))
+    path <- decode_path(import, config)
+    is_missing <- !file.exists(path) && !is_url(path)
   } else {
     value <- get_import_from_memory(import, config = config)
     is_missing <- identical(value, NA_character_)

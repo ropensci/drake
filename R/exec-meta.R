@@ -123,24 +123,29 @@ output_file_hash <- function(
   )
 }
 
-rehash_storage <- function(target, config) {
+rehash_storage <- function(target, filename = NULL, config) {
   if (!is_encoded_path(target)) {
     return(NA_character_)
   }
-  file <- decode_path(target, config)
-  if (!file.exists(file)) {
+  if (is.null(filename)) {
+    filename <- decode_path(target, config)
+  }
+  if (is_url(filename)) {
+    return(rehash_url(target, filename, config))
+  }
+  if (!file.exists(filename)) {
     return(NA_character_)
   }
-  if (dir.exists(file)) {
-    rehash_dir(file, config)
+  if (dir.exists(filename)) {
+    rehash_dir(filename, config)
   } else {
-    rehash_file(file, config)
+    rehash_file(filename, config)
   }
 }
 
-rehash_file <- function(file, config) {
+rehash_file <- function(filename, config) {
   digest::digest(
-    object = file,
+    object = filename,
     algo = config$cache$driver$hash_algorithm,
     file = TRUE,
     serialize = FALSE
@@ -169,9 +174,48 @@ rehash_dir <- function(dir, config) {
   )
 }
 
+rehash_url <- function(target, url, config) {
+  if (curl::has_internet()) {
+    req <- curl::curl_fetch_memory(url)
+    headers <- curl::parse_headers(req$headers)
+  } else {
+    headers <- NULL # nocov
+  }
+  etag <- grep("^[eE][tT][aA][gG]", headers, value = TRUE)
+  if (length(etag)) {
+    return(etag)
+  }
+  old_etag <- safe_get(
+    key = target,
+    namespace = config$cache$default_namespace,
+    config = config
+  )
+  msg <- ifelse(
+    any(is.na(old_etag)),
+    ". Consider a custom trigger.",
+    ". Using the ETag from a previous make()."
+  )
+  drake_warning(
+    "could not find the ETag of URL ",
+    shQuote(url),
+    msg,
+    config = config
+  )
+  old_etag
+}
+
+is_url <- function(x) {
+  grepl("^http://|^https://|^ftp://", x)
+}
+
+file_dep_exists <- function(x) {
+  file.exists(x) | is_url(x)
+}
+
 safe_rehash_storage <- function(target, config) {
-  if (file.exists(decode_path(target, config))) {
-    rehash_storage(target = target, config = config)
+  path <- decode_path(target, config)
+  if (file_dep_exists(path)) {
+    rehash_storage(target = target, filename = path, config = config)
   } else {
     NA_character_
   }
@@ -195,6 +239,9 @@ storage_hash <- function(
     return(NA_character_)
   }
   filename <- decode_path(target, config)
+  if (is_url(filename)) {
+    return(rehash_url(target = target, url = filename, config = config))
+  }
   if (!file.exists(filename)) {
     return(NA_character_)
   }
@@ -221,7 +268,7 @@ storage_hash <- function(
     size_cutoff = size_cutoff)
   old_hash_exists <- config$cache$exists(key = target)
   if (do_rehash || !old_hash_exists) {
-    rehash_storage(target = target, config = config)
+    rehash_storage(target = target, filename = filename, config = config)
   } else {
     config$cache$get(key = target)
   }

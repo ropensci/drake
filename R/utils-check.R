@@ -42,7 +42,7 @@ missing_input_files <- function(config) {
     jobs = config$jobs_preprocess
   )
   files <- decode_path(x = files, config = config)
-  missing_files <- files[!file.exists(files)]
+  missing_files <- files[!file_dep_exists(files)]
   if (length(missing_files)) {
     warning(
       "missing input files:\n",

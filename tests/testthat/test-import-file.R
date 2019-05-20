@@ -66,5 +66,36 @@ test_with_dir("same with an imported directory", {
   expect_equal(justbuilt(config), sort(c(
     "drake_target_1", "combined", "final", "myinput", "nextone")))
   expect_false(length(final0) == length(readd(final, search = FALSE)))
+})
 
+test_with_dir("good URL", {
+  skip_on_cran()
+  skip_if_offline()
+  plan <- drake_plan(
+    x = file_in("https://github.com/ropensci/drake/archive/v7.3.0.tar.gz")
+  )
+  config <- drake_config(
+    plan,
+    cache = storr::storr_environment(),
+    session_info = FALSE,
+    log_progress = TRUE
+  )
+  make(config = config)
+  expect_equal(justbuilt(config), "x")
+  etag <- config$cache$get(
+    file_store("https://github.com/ropensci/drake/archive/v7.3.0.tar.gz")
+  )
+  expect_true(nzchar(etag))
+  expect_true(grepl("^[eE][tT][aA][gG]", etag))
+  expect_equal(outdated(config), character(0))
+  make(config = config)
+  expect_equal(justbuilt(config), character(0))
+  if (FALSE) { # Should to do this part manually.
+    vis_drake_graph(config) # should as non-missing URL # nolint
+    # Now disconnect from the internet.
+    expect_warning(
+      make(config = config),
+      regexp = "previous makeß"
+    )
+  }
 })
