@@ -594,3 +594,27 @@ warn_empty_transform <- function(target) {
 }
 
 dsl_all_special <- c(".id", ".tag_in", ".tag_out")
+
+map_by <- function(.x, .by, .f, ...) {
+  splits <- split_by(.x, .by = .by)
+  out <- lapply(
+    X = splits,
+    FUN = function(split){
+      out <- .f(split, ...)
+      if (nrow(out)) {
+        out[, .by] <- split[replicate(nrow(out), 1), .by]
+      }
+      out
+    }
+  )
+  do.call(what = rbind, args = out)
+}
+
+split_by <- function(.x, .by = character(0)) {
+  if (!length(.by)) {
+    return(list(.x))
+  }
+  fact <- lapply(.x[, .by, drop = FALSE], factor, exclude = c())
+  splits <- split(x = .x, f = fact)
+  Filter(x = splits, f = nrow)
+}
