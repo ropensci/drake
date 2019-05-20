@@ -244,6 +244,13 @@ test_with_dir("slice_indices edge cases", {
   }
 })
 
+test_with_dir("drake_slice edge cases", {
+  expect_error(
+    drake_slice(mtcars, margin = 1:2),
+    regexp = "must each have length 1"
+  )
+})
+
 test_with_dir("drake_slice on a vector", {
   expect_equal(drake_slice(letters, splits = 3, index = 1), letters[1:9])
   expect_equal(drake_slice(letters, splits = 3, index = 2), letters[10:18])
