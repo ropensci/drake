@@ -175,11 +175,12 @@ rehash_dir <- function(dir, config) {
 }
 
 rehash_url <- function(target, url, config) {
+  headers <- NULL
   if (curl::has_internet()) {
-    req <- curl::curl_fetch_memory(url)
-    headers <- curl::parse_headers(req$headers)
-  } else {
-    headers <- NULL # nocov
+    try({
+      req <- curl::curl_fetch_memory(url)
+      headers <- curl::parse_headers(req$headers)
+    })
   }
   out <- parse_url_etag(headers) %||% parse_url_mtime(headers)
   if (length(out)) {

@@ -90,7 +90,8 @@ test_with_dir("good URL", {
   expect_equal(outdated(config), character(0))
   make(config = config)
   expect_equal(justbuilt(config), character(0))
-  if (FALSE) { # Should to do this part manually.
+  # Should to do this part manually.
+  if (FALSE) {
     vis_drake_graph(config) # should as non-missing URL # nolint
     # Now disconnect from the internet.
     expect_warning(
@@ -124,4 +125,6 @@ test_with_dir("header utils", {
   expect_true(length(parse_url_mtime("Last-Modified 123")) > 0L)
   expect_false(length(parse_url_etag("x 123")) > 0L)
   expect_false(length(parse_url_mtime("x 123")) > 0L)
+  x <- "http://example.com"
+  expect_true(grepl("^url", display_path(encode_path(x), list())))
 })
