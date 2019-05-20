@@ -250,6 +250,13 @@ test_with_dir("drake_slice on a vector", {
   expect_equal(drake_slice(letters, splits = 3, index = 3), letters[19:26])
 })
 
+test_with_dir("drake_slice on a list", {
+  x <- as.list(letters)
+  expect_equal(drake_slice(x, splits = 3, index = 1), x[1:9])
+  expect_equal(drake_slice(x, splits = 3, index = 2), x[10:18])
+  expect_equal(drake_slice(x, splits = 3, index = 3), x[19:26])
+})
+
 test_with_dir("drake_slice on arrays", {
   skip_if_not_installed("abind")
   for (ndim in 1:4) {
@@ -269,4 +276,23 @@ test_with_dir("drake_slice on arrays", {
       }
     }
   }
+})
+
+test_with_dir("drake_slice on a data frame", {
+  lst <- lapply(
+    seq_len(4),
+    function(i) {
+      drake_slice(data = mtcars, splits = 4, margin = 1, index = i)
+    }
+  )
+  out <- do.call(rbind, lst)
+  expect_equal(out, mtcars)
+})
+
+test_with_dir("drake_slice and drop", {
+  x <- matrix(seq_len(20), nrow = 5)
+  out <- drake_slice(x, splits = 3, margin = 2, index = 2)
+  expect_equal(out, matrix(11:15, ncol = 1))
+  out <- drake_slice(x, splits = 3, margin = 2, index = 2, drop = TRUE)
+  expect_equal(out, 11:15)
 })

@@ -1,5 +1,9 @@
 # Version 7.3.0.9000
 
+## New features
+
+- Add `drake_slice()` to help split data across multiple targets. Related: [#77](https://github.com/ropensci/drake/issues/77), [#685](https://github.com/ropensci/drake/issues/685), [#833](https://github.com/ropensci/drake/issues/833).
+
 
 # Version 7.3.0
 

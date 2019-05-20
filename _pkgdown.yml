@@ -60,12 +60,13 @@ reference:
   - '`plan_to_code`'
   - '`plan_to_notebook`'
   - '`bind_plans`'
-- title: Special functions within plans
+- title: Special functions for plans
   contents:
   - '`file_in`'
   - '`file_out`'
   - '`knitr_in`'
   - '`ignore`'
+  - '`drake_slice`'
   - '`drake_envir`'
   - '`trigger`'
 - title: Network graphs and visualization
