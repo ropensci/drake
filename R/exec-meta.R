@@ -181,9 +181,9 @@ rehash_url <- function(target, url, config) {
   } else {
     headers <- NULL # nocov
   }
-  etag <- grep("^[eE][tT][aA][gG]", headers, value = TRUE)
-  if (length(etag)) {
-    return(etag)
+  out <- parse_url_etag(headers) %||% parse_url_mtime(headers)
+  if (length(out)) {
+    return(out)
   }
   old_etag <- safe_get(
     key = target,
@@ -193,15 +193,23 @@ rehash_url <- function(target, url, config) {
   msg <- ifelse(
     any(is.na(old_etag)),
     ". Consider a custom trigger.",
-    ". Using the ETag from a previous make()."
+    ". Using the ETag or Last-Modified from a previous make()."
   )
   drake_warning(
-    "could not find the ETag of URL ",
+    "could not find the ETag or Last-Modified date of URL ",
     shQuote(url),
     msg,
     config = config
   )
   old_etag
+}
+
+parse_url_etag <- function(headers) {
+  grep("^[eE][tT][aA][gG]", headers, value = TRUE)
+}
+
+parse_url_mtime <- function(headers) {
+  grep("^Last-Modified", headers, value = TRUE)
 }
 
 is_url <- function(x) {

@@ -100,3 +100,28 @@ test_with_dir("good URL", {
     expect_equal(justbuilt(config), character(0))
   }
 })
+
+test_with_dir("bad URL", {
+  skip_on_cran()
+  skip_if_offline()
+  plan <- drake_plan(
+    x = file_in("https://aklsdjflkjsiofjlekjsiolkjiufhalskdjf")
+  )
+  config <- drake_config(
+    plan,
+    cache = storr::storr_environment(),
+    session_info = FALSE,
+    log_progress = TRUE
+  )
+  expect_warning(make(config = config), "could not find")
+  expect_equal(justbuilt(config), "x")
+  expect_warning(make(config = config), "could not find")
+  expect_equal(justbuilt(config), character(0))
+})
+
+test_with_dir("header utils", {
+  expect_true(length(parse_url_etag("etag 123")) > 0L)
+  expect_true(length(parse_url_mtime("Last-Modified 123")) > 0L)
+  expect_false(length(parse_url_etag("x 123")) > 0L)
+  expect_false(length(parse_url_mtime("x 123")) > 0L)
+})
