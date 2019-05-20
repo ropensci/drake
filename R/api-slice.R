@@ -1,5 +1,5 @@
 #' @title Take a strategic subset of a dataset.
-drake_slice <- function(data, margin, splits, index, drop = FALSE) {
+drake_slice <- function(data, splits, index, margin = 1L, drop = FALSE) {
   check_drake_slice_args(margin, splits, index)
   args <- list(data)
   dim <- dim(data) %||% length(data)
@@ -25,8 +25,8 @@ slice_indices <- function(length, splits, index) {
   seq(from = from, length.out = n)
 }
 
-check_drake_slice_args <- function(margin, splits, index) {
-  sclr <- length(margin) == 1L && length(splits) == 1L && length(index) == 1L
+check_drake_slice_args <- function(splits, index, margin) {
+  sclr <- length(splits) == 1L && length(index) && length(margin) == 1L
   if (sclr) {
     return()
   }

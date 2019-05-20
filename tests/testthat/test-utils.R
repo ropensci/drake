@@ -212,3 +212,61 @@ test_with_dir("make_unique()", {
   exp <- make.unique(x, sep = ".")
   expect_equal(out, exp)
 })
+
+test_with_dir("slice_indices", {
+  all_splits <- function(length, splits) {
+    lapply(seq_len(splits), slice_indices, length = length, splits = splits)
+  }
+  for (i in seq_len(100)) {
+    for (j in seq_len(i + 2)) {
+      s <- all_splits(i, j)
+      expect_equal(sort(unlist(s)), seq_len(i))
+      lengths <- vapply(s, length, FUN.VALUE = integer(1))
+      diff <- max(lengths) - min(lengths)
+      expect_true(diff <= 1L)
+    }
+  }
+})
+
+test_with_dir("slice_indices edge cases", {
+  expect_equal(slice_indices(100, splits = 1, index = 1), seq_len(100))
+  expect_equal(slice_indices(100, splits = 1, index = 2), integer(0))
+  expect_equal(slice_indices(100, splits = 2, index = 3), integer(0))
+  for (i in c(0, 100)) {
+    for (j in c(0, 1)) {
+      for (k in c(0, 1)) {
+        if (i > 0L && j > 0L && k > 0L) {
+          next
+        }
+        expect_equal(slice_indices(i, splits = j, index = k), integer(0))
+      }
+    }
+  }
+})
+
+test_with_dir("drake_slice on a vector", {
+  expect_equal(drake_slice(letters, splits = 3, index = 1), letters[1:9])
+  expect_equal(drake_slice(letters, splits = 3, index = 2), letters[10:18])
+  expect_equal(drake_slice(letters, splits = 3, index = 3), letters[19:26])
+})
+
+test_with_dir("drake_slice on arrays", {
+  skip_if_not_installed("abind")
+  for (ndim in 1:4) {
+    dim <- seq(from = 8, length.out = ndim)
+    x <- array(seq_len(prod(dim)), dim = dim)
+    for (splits in c(3, 4, 5)) {
+      for (margin in seq_len(ndim)) {
+        lst <- lapply(
+          seq_len(splits),
+          function(i) {
+            drake_slice(data = x, splits = splits, margin = margin, index = i)
+          }
+        )
+        lst$along <- margin
+        out <- do.call(abind::abind, lst)
+        expect_equivalent(x, out)
+      }
+    }
+  }
+})
