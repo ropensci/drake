@@ -1,13 +1,6 @@
 #' @title Take a strategic subset of a dataset.
 drake_slice <- function(data, margin, splits, index, drop = FALSE) {
-  sclr <- length(margin) == 1L && length(splits) == 1L && length(index) == 1L
-  if (!sclr) {
-    stop(
-      "In drake_slice, arguments margin, splits, ",
-      "and index must each have length 1.",
-      call. = FALSE
-    )
-  }
+  check_drake_slice_args(margin, splits, index)
   args <- list(data)
   dim <- dim(data) %||% length(data)
   for (m in seq_along(dim)) {
@@ -27,4 +20,16 @@ slice_indices <- function(length, splits, index) {
   }
   delta <- as.integer(length / splits)
   seq(from = 1L + delta * (index - 1L), to = delta * index, by = 1L)
+}
+
+check_drake_slice_args <- function(margin, splits, index) {
+  sclr <- length(margin) == 1L && length(splits) == 1L && length(index) == 1L
+  if (sclr) {
+    return()
+  }
+  stop(
+    "In drake_slice, arguments margin, splits, ",
+    "and index must each have length 1.",
+    call. = FALSE
+  )
 }
