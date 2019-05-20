@@ -18,8 +18,8 @@ slice_indices <- function(length, splits, index) {
   if (length < 1L || splits < 1L || index < 1L || index > splits) {
     return(integer(0))
   }
-  delta <- as.integer(length / splits)
-  seq(from = 1L + delta * (index - 1L), to = delta * index, by = 1L)
+  delta <- ceiling(length / splits)
+  seq(from = 1L + delta * (index - 1L), to = min(length, delta * index), by = 1L)
 }
 
 check_drake_slice_args <- function(margin, splits, index) {
@@ -32,4 +32,11 @@ check_drake_slice_args <- function(margin, splits, index) {
     "and index must each have length 1.",
     call. = FALSE
   )
+}
+
+
+
+
+all_splits <- function(length, splits) {
+  lapply(seq_len(splits), slice_indices, length = length, splits = splits)
 }
