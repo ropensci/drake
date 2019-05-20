@@ -1,8 +1,10 @@
 #' @title Take a strategic subset of a dataset.
+#' @description Split a list, data frame, matrix, or other
 drake_slice <- function(data, splits, index, margin = 1L, drop = FALSE) {
   check_drake_slice_args(margin, splits, index)
   args <- list(data)
   dim <- dim(data) %||% length(data)
+  margin <- ifelse(is.null(dim(data)), 1L, margin)
   for (m in seq_along(dim)) {
     if (m == margin) {
       args[[m + 1]] <- slice_indices(dim[m], splits, index)

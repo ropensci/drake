@@ -217,7 +217,7 @@ test_with_dir("slice_indices", {
   all_splits <- function(length, splits) {
     lapply(seq_len(splits), slice_indices, length = length, splits = splits)
   }
-  for (i in seq_len(100)) {
+  for (i in seq_len(50)) {
     for (j in seq_len(i + 2)) {
       s <- all_splits(i, j)
       expect_equal(sort(unlist(s)), seq_len(i))
