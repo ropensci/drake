@@ -10,7 +10,9 @@ drake_slice(data, slices, index, margin = 1L, drop = FALSE)
 \item{data}{A list, vector, data frame, matrix, or arbitrary array.
 Anything with a \code{length()} or \code{dim()}.}
 
-\item{slices}{Integer of length 1, number of pieces to split the data into.}
+\item{slices}{Integer of length 1, number of slices (i.e. pieces)
+of the whole dataset. Remember, \code{drake_slice(index = i)} returns
+only slice number \code{i}.}
 
 \item{index}{Integer of length 1, which piece of the partition to return.}
 

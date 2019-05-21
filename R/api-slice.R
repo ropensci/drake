@@ -14,7 +14,9 @@
 #' @return A subset of `data`.
 #' @param data A list, vector, data frame, matrix, or arbitrary array.
 #'   Anything with a `length()` or `dim()`.
-#' @param slices Integer of length 1, number of pieces to split the data into.
+#' @param slices Integer of length 1, number of slices (i.e. pieces)
+#'   of the whole dataset. Remember, `drake_slice(index = i)` returns
+#'   only slice number `i`.
 #' @param index Integer of length 1, which piece of the partition to return.
 #' @param margin Integer of length 1, margin over which to split the data.
 #'   For example, for a data frame or matrix,
