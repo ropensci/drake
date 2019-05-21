@@ -14,7 +14,7 @@
 #' @return A subset of `data`.
 #' @param data A list, vector, data frame, matrix, or arbitrary array.
 #'   Anything with a `length()` or `dim()`.
-#' @param splits Integer of length 1, number of splits in the partition.
+#' @param slices Integer of length 1, number of pieces to split the data into.
 #' @param index Integer of length 1, which piece of the partition to return.
 #' @param margin Integer of length 1, margin over which to split the data.
 #'   For example, for a data frame or matrix,
@@ -27,16 +27,16 @@
 #' # Simple usage
 #' x <- matrix(seq_len(20), nrow = 5)
 #' x
-#' drake_slice(x, splits = 3, index = 1)
-#' drake_slice(x, splits = 3, index = 2)
-#' drake_slice(x, splits = 3, index = 3)
-#' drake_slice(x, splits = 3, margin = 2, index = 1)
+#' drake_slice(x, slices = 3, index = 1)
+#' drake_slice(x, slices = 3, index = 2)
+#' drake_slice(x, slices = 3, index = 3)
+#' drake_slice(x, slices = 3, margin = 2, index = 1)
 #' # In drake, you can split a large dataset over multiple targets.
 #' \dontrun{
 #' plan <- drake_plan(
 #'   large_data = iris,
 #'   data_split = target(
-#'     drake_slice(large_data, splits = 50, index = i),
+#'     drake_slice(large_data, slices = 50, index = i),
 #'     transform = map(i = !!seq_len(50))
 #'   )
 #' )
@@ -46,14 +46,14 @@
 #' readd(data_split_1L, cache = cache)
 #' readd(data_split_2L, cache = cache)
 #' }
-drake_slice <- function(data, splits, index, margin = 1L, drop = FALSE) {
-  check_drake_slice_args(margin, splits, index)
+drake_slice <- function(data, slices, index, margin = 1L, drop = FALSE) {
+  check_drake_slice_args(margin, slices, index)
   args <- list(data)
   dim <- dim(data) %||% length(data)
   margin <- ifelse(is.null(dim(data)), 1L, margin)
   for (m in seq_along(dim)) {
     if (m == margin) {
-      args[[m + 1]] <- slice_indices(dim[m], splits, index)
+      args[[m + 1]] <- slice_indices(dim[m], slices, index)
     } else {
       args[[m + 1]] <- substitute()
     }
@@ -62,24 +62,24 @@ drake_slice <- function(data, splits, index, margin = 1L, drop = FALSE) {
   do.call(`[`, args)
 }
 
-slice_indices <- function(length, splits, index) {
-  if (length < 1L || splits < 1L || index < 1L || index > splits) {
+slice_indices <- function(length, slices, index) {
+  if (length < 1L || slices < 1L || index < 1L || index > slices) {
     return(integer(0))
   }
-  inc <- as.integer(length / splits)
-  mod <- length %% splits
+  inc <- as.integer(length / slices)
+  mod <- length %% slices
   n <- inc + as.integer(index <= mod)
   from <- 1L + inc * (index - 1L) + min(index - 1L, mod)
   seq(from = from, length.out = n)
 }
 
-check_drake_slice_args <- function(splits, index, margin) {
-  sclr <- length(splits) == 1L && length(index) && length(margin) == 1L
+check_drake_slice_args <- function(slices, index, margin) {
+  sclr <- length(slices) == 1L && length(index) && length(margin) == 1L
   if (sclr) {
     return()
   }
   stop(
-    "In drake_slice, arguments margin, splits, ",
+    "In drake_slice, arguments margin, slices, ",
     "and index must each have length 1.",
     call. = FALSE
   )

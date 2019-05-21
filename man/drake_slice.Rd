@@ -4,13 +4,13 @@
 \alias{drake_slice}
 \title{Take a strategic subset of a dataset.}
 \usage{
-drake_slice(data, splits, index, margin = 1L, drop = FALSE)
+drake_slice(data, slices, index, margin = 1L, drop = FALSE)
 }
 \arguments{
 \item{data}{A list, vector, data frame, matrix, or arbitrary array.
 Anything with a \code{length()} or \code{dim()}.}
 
-\item{splits}{Integer of length 1, number of splits in the partition.}
+\item{slices}{Integer of length 1, number of pieces to split the data into.}
 
 \item{index}{Integer of length 1, which piece of the partition to return.}
 
@@ -42,16 +42,16 @@ See the examples to learn why splitting is useful in \code{drake}.
 # Simple usage
 x <- matrix(seq_len(20), nrow = 5)
 x
-drake_slice(x, splits = 3, index = 1)
-drake_slice(x, splits = 3, index = 2)
-drake_slice(x, splits = 3, index = 3)
-drake_slice(x, splits = 3, margin = 2, index = 1)
+drake_slice(x, slices = 3, index = 1)
+drake_slice(x, slices = 3, index = 2)
+drake_slice(x, slices = 3, index = 3)
+drake_slice(x, slices = 3, margin = 2, index = 1)
 # In drake, you can split a large dataset over multiple targets.
 \dontrun{
 plan <- drake_plan(
   large_data = iris,
   data_split = target(
-    drake_slice(large_data, splits = 50, index = i),
+    drake_slice(large_data, slices = 50, index = i),
     transform = map(i = !!seq_len(50))
   )
 )
