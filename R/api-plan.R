@@ -104,7 +104,7 @@
 #'     transform = split(large_data, slices = 4)
 #'   ),
 #'   results = target(
-#'     dplyr::bind_rows(slice_analysis),
+#'     rbind(slice_analysis),
 #'     transform = combine(slice_analysis)
 #'   )
 #' )

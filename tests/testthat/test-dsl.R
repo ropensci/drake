@@ -2409,7 +2409,7 @@ test_with_dir("basic splitting", {
       transform = split(large_data, slices = 4)
     ),
     results = target(
-      dplyr::bind_rows(slice_analysis),
+      rbind(slice_analysis),
       transform = combine(slice_analysis)
     )
   )
@@ -2423,7 +2423,7 @@ test_with_dir("basic splitting", {
       data = large_data, slices = 4, index = 3) %>% analyze(),
     slice_analysis_4 = drake_slice(
       data = large_data, slices = 4, index = 4) %>% analyze(),
-    results = dplyr::bind_rows(
+    results = rbind(
       slice_analysis_1, slice_analysis_2, slice_analysis_3,
       slice_analysis_4
     )
@@ -2440,7 +2440,7 @@ test_with_dir("splitting with all args", {
       transform = split(large_data, margin = 2, drop = TRUE, slices = 4)
     ),
     results = target(
-      dplyr::bind_rows(slice_analysis),
+      rbind(slice_analysis),
       transform = combine(slice_analysis)
     )
   )
@@ -2462,7 +2462,7 @@ test_with_dir("splitting with all args", {
       data = large_data, slices = 4, index = 4, margin = 2,
       drop = TRUE
     ) %>% analyze(),
-    results = dplyr::bind_rows(
+    results = rbind(
       slice_analysis_1, slice_analysis_2, slice_analysis_3,
       slice_analysis_4
     )
@@ -2480,7 +2480,7 @@ test_with_dir("splitting with tidy eval", {
       transform = split(large_data, slices = !!s)
     ),
     results = target(
-      dplyr::bind_rows(slice_analysis),
+      rbind(slice_analysis),
       transform = combine(slice_analysis)
     )
   )
@@ -2494,7 +2494,7 @@ test_with_dir("splitting with tidy eval", {
       data = large_data, slices = 4, index = 3) %>% analyze(),
     slice_analysis_4 = drake_slice(
       data = large_data, slices = 4, index = 4) %>% analyze(),
-    results = dplyr::bind_rows(
+    results = rbind(
       slice_analysis_1, slice_analysis_2, slice_analysis_3,
       slice_analysis_4
     )
