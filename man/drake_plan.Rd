@@ -119,6 +119,20 @@ drake_plan(
   )
 )
 
+# Split data among multiple targets.
+drake_plan(
+  large_data = get_data(),
+  slice_analysis = target(
+    large_data \%>\%
+      analyze(),
+    transform = split(large_data, slices = 4)
+  ),
+  results = target(
+    dplyr::bind_rows(slice_analysis),
+    transform = combine(slice_analysis)
+  )
+)
+
 # Set trace = TRUE to show what happened during the transformation process.
 drake_plan(
   data = target(

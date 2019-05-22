@@ -2399,3 +2399,19 @@ test_with_dir("max_expand with a .data grid for cross()", {
   )
   equivalent_plans(out, exp)
 })
+
+test_with_dir("basic splitting", {
+  out <- drake_plan(
+    large_data = get_data(),
+    slice_analysis = target(
+      large_data %>%
+        analyze(),
+      transform = split(large_data, slices = 4)
+    ),
+    results = target(
+      dplyr::bind_rows(slice_analysis),
+      transform = combine(slice_analysis)
+    )
+  )
+
+})
