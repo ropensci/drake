@@ -90,9 +90,14 @@ store_object <- function(target, value, meta, config) {
 }
 
 store_file <- function(target, meta, config) {
+  if (meta$imported) {
+    value <- storage_hash(target = target, config = config)
+  } else {
+    value <- rehash_storage(target = target, config = config)
+  }
   store_object(
     target = target,
-    value = safe_rehash_storage(target = target, config = config),
+    value = value,
     meta = meta,
     config = config
   )

@@ -278,7 +278,8 @@ test_with_dir("drake_slice on arrays", {
           }
         )
         lst$along <- margin
-        out <- do.call(abind::abind, lst)
+        # unfixable partial arg match warnings:
+        out <- suppressWarnings(do.call(abind::abind, lst))
         expect_equivalent(x, out)
       }
     }

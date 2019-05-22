@@ -169,14 +169,6 @@ rehash_dir <- function(dir, config) {
   )
 }
 
-safe_rehash_storage <- function(target, config) {
-  if (file.exists(decode_path(target, config))) {
-    rehash_storage(target = target, config = config)
-  } else {
-    NA_character_
-  }
-}
-
 should_rehash_storage <- function(filename, new_mtime, old_mtime,
   size_cutoff) {
   do_rehash <- storage_size(filename) < size_cutoff | new_mtime > old_mtime
