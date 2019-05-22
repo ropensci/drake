@@ -130,11 +130,12 @@ test_with_dir("forks + lock_envir = informative error msg", {
     make(plan, envir = globalenv(), lock_envir = TRUE),
     regexp = regexp
   )
+  # Does not actually spin up new processes on Mac OS.
   future::plan(future::multicore)
   plan <- drake_plan(
     # install.packages("furrr") # nolint
     # Not in "Suggests"
-    x = eval(parse(text = "furrr::future_map(1:2, identity)"))
+    x = eval(parse(text = "furrr::future_map(1:2, function(x) Sys.getpid())"))
   )
   expect_error(
     make(plan, envir = globalenv(), lock_envir = TRUE),
