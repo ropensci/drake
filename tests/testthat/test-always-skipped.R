@@ -2,6 +2,43 @@ if (FALSE) {
 
 drake_context("always skipped")
 
+test_with_dir("time stamps and large files", {
+  skip_if_not_installed("downloader")
+  dir_csv <- tempfile()
+  file_zip <- tempfile()
+  file_csv <- tempfile()
+  file_large <- tempfile()
+  log1 <- tempfile()
+  log2 <- tempfile()
+  downloader::download(
+    "http://eforexcel.com/wp/wp-content/uploads/2017/07/1500000%20Sales%20Records.zip", # nolint
+    file_zip,
+    quiet = TRUE
+  )
+  dir.create(dir_csv)
+  utils::unzip(file_zip, exdir = dir_csv)
+  tmp <- file.rename(
+    file.path(dir_csv, list.files(dir_csv, pattern = "csv$")[1]),
+    file_csv
+  )
+  for (i in 1:58) {
+    message(i)
+    file.append(file_large, file_csv)
+  }
+  plan <- drake_plan(x = file_in(!!file_large))
+  cache <- storr::storr_rds(tempfile())
+  make(plan, cache = cache, console_log_file = log1)
+  make(plan, cache = cache, console_log_file = log2)
+  # Now, compare the times stamps on the logs.
+  # Make sure the imported file takes a long time to process the first time
+  # but is instantaneous the second time.
+  message(paste(readLines(log1), collapse = "\n"))
+  message(paste(readLines(log2), collapse = "\n"))
+  # Now remove those huge files!
+  files <- c(dir_csv, file_zip, file_csv, file_large)
+  unlink(files, recursive = TRUE, force = TRUE)
+})
+
 test_with_dir("use_drake()", {
   # Load drake with library(drake)
   # and not with devtools::load_all().
