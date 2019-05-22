@@ -11,9 +11,10 @@
 #' @details `drake` has special syntax for generating large plans.
 #'  Your code will look something like
 #'  `drake_plan(x = target(cmd, transform = f(y, z), group = g)`
-#'  where `f()` is either `map()`, `cross()`, or `combine()`
-#'  (similar to `purrr::pmap()`, `tidy::crossing()`, and `dplyr::summarize()`,
-#'  respectively). These verbs mimic Tidyverse behavior to scale up
+#'  where `f()` is either `map()`, `cross()`, `split()`, or `combine()`
+#'  (similar to `purrr::pmap()`, `tidy::crossing()`, `base::split()`,
+#'  and  `dplyr::summarize()`, respectively).
+#'  These verbs mimic Tidyverse behavior to scale up
 #'  existing plans to large numbers of targets.
 #'  You can read about this interface at
 #'  <https://ropenscilabs.github.io/drake-manual/plans.html#create-large-plans-the-easy-way>. # nolint
@@ -91,6 +92,20 @@
 #'   winners = target(
 #'     min(summ),
 #'     transform = combine(summ, .by = c(data, sum_fun))
+#'   )
+#' )
+#'
+#' # Split data among multiple targets.
+#' drake_plan(
+#'   large_data = get_data(),
+#'   slice_analysis = target(
+#'     large_data %>%
+#'       analyze(),
+#'     transform = split(large_data, slices = 4)
+#'   ),
+#'   results = target(
+#'     rbind(slice_analysis),
+#'     transform = combine(slice_analysis)
 #'   )
 #' )
 #'

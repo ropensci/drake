@@ -60,9 +60,10 @@ code strings or a list of language objects.
 \code{drake} has special syntax for generating large plans.
 Your code will look something like
 \code{drake_plan(x = target(cmd, transform = f(y, z), group = g)}
-where \code{f()} is either \code{map()}, \code{cross()}, or \code{combine()}
-(similar to \code{purrr::pmap()}, \code{tidy::crossing()}, and \code{dplyr::summarize()},
-respectively). These verbs mimic Tidyverse behavior to scale up
+where \code{f()} is either \code{map()}, \code{cross()}, \code{split()}, or \code{combine()}
+(similar to \code{purrr::pmap()}, \code{tidy::crossing()}, \code{base::split()},
+and  \code{dplyr::summarize()}, respectively).
+These verbs mimic Tidyverse behavior to scale up
 existing plans to large numbers of targets.
 You can read about this interface at
 \url{https://ropenscilabs.github.io/drake-manual/plans.html#create-large-plans-the-easy-way}. # nolint
@@ -115,6 +116,20 @@ drake_plan(
   winners = target(
     min(summ),
     transform = combine(summ, .by = c(data, sum_fun))
+  )
+)
+
+# Split data among multiple targets.
+drake_plan(
+  large_data = get_data(),
+  slice_analysis = target(
+    large_data \%>\%
+      analyze(),
+    transform = split(large_data, slices = 4)
+  ),
+  results = target(
+    rbind(slice_analysis),
+    transform = combine(slice_analysis)
   )
 )
 
