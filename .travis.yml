@@ -19,15 +19,13 @@ addons:
       - libudunits2-dev
       - libzmq3-dev
 
-r_github_packages:
-  - r-lib/pkgdown
-
 r_packages:
   - clustermq
   - downloader
   - forcats
   - ggplot2
   - lintr
+  - pkgdown
   - readxl
 
 r_github_packages:
