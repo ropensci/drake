@@ -333,6 +333,10 @@ fill_cols <- function(x, cols) {
   x
 }
 
+long_deparse <- function(x, collapse = "\n") {
+  paste(deparse(x), collapse = collapse)
+}
+
 safe_deparse <- function(x, collapse = "\n") {
   paste(
     deparse(x, control = c("keepInteger", "keepNA")),

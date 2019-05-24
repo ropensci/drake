@@ -2,7 +2,8 @@
 
 ## Bug fixes
 
-- Do not rehash large imported files every `make()` [#878](https://github.com/ropensci/drake/issues/878).
+- Do not rehash large imported files every `make()` ([#878](https://github.com/ropensci/drake/issues/878)).
+- Repair parsing of long tidy eval inputs in the DSL ([#878](https://github.com/ropensci/drake/issues/881)).
 
 ## New features
 

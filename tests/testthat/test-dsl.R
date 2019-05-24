@@ -2501,3 +2501,29 @@ test_with_dir("splitting with tidy eval", {
   )
   equivalent_plans(out, exp)
 })
+
+test_with_dir("parse long tidyeval inputs", {
+  l <- lapply(100, function(x) rep("a", x))
+  out <- drake_plan(
+    a = target(
+      length(x),
+      transform = map(x = !!l, y = !!seq_along(l), .id = y)
+    )
+  )
+  exp <- drake_plan(
+    a_1L = length(
+      c(
+        "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a",
+        "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a",
+        "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a",
+        "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a",
+        "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a",
+        "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a",
+        "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a",
+        "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a",
+        "a", "a", "a", "a", "a"
+      )
+    )
+  )
+  equivalent_plans(out, exp)
+})

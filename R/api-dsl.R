@@ -438,7 +438,7 @@ explicit_new_groupings <- function(code, exclude = character(0)) {
     if (is.call(x)) {
       x <- x[-1]
     }
-    as.character(lapply(as.list(x), deparse))
+    as.character(lapply(as.list(x), long_deparse))
   })
 }
 
