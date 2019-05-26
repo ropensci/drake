@@ -53,7 +53,7 @@ test_with_dir("responses to imported objects and functions", {
   config$plan$command[[2]] <- quote(f(1 + 1) + k)
   config$envir$k <- 5
   testrun(config)
-  final0 <- readd(final, search = FALSE)
+  final0 <- readd(final)
   builds <- sort(
     c(
       "drake_target_1",
@@ -67,13 +67,13 @@ test_with_dir("responses to imported objects and functions", {
   # nothing to do
   testrun(config)
   nobuild(config)
-  expect_true(identical(final0, readd(final, search = FALSE)))
+  expect_true(identical(final0, readd(final)))
 
   # change k
   config$envir$k <- 10
   testrun(config)
   expect_equal(justbuilt(config), builds)
-  expect_false(identical(final0, readd(final, search = FALSE)))
+  expect_false(identical(final0, readd(final)))
 })
 
 test_with_dir("add a new import", {

@@ -32,7 +32,7 @@ test_with_dir("responses to intermediate file", {
     testrun(config)
     expect_equal(justbuilt(config), sort(config$plan$target))
     expect_equal(outdated(config), character(0))
-    final0 <- readd(final, search = FALSE)
+    final0 <- readd(final)
     val <- readRDS("intermediatefile.rds")
     val2 <- readRDS("out2.rds")
     expect_equal(val + 1, val2)
@@ -42,7 +42,7 @@ test_with_dir("responses to intermediate file", {
       saveRDS(sum(val) + 100, file)
       testrun(config)
       expect_equal(justbuilt(config), "drake_target_1")
-      expect_equal(final0, readd(final, search = FALSE))
+      expect_equal(final0, readd(final))
       expect_equal(val, readRDS("intermediatefile.rds"))
       expect_equal(val2, readRDS("out2.rds"))
     }
@@ -51,7 +51,7 @@ test_with_dir("responses to intermediate file", {
       unlink(file, force = TRUE)
       testrun(config)
       expect_equal(justbuilt(config), "drake_target_1")
-      expect_equal(final0, readd(final, search = FALSE))
+      expect_equal(final0, readd(final))
       expect_equal(val, readRDS("intermediatefile.rds"))
       expect_equal(val2, readRDS("out2.rds"))
     }
@@ -65,7 +65,7 @@ test_with_dir("responses to intermediate file", {
       sort(justbuilt(config)),
       sort(c("drake_target_1", "final"))
     )
-    expect_equal(final0 + 5, readd(final, search = FALSE))
+    expect_equal(final0 + 5, readd(final))
     expect_equal(val + 5, readRDS("intermediatefile.rds"))
     expect_equal(val2, readRDS("out2.rds"))
 
@@ -78,7 +78,7 @@ test_with_dir("responses to intermediate file", {
       sort(justbuilt(config)),
       sort(c("drake_target_1", "final"))
     )
-    expect_equal(final0 + 6, readd(final, search = FALSE))
+    expect_equal(final0 + 6, readd(final))
     expect_equal(val + 5, readRDS("intermediatefile.rds"))
     expect_equal(val2 + 1, readRDS("out2.rds"))
     clean(destroy = TRUE)
@@ -117,7 +117,7 @@ test_with_dir("same with a directory", {
   testrun(config)
   expect_equal(justbuilt(config), sort(config$plan$target))
   expect_equal(outdated(config), character(0))
-  final0 <- readd(final, search = FALSE)
+  final0 <- readd(final)
   val <- readRDS("scratch/intermediatefile.rds")
   val2 <- readRDS("scratch/out2.rds")
   expect_equal(as.integer(val) + 1L, as.integer(val2))
@@ -127,7 +127,7 @@ test_with_dir("same with a directory", {
     saveRDS(sum(val) + 100, file)
     testrun(config)
     expect_equal(justbuilt(config), "drake_target_1")
-    expect_equal(final0, readd(final, search = FALSE))
+    expect_equal(final0, readd(final))
     expect_equal(val, readRDS("scratch/intermediatefile.rds"))
     expect_equal(val2, readRDS("scratch/out2.rds"))
   }
@@ -137,7 +137,7 @@ test_with_dir("same with a directory", {
     unlink(file, force = TRUE)
     testrun(config)
     expect_equal(justbuilt(config), "drake_target_1")
-    expect_equal(final0, readd(final, search = FALSE))
+    expect_equal(final0, readd(final))
     expect_equal(val, readRDS("scratch/intermediatefile.rds"))
     expect_equal(val2, readRDS("scratch/out2.rds"))
   }
@@ -151,7 +151,7 @@ test_with_dir("same with a directory", {
     sort(justbuilt(config)),
     sort(c("drake_target_1", "final"))
   )
-  expect_equal(final0 + 5, readd(final, search = FALSE))
+  expect_equal(final0 + 5, readd(final))
   expect_equal(val + 5, readRDS("scratch/intermediatefile.rds"))
   expect_equal(val2, readRDS("scratch/out2.rds"))
 
@@ -164,7 +164,7 @@ test_with_dir("same with a directory", {
     sort(justbuilt(config)),
     sort(c("drake_target_1", "final"))
   )
-  expect_equal(final0 + 6, readd(final, search = FALSE))
+  expect_equal(final0 + 6, readd(final))
   expect_equal(val + 5, readRDS("scratch/intermediatefile.rds"))
   expect_equal(val2 + 1, readRDS("scratch/out2.rds"))
   clean(destroy = TRUE)

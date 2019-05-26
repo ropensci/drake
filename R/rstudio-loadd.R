@@ -17,7 +17,7 @@ rs_addin_loadd <- function(context = NULL){
   if (is.null(target)) {
     return()
   }
-  cache <- get_cache()
+  cache <- drake_cache()
   message(
     "Loading target ",
     shQuote(target),

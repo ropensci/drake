@@ -15,6 +15,11 @@ These changes are technically breaking changes, but they should only affect adva
 
 - Add `drake_slice()` to help split data across multiple targets. Related: [#77](https://github.com/ropensci/drake/issues/77), [#685](https://github.com/ropensci/drake/issues/685), [#833](https://github.com/ropensci/drake/issues/833).
 
+## Enhancements
+
+- Introduce a new `drake_cache()` function, which is now recommended instead of `get_cache()` ([#883](https://github.com/ropensci/drake/issues/883)).
+- Deprecate `get_cache()` in favor of `drake_cache()`.
+- Show the path to the cache in the `clean()` menu prompt.
 
 # Version 7.3.0
 

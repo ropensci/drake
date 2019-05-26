@@ -51,7 +51,7 @@ test_with_dir("deprecation: deps_targets() and knitr_deps()", {
 test_with_dir("deprecation: cache functions", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   plan <- drake_plan(x = 1)
-  expect_error(expect_warning(tmp <- read_drake_meta(search = FALSE)))
+  expect_error(expect_warning(tmp <- read_drake_meta()))
   expect_silent(make(plan, verbose = 0L, session_info = FALSE))
   expect_true(is.numeric(readd(x)))
   expect_equal(cached(), "x")
@@ -70,24 +70,20 @@ test_with_dir("deprecation: built", {
   config <- drake_config(plan)
   expect_warning(built(cache = NULL))
   expect_equal(
-    sort(suppressWarnings(built(search = FALSE))),
+    sort(suppressWarnings(built())),
     sort(display_keys(plan$target))
   )
   twopiece <- sort(
     c(
-      suppressWarnings(built(search = FALSE)),
-      suppressWarnings(imported(search = FALSE, files_only = FALSE))
+      suppressWarnings(built()),
+      suppressWarnings(imported(files_only = FALSE))
     )
   )
   expect_equal(
     sort(cached()),
     sort(display_keys(twopiece))
   )
-  expect_equal(
-    sort(suppressWarnings(built(search = TRUE))),
-    sort(display_keys(c(plan$target)))
-  )
-  expect_warning(imported(search = FALSE, files_only = TRUE))
+  expect_warning(imported(files_only = TRUE))
 })
 
 test_with_dir("deprecation: imported", {
@@ -96,7 +92,7 @@ test_with_dir("deprecation: imported", {
     character(0)
   )
   for (fo in c(FALSE, TRUE)) {
-    imp <- suppressWarnings(imported(files_only = fo, search = FALSE))
+    imp <- suppressWarnings(imported(files_only = fo))
     expect_equal(
       sort(imp),
       sort(setdiff(cached(targets_only = FALSE), cached(targets_only = TRUE))),
@@ -243,7 +239,6 @@ test_with_dir("force with a non-back-compatible cache", {
 })
 
 test_with_dir("deprecate the `force` argument", {
-  expect_warning(tmp <- drake_cache(), regexp = "deprecated")
   expect_warning(tmp <- recover_cache(force = TRUE), regexp = "deprecated")
   expect_warning(load_mtcars_example(force = TRUE), regexp = "deprecated")
 })

@@ -40,11 +40,11 @@ test_with_dir("build times works if no targets are built", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("lubridate")
   expect_equal(cached(), character(0))
-  expect_equal(nrow(build_times(search = FALSE)), 0)
+  expect_equal(nrow(build_times()), 0)
   my_plan <- drake_plan(x = 1)
   con <- drake_config(my_plan, verbose = 0L)
   process_imports(con)
-  expect_equal(nrow(build_times(search = FALSE)), 0)
+  expect_equal(nrow(build_times()), 0)
 })
 
 test_with_dir("build time the same after superfluous make", {
@@ -54,13 +54,13 @@ test_with_dir("build time the same after superfluous make", {
   make(x, verbose = 0L, session_info = FALSE)
   c1 <- drake_config(x, verbose = 0L, session_info = FALSE)
   expect_equal(justbuilt(c1), "y")
-  b1 <- build_times(search = FALSE)
+  b1 <- build_times()
   expect_true(all(complete.cases(b1)))
 
   make(x, verbose = 0L, session_info = FALSE)
   c2 <- drake_config(x, verbose = 0L, session_info = FALSE)
   expect_equal(justbuilt(c2), character(0))
-  b2 <- build_times(search = FALSE)
+  b2 <- build_times()
   expect_true(all(complete.cases(b2)))
   expect_equal(b1[b1$target == "y", ], b2[b2$target == "y", ])
 })

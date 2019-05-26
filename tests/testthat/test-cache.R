@@ -412,7 +412,7 @@ test_with_dir("cache functions work from various working directories", {
     loadd(combined, deps = TRUE, config = config, envir = e)
     expect_true(all(deps %in% ls(envir = e)))
 
-    # clean using search = TRUE or FALSE
+    # clean
     expect_true(all(config$plan$target %in% cached()))
     clean(final, jobs = 2, garbage_collection = TRUE)
     targs <- setdiff(config$plan$target, "final")
