@@ -252,11 +252,11 @@ test_with_dir("drake_cache() can search", {
 
 test_with_dir("neighboring caches", {
   cache <- new_cache(".test")
-  test_plan = drake_plan(
+  test_plan <- drake_plan(
     dot_test = 1L
   )
   make(test_plan, cache = cache)
-  default_plan = drake_plan(
+  default_plan <- drake_plan(
     dot_drake = 2L
   )
   make(default_plan)
