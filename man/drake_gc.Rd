@@ -4,19 +4,15 @@
 \alias{drake_gc}
 \title{Do garbage collection on the drake cache.}
 \usage{
-drake_gc(path = getwd(), search = TRUE, verbose = 1L, cache = NULL,
+drake_gc(path = NULL, search = NULL, verbose = 1L,
+  cache = drake::drake_cache(path = path, verbose = verbose),
   force = FALSE)
 }
 \arguments{
-\item{path}{Root directory of the drake project,
-or if \code{search} is \code{TRUE}, either the
-project root or a subdirectory of the project.
-Ignored if a \code{cache} is supplied.}
+\item{path}{Path to a \code{drake} cache
+(usually a hidden \code{.drake/} folder) or \code{NULL}.}
 
-\item{search}{Logical. If \code{TRUE}, search parent directories
-to find the nearest drake cache. Otherwise, look in the
-current working directory only.
-Ignored if a \code{cache} is supplied.}
+\item{search}{Deprecated.}
 
 \item{verbose}{Integer, control printing to the console/terminal.
 \itemize{
@@ -26,7 +22,7 @@ Ignored if a \code{cache} is supplied.}
 }}
 
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
-If supplied, \code{path} and \code{search} are ignored.}
+If supplied, \code{path} is ignored.}
 
 \item{force}{Logical, whether to load the cache
 despite any back compatibility issues with the

@@ -17,14 +17,14 @@ test_with_dir("responses to imported file", {
   saveRDS(contents, "input.rds")
   testrun(config)
   nobuild(config)
-  final0 <- readd(final, search = FALSE)
+  final0 <- readd(final)
 
   # actually change file
   saveRDS(2:10, "input.rds")
   testrun(config)
   expect_equal(justbuilt(config), sort(c(
     "drake_target_1", "combined", "final", "myinput", "nextone")))
-  expect_false(length(final0) == length(readd(final, search = FALSE)))
+  expect_false(length(final0) == length(readd(final)))
 })
 
 test_with_dir("same with an imported directory", {
@@ -58,13 +58,13 @@ test_with_dir("same with an imported directory", {
   saveRDS(2:10, "inputdir/otherinput.rds")
   testrun(config)
   expect_equal(justbuilt(config), "myinput")
-  expect_equal(length(final0), length(readd(final, search = FALSE)))
+  expect_equal(length(final0), length(readd(final)))
 
   # change the real input file
   saveRDS(2:10, "inputdir/input.rds")
   testrun(config)
   expect_equal(justbuilt(config), sort(c(
     "drake_target_1", "combined", "final", "myinput", "nextone")))
-  expect_false(length(final0) == length(readd(final, search = FALSE)))
+  expect_false(length(final0) == length(readd(final)))
 
 })

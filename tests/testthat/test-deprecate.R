@@ -24,7 +24,6 @@ test_with_dir("deprecation: fetch_cache", {
   dp <- drake_plan(x = 1)
   expect_warning(make(dp, fetch_cache = ""), regexp = "deprecated")
   expect_warning(drake_config(dp, fetch_cache = ""), regexp = "deprecated")
-  expect_warning(get_cache(fetch_cache = ""), regexp = "deprecated")
 })
 
 test_with_dir("deprecation: deps_targets() and knitr_deps()", {
@@ -52,11 +51,11 @@ test_with_dir("deprecation: deps_targets() and knitr_deps()", {
 test_with_dir("deprecation: cache functions", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   plan <- drake_plan(x = 1)
-  expect_error(expect_warning(tmp <- read_drake_meta(search = FALSE)))
+  expect_error(expect_warning(tmp <- read_drake_meta()))
   expect_silent(make(plan, verbose = 0L, session_info = FALSE))
-  expect_true(is.numeric(readd(x, search = FALSE)))
+  expect_true(is.numeric(readd(x)))
   expect_equal(cached(), "x")
-  cache <- get_cache()
+  cache <- drake_cache()
   expect_warning(short_hash(cache))
   expect_warning(long_hash(cache))
   expect_warning(default_short_hash_algo(cache))
@@ -71,24 +70,20 @@ test_with_dir("deprecation: built", {
   config <- drake_config(plan)
   expect_warning(built(cache = NULL))
   expect_equal(
-    sort(suppressWarnings(built(search = FALSE))),
+    sort(suppressWarnings(built())),
     sort(display_keys(plan$target))
   )
   twopiece <- sort(
     c(
-      suppressWarnings(built(search = FALSE)),
-      suppressWarnings(imported(search = FALSE, files_only = FALSE))
+      suppressWarnings(built()),
+      suppressWarnings(imported(files_only = FALSE))
     )
   )
   expect_equal(
-    sort(cached(search = FALSE)),
+    sort(cached()),
     sort(display_keys(twopiece))
   )
-  expect_equal(
-    sort(suppressWarnings(built(search = TRUE))),
-    sort(display_keys(c(plan$target)))
-  )
-  expect_warning(imported(search = FALSE, files_only = TRUE))
+  expect_warning(imported(files_only = TRUE))
 })
 
 test_with_dir("deprecation: imported", {
@@ -97,7 +92,7 @@ test_with_dir("deprecation: imported", {
     character(0)
   )
   for (fo in c(FALSE, TRUE)) {
-    imp <- suppressWarnings(imported(files_only = fo, search = FALSE))
+    imp <- suppressWarnings(imported(files_only = fo))
     expect_equal(
       sort(imp),
       sort(setdiff(cached(targets_only = FALSE), cached(targets_only = TRUE))),
@@ -125,7 +120,7 @@ test_with_dir("drake version checks in previous caches", {
   # to check back compatibility.
   plan <- drake_plan(x = 1)
   expect_silent(make(plan, verbose = 0L))
-  x <- get_cache()
+  x <- drake_cache()
   suppressWarnings(expect_error(drake_session(cache = NULL), regexp = "make"))
   expect_warning(drake_session(cache = x), regexp = "deprecated")
   skip_if_not_installed("lubridate")
@@ -228,10 +223,10 @@ test_with_dir("example template files (deprecated)", {
 test_with_dir("force with a non-back-compatible cache", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(cache_vers_check(NULL), character(0))
-  expect_null(get_cache())
+  expect_null(drake_cache())
   expect_true(inherits(suppressWarnings(recover_cache()), "storr"))
   write_v6.2.1_project() # nolint
-  expect_warning(get_cache(), regexp = "compatible")
+  expect_warning(drake_cache(), regexp = "compatible")
   expect_warning(recover_cache(), regexp = "compatible")
   suppressWarnings(
     expect_error(drake_config(drake_plan(x = 1)), regexp = "compatible")
@@ -240,11 +235,10 @@ test_with_dir("force with a non-back-compatible cache", {
     expect_error(make(drake_plan(x = 1)), regexp = "compatible")
   )
   expect_warning(make(drake_plan(x = 1), force = TRUE), regexp = "compatible")
-  tmp <- get_cache()
+  tmp <- drake_cache()
 })
 
 test_with_dir("deprecate the `force` argument", {
-  expect_warning(tmp <- get_cache(force = TRUE), regexp = "deprecated")
   expect_warning(tmp <- recover_cache(force = TRUE), regexp = "deprecated")
   expect_warning(load_mtcars_example(force = TRUE), regexp = "deprecated")
 })
@@ -1461,3 +1455,11 @@ test_with_dir("reduce_by()", suppressWarnings({
   y <- bind_plans(plan, new_row)
   equivalent_plans(x[, c("target", "command")], y)
 }))
+
+test_with_dir("get_cache", {
+  make(drake_plan(x = 1), session_info = FALSE)
+  tmp1 <- get_cache(search = TRUE)
+  tmp2 <- get_cache(search = FALSE)
+  expect_true(inherits(tmp1, "storr"))
+  expect_true(inherits(tmp2, "storr"))
+})

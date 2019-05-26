@@ -13,7 +13,7 @@ Otherwise, \code{target} is an unquoted symbol with the name of the
 object.}
 
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
-If supplied, \code{path} and \code{search} are ignored.}
+If supplied, \code{path} is ignored.}
 
 \item{namespace}{Optional character string,
 name of the \code{storr} namespace to read from.}

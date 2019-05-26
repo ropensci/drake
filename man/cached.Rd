@@ -5,8 +5,9 @@
 \title{List targets in the cache.}
 \usage{
 cached(..., list = character(0), no_imported_objects = FALSE,
-  path = getwd(), search = TRUE, cache = NULL, verbose = 1L,
-  namespace = NULL, jobs = 1, targets_only = TRUE)
+  path = NULL, search = NULL, cache = drake_cache(path = path,
+  verbose = verbose), verbose = 1L, namespace = NULL, jobs = 1,
+  targets_only = TRUE)
 }
 \arguments{
 \item{...}{Deprecated. Do not use.
@@ -21,18 +22,13 @@ cache. Similar to the \code{list} argument of \code{\link[=remove]{remove()}}.}
 \item{no_imported_objects}{Logical, deprecated. Use
 \code{targets_only} instead.}
 
-\item{path}{Root directory of the drake project,
-or if \code{search} is \code{TRUE}, either the
-project root or a subdirectory of the project.
-Ignored if a \code{cache} is supplied.}
+\item{path}{Path to a \code{drake} cache
+(usually a hidden \code{.drake/} folder) or \code{NULL}.}
 
-\item{search}{Logical. If \code{TRUE}, search parent directories
-to find the nearest drake cache. Otherwise, look in the
-current working directory only.
-Ignored if a \code{cache} is supplied.}
+\item{search}{Deprecated.}
 
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
-If supplied, \code{path} and \code{search} are ignored.}
+If supplied, \code{path} is ignored.}
 
 \item{verbose}{Integer, control printing to the console/terminal.
 \itemize{

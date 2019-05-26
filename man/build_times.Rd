@@ -4,8 +4,8 @@
 \alias{build_times}
 \title{List the time it took to build each target.}
 \usage{
-build_times(..., path = getwd(), search = TRUE, digits = 3,
-  cache = get_cache(path = path, search = search, verbose = verbose),
+build_times(..., path = NULL, search = NULL, digits = 3,
+  cache = drake_cache(path = path, verbose = verbose),
   targets_only = NULL, verbose = 1L, jobs = 1, type = c("build",
   "command"), list = character(0))
 }
@@ -15,20 +15,15 @@ character strings. If the \code{tidyselect} package is installed,
 you can also supply \code{dplyr}-style \code{tidyselect}
 commands such as \code{starts_with()}, \code{ends_with()}, and \code{one_of()}.}
 
-\item{path}{Root directory of the drake project,
-or if \code{search} is \code{TRUE}, either the
-project root or a subdirectory of the project.
-Ignored if a \code{cache} is supplied.}
+\item{path}{Path to a \code{drake} cache
+(usually a hidden \code{.drake/} folder) or \code{NULL}.}
 
-\item{search}{Logical. If \code{TRUE}, search parent directories
-to find the nearest drake cache. Otherwise, look in the
-current working directory only.
-Ignored if a \code{cache} is supplied.}
+\item{search}{Deprecated.}
 
 \item{digits}{How many digits to round the times to.}
 
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
-If supplied, \code{path} and \code{search} are ignored.}
+If supplied, \code{path} is ignored.}
 
 \item{targets_only}{Deprecated.}
 

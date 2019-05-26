@@ -2,7 +2,7 @@ cache_vers_check <- function(cache) {
   if (is.null(cache)) {
     return(character(0))
   }
-  old <- get_cache_version(cache = cache)
+  old <- drake_cache_version(cache = cache)
   if (compareVersion(old, "6.2.1") <= 0) {
     paste0(
       "This project was last run with drake version ",
@@ -44,7 +44,7 @@ enforce_compatible_config <- function(config) {
   config
 }
 
-get_cache_version <- function(cache) {
+drake_cache_version <- function(cache) {
   if (cache$exists(key = "drake_version", namespace = "session")) {
     cache$get(key = "drake_version", namespace = "session")
   } else if (cache$exists(key = "sessionInfo", namespace = "session")) {

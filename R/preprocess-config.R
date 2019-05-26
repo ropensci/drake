@@ -114,7 +114,7 @@
 #'   `make(..., log_progress = FALSE)`.
 #'
 #' @param cache drake cache as created by [new_cache()].
-#'   See also [get_cache()].
+#'   See also [drake_cache()].
 #'
 #' @param fetch_cache Deprecated.
 #'
@@ -390,7 +390,7 @@ drake_config <- function(
   envir = parent.frame(),
   verbose = 1L,
   hook = NULL,
-  cache = drake::get_cache(
+  cache = drake::drake_cache(
     verbose = verbose, console_log_file = console_log_file),
   fetch_cache = NULL,
   parallelism = "loop",

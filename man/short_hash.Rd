@@ -8,7 +8,7 @@ short_hash(cache = drake::get_cache(verbose = verbose), verbose = 1L)
 }
 \arguments{
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
-If supplied, \code{path} and \code{search} are ignored.}
+If supplied, \code{path} is ignored.}
 
 \item{verbose}{Integer, control printing to the console/terminal.
 \itemize{

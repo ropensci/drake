@@ -4,9 +4,10 @@
 \alias{clean}
 \title{Remove targets/imports from the cache.}
 \usage{
-clean(..., list = character(0), destroy = FALSE, path = getwd(),
-  search = TRUE, cache = NULL, verbose = 1L, jobs = 1,
-  force = FALSE, garbage_collection = FALSE, purge = FALSE)
+clean(..., list = character(0), destroy = FALSE, path = NULL,
+  search = NULL, cache = drake::drake_cache(path = path, verbose =
+  verbose), verbose = 1L, jobs = 1, force = FALSE,
+  garbage_collection = FALSE, purge = FALSE)
 }
 \arguments{
 \item{...}{Targets to remove from the cache: as names (symbols) or
@@ -23,18 +24,13 @@ from \code{make()}
 are removed. If \code{TRUE}, the whole cache is removed, including
 session metadata, etc.}
 
-\item{path}{Root directory of the drake project,
-or if \code{search} is \code{TRUE}, either the
-project root or a subdirectory of the project.
-Ignored if a \code{cache} is supplied.}
+\item{path}{Path to a \code{drake} cache
+(usually a hidden \code{.drake/} folder) or \code{NULL}.}
 
-\item{search}{Logical. If \code{TRUE}, search parent directories
-to find the nearest drake cache. Otherwise, look in the
-current working directory only.
-Ignored if a \code{cache} is supplied.}
+\item{search}{Deprecated.}
 
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
-If supplied, \code{path} and \code{search} are ignored.}
+If supplied, \code{path} is ignored.}
 
 \item{verbose}{Integer, control printing to the console/terminal.
 \itemize{
@@ -75,10 +71,6 @@ but it purges data with no remaining references. To just do garbage
 collection without cleaning, see \code{\link[=drake_gc]{drake_gc()}}.
 Also, for \code{clean()}, you must be in your project's working directory
 or a subdirectory of it.
-\code{clean(search = TRUE)} searches upwards in your folder structure
-for the drake cache and acts on the first one it sees. Use
-\code{search = FALSE} to look within the current working
-directory only.
 WARNING: This deletes ALL work done with \code{\link[=make]{make()}},
 which includes
 file targets as well as the entire drake cache. Only use \code{clean()}

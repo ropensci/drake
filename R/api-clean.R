@@ -8,10 +8,6 @@
 #' collection without cleaning, see [drake_gc()].
 #' Also, for `clean()`, you must be in your project's working directory
 #' or a subdirectory of it.
-#' `clean(search = TRUE)` searches upwards in your folder structure
-#' for the drake cache and acts on the first one it sees. Use
-#' `search = FALSE` to look within the current working
-#' directory only.
 #' WARNING: This deletes ALL work done with [make()],
 #' which includes
 #' file targets as well as the entire drake cache. Only use `clean()`
@@ -101,19 +97,17 @@ clean <- function(
   ...,
   list = character(0),
   destroy = FALSE,
-  path = getwd(),
-  search = TRUE,
-  cache = NULL,
+  path = NULL,
+  search = NULL,
+  cache = drake::drake_cache(path = path, verbose = verbose),
   verbose = 1L,
   jobs = 1,
   force = FALSE,
   garbage_collection = FALSE,
   purge = FALSE
 ) {
-  if (is.null(cache)) {
-    cache <- get_cache(
-      path = path, search = search, verbose = verbose, force = force)
-  }
+  deprecate_force(force)
+  deprecate_search(search)
   if (is.null(cache)) {
     return(invisible())
   }
@@ -127,7 +121,7 @@ clean <- function(
     )
   }
   if (!length(targets) && is.null(c(...))) {
-    if (abort_full_clean()) {
+    if (abort_full_clean(cache$driver$path)) {
       return(invisible()) # nocov
     }
     targets <- cache$list()
@@ -202,20 +196,13 @@ clean_single_target <- function(
 #' })
 #' }
 drake_gc <- function(
-  path = getwd(),
-  search = TRUE,
+  path = NULL,
+  search = NULL,
   verbose = 1L,
-  cache = NULL,
+  cache = drake::drake_cache(path = path, verbose = verbose),
   force = FALSE
 ) {
-  if (is.null(cache)) {
-    cache <- get_cache(
-      path = path,
-      search = search,
-      verbose = verbose,
-      force = force
-    )
-  }
+  deprecate_search(search)
   if (!is.null(cache)) {
     cache$gc()
     rm_bad_cache_filenames(cache)
@@ -237,11 +224,11 @@ rm_bad_cache_filenames <- function(cache) {
 #' dangling orphaned files that prevent you from loading or cleaning.
 #' This function tries to remove those files so you can use the
 #' cache normally again.
-#' @return The rescued drake/storr cache.
+#' @return Nothing.
 #' @export
-#' @seealso [get_cache()], [cached()],
+#' @seealso [drake_cache()], [cached()],
 #'   [drake_gc()], [clean()]
-#' @inheritParams get_cache
+#' @inheritParams drake_cache
 #' @param targets Character vector, names of the targets to rescue.
 #'   As with many other drake utility functions, the word `target`
 #'   is defined generally in this case, encompassing imports
@@ -254,6 +241,8 @@ rm_bad_cache_filenames <- function(cache) {
 #' @param garbage_collection Logical, whether to do garbage collection
 #'   as a final step. See [drake_gc()] and [clean()]
 #'   for details.
+#' @param search Deprecated.
+#' @param force Deprecated.
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {
@@ -270,15 +259,16 @@ rm_bad_cache_filenames <- function(cache) {
 #' }
 rescue_cache <- function(
   targets = NULL,
-  path = getwd(),
-  search = TRUE,
+  path = NULL,
+  search = NULL,
   verbose = 1L,
   force = FALSE,
-  cache = drake::get_cache(
-    path = path, search = search, verbose = verbose, force = force),
+  cache = drake::drake_cache(path = path, verbose = verbose),
   jobs = 1,
   garbage_collection = FALSE
 ) {
+  deprecate_search(search)
+  deprecate_force(force)
   if (is.null(cache)) {
     return(invisible())
   }
@@ -298,7 +288,7 @@ rescue_cache <- function(
   if (garbage_collection) {
     cache$gc()
   }
-  invisible(cache)
+  invisible()
 }
 
 rescue_del <- function(key, cache, namespace) {
@@ -319,7 +309,7 @@ touch_storr_object <- function(key, cache, namespace) {
   invisible(NULL)
 }
 
-abort_full_clean <- function() {
+abort_full_clean <- function(path) {
   menu_enabled <- .pkg_envir[["drake_clean_menu"]] %||%
     getOption("drake_clean_menu") %||%
     TRUE
@@ -327,9 +317,10 @@ abort_full_clean <- function() {
     return(FALSE)
   }
   # nocov start
-  title <- paste(
-    "Really delete everything in the drake cache?",
-    "(Prompt shown once per session.)",
+  title <- paste0(
+    "Really delete everything in the drake cache at ",
+    shQuote(path),
+    "? (Prompt shown once per session.)",
     sep = "\n"
   )
   response <- utils::menu(choices = c("yes", "no"), title = title)

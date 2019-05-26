@@ -4,9 +4,9 @@
 \alias{diagnose}
 \title{Get diagnostic metadata on a target.}
 \usage{
-diagnose(target = NULL, character_only = FALSE, path = getwd(),
-  search = TRUE, cache = drake::get_cache(path = path, search = search,
-  verbose = verbose), verbose = 1L)
+diagnose(target = NULL, character_only = FALSE, path = NULL,
+  search = NULL, cache = drake::drake_cache(path = path, verbose =
+  verbose), verbose = 1L)
 }
 \arguments{
 \item{target}{Name of the target of the error to get.
@@ -17,18 +17,13 @@ must be a character if \code{character_only} is \code{TRUE}.}
 as a character or a symbol.
 Just like \code{character.only} in \code{\link[=library]{library()}}.}
 
-\item{path}{Root directory of the drake project,
-or if \code{search} is \code{TRUE}, either the
-project root or a subdirectory of the project.
-Ignored if a \code{cache} is supplied.}
+\item{path}{Path to a \code{drake} cache
+(usually a hidden \code{.drake/} folder) or \code{NULL}.}
 
-\item{search}{Logical. If \code{TRUE}, search parent directories
-to find the nearest drake cache. Otherwise, look in the
-current working directory only.
-Ignored if a \code{cache} is supplied.}
+\item{search}{Deprecated.}
 
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
-If supplied, \code{path} and \code{search} are ignored.}
+If supplied, \code{path} is ignored.}
 
 \item{verbose}{Integer, control printing to the console/terminal.
 \itemize{

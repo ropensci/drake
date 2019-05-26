@@ -63,14 +63,15 @@
 readd <- function(
   target,
   character_only = FALSE,
-  path = getwd(),
-  search = TRUE,
-  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  path = NULL,
+  search = NULL,
+  cache = drake::drake_cache(path = path, verbose = verbose),
   namespace = NULL,
   verbose = 1L,
   show_source = FALSE
 ) {
-  # if the cache is null after trying get_cache:
+  deprecate_search(search)
+  # if the cache is null after trying drake_cache:
   if (is.null(cache)) {
     stop("cannot find drake cache.")
   }
@@ -186,9 +187,9 @@ loadd <- function(
   ...,
   list = character(0),
   imported_only = NULL,
-  path = getwd(),
-  search = TRUE,
-  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  path = NULL,
+  search = NULL,
+  cache = drake::drake_cache(path = path, verbose = verbose),
   namespace = NULL,
   envir = parent.frame(),
   jobs = 1,
@@ -201,6 +202,7 @@ loadd <- function(
   tidyselect = !deps,
   config = NULL
 ) {
+  deprecate_search(search)
   force(envir)
   lazy <- parse_lazy_arg(lazy)
   if (!is.null(graph)) {
@@ -428,13 +430,14 @@ bind_load_target <- function(target, cache, namespace, envir, verbose) {
 #' read_drake_seed(cache = cache)
 #' readd(target2, cache = cache)
 read_drake_seed <- function(
-  path = getwd(),
-  search = TRUE,
+  path = NULL,
+  search = NULL,
   cache = NULL,
   verbose = 1L
 ) {
+  deprecate_search(search)
   if (is.null(cache)) {
-    cache <- get_cache(path = path, search = search, verbose = verbose)
+    cache <- drake_cache(path = path, verbose = verbose)
   }
   if (is.null(cache)) {
     stop("cannot find drake cache.")

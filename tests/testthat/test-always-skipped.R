@@ -10,6 +10,7 @@ test_with_dir("time stamps and large files", {
   file_large <- tempfile()
   log1 <- tempfile()
   log2 <- tempfile()
+  log3 <- tempfile()
   downloader::download(
     "http://eforexcel.com/wp/wp-content/uploads/2017/07/1500000%20Sales%20Records.zip", # nolint
     file_zip,
@@ -27,13 +28,22 @@ test_with_dir("time stamps and large files", {
   }
   plan <- drake_plan(x = file_in(!!file_large))
   cache <- storr::storr_rds(tempfile())
+  config <- drake_config(plan, cache = cache)
   make(plan, cache = cache, console_log_file = log1)
+  expect_equal(justbuilt(config), "x")
   make(plan, cache = cache, console_log_file = log2)
+  expect_equal(justbuilt(config), character(0))
+  tmp <- file.append(file_large, file_csv)
+  make(plan, cache = cache, console_log_file = log3)
+  expect_equal(justbuilt(config), "x")
   # Now, compare the times stamps on the logs.
   # Make sure the imported file takes a long time to process the first time
   # but is instantaneous the second time.
+  # The third time, the file changed, so the processing time
+  # should be longer.
   message(paste(readLines(log1), collapse = "\n"))
   message(paste(readLines(log2), collapse = "\n"))
+  message(paste(readLines(log3), collapse = "\n"))
   # Now remove those huge files!
   files <- c(dir_csv, file_zip, file_csv, file_large)
   unlink(files, recursive = TRUE, force = TRUE)
@@ -130,7 +140,6 @@ test_with_dir("forks + lock_envir = informative error msg", {
     make(plan, envir = globalenv(), lock_envir = TRUE),
     regexp = regexp
   )
-  # Does not actually spin up new processes on Mac OS.
   future::plan(future::multicore)
   plan <- drake_plan(
     # install.packages("furrr") # nolint

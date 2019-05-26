@@ -218,8 +218,8 @@ test_with_dir("can use semicolons for multi-line commands", {
   )
   make(plan, verbose = 0L, session_info = FALSE)
   expect_false(any(c("a", "b") %in% ls()))
-  expect_true(all(c("x", "y") %in% cached(search = FALSE)))
-  expect_equal(cached(search = FALSE), c("x", "y"))
+  expect_true(all(c("x", "y") %in% cached()))
+  expect_equal(cached(), c("x", "y"))
 })
 
 test_with_dir("can use braces for multi-line commands", {

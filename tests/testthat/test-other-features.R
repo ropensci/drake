@@ -198,10 +198,10 @@ test_with_dir("targets can be partially specified", {
   config$targets <- "drake_target_1"
   testrun(config)
   expect_true(file.exists("intermediatefile.rds"))
-  expect_error(readd(final, search = FALSE))
+  expect_error(readd(final))
   config$targets <- "final"
   testrun(config)
-  expect_true(is.numeric(readd(final, search = FALSE)))
+  expect_true(is.numeric(readd(final)))
 })
 
 test_with_dir("file_store quotes properly", {
@@ -298,9 +298,9 @@ test_with_dir("packages are loaded and prework is run", {
   expect_false(any(c("x", "y") %in% config$cache$list()))
   testrun(config)
   expect_true(all(c("x", "y") %in% config$cache$list()))
-  expect_equal(readd(x, search = FALSE), "set")
-  expect_true(length(readd(y, search = FALSE)) > 0)
-  clean(search = FALSE)
+  expect_equal(readd(x), "set")
+  expect_true(length(readd(y)) > 0)
+  clean()
 
   # load packages the usual way
   options(test_drake_option_12345 = "unset")
@@ -328,8 +328,8 @@ test_with_dir("packages are loaded and prework is run", {
     )
   )
   expect_true(all(c("x", "y") %in% config$cache$list()))
-  expect_equal(readd(x, search = FALSE), "set")
-  expect_true(length(readd(y, search = FALSE)) > 0)
+  expect_equal(readd(x), "set")
+  expect_true(length(readd(y)) > 0)
 })
 
 test_with_dir("prework can be an expression", {

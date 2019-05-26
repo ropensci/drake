@@ -58,7 +58,7 @@ Ignored if \code{plan} has a \code{trigger} column.
 See \code{\link[=trigger]{trigger()}} for details.}
 
 \item{cache}{drake cache as created by \code{\link[=new_cache]{new_cache()}}.
-See also \code{\link[=get_cache]{get_cache()}}.}
+See also \code{\link[=drake_cache]{drake_cache()}}.}
 }
 \value{
 An \code{igraph} object.

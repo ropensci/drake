@@ -105,7 +105,7 @@ reference:
   - '`predict_workers`'
 - title: Caches
   contents:
-  - '`get_cache`'
+  - '`drake_cache`'
   - '`new_cache`'
   - '`find_cache`'
 - title: Cache inspection

@@ -4,23 +4,18 @@
 \alias{drake_cache_log}
 \title{Get a table that represents the state of the cache.}
 \usage{
-drake_cache_log(path = getwd(), search = TRUE,
-  cache = drake::get_cache(path = path, search = search, verbose =
-  verbose), verbose = 1L, jobs = 1, targets_only = FALSE)
+drake_cache_log(path = NULL, search = NULL,
+  cache = drake::drake_cache(path = path, verbose = verbose),
+  verbose = 1L, jobs = 1, targets_only = FALSE)
 }
 \arguments{
-\item{path}{Root directory of the drake project,
-or if \code{search} is \code{TRUE}, either the
-project root or a subdirectory of the project.
-Ignored if a \code{cache} is supplied.}
+\item{path}{Path to a \code{drake} cache
+(usually a hidden \code{.drake/} folder) or \code{NULL}.}
 
-\item{search}{Logical. If \code{TRUE}, search parent directories
-to find the nearest drake cache. Otherwise, look in the
-current working directory only.
-Ignored if a \code{cache} is supplied.}
+\item{search}{Deprecated.}
 
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
-If supplied, \code{path} and \code{search} are ignored.}
+If supplied, \code{path} is ignored.}
 
 \item{verbose}{Integer, control printing to the console/terminal.
 \itemize{
@@ -103,5 +98,5 @@ suppressWarnings(
 }
 }
 \seealso{
-\code{\link[=cached]{cached()}}, \code{\link[=get_cache]{get_cache()}}
+\code{\link[=cached]{cached()}}, \code{\link[=drake_cache]{drake_cache()}}
 }
