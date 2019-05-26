@@ -74,7 +74,7 @@ drake_cache <- function(
 
 #' @title Search up the file system for the nearest drake cache.
 #' @description Only works if the cache is a file system in a
-#' hidden folder named `.drake` (default).
+#' hidden folder named `.drake/` (default).
 #' @seealso [drake_plan()], [make()],
 #' @export
 #' @return File path of the nearest drake cache or `NULL`
@@ -96,7 +96,7 @@ drake_cache <- function(
 #' })
 #' }
 find_cache <- function(
-  path = NULL,
+  path = getwd(),
   dir = NULL,
   directory = NULL
 ) {

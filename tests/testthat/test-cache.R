@@ -231,15 +231,23 @@ test_with_dir("drake_cache() can search", {
   dir.create(file.path("w", "x", "y"))
   dir.create(file.path("w", "x", "y", "z"))
   tmp <- storr::storr_rds(file.path("w", "x", ".drake"), mangle_key = TRUE)
-  cache <- drake_cache(file.path("w", "x", "y", "z"))
+  cache <- with_dir(
+    file.path("w", "x", "y", "z"),
+    drake_cache()
+  )
   expect_true(inherits(cache, "storr"))
   cache <- drake_cache(file.path("w", "x", ".drake"))
   expect_true(inherits(cache, "storr"))
-  cache <- drake_cache(file.path("w", "x", ".drake", "keys"))
+  cache <- with_dir(
+    file.path("w", "x", ".drake", "keys"),
+    drake_cache()
+  )
   expect_true(inherits(cache, "storr"))
-  cache <- drake_cache(file.path("w", "x"), search = FALSE)
+  cache <- with_dir(
+    file.path("w", "x"),
+    drake_cache()
+  )
   expect_true(inherits(cache, "storr"))
-  expect_null(drake_cache(file.path("w", "x", "y", "z"), search = FALSE))
 })
 
 test_with_dir("cache functions work from various working directories", {
