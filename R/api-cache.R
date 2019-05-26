@@ -531,7 +531,8 @@ deprecate_hash_algo_args <- function(
 #' @param cache drake cache. See [new_cache()].
 #'   If supplied, `path` is ignored.
 #'
-#' @param path Path to a `drake` cache or NULL.
+#' @param path Path to a `drake` cache
+#'   (usually a hidden `.drake/` folder) or `NULL`.
 #'
 #' @param search Deprecated.
 #'

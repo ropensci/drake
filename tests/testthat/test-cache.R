@@ -257,195 +257,185 @@ test_with_dir("cache functions work from various working directories", {
   rm(list = remove_these, envir = globalenv())
 
   cache_dir <- basename(default_cache_path())
-  first_wd <- getwd()
-  scratch <- file.path(first_wd, "scratch")
+  scratch <- file.path(getwd(), "scratch")
   if (!file.exists(scratch)) {
     dir.create(scratch) # Will move up a level later.
   }
-  setwd(scratch) # nolint
-  owd <- getwd()
-  expect_equal(nrow(build_times(search = FALSE)), 0)
-  expect_equal(nrow(progress(search = FALSE)), 0)
-  expect_false(any("in progress" %in% progress(search = FALSE)))
-  expect_error(readd(search = FALSE))
-  config <- dbug()
-  using_global <- identical(config$envir, globalenv())
-  if (using_global) {
-    envir <- globalenv()
-  } else {
-    envir <- environment()
-  }
+  with_dir(scratch, {
+    expect_equal(nrow(build_times()), 0)
+    expect_equal(nrow(progress()), 0)
+    expect_false(any("in progress" %in% progress()))
+    expect_error(readd())
+    config <- dbug()
+    using_global <- identical(config$envir, globalenv())
+    if (using_global) {
+      envir <- globalenv()
+    } else {
+      envir <- environment()
+    }
 
-  config$session_info <- TRUE
-  testrun(config)
+    config$session_info <- TRUE
+    testrun(config)
 
-  # drake_cache_log() # nolint
-  all_hashes <- drake_cache_log()
-  some_hashes <- drake_cache_log(targets_only = TRUE)
-  expect_equal(ncol(all_hashes), ncol(some_hashes))
-  n_a <- nrow(all_hashes)
-  n_s <- nrow(some_hashes)
-  expect_true(n_a > n_s && n_s > 0)
+    # drake_cache_log() # nolint
+    all_hashes <- drake_cache_log()
+    some_hashes <- drake_cache_log(targets_only = TRUE)
+    expect_equal(ncol(all_hashes), ncol(some_hashes))
+    n_a <- nrow(all_hashes)
+    n_s <- nrow(some_hashes)
+    expect_true(n_a > n_s && n_s > 0)
 
-  # drake_gc() should not remove any important targets/imports.
-  x <- cached()
-  expect_true(length(x) > 0)
-  drake_gc()
-  y <- cached()
-  expect_equal(sort(x), sort(y))
-  expect_equal(outdated(config), character(0))
+    # drake_gc() should not remove any important targets/imports.
+    x <- cached()
+    expect_true(length(x) > 0)
+    drake_gc()
+    y <- cached()
+    expect_equal(sort(x), sort(y))
+    expect_equal(outdated(config), character(0))
 
-  # targets and imports
-  imports <- sort(c(encode_path("input.rds"),
-                    "a", "b", "c", "f", "g",
-                    "h", "i", "j"))
-  builds <- sort(config$plan$target)
-  out_files <- encode_path("intermediatefile.rds")
-  all <- sort(c(builds, imports, out_files))
+    # targets and imports
+    imports <- sort(
+      c(
+        encode_path("input.rds"),
+        "a", "b", "c", "f", "g",
+        "h", "i", "j"
+      )
+    )
+    builds <- sort(config$plan$target)
+    out_files <- encode_path("intermediatefile.rds")
+    all <- sort(c(builds, imports, out_files))
 
-  # build_times
-  x <- config$cache
-  bt <- build_times(search = FALSE)
-  expect_equal(
-    sort(display_keys(x$list(namespace = "meta"))),
-    sort(cached(targets_only = FALSE))
-  )
-  expect_equal(
-    sort(config$plan$target),
-    sort(cached(targets_only = TRUE))
-  )
-  expect_equal(sort(bt$target), sort(builds))
-  expect_length(bt, 4) # 4 columns
-  n1 <- nrow(bt)
+    # build_times
+    x <- config$cache
+    bt <- build_times()
+    expect_equal(
+      sort(display_keys(x$list(namespace = "meta"))),
+      sort(cached(targets_only = FALSE))
+    )
+    expect_equal(
+      sort(config$plan$target),
+      sort(cached(targets_only = TRUE))
+    )
+    expect_equal(sort(bt$target), sort(builds))
+    expect_length(bt, 4) # 4 columns
+    n1 <- nrow(bt)
 
-  # find stuff in current directory session, progress
-  expect_equal(read_drake_seed(search = FALSE), config$seed)
-  expect_true(is.list(drake_get_session_info(search = FALSE)))
-  expect_true(all(progress(search = FALSE)$progress == "done"))
-  expect_false(any("running" %in% progress(search = FALSE)))
-  expect_equal(sort(progress(search = FALSE)$target), sort(config$plan$target))
-  exp <- weak_tibble(target = "final", progress = "done")
-  expect_equal(progress(final, search = FALSE), exp)
-  expect_equal(progress(list = "final", search = FALSE), exp)
+    # find stuff in current directory session, progress
+    expect_equal(read_drake_seed(), config$seed)
+    expect_true(is.list(drake_get_session_info()))
+    expect_true(all(progress()$progress == "done"))
+    expect_false(any("running" %in% progress()))
+    expect_equal(sort(progress()$target), sort(config$plan$target))
+    exp <- weak_tibble(target = "final", progress = "done")
+    expect_equal(progress(final), exp)
+    expect_equal(progress(list = "final"), exp)
 
-  # cached, diagnose, rescue
-  expect_true(length(diagnose(search = FALSE)) > length(config$plan$target))
-  expect_error(diagnose("xyz", cache = config$cache), regexp = "diagnostic")
-  expect_equal(
-    sort(cached(search = FALSE, targets_only = TRUE)),
-    sort(builds)
-  )
-  expect_true(
-    inherits(rescue_cache(search = FALSE, targets = "final"), "storr"))
-  expect_true(inherits(
-    rescue_cache(search = FALSE, garbage_collection = FALSE), "storr"))
-  expect_true(inherits(
-    rescue_cache(search = FALSE, garbage_collection = TRUE), "storr"))
+    # cached, diagnose, rescue
+    expect_true(length(diagnose()) > length(config$plan$target))
+    expect_error(diagnose("xyz", cache = config$cache), regexp = "diagnostic")
+    expect_equal(
+      sort(cached(targets_only = TRUE)),
+      sort(builds)
+    )
 
-  # find your project
-  expect_equal(find_cache(), file.path(getwd(), cache_dir))
-  expect_true(is.numeric(readd(a, search = FALSE)))
+    # Should not throw errors.
+    rescue_cache(targets = "final")
+    rescue_cache(garbage_collection = FALSE)
+    rescue_cache(garbage_collection = TRUE)
 
-  # load and read stuff
-  list <- intersect(
-    setdiff(cached(targets_only = FALSE), cached(targets_only = TRUE)),
-    ls(envir = envir)
-  )
-  rm(list = list, envir = envir)
-  expect_error(h(1))
-  expect_true(is.numeric(readd(final, search = FALSE)))
+    # find your project
+    expect_equal(find_cache(), file.path(getwd(), cache_dir))
+    expect_true(is.numeric(readd(a)))
 
-  loadd(yourinput, nextone, jobs = 2, search = FALSE, envir = envir)
-  expect_true(is.numeric(envir[["yourinput"]]))
-  expect_true(is.numeric(envir[["nextone"]]))
-  rm(yourinput, nextone, envir = envir)
+    # load and read stuff
+    list <- intersect(
+      setdiff(cached(targets_only = FALSE), cached(targets_only = TRUE)),
+      ls(envir = envir)
+    )
+    rm(list = list, envir = envir)
+    expect_error(h(1))
+    expect_true(is.numeric(readd(final)))
 
-  # test loadd loadd() everything
-  e <- new.env()
-  loadd(search = FALSE, envir = e)
-  expect_equal(sort(config$plan$target), sort(ls(envir = e)))
+    loadd(yourinput, nextone, jobs = 2, envir = envir)
+    expect_true(is.numeric(envir[["yourinput"]]))
+    expect_true(is.numeric(envir[["nextone"]]))
+    rm(yourinput, nextone, envir = envir)
 
-  # search from a different directory
-  if (!file.exists("searchfrom")) {
-    dir.create("searchfrom")
-    dir.create(file.path("searchfrom", "here"))
-  }
-  setwd("..") # nolint
-  expect_equal(getwd(), first_wd)
+    # test loadd loadd() everything
+    e <- new.env()
+    loadd(envir = e)
+    expect_equal(sort(config$plan$target), sort(ls(envir = e)))
+
+    # search from a different directory
+    if (!file.exists("searchfrom")) {
+      dir.create("searchfrom")
+      dir.create(file.path("searchfrom", "here"))
+    }
+  })
   s <- normalizePath(file.path(scratch, "searchfrom", "here"))
+  with_dir(s, {
+    # progress, session
+    expect_true(is.list(drake_get_session_info()))
+    prog <- progress()
+    expect_equal(sort(prog$target), sort(config$plan$target))
+    expect_true(all(prog$progress == "done"))
+    prog <- progress(nothing)
+    expect_equal(prog, weak_tibble(target = "nothing", progress = "none"))
 
-  # progress, session
-  expect_true(is.list(drake_get_session_info(search = TRUE, path = s)))
-  prog <- progress(search = TRUE, path = s)
-  expect_equal(sort(prog$target), sort(config$plan$target))
-  expect_true(all(prog$progress == "done"))
-  prog <- progress(nothing, search = TRUE, path = s)
-  expect_equal(prog, weak_tibble(target = "nothing", progress = "none"))
+    # cached and diagnose
+    expect_equal(sort(diagnose()), sort(config$cache$list()))
+    expect_equal(
+      sort(cached(targets_only = TRUE)),
+      sort(config$plan$target)
+    )
+    expect_equal(
+      length(cached(targets_only = FALSE)),
+      length(config$cache$list())
+    )
+    rescue_cache()
 
-  # cached and diagnose
-  expect_equal(diagnose(search = TRUE), character(0))
-  expect_equal(
-    sort(cached(targets_only = TRUE, path = s, search = TRUE)),
-    sort(config$plan$target)
-  )
-  expect_equal(
-    length(cached(targets_only = FALSE, path = s, search = TRUE)),
-    length(config$cache$list())
-  )
-  expect_true(inherits(rescue_cache(path = s, search = TRUE), "storr"))
+    # find your project
+    expect_equal(find_cache(), file.path(scratch, cache_dir))
 
-  # find your project
-  expect_equal(find_cache(path = s),
-               file.path(scratch, cache_dir))
+    # load and read stuff
+    expect_true(is.numeric(readd(a)))
 
-  # load and read stuff
-  expect_true(is.numeric(readd(a, path = s, search = TRUE)))
+    loadd(yourinput, nextone, jobs = 2, envir = envir)
+    expect_true(is.numeric(envir[["yourinput"]]))
+    expect_true(is.numeric(envir[["nextone"]]))
+    rm(yourinput, nextone, envir = envir)
 
-  loadd(yourinput, nextone, jobs = 2, search = TRUE, path = s, envir = envir)
-  expect_true(is.numeric(envir[["yourinput"]]))
-  expect_true(is.numeric(envir[["nextone"]]))
-  rm(yourinput, nextone, envir = envir)
+    # load dependencies
+    e <- new.env()
+    deps <- c("nextone", "yourinput")
+    expect_false(any(deps %in% ls(envir = e)))
+    loadd(combined, deps = TRUE, config = config, envir = e)
+    expect_true(all(deps %in% ls(envir = e)))
 
-  # load dependencies
-  e <- new.env()
-  deps <- c("nextone", "yourinput")
-  expect_false(any(deps %in% ls(envir = e)))
-  loadd(
-    combined, deps = TRUE, config = config,
-    path = s, search = TRUE, envir = e
-  )
-  expect_true(all(deps %in% ls(envir = e)))
+    # clean using search = TRUE or FALSE
+    expect_true(all(config$plan$target %in% cached()))
+    clean(final, jobs = 2, garbage_collection = TRUE)
+    targs <- setdiff(config$plan$target, "final")
+    expect_true(all(targs %in% cached()))
+    drake_gc()
 
-  # clean using search = TRUE or FALSE
-  expect_true(all(config$plan$target %in% cached(path = s, search = TRUE)))
-  clean(final, path = s, search = TRUE, jobs = 2,
-        garbage_collection = TRUE)
-  targs <- setdiff(config$plan$target, "final")
-  expect_true(all(targs %in% cached(path = s, search = TRUE)))
-  drake_gc(path = s, search = TRUE)
+    # Test purging
+    prog <- progress()
+    expect_true("final" %in% prog$target)
 
-  # Test purging
-  prog <- progress(search = TRUE, path = s)
-  expect_true("final" %in% prog$target)
+    clean(final, jobs = 2, garbage_collection = TRUE, purge = TRUE)
+    prog <- progress()
+    expect_false("final" %in% prog$target)
 
-  clean(final, path = s, search = TRUE, jobs = 2,
-        garbage_collection = TRUE, purge = TRUE)
-  prog <- progress(search = TRUE, path = s)
-  expect_false("final" %in% prog$target)
-
-  # More cleaning checks
-  clean(path = s, search = TRUE, garbage_collection = FALSE)
-  expect_equal(cached(path = s, search = TRUE), character(0))
-  where <- file.path(scratch, cache_dir)
-  expect_true(file.exists(where))
-  clean(path = s, search = FALSE, destroy = TRUE)
-  expect_true(file.exists(where))
-  clean(path = s, search = TRUE, destroy = TRUE)
-  expect_false(file.exists(where))
-  expect_silent(drake_gc()) # Cache does not exist
-
-  setwd(scratch) # nolint
-  unlink("searchfrom", recursive = TRUE, force = TRUE)
+    # More cleaning checks
+    clean(garbage_collection = FALSE)
+    expect_equal(cached(), character(0))
+    x <- file.path(scratch, cache_dir)
+    expect_true(file.exists(x))
+    clean(destroy = TRUE)
+    expect_false(file.exists(x))
+    expect_silent(drake_gc()) # Cache does not exist
+  })
 })
 
 test_with_dir("memo_expr() works without a cache", {

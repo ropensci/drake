@@ -1,5 +1,11 @@
 # Version 7.3.0.9000
 
+## Mildly breaking changes
+
+These changes are technically breaking changes, but they should only affect advanced users.
+
+- `rescue_cache()` no longer returns a value.
+
 ## Bug fixes
 
 - Do not rehash large imported files every `make()` ([#878](https://github.com/ropensci/drake/issues/878)).

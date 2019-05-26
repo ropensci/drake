@@ -224,7 +224,7 @@ rm_bad_cache_filenames <- function(cache) {
 #' dangling orphaned files that prevent you from loading or cleaning.
 #' This function tries to remove those files so you can use the
 #' cache normally again.
-#' @return The rescued drake/storr cache.
+#' @return Nothing.
 #' @export
 #' @seealso [drake_cache()], [cached()],
 #'   [drake_gc()], [clean()]
@@ -286,7 +286,7 @@ rescue_cache <- function(
   if (garbage_collection) {
     cache$gc()
   }
-  invisible(cache)
+  invisible()
 }
 
 rescue_del <- function(key, cache, namespace) {
