@@ -107,7 +107,7 @@ make <- function(
   envir = parent.frame(),
   verbose = 1L,
   hook = NULL,
-  cache = drake::get_cache(
+  cache = drake::drake_cache(
     verbose = verbose,
     console_log_file = console_log_file
   ),

@@ -5,7 +5,7 @@ test_with_dir("can ignore a bad time", {
   skip_if_not_installed("lubridate")
   x <- drake_plan(a = 1, b = 2)
   make(x, verbose = 0L)
-  cache <- get_cache()
+  cache <- drake_cache()
   expect_equal(nrow(build_times()), 2)
   set_in_subspaces(
     key = "a",

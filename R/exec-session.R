@@ -21,8 +21,8 @@
 #' }
 drake_get_session_info <- function(
   path = getwd(),
-  search = TRUE,
-  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  search = NULL,
+  cache = drake::drake_cache(path = path, verbose = verbose),
   verbose = 1L
 ) {
   if (is.null(cache)) {
@@ -33,8 +33,8 @@ drake_get_session_info <- function(
 
 drake_set_session_info <- function(
   path = getwd(),
-  search = TRUE,
-  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  search = NULL,
+  cache = drake::drake_cache(path = path, verbose = verbose),
   verbose = 1L,
   full = TRUE
 ) {

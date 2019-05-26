@@ -48,12 +48,13 @@ progress <- function(
   list = character(0),
   no_imported_objects = NULL,
   path = getwd(),
-  search = TRUE,
-  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  search = NULL,
+  cache = drake::drake_cache(path = path, verbose = verbose),
   verbose = 1L,
   jobs = 1,
   progress = NULL
 ) {
+  deprecate_search(search)
   if (is.null(cache)) {
     return(weak_tibble(target = character(0), progress = character(0)))
   }
@@ -120,10 +121,11 @@ progress <- function(
 #' }
 running <- function(
   path = getwd(),
-  search = TRUE,
-  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  search = NULL,
+  cache = drake::drake_cache(path = path, verbose = verbose),
   verbose = 1L
 ) {
+  deprecate_search(search)
   prog <- progress(path = path, search = search, cache = cache)
   prog$target[prog$progress == "running"]
 }
@@ -155,11 +157,12 @@ running <- function(
 #' }
 failed <- function(
   path = getwd(),
-  search = TRUE,
-  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  search = NULL,
+  cache = drake::drake_cache(path = path, verbose = verbose),
   verbose = 1L,
   upstream_only = NULL
 ) {
+  deprecate_search(search)
   if (!is.null(upstream_only)) {
     warning("argument upstream_only is deprecated.")
   }

@@ -31,15 +31,16 @@
 build_times <- function(
   ...,
   path = getwd(),
-  search = TRUE,
+  search = NULL,
   digits = 3,
-  cache = get_cache(path = path, search = search, verbose = verbose),
+  cache = drake_cache(path = path, verbose = verbose),
   targets_only = NULL,
   verbose = 1L,
   jobs = 1,
   type = c("build", "command"),
   list = character(0)
 ) {
+  deprecate_search(search)
   deprecate_targets_only(targets_only) # 2019-01-03 # nolint
   if (is.null(cache)) {
     return(weak_as_tibble(empty_times()))

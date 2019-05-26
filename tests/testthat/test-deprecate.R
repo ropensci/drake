@@ -24,7 +24,7 @@ test_with_dir("deprecation: fetch_cache", {
   dp <- drake_plan(x = 1)
   expect_warning(make(dp, fetch_cache = ""), regexp = "deprecated")
   expect_warning(drake_config(dp, fetch_cache = ""), regexp = "deprecated")
-  expect_warning(get_cache(fetch_cache = ""), regexp = "deprecated")
+  expect_warning(drake_cache(fetch_cache = ""), regexp = "deprecated")
 })
 
 test_with_dir("deprecation: deps_targets() and knitr_deps()", {
@@ -56,7 +56,7 @@ test_with_dir("deprecation: cache functions", {
   expect_silent(make(plan, verbose = 0L, session_info = FALSE))
   expect_true(is.numeric(readd(x, search = FALSE)))
   expect_equal(cached(), "x")
-  cache <- get_cache()
+  cache <- drake_cache()
   expect_warning(short_hash(cache))
   expect_warning(long_hash(cache))
   expect_warning(default_short_hash_algo(cache))
@@ -125,7 +125,7 @@ test_with_dir("drake version checks in previous caches", {
   # to check back compatibility.
   plan <- drake_plan(x = 1)
   expect_silent(make(plan, verbose = 0L))
-  x <- get_cache()
+  x <- drake_cache()
   suppressWarnings(expect_error(drake_session(cache = NULL), regexp = "make"))
   expect_warning(drake_session(cache = x), regexp = "deprecated")
   skip_if_not_installed("lubridate")
@@ -228,10 +228,10 @@ test_with_dir("example template files (deprecated)", {
 test_with_dir("force with a non-back-compatible cache", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(cache_vers_check(NULL), character(0))
-  expect_null(get_cache())
+  expect_null(drake_cache())
   expect_true(inherits(suppressWarnings(recover_cache()), "storr"))
   write_v6.2.1_project() # nolint
-  expect_warning(get_cache(), regexp = "compatible")
+  expect_warning(drake_cache(), regexp = "compatible")
   expect_warning(recover_cache(), regexp = "compatible")
   suppressWarnings(
     expect_error(drake_config(drake_plan(x = 1)), regexp = "compatible")
@@ -240,11 +240,11 @@ test_with_dir("force with a non-back-compatible cache", {
     expect_error(make(drake_plan(x = 1)), regexp = "compatible")
   )
   expect_warning(make(drake_plan(x = 1), force = TRUE), regexp = "compatible")
-  tmp <- get_cache()
+  tmp <- drake_cache()
 })
 
 test_with_dir("deprecate the `force` argument", {
-  expect_warning(tmp <- get_cache(force = TRUE), regexp = "deprecated")
+  expect_warning(tmp <- drake_cache(force = TRUE), regexp = "deprecated")
   expect_warning(tmp <- recover_cache(force = TRUE), regexp = "deprecated")
   expect_warning(load_mtcars_example(force = TRUE), regexp = "deprecated")
 })

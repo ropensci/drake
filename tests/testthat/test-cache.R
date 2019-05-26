@@ -42,19 +42,19 @@ test_with_dir("clean() removes the correct files", {
 test_with_dir("drake_version", {
   cache <- storr::storr_environment()
   expect_equal(
-    get_cache_version(cache),
+    drake_cache_version(cache),
     as.character(utils::packageVersion("drake"))
   )
   make(drake_plan(x = 1), session_info = FALSE)
   con <- drake_config(drake_plan(x = 1), session_info = FALSE)
-  expect_true(is.character(get_cache_version(con$cache)))
+  expect_true(is.character(drake_cache_version(con$cache)))
   clean()
   make(drake_plan(x = 1), session_info = TRUE)
   con <- drake_config(drake_plan(x = 1), session_info = TRUE)
-  expect_true(is.character(get_cache_version(con$cache)))
+  expect_true(is.character(drake_cache_version(con$cache)))
   con$cache$clear(namespace = "session")
   expect_equal(
-    get_cache_version(con$cache),
+    drake_cache_version(con$cache),
     as.character(utils::packageVersion("drake"))
   )
 })
@@ -157,10 +157,10 @@ test_with_dir("bad/corrupt caches, no progress, no seed", {
   expect_warning(new_cache(type = "nope"))
   x <- drake_plan(a = 1)
   make(x, verbose = 0L, session_info = FALSE, log_progress = FALSE)
-  expect_equal(get_cache()$list(namespace = "progress"), character(0))
+  expect_equal(drake_cache()$list(namespace = "progress"), character(0))
   clean()
   make(x, verbose = 0L, session_info = FALSE, log_progress = TRUE)
-  expect_equal(get_cache()$list(namespace = "progress"), "a")
+  expect_equal(drake_cache()$list(namespace = "progress"), "a")
   path <- file.path(default_cache_path(), "config", "hash_algorithm")
   expect_true(file.exists(path))
   unlink(path)
@@ -225,21 +225,21 @@ test_with_dir("subspaces", {
   expect_equal(sort(lst), c("a", "b"))
 })
 
-test_with_dir("get_cache() can search", {
+test_with_dir("drake_cache() can search", {
   dir.create(file.path("w"))
   dir.create(file.path("w", "x"))
   dir.create(file.path("w", "x", "y"))
   dir.create(file.path("w", "x", "y", "z"))
   tmp <- storr::storr_rds(file.path("w", "x", ".drake"), mangle_key = TRUE)
-  cache <- get_cache(file.path("w", "x", "y", "z"))
+  cache <- drake_cache(file.path("w", "x", "y", "z"))
   expect_true(inherits(cache, "storr"))
-  cache <- get_cache(file.path("w", "x", ".drake"))
+  cache <- drake_cache(file.path("w", "x", ".drake"))
   expect_true(inherits(cache, "storr"))
-  cache <- get_cache(file.path("w", "x", ".drake", "keys"))
+  cache <- drake_cache(file.path("w", "x", ".drake", "keys"))
   expect_true(inherits(cache, "storr"))
-  cache <- get_cache(file.path("w", "x"), search = FALSE)
+  cache <- drake_cache(file.path("w", "x"), search = FALSE)
   expect_true(inherits(cache, "storr"))
-  expect_null(get_cache(file.path("w", "x", "y", "z"), search = FALSE))
+  expect_null(drake_cache(file.path("w", "x", "y", "z"), search = FALSE))
 })
 
 test_with_dir("cache functions work from various working directories", {

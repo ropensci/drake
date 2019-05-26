@@ -5,7 +5,7 @@
 \title{Run your project (build the outdated targets).}
 \usage{
 make(plan, targets = NULL, envir = parent.frame(), verbose = 1L,
-  hook = NULL, cache = drake::get_cache(verbose = verbose,
+  hook = NULL, cache = drake::drake_cache(verbose = verbose,
   console_log_file = console_log_file), fetch_cache = NULL,
   parallelism = "loop", jobs = 1L, jobs_preprocess = 1L,
   packages = rev(.packages()), lib_loc = NULL,
@@ -61,7 +61,7 @@ then reproducibly tracked as dependencies.}
 \item{hook}{Deprecated.}
 
 \item{cache}{drake cache as created by \code{\link[=new_cache]{new_cache()}}.
-See also \code{\link[=get_cache]{get_cache()}}.}
+See also \code{\link[=drake_cache]{drake_cache()}}.}
 
 \item{fetch_cache}{Deprecated.}
 

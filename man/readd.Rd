@@ -5,16 +5,16 @@
 \alias{loadd}
 \title{Read and return a drake target/import from the cache.}
 \usage{
-readd(target, character_only = FALSE, path = getwd(), search = TRUE,
-  cache = drake::get_cache(path = path, search = search, verbose =
-  verbose), namespace = NULL, verbose = 1L, show_source = FALSE)
+readd(target, character_only = FALSE, path = getwd(), search = NULL,
+  cache = drake::drake_cache(path = path, verbose = verbose),
+  namespace = NULL, verbose = 1L, show_source = FALSE)
 
 loadd(..., list = character(0), imported_only = NULL, path = getwd(),
-  search = TRUE, cache = drake::get_cache(path = path, search = search,
-  verbose = verbose), namespace = NULL, envir = parent.frame(),
-  jobs = 1, verbose = 1L, deps = FALSE, lazy = "eager",
-  graph = NULL, replace = TRUE, show_source = FALSE,
-  tidyselect = !deps, config = NULL)
+  search = NULL, cache = drake::drake_cache(path = path, verbose =
+  verbose), namespace = NULL, envir = parent.frame(), jobs = 1,
+  verbose = 1L, deps = FALSE, lazy = "eager", graph = NULL,
+  replace = TRUE, show_source = FALSE, tidyselect = !deps,
+  config = NULL)
 }
 \arguments{
 \item{target}{If \code{character_only} is \code{TRUE}, then
@@ -26,18 +26,12 @@ object.}
 as a character or a symbol
 (just like \code{character.only} in \code{\link[=library]{library()}}).}
 
-\item{path}{Root directory of the drake project,
-or if \code{search} is \code{TRUE}, either the
-project root or a subdirectory of the project.
-Ignored if a \code{cache} is supplied.}
+\item{path}{Path to a \code{drake} cache or NULL.}
 
-\item{search}{Logical. If \code{TRUE}, search parent directories
-to find the nearest drake cache. Otherwise, look in the
-current working directory only.
-Ignored if a \code{cache} is supplied.}
+\item{search}{Deprecated.}
 
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
-If supplied, \code{path} and \code{search} are ignored.}
+If supplied, \code{path} is ignored.}
 
 \item{namespace}{Optional character string,
 name of the \code{storr} namespace to read from.}

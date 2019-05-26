@@ -2698,3 +2698,82 @@ reduction_pairs <- function(x, pairs = NULL, base_name = "reduced_") {
     base_name = base_name
   )
 }
+
+#' @title Deprecated: the default cache of a `drake` project.
+#' @description Use [drake_cache()] instead.
+#' @details Deprecated on 2019-05-25.
+#' @keywords internal
+#' @export
+#' @inheritParams cached
+#' @inheritParams drake_config
+#' @param path Character, either the root file path of a `drake` project
+#'   or a folder containing the root (top-level working directory
+#'   where you plan to call [make()]).
+#'   If this is too confusing, feel free to just use `storr::storr_rds()`
+#'   to get the cache.
+#'   If `search = FALSE`, `path` must be the root.
+#'   If `search = TRUE`, you can specify any
+#'   subdirectory of the project. Let's say `"/home/you/my_project"`
+#'   is the root. The following are equivalent and correct:
+#'   - `get_cache(path = "/home/you/my_project", search = FALSE)`
+#'   - `get_cache(path = "/home/you/my_project", search = TRUE)`
+#'   - `get_cache(path = "/home/you/my_project/subdir/x", search = TRUE)`
+#'   - `get_cache(path = "/home/you/my_project/.drake", search = TRUE)`
+#'   - `get_cache(path = "/home/you/my_project/.drake/keys", search = TRUE)`
+#' @param force Deprecated.
+#' @param fetch_cache Deprecated.
+#' @examples
+#' \dontrun{
+#' isolate_example("Quarantine side effects.", {
+#' if (suppressWarnings(require("knitr"))) {
+#' clean(destroy = TRUE)
+#' # No cache is available.
+#' get_cache() # NULL
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
+#' make(my_plan) # Run the project, build the targets.
+#' x <- get_cache() # Now, there is a cache.
+#' y <- storr::storr_rds(".drake") # Equivalent.
+#' # List the objects readable from the cache with readd().
+#' x$list()
+#' }
+#' })
+#' }
+get_cache <- function(
+  path = getwd(),
+  search = TRUE,
+  verbose = 1L,
+  force = FALSE,
+  fetch_cache = NULL,
+  console_log_file = NULL
+) {
+  .Deprecated(
+    new = "",
+    package = "drake",
+    msg = paste(
+      "get_cache() is deprecated. Use drake_cache() instead."
+    )
+  )
+  if (search) {
+    path <- find_cache(path = path)
+  } else {
+    path <- default_cache_path(root = path)
+  }
+  this_cache_(
+    path = path,
+    verbose = verbose,
+    fetch_cache = fetch_cache,
+    console_log_file = console_log_file
+  )
+}
+
+# 2019-05-25 # nolint
+deprecate_search <- function(search) {
+  if (!is.null(search)) {
+    warning(
+      "Argument ",
+      shQuote("search"),
+      " is deprecated in drake functions.",
+      call. = FALSE
+    )
+  }
+}

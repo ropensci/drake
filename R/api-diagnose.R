@@ -70,10 +70,11 @@ diagnose <- function(
   target = NULL,
   character_only = FALSE,
   path = getwd(),
-  search = TRUE,
-  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  search = NULL,
+  cache = drake::drake_cache(path = path, verbose = verbose),
   verbose = 1L
 ) {
+  deprecate_search(search)
   if (is.null(cache)) {
     return(character(0))
   }
