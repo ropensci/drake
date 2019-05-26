@@ -121,7 +121,7 @@ clean <- function(
     )
   }
   if (!length(targets) && is.null(c(...))) {
-    if (abort_full_clean()) {
+    if (abort_full_clean(cache$driver$path)) {
       return(invisible()) # nocov
     }
     targets <- cache$list()
@@ -307,7 +307,7 @@ touch_storr_object <- function(key, cache, namespace) {
   invisible(NULL)
 }
 
-abort_full_clean <- function() {
+abort_full_clean <- function(path) {
   menu_enabled <- .pkg_envir[["drake_clean_menu"]] %||%
     getOption("drake_clean_menu") %||%
     TRUE
@@ -315,9 +315,10 @@ abort_full_clean <- function() {
     return(FALSE)
   }
   # nocov start
-  title <- paste(
-    "Really delete everything in the drake cache?",
-    "(Prompt shown once per session.)",
+  title <- paste0(
+    "Really delete everything in the drake cache at ",
+    shQuote(path),
+    "? (Prompt shown once per session.)",
     sep = "\n"
   )
   response <- utils::menu(choices = c("yes", "no"), title = title)

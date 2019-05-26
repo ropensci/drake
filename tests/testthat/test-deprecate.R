@@ -24,7 +24,6 @@ test_with_dir("deprecation: fetch_cache", {
   dp <- drake_plan(x = 1)
   expect_warning(make(dp, fetch_cache = ""), regexp = "deprecated")
   expect_warning(drake_config(dp, fetch_cache = ""), regexp = "deprecated")
-  expect_warning(drake_cache(fetch_cache = ""), regexp = "deprecated")
 })
 
 test_with_dir("deprecation: deps_targets() and knitr_deps()", {
@@ -54,7 +53,7 @@ test_with_dir("deprecation: cache functions", {
   plan <- drake_plan(x = 1)
   expect_error(expect_warning(tmp <- read_drake_meta(search = FALSE)))
   expect_silent(make(plan, verbose = 0L, session_info = FALSE))
-  expect_true(is.numeric(readd(x, search = FALSE)))
+  expect_true(is.numeric(readd(x)))
   expect_equal(cached(), "x")
   cache <- drake_cache()
   expect_warning(short_hash(cache))
@@ -81,7 +80,7 @@ test_with_dir("deprecation: built", {
     )
   )
   expect_equal(
-    sort(cached(search = FALSE)),
+    sort(cached()),
     sort(display_keys(twopiece))
   )
   expect_equal(
@@ -244,7 +243,7 @@ test_with_dir("force with a non-back-compatible cache", {
 })
 
 test_with_dir("deprecate the `force` argument", {
-  expect_warning(tmp <- drake_cache(force = TRUE), regexp = "deprecated")
+  expect_warning(tmp <- drake_cache(), regexp = "deprecated")
   expect_warning(tmp <- recover_cache(force = TRUE), regexp = "deprecated")
   expect_warning(load_mtcars_example(force = TRUE), regexp = "deprecated")
 })

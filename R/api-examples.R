@@ -284,7 +284,7 @@ mtcars_plan <- function() {
 #' })
 #' }
 clean_mtcars_example <- function() {
-  clean(destroy = TRUE, search = FALSE)
+  clean(destroy = TRUE)
   unlink("report.Rmd")
   invisible()
 }

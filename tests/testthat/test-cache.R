@@ -177,10 +177,10 @@ test_with_dir("non-existent caches", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(0, nrow(drake_cache_log()))
   expect_equal(find_cache(), NULL)
-  expect_error(loadd(list = "nothing", search = FALSE))
-  expect_error(tmp <- read_drake_seed(search = FALSE))
-  expect_error(tmp <- drake_get_session_info(search = FALSE))
-  expect_error(tmp <- drake_set_session_info(search = FALSE))
+  expect_error(loadd(list = "nothing"))
+  expect_error(tmp <- read_drake_seed())
+  expect_error(tmp <- drake_get_session_info())
+  expect_error(tmp <- drake_set_session_info())
   dummy <- new_cache()
 })
 
