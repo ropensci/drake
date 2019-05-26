@@ -1455,3 +1455,11 @@ test_with_dir("reduce_by()", suppressWarnings({
   y <- bind_plans(plan, new_row)
   equivalent_plans(x[, c("target", "command")], y)
 }))
+
+test_with_dir("get_cache", {
+  make(drake_plan(x = 1), session_info = FALSE)
+  tmp1 <- get_cache(search = TRUE)
+  tmp2 <- get_cache(search = FALSE)
+  expect_true(inherits(tmp1, "storr"))
+  expect_true(inherits(tmp2, "storr"))
+})

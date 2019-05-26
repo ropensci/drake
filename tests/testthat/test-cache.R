@@ -250,6 +250,21 @@ test_with_dir("drake_cache() can search", {
   expect_true(inherits(cache, "storr"))
 })
 
+test_with_dir("neighboring caches", {
+  cache <- new_cache(".test")
+  test_plan = drake_plan(
+    dot_test = 1L
+  )
+  make(test_plan, cache = cache)
+  default_plan = drake_plan(
+    dot_drake = 2L
+  )
+  make(default_plan)
+  expect_equal(cached(cache = drake_cache(".test")), "dot_test")
+  expect_equal(cached(), "dot_drake")
+  expect_equal(cached(cache = drake_cache(".drake")), "dot_drake")
+})
+
 test_with_dir("cache functions work from various working directories", {
   skip_if_not_installed("lubridate")
   # May have been loaded in a globalenv() testing scenario # nolint
