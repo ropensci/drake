@@ -241,6 +241,8 @@ rm_bad_cache_filenames <- function(cache) {
 #' @param garbage_collection Logical, whether to do garbage collection
 #'   as a final step. See [drake_gc()] and [clean()]
 #'   for details.
+#' @param search Deprecated.
+#' @param force Deprecated.
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {
