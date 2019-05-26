@@ -5,7 +5,7 @@
 \title{List targets in the cache.}
 \usage{
 cached(..., list = character(0), no_imported_objects = FALSE,
-  path = getwd(), search = NULL, cache = drake_cache(path = path,
+  path = NULL, search = NULL, cache = drake_cache(path = path,
   verbose = verbose), verbose = 1L, namespace = NULL, jobs = 1,
   targets_only = TRUE)
 }

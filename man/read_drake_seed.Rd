@@ -4,7 +4,7 @@
 \alias{read_drake_seed}
 \title{Read the pseudo-random number generator seed of the project.}
 \usage{
-read_drake_seed(path = getwd(), search = NULL, cache = NULL,
+read_drake_seed(path = NULL, search = NULL, cache = NULL,
   verbose = 1L)
 }
 \arguments{

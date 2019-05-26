@@ -5,11 +5,11 @@
 \alias{loadd}
 \title{Read and return a drake target/import from the cache.}
 \usage{
-readd(target, character_only = FALSE, path = getwd(), search = NULL,
+readd(target, character_only = FALSE, path = NULL, search = NULL,
   cache = drake::drake_cache(path = path, verbose = verbose),
   namespace = NULL, verbose = 1L, show_source = FALSE)
 
-loadd(..., list = character(0), imported_only = NULL, path = getwd(),
+loadd(..., list = character(0), imported_only = NULL, path = NULL,
   search = NULL, cache = drake::drake_cache(path = path, verbose =
   verbose), namespace = NULL, envir = parent.frame(), jobs = 1,
   verbose = 1L, deps = FALSE, lazy = "eager", graph = NULL,

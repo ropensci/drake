@@ -4,7 +4,7 @@
 \alias{drake_cache_log}
 \title{Get a table that represents the state of the cache.}
 \usage{
-drake_cache_log(path = path, search = NULL,
+drake_cache_log(path = NULL, search = NULL,
   cache = drake::drake_cache(path = path, verbose = verbose),
   verbose = 1L, jobs = 1, targets_only = FALSE)
 }

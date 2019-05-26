@@ -47,7 +47,7 @@ progress <- function(
   ...,
   list = character(0),
   no_imported_objects = NULL,
-  path = getwd(),
+  path = NULL,
   search = NULL,
   cache = drake::drake_cache(path = path, verbose = verbose),
   verbose = 1L,
@@ -120,7 +120,7 @@ progress <- function(
 #' })
 #' }
 running <- function(
-  path = getwd(),
+  path = NULL,
   search = NULL,
   cache = drake::drake_cache(path = path, verbose = verbose),
   verbose = 1L
@@ -156,7 +156,7 @@ running <- function(
 #' })
 #' }
 failed <- function(
-  path = getwd(),
+  path = NULL,
   search = NULL,
   cache = drake::drake_cache(path = path, verbose = verbose),
   verbose = 1L,

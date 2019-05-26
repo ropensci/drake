@@ -4,9 +4,8 @@
 \alias{running}
 \title{List running targets.}
 \usage{
-running(path = getwd(), search = NULL,
-  cache = drake::drake_cache(path = path, verbose = verbose),
-  verbose = 1L)
+running(path = NULL, search = NULL, cache = drake::drake_cache(path =
+  path, verbose = verbose), verbose = 1L)
 }
 \arguments{
 \item{path}{Path to a \code{drake} cache or NULL.}

@@ -6,8 +6,8 @@
 during a \code{\link[=make]{make()}}.}
 \usage{
 progress(..., list = character(0), no_imported_objects = NULL,
-  path = getwd(), search = NULL, cache = drake::drake_cache(path =
-  path, verbose = verbose), verbose = 1L, jobs = 1, progress = NULL)
+  path = NULL, search = NULL, cache = drake::drake_cache(path = path,
+  verbose = verbose), verbose = 1L, jobs = 1, progress = NULL)
 }
 \arguments{
 \item{...}{Objects to load from the cache, as names (unquoted)

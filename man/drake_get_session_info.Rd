@@ -5,7 +5,7 @@
 \title{Return the \code{\link[=sessionInfo]{sessionInfo()}}
 of the last call to \code{\link[=make]{make()}}.}
 \usage{
-drake_get_session_info(path = getwd(), search = NULL,
+drake_get_session_info(path = NULL, search = NULL,
   cache = drake::drake_cache(path = path, verbose = verbose),
   verbose = 1L)
 }

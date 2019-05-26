@@ -30,7 +30,7 @@
 #' }
 build_times <- function(
   ...,
-  path = getwd(),
+  path = NULL,
   search = NULL,
   digits = 3,
   cache = drake_cache(path = path, verbose = verbose),

@@ -4,7 +4,7 @@
 \alias{clean}
 \title{Remove targets/imports from the cache.}
 \usage{
-clean(..., list = character(0), destroy = FALSE, path = getwd(),
+clean(..., list = character(0), destroy = FALSE, path = NULL,
   search = NULL, cache = drake::drake_cache(path = path, verbose =
   verbose), verbose = 1L, jobs = 1, force = FALSE,
   garbage_collection = FALSE, purge = FALSE)

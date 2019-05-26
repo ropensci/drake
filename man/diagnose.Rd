@@ -4,7 +4,7 @@
 \alias{diagnose}
 \title{Get diagnostic metadata on a target.}
 \usage{
-diagnose(target = NULL, character_only = FALSE, path = getwd(),
+diagnose(target = NULL, character_only = FALSE, path = NULL,
   search = NULL, cache = drake::drake_cache(path = path, verbose =
   verbose), verbose = 1L)
 }

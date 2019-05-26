@@ -5,8 +5,8 @@
 \title{List failed targets.
 to \code{\link[=make]{make()}}.}
 \usage{
-failed(path = getwd(), search = NULL, cache = drake::drake_cache(path
-  = path, verbose = verbose), verbose = 1L, upstream_only = NULL)
+failed(path = NULL, search = NULL, cache = drake::drake_cache(path =
+  path, verbose = verbose), verbose = 1L, upstream_only = NULL)
 }
 \arguments{
 \item{path}{Path to a \code{drake} cache or NULL.}

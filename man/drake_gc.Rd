@@ -4,7 +4,7 @@
 \alias{drake_gc}
 \title{Do garbage collection on the drake cache.}
 \usage{
-drake_gc(path = getwd(), search = NULL, verbose = 1L,
+drake_gc(path = NULL, search = NULL, verbose = 1L,
   cache = drake::drake_cache(path = path, verbose = verbose),
   force = FALSE)
 }

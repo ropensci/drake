@@ -96,7 +96,7 @@ drake_cache <- function(
 #' })
 #' }
 find_cache <- function(
-  path = getwd(),
+  path = NULL,
   dir = NULL,
   directory = NULL
 ) {
@@ -369,7 +369,7 @@ drake_cache_log_file_ <- function(
 #' })
 #' }
 drake_cache_log <- function(
-  path = path,
+  path = NULL,
   search = NULL,
   cache = drake::drake_cache(path = path, verbose = verbose),
   verbose = 1L,
@@ -557,7 +557,7 @@ cached <- function(
   ...,
   list = character(0),
   no_imported_objects = FALSE,
-  path = getwd(),
+  path = NULL,
   search = NULL,
   cache = drake_cache(path = path, verbose = verbose),
   verbose = 1L,

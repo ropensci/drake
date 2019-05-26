@@ -4,7 +4,7 @@
 \alias{find_cache}
 \title{Search up the file system for the nearest drake cache.}
 \usage{
-find_cache(path = getwd(), dir = NULL, directory = NULL)
+find_cache(path = NULL, dir = NULL, directory = NULL)
 }
 \arguments{
 \item{path}{Starting path for search back for the cache.

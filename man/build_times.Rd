@@ -4,7 +4,7 @@
 \alias{build_times}
 \title{List the time it took to build each target.}
 \usage{
-build_times(..., path = getwd(), search = NULL, digits = 3,
+build_times(..., path = NULL, search = NULL, digits = 3,
   cache = drake_cache(path = path, verbose = verbose),
   targets_only = NULL, verbose = 1L, jobs = 1, type = c("build",
   "command"), list = character(0))

@@ -20,7 +20,7 @@
 #' })
 #' }
 drake_get_session_info <- function(
-  path = getwd(),
+  path = NULL,
   search = NULL,
   cache = drake::drake_cache(path = path, verbose = verbose),
   verbose = 1L
@@ -32,7 +32,7 @@ drake_get_session_info <- function(
 }
 
 drake_set_session_info <- function(
-  path = getwd(),
+  path = NULL,
   search = NULL,
   cache = drake::drake_cache(path = path, verbose = verbose),
   verbose = 1L,

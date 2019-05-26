@@ -63,7 +63,7 @@
 readd <- function(
   target,
   character_only = FALSE,
-  path = getwd(),
+  path = NULL,
   search = NULL,
   cache = drake::drake_cache(path = path, verbose = verbose),
   namespace = NULL,
@@ -187,7 +187,7 @@ loadd <- function(
   ...,
   list = character(0),
   imported_only = NULL,
-  path = getwd(),
+  path = NULL,
   search = NULL,
   cache = drake::drake_cache(path = path, verbose = verbose),
   namespace = NULL,
@@ -430,7 +430,7 @@ bind_load_target <- function(target, cache, namespace, envir, verbose) {
 #' read_drake_seed(cache = cache)
 #' readd(target2, cache = cache)
 read_drake_seed <- function(
-  path = getwd(),
+  path = NULL,
   search = NULL,
   cache = NULL,
   verbose = 1L

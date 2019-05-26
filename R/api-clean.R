@@ -97,7 +97,7 @@ clean <- function(
   ...,
   list = character(0),
   destroy = FALSE,
-  path = getwd(),
+  path = NULL,
   search = NULL,
   cache = drake::drake_cache(path = path, verbose = verbose),
   verbose = 1L,
@@ -196,7 +196,7 @@ clean_single_target <- function(
 #' })
 #' }
 drake_gc <- function(
-  path = getwd(),
+  path = NULL,
   search = NULL,
   verbose = 1L,
   cache = drake::drake_cache(path = path, verbose = verbose),
@@ -257,7 +257,7 @@ rm_bad_cache_filenames <- function(cache) {
 #' }
 rescue_cache <- function(
   targets = NULL,
-  path = getwd(),
+  path = NULL,
   search = NULL,
   verbose = 1L,
   force = FALSE,

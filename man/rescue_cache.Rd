@@ -5,7 +5,7 @@
 \title{Try to repair a drake cache that is prone
 to throwing \code{storr}-related errors.}
 \usage{
-rescue_cache(targets = NULL, path = getwd(), search = NULL,
+rescue_cache(targets = NULL, path = NULL, search = NULL,
   verbose = 1L, force = FALSE, cache = drake::drake_cache(path =
   path, verbose = verbose), jobs = 1, garbage_collection = FALSE)
 }
