@@ -9,7 +9,8 @@ drake_cache_log(path = NULL, search = NULL,
   verbose = 1L, jobs = 1, targets_only = FALSE)
 }
 \arguments{
-\item{path}{Path to a \code{drake} cache or NULL.}
+\item{path}{Path to a \code{drake} cache
+(usually a hidden \code{.drake/} folder) or \code{NULL}.}
 
 \item{search}{Deprecated.}
 

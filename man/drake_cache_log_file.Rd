@@ -12,7 +12,8 @@ drake_cache_log_file(file = "drake_cache.log", path = getwd(),
 \arguments{
 \item{file}{character scalar, name of the flat text log file.}
 
-\item{path}{Path to a \code{drake} cache or NULL.}
+\item{path}{Path to a \code{drake} cache
+(usually a hidden \code{.drake/} folder) or \code{NULL}.}
 
 \item{search}{Deprecated.}
 

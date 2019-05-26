@@ -22,7 +22,8 @@ cache. Similar to the \code{list} argument of \code{\link[=remove]{remove()}}.}
 \item{no_imported_objects}{Logical, deprecated. Use
 \code{targets_only} instead.}
 
-\item{path}{Path to a \code{drake} cache or NULL.}
+\item{path}{Path to a \code{drake} cache
+(usually a hidden \code{.drake/} folder) or \code{NULL}.}
 
 \item{search}{Deprecated.}
 

@@ -21,7 +21,8 @@ cache. Similar to the \code{list} argument of \code{\link[=remove]{remove()}}.}
 about imported files and targets with commands (i.e. whether to ignore
 imported objects that are not files).}
 
-\item{path}{Path to a \code{drake} cache or NULL.}
+\item{path}{Path to a \code{drake} cache
+(usually a hidden \code{.drake/} folder) or \code{NULL}.}
 
 \item{search}{Deprecated.}
 

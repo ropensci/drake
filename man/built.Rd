@@ -8,7 +8,8 @@ built(path = getwd(), search = TRUE, cache = drake::get_cache(path =
   path, search = search, verbose = verbose), verbose = 1L, jobs = 1)
 }
 \arguments{
-\item{path}{Path to a \code{drake} cache or NULL.}
+\item{path}{Path to a \code{drake} cache
+(usually a hidden \code{.drake/} folder) or \code{NULL}.}
 
 \item{search}{Deprecated.}
 

@@ -9,7 +9,8 @@ drake_gc(path = NULL, search = NULL, verbose = 1L,
   force = FALSE)
 }
 \arguments{
-\item{path}{Path to a \code{drake} cache or NULL.}
+\item{path}{Path to a \code{drake} cache
+(usually a hidden \code{.drake/} folder) or \code{NULL}.}
 
 \item{search}{Deprecated.}
 

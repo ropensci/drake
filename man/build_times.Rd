@@ -15,7 +15,8 @@ character strings. If the \code{tidyselect} package is installed,
 you can also supply \code{dplyr}-style \code{tidyselect}
 commands such as \code{starts_with()}, \code{ends_with()}, and \code{one_of()}.}
 
-\item{path}{Path to a \code{drake} cache or NULL.}
+\item{path}{Path to a \code{drake} cache
+(usually a hidden \code{.drake/} folder) or \code{NULL}.}
 
 \item{search}{Deprecated.}
 

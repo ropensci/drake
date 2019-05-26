@@ -24,7 +24,8 @@ from \code{make()}
 are removed. If \code{TRUE}, the whole cache is removed, including
 session metadata, etc.}
 
-\item{path}{Path to a \code{drake} cache or NULL.}
+\item{path}{Path to a \code{drake} cache
+(usually a hidden \code{.drake/} folder) or \code{NULL}.}
 
 \item{search}{Deprecated.}
 

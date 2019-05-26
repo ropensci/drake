@@ -10,7 +10,8 @@ drake_get_session_info(path = NULL, search = NULL,
   verbose = 1L)
 }
 \arguments{
-\item{path}{Path to a \code{drake} cache or NULL.}
+\item{path}{Path to a \code{drake} cache
+(usually a hidden \code{.drake/} folder) or \code{NULL}.}
 
 \item{search}{Deprecated.}
 

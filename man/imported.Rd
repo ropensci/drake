@@ -14,7 +14,8 @@ and ignore imported objects. Since all your functions and
 all their global variables are imported, the full list of
 imported objects could get really cumbersome.}
 
-\item{path}{Path to a \code{drake} cache or NULL.}
+\item{path}{Path to a \code{drake} cache
+(usually a hidden \code{.drake/} folder) or \code{NULL}.}
 
 \item{search}{Deprecated.}
 

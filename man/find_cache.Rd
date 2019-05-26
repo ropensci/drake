@@ -4,7 +4,7 @@
 \alias{find_cache}
 \title{Search up the file system for the nearest drake cache.}
 \usage{
-find_cache(path = NULL, dir = NULL, directory = NULL)
+find_cache(path = getwd(), dir = NULL, directory = NULL)
 }
 \arguments{
 \item{path}{Starting path for search back for the cache.
@@ -20,7 +20,7 @@ if no cache is found.
 }
 \description{
 Only works if the cache is a file system in a
-hidden folder named \code{.drake} (default).
+hidden folder named \code{.drake/} (default).
 }
 \examples{
 \dontrun{

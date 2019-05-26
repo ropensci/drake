@@ -26,7 +26,8 @@ object.}
 as a character or a symbol
 (just like \code{character.only} in \code{\link[=library]{library()}}).}
 
-\item{path}{Path to a \code{drake} cache or NULL.}
+\item{path}{Path to a \code{drake} cache
+(usually a hidden \code{.drake/} folder) or \code{NULL}.}
 
 \item{search}{Deprecated.}
 

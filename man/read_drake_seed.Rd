@@ -8,7 +8,8 @@ read_drake_seed(path = NULL, search = NULL, cache = NULL,
   verbose = 1L)
 }
 \arguments{
-\item{path}{Path to a \code{drake} cache or NULL.}
+\item{path}{Path to a \code{drake} cache
+(usually a hidden \code{.drake/} folder) or \code{NULL}.}
 
 \item{search}{Deprecated.}
 

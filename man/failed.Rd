@@ -9,7 +9,8 @@ failed(path = NULL, search = NULL, cache = drake::drake_cache(path =
   path, verbose = verbose), verbose = 1L, upstream_only = NULL)
 }
 \arguments{
-\item{path}{Path to a \code{drake} cache or NULL.}
+\item{path}{Path to a \code{drake} cache
+(usually a hidden \code{.drake/} folder) or \code{NULL}.}
 
 \item{search}{Deprecated.}
 

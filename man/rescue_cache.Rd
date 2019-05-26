@@ -41,7 +41,7 @@ as a final step. See \code{\link[=drake_gc]{drake_gc()}} and \code{\link[=clean]
 for details.}
 }
 \value{
-The rescued drake/storr cache.
+Nothing.
 }
 \description{
 Sometimes, \code{storr} caches may have
