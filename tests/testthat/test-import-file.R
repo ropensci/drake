@@ -74,7 +74,7 @@ test_with_dir("drake_config() memoizes against knitr files (#887)", {
   plan <- drake_plan(
     a = TRUE,
     b = TRUE,
-    report_step = knitr_in("report.Rmd")
+    report_step = knitr_in("report1.Rmd", "report2.Rmd")
   )
   lines_a <- c(
     "---",
@@ -94,24 +94,28 @@ test_with_dir("drake_config() memoizes against knitr files (#887)", {
     "readd(b)",
     "```"
   )
-  writeLines(lines_a, "report.Rmd")
+  writeLines(lines_a, "report1.Rmd")
+  writeLines(lines_a, "report2.Rmd")
+  envir <- new.env(parent = globalenv())
   cache <- storr::storr_environment()
   for (i in 1:2) {
     config <- drake_config(
       plan,
+      envir = envir,
       cache = cache,
       session_info = FALSE
     )
   }
 
   # Now switch `a` to `b` in the report.
-  writeLines(lines_b, "report.Rmd")
+  writeLines(lines_b, "report2.Rmd")
   config <- drake_config(
     plan,
+    envir = envir,
     cache = cache,
     session_info = FALSE
   )
   deps <- deps_target(report_step, config)
-  expect_false("a" %in% deps$name)
+  expect_true("a" %in% deps$name)
   expect_true("b" %in% deps$name)
 })

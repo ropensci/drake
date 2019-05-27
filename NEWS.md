@@ -8,6 +8,7 @@ These changes are technically breaking changes, but they should only affect adva
 
 ## Bug fixes
 
+- Ensure `drake` recomputes `config$layout` when `knitr` reports change ([#887](https://github.com/ropensci/drake/issues/887)).
 - Do not rehash large imported files every `make()` ([#878](https://github.com/ropensci/drake/issues/878)).
 - Repair parsing of long tidy eval inputs in the DSL ([#878](https://github.com/ropensci/drake/issues/881)).
 - Clear up cache confusion when a custom cache exists adjacent to the default cache ([#883](https://github.com/ropensci/drake/issues/883)).
