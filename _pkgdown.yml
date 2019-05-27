@@ -45,6 +45,7 @@ reference:
   - '`r_drake_build`'
   - '`r_outdated`'
   - '`r_missed`'
+  - '`r_deps_target`'
   - '`r_drake_graph_info`'
   - '`r_vis_drake_graph`'
   - '`r_sankey_drake_graph`'

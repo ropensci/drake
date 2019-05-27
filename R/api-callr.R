@@ -90,8 +90,22 @@ r_make <- function(source = NULL, r_fn = NULL, r_args = list()) {
 #' @rdname r_make
 #' @export
 #' @inheritParams r_make
-r_drake_build <- function(..., source = NULL, r_fn = NULL, r_args = list()) {
-  r_drake(source, drake::drake_build, list(...), r_fn, r_args)
+#' @inheritParams drake_build
+r_drake_build <- function(
+  target,
+  character_only = FALSE,
+  ...,
+  source = NULL,
+  r_fn = NULL,
+  r_args = list()
+) {
+  d_args <- list(...)
+  if (!character_only) {
+    target <- as.character(substitute(target))
+  }
+  d_args$target <- target
+  d_args$character_only <- TRUE
+  r_drake(source, drake::drake_build, d_args, r_fn, r_args)
 }
 
 #' @rdname r_make
@@ -106,6 +120,27 @@ r_outdated <- function(..., source = NULL, r_fn = NULL, r_args = list()) {
 #' @inheritParams r_make
 r_missed <- function(..., source = NULL, r_fn = NULL, r_args = list()) {
   r_drake(source, drake::missed, list(...), r_fn, r_args)
+}
+
+#' @rdname r_make
+#' @export
+#' @inheritParams r_make
+#' @inheritParams deps_target
+r_deps_target <- function(
+  target,
+  character_only = FALSE,
+  ...,
+  source = NULL,
+  r_fn = NULL,
+  r_args = list()
+) {
+  d_args <- list(...)
+  if (!character_only) {
+    target <- as.character(substitute(target))
+  }
+  d_args$target <- target
+  d_args$character_only <- TRUE
+  r_drake(source, drake::deps_target, d_args, r_fn, r_args)
 }
 
 #' @rdname r_make

@@ -5,6 +5,7 @@
 \alias{r_drake_build}
 \alias{r_outdated}
 \alias{r_missed}
+\alias{r_deps_target}
 \alias{r_drake_graph_info}
 \alias{r_vis_drake_graph}
 \alias{r_sankey_drake_graph}
@@ -16,11 +17,15 @@
 \usage{
 r_make(source = NULL, r_fn = NULL, r_args = list())
 
-r_drake_build(..., source = NULL, r_fn = NULL, r_args = list())
+r_drake_build(target, character_only = FALSE, ..., source = NULL,
+  r_fn = NULL, r_args = list())
 
 r_outdated(..., source = NULL, r_fn = NULL, r_args = list())
 
 r_missed(..., source = NULL, r_fn = NULL, r_args = list())
+
+r_deps_target(target, character_only = FALSE, ..., source = NULL,
+  r_fn = NULL, r_args = list())
 
 r_drake_graph_info(..., source = NULL, r_fn = NULL, r_args = list())
 
@@ -53,6 +58,12 @@ Example: \code{r_make(r_fn = callr::r)}.}
 
 \item{r_args}{List of arguments to \code{r_fn}, not including \code{func} or \code{args}.
 Example: \code{r_make(r_fn = callr::r_bg, r_args = list(stdout = "stdout.log"))}.}
+
+\item{target}{Name of the target.}
+
+\item{character_only}{Logical, whether \code{name} should be treated
+as a character or a symbol
+(just like \code{character.only} in \code{\link[=library]{library()}}).}
 
 \item{...}{Arguments to the inner function. For example, if you want to call
 \code{\link[=r_vis_drake_graph]{r_vis_drake_graph()}}, the inner function is \code{\link[=vis_drake_graph]{vis_drake_graph()}}, and
