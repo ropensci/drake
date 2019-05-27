@@ -13,6 +13,7 @@ These changes are technically breaking changes, but they should only affect adva
 - Repair parsing of long tidy eval inputs in the DSL ([#878](https://github.com/ropensci/drake/issues/881)).
 - Clear up cache confusion when a custom cache exists adjacent to the default cache ([#883](https://github.com/ropensci/drake/issues/883)).
 - Accept targets as symbols in `r_drake_build()`.
+- Log progress during `r_make()` ([#889](https://github.com/ropensci/drake/issues/889)).
 
 ## New features
 
