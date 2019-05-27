@@ -68,3 +68,50 @@ test_with_dir("same with an imported directory", {
   expect_false(length(final0) == length(readd(final)))
 
 })
+
+test_with_dir("drake_config() memoizes against knitr files (#887)", {
+  # Setup
+  plan <- drake_plan(
+    a = TRUE,
+    b = TRUE,
+    report_step = knitr_in("report.Rmd")
+  )
+  lines_a <- c(
+    "---",
+    "title: abc",
+    "---",
+    "",
+    "```{r}",
+    "readd(a)",
+    "```"
+  )
+  lines_b <- c(
+    "---",
+    "title: abc",
+    "---",
+    "",
+    "```{r}",
+    "readd(b)",
+    "```"
+  )
+  writeLines(lines_a, "report.Rmd")
+  cache <- storr::storr_environment()
+  for (i in 1:2) {
+    config <- drake_config(
+      plan,
+      cache = cache,
+      session_info = FALSE
+    )
+  }
+
+  # Now switch `a` to `b` in the report.
+  writeLines(lines_b, "report.Rmd")
+  config <- drake_config(
+    plan,
+    cache = cache,
+    session_info = FALSE
+  )
+  deps <- deps_target(report_step, config)
+  expect_false("a" %in% deps$name)
+  expect_true("b" %in% deps$name)
+})
