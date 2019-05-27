@@ -205,6 +205,7 @@ make <- function(
     )
   }
   assert_config_not_plan(config)
+  config$running_make <- TRUE
   initialize_session(config = config)
   config$ht_get_hash <- ht_new() # Memoize getting hashes from the cache.
   on.exit(ht_clear(config$ht_get_hash)) # Needs to be empty afterwards.

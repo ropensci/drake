@@ -179,7 +179,10 @@ get_progress_single <- function(target, cache) {
 }
 
 set_progress <- function(target, meta, value, config) {
-  if (!config$log_progress || (meta$imported %||% FALSE)) {
+  skip_progress <- !identical(config$running_make, TRUE) ||
+    !config$log_progress ||
+    (meta$imported %||% FALSE)
+  if (skip_progress) {
     return()
   }
   config$cache$duplicate(

@@ -408,7 +408,7 @@ drake_config <- function(
   elapsed = Inf,
   retries = 0,
   force = FALSE,
-  log_progress = FALSE,
+  log_progress = TRUE,
   graph = NULL,
   trigger = drake::trigger(),
   skip_targets = FALSE,
