@@ -1458,8 +1458,8 @@ test_with_dir("reduce_by()", suppressWarnings({
 
 test_with_dir("get_cache", {
   make(drake_plan(x = 1), session_info = FALSE)
-  tmp1 <- get_cache(search = TRUE)
-  tmp2 <- get_cache(search = FALSE)
+  tmp1 <- expect_warning(get_cache(search = TRUE), regexp = "deprecated")
+  tmp2 <- expect_warning(get_cache(search = FALSE), regexp = "deprecated")
   expect_true(inherits(tmp1, "storr"))
   expect_true(inherits(tmp2, "storr"))
 })
