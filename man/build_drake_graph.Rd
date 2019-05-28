@@ -51,7 +51,13 @@ For details, visit
 
 \item{console_log_file}{Optional character scalar of a file name or
 connection object (such as \code{stdout()}) to dump maximally verbose
-log information for \code{\link[=make]{make()}}. Independent of the \code{verbose} argument.}
+log information for \code{\link[=make]{make()}} and other functions (all functions that
+accept a \code{config} argument, plus \code{drake_config()}).
+The \code{console_log_file} argument is
+independent of the \code{verbose} argument.
+If you choose to use a text file as the console log,
+it will persist over multiple function calls
+until you delete it manually.}
 
 \item{trigger}{Name of the trigger to apply to all targets.
 Ignored if \code{plan} has a \code{trigger} column.

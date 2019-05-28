@@ -286,7 +286,13 @@
 #'
 #' @param console_log_file Optional character scalar of a file name or
 #'   connection object (such as `stdout()`) to dump maximally verbose
-#'   log information for [make()]. Independent of the `verbose` argument.
+#'   log information for [make()] and other functions (all functions that
+#'   accept a `config` argument, plus `drake_config()`).
+#'   The `console_log_file` argument is
+#'   independent of the `verbose` argument.
+#'   If you choose to use a text file as the console log,
+#'   it will persist over multiple function calls
+#'   until you delete it manually.
 #'
 #' @param ensure_workers Logical, whether the master process
 #'   should wait for the workers to post before assigning them
