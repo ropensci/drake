@@ -28,6 +28,7 @@ create_drake_layout <- function(
     config$cache,
     imports_kernel
   )
+  knitr_hash <- cdl_get_knitr_hash(config)
   command_layout <- memo_expr(
     cdl_analyze_commands(config),
     config$cache,
@@ -35,7 +36,7 @@ create_drake_layout <- function(
     config$trigger,
     import_layout,
     imports_kernel,
-    cdl_get_knitr_hash(config)
+    knitr_hash
   )
   cdl_set_knitr_files(config = config, layout = command_layout)
   c(import_layout, command_layout)
@@ -170,10 +171,11 @@ cdl_prepare_layout <- function(config, layout){
 
 # https://github.com/ropensci/drake/issues/887 # nolint
 cdl_set_knitr_files <- function(config, layout) {
+  log_msg("set knitr files", config = config)
   knitr_files <- lightly_parallelize(
     X = layout,
     FUN = function(x) {
-      decode_path(x$deps_build$knitr_in)
+      x$deps_build$knitr_in
     },
     jobs = config$jobs
   )
@@ -186,6 +188,7 @@ cdl_set_knitr_files <- function(config, layout) {
 }
 
 cdl_get_knitr_hash <- function(config, layout) {
+  log_msg("get knitr hash", config = config)
   if (!config$cache$exists(key = "knitr", namespace = "memoize")) {
     return(NA_character_)
   }
@@ -196,11 +199,9 @@ cdl_get_knitr_hash <- function(config, layout) {
   )
   knitr_hashes <- lightly_parallelize(
     X = knitr_files,
-    FUN = digest::digest,
+    FUN = storage_hash,
     jobs = config$jobs,
-    algo = config$cache$driver$hash_algorithm,
-    file = TRUE,
-    serialize = FALSE
+    config = config
   )
   knitr_hashes <- as.character(unlist(knitr_hashes))
   knitr_hashes <- paste0(knitr_hashes, collapse = "")

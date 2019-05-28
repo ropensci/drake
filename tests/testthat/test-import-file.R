@@ -118,4 +118,29 @@ test_with_dir("drake_config() memoizes against knitr files (#887)", {
   deps <- deps_target(report_step, config)
   expect_true("a" %in% deps$name)
   expect_true("b" %in% deps$name)
+
+  # make() first so file times and hashes are in the cache.
+  make(config = config)
+  writeLines(lines_b, "report1.Rmd")
+  config <- drake_config(
+    plan,
+    envir = envir,
+    cache = cache,
+    session_info = FALSE
+  )
+  deps <- deps_target(report_step, config)
+  expect_false("a" %in% deps$name)
+  expect_true("b" %in% deps$name)
+
+  # check if things work if a knitr file is missing.
+  unlink("report1.Rmd")
+  expect_warning(
+    config <- drake_config(
+      plan,
+      envir = envir,
+      cache = cache,
+      session_info = FALSE
+    ),
+    regexp = "does not exist"
+  )
 })
