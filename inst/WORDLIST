@@ -50,6 +50,7 @@ deps
 dereferenced
 deterministically
 devtools
+discoverability
 Dobbyn
 dplyr
 DSL
@@ -155,6 +156,8 @@ Quickstart
 RDS
 README
 Recombinant
+reimagine
+reimagining
 reimplement
 replicability
 reproducibility
@@ -175,6 +178,7 @@ Sankey
 Saunak
 scalability
 scalable
+Schratz
 shinyapps
 Sina
 SLURM
@@ -218,6 +222,7 @@ whitelist
 widehat
 withTimeout
 wlandau
+workflowr
 YAML
 Yub
 zeromq

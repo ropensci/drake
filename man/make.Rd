@@ -293,11 +293,15 @@ Example: \code{make(parallelism = "Makefile", makefile_path = ".drake/.makefile"
 connection object (such as \code{stdout()}) to dump maximally verbose
 log information for \code{\link[=make]{make()}} and other functions (all functions that
 accept a \code{config} argument, plus \code{drake_config()}).
-The \code{console_log_file} argument is
-independent of the \code{verbose} argument.
 If you choose to use a text file as the console log,
 it will persist over multiple function calls
-until you delete it manually.}
+until you delete it manually.
+Fields in each row the log file, from left to right:
+- The node name (short host name) of the
+computer (from \code{Sys.info()["nodename"]}).
+- The process ID (from \code{Sys.getpid()}).
+- A timestamp with the date and time (in microseconds).
+- A brief description of what \code{drake} was doing.\code{ The fields are separated by pipe symbols (}"|"`).}
 
 \item{ensure_workers}{Logical, whether the master process
 should wait for the workers to post before assigning them

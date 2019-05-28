@@ -4,6 +4,7 @@
 <center>
 <img src="https://ropensci.github.io/drake/figures/infographic.svg" alt="infographic" align="center" style = "border: none; float: center;">
 </center>
+
 <table class="table">
 <thead>
 <tr class="header">
@@ -144,11 +145,6 @@ To set up a project, load your packages,
 library(drake)
 library(dplyr)
 library(ggplot2)
-#> Registered S3 methods overwritten by 'ggplot2':
-#>   method         from 
-#>   [.quosures     rlang
-#>   c.quosures     rlang
-#>   print.quosures rlang
 ```
 
 load your custom functions,
@@ -319,7 +315,7 @@ When it comes time to actually rerun the entire project, you have much
 more confidence. Starting over from scratch is trivially easy.
 
 ``` r
-clean()       # Remove the original author's results.
+clean()    # Remove the original author's results.
 make(plan) # Independently re-create the results from the code and input data.
 #> target raw_data
 #> target data
@@ -497,7 +493,17 @@ for details.
 
 # Similar work
 
-## GNU Make
+`drake` enhances reproducibility and high-performance computing, but not
+in all respects. [Literate programming](https://rmarkdown.rstudio.com/),
+[local library managers](https://rstudio.github.io/packrat),
+[containerization](https://www.docker.com/), and [strict session
+managers](https://github.com/tidyverse/reprex) offer more robust
+solutions in their respective domains. And for the problems `drake`
+*does* solve, it stands on the shoulders of the giants that came before.
+
+## Pipeline tools
+
+### GNU Make
 
 The original idea of a time-saving reproducible build system extends
 back at least as far as [GNU Make](https://www.gnu.org/software/make/),
@@ -526,146 +532,38 @@ website](https://kbroman.org/minimal_make/).
     `Makefile` at
     <https://github.com/kbroman/phyloQTLpaper/blob/master/Makefile>.
 
-There are several reasons for R users to prefer `drake` instead.
+Whereas [GNU Make](https://www.gnu.org/software/make/) is
+language-agnostic, `drake` is fundamentally designed for R.
 
-  - `drake` already has a
-    [Make](https://kbroman.org/minimal_make/)-powered parallel backend.
-    Just run `make(..., parallelism = "Makefile", jobs = 2)` to enjoy
-    most of the original benefits of
-    [Make](https://kbroman.org/minimal_make/) itself.
-  - Improved scalability. With
-    [Make](https://kbroman.org/minimal_make/), you must write a
-    potentially large and cumbersome
-    [Makefile](https://github.com/kbroman/preCCProbPaper/blob/master/Makefile)
-    by hand. But with `drake`, you can use [wildcard
-    templating](https://ropenscilabs.github.io/drake-manual/mtcars.html#generate-the-workflow-plan)
-    to automatically generate massive collections of targets with
-    minimal code.
-  - Lower overhead for light-weight tasks. For each
-    [Make](https://kbroman.org/minimal_make/) target that uses R, a
-    brand new R session must spawn. For projects with thousands of small
-    targets, that means more time may be spent loading R sessions than
-    doing the actual work. With `make(..., parallelism = "mclapply, jobs
-    = 4")`, `drake` launches 4 persistent workers up front and
-    efficiently processes the targets in R.
-  - Convenient organization of output. With
-    [Make](https://kbroman.org/minimal_make/), the user must save each
-    target as a file. `drake` saves all the results for you
-    automatically in a [storr cache](https://github.com/richfitz/storr)
-    so you do not have to micromanage the results.
-
-## Remake
-
-[drake](https://github.com/ropensci/drake) overlaps with its direct
-predecessor, [remake](https://github.com/richfitz/remake). In fact,
-[drake](https://github.com/ropensci/drake) owes its core ideas to
-[remake](https://github.com/richfitz/remake) and [Rich
-FitzJohn](https://github.com/richfitz/remake).
-[Remake](https://github.com/richfitz/remake)’s development repository
-lists several [real-world
-applications](https://github.com/richfitz/remake/blob/master/README.md#real-world-examples).
-[drake](https://github.com/ropensci/drake) surpasses
-[remake](https://github.com/richfitz/remake) in several important ways,
-including but not limited to the following.
-
-1.  High-performance computing.
-    [`Remake`](https://github.com/richfitz/remake) has no native
-    parallel computing support.
-    [`drake`](https://github.com/ropensci/drake), on the other hand, has
-    a thorough selection of parallel computing technologies and
-    scheduling algorithms. Thanks to
-    [`future`](github.com/HenrikBengtsson/future),
-    [`future.batchtools`](github.com/HenrikBengtsson/future.batchtools),
-    and [`batchtools`](github.com/mllg/batchtools), it is
-    straightforward to configure a
-    [`drake`](https://github.com/ropensci/drake) project for most
-    popular job schedulers, such as [SLURM](https://slurm.schedmd.com/),
-    [TORQUE](https://www.adaptivecomputing.com/products/torque/), and
-    the [Grid
-    Engine](https://www.oracle.com/technetwork/oem/grid-engine-166852.html),
-    as well as systems contained in [Docker
-    images](https://www.docker.com/).
-2.  A friendly interface. In
-    [`remake`](https://github.com/richfitz/remake), the user must
-    manually write a
-    [YAML](https://github.com/richfitz/remake/blob/master/doc/remake.yml)
-    configuration file to arrange the steps of a workflow, which leads
-    to some of the same scalability problems as
-    [Make](https://www.gnu.org/software/make/).
-    [`drake`](https://github.com/ropensci/drake)’s [domain-specific
+  - Instead of a
+    [Makefile](https://github.com/kbroman/preCCProbPaper/blob/master/Makefile),
+    `drake` supports an R-friendly [domain-specific
     language](https://ropenscilabs.github.io/drake-manual/plans.html#large-plans)
-    easily generates workflows at scale.
-3.  Thorough documentation. [`drake`](https://github.com/ropensci/drake)
-    contains [thorough user
-    manual](https://ropenscilabs.github.io/drake-manual/), a [reference
-    website](https://ropensci.github.io/drake/), a [comprehensive
-    README](https://github.com/ropensci/drake/blob/master/README.md),
-    examples in the help files of user-side functions, and [accessible
-    example code](https://github.com/wlandau/drake-examples) that users
-    can write with `drake::example_drake()`.
-4.  Active maintenance. [`drake`](https://github.com/ropensci/drake) is
-    actively developed and maintained, and
-    [issues](https://github.com/ropensci/drake/issues) are usually
-    addressed promptly.
-5.  Presence on CRAN. At the time of writing,
-    [`drake`](https://github.com/ropensci/drake) is [available on
-    CRAN](https://cran.r-project.org/package=drake), but
-    [`remake`](https://github.com/richfitz/remake) is not.
+    for declaring targets.
+  - Targets in [GNU Make](https://www.gnu.org/software/make/) are files,
+    whereas targets in `drake` are arbitrary variables in memory.
+    (`drake` does have opt-in support for files via `file_out()`,
+    `file_in()`, and `knitr_in()`.) `drake` caches these objects in its
+    own [storage system](https://github.com/richfitz/storr) so R users
+    rarely have to think about output files.
 
-## Memoise
+### Remake
 
-Memoization is the strategic caching of the return values of functions.
-Every time a memoized function is called with a new set of arguments,
-the return value is saved for future use. Later, whenever the same
-function is called with the same arguments, the previous return value is
-salvaged, and the function call is skipped to save time. The [memoise
-package](https://github.com/r-lib/memoise) is an excellent
-implementation of memoization in R.
+[remake](https://github.com/richfitz/remake) itself is no longer
+maintained, but its founding design goals and principles live on through
+[drake](https://github.com/ropensci/drake). In fact,
+[drake](https://github.com/ropensci/drake) is a direct reimagining of
+[remake](https://github.com/richfitz/remake) with enhanced scalability,
+reproducibility, high-performance computing, visualization, and
+documentation.
 
-However, memoization does not go far enough. In reality, the return
-value of a function depends not only on the function body and the
-arguments, but also on any nested functions and global variables, the
-dependencies of those dependencies, and so on upstream. `drake`
-surpasses [memoise](https://github.com/r-lib/memoise) because it uses
-the *entire dependency network graph* of a project to decide which
-pieces need to be rebuilt and which ones can be skipped.
-
-## Knitr
-
-Much of the R community uses [knitr](https://yihui.name/knitr/) for
-reproducible research. The idea is to intersperse code chunks in an [R
-Markdown](https://rmarkdown.rstudio.com/) or `*.Rnw` file and then
-generate a dynamic report that weaves together code, output, and prose.
-[Knitr](https://yihui.name/knitr/) is not designed to be a serious
-[pipeline toolkit](https://github.com/pditommaso/awesome-pipeline), and
-it should not be the primary computational engine for medium to large
-data analysis projects.
-
-1.  [Knitr](https://yihui.name/knitr/) scales far worse than
-    [Make](https://www.gnu.org/software/make/) or
-    [remake](https://github.com/richfitz/remake). The whole point is to
-    consolidate output and prose, so it deliberately lacks the essential
-    modularity.
-2.  There is no obvious high-performance computing support.
-3.  While there is a way to skip chunks that are already up to date
-    (with code chunk options `cache` and `autodep`), this functionality
-    is not the focus of [knitr](https://yihui.name/knitr/). It is
-    deactivated by default, and
-    [remake](https://github.com/richfitz/remake) and `drake` are more
-    dependable ways to skip work that is already up to date.
-
-`drake` was designed to manage the entire workflow with
-[knitr](https://yihui.name/knitr/) reports as targets. The strategy is
-analogous for [knitr](https://yihui.name/knitr/) reports within
-[remake](https://github.com/richfitz/remake) projects.
-
-## Factual’s Drake
+### Factual’s Drake
 
 [Factual’s Drake](https://github.com/Factual/drake) is similar in
 concept, but the development effort is completely unrelated to the
 [drake R package](https://github.com/ropensci/drake).
 
-## Other pipeline toolkits
+### Other pipeline tools
 
 There are [countless other successful pipeline
 toolkits](https://github.com/pditommaso/awesome-pipeline). The `drake`
@@ -673,6 +571,69 @@ package distinguishes itself with its R-focused approach,
 Tidyverse-friendly interface, and a [thorough selection of parallel
 computing technologies and scheduling
 algorithms](https://ropenscilabs.github.io/drake-manual/hpc.html).
+
+## Memoization
+
+Memoization is the strategic caching of the return values of functions.
+It is a lightweight approach to the core problem that `drake` and other
+pipeline tools are trying to solve. Every time a memoized function is
+called with a new set of arguments, the return value is saved for future
+use. Later, whenever the same function is called with the same
+arguments, the previous return value is salvaged, and the function call
+is skipped to save time. The
+[`memoise`](https://github.com/r-lib/memoise) package is the primary
+implementation of memoization in R.
+
+Memoization saves time for small projects, but it arguably does not go
+far enough for large reproducible pipelines. In reality, the return
+value of a function depends not only on the function body and the
+arguments, but also on any nested functions and global variables, the
+dependencies of those dependencies, and so on upstream. `drake` tracks
+this deeper context, while [memoise](https://github.com/r-lib/memoise)
+does not.
+
+## Literate programming
+
+[Literate programming](https://rmarkdown.rstudio.com/) is the practice
+of narrating code in plain vernacular. The goal is to communicate the
+research process clearly, transparently, and reproducibly. Whereas
+commented code is still mostly code, literate
+[knitr](https://yihui.name/knitr/) / [R
+Markdown](https://rmarkdown.rstudio.com/) reports can become websites,
+presentation slides, lecture notes, serious scientific manuscripts, and
+even books.
+
+### knitr and R Markdown
+
+`drake` and [knitr](https://yihui.name/knitr/) are symbiotic. `drake`’s
+job is to manage large computation and orchestrate the demanding tasks
+of a complex data analysis pipeline.
+[knitr](https://yihui.name/knitr/)’s job is to communicate those
+expensive results after `drake` computes them.
+[knitr](https://yihui.name/knitr/) / [R
+Markdown](https://rmarkdown.rstudio.com/) reports are small pieces of an
+overarching `drake` pipeline. They should focus on communication, and
+they should do as little computation as possible.
+
+To insert a [knitr](https://yihui.name/knitr/) report in a `drake`
+pipeline, use the `knitr_in()` function inside your [`drake`
+plan](https://ropenscilabs.github.io/drake-manual/plans.html), and use
+`loadd()` and `readd()` to refer to targets in the report itself. See an
+[example
+here](https://github.com/wlandau/drake-examples/tree/master/main).
+
+### workflowr
+
+The [`workflowr`](https://github.com/jdblischak/workflowr) package is a
+project manager that focuses on literate programming, sharing over the
+web, file organization, and version control. Its brand of
+reproducibility is all about transparency, communication, and
+discoverability. For an example of
+[`workflowr`](https://github.com/jdblischak/workflowr) and `drake`
+working together, see [this machine learning
+project](https://2019-feature-selection.pjs-web.de/report-defoliation.html)
+by [Patrick Schratz](https://github.com/pat-s)
+([source](https://github.com/pat-s/2019-feature-selection)).
 
 # Acknowledgements
 
