@@ -56,6 +56,8 @@ vis_drake_graph <- function(
   collapse = TRUE,
   ...
 ) {
+  log_msg("begin vis_drake_graph()", config = config)
+  on.exit(log_msg("end vis_drake_graph()", config = config), add = TRUE)
   assert_pkg("visNetwork")
   graph_info <- drake_graph_info(
     config = config,

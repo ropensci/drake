@@ -68,6 +68,8 @@ deps_target <- function(
   config,
   character_only = FALSE
 ) {
+  log_msg("begin deps_target()", config = config)
+  on.exit(log_msg("end deps_target()", config = config), add = TRUE)
   if (!character_only) {
     target <- as.character(substitute(target))
   }

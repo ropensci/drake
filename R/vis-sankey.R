@@ -52,6 +52,8 @@ sankey_drake_graph <- function(
   show_output_files = TRUE,
   ...
 ) {
+  log_msg("begin sankey_drake_graph()", config = config)
+  on.exit(log_msg("end sankey_drake_graph()", config = config), add = TRUE)
   assert_pkg("networkD3")
   graph_info <- drake_graph_info(
     config = config,

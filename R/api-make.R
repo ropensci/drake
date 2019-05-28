@@ -153,6 +153,10 @@ make <- function(
   layout = NULL,
   lock_envir = TRUE
 ) {
+  log_msg(
+    "begin make()",
+    config = config %||% list(console_log_file = console_log_file)
+  )
   force(envir)
   if (is.null(config)) {
     config <- drake_config(
@@ -226,5 +230,6 @@ make <- function(
     process_targets(config)
   }
   conclude_session(config)
+  log_msg("end make()", config = config)
   invisible()
 }

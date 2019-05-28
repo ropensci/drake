@@ -46,6 +46,8 @@ outdated <-  function(
   make_imports = TRUE,
   do_prework = TRUE
 ) {
+  log_msg("begin outdated()", config = config)
+  on.exit(log_msg("end outdated()", config = config), add = TRUE)
   assert_config_not_plan(config)
   if (do_prework) {
     do_prework(config = config, verbose_packages = config$verbose)
@@ -116,6 +118,8 @@ first_outdated <- function(config) {
 #' })
 #' }
 missed <- function(config) {
+  log_msg("begin missed()", config = config)
+  on.exit(log_msg("end missed()", config = config), add = TRUE)
   assert_config_not_plan(config)
   imports <- all_imports(config)
   is_missing <- lightly_parallelize(

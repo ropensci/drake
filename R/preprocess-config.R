@@ -433,6 +433,10 @@ drake_config <- function(
   layout = NULL,
   lock_envir = TRUE
 ) {
+  log_msg(
+    "begin drake_config()",
+    config = list(console_log_file = console_log_file)
+  )
   deprecate_fetch_cache(fetch_cache)
   if (!is.null(hook)) {
     warning(
@@ -516,7 +520,6 @@ drake_config <- function(
   plan_checks(plan)
   targets <- sanitize_targets(targets, plan)
   force(envir)
-  unlink(console_log_file)
   trigger <- convert_old_trigger(trigger)
   sleep <- `environment<-`(sleep, new.env(parent = globalenv()))
   if (is.null(cache)) {
@@ -602,6 +605,7 @@ drake_config <- function(
   )
   out <- enforce_compatible_config(out)
   config_checks(out)
+  log_msg("end drake_config()", config = out)
   out
 }
 

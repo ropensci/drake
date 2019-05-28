@@ -1,4 +1,5 @@
 log_msg <- function(..., config, tier = 2L, color = colors["default"]) {
+  assert_config_not_plan(config)
   drake_log(..., config = config)
   if (is.null(config$verbose) || as.integer(config$verbose) < tier) {
     return()
@@ -24,7 +25,7 @@ drake_log <- function(..., config) {
     return()
   }
   write(
-    x = paste(microtimestamp(), "|", ...),
+    x = paste("PID", Sys.getpid(), "|", microtimestamp(), "|", ...),
     file = config$console_log_file,
     append = TRUE
   )
