@@ -26,7 +26,7 @@ These changes are technically breaking changes, but they should only affect adva
 - Deprecate `get_cache()` in favor of `drake_cache()`.
 - Show the path to the cache in the `clean()` menu prompt.
 - Stop removing the console log file on each call to `drake_config()`.
-- Log the process ID in the console log file.
+- Log the node name (short host name) and process ID in the console log file.
 - Log the name of the calling function in the console log file, e.g. "begin make()" and "end make()". Applies to all functions that accept a `config` argument.
 
 # Version 7.3.0

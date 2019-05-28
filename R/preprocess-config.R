@@ -288,11 +288,16 @@
 #'   connection object (such as `stdout()`) to dump maximally verbose
 #'   log information for [make()] and other functions (all functions that
 #'   accept a `config` argument, plus `drake_config()`).
-#'   The `console_log_file` argument is
-#'   independent of the `verbose` argument.
 #'   If you choose to use a text file as the console log,
 #'   it will persist over multiple function calls
 #'   until you delete it manually.
+#'   Fields in each row the log file, from left to right:
+#'       - The node name (short host name) of the
+#'         computer (from `Sys.info()["nodename"]`).
+#'       - The process ID (from `Sys.getpid()`).
+#'       - A timestamp with the date and time (in microseconds).
+#'       - A brief description of what `drake` was doing.`
+#'   The fields are separated by pipe symbols (`"|"`).
 #'
 #' @param ensure_workers Logical, whether the master process
 #'   should wait for the workers to post before assigning them

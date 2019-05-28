@@ -24,11 +24,16 @@ drake_log <- function(..., config) {
   if (is.null(config$console_log_file)) {
     return()
   }
-  write(
-    x = paste("PID", Sys.getpid(), "|", microtimestamp(), "|", ...),
-    file = config$console_log_file,
-    append = TRUE
+  msg <- paste(
+    Sys.info()["nodename"],
+    "|",
+    Sys.getpid(),
+    "|",
+    microtimestamp(),
+    "|",
+    ...
   )
+  write(x = msg, file = config$console_log_file, append = TRUE)
   invisible()
 }
 
