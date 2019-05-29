@@ -1,3 +1,18 @@
+Name: Run a drake workflow
+Description: Calls r_make(). Requries a `_drake.R` script.
+Binding: rs_addin_r_make
+Interactive: false
+
+Name: Visualize a drake workflow
+Description: Calls r_vis_drake_graph(). Requries a `_drake.R` script.
+Binding: rs_addin_r_vis_drake_graph
+Interactive: false
+
+Name: See outdated drake targets
+Description: Calls r_outdated(). Requries a `_drake.R` script.
+Binding: rs_addin_r_outdated
+Interactive: false
+
 Name: loadd target at cursor
 Description: Load the target identified by the symbol under the cursor position from the drake cache.
 Binding: rs_addin_loadd

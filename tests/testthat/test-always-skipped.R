@@ -257,4 +257,28 @@ test_with_dir("r_make() + multicore future", {
   expect_equal(r_outdated(), character(0))
 })
 
+test_with_dir("Output from the callr RStudio addins", {
+  skip_on_cran()
+  skip_if_not_installed("callr")
+  skip_if_not_installed("knitr")
+  if (identical(Sys.getenv("drake_skip_callr"), "true")) {
+    skip("Skipping callr tests.")
+  }
+  writeLines(
+    c(
+      "library(drake)",
+      "load_mtcars_example()",
+      "drake_config(my_plan, verbose = FALSE)"
+    ),
+    default_drake_source
+  )
+  r_args <- list(show = FALSE)
+  expect_true(length(rs_addin_r_outdated(r_args)) > 1) # Should print.
+  rs_addin_r_make(r_args)
+  expect_equal(rs_addin_r_outdated(r_args), character(0)) # Should print.
+  skip_if_not_installed("visNetwork")
+  graph <- rs_addin_r_vis_drake_graph(r_args) # Should show a graph.
+  expect_true(inherits(graph, "visNetwork"))
+})
+
 }

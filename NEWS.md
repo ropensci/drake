@@ -20,6 +20,7 @@ These changes are technically breaking changes, but they should only affect adva
 - Add `drake_slice()` to help split data across multiple targets. Related: [#77](https://github.com/ropensci/drake/issues/77), [#685](https://github.com/ropensci/drake/issues/685), [#833](https://github.com/ropensci/drake/issues/833).
 - Introduce a new `drake_cache()` function, which is now recommended instead of `get_cache()` ([#883](https://github.com/ropensci/drake/issues/883)).
 - Introduce a new `r_deps_target()` function.
+- Add RStudio addins for `r_make()`, `r_vis_drake_graph()`, and `r_outdated()` ([#892](https://github.com/ropensci/drake/issues/892)).
 
 ## Enhancements
 
