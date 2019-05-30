@@ -1,4 +1,4 @@
-# Walkthrough: https://ropenscilabs.github.io/drake-manual/index.html#intro
+# Walkthrough: https://ropenscilabs.github.io/drake-manual/walkthrough.html
 # Download the code: drake_example("main") # nolint
 
 # Load your packages and supporting functions into your session.
