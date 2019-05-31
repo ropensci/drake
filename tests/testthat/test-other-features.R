@@ -198,7 +198,11 @@ test_with_dir("targets can be partially specified", {
   config$targets <- "drake_target_1"
   testrun(config)
   expect_true(file.exists("intermediatefile.rds"))
-  expect_error(readd(final))
+  expect_error(
+    suppressWarnings( # https://github.com/richfitz/storr/issues/105 # nolint
+      readd(final)
+    )
+  )
   config$targets <- "final"
   testrun(config)
   expect_true(is.numeric(readd(final)))

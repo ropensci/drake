@@ -91,7 +91,7 @@ readd <- function(
   cache$get(
     standardize_key(target),
     namespace = namespace,
-    use_cache = TRUE
+    use_cache = FALSE
   )
 }
 
@@ -337,7 +337,11 @@ load_target <- function(target, cache, namespace, envir, verbose, lazy) {
 #' @export
 #' @inheritParams loadd
 eager_load_target <- function(target, cache, namespace, envir, verbose) {
-  value <- cache$get(key = target, namespace = namespace)
+  value <- cache$get(
+    key = target,
+    namespace = namespace,
+    use_cache = FALSE
+  )
   assign(x = target, value = value, envir = envir)
   local <- environment()
   rm(value, envir = local)
@@ -348,7 +352,11 @@ promise_load_target <- function(target, cache, namespace, envir, verbose) {
   eval_env <- environment()
   delayedAssign(
     x = target,
-    value = cache$get(key = target, namespace = namespace),
+    value = cache$get(
+      key = target,
+      namespace = namespace,
+      use_cache = FALSE
+    ),
     eval.env = eval_env,
     assign.env = envir
   )
@@ -376,7 +384,7 @@ bind_load_target <- function(target, cache, namespace, envir, verbose) {
       cache$get(
         key = as.character(key),
         namespace = as.character(namespace),
-        use_cache = TRUE
+        use_cache = FALSE
       )
     },
     cache = cache,

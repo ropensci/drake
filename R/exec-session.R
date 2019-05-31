@@ -80,6 +80,10 @@ conclude_session <- function(config) {
     jobs = config$jobs_preprocess
   )
   remove(list = names(config$eval), envir = config$eval)
+  config$cache$flush_cache()
+  if (config$garbage_collection) {
+    gc()
+  }
   invisible()
 }
 

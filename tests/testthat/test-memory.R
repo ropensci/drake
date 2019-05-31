@@ -7,7 +7,9 @@ test_with_dir("manage_memory() warns if loading missing deps", {
     memory_strategy = "lookahead"
   )
   capture.output(
-    manage_memory(targets = "b", config = con),
+    suppressWarnings( # https://github.com/richfitz/storr/issues/105 # nolint
+      manage_memory(targets = "b", config = con)
+    ),
     type = "message"
   )
   expect_false(exists("b", envir = con$eval, inherits = FALSE))
