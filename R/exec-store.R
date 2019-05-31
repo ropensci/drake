@@ -17,7 +17,10 @@ store_outputs <- function(target, value, meta, config) {
   }
   if (!is.null(meta$trigger$change)) {
     config$cache$set(
-      key = target, value = meta$trigger$value, namespace = "change"
+      key = target,
+      value = meta$trigger$value,
+      namespace = "change",
+      use_cache = FALSE
     )
     meta$trigger$value <- NULL
   }
@@ -79,14 +82,19 @@ finalize_storage <- function(target, value, meta, config, verbose) {
     meta = meta,
     config = config
   )
-  config$cache$set(key = target, value = meta, namespace = "meta")
+  config$cache$set(
+    key = target,
+    value = meta,
+    namespace = "meta",
+    use_cache = FALSE
+  )
   if (!meta$imported && verbose) {
     console_time(target, meta, config)
   }
 }
 
 store_object <- function(target, value, meta, config) {
-  config$cache$set(key = target, value = value)
+  config$cache$set(key = target, value = value, use_cache = FALSE)
 }
 
 store_file <- function(target, meta, config) {
