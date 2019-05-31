@@ -470,8 +470,14 @@ Functions such as \code{data()} belong in your setup scripts
 prior to \code{make()}, not in any functions or commands that get called
 during \code{make()} itself.
 
-To avoid environment-locking errors,
-you can run \code{make(plan, lock_envir = FALSE)}.
+For each target that is still problematic  (e.g.
+\url{https://github.com/rstudio/gt/issues/297})
+you can safely run the command in its own special \code{callr::r()} process.
+Example: \url{https://github.com/rstudio/gt/issues/297#issuecomment-497778735}. # nolint
+
+If that fails, you can run \code{make(plan, lock_envir = FALSE)}
+to suppress environment-locking for all targets.
+However, this is not usually recommended.
 There are legitimate use cases for \code{lock_envir = FALSE}
 (example: \url{https://ropenscilabs.github.io/drake-manual/hpc.html#parallel-computing-within-targets}) # nolint
 but most workflows should stick with the default \code{lock_envir = TRUE}.
