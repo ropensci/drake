@@ -29,7 +29,7 @@ These changes are technically breaking changes, but they should only affect adva
 - Stop removing the console log file on each call to `drake_config()`.
 - Log the node name (short host name) and process ID in the console log file.
 - Log the name of the calling function in the console log file, e.g. "begin make()" and "end make()". Applies to all functions that accept a `config` argument.
-- Memory management: set `use_cache` to `FALSE` in `storr` function calls for loading and reading targets. Also, at the end of `make()`, call `flush_cache()` (and then `gc()` if garbage collection is enabled).
+- Memory management: set `use_cache` to `FALSE` in `storr` function calls for saving and loading targets. Also, at the end of `make()`, call `flush_cache()` (and then `gc()` if garbage collection is enabled).
 
 # Version 7.3.0
 
