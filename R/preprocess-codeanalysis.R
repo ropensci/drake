@@ -70,7 +70,24 @@ analyze_assign <- function(expr, results, locals, allowed_globals) {
   expr <- match.call(definition = assign, call = expr)
   if (is.character(expr$x)) {
     ht_set(results$strings, expr$x)
-    if (is.null(expr$pos) || identical(expr$pos, formals(assign)$pos)) {
+    is_local <- is.null(expr$pos) || identical(expr$pos, formals(assign)$pos)
+    if (is_local) {
+      ht_set(locals, expr$x)
+    }
+  } else {
+    analyze_global(expr$x, results, locals, allowed_globals)
+  }
+  expr$x <- NULL
+  walk_call(expr, results, locals, allowed_globals)
+}
+
+analyze_delayed_assign <- function(expr, results, locals, allowed_globals) {
+  expr <- match.call(definition = delayedAssign, call = expr)
+  if (is.character(expr$x)) {
+    ht_set(results$strings, expr$x)
+    is_local <- is.null(expr$assign.env) ||
+      identical(expr$assign.env, formals(delayedAssign)$assign.env)
+    if (is_local) {
       ht_set(locals, expr$x)
     }
   } else {
@@ -159,8 +176,10 @@ walk_code <- function(expr, results, locals, allowed_globals) {
       analyze_for(expr, results, locals, allowed_globals)
     } else if (name == "function") {
       analyze_function(eval(expr), results, locals, allowed_globals)
-    } else if (name %in% c("assign", "delayedAssign")) {
+    } else if (name == "assign") {
       analyze_assign(expr, results, locals, allowed_globals)
+    } else if (name == "delayedAssign") {
+      analyze_delayed_assign(expr, results, locals, allowed_globals)
     } else if (name %in% loadd_fns) {
       analyze_loadd(expr, results)
     } else if (name %in% readd_fns) {

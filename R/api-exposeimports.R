@@ -106,11 +106,16 @@ expose_envir <- function(from, to, jobs, keep = names(from)) {
   lightly_parallelize(
     X = ls(from, all.names = TRUE),
     FUN = function(name) {
-      assign(
-        x = name,
-        envir = to,
-        value = `environment<-`(get(name, envir = from), from)
-      )
+      value <- get(name, envir = from)
+      if (typeof(value) == "closure") {
+        assign(
+          x = name,
+          envir = to,
+          value = `environment<-`(value, from)
+        )
+      } else {
+        assign(x = name, envir = to, value = value)
+      }
     },
     jobs = jobs
   )
