@@ -66,6 +66,7 @@ test_with_dir("local variable tests from the codetools package", {
   expect_equal(find_locals(quote(x <- y <- 1)), c("x", "y"))
   expect_equal(find_locals(quote(local(x <- 1))), character(0))
   expect_equal(find_locals(quote(assign(x, 3))), character(0))
+  expect_equal(find_locals(quote(delayedAssign(x, 3))), character(0))
   expect_equal(find_locals(quote(assign("x", 3))), "x")
   expect_equal(find_locals(quote(assign("x", 3, 4))), character(0))
 })
