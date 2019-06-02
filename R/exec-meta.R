@@ -169,8 +169,12 @@ rehash_dir <- function(dir, config) {
   )
 }
 
-should_rehash_storage <- function(filename, new_mtime, old_mtime,
-  size_cutoff) {
+should_rehash_storage <- function(
+  filename,
+  size_cutoff,
+  new_mtime,
+  old_mtime
+) {
   do_rehash <- storage_size(filename) < size_cutoff | new_mtime > old_mtime
   if (safe_is_na(do_rehash)) {
     do_rehash <- TRUE
@@ -208,9 +212,10 @@ storage_hash <- function(
   new_mtime <- storage_mtime(filename)
   do_rehash <- should_rehash_storage(
     filename = filename,
+    size_cutoff = size_cutoff,
     new_mtime = new_mtime,
-    old_mtime = old_mtime,
-    size_cutoff = size_cutoff)
+    old_mtime = old_mtime
+  )
   old_hash_exists <- config$cache$exists(key = target)
   if (do_rehash || !old_hash_exists) {
     rehash_storage(target = target, config = config)
