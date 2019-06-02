@@ -402,8 +402,12 @@ drake_cache_log <- function(
 
 single_cache_log <- function(key, cache) {
   hash <- cache$get_hash(key = key)
-  meta <- safe_get(key = key, namespace = "meta", config = list(cache = cache))
-  imported <- ifelse(is.list(meta), meta$imported, TRUE)
+  imported <- read_from_meta(
+    key = key,
+    field = "imported",
+    cache = cache
+  ) %||NA%
+    TRUE
   type <- ifelse(imported, "import", "target")
   weak_tibble(hash = hash, type = type, name = key)
 }
