@@ -85,7 +85,7 @@ finalize_storage <- function(target, meta, config) {
     namespace = "meta",
     use_cache = FALSE
   )
-  if (!meta$imported) {
+  if (!meta$imported && !is_encoded_path(target)) {
     console_time(target, meta, config)
   }
 }
@@ -137,15 +137,12 @@ store_failure <- function(target, meta, config) {
     value = "failed",
     config = config
   )
-  fields <- c(
-    "messages",
-    "warnings",
-    "error",
-    "imported",
-    "time_command",
-    "time_start"
-  )
-  fields <- intersect(fields, names(meta))
+  fields <- intersect(c("messages", "warnings", "error"), names(meta))
   meta <- meta[fields]
-  finalize_storage(target = target, meta = meta, config = config)
+  config$cache$set(
+    key = target,
+    value = meta,
+    namespace = "meta",
+    use_cache = FALSE
+  )
 }
