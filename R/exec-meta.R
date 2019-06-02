@@ -192,34 +192,23 @@ storage_hash <- function(
   if (!file.exists(filename)) {
     return(NA_character_)
   }
-  old_mtime <- ifelse(
-    exists_in_subspace(
-      key = target,
-      subspace = "mtime",
-      namespace = "meta",
-      cache = config$cache
-    ),
-    get_from_subspace(
-      key = target,
-      subspace = "mtime",
-      namespace = "meta",
-      cache = config$cache
-    ),
-    -Inf
-  )
-  new_mtime <- storage_mtime(filename)
-  do_rehash <- should_rehash_storage(
+  not_cached <- !config$cache$exists(key = target) ||
+    !config$cache$exists(key = target, namespace = "meta")
+  if (not_cached) {
+    return(rehash_storage(target = target, config = config))
+  }
+  meta <- config$cache$get(key = target, namespace = "meta")
+  should_rehash <- should_rehash_storage(
     filename = filename,
     size_cutoff = size_cutoff,
-    new_mtime = new_mtime,
-    old_mtime = old_mtime
+    new_mtime = storage_mtime(filename),
+    old_mtime = meta$mtime %||% -Inf
   )
-  old_hash_exists <- config$cache$exists(key = target)
-  if (do_rehash || !old_hash_exists) {
-    rehash_storage(target = target, config = config)
-  } else {
+  ifelse (
+    should_rehash,
+    rehash_storage(target = target, config = config),
     config$cache$get(key = target)
-  }
+  )
 }
 
 storage_mtime <- function(x) {
