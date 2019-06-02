@@ -137,5 +137,15 @@ store_failure <- function(target, meta, config) {
     value = "failed",
     config = config
   )
+  fields <- c(
+    "messages",
+    "warnings",
+    "error",
+    "imported",
+    "time_command",
+    "time_start"
+  )
+  fields <- intersect(fields, names(meta))
+  meta <- meta[fields]
   finalize_storage(target = target, meta = meta, config = config)
 }
