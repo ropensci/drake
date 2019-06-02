@@ -175,11 +175,9 @@ should_rehash_storage <- function(
   new_mtime,
   old_mtime
 ) {
-  do_rehash <- storage_size(filename) < size_cutoff | new_mtime > old_mtime
-  if (safe_is_na(do_rehash)) {
-    do_rehash <- TRUE
-  }
-  do_rehash
+  small <- (storage_size(filename) < size_cutoff) %||NA% TRUE
+  touched <- (new_mtime > old_mtime) %||NA% TRUE
+  small || touched
 }
 
 storage_hash <- function(
