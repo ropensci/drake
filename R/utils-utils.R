@@ -1,3 +1,6 @@
+# From testthat
+drake_tol <- .Machine$double.eps ^ 0.5
+
 # From lintr
 `%||%` <- function(x, y) {
   if (is.null(x) || length(x) <= 0) {

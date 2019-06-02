@@ -33,6 +33,7 @@ These changes are technically breaking changes, but they should only affect adva
 - Log the name of the calling function in the console log file, e.g. "begin make()" and "end make()". Applies to all functions that accept a `config` argument.
 - Memory management: set `use_cache` to `FALSE` in `storr` function calls for saving and loading targets. Also, at the end of `make()`, call `flush_cache()` (and then `gc()` if garbage collection is enabled).
 - Mention `callr::r()` within commands as [a safe alternative to `lock_envir = FALSE`](https://github.com/rstudio/gt/issues/297#issuecomment-497778735) in the self-invalidation section of the `make()` help file.
+- Use file size to help decide when to rehash `file_in()`/`file_out()`/`knitr_in()` files. We now rehash files if the file is less than 100 KB or the time stamp changed or the **file size** changed.
 
 # Version 7.3.0
 

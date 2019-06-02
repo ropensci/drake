@@ -48,60 +48,71 @@ test_with_dir("same with a directory", {
   }
 })
 
-test_with_dir("stress test hashing decisions", {
+test_with_dir("hashing decisions", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   file <- "nobodyhome"
-  expect_false(file.exists(file))
-  expect_true(should_rehash_storage(
-    filename = file, new_mtime = 0, old_mtime = 0, size_cutoff = Inf))
-  expect_true(should_rehash_storage(
-    filename = file, new_mtime = 1, old_mtime = 0, size_cutoff = Inf))
-  expect_true(should_rehash_storage(
-    filename = file, new_mtime = 0, old_mtime = 1, size_cutoff = Inf))
-  expect_true(should_rehash_storage(
-    filename = file, new_mtime = 0, old_mtime = 0, size_cutoff = -1))
-  expect_true(should_rehash_storage(
-    filename = file, new_mtime = 1, old_mtime = 0, size_cutoff = -1))
-  expect_true(should_rehash_storage(
-    filename = file, new_mtime = 0, old_mtime = 1, size_cutoff = -1))
-})
-
-test_with_dir("more stress testing of hashing decisions", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  file <- "input.rds"
-  saveRDS(1, file = file)
-  expect_true(file.exists(file))
-  expect_true(should_rehash_storage(
-    filename = file, new_mtime = 1, old_mtime = 0, size_cutoff = Inf))
-  expect_true(should_rehash_storage(
-    filename = file, new_mtime = 0, old_mtime = 1, size_cutoff = Inf))
-  expect_true(should_rehash_storage(
-    filename = file, new_mtime = 0, old_mtime = 0, size_cutoff = Inf))
-  expect_true(should_rehash_storage(
-    filename = file, new_mtime = 1, old_mtime = 0, size_cutoff = -1))
-  expect_false(should_rehash_storage(
-    filename = file, new_mtime = 0, old_mtime = 1, size_cutoff = -1))
-  expect_false(should_rehash_storage(
-    filename = file, new_mtime = 0, old_mtime = 0, size_cutoff = -1))
-})
-
-test_with_dir("same with a directory", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  file <- "myinputdir"
-  dir.create(file)
-  writeLines("12sddsfff3", "myinputdir/a.txt")
-  writeLines("4sdfasdf56", "myinputdir/b.txt")
-  expect_true(file.exists(file))
-  expect_true(should_rehash_storage(
-    filename = file, new_mtime = 1, old_mtime = 0, size_cutoff = Inf))
-  expect_true(should_rehash_storage(
-    filename = file, new_mtime = 0, old_mtime = 1, size_cutoff = Inf))
-  expect_true(should_rehash_storage(
-    filename = file, new_mtime = 0, old_mtime = 0, size_cutoff = Inf))
-  expect_true(should_rehash_storage(
-    filename = file, new_mtime = 1, old_mtime = 0, size_cutoff = -1))
-  expect_false(should_rehash_storage(
-    filename = file, new_mtime = 0, old_mtime = 1, size_cutoff = -1))
-  expect_false(should_rehash_storage(
-    filename = file, new_mtime = 0, old_mtime = 0, size_cutoff = -1))
+  expect_true(
+    should_rehash_storage(
+      filename = file,
+      new_mtime = 0,
+      old_mtime = 0,
+      old_size = 0,
+      new_size = 0,
+      size_cutoff = Inf
+    )
+  )
+  for (i in c(0, 1)) {
+    expect_false(
+      should_rehash_storage(
+        filename = file,
+        new_mtime = 0,
+        old_mtime = i,
+        old_size = 0,
+        new_size = 0,
+        size_cutoff = -Inf
+      )
+    )
+    expect_true(
+      should_rehash_storage(
+        filename = file,
+        new_mtime = 0,
+        old_mtime = i,
+        old_size = 0,
+        new_size = 0,
+        size_cutoff = Inf
+      )
+    )
+  }
+  for (s in c(-Inf, Inf)) {
+    expect_true(
+      should_rehash_storage(
+        filename = file,
+        new_mtime = 1,
+        old_mtime = 0,
+        old_size = 0,
+        new_size = 0,
+        size_cutoff = s
+      )
+    )
+    expect_true(
+      should_rehash_storage(
+        filename = file,
+        new_mtime = 0,
+        old_mtime = 0,
+        old_size = 1,
+        new_size = 0,
+        size_cutoff = s
+      )
+    )
+    expect_true(
+      should_rehash_storage(
+        filename = file,
+        new_mtime = 0,
+        old_mtime = 0,
+        old_size = 0,
+        new_size = 1,
+        size_cutoff = s
+      )
+    )
+  }
 })

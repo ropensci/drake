@@ -19,7 +19,9 @@ drake_meta_ <- function(target, config) {
   }
   # For imported files.
   if (meta$isfile) {
-    meta$mtime <- storage_mtime(decode_path(target, config))
+    path <- decode_path(target, config)
+    meta$mtime <- storage_mtime(path)
+    meta$size <- storage_size(path)
   }
   if (meta$trigger$command) {
     meta$command <- layout$command_standardized
@@ -173,11 +175,14 @@ should_rehash_storage <- function(
   filename,
   size_cutoff,
   new_mtime,
-  old_mtime
+  old_mtime,
+  new_size,
+  old_size
 ) {
-  small <- (storage_size(filename) < size_cutoff) %||NA% TRUE
+  small <- (new_size < size_cutoff) %||NA% TRUE
   touched <- (new_mtime > old_mtime) %||NA% TRUE
-  small || touched
+  resized <- (abs(new_size - old_size) > drake_tol) %||NA% TRUE
+  small || touched || resized
 }
 
 storage_hash <- function(
@@ -202,7 +207,9 @@ storage_hash <- function(
     filename = filename,
     size_cutoff = size_cutoff,
     new_mtime = storage_mtime(filename),
-    old_mtime = meta$mtime %||% -Inf
+    old_mtime = meta$mtime %||% -Inf,
+    new_size = storage_size(filename),
+    old_size = meta$size
   )
   ifelse (
     should_rehash,
@@ -223,7 +230,15 @@ storage_size <- function(x) {
   if (dir.exists(x)) {
     dir_size(x)
   } else {
+    file_size(x)
+  }
+}
+
+file_size <- function(x) {
+  if (file.exists(x)) {
     file.size(x)
+  } else {
+    NA_real_
   }
 }
 
@@ -247,6 +262,6 @@ dir_size <- function(x) {
     recursive = TRUE,
     include.dirs = FALSE
   )
-  sizes <- vapply(files, file.size, FUN.VALUE = numeric(1))
+  sizes <- vapply(files, file_size, FUN.VALUE = numeric(1))
   max(sizes %||% 0)
 }
