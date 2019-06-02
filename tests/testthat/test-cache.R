@@ -197,34 +197,6 @@ test_with_dir("try to rescue non-existent stuff", {
   expect_silent(rescue_del(key = "no_key", cache = cache, namespace = "none"))
 })
 
-test_with_dir("subspaces", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  lst <- list_subspace(
-    subspace = "y", namespace = "x", cache = NULL, jobs = 1)
-  expect_equal(lst, character(0))
-  x <- storr::storr_rds("test")
-  lst <- list_subspace(
-    subspace = "y", namespace = "x", cache = x, jobs = 1)
-  expect_equal(lst, character(0))
-  set_in_subspaces(
-    key = "a",
-    values = 1,
-    namespace = "x",
-    subspaces = "y",
-    cache = x
-  )
-  set_in_subspaces(
-    key = "b",
-    values = 2,
-    namespace = "x",
-    subspaces = "y",
-    cache = x
-  )
-  lst <- list_subspace(
-    subspace = "y", namespace = "x", cache = x, jobs = 1)
-  expect_equal(sort(lst), c("a", "b"))
-})
-
 test_with_dir("drake_cache() can search", {
   dir.create(file.path("w"))
   dir.create(file.path("w", "x"))

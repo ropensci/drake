@@ -7,13 +7,9 @@ test_with_dir("can ignore a bad time", {
   make(x, verbose = 0L)
   cache <- drake_cache()
   expect_equal(nrow(build_times()), 2)
-  set_in_subspaces(
-    key = "a",
-    subspaces = "time_build",
-    namespace = "meta",
-    values = NA,
-    cache = cache
-  )
+  meta <- diagnose(a)
+  meta$time_build <- NA
+  cache$set(key = "a", value = meta, namespace = "meta")
   expect_equal(nrow(build_times()), 1)
 })
 
@@ -21,18 +17,13 @@ test_with_dir("proc_time runtimes can be fetched", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("lubridate")
   cache <- storr::storr_rds("cache")
-  key <- "x"
   t <- system.time({
     z <- 1
   })
-  set_in_subspaces(
-    key = key,
-    values = list(x = t),
-    subspaces = "time_build",
-    namespace = "meta",
-    cache = cache
-  )
-  y <- fetch_runtime(key = key, cache = cache, type = "build")
+  meta <- diagnose(x)
+  meta$time_build <- list(x = t)
+  cache$set(key = "x", value = meta, namespace = "meta")
+  y <- fetch_runtime(key = "x", cache = cache, type = "build")
   expect_true(nrow(y) > 0)
 })
 
