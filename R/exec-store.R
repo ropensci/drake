@@ -34,8 +34,7 @@ store_outputs <- function(target, value, meta, config) {
     target = target,
     value = value,
     meta = meta,
-    config = config,
-    verbose = TRUE
+    config = config
   )
   set_progress(
     target = target,
@@ -45,7 +44,7 @@ store_outputs <- function(target, value, meta, config) {
   )
 }
 
-store_single_output <- function(target, value, meta, config, verbose = FALSE) {
+store_single_output <- function(target, value, meta, config) {
   if (meta$isfile) {
     store_file(
       target = target,
@@ -69,14 +68,12 @@ store_single_output <- function(target, value, meta, config, verbose = FALSE) {
   }
   finalize_storage(
     target = target,
-    value = value,
     meta = meta,
-    config = config,
-    verbose = verbose
+    config = config
   )
 }
 
-finalize_storage <- function(target, value, meta, config, verbose) {
+finalize_storage <- function(target, meta, config) {
   meta <- finalize_times(
     target = target,
     meta = meta,
@@ -88,7 +85,7 @@ finalize_storage <- function(target, value, meta, config, verbose) {
     namespace = "meta",
     use_cache = FALSE
   )
-  if (!meta$imported && verbose) {
+  if (!meta$imported) {
     console_time(target, meta, config)
   }
 }
