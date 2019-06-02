@@ -89,12 +89,11 @@ build_times <- function(
 }
 
 fetch_runtime <- function(key, cache, type) {
-  meta <- safe_get(key = key, namespace = "meta", config = list(cache = cache))
-  if (is.list(meta)) {
-    x <- meta[[paste0("time_", type)]]
-  } else {
-    x <- NA
-  }
+  x <- read_from_meta(
+    key = key,
+    field = paste0("time_", type),
+    cache = cache
+  )
   if (is_bad_time(x)) {
     x <- empty_times()
   } else if (inherits(x, "proc_time")) {
