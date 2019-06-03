@@ -120,10 +120,9 @@ command_trigger <- function(target, meta, config) {
   if (is.null(meta$command)) {
     return(FALSE)
   }
-  command <- get_from_subspace(
+  command <- read_from_meta(
     key = target,
-    subspace = "command",
-    namespace = "meta",
+    field = "command",
     cache = config$cache
   )
   !identical(command, meta$command)
@@ -133,10 +132,9 @@ depend_trigger <- function(target, meta, config) {
   if (is.null(meta$dependency_hash)) {
     return(FALSE)
   }
-  dependency_hash <- get_from_subspace(
+  dependency_hash <- read_from_meta(
     key = target,
-    subspace = "dependency_hash",
-    namespace = "meta",
+    field = "dependency_hash",
     cache = config$cache
   )
   !identical(dependency_hash, meta$dependency_hash)
@@ -155,10 +153,9 @@ file_trigger <- function(target, meta, config) {
     }
   }
   for (hash_name in c("input_file_hash", "output_file_hash")) {
-    old_file_hash <- get_from_subspace(
+    old_file_hash <- read_from_meta(
       key = target,
-      subspace = hash_name,
-      namespace = "meta",
+      field = hash_name,
       cache = config$cache
     )
     if (!identical(old_file_hash, meta[[hash_name]])) {

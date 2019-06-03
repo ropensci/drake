@@ -89,10 +89,9 @@ build_times <- function(
 }
 
 fetch_runtime <- function(key, cache, type) {
-  x <- get_from_subspace(
+  x <- read_from_meta(
     key = key,
-    subspace = paste0("time_", type),
-    namespace = "meta",
+    field = paste0("time_", type),
     cache = cache
   )
   if (is_bad_time(x)) {
