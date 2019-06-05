@@ -213,9 +213,8 @@ walk_strings <- function(expr, ht) {
     walk_strings(formals(expr), ht)
     walk_strings(body(expr), ht)
   } else if (is.character(expr)) {
-    if (nzchar(expr)) {
-      ht_set(ht, expr)
-    }
+    expr <- Filter(x = expr, f = nzchar)
+    ht_set(ht, expr)
   } else if (is.pairlist(expr) || is_callish(expr)) {
     lapply(expr, walk_strings, ht = ht)
   }

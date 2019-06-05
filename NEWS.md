@@ -16,6 +16,7 @@ These changes are technically breaking changes, but they should only affect adva
 - Log progress during `r_make()` ([#889](https://github.com/ropensci/drake/issues/889)).
 - Repair `expose_imports()`: do not do the `environment<-` trick unless the object is a non-primitive function.
 - Use different static analyses of `assign()` vs `delayedAssign()`.
+- Fix a superfluous code analysis warning incurred by multiple `file_in()` files and other strings ([#896](https://github.com/ropensci/drake/issues/896)).
 
 ## New features
 
