@@ -250,33 +250,48 @@
 #' @param pruning_strategy Deprecated. See `memory_strategy`.
 #'
 #' @param memory_strategy Character scalar, name of the
-#'   strategy `drake` uses to manage targets in memory. For more direct
-#'   control over which targets `drake` keeps in memory, see the
-#'   help file examples of [drake_envir()]. The `memory_strategy` argument
-#'   to `make()` and `drake_config()` is an attempt at an automatic
-#'   catch-all solution. These are the choices.
+#'   strategy `drake` uses to load/unload a target's dependencies in memory.
+#'   You can give each target its own memory strategy,
+#'   (e.g. `drake_plan(x = 1, y = target(f(x), memory_strategy = "lookahead"))`)
+#'   to override the global memory strategy. Choices:
 #'
-#' - `"speed"`: Once a target is loaded in memory, just keep it there.
+#' - `"speed"`: Once a target is newly built or loaded in memory,
+#'   just keep it there.
 #'   This choice maximizes speed and hogs memory.
 #' - `"memory"`: Just before building each new target,
 #'   unload everything from memory except the target's direct dependencies.
+#'   After a target is built, keep it in memory until `drake` determines
+#'   they can be unloaded.
 #'   This option conserves memory, but it sacrifices speed because
 #'   each new target needs to reload
 #'   any previously unloaded targets from storage.
 #' - `"lookahead"`: Just before building each new target,
 #'   search the dependency graph to find targets that will not be
 #'   needed for the rest of the current `make()` session.
+#'   After a target is built, keep it in memory until the next
+#'   memory management stage.
 #'   In this mode, targets are only in memory if they need to be loaded,
 #'   and we avoid superfluous reads from the cache.
 #'   However, searching the graph takes time,
 #'   and it could even double the computational overhead for large projects.
+#' - `"unload"`: Just before building each new target,
+#'   unload all targets from memory.
+#'   After a target is built, **do not** keep it in memory.
+#'   This mode aggressively optimizes for both memory and speed,
+#'   but in commands and triggers,
+#'   you have to manually load any dependencies you need using `readd()`.
+#' - `"none"`: Do not manage memory at all.
+#'   Do not load or unload anything before building targets.
+#'   After a target is built, **do not** keep it in memory.
+#'   This mode aggressively optimizes for both memory and speed,
+#'   but in commands and triggers,
+#'   you have to manually load any dependencies you need using `readd()`.
 #'
-#' Each strategy has a weakness.
-#' `"speed"` is memory-hungry, `"memory"` wastes time reloading
-#' targets from storage, and `"lookahead"` wastes time
-#' traversing the entire dependency graph on every [make()]. For a better
-#' compromise and more control, see the examples in the help file
-#' of [drake_envir()].
+#' For even more direct
+#' control over which targets `drake` keeps in memory, see the
+#' help file examples of [drake_envir()].
+#' Also see the `garbage_collection` argument of `make()` and
+#' `drake_config()`.
 #'
 #' @param makefile_path Path to the `Makefile` for
 #'   `make(parallelism = "Makefile")`. If you set this argument to a

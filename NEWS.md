@@ -21,6 +21,8 @@ These changes are technically breaking changes, but they should only affect adva
 
 ## New features
 
+- Implement new memory management strategies `"unload"` and `"none"`, which do not attempt to load a target's dependencies from memory ([#897](https://github.com/ropensci/drake/issues/897)).
+- Allow users to give each target its own memory strategy ([#897](https://github.com/ropensci/drake/issues/897)).
 - Add `drake_slice()` to help split data across multiple targets. Related: [#77](https://github.com/ropensci/drake/issues/77), [#685](https://github.com/ropensci/drake/issues/685), [#833](https://github.com/ropensci/drake/issues/833).
 - Introduce a new `drake_cache()` function, which is now recommended instead of `get_cache()` ([#883](https://github.com/ropensci/drake/issues/883)).
 - Introduce a new `r_deps_target()` function.
