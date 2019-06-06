@@ -21,7 +21,7 @@ make(plan, targets = NULL, envir = parent.frame(), verbose = 1L,
   console_log_file = NULL, ensure_workers = TRUE,
   garbage_collection = FALSE, template = list(), sleep = function(i)
   0.01, hasty_build = NULL, memory_strategy = c("speed", "memory",
-  "lookahead"), layout = NULL, lock_envir = TRUE)
+  "lookahead", "unload", "none"), layout = NULL, lock_envir = TRUE)
 }
 \arguments{
 \item{plan}{Workflow plan data frame.

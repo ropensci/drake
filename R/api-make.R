@@ -156,7 +156,7 @@ make <- function(
   template = list(),
   sleep = function(i) 0.01,
   hasty_build = NULL,
-  memory_strategy = c("speed", "memory", "lookahead"),
+  memory_strategy = c("speed", "memory", "lookahead", "unload", "none"),
   layout = NULL,
   lock_envir = TRUE
 ) {
