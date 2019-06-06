@@ -2,12 +2,12 @@
 % Please edit documentation in R/exec-memory.R
 \name{manage_memory}
 \alias{manage_memory}
-\title{Manage in-memory targets}
+\title{Manage the in-memory dependencies of a target.}
 \usage{
-manage_memory(targets, config, downstream = NULL, jobs = 1)
+manage_memory(target, config, downstream = NULL, jobs = 1)
 }
 \arguments{
-\item{targets}{Character vector of targets.}
+\item{target}{Character, name of the target.}
 
 \item{config}{\code{\link[=drake_config]{drake_config()}} list.}
 
@@ -20,11 +20,8 @@ assumed to be downstream.}
 Nothing.
 }
 \description{
-Load targets that you need to build the targets
-and unload the ones you will never need again in the
-current runthrough of the pipeline. This function should
-not be used directly by users. Only exported for
-internal reasons.
+Load/unload a target's dependencies.
+Not a user-side function.
 }
 \examples{
 # Users should use make().

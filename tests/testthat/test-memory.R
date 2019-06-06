@@ -8,7 +8,7 @@ test_with_dir("manage_memory() warns if loading missing deps", {
   )
   capture.output(
     suppressWarnings( # https://github.com/richfitz/storr/issues/105 # nolint
-      manage_memory(targets = "b", config = con)
+      manage_memory(target = "b", config = con)
     ),
     type = "message"
   )
@@ -83,23 +83,30 @@ test_with_dir("manage_memory in full build", {
   # are discarded
   remove(list = ls(config$eval), envir = config$eval)
   expect_equal(ls(config$eval), character(0))
-  manage_memory(c("x", "y", "z"), config)
-  expect_equal(ls(config$eval), character(0))
-  manage_memory(
-    c("a_x", "a_y", "a_z", "b_x", "b_y", "b_z", "c_x", "c_y", "c_z"),
-    config
-  )
-  expect_equal(ls(config$eval), c("x", "y", "z"))
+  for (x in c("x", "y", "z")) {
+    manage_memory(x, config)
+    expect_equal(ls(config$eval), character(0))
+  }
+  targets <- c("a_x", "a_y", "a_z", "b_x", "b_y", "b_z", "c_x", "c_y", "c_z")
+  for (x in targets) {
+    manage_memory(x, config)
+    expect_true(
+      all(
+        deps_target(x, config, character_only = TRUE)$name %in%
+          ls(config$eval)
+      )
+    )
+  }
   manage_memory("waitforme", config)
 
   # keep y around for waitformetoo
   expect_equal(
-    ls(config$eval),
-    c("a_x", "c_y", "s_b_x", "t_a_z", "y")
+    sort(deps_target("waitforme", config)$name),
+    sort(c("a_x", "c_y", "s_b_x", "t_a_z"))
   )
 })
 
-test_with_dir("all memory strategies work", {
+test_with_dir("primary memory strategies work", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("knitr")
   for (memory_strategy in c("speed", "memory", "lookahead")) {

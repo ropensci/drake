@@ -98,7 +98,7 @@ cmq_send_target <- function(target, config) {
   }
   announce_build(target = target, meta = meta, config = config)
   if (identical(config$caching, "master")) {
-    manage_memory(targets = target, config = config, jobs = 1)
+    manage_memory(target = target, config = config, jobs = 1)
     deps <- cmq_deps_list(target = target, config = config)
   } else {
     deps <- NULL
@@ -169,7 +169,7 @@ cmq_build <- function(target, meta, deps, layout, config) {
       config$eval[[dep]] <- deps[[dep]]
     }
   } else {
-    manage_memory(targets = target, config = config, jobs = 1)
+    manage_memory(target = target, config = config, jobs = 1)
   }
   build <- build_target(target = target, meta = meta, config = config)
   if (identical(config$caching, "master")) {
