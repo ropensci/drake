@@ -22,7 +22,12 @@ loop_build <- function(target, config, downstream) {
     return()
   }
   announce_build(target, meta, config)
-  manage_memory(target, config, downstream = downstream)
+  manage_memory(
+    target,
+    config,
+    downstream = downstream,
+    jobs = config$jobs_preprocess
+  )
   build <- build_target(target = target, meta = meta, config = config)
   conclude_build(build = build, config = config)
   invisible()

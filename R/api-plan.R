@@ -605,6 +605,10 @@ drake_envir <- function() {
 
 drake_envir_marker <- "._drake_envir"
 drake_target_marker <- "._drake_target"
+drake_markers <- c(
+  drake_envir_marker,
+  drake_target_marker
+)
 
 as_drake_plan <- function(plan, .force_df = FALSE) {
   no_tibble <- !suppressWarnings(requireNamespace("tibble", quietly = TRUE))
