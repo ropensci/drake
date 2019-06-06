@@ -196,8 +196,14 @@ test_with_dir("bad URL", {
     session_info = FALSE,
     log_progress = TRUE
   )
-  expect_error(make(config = config), "no ETag or Last-Modified for url")
+  expect_error(
+    make(config = config),
+    "no ETag or Last-Modified for url|resolve host"
+  )
   expect_equal(justbuilt(config), character(0))
-  expect_error(make(config = config), "no ETag or Last-Modified for url")
+  expect_error(
+    make(config = config),
+    "no ETag or Last-Modified for url|resolve host"
+  )
   expect_equal(justbuilt(config), character(0))
 })
