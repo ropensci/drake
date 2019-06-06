@@ -278,11 +278,7 @@
 #' compromise and more control, see the examples in the help file
 #' of [drake_envir()].
 #'
-#' @param makefile_path Path to the `Makefile` for
-#'   `make(parallelism = "Makefile")`. If you set this argument to a
-#'   non-default value, you are responsible for supplying this same
-#'   path to the `args` argument so `make` knows where to find it.
-#'   Example: `make(parallelism = "Makefile", makefile_path = ".drake/.makefile", command = "make", args = "--file=.drake/.makefile")`
+#' @param makefile_path Deprecated.
 #'
 #' @param console_log_file Optional character scalar of a file name or
 #'   connection object (such as `stdout()`) to dump maximally verbose

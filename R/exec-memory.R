@@ -114,7 +114,7 @@ get_import_from_memory <- function(target, config) {
 
 missing_import <- function(x, config) {
   if (is_encoded_path(x)) {
-    return(!file.exists(decode_path(x, config)))
+    return(!file_dep_exists(decode_path(x, config)))
   }
   identical(get_import_from_memory(x, config = config), NA_character_)
 }
