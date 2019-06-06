@@ -95,7 +95,7 @@ Suggests:
   cli (>= 1.1.0),
   clustermq,
   crayon,
-  curl,
+  curl (>= 2.7),
   datasets,
   downloader,
   future,

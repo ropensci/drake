@@ -16,6 +16,18 @@ A character vector of declared input file or directory paths.
 \code{file_in()} marks individual files
 (and whole directories) that your targets depend on.
 }
+\details{
+As of \code{drake} 7.4.0, \code{file_in()} and \code{file_out()} have
+experimental support for URLs. If the file name begins with
+"http://", "https://", or "ftp://", \code{\link[=make]{make()}} attempts
+to check the ETag to see if the data changed from last time.
+If no ETag can be found, \code{drake} simply uses the ETag
+from last \code{\link[=make]{make()}} and registers the file as unchanged
+(which prevents your workflow from breaking if you lose
+internet access). If this approach to tracking remote data
+does not work for you, consider a custom trigger:
+\url{https://ropenscilabs.github.io/drake-manual/triggers.html}.
+}
 \examples{
 \dontrun{
 isolate_example("Contain side effects", {

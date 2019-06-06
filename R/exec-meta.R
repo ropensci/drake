@@ -138,11 +138,16 @@ output_file_hash <- function(
   )
 }
 
-rehash_storage <- function(target, config) {
+rehash_storage <- function(target, file = NULL, config) {
   if (!is_encoded_path(target)) {
     return(NA_character_)
   }
-  file <- decode_path(target, config)
+  if (is.null(file)) {
+    file <- decode_path(target, config)
+  }
+  if (is_url(file)) {
+    return(rehash_url(url = file))
+  }
   if (!file.exists(file)) {
     return(NA_character_)
   }
@@ -184,8 +189,36 @@ rehash_dir <- function(dir, config) {
   )
 }
 
+rehash_url <- function(url) {
+  assert_pkg("curl")
+  headers <- NULL
+  if (!curl::has_internet()) {
+    # Tested in tests/testthat/test-always-skipped.R.
+    stop("no internet. Cannot check url: ", url, call. = FALSE) # nocov
+  }
+  req <- curl::curl_fetch_memory(url)
+  headers <- curl::parse_headers_list(req$headers)
+  assert_useful_headers(headers, url)
+  etag <- paste(headers[["etag"]], collapse = "")
+  mtime <- paste(headers[["last-modified"]], collapse = "")
+  return(paste(etag, mtime))
+}
+
+assert_useful_headers <- function(headers, url) {
+  if (!any(c("etag", "last-modified") %in% names(headers))) {
+    stop("no ETag or Last-Modified for url: ", url, call. = FALSE)
+  }
+}
+
+is_url <- function(x) {
+  grepl("^http://|^https://|^ftp://", x)
+}
+
+file_dep_exists <- function(x) {
+  file.exists(x) | is_url(x)
+}
+
 should_rehash_storage <- function(
-  filename,
   size_cutoff,
   new_mtime,
   old_mtime,
@@ -206,22 +239,24 @@ storage_hash <- function(
   if (!is_encoded_path(target)) {
     return(NA_character_)
   }
-  filename <- decode_path(target, config)
-  if (!file.exists(filename)) {
+  file <- decode_path(target, config)
+  if (is_url(file)) {
+    return(rehash_storage(target = target, file = file, config = config))
+  }
+  if (!file.exists(file)) {
     return(NA_character_)
   }
   not_cached <- !config$cache$exists(key = target) ||
     !config$cache$exists(key = target, namespace = "meta")
   if (not_cached) {
-    return(rehash_storage(target = target, config = config))
+    return(rehash_storage(target = target, file = file, config = config))
   }
   meta <- config$cache$get(key = target, namespace = "meta")
   should_rehash <- should_rehash_storage(
-    filename = filename,
     size_cutoff = size_cutoff,
-    new_mtime = storage_mtime(filename),
+    new_mtime = storage_mtime(file),
     old_mtime = meta$mtime %||% -Inf,
-    new_size = storage_size(filename),
+    new_size = storage_size(file),
     old_size = meta$size
   )
   ifelse (

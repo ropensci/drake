@@ -144,3 +144,73 @@ test_with_dir("drake_config() memoizes against knitr files (#887)", {
     regexp = "does not exist"
   )
 })
+
+test_with_dir("good URL with an ETag", {
+  skip_on_cran()
+  skip_if_offline()
+  plan <- drake_plan(
+    x = file_in("https://github.com/ropensci/drake/archive/v7.3.0.tar.gz")
+  )
+  config <- drake_config(
+    plan,
+    cache = storr::storr_environment(),
+    session_info = FALSE,
+    log_progress = TRUE
+  )
+  make(config = config)
+  expect_equal(justbuilt(config), "x")
+  etag <- config$cache$get(
+    file_store("https://github.com/ropensci/drake/archive/v7.3.0.tar.gz")
+  )
+  expect_true(nzchar(etag))
+  expect_equal(outdated(config), character(0))
+  make(config = config)
+  expect_equal(justbuilt(config), character(0))
+})
+
+test_with_dir("good URL with a timestamp", {
+  skip_on_cran()
+  skip_if_offline()
+  plan <- drake_plan(x = file_in("https://nytimes.com"))
+  config <- drake_config(
+    plan,
+    cache = storr::storr_environment(),
+    session_info = FALSE,
+    log_progress = TRUE
+  )
+  make(config = config)
+  expect_equal(justbuilt(config), "x")
+  mtime <- config$cache$get(file_store("https://nytimes.com"))
+  expect_true(nzchar(mtime))
+})
+
+test_with_dir("bad URL", {
+  skip_on_cran()
+  skip_if_offline()
+  plan <- drake_plan(
+    x = file_in("https://aklsdjflkjsiofjlekjsiolkjiufhalskdjf")
+  )
+  config <- drake_config(
+    plan,
+    cache = storr::storr_environment(),
+    session_info = FALSE,
+    log_progress = TRUE
+  )
+  expect_error(
+    make(config = config),
+    "no ETag or Last-Modified for url|resolve host"
+  )
+  expect_equal(justbuilt(config), character(0))
+  expect_error(
+    make(config = config),
+    "no ETag or Last-Modified for url|resolve host"
+  )
+  expect_equal(justbuilt(config), character(0))
+})
+
+test_with_dir("assert_useful_headers()", {
+  expect_error(
+    assert_useful_headers(list(), "xyz"),
+    regexp = "no ETag or Last-Modified for url"
+  )
+})

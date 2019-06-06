@@ -270,11 +270,7 @@ if targets fail.}
 
 \item{pruning_strategy}{Deprecated. See \code{memory_strategy}.}
 
-\item{makefile_path}{Path to the \code{Makefile} for
-\code{make(parallelism = "Makefile")}. If you set this argument to a
-non-default value, you are responsible for supplying this same
-path to the \code{args} argument so \code{make} knows where to find it.
-Example: \code{make(parallelism = "Makefile", makefile_path = ".drake/.makefile", command = "make", args = "--file=.drake/.makefile")}}
+\item{makefile_path}{Deprecated.}
 
 \item{console_log_file}{Optional character scalar of a file name or
 connection object (such as \code{stdout()}) to dump maximally verbose

@@ -87,11 +87,20 @@ redecode_namespaced <- redecode_path
 
 display_key <- function(x, config) {
   if (is_encoded_path(x)) {
-    sprintf("file %s", decode_path(x = x, config = config))
+    display_path(x = x, config = config)
   } else if (is_encoded_namespaced(x)) {
     sprintf("%s", decode_namespaced(x = x, config = config))
   } else {
     x
+  }
+}
+
+display_path <- function(x, config) {
+  path <- decode_path(x = x, config = config)
+  if (is_url(path)) {
+    sprintf("url %s", path)
+  } else {
+    sprintf("file %s", path)
   }
 }
 
