@@ -190,22 +190,19 @@ rehash_dir <- function(dir, config) {
 }
 
 rehash_url <- function(url) {
+  assert_pkg("curl")
   headers <- NULL
   if (!curl::has_internet()) {
     stop("no internet. Cannot check url: ", url, call. = FALSE)
   }
   req <- curl::curl_fetch_memory(url)
-  headers <- curl::parse_headers(req$headers)
-  etag <- grep("^[eE][tT][aA][gG]", headers, value = TRUE)
-  mtime <- grep("^[lL]ast.[mM]odified", headers, value = TRUE)
-  if (!length(etag) && !length(mtime)) {
-    stop(
-      "could not find an ETag or Last-modified date for url: ",
-      url,
-      call. = FALSE
-    )
+  headers <- curl::parse_headers_list(req$headers)
+  if (!any(c("etag", "last-modified") %in% names(headers))) {
+    stop("no ETag or Last-Modified for url: ", url, call. = FALSE)
   }
-  paste(etag, mtime)
+  etag <- paste(headers[["etag"]], collapse = "")
+  mtime <- paste(headers[["last-modified"]], collapse = "")
+  return(paste(etag, mtime))
 }
 
 is_url <- function(x) {

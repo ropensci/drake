@@ -145,7 +145,7 @@ test_with_dir("drake_config() memoizes against knitr files (#887)", {
   )
 })
 
-test_with_dir("good URL", {
+test_with_dir("good URL with an ETag", {
   skip_on_cran()
   skip_if_offline()
   plan <- drake_plan(
@@ -163,7 +163,6 @@ test_with_dir("good URL", {
     file_store("https://github.com/ropensci/drake/archive/v7.3.0.tar.gz")
   )
   expect_true(nzchar(etag))
-  expect_true(grepl("^[eE][tT][aA][gG]", etag))
   expect_equal(outdated(config), character(0))
   make(config = config)
   expect_equal(justbuilt(config), character(0))
@@ -171,12 +170,28 @@ test_with_dir("good URL", {
   if (FALSE) {
     vis_drake_graph(config) # should as non-missing URL # nolint
     # Now disconnect from the internet.
-    expect_warning(
+    expect_error(
       make(config = config),
       regexp = "previous make"
     )
     expect_equal(justbuilt(config), character(0))
   }
+})
+
+test_with_dir("good URL with a timestamp", {
+  skip_on_cran()
+  skip_if_offline()
+  plan <- drake_plan(x = file_in("https://nytimes.com"))
+  config <- drake_config(
+    plan,
+    cache = storr::storr_environment(),
+    session_info = FALSE,
+    log_progress = TRUE
+  )
+  make(config = config)
+  expect_equal(justbuilt(config), "x")
+  mtime <- config$cache$get(file_store("https://nytimes.com"))
+  expect_true(nzchar(mtime))
 })
 
 test_with_dir("bad URL", {
@@ -191,18 +206,8 @@ test_with_dir("bad URL", {
     session_info = FALSE,
     log_progress = TRUE
   )
-  expect_warning(make(config = config), "could not find")
-  expect_equal(justbuilt(config), "x")
-  expect_warning(make(config = config), "could not find")
+  expect_error(make(config = config), "no ETag or Last-Modified for url")
   expect_equal(justbuilt(config), character(0))
-})
-
-
-test_with_dir("header utils", {
-  expect_true(length(parse_url_etag("etag 123")) > 0L)
-  expect_true(length(parse_url_mtime("Last-Modified 123")) > 0L)
-  expect_false(length(parse_url_etag("x 123")) > 0L)
-  expect_false(length(parse_url_mtime("x 123")) > 0L)
-  x <- "http://example.com"
-  expect_true(grepl("^url", display_path(encode_path(x), list())))
+  expect_error(make(config = config), "no ETag or Last-Modified for url")
+  expect_equal(justbuilt(config), character(0))
 })
