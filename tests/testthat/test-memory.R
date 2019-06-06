@@ -184,11 +184,11 @@ test_with_dir("primary memory strategies actually build everything", {
 
 test_with_dir("The unload and none strategies do not hold on to targets", {
   for (mem in c("none", "unload")) {
-    plan <- drake_plan(a = 1, b = a)
+    plan <- drake_plan(target84d2fe31 = 1, target167ff309 = target84d2fe31)
     expect_error(make(plan, memory_strategy = mem), regexp = "not found")
-    expect_equal(failed(), "b")
+    expect_equal(failed(), "target167ff309")
     clean()
-    plan <- drake_plan(a = 1, b = readd(a))
+    plan <- drake_plan(target84d2fe31 = 1, target167ff309 = readd(target84d2fe31))
     clean()
     make(plan, memory_strategy = mem)
     config <- drake_config(plan)
@@ -202,24 +202,24 @@ test_with_dir("The unload and none strategies do not hold on to targets", {
 
 test_with_dir("different memory strategies for each targret", {
   plan <- drake_plan(
-    a = 1,
-    b = target(a, memory_strategy = "speed"),
-    c = target(b, memory_strategy = "unload")
+    targetx84d2fe31 = 1,
+    targetx167ff309 = target(targetx84d2fe31, memory_strategy = "speed"),
+    targetx523e1fba = target(targetx167ff309, memory_strategy = "unload")
   )
   expect_error(make(plan), regexp = "not found")
-  expect_equal(failed(), "c")
+  expect_equal(failed(), "targetx523e1fba")
 })
 
 test_with_dir("drake_envir() and memory strategies", {
   plan <- drake_plan(
-    a = {
+    targety84d2fe31 = {
       i <- 1
       i
     },
-    b = a,
-    c = {
+    targety167ff309 = targety84d2fe31,
+    targety523e1fba = {
       saveRDS(ls(envir = drake_envir()), "ls.rds")
-      b
+      targety167ff309
     }
   )
   make(
@@ -229,7 +229,7 @@ test_with_dir("drake_envir() and memory strategies", {
     session_info = FALSE
   )
   l <- readRDS("ls.rds")
-  expect_true(all(c("a", "b") %in% l))
+  expect_true(all(c("targety84d2fe31", "targety167ff309") %in% l))
   expect_false(any(c("i") %in% l))
   make(
     plan,
@@ -238,8 +238,8 @@ test_with_dir("drake_envir() and memory strategies", {
     session_info = FALSE
   )
   l <- readRDS("ls.rds")
-  expect_true(all(c("b") %in% l))
-  expect_false(any(c("a", "i") %in% l))
+  expect_true(all(c("targety167ff309") %in% l))
+  expect_false(any(c("targety84d2fe31", "i") %in% l))
   make(
     plan,
     memory_strategy = "lookahead",
@@ -247,21 +247,21 @@ test_with_dir("drake_envir() and memory strategies", {
     session_info = FALSE
   )
   l <- readRDS("ls.rds")
-  expect_true(all(c("b") %in% l))
-  expect_false(any(c("a", "i") %in% l))
+  expect_true(all(c("targety167ff309") %in% l))
+  expect_false(any(c("targety84d2fe31", "i") %in% l))
   plan <- drake_plan(
-    a = {
+    targety84d2fe31 = {
       i <- 1
       i
     },
-    b = {
-      out <- a
-      rm(a, envir = drake_envir())
+    targety167ff309 = {
+      out <- targety84d2fe31
+      rm(targety84d2fe31, envir = drake_envir())
       out
     },
     c = {
       saveRDS(ls(envir = drake_envir()), "ls.rds")
-      b
+      targety167ff309
     }
   )
   make(
@@ -271,8 +271,8 @@ test_with_dir("drake_envir() and memory strategies", {
     session_info = FALSE
   )
   l <- readRDS("ls.rds")
-  expect_true(all(c("b") %in% l))
-  expect_false(any(c("a", "i", "out") %in% l))
+  expect_true(all(c("targety167ff309") %in% l))
+  expect_false(any(c("targety84d2fe31", "i", "out") %in% l))
 })
 
 test_with_dir("drake_envir() depth", {
