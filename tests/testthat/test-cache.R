@@ -432,6 +432,7 @@ test_with_dir("memo_expr() works without a cache", {
 
 test_with_dir("master caching, environment caches and parallelism", {
   skip_on_cran()
+  skip_if_not_installed("knitr")
   skip_if_not_installed("future")
   load_mtcars_example()
   future::plan(future::multiprocess)

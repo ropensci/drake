@@ -1,4 +1,4 @@
-# Version 7.3.0.9000
+# Version 7.4.0
 
 ## Mildly breaking changes
 
