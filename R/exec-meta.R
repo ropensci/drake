@@ -198,12 +198,16 @@ rehash_url <- function(url) {
   }
   req <- curl::curl_fetch_memory(url)
   headers <- curl::parse_headers_list(req$headers)
-  if (!any(c("etag", "last-modified") %in% names(headers))) {
-    stop("no ETag or Last-Modified for url: ", url, call. = FALSE)
-  }
+  assert_useful_headers(headers, url)
   etag <- paste(headers[["etag"]], collapse = "")
   mtime <- paste(headers[["last-modified"]], collapse = "")
   return(paste(etag, mtime))
+}
+
+assert_useful_headers <- function(headers, url) {
+  if (!any(c("etag", "last-modified") %in% names(headers))) {
+    stop("no ETag or Last-Modified for url: ", url, call. = FALSE)
+  }
 }
 
 is_url <- function(x) {

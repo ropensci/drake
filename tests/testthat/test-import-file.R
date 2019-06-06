@@ -207,3 +207,10 @@ test_with_dir("bad URL", {
   )
   expect_equal(justbuilt(config), character(0))
 })
+
+test_with_dir("assert_useful_headers()", {
+  expect_error(
+    assert_useful_headers(list(), "xyz"),
+    regexp = "no ETag or Last-Modified for url"
+  )
+})
