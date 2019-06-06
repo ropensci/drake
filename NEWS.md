@@ -21,6 +21,7 @@ These changes are technically breaking changes, but they should only affect adva
 
 ## New features
 
+- Add experimental support for URLs in `file_in()` and `file_out()`. `drake` now treats `file_in()`/`file_out()` files as URLS if they begin with "http://", "https://", or "ftp://". The fingerprint is a concatenation of the ETag and last-modified timestamp. If neither can be found or if there is no internet connection, `drake` throws an error.
 - Add `drake_slice()` to help split data across multiple targets. Related: [#77](https://github.com/ropensci/drake/issues/77), [#685](https://github.com/ropensci/drake/issues/685), [#833](https://github.com/ropensci/drake/issues/833).
 - Introduce a new `drake_cache()` function, which is now recommended instead of `get_cache()` ([#883](https://github.com/ropensci/drake/issues/883)).
 - Introduce a new `r_deps_target()` function.
