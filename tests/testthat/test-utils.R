@@ -304,3 +304,8 @@ test_with_dir("drake_slice and drop", {
   out <- drake_slice(x, slices = 3, margin = 2, index = 2, drop = TRUE)
   expect_equal(out, 11:15)
 })
+
+test_with_dir("display paths", {
+  expect_true(grepl("url", display_path(encode_path("https://url"), list())))
+  expect_true(grepl("file", display_path(encode_path("123"), list())))
+})

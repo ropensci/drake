@@ -193,7 +193,8 @@ rehash_url <- function(url) {
   assert_pkg("curl")
   headers <- NULL
   if (!curl::has_internet()) {
-    stop("no internet. Cannot check url: ", url, call. = FALSE)
+    # Tested in tests/testthat/test-always-skipped.R.
+    stop("no internet. Cannot check url: ", url, call. = FALSE) # nocov
   }
   req <- curl::curl_fetch_memory(url)
   headers <- curl::parse_headers_list(req$headers)
