@@ -142,7 +142,7 @@ rehash_storage <- function(target, file = NULL, config) {
   if (!is_encoded_path(target)) {
     return(NA_character_)
   }
-  if (!is.null(file)) {
+  if (is.null(file)) {
     file <- decode_path(target, config)
   }
   if (is_url(file)) {
@@ -247,7 +247,7 @@ storage_hash <- function(
   not_cached <- !config$cache$exists(key = target) ||
     !config$cache$exists(key = target, namespace = "meta")
   if (not_cached) {
-    return(rehash_storage(target = target, config = config))
+    return(rehash_storage(target = target, file = file, config = config))
   }
   meta <- config$cache$get(key = target, namespace = "meta")
   should_rehash <- should_rehash_storage(
