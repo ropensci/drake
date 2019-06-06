@@ -260,10 +260,10 @@ test_with_dir("warning when file_out() files not produced", {
 
 test_with_dir("storage hash of a non-existent path", {
   expect_false(file.exists("asdf"))
-  expect_true(is.na(storage_hash("asdf", list())))
-  expect_true(is.na(rehash_storage("asdf", list())))
-  expect_true(is.na(storage_hash(encode_path("asdf"), list())))
-  expect_true(is.na(rehash_storage(encode_path("asdf"), list())))
+  expect_true(is.na(storage_hash("asdf", config = list())))
+  expect_true(is.na(rehash_storage("asdf", config = list())))
+  expect_true(is.na(storage_hash(encode_path("asdf"), config = list())))
+  expect_true(is.na(rehash_storage(encode_path("asdf"), config = list())))
 })
 
 test_with_dir("imported functions cannot depend on targets", {
