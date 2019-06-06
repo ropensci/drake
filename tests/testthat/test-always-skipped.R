@@ -11,6 +11,7 @@ test_with_dir("time stamps and large files", {
   log1 <- tempfile()
   log2 <- tempfile()
   log3 <- tempfile()
+  log4 <- tempfile()
   downloader::download(
     "http://eforexcel.com/wp/wp-content/uploads/2017/07/1500000%20Sales%20Records.zip", # nolint
     file_zip,
@@ -36,14 +37,19 @@ test_with_dir("time stamps and large files", {
   tmp <- file.append(file_large, file_csv)
   make(plan, cache = cache, console_log_file = log3)
   expect_equal(justbuilt(config), "x")
+  system2("touch", file_large)
+  make(plan, cache = cache, console_log_file = log4)
+  expect_equal(justbuilt(config), character(0))
   # Now, compare the times stamps on the logs.
   # Make sure the imported file takes a long time to process the first time
   # but is instantaneous the second time.
   # The third time, the file changed, so the processing time
-  # should be longer.
+  # should be longer. Likewise for the fourth time because
+  # the file was touched.
   message(paste(readLines(log1), collapse = "\n"))
   message(paste(readLines(log2), collapse = "\n"))
   message(paste(readLines(log3), collapse = "\n"))
+  message(paste(readLines(log4), collapse = "\n"))
   # Now remove those huge files!
   files <- c(dir_csv, file_zip, file_csv, file_large)
   unlink(files, recursive = TRUE, force = TRUE)
