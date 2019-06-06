@@ -1,4 +1,9 @@
 assign_to_envir <- function(target, value, config) {
+  memory_strategy <- config$layout[[target]]$memory_strategy %||NA%
+    config$memory_strategy
+  if (memory_strategy %in% c("unload", "none")) {
+    return()
+  }
   if (
     identical(config$lazy_load, "eager") &&
     !is_encoded_path(target) &&
@@ -9,45 +14,85 @@ assign_to_envir <- function(target, value, config) {
   invisible()
 }
 
-#' @title Manage in-memory targets
-#' @description Load targets that you need to build the targets
-#'   and unload the ones you will never need again in the
-#'   current runthrough of the pipeline. This function should
-#'   not be used directly by users. Only exported for
-#'   internal reasons.
+#' @title Manage the in-memory dependencies of a target.
+#' @description Load/unload a target's dependencies.
+#'   Not a user-side function.
 #' @export
 #' @keywords internal
 #' @return Nothing.
-#' @param targets Character vector of targets.
+#' @param target Character, name of the target.
 #' @param config [drake_config()] list.
 #' @param downstream Optional, character vector of any targets
 #'   assumed to be downstream.
 #' @param jobs Number of jobs for local parallel computing
 #' @examples
 #' # Users should use make().
-manage_memory <- function(targets, config, downstream = NULL, jobs = 1) {
+manage_memory <- function(target, config, downstream = NULL, jobs = 1) {
+  stopifnot(length(target) == 1L)
   if (identical(config$garbage_collection, TRUE)) {
     gc()
   }
-  if (identical(config$memory_strategy, "lookahead")) {
-    downstream <- downstream %||% downstream_nodes(config$graph, targets)
-    downstream_deps <- deps_memory(targets = downstream, config = config)
-  } else {
-    downstream <- downstream_deps <- NULL
+  class(target) <- config$layout[[target]]$memory_strategy %||NA%
+    config$memory_strategy
+  manage_deps(
+    target = target,
+    config = config,
+    downstream = downstream,
+    jobs = jobs
+  )
+}
+
+manage_deps <- function(target, config, downstream, jobs) {
+  UseMethod("manage_deps")
+}
+
+manage_deps.speed <- function(target, config, downstream, jobs) {
+  already_loaded <- setdiff(names(config$eval), drake_markers)
+  target_deps <- deps_memory(targets = target, config = config)
+  target_deps <- setdiff(target_deps, target)
+  target_deps <- setdiff(target_deps, already_loaded)
+  try_load(targets = target_deps, config = config, jobs = jobs)
+}
+
+manage_deps.memory <- function(target, config, downstream, jobs) {
+  already_loaded <- setdiff(names(config$eval), drake_markers)
+  target_deps <- deps_memory(targets = target, config = config)
+  discard_these <- setdiff(x = already_loaded, y = target_deps)
+  if (length(discard_these)) {
+    log_msg("unload", discard_these, config = config)
+    rm(list = discard_these, envir = config$eval)
   }
-  already_loaded <- setdiff(names(config$eval), drake_envir_marker)
-  target_deps <- deps_memory(targets = targets, config = config)
-  if (!identical(config$memory_strategy, "speed")) {
-    keep_these <- c(target_deps, downstream_deps)
-    discard_these <- setdiff(x = already_loaded, y = keep_these)
-    if (length(discard_these)) {
-      log_msg("unload", discard_these, config = config)
-      rm(list = discard_these, envir = config$eval)
-    }
+  target_deps <- setdiff(target_deps, target)
+  target_deps <- setdiff(target_deps, already_loaded)
+  try_load(targets = target_deps, config = config, jobs = jobs)
+}
+
+manage_deps.lookahead <- function(target, config, downstream, jobs) {
+  downstream <- downstream %||% downstream_nodes(config$graph, target)
+  downstream_deps <- deps_memory(targets = downstream, config = config)
+  already_loaded <- setdiff(names(config$eval), drake_markers)
+  target_deps <- deps_memory(targets = target, config = config)
+  keep_these <- c(target_deps, downstream_deps)
+  discard_these <- setdiff(x = already_loaded, y = keep_these)
+  if (length(discard_these)) {
+    log_msg("unload", discard_these, config = config)
+    rm(list = discard_these, envir = config$eval)
   }
-  targets <- setdiff(target_deps, targets)
-  targets <- setdiff(targets, already_loaded)
-  try_load(targets = targets, config = config, jobs = jobs)
+  target_deps <- setdiff(target_deps, target)
+  target_deps <- setdiff(target_deps, already_loaded)
+  try_load(targets = target_deps, config = config, jobs = jobs)
+}
+
+manage_deps.unload <- function(target, config, downstream, jobs) {
+  discard_these <- setdiff(names(config$eval), drake_markers)
+  if (length(discard_these)) {
+    log_msg("unload", discard_these, config = config)
+    rm(list = discard_these, envir = config$eval)
+  }
+}
+
+manage_deps.none <- function(...) {
+  return()
 }
 
 deps_memory <- function(targets, config) {

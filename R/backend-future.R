@@ -61,7 +61,7 @@ future_build <- function(target, meta, config, layout, protect) {
   config$layout <- list()
   config$layout[[target]] <- layout
   if (identical(config$caching, "worker")) {
-    manage_memory(targets = target, config = config, downstream = protect)
+    manage_memory(target = target, config = config, downstream = protect)
   }
   do_prework(config = config, verbose_packages = FALSE)
   build <- build_target(target = target, meta = meta, config = config)
@@ -86,7 +86,7 @@ new_worker <- function(id, target, config, ft_config, protect) {
     return(empty_worker(target = target))
   }
   if (identical(config$caching, "master")) {
-    manage_memory(targets = target, config = config, downstream = protect)
+    manage_memory(target = target, config = config, downstream = protect)
   }
   DRAKE_GLOBALS__ <- NULL # Fixes warning about undefined globals.
   # Avoid potential name conflicts with other globals.
