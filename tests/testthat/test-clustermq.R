@@ -1,7 +1,6 @@
 drake_context("clustermq")
 
 test_with_dir("clustermq parallelism", {
-  skip_on_cran()
   skip_if_not_installed("clustermq")
   skip_on_os("windows")
   if ("package:clustermq" %in% search()) {
