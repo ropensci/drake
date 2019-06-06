@@ -71,7 +71,7 @@ test_with_dir("a close look at the memory strategies", {
 
   # actually run
   config$plan <- plan
-  testrun(config)
+  make(config = config)
   expect_true(all(plan$target %in% cached(cache = config$cache)))
 
   # lookahead
