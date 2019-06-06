@@ -166,16 +166,6 @@ test_with_dir("good URL with an ETag", {
   expect_equal(outdated(config), character(0))
   make(config = config)
   expect_equal(justbuilt(config), character(0))
-  # Should to do this part manually.
-  if (FALSE) {
-    vis_drake_graph(config) # should as non-missing URL # nolint
-    # Now disconnect from the internet.
-    expect_error(
-      make(config = config),
-      regexp = "previous make"
-    )
-    expect_equal(justbuilt(config), character(0))
-  }
 })
 
 test_with_dir("good URL with a timestamp", {

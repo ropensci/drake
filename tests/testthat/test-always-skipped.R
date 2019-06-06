@@ -2,7 +2,16 @@ if (FALSE) {
 
 drake_context("always skipped")
 
+test_with_dir("imported online file with no internet", {
+  # Disconnect from the internet.
+  plan <- drake_plan(
+    x = file_in("https://github.com/ropensci/drake/archive/v7.3.0.tar.gz")
+  )
+  expect_error(make(plan), regexp = "no internet. Cannot check url")
+})
+
 test_with_dir("time stamps and large files", {
+  # Reconnect to the internet.
   skip_if_not_installed("downloader")
   dir_csv <- tempfile()
   file_zip <- tempfile()
