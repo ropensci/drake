@@ -1,4 +1,9 @@
 assign_to_envir <- function(target, value, config) {
+  memory_strategy <- config$layout[[target]]$memory_strategy %||NA%
+    config$memory_strategy
+  if (memory_strategy %in% c("unload", "none")) {
+    return()
+  }
   if (
     identical(config$lazy_load, "eager") &&
     !is_encoded_path(target) &&
@@ -39,10 +44,6 @@ manage_memory <- function(target, config, downstream = NULL, jobs = 1) {
 
 manage_deps <- function(target, config, downstream, jobs) {
   UseMethod("manage_deps")
-}
-
-manage_deps.default <- function(...) {
-  return()
 }
 
 manage_deps.speed <- function(target, config, downstream, jobs) {
@@ -88,6 +89,10 @@ manage_deps.unload <- function(target, config, downstream, jobs) {
     log_msg("unload", discard_these, config = config)
     rm(list = discard_these, envir = config$eval)
   }
+}
+
+manage_deps.none <- function(...) {
+  return()
 }
 
 deps_memory <- function(targets, config) {
