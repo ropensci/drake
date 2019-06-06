@@ -93,10 +93,12 @@ with_call_stack <- function(target, config) {
 # https://github.com/HenrikBengtsson/R.utils/blob/13e9d000ac9900bfbbdf24096d635da723da76c8/R/withTimeout.R # nolint
 # Copyright Henrik Bengtsson, LGPL >= 2.1.
 with_timeout <- function(expr, cpu, elapsed) {
+  if (cpu < Inf || elapsed < Inf) {
+    setTimeLimit(cpu = cpu, elapsed = elapsed, transient = TRUE)
+    on.exit(setTimeLimit(cpu = Inf, elapsed = Inf, transient = FALSE))
+  }
   expr <- substitute(expr)
   envir <- parent.frame()
-  setTimeLimit(cpu = cpu, elapsed = elapsed, transient = TRUE)
-  on.exit(setTimeLimit(cpu = Inf, elapsed = Inf, transient = FALSE))
   eval(expr, envir = envir)
 }
 

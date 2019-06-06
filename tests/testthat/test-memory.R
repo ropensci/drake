@@ -188,7 +188,10 @@ test_with_dir("The unload and none strategies do not hold on to targets", {
     expect_error(make(plan, memory_strategy = mem), regexp = "not found")
     expect_equal(failed(), "target167ff309")
     clean()
-    plan <- drake_plan(target84d2fe31 = 1, target167ff309 = readd(target84d2fe31))
+    plan <- drake_plan(
+      target84d2fe31 = 1,
+      target167ff309 = readd(target84d2fe31)
+    )
     clean()
     make(plan, memory_strategy = mem)
     config <- drake_config(plan)
