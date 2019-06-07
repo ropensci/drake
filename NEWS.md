@@ -1,3 +1,10 @@
+# Version 7.4.0.9000
+
+## Enhancements
+
+- Suggest `clustermq` >= 0.8.8.
+
+
 # Version 7.4.0
 
 ## Mildly breaking changes

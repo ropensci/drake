@@ -11,7 +11,7 @@ Description: A general-purpose computational engine for data analysis,
   to practical examples and more, is available at the reference website
   <https://ropensci.github.io/drake/> and the online manual
   <https://ropenscilabs.github.io/drake-manual/>.
-Version: 7.4.0
+Version: 7.4.0.9000
 License: GPL-3
 URL: https://github.com/ropensci/drake
 BugReports: https://github.com/ropensci/drake/issues
@@ -93,7 +93,7 @@ Suggests:
   bindr,
   callr,
   cli (>= 1.1.0),
-  clustermq,
+  clustermq (>= 0.8.8),
   crayon,
   curl (>= 2.7),
   datasets,
