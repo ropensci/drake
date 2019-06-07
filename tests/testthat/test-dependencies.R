@@ -470,3 +470,46 @@ test_with_dir("ignore() in imported functions", {
   config <- drake_config(plan, cache = cache)
   expect_equal(justbuilt(config), "x")
 })
+
+test_with_dir("ignore() inside special functions", {
+  plan <- drake_plan(
+    a = 1,
+    b1 = readd(a),
+    b2 = readd("a"),
+    b3 = ignore(readd(a)),
+    b4 = readd(ignore(a)),
+    b5 = readd(ignore("a")),
+    c1 = loadd(a),
+    c2 = loadd("a"),
+    c3 = ignore(loadd(a)),
+    c4 = loadd(ignore(a)),
+    c5 = loadd(ignore("a")),
+    d1 = file_in("a"),
+    d2 = file_in("a"),
+    d3 = ignore(file_in("a")),
+    d4 = file_in(ignore("a")),
+    d5 = file_in(ignore("a")),
+    e1 = file_out("a"),
+    e2 = file_out("a"),
+    e3 = ignore(file_out("a")),
+    e4 = file_out(ignore("a")),
+    e5 = file_out(ignore("a")),
+    f1 = knitr_in("a"),
+    f2 = knitr_in("a"),
+    f3 = ignore(knitr_in("a")),
+    f4 = knitr_in(ignore("a")),
+    f5 = knitr_in(ignore("a"))
+  )
+  suppressWarnings(config <- drake_config(plan))
+  for (x in letters[2:6]) {
+    for (y in 1:5) {
+      target <- paste0(x, y)
+      deps <- deps_target(target, config, character_only = TRUE)$name
+      if (y < 3) {
+        expect_equal(deps, "a")
+      } else {
+        expect_equal(deps, character(0))
+      }
+    }
+  }
+})

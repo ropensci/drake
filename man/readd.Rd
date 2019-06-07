@@ -139,13 +139,21 @@ calls to \code{loadd()} and \code{readd()} in active code chunks,
 and then treat those loaded targets as dependencies.
 That way, \code{\link[=make]{make()}} will automatically (re)run the report if those
 dependencies change.
+\item If you are using \code{make(memory_strategy = "none")}
+or \code{make(memory_strategy = "unload")},
+\code{\link[=loadd]{loadd()}} and \code{\link[=readd]{readd()}} can manually load dependencies
+into memory for the target that is being built.
+If you do this, you must carefully inspect \code{\link[=deps_target]{deps_target()}}
+and \code{\link[=vis_drake_graph]{vis_drake_graph()}} before running \code{\link[=make]{make()}}
+to be sure the dependency relationships among targets
+are correct. If you do not wish to incur extra dependencies
+with \code{\link[=loadd]{loadd()}} or \code{\link[=readd]{readd()}}, you will need to use \code{\link[=ignore]{ignore()}},
+e.g. \code{drake_plan(x = 1, y = ignore(readd(x)))} or
+\code{drake_plan(x = 1, y = readd(ignore("x"), character_only = TRUE))}.
+Compare those plans to \code{drake_plan(x = 1, y = readd(x))}
+and \code{drake_plan(x = 1, y = readd("x", character_only = TRUE))}
+using \code{\link[=vis_drake_graph]{vis_drake_graph()}} and \code{\link[=deps_target]{deps_target()}}.
 }
-}
-\note{
-Please do not put calls to \code{\link[=loadd]{loadd()}} or \code{\link[=readd]{readd()}} inside
-your custom (imported) functions or the commands in your \code{\link[=drake_plan]{drake_plan()}}.
-This creates confusion inside \code{\link[=make]{make()}}, which has its own ways of
-interacting with the cache.
 }
 \examples{
 \dontrun{

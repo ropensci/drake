@@ -18,6 +18,7 @@ These changes are technically breaking changes, but they should only affect adva
 - Repair `expose_imports()`: do not do the `environment<-` trick unless the object is a non-primitive function.
 - Use different static analyses of `assign()` vs `delayedAssign()`.
 - Fix a superfluous code analysis warning incurred by multiple `file_in()` files and other strings ([#896](https://github.com/ropensci/drake/issues/896)).
+- Make `ignore()` work inside `loadd()`, `readd()`, `file_in()`, `file_out()`, and `knitr_in()`.
 
 ## New features
 

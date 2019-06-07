@@ -26,10 +26,20 @@
 #'   and then treat those loaded targets as dependencies.
 #'   That way, [make()] will automatically (re)run the report if those
 #'   dependencies change.
-#' @note Please do not put calls to [loadd()] or [readd()] inside
-#' your custom (imported) functions or the commands in your [drake_plan()].
-#' This creates confusion inside [make()], which has its own ways of
-#' interacting with the cache.
+#' 3. If you are using `make(memory_strategy = "none")`
+#'   or `make(memory_strategy = "unload")`,
+#'   [loadd()] and [readd()] can manually load dependencies
+#'   into memory for the target that is being built.
+#'   If you do this, you must carefully inspect [deps_target()]
+#'   and [vis_drake_graph()] before running [make()]
+#'   to be sure the dependency relationships among targets
+#'   are correct. If you do not wish to incur extra dependencies
+#'   with [loadd()] or [readd()], you will need to use [ignore()],
+#'   e.g. `drake_plan(x = 1, y = ignore(readd(x)))` or
+#'   `drake_plan(x = 1, y = readd(ignore("x"), character_only = TRUE))`.
+#'   Compare those plans to `drake_plan(x = 1, y = readd(x))`
+#'   and `drake_plan(x = 1, y = readd("x", character_only = TRUE))`
+#'   using [vis_drake_graph()] and [deps_target()].
 #' @seealso [cached()], [drake_plan()], [make()]
 #' @export
 #' @return The cached value of the `target`.
