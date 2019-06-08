@@ -1,5 +1,5 @@
 backend_clustermq <- function(config) {
-  assert_pkg("clustermq", version = "0.8.5")
+  assert_pkg("clustermq", version = "0.8.8")
   config$queue <- new_priority_queue(
     config = config,
     jobs = config$jobs_preprocess
@@ -43,33 +43,15 @@ cmq_set_common_data <- function(config) {
     export <- as.list(config$envir, all.names = TRUE) # nocov
   }
   export$config <- cmq_config(config)
-  use_pkgs <- utils::compareVersion(
-    paste0(utils::packageVersion("clustermq"), collapse = "."),
-    "0.8.8"
-  ) >= 0L
-  if (use_pkgs) {
-    config$workers$set_common_data(
-      export = export,
-      fun = identity,
-      const = list(),
-      rettype = list(),
-      pkgs = character(0),
-      common_seed = config$seed,
-      token = "set_common_data_token"
-    )
-  } else {
-    # Need to test manually with old clustermq.
-    # nocov start
-    config$workers$set_common_data(
-      export = export,
-      fun = identity,
-      const = list(),
-      rettype = list(),
-      common_seed = config$seed,
-      token = "set_common_data_token"
-    )
-    # nocov end
-  }
+  config$workers$set_common_data(
+    export = export,
+    fun = identity,
+    const = list(),
+    rettype = list(),
+    pkgs = character(0),
+    common_seed = config$seed,
+    token = "set_common_data_token"
+  )
 }
 
 cmq_master <- function(config) {

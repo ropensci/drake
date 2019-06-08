@@ -40,3 +40,4 @@ vignettes/.*_files
 ^_pkgdown\.yml$
 ^codemeta\.json$
 ^\.httr-oauth$
+^CRAN-RELEASE$

@@ -2,7 +2,7 @@
 
 ## Enhancements
 
-- Suggest `clustermq` >= 0.8.8.
+- Suggest and assert `clustermq` >= 0.8.8.
 
 
 # Version 7.4.0
