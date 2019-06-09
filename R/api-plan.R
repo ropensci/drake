@@ -31,6 +31,7 @@
 #' @export
 #' @return A data frame of targets, commands, and optional
 #'   custom columns.
+#' @inheritParams transform_plan
 #' @param ... A collection of symbols/targets
 #'   with commands assigned to them. See the examples for details.
 #' @param list Deprecated
@@ -41,18 +42,6 @@
 #'   into a larger plan with more targets.
 #'   Requires the `transform` field in
 #'   `target()`. See the examples for details.
-#' @param trace Logical, whether to add columns to show
-#'   what happens during target transformations.
-#' @param envir Environment for tidy evaluation.
-#' @param tidy_eval Logical, whether to use tidy evaluation
-#'   (e.g. unquoting/`!!`) when resolving commands.
-#'   Tidy evaluation in transformations is always turned on
-#'   regardless of the value you supply to this argument.
-#' @param max_expand Positive integer, optional upper bound on the lengths
-#'   of grouping variables for `map()` and `cross()`. Comes in handy
-#'   when you have a massive number of targets and you want to test
-#'   on a miniature version of your workflow before you scale up
-#'   to production.
 #' @examples
 #' isolate_example("Contain side effects", {
 #' # Create workflow plan data frames.
@@ -197,20 +186,19 @@ drake_plan <- function(
   plan$command <- commands
   plan <- parse_custom_plan_columns(plan)
   if (transform && ("transform" %in% colnames(plan))) {
-    plan <- transform_plan(
+    plan <- transform_plan_(
       plan = plan,
       envir = envir,
       trace = trace,
-      max_expand = max_expand
+      max_expand = max_expand,
+      tidy_eval = FALSE,
+      sanitize = FALSE
     )
   }
   if (tidy_eval) {
     for (col in setdiff(colnames(plan), c("target", "transform"))) {
       plan[[col]] <- tidyeval_exprs(plan[[col]], envir = envir)
     }
-  }
-  for (col in setdiff(colnames(plan), c("target", "command", "trigger"))) {
-    plan[[col]] <- unlist(plan[[col]])
   }
   sanitize_plan(plan)
 }

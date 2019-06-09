@@ -1,4 +1,64 @@
-transform_plan <- function(plan, envir, trace, max_expand) {
+#' @title Transform a plan
+#' @description Evaluate the `map()`, `cross()`, `split()` and
+#'   `combine()` operations in the `transform` column of a
+#'   `drake` plan.
+#' @details <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans> # nolint
+#' @export
+#' @param plan A `drake` plan with a `transform` column
+#' @param envir Environment for tidy evaluation.
+#' @param trace Logical, whether to add columns to show
+#'   what happens during target transformations.
+#' @param max_expand Positive integer, optional upper bound on the lengths
+#'   of grouping variables for `map()` and `cross()`. Comes in handy
+#'   when you have a massive number of targets and you want to test
+#'   on a miniature version of your workflow before you scale up
+#'   to production.
+#' @param tidy_eval Logical, whether to use tidy evaluation
+#'   (e.g. unquoting/`!!`) when resolving commands.
+#'   Tidy evaluation in transformations is always turned on
+#'   regardless of the value you supply to this argument.
+#' @examples
+#' plan1 <- drake_plan(
+#'   y = target(
+#'     f(x),
+#'     transform = map(x = c(1, 2))
+#'   ),
+#'   transform = FALSE
+#' )
+#' plan2 <- drake_plan(
+#'   z = target(
+#'     g(y),
+#'     transform = map(y, .id = x)
+#'   ),
+#'   transform = FALSE
+#' )
+#' plan <- bind_plans(plan1, plan2)
+#' transform_plan(plan)
+transform_plan <- function(
+  plan,
+  envir = parent.frame(),
+  trace = FALSE,
+  max_expand = NULL,
+  tidy_eval = TRUE
+) {
+  transform_plan_(
+    plan = plan,
+    envir = envir,
+    trace = trace,
+    max_expand = max_expand,
+    tidy_eval = tidy_eval,
+    sanitize = TRUE
+  )
+}
+
+transform_plan_ <- function(
+  plan,
+  envir,
+  trace,
+  max_expand,
+  tidy_eval,
+  sanitize
+) {
   if (!("transform" %in% names(plan))) {
     return(plan)
   }
@@ -19,6 +79,14 @@ transform_plan <- function(plan, envir, trace, max_expand) {
     plan <- plan[, intersect(colnames(plan), old_cols(plan)), drop = FALSE]
   }
   old_cols(plan) <- plan$transform <- NULL
+  if (tidy_eval) {
+    for (col in setdiff(colnames(plan), c("target", "transform"))) {
+      plan[[col]] <- tidyeval_exprs(plan[[col]], envir = envir)
+    }
+  }
+  if (sanitize) {
+    plan <- sanitize_plan(plan)
+  }
   plan
 }
 

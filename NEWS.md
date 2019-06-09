@@ -1,5 +1,9 @@
 # Version 7.4.0.9000
 
+## New features
+
+- Export `transform_plan()`.
+
 ## Enhancements
 
 - Suggest and assert `clustermq` >= 0.8.8.

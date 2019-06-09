@@ -2277,7 +2277,7 @@ test_with_dir("max_expand", {
     ),
     analysis = target(
       fn(data, param),
-      transform = cross(data, fn = !!letters, param = !!seq_len(100)),
+      transform = cross(data, fn = !!letters, param = !!seq_len(100))
     ),
     result = target(
       bind_rows(analysis),
@@ -2526,4 +2526,45 @@ test_with_dir("parse long tidyeval inputs", {
     )
   )
   equivalent_plans(out, exp)
+})
+
+test_with_dir("transform_plan() on its own", {
+  i <- 0L
+  out1 <- drake_plan(
+    y = target(
+      f(x, !!i),
+      transform = map(x = c(1, 2))
+    ),
+    transform = FALSE,
+    tidy_eval = FALSE
+  )
+  out2 <- drake_plan(
+    z = target(
+      g(y, !!i),
+      transform = map(y, .id = x)
+    ),
+    transform = FALSE,
+    tidy_eval = FALSE
+  )
+  out3 <- transform_plan(bind_plans(out1, out2))
+  exp1 <- drake_plan(
+    y = target(
+      command = f(x, !!i),
+      transform = map(x = c(1, 2))
+    ),
+    transform = FALSE
+  )
+  exp2 <- drake_plan(
+    z = target(
+      command = g(y, !!i),
+      transform = map(y, .id = x)
+    ),
+    transform = FALSE
+  )
+  exp3 <- drake_plan(
+    y_1 = f(1, 0L),
+    y_2 = f(2, 0L),
+    z_1 = g(y_1, 0L),
+    z_2 = g(y_2, 0L)
+  )
 })

@@ -21,6 +21,9 @@ sanitize_plan <- function(plan, allow_duplicated_targets = FALSE) {
       plan[[col]] <- lapply(plan[[col]], safe_parse)
     }
   }
+  for (col in setdiff(colnames(plan), c("target", "command", "trigger"))) {
+    plan[[col]] <- unlist(plan[[col]])
+  }
   as_drake_plan(plan)
 }
 
