@@ -332,6 +332,7 @@ The [reference section](https://ropensci.github.io/drake/reference/index.html) l
 - The [reference website](https://ropensci.github.io/drake/).
 - The [official repository of example code](https://github.com/wlandau/drake-examples). Download an example workflow from here with `drake_example()`.
 - [`drakeplanner`](https://github.com/wlandau/drakeplanner), an R/Shiny app to help learn `drake` and create new projects. Run locally with `drakeplanner::drakeplanner()` or access it at <https://wlandau.shinyapps.io/drakeplanner>.
+- [`learndrake`](https://github.com/wlandau/learndrake), an R package for teaching an extended `drake` workshop. It contains notebooks, slides, Shiny apps, the latter two of which are publicly deployed. See the [README](https://github.com/wlandau/learndrake/blob/master/README.md) for instructions and links.
 - Presentations and workshops by [Will Landau](https://github.com/wlandau), [Kirill Müller](https://github.com/krlmlr), [Amanda Dobbyn](https://github.com/aedobbyn), [Karthik Ram](http://github.com/karthik), [Sina Rüeger](https://github.com/sinarueeger), [Christine Stawitz](https://github.com/cstawitz), and others. See specific links at <https://ropenscilabs.github.io/drake-manual/index.html#presentations>
 - The [FAQ page](https://ropenscilabs.github.io/drake-manual/faq.html), which links to [appropriately-labeled issues on GitHub](https://github.com/ropensci/drake/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22frequently+asked+question%22+).
 
