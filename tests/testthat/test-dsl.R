@@ -2567,4 +2567,5 @@ test_with_dir("transform_plan() on its own", {
     z_1 = g(y_1, 0L),
     z_2 = g(y_2, 0L)
   )
+  equivalent_plans(out3, exp3)
 })
