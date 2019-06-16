@@ -600,11 +600,13 @@ targets_only <- function(targets, cache, jobs) {
 }
 
 is_imported_cache <- Vectorize(function(target, cache) {
-  cache$exists(key = target) &&
-  diagnose(
-    target = target,
-    character_only = TRUE,
-    cache = cache
-  )$imported
+  exists <- cache$exists(key = target) && (
+    imported <- diagnose(
+      target = target,
+      character_only = TRUE,
+      cache = cache
+    )$imported %||%
+      FALSE
+  )
 },
 "target", SIMPLIFY = TRUE)
