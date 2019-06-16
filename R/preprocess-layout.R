@@ -86,7 +86,7 @@ cdl_analyze_imports <- function(config, imports) {
   out <- lightly_parallelize(
     X = seq_along(imports),
     FUN = function(i) {
-      log_msg("analyze", names[i], config = config)
+      log_msg("analyze", target = names[i], config = config)
       list(
         target = names[i],
         deps_build = import_dependencies(
@@ -133,7 +133,7 @@ cdl_analyze_commands <- function(config) {
 }
 
 cdl_prepare_layout <- function(config, layout){
-  log_msg("analyze", layout$target, config = config)
+  log_msg("analyze", target = layout$target, config = config)
   layout$deps_build <- command_dependencies(
     command = layout$command,
     exclude = layout$target,

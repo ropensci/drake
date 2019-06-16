@@ -43,7 +43,7 @@ cdg_create_edges <- function(config, layout) {
 }
 
 cdg_node_to_edges <- function(node, config) {
-  log_msg("connect", node$target, config = config)
+  log_msg("connect", target = node$target, config = config)
   file_out <- node$deps_build$file_out
   node$deps_build$file_out <- NULL
   inputs <- clean_nested_char_list(
@@ -86,7 +86,7 @@ cdg_edges_thru_file_out <- function(edges, config) {
 cdg_transitive_edges <- function(vertex, edges, config) {
   log_msg(
     "file_out",
-    display_key(vertex, config),
+    target = display_key(vertex, config),
     config = config
   )
   from <- unique(edges$from[edges$to == vertex])

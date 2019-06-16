@@ -7,7 +7,7 @@
 ## Enhancements
 
 - Suggest and assert `clustermq` >= 0.8.8.
-
+- Log the target name in a special column in the console log file ([#909](https://github.com/ropensci/drake/issues/909)).
 
 # Version 7.4.0
 
