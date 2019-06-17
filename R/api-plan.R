@@ -271,7 +271,7 @@ complete_target_names <- function(commands_list) {
 #'   does not work for you, consider a custom trigger:
 #'   <https://ropenscilabs.github.io/drake-manual/triggers.html>.
 #' @export
-#' @seealso [file_out()], [knitr_in()], [ignore()]
+#' @seealso [file_out()], [knitr_in()], [ignore()], [no_deps()]
 #' @return A character vector of declared input file or directory paths.
 #' @param ... Character vector, paths to files and directories.
 #' @export
@@ -324,7 +324,7 @@ file_in <- function(...) {
 #' @description `file_in()` marks individual files
 #'   (and whole directories) that your targets create.
 #' @export
-#' @seealso [file_out()], [knitr_in()], [ignore()]
+#' @seealso [file_out()], [knitr_in()], [ignore()], [no_deps()]
 #' @return A character vector of declared output file or directory paths.
 #' @param ... Character vector, paths to files and directories.
 #' @export
@@ -382,7 +382,7 @@ file_out <- file_in
 #' @details Unlike [file_in()] and [file_out()], `knitr_in()`
 #'   does not work with entire directories.
 #' @export
-#' @seealso [file_in()], [file_out()], [ignore()]
+#' @seealso [file_in()], [file_out()], [ignore()], [no_deps()]
 #' @return A character vector of declared input file paths.
 #' @param ... Character strings. File paths of `knitr`/`rmarkdown`
 #'   source files supplied to a command in your workflow plan data frame.
@@ -412,15 +412,16 @@ file_out <- file_in
 #' }
 knitr_in <- file_in
 
-#' @title Ignore components of commands and imported functions.
-#' @description In a command in the workflow plan
-#' or the body of an imported function, you can
-#' `ignore(some_code)` to
-#' 1. Force `drake` to not track dependencies in `some_code`, and
-#' 2. Ignore any changes in `some_code` when it comes to
-#'   deciding which target are out of date.
+#' @title Ignore code
+#' @description Ignore sections of commands and imported functions.
+#' @details In user-defined functions and [drake_plan()] commands, you can
+#' wrap code chunks in `ignore()` to
+#' 1. Tell `drake` to not search for dependencies
+#'   (targets etc. mentioned in the code) and
+#' 2. Ignore changes to the code so downstream targets remain up to date.
+#' To enforce (1) without (2), use [no_deps()].
 #' @export
-#' @seealso [file_in()], [file_out()], [knitr_in()]
+#' @seealso [file_in()], [file_out()], [knitr_in()], [no_deps()]
 #' @return The argument.
 #' @param x Code to ignore.
 #' @examples
@@ -437,20 +438,75 @@ knitr_in <- file_in
 #' x <- 6
 #' make(plan = drake_plan(y = sqrt(4) + ignore(x))) # Skips y.
 #' make(plan = drake_plan(y = sqrt(4) + ignore(x + 1))) # Skips y.
-#' # What about imported functions?
-#' f <- function(x) sqrt(4) + ignore(x + 1)
-#' make(plan = drake_plan(x = f(2)))
+#'
+#' # ignore() works with functions and multiline code chunks.
+#' f <- function(x) {
+#'   ignore({
+#'     x <- x + 1
+#'     x <- x + 2
+#'   })
+#'   x # Not ignored.
+#' }
+#' make(plan = drake_plan(y = f(2)))
 #' readd(x)
-#' f <- function(x) sqrt(4) + ignore(x + 2)
-#' make(plan = drake_plan(x = f(2)))
-#' readd(x)
-#' f <- function(x) sqrt(5) + ignore(x + 2)
+#' # Changes the content of the ignore() block:
+#' f <- function(x) {
+#'   ignore({
+#'     x <- x + 1
+#'   })
+#'   x # Not ignored.
+#' }
 #' make(plan = drake_plan(x = f(2)))
 #' readd(x)
 #' })
 #' }
 ignore <- function(x = NULL) {
-  identity(x)
+  x
+}
+
+#' @title Suppress dependency detection.
+#' @description Tell `drake` to not search for dependencies in a chunk of code.
+#' @details `no_deps()` is similar to [ignore()], but it still lets `drake`
+#'   track meaningful changes to the code itself.
+#' @export
+#' @seealso [file_in()], [file_out()], [knitr_in()], [no_deps()]
+#' @return The argument.
+#' @param x Code for which dependency detection is suppressed.
+#' @examples
+#' \dontrun{
+#' isolate_example("Contain side effects", {
+#' # Normally, `drake` reacts to changes in dependencies.
+#' x <- 4
+#' make(plan = drake_plan(y = sqrt(x)))
+#' x <- 5
+#' make(plan = drake_plan(y = sqrt(x)))
+#' make(plan = drake_plan(y = sqrt(4) + x))
+#' # But not with no_deps().
+#' make(plan = drake_plan(y = sqrt(4) + no_deps(x))) # Builds y.
+#' x <- 6
+#' make(plan = drake_plan(y = sqrt(4) + no_deps(x))) # Skips y.
+#' # However, `drake` *does* react to changes
+#' # to the *literal code* inside `no_deps()`.
+#' make(plan = drake_plan(y = sqrt(4) + ignore(x + 1))) # Builds y.
+#'
+#' # Like ignore(), no_deps() works with functions and multiline code chunks.
+#' z <- 1
+#' f <- function(x) {
+#'   no_deps({
+#'     x <- y + 1
+#'     x <- x + 2
+#'   })
+#'   x
+#' }
+#' make(plan = drake_plan(z = f(2)))
+#' readd(x)
+#' z <- 2 # Changed dependency is not tracked.
+#' make(plan = drake_plan(z = f(2)))
+#' readd(x)
+#' })
+#' }
+no_deps <- function(x = NULL) {
+  x
 }
 
 # Unnamed arguments may have been declared with `<-`` or `->``

@@ -3,6 +3,7 @@
 ## New features
 
 - Export `transform_plan()`.
+- Add a new `no_deps()` function, similar to `ignore()`. `no_deps()` suppresses dependency detection but still tracks changes to the literal code ([#910](https://github.com/ropensci/drake/issues/910)).
 
 ## Enhancements
 

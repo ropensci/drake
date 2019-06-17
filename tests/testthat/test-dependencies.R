@@ -513,3 +513,44 @@ test_with_dir("ignore() inside special functions", {
     }
   }
 })
+
+test_with_dir("no_deps() in a command", {
+  plan <- drake_plan(y = sqrt(no_deps(x)))
+  cache <- storr::storr_environment()
+  config <- drake_config(plan, cache = cache)
+  x <- 4
+  make(plan, cache = cache)
+  expect_equal(justbuilt(config), "y")
+  x <- 5
+  make(plan, cache = cache)
+  expect_equal(justbuilt(config), character(0))
+  plan <- drake_plan(y = sqrt(no_deps(x + 1)))
+  make(plan, cache = cache)
+  expect_equal(justbuilt(config), "y")
+})
+
+test_with_dir("no_deps() in a function", {
+  y <- 1
+  f <- function(x) {
+    no_deps({
+      out <- sqrt(x + y) + 1
+      out
+    })
+  }
+  plan <- drake_plan(z = f(2))
+  cache <- storr::storr_environment()
+  config <- drake_config(plan, cache = cache)
+  make(plan, cache = cache)
+  expect_equal(justbuilt(config), "z")
+  y <- 2
+  make(plan, cache = cache)
+  expect_equal(justbuilt(config), character(0))
+  f <- function(x) {
+    no_deps({
+      out <- sqrt(x + y) + 2
+      out
+    })
+  }
+  make(plan, cache = cache)
+  expect_equal(justbuilt(config), "z")
+})

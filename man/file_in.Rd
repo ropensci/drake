@@ -71,5 +71,5 @@ file.exists("dir/mtcars.csv")
 }
 }
 \seealso{
-\code{\link[=file_out]{file_out()}}, \code{\link[=knitr_in]{knitr_in()}}, \code{\link[=ignore]{ignore()}}
+\code{\link[=file_out]{file_out()}}, \code{\link[=knitr_in]{knitr_in()}}, \code{\link[=ignore]{ignore()}}, \code{\link[=no_deps]{no_deps()}}
 }

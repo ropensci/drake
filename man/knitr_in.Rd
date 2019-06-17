@@ -52,5 +52,5 @@ make(my_plan)
 }
 }
 \seealso{
-\code{\link[=file_in]{file_in()}}, \code{\link[=file_out]{file_out()}}, \code{\link[=ignore]{ignore()}}
+\code{\link[=file_in]{file_in()}}, \code{\link[=file_out]{file_out()}}, \code{\link[=ignore]{ignore()}}, \code{\link[=no_deps]{no_deps()}}
 }
