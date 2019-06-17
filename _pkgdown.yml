@@ -68,6 +68,7 @@ reference:
   - '`file_out`'
   - '`knitr_in`'
   - '`ignore`'
+  - '`no_deps`'
   - '`drake_slice`'
   - '`drake_envir`'
   - '`trigger`'

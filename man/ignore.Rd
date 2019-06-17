@@ -2,7 +2,7 @@
 % Please edit documentation in R/api-plan.R
 \name{ignore}
 \alias{ignore}
-\title{Ignore components of commands and imported functions.}
+\title{Ignore code}
 \usage{
 ignore(x = NULL)
 }
@@ -13,13 +13,16 @@ ignore(x = NULL)
 The argument.
 }
 \description{
-In a command in the workflow plan
-or the body of an imported function, you can
-\code{ignore(some_code)} to
+Ignore sections of commands and imported functions.
+}
+\details{
+In user-defined functions and \code{\link[=drake_plan]{drake_plan()}} commands, you can
+wrap code chunks in \code{ignore()} to
 \enumerate{
-\item Force \code{drake} to not track dependencies in \code{some_code}, and
-\item Ignore any changes in \code{some_code} when it comes to
-deciding which target are out of date.
+\item Tell \code{drake} to not search for dependencies
+(targets etc. mentioned in the code) and
+\item Ignore changes to the code so downstream targets remain up to date.
+To enforce (1) without (2), use \code{\link[=no_deps]{no_deps()}}.
 }
 }
 \examples{
@@ -36,19 +39,29 @@ make(plan = drake_plan(y = sqrt(4) + ignore(x))) # Builds y.
 x <- 6
 make(plan = drake_plan(y = sqrt(4) + ignore(x))) # Skips y.
 make(plan = drake_plan(y = sqrt(4) + ignore(x + 1))) # Skips y.
-# What about imported functions?
-f <- function(x) sqrt(4) + ignore(x + 1)
-make(plan = drake_plan(x = f(2)))
+
+# ignore() works with functions and multiline code chunks.
+f <- function(x) {
+  ignore({
+    x <- x + 1
+    x <- x + 2
+  })
+  x # Not ignored.
+}
+make(plan = drake_plan(y = f(2)))
 readd(x)
-f <- function(x) sqrt(4) + ignore(x + 2)
-make(plan = drake_plan(x = f(2)))
-readd(x)
-f <- function(x) sqrt(5) + ignore(x + 2)
+# Changes the content of the ignore() block:
+f <- function(x) {
+  ignore({
+    x <- x + 1
+  })
+  x # Not ignored.
+}
 make(plan = drake_plan(x = f(2)))
 readd(x)
 })
 }
 }
 \seealso{
-\code{\link[=file_in]{file_in()}}, \code{\link[=file_out]{file_out()}}, \code{\link[=knitr_in]{knitr_in()}}
+\code{\link[=file_in]{file_in()}}, \code{\link[=file_out]{file_out()}}, \code{\link[=knitr_in]{knitr_in()}}, \code{\link[=no_deps]{no_deps()}}
 }
