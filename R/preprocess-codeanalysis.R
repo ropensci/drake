@@ -195,7 +195,7 @@ walk_code <- function(expr, results, locals, allowed_globals) {
       analyze_file_out(expr, results)
     } else if (name %in% c(knitr_in_fns)) {
       analyze_knitr_in(expr, results)
-    } else if (!(name %in% ignore_fns)) {
+    } else if (!(name %in% no_deps_fns)) {
       walk_call(expr, results, locals, allowed_globals)
     }
   }
