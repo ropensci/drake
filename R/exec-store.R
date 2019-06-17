@@ -4,7 +4,7 @@ store_outputs <- function(target, value, meta, config) {
   if (inherits(meta$error, "error")) {
     return()
   }
-  log_msg("store", target, config = config)
+  log_msg("store", target = target, config = config)
   layout <- config$layout[[target]]
   if (is.null(meta$command)) {
     meta$command <- layout$command_standardized

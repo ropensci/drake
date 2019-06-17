@@ -14,4 +14,4 @@ vignette: >
 
 # Learn about drake
 
-The main resources to learn `drake` are the [user manual](https://ropenscilabs.github.io/drake-manual/) and the [reference website](https://ropensci.github.io/drake/). The information from this vignette has moved there.
+The main resources to learn `drake` are the [user manual](https://ropenscilabs.github.io/drake-manual/), the [reference website](https://ropensci.github.io/drake/), [`learndrake`](https://github.com/wlandau/learndrake), and [`drakeplanner`](https://github.com/wlandau/drakeplanner). The information from this vignette has moved to the [manual](https://ropenscilabs.github.io/drake-manual/).

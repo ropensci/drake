@@ -24,13 +24,21 @@ with_handling <- function(target, meta, config) {
   withCallingHandlers(
     value <- with_call_stack(target = target, config = config),
     warning = function(w) {
-      drake_log(paste("Warning:", w$message), config = config)
+      drake_log(
+        paste("Warning:", w$message),
+        target = target,
+        config = config
+      )
       warnings <<- c(warnings, w$message)
       invokeRestart("muffleWarning")
     },
     message = function(m) {
       msg <- gsub(pattern = "\n$", replacement = "", x = m$message)
-      drake_log(msg, config = config)
+      drake_log(
+        msg,
+        target = target,
+        config = config
+      )
       messages <<- c(messages, msg)
       invokeRestart("muffleMessage")
     }

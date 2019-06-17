@@ -8,6 +8,7 @@ announce_build <- function(target, meta, config) {
   log_msg(
     "target",
     target,
+    target = target,
     config = config,
     color = colors["target"],
     tier = 1L
@@ -29,6 +30,7 @@ build_target <- function(target, meta, config) {
         retries,
         "of",
         max_retries,
+        target = target,
         config = config,
         color = colors["retry"],
         tier = 1L

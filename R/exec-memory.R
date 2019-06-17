@@ -59,7 +59,7 @@ manage_deps.memory <- function(target, config, downstream, jobs) {
   target_deps <- deps_memory(targets = target, config = config)
   discard_these <- setdiff(x = already_loaded, y = target_deps)
   if (length(discard_these)) {
-    log_msg("unload", discard_these, config = config)
+    log_msg("unload", discard_these, target = target, config = config)
     rm(list = discard_these, envir = config$eval)
   }
   target_deps <- setdiff(target_deps, target)
@@ -75,7 +75,7 @@ manage_deps.lookahead <- function(target, config, downstream, jobs) {
   keep_these <- c(target_deps, downstream_deps)
   discard_these <- setdiff(x = already_loaded, y = keep_these)
   if (length(discard_these)) {
-    log_msg("unload", discard_these, config = config)
+    log_msg("unload", discard_these, target = target, config = config)
     rm(list = discard_these, envir = config$eval)
   }
   target_deps <- setdiff(target_deps, target)
@@ -86,7 +86,7 @@ manage_deps.lookahead <- function(target, config, downstream, jobs) {
 manage_deps.unload <- function(target, config, downstream, jobs) {
   discard_these <- setdiff(names(config$eval), drake_markers)
   if (length(discard_these)) {
-    log_msg("unload", discard_these, config = config)
+    log_msg("unload", discard_these, target = target, config = config)
     rm(list = discard_these, envir = config$eval)
   }
 }

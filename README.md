@@ -4,7 +4,6 @@
 <center>
 <img src="https://ropensci.github.io/drake/figures/infographic.svg" alt="infographic" align="center" style = "border: none; float: center;">
 </center>
-
 <table class="table">
 <thead>
 <tr class="header">
@@ -145,6 +144,11 @@ To set up a project, load your packages,
 library(drake)
 library(dplyr)
 library(ggplot2)
+#> Registered S3 methods overwritten by 'ggplot2':
+#>   method         from 
+#>   [.quosures     rlang
+#>   c.quosures     rlang
+#>   print.quosures rlang
 ```
 
 load your custom functions,
@@ -431,6 +435,12 @@ all the available functions. Here are the most important ones.
     R/Shiny app to help learn `drake` and create new projects. Run
     locally with `drakeplanner::drakeplanner()` or access it at
     <https://wlandau.shinyapps.io/drakeplanner>.
+  - [`learndrake`](https://github.com/wlandau/learndrake), an R package
+    for teaching an extended `drake` workshop. It contains notebooks,
+    slides, Shiny apps, the latter two of which are publicly deployed.
+    See the
+    [README](https://github.com/wlandau/learndrake/blob/master/README.md)
+    for instructions and links.
   - Presentations and workshops by [Will
     Landau](https://github.com/wlandau), [Kirill
     Müller](https://github.com/krlmlr), [Amanda

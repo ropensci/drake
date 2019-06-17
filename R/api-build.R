@@ -42,8 +42,15 @@ drake_build <- function(
   jobs = 1,
   replace = FALSE
 ) {
-  log_msg("begin drake_build()", config = config)
-  on.exit(log_msg("end drake_build()", config = config), add = TRUE)
+  log_msg("begin drake_build()", target = target, config = config)
+  on.exit(
+    log_msg(
+      "end drake_build()",
+      target = target,
+      config = config
+    ),
+    add = TRUE
+  )
   if (!is.null(meta)) {
     warning(
       "drake_build() is exclusively user-side now, ",
