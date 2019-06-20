@@ -13,7 +13,7 @@ file_out(...)
 A character vector of declared output file or directory paths.
 }
 \description{
-\code{file_in()} marks individual files
+\code{file_out()} marks individual files
 (and whole directories) that your targets create.
 }
 \examples{
@@ -22,8 +22,7 @@ isolate_example("Contain side effects", {
 # The `file_out()` and `file_in()` functions
 # just takes in strings and returns them.
 file_out("summaries.txt")
-# Their main purpose is to orchestrate your custom files
-# in your workflow plan data frame.
+# Their main purpose is to flag custom files for tracking.
 suppressWarnings(
   plan <- drake_plan(
     out = write.csv(mtcars, file_out("mtcars.csv")),
