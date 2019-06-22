@@ -21,5 +21,26 @@ drake_history <- function(
   make_imports = TRUE,
   do_prework = TRUE
 ) {
-  namespace <- ifelse(show_cleaned, "meta", config$cache$default_namespace)
+  if (!has_history(config)) {
+    stop(
+      "make() or drake_config() was run with history = FALSE, ",
+      "so drake did not track history.",
+      call. = FALSE
+    )
+  }
+  config$history$list()
+}
+
+default_history_queue <- function(cache_path) {
+  assert_pkg("txtq", version = "0.1.2")
+  cache_dir <- dirname(cache_path)
+  history_path <- file.path(cache_dir, ".drake_history")
+  txtq::txtq(history_path)
+}
+
+has_history <- function(config) {
+  if (is.null(config$history)) {
+    return(FALSE)
+  }
+  inherits(config$history, "R6_txtq")
 }

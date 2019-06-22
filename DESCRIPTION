@@ -115,6 +115,7 @@ Suggests:
   testthat,
   tibble,
   tidyselect (>= 0.2.4),
+  txtq (>= 0.1.2),
   txtplot,
   usethis,
   visNetwork,

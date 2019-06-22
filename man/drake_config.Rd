@@ -22,7 +22,7 @@ drake_config(plan, targets = NULL, envir = parent.frame(),
   garbage_collection = FALSE, template = list(), sleep = function(i)
   0.01, hasty_build = NULL, memory_strategy = c("speed", "autoclean",
   "preclean", "lookahead", "unload", "none", "memory"), layout = NULL,
-  lock_envir = TRUE)
+  lock_envir = TRUE, history = FALSE)
 }
 \arguments{
 \item{plan}{Workflow plan data frame.
@@ -416,6 +416,12 @@ This is extremely important for ensuring the purity of your functions
 and the reproducibility/credibility/trust you can place in your project.
 \code{lock_envir} will be set to a default of \code{TRUE} in \code{drake} version
 7.0.0 and higher.}
+
+\item{history}{Logical, whether to record the build history
+of your targets. You can also supply a
+\href{https://github.com/wlandau/txtq}{txtq}, which is
+how \code{drake} records history.
+Required for \code{\link[=drake_history]{drake_history()}}.}
 }
 \value{
 The master internal configuration list of a project.

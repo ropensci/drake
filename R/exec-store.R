@@ -105,12 +105,14 @@ finalize_times <- function(target, meta, config) {
     target = target
   )
   meta$time_start <- NULL
-  meta$time_stamp <- Sys.time()
   meta
 }
 
 finalize_history <- function(target, meta, config) {
   meta$value_hash <- config$cache$get_hash(target)
+  if (has_history(config)) {
+    config$history$push(title = target, message = meta$value_hash)
+  }
   meta
 }
 

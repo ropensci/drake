@@ -166,7 +166,8 @@ make <- function(
     "memory" # deprecated on 2019-06-22
   ),
   layout = NULL,
-  lock_envir = TRUE
+  lock_envir = TRUE,
+  history = FALSE
 ) {
   log_msg(
     "begin make()",
@@ -220,7 +221,8 @@ make <- function(
       hasty_build = hasty_build,
       memory_strategy = memory_strategy,
       layout = layout,
-      lock_envir = lock_envir
+      lock_envir = lock_envir,
+      history = history
     )
   }
   assert_config_not_plan(config)
