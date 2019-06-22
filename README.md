@@ -466,6 +466,7 @@ applications of `drake` in real-world
   - [efcaguab/demografia-del-voto](https://github.com/efcaguab/demografia-del-voto)
   - [efcaguab/great-white-shark-nsw](https://github.com/efcaguab/great-white-shark-nsw)
   - [IndianaCHE/Detailed-SSP-Reports](https://github.com/IndianaCHE/Detailed-SSP-Reports)
+  - [joelnitta/pleurosoriopsis](https://github.com/joelnitta/pleurosoriopsis)
   - [pat-s/pathogen-modeling](https://github.com/pat-s/pathogen-modeling)
   - [sol-eng/tensorflow-w-r](https://github.com/sol-eng/tensorflow-w-r)
   - [tiernanmartin/home-and-hope](https://github.com/tiernanmartin/home-and-hope)
