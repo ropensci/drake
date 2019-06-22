@@ -7,13 +7,6 @@
 #' @export
 #' @return A data frame of target history.
 #' @param config A list returned from `drake_config()`.
-#' @param show_cleaned Logical.
-#'   - `FALSE`: omit targets that have been "removed" with [clean()].
-#'   - `TRUE`: include targets that have been "removed" with [clean()].
-#'   (They are not really gone unless you run
-#'   `clean(garbage_collection = TRUE)`).
-#'   Could be slow.
-#'   Omits targets "removed" with `clean(purge = TRUE)`.
 #' @param show_args Logical, whether to include atomic arguments
 #'   to function calls in [drake_plan()] commands.
 #'   Could be slow because this requires parsing and analyzing
@@ -23,11 +16,10 @@
 #' @inheritParams outdated
 drake_history <- function(
   config,
-  show_cleaned = FALSE,
   show_args = FALSE,
   show_status = FALSE,
   make_imports = TRUE,
   do_prework = TRUE
 ) {
-  invisible()
+  namespace <- ifelse(show_cleaned, "meta", config$cache$default_namespace)
 }

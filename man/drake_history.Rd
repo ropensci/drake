@@ -4,21 +4,11 @@
 \alias{drake_history}
 \title{Show history}
 \usage{
-drake_history(config, show_cleaned = FALSE, show_args = FALSE,
-  show_status = FALSE, make_imports = TRUE, do_prework = TRUE)
+drake_history(config, show_args = FALSE, show_status = FALSE,
+  make_imports = TRUE, do_prework = TRUE)
 }
 \arguments{
 \item{config}{A list returned from \code{drake_config()}.}
-
-\item{show_cleaned}{Logical.
-\itemize{
-\item \code{FALSE}: omit targets that have been "removed" with \code{\link[=clean]{clean()}}.
-\item \code{TRUE}: include targets that have been "removed" with \code{\link[=clean]{clean()}}.
-(They are not really gone unless you run
-\code{clean(garbage_collection = TRUE)}).
-Could be slow.
-Omits targets "removed" with \code{clean(purge = TRUE)}.
-}}
 
 \item{show_args}{Logical, whether to include atomic arguments
 to function calls in \code{\link[=drake_plan]{drake_plan()}} commands.

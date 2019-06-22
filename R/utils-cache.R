@@ -1,7 +1,8 @@
 cleaned_namespaces_ <- function(
   default = storr::storr_environment()$default_namespace
 ) {
-  default
+  out <- c(default, "meta")
+  sort(out)
 }
 
 # List the `storr` cache namespaces that store target-level information.
@@ -10,7 +11,6 @@ target_namespaces_ <- function(
 ) {
   out <- c(
     cleaned_namespaces_(default = default),
-    "meta",
     "progress"
   )
   sort(out)
