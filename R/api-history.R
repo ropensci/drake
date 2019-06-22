@@ -22,11 +22,7 @@ drake_history <- function(
   do_prework = TRUE
 ) {
   if (!has_history(config)) {
-    stop(
-      "make() or drake_config() was run with history = FALSE, ",
-      "so drake did not track history.",
-      call. = FALSE
-    )
+    config$history <- default_history_queue(config$cache_path)
   }
   config$history$list()
 }
