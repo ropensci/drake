@@ -20,8 +20,9 @@ drake_config(plan, targets = NULL, envir = parent.frame(),
   session = NULL, pruning_strategy = NULL, makefile_path = NULL,
   console_log_file = NULL, ensure_workers = TRUE,
   garbage_collection = FALSE, template = list(), sleep = function(i)
-  0.01, hasty_build = NULL, memory_strategy = c("speed", "memory",
-  "lookahead", "unload", "none"), layout = NULL, lock_envir = TRUE)
+  0.01, hasty_build = NULL, memory_strategy = c("speed", "autoclean",
+  "preclean", "lookahead", "unload", "none", "memory"), layout = NULL,
+  lock_envir = TRUE)
 }
 \arguments{
 \item{plan}{Workflow plan data frame.
@@ -359,7 +360,14 @@ to override the global memory strategy. Choices:
 \item \code{"speed"}: Once a target is newly built or loaded in memory,
 just keep it there.
 This choice maximizes speed and hogs memory.
-\item \code{"memory"}: Just before building each new target,
+\item \code{"autoclean"}: Just before building each new target,
+unload everything from memory except the target's direct dependencies.
+After a target is built, discard it from memory.
+(Set \code{garbage_collection = TRUE} to make sure it is really gone.)
+This option conserves memory, but it sacrifices speed because
+each new target needs to reload
+any previously unloaded targets from storage.
+\item \code{"preclean"}: Just before building each new target,
 unload everything from memory except the target's direct dependencies.
 After a target is built, keep it in memory until \code{drake} determines
 they can be unloaded.

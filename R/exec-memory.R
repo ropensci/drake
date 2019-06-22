@@ -1,7 +1,7 @@
 assign_to_envir <- function(target, value, config) {
   memory_strategy <- config$layout[[target]]$memory_strategy %||NA%
     config$memory_strategy
-  if (memory_strategy %in% c("unload", "none")) {
+  if (memory_strategy %in% c("autoclean", "unload", "none")) {
     return()
   }
   if (
@@ -54,7 +54,7 @@ manage_deps.speed <- function(target, config, downstream, jobs) {
   try_load(targets = target_deps, config = config, jobs = jobs)
 }
 
-manage_deps.memory <- function(target, config, downstream, jobs) {
+manage_deps.autoclean <- function(target, config, downstream, jobs) {
   already_loaded <- setdiff(names(config$eval), drake_markers)
   target_deps <- deps_memory(targets = target, config = config)
   discard_these <- setdiff(x = already_loaded, y = target_deps)
@@ -66,6 +66,8 @@ manage_deps.memory <- function(target, config, downstream, jobs) {
   target_deps <- setdiff(target_deps, already_loaded)
   try_load(targets = target_deps, config = config, jobs = jobs)
 }
+
+manage_deps.preclean <- manage_deps.autoclean
 
 manage_deps.lookahead <- function(target, config, downstream, jobs) {
   downstream <- downstream %||% downstream_nodes(config$graph, target)

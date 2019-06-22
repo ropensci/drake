@@ -9,6 +9,7 @@ algo
 Ane
 args
 Args
+autoclean
 Axthelm
 backoff
 Badi
@@ -147,6 +148,7 @@ Pinnoi
 pleurosoriopsis
 pre
 preCCProbPaper
+preclean
 precomputed
 Preprocess
 prettycode

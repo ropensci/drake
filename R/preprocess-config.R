@@ -258,7 +258,14 @@
 #' - `"speed"`: Once a target is newly built or loaded in memory,
 #'   just keep it there.
 #'   This choice maximizes speed and hogs memory.
-#' - `"memory"`: Just before building each new target,
+#' - `"autoclean"`: Just before building each new target,
+#'   unload everything from memory except the target's direct dependencies.
+#'   After a target is built, discard it from memory.
+#'   (Set `garbage_collection = TRUE` to make sure it is really gone.)
+#'   This option conserves memory, but it sacrifices speed because
+#'   each new target needs to reload
+#'   any previously unloaded targets from storage.
+#' - `"preclean"`: Just before building each new target,
 #'   unload everything from memory except the target's direct dependencies.
 #'   After a target is built, keep it in memory until `drake` determines
 #'   they can be unloaded.
@@ -451,7 +458,15 @@ drake_config <- function(
   template = list(),
   sleep = function(i) 0.01,
   hasty_build = NULL,
-  memory_strategy = c("speed", "memory", "lookahead", "unload", "none"),
+  memory_strategy = c(
+    "speed",
+    "autoclean",
+    "preclean",
+    "lookahead",
+    "unload",
+    "none",
+    "memory" # deprecated on 2019-06-22
+  ),
   layout = NULL,
   lock_envir = TRUE
 ) {
@@ -538,6 +553,16 @@ drake_config <- function(
       # 2019-01-03 # nolint
     )
   }
+  memory_strategy <- match.arg(memory_strategy)
+  if (memory_strategy == "memory") {
+    memory_strategy <- "preclean"
+    warning(
+      "make(memory_strategy = \"memory\") is deprecated. ",
+      "Use make(memory_strategy = \"preclean\") instead",
+      call. = FALSE
+      # 2019-06-22 # nolint
+    )
+  }
   plan <- sanitize_plan(plan)
   plan_checks(plan)
   targets <- sanitize_targets(targets, plan)
@@ -575,7 +600,6 @@ drake_config <- function(
   )
   cache_path <- force_cache_path(cache)
   lazy_load <- parse_lazy_arg(lazy_load)
-  memory_strategy <- match.arg(memory_strategy)
   caching <- match.arg(caching)
   ht_encode_path <- ht_new()
   ht_decode_path <- ht_new()

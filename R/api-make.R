@@ -156,7 +156,15 @@ make <- function(
   template = list(),
   sleep = function(i) 0.01,
   hasty_build = NULL,
-  memory_strategy = c("speed", "memory", "lookahead", "unload", "none"),
+  memory_strategy = c(
+    "speed",
+    "autoclean",
+    "preclean",
+    "lookahead",
+    "unload",
+    "none",
+    "memory" # deprecated on 2019-06-22
+  ),
   layout = NULL,
   lock_envir = TRUE
 ) {

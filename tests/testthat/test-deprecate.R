@@ -1463,3 +1463,16 @@ test_with_dir("get_cache", {
   expect_true(inherits(tmp1, "storr"))
   expect_true(inherits(tmp2, "storr"))
 })
+
+test_with_dir("deprecated memory strategies", {
+  plan <- drake_plan(x = 1)
+  expect_warning(
+    make(
+      plan,
+      cache = storr::storr_environment(),
+      session_info = FALSE,
+      memory_strategy = "memory"
+    ),
+    regexp = "preclean"
+  )
+})

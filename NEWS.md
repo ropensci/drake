@@ -4,11 +4,13 @@
 
 - Export `transform_plan()`.
 - Add a new `no_deps()` function, similar to `ignore()`. `no_deps()` suppresses dependency detection but still tracks changes to the literal code ([#910](https://github.com/ropensci/drake/issues/910)).
+- Add a new "autoclean" memory strategy (#917)
 
 ## Enhancements
 
 - Suggest and assert `clustermq` >= 0.8.8.
 - Log the target name in a special column in the console log file ([#909](https://github.com/ropensci/drake/issues/909)).
+- Rename the "memory" memory strategy to "preclean" (with deprecation; #917).
 
 # Version 7.4.0
 

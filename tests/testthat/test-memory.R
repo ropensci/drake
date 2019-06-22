@@ -1,4 +1,4 @@
-drake_context("memory")
+drake_context("preclean")
 
 test_with_dir("manage_memory() warns if loading missing deps", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
@@ -131,32 +131,47 @@ test_with_dir("a close look at the memory strategies", {
   deps <- unique(c(deps, "a_x", "c_y", "t_a_z", "s_b_x"))
   expect_equal(sort(deps), sort(ls(config$eval)))
 
-  # memory
-  config$memory_strategy <- "memory"
-  remove(list = ls(config$eval), envir = config$eval)
-  expect_equal(ls(config$eval), character(0))
-  for (x in c("x", "y", "z")) {
-    manage_memory(x, config)
+  # autoclean and preclean
+  for (strategy in c("preclean", "autoclean")) {
+    config$memory_strategy <- strategy
+    remove(list = ls(config$eval), envir = config$eval)
+
+    # initial discard and load
     expect_equal(ls(config$eval), character(0))
+    for (x in c("x", "y", "z")) {
+      manage_memory(x, config)
+      expect_equal(ls(config$eval), character(0))
+    }
+    for (x in c("a_x", "b_x", "c_x")) {
+      manage_memory(x, config)
+      expect_equal(ls(config$eval), "x")
+    }
+    manage_memory("a_y", config)
+    expect_equal(ls(config$eval), "y")
+    manage_memory("s", config)
+    deps <- paste(
+      "s",
+      rep(letters[1:3], times = 3),
+      rep(letters[24:26], each = 3),
+      sep = "_"
+    )
+    expect_equal(sort(deps), sort(ls(config$eval)))
+    config$eval$y <- 1
+    manage_memory("waitforme", config)
+    deps <- c("a_x", "c_y", "t_a_z", "s_b_x")
+    expect_equal(sort(deps), sort(ls(config$eval)))
+
+    # final discard
+    if (exists("x", envir = config$eval, inherits = FALSE)) {
+      rm(list = "x", envir = config$eval)
+    }
+    assign_to_envir("x", "value", config)
+    e <- exists("x", envir = config$eval, inherits = FALSE)
+    expect_equal(e, config$memory_strategy == "preclean")
+    if (e) {
+      rm(list = "x", envir = config$eval)
+    }
   }
-  for (x in c("a_x", "b_x", "c_x")) {
-    manage_memory(x, config)
-    expect_equal(ls(config$eval), "x")
-  }
-  manage_memory("a_y", config)
-  expect_equal(ls(config$eval), "y")
-  manage_memory("s", config)
-  deps <- paste(
-    "s",
-    rep(letters[1:3], times = 3),
-    rep(letters[24:26], each = 3),
-    sep = "_"
-  )
-  expect_equal(sort(deps), sort(ls(config$eval)))
-  config$eval$y <- 1
-  manage_memory("waitforme", config)
-  deps <- c("a_x", "c_y", "t_a_z", "s_b_x")
-  expect_equal(sort(deps), sort(ls(config$eval)))
 
   # none
   config$memory_strategy <- "none"
@@ -172,7 +187,7 @@ test_with_dir("a close look at the memory strategies", {
 test_with_dir("primary memory strategies actually build everything", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("knitr")
-  for (memory_strategy in c("speed", "memory", "lookahead")) {
+  for (memory_strategy in c("speed", "autoclean", "preclean", "lookahead")) {
     envir <- new.env(parent = globalenv())
     cache <- storr::storr_environment()
     load_mtcars_example(envir = envir)
@@ -236,7 +251,7 @@ test_with_dir("drake_envir() and memory strategies", {
   expect_false(any(c("i") %in% l))
   make(
     plan,
-    memory_strategy = "memory",
+    memory_strategy = "preclean",
     cache = storr::storr_environment(),
     session_info = FALSE
   )
