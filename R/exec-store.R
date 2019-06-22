@@ -66,28 +66,52 @@ store_single_output <- function(target, value, meta, config) {
       config = config
     )
   }
-  finalize_storage(
+  store_meta(
     target = target,
     meta = meta,
     config = config
   )
 }
 
-finalize_storage <- function(target, meta, config) {
+store_meta <- function(target, meta, config) {
   meta <- finalize_times(
     target = target,
     meta = meta,
     config = config
   )
+  if (!meta$imported && !is_encoded_path(target)) {
+    meta <- finalize_history(
+      target = target,
+      meta = meta,
+      config = config
+    )
+    console_time(target, meta, config)
+  }
   config$cache$set(
     key = target,
     value = meta,
     namespace = "meta",
     use_cache = FALSE
   )
-  if (!meta$imported && !is_encoded_path(target)) {
-    console_time(target, meta, config)
-  }
+}
+
+finalize_times <- function(target, meta, config) {
+  meta$time_command <- runtime_entry(
+    runtime = meta$time_command,
+    target = target
+  )
+  meta$time_build <- runtime_entry(
+    runtime = proc.time() - meta$time_start,
+    target = target
+  )
+  meta$time_start <- NULL
+  meta$time_stamp <- Sys.time()
+  meta
+}
+
+finalize_history <- function(target, meta, config) {
+  meta$value_hash <- config$cache$get_hash(target)
+  meta
 }
 
 store_object <- function(target, value, meta, config) {
