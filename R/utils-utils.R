@@ -451,6 +451,6 @@ make_unique <- function(x) {
   y[order(ord)]
 }
 
-microtimestamp <- function() {
-  format(Sys.time(), "%Y-%m-%d %H:%M:%OS9")
+microtime <- function() {
+  format(Sys.time(), "%Y-%m-%d %H:%M:%OS9 %z GMT")
 }

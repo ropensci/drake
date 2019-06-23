@@ -112,13 +112,16 @@ Suggests:
   rstudioapi,
   stats,
   styler,
-  testthat,
+  testthat (>= 2.1.0),
   tibble,
   tidyselect (>= 0.2.4),
+  txtq (>= 0.1.3),
   txtplot,
   usethis,
   visNetwork,
   webshot
+Remotes:
+  wlandau/txtq
 VignetteBuilder: knitr
 Encoding: UTF-8
 Language: en-US

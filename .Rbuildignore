@@ -3,6 +3,7 @@
 ^pkgdown$
 \.DS_Store
 \.drake$
+\.drake_history$
 \.future$
 \.git$
 \.github$

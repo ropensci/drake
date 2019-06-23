@@ -395,6 +395,12 @@
 #'   `lock_envir` will be set to a default of `TRUE` in `drake` version
 #'   7.0.0 and higher.
 #'
+#' @param history Logical, whether to record the build history
+#'   of your targets. You can also supply a
+#'   [`txtq`](https://github.com/wlandau/txtq), which is
+#'   how `drake` records history.
+#'   Required for [drake_history()].
+#'
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {
@@ -468,7 +474,8 @@ drake_config <- function(
     "memory" # deprecated on 2019-06-22
   ),
   layout = NULL,
-  lock_envir = TRUE
+  lock_envir = TRUE,
+  history = FALSE
 ) {
   log_msg(
     "begin drake_config()",
@@ -599,6 +606,9 @@ drake_config <- function(
     verbose = verbose
   )
   cache_path <- force_cache_path(cache)
+  if (identical(history, TRUE)) {
+    history <- default_history_queue(cache_path)
+  }
   lazy_load <- parse_lazy_arg(lazy_load)
   caching <- match.arg(caching)
   ht_encode_path <- ht_new()
@@ -647,7 +657,8 @@ drake_config <- function(
     sleep = sleep,
     hasty_build = hasty_build,
     lock_envir = lock_envir,
-    force = force
+    force = force,
+    history = history
   )
   out <- enforce_compatible_config(out)
   config_checks(out)

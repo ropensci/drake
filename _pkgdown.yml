@@ -86,6 +86,7 @@ reference:
   - '`legend_nodes`'
 - title: Target status
   contents:
+  - '`drake_history`'
   - '`outdated`'
   - '`missed`'
   - '`tracked`'
