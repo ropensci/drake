@@ -357,7 +357,7 @@ Remarks:
   - The `hash` column identifies all the previous the versions of your
     targets. As long as `exists` is `TRUE`, you can recover old data.
 
-Let’s use the history to get the old histogram.
+Let’s use the history to recover the old histogram.
 
 ``` r
 hash <- history %>%
