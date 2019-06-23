@@ -449,8 +449,7 @@ all the available functions. Here are the most important ones.
 
   - `drake_plan()`: create a workflow data frame (like `my_plan`).
   - `make()`: build your project.
-  - `drake_history()`: show what you built, along with how and when you
-    built it.
+  - `drake_history()`: show what you built, when you built it, and the function arguments you used.
   - `r_make()`: launch a fresh
     [`callr::r()`](https://github.com/r-lib/callr) process to build your
     project. Called from an interactive R session, `r_make()` is more
