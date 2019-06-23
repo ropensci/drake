@@ -50,11 +50,12 @@ If \code{analyze} is \code{TRUE}, \code{drake}
 scans your \code{\link[=drake_plan]{drake_plan()}} commands
 for function arguments and mentions them in the history.
 A function argument shows up if and only if
-1. It is explicitly named in the function call,
-e.g. \code{list(a = 1)} instead of \code{list(1)}.
-3. It has length 1.
-4. It is atomic, i.e. a base type: logical, integer,
+1. It has length 1.
+2. It is atomic, i.e. a base type: logical, integer,
 real, complex, character, or raw.
+3. It is explicitly named in the function call,
+For example, \code{x} is detected in
+\code{fn(list(x = 1))} but not \code{f(list(1))}.
 }
 \examples{
 \dontrun{

@@ -6,11 +6,12 @@
 #'   scans your [drake_plan()] commands
 #'   for function arguments and mentions them in the history.
 #'   A function argument shows up if and only if
-#'     1. It is explicitly named in the function call,
-#'        e.g. `list(a = 1)` instead of `list(1)`.
-#'     3. It has length 1.
-#'     4. It is atomic, i.e. a base type: logical, integer,
+#'     1. It has length 1.
+#'     2. It is atomic, i.e. a base type: logical, integer,
 #'       real, complex, character, or raw.
+#'     3. It is explicitly named in the function call,
+#'        For example, `x` is detected in
+#'        `fn(list(x = 1))` but not `f(list(1))`.
 #' @export
 #' @return A data frame of target history.
 #' @param cache An optional
