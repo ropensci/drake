@@ -6,25 +6,55 @@
 #'   and whether each target is up to date (also could be slow).
 #' @export
 #' @return A data frame of target history.
-#' @param config A list returned from `drake_config()`.
-#' @param show_args Logical, whether to include atomic arguments
-#'   to function calls in [drake_plan()] commands.
+#' @param cache An optional
+#'   `drake`/[`storr`](https://github.com/richfitz/storr) cache.
+#'   If not supplied, `drake` will try to find the default cache:
+#'   a folder called `.drake/` in the current working directory
+#'   or one of its ancestor directories.
+#' @param history An optional [`txtq`](https://github.com/wlandau/txtq)
+#'   produced by `make(history = TRUE)`. If not supplied,
+#'   `drake` will try to find it next to the cache in a folder
+#'   called `.drake_history/`.
+#' @param find_args Logical, whether to search for atomic arguments
+#'   to function calls inside [drake_plan()] commands.
 #'   Could be slow because this requires parsing and analyzing
 #'   lots of R code.
-#' @param show_status Logical, whether to show the status of each target
-#'   based on the results of `outdated()`. Could be slow.
 #' @inheritParams outdated
+#' @inheritParams drake_config
 drake_history <- function(
-  config,
-  show_args = FALSE,
-  show_status = FALSE,
+  cache = NULL,
+  history = NULL,
+  find_args = FALSE,
   make_imports = TRUE,
-  do_prework = TRUE
+  do_prework = TRUE,
+  verbose = TRUE
 ) {
-  if (!has_history(config)) {
-    config$history <- default_history_queue(config$cache_path)
+  if (is.null(cache)) {
+    cache <- drake_cache(verbose = verbose)
   }
-  config$history$list()
+  if (is.null(cache)) {
+    stop("cannot find drake cache.")
+  }
+  if (is.null(history)) {
+    history <- default_history_queue(force_cache_path(cache))
+  }
+  from_txtq <- history$list()
+  precedence <- with(from_txtq, order(title, rev(time)))
+  from_txtq <- from_txtq[precedence, ]
+  from_txtq$latest <- !duplicated(from_txtq$title)
+  from_cache <- lapply(from_txtq$message, history_from_cache, cache = cache)
+
+  browser()
+}
+
+history_from_cache <- function(meta_hash, cache) {
+  if (!cache$exists_object(meta_hash)) {
+    return()
+  }
+  meta <- cache$get_value(meta_hash)
+
+  browser()
+
 }
 
 default_history_queue <- function(cache_path) {

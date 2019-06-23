@@ -4,25 +4,38 @@
 \alias{drake_history}
 \title{Show history}
 \usage{
-drake_history(config, show_args = FALSE, show_status = FALSE,
-  make_imports = TRUE, do_prework = TRUE)
+drake_history(cache = NULL, history = NULL, find_args = FALSE,
+  make_imports = TRUE, do_prework = TRUE, verbose = TRUE)
 }
 \arguments{
-\item{config}{A list returned from \code{drake_config()}.}
+\item{cache}{An optional
+\code{drake}/\href{https://github.com/richfitz/storr}{storr} cache.
+If not supplied, \code{drake} will try to find the default cache:
+a folder called \code{.drake/} in the current working directory
+or one of its ancestor directories.}
 
-\item{show_args}{Logical, whether to include atomic arguments
-to function calls in \code{\link[=drake_plan]{drake_plan()}} commands.
+\item{history}{An optional \href{https://github.com/wlandau/txtq}{txtq}
+produced by \code{make(history = TRUE)}. If not supplied,
+\code{drake} will try to find it next to the cache in a folder
+called \code{.drake_history/}.}
+
+\item{find_args}{Logical, whether to search for atomic arguments
+to function calls inside \code{\link[=drake_plan]{drake_plan()}} commands.
 Could be slow because this requires parsing and analyzing
 lots of R code.}
-
-\item{show_status}{Logical, whether to show the status of each target
-based on the results of \code{outdated()}. Could be slow.}
 
 \item{make_imports}{Logical, whether to make the imports first.
 Set to \code{FALSE} to save some time and risk obsolete output.}
 
 \item{do_prework}{Whether to do the \code{prework}
 normally supplied to \code{\link[=make]{make()}}.}
+
+\item{verbose}{Integer, control printing to the console/terminal.
+\itemize{
+\item \code{0}: print nothing.
+\item \code{1}: print targets, retries, and failures.
+\item \code{2}: also show a spinner when preprocessing tasks are underway.
+}}
 }
 \value{
 A data frame of target history.
