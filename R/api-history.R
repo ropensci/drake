@@ -7,9 +7,9 @@
 #'   for function arguments and mentions them in the history.
 #'   A function argument shows up if and only if
 #'     1. It is explicitly named in the function call,
-#'        e.g. `f(a = 1)` instead of `f(1)`.
-#'     2. It has length 1.
-#'     3. It is atomic, i.e. a base type: logical, integer,
+#'        e.g. `list(a = 1)` instead of `list(1)`.
+#'     3. It has length 1.
+#'     4. It is atomic, i.e. a base type: logical, integer,
 #'       real, complex, character, or raw.
 #' @export
 #' @return A data frame of target history.

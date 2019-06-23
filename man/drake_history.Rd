@@ -51,9 +51,9 @@ scans your \code{\link[=drake_plan]{drake_plan()}} commands
 for function arguments and mentions them in the history.
 A function argument shows up if and only if
 1. It is explicitly named in the function call,
-e.g. \code{f(a = 1)} instead of \code{f(1)}.
-2. It has length 1.
-3. It is atomic, i.e. a base type: logical, integer,
+e.g. \code{list(a = 1)} instead of \code{list(1)}.
+3. It has length 1.
+4. It is atomic, i.e. a base type: logical, integer,
 real, complex, character, or raw.
 }
 \examples{
