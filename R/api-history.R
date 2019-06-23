@@ -15,8 +15,9 @@
 #'   produced by `make(history = TRUE)`. If not supplied,
 #'   `drake` will try to find it next to the cache in a folder
 #'   called `.drake_history/`.
-#' @param show_args Logical, whether to search for named atomic arguments
-#'   to function calls inside [drake_plan()] commands.
+#' @param analyze Logical, whether to analyze [drake_plan()]
+#'   commands for named atomic arguments to function calls.
+#'   The values of these arguments will show up in the return value.
 #'   Could be slow because this requires parsing and analyzing
 #'   lots of R code.
 #' @inheritParams outdated
@@ -24,21 +25,39 @@
 #' @examples
 #' \dontrun{
 #' isolate_example({
-#' load_mtcars_example(
-#' make(my_plan, history = TRUE)
+#' # First, let's iterate on a drake workflow.
+#' load_mtcars_example()
+#' make(my_plan, history = TRUE, verbose = 0L)
+#' # Naturally, we'll make updates to our targets along the way.
 #' reg2 <- function(d) {
 #'   d$x2 <- d$x ^ 3
 #'   lm(y ~ x2, data = d)
 #' }
-#' Sys.sleep(5)
-#' make(my_plan, history = TRUE)
-#' drake_history(show_args = TRUE)
+#' Sys.sleep(1.1)
+#' make(my_plan, history = TRUE, verbose = 0L)
+#' # The history is a data frame about all the recorded runs of your targets.
+#' out <- drake_history(analyze = TRUE)
+#' print(out)
+#' # View(out)
+#' # Let's use the history to recover the oldest version
+#' # of our regression2_small target.
+#' oldest_reg2_small <- max(which(out$target == "regression2_small"))
+#' hash_oldest_reg2_small <- out[oldest_reg2_small, ]$hash
+#' cache <- drake_cache()
+#' cache$get_value(hash_oldest_reg2_small)
+#' # If you run clean(), drake can still find all the targets.
+#' clean(small)
+#' drake_history()
+#' # But if you run clean() with garbage collection,
+#' # older versions of your targets may be gone.
+#' clean(large, garbage_collection = TRUE)
+#' drake_history()
 #' })
 #' }
 drake_history <- function(
   cache = NULL,
   history = NULL,
-  show_args = FALSE,
+  analyze = FALSE,
   make_imports = TRUE,
   do_prework = TRUE,
   verbose = TRUE
@@ -53,21 +72,26 @@ drake_history <- function(
     history <- default_history_queue(force_cache_path(cache))
   }
   from_txtq <- history$list()
-  precedence <- with(from_txtq, order(title, rev(time)))
-  from_txtq <- from_txtq[precedence, ]
-  from_txtq$latest <- !duplicated(from_txtq$title)
   from_cache <- lapply(from_txtq$message, history_from_cache, cache = cache)
   from_cache <- do.call(drake_bind_rows, from_cache)
-  out <- weak_tibble(
-    target = from_txtq$title,
-    time = from_txtq$time,
-    hash = from_cache$hash,
-    exists = from_cache$exists,
-    latest = from_txtq$latest,
-    command = from_cache$command,
-    runtime = from_cache$runtime
+  out <- merge(
+    x = from_txtq,
+    y = from_cache,
+    by = "message",
+    all.x = TRUE
   )
-  if (show_args) {
+  out <- weak_tibble(
+    target = out$title,
+    time = out$time,
+    hash = out$hash,
+    exists = out$exists,
+    command = out$command,
+    runtime = out$runtime
+  )
+  ref <- as.POSIXct("0000-01-01", origin = "0000-01-01")
+  out <- out[order(out$target, ref - out$time), ]
+  out$latest <- !duplicated(out$target)
+  if (analyze) {
     args <- lapply(out$command, find_args)
     args <- do.call(drake_bind_rows, args)
     out <- cbind(out, args)
@@ -78,13 +102,14 @@ drake_history <- function(
 
 history_from_cache <- function(meta_hash, cache) {
   if (!cache$exists_object(meta_hash)) {
-    return(data.frame(hash = NA_character_))
+    return(data.frame(hash = NA_character_, stringsAsFactors = FALSE))
   }
   meta <- cache$get_value(meta_hash)
-  out <- data.frame(hash = meta$hash)
+  out <- data.frame(hash = meta$hash, stringsAsFactors = FALSE)
   out$exists <- cache$exists_object(meta$hash)
   out$command <- meta$command
   out$runtime <- meta$time_command$elapsed
+  out$message <- meta_hash
   out
 }
 
@@ -92,9 +117,9 @@ find_args <- function(command) {
   command <- parse(text = command)[[1]]
   ht <- ht_new()
   walk_args(command, ht)
-  out <- as.data.frame(as.list(ht))
+  out <- as.data.frame(as.list(ht), stringsAsFactors = FALSE)
   if (!nrow(out)) {
-    out <- data.frame(DRAKE_HISTORY_NA_ = NA)
+    out <- data.frame(DRAKE_HISTORY_NA_ = NA, stringsAsFactors = FALSE)
   }
   out
 }
