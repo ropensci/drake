@@ -101,7 +101,16 @@ drake_history <- function(
 
 history_from_cache <- function(meta_hash, cache) {
   if (!cache$exists_object(meta_hash)) {
-    return(data.frame(hash = NA_character_, stringsAsFactors = FALSE))
+    return(
+      data.frame(
+        message = meta_hash,
+        hash = NA_character_,
+        exists = NA,
+        command = NA_character_,
+        runtime = NA,
+        stringsAsFactors = FALSE
+      )
+    )
   }
   meta <- cache$get_value(meta_hash)
   out <- data.frame(hash = meta$hash, stringsAsFactors = FALSE)

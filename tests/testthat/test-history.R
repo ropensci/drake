@@ -57,6 +57,11 @@ test_with_dir("basic history", {
   expect_equal(sort(colnames(out)), sort(cols))
   expect_na <- out$target == "small" | !out$latest
   expect_equal(is.na(out$hash), expect_na)
+
+  # Clean everything.
+  clean(cache = cache, garbage_collection = TRUE)
+  out <- drake_history(cache = cache, analyze = TRUE)
+  expect_equal(dim(out), c(22L, 7L))
 })
 
 test_with_dir("complicated history commands", {
