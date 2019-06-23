@@ -55,10 +55,12 @@ file_out_fns <- pair_text(drake_prefix, c("file_out"))
 ignore_fns <- pair_text(drake_prefix, "ignore")
 knitr_in_fns <- pair_text(drake_prefix, c("knitr_in"))
 loadd_fns <- pair_text(drake_prefix, "loadd")
-no_deps_fns <- c(ignore_fns, pair_text(drake_prefix, "no_deps"))
 readd_fns <- pair_text(drake_prefix, "readd")
 target_fns <- pair_text(drake_prefix, "target")
 trigger_fns <- pair_text(drake_prefix, "trigger")
+
+no_deps_fns <- c(ignore_fns, pair_text(drake_prefix, "no_deps"))
+file_fns <- c(file_in_fns, file_out_fns, knitr_in_fns)
 
 drake_symbols <- sort(
   c(

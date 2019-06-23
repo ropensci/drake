@@ -8,10 +8,16 @@
 #'   A function argument shows up if and only if
 #'     1. It has length 1.
 #'     2. It is atomic, i.e. a base type: logical, integer,
-#'       real, complex, character, or raw.
+#'        real, complex, character, or raw.
 #'     3. It is explicitly named in the function call,
-#'        For example, `x` is detected in
+#'        For example, `x` is detected as `1` in
 #'        `fn(list(x = 1))` but not `f(list(1))`.
+#'        The exceptions are [file_out()], [file_in()],
+#'        and [knitr_in()]. For example, `filename` is detected
+#'        as `"my_file.csv"` in
+#'        `process_data(filename = file_in("my_file.csv"))`.
+#'        NB: in `process_data(filename = file_in("a", "b"))`
+#'        `filename` is not detected because the value must be atomic.
 #' @export
 #' @return A data frame of target history.
 #' @param cache An optional
@@ -100,7 +106,7 @@ drake_history <- function(
   out <- out[order(out$target, out$time), ]
   out$latest <- !duplicated(out$target, fromLast = TRUE)
   if (analyze) {
-    args <- lapply(out$command, find_args)
+    args <- lapply(out$command, history_find_args)
     args <- do.call(drake_bind_rows, args)
     out <- cbind(out, args)
   }
@@ -130,10 +136,10 @@ history_from_cache <- function(meta_hash, cache) {
   out
 }
 
-find_args <- function(command) {
+history_find_args <- function(command) {
   command <- parse(text = command)[[1]]
   ht <- ht_new()
-  walk_args(command, ht)
+  history_walk_args(command, ht)
   out <- as.data.frame(as.list(ht), stringsAsFactors = FALSE)
   if (!nrow(out)) {
     out <- data.frame(DRAKE_HISTORY_NA_ = NA, stringsAsFactors = FALSE)
@@ -141,20 +147,29 @@ find_args <- function(command) {
   out
 }
 
-walk_args <- function(expr, ht) {
+history_walk_args <- function(expr, ht) {
   if (!length(expr)) {
     return()
   }
   if (is.call(expr)) {
     for (name in Filter(nzchar, names(expr))) {
-      value <- expr[[name]]
-      if (is.atomic(value)) {
-        ht_set(ht = ht, x = name, value = value)
-      }
+      history_analyze_value(name = name, value = expr[[name]], ht = ht)
     }
   }
   if (is.recursive(expr)) {
-    lapply(expr, walk_args, ht = ht)
+    lapply(expr, history_walk_args, ht = ht)
+  }
+}
+
+history_analyze_value <- function(name, value, ht) {
+  if (is.call(value)) {
+    fn <- safe_deparse(value[[1]])
+    if (fn %in% file_fns) {
+      value <- eval(value)
+    }
+  }
+  if (is.atomic(value) && length(value) == 1) {
+    ht_set(ht = ht, x = name, value = value)
   }
 }
 
