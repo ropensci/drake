@@ -196,7 +196,7 @@ work. Targets are built in the correct order regardless of the row order
 of `plan`.
 
 ``` r
-make(plan, history = TRUE) # History is optional.
+make(plan, history = TRUE) # History is new in drake 7.5.0.
 #> target raw_data
 #> target data
 #> target fit

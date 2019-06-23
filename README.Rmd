@@ -190,7 +190,7 @@ plan
 So far, we have just been setting the stage. Use `make()` to do the real work. Targets are built in the correct order regardless of the row order of `plan`.
 
 ```{r make1}
-make(plan, history = TRUE) # History is optional.
+make(plan, history = TRUE) # History is new in drake 7.5.0.
 ```
 
 Except for files like `report.html`, your output is stored in a hidden `.drake/` folder. Reading it back is easy.
