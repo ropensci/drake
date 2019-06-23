@@ -329,9 +329,9 @@ make(plan) # Independently re-create the results from the code and input data.
 #> target report
 ```
 
-## History
+## History and provenance
 
-As of version 7.5.0, `drake` can track the history of your analysis:
+As of version 7.5.0, `drake` can track the history and provenance of your targets:
 what you built, when you built it, how you built it, the arguments you
 used in your function calls, and how to get the data back.
 
