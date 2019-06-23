@@ -4,7 +4,7 @@
 \alias{drake_history}
 \title{Show history}
 \usage{
-drake_history(cache = NULL, history = NULL, find_args = FALSE,
+drake_history(cache = NULL, history = NULL, show_args = FALSE,
   make_imports = TRUE, do_prework = TRUE, verbose = TRUE)
 }
 \arguments{
@@ -19,7 +19,7 @@ produced by \code{make(history = TRUE)}. If not supplied,
 \code{drake} will try to find it next to the cache in a folder
 called \code{.drake_history/}.}
 
-\item{find_args}{Logical, whether to search for atomic arguments
+\item{show_args}{Logical, whether to search for named atomic arguments
 to function calls inside \code{\link[=drake_plan]{drake_plan()}} commands.
 Could be slow because this requires parsing and analyzing
 lots of R code.}
@@ -46,4 +46,19 @@ what you ran, when you ran it, and where
 it lives. Optionally show the settings
 under which you ran things (could be slow)
 and whether each target is up to date (also could be slow).
+}
+\examples{
+\dontrun{
+isolate_example({
+load_mtcars_example(
+make(my_plan, history = TRUE)
+reg2 <- function(d) {
+  d$x2 <- d$x ^ 3
+  lm(y ~ x2, data = d)
+}
+Sys.sleep(5)
+make(my_plan, history = TRUE)
+drake_history(show_args = TRUE)
+})
+}
 }

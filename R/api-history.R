@@ -15,16 +15,30 @@
 #'   produced by `make(history = TRUE)`. If not supplied,
 #'   `drake` will try to find it next to the cache in a folder
 #'   called `.drake_history/`.
-#' @param find_args Logical, whether to search for atomic arguments
+#' @param show_args Logical, whether to search for named atomic arguments
 #'   to function calls inside [drake_plan()] commands.
 #'   Could be slow because this requires parsing and analyzing
 #'   lots of R code.
 #' @inheritParams outdated
 #' @inheritParams drake_config
+#' @examples
+#' \dontrun{
+#' isolate_example({
+#' load_mtcars_example(
+#' make(my_plan, history = TRUE)
+#' reg2 <- function(d) {
+#'   d$x2 <- d$x ^ 3
+#'   lm(y ~ x2, data = d)
+#' }
+#' Sys.sleep(5)
+#' make(my_plan, history = TRUE)
+#' drake_history(show_args = TRUE)
+#' })
+#' }
 drake_history <- function(
   cache = NULL,
   history = NULL,
-  find_args = FALSE,
+  show_args = FALSE,
   make_imports = TRUE,
   do_prework = TRUE,
   verbose = TRUE
@@ -53,21 +67,22 @@ drake_history <- function(
     command = from_cache$command,
     runtime = from_cache$runtime
   )
-  if (find_args) {
+  if (show_args) {
     args <- lapply(out$command, find_args)
     args <- do.call(drake_bind_rows, args)
     out <- cbind(out, args)
   }
-  out
+  out$DRAKE_HISTORY_NA_ <- NULL
+  weak_as_tibble(out)
 }
 
 history_from_cache <- function(meta_hash, cache) {
   if (!cache$exists_object(meta_hash)) {
-    return()
+    return(data.frame(hash = NA_character_))
   }
   meta <- cache$get_value(meta_hash)
   out <- data.frame(hash = meta$hash)
-  out$exists = cache$exists_object(meta$hash)
+  out$exists <- cache$exists_object(meta$hash)
   out$command <- meta$command
   out$runtime <- meta$time_command$elapsed
   out
@@ -75,8 +90,30 @@ history_from_cache <- function(meta_hash, cache) {
 
 find_args <- function(command) {
   command <- parse(text = command)[[1]]
+  ht <- ht_new()
+  walk_args(command, ht)
+  out <- as.data.frame(as.list(ht))
+  if (!nrow(out)) {
+    out <- data.frame(DRAKE_HISTORY_NA_ = NA)
+  }
+  out
+}
 
-  browser()
+walk_args <- function(expr, ht) {
+  if (!length(expr)) {
+    return()
+  }
+  if (is.call(expr)) {
+    for (name in Filter(nzchar, names(expr))) {
+      value <- expr[[name]]
+      if (is.atomic(value)) {
+        ht_set(ht = ht, x = name, value = value)
+      }
+    }
+  }
+  if (is.recursive(expr)) {
+    lapply(expr, walk_args, ht = ht)
+  }
 }
 
 default_history_queue <- function(cache_path) {

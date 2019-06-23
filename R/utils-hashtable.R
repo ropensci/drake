@@ -1,3 +1,4 @@
+# Should probably have used S3 dispatch. Oh well...
 ht_new <- function(x = NULL, hash = TRUE) {
   out <- new.env(hash = hash, parent = emptyenv())
   if (!is.null(x)) {
@@ -10,11 +11,11 @@ ht_new_from_list <- function(x, hash = (length(x) > 100)) {
   list2env(x, hash = hash, parent = emptyenv())
 }
 
-ht_set <- function(ht, x) {
+ht_set <- function(ht, x, value = TRUE) {
   lapply(
     X = x,
     FUN = assign,
-    value = TRUE,
+    value = value,
     envir = ht,
     inherits = FALSE
   )
