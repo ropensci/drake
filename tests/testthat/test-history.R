@@ -5,6 +5,7 @@ test_with_dir("history with no cache", {
 })
 
 test_with_dir("basic history", {
+  skip_on_cran()
   skip_if_not_installed("txtq")
   # Iterate.
   load_mtcars_example()
@@ -14,6 +15,7 @@ test_with_dir("basic history", {
     d$x2 <- d$x ^ 3
     lm(y ~ x2, data = d)
   }
+  Sys.sleep(1.1)
   make(my_plan, history = TRUE, cache = cache, session_info = FALSE)
 
   # Get and inspect the history.
@@ -33,6 +35,10 @@ test_with_dir("basic history", {
   expect_equal(sum(is.finite(out$quiet)), 2L)
   expect_true(all(out$quiet[out$target == "report"] == TRUE))
 
+  # Without analysis
+  x <- drake_history(cache = cache)
+  expect_false("quiet" %in% colnames(x))
+
   # Recover an old version of a target.
   i <- which(out$target == "regression2_small")
   expect_equal(length(i), 2)
@@ -40,8 +46,16 @@ test_with_dir("basic history", {
   reg <- cache$get_value(hash_oldest_reg2_small)
   expect_true(inherits(reg, "lm"))
 
-  # Clean
+  # Clean without garbage collection
   clean(small, cache = cache)
+  out2 <- drake_history(cache = cache, analyze = TRUE)
+  expect_equal(out, out2)
 
-  out <- drake_history(cache = cache)
+  # After garbage collection
+  cache$gc()
+  out <- drake_history(cache = cache, analyze = TRUE)
+  expect_equal(dim(out), c(22L, 8L))
+  expect_equal(sort(colnames(out)), sort(cols))
+  expect_na <- out$target == "small" | !out$latest
+  expect_equal(is.na(out$hash), expect_na)
 })
