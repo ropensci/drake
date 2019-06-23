@@ -1,7 +1,8 @@
 drake_context("history")
 
-test_with_dir("history with no cache", {
+test_with_dir("edge_cases", {
   expect_error(drake_history(), regexp = "cannot find drake cache")
+  expect_null(walk_args(NULL, NULL))
 })
 
 test_with_dir("basic history", {

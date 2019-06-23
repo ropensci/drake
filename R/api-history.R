@@ -157,8 +157,5 @@ default_history_queue <- function(cache_path) {
 }
 
 has_history <- function(config) {
-  if (is.null(config$history)) {
-    return(FALSE)
-  }
   inherits(config$history, "R6_txtq")
 }
