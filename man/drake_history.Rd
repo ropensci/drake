@@ -2,7 +2,7 @@
 % Please edit documentation in R/api-history.R
 \name{drake_history}
 \alias{drake_history}
-\title{Show history}
+\title{Show what you built and how you built it}
 \usage{
 drake_history(cache = NULL, history = NULL, analyze = FALSE,
   make_imports = TRUE, do_prework = TRUE, verbose = TRUE)
@@ -44,9 +44,8 @@ A data frame of target history.
 \description{
 See the history of your targets:
 what you ran, when you ran it, and where
-it lives. Optionally show the settings
-under which you ran things (could be slow)
-and whether each target is up to date (also could be slow).
+it lives. Optionally scan your \code{\link[=drake_plan]{drake_plan()}} commands
+for the arguments you used in your function calls.
 }
 \examples{
 \dontrun{
@@ -64,7 +63,6 @@ make(my_plan, history = TRUE, verbose = 0L)
 # The history is a data frame about all the recorded runs of your targets.
 out <- drake_history(analyze = TRUE)
 print(out)
-# View(out)
 # Let's use the history to recover the oldest version
 # of our regression2_small target.
 oldest_reg2_small <- max(which(out$target == "regression2_small"))

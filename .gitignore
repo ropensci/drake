@@ -18,6 +18,7 @@ Thumbs.db
 *.toc
 *.vrb
 .drake
+.drake_history
 .DS_Store
 .future
 .nfs*

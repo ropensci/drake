@@ -144,11 +144,6 @@ To set up a project, load your packages,
 library(drake)
 library(dplyr)
 library(ggplot2)
-#> Registered S3 methods overwritten by 'ggplot2':
-#>   method         from 
-#>   [.quosures     rlang
-#>   c.quosures     rlang
-#>   print.quosures rlang
 ```
 
 load your custom functions,
@@ -201,7 +196,7 @@ work. Targets are built in the correct order regardless of the row order
 of `plan`.
 
 ``` r
-make(plan)
+make(plan, history = TRUE) # History is optional.
 #> target raw_data
 #> target data
 #> target fit
@@ -260,7 +255,7 @@ The next `make()` just builds `hist` and `report.html`. No point in
 wasting time on the data or model.
 
 ``` r
-make(plan)
+make(plan, history = TRUE)
 #> target hist
 #> target report
 ```
@@ -338,6 +333,27 @@ in advance. In that case, you can stay usefully ignorant as you
 reimplement the original author’s methodology. In other words, `drake`
 could potentially improve the integrity of independent replication.
 
+## History
+
+As of version 7.5.0, `drake` can track the history of your analysis:
+what you built, when you built it, how you built it, the arguments you
+used in your function calls, and how to get the data back.
+
+``` r
+drake_history(analyze = TRUE) # Requires a prior make(history = TRUE)
+#> # A tibble: 7 x 8
+#>   target  time        hash    exists command           runtime latest quiet
+#>   <chr>   <chr>       <chr>   <lgl>  <chr>               <dbl> <lgl>  <lgl>
+#> 1 data    2019-06-22… e580e1… TRUE   raw_data %>% mu… 0.001000 TRUE   NA   
+#> 2 fit     2019-06-22… 62a16b… TRUE   lm(Sepal.Width … 0.006    TRUE   NA   
+#> 3 hist    2019-06-22… 10bcd8… TRUE   create_plot(dat… 0.006    FALSE  NA   
+#> 4 hist    2019-06-22… 5252f8… TRUE   create_plot(dat… 0.003    TRUE   NA   
+#> 5 raw_da… 2019-06-22… 63172a… TRUE   "readxl::read_e… 0.00700  TRUE   NA   
+#> # … with 2 more rows
+```
+
+See the [`drake_history()`](https://ropensci.github.io/drake/reference/drake_history.html) help file for details and examples.
+
 ## Readability and transparency
 
 Ideally, independent observers should be able to read your code and
@@ -407,6 +423,7 @@ all the available functions. Here are the most important ones.
 
   - `drake_plan()`: create a workflow data frame (like `my_plan`).
   - `make()`: build your project.
+  - `drake_history()`: show what you built, along with how and when you built it.
   - `r_make()`: launch a fresh
     [`callr::r()`](https://github.com/r-lib/callr) process to build your
     project. Called from an interactive R session, `r_make()` is more

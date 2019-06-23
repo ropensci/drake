@@ -1,9 +1,8 @@
-#' @title Show history
+#' @title Show what you built and how you built it
 #' @description See the history of your targets:
 #'   what you ran, when you ran it, and where
-#'   it lives. Optionally show the settings
-#'   under which you ran things (could be slow)
-#'   and whether each target is up to date (also could be slow).
+#'   it lives. Optionally scan your [drake_plan()] commands
+#'   for the arguments you used in your function calls.
 #' @export
 #' @return A data frame of target history.
 #' @param cache An optional
