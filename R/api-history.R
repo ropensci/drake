@@ -43,8 +43,22 @@ drake_history <- function(
   from_txtq <- from_txtq[precedence, ]
   from_txtq$latest <- !duplicated(from_txtq$title)
   from_cache <- lapply(from_txtq$message, history_from_cache, cache = cache)
-
-  browser()
+  from_cache <- do.call(drake_bind_rows, from_cache)
+  out <- weak_tibble(
+    target = from_txtq$title,
+    time = from_txtq$time,
+    hash = from_cache$hash,
+    exists = from_cache$exists,
+    latest = from_txtq$latest,
+    command = from_cache$command,
+    runtime = from_cache$runtime
+  )
+  if (find_args) {
+    args <- lapply(out$command, find_args)
+    args <- do.call(drake_bind_rows, args)
+    out <- cbind(out, args)
+  }
+  out
 }
 
 history_from_cache <- function(meta_hash, cache) {
@@ -52,9 +66,17 @@ history_from_cache <- function(meta_hash, cache) {
     return()
   }
   meta <- cache$get_value(meta_hash)
+  out <- data.frame(hash = meta$hash)
+  out$exists = cache$exists_object(meta$hash)
+  out$command <- meta$command
+  out$runtime <- meta$time_command$elapsed
+  out
+}
+
+find_args <- function(command) {
+  command <- parse(text = command)[[1]]
 
   browser()
-
 }
 
 default_history_queue <- function(cache_path) {
