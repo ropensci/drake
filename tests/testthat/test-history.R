@@ -5,7 +5,6 @@ test_with_dir("history with no cache", {
 })
 
 test_with_dir("basic history", {
-  skip_on_cran()
   skip_if_not_installed("txtq")
   # Iterate.
   load_mtcars_example()
@@ -15,7 +14,7 @@ test_with_dir("basic history", {
     d$x2 <- d$x ^ 3
     lm(y ~ x2, data = d)
   }
-  Sys.sleep(1.1)
+  Sys.sleep(0.01)
   make(my_plan, history = TRUE, cache = cache, session_info = FALSE)
 
   # Get and inspect the history.
@@ -58,4 +57,20 @@ test_with_dir("basic history", {
   expect_equal(sort(colnames(out)), sort(cols))
   expect_na <- out$target == "small" | !out$latest
   expect_equal(is.na(out$hash), expect_na)
+})
+
+test_with_dir("complicated history commands", {
+  skip_if_not_installed("txtq")
+  plan <- drake_plan(
+    a = identity(
+      x = list(a = "x", 2, b = list(y = 3L, z = sqrt(4), w = "5"))
+    )
+  )
+  cache <- storr::storr_environment()
+  make(plan, cache = cache, session_info = FALSE, history = TRUE)
+  out <- drake_history(cache = cache, analyze = TRUE)
+  expect_equal(ncol(out), 10L)
+  expect_equal(out$a, "x")
+  expect_equal(out$w, "5")
+  expect_equal(out$y, 3L)
 })

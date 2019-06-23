@@ -33,7 +33,7 @@
 #'   d$x2 <- d$x ^ 3
 #'   lm(y ~ x2, data = d)
 #' }
-#' Sys.sleep(1.1)
+#' Sys.sleep(0.01)
 #' make(my_plan, history = TRUE, verbose = 0L)
 #' # The history is a data frame about all the recorded runs of your targets.
 #' out <- drake_history(analyze = TRUE)
@@ -88,9 +88,8 @@ drake_history <- function(
     command = out$command,
     runtime = out$runtime
   )
-  ref <- as.POSIXct("0000-01-01", origin = "0000-01-01")
-  out <- out[order(out$target, ref - out$time), ]
-  out$latest <- !duplicated(out$target)
+  out <- out[order(out$target, out$time), ]
+  out$latest <- !duplicated(out$target, fromLast = TRUE)
   if (analyze) {
     args <- lapply(out$command, find_args)
     args <- do.call(drake_bind_rows, args)

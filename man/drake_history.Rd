@@ -4,7 +4,7 @@
 \alias{drake_history}
 \title{Show history}
 \usage{
-drake_history(cache = NULL, history = NULL, show_args = FALSE,
+drake_history(cache = NULL, history = NULL, analyze = FALSE,
   make_imports = TRUE, do_prework = TRUE, verbose = TRUE)
 }
 \arguments{
@@ -19,8 +19,9 @@ produced by \code{make(history = TRUE)}. If not supplied,
 \code{drake} will try to find it next to the cache in a folder
 called \code{.drake_history/}.}
 
-\item{show_args}{Logical, whether to search for named atomic arguments
-to function calls inside \code{\link[=drake_plan]{drake_plan()}} commands.
+\item{analyze}{Logical, whether to analyze \code{\link[=drake_plan]{drake_plan()}}
+commands for named atomic arguments to function calls.
+The values of these arguments will show up in the return value.
 Could be slow because this requires parsing and analyzing
 lots of R code.}
 
@@ -50,15 +51,33 @@ and whether each target is up to date (also could be slow).
 \examples{
 \dontrun{
 isolate_example({
-load_mtcars_example(
-make(my_plan, history = TRUE)
+# First, let's iterate on a drake workflow.
+load_mtcars_example()
+make(my_plan, history = TRUE, verbose = 0L)
+# Naturally, we'll make updates to our targets along the way.
 reg2 <- function(d) {
   d$x2 <- d$x ^ 3
   lm(y ~ x2, data = d)
 }
-Sys.sleep(5)
-make(my_plan, history = TRUE)
-drake_history(show_args = TRUE)
+Sys.sleep(0.01)
+make(my_plan, history = TRUE, verbose = 0L)
+# The history is a data frame about all the recorded runs of your targets.
+out <- drake_history(analyze = TRUE)
+print(out)
+# View(out)
+# Let's use the history to recover the oldest version
+# of our regression2_small target.
+oldest_reg2_small <- max(which(out$target == "regression2_small"))
+hash_oldest_reg2_small <- out[oldest_reg2_small, ]$hash
+cache <- drake_cache()
+cache$get_value(hash_oldest_reg2_small)
+# If you run clean(), drake can still find all the targets.
+clean(small)
+drake_history()
+# But if you run clean() with garbage collection,
+# older versions of your targets may be gone.
+clean(large, garbage_collection = TRUE)
+drake_history()
 })
 }
 }

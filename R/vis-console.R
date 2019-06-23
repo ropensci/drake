@@ -35,7 +35,7 @@ drake_log <- function(..., target = character(0), config) {
     "|",
     Sys.getpid(),
     "|",
-    microtimestamp(),
+    microtime(),
     "|",
     target,
     "|",
