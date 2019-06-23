@@ -73,14 +73,17 @@ test_with_dir("complicated history commands", {
   skip_if_not_installed("txtq")
   plan <- drake_plan(
     a = identity(
-      x = list(a = "x", 2, b = list(y = 3L, z = sqrt(4), w = "5"))
+      x = list(a = "x", 2, b = list(y = c(3L, 4L), z = sqrt(4), w = "5"))
+    ),
+    b = identity(
+      x = list(a = "x", 2, b = list(y = 4L, z = sqrt(4), w = "5"))
     )
   )
   cache <- storr::storr_environment()
   make(plan, cache = cache, session_info = FALSE, history = TRUE)
   out <- drake_history(cache = cache, analyze = TRUE)
   expect_equal(ncol(out), 10L)
-  expect_equal(out$a, "x")
-  expect_equal(out$w, "5")
-  expect_equal(out$y, 3L)
+  expect_equal(out$a, rep("x", 2))
+  expect_equal(out$w, rep("5", 2))
+  expect_equal(out$y[2], 4L)
 })

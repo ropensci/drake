@@ -2,7 +2,7 @@
 % Please edit documentation in R/api-history.R
 \name{drake_history}
 \alias{drake_history}
-\title{Show what you built and how you built it}
+\title{History and provenance}
 \usage{
 drake_history(cache = NULL, history = NULL, analyze = FALSE,
   make_imports = TRUE, do_prework = TRUE, verbose = TRUE)
@@ -20,8 +20,7 @@ produced by \code{make(history = TRUE)}. If not supplied,
 called \code{.drake_history/}.}
 
 \item{analyze}{Logical, whether to analyze \code{\link[=drake_plan]{drake_plan()}}
-commands for named atomic arguments to function calls.
-The values of these arguments will show up in the return value.
+commands for arguments to function calls.
 Could be slow because this requires parsing and analyzing
 lots of R code.}
 
@@ -42,10 +41,20 @@ normally supplied to \code{\link[=make]{make()}}.}
 A data frame of target history.
 }
 \description{
-See the history of your targets:
-what you ran, when you ran it, and where
-it lives. Optionally scan your \code{\link[=drake_plan]{drake_plan()}} commands
-for the arguments you used in your function calls.
+See the history and provenance of your targets:
+what you ran, when you ran it, the function arguments
+you used, and how to get old data back.
+}
+\details{
+If \code{analyze} is \code{TRUE}, \code{drake}
+scans your \code{\link[=drake_plan]{drake_plan()}} commands
+for function arguments and mentions them in the history.
+A function argument shows up if and only if
+1. It is explicitly named in the function call,
+e.g. \code{f(a = 1)} instead of \code{f(1)}.
+2. It has length 1.
+3. It is atomic, i.e. a base type: logical, integer,
+real, complex, character, or raw.
 }
 \examples{
 \dontrun{

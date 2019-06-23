@@ -1,8 +1,16 @@
-#' @title Show what you built and how you built it
-#' @description See the history of your targets:
-#'   what you ran, when you ran it, and where
-#'   it lives. Optionally scan your [drake_plan()] commands
-#'   for the arguments you used in your function calls.
+#' @title History and provenance
+#' @description See the history and provenance of your targets:
+#'   what you ran, when you ran it, the function arguments
+#'   you used, and how to get old data back.
+#' @details If `analyze` is `TRUE`, `drake`
+#'   scans your [drake_plan()] commands
+#'   for function arguments and mentions them in the history.
+#'   A function argument shows up if and only if
+#'     1. It is explicitly named in the function call,
+#'        e.g. `f(a = 1)` instead of `f(1)`.
+#'     2. It has length 1.
+#'     3. It is atomic, i.e. a base type: logical, integer,
+#'       real, complex, character, or raw.
 #' @export
 #' @return A data frame of target history.
 #' @param cache An optional
@@ -15,8 +23,7 @@
 #'   `drake` will try to find it next to the cache in a folder
 #'   called `.drake_history/`.
 #' @param analyze Logical, whether to analyze [drake_plan()]
-#'   commands for named atomic arguments to function calls.
-#'   The values of these arguments will show up in the return value.
+#'   commands for arguments to function calls.
 #'   Could be slow because this requires parsing and analyzing
 #'   lots of R code.
 #' @inheritParams outdated
