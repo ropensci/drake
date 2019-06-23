@@ -38,7 +38,6 @@
 #' # The history is a data frame about all the recorded runs of your targets.
 #' out <- drake_history(analyze = TRUE)
 #' print(out)
-#' # View(out)
 #' # Let's use the history to recover the oldest version
 #' # of our regression2_small target.
 #' oldest_reg2_small <- max(which(out$target == "regression2_small"))

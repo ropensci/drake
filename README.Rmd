@@ -190,7 +190,7 @@ plan
 So far, we have just been setting the stage. Use `make()` to do the real work. Targets are built in the correct order regardless of the row order of `plan`.
 
 ```{r make1}
-make(plan)
+make(plan, history = TRUE) # History is optional.
 ```
 
 Except for files like `report.html`, your output is stored in a hidden `.drake/` folder. Reading it back is easy.
@@ -231,7 +231,7 @@ vis_drake_graph(config) # Interactive graph: zoom, drag, etc.
 The next `make()` just builds `hist` and `report.html`. No point in wasting time on the data or model.
 
 ```{r justhistetc}
-make(plan)
+make(plan, history = TRUE)
 ```
 
 ```{r hist2, eval = FALSE}
@@ -270,6 +270,10 @@ make(plan) # Independently re-create the results from the code and input data.
 ## Independent replication
 
 With even more evidence and confidence, you can invest the time to independently replicate the original code base if necessary. Up until this point, you relied on basic `drake` functions such as `make()`, so you may not have needed to peek at any substantive author-defined code in advance. In that case, you can stay usefully ignorant as you reimplement the original author's methodology. In other words, `drake` could potentially improve the integrity of independent replication.
+
+## History
+
+As of version 7.5.0, `drake` can track the history of your analysis: what you built, 
 
 ## Readability and transparency
 
