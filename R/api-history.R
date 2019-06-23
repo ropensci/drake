@@ -72,6 +72,9 @@ drake_history <- function(
   from_txtq <- history$list()
   from_cache <- lapply(from_txtq$message, history_from_cache, cache = cache)
   from_cache <- do.call(drake_bind_rows, from_cache)
+  if (!nrow(from_txtq)) {
+    stop("no history. Call make(history = TRUE) next time.", call. = FALSE)
+  }
   out <- merge(
     x = from_txtq,
     y = from_cache,

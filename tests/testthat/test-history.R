@@ -1,8 +1,11 @@
 drake_context("history")
 
 test_with_dir("edge_cases", {
+  skip_if_not_installed("txtq")
   expect_error(drake_history(), regexp = "cannot find drake cache")
   expect_null(walk_args(NULL, NULL))
+  cache <- storr::storr_environment()
+  expect_error(drake_history(cache = cache), regexp = "no history")
 })
 
 test_with_dir("basic history", {
@@ -66,6 +69,7 @@ test_with_dir("basic history", {
 })
 
 test_with_dir("complicated history commands", {
+  skip_on_cran()
   skip_if_not_installed("txtq")
   plan <- drake_plan(
     a = identity(
