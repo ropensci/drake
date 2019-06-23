@@ -12,7 +12,6 @@ knitr::opts_chunk$set(
   comment = "#>",
   fig.path = "README-"
 )
-options(tibble.print_min = 5, tibble.print_max = 5)
 ```
 
 ```{r mainexample, echo = FALSE}
@@ -267,19 +266,38 @@ clean()    # Remove the original author's results.
 make(plan) # Independently re-create the results from the code and input data.
 ```
 
+## History
+
+As of version 7.5.0, `drake` can track the history of your analysis:
+what you built, when you built it, how you built it, the arguments you
+used in your function calls, and how to get the data back.
+
+```{r history}
+history <- drake_history(analyze = TRUE) # Requires make(history = TRUE)
+history
+```
+
+Remarks:
+
+- The `quiet` column appears above because one of the `drake_plan()` commands has `knit(quiet = TRUE)`.
+- The `hash` column identifies all the previous the versions of your targets. As long as `exists` is `TRUE`, you can recover old data.
+
+Let's use the history to get the old histogram.
+
+```{r, eval = FALSE}
+hash <- history %>%
+  filter(target == "hist" & !latest) %>% # Get the old histogram.
+  pull(hash)
+cache <- drake_cache()
+cache$get_value(hash)
+#> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+<img src="https://ropensci.github.io/drake/figures/hist1.png" alt="hist1" align="center" style = "border: none; float: center;" width = "600px">
+
 ## Independent replication
 
 With even more evidence and confidence, you can invest the time to independently replicate the original code base if necessary. Up until this point, you relied on basic `drake` functions such as `make()`, so you may not have needed to peek at any substantive author-defined code in advance. In that case, you can stay usefully ignorant as you reimplement the original author's methodology. In other words, `drake` could potentially improve the integrity of independent replication.
-
-## History
-
-As of version 7.5.0, `drake` can track the history of your analysis: what you built, when you built it, how you built it, the arguments you used in your function calls, and how to get the data back.
-
-```{r history}
-drake_history(analyze = TRUE) # Requires a prior make(history = TRUE)
-```
-
-See the [`drake_history()`](https://ropensci.github.io/drake/reference/drake_history.html) help file for details and examples.
 
 ## Readability and transparency
 
@@ -452,5 +470,8 @@ Credit for images is [attributed here](https://ropensci.github.io/drake/figures/
 
 ```{r cleanupfooter, echo = FALSE}
 clean(destroy = TRUE)
-unlink(c("main", "raw_data.xlsx", "report.Rmd"), recursive = TRUE)
+unlink(
+  c(".drake_history", "main", "raw_data.xlsx", "report.Rmd"),
+  recursive = TRUE
+)
 ```

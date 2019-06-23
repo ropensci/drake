@@ -4,6 +4,7 @@
 <center>
 <img src="https://ropensci.github.io/drake/figures/infographic.svg" alt="infographic" align="center" style = "border: none; float: center;">
 </center>
+
 <table class="table">
 <thead>
 <tr class="header">
@@ -210,14 +211,19 @@ Except for files like `report.html`, your output is stored in a hidden
 ``` r
 readd(data) # See also loadd().
 #> # A tibble: 150 x 5
-#>   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
-#>          <dbl>       <dbl>        <dbl>       <dbl> <fct>  
-#> 1          5.1         3.5          1.4         0.2 setosa 
-#> 2          4.9         3            1.4         0.2 setosa 
-#> 3          4.7         3.2          1.3         0.2 setosa 
-#> 4          4.6         3.1          1.5         0.2 setosa 
-#> 5          5           3.6          1.4         0.2 setosa 
-#> # … with 145 more rows
+#>    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+#>           <dbl>       <dbl>        <dbl>       <dbl> <fct>  
+#>  1          5.1         3.5          1.4         0.2 setosa 
+#>  2          4.9         3            1.4         0.2 setosa 
+#>  3          4.7         3.2          1.3         0.2 setosa 
+#>  4          4.6         3.1          1.5         0.2 setosa 
+#>  5          5           3.6          1.4         0.2 setosa 
+#>  6          5.4         3.9          1.7         0.4 setosa 
+#>  7          4.6         3.4          1.4         0.3 setosa 
+#>  8          5           3.4          1.5         0.2 setosa 
+#>  9          4.4         2.9          1.4         0.2 setosa 
+#> 10          4.9         3.1          1.5         0.1 setosa 
+#> # … with 140 more rows
 ```
 
 You may look back on your work and see room for improvement, but it’s
@@ -323,6 +329,47 @@ make(plan) # Independently re-create the results from the code and input data.
 #> target report
 ```
 
+## History
+
+As of version 7.5.0, `drake` can track the history of your analysis:
+what you built, when you built it, how you built it, the arguments you
+used in your function calls, and how to get the data back.
+
+``` r
+history <- drake_history(analyze = TRUE) # Requires make(history = TRUE)
+history
+#> # A tibble: 7 x 8
+#>   target  time        hash   exists command            runtime latest quiet
+#>   <chr>   <chr>       <chr>  <lgl>  <chr>                <dbl> <lgl>  <lgl>
+#> 1 data    2019-06-23… e580e… TRUE   raw_data %>% muta… 0.001   TRUE   NA   
+#> 2 fit     2019-06-23… 62a16… TRUE   lm(Sepal.Width ~ … 0.00500 TRUE   NA   
+#> 3 hist    2019-06-23… 10bcd… TRUE   create_plot(data)  0.005   FALSE  NA   
+#> 4 hist    2019-06-23… 5252f… TRUE   create_plot(data)  0.00300 TRUE   NA   
+#> 5 raw_da… 2019-06-23… 63172… TRUE   "readxl::read_exc… 0.006   TRUE   NA   
+#> 6 report  2019-06-23… 73303… TRUE   "rmarkdown::rende… 0.501   FALSE  TRUE 
+#> 7 report  2019-06-23… 73303… TRUE   "rmarkdown::rende… 0.381   TRUE   TRUE
+```
+
+Remarks:
+
+  - The `quiet` column appears above because one of the `drake_plan()`
+    commands has `knit(quiet = TRUE)`.
+  - The `hash` column identifies all the previous the versions of your
+    targets. As long as `exists` is `TRUE`, you can recover old data.
+
+Let’s use the history to get the old histogram.
+
+``` r
+hash <- history %>%
+  filter(target == "hist" & !latest) %>% # Get the old histogram.
+  pull(hash)
+cache <- drake_cache()
+cache$get_value(hash)
+#> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+<img src="https://ropensci.github.io/drake/figures/hist1.png" alt="hist1" align="center" style = "border: none; float: center;" width = "600px">
+
 ## Independent replication
 
 With even more evidence and confidence, you can invest the time to
@@ -332,27 +379,6 @@ you may not have needed to peek at any substantive author-defined code
 in advance. In that case, you can stay usefully ignorant as you
 reimplement the original author’s methodology. In other words, `drake`
 could potentially improve the integrity of independent replication.
-
-## History
-
-As of version 7.5.0, `drake` can track the history of your analysis:
-what you built, when you built it, how you built it, the arguments you
-used in your function calls, and how to get the data back.
-
-``` r
-drake_history(analyze = TRUE) # Requires a prior make(history = TRUE)
-#> # A tibble: 7 x 8
-#>   target  time        hash    exists command           runtime latest quiet
-#>   <chr>   <chr>       <chr>   <lgl>  <chr>               <dbl> <lgl>  <lgl>
-#> 1 data    2019-06-22… e580e1… TRUE   raw_data %>% mu… 0.001000 TRUE   NA   
-#> 2 fit     2019-06-22… 62a16b… TRUE   lm(Sepal.Width … 0.006    TRUE   NA   
-#> 3 hist    2019-06-22… 10bcd8… TRUE   create_plot(dat… 0.006    FALSE  NA   
-#> 4 hist    2019-06-22… 5252f8… TRUE   create_plot(dat… 0.003    TRUE   NA   
-#> 5 raw_da… 2019-06-22… 63172a… TRUE   "readxl::read_e… 0.00700  TRUE   NA   
-#> # … with 2 more rows
-```
-
-See the [`drake_history()`](https://ropensci.github.io/drake/reference/drake_history.html) help file for details and examples.
 
 ## Readability and transparency
 
@@ -423,7 +449,8 @@ all the available functions. Here are the most important ones.
 
   - `drake_plan()`: create a workflow data frame (like `my_plan`).
   - `make()`: build your project.
-  - `drake_history()`: show what you built, along with how and when you built it.
+  - `drake_history()`: show what you built, along with how and when you
+    built it.
   - `r_make()`: launch a fresh
     [`callr::r()`](https://github.com/r-lib/callr) process to build your
     project. Called from an interactive R session, `r_make()` is more
