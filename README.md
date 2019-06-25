@@ -677,15 +677,15 @@ plan](https://ropenscilabs.github.io/drake-manual/plans.html), and use
 [example
 here](https://github.com/wlandau/drake-examples/tree/master/main).
 
+### Version control
+
+`drake` is not a version control tool. However, it is fully compatible with [`git`](https://git-scm.com/), [`svn`](https://en.wikipedia.org/wiki/Apache_Subversion), and similar software. In fact, it is good practice to use [`git`](https://git-scm.com/) alongside `drake` for reproducible workflows.
+
+However, data poses a challenge. The datasets created by `make()` can get large and numerous, and it is not recommended to put the `.drake/` cache or the `.drake_history/` logs under version control. Instead, it is recommended to use a data storage solution such as [DropBox](https://www.dropbox.com/) or [OSF](https://osf.io/ka7jv/wiki/home/).
+
 ### Containerization and R package environments
 
-`drake` does not track R packages or system dependencies for changes.
-Instead, it defers to tools like [Docker](https://www.docker.com),
-[Singularity](https://sylabs.io/singularity/),
-[`renv`](https://github.com/rstudio/renv), and
-[`packrat`](https://github.com/rstudio/packrat), which create
-self-contained portable environments to reproducibly isolate and ship
-data analysis projects. `drake` is fully compatible with these tools.
+`drake` does not track R packages or system dependencies for changes. Instead, it defers to tools like [Docker](https://www.docker.com), [Singularity](https://sylabs.io/singularity/), [`renv`](https://github.com/rstudio/renv), and [`packrat`](https://github.com/rstudio/packrat), which create self-contained portable environments to reproducibly isolate and ship data analysis projects. `drake` is fully compatible with these tools.
 
 ### workflowr
 
