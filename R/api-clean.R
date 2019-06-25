@@ -304,7 +304,7 @@ rescue_del <- function(key, cache, namespace) {
 touch_storr_object <- function(key, cache, namespace) {
   envir <- environment()
   hash <- cache$get_hash(key = key, namespace = namespace)
-  value <- cache$driver$get_object(hash = hash)
+  value <- cache$get_value(hash = hash, use_cache = FALSE)
   remove(value, envir = envir)
   invisible(NULL)
 }
