@@ -4,7 +4,6 @@
 <center>
 <img src="https://ropensci.github.io/drake/figures/infographic.svg" alt="infographic" align="center" style = "border: none; float: center;">
 </center>
-
 <table class="table">
 <thead>
 <tr class="header">
@@ -331,23 +330,24 @@ make(plan) # Independently re-create the results from the code and input data.
 
 ## History and provenance
 
-As of version 7.5.0, `drake` can track the history and provenance of your targets:
-what you built, when you built it, how you built it, the arguments you
-used in your function calls, and how to get the data back.
+As of version 7.5.0, `drake` can track the history and provenance of
+your targets: what you built, when you built it, how you built it, the
+arguments you used in your function calls, and how to get the data back.
 
 ``` r
 history <- drake_history(analyze = TRUE) # Requires make(history = TRUE)
 history
-#> # A tibble: 7 x 8
-#>   target  time        hash   exists command            runtime latest quiet
-#>   <chr>   <chr>       <chr>  <lgl>  <chr>                <dbl> <lgl>  <lgl>
-#> 1 data    2019-06-23… e580e… TRUE   raw_data %>% muta… 0.001   TRUE   NA   
-#> 2 fit     2019-06-23… 62a16… TRUE   lm(Sepal.Width ~ … 0.00500 TRUE   NA   
-#> 3 hist    2019-06-23… 10bcd… TRUE   create_plot(data)  0.005   FALSE  NA   
-#> 4 hist    2019-06-23… 5252f… TRUE   create_plot(data)  0.00300 TRUE   NA   
-#> 5 raw_da… 2019-06-23… 63172… TRUE   "readxl::read_exc… 0.006   TRUE   NA   
-#> 6 report  2019-06-23… 73303… TRUE   "rmarkdown::rende… 0.501   FALSE  TRUE 
-#> 7 report  2019-06-23… 73303… TRUE   "rmarkdown::rende… 0.381   TRUE   TRUE
+#> # A tibble: 7 x 9
+#>   target time                hash  exists command runtime latest quiet
+#>   <chr>  <dttm>              <chr> <lgl>  <chr>     <dbl> <lgl>  <lgl>
+#> 1 data   2019-06-25 14:32:05 e580… TRUE   raw_da… 0.004   TRUE   NA   
+#> 2 fit    2019-06-25 14:32:05 62a1… TRUE   lm(Sep… 0.007   TRUE   NA   
+#> 3 hist   2019-06-25 14:32:05 10bc… TRUE   create… 0.008   FALSE  NA   
+#> 4 hist   2019-06-25 14:32:06 5252… TRUE   create… 0.00400 TRUE   NA   
+#> 5 raw_d… 2019-06-25 14:32:04 6317… TRUE   "readx… 0.012   TRUE   NA   
+#> 6 report 2019-06-25 14:32:06 9946… TRUE   "rmark… 1.18    FALSE  TRUE 
+#> 7 report 2019-06-25 14:32:07 9946… TRUE   "rmark… 0.489   TRUE   TRUE 
+#> # … with 1 more variable: output_file <chr>
 ```
 
 Remarks:
@@ -449,7 +449,8 @@ all the available functions. Here are the most important ones.
 
   - `drake_plan()`: create a workflow data frame (like `my_plan`).
   - `make()`: build your project.
-  - `drake_history()`: show what you built, when you built it, and the function arguments you used.
+  - `drake_history()`: show what you built, when you built it, and the
+    function arguments you used.
   - `r_make()`: launch a fresh
     [`callr::r()`](https://github.com/r-lib/callr) process to build your
     project. Called from an interactive R session, `r_make()` is more
@@ -675,6 +676,16 @@ plan](https://ropenscilabs.github.io/drake-manual/plans.html), and use
 `loadd()` and `readd()` to refer to targets in the report itself. See an
 [example
 here](https://github.com/wlandau/drake-examples/tree/master/main).
+
+### Containerization and R package environments
+
+`drake` does not track R packages or system dependencies for changes.
+Instead, it defers to tools like [Docker](https://www.docker.com),
+[Singularity](https://sylabs.io/singularity/),
+[`renv`](https://github.com/rstudio/renv), and
+[`packrat`](https://github.com/rstudio/packrat), which create
+self-contained portable environments to reproducibly isolate and ship
+data analysis projects. `drake` is fully compatible with these tools.
 
 ### workflowr
 

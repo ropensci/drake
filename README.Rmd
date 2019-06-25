@@ -27,7 +27,6 @@ invisible(file.copy("main/report.Rmd", ".", overwrite = TRUE))
 <center>
 <img src="https://ropensci.github.io/drake/figures/infographic.svg" alt="infographic" align="center" style = "border: none; float: center;">
 </center>
-
 <table class="table">
 <thead>
 <tr class="header">
@@ -442,6 +441,10 @@ Memoization saves time for small projects, but it arguably does not go far enoug
 `drake` and [knitr](https://yihui.name/knitr/) are symbiotic. `drake`'s job is to manage large computation and orchestrate the demanding tasks of a complex data analysis pipeline. [knitr](https://yihui.name/knitr/)'s job is to communicate those expensive results after `drake` computes them. [knitr](https://yihui.name/knitr/) / [R Markdown](https://rmarkdown.rstudio.com/) reports are small pieces of an overarching `drake` pipeline. They should focus on communication, and they should do as little computation as possible. 
 
 To insert a [knitr](https://yihui.name/knitr/) report in a `drake` pipeline, use the `knitr_in()` function inside your [`drake` plan](https://ropenscilabs.github.io/drake-manual/plans.html), and use `loadd()` and `readd()` to refer to targets in the report itself. See an [example here](https://github.com/wlandau/drake-examples/tree/master/main).
+
+### Containerization and R package environments
+
+`drake` does not track R packages or system dependencies for changes. Instead, it defers to tools like [Docker](https://www.docker.com), [Singularity](https://sylabs.io/singularity/), [`renv`](https://github.com/rstudio/renv), and [`packrat`](https://github.com/rstudio/packrat), which create self-contained portable environments to reproducibly isolate and ship data analysis projects. `drake` is fully compatible with these tools.
 
 ### workflowr
 
