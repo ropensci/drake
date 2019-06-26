@@ -39,7 +39,7 @@ test_with_dir("basic history", {
   expect_true(all(out[["quiet"]][out$target == "report"] == TRUE))
 
   # Without analysis
-  x <- drake_history(cache = cache)
+  x <- drake_history(cache = cache, analyze = FALSE)
   expect_false("quiet" %in% colnames(x))
 
   # Recover an old version of a target.
