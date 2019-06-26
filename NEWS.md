@@ -2,9 +2,10 @@
 
 ## New features
 
+- Track history and provenance of targets, viewable with `drake_history()`. Powered by [`txtq`](https://github.com/wlandau/txtq) (#918, #920).
 - Export `transform_plan()`.
 - Add a new `no_deps()` function, similar to `ignore()`. `no_deps()` suppresses dependency detection but still tracks changes to the literal code ([#910](https://github.com/ropensci/drake/issues/910)).
-- Add a new "autoclean" memory strategy (#917)
+- Add a new "autoclean" memory strategy (#917).
 
 ## Enhancements
 

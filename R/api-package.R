@@ -49,6 +49,7 @@
 #' @importFrom methods new setRefClass
 #' @importFrom rlang dots_list enquo eval_tidy expr quo_squash quos
 #' @importFrom storr storr_environment storr_rds
+#' @importFrom txtq txtq
 #' @importFrom utils compareVersion flush.console head menu packageVersion
 #'   read.csv sessionInfo stack type.convert unzip write.table
 NULL

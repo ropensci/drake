@@ -174,7 +174,6 @@ history_analyze_value <- function(name, value, ht) {
 }
 
 default_history_queue <- function(cache_path) {
-  assert_pkg("txtq", version = "0.1.2")
   cache_dir <- dirname(cache_path)
   history_path <- file.path(cache_dir, ".drake_history")
   txtq::txtq(history_path)

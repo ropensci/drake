@@ -20,9 +20,8 @@ drake_config(plan, targets = NULL, envir = parent.frame(),
   session = NULL, pruning_strategy = NULL, makefile_path = NULL,
   console_log_file = NULL, ensure_workers = TRUE,
   garbage_collection = FALSE, template = list(), sleep = function(i)
-  0.01, hasty_build = NULL, memory_strategy = c("speed", "autoclean",
-  "preclean", "lookahead", "unload", "none", "memory"), layout = NULL,
-  lock_envir = TRUE, history = FALSE)
+  0.01, hasty_build = NULL, memory_strategy = "speed", layout = NULL,
+  lock_envir = TRUE, history = TRUE)
 }
 \arguments{
 \item{plan}{Workflow plan data frame.
@@ -421,7 +420,7 @@ and the reproducibility/credibility/trust you can place in your project.
 of your targets. You can also supply a
 \href{https://github.com/wlandau/txtq}{txtq}, which is
 how \code{drake} records history.
-Required for \code{\link[=drake_history]{drake_history()}}.}
+Must be \code{TRUE} for \code{\link[=drake_history]{drake_history()}} to work later.}
 }
 \value{
 The master internal configuration list of a project.

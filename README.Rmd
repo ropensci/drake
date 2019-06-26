@@ -7,6 +7,9 @@ output:
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r knitrsetup, echo = FALSE}
+dir <- tempfile()
+dir.create(dir)
+knitr::opts_knit$set(root.dir = dir)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -188,7 +191,7 @@ plan
 So far, we have just been setting the stage. Use `make()` to do the real work. Targets are built in the correct order regardless of the row order of `plan`.
 
 ```{r make1}
-make(plan, history = TRUE) # History is new in drake 7.5.0.
+make(plan)
 ```
 
 Except for files like `report.html`, your output is stored in a hidden `.drake/` folder. Reading it back is easy.
@@ -229,7 +232,7 @@ vis_drake_graph(config) # Interactive graph: zoom, drag, etc.
 The next `make()` just builds `hist` and `report.html`. No point in wasting time on the data or model.
 
 ```{r justhistetc}
-make(plan, history = TRUE)
+make(plan)
 ```
 
 ```{r hist2, eval = FALSE}
@@ -267,12 +270,12 @@ make(plan) # Independently re-create the results from the code and input data.
 
 ## History and provenance
 
-As of version 7.5.0, `drake` can track the history and provenance of your targets:
+As of version 7.5.0, `drake` tracks the history and provenance of your targets:
 what you built, when you built it, how you built it, the arguments you
-used in your function calls, and how to get the data back.
+used in your function calls, and how to get the data back. (Disable with `make(history = FALSE)`)
 
 ```{r history}
-history <- drake_history(analyze = TRUE) # Requires make(history = TRUE)
+history <- drake_history(analyze = TRUE)
 history
 ```
 
@@ -280,13 +283,15 @@ Remarks:
 
 - The `quiet` column appears above because one of the `drake_plan()` commands has `knit(quiet = TRUE)`.
 - The `hash` column identifies all the previous the versions of your targets. As long as `exists` is `TRUE`, you can recover old data.
+- Advanced: if you use `make(cache_log_file = TRUE)` and put the cache log file under version control, you can match the hashes from `drake_history()` with the `git` commit history of your code.
 
-Let's use the history to recover the old histogram.
+Let's use the history to recover the oldest histogram.
 
 ```{r, eval = FALSE}
 hash <- history %>%
-  filter(target == "hist" & !latest) %>% # Get the old histogram.
-  pull(hash)
+  filter(target == "hist") %>%
+  pull(hash) %>%
+  head(n = 1)
 cache <- drake_cache()
 cache$get_value(hash)
 #> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
@@ -476,11 +481,3 @@ Many thanks to [Julia Lowndes](https://github.com/jules32), [Ben Marwick](https:
 Credit for images is [attributed here](https://ropensci.github.io/drake/figures/image-credit.md).
 
 [![ropensci_footer](https://ropensci.org/public_images/github_footer.png)](https://ropensci.org)
-
-```{r cleanupfooter, echo = FALSE}
-clean(destroy = TRUE)
-unlink(
-  c(".drake_history", "main", "raw_data.xlsx", "report.Rmd"),
-  recursive = TRUE
-)
-```

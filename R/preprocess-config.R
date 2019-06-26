@@ -399,7 +399,7 @@
 #'   of your targets. You can also supply a
 #'   [`txtq`](https://github.com/wlandau/txtq), which is
 #'   how `drake` records history.
-#'   Required for [drake_history()].
+#'   Must be `TRUE` for [drake_history()] to work later.
 #'
 #' @examples
 #' \dontrun{
@@ -464,18 +464,10 @@ drake_config <- function(
   template = list(),
   sleep = function(i) 0.01,
   hasty_build = NULL,
-  memory_strategy = c(
-    "speed",
-    "autoclean",
-    "preclean",
-    "lookahead",
-    "unload",
-    "none",
-    "memory" # deprecated on 2019-06-22
-  ),
+  memory_strategy = "speed",
   layout = NULL,
   lock_envir = TRUE,
-  history = FALSE
+  history = TRUE
 ) {
   log_msg(
     "begin drake_config()",
@@ -560,7 +552,7 @@ drake_config <- function(
       # 2019-01-03 # nolint
     )
   }
-  memory_strategy <- match.arg(memory_strategy)
+  memory_strategy <- match.arg(memory_strategy, choices = memory_strategies())
   if (memory_strategy == "memory") {
     memory_strategy <- "preclean"
     warning(

@@ -87,6 +87,7 @@ Imports:
   methods,
   rlang (>= 0.2.0),
   storr (>= 1.1.0),
+  txtq (>= 0.1.3),
   utils
 Suggests:
   abind,
@@ -115,7 +116,6 @@ Suggests:
   testthat (>= 2.1.0),
   tibble,
   tidyselect (>= 0.2.4),
-  txtq (>= 0.1.3),
   txtplot,
   usethis,
   visNetwork,

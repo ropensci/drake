@@ -196,7 +196,7 @@ work. Targets are built in the correct order regardless of the row order
 of `plan`.
 
 ``` r
-make(plan, history = TRUE) # History is new in drake 7.5.0.
+make(plan)
 #> target raw_data
 #> target data
 #> target fit
@@ -260,7 +260,7 @@ The next `make()` just builds `hist` and `report.html`. No point in
 wasting time on the data or model.
 
 ``` r
-make(plan, history = TRUE)
+make(plan)
 #> target hist
 #> target report
 ```
@@ -330,24 +330,29 @@ make(plan) # Independently re-create the results from the code and input data.
 
 ## History and provenance
 
-As of version 7.5.0, `drake` can track the history and provenance of
-your targets: what you built, when you built it, how you built it, the
+As of version 7.5.0, `drake` tracks the history and provenance of your
+targets: what you built, when you built it, how you built it, the
 arguments you used in your function calls, and how to get the data back.
+(Disable with `make(history = FALSE)`)
 
 ``` r
-history <- drake_history(analyze = TRUE) # Requires make(history = TRUE)
+history <- drake_history(analyze = TRUE)
 history
-#> # A tibble: 7 x 9
-#>   target time                hash  exists command runtime latest quiet
-#>   <chr>  <dttm>              <chr> <lgl>  <chr>     <dbl> <lgl>  <lgl>
-#> 1 data   2019-06-25 14:32:05 e580… TRUE   raw_da… 0.004   TRUE   NA   
-#> 2 fit    2019-06-25 14:32:05 62a1… TRUE   lm(Sep… 0.007   TRUE   NA   
-#> 3 hist   2019-06-25 14:32:05 10bc… TRUE   create… 0.008   FALSE  NA   
-#> 4 hist   2019-06-25 14:32:06 5252… TRUE   create… 0.00400 TRUE   NA   
-#> 5 raw_d… 2019-06-25 14:32:04 6317… TRUE   "readx… 0.012   TRUE   NA   
-#> 6 report 2019-06-25 14:32:06 9946… TRUE   "rmark… 1.18    FALSE  TRUE 
-#> 7 report 2019-06-25 14:32:07 9946… TRUE   "rmark… 0.489   TRUE   TRUE 
-#> # … with 1 more variable: output_file <chr>
+#> # A tibble: 12 x 9
+#>    target  time    hash  exists command    runtime latest quiet output_file
+#>    <chr>   <chr>   <chr> <lgl>  <chr>        <dbl> <lgl>  <lgl> <chr>      
+#>  1 data    2019-0… e580… TRUE   raw_data… 0.002    FALSE  NA    <NA>       
+#>  2 data    2019-0… e580… TRUE   raw_data… 0        TRUE   NA    <NA>       
+#>  3 fit     2019-0… 62a1… TRUE   lm(Sepal… 0.003    FALSE  NA    <NA>       
+#>  4 fit     2019-0… 62a1… TRUE   lm(Sepal… 0.001000 TRUE   NA    <NA>       
+#>  5 hist    2019-0… 10bc… TRUE   create_p… 0.006    FALSE  NA    <NA>       
+#>  6 hist    2019-0… 5252… TRUE   create_p… 0.004    FALSE  NA    <NA>       
+#>  7 hist    2019-0… 00fa… TRUE   create_p… 0.00600  TRUE   NA    <NA>       
+#>  8 raw_da… 2019-0… 6317… TRUE   "readxl:… 0.01     FALSE  NA    <NA>       
+#>  9 raw_da… 2019-0… 6317… TRUE   "readxl:… 0.007    TRUE   NA    <NA>       
+#> 10 report  2019-0… 0064… TRUE   "rmarkdo… 0.647    FALSE  TRUE  report.html
+#> 11 report  2019-0… 0064… TRUE   "rmarkdo… 0.45     FALSE  TRUE  report.html
+#> 12 report  2019-0… 0064… TRUE   "rmarkdo… 0.456    TRUE   TRUE  report.html
 ```
 
 Remarks:
@@ -356,13 +361,17 @@ Remarks:
     commands has `knit(quiet = TRUE)`.
   - The `hash` column identifies all the previous the versions of your
     targets. As long as `exists` is `TRUE`, you can recover old data.
+  - Advanced: if you use `make(cache_log_file = TRUE)` and put the cache
+    log file under version control, you can match the hashes from
+    `drake_history()` with the `git` commit history of your code.
 
-Let’s use the history to recover the old histogram.
+Let’s use the history to recover the oldest histogram.
 
 ``` r
 hash <- history %>%
-  filter(target == "hist" & !latest) %>% # Get the old histogram.
-  pull(hash)
+  filter(target == "hist") %>%
+  pull(hash) %>%
+  head(n = 1)
 cache <- drake_cache()
 cache$get_value(hash)
 #> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
@@ -679,13 +688,29 @@ here](https://github.com/wlandau/drake-examples/tree/master/main).
 
 ### Version control
 
-`drake` is not a version control tool. However, it is fully compatible with [`git`](https://git-scm.com/), [`svn`](https://en.wikipedia.org/wiki/Apache_Subversion), and similar software. In fact, it is good practice to use [`git`](https://git-scm.com/) alongside `drake` for reproducible workflows.
+`drake` is not a version control tool. However, it is fully compatible
+with [`git`](https://git-scm.com/),
+[`svn`](https://en.wikipedia.org/wiki/Apache_Subversion), and similar
+software. In fact, it is good practice to use
+[`git`](https://git-scm.com/) alongside `drake` for reproducible
+workflows.
 
-However, data poses a challenge. The datasets created by `make()` can get large and numerous, and it is not recommended to put the `.drake/` cache or the `.drake_history/` logs under version control. Instead, it is recommended to use a data storage solution such as [DropBox](https://www.dropbox.com/) or [OSF](https://osf.io/ka7jv/wiki/home/).
+However, data poses a challenge. The datasets created by `make()` can
+get large and numerous, and it is not recommended to put the `.drake/`
+cache or the `.drake_history/` logs under version control. Instead, it
+is recommended to use a data storage solution such as
+[DropBox](https://www.dropbox.com/) or
+[OSF](https://osf.io/ka7jv/wiki/home/).
 
 ### Containerization and R package environments
 
-`drake` does not track R packages or system dependencies for changes. Instead, it defers to tools like [Docker](https://www.docker.com), [Singularity](https://sylabs.io/singularity/), [`renv`](https://github.com/rstudio/renv), and [`packrat`](https://github.com/rstudio/packrat), which create self-contained portable environments to reproducibly isolate and ship data analysis projects. `drake` is fully compatible with these tools.
+`drake` does not track R packages or system dependencies for changes.
+Instead, it defers to tools like [Docker](https://www.docker.com),
+[Singularity](https://sylabs.io/singularity/),
+[`renv`](https://github.com/rstudio/renv), and
+[`packrat`](https://github.com/rstudio/packrat), which create
+self-contained portable environments to reproducibly isolate and ship
+data analysis projects. `drake` is fully compatible with these tools.
 
 ### workflowr
 
