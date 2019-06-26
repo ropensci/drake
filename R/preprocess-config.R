@@ -598,9 +598,7 @@ drake_config <- function(
     verbose = verbose
   )
   cache_path <- force_cache_path(cache)
-  if (identical(history, TRUE)) {
-    history <- default_history_queue(cache_path)
-  }
+  history <- initialize_history(history, cache_path)
   lazy_load <- parse_lazy_arg(lazy_load)
   caching <- match.arg(caching)
   ht_encode_path <- ht_new()

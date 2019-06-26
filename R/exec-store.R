@@ -87,7 +87,7 @@ store_meta <- function(target, meta, hash, config) {
     namespace = "meta",
     use_cache = FALSE
   )
-  log_history <- has_history(config) &&
+  log_history <- is_history(config$history) &&
     !meta$imported &&
     !is_encoded_path(target)
   if (log_history) {

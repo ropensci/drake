@@ -4,31 +4,23 @@
 \alias{drake_history}
 \title{History and provenance}
 \usage{
-drake_history(cache = NULL, history = NULL, analyze = FALSE,
-  make_imports = TRUE, do_prework = TRUE, verbose = TRUE)
+drake_history(cache = NULL, history = NULL, analyze = TRUE,
+  verbose = TRUE)
 }
 \arguments{
-\item{cache}{An optional
-\code{drake}/\href{https://github.com/richfitz/storr}{storr} cache.
-If not supplied, \code{drake} will try to find the default cache:
-a folder called \code{.drake/} in the current working directory
-or one of its ancestor directories.}
+\item{cache}{drake cache as created by \code{\link[=new_cache]{new_cache()}}.
+See also \code{\link[=drake_cache]{drake_cache()}}.}
 
-\item{history}{An optional \href{https://github.com/wlandau/txtq}{txtq}
-produced by \code{make(history = TRUE)}. If not supplied,
-\code{drake} will try to find it next to the cache in a folder
-called \code{.drake_history/}.}
+\item{history}{Logical, whether to record the build history
+of your targets. You can also supply a
+\href{https://github.com/wlandau/txtq}{txtq}, which is
+how \code{drake} records history.
+Must be \code{TRUE} for \code{\link[=drake_history]{drake_history()}} to work later.}
 
 \item{analyze}{Logical, whether to analyze \code{\link[=drake_plan]{drake_plan()}}
 commands for arguments to function calls.
 Could be slow because this requires parsing and analyzing
 lots of R code.}
-
-\item{make_imports}{Logical, whether to make the imports first.
-Set to \code{FALSE} to save some time and risk obsolete output.}
-
-\item{do_prework}{Whether to do the \code{prework}
-normally supplied to \code{\link[=make]{make()}}.}
 
 \item{verbose}{Integer, control printing to the console/terminal.
 \itemize{
@@ -81,7 +73,7 @@ out <- drake_history(analyze = TRUE)
 print(out)
 # Let's use the history to recover the oldest version
 # of our regression2_small target.
-oldest_reg2_small <- max(which(out$target == "regression2_small"))
+oldest_reg2_smsall <- max(which(out$target == "regression2_small"))
 hash_oldest_reg2_small <- out[oldest_reg2_small, ]$hash
 cache <- drake_cache()
 cache$get_value(hash_oldest_reg2_small)

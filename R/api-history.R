@@ -20,20 +20,10 @@
 #'        `filename` is not detected because the value must be atomic.
 #' @export
 #' @return A data frame of target history.
-#' @param cache An optional
-#'   `drake`/[`storr`](https://github.com/richfitz/storr) cache.
-#'   If not supplied, `drake` will try to find the default cache:
-#'   a folder called `.drake/` in the current working directory
-#'   or one of its ancestor directories.
-#' @param history An optional [`txtq`](https://github.com/wlandau/txtq)
-#'   produced by `make(history = TRUE)`. If not supplied,
-#'   `drake` will try to find it next to the cache in a folder
-#'   called `.drake_history/`.
 #' @param analyze Logical, whether to analyze [drake_plan()]
 #'   commands for arguments to function calls.
 #'   Could be slow because this requires parsing and analyzing
 #'   lots of R code.
-#' @inheritParams outdated
 #' @inheritParams drake_config
 #' @examples
 #' \dontrun{
@@ -53,7 +43,7 @@
 #' print(out)
 #' # Let's use the history to recover the oldest version
 #' # of our regression2_small target.
-#' oldest_reg2_small <- max(which(out$target == "regression2_small"))
+#' oldest_reg2_smsall <- max(which(out$target == "regression2_small"))
 #' hash_oldest_reg2_small <- out[oldest_reg2_small, ]$hash
 #' cache <- drake_cache()
 #' cache$get_value(hash_oldest_reg2_small)
@@ -69,9 +59,7 @@
 drake_history <- function(
   cache = NULL,
   history = NULL,
-  analyze = FALSE,
-  make_imports = TRUE,
-  do_prework = TRUE,
+  analyze = TRUE,
   verbose = TRUE
 ) {
   if (is.null(cache)) {
@@ -179,6 +167,17 @@ default_history_queue <- function(cache_path) {
   txtq::txtq(history_path)
 }
 
-has_history <- function(config) {
-  inherits(config$history, "R6_txtq")
+is_history <- function(history) {
+  inherits(history, "R6_txtq")
+}
+
+initialize_history <- function(history, cache_path) {
+  if (identical(history, TRUE)) {
+    history <- default_history_queue(cache_path)
+  }
+  if (!is.null(history)) {
+    stopifnot(is_history(history))
+    history$validate()
+  }
+  history
 }
