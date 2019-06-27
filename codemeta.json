@@ -381,19 +381,6 @@
     },
     {
       "@type": "SoftwareApplication",
-      "identifier": "txtq",
-      "name": "txtq",
-      "version": ">= 0.1.3",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://github.com/wlandau/txtq"
-    },
-    {
-      "@type": "SoftwareApplication",
       "identifier": "txtplot",
       "name": "txtplot",
       "provider": {
@@ -517,13 +504,26 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "txtq",
+      "name": "txtq",
+      "version": ">= 0.1.4",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://github.com/wlandau/txtq"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "utils",
       "name": "utils"
     }
   ],
   "releaseNotes": "https://github.com/ropensci/drake/blob/master/NEWS.md",
   "readme": "https://github.com/ropensci/drake/blob/master/README.md",
-  "fileSize": "904.309KB",
+  "fileSize": "905.247KB",
   "contIntegration": [
     "https://ci.appveyor.com/project/ropensci/drake",
     "https://travis-ci.org/ropensci/drake",

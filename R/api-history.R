@@ -177,7 +177,6 @@ initialize_history <- function(history, cache_path) {
   }
   if (!is.null(history)) {
     stopifnot(is_history(history))
-    history$validate()
   }
   history
 }
