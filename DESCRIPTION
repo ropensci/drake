@@ -120,8 +120,6 @@ Suggests:
   usethis,
   visNetwork,
   webshot
-Remotes:
-  wlandau/txtq
 VignetteBuilder: knitr
 Encoding: UTF-8
 Language: en-US
