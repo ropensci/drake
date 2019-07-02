@@ -359,3 +359,10 @@ test_with_dir("Trailing slashes in file paths on Windows", {
   )
   expect_true(file.exists("out/out.txt"))
 })
+
+test_with_dir("make() with config + non-config args", {
+  expect_error(
+    make(plan = list(), config = list()),
+    regexp = "must not supply any additional arguments"
+  )
+})

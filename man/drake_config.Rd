@@ -424,7 +424,13 @@ parameters and settings that \code{\link[=make]{make()}} needs to do its job:
 the plan, packages,
 the environment of functions and initial data objects,
 parallel computing instructions,
-verbosity level, etc. Other functions such as \code{\link[=outdated]{outdated()}},
+verbosity level, etc.
+}
+\details{
+Once you create a list with \code{\link[=drake_config]{drake_config()}},
+do not modify it by hand.
+
+Utility functions such as \code{\link[=outdated]{outdated()}},
 \code{\link[=vis_drake_graph]{vis_drake_graph()}}, and \code{\link[=predict_runtime]{predict_runtime()}} require output from
 \code{\link[=drake_config]{drake_config()}} for the \code{config} argument.
 If you supply a \code{\link[=drake_config]{drake_config()}} object to the \code{config}

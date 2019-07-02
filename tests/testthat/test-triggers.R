@@ -226,10 +226,15 @@ test_with_dir("trigger does not block out command deps", {
   expect_true(all(deps %in% igraph::V(config$graph)$name))
   expect_equal(sort(deps_graph("x", config$graph)), sort(deps))
   expect_equal(outdated(config), "x")
-  make(config = config, memory_strategy = "memory")
+  make(
+    plan, session_info = FALSE,
+    cache = config$cache,
+    log_progress = TRUE,
+    memory_strategy = "memory"
+  )
   expect_equal(justbuilt(config), "x")
   expect_equal(outdated(config), character(0))
-  make(config = config, memory_strategy = "memory")
+  make(config = config)
   nobuild(config)
   f <- function(x) {
     identity(x) || FALSE
@@ -278,10 +283,40 @@ test_with_dir("same, but with global change trigger", {
   expect_true(all(deps %in% igraph::V(config$graph)$name))
   expect_equal(sort(deps_graph("x", config$graph)), sort(deps))
   expect_equal(outdated(config), "x")
-  make(config = config, memory_strategy = "memory")
+  make(
+    plan,
+    session_info = FALSE,
+    cache = config$cache,
+    log_progress = TRUE, trigger = trigger(
+      change = {
+        knitr_in("knitr.Rmd")
+        f(FALSE) + readRDS(file_in("file.rds"))
+      },
+      command = FALSE,
+      file = TRUE,
+      depend = TRUE,
+      condition = FALSE
+    ),
+    memory_strategy = "memory"
+  )
   expect_equal(justbuilt(config), "x")
   expect_equal(outdated(config), character(0))
-  make(config = config, memory_strategy = "memory")
+  make(
+    plan,
+    session_info = FALSE,
+    cache = config$cache,
+    log_progress = TRUE, trigger = trigger(
+      change = {
+        knitr_in("knitr.Rmd")
+        f(FALSE) + readRDS(file_in("file.rds"))
+      },
+      command = FALSE,
+      file = TRUE,
+      depend = TRUE,
+      condition = FALSE
+    ),
+    memory_strategy = "memory"
+  )
   nobuild(config)
   f <- function(x) {
     identity(x) || FALSE

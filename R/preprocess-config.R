@@ -5,7 +5,11 @@
 #'   the plan, packages,
 #'   the environment of functions and initial data objects,
 #'   parallel computing instructions,
-#'   verbosity level, etc. Other functions such as [outdated()],
+#'   verbosity level, etc.
+#' @details Once you create a list with [drake_config()],
+#'   do not modify it by hand.
+#'
+#'   Utility functions such as [outdated()],
 #'   [vis_drake_graph()], and [predict_runtime()] require output from
 #'   [drake_config()] for the `config` argument.
 #'   If you supply a [drake_config()] object to the `config`
