@@ -134,14 +134,12 @@ check_parallelism <- function(parallelism, jobs) {
 check_make_call <- function(call) {
   x <- names(call)
   if ("config" %in% names(call) && sum(nzchar(x)) > 1L) {
-    stop(
+    warning(
       "if you supply a ", shQuote("config"),
       " argument to ", shQuote("make()"),
-      " then you must not supply any additional arguments. ",
-      "For example, ", shQuote("make(config = config)"), " and ",
-      shQuote("make(plan, history = FALSE)"), " are permitted, ",
-      " but ", shQuote("make(config = config, history = FALSE)"),
-      " is not.",
+      " then all additional arguments are ignored. ",
+      "For example, in ", shQuote("make(config = config, verbose = 0L)"),
+      "verbosity remains at ", shQuote("config$verbose"), ".",
       call. = FALSE
     )
   }

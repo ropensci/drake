@@ -13,7 +13,7 @@
 - Log the target name in a special column in the console log file ([#909](https://github.com/ropensci/drake/issues/909)).
 - Rename the "memory" memory strategy to "preclean" (with deprecation; #917).
 - Deprecate `ensure_workers` in `drake_config()` and `make()`.
-- Explicitly forbid any additional arguments to `make()` if `config` is already supplied.
+- Warn when the user supplies additional arguments to `make()` after `config` is already supplied.
 
 
 # Version 7.4.0

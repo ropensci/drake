@@ -361,8 +361,14 @@ test_with_dir("Trailing slashes in file paths on Windows", {
 })
 
 test_with_dir("make() with config + non-config args", {
-  expect_error(
-    make(plan = list(), config = list()),
-    regexp = "must not supply any additional arguments"
+  plan <- drake_plan(x = 1)
+  config <- drake_config(
+    plan,
+    session_info = FALSE,
+    cache = storr::storr_environment()
+  )
+  expect_warning(
+    make(plan = plan, config = config),
+    regexp = "additional arguments are ignored"
   )
 })
