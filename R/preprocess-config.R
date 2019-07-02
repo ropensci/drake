@@ -317,14 +317,7 @@
 #'       - A brief description of what `drake` was doing.`
 #'   The fields are separated by pipe symbols (`"|"`).
 #'
-#' @param ensure_workers Logical, whether the master process
-#'   should wait for the workers to post before assigning them
-#'   targets. Should usually be `TRUE`. Set to `FALSE`
-#'   for `make(parallelism = "future_lapply", jobs = n)`
-#'   (`n > 1`) when combined with `future::plan(future::sequential)`.
-#'   This argument only applies to parallel computing with persistent workers
-#'   (`make(parallelism = x)`, where `x` could be `"mclapply"`,
-#'   `"parLapply"`, or `"future_lapply"`).
+#' @param ensure_workers Deprecated.
 #'
 #' @param garbage_collection Logical, whether to call `gc()` each time
 #'   a target is built during [make()].
@@ -459,7 +452,7 @@ drake_config <- function(
   pruning_strategy = NULL,
   makefile_path = NULL,
   console_log_file = NULL,
-  ensure_workers = TRUE,
+  ensure_workers = NULL,
   garbage_collection = FALSE,
   template = list(),
   sleep = function(i) 0.01,
@@ -534,6 +527,15 @@ drake_config <- function(
       "is deprecated. make() will NOT run in a separate callr session. ",
       "For reproducibility, you may wish to try make(lock_envir = TRUE). ",
       "Details: https://github.com/ropensci/drake/issues/623.",
+      call. = FALSE
+    )
+  }
+  if (!is.null(ensure_workers)) {
+    # Deprecated on 2018-12-18.
+    warning(
+      "The ", sQuote("ensure_workers"),
+      " argument of make() and drake_config() ",
+      "is deprecated.",
       call. = FALSE
     )
   }
@@ -638,10 +640,8 @@ drake_config <- function(
     cache_log_file = cache_log_file,
     caching = caching,
     keep_going = keep_going,
-    session = session,
     memory_strategy = memory_strategy,
     console_log_file = console_log_file,
-    ensure_workers = ensure_workers,
     garbage_collection = garbage_collection,
     template = template,
     sleep = sleep,

@@ -18,7 +18,7 @@ make(plan, targets = NULL, envir = parent.frame(), verbose = 1L,
   session_info = TRUE, cache_log_file = NULL, seed = NULL,
   caching = "master", keep_going = FALSE, session = NULL,
   pruning_strategy = NULL, makefile_path = NULL,
-  console_log_file = NULL, ensure_workers = TRUE,
+  console_log_file = NULL, ensure_workers = NULL,
   garbage_collection = FALSE, template = list(), sleep = function(i)
   0.01, hasty_build = NULL, memory_strategy = "speed", layout = NULL,
   lock_envir = TRUE, history = TRUE)
@@ -299,14 +299,7 @@ computer (from \code{Sys.info()["nodename"]}).
 - A timestamp with the date and time (in microseconds).
 - A brief description of what \code{drake} was doing.\code{ The fields are separated by pipe symbols (}"|"`).}
 
-\item{ensure_workers}{Logical, whether the master process
-should wait for the workers to post before assigning them
-targets. Should usually be \code{TRUE}. Set to \code{FALSE}
-for \code{make(parallelism = "future_lapply", jobs = n)}
-(\code{n > 1}) when combined with \code{future::plan(future::sequential)}.
-This argument only applies to parallel computing with persistent workers
-(\code{make(parallelism = x)}, where \code{x} could be \code{"mclapply"},
-\code{"parLapply"}, or \code{"future_lapply"}).}
+\item{ensure_workers}{Deprecated.}
 
 \item{garbage_collection}{Logical, whether to call \code{gc()} each time
 a target is built during \code{\link[=make]{make()}}.}

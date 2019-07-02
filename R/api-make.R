@@ -151,7 +151,7 @@ make <- function(
   pruning_strategy = NULL,
   makefile_path = NULL,
   console_log_file = NULL,
-  ensure_workers = TRUE,
+  ensure_workers = NULL,
   garbage_collection = FALSE,
   template = list(),
   sleep = function(i) 0.01,

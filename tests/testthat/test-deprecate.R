@@ -208,6 +208,10 @@ test_with_dir("deprecated arguments", {
   expect_error(expect_warning(loadd(list = "a", deps = TRUE)))
   expect_warning(loadd(imported_only = TRUE), regexp = "deprecated")
   expect_warning(cached(list = "x"), regexp = "deprecated")
+  expect_warning(
+    drake_config(plan = pl, ensure_workers = TRUE),
+    regexp = "deprecated"
+  )
 })
 
 test_with_dir("example template files (deprecated)", {

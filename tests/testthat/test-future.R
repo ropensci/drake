@@ -91,8 +91,7 @@ test_with_dir("future package functionality", {
       caching = caching[i],
       jobs = 2,
       verbose = 0L,
-      session_info = FALSE,
-      ensure_workers = FALSE
+      session_info = FALSE
     )
     clean(destroy = TRUE)
   }
