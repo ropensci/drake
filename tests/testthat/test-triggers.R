@@ -230,7 +230,7 @@ test_with_dir("trigger does not block out command deps", {
     plan, session_info = FALSE,
     cache = config$cache,
     log_progress = TRUE,
-    memory_strategy = "memory"
+    memory_strategy = "preclean"
   )
   expect_equal(justbuilt(config), "x")
   expect_equal(outdated(config), character(0))
@@ -297,7 +297,7 @@ test_with_dir("same, but with global change trigger", {
       depend = TRUE,
       condition = FALSE
     ),
-    memory_strategy = "memory"
+    memory_strategy = "preclean"
   )
   expect_equal(justbuilt(config), "x")
   expect_equal(outdated(config), character(0))
@@ -315,7 +315,7 @@ test_with_dir("same, but with global change trigger", {
       depend = TRUE,
       condition = FALSE
     ),
-    memory_strategy = "memory"
+    memory_strategy = "preclean"
   )
   nobuild(config)
   f <- function(x) {
