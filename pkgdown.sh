@@ -14,7 +14,7 @@ then
   git clone -b gh-pages https://${GITHUB_PAT}@github.com/${TRAVIS_REPO_SLUG}.git gh-pages
   cd gh-pages
   shopt -s extglob
-  rm -r ./!(.git)
+  rm -r !(.git)
   cp -r ../docs/* ./
   git add --all *
   git commit -m "Update pkgdown site" || true
