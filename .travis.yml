@@ -34,6 +34,8 @@ r_github_packages:
 before_script:
   - R -q -e 'install.packages("remotes")'
   - R -q -e 'remotes::install_github("ropensci/rotemplate")'
+  - R -q -e 'install.packages("webshot")'
+  - R -q -e 'webshot::install_phantomjs()'
   - chmod +x ./pkgdown.sh
 
 # From Jim Hester, for avoiding timeouts
