@@ -372,3 +372,12 @@ test_with_dir("make() with config + non-config args", {
     regexp = "additional arguments are ignored"
   )
 })
+
+test_with_dir("make() from inside the cache", {
+  cache <- storr::storr_rds(getwd())
+  plan <- drake_plan(x = 1)
+  expect_error(
+    make(plan, cache = cache),
+    regexp = "from inside the cache"
+  )
+})

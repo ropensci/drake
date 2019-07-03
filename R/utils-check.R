@@ -33,6 +33,7 @@ runtime_checks <- function(config) {
   }
   missing_input_files(config = config)
   subdirectory_warning(config = config)
+  assert_outside_cache(config = config)
 }
 
 missing_input_files <- function(config) {
@@ -178,4 +179,19 @@ subdirectory_warning <- function(config) {
     "  cache directory:     ", dir_cache,
     call. = FALSE
   )
+}
+
+assert_outside_cache <- function(config) {
+  work_dir <- path.expand(getwd())
+  cache_dir <- path.expand(config$cache_path)
+  if (identical(work_dir, cache_dir)) {
+    stop(
+      "cannot run make() from inside the cache: ", shQuote(cache_dir),
+      ". The cache path must be different from your working directory. ",
+      "If your drake project lives at ", shQuote("/your/project/root/"), # nolint
+      " then you should run ", shQuote("make()"), " from this directory, ",
+      "and your cache should be in a subfolder, e.g. ",
+      shQuote("/your/project/root/.drake/") # nolint
+    )
+  }
 }

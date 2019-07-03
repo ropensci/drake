@@ -14,6 +14,7 @@
 - Rename the "memory" memory strategy to "preclean" (with deprecation; #917).
 - Deprecate `ensure_workers` in `drake_config()` and `make()`.
 - Warn when the user supplies additional arguments to `make()` after `config` is already supplied.
+- Prevent users from running `make()` from inside the cache (#927).
 
 
 # Version 7.4.0
