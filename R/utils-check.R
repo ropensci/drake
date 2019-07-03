@@ -182,8 +182,8 @@ subdirectory_warning <- function(config) {
 }
 
 assert_outside_cache <- function(config) {
-  work_dir <- path.expand(getwd())
-  cache_dir <- path.expand(config$cache_path)
+  work_dir <- normalizePath(getwd(), mustWork = FALSE)
+  cache_dir <- normalizePath(config$cache_path, mustWork = FALSE)
   if (identical(work_dir, cache_dir)) {
     stop(
       "cannot run make() from inside the cache: ", shQuote(cache_dir),
