@@ -15,7 +15,7 @@ then
   cd gh-pages
   ls -a | grep -Ev "^\.$|^..$|^\.git$" | xargs rm -rf
   cp -r ../docs/* ./
-  git add --all *
-  git commit -m "Update pkgdown site" || true
+  git add *
+  git commit -am "Update pkgdown site" || true
   git push -q origin gh-pages
 fi
