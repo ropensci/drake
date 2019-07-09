@@ -161,8 +161,9 @@ walk_code <- function(expr, results, locals, allowed_globals) {
   } else if (is.name(expr)) {
     analyze_global(expr, results, locals, allowed_globals)
   } else if (is.character(expr)) {
-    if (nzchar(expr)) {
-      ht_set(results$strings, expr)
+    str <- expr[nzchar(expr)]
+    for (x in str) {
+      ht_set(results$strings, x)
     }
   } else if (is.pairlist(expr)) {
     walk_call(expr, results, locals, allowed_globals)

@@ -16,6 +16,10 @@
 - Warn when the user supplies additional arguments to `make()` after `config` is already supplied.
 - Prevent users from running `make()` from inside the cache (#927).
 
+## Bug fixes
+
+- Minor: handle strings embedded in language objects (#934).
+
 
 # Version 7.4.0
 

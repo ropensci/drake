@@ -236,3 +236,17 @@ test_with_dir("code analysis error handling", {
   e <- list(1, 2)
   expect_error(get_assigned_var(e), regexp = "not a symbol")
 })
+
+test_with_dir("character vectors inside language objects", {
+  y <- c("a", "b")
+  plan <- drake::drake_plan(
+    out = data.frame(x = 1:2, y = !!y)
+  )
+  expect_silent(
+    drake_config(plan, cache = storr::storr_environment(), session_info = FALSE)
+  )
+  expect_equal(
+    sort(analyze_code(plan$command[[1]])$strings),
+    sort(c("a", "b"))
+  )
+})
