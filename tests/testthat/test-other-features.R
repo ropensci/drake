@@ -408,3 +408,36 @@ test_with_dir("running()", {
   cache$set(key = "a", value = "running", namespace = "progress")
   expect_equal(running(cache = cache), "a")
 })
+
+test_with_dir("rename_targets()", {
+  cache <- storr::storr_environment()
+  plan <- drake_plan(
+    temp = target(
+      matrix(runif(10 ^ 3) + offset, ncol = 5),
+      transform = map(offset = c(2, 5))
+    )
+  )
+  make(plan, cache = cache, session_info = FALSE)
+  plan <- drake_plan(
+    temp = target(
+      matrix(runif(10 ^ 3) + offset, ncol = ncol),
+      transform = cross(
+        ncol = c(5, 2),
+        offset = c(2, 5)
+      )
+    )
+  )
+  config <- drake_config(plan, cache = cache, session_info = FALSE)
+  expect_equal(
+    sort(outdated(config)),
+    sort(sort(c("temp_2_2", "temp_2_5", "temp_5_2", "temp_5_5")))
+  )
+  rename_targets(
+    from = c("temp_2", "temp_5"),
+    to = c("temp_5_2", "temp_5_5"),
+    cache = cache
+  )
+  expect_equal(sort(outdated(config)), sort(c("temp_2_2", "temp_2_5")))
+  make(plan, cache = cache, session_info = FALSE)
+  expect_equal(justbuilt(config), sort(c("temp_2_2", "temp_2_5")))
+})

@@ -125,6 +125,7 @@ reference:
   - '`file_store`'
 - title: Cache maintenance
   contents:
+  - '`rename_targets()`'
   - '`clean`'
   - '`drake_gc`'
   - '`rescue_cache`'
