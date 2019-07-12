@@ -27,18 +27,6 @@ Character vector of the names of outdated targets.
 Outdated targets will be rebuilt in the next
 \code{\link[=make]{make()}}.
 }
-\details{
-\code{outdated()} is sensitive to the alternative triggers
-described at
-\url{https://ropenscilabs.github.io/drake-manual/debug.html}.
-For example, even if \code{outdated(...)} shows everything up to date,
-\code{outdated(..., trigger = trigger(condition = TRUE))} will show
-all targets out of date.
-You must use a fresh \code{config} argument with an up-to-date
-dependency graph that was never modified by hand.
-If needed, rerun \code{\link[=drake_config]{drake_config()}} early and often.
-See the details in the help file for \code{\link[=drake_config]{drake_config()}}.
-}
 \examples{
 \dontrun{
 isolate_example("Quarantine side effects.", {
@@ -57,6 +45,6 @@ outdated(config = config)
 }
 }
 \seealso{
-\code{\link[=drake_config]{drake_config()}}, \code{\link[=missed]{missed()}}, \code{\link[=drake_plan]{drake_plan()}},
+\code{\link[=r_outdated]{r_outdated()}}, \code{\link[=drake_config]{drake_config()}}, \code{\link[=missed]{missed()}}, \code{\link[=drake_plan]{drake_plan()}},
 \code{\link[=make]{make()}}
 }

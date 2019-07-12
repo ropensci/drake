@@ -1,18 +1,8 @@
 #' @title List the targets that are out of date.
 #' @description Outdated targets will be rebuilt in the next
 #'   [make()].
-#' @details `outdated()` is sensitive to the alternative triggers
-#' described at
-#' <https://ropenscilabs.github.io/drake-manual/debug.html>.
-#' For example, even if `outdated(...)` shows everything up to date,
-#' `outdated(..., trigger = trigger(condition = TRUE))` will show
-#' all targets out of date.
-#' You must use a fresh `config` argument with an up-to-date
-#' dependency graph that was never modified by hand.
-#' If needed, rerun [drake_config()] early and often.
-#' See the details in the help file for [drake_config()].
 #' @export
-#' @seealso [drake_config()], [missed()], [drake_plan()],
+#' @seealso [r_outdated()], [drake_config()], [missed()], [drake_plan()],
 #'   [make()]
 #' @return Character vector of the names of outdated targets.
 #' @param config Optional internal runtime parameter list

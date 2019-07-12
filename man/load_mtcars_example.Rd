@@ -38,10 +38,7 @@ to see if there is an association.
 }
 \details{
 Use \code{drake_example("mtcars")} to get the code
-for the mtcars example. The included R script is a detailed,
-heavily-commented walkthrough. The chapter of the user manual at
-\url{https://ropenscilabs.github.io/drake-manual/mtcars.html} # nolint
-also walks through the mtcars example.
+for the mtcars example.
 This function also writes/overwrites
 the file, \code{report.Rmd}.
 }

@@ -43,7 +43,7 @@ Other instructions are available in the files at
 isolate_example("Quarantine side effects.", {
 if (requireNamespace("downloader")) {
 drake_examples() # List all the drake examples.
-# Sets up the same example as https://ropenscilabs.github.io/drake-manual/mtcars.html # nolint
+# Sets up the same example from load_mtcars_example()
 drake_example("mtcars")
 # Sets up the SLURM example.
 drake_example("slurm")

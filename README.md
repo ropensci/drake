@@ -403,7 +403,7 @@ understand it. `drake` helps in several ways.
     computing (HPC) for you. That means the HPC code is no longer
     tangled up with the code that actually expresses your ideas.
   - You can [generate large collections of
-    targets](https://ropenscilabs.github.io/drake-manual/mtcars.html#generate-the-workflow-plan)
+    targets](https://ropenscilabs.github.io/drake-manual/gsp.html)
     without necessarily changing your code base of imported functions,
     another nice separation between the concepts and the execution of
     your workflow

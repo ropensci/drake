@@ -27,7 +27,7 @@
 #' isolate_example("Quarantine side effects.", {
 #' if (requireNamespace("downloader")) {
 #' drake_examples() # List all the drake examples.
-#' # Sets up the same example as https://ropenscilabs.github.io/drake-manual/mtcars.html # nolint
+#' # Sets up the same example from load_mtcars_example()
 #' drake_example("mtcars")
 #' # Sets up the SLURM example.
 #' drake_example("slurm")
@@ -76,8 +76,7 @@ drake_example <- function(
 #' isolate_example("Quarantine side effects.", {
 #' if (requireNamespace("downloader")) {
 #' drake_examples() # List all the drake examples.
-#' # Sets up the example from
-#' # https://ropenscilabs.github.io/drake-manual/mtcars.html
+#' # Sets up the example from load_mtcars_example()
 #' drake_example("mtcars")
 #' # Sets up the SLURM example.
 #' drake_example("slurm")
@@ -107,10 +106,7 @@ drake_examples <- function(quiet = TRUE) {
 #' Finally, we summarize the regression models
 #' to see if there is an association.
 #' @details Use `drake_example("mtcars")` to get the code
-#' for the mtcars example. The included R script is a detailed,
-#' heavily-commented walkthrough. The chapter of the user manual at
-#' <https://ropenscilabs.github.io/drake-manual/mtcars.html> # nolint
-#' also walks through the mtcars example.
+#' for the mtcars example.
 #' This function also writes/overwrites
 #' the file, `report.Rmd`.
 #' @export

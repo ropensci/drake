@@ -26,8 +26,7 @@ so you need an internet connection.
 isolate_example("Quarantine side effects.", {
 if (requireNamespace("downloader")) {
 drake_examples() # List all the drake examples.
-# Sets up the example from
-# https://ropenscilabs.github.io/drake-manual/mtcars.html
+# Sets up the example from load_mtcars_example()
 drake_example("mtcars")
 # Sets up the SLURM example.
 drake_example("slurm")
