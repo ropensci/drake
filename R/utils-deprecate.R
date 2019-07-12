@@ -528,9 +528,6 @@ deprecate_targets_only <- function(targets_only) {
 #' @description The main example lives at
 #' <https://github.com/wlandau/drake-examples/tree/master/main>.
 #' Use `drake_example("main")` to download its code.
-#' The chapter of the user manual at
-#' <https://ropenscilabs.github.io/drake-manual/main.html>
-#' also walks through the main example.
 #' This function also writes/overwrites
 #' the files `report.Rmd` and `raw_data.xlsx`.
 #' @export
