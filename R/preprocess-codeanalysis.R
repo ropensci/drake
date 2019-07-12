@@ -39,7 +39,7 @@ analyze_global <- function(expr, results, locals, allowed_globals) {
 
 analyze_arrow <- function(expr, results, locals, allowed_globals) {
   walk_call(flatten_assignment(expr[[2]]), results, locals, allowed_globals)
-  walk_code(expr[[3]], results, locals, allowed_globals)
+  ignore(walk_code)(expr[[3]], results, locals, allowed_globals)
   ht_set(locals, get_assigned_var(expr))
 }
 
@@ -55,8 +55,8 @@ analyze_function <- function(expr, results, locals, allowed_globals) {
   }
   locals <- ht_clone(locals)
   ht_set(locals, names(formals(expr)))
-  walk_code(formals(expr), results, locals, allowed_globals)
-  walk_code(body(expr), results, locals, allowed_globals)
+  ignore(walk_code)(formals(expr), results, locals, allowed_globals)
+  ignore(walk_code)(body(expr), results, locals, allowed_globals)
 }
 
 analyze_namespaced <- function(expr, results, locals, allowed_globals) {
@@ -145,7 +145,7 @@ analyze_knitr_file <- function(file, results) {
     return(list())
   }
   fragments <- safe_get_tangled_frags(file)
-  out <- analyze_code(fragments, as_list = FALSE)
+  out <- ignore(analyze_code)(fragments, as_list = FALSE)
   if (length(out)){
     for (slot in knitr_in_slots) {
       ht_merge(results[[slot]], out[[slot]])
@@ -205,7 +205,7 @@ walk_code <- function(expr, results, locals, allowed_globals) {
 walk_call <- function(expr, results, locals, allowed_globals) {
   lapply(
     X = expr,
-    FUN = walk_code,
+    FUN = ignore(walk_code),
     results = results,
     locals = locals,
     allowed_globals = allowed_globals
