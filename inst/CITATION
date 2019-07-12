@@ -1,0 +1,19 @@
+citHeader("To cite drake in publications use:")
+
+citEntry(
+  entry    = "Article",
+  title    = "The drake R package: a pipeline toolkit for reproducibility and high-performance computing",
+  author   = "William Michael Landau",
+  journal  = "Journal of Open Source Software",
+  year     = 2018,
+  volume   = 3,
+  number   = 21,
+  url      = "https://doi.org/10.21105/joss.00550",
+  textVersion = paste(
+    "William Michael Landau, (2018).",
+    "The drake R package: a pipeline toolkit for",
+    "reproducibility and high-performance computing.",
+    "Journal of Open Source Software,",
+    "3(21), 550, https://doi.org/10.21105/joss.00550"
+  )
+)

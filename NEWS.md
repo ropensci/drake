@@ -16,6 +16,7 @@
 - Deprecate `ensure_workers` in `drake_config()` and `make()`.
 - Warn when the user supplies additional arguments to `make()` after `config` is already supplied.
 - Prevent users from running `make()` from inside the cache (#927).
+- Add `CITATION` file with JOSS paper.
 
 ## Bug fixes
 
