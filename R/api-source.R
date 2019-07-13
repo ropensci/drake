@@ -119,3 +119,10 @@ print.drake_plan_source <- function(x, ...) {
   }
   cat(x, sep = "\n")
 }
+
+is_trigger_call <- function(expr) {
+  tryCatch(
+    safe_deparse(expr[[1]]) %in% trigger_fns,
+    error = error_false
+  )
+}

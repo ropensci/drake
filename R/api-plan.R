@@ -730,3 +730,10 @@ c.expr_list <- function(x, ...) {
 `[.expr_list` <- function(x, i) {
   as_expr_list(NextMethod())
 }
+
+is_target_call <- function(expr) {
+  tryCatch(
+    safe_deparse(expr[[1]]) %in% target_fns,
+    error = error_false
+  )
+}
