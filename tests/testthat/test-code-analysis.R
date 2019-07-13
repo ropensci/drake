@@ -253,4 +253,17 @@ test_with_dir("character vectors inside language objects", {
 
 test_with_dir("dollar sign (#938)", {
   expect_equal(analyze_code(quote(x$y))$globals, "x")
+  f <- function(target, cache) {
+    exists <- cache$exists(key = target) && (
+      imported <- diagnose(
+        target = target,
+        character_only = TRUE,
+        cache = cache
+      )$imported %||%
+        FALSE
+    )
+  }
+  out <- sort(analyze_code(f)$globals)
+  exp <- sort(c("diagnose", "%||%"))
+  expect_equal(out, exp)
 })
