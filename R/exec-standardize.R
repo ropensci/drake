@@ -31,16 +31,3 @@ standardize_imported_function <- function(fun) {
   }
   gsub("<pointer: 0x[0-9a-zA-Z]*>", "", str)
 }
-
-ignore_ignore <- function(x) {
-  if (is.function(x) && !is.primitive(x) && !is.null(body(x))) {
-    body(x) <- ignore_ignore(body(x))
-  } else if (is_callish(x)) {
-    if (safe_deparse(x[[1]]) %in% ignore_fns) {
-      x <- quote(ignore())
-    } else {
-      x[] <- lapply(as.list(x), ignore_ignore)
-    }
-  }
-  x
-}
