@@ -20,6 +20,7 @@
 
 ## Bug fixes
 
+- In the static code analysis for dependency detection, ignore list elements referenced with `$` (#938).
 - Minor: handle strings embedded in language objects (#934).
 
 

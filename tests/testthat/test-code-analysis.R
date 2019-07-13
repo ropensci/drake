@@ -250,3 +250,7 @@ test_with_dir("character vectors inside language objects", {
     sort(c("a", "b"))
   )
 })
+
+test_with_dir("dollar sign (#938)", {
+  expect_equal(analyze_code(quote(x$y))$globals, "x")
+})

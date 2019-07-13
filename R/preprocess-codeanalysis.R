@@ -174,6 +174,8 @@ walk_code <- function(expr, results, locals, allowed_globals) {
     }
     if (name %in% c("expression", "quote", "Quote")) {
       analyze_global(name, results, locals, allowed_globals)
+    } else if (name == "$" && is.symbol(expr[[2]])) {
+      analyze_global(expr[[2]], results, locals, allowed_globals)
     } else if (name %in% c("<-", "=")) {
       analyze_arrow(expr, results, locals, allowed_globals)
     } else if (name %in% c("::", ":::")) {
