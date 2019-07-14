@@ -229,58 +229,6 @@ is_target_call <- function(expr) {
   )
 }
 
-#' @title Define custom columns in a [drake_plan()].
-#' @description Not a user-side function. Please use from within
-#'   [drake_plan()] only.
-#' @export
-#' @keywords internal
-#' @seealso [drake_plan()], [make()]
-#' @return A one-row workflow plan data frame with the named
-#' arguments as columns.
-#' @param command The command to build the target.
-#' @param ... Named arguments specifying non-standard
-#'   fields of the workflow plan.
-#' @examples
-#' # Use target() to create your own custom columns in a drake plan.
-#' # See ?triggers for more on triggers.
-#' drake_plan(
-#'   website_data = target(
-#'     download_data("www.your_url.com"),
-#'     trigger = "always",
-#'     custom_column = 5
-#'   ),
-#'   analysis = analyze(website_data)
-#' )
-target <- function(command = NULL, ...) {
-  # TODO: remove this warning when we unexport target().
-  if (!nzchar(Sys.getenv("drake_target_silent"))) {
-    .Deprecated(
-      "target",
-      package = "drake",
-      msg = paste(
-        "target() is deprecated as a user-side function.",
-        "Use target from inside drake_plan(). See",
-        "https://ropenscilabs.github.io/drake-manual/plans.html#large-plans",
-        "for details."
-      )
-    )
-  }
-  call <- match.call(expand.dots = FALSE)
-  lst <- call$...
-  lst <- select_nonempty(lst)
-  lst <- lst[nzchar(names(lst))]
-  lst <- c(command = call$command, lst)
-  lst <- lapply(lst, function(x) {
-    if (is.language(x)) x <- list(x)
-    x
-  })
-  out <- data.frame(command = NA, stringsAsFactors = FALSE)
-  for (col in names(lst)) {
-    out[[col]] <- lst[[col]]
-  }
-  out
-}
-
 drake_bind_rows <- function(...) {
   args <- rlang::dots_list(..., .ignore_empty = "all")
   df_env <- new.env(parent = emptyenv())
