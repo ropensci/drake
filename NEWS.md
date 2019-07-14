@@ -10,6 +10,7 @@
 
 ## Enhancements
 
+- In `drake_plan()`, interpret custom columns as non-language objects (#942).
 - Suggest and assert `clustermq` >= 0.8.8.
 - Log the target name in a special column in the console log file ([#909](https://github.com/ropensci/drake/issues/909)).
 - Rename the "memory" memory strategy to "preclean" (with deprecation; #917).

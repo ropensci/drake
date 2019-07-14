@@ -197,7 +197,7 @@ drake_plan <- function(
   targets <- names(commands)
   plan <- weak_tibble(target = targets)
   plan$command <- commands
-  plan <- parse_custom_plan_columns(plan)
+  plan <- parse_custom_plan_columns(plan, envir = envir)
   if (transform && ("transform" %in% colnames(plan))) {
     plan <- transform_plan_(
       plan = plan,
@@ -209,28 +209,25 @@ drake_plan <- function(
     )
   }
   if (tidy_eval) {
-    for (col in setdiff(colnames(plan), c("target", "transform"))) {
-      plan[[col]] <- tidyeval_exprs(plan[[col]], envir = envir)
-    }
+    plan <- tidyeval_cols(plan, envir = envir)
   }
-  sanitize_plan(plan)
+  sanitize_plan(plan, envir = envir)
 }
 
-parse_custom_plan_columns <- function(plan) {
+parse_custom_plan_columns <- function(plan, envir) {
   Sys.setenv("drake_target_silent" = "true")
   on.exit(Sys.setenv("drake_target_silent" = ""))
   splits <- split(plan, seq_len(nrow(plan)))
-  out <- lapply(splits, parse_custom_plan_row)
+  out <- lapply(splits, parse_custom_plan_row, envir = envir)
   out <- do.call(drake_bind_rows, out)
-  sanitize_plan(out)
 }
 
-parse_custom_plan_row <- function(row) {
+parse_custom_plan_row <- function(row, envir) {
   expr <- row$command
   if (!length(expr) || !is_target_call(expr[[1]])) {
     return(row)
   }
-  out <- eval(expr[[1]])
+  out <- eval(expr[[1]], envir = envir)
   out$target <- row$target
   out
 }
@@ -270,7 +267,15 @@ fill_cols <- function(x, cols) {
   x
 }
 
-sanitize_plan <- function(plan, allow_duplicated_targets = FALSE) {
+sanitize_plan <- function(
+  plan,
+  allow_duplicated_targets = FALSE,
+  envir = parent.frame()
+) {
+  if (nrow(plan) < 1L) {
+    return(plan)
+  }
+  force(envir)
   fields <- intersect(colnames(plan), c("command", "target", "trigger"))
   for (field in fields) {
     if (!is.null(plan[[field]])) {
@@ -288,14 +293,8 @@ sanitize_plan <- function(plan, allow_duplicated_targets = FALSE) {
     plan <- assert_unique_targets(plan[, cols])
   }
   plan <- arrange_plan_cols(plan)
-  for (col in lang_cols(plan)) {
-    if (!is.list(plan[[col]])) {
-      plan[[col]] <- lapply(plan[[col]], safe_parse)
-    }
-  }
-  for (col in setdiff(colnames(plan), c("target", "command", "trigger"))) {
-    plan[[col]] <- unlist(plan[[col]])
-  }
+  plan <- eval_non_lang_cols(plan, envir = envir)
+  plan <- parse_lang_cols(plan)
   as_drake_plan(plan)
 }
 
@@ -382,6 +381,13 @@ empty_plan <- function() {
   out
 }
 
+tidyeval_cols <- function(plan, envir) {
+  for (col in setdiff(colnames(plan), c("target", "transform"))) {
+    plan[[col]] <- tidyeval_exprs(plan[[col]], envir = envir)
+  }
+  plan
+}
+
 tidyeval_exprs <- function(expr_list, envir) {
   lapply(expr_list, tidyeval_expr, envir = envir)
 }
@@ -389,6 +395,32 @@ tidyeval_exprs <- function(expr_list, envir) {
 tidyeval_expr <- function(expr, envir) {
   call <- as.call(c(quote(rlang::expr), expr))
   eval(call, envir = envir)
+}
+
+eval_non_lang_cols <- function(plan, envir) {
+  for (col in non_lang_cols(plan)) {
+    plan[[col]] <- eval_non_lang_col(plan[[col]], envir = envir)
+  }
+  plan
+}
+
+eval_non_lang_col <- function(x, envir) {
+  if (is.language(x[[1]])) {
+    x <- lapply(x, eval, envir = envir)
+  }
+  if (is.atomic(x[[1]])) {
+    x <- unlist(x)
+  }
+  x
+}
+
+parse_lang_cols <- function(plan) {
+  for (col in lang_cols(plan)) {
+    if (!is.list(plan[[col]])) {
+      plan[[col]] <- lapply(plan[[col]], safe_parse)
+    }
+  }
+  plan
 }
 
 # weak_as_tibble - use as_tibble() if available but fall back to
@@ -406,7 +438,6 @@ weak_as_tibble <- function(..., .force_df = FALSE) {
 # data.frame() if necessary
 weak_tibble <- function(..., .force_df = FALSE) {
   no_tibble <- !suppressWarnings(requireNamespace("tibble", quietly = TRUE))
-
   if (.force_df || no_tibble) {
     data.frame(..., stringsAsFactors = FALSE)
   } else {
@@ -496,13 +527,9 @@ deparse_lang_col <- function(x) {
 }
 
 lang_cols <- function(plan) {
-  out <- intersect(colnames(plan), c("command", "trigger", "transform"))
-  others <- vapply(
-    plan,
-    function(x) {
-      as.logical(length(x)) && is.list(x) && is.language(x[[1]])
-    },
-    FUN.VALUE = logical(1)
-  )
-  union(out, names(which(others)))
+  intersect(colnames(plan), c("command", "trigger", "transform"))
+}
+
+non_lang_cols <- function(plan) {
+  setdiff(colnames(plan), c("command", "trigger", "transform"))
 }

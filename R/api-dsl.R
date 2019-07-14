@@ -41,6 +41,7 @@ transform_plan <- function(
   max_expand = NULL,
   tidy_eval = TRUE
 ) {
+  force(envir)
   transform_plan_(
     plan = plan,
     envir = envir,
@@ -85,7 +86,7 @@ transform_plan_ <- function(
     }
   }
   if (sanitize) {
-    plan <- sanitize_plan(plan)
+    plan <- sanitize_plan(plan, envir = envir)
   }
   plan
 }

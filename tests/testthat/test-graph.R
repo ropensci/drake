@@ -27,10 +27,10 @@ test_with_dir("lang cluster cols", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("lubridate")
   skip_if_not_installed("visNetwork")
-  plan <- drake_plan(x = target(1, col = g(f(x))))
+  plan <- drake_plan(x = target(1, transform = g(f(x))), transform = FALSE)
   config <- drake_config(plan)
-  x <- drake_graph_info(config = config, group = "col")
-  expect_equal(x$nodes$col, "g(f(x))")
+  x <- drake_graph_info(config = config, group = "transform")
+  expect_equal(x$nodes$transform, "g(f(x))")
 })
 
 test_with_dir("circular non-DAG drake_plans quit in error", {

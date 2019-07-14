@@ -568,10 +568,10 @@ drake_config <- function(
       # 2019-06-22 # nolint
     )
   }
-  plan <- sanitize_plan(plan)
+  force(envir)
+  plan <- sanitize_plan(plan, envir = envir)
   plan_checks(plan)
   targets <- sanitize_targets(targets, plan)
-  force(envir)
   trigger <- convert_old_trigger(trigger)
   sleep <- `environment<-`(sleep, new.env(parent = globalenv()))
   if (is.null(cache)) {
