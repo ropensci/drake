@@ -713,3 +713,23 @@ do_prework <- function(config, verbose_packages) {
   }
   invisible()
 }
+
+sanitize_targets <- function(targets, plan) {
+  if (is.null(try(targets, silent = TRUE))) {
+    return(plan$target)
+  }
+  targets <- make.names(targets, unique = FALSE, allow_ = TRUE)
+  not_found <- setdiff(targets, plan$target)
+  if (length(not_found)) {
+    warning(
+      "ignoring targets not in the drake plan:\n",
+      multiline_message(not_found),
+      call. = FALSE
+    )
+  }
+  out <- unique(intersect(targets, plan$target))
+  if (!length(out)) {
+    stop("no valid targets specified.", call. = FALSE)
+  }
+  out
+}

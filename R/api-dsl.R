@@ -720,3 +720,12 @@ convert_split_to_map <- function(target, command, transform) {
   transform[[index]] <- as.numeric(seq_len(slice$slices))
   list(command = command, transform = transform)
 }
+
+sub_in_plan <- function(plan, rows, index) {
+  plan <- drake_bind_rows(
+    plan[seq_len(index - 1), ],
+    rows,
+    plan[-seq_len(index), ]
+  )
+  plan
+}

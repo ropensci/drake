@@ -53,7 +53,7 @@ reference:
   - '`r_text_drake_graph`'
   - '`r_predict_runtime`'
   - '`r_predict_workers`'
-- title: drake plans
+- title: drake plans and helpers
   contents:
   - '`drake_plan`'
   - '`transform_plan`'
@@ -62,14 +62,14 @@ reference:
   - '`plan_to_code`'
   - '`plan_to_notebook`'
   - '`bind_plans`'
-- title: Special functions for plans
+  - '`drake_slice`'
+- title: drake plan keywords
   contents:
   - '`file_in`'
   - '`file_out`'
   - '`knitr_in`'
   - '`ignore`'
   - '`no_deps`'
-  - '`drake_slice`'
   - '`drake_envir`'
   - '`trigger`'
 - title: Network graphs and visualization
