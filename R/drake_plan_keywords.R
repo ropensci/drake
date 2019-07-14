@@ -3,6 +3,7 @@
 #'   [drake_plan()] only.
 #' @export
 #' @keywords internal
+#' @inheritSection drake_plan Keywords
 #' @seealso [drake_plan()], [make()]
 #' @return A one-row workflow plan data frame with the named
 #' arguments as columns.
@@ -64,6 +65,7 @@ target <- function(command = NULL, ...) {
 #'   does not work for you, consider a custom trigger:
 #'   <https://ropenscilabs.github.io/drake-manual/triggers.html>.
 #' @export
+#' @inheritSection drake_plan Keywords
 #' @seealso [file_out()], [knitr_in()], [ignore()], [no_deps()]
 #' @return A character vector of declared input file or directory paths.
 #' @param ... Character vector, paths to files and directories.
@@ -117,6 +119,7 @@ file_in <- function(...) {
 #' @description `file_out()` marks individual files
 #'   (and whole directories) that your targets create.
 #' @export
+#' @inheritSection drake_plan Keywords
 #' @seealso [file_out()], [knitr_in()], [ignore()], [no_deps()]
 #' @return A character vector of declared output file or directory paths.
 #' @param ... Character vector, paths to files and directories.
@@ -174,6 +177,7 @@ file_out <- file_in
 #' @details Unlike [file_in()] and [file_out()], `knitr_in()`
 #'   does not work with entire directories.
 #' @export
+#' @inheritSection drake_plan Keywords
 #' @seealso [file_in()], [file_out()], [ignore()], [no_deps()]
 #' @return A character vector of declared input file paths.
 #' @param ... Character strings. File paths of `knitr`/`rmarkdown`
@@ -213,6 +217,7 @@ knitr_in <- file_in
 #' 2. Ignore changes to the code so downstream targets remain up to date.
 #' To enforce (1) without (2), use [no_deps()].
 #' @export
+#' @inheritSection drake_plan Keywords
 #' @seealso [file_in()], [file_out()], [knitr_in()], [no_deps()]
 #' @return The argument.
 #' @param x Code to ignore.
@@ -261,6 +266,7 @@ ignore <- function(x = NULL) {
 #' @details `no_deps()` is similar to [ignore()], but it still lets `drake`
 #'   track meaningful changes to the code itself.
 #' @export
+#' @inheritSection drake_plan Keywords
 #' @seealso [file_in()], [file_out()], [knitr_in()], [no_deps()]
 #' @return The argument.
 #' @param x Code for which dependency detection is suppressed.
@@ -308,6 +314,7 @@ no_deps <- function(x = NULL) {
 #'   while [make()] is running. That way, you can limit the
 #'   amount of computer memory you use.
 #' @export
+#' @inheritSection drake_plan Keywords
 #' @seealso [from_plan()]
 #' @return The environment where `drake` builds targets.
 #' @examples

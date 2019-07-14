@@ -1,14 +1,36 @@
 #' @title Create a workflow plan data frame
 #'   for the `plan` argument of [make()].
+#'
 #' @description A `drake` plan is a data frame with columns
 #'   `"target"` and `"command"`. Each target is an R object
 #'   produced in your workflow, and each command is the
-#'   R code to produce it. The `"target"` column has the names
-#'   of the targets, and no duplicate elements are allowed.
-#'   The `"command"` column is either a character vector of
-#'   code strings or a list of language objects.
+#'   R code to produce it.
 #'
-#' @details `drake` has special syntax for generating large plans.
+#' @details Besides `"target"` and `"command"`, [drake_plan()]
+#'   understands a special set of optional columns. For details, visit
+#'   <https://ropenscilabs.github.io/drake-manual/plans.html#special-custom-columns-in-your-plan>
+#'
+#' @section Keywords:
+#' [drake_plan()] understands special keyword functions for your commands.
+#' With the exception of [target()], each one is a proper function
+#' with its own help file.
+#' - [target()]: declare more than just the command,
+#'   e.g. assign a trigger or transform.
+#'   Examples: <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>. # nolint
+#' - [file_in()]: declare an input file dependency.
+#' - [file_out()]: declare an output file to be produced
+#'   when the target is built.
+#' - [knitr_in()]: declare a `knitr` file dependency such as an
+#'   R Markdown (`*.Rmd`) or R LaTeX (`*.Rnw`) file.
+#' - [ignore()]: force `drake` to entirely ignore a piece of code:
+#'   do not track it for changes and do not analyze it for dependencies.
+#' - [no_deps()]: tell `drake` to not track the dependencies
+#'   of a piece of code. `drake` still tracks the code itself for changes.
+#' - [drake_envir()]: get the environment where drake builds targets.
+#'   Intended for advanced custom memory management.
+#'
+#' @section DSL:
+#'  `drake` has special syntax for generating large plans.
 #'  Your code will look something like
 #'  `drake_plan(x = target(cmd, transform = f(y, z), group = g)`
 #'  where `f()` is either `map()`, `cross()`, `split()`, or `combine()`
@@ -17,16 +39,7 @@
 #'  These verbs mimic Tidyverse behavior to scale up
 #'  existing plans to large numbers of targets.
 #'  You can read about this interface at
-#'  <https://ropenscilabs.github.io/drake-manual/plans.html#create-large-plans-the-easy-way>. # nolint
-#'
-#' There is also special syntax for declaring input files,
-#'  output files, and knitr reports so dependencies are
-#'  properly accounted for ([file_in()], [file_out()], and
-#'  [knitr_in()], respectively.
-#'
-#' Besides `"target"` and `"command"`, you may include
-#'   optional columns in your workflow plan. For details, visit
-#'   <https://ropenscilabs.github.io/drake-manual/plans.html#special-custom-columns-in-your-plan>
+#'  <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>. # nolint
 #'
 #' @export
 #' @return A data frame of targets, commands, and optional

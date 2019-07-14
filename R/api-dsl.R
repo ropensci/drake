@@ -729,4 +729,3 @@ sub_in_plan <- function(plan, rows, index) {
   )
   plan
 }
-
