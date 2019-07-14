@@ -40,13 +40,13 @@ target <- function(command = NULL, ...) {
   lst <- select_nonempty(lst)
   lst <- lst[nzchar(names(lst))]
   lst <- c(command = call$command, lst)
-  lst <- lapply(lst, function(x) {
-    if (is.language(x)) x <- list(x)
-    x
-  })
   out <- data.frame(command = NA, stringsAsFactors = FALSE)
   for (col in names(lst)) {
-    out[[col]] <- lst[[col]]
+    if (is.language(lst[[col]])) {
+      out[[col]] <- list(lst[[col]])
+    } else {
+      out[[col]] <- lst[[col]]
+    }
   }
   out
 }

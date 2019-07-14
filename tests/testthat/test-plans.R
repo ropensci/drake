@@ -241,17 +241,17 @@ test_with_dir("custom column interface", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   tidyvar <- 2
   x <- drake_plan(x = target(
-    stop(!!tidyvar), worker = !!tidyvar, cpu = 4, custom = stop(), c2 = 5)
+    stop(!!tidyvar), worker = !!tidyvar, cpu = 4, custom = list(123), c2 = 5)
   )
   expect_true(is.list(x$custom))
-  expect_true(is.language(x$custom[[1]]))
+  expect_true(is.list(x$custom[[1]]))
   x$custom <- safe_deparse(x$custom[[1]])
   y <- weak_tibble(
     target = "x",
     command = "stop(2)",
     worker = 2,
     cpu = 4,
-    custom = "stop()",
+    custom = "list(123)",
     c2 = 5
   )
   equivalent_plans(x, y)
