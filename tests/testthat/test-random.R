@@ -183,3 +183,56 @@ test_with_dir("Random targets are reproducible", {
     regexp = "already has a different seed"
   )
 })
+
+test_with_dir("custom seeds", {
+  plan <- drake_plan(
+    x = sample.int(n = 200, size = 3),
+    y = sample.int(n = 200, size = 3),
+    z = sample.int(n = 200, size = 3),
+    mx = mean(x),
+    my = mean(y),
+    mz = mean(z)
+  )
+  config <- drake_config(
+    plan,
+    cache = storr::storr_environment(),
+    session_info = FALSE
+  )
+  make(config = config)
+  expect_equal(sort(justbuilt(config)), sort(plan$target))
+  old_x <- readd(x, cache = config$cache)
+  old_y <- readd(y, cache = config$cache)
+  old_z <- readd(z, cache = config$cache)
+  old_mx <- readd(mx, cache = config$cache)
+  old_my <- readd(my, cache = config$cache)
+  old_mz <- readd(mz, cache = config$cache)
+  expect_false(all(old_x == old_y))
+  expect_false(all(old_x == old_z))
+  expect_false(all(old_mx == old_my))
+  expect_false(all(old_mx == old_mz))
+  s <- diagnose(y, cache = config$cache)$seed
+  plan <- drake_plan(
+    x = target(
+      sample.int(n = 200, size = 3),
+      seed = s
+    ),
+    y = sample.int(n = 200, size = 3),
+    z = sample.int(n = 200, size = 3),
+    mx = mean(x),
+    my = mean(y),
+    mz = mean(z)
+  )
+  config <- drake_config(
+    plan,
+    cache = config$cache,
+    session_info = FALSE
+  )
+  make(config = config)
+  expect_equal(sort(justbuilt(config)), sort(c("x", "mx")))
+  new_x <- readd(x, cache = config$cache)
+  new_mx <- readd(mx, cache = config$cache)
+  expect_false(all(old_x == new_mx))
+  expect_false(all(old_mx == new_mx))
+  expect_equal(old_y, new_x)
+  expect_equal(old_my, new_mx)
+})
