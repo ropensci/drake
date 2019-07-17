@@ -50,6 +50,11 @@ test_with_dir("recovery (#945)", {
     make(plan, parallelism = parallelism, caching = caching)
     expect_false(file.exists("w"))
     expect_equal(justbuilt(config), "w")
+
+    # Everything should be up to date now.
+    make(plan, parallelism = parallelism, caching = caching)
+    expect_false(file.exists("w"))
+    expect_equal(justbuilt(config), character(0))
   }
   for (parallelism in c("loop", "clustermq", "future")) {
     for (caching in c("master", "worker")) {
