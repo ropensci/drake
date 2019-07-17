@@ -16,9 +16,9 @@ deps_profile(target, config, character_only = FALSE)
 is a character string rather than a symbol.}
 }
 \value{
-A data frame of the old hashes and
-new hashes of the data frame, along with
-an indication of which hashes changed since
+A data frame of old and new values for each
+of the main triggers, along with
+an indication of which values changed since
 the last \code{\link[=make]{make()}}.
 }
 \description{
@@ -26,12 +26,16 @@ The dependency profile can give you
 a hint as to why a target is out of date.
 It can tell you if
 \itemize{
+\item the command changed
+(\code{\link[=deps_profile]{deps_profile()}} reports the \emph{hash} of the command,
+not the command itself)
 \item at least one input file changed,
 \item at least one output file changed,
 \item or a non-file dependency changed. For this last part,
 the imports need to be up to date in the cache,
 which you can do with \code{outdated()} or
 \code{make(skip_targets = TRUE)}.
+\item the pseudo-random number generator seed changed.
 Unfortunately, \code{deps_profile()} does not
 currently get more specific than that.
 }

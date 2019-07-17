@@ -6,6 +6,8 @@
 - Add a new `no_deps()` function, similar to `ignore()`. `no_deps()` suppresses dependency detection but still tracks changes to the literal code ([#910](https://github.com/ropensci/drake/issues/910)).
 - Add a new "autoclean" memory strategy (#917).
 - Export `transform_plan()`.
+- Allow a custom `seed` column of `drake` plans to set custom seeds (#947).
+- Add a new `seed` trigger to optionally ignore changes to the target seed (#947).
 
 ## Enhancements
 
@@ -17,6 +19,8 @@
 - Warn when the user supplies additional arguments to `make()` after `config` is already supplied.
 - Prevent users from running `make()` from inside the cache (#927).
 - Add `CITATION` file with JOSS paper.
+- In `deps_profile()`, include the seed and change the names.
+- Allow the user to set a different seed in `make()`. All this does is invalidate old targets.
 
 ## Bug fixes
 

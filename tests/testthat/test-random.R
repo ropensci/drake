@@ -169,17 +169,182 @@ test_with_dir("Random targets are reproducible", {
   expect_false(identical(readd(my), old_my))
   expect_false(identical(readd(mz), old_mz))
 
-  # Cannot supply a conflicting seed.
-  expect_error(
-    make(
-      data,
-      envir = env,
-      seed = con5$seed + 1,
-      parallelism = parallelism,
-      jobs = jobs,
-      verbose = 0L,
-      session_info = FALSE
-    ),
-    regexp = "already has a different seed"
+  # New seed invalidates old targets.
+  make(
+    data,
+    envir = env,
+    seed = con2$seed + 2,
+    parallelism = parallelism,
+    jobs = jobs,
+    verbose = 0L,
+    session_info = FALSE
   )
+  expect_equal(sort(justbuilt(con5)), sort(data$target))
+
+  make(
+    data,
+    envir = env,
+    parallelism = parallelism,
+    jobs = jobs,
+    verbose = 0L,
+    session_info = FALSE
+  )
+  expect_equal(justbuilt(con5), character(0))
+  expect_equal(con2$seed + 2, read_drake_seed())
+  expect_true(con2$seed + 2 > 1L)
+})
+
+test_with_dir("custom seeds (#947)", {
+  plan <- drake_plan(
+    x = sample.int(n = 200, size = 3),
+    y = sample.int(n = 200, size = 3),
+    z = sample.int(n = 200, size = 3),
+    mx = mean(x),
+    my = mean(y),
+    mz = mean(z)
+  )
+  config <- drake_config(
+    plan,
+    cache = storr::storr_environment(),
+    session_info = FALSE
+  )
+  make(config = config)
+  expect_equal(sort(justbuilt(config)), sort(plan$target))
+  old_x <- readd(x, cache = config$cache)
+  old_y <- readd(y, cache = config$cache)
+  old_z <- readd(z, cache = config$cache)
+  old_mx <- readd(mx, cache = config$cache)
+  old_my <- readd(my, cache = config$cache)
+  old_mz <- readd(mz, cache = config$cache)
+  expect_false(all(old_x == old_y))
+  expect_false(all(old_x == old_z))
+  expect_false(all(old_mx == old_my))
+  expect_false(all(old_mx == old_mz))
+  s <- diagnose(y, cache = config$cache)$seed
+
+  plan <- drake_plan(
+    x = target(
+      sample.int(n = 200, size = 3),
+      seed = s,
+      trigger = trigger(seed = FALSE)
+    ),
+    y = sample.int(n = 200, size = 3),
+    z = sample.int(n = 200, size = 3),
+    mx = mean(x),
+    my = mean(y),
+    mz = mean(z)
+  )
+  config <- drake_config(
+    plan,
+    cache = config$cache,
+    session_info = FALSE
+  )
+  make(config = config)
+  expect_equal(justbuilt(config), character(0))
+
+  plan <- drake_plan(
+    x = target(
+      sample.int(n = 200, size = 3),
+      seed = s
+    ),
+    y = sample.int(n = 200, size = 3),
+    z = sample.int(n = 200, size = 3),
+    mx = mean(x),
+    my = mean(y),
+    mz = mean(z)
+  )
+  config <- drake_config(
+    plan,
+    trigger = trigger(seed = FALSE),
+    cache = config$cache,
+    session_info = FALSE
+  )
+  make(config = config)
+  expect_equal(justbuilt(config), character(0))
+
+  plan <- drake_plan(
+    x = target(
+      sample.int(n = 200, size = 3),
+      seed = s
+    ),
+    y = sample.int(n = 200, size = 3),
+    z = sample.int(n = 200, size = 3),
+    mx = mean(x),
+    my = mean(y),
+    mz = mean(z)
+  )
+  config <- drake_config(
+    plan,
+    cache = config$cache,
+    session_info = FALSE
+  )
+  make(config = config)
+  expect_equal(sort(justbuilt(config)), sort(c("x", "mx")))
+  new_x <- readd(x, cache = config$cache)
+  new_mx <- readd(mx, cache = config$cache)
+  expect_false(all(old_x == new_mx))
+  expect_false(all(old_mx == new_mx))
+  expect_equal(old_y, new_x)
+  expect_equal(old_my, new_mx)
+})
+
+test_with_dir("revert the seed trigger and end up with a new seed (#947)", {
+  plan <- drake_plan(
+    x = sample.int(n = 200, size = 3),
+    y = sample.int(n = 200, size = 3),
+    z = sample.int(n = 200, size = 3),
+    mx = mean(x),
+    my = mean(y),
+    mz = mean(z)
+  )
+  config <- drake_config(
+    plan,
+    cache = storr::storr_environment(),
+    session_info = FALSE
+  )
+  make(config = config)
+  expect_equal(sort(justbuilt(config)), sort(plan$target))
+
+  s <- diagnose(x, cache = config$cache)$seed
+  expect_true(s > 5)
+  expect_true(is.integer(s))
+
+  plan <- drake_plan(
+    x = target(
+      sample.int(n = 201, size = 3),
+      seed = 2,
+      trigger = trigger(seed = FALSE)
+    ),
+    y = sample.int(n = 200, size = 3),
+    z = sample.int(n = 200, size = 3),
+    mx = mean(x),
+    my = mean(y),
+    mz = mean(z)
+  )
+  config <- drake_config(
+    plan,
+    cache = config$cache,
+    session_info = FALSE
+  )
+  make(config = config)
+  expect_equal(sort(justbuilt(config)), sort(c("x", "mx")))
+
+  plan <- drake_plan(
+    x = target(
+      sample.int(n = 201, size = 3),
+      seed = 3
+    ),
+    y = sample.int(n = 200, size = 3),
+    z = sample.int(n = 200, size = 3),
+    mx = mean(x),
+    my = mean(y),
+    mz = mean(z)
+  )
+  config <- drake_config(
+    plan,
+    cache = config$cache,
+    session_info = FALSE
+  )
+  make(config = config)
+  expect_equal(sort(justbuilt(config)), sort(c("x", "mx")))
 })

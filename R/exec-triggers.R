@@ -32,6 +32,10 @@
 #'   non-file dependency changes.
 #' @param file Logical, whether to rebuild the target
 #'   if a [file_in()]/[file_out()]/[knitr_in()] file changes.
+#' @param seed Logical, whether to rebuild the target
+#'   if the seed changes. Only makes a difference if you set
+#'   a custom `seed` column in your [drake_plan()] at some point
+#'   in your workflow.
 #' @param condition R code (expression or language object)
 #'   that returns a logical. The target will rebuild
 #'   if the code evaluates to `TRUE`.
@@ -88,6 +92,7 @@ trigger <- function(
   command = TRUE,
   depend = TRUE,
   file = TRUE,
+  seed = TRUE,
   condition = FALSE,
   change = NULL,
   mode = c("whitelist", "blacklist", "condition")
@@ -99,6 +104,7 @@ trigger <- function(
     command = command,
     depend = depend,
     file = file,
+    seed = seed,
     condition = rlang::quo_squash(rlang::enquo(condition)),
     change = rlang::quo_squash(rlang::enquo(change)),
     mode = match.arg(mode)
@@ -163,6 +169,15 @@ file_trigger <- function(target, meta, config) {
     }
   }
   FALSE
+}
+
+seed_trigger <- function(target, meta, config) {
+  seed <- read_from_meta(
+    key = target,
+    field = "seed",
+    cache = config$cache
+  )
+  !identical(seed, meta$seed)
 }
 
 condition_trigger <- function(target, meta, config) {
@@ -233,6 +248,11 @@ should_build_target <- function(target, meta, config) {
   }
   if (identical(meta$trigger$file, TRUE)) {
     if (file_trigger(target = target, meta = meta, config = config)) {
+      return(TRUE)
+    }
+  }
+  if (identical(meta$trigger$seed, TRUE)) {
+    if (seed_trigger(target = target, meta = meta, config = config)) {
       return(TRUE)
     }
   }

@@ -89,7 +89,8 @@ drake_history <- function(
     hash = out$hash,
     exists = out$exists,
     command = out$command,
-    runtime = out$runtime
+    runtime = out$runtime,
+    seed = out$seed
   )
   out <- out[order(out$target, out$time), ]
   out$latest <- !duplicated(out$target, fromLast = TRUE)
@@ -111,6 +112,7 @@ history_from_cache <- function(meta_hash, cache) {
         exists = NA,
         command = NA_character_,
         runtime = NA,
+        seed = NA_integer_,
         stringsAsFactors = FALSE
       )
     )
@@ -120,6 +122,7 @@ history_from_cache <- function(meta_hash, cache) {
   out$exists <- cache$exists_object(meta$hash)
   out$command <- meta$command
   out$runtime <- meta$time_command$elapsed
+  out$seed <- meta$seed
   out$message <- meta_hash
   out
 }

@@ -4,7 +4,7 @@
 \alias{trigger}
 \title{Customize the decision rules for rebuilding targets}
 \usage{
-trigger(command = TRUE, depend = TRUE, file = TRUE,
+trigger(command = TRUE, depend = TRUE, file = TRUE, seed = TRUE,
   condition = FALSE, change = NULL, mode = c("whitelist",
   "blacklist", "condition"))
 }
@@ -17,6 +17,11 @@ non-file dependency changes.}
 
 \item{file}{Logical, whether to rebuild the target
 if a \code{\link[=file_in]{file_in()}}/\code{\link[=file_out]{file_out()}}/\code{\link[=knitr_in]{knitr_in()}} file changes.}
+
+\item{seed}{Logical, whether to rebuild the target
+if the seed changes. Only makes a difference if you set
+a custom \code{seed} column in your \code{\link[=drake_plan]{drake_plan()}} at some point
+in your workflow.}
 
 \item{condition}{R code (expression or language object)
 that returns a logical. The target will rebuild

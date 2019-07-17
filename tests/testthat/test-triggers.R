@@ -104,6 +104,7 @@ test_with_dir("trigger() function works", {
     command = TRUE,
     depend = FALSE,
     file = FALSE,
+    seed = TRUE,
     condition = quote(1 + 1),
     change = quote(sqrt(1)),
     mode = "whitelist"

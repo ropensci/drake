@@ -75,7 +75,7 @@ test_with_dir("dependency profile", {
   config$skip_targets <- TRUE
   make(config = config)
   dp <- deps_profile(target = a, config = config)
-  expect_true(as.logical(dp[dp$hash == "depend", "changed"]))
+  expect_true(as.logical(dp[dp$name == "depend", "changed"]))
   expect_equal(sum(dp$changed), 1)
   config$plan$command <- "b + c"
   config$layout <- create_drake_layout(
@@ -84,7 +84,7 @@ test_with_dir("dependency profile", {
     cache = config$cache
   )$layout
   dp <- deps_profile(target = a, config = config)
-  expect_true(as.logical(dp[dp$hash == "command", "changed"]))
+  expect_true(as.logical(dp[dp$name == "command", "changed"]))
   expect_equal(sum(dp$changed), 2)
   load_mtcars_example()
   config <- drake_config(
@@ -99,7 +99,7 @@ test_with_dir("dependency profile", {
     character_only = TRUE,
     config
   )
-  expect_equal(nrow(out), 4)
+  expect_equal(nrow(out), 5L)
 })
 
 test_with_dir("Missing cache", {
