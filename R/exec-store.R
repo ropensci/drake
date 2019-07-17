@@ -81,7 +81,7 @@ store_meta <- function(target, meta, hash, config) {
     hash = hash,
     config = config
   )
-  meta_hash <- config$cache$set(
+  meta$meta_hash <- config$cache$set(
     key = target,
     value = meta,
     namespace = "meta",
@@ -89,8 +89,15 @@ store_meta <- function(target, meta, hash, config) {
   )
   is_target <- !meta$imported && !is_encoded_path(target)
   if (is_target && is_history(config$history)) {
-    config$history$push(title = target, message = meta_hash)
+    config$history$push(title = target, message = meta$meta_hash)
   }
+  if (is_target && config$recover) {
+    store_recovery(target = target, meta = meta, config = config)
+  }
+}
+
+store_recovery <- function(target, meta, config) {
+
 }
 
 finalize_meta <- function(target, meta, hash, config) {
