@@ -19,7 +19,8 @@
 - Warn when the user supplies additional arguments to `make()` after `config` is already supplied.
 - Prevent users from running `make()` from inside the cache (#927).
 - Add `CITATION` file with JOSS paper.
-- in `deps_profile()`, include the seed and change the names.
+- In `deps_profile()`, include the seed and change the names.
+- Allow the user to set a different seed in `make()`. All this does is invalidate old targets.
 
 ## Bug fixes
 

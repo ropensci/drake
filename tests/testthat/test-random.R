@@ -169,19 +169,29 @@ test_with_dir("Random targets are reproducible", {
   expect_false(identical(readd(my), old_my))
   expect_false(identical(readd(mz), old_mz))
 
-  # Cannot supply a conflicting seed.
-  expect_error(
-    make(
-      data,
-      envir = env,
-      seed = con5$seed + 1,
-      parallelism = parallelism,
-      jobs = jobs,
-      verbose = 0L,
-      session_info = FALSE
-    ),
-    regexp = "already has a different seed"
+  # New seed invalidates old targets.
+  make(
+    data,
+    envir = env,
+    seed = con2$seed + 2,
+    parallelism = parallelism,
+    jobs = jobs,
+    verbose = 0L,
+    session_info = FALSE
   )
+  expect_equal(sort(justbuilt(con5)), sort(data$target))
+
+  make(
+    data,
+    envir = env,
+    parallelism = parallelism,
+    jobs = jobs,
+    verbose = 0L,
+    session_info = FALSE
+  )
+  expect_equal(justbuilt(con5), character(0))
+  expect_equal(con2$seed + 2, read_drake_seed())
+  expect_true(con2$seed + 2 > 1L)
 })
 
 test_with_dir("custom seeds (#947)", {
