@@ -44,7 +44,7 @@ recoverable <-  function(
   out[index]
 }
 
-is_recoverable = function(target, config) {
+is_recoverable <- function(target, config) {
   meta <- drake_meta_(target = target, config = config)
   hash <- old_recovery_hash(target, meta, config)
   !is.na(hash)
