@@ -45,8 +45,8 @@ old_recovery_hash <- function(target, meta, config) {
     namespace = "recover",
     config = config
   )
-  new_hash <- recovery_hash(target = target, meta = meta, config = config)
-  if (old_hash != new_hash) {
+  new_hash <- new_recovery_hash(target = target, meta = meta, config = config)
+  if (is.na(old_hash) || old_hash != new_hash) {
     return(NA_character_)
   }
   old_hash

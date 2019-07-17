@@ -4,6 +4,7 @@
 \alias{r_make}
 \alias{r_drake_build}
 \alias{r_outdated}
+\alias{r_recoveable}
 \alias{r_missed}
 \alias{r_deps_target}
 \alias{r_drake_graph_info}
@@ -21,6 +22,8 @@ r_drake_build(target, character_only = FALSE, ..., source = NULL,
   r_fn = NULL, r_args = list())
 
 r_outdated(..., source = NULL, r_fn = NULL, r_args = list())
+
+r_recoveable(..., source = NULL, r_fn = NULL, r_args = list())
 
 r_missed(..., source = NULL, r_fn = NULL, r_args = list())
 

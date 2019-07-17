@@ -44,6 +44,7 @@ reference:
   - '`r_make`'
   - '`r_drake_build`'
   - '`r_outdated`'
+  - '`r_recoverable`'
   - '`r_missed`'
   - '`r_deps_target`'
   - '`r_drake_graph_info`'
@@ -88,6 +89,7 @@ reference:
   contents:
   - '`drake_history`'
   - '`outdated`'
+  - '`recoverable`'
   - '`missed`'
   - '`tracked`'
   - '`deps_code`'

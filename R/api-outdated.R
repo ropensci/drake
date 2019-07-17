@@ -1,3 +1,55 @@
+#' @title List the *recoverable* targets that are out of date.
+#' @description Some outdated targets can be recovered using old data.
+#'   For details, see the `recover` argument in the help file of [make()].
+#'   The [recoverable()] function lists the outdated targets that
+#'   can be recovered with `make(recover = TRUE)`. Instead of rerunning
+#'   the commands, [make()] will simply assign the old data to the new
+#'   targets as appropriate.
+#' @export
+#' @seealso [r_recoverable()], [r_outdated()], [drake_config()], [missed()],
+#'   [drake_plan()], [make()]
+#' @return Character vector of the names of recoverable targets.
+#' @inheritParams outdated
+#' @examples
+#' \dontrun{
+#' isolate_example("Quarantine side effects.", {
+#' if (suppressWarnings(require("knitr"))) {
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
+#' # Recopute the config list early and often to have the
+#' # most current information. Do not modify the config list by hand.
+#' config <- drake_config(my_plan)
+#' outdated(config = config) # Which targets are out of date?
+#' recoverable(config = config) # Which of these are recoverable?
+#' }
+#' })
+#' }
+recoverable <-  function(
+  config,
+  make_imports = TRUE,
+  do_prework = TRUE
+) {
+  log_msg("begin recoverable()", config = config)
+  on.exit(log_msg("end recoverable()", config = config), add = TRUE)
+  out <- outdated(
+    config = config,
+    make_imports = make_imports,
+    do_prework = do_prework
+  )
+  index <- vapply(
+    out,
+    is_recoverable,
+    FUN.VALUE = logical(1),
+    config = config
+  )
+  out[index]
+}
+
+is_recoverable = function(target, config) {
+  meta <- drake_meta_(target = target, config = config)
+  hash <- old_recovery_hash(target, meta, config)
+  !is.na(hash)
+}
+
 #' @title List the targets that are out of date.
 #' @description Outdated targets will be rebuilt in the next
 #'   [make()].
@@ -68,7 +120,7 @@ first_outdated <- function(config) {
           return(TRUE)
         }
         meta <- drake_meta_(target, config)
-        should_build_target(target, meta, config)
+        should_build_target(target, meta, config, log_skip = FALSE)
       },
       jobs = config$jobs_preprocess
     )

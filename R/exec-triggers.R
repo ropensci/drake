@@ -225,7 +225,7 @@ change_trigger <- function(target, meta, config) {
   !identical(old_value, meta$trigger$value)
 }
 
-should_build_target <- function(target, meta, config) {
+should_build_target <- function(target, meta, config, log_skip) {
   if (meta$imported) {
     return(TRUE)
   }
@@ -236,6 +236,9 @@ should_build_target <- function(target, meta, config) {
   condition <- condition_trigger(target = target, meta = meta, config = config)
   if (is.logical(condition)) {
     log_msg("trigger condition", target = target, config = config)
+    if (!condition && log_skip) {
+      log_msg("skip", target = target, config = config)
+    }
     return(condition)
   }
   if (identical(meta$trigger$command, TRUE)) {
@@ -268,5 +271,13 @@ should_build_target <- function(target, meta, config) {
       return(TRUE)
     }
   }
+  if (log_skip) {
+    log_msg("skip", target = target, config = config)
+  }
   FALSE
+}
+
+skip_command <- function(target, meta, config) {
+  !should_build_target(target, meta, config, log_skip = TRUE) ||
+    recover_target(target, meta, config)
 }
