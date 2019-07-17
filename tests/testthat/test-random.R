@@ -184,7 +184,7 @@ test_with_dir("Random targets are reproducible", {
   )
 })
 
-test_with_dir("custom seeds", {
+test_with_dir("custom seeds (#947)", {
   plan <- drake_plan(
     x = sample.int(n = 200, size = 3),
     y = sample.int(n = 200, size = 3),
@@ -276,4 +276,67 @@ test_with_dir("custom seeds", {
   expect_false(all(old_mx == new_mx))
   expect_equal(old_y, new_x)
   expect_equal(old_my, new_mx)
+})
+
+test_with_dir("revert the seed trigger and end up with a new seed (#947)", {
+  plan <- drake_plan(
+    x = sample.int(n = 200, size = 3),
+    y = sample.int(n = 200, size = 3),
+    z = sample.int(n = 200, size = 3),
+    mx = mean(x),
+    my = mean(y),
+    mz = mean(z)
+  )
+  config <- drake_config(
+    plan,
+    cache = storr::storr_environment(),
+    session_info = FALSE
+  )
+  make(config = config)
+  expect_equal(sort(justbuilt(config)), sort(plan$target))
+
+  s <- diagnose(x, cache = config$cache)$seed
+  expect_true(s > 5)
+  expect_true(is.integer(s))
+
+  plan <- drake_plan(
+    x = target(
+      sample.int(n = 200, size = 3),
+      seed = 2,
+      trigger = trigger(seed = FALSE)
+    ),
+    y = sample.int(n = 200, size = 3),
+    z = sample.int(n = 200, size = 3),
+    mx = mean(x),
+    my = mean(y),
+    mz = mean(z)
+  )
+  config <- drake_config(
+    plan,
+    cache = config$cache,
+    session_info = FALSE
+  )
+  make(config = config)
+  expect_equal(justbuilt(config), character(0))
+
+  for (seed in c(2, 3)) {
+    plan <- drake_plan(
+      x = target(
+        sample.int(n = 200, size = 3),
+        seed = !!seed
+      ),
+      y = sample.int(n = 200, size = 3),
+      z = sample.int(n = 200, size = 3),
+      mx = mean(x),
+      my = mean(y),
+      mz = mean(z)
+    )
+    config <- drake_config(
+      plan,
+      cache = config$cache,
+      session_info = FALSE
+    )
+    make(config = config)
+    expect_equal(sort(justbuilt(config)), sort(c("x", "mx")))
+  }
 })
