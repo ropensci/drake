@@ -301,7 +301,7 @@ test_with_dir("revert the seed trigger and end up with a new seed (#947)", {
 
   plan <- drake_plan(
     x = target(
-      sample.int(n = 200, size = 3),
+      sample.int(n = 201, size = 3),
       seed = 2,
       trigger = trigger(seed = FALSE)
     ),
@@ -317,26 +317,43 @@ test_with_dir("revert the seed trigger and end up with a new seed (#947)", {
     session_info = FALSE
   )
   make(config = config)
+  expect_equal(sort(justbuilt(config)), sort(c("x", "mx")))
+
+  plan <- drake_plan(
+    x = target(
+      sample.int(n = 201, size = 3),
+      seed = 2
+    ),
+    y = sample.int(n = 200, size = 3),
+    z = sample.int(n = 200, size = 3),
+    mx = mean(x),
+    my = mean(y),
+    mz = mean(z)
+  )
+  config <- drake_config(
+    plan,
+    cache = config$cache,
+    session_info = FALSE
+  )
+  make(config = config)
   expect_equal(justbuilt(config), character(0))
 
-  for (seed in c(2, 3)) {
-    plan <- drake_plan(
-      x = target(
-        sample.int(n = 200, size = 3),
-        seed = !!seed
-      ),
-      y = sample.int(n = 200, size = 3),
-      z = sample.int(n = 200, size = 3),
-      mx = mean(x),
-      my = mean(y),
-      mz = mean(z)
-    )
-    config <- drake_config(
-      plan,
-      cache = config$cache,
-      session_info = FALSE
-    )
-    make(config = config)
-    expect_equal(sort(justbuilt(config)), sort(c("x", "mx")))
-  }
+  plan <- drake_plan(
+    x = target(
+      sample.int(n = 201, size = 3),
+      seed = 3
+    ),
+    y = sample.int(n = 200, size = 3),
+    z = sample.int(n = 200, size = 3),
+    mx = mean(x),
+    my = mean(y),
+    mz = mean(z)
+  )
+  config <- drake_config(
+    plan,
+    cache = config$cache,
+    session_info = FALSE
+  )
+  make(config = config)
+  expect_equal(sort(justbuilt(config)), sort(c("x", "mx")))
 })
