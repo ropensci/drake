@@ -23,7 +23,7 @@ test_with_dir("basic history", {
 
   # Get and inspect the history.
   out <- drake_history(cache = cache, analyze = TRUE)
-  expect_equal(dim(out), c(22L, 8L))
+  expect_equal(dim(out), c(22L, 9L))
   cols <- c(
     "target",
     "time",
@@ -32,11 +32,13 @@ test_with_dir("basic history", {
     "latest",
     "command",
     "runtime",
+    "seed",
     "quiet"
   )
   expect_equal(sort(colnames(out)), sort(cols))
   expect_equal(sum(is.finite(out[["quiet"]])), 2L)
   expect_true(all(out[["quiet"]][out$target == "report"] == TRUE))
+  expect_true(is.integer(out$seed))
 
   # Without analysis
   x <- drake_history(cache = cache, analyze = FALSE)
@@ -57,7 +59,7 @@ test_with_dir("basic history", {
   # After garbage collection
   cache$gc()
   out <- drake_history(cache = cache, analyze = TRUE)
-  expect_equal(dim(out), c(22L, 8L))
+  expect_equal(dim(out), c(22L, 9L))
   expect_equal(sort(colnames(out)), sort(cols))
   expect_na <- out$target == "small" | !out$latest
   expect_equal(is.na(out$hash), expect_na)
@@ -65,7 +67,7 @@ test_with_dir("basic history", {
   # Clean everything.
   clean(cache = cache, garbage_collection = TRUE)
   out <- drake_history(cache = cache, analyze = TRUE)
-  expect_equal(dim(out), c(22L, 7L))
+  expect_equal(dim(out), c(22L, 8L))
 })
 
 test_with_dir("complicated history commands", {
@@ -82,7 +84,7 @@ test_with_dir("complicated history commands", {
   cache <- storr::storr_environment()
   make(plan, cache = cache, session_info = FALSE, history = TRUE)
   out <- drake_history(cache = cache, analyze = TRUE)
-  expect_equal(ncol(out), 10L)
+  expect_equal(ncol(out), 11L)
   expect_equal(out$a, rep("x", 2))
   expect_equal(out$w, rep("5", 2))
   expect_equal(out$y[2], 4L)
