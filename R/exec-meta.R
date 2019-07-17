@@ -6,7 +6,9 @@ drake_meta_ <- function(target, config) {
     target = target,
     imported = layout$imported %||% TRUE,
     missing = !target_exists(target = target, config = config),
-    seed = seed_from_basic_types(config$seed, target),
+    seed = as.integer(
+      layout$seed %||NA% seed_from_basic_types(config$seed, target)
+    ),
     time_start = proc.time(),
     file_out = layout$deps_build$file_out
   )
