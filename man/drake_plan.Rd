@@ -58,6 +58,43 @@ Besides \code{"target"} and \code{"command"}, \code{\link[=drake_plan]{drake_pla
 understands a special set of optional columns. For details, visit
 \url{https://ropenscilabs.github.io/drake-manual/plans.html#special-custom-columns-in-your-plan}
 }
+\section{Columns}{
+
+\code{\link[=drake_plan]{drake_plan()}} creates a special data frame. At minimum, that data frame
+must have columns \code{target} and \code{command} with the target names and the
+R code chunks to build them, respectively.
+
+You can add custom columns yourself, either with \code{target()}
+(e.g. \code{drake_plan(targ = target(my_cmd(), custom = "column"))})
+or by appending columns post-hoc (e.g. \code{plan$col <- vals}).
+
+Some of these custom columns are special. They are optional,
+but \code{drake} looks for them at various points in the workflow.
+\itemize{
+\item \code{elapsed} and \code{cpu}: number of seconds to wait for the target to build
+before timing out (\code{elapsed} for elapsed time and \code{cpu} for CPU time).
+\item \code{hpc}: logical values (\code{TRUE}/\code{FALSE}/\code{NA}) whether to send each target
+to parallel workers.
+Visit \url{https://ropenscilabs.github.io/drake-manual/hpc.html#selectivity}
+to learn more.
+\item \code{resources}: target-specific lists of resources for a computing cluster.
+See
+\url{https://ropenscilabs.github.io/drake-manual/hpc.html#advanced-options}
+for details.
+\item \code{retries}: number of times to retry building a target
+in the event of an error.
+\item \code{seed}: an optional pseudo-random number generator (RNG)
+seed for each target. \code{drake} usually comes up with its own
+unique reproducible target-specific seeds using the global seed
+(the \code{seed} argument to \code{\link[=make]{make()}} and \code{\link[=drake_config]{drake_config()}})
+and the target names, but you can overwrite these automatic seeds.
+\code{NA} entries default back to \code{drake}'s automatic seeds.
+\item \code{trigger}: rule to decide whether a target needs to run.
+It is recommended that you define this one with \code{target()}.
+Details: \url{https://ropenscilabs.github.io/drake-manual/triggers.html}.
+}
+}
+
 \section{Keywords}{
 
 \code{\link[=drake_plan]{drake_plan()}} understands special keyword functions for your commands.

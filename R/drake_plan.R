@@ -10,6 +10,40 @@
 #'   understands a special set of optional columns. For details, visit
 #'   <https://ropenscilabs.github.io/drake-manual/plans.html#special-custom-columns-in-your-plan>
 #'
+#' @section Columns:
+#' [drake_plan()] creates a special data frame. At minimum, that data frame
+#' must have columns `target` and `command` with the target names and the
+#' R code chunks to build them, respectively.
+#'
+#' You can add custom columns yourself, either with `target()`
+#' (e.g. `drake_plan(targ = target(my_cmd(), custom = "column"))`)
+#' or by appending columns post-hoc (e.g. `plan$col <- vals`).
+#'
+#' Some of these custom columns are special. They are optional,
+#' but `drake` looks for them at various points in the workflow.
+#'
+#' - `elapsed` and `cpu`: number of seconds to wait for the target to build
+#'   before timing out (`elapsed` for elapsed time and `cpu` for CPU time).
+#' - `hpc`: logical values (`TRUE`/`FALSE`/`NA`) whether to send each target
+#'   to parallel workers.
+#'   Visit <https://ropenscilabs.github.io/drake-manual/hpc.html#selectivity>
+#'   to learn more.
+#' - `resources`: target-specific lists of resources for a computing cluster.
+#'   See
+#'   <https://ropenscilabs.github.io/drake-manual/hpc.html#advanced-options>
+#'   for details.
+#' - `retries`: number of times to retry building a target
+#'   in the event of an error.
+#' - `seed`: an optional pseudo-random number generator (RNG)
+#'   seed for each target. `drake` usually comes up with its own
+#'   unique reproducible target-specific seeds using the global seed
+#'   (the `seed` argument to [make()] and [drake_config()])
+#'   and the target names, but you can overwrite these automatic seeds.
+#'   `NA` entries default back to `drake`'s automatic seeds.
+#' - `trigger`: rule to decide whether a target needs to run.
+#'   It is recommended that you define this one with `target()`.
+#'   Details: <https://ropenscilabs.github.io/drake-manual/triggers.html>.
+#'
 #' @section Keywords:
 #' [drake_plan()] understands special keyword functions for your commands.
 #' With the exception of [target()], each one is a proper function
