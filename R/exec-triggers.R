@@ -246,13 +246,13 @@ should_build_target <- function(target, meta, config) {
       return(TRUE)
     }
   }
-  if (identical(meta$trigger$seed, TRUE)) {
-    if (seed_trigger(target = target, meta = meta, config = config)) {
+  if (identical(meta$trigger$file, TRUE)) {
+    if (file_trigger(target = target, meta = meta, config = config)) {
       return(TRUE)
     }
   }
-  if (identical(meta$trigger$file, TRUE)) {
-    if (file_trigger(target = target, meta = meta, config = config)) {
+  if (identical(meta$trigger$seed, TRUE)) {
+    if (seed_trigger(target = target, meta = meta, config = config)) {
       return(TRUE)
     }
   }
