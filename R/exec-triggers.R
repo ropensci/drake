@@ -219,7 +219,7 @@ change_trigger <- function(target, meta, config) {
     return(FALSE)
   }
   if (!config$cache$exists(key = target, namespace = "change")) {
-    return(FALSE) # nocov
+    return(TRUE) # nocov
   }
   old_value <- config$cache$get(key = target, namespace = "change")
   !identical(old_value, meta$trigger$value)

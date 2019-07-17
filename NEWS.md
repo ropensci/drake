@@ -2,6 +2,7 @@
 
 ## New features
 
+- Try to recover outdated targets using old data instead of rerunning the command (#945). Requires `make(recover = TRUE)`. Users can rename targets this way as long as a custom seed is set in the plan (via `plan$seed`).
 - Track the history and provenance of targets, viewable with `drake_history()`. Powered by [`txtq`](https://github.com/wlandau/txtq) (#918, #920).
 - Add a new `no_deps()` function, similar to `ignore()`. `no_deps()` suppresses dependency detection but still tracks changes to the literal code ([#910](https://github.com/ropensci/drake/issues/910)).
 - Add a new "autoclean" memory strategy (#917).

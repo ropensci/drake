@@ -315,3 +315,30 @@ dir_size <- function(x) {
   sizes <- vapply(files, file_size, FUN.VALUE = numeric(1))
   max(sizes %||% 0)
 }
+
+recovery_hash <- function(target, meta, config) {
+  if (is.null(meta$trigger$value)) {
+    change_hash <- NA_character_
+  } else {
+    change_hash <- digest::digest(
+      meta$trigger$value,
+      algo = config$cache$driver$hash_algorithm
+    )
+  }
+  x <- c(
+    meta$command,
+    meta$dependency_hash,
+    meta$input_file_hash,
+    meta$output_file_hash,
+    as.character(meta$seed),
+    safe_deparse(meta$trigger$condition),
+    meta$trigger$mode,
+    change_hash
+  )
+  x <- paste(x, collapse = "|")
+  digest::digest(
+    x,
+    algo = config$cache$driver$hash_algorithm,
+    serialize = FALSE
+  )
+}

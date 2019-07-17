@@ -411,9 +411,9 @@
 #'   - The old target data, the ordinary metadata, and recovery metadata,
 #'     must still exist in the cache.
 #'   - The underlying triggers of the old target data and the
-#'     prospective new target must aggree. In other words, the old target
+#'     prospective new target must agree. In other words, the old target
 #'     data must have the same command, dependency hash, file hashes,
-#'     seed, `condition` trigger, `change` trigger, and trigger mode
+#'     seed, `condition` expression, `condition` mode, and `change` value
 #'     as the prospective target about to be built.
 #'
 #'   Caution: `recover = TRUE` tells `drake` to put many more data

@@ -446,9 +446,9 @@ Requirements for automatic recovery:
 \item The old target data, the ordinary metadata, and recovery metadata,
 must still exist in the cache.
 \item The underlying triggers of the old target data and the
-prospective new target must aggree. In other words, the old target
+prospective new target must agree. In other words, the old target
 data must have the same command, dependency hash, file hashes,
-seed, \code{condition} trigger, \code{change} trigger, and trigger mode
+seed, \code{condition} expression, \code{condition} mode, and \code{change} value
 as the prospective target about to be built.
 }
 

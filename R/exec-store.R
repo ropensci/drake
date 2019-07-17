@@ -22,7 +22,6 @@ store_outputs <- function(target, value, meta, config) {
       namespace = "change",
       use_cache = FALSE
     )
-    meta$trigger$value <- NULL
   }
   store_output_files(layout$deps_build$file_out, meta, config)
   if (length(file_out) || is.null(file_out)) {
@@ -81,9 +80,11 @@ store_meta <- function(target, meta, hash, config) {
     hash = hash,
     config = config
   )
+  meta_lite <- meta
+  meta_lite$trigger$value <- NULL
   meta$meta_hash <- config$cache$set(
     key = target,
-    value = meta,
+    value = meta_lite,
     namespace = "meta",
     use_cache = FALSE
   )
@@ -97,7 +98,14 @@ store_meta <- function(target, meta, hash, config) {
 }
 
 store_recovery <- function(target, meta, config) {
-
+  key <- recovery_hash(target = target, meta = meta, config = config)
+  value <- c(meta$hash, meta$meta_hash) # (1) target data hash (2) metadata hash # nolint
+  config$cache$set(
+    key = key,
+    value = value,
+    namespace = "recover",
+    use_cache = FALSE
+  )
 }
 
 finalize_meta <- function(target, meta, hash, config) {
