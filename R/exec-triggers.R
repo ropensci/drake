@@ -235,10 +235,8 @@ should_build_target <- function(target, meta, config) {
   }
   condition <- condition_trigger(target = target, meta = meta, config = config)
   if (is.logical(condition)) {
-    if (condition) {
-      log_msg("trigger condition", target = target, config = config)
-      return(condition)
-    }
+    log_msg("trigger condition", target = target, config = config)
+    return(condition)
   }
   if (identical(meta$trigger$command, TRUE)) {
     if (command_trigger(target = target, meta = meta, config = config)) {
