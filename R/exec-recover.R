@@ -1,5 +1,5 @@
 recover_target <- function(target, meta, config) {
-  if (is.null(config$recover)) {
+  if (is.null(config$recover) || is.null(config$cache$driver$set_hash)) {
     return(FALSE)
   }
   value <- recovery_metadata(target, meta, config)
@@ -14,15 +14,15 @@ recover_target <- function(target, meta, config) {
     color = colors["recover"],
     tier = 1L
   )
-  config$cache$duplicate(
-    key_src = value[1],
-    key_dest = value[1],
-    namespace = config$cache$default_namespace
+  config$cache$driver$set_hash(
+    key = target,
+    namespace = config$cache$default_namespace,
+    hash = value[1]
   )
-  config$cache$duplicate(
-    key_src = value[2],
-    key_dest = value[2],
-    namespace = "meta"
+  config$cache$driver$set_hash(
+    key = target,
+    namespace = "meta",
+    hash = value[2]
   )
   set_progress(
     target = target,

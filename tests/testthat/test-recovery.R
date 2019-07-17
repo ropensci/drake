@@ -2,6 +2,7 @@ drake_context("recovery")
 
 test_with_dir("recovery (#945)", {
   test_recovery <- function(parallelism, caching) {
+    clean(destroy = TRUE)
     plan <- drake_plan(
       w = {
         file.create("w")
