@@ -21,7 +21,7 @@ make(plan, targets = NULL, envir = parent.frame(), verbose = 1L,
   console_log_file = NULL, ensure_workers = NULL,
   garbage_collection = FALSE, template = list(), sleep = function(i)
   0.01, hasty_build = NULL, memory_strategy = "speed", layout = NULL,
-  lock_envir = TRUE, history = TRUE)
+  lock_envir = TRUE, history = TRUE, recover = TRUE)
 }
 \arguments{
 \item{plan}{Workflow plan data frame.
@@ -431,6 +431,31 @@ of your targets. You can also supply a
 \href{https://github.com/wlandau/txtq}{txtq}, which is
 how \code{drake} records history.
 Must be \code{TRUE} for \code{\link[=drake_history]{drake_history()}} to work later.}
+
+\item{recover}{Logical, whether \code{make()} should try to recover
+old targets and make new targets recoverable. This is different from
+simply skipping a target if it is already up to date.
+With automatic recovery, \code{make()} can sometimes salvage old data
+from the distant past instead of rerunning the command
+of an outdated target.
+
+Requirements for automatic recovery:
+\itemize{
+\item The old target value must have been generated with
+\code{make(recover = TRUE)}.
+\item The old target data, the ordinary metadata, and recovery metadata,
+must still exist in the cache.
+\item The underlying triggers of the old target data and the
+prospective new target must aggree. In other words, the old target
+data must have the same command, dependency hash, file hashes,
+seed, \code{condition} trigger, \code{change} trigger, and trigger mode
+as the prospective target about to be built.
+}
+
+Caution: \code{recover = TRUE} tells \code{drake} to put many more data
+files in the cache (usually the \code{.drake/} folder).
+So if you need to reduce or limit the number of files in the cache,
+run \code{make(log_progress = FALSE, recover = FALSE)}.}
 }
 \value{
 nothing

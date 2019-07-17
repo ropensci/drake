@@ -21,7 +21,7 @@ drake_config(plan, targets = NULL, envir = parent.frame(),
   console_log_file = NULL, ensure_workers = NULL,
   garbage_collection = FALSE, template = list(), sleep = function(i)
   0.01, hasty_build = NULL, memory_strategy = "speed", layout = NULL,
-  lock_envir = TRUE, history = TRUE)
+  lock_envir = TRUE, history = TRUE, recover = TRUE)
 }
 \arguments{
 \item{plan}{Workflow plan data frame.

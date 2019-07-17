@@ -486,7 +486,8 @@ drake_config <- function(
   memory_strategy = "speed",
   layout = NULL,
   lock_envir = TRUE,
-  history = TRUE
+  history = TRUE,
+  recover = TRUE
 ) {
   log_msg(
     "begin drake_config()",
@@ -674,7 +675,8 @@ drake_config <- function(
     hasty_build = hasty_build,
     lock_envir = lock_envir,
     force = force,
-    history = history
+    history = history,
+    recover = recover
   )
   out <- enforce_compatible_config(out)
   config_checks(out)

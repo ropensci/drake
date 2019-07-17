@@ -163,7 +163,8 @@ make <- function(
   memory_strategy = "speed",
   layout = NULL,
   lock_envir = TRUE,
-  history = TRUE
+  history = TRUE,
+  recover = TRUE
 ) {
   log_msg(
     "begin make()",
@@ -219,7 +220,8 @@ make <- function(
       memory_strategy = memory_strategy,
       layout = layout,
       lock_envir = lock_envir,
-      history = history
+      history = history,
+      recover = recover
     )
   }
   assert_config_not_plan(config)
