@@ -3,7 +3,6 @@
 ## New features
 
 - Track the history and provenance of targets, viewable with `drake_history()`. Powered by [`txtq`](https://github.com/wlandau/txtq) (#918, #920).
-- Add a new `rename_targets()` function to rename targets in the cache without rebuilding them. Keeps targets up to date even if their names change in the plan (#935).
 - Add a new `no_deps()` function, similar to `ignore()`. `no_deps()` suppresses dependency detection but still tracks changes to the literal code ([#910](https://github.com/ropensci/drake/issues/910)).
 - Add a new "autoclean" memory strategy (#917).
 - Export `transform_plan()`.
