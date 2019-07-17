@@ -316,7 +316,7 @@ dir_size <- function(x) {
   max(sizes %||% 0)
 }
 
-recovery_hash <- function(target, meta, config) {
+new_recovery_hash <- function(target, meta, config) {
   if (is.null(meta$trigger$value)) {
     change_hash <- NA_character_
   } else {
@@ -340,5 +340,42 @@ recovery_hash <- function(target, meta, config) {
     x,
     algo = config$cache$driver$hash_algorithm,
     serialize = FALSE
+  )
+}
+
+# Returns NA_character_ if we should not recover the target at all.
+old_recovery_hash <- function(target, meta, config) {
+  if (!config$recover) {
+    return(NA_character_)
+  }
+  old_hash <- safe_get_hash(
+    key = target,
+    namespace = "recover",
+    config = config
+  )
+  new_hash <- recovery_hash(target = target, meta = meta, config = config)
+  if (old_hash != new_hash) {
+    return(NA_character_)
+  }
+  old_hash
+}
+
+recover_target <- function(target, hash, config) {
+  value <- config$cache$get(hash, namespace = "recover", use_cache = FALSE)
+  config$cache$duplicate(
+    key_src = value[1],
+    key_dest = value[1],
+    namespace = config$cache$default_namespace
+  )
+  config$cache$duplicate(
+    key_src = value[2],
+    key_dest = value[2],
+    namespace = "meta"
+  )
+  set_progress(
+    target = target,
+    meta = list(imported = FALSE),
+    value = "done",
+    config = config
   )
 }
