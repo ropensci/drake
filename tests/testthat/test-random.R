@@ -211,6 +211,47 @@ test_with_dir("custom seeds", {
   expect_false(all(old_mx == old_my))
   expect_false(all(old_mx == old_mz))
   s <- diagnose(y, cache = config$cache)$seed
+
+  plan <- drake_plan(
+    x = target(
+      sample.int(n = 200, size = 3),
+      seed = s,
+      trigger = trigger(seed = FALSE)
+    ),
+    y = sample.int(n = 200, size = 3),
+    z = sample.int(n = 200, size = 3),
+    mx = mean(x),
+    my = mean(y),
+    mz = mean(z)
+  )
+  config <- drake_config(
+    plan,
+    cache = config$cache,
+    session_info = FALSE
+  )
+  make(config = config)
+  expect_equal(justbuilt(config), character(0))
+
+  plan <- drake_plan(
+    x = target(
+      sample.int(n = 200, size = 3),
+      seed = s
+    ),
+    y = sample.int(n = 200, size = 3),
+    z = sample.int(n = 200, size = 3),
+    mx = mean(x),
+    my = mean(y),
+    mz = mean(z)
+  )
+  config <- drake_config(
+    plan,
+    trigger = trigger(seed = FALSE),
+    cache = config$cache,
+    session_info = FALSE
+  )
+  make(config = config)
+  expect_equal(justbuilt(config), character(0))
+
   plan <- drake_plan(
     x = target(
       sample.int(n = 200, size = 3),
