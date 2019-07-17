@@ -230,34 +230,43 @@ should_build_target <- function(target, meta, config) {
     return(TRUE)
   }
   if (meta$missing) {
+    log_msg("trigger missing", target = target, config = config)
     return(TRUE)
   }
   condition <- condition_trigger(target = target, meta = meta, config = config)
   if (is.logical(condition)) {
-    return(condition)
+    if (condition) {
+      log_msg("trigger condition", target = target, config = config)
+      return(TRUE)
+    }
   }
   if (identical(meta$trigger$command, TRUE)) {
     if (command_trigger(target = target, meta = meta, config = config)) {
+      log_msg("trigger command", target = target, config = config)
       return(TRUE)
     }
   }
   if (identical(meta$trigger$depend, TRUE)) {
     if (depend_trigger(target = target, meta = meta, config = config)) {
+      log_msg("trigger depend", target = target, config = config)
       return(TRUE)
     }
   }
   if (identical(meta$trigger$file, TRUE)) {
     if (file_trigger(target = target, meta = meta, config = config)) {
+      log_msg("trigger file", target = target, config = config)
       return(TRUE)
     }
   }
   if (identical(meta$trigger$seed, TRUE)) {
     if (seed_trigger(target = target, meta = meta, config = config)) {
+      log_msg("trigger seed", target = target, config = config)
       return(TRUE)
     }
   }
   if (!is.null(meta$trigger$change)) {
     if (change_trigger(target = target, meta = meta, config = config)) {
+      log_msg("trigger change", target = target, config = config)
       return(TRUE)
     }
   }
