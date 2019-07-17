@@ -4,6 +4,7 @@
 colors <- c(
   default = "dodgerblue3",
   target = "green3",
+  recover = "dodgerblue3",
   retry = "#9400d3",
   missing = "#9400d3",
   fail = "red",
