@@ -151,10 +151,10 @@ rather than rerun all your targets from scratch.}
 
 \item{log_progress}{Logical, whether to log the progress
 of individual targets as they are being built. Progress logging
-creates a lot of little files in the cache, and it may make builds
-a tiny bit slower. So you may see gains in storage efficiency
-and speed with
-\code{make(..., log_progress = FALSE)}.}
+creates extra files in the cache (usually the \code{.drake/} folder)
+and slows down \code{make()} a little.
+If you need to reduce or limit the number of files in the cache,
+call \code{make(log_progress = FALSE, recover = FALSE)}.}
 
 \item{graph}{An \code{igraph} object from the previous \code{make()}.
 Supplying a pre-built graph could save time.}
@@ -414,6 +414,31 @@ of your targets. You can also supply a
 \href{https://github.com/wlandau/txtq}{txtq}, which is
 how \code{drake} records history.
 Must be \code{TRUE} for \code{\link[=drake_history]{drake_history()}} to work later.}
+
+\item{recover}{Logical, whether \code{make()} should try to recover
+old targets and make new targets recoverable. This is different from
+simply skipping a target if it is already up to date.
+With automatic recovery, \code{make()} can sometimes salvage old data
+from the distant past instead of rerunning the command
+of an outdated target.
+
+Requirements for automatic recovery:
+\itemize{
+\item The old target value must have been generated with
+\code{make(recover = TRUE)}.
+\item The old target data, the ordinary metadata, and recovery metadata,
+must still exist in the cache.
+\item The underlying triggers of the old target data and the
+prospective new target must aggree. In other words, the old target
+data must have the same command, dependency hash, file hashes,
+seed, \code{condition} trigger, \code{change} trigger, and trigger mode
+as the prospective target about to be built.
+}
+
+Caution: \code{recover = TRUE} tells \code{drake} to put many more data
+files in the cache (usually the \code{.drake/} folder).
+So if you need to reduce or limit the number of files in the cache,
+run \code{make(log_progress = FALSE, recover = FALSE)}.}
 }
 \value{
 The master internal configuration list of a project.

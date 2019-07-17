@@ -112,10 +112,10 @@
 #'
 #' @param log_progress Logical, whether to log the progress
 #'   of individual targets as they are being built. Progress logging
-#'   creates a lot of little files in the cache, and it may make builds
-#'   a tiny bit slower. So you may see gains in storage efficiency
-#'   and speed with
-#'   `make(..., log_progress = FALSE)`.
+#'   creates extra files in the cache (usually the `.drake/` folder)
+#'   and slows down `make()` a little.
+#'   If you need to reduce or limit the number of files in the cache,
+#'   call `make(log_progress = FALSE, recover = FALSE)`.
 #'
 #' @param cache drake cache as created by [new_cache()].
 #'   See also [drake_cache()].
@@ -398,6 +398,28 @@
 #'   how `drake` records history.
 #'   Must be `TRUE` for [drake_history()] to work later.
 #'
+#' @param recover Logical, whether `make()` should try to recover
+#'   old targets and make new targets recoverable. This is different from
+#'   simply skipping a target if it is already up to date.
+#'   With automatic recovery, `make()` can sometimes salvage old data
+#'   from the distant past instead of rerunning the command
+#'   of an outdated target.
+#'
+#'   Requirements for automatic recovery:
+#'   - The old target value must have been generated with
+#'     `make(recover = TRUE)`.
+#'   - The old target data, the ordinary metadata, and recovery metadata,
+#'     must still exist in the cache.
+#'   - The underlying triggers of the old target data and the
+#'     prospective new target must aggree. In other words, the old target
+#'     data must have the same command, dependency hash, file hashes,
+#'     seed, `condition` trigger, `change` trigger, and trigger mode
+#'     as the prospective target about to be built.
+#'
+#'   Caution: `recover = TRUE` tells `drake` to put many more data
+#'   files in the cache (usually the `.drake/` folder).
+#'   So if you need to reduce or limit the number of files in the cache,
+#'   run `make(log_progress = FALSE, recover = FALSE)`.
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {

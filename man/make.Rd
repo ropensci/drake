@@ -127,10 +127,10 @@ This code can be used to set global options, etc.}
 
 \item{log_progress}{Logical, whether to log the progress
 of individual targets as they are being built. Progress logging
-creates a lot of little files in the cache, and it may make builds
-a tiny bit slower. So you may see gains in storage efficiency
-and speed with
-\code{make(..., log_progress = FALSE)}.}
+creates extra files in the cache (usually the \code{.drake/} folder)
+and slows down \code{make()} a little.
+If you need to reduce or limit the number of files in the cache,
+call \code{make(log_progress = FALSE, recover = FALSE)}.}
 
 \item{skip_targets}{Logical, whether to skip building the targets
 in \code{plan} and just import objects and files.}
