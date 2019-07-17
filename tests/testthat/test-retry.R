@@ -82,7 +82,7 @@ test_with_dir("timeouts", {
   expect_true("x" %in% cached())
 
   # Should time out.
-  clean()
+  clean(destroy = TRUE)
   expect_error(
     tmp <- capture.output(
       make(
@@ -101,7 +101,7 @@ test_with_dir("timeouts", {
   # the arguments to make().
   # CPU time should be similar, but testing it is elusive.
   for (field in c("elapsed")) {
-    clean()
+    clean(destroy = TRUE)
     pl2 <- pl
     pl2[[field]] <- 1e-3
     args <- list(
