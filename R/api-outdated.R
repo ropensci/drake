@@ -46,8 +46,8 @@ recoverable <-  function(
 
 is_recoverable <- function(target, config) {
   meta <- drake_meta_(target = target, config = config)
-  hash <- old_recovery_hash(target, meta, config)
-  !is.na(hash)
+  value <- recovery_metadata(target = target, meta = meta, config = config)
+  length(value) > 1L
 }
 
 #' @title List the targets that are out of date.

@@ -98,7 +98,7 @@ store_meta <- function(target, meta, hash, config) {
 }
 
 store_recovery <- function(target, meta, config) {
-  key <- new_recovery_hash(target = target, meta = meta, config = config)
+  key <- recovery_hash(target = target, meta = meta, config = config)
   value <- c(meta$hash, meta$meta_hash) # (1) target data hash (2) metadata hash # nolint
   config$cache$set(
     key = key,

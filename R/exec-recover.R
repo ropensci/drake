@@ -1,13 +1,10 @@
 recover_target <- function(target, meta, config) {
-  hash <- old_recovery_hash(target = target, meta = meta, config = config)
-  if (is.na(hash)) {
+  if (is.null(config$recover)) {
     return(FALSE)
   }
-  value <- config$cache$get(hash, namespace = "recover", use_cache = FALSE)
-  for (i in seq_len(value)) {
-    if (!config$cache$exists_object(value[i])) {
-      return(FALSE)
-    }
+  value <- recovery_metadata(target, meta, config)
+  if (length(value) < 2L && is.na(value)) {
+    return(FALSE)
   }
   log_msg(
     "recover",
@@ -36,23 +33,21 @@ recover_target <- function(target, meta, config) {
   TRUE
 }
 
-old_recovery_hash <- function(target, meta, config) {
-  if (!config$recover) {
+recovery_metadata <- function(target, meta, config) {
+  hash <- recovery_hash(target = target, meta = meta, config = config)
+  if (!config$cache$exists(hash, namespace = "recover")) {
     return(NA_character_)
   }
-  old_hash <- safe_get_hash(
-    key = target,
-    namespace = "recover",
-    config = config
-  )
-  new_hash <- new_recovery_hash(target = target, meta = meta, config = config)
-  if (is.na(old_hash) || old_hash != new_hash) {
-    return(NA_character_)
+  value <- config$cache$get(hash, namespace = "recover", use_cache = FALSE)
+  for (i in seq_along(value)) {
+    if (!config$cache$exists_object(value[i])) {
+      return(NA_character_)
+    }
   }
-  old_hash
+  value
 }
 
-new_recovery_hash <- function(target, meta, config) {
+recovery_hash <- function(target, meta, config) {
   if (is.null(meta$trigger$value)) {
     change_hash <- NA_character_
   } else {
