@@ -4,6 +4,19 @@ recover_target <- function(target, meta, config) {
     return(FALSE)
   }
   value <- config$cache$get(hash, namespace = "recover", use_cache = FALSE)
+  for (i in seq_len(value)) {
+    if (!config$cache$exists_object(value[i])) {
+      return(FALSE)
+    }
+  }
+  log_msg(
+    "recover",
+    target,
+    target = target,
+    config = config,
+    color = colors["recover"],
+    tier = 1L
+  )
   config$cache$duplicate(
     key_src = value[1],
     key_dest = value[1],

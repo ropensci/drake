@@ -21,6 +21,9 @@ loop_build <- function(target, config, downstream) {
     log_msg("skip", target = target, config = config)
     return()
   }
+  if (recover_target(target, meta, config)) {
+    return()
+  }
   announce_build(target, meta, config)
   manage_memory(
     target,
