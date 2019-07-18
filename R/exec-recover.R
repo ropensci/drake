@@ -1,7 +1,5 @@
 recover_target <- function(target, meta, config) {
-  skip_recovery <- !identical(config$recover, TRUE) ||
-    is.null(config$cache$driver$set_hash)
-  if (skip_recovery) {
+  if (!config$recover) {
     return(FALSE)
   }
   key <- recovery_key(target = target, meta = meta, config = config)
