@@ -202,7 +202,8 @@ set_progress <- function(target, meta, value, config) {
 progress_hashmap <- function(cache) {
   keys <- c("running", "done", "failed")
   out <- lapply(keys, progress_hash, cache = cache)
-  setNames(out, keys)
+  names(out) <- keys
+  out
 }
 
 progress_hash <- function(key, cache) {
