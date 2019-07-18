@@ -63,6 +63,7 @@ test_with_dir("recovery (#945)", {
       }
       if (parallelism != "loop") {
         skip_on_cran()
+        skip_on_os("windows")
       }
       test_recovery(parallelism, caching)
     }
