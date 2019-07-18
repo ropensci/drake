@@ -13,7 +13,13 @@ test_with_dir("basic history", {
   # Iterate.
   load_mtcars_example()
   cache <- storr::storr_environment()
-  make(my_plan, history = TRUE, cache = cache, session_info = FALSE)
+  make(
+    my_plan,
+    history = TRUE,
+    cache = cache,
+    session_info = FALSE,
+    recoverable = FALSE
+  )
   reg2 <- function(d) {
     d$x2 <- d$x ^ 3
     lm(y ~ x2, data = d)
@@ -23,7 +29,8 @@ test_with_dir("basic history", {
     my_plan,
     history = TRUE,
     cache = cache,
-    session_info = FALSE
+    session_info = FALSE,
+    recoverable = FALSE
   )
 
   # Get and inspect the history.
@@ -71,7 +78,7 @@ test_with_dir("basic history", {
   # Clean everything.
   clean(cache = cache, garbage_collection = TRUE)
   out <- drake_history(cache = cache, analyze = TRUE)
-  expect_equal(dim(out), c(22L, 9L))
+  expect_equal(dim(out), c(22L, 8L))
 })
 
 test_with_dir("complicated history commands", {

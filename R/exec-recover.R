@@ -14,7 +14,7 @@ recover_target <- function(target, meta, config) {
   exists_data <- config$cache$exists_object(meta_hash) &&
     config$cache$exists_object(value_hash)
   if (!exists_data) {
-    return(FALSE)
+    return(FALSE) # nocov # Should not happen, just to be safe...
   }
   log_msg(
     "recover",
