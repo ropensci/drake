@@ -80,3 +80,20 @@ test_with_dir("recovery (#945)", {
     }
   }
 })
+
+test_with_dir("recovery with a non-standard trigger", {
+  plan <- drake_plan(
+    x = target(file.create("x"), trigger = trigger(change = "a"))
+  )
+  make(plan, recover = TRUE)
+  plan <- drake_plan(
+    x = target(file.create("x"), trigger = trigger(change = "b"))
+  )
+  make(plan, recover = TRUE)
+  plan <- drake_plan(
+    x = target(file.create("x"), trigger = trigger(change = "a"))
+  )
+  unlink("x")
+  make(plan, recover = TRUE)
+  expect_false(file.exists("x"))
+})
