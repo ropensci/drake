@@ -49,7 +49,7 @@ recovery_key <- function(target, meta, config) {
   } else {
     change_hash <- digest::digest(
       meta$trigger$value,
-      algo = config$cache$driver$hash_algorithm
+      algo = config$hash_algorithm
     )
   }
   x <- c(
@@ -65,7 +65,7 @@ recovery_key <- function(target, meta, config) {
   x <- paste(x, collapse = "|")
   digest::digest(
     x,
-    algo = config$cache$driver$hash_algorithm,
+    algo = config$hash_algorithm,
     serialize = FALSE
   )
 }
