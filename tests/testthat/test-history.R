@@ -19,7 +19,12 @@ test_with_dir("basic history", {
     lm(y ~ x2, data = d)
   }
   Sys.sleep(0.01)
-  make(my_plan, history = TRUE, cache = cache, session_info = FALSE)
+  make(
+    my_plan,
+    history = TRUE,
+    cache = cache,
+    session_info = FALSE
+  )
 
   # Get and inspect the history.
   out <- drake_history(cache = cache, analyze = TRUE)
@@ -61,13 +66,12 @@ test_with_dir("basic history", {
   out <- drake_history(cache = cache, analyze = TRUE)
   expect_equal(dim(out), c(22L, 9L))
   expect_equal(sort(colnames(out)), sort(cols))
-  expect_na <- out$target == "small" | !out$latest
-  expect_equal(is.na(out$hash), expect_na)
+  expect_false(any(is.na(out$hash)))
 
   # Clean everything.
   clean(cache = cache, garbage_collection = TRUE)
   out <- drake_history(cache = cache, analyze = TRUE)
-  expect_equal(dim(out), c(22L, 8L))
+  expect_equal(dim(out), c(22L, 9L))
 })
 
 test_with_dir("complicated history commands", {
