@@ -173,7 +173,13 @@ failed <- function(
 get_progress_single <- function(target, cache) {
   if (cache$exists(key = target, namespace = "progress")) {
     hash <- cache$get_hash(key = target, namespace = "progress")
-
+    switch(
+      substr(hash, 1, 1),
+      r = "running",
+      d = "done",
+      f = "failed",
+      NA_character_
+    )
   } else{
     "none"
   }
