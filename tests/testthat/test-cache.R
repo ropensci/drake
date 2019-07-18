@@ -110,16 +110,6 @@ test_with_dir("Missing cache", {
   expect_equal(cached(), character(0))
 })
 
-test_with_dir("broken or incomplete cache", {
-  skip_on_cran()
-  make(drake_plan(x = 1), session_info = FALSE)
-  unlink(file.path(".drake", "config"), recursive = TRUE)
-  expect_error(
-    suppressWarnings(make(drake_plan(x = 1), session_info = FALSE)),
-    regexp = "failed to get the storr"
-  )
-})
-
 test_with_dir("Cache namespaces", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   y <- target_namespaces_()
@@ -161,12 +151,11 @@ test_with_dir("bad/corrupt caches, no progress, no seed", {
   clean()
   make(x, verbose = 0L, session_info = FALSE, log_progress = TRUE)
   expect_equal(drake_cache()$list(namespace = "progress"), "a")
-  path <- file.path(default_cache_path(), "config", "hash_algorithm")
+  path <- file.path(default_cache_path(), "config")
   expect_true(file.exists(path))
-  unlink(path)
+  unlink(path, recursive = TRUE)
   expect_false(file.exists(path))
-  expect_warning(expect_error(
-    make(x, verbose = 0L, session_info = FALSE)))
+  expect_error(make(x, verbose = 0L, session_info = FALSE))
   expect_error(
     read_drake_seed(cache = storr::storr_environment()),
     regexp = "random seed not found"

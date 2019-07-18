@@ -134,33 +134,16 @@ this_cache_ <- function(
   }
   config <- list(verbose = verbose, console_log_file = console_log_file)
   log_msg("cache", path, config = config)
-  cache <- drake_try_fetch_rds(path = path)
+  cache <- drake_fetch_rds(path = path)
   cache_vers_warn(cache = cache)
   cache
-}
-
-drake_try_fetch_rds <- function(path) {
-  out <- try(drake_fetch_rds(path = path), silent = TRUE)
-  if (!inherits(out, "try-error")) {
-    return(out)
-  }
-  stop(
-    "drake failed to get the storr::storr_rds() cache at ", path, ". ",
-    "Something is wrong with the file system of the cache. ",
-    "If you downloaded it from an online repository, are you sure ",
-    "all the files were downloaded correctly? ",
-    "If all else fails, remove the folder at ", path, " and try again.",
-    call. = FALSE
-  )
 }
 
 drake_fetch_rds <- function(path) {
   if (!file.exists(path)) {
     return(NULL)
   }
-  hash_algo_file <- file.path(path, "config", "hash_algorithm")
-  hash_algo <- scan(hash_algo_file, quiet = TRUE, what = character())
-  storr::storr_rds(path = path, hash_algorithm = hash_algo)
+  storr::storr_rds(path = path)
 }
 
 #' @title  Make a new `drake` cache.
