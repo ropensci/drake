@@ -11,14 +11,17 @@ test_with_dir("recovery (#945)", {
       x = {
         w
         file.create("x")
+        "x"
       },
       y = {
         x
         file.create("y")
+        "y"
       },
       z = {
         y
         file.create("z")
+        "z"
       }
     )
 
@@ -31,14 +34,15 @@ test_with_dir("recovery (#945)", {
     # change w
     plan$command[[1]] <- quote({
       file.create("w2")
-      "w"
+      "w2"
     })
     config <- drake_config(plan)
     expect_equal(recoverable(config), character(0))
     make(plan, recover = TRUE, parallelism = parallelism, caching = caching)
-    expect_equal(justbuilt(config), "w")
+    expect_equal(sort(justbuilt(config)), sort(c("w", "x")))
     expect_true(file.exists("w2"))
-    unlink("w2")
+    expect_true(file.exists("x"))
+    unlink(c("w2", "x"))
 
     # change w back
     plan$command[[1]] <- quote({
@@ -48,12 +52,15 @@ test_with_dir("recovery (#945)", {
     config <- drake_config(plan)
     expect_equal(recoverable(config), "w")
     make(plan, recover = TRUE, parallelism = parallelism, caching = caching)
-    expect_false(file.exists("w"))
-    expect_equal(justbuilt(config), "w")
+    expect_equal(readd(w, cache = config$cache), "w")
+    expect_equal(readd(x, cache = config$cache), "x")
+    expect_false(any(file.exists(c("w", "x"))))
+    expect_equal(justbuilt(config), c("w", "x"))
 
     # Everything should be up to date now.
     make(plan, recover = TRUE, parallelism = parallelism, caching = caching)
     expect_false(file.exists("w"))
+    expect_false(file.exists("x"))
     expect_equal(justbuilt(config), character(0))
 
     # Clean with garbage collection
@@ -62,7 +69,7 @@ test_with_dir("recovery (#945)", {
     # Can't recover `w`.
     plan$command[[1]] <- quote({
       file.create("w2")
-      "w"
+      "w2"
     })
     config <- drake_config(plan)
     expect_equal(recoverable(config), character(0))
@@ -84,19 +91,32 @@ test_with_dir("recovery (#945)", {
 test_with_dir("recovery with a non-standard trigger", {
   skip_on_cran()
   plan <- drake_plan(
-    x = target(file.create("x"), trigger = trigger(change = "a"))
+    x = target({
+      file.create("x")
+      "x"
+    },
+    trigger = trigger(change = "a"))
   )
   make(plan, recover = TRUE)
   plan <- drake_plan(
-    x = target(file.create("x"), trigger = trigger(change = "b"))
+    x = target({
+      file.create("x")
+      "y"
+    },
+    trigger = trigger(change = "b"))
   )
   make(plan, recover = TRUE)
   plan <- drake_plan(
-    x = target(file.create("x"), trigger = trigger(change = "a"))
+    x = target({
+      file.create("x")
+      "x"
+    },
+    trigger = trigger(change = "a"))
   )
   unlink("x")
   make(plan, recover = TRUE)
   expect_false(file.exists("x"))
+  expect_equal(readd(x), "x")
 })
 
 test_with_dir("recoverability can be disabled", {

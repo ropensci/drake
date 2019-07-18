@@ -21,7 +21,8 @@ make(plan, targets = NULL, envir = parent.frame(), verbose = 1L,
   console_log_file = NULL, ensure_workers = NULL,
   garbage_collection = FALSE, template = list(), sleep = function(i)
   0.01, hasty_build = NULL, memory_strategy = "speed", layout = NULL,
-  lock_envir = TRUE, history = TRUE, recover = FALSE)
+  lock_envir = TRUE, history = TRUE, recover = FALSE,
+  recoverable = TRUE)
 }
 \arguments{
 \item{plan}{Workflow plan data frame.
@@ -433,27 +434,40 @@ how \code{drake} records history.
 Must be \code{TRUE} for \code{\link[=drake_history]{drake_history()}} to work later.}
 
 \item{recover}{Logical, whether to activate automated data recovery.
-Warning: this feature is experimental, and it has
-performance and reproducibility issues as discussed at
-<>.
-Use at your own risk.
-
-Sometimes, we just want our old data back.
-If we accidentally call \code{\link[=clean]{clean()}} without garbage collection,
-or if we revert to a prior version of our code,
-the data we need may still be in the cache.
-\code{make(recover = TRUE)} tells \code{drake} to
+The default is \code{FALSE} because
 \enumerate{
-\item Track new target values so they will be recoverable later, and
-\item Try to recover old targets when possible. If \code{drake}
-is about to build a target, and it finds a old value that came from
-the same command, dependencies, etc. that we have right now,
-\code{make()} will recover the data and skip the command.
+\item Automated data recovery is still experimental.
+\item It has reproducibility issues.
+Targets recovered from the distant past may have been generated
+with earlier versions of R and earlier package environments
+that no longer exist.
+}
+
+How it works: if \code{recover} is \code{TRUE},
+\code{drake} tries to salvage old target values from the cache
+instead of running commands from the plan.
+A target is recoverable if
+\enumerate{
+\item There is an old value somewhere in the cache that
+shares the command, dependencies, etc.
+of the target about to be built.
+\item The old value was generated with \code{make(recoverable = TRUE)}.
+}
+
+If both conditions are met, \code{drake} will
+\enumerate{
+\item Assign the most recently-generated admissible data to the target, and
+\item skip the target's command.
 }
 
 Functions \code{\link[=recoverable]{recoverable()}} and \code{\link[=r_recoverable]{r_recoverable()}} show the most upstream
 outdated targets that will be recovered in this way in the next
 \code{\link[=make]{make()}} or \code{\link[=r_make]{r_make()}}.}
+
+\item{recoverable}{Logical, whether to make target values recoverable
+with \code{make(recover = TRUE)}. This requires writing extra files to the cache.
+If the cache gets too big,
+consider \code{make(recoverable = FALSE, progress = FALSE)}.}
 }
 \value{
 nothing
