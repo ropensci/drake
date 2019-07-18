@@ -53,23 +53,7 @@ testrun <- function(config) {
 }
 
 justbuilt <- function(config) {
-  recorded <- config$cache$list(namespace = "progress")
-  all <- lapply(
-    X = recorded,
-    FUN = function(target) {
-      config$cache$get(
-        key = target, namespace = "progress", use_cache = FALSE)
-    }
-  )
-  names(all) <- recorded
-  all <- unlist(all)
-  out <- Filter(
-    all,
-    f = function(x) {
-      x == "done"
-    }
-  )
-  sort(intersect(names(out), y = all_targets(config)))
+  sort(progress(progress = "done", cache = config$cache)$target)
 }
 
 nobuild <- function(config) {

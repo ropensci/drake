@@ -21,6 +21,7 @@
 - Add `CITATION` file with JOSS paper.
 - In `deps_profile()`, include the seed and change the names.
 - Allow the user to set a different seed in `make()`. All this does is invalidate old targets.
+- Use `set_hash()` and `get_hash()` in `storr` to double the speed of progress tracking.
 
 ## Bug fixes
 

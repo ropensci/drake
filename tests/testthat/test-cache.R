@@ -325,11 +325,6 @@ test_with_dir("cache functions work from various working directories", {
       sort(builds)
     )
 
-    # Should not throw errors.
-    rescue_cache(targets = "final")
-    rescue_cache(garbage_collection = FALSE)
-    rescue_cache(garbage_collection = TRUE)
-
     # find your project
     expect_equal(find_cache(), file.path(getwd(), cache_dir))
     expect_true(is.numeric(readd(a)))
@@ -379,7 +374,6 @@ test_with_dir("cache functions work from various working directories", {
       length(cached(targets_only = FALSE)),
       length(config$cache$list())
     )
-    rescue_cache()
 
     # find your project
     expect_equal(find_cache(), file.path(scratch, cache_dir))
@@ -413,6 +407,13 @@ test_with_dir("cache functions work from various working directories", {
     clean(final, jobs = 2, garbage_collection = TRUE, purge = TRUE)
     prog <- progress()
     expect_false("final" %in% prog$target)
+
+    # progress is erased with cache rescue
+    rescue_cache(targets = "final")
+    expect_true(nrow(progress()) > 0L)
+    rescue_cache(garbage_collection = FALSE)
+    expect_equal(nrow(progress()), 0L)
+    rescue_cache(garbage_collection = TRUE)
 
     # More cleaning checks
     clean(garbage_collection = FALSE)
