@@ -184,7 +184,7 @@ new_cache <- function(
   console_log_file = NULL
 ) {
   path <- path %||% default_cache_path()
-  hash_algorithm <- set_hash_algorithm(hash_algorithm)
+  hash_algorithm <- sanitize_hash_algorithm(hash_algorithm)
   if (!is.null(type)) {
     warning(
       "The 'type' argument of new_cache() is deprecated. ",
@@ -223,7 +223,7 @@ recover_cache_ <- function(
   deprecate_force(force)
   deprecate_fetch_cache(fetch_cache)
   deprecate_hash_algo_args(short_hash_algo, long_hash_algo)
-  hash_algorithm <- set_hash_algorithm(hash_algorithm)
+  hash_algorithm <- sanitize_hash_algorithm(hash_algorithm)
   cache <- this_cache_(
     path = path,
     verbose = verbose,
@@ -451,7 +451,7 @@ memo_expr <- function(expr, cache, ...) {
     return(force(expr))
   }
   lang <- match.call(expand.dots = FALSE)$expr
-  key <- digest::digest(list(lang, ...), algo = cache$driver$hash_algorithm)
+  key <- digest::digest(list(lang, ...), algo = cache_hash_algorithm(cache))
   if (cache$exists(key = key, namespace = "memoize")) {
     return(cache$get(key = key, namespace = "memoize"))
   }
@@ -460,12 +460,16 @@ memo_expr <- function(expr, cache, ...) {
   value
 }
 
-set_hash_algorithm <- function(hash_algorithm) {
+sanitize_hash_algorithm <- function(hash_algorithm) {
   if (is.null(hash_algorithm)) {
     "xxhash64"
   } else {
     hash_algorithm
   }
+}
+
+cache_hash_algorithm <- function(cache) {
+  cache$driver$hash_algorithm %||% "xxhash64"
 }
 
 deprecate_hash_algo_args <- function(

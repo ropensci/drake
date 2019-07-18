@@ -604,6 +604,7 @@ drake_config <- function(
     verbose = verbose
   )
   cache_path <- force_cache_path(cache)
+  hash_algorithm <- cache_hash_algorithm(cache)
   history <- initialize_history(history, cache_path)
   lazy_load <- parse_lazy_arg(lazy_load)
   caching <- match.arg(caching)
@@ -617,6 +618,7 @@ drake_config <- function(
     eval = new.env(parent = envir),
     cache = cache,
     cache_path = cache_path,
+    hash_algorithm = hash_algorithm,
     parallelism = parallelism,
     jobs = jobs,
     jobs_preprocess = jobs_preprocess,

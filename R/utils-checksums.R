@@ -23,7 +23,7 @@ mc_get_outfile_checksum <- function(target, config) {
   out <- paste(out, collapse = "")
   digest::digest(
     out,
-    algo = config$cache$driver$hash_algorithm,
+    algo = config$hash_algorithm,
     serialize = FALSE
   )
 }

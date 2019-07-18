@@ -209,7 +209,7 @@ progress_hashmap <- function(cache) {
 progress_hash <- function(key, cache) {
   out <- digest::digest(
     key,
-    algo = cache$driver$hash_algorithm,
+    algo = cache_hash_algorithm(cache),
     serialize = FALSE
   )
   gsub("^.", substr(key, 1, 1), out)

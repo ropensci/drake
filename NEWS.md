@@ -27,6 +27,7 @@
 
 - In the static code analysis for dependency detection, ignore list elements referenced with `$` (#938).
 - Minor: handle strings embedded in language objects (#934).
+- Minor: supply `xxhash64` as the default hash algorithm for non-`storr` hashing if the driver does not have a hash algorithm.
 
 
 # Version 7.4.0

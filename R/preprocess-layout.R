@@ -207,7 +207,7 @@ cdl_get_knitr_hash <- function(config, layout) {
   knitr_hashes <- paste0(knitr_hashes, collapse = "")
   digest::digest(
     knitr_hashes,
-    algo = config$cache$driver$hash_algorithm,
+    algo = config$hash_algorithm,
     serialize = FALSE
   )
 }
