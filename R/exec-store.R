@@ -116,6 +116,7 @@ finalize_meta <- function(target, meta, hash, config) {
     target = target
   )
   meta$time_start <- NULL
+  meta$date_stored <- microtime()
   if (!meta$imported && !is_encoded_path(target)) {
     console_time(target, meta, config)
   }
