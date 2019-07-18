@@ -630,6 +630,7 @@ drake_config <- function(
   history <- initialize_history(history, cache_path)
   lazy_load <- parse_lazy_arg(lazy_load)
   caching <- match.arg(caching)
+  recover <- as.logical(recover)
   ht_encode_path <- ht_new()
   ht_decode_path <- ht_new()
   ht_encode_namespaced <- ht_new()

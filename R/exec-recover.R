@@ -1,5 +1,7 @@
 recover_target <- function(target, meta, config) {
-  if (is.null(config$recover) || is.null(config$cache$driver$set_hash)) {
+  skip_recovery <- !identical(config$recover, TRUE) ||
+    is.null(config$cache$driver$set_hash)
+  if (skip_recovery) {
     return(FALSE)
   }
   value <- recovery_metadata(target, meta, config)
