@@ -643,6 +643,7 @@ drake_config <- function(
     verbose = verbose
   )
   cache_path <- force_cache_path(cache)
+  hash_algorithm <- cache_hash_algorithm(cache)
   history <- initialize_history(history, cache_path)
   lazy_load <- parse_lazy_arg(lazy_load)
   caching <- match.arg(caching)
@@ -652,11 +653,13 @@ drake_config <- function(
   ht_decode_path <- ht_new()
   ht_encode_namespaced <- ht_new()
   ht_decode_namespaced <- ht_new()
+  progress_hashmap <- progress_hashmap(cache)
   out <- list(
     envir = envir,
     eval = new.env(parent = envir),
     cache = cache,
     cache_path = cache_path,
+    hash_algorithm = hash_algorithm,
     parallelism = parallelism,
     jobs = jobs,
     jobs_preprocess = jobs_preprocess,
@@ -680,6 +683,7 @@ drake_config <- function(
     skip_imports = skip_imports,
     skip_safety_checks = skip_safety_checks,
     log_progress = log_progress,
+    progress_hashmap = progress_hashmap,
     lazy_load = lazy_load,
     session_info = session_info,
     cache_log_file = cache_log_file,

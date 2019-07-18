@@ -110,16 +110,6 @@ test_with_dir("Missing cache", {
   expect_equal(cached(), character(0))
 })
 
-test_with_dir("broken or incomplete cache", {
-  skip_on_cran()
-  make(drake_plan(x = 1), session_info = FALSE)
-  unlink(file.path(".drake", "config"), recursive = TRUE)
-  expect_error(
-    suppressWarnings(make(drake_plan(x = 1), session_info = FALSE)),
-    regexp = "failed to get the storr"
-  )
-})
-
 test_with_dir("Cache namespaces", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   y <- target_namespaces_()
@@ -161,12 +151,11 @@ test_with_dir("bad/corrupt caches, no progress, no seed", {
   clean()
   make(x, verbose = 0L, session_info = FALSE, log_progress = TRUE)
   expect_equal(drake_cache()$list(namespace = "progress"), "a")
-  path <- file.path(default_cache_path(), "config", "hash_algorithm")
+  path <- file.path(default_cache_path(), "config")
   expect_true(file.exists(path))
-  unlink(path)
+  unlink(path, recursive = TRUE)
   expect_false(file.exists(path))
-  expect_warning(expect_error(
-    make(x, verbose = 0L, session_info = FALSE)))
+  expect_error(make(x, verbose = 0L, session_info = FALSE))
   expect_error(
     read_drake_seed(cache = storr::storr_environment()),
     regexp = "random seed not found"
@@ -325,11 +314,6 @@ test_with_dir("cache functions work from various working directories", {
       sort(builds)
     )
 
-    # Should not throw errors.
-    rescue_cache(targets = "final")
-    rescue_cache(garbage_collection = FALSE)
-    rescue_cache(garbage_collection = TRUE)
-
     # find your project
     expect_equal(find_cache(), file.path(getwd(), cache_dir))
     expect_true(is.numeric(readd(a)))
@@ -379,7 +363,6 @@ test_with_dir("cache functions work from various working directories", {
       length(cached(targets_only = FALSE)),
       length(config$cache$list())
     )
-    rescue_cache()
 
     # find your project
     expect_equal(find_cache(), file.path(scratch, cache_dir))
@@ -413,6 +396,13 @@ test_with_dir("cache functions work from various working directories", {
     clean(final, jobs = 2, garbage_collection = TRUE, purge = TRUE)
     prog <- progress()
     expect_false("final" %in% prog$target)
+
+    # progress is erased with cache rescue
+    rescue_cache(targets = "final")
+    expect_true(nrow(progress()) > 0L)
+    rescue_cache(garbage_collection = FALSE)
+    expect_equal(nrow(progress()), 0L)
+    rescue_cache(garbage_collection = TRUE)
 
     # More cleaning checks
     clean(garbage_collection = FALSE)

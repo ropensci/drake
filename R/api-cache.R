@@ -134,33 +134,16 @@ this_cache_ <- function(
   }
   config <- list(verbose = verbose, console_log_file = console_log_file)
   log_msg("cache", path, config = config)
-  cache <- drake_try_fetch_rds(path = path)
+  cache <- drake_fetch_rds(path = path)
   cache_vers_warn(cache = cache)
   cache
-}
-
-drake_try_fetch_rds <- function(path) {
-  out <- try(drake_fetch_rds(path = path), silent = TRUE)
-  if (!inherits(out, "try-error")) {
-    return(out)
-  }
-  stop(
-    "drake failed to get the storr::storr_rds() cache at ", path, ". ",
-    "Something is wrong with the file system of the cache. ",
-    "If you downloaded it from an online repository, are you sure ",
-    "all the files were downloaded correctly? ",
-    "If all else fails, remove the folder at ", path, " and try again.",
-    call. = FALSE
-  )
 }
 
 drake_fetch_rds <- function(path) {
   if (!file.exists(path)) {
     return(NULL)
   }
-  hash_algo_file <- file.path(path, "config", "hash_algorithm")
-  hash_algo <- scan(hash_algo_file, quiet = TRUE, what = character())
-  storr::storr_rds(path = path, hash_algorithm = hash_algo)
+  storr::storr_rds(path = path)
 }
 
 #' @title  Make a new `drake` cache.
@@ -201,7 +184,7 @@ new_cache <- function(
   console_log_file = NULL
 ) {
   path <- path %||% default_cache_path()
-  hash_algorithm <- set_hash_algorithm(hash_algorithm)
+  hash_algorithm <- sanitize_hash_algorithm(hash_algorithm)
   if (!is.null(type)) {
     warning(
       "The 'type' argument of new_cache() is deprecated. ",
@@ -240,7 +223,7 @@ recover_cache_ <- function(
   deprecate_force(force)
   deprecate_fetch_cache(fetch_cache)
   deprecate_hash_algo_args(short_hash_algo, long_hash_algo)
-  hash_algorithm <- set_hash_algorithm(hash_algorithm)
+  hash_algorithm <- sanitize_hash_algorithm(hash_algorithm)
   cache <- this_cache_(
     path = path,
     verbose = verbose,
@@ -418,7 +401,7 @@ default_cache_path <- function(root = getwd()) {
 
 # Pre-set the values to avoid https://github.com/richfitz/storr/issues/80.
 init_common_values <- function(cache) {
-  common_values <- list(TRUE, FALSE, "done", "running", "failed")
+  common_values <- list(TRUE, FALSE)
   cache$mset(
     key = as.character(common_values),
     value = common_values,
@@ -468,7 +451,7 @@ memo_expr <- function(expr, cache, ...) {
     return(force(expr))
   }
   lang <- match.call(expand.dots = FALSE)$expr
-  key <- digest::digest(list(lang, ...), algo = cache$driver$hash_algorithm)
+  key <- digest::digest(list(lang, ...), algo = cache_hash_algorithm(cache))
   if (cache$exists(key = key, namespace = "memoize")) {
     return(cache$get(key = key, namespace = "memoize"))
   }
@@ -477,12 +460,16 @@ memo_expr <- function(expr, cache, ...) {
   value
 }
 
-set_hash_algorithm <- function(hash_algorithm) {
+sanitize_hash_algorithm <- function(hash_algorithm) {
   if (is.null(hash_algorithm)) {
     "xxhash64"
   } else {
     hash_algorithm
   }
+}
+
+cache_hash_algorithm <- function(cache) {
+  cache$driver$hash_algorithm %||% "xxhash64"
 }
 
 deprecate_hash_algo_args <- function(

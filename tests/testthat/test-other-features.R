@@ -405,6 +405,13 @@ test_with_dir("running()", {
   cache <- storr::storr_environment()
   make(plan, session_info = FALSE, cache = cache)
   expect_equal(running(cache = cache), character(0))
-  cache$set(key = "a", value = "running", namespace = "progress")
+  config <- drake_config(plan, cache = cache, log_progress = TRUE)
+  config$running_make <- TRUE
+  set_progress(
+    target = "a",
+    meta = list(imported = FALSE),
+    value = "running",
+    config = config
+  )
   expect_equal(running(cache = cache), "a")
 })
