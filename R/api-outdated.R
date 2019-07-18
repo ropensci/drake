@@ -42,8 +42,12 @@
 #' clean()
 #' outdated(config) # Which targets are outdated?
 #' recoverable(config) # Which of these are recoverable and upstream?
-#' # The report still builds because clean() removes report.md.
+#' # The report still builds because clean() removes report.md,
+#' # but make() recovers the rest.
 #' make(my_plan, recover = TRUE)
+#' # When was the *recovered* small data actually built (first stored)?
+#' # (Was I using a different version of R back then?)
+#' diagnose(small)$date
 #' }
 #' })
 #' }
