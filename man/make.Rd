@@ -465,8 +465,11 @@ outdated targets that will be recovered in this way in the next
 \code{\link[=make]{make()}} or \code{\link[=r_make]{r_make()}}.}
 
 \item{recoverable}{Logical, whether to make target values recoverable
-with \code{make(recover = TRUE)}. This requires writing extra files to the cache.
-If the cache gets too big,
+with \code{make(recover = TRUE)}.
+This requires writing extra files to the cache,
+and it prevents old metadata from being removed with garbage collection
+(\code{clean(garbage_collection = TRUE)}, \code{gc()} in \code{storr}s).
+If you need to limit the cache size or the number of files in the cache,
 consider \code{make(recoverable = FALSE, progress = FALSE)}.}
 }
 \value{

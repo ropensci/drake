@@ -118,6 +118,7 @@ r_outdated <- function(..., source = NULL, r_fn = NULL, r_args = list()) {
 #' @rdname r_make
 #' @export
 #' @inheritParams r_make
+#' @inheritSection recoverable Recovery
 r_recoverable <- function(..., source = NULL, r_fn = NULL, r_args = list()) {
   r_drake(source, drake::recoverable, list(...), r_fn, r_args)
 }

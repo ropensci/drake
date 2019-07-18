@@ -448,8 +448,11 @@ outdated targets that will be recovered in this way in the next
 \code{\link[=make]{make()}} or \code{\link[=r_make]{r_make()}}.}
 
 \item{recoverable}{Logical, whether to make target values recoverable
-with \code{make(recover = TRUE)}. This requires writing extra files to the cache.
-If the cache gets too big,
+with \code{make(recover = TRUE)}.
+This requires writing extra files to the cache,
+and it prevents old metadata from being removed with garbage collection
+(\code{clean(garbage_collection = TRUE)}, \code{gc()} in \code{storr}s).
+If you need to limit the cache size or the number of files in the cache,
 consider \code{make(recoverable = FALSE, progress = FALSE)}.}
 }
 \value{
@@ -474,6 +477,37 @@ If you supply a \code{\link[=drake_config]{drake_config()}} object to the \code{
 argument of \code{\link[=make]{make()}}, then \code{drake} will ignore all the other arguments
 because it already has everything it needs in \code{config}.
 }
+\section{Recovery}{
+
+\code{make(recover = TRUE, recoverable = TRUE)}
+powers automated data recovery.
+The default of \code{recover} is \code{FALSE} because
+\enumerate{
+\item Automated data recovery is still experimental.
+\item It has reproducibility issues.
+Targets recovered from the distant past may have been generated
+with earlier versions of R and earlier package environments
+that no longer exist.
+}
+
+How it works: if \code{recover} is \code{TRUE},
+\code{drake} tries to salvage old target values from the cache
+instead of running commands from the plan.
+A target is recoverable if
+\enumerate{
+\item There is an old value somewhere in the cache that
+shares the command, dependencies, etc.
+of the target about to be built.
+\item The old value was generated with \code{make(recoverable = TRUE)}.
+}
+
+If both conditions are met, \code{drake} will
+\enumerate{
+\item Assign the most recently-generated admissible data to the target, and
+\item skip the target's command.
+}
+}
+
 \examples{
 \dontrun{
 isolate_example("Quarantine side effects.", {

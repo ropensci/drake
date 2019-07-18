@@ -1,10 +1,32 @@
-#' @title List the *recoverable* targets that are out of date.
-#' @description Some outdated targets can be recovered using old data.
-#'   For details, see the `recover` argument in the help file of [make()].
-#'   The [recoverable()] function lists the most upstream outdated targets
-#'   that will be recovered with the next `make(recover = TRUE)`. Other
-#'   downstream targets may also be recoverable, but we do not have
-#'   enough information to tell until we actually run `make(recover = TRUE)`.
+#' @title List the most upstream *recoverable* outdated targets.
+#' @description Only shows the most upstream updated targets.
+#'   Whether downstream targets are recoverable depends on
+#'   the eventual values of the upstream targets in the next [make()].
+#' @section Recovery:
+#'  `make(recover = TRUE, recoverable = TRUE)`
+#'   powers automated data recovery.
+#'   The default of `recover` is `FALSE` because
+#'
+#'   1. Automated data recovery is still experimental.
+#'   2. It has reproducibility issues.
+#'   Targets recovered from the distant past may have been generated
+#'   with earlier versions of R and earlier package environments
+#'   that no longer exist.
+#'
+#'   How it works: if `recover` is `TRUE`,
+#'   `drake` tries to salvage old target values from the cache
+#'   instead of running commands from the plan.
+#'   A target is recoverable if
+#'
+#'   1. There is an old value somewhere in the cache that
+#'      shares the command, dependencies, etc.
+#'      of the target about to be built.
+#'   2. The old value was generated with `make(recoverable = TRUE)`.
+#'
+#'   If both conditions are met, `drake` will
+#'
+#'   1. Assign the most recently-generated admissible data to the target, and
+#'   2. skip the target's command.
 #' @export
 #' @seealso [r_recoverable()], [r_outdated()], [drake_config()], [missed()],
 #'   [drake_plan()], [make()]
@@ -15,11 +37,13 @@
 #' isolate_example("Quarantine side effects.", {
 #' if (suppressWarnings(require("knitr"))) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' # Recopute the config list early and often to have the
-#' # most current information. Do not modify the config list by hand.
 #' config <- drake_config(my_plan)
-#' outdated(config = config) # Which targets are out of date?
-#' recoverable(config = config) # Which of these are recoverable?
+#' make(my_plan)
+#' clean()
+#' outdated(config) # Which targets are outdated?
+#' recoverable(config) # Which of these are recoverable and upstream?
+#' # The report still builds because clean() removes report.md.
+#' make(my_plan, recover = TRUE)
 #' }
 #' })
 #' }

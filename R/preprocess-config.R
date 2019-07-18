@@ -15,6 +15,7 @@
 #'   If you supply a [drake_config()] object to the `config`
 #'   argument of [make()], then `drake` will ignore all the other arguments
 #'   because it already has everything it needs in `config`.
+#' @inheritSection recoverable Recovery
 #' @export
 #' @return The master internal configuration list of a project.
 #' @seealso [make()], [drake_plan()], [vis_drake_graph()]
@@ -427,8 +428,11 @@
 #'   [make()] or [r_make()].
 #'
 #' @param recoverable Logical, whether to make target values recoverable
-#'   with `make(recover = TRUE)`. This requires writing extra files to the cache.
-#'   If the cache gets too big,
+#'   with `make(recover = TRUE)`.
+#'   This requires writing extra files to the cache,
+#'   and it prevents old metadata from being removed with garbage collection
+#'   (`clean(garbage_collection = TRUE)`, `gc()` in `storr`s).
+#'   If you need to limit the cache size or the number of files in the cache,
 #'   consider `make(recoverable = FALSE, progress = FALSE)`.
 #'
 #' @examples

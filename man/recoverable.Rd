@@ -2,7 +2,7 @@
 % Please edit documentation in R/api-outdated.R
 \name{recoverable}
 \alias{recoverable}
-\title{List the \emph{recoverable} targets that are out of date.}
+\title{List the most upstream \emph{recoverable} outdated targets.}
 \usage{
 recoverable(config, make_imports = TRUE, do_prework = TRUE)
 }
@@ -24,23 +24,53 @@ normally supplied to \code{\link[=make]{make()}}.}
 Character vector of the names of recoverable targets.
 }
 \description{
-Some outdated targets can be recovered using old data.
-For details, see the \code{recover} argument in the help file of \code{\link[=make]{make()}}.
-The \code{\link[=recoverable]{recoverable()}} function lists the most upstream outdated targets
-that will be recovered with the next \code{make(recover = TRUE)}. Other
-downstream targets may also be recoverable, but we do not have
-enough information to tell until we actually run \code{make(recover = TRUE)}.
+Only shows the most upstream updated targets.
+Whether downstream targets are recoverable depends on
+the eventual values of the upstream targets in the next \code{\link[=make]{make()}}.
 }
+\section{Recovery}{
+
+\code{make(recover = TRUE, recoverable = TRUE)}
+powers automated data recovery.
+The default of \code{recover} is \code{FALSE} because
+\enumerate{
+\item Automated data recovery is still experimental.
+\item It has reproducibility issues.
+Targets recovered from the distant past may have been generated
+with earlier versions of R and earlier package environments
+that no longer exist.
+}
+
+How it works: if \code{recover} is \code{TRUE},
+\code{drake} tries to salvage old target values from the cache
+instead of running commands from the plan.
+A target is recoverable if
+\enumerate{
+\item There is an old value somewhere in the cache that
+shares the command, dependencies, etc.
+of the target about to be built.
+\item The old value was generated with \code{make(recoverable = TRUE)}.
+}
+
+If both conditions are met, \code{drake} will
+\enumerate{
+\item Assign the most recently-generated admissible data to the target, and
+\item skip the target's command.
+}
+}
+
 \examples{
 \dontrun{
 isolate_example("Quarantine side effects.", {
 if (suppressWarnings(require("knitr"))) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
-# Recopute the config list early and often to have the
-# most current information. Do not modify the config list by hand.
 config <- drake_config(my_plan)
-outdated(config = config) # Which targets are out of date?
-recoverable(config = config) # Which of these are recoverable?
+make(my_plan)
+clean()
+outdated(config) # Which targets are outdated?
+recoverable(config) # Which of these are recoverable and upstream?
+# The report still builds because clean() removes report.md.
+make(my_plan, recover = TRUE)
 }
 })
 }
