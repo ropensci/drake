@@ -55,6 +55,17 @@ test_with_dir("recovery (#945)", {
     make(plan, recover = TRUE, parallelism = parallelism, caching = caching)
     expect_false(file.exists("w"))
     expect_equal(justbuilt(config), character(0))
+
+    # Clean with garbage collection
+    clean(garbage_collection = TRUE)
+
+    # Can't recover `w`.
+    plan$command[[1]] <- quote({
+      file.create("w2")
+      "w"
+    })
+    config <- drake_config(plan)
+    expect_equal(recoverable(config), character(0))
   }
   for (parallelism in c("loop", "clustermq", "future")) {
     for (caching in c("master", "worker")) {
