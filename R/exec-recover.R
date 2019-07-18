@@ -4,8 +4,16 @@ recover_target <- function(target, meta, config) {
   if (skip_recovery) {
     return(FALSE)
   }
-  value <- recovery_metadata(target, meta, config)
-  if (length(value) < 2L && is.na(value)) {
+  key <- recovery_key(target = target, meta = meta, config = config)
+  if (!config$cache$exists(key, namespace = "recover")) {
+    return(FALSE)
+  }
+  meta_hash <- config$cache$get_hash(key, namespace = "recover")
+  recovery_meta <- config$cache$driver$get_object(meta_hash)
+  value_hash <- recovery_meta$hash
+  exists_data <- config$cache$exists_object(meta_hash) &&
+    config$cache$exists_object(value_hash)
+  if (!exists_data) {
     return(FALSE)
   }
   log_msg(
@@ -18,13 +26,13 @@ recover_target <- function(target, meta, config) {
   )
   config$cache$driver$set_hash(
     key = target,
-    namespace = config$cache$default_namespace,
-    hash = value[1]
+    namespace = "meta",
+    hash = meta_hash
   )
   config$cache$driver$set_hash(
     key = target,
-    namespace = "meta",
-    hash = value[2]
+    namespace = config$cache$default_namespace,
+    hash = value_hash
   )
   set_progress(
     target = target,
@@ -35,21 +43,7 @@ recover_target <- function(target, meta, config) {
   TRUE
 }
 
-recovery_metadata <- function(target, meta, config) {
-  hash <- recovery_hash(target = target, meta = meta, config = config)
-  if (!config$cache$exists(hash, namespace = "recover")) {
-    return(NA_character_)
-  }
-  value <- config$cache$get(hash, namespace = "recover", use_cache = FALSE)
-  for (i in seq_along(value)) {
-    if (!config$cache$exists_object(value[i])) {
-      return(NA_character_)
-    }
-  }
-  value
-}
-
-recovery_hash <- function(target, meta, config) {
+recovery_key <- function(target, meta, config) {
   if (is.null(meta$trigger$value)) {
     change_hash <- NA_character_
   } else {

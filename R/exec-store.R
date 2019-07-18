@@ -82,7 +82,7 @@ store_meta <- function(target, meta, hash, config) {
   )
   meta_lite <- meta
   meta_lite$trigger$value <- NULL
-  meta$meta_hash <- config$cache$set(
+  meta_hash <- config$cache$set(
     key = target,
     value = meta_lite,
     namespace = "meta",
@@ -90,21 +90,19 @@ store_meta <- function(target, meta, hash, config) {
   )
   is_target <- !meta$imported && !is_encoded_path(target)
   if (is_target && is_history(config$history)) {
-    config$history$push(title = target, message = meta$meta_hash)
+    config$history$push(title = target, message = meta_hash)
   }
   if (is_target && config$recoverable) {
-    store_recovery(target = target, meta = meta, config = config)
+    store_recovery(target, meta, meta_hash, config)
   }
 }
 
-store_recovery <- function(target, meta, config) {
-  key <- recovery_hash(target = target, meta = meta, config = config)
-  value <- c(meta$hash, meta$meta_hash) # (1) target data hash (2) metadata hash # nolint
-  config$cache$set(
+store_recovery <- function(target, meta, meta_hash, config) {
+  key <- recovery_key(target = target, meta = meta, config = config)
+  config$cache$driver$set_hash(
     key = key,
-    value = value,
     namespace = "recover",
-    use_cache = FALSE
+    hash = meta_hash
   )
 }
 

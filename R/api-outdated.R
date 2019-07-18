@@ -49,8 +49,15 @@ recoverable <-  function(
 
 is_recoverable <- function(target, config) {
   meta <- drake_meta_(target = target, config = config)
-  value <- recovery_metadata(target = target, meta = meta, config = config)
-  length(value) > 1L
+  key <- recovery_key(target = target, meta = meta, config = config)
+  if (!config$cache$exists(key, namespace = "recover")) {
+    return(FALSE)
+  }
+  meta_hash <- config$cache$get_hash(key, namespace = "recover")
+  recovery_meta <- config$cache$driver$get_object(meta_hash)
+  value_hash <- recovery_meta$hash
+  config$cache$exists_object(meta_hash) &&
+    config$cache$exists_object(value_hash)
 }
 
 #' @title List the targets that are out of date.
