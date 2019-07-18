@@ -155,7 +155,6 @@ test_with_dir("bad/corrupt caches, no progress, no seed", {
   expect_true(file.exists(path))
   unlink(path, recursive = TRUE)
   expect_false(file.exists(path))
-  expect_error(make(x, verbose = 0L, session_info = FALSE))
   expect_error(
     read_drake_seed(cache = storr::storr_environment()),
     regexp = "random seed not found"
