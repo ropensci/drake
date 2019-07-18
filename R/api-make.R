@@ -164,7 +164,7 @@ make <- function(
   layout = NULL,
   lock_envir = TRUE,
   history = TRUE,
-  recover = TRUE
+  recover = FALSE
 ) {
   log_msg(
     "begin make()",

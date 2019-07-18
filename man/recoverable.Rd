@@ -26,10 +26,10 @@ Character vector of the names of recoverable targets.
 \description{
 Some outdated targets can be recovered using old data.
 For details, see the \code{recover} argument in the help file of \code{\link[=make]{make()}}.
-The \code{\link[=recoverable]{recoverable()}} function lists the outdated targets that
-can be recovered with \code{make(recover = TRUE)}. Instead of rerunning
-the commands, \code{\link[=make]{make()}} will simply assign the old data to the new
-targets as appropriate.
+The \code{\link[=recoverable]{recoverable()}} function lists the most upstream outdated targets
+that will be recovered with the next \code{make(recover = TRUE)}. Other
+downstream targets may also be recoverable, but we do not have
+enough information to tell until we actually run \code{make(recover = TRUE)}.
 }
 \examples{
 \dontrun{

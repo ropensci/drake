@@ -21,7 +21,7 @@ make(plan, targets = NULL, envir = parent.frame(), verbose = 1L,
   console_log_file = NULL, ensure_workers = NULL,
   garbage_collection = FALSE, template = list(), sleep = function(i)
   0.01, hasty_build = NULL, memory_strategy = "speed", layout = NULL,
-  lock_envir = TRUE, history = TRUE, recover = TRUE)
+  lock_envir = TRUE, history = TRUE, recover = FALSE)
 }
 \arguments{
 \item{plan}{Workflow plan data frame.
@@ -432,30 +432,28 @@ of your targets. You can also supply a
 how \code{drake} records history.
 Must be \code{TRUE} for \code{\link[=drake_history]{drake_history()}} to work later.}
 
-\item{recover}{Logical, whether \code{make()} should try to recover
-old targets and make new targets recoverable. This is different from
-simply skipping a target if it is already up to date.
-With automatic recovery, \code{make()} can sometimes salvage old data
-from the distant past instead of rerunning the command
-of an outdated target.
+\item{recover}{Logical, whether to activate automated data recovery.
+Warning: this feature is experimental, and it has
+performance and reproducibility issues as discussed at
+<>.
+Use at your own risk.
 
-Requirements for automatic recovery:
-\itemize{
-\item The old target value must have been generated with
-\code{make(recover = TRUE)}.
-\item The old target data, the ordinary metadata, and recovery metadata,
-must still exist in the cache.
-\item The underlying triggers of the old target data and the
-prospective new target must agree. In other words, the old target
-data must have the same command, dependency hash, file hashes,
-seed, \code{condition} expression, \code{condition} mode, and \code{change} value
-as the prospective target about to be built.
+Sometimes, we just want our old data back.
+If we accidentally call \code{\link[=clean]{clean()}} without garbage collection,
+or if we revert to a prior version of our code,
+the data we need may still be in the cache.
+\code{make(recover = TRUE)} tells \code{drake} to
+\enumerate{
+\item Track new target values so they will be recoverable later, and
+\item Try to recover old targets when possible. If \code{drake}
+is about to build a target, and it finds a old value that came from
+the same command, dependencies, etc. that we have right now,
+\code{make()} will recover the data and skip the command.
 }
 
-Caution: \code{recover = TRUE} tells \code{drake} to put many more data
-files in the cache (usually the \code{.drake/} folder).
-So if you need to reduce or limit the number of files in the cache,
-run \code{make(log_progress = FALSE, recover = FALSE)}.}
+Functions \code{\link[=recoverable]{recoverable()}} and \code{\link[=r_recoverable]{r_recoverable()}} show the most upstream
+outdated targets that will be recovered in this way in the next
+\code{\link[=make]{make()}} or \code{\link[=r_make]{r_make()}}.}
 }
 \value{
 nothing

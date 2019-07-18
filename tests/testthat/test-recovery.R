@@ -24,7 +24,7 @@ test_with_dir("recovery (#945)", {
 
     # build everything
     config <- drake_config(plan)
-    make(plan, parallelism = parallelism, caching = caching)
+    make(plan, recover = TRUE, parallelism = parallelism, caching = caching)
     expect_true(all(file.exists(plan$target)))
     unlink(plan$target)
 
@@ -34,8 +34,8 @@ test_with_dir("recovery (#945)", {
       "w"
     })
     config <- drake_config(plan)
-    expect_equal(sort(recoverable(config)), sort(c("x", "y", "z")))
-    make(plan, parallelism = parallelism, caching = caching)
+    expect_equal(recoverable(config), character(0))
+    make(plan, recover = TRUE, parallelism = parallelism, caching = caching)
     expect_equal(justbuilt(config), "w")
     expect_true(file.exists("w2"))
     unlink("w2")
@@ -46,13 +46,13 @@ test_with_dir("recovery (#945)", {
       "w"
     })
     config <- drake_config(plan)
-    expect_equal(sort(recoverable(config)), sort(plan$target))
-    make(plan, parallelism = parallelism, caching = caching)
+    expect_equal(recoverable(config), "w")
+    make(plan, recover = TRUE, parallelism = parallelism, caching = caching)
     expect_false(file.exists("w"))
     expect_equal(justbuilt(config), "w")
 
     # Everything should be up to date now.
-    make(plan, parallelism = parallelism, caching = caching)
+    make(plan, recover = TRUE, parallelism = parallelism, caching = caching)
     expect_false(file.exists("w"))
     expect_equal(justbuilt(config), character(0))
   }

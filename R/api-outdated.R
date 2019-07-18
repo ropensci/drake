@@ -1,10 +1,10 @@
 #' @title List the *recoverable* targets that are out of date.
 #' @description Some outdated targets can be recovered using old data.
 #'   For details, see the `recover` argument in the help file of [make()].
-#'   The [recoverable()] function lists the outdated targets that
-#'   can be recovered with `make(recover = TRUE)`. Instead of rerunning
-#'   the commands, [make()] will simply assign the old data to the new
-#'   targets as appropriate.
+#'   The [recoverable()] function lists the most upstream outdated targets
+#'   that will be recovered with the next `make(recover = TRUE)`. Other
+#'   downstream targets may also be recoverable, but we do not have
+#'   enough information to tell until we actually run `make(recover = TRUE)`.
 #' @export
 #' @seealso [r_recoverable()], [r_outdated()], [drake_config()], [missed()],
 #'   [drake_plan()], [make()]
@@ -30,11 +30,14 @@ recoverable <-  function(
 ) {
   log_msg("begin recoverable()", config = config)
   on.exit(log_msg("end recoverable()", config = config), add = TRUE)
-  out <- outdated(
-    config = config,
-    make_imports = make_imports,
-    do_prework = do_prework
-  )
+  assert_config_not_plan(config)
+  if (do_prework) {
+    do_prework(config = config, verbose_packages = config$verbose)
+  }
+  if (make_imports) {
+    process_imports(config = config)
+  }
+  out <- first_outdated(config)
   index <- vapply(
     out,
     is_recoverable,
