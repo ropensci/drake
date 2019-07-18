@@ -92,7 +92,7 @@ store_meta <- function(target, meta, hash, config) {
   if (is_target && is_history(config$history)) {
     config$history$push(title = target, message = meta$meta_hash)
   }
-  if (is_target && config$recover) {
+  if (is_target && config$recoverable) {
     store_recovery(target = target, meta = meta, config = config)
   }
 }

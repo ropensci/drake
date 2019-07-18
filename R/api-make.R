@@ -164,7 +164,8 @@ make <- function(
   layout = NULL,
   lock_envir = TRUE,
   history = TRUE,
-  recover = FALSE
+  recover = FALSE,
+  recoverable = TRUE
 ) {
   log_msg(
     "begin make()",
@@ -221,7 +222,8 @@ make <- function(
       layout = layout,
       lock_envir = lock_envir,
       history = history,
-      recover = recover
+      recover = recover,
+      recoverable = recoverable
     )
   }
   assert_config_not_plan(config)

@@ -82,6 +82,7 @@ test_with_dir("recovery (#945)", {
 })
 
 test_with_dir("recovery with a non-standard trigger", {
+  skip_on_cran()
   plan <- drake_plan(
     x = target(file.create("x"), trigger = trigger(change = "a"))
   )
@@ -96,4 +97,22 @@ test_with_dir("recovery with a non-standard trigger", {
   unlink("x")
   make(plan, recover = TRUE)
   expect_false(file.exists("x"))
+})
+
+test_with_dir("recoverability can be disabled", {
+  skip_on_cran()
+  plan <- drake_plan(
+    x = target(file.create("x"))
+  )
+  make(plan, recoverable = FALSE)
+  plan <- drake_plan(
+    x = target(file.create("y"))
+  )
+  make(plan, recover = TRUE)
+  plan <- drake_plan(
+    x = target(file.create("x"))
+  )
+  unlink("x")
+  make(plan, recover = TRUE)
+  expect_true(file.exists("x"))
 })

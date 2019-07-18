@@ -399,26 +399,37 @@
 #'   Must be `TRUE` for [drake_history()] to work later.
 #'
 #' @param recover Logical, whether to activate automated data recovery.
-#'   Warning: this feature is experimental, and it has
-#'   performance and reproducibility issues as discussed at
-#'   <>.
-#'   Use at your own risk.
+#'   The default is `FALSE` because
 #'
-#'   Sometimes, we just want our old data back.
-#'   If we accidentally call [clean()] without garbage collection,
-#'   or if we revert to a prior version of our code,
-#'   the data we need may still be in the cache.
-#'   `make(recover = TRUE)` tells `drake` to
+#'   1. Automated data recovery is still experimental.
+#'   2. It has reproducibility issues.
+#'   Targets recovered from the distant past may have been generated
+#'   with earlier versions of R and earlier package environments
+#'   that no longer exist.
 #'
-#'   1. Track new target values so they will be recoverable later, and
-#'   2. Try to recover old targets when possible. If `drake`
-#'     is about to build a target, and it finds a old value that came from
-#'     the same command, dependencies, etc. that we have right now,
-#'     `make()` will recover the data and skip the command.
+#'   How it works: if `recover` is `TRUE`,
+#'   `drake` tries to salvage old target values from the cache
+#'   instead of running commands from the plan.
+#'   A target is recoverable if
+#'
+#'   1. There is an old value somewhere in the cache that
+#'      shares the command, dependencies, etc.
+#'      of the target about to be built.
+#'   2. The old value was generated with `make(recoverable = TRUE)`.
+#'
+#'   If both conditions are met, `drake` will
+#'
+#'   1. Assign the most recently-generated admissible data to the target, and
+#'   2. skip the target's command.
 #'
 #'   Functions [recoverable()] and [r_recoverable()] show the most upstream
 #'   outdated targets that will be recovered in this way in the next
 #'   [make()] or [r_make()].
+#'
+#' @param recoverable Logical, whether to make target values recoverable
+#'   with `make(recover = TRUE)`. This requires writing extra files to the cache.
+#'   If the cache gets too big,
+#'   consider `make(recoverable = FALSE, progress = FALSE)`.
 #'
 #' @examples
 #' \dontrun{
@@ -487,7 +498,8 @@ drake_config <- function(
   layout = NULL,
   lock_envir = TRUE,
   history = TRUE,
-  recover = FALSE
+  recover = FALSE,
+  recoverable = TRUE
 ) {
   log_msg(
     "begin drake_config()",
@@ -631,6 +643,7 @@ drake_config <- function(
   lazy_load <- parse_lazy_arg(lazy_load)
   caching <- match.arg(caching)
   recover <- as.logical(recover)
+  recoverable <- as.logical(recoverable)
   ht_encode_path <- ht_new()
   ht_decode_path <- ht_new()
   ht_encode_namespaced <- ht_new()
@@ -677,7 +690,8 @@ drake_config <- function(
     lock_envir = lock_envir,
     force = force,
     history = history,
-    recover = recover
+    recover = recover,
+    recoverable = recoverable
   )
   out <- enforce_compatible_config(out)
   config_checks(out)
