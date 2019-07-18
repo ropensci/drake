@@ -611,6 +611,7 @@ drake_config <- function(
   ht_decode_path <- ht_new()
   ht_encode_namespaced <- ht_new()
   ht_decode_namespaced <- ht_new()
+  progress_hashmap <- progress_hashmap(cache)
   out <- list(
     envir = envir,
     eval = new.env(parent = envir),
@@ -639,6 +640,7 @@ drake_config <- function(
     skip_imports = skip_imports,
     skip_safety_checks = skip_safety_checks,
     log_progress = log_progress,
+    progress_hashmap = progress_hashmap,
     lazy_load = lazy_load,
     session_info = session_info,
     cache_log_file = cache_log_file,

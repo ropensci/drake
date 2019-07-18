@@ -172,7 +172,8 @@ failed <- function(
 
 get_progress_single <- function(target, cache) {
   if (cache$exists(key = target, namespace = "progress")) {
-    cache$get(key = target, namespace = "progress")
+    hash <- cache$get_hash(key = target, namespace = "progress")
+
   } else{
     "none"
   }
@@ -185,10 +186,24 @@ set_progress <- function(target, meta, value, config) {
   if (skip_progress) {
     return()
   }
-  config$cache$duplicate(
-    key_src = value,
-    key_dest = target,
-    namespace_src = "common",
-    namespace_dest = "progress"
+  config$cache$driver$set_hash(
+    key = target,
+    namespace = "progress",
+    hash = config$progress_hashmap[[value]]
   )
+}
+
+progress_hashmap <- function(cache) {
+  keys <- c("running", "done", "failed")
+  out <- lapply(keys, progress_hash, cache = cache)
+  setNames(out, keys)
+}
+
+progress_hash <- function(key, cache) {
+  out <- digest::digest(
+    key,
+    algo = cache$driver$hash_algorithm,
+    serialize = FALSE
+  )
+  gsub("^.", substr(key, 1, 1), out)
 }

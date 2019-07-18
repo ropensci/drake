@@ -418,7 +418,7 @@ default_cache_path <- function(root = getwd()) {
 
 # Pre-set the values to avoid https://github.com/richfitz/storr/issues/80.
 init_common_values <- function(cache) {
-  common_values <- list(TRUE, FALSE, "done", "running", "failed")
+  common_values <- list(TRUE, FALSE)
   cache$mset(
     key = as.character(common_values),
     value = common_values,
