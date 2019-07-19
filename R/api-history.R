@@ -2,7 +2,35 @@
 #' @description See the history and provenance of your targets:
 #'   what you ran, when you ran it, the function arguments
 #'   you used, and how to get old data back.
-#' @details If `analyze` is `TRUE`, `drake`
+#' @details [drake_history()] returns a data frame with the following columns.
+#'
+#' - `target`: the name of the target.
+#' - `current`: logical, whether the row describes the data
+#'   actually assigned to the target name in the cache,
+#'   e.g. what you get with `loadd(target)` and `readd(target)`.
+#'   Does **NOT** tell you if the target is up to date.
+#' - `built`: when the target's value was stored in the cache.
+#'   This is the true creation date of the target's value,
+#'   not the recovery date from `make(recover = TRUE)`.
+#' - `exists`: logical, whether the target's historical value
+#'   still exists in the cache. Garbage collection via
+#'   (`clean(garbage_collection = TRUE)` and `drake_cache()$gc()`)
+#'   remove these historical values, but `clean()` under the default
+#'   settings does not.
+#' - `hash`: fingerprint of the target's historical value in the cache.
+#'   If the value still exists, you can read it with
+#'   `drake_cache()$get_value(hash)`.
+#' - `command`: the [drake_plan()] command executed to build the target.
+#' - `seed`: random number generator seed.
+#' - `runtime`: the time it took to execute the [drake_plan()] command.
+#'   Does not include overhead due to `drake`'s processing.
+#'
+#' If `analyze` is `TRUE`, various other columns are included to show
+#' the explicitly-named length-1 arguments to function calls in the commands.
+#' See the "Provenance" section for more details.
+#'
+#' @section Provenance:
+#' If `analyze` is `TRUE`, `drake`
 #'   scans your [drake_plan()] commands
 #'   for function arguments and mentions them in the history.
 #'   A function argument shows up if and only if
@@ -93,13 +121,21 @@ drake_history <- function(
     seed = out$seed
   )
   out <- out[order(out$target, out$built), ]
-  out$latest <- !duplicated(out$target, fromLast = TRUE)
+  current_hash <- vapply(
+    out$target,
+    safe_get_hash,
+    FUN.VALUE = character(1),
+    namespace = cache$default_namespace,
+    config = list(cache = cache)
+  )
+  out$current <- out$hash == current_hash
+  out$current[is.na(out$current)] <- FALSE
   cols <- c(
     "target",
+    "current",
     "built",
-    "latest",
-    "hash",
     "exists",
+    "hash",
     "command",
     "seed",
     "runtime"

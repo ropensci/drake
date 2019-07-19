@@ -38,6 +38,36 @@ what you ran, when you ran it, the function arguments
 you used, and how to get old data back.
 }
 \details{
+\code{\link[=drake_history]{drake_history()}} returns a data frame with the following columns.
+\itemize{
+\item \code{target}: the name of the target.
+\item \code{current}: logical, whether the row describes the data
+actually assigned to the target name in the cache,
+e.g. what you get with \code{loadd(target)} and \code{readd(target)}.
+Does \strong{NOT} tell you if the target is up to date.
+\item \code{built}: when the target's value was stored in the cache.
+This is the true creation date of the target's value,
+not the recovery date from \code{make(recover = TRUE)}.
+\item \code{exists}: logical, whether the target's historical value
+still exists in the cache. Garbage collection via
+(\code{clean(garbage_collection = TRUE)} and \code{drake_cache()$gc()})
+remove these historical values, but \code{clean()} under the default
+settings does not.
+\item \code{hash}: fingerprint of the target's historical value in the cache.
+If the value still exists, you can read it with
+\code{drake_cache()$get_value(hash)}.
+\item \code{command}: the \code{\link[=drake_plan]{drake_plan()}} command executed to build the target.
+\item \code{seed}: random number generator seed.
+\item \code{runtime}: the time it took to execute the \code{\link[=drake_plan]{drake_plan()}} command.
+Does not include overhead due to \code{drake}'s processing.
+}
+
+If \code{analyze} is \code{TRUE}, various other columns are included to show
+the explicitly-named length-1 arguments to function calls in the commands.
+See the "Provenance" section for more details.
+}
+\section{Provenance}{
+
 If \code{analyze} is \code{TRUE}, \code{drake}
 scans your \code{\link[=drake_plan]{drake_plan()}} commands
 for function arguments and mentions them in the history.
@@ -55,6 +85,7 @@ as \code{"my_file.csv"} in
 NB: in \code{process_data(filename = file_in("a", "b"))}
 \code{filename} is not detected because the value must be atomic.
 }
+
 \examples{
 \dontrun{
 isolate_example({

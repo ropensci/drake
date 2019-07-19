@@ -38,10 +38,10 @@ test_with_dir("basic history", {
   expect_equal(dim(out), c(22L, 9L))
   cols <- c(
     "target",
+    "current",
     "built",
     "hash",
     "exists",
-    "latest",
     "command",
     "runtime",
     "seed",
@@ -66,6 +66,8 @@ test_with_dir("basic history", {
   # Clean without garbage collection
   clean(small, cache = cache)
   out2 <- drake_history(cache = cache, analyze = TRUE)
+  expect_equal(out2$current[out2$target == "small"], FALSE)
+  out2$current[out2$target == "small"] <- TRUE
   expect_equal(out, out2)
 
   # After garbage collection
@@ -73,8 +75,7 @@ test_with_dir("basic history", {
   out <- drake_history(cache = cache, analyze = TRUE)
   expect_equal(dim(out), c(22L, 9L))
   expect_equal(sort(colnames(out)), sort(cols))
-  expect_na <- out$target == "small" | !out$latest
-  expect_equal(is.na(out$hash), expect_na)
+  expect_equal(is.na(out$hash), !out$current)
 
   # Clean everything.
   clean(cache = cache, garbage_collection = TRUE)
