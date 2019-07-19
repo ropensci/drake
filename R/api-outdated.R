@@ -48,6 +48,10 @@
 #' # When was the *recovered* small data actually built (first stored)?
 #' # (Was I using a different version of R back then?)
 #' diagnose(small)$date
+#' # If you set the same seed as before, you can even
+#' # rename targets without having to build them again.
+#' # For an example, see
+#' # https://github.com/ropensci/drake/blob/master/README.md#automatic-recovery-and-renaming. # nolint
 #' }
 #' })
 #' }
