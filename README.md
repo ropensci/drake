@@ -472,7 +472,7 @@ understand it. `drake` helps in several ways.
     another nice separation between the concepts and the execution of
     your workflow
 
-# Aggressively scale up.
+# Scale up and out.
 
 Not every project can complete in a single R session on your laptop.
 Some projects need more speed or computing power. Some require a few
