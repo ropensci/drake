@@ -22,6 +22,12 @@ recover_target <- function(target, meta, config) {
     color = colors["recover"],
     tier = 1L
   )
+  log_msg(
+    "recovered target originally stored on",
+    recovery_meta$date,
+    target = target,
+    config = config
+  )
   config$cache$driver$set_hash(
     key = target,
     namespace = "meta",
