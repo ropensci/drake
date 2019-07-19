@@ -314,16 +314,23 @@ make(plan, recover = TRUE) # The report still builds since report.md is gone.
 diagnose(raw_data)$date
 ```
 
-You can even rename your targets! Just be aware that this invalidates downstream targets.
+You can even rename your targets! All you have to do is use the same target seed as last time. Just be aware that renaming invalidates downstream targets.
 
 ```{r}
+# Get the old seed.
+old_seed <- diagnose(data)$seed
+
+# Now rename the data and supply the old seed.
 plan <- drake_plan(
   raw_data = readxl::read_excel(file_in("raw_data.xlsx")),
   
   # Previously just named "data".
-  iris_data = raw_data %>%
-    mutate(Species = forcats::fct_inorder(Species)),
-  
+  iris_data = target(
+    raw_data %>%
+      mutate(Species = forcats::fct_inorder(Species)),
+    seed = !!old_seed
+  ),
+
   # `iris_data` will be recovered from `data`,
   # but `hist` and `fit` have changed commands,
   # so they will build from scratch.
