@@ -99,6 +99,7 @@ test_with_dir("rename a target", {
     summ = mean(data$Sepal.Width),
     fit = lm(Sepal.Width ~ Petal.Width + Species, data)
   )
+  plan$seed <- seq_len(nrow(plan))
   cache <- storr::storr_environment()
   make(plan, cache = cache, session_info = FALSE)
   clean()
@@ -113,6 +114,7 @@ test_with_dir("rename a target", {
     summ = mean(iris_data$Sepal.Width),
     fit = lm(Sepal.Width ~ Petal.Width + Species, iris_data)
   )
+  plan$seed <- seq_len(nrow(plan))
   make(plan, recover = TRUE, cache = cache, session_info = FALSE)
   expect_false(file.exists("x"))
   config <- drake_config(plan, cache = cache)
