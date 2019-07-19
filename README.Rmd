@@ -299,6 +299,46 @@ cache$get_value(hash)
 
 <img src="https://ropensci.github.io/drake/figures/hist1.png" alt="hist1" align="center" style = "border: none; float: center;" width = "600px">
 
+## Automated data recovery (experimental)
+
+In `drake` version 7.5.0 and above, `make(recover = TRUE)` can salvage old targets from the distant past. This may not be a good idea if your external dependencies have changed a lot over time (R version, package environment, etc) but it can be super handy.
+
+```{r}
+# Is the data really gone?
+clean() # garbage_collection = FALSE
+
+# Nope!
+make(plan, recover = TRUE) # The report still builds since report.md is gone.
+
+# When was the raw data *really* first built?
+diagnose(raw_data)$date
+```
+
+You can even rename your targets! Just be aware that this invalidates downstream targets.
+
+```{r}
+plan <- drake_plan(
+  raw_data = readxl::read_excel(file_in("raw_data.xlsx")),
+  
+  # Previously just named "data".
+  iris_data = raw_data %>%
+    mutate(Species = forcats::fct_inorder(Species)),
+  
+  # `iris_data` will be recovered from `data`,
+  # but `hist` and `fit` have changed commands,
+  # so they will build from scratch.
+  hist = create_plot(iris_data),
+  fit = lm(Sepal.Width ~ Petal.Width + Species, iris_data),
+  report = rmarkdown::render(
+    knitr_in("report.Rmd"),
+    output_file = file_out("report.html"),
+    quiet = TRUE
+  )
+)
+
+make(plan, recover = TRUE)
+```
+
 ## Independent replication
 
 With even more evidence and confidence, you can invest the time to independently replicate the original code base if necessary. Up until this point, you relied on basic `drake` functions such as `make()`, so you may not have needed to peek at any substantive author-defined code in advance. In that case, you can stay usefully ignorant as you reimplement the original author's methodology. In other words, `drake` could potentially improve the integrity of independent replication.
@@ -354,6 +394,7 @@ The [reference section](https://ropensci.github.io/drake/reference/index.html) l
 - `readd()`: read and return a built target.
 - `drake_config()`: create a master configuration list for other user-side functions.
 - `vis_drake_graph()`: show an interactive visual network representation of your workflow.
+- `recoverable()`: Which targets can we salvage using `make(recover = TRUE)` (experimental).
 - `outdated()`: see which targets will be built in the next `make()`.
 - `deps()`: check the dependencies of a command or function.
 - `failed()`: list the targets that failed to build in the last `make()`.

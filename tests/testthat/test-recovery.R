@@ -88,6 +88,37 @@ test_with_dir("recovery (#945)", {
   }
 })
 
+test_with_dir("rename a target", {
+  plan <- drake_plan(
+    raw_data = iris,
+    data = {
+      raw_data$Species <- as.factor(raw_data$Species)
+      file.create("x")
+      raw_data
+    },
+    summ = mean(data$Sepal.Width),
+    fit = lm(Sepal.Width ~ Petal.Width + Species, data)
+  )
+  cache <- storr::storr_environment()
+  make(plan, cache = cache, session_info = FALSE)
+  clean()
+  unlink("x")
+  plan <- drake_plan(
+    raw_data = iris,
+    iris_data = {
+      raw_data$Species <- as.factor(raw_data$Species)
+      file.create("x")
+      raw_data
+    },
+    summ = mean(iris_data$Sepal.Width),
+    fit = lm(Sepal.Width ~ Petal.Width + Species, iris_data)
+  )
+  make(plan, recover = TRUE, cache = cache, session_info = FALSE)
+  expect_false(file.exists("x"))
+  config <- drake_config(plan, cache = cache)
+  expect_equal(outdated(config), character(0))
+})
+
 test_with_dir("recovery with a non-standard trigger", {
   skip_on_cran()
   plan <- drake_plan(
