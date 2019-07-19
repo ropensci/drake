@@ -380,7 +380,7 @@ cache$get_value(hash)
 
 <img src="https://ropensci.github.io/drake/figures/hist1.png" alt="hist1" align="center" style = "border: none; float: center;" width = "600px">
 
-## Automated data recovery (experimental)
+## Automated recovery and renaming (experimental)
 
 In `drake` version 7.5.0 and above, `make(recover = TRUE)` can salvage
 old targets from the distant past. This may not be a good idea if your
