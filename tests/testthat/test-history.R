@@ -38,7 +38,7 @@ test_with_dir("basic history", {
   expect_equal(dim(out), c(22L, 9L))
   cols <- c(
     "target",
-    "time",
+    "built",
     "hash",
     "exists",
     "latest",

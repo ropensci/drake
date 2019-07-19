@@ -85,15 +85,26 @@ drake_history <- function(
   )
   out <- weak_tibble(
     target = out$title,
-    time = out$time,
+    built = out$time,
     hash = out$hash,
     exists = out$exists,
     command = out$command,
     runtime = out$runtime,
     seed = out$seed
   )
-  out <- out[order(out$target, out$time), ]
+  out <- out[order(out$target, out$built), ]
   out$latest <- !duplicated(out$target, fromLast = TRUE)
+  cols <- c(
+    "target",
+    "built",
+    "latest",
+    "hash",
+    "exists",
+    "command",
+    "seed",
+    "runtime"
+  )
+  out <- out[, cols]
   if (analyze) {
     args <- lapply(out$command, history_find_args)
     args <- do.call(drake_bind_rows, args)
@@ -108,6 +119,7 @@ history_from_cache <- function(meta_hash, cache) {
     return(
       data.frame(
         message = meta_hash,
+        built = NA_character_,
         hash = NA_character_,
         exists = NA,
         command = NA_character_,
