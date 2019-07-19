@@ -387,7 +387,7 @@ Note: this feature is still experimental.
 In `drake` version 7.5.0 and above, `make(recover = TRUE)` can salvage
 old targets from the distant past. This may not be a good idea if your
 external dependencies have changed a lot over time (R version, package
-environment, etc) but it can be super handy.
+environment, etc) but it can be useful under the right circumstances.
 
 ``` r
 # Is the data really gone?
