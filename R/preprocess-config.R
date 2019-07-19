@@ -15,6 +15,7 @@
 #'   If you supply a [drake_config()] object to the `config`
 #'   argument of [make()], then `drake` will ignore all the other arguments
 #'   because it already has everything it needs in `config`.
+#' @inheritSection recoverable Recovery
 #' @export
 #' @return The master internal configuration list of a project.
 #' @seealso [make()], [drake_plan()], [vis_drake_graph()]
@@ -112,10 +113,10 @@
 #'
 #' @param log_progress Logical, whether to log the progress
 #'   of individual targets as they are being built. Progress logging
-#'   creates a lot of little files in the cache, and it may make builds
-#'   a tiny bit slower. So you may see gains in storage efficiency
-#'   and speed with
-#'   `make(..., log_progress = FALSE)`.
+#'   creates extra files in the cache (usually the `.drake/` folder)
+#'   and slows down `make()` a little.
+#'   If you need to reduce or limit the number of files in the cache,
+#'   call `make(log_progress = FALSE, recover = FALSE)`.
 #'
 #' @param cache drake cache as created by [new_cache()].
 #'   See also [drake_cache()].
@@ -398,6 +399,42 @@
 #'   how `drake` records history.
 #'   Must be `TRUE` for [drake_history()] to work later.
 #'
+#' @param recover Logical, whether to activate automated data recovery.
+#'   The default is `FALSE` because
+#'
+#'   1. Automated data recovery is still experimental.
+#'   2. It has reproducibility issues.
+#'   Targets recovered from the distant past may have been generated
+#'   with earlier versions of R and earlier package environments
+#'   that no longer exist.
+#'
+#'   How it works: if `recover` is `TRUE`,
+#'   `drake` tries to salvage old target values from the cache
+#'   instead of running commands from the plan.
+#'   A target is recoverable if
+#'
+#'   1. There is an old value somewhere in the cache that
+#'      shares the command, dependencies, etc.
+#'      of the target about to be built.
+#'   2. The old value was generated with `make(recoverable = TRUE)`.
+#'
+#'   If both conditions are met, `drake` will
+#'
+#'   1. Assign the most recently-generated admissible data to the target, and
+#'   2. skip the target's command.
+#'
+#'   Functions [recoverable()] and [r_recoverable()] show the most upstream
+#'   outdated targets that will be recovered in this way in the next
+#'   [make()] or [r_make()].
+#'
+#' @param recoverable Logical, whether to make target values recoverable
+#'   with `make(recover = TRUE)`.
+#'   This requires writing extra files to the cache,
+#'   and it prevents old metadata from being removed with garbage collection
+#'   (`clean(garbage_collection = TRUE)`, `gc()` in `storr`s).
+#'   If you need to limit the cache size or the number of files in the cache,
+#'   consider `make(recoverable = FALSE, progress = FALSE)`.
+#'
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {
@@ -464,7 +501,9 @@ drake_config <- function(
   memory_strategy = "speed",
   layout = NULL,
   lock_envir = TRUE,
-  history = TRUE
+  history = TRUE,
+  recover = FALSE,
+  recoverable = TRUE
 ) {
   log_msg(
     "begin drake_config()",
@@ -608,6 +647,8 @@ drake_config <- function(
   history <- initialize_history(history, cache_path)
   lazy_load <- parse_lazy_arg(lazy_load)
   caching <- match.arg(caching)
+  recover <- as.logical(recover)
+  recoverable <- as.logical(recoverable)
   ht_encode_path <- ht_new()
   ht_decode_path <- ht_new()
   ht_encode_namespaced <- ht_new()
@@ -656,7 +697,9 @@ drake_config <- function(
     hasty_build = hasty_build,
     lock_envir = lock_envir,
     force = force,
-    history = history
+    history = history,
+    recover = recover,
+    recoverable = recoverable
   )
   out <- enforce_compatible_config(out)
   config_checks(out)

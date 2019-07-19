@@ -22,7 +22,6 @@ store_outputs <- function(target, value, meta, config) {
       namespace = "change",
       use_cache = FALSE
     )
-    meta$trigger$value <- NULL
   }
   store_output_files(layout$deps_build$file_out, meta, config)
   if (length(file_out) || is.null(file_out)) {
@@ -81,18 +80,30 @@ store_meta <- function(target, meta, hash, config) {
     hash = hash,
     config = config
   )
+  meta_lite <- meta
+  meta_lite$trigger$value <- NULL
   meta_hash <- config$cache$set(
     key = target,
-    value = meta,
+    value = meta_lite,
     namespace = "meta",
     use_cache = FALSE
   )
-  log_history <- is_history(config$history) &&
-    !meta$imported &&
-    !is_encoded_path(target)
-  if (log_history) {
+  is_target <- !meta$imported && !is_encoded_path(target)
+  if (is_target && is_history(config$history)) {
     config$history$push(title = target, message = meta_hash)
   }
+  if (is_target && config$recoverable) {
+    store_recovery(target, meta, meta_hash, config)
+  }
+}
+
+store_recovery <- function(target, meta, meta_hash, config) {
+  key <- recovery_key(target = target, meta = meta, config = config)
+  config$cache$driver$set_hash(
+    key = key,
+    namespace = "recover",
+    hash = meta_hash
+  )
 }
 
 finalize_meta <- function(target, meta, hash, config) {
@@ -105,6 +116,7 @@ finalize_meta <- function(target, meta, hash, config) {
     target = target
   )
   meta$time_start <- NULL
+  meta$date <- microtime()
   if (!meta$imported && !is_encoded_path(target)) {
     console_time(target, meta, config)
   }

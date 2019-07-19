@@ -4,6 +4,7 @@
 \alias{r_make}
 \alias{r_drake_build}
 \alias{r_outdated}
+\alias{r_recoverable}
 \alias{r_missed}
 \alias{r_deps_target}
 \alias{r_drake_graph_info}
@@ -21,6 +22,8 @@ r_drake_build(target, character_only = FALSE, ..., source = NULL,
   r_fn = NULL, r_args = list())
 
 r_outdated(..., source = NULL, r_fn = NULL, r_args = list())
+
+r_recoverable(..., source = NULL, r_fn = NULL, r_args = list())
 
 r_missed(..., source = NULL, r_fn = NULL, r_args = list())
 
@@ -90,6 +93,37 @@ with the \code{config} argument from step 2.
 (e.g. your interactive R session).
 }
 }
+\section{Recovery}{
+
+\code{make(recover = TRUE, recoverable = TRUE)}
+powers automated data recovery.
+The default of \code{recover} is \code{FALSE} because
+\enumerate{
+\item Automated data recovery is still experimental.
+\item It has reproducibility issues.
+Targets recovered from the distant past may have been generated
+with earlier versions of R and earlier package environments
+that no longer exist.
+}
+
+How it works: if \code{recover} is \code{TRUE},
+\code{drake} tries to salvage old target values from the cache
+instead of running commands from the plan.
+A target is recoverable if
+\enumerate{
+\item There is an old value somewhere in the cache that
+shares the command, dependencies, etc.
+of the target about to be built.
+\item The old value was generated with \code{make(recoverable = TRUE)}.
+}
+
+If both conditions are met, \code{drake} will
+\enumerate{
+\item Assign the most recently-generated admissible data to the target, and
+\item skip the target's command.
+}
+}
+
 \examples{
 \dontrun{
 isolate_example("quarantine side effects", {

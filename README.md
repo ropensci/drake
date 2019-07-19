@@ -338,21 +338,22 @@ arguments you used in your function calls, and how to get the data back.
 ``` r
 history <- drake_history(analyze = TRUE)
 history
-#> # A tibble: 12 x 9
-#>    target  time    hash  exists command    runtime latest quiet output_file
-#>    <chr>   <chr>   <chr> <lgl>  <chr>        <dbl> <lgl>  <lgl> <chr>      
-#>  1 data    2019-0… e580… TRUE   raw_data… 0.002    FALSE  NA    <NA>       
-#>  2 data    2019-0… e580… TRUE   raw_data… 0        TRUE   NA    <NA>       
-#>  3 fit     2019-0… 62a1… TRUE   lm(Sepal… 0.003    FALSE  NA    <NA>       
-#>  4 fit     2019-0… 62a1… TRUE   lm(Sepal… 0.001000 TRUE   NA    <NA>       
-#>  5 hist    2019-0… 10bc… TRUE   create_p… 0.006    FALSE  NA    <NA>       
-#>  6 hist    2019-0… 5252… TRUE   create_p… 0.004    FALSE  NA    <NA>       
-#>  7 hist    2019-0… 00fa… TRUE   create_p… 0.00600  TRUE   NA    <NA>       
-#>  8 raw_da… 2019-0… 6317… TRUE   "readxl:… 0.01     FALSE  NA    <NA>       
-#>  9 raw_da… 2019-0… 6317… TRUE   "readxl:… 0.007    TRUE   NA    <NA>       
-#> 10 report  2019-0… 0064… TRUE   "rmarkdo… 0.647    FALSE  TRUE  report.html
-#> 11 report  2019-0… 0064… TRUE   "rmarkdo… 0.45     FALSE  TRUE  report.html
-#> 12 report  2019-0… 0064… TRUE   "rmarkdo… 0.456    TRUE   TRUE  report.html
+#> # A tibble: 12 x 10
+#>    target time  hash  exists command  runtime   seed latest quiet
+#>    <chr>  <chr> <chr> <lgl>  <chr>      <dbl>  <int> <lgl>  <lgl>
+#>  1 data   2019… e580… TRUE   raw_da… 0.001    1.29e9 FALSE  NA   
+#>  2 data   2019… e580… TRUE   raw_da… 0        1.29e9 TRUE   NA   
+#>  3 fit    2019… 62a1… TRUE   lm(Sep… 0.002    1.11e9 FALSE  NA   
+#>  4 fit    2019… 62a1… TRUE   lm(Sep… 0.001000 1.11e9 TRUE   NA   
+#>  5 hist   2019… 10bc… TRUE   create… 0.006    2.10e8 FALSE  NA   
+#>  6 hist   2019… 5252… TRUE   create… 0.004    2.10e8 FALSE  NA   
+#>  7 hist   2019… 00fa… TRUE   create… 0.007    2.10e8 TRUE   NA   
+#>  8 raw_d… 2019… 6317… TRUE   "readx… 0.009    1.20e9 FALSE  NA   
+#>  9 raw_d… 2019… 6317… TRUE   "readx… 0.00600  1.20e9 TRUE   NA   
+#> 10 report 2019… 3e2b… TRUE   "rmark… 0.481    1.30e9 FALSE  TRUE 
+#> 11 report 2019… 3e2b… TRUE   "rmark… 0.358    1.30e9 FALSE  TRUE 
+#> 12 report 2019… 3e2b… TRUE   "rmark… 0.356    1.30e9 TRUE   TRUE 
+#> # … with 1 more variable: output_file <chr>
 ```
 
 Remarks:
@@ -378,6 +379,69 @@ cache$get_value(hash)
 ```
 
 <img src="https://ropensci.github.io/drake/figures/hist1.png" alt="hist1" align="center" style = "border: none; float: center;" width = "600px">
+
+## Automated recovery and renaming
+
+Note: this feature is still experimental.
+
+In `drake` version 7.5.0 and above, `make(recover = TRUE)` can salvage
+old targets from the distant past. This may not be a good idea if your
+external dependencies have changed a lot over time (R version, package
+environment, etc) but it can be super handy.
+
+``` r
+# Is the data really gone?
+clean() # garbage_collection = FALSE
+
+# Nope!
+make(plan, recover = TRUE) # The report still builds since report.md is gone.
+#> recover raw_data
+#> recover data
+#> recover fit
+#> recover hist
+#> target report
+
+# When was the raw data *really* first built?
+diagnose(raw_data)$date
+#> [1] "2019-07-18 20:19:48.110163 -0400 GMT"
+```
+
+You can even rename your targets\! All you have to do is use the same  target seed as last time. Just be aware that this invalidates downstream
+targets.
+
+``` r
+# Get the old seed.
+old_seed <- diagnose(data)$seed
+
+# Now rename the data and supply the old seed.
+plan <- drake_plan(
+  raw_data = readxl::read_excel(file_in("raw_data.xlsx")),
+  
+  # Previously just named "data".
+  iris_data = target(
+    raw_data %>%
+      mutate(Species = forcats::fct_inorder(Species)),
+    seed = !!old_seed
+  ),
+
+  # `iris_data` will be recovered from `data`,
+  # but `hist` and `fit` have changed commands,
+  # so they will build from scratch.
+  hist = create_plot(iris_data),
+  fit = lm(Sepal.Width ~ Petal.Width + Species, iris_data),
+  report = rmarkdown::render(
+    knitr_in("report.Rmd"),
+    output_file = file_out("report.html"),
+    quiet = TRUE
+  )
+)
+
+make(plan, recover = TRUE)
+#> recover iris_data
+#> target fit
+#> target hist
+#> target report
+```
 
 ## Independent replication
 
@@ -470,6 +534,8 @@ all the available functions. Here are the most important ones.
     user-side functions.
   - `vis_drake_graph()`: show an interactive visual network
     representation of your workflow.
+  - `recoverable()`: Which targets can we salvage using `make(recover =
+    TRUE)` (experimental).
   - `outdated()`: see which targets will be built in the next `make()`.
   - `deps()`: check the dependencies of a command or function.
   - `failed()`: list the targets that failed to build in the last

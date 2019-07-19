@@ -219,7 +219,7 @@ change_trigger <- function(target, meta, config) {
     return(FALSE)
   }
   if (!config$cache$exists(key = target, namespace = "change")) {
-    return(FALSE) # nocov
+    return(TRUE) # nocov
   }
   old_value <- config$cache$get(key = target, namespace = "change")
   !identical(old_value, meta$trigger$value)
@@ -235,7 +235,9 @@ should_build_target <- function(target, meta, config) {
   }
   condition <- condition_trigger(target = target, meta = meta, config = config)
   if (is.logical(condition)) {
-    log_msg("trigger condition", target = target, config = config)
+    if (condition) {
+      log_msg("trigger condition", target = target, config = config)
+    }
     return(condition)
   }
   if (identical(meta$trigger$command, TRUE)) {
@@ -268,5 +270,11 @@ should_build_target <- function(target, meta, config) {
       return(TRUE)
     }
   }
+  log_msg("skip", target = target, config = config)
   FALSE
+}
+
+skip_command <- function(target, meta, config) {
+  !should_build_target(target, meta, config) ||
+    recover_target(target, meta, config)
 }

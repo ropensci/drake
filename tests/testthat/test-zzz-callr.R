@@ -22,6 +22,7 @@ test_with_dir("basic functions with default _drake.R file", {
     default_drake_source
   )
   expect_true(length(r_outdated(r_args = list(show = FALSE))) > 1)
+  expect_true(length(r_recoverable(r_args = list(show = FALSE))) == 0L)
   expect_equal(r_missed(r_args = list(show = FALSE)), character(0))
   deps <- r_deps_target(regression1_small, r_args = list(show = FALSE))
   expect_equal(sort(deps$name), sort(c("reg1", "small")))

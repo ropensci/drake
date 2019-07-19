@@ -1,3 +1,97 @@
+#' @title List the most upstream *recoverable* outdated targets.
+#' @description Only shows the most upstream updated targets.
+#'   Whether downstream targets are recoverable depends on
+#'   the eventual values of the upstream targets in the next [make()].
+#' @section Recovery:
+#'  `make(recover = TRUE, recoverable = TRUE)`
+#'   powers automated data recovery.
+#'   The default of `recover` is `FALSE` because
+#'
+#'   1. Automated data recovery is still experimental.
+#'   2. It has reproducibility issues.
+#'   Targets recovered from the distant past may have been generated
+#'   with earlier versions of R and earlier package environments
+#'   that no longer exist.
+#'
+#'   How it works: if `recover` is `TRUE`,
+#'   `drake` tries to salvage old target values from the cache
+#'   instead of running commands from the plan.
+#'   A target is recoverable if
+#'
+#'   1. There is an old value somewhere in the cache that
+#'      shares the command, dependencies, etc.
+#'      of the target about to be built.
+#'   2. The old value was generated with `make(recoverable = TRUE)`.
+#'
+#'   If both conditions are met, `drake` will
+#'
+#'   1. Assign the most recently-generated admissible data to the target, and
+#'   2. skip the target's command.
+#' @export
+#' @seealso [r_recoverable()], [r_outdated()], [drake_config()], [missed()],
+#'   [drake_plan()], [make()]
+#' @return Character vector of the names of recoverable targets.
+#' @inheritParams outdated
+#' @examples
+#' \dontrun{
+#' isolate_example("Quarantine side effects.", {
+#' if (suppressWarnings(require("knitr"))) {
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
+#' config <- drake_config(my_plan)
+#' make(my_plan)
+#' clean()
+#' outdated(config) # Which targets are outdated?
+#' recoverable(config) # Which of these are recoverable and upstream?
+#' # The report still builds because clean() removes report.md,
+#' # but make() recovers the rest.
+#' make(my_plan, recover = TRUE)
+#' # When was the *recovered* small data actually built (first stored)?
+#' # (Was I using a different version of R back then?)
+#' diagnose(small)$date
+#' # If you set the same seed as before, you can even
+#' # rename targets without having to build them again.
+#' # For an example, see
+#' # https://github.com/ropensci/drake/blob/master/README.md#automatic-recovery-and-renaming. # nolint
+#' }
+#' })
+#' }
+recoverable <-  function(
+  config,
+  make_imports = TRUE,
+  do_prework = TRUE
+) {
+  log_msg("begin recoverable()", config = config)
+  on.exit(log_msg("end recoverable()", config = config), add = TRUE)
+  assert_config_not_plan(config)
+  if (do_prework) {
+    do_prework(config = config, verbose_packages = config$verbose)
+  }
+  if (make_imports) {
+    process_imports(config = config)
+  }
+  out <- first_outdated(config)
+  index <- vapply(
+    out,
+    is_recoverable,
+    FUN.VALUE = logical(1),
+    config = config
+  )
+  out[index]
+}
+
+is_recoverable <- function(target, config) {
+  meta <- drake_meta_(target = target, config = config)
+  key <- recovery_key(target = target, meta = meta, config = config)
+  if (!config$cache$exists(key, namespace = "recover")) {
+    return(FALSE)
+  }
+  meta_hash <- config$cache$get_hash(key, namespace = "recover")
+  recovery_meta <- config$cache$driver$get_object(meta_hash)
+  value_hash <- recovery_meta$hash
+  config$cache$exists_object(meta_hash) &&
+    config$cache$exists_object(value_hash)
+}
+
 #' @title List the targets that are out of date.
 #' @description Outdated targets will be rebuilt in the next
 #'   [make()].

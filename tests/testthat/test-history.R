@@ -13,13 +13,25 @@ test_with_dir("basic history", {
   # Iterate.
   load_mtcars_example()
   cache <- storr::storr_environment()
-  make(my_plan, history = TRUE, cache = cache, session_info = FALSE)
+  make(
+    my_plan,
+    history = TRUE,
+    cache = cache,
+    session_info = FALSE,
+    recoverable = FALSE
+  )
   reg2 <- function(d) {
     d$x2 <- d$x ^ 3
     lm(y ~ x2, data = d)
   }
   Sys.sleep(0.01)
-  make(my_plan, history = TRUE, cache = cache, session_info = FALSE)
+  make(
+    my_plan,
+    history = TRUE,
+    cache = cache,
+    session_info = FALSE,
+    recoverable = FALSE
+  )
 
   # Get and inspect the history.
   out <- drake_history(cache = cache, analyze = TRUE)

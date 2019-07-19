@@ -17,8 +17,7 @@ backend_loop <- function(config) {
 
 loop_build <- function(target, config, downstream) {
   meta <- drake_meta_(target = target, config = config)
-  if (!should_build_target(target, meta, config)) {
-    log_msg("skip", target = target, config = config)
+  if (skip_command(target, meta, config)) {
     return()
   }
   announce_build(target, meta, config)

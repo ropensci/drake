@@ -28,10 +28,9 @@ cmq_local_master <- function(config) {
       next
     }
     meta <- drake_meta_(target = target, config = config)
-    if (should_build_target(target, meta, config)) {
+    if (!skip_command(target, meta, config)) {
       return()
     }
-    log_msg("skip", target = target, config = config)
     config$queue$pop0()
     cmq_conclude_target(target, config)
   }
@@ -91,8 +90,7 @@ cmq_next_target <- function(config) {
 
 cmq_send_target <- function(target, config) {
   meta <- drake_meta_(target = target, config = config)
-  if (!should_build_target(target, meta, config)) {
-    log_msg("skip", target = target, config = config)
+  if (skip_command(target, meta, config)) {
     cmq_conclude_target(target = target, config = config)
     config$workers$send_wait()
     return()
