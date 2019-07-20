@@ -71,7 +71,7 @@
 #' print(out)
 #' # Let's use the history to recover the oldest version
 #' # of our regression2_small target.
-#' oldest_reg2_smsall <- max(which(out$target == "regression2_small"))
+#' oldest_reg2_small <- max(which(out$target == "regression2_small"))
 #' hash_oldest_reg2_small <- out[oldest_reg2_small, ]$hash
 #' cache <- drake_cache()
 #' cache$get_value(hash_oldest_reg2_small)
