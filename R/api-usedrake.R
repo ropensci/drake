@@ -12,8 +12,8 @@
 #'     You can call it whatever you want.
 #'   - Other supporting scripts, such as `R/packages.R`,
 #'     `R/functions.R`, and `R/plan.R`, are not included.
-#'     You can find examples at
-#'     <https://github.com/wlandau/drake-examples/tree/master/main/R>
+#'   - You can find examples at
+#'     <https://github.com/wlandau/drake-examples>
 #'     and download examples with [`drake_example()`]
 #'     (e.g. `drake_example("main")`).
 #' @export

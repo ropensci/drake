@@ -599,7 +599,7 @@ The following resources document many known issues and challenges.
   - [Cautionary notes and edge
     cases](https://ropenscilabs.github.io/drake-manual/caution.html)
   - [Debugging and testing drake
-    projects](https://ropenscilabs.github.io/drake-manual/debug.html)
+    projects](https://ropenscilabs.github.io/drake-manual/debugging.html)
   - [Other known issues](https://github.com/ropensci/drake/issues)
     (please search both open and closed ones).
 

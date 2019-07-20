@@ -28,8 +28,8 @@ Remarks:
 You can call it whatever you want.
 \item Other supporting scripts, such as \code{R/packages.R},
 \code{R/functions.R}, and \code{R/plan.R}, are not included.
-You can find examples at
-\url{https://github.com/wlandau/drake-examples/tree/master/main/R}
+\item You can find examples at
+\url{https://github.com/wlandau/drake-examples}
 and download examples with \code{\link[=drake_example]{drake_example()}}
 (e.g. \code{drake_example("main")}).
 }

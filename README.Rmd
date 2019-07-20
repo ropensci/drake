@@ -438,7 +438,7 @@ The following resources document many known issues and challenges.
 
 - [Frequently-asked questions](https://github.com/ropensci/drake/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22frequently+asked+question%22+).
 - [Cautionary notes and edge cases](https://ropenscilabs.github.io/drake-manual/caution.html)
-- [Debugging and testing drake projects](https://ropenscilabs.github.io/drake-manual/debug.html)
+- [Debugging and testing drake projects](https://ropenscilabs.github.io/drake-manual/debugging.html)
 - [Other known issues](https://github.com/ropensci/drake/issues) (please search both open and closed ones).
 
 If you are still having trouble, please submit a [new issue](https://github.com/ropensci/drake/issues/new) with a bug report or feature request, along with a minimal reproducible example where appropriate.
