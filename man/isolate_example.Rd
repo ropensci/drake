@@ -4,12 +4,12 @@
 \alias{isolate_example}
 \title{Isolate the side effects of an example.}
 \usage{
-isolate_example(desc, code)
+isolate_example(desc, ...)
 }
 \arguments{
 \item{desc}{Character, description of the example.}
 
-\item{code}{Code to run.}
+\item{...}{Code to run.}
 }
 \value{
 Nothing.
