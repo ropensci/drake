@@ -24,10 +24,10 @@ r_packages:
   - downloader
   - forcats
   - ggplot2
+  - lintr
   - readxl
 
 r_github_packages:
-  - jimhester/lintr
   - r-lib/covr
   - r-lib/pkgdown
 
