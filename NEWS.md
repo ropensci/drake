@@ -2,6 +2,7 @@
 
 ## Bug fixes
 
+- Change \.drake_history$ to ^\.drake_history$ in .Rbuildignore appease CRAN checks. 
 - Repair help file examples.
 
 

@@ -162,6 +162,7 @@ PSOCK
 quasiquotation
 quickstart
 Quickstart
+Rbuildignore
 RDS
 README
 Recombinant
