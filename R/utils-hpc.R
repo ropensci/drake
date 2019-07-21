@@ -16,16 +16,16 @@
 #'   same name.
 #' @examples
 #' \dontrun{
-#' isolate_example("Quarantine side effects.", {
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
+#' plan <- drake_plan(x = rnorm(1e7), y = rnorm(1e7))
 #' # List the available template files.
 #' drake_hpc_template_files()
-#' # Write a SLURM template file from the SLURM example.
-#' drake_hpc_template_file("slurm_batchtools.tmpl") # Writes slurm_batchtools.tmpl.
+#' # Write a SLURM template file.
+#' out <- file.path(tempdir(), "slurm_batchtools.tmpl")
+#' drake_hpc_template_file("slurm_batchtools.tmpl", to = tempdir())
+#' cat(readLines(out), sep = "\n")
 #' # library(future.batchtools) # nolint
-#' # future::plan(batchtools_slurm, template = "slurm_batchtools.tmpl") # nolint
-#' # make(my_plan, parallelism = "future", jobs = 2) # nolint
-#' })
+#' # future::plan(batchtools_slurm, template = out) # nolint
+#' # make(plan, parallelism = "future", jobs = 2) # nolint
 #' }
 drake_hpc_template_file <- function(
   file = drake::drake_hpc_template_files(),
@@ -60,16 +60,16 @@ drake_hpc_template_file <- function(
 #'   you can write with [drake_hpc_template_file()].
 #' @examples
 #' \dontrun{
-#' isolate_example("Quarantine side effects.", {
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
+#' plan <- drake_plan(x = rnorm(1e7), y = rnorm(1e7))
 #' # List the available template files.
 #' drake_hpc_template_files()
-#' # Write a SLURM template file from the SLURM example.
-#' drake_hpc_template_file("slurm_batchtools.tmpl") # Writes slurm_batchtools.tmpl.
+#' # Write a SLURM template file.
+#' out <- file.path(tempdir(), "slurm_batchtools.tmpl")
+#' drake_hpc_template_file("slurm_batchtools.tmpl", to = tempdir())
+#' cat(readLines(out), sep = "\n")
 #' # library(future.batchtools) # nolint
-#' # future::plan(batchtools_slurm, template = "slurm_batchtools.tmpl") # nolint
-#' # make(my_plan, parallelism = "future", jobs = 2) # nolint
-#' })
+#' # future::plan(batchtools_slurm, template = out) # nolint
+#' # make(plan, parallelism = "future", jobs = 2) # nolint
 #' }
 drake_hpc_template_files <- function() {
   dir(

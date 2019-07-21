@@ -51,8 +51,6 @@ Intended for advanced custom memory management.
 
 \examples{
 \dontrun{
-isolate_example("Contain side effects", {
-if (suppressWarnings(require("knitr"))) {
 # `knitr_in()` is like `file_in()`
 # except that it analyzes active code chunks in your `knitr`
 # source file and detects non-file dependencies.
@@ -60,8 +58,10 @@ if (suppressWarnings(require("knitr"))) {
 # in your report.
 # The mtcars example (`drake_example("mtcars")`)
 # already has a demonstration
+
 load_mtcars_example()
 make(my_plan)
+
 # Now how did drake magically know that
 # `small`, `large`, and `coef_regression2_small` were
 # dependencies of the output file `report.md`?
@@ -70,8 +70,6 @@ make(my_plan)
 # to analyze the active code chunks. There, it spotted
 # where `small`, `large`, and `coef_regression2_small`
 # were read from the cache using calls to `loadd()` and `readd()`.
-}
-})
 }
 }
 \seealso{

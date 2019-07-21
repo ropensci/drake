@@ -71,18 +71,6 @@ drake_example <- function(
 #' @param quiet Logical, passed to `downloader::download()`
 #'   and thus `utils::download.file()`. Whether
 #'   to download quietly or print progress.
-#' @examples
-#' \dontrun{
-#' isolate_example("Quarantine side effects.", {
-#' if (requireNamespace("downloader")) {
-#' drake_examples() # List all the drake examples.
-#' # Sets up the example from load_mtcars_example()
-#' drake_example("mtcars")
-#' # Sets up the SLURM example.
-#' drake_example("slurm")
-#' }
-#' })
-#' }
 drake_examples <- function(quiet = TRUE) {
   assert_pkg("downloader")
   destfile <- tempfile()

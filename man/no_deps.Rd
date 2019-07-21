@@ -63,16 +63,16 @@ make(plan = drake_plan(y = sqrt(4) + ignore(x + 1))) # Builds y.
 z <- 1
 f <- function(x) {
   no_deps({
-    x <- y + 1
+    x <- z + 1
     x <- x + 2
   })
   x
 }
-make(plan = drake_plan(z = f(2)))
-readd(x)
+make(plan = drake_plan(y = f(2)))
+readd(y)
 z <- 2 # Changed dependency is not tracked.
-make(plan = drake_plan(z = f(2)))
-readd(x)
+make(plan = drake_plan(y = f(2)))
+readd(y)
 })
 }
 }

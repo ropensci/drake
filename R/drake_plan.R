@@ -90,8 +90,12 @@
 #'   Requires the `transform` field in
 #'   `target()`. See the examples for details.
 #' @examples
-#' isolate_example("Contain side effects", {
-#' # Create workflow plan data frames.
+#' \dontrun{
+#' isolate_example("contain side effects", {
+#' # For more examples, visit
+#' # https://ropenscilabs.github.io/drake-manual/plans.html.
+#'
+#' # Create drake plans:
 #' mtcars_plan <- drake_plan(
 #'   write.csv(mtcars[, c("mpg", "cyl")], file_out("mtcars.csv")),
 #'   value = read.csv(file_in("mtcars.csv"))
@@ -100,8 +104,10 @@
 #' make(mtcars_plan) # Makes `mtcars.csv` and then `value`
 #' head(readd(value))
 #' # You can use knitr inputs too. See the top command below.
+#'
 #' load_mtcars_example()
 #' head(my_plan)
+#'
 #' # The `knitr_in("report.Rmd")` tells `drake` to dive into the active
 #' # code chunks to find dependencies.
 #' # There, `drake` sees that `small`, `large`, and `coef_regression2_small`
@@ -182,6 +188,7 @@
 #' sms <- rlang::syms(letters) # To sub in character args, skip this.
 #' drake_plan(x = target(f(char), transform = map(char = !!sms)))
 #' })
+#' }
 drake_plan <- function(
   ...,
   list = character(0),

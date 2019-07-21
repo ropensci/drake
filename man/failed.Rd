@@ -36,18 +36,20 @@ for ordinary error messages printed to the console.
 }
 \examples{
 \dontrun{
-isolate_example("Quarantine side effects.", {
 if (suppressWarnings(require("knitr"))) {
-load_mtcars_example() # Get the code with drake_example("mtcars").
-make(my_plan) # Run the project, build the targets.
-failed() # Should show that no targets failed.
-# Build a workflow plan doomed to fail:
+# Build a plan doomed to fail:
 bad_plan <- drake_plan(x = function_doesnt_exist())
-try(make(bad_plan), silent = TRUE) # error
-failed() # "x"
-diagnose(x) # Retrieve the cached error log of x.
+cache <- storr::storr_environment() # optional
+try(
+  make(bad_plan, cache = cache, history = FALSE),
+  silent = TRUE
+) # error
+failed(cache = cache) # "x"
+e <- diagnose(x, cache = cache) # Retrieve the cached error log of x.
+names(e)
+e$error
+names(e$error)
 }
-})
 }
 }
 \seealso{

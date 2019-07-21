@@ -55,7 +55,7 @@
 #' @inheritParams drake_config
 #' @examples
 #' \dontrun{
-#' isolate_example({
+#' isolate_example("contain side-effects", {
 #' # First, let's iterate on a drake workflow.
 #' load_mtcars_example()
 #' make(my_plan, history = TRUE, verbose = 0L)
@@ -82,6 +82,7 @@
 #' # older versions of your targets may be gone.
 #' clean(large, garbage_collection = TRUE)
 #' drake_history()
+#' invisible()
 #' })
 #' }
 drake_history <- function(

@@ -32,7 +32,6 @@
 #'   of the imports.
 #' @examples
 #' \dontrun{
-#' isolate_example("contain this example's side effects", {
 #' # Suppose you have a workflow that uses the `digest()` function,
 #' # which computes the hash of an object.
 #'
@@ -44,9 +43,10 @@
 #'   g(x)
 #' }
 #' plan <- drake_plan(x = f(1))
+#' cache <- storr::storr_environment() # optional
 #'
 #' # Here are the reproducibly tracked objects in the workflow.
-#' config <- drake_config(plan)
+#' config <- drake_config(plan, cache = cache, history = FALSE)
 #' tracked(config)
 #'
 #' # But the digest() function has dependencies too.
@@ -58,7 +58,7 @@
 #' # a package's inner functions.
 #'
 #' expose_imports(digest)
-#' config <- drake_config(plan)
+#' config <- drake_config(plan, cache = cache, history = FALSE)
 #' new_objects <- tracked(config)
 #' head(new_objects, 10)
 #' length(new_objects)
@@ -66,8 +66,7 @@
 #' # Now when you call `make()`, `drake` will dive into `digest`
 #' # to import dependencies.
 #'
-#' cache <- storr::storr_environment() # just for examples
-#' make(plan, cache = cache)
+#' make(plan, cache = cache, history = FALSE)
 #' head(cached(cache = cache), 10)
 #' length(cached(cache = cache))
 #'
@@ -83,9 +82,8 @@
 #' g <- function(x) {
 #'   digest::digest(x) # Was previously just digest()
 #' }
-#' config <- drake_config(plan)
+#' config <- drake_config(plan, cache = cache, history = FALSE)
 #' tracked(config)
-#' })
 #' }
 expose_imports <- function(
   package,

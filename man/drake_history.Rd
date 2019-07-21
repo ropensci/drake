@@ -88,7 +88,7 @@ NB: in \code{process_data(filename = file_in("a", "b"))}
 
 \examples{
 \dontrun{
-isolate_example({
+isolate_example("contain side-effects", {
 # First, let's iterate on a drake workflow.
 load_mtcars_example()
 make(my_plan, history = TRUE, verbose = 0L)
@@ -115,6 +115,7 @@ drake_history()
 # older versions of your targets may be gone.
 clean(large, garbage_collection = TRUE)
 drake_history()
+invisible()
 })
 }
 }

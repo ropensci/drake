@@ -21,19 +21,6 @@ The \code{drake_examples()} function downloads the list of examples
 from \url{https://wlandau.github.io/drake-examples/examples.md},
 so you need an internet connection.
 }
-\examples{
-\dontrun{
-isolate_example("Quarantine side effects.", {
-if (requireNamespace("downloader")) {
-drake_examples() # List all the drake examples.
-# Sets up the example from load_mtcars_example()
-drake_example("mtcars")
-# Sets up the SLURM example.
-drake_example("slurm")
-}
-})
-}
-}
 \seealso{
 \code{\link[=drake_example]{drake_example()}}, \code{\link[=make]{make()}}
 }

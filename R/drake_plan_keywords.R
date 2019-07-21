@@ -72,43 +72,43 @@ target <- function(command = NULL, ...) {
 #' @export
 #' @examples
 #' \dontrun{
-#' isolate_example("Contain side effects", {
+#' isolate_example("contain side effects", {
 #' # The `file_out()` and `file_in()` functions
 #' # just takes in strings and returns them.
 #' file_out("summaries.txt")
 #' # Their main purpose is to orchestrate your custom files
 #' # in your workflow plan data frame.
-#' suppressWarnings(
-#'   plan <- drake_plan(
-#'     out = write.csv(mtcars, file_out("mtcars.csv")),
-#'     contents = read.csv(file_in("mtcars.csv"))
-#'   )
+#' plan <- drake_plan(
+#'   out = write.csv(mtcars, file_out("mtcars.csv")),
+#'   contents = read.csv(file_in("mtcars.csv"))
 #' )
 #' plan
 #' # drake knows "\"mtcars.csv\"" is the first target
 #' # and a dependency of `contents`. See for yourself:
+#'
 #' make(plan)
 #' file.exists("mtcars.csv")
+#'
 #' # You can also work with entire directories this way.
 #' # However, in `file_out("your_directory")`, the directory
 #' # becomes an entire unit. Thus, `file_in("your_directory")`
 #' # is more appropriate for subsequent steps than
 #' # `file_in("your_directory/file_inside.txt")`.
-#' suppressWarnings(
-#'   plan <- drake_plan(
-#'     out = {
-#'       dir.create(file_out("dir"))
-#'       write.csv(mtcars, "dir/mtcars.csv")
-#'     },
-#'     contents = read.csv(file.path(file_in("dir"), "mtcars.csv"))
-#'   )
+#' plan <- drake_plan(
+#'   out = {
+#'     dir.create(file_out("dir"))
+#'     write.csv(mtcars, "dir/mtcars.csv")
+#'   },
+#'   contents = read.csv(file.path(file_in("dir"), "mtcars.csv"))
 #' )
 #' plan
+#'
 #' make(plan)
 #' file.exists("dir/mtcars.csv")
+#'
 #' # See the connections that the file relationships create:
-#' # config <- drake_config(plan) # nolint
-#' # vis_drake_graph(config)      # nolint
+#' config <- drake_config(plan)
+#' vis_drake_graph(config)
 #' })
 #' }
 file_in <- function(...) {
@@ -126,42 +126,43 @@ file_in <- function(...) {
 #' @export
 #' @examples
 #' \dontrun{
-#' isolate_example("Contain side effects", {
+#' isolate_example("contain side effects", {
 #' # The `file_out()` and `file_in()` functions
 #' # just takes in strings and returns them.
 #' file_out("summaries.txt")
-#' # Their main purpose is to flag custom files for tracking.
-#' suppressWarnings(
-#'   plan <- drake_plan(
-#'     out = write.csv(mtcars, file_out("mtcars.csv")),
-#'     contents = read.csv(file_in("mtcars.csv"))
-#'   )
+#' # Their main purpose is to orchestrate your custom files
+#' # in your workflow plan data frame.
+#' plan <- drake_plan(
+#'   out = write.csv(mtcars, file_out("mtcars.csv")),
+#'   contents = read.csv(file_in("mtcars.csv"))
 #' )
 #' plan
 #' # drake knows "\"mtcars.csv\"" is the first target
 #' # and a dependency of `contents`. See for yourself:
+#'
 #' make(plan)
 #' file.exists("mtcars.csv")
+#'
 #' # You can also work with entire directories this way.
 #' # However, in `file_out("your_directory")`, the directory
 #' # becomes an entire unit. Thus, `file_in("your_directory")`
 #' # is more appropriate for subsequent steps than
 #' # `file_in("your_directory/file_inside.txt")`.
-#' suppressWarnings(
-#'   plan <- drake_plan(
-#'     out = {
-#'       dir.create(file_out("dir"))
-#'       write.csv(mtcars, "dir/mtcars.csv")
-#'     },
-#'     contents = read.csv(file.path(file_in("dir"), "mtcars.csv"))
-#'   )
+#' plan <- drake_plan(
+#'   out = {
+#'     dir.create(file_out("dir"))
+#'     write.csv(mtcars, "dir/mtcars.csv")
+#'   },
+#'   contents = read.csv(file.path(file_in("dir"), "mtcars.csv"))
 #' )
 #' plan
+#'
 #' make(plan)
-#' # See the connections that the file relationships create:
-#' # config <- drake_config(plan) # nolint
-#' # vis_drake_graph(config)      # nolint
 #' file.exists("dir/mtcars.csv")
+#'
+#' # See the connections that the file relationships create:
+#' config <- drake_config(plan)
+#' vis_drake_graph(config)
 #' })
 #' }
 file_out <- file_in
@@ -184,8 +185,6 @@ file_out <- file_in
 #'   source files supplied to a command in your workflow plan data frame.
 #' @examples
 #' \dontrun{
-#' isolate_example("Contain side effects", {
-#' if (suppressWarnings(require("knitr"))) {
 #' # `knitr_in()` is like `file_in()`
 #' # except that it analyzes active code chunks in your `knitr`
 #' # source file and detects non-file dependencies.
@@ -193,8 +192,10 @@ file_out <- file_in
 #' # in your report.
 #' # The mtcars example (`drake_example("mtcars")`)
 #' # already has a demonstration
+#'
 #' load_mtcars_example()
 #' make(my_plan)
+#'
 #' # Now how did drake magically know that
 #' # `small`, `large`, and `coef_regression2_small` were
 #' # dependencies of the output file `report.md`?
@@ -203,8 +204,6 @@ file_out <- file_in
 #' # to analyze the active code chunks. There, it spotted
 #' # where `small`, `large`, and `coef_regression2_small`
 #' # were read from the cache using calls to `loadd()` and `readd()`.
-#' }
-#' })
 #' }
 knitr_in <- file_in
 
@@ -291,16 +290,16 @@ ignore <- function(x = NULL) {
 #' z <- 1
 #' f <- function(x) {
 #'   no_deps({
-#'     x <- y + 1
+#'     x <- z + 1
 #'     x <- x + 2
 #'   })
 #'   x
 #' }
-#' make(plan = drake_plan(z = f(2)))
-#' readd(x)
+#' make(plan = drake_plan(y = f(2)))
+#' readd(y)
 #' z <- 2 # Changed dependency is not tracked.
-#' make(plan = drake_plan(z = f(2)))
-#' readd(x)
+#' make(plan = drake_plan(y = f(2)))
+#' readd(y)
 #' })
 #' }
 no_deps <- function(x = NULL) {

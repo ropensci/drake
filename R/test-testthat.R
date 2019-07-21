@@ -61,7 +61,7 @@ nobuild <- function(config) {
   testthat::expect_true(length(justbuilt(config)) < 1)
 }
 
-test_with_dir <- function(desc, ...) {
+test_with_dir <- function(desc, code) {
   assert_pkg("testthat")
   old <- Sys.getenv("drake_warn_subdir")
   Sys.setenv(drake_warn_subdir = "false")
@@ -79,7 +79,7 @@ test_with_dir <- function(desc, ...) {
     )
     with_options(new = opts, {
       set_test_backend()
-      testthat::test_that(desc = desc, ...)
+      testthat::test_that(desc = desc, code = code)
     })
   })
   invisible()
@@ -92,8 +92,8 @@ test_with_dir <- function(desc, ...) {
 #' @export
 #' @keywords internal
 #' @return Nothing.
-#' @param desc Character, description of the test.
-#' @param ... Code to test.
+#' @param desc Character, description of the example.
+#' @param code Code to run.
 isolate_example <- test_with_dir
 
 restore_options <- function(old) {

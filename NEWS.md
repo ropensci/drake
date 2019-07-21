@@ -1,3 +1,10 @@
+# Version 7.5.1
+
+## Bug fixes
+
+- Repair help file examples.
+
+
 # Version 7.5.0
 
 ## New features
