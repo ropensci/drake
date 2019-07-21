@@ -15,9 +15,6 @@ nothing
 \description{
 Deprecated on 2019-01-04
 }
-\examples{
-# deprecated
-}
 \seealso{
 \code{\link[=make]{make()}}, \code{\link[=drake_config]{drake_config()}}
 }

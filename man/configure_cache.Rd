@@ -59,7 +59,4 @@ so we no longer need this configuration step.
 \details{
 Deprecated on 2018-12-12.
 }
-\examples{
-# deprecated
-}
 \keyword{internal}

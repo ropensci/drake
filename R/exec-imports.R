@@ -12,8 +12,6 @@ process_imports <- function(config) {
 #' @keywords internal
 #' @param import Character, name of an import to process
 #' @param config [drake_config()] object
-#' @examples
-#' # Not a user-side function.
 process_import <- function(import, config) {
   meta <- drake_meta_(import, config)
   if (meta$isfile) {

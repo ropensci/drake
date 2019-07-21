@@ -3,8 +3,6 @@
 #' @keywords internal
 #' @description Deprecated on 2018-12-12.
 #' @return A character vector of names of available hash algorithms.
-#' @examples
-#' # deprecated
 available_hash_algos <- function() {
   .Deprecated(
     new = "",
@@ -21,8 +19,6 @@ available_hash_algos <- function() {
 #' @keywords internal
 #' @return An `igraph` object.
 #' @inheritParams drake_config
-#' @examples
-#' # See ?drake_config for examples.
 build_drake_graph <- function(
   plan,
   targets = plan$target,
@@ -93,9 +89,6 @@ build_drake_graph <- function(
 #'   version in the cache and other common values.
 #'   Not always a thread safe operation, so should only be `TRUE`
 #'   on the master process
-#'
-#' @examples
-#' # deprecated
 configure_cache <- function(
   cache = drake::get_cache(verbose = verbose),
   short_hash_algo = drake::default_short_hash_algo(cache = cache),
@@ -155,8 +148,6 @@ configure_cache <- function(
 #'   supplying a long hash algorithm,
 #'   `default_long_hash_algo(cache)` is the long
 #'   hash algorithm that drake picks for you.
-#' @examples
-#' # deprecated
 default_long_hash_algo <- function(cache = NULL) {
   .Deprecated(
     new = "",
@@ -189,8 +180,6 @@ default_long_hash_algo <- function(cache = NULL) {
 #'   supplying a short hash algorithm,
 #'   `default_short_hash_algo(cache)` is the short
 #'   hash algorithm that drake picks for you.
-#' @examples
-#' # deprecated
 default_short_hash_algo <- function(cache = NULL) {
   .Deprecated(
     new = "",
@@ -235,15 +224,6 @@ deprecate_force <- function(force) {
 #' @param reverse Logical, whether to compute reverse dependencies
 #'   (targets immediately downstream) instead of ordinary dependencies.
 #' @return Names of dependencies listed by type (object, input file, etc).
-#' @examples
-#' \dontrun{
-#' isolate_example("Quarantine side effects.", {
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' config <- drake_config(my_plan)
-#' deps_targets("regression1_small", config = config)
-#' deps_targets(c("small", "large"), config = config, reverse = TRUE)
-#' })
-#' }
 deps_targets <- function(
   targets,
   config,
@@ -267,8 +247,6 @@ deps_targets <- function(
 #' @keywords internal
 #' @inheritParams drake_hpc_template_file
 #' @param example Name of template file.
-#' @examples
-#' # See drake_hpc_template_file() for examples.
 drake_batchtools_tmpl_file <- function(
   example = drake::drake_hpc_template_files(),
   to = getwd(),
@@ -293,8 +271,6 @@ drake_batchtools_tmpl_file <- function(
 #' @keywords internal
 #' @return [sessionInfo()] of the last call to [make()]
 #' @inheritParams cached
-#' @examples
-#' # See ?drake_get_session_info for examples.
 drake_session <- function(
   path = getwd(),
   search = TRUE,
@@ -321,8 +297,6 @@ drake_session <- function(
 #' @description Deprecated on 2018-12-12
 #' @return A character vector naming a hash algorithm.
 #' @inheritParams cached
-#' @examples
-#' # deprecated
 long_hash <- function(
   cache = drake::get_cache(verbose = verbose),
   verbose = 1L
@@ -349,8 +323,6 @@ long_hash <- function(
 #' @return A `ggplot2` object, which you can modify with more layers,
 #'   show with `plot()`, or save as a file with `ggsave()`.
 #' @inheritParams render_drake_ggraph
-#' @examples
-#' # See render_drake_ggraph()
 render_static_drake_graph <- function(
   graph_info,
   main = graph_info$default_title
@@ -372,8 +344,6 @@ render_static_drake_graph <- function(
 #' @description Deprecated on 2018-12-12.
 #' @return A character vector naming a hash algorithm.
 #' @inheritParams cached
-#' @examples
-#' # deprecated
 short_hash <- function(
   cache = drake::get_cache(verbose = verbose),
   verbose = 1L
@@ -401,8 +371,6 @@ short_hash <- function(
 #' @return A `ggplot2` object, which you can modify with more layers,
 #'   show with `plot()`, or save as a file with `ggsave()`.
 #' @inheritParams drake_ggraph
-#' @examples
-#' # See drake_ggraph()
 static_drake_graph <- function(
   config,
   build_times = "build",
@@ -453,8 +421,6 @@ static_drake_graph <- function(
 #' is outdated or up to date.
 #' @details Deprecated on 2018-07-22.
 #' @return A character vector with the names of the old triggers.
-#' @examples
-#' # Deprecated. See the trigger() function instead (singular).
 triggers <- function() {
   .Deprecated(
     new = "",
@@ -543,14 +509,6 @@ deprecate_targets_only <- function(targets_only) {
 #' @param force Deprecated.
 #' @keywords internal
 #' @details Deprecated 2018-12-31.
-#' @examples
-#' \dontrun{
-#' # The code for this example is hosted at
-#' # https://github.com/wlandau/drake-examples/tree/master/main
-#' # You can download it with drake_example("main")
-#' # or watch a video tutorial about it at
-#' # https://ropenscilabs.github.io/drake-manual/.
-#' }
 load_main_example <- function(
   envir = parent.frame(),
   report_file = "report.Rmd",
@@ -595,14 +553,6 @@ load_main_example <- function(
 #' @return Nothing.
 #' @keywords internal
 #' @details Deprecated 2018-12-31.
-#' @examples
-#' \dontrun{
-#' # The code for this example is hosted at
-#' # https://github.com/wlandau/drake-examples/tree/master/main
-#' # You can download it with drake_example("main")
-#' # or watch a video tutorial about it at
-#' # https://ropenscilabs.github.io/drake-manual/.
-#' }
 clean_main_example <- function() {
   deprecate_force(force)
   .Deprecated(
@@ -637,8 +587,6 @@ default_verbose <- function() {
 #' @param x Character vector or object to be coerced to character.
 #' @param single Add single quotes if `TRUE`
 #'   and double quotes otherwise.
-#' @examples
-#' # deprecated
 drake_quotes <- function(x = NULL, single = FALSE) {
   .Deprecated(
     new = "",
@@ -665,8 +613,6 @@ drake_quotes <- function(x = NULL, single = FALSE) {
 #'   or trailing escaped quotes around
 #'   the elements.
 #' @param x Character vector.
-#' @examples
-#' # deprecated
 drake_unquote <- function(x = NULL) {
   .Deprecated(
     new = "",
@@ -682,8 +628,6 @@ drake_unquote <- function(x = NULL) {
 #' @keywords internal
 #' @return A character vector.
 #' @param ... Unquoted symbols to turn into character strings.
-#' @examples
-#' # deprecated
 drake_strings <- function(...) {
   .Deprecated(
     new = "",
@@ -770,8 +714,6 @@ find_project <- function(path = getwd()) {
 #' @return `args` for `system2(command, args)`
 #' @inheritParams drake_config
 #' @param jobs Number of jobs.
-#' @examples
-#' # deprecated
 default_Makefile_args <- function(jobs, verbose) {
   .Deprecated(
     new = "",
@@ -793,8 +735,6 @@ default_Makefile_args <- function(jobs, verbose) {
 #' @keywords internal
 #' @return A character scalar
 #' @export
-#' @examples
-#' # deprecated
 default_Makefile_command <- function() {
   .Deprecated(
     new = "",
@@ -815,8 +755,6 @@ default_Makefile_command <- function() {
 #' @param recipe_command Character scalar.
 #' @param target Character scalar.
 #' @param cache_path Character scalar.
-#' @examples
-#' # deprecated
 Makefile_recipe <- function( # nolint
   recipe_command = drake::default_recipe_command(),
   target = "your_target",
@@ -838,8 +776,6 @@ Makefile_recipe <- function( # nolint
 #' @keywords internal
 #' @description 2019-01-02
 #' @return A character scalar with the default recipe command.
-#' @examples
-#' # deprecated
 default_recipe_command <- function() {
   .Deprecated(
     new = "",
@@ -857,8 +793,6 @@ default_recipe_command <- function() {
 #' @keywords internal
 #' @description 2019-01-02
 #' @return The R recipe wildcard.
-#' @examples
-#' # deprecated
 r_recipe_wildcard <- function() {
   .Deprecated(
     new = "",
@@ -877,8 +811,6 @@ r_recipe_wildcard <- function() {
 #' @keywords internal
 #' @return character vector
 #' @param distributed_only Logical.
-#' @examples
-#' # deprecated
 parallelism_choices <- function(distributed_only = FALSE) {
   .Deprecated(
     new = "",
@@ -911,8 +843,6 @@ parallelism_choices <- function(distributed_only = FALSE) {
 #' @return logical
 #' @param path Character.
 #' @param overwrite Logical.
-#' @examples
-#' # deprecated
 shell_file <- function(
   path = "shell.sh",
   overwrite = FALSE
@@ -933,8 +863,6 @@ shell_file <- function(
 #' @export
 #' @keywords internal
 #' @return character
-#' @examples
-#' # deprecated
 default_parallelism <- function() {
   .Deprecated(
     new = "",
@@ -953,8 +881,6 @@ default_parallelism <- function() {
 #' @seealso [make()], [drake_config()]
 #' @return nothing
 #' @param config A configuration list returned by [drake_config()].
-#' @examples
-#' # deprecated
 make_imports <- function(config) {
   .Deprecated(
     new = "make",
@@ -975,8 +901,6 @@ make_imports <- function(config) {
 #' @seealso [make()], [drake_config()]
 #' @return nothing
 #' @param config A configuration list returned by [drake_config()].
-#' @examples
-#' # deprecated
 make_targets <- function(config) {
   .Deprecated(
     new = "make",
@@ -997,8 +921,6 @@ make_targets <- function(config) {
 #' @seealso [make()], [drake_config()]
 #' @return nothing
 #' @param config A configuration list returned by [drake_config()].
-#' @examples
-#' # deprecated
 make_with_config <- function(config) {
   .Deprecated(
     new = "make",
@@ -1018,8 +940,6 @@ make_with_config <- function(config) {
 #' @export
 #' @keywords internal
 #' @inheritParams cached
-#' @examples
-#' # deprecated
 read_drake_config <- function(
   path = getwd(),
   search = TRUE,
@@ -1049,8 +969,6 @@ read_drake_config <- function(
 #' @export
 #' @keywords internal
 #' @inheritParams cached
-#' @examples
-#' # deprecated
 read_drake_graph <- function(
   path = getwd(),
   search = TRUE,
@@ -1078,8 +996,6 @@ read_drake_graph <- function(
 #' @export
 #' @keywords internal
 #' @inheritParams cached
-#' @examples
-#' # deprecated
 read_drake_plan <- function(
   path = getwd(),
   search = TRUE,
@@ -1153,8 +1069,6 @@ imported <- function(
 #' @param graph An igraph object.
 #' @param to Character vector of vertices.
 #' @param jobs Number of jobs for parallelism.
-#' @examples
-#' # deprecated
 prune_drake_graph <- function(
   graph, to = igraph::V(graph)$name, jobs = 1
 ) {
@@ -1470,8 +1384,6 @@ target_namespaces <- function(
 #'   to make the datasets.
 #' @param sep character Scalar, delimiter for creating
 #'   the names of new targets.
-#' @examples
-#' # Deprecated
 plan_analyses <- function(plan, datasets, sep = "_") {
   .Deprecated(
     new = "",
@@ -1513,8 +1425,6 @@ plan_analyses <- function(plan, datasets, sep = "_") {
 #'   for more.
 #' @param sep Character scalar, delimiter for creating the
 #'   new target names.
-#' @examples
-#' # Deprecated
 plan_summaries <- function(
   plan,
   analyses,
@@ -1762,8 +1672,6 @@ this_cache <- function(
 #'   output will include the hashes of both targets and imports.
 #' @keywords internal
 #' @return There is no return value, but a log file is generated.
-#' @examples
-#' # Deprecated
 drake_cache_log_file <- function(
   file = "drake_cache.log",
   path = getwd(),
@@ -1849,91 +1757,6 @@ drake_cache_log_file <- function(
 #'   of the new targets generated. For example, in
 #'   `evaluate_plan(drake_plan(x = sqrt(y__)), list(y__ = 1:2), sep = ".")`,
 #'   the names of the new targets are `x.1` and `x.2`.
-#'
-#' @examples
-#' \dontrun{
-#' suppressWarnings({
-#' # Create the part of the workflow plan for the datasets.
-#' datasets <- drake_plan(
-#'   small = simulate(5),
-#'   large = simulate(50)
-#' )
-#' # Create a template workflow plan for the analyses.
-#' methods <- drake_plan(
-#'   regression1 = reg1(dataset__),
-#'   regression2 = reg2(dataset__)
-#' )
-#' # Evaluate the wildcards in the template
-#' # to produce the actual part of the workflow plan
-#' # that encodes the analyses of the datasets.
-#' # Create one analysis for each combination of dataset and method.
-#' evaluate_plan(
-#'   methods,
-#'   wildcard = "dataset__",
-#'   values = datasets$target
-#' )
-#' # Only choose some combinations of dataset and analysis method.
-#' ans <- evaluate_plan(
-#'   methods,
-#'   wildcard = "dataset__",
-#'   values = datasets$target,
-#'   expand = FALSE
-#' )
-#' ans
-#' # For the complete workflow plan, row bind the pieces together.
-#' my_plan <- rbind(datasets, ans)
-#' my_plan
-#' # Wildcards for evaluate_plan() do not need the double-underscore suffix.
-#' # Any valid symbol will do.
-#' plan <- drake_plan(
-#'   numbers = sample.int(n = `{Number}`, size = ..size)
-#' )
-#' evaluate_plan(
-#'   plan,
-#'   rules = list(
-#'     "`{Number}`" = c(10, 13),
-#'     ..size = c(3, 4)
-#'   )
-#' )
-#' # Workflow plans can have multiple wildcards.
-#' # Each combination of wildcard values will be used
-#' # Except when expand is FALSE.
-#' x <- drake_plan(draws = sample.int(n = N, size = Size))
-#' evaluate_plan(x, rules = list(N = 10:13, Size = 1:2))
-#' # You can use wildcards on columns other than "command"
-#' evaluate_plan(
-#'   drake_plan(
-#'     x = target("1 + 1", cpu = "any"),
-#'     y = target("sqrt(4)", cpu = "always"),
-#'     z = target("sqrt(16)", cpu = "any")
-#'   ),
-#'   rules = list(always = 1:2),
-#'   columns = c("command", "cpu")
-#' )
-#' # With the `trace` argument,
-#' # you can generate columns that show how the wildcards
-#' # were evaluated.
-#' plan <- drake_plan(x = sample.int(n__), y = sqrt(n__))
-#' plan <- evaluate_plan(plan, wildcard = "n__", values = 1:2, trace = TRUE)
-#' print(plan)
-#' # With the `trace` argument,
-#' # you can generate columns that show how the wildcards
-#' # were evaluated. Then you can visualize the wildcard groups
-#' # as clusters.
-#' plan <- drake_plan(x = sqrt(n__), y = sample.int(n__))
-#' plan <- evaluate_plan(plan, wildcard = "n__", values = 1:2, trace = TRUE)
-#' print(plan)
-#' cache <- storr::storr_environment()
-#' config <- drake_config(plan, cache = cache)
-#' if (requireNamespace("visNetwork", quietly = TRUE)) {
-#' vis_drake_graph(config, group = "n__", clusters = "1")
-#' vis_drake_graph(config, group = "n__", clusters = c("1", "2"))
-#' make(plan, targets = c("x_1", "y_2"), cache = cache)
-#' # Optionally cluster on columns supplied by `drake_graph_info()$nodes`.
-#' vis_drake_graph(config, group = "status", clusters = "up to date")
-#' }
-#' })
-#' }
 evaluate_plan <- function(
   plan,
   rules = NULL,
@@ -2119,22 +1942,6 @@ check_wildcard_rules <- function(rules) {
 #'   target names and the values to append to create the new
 #'   target names. Only relevant when `rename` is `TRUE`.
 #' @param sanitize Logical, whether to sanitize the plan.
-#' @examples
-#' \dontrun{
-#' suppressWarnings({
-#' # Create the part of the workflow plan for the datasets.
-#' datasets <- drake_plan(
-#'   small = simulate(5),
-#'   large = simulate(50)
-#' )
-#' # Create replicates. If you want repeat targets,
-#' # this is convenient.
-#' expand_plan(datasets, values = c("rep1", "rep2", "rep3"))
-#' # Choose whether to rename the targets based on the values.
-#' expand_plan(datasets, values = 1:3, rename = TRUE)
-#' expand_plan(datasets, values = 1:3, rename = FALSE)
-#' })
-#' }
 expand_plan <- function(
   plan, values = NULL, rename = TRUE, sep = "_", sanitize = TRUE
 ) {
@@ -2197,37 +2004,6 @@ expand_plan <- function(
 #'   to the output workflow plan data frame. The added columns
 #'   help "trace back" the original settings that went into building
 #'   each target. Similar to the `trace` argument of [drake_plan()].
-#' @examples
-#' \dontrun{
-#' suppressWarnings({
-#' # For the full tutorial, visit
-#' # https://ropenscilabs.github.io/drake-manual/plans.html#map_plan.
-#' my_model_fit <- function(x1, x2, data) {
-#'   lm(as.formula(paste("mpg ~", x1, "+", x1)), data = data)
-#' }
-#' covariates <- setdiff(colnames(mtcars), "mpg")
-#' args <- t(combn(covariates, 2))
-#' colnames(args) <- c("x1", "x2")
-#' # Use tibble::as_tibble(args) for better printing # nolint
-#' # Below, stringsAsFactors = FALSE is very important! # nolint
-#' args <- as.data.frame(args, stringsAsFactors = FALSE)
-#' args$data <- "mtcars"
-#' args$data <- rlang::syms(args$data)
-#' args$id <- paste0("fit_", args$x1, "_", args$x2)
-#' # print(args) # Requires `args` to be a tibble # nolint
-#' plan <- map_plan(args, my_model_fit)
-#' plan
-#' # Consider `trace = TRUE` to include the columns in `args`
-#' # in your plan.
-#' plan <- map_plan(args, my_model_fit, trace = TRUE)
-#' # print(plan) # If you have tibble installed # nolint
-#' # And of course, you can execute the plan and
-#' # inspect your results.
-#' cache <- storr::storr_environment()
-#' make(plan, verbose = FALSE, cache = cache)
-#' readd(fit_cyl_disp, cache = cache)
-#' })
-#' }
 map_plan <- function(
   args,
   fun,
@@ -2294,37 +2070,6 @@ map_plan <- function(
 #'   original rows in the `plan` argument.
 #'   If `FALSE`, the output will only include the new
 #'   targets and commands.
-#' @examples
-#' \dontrun{
-#' suppressWarnings({
-#' # Workflow plan for datasets:
-#' datasets <- drake_plan(
-#'   small = simulate(5),
-#'   large = simulate(50)
-#' )
-#' # Create a new target that brings the datasets together.
-#' gather_plan(datasets, target = "my_datasets", append = FALSE)
-#' # This time, the new target just appends the rows of 'small' and 'large'
-#' # into a single matrix or data frame.
-#' gathered <- gather_plan(
-#'   datasets,
-#'   target = "aggregated_data",
-#'   gather = "rbind",
-#'   append = FALSE
-#' )
-#' gathered
-#' # For the complete workflow plan, row bind the pieces together.
-#' bind_plans(datasets, gathered)
-#' # Alternatively, you can set `append = TRUE` to incorporate
-#' # the new targets automatically.
-#' gather_plan(
-#'   datasets,
-#'   target = "aggregated_data",
-#'   gather = "rbind",
-#'   append = TRUE
-#' )
-#' })
-#' }
 gather_plan <- function(
   plan = NULL,
   target = "target",
@@ -2380,35 +2125,6 @@ gather_plan <- function(
 #'   in the output. See the examples for a demonstration.
 #' @param sep Character scalar, delimiter for creating the names
 #'   of new targets.
-#' @examples
-#' \dontrun{
-#' suppressWarnings({
-#' plan <- drake_plan(
-#'   data = get_data(),
-#'   informal_look = inspect_data(data, mu = mu__),
-#'   bayes_model = bayesian_model_fit(data, prior_mu = mu__)
-#' )
-#' plan <- evaluate_plan(plan, rules = list(mu__ = 1:2), trace = TRUE)
-#' plan
-#' gather_by(plan, mu___from, gather = "rbind")
-#' gather_by(plan, mu___from, append = TRUE)
-#' gather_by(plan, mu___from, append = FALSE)
-#' gather_by(plan, mu__, mu___from, prefix = "x")
-#' gather_by(plan) # Gather everything and append a row.
-#' # You can filter out the informal_look_* targets beforehand
-#' # if you only want the bayes_model_* ones to be gathered.
-#' # The advantage here is that if you also need `append = TRUE`,
-#' # only the bayes_model_* targets will be gathered, but
-#' # the informal_look_* targets will still be included
-#' # in the output.
-#' gather_by(
-#'   plan,
-#'   mu___from,
-#'   append = TRUE,
-#'   filter = mu___from == "bayes_model"
-#' )
-#' })
-#' }
 gather_by <- function(
   plan,
   ...,
@@ -2485,37 +2201,6 @@ gather_by <- function(
 #'   If `FALSE`, the output will only include the new
 #'   targets and commands.
 #' @param sep Character scalar, delimiter for creating new target names.
-#' @examples
-#' \dontrun{
-#' suppressWarnings({
-#' # Workflow plan for datasets:
-#' x_plan <- evaluate_plan(
-#'   drake_plan(x = VALUE),
-#'   wildcard = "VALUE",
-#'   values = 1:8
-#' )
-#' x_plan
-#' # Create a new target from the sum of the others.
-#' reduce_plan(x_plan, target = "x_sum", pairwise = FALSE, append = FALSE)
-#' # Optionally include the original rows with `append = TRUE`.
-#' reduce_plan(x_plan, target = "x_sum", pairwise = FALSE, append = TRUE)
-#' # For memory efficiency and parallel computing,
-#' # reduce pairwise:
-#' reduce_plan(x_plan, target = "x_sum", pairwise = TRUE, append = FALSE)
-#' # Optionally define your own function and use it as the
-#' # binary operator in the reduction.
-#' x_plan <- evaluate_plan(
-#'   drake_plan(x = VALUE),
-#'   wildcard = "VALUE",
-#'   values = 1:9
-#' )
-#' x_plan
-#' reduce_plan(
-#'   x_plan, target = "x_sum", pairwise = TRUE,
-#'   begin = "fun(", op = ", ", end = ")"
-#' )
-#' })
-#' }
 reduce_plan <- function(
   plan = NULL,
   target = "target",
@@ -2589,37 +2274,6 @@ reduce_plan <- function(
 #'   in the output. See the examples for a demonstration.
 #' @param sep Character scalar, delimiter for creating the names
 #'   of new targets.
-#' @examples
-#' \dontrun{
-#' suppressWarnings({
-#' plan <- drake_plan(
-#'   data = get_data(),
-#'   informal_look = inspect_data(data, mu = mu__),
-#'   bayes_model = bayesian_model_fit(data, prior_mu = mu__)
-#' )
-#' plan <- evaluate_plan(plan, rules = list(mu__ = 1:2), trace = TRUE)
-#' plan
-#' reduce_by(plan, mu___from, begin = "list(", end = ")", op = ", ")
-#' reduce_by(plan, mu__)
-#' reduce_by(plan, mu__, append = TRUE)
-#' reduce_by(plan, mu__, append = FALSE)
-#' reduce_by(plan) # Reduce all the targets.
-#' reduce_by(plan, append = FALSE)
-#' reduce_by(plan, pairwise = FALSE)
-#' # You can filter out the informal_look_* targets beforehand
-#' # if you only want the bayes_model_* ones to be reduced.
-#' # The advantage here is that if you also need `append = TRUE`,
-#' # only the bayes_model_* targets will be reduced, but
-#' # the informal_look_* targets will still be included
-#' # in the output.
-#' reduce_by(
-#'   plan,
-#'   mu___from,
-#'   append = TRUE,
-#'   filter = mu___from == "bayes_model"
-#' )
-#' })
-#' }
 reduce_by <- function(
   plan,
   ...,
@@ -2719,22 +2373,6 @@ reduction_pairs <- function(x, pairs = NULL, base_name = "reduced_") {
 #'   - `get_cache(path = "/home/you/my_project/.drake/keys", search = TRUE)`
 #' @param force Deprecated.
 #' @param fetch_cache Deprecated.
-#' @examples
-#' \dontrun{
-#' isolate_example("Quarantine side effects.", {
-#' if (suppressWarnings(require("knitr"))) {
-#' clean(destroy = TRUE)
-#' # No cache is available.
-#' get_cache() # NULL
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' make(my_plan) # Run the project, build the targets.
-#' x <- get_cache() # Now, there is a cache.
-#' y <- storr::storr_rds(".drake") # Equivalent.
-#' # List the objects readable from the cache with readd().
-#' x$list()
-#' }
-#' })
-#' }
 get_cache <- function(
   path = getwd(),
   search = TRUE,

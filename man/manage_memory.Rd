@@ -23,7 +23,4 @@ Nothing.
 Load/unload a target's dependencies.
 Not a user-side function.
 }
-\examples{
-# Users should use make().
-}
 \keyword{internal}

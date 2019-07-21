@@ -35,6 +35,7 @@
 #' drake_slice(x, slices = 3, margin = 2, index = 1)
 #' # In drake, you can split a large dataset over multiple targets.
 #' \dontrun{
+#' isolate_example("contain side effects", {
 #' plan <- drake_plan(
 #'   large_data = iris,
 #'   data_split = target(
@@ -47,6 +48,7 @@
 #' make(plan, cache = cache, session_info = FALSE, verbose = FALSE)
 #' readd(data_split_1L, cache = cache)
 #' readd(data_split_2L, cache = cache)
+#' })
 #' }
 drake_slice <- function(data, slices, index, margin = 1L, drop = FALSE) {
   check_drake_slice_args(margin, slices, index)

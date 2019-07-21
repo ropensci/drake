@@ -25,7 +25,4 @@ Use \code{\link[=render_drake_ggraph]{render_drake_ggraph()}} instead.
 \details{
 Deprecated on 2018-07-25.
 }
-\examples{
-# See render_drake_ggraph()
-}
 \keyword{internal}

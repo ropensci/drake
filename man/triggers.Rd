@@ -17,7 +17,4 @@ is outdated or up to date.
 \details{
 Deprecated on 2018-07-22.
 }
-\examples{
-# Deprecated. See the trigger() function instead (singular).
-}
 \keyword{internal}

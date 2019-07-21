@@ -22,7 +22,4 @@ Deprecated. drake now only uses one hash algorithm per cache.
 \details{
 Deprecated on 2018-12-12
 }
-\examples{
-# deprecated
-}
 \keyword{internal}

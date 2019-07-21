@@ -12,7 +12,4 @@ The R recipe wildcard.
 \description{
 2019-01-02
 }
-\examples{
-# deprecated
-}
 \keyword{internal}

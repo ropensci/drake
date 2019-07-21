@@ -14,7 +14,4 @@ process_import(import, config)
 \description{
 only used inside process_imports(). Not a user-side function.
 }
-\examples{
-# Not a user-side function.
-}
 \keyword{internal}

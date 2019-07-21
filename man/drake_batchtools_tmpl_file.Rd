@@ -21,7 +21,4 @@ Deprecated. Use \code{\link[=drake_hpc_template_file]{drake_hpc_template_file()}
 \details{
 Deprecated on 2018-06-27.
 }
-\examples{
-# See drake_hpc_template_file() for examples.
-}
 \keyword{internal}

@@ -20,7 +20,4 @@ A character scalar
 \description{
 2019-01-03
 }
-\examples{
-# deprecated
-}
 \keyword{internal}

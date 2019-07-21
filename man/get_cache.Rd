@@ -58,21 +58,4 @@ Use \code{\link[=drake_cache]{drake_cache()}} instead.
 \details{
 Deprecated on 2019-05-25.
 }
-\examples{
-\dontrun{
-isolate_example("Quarantine side effects.", {
-if (suppressWarnings(require("knitr"))) {
-clean(destroy = TRUE)
-# No cache is available.
-get_cache() # NULL
-load_mtcars_example() # Get the code with drake_example("mtcars").
-make(my_plan) # Run the project, build the targets.
-x <- get_cache() # Now, there is a cache.
-y <- storr::storr_rds(".drake") # Equivalent.
-# List the objects readable from the cache with readd().
-x$list()
-}
-})
-}
-}
 \keyword{internal}

@@ -26,25 +26,25 @@ inside literal double quotes to avoid confusion between
 files and generic R objects.
 }
 \examples{
-  # Wraps the string in single quotes.
-  file_store("my_file.rds") # "'my_file.rds'"
-  \dontrun{
-  isolate_example("contain side effects", {
-  if (suppressWarnings(require("knitr"))) {
-  load_mtcars_example() # Get the code with drake_example("mtcars").
-  make(my_plan) # Run the workflow to build the targets
-  list.files() # Should include input "report.Rmd" and output "report.md".
-  head(readd(small)) # You can use symbols for ordinary objects.
-  # But if you want to read cached info on files, use `file_store()`.
-  readd(file_store("report.md"), character_only = TRUE) # File fingerprint.
-  deps_code(file_store("report.Rmd"))
-  config <- drake_config(my_plan)
-  deps_profile(
-    file_store("report.Rmd"),
-    config = config,
-    character_only = TRUE
-  )
-  }
-  })
-  }
+# Wraps the string in single quotes.
+file_store("my_file.rds") # "'my_file.rds'"
+\dontrun{
+isolate_example("contain side effects", {
+if (suppressWarnings(require("knitr"))) {
+load_mtcars_example() # Get the code with drake_example("mtcars").
+make(my_plan) # Run the workflow to build the targets
+list.files() # Should include input "report.Rmd" and output "report.md".
+head(readd(small)) # You can use symbols for ordinary objects.
+# But if you want to read cached info on files, use `file_store()`.
+readd(file_store("report.md"), character_only = TRUE) # File fingerprint.
+deps_code(file_store("report.Rmd"))
+config <- drake_config(my_plan)
+deps_profile(
+  file_store("report.Rmd"),
+  config = config,
+  character_only = TRUE
+)
+}
+})
+}
 }

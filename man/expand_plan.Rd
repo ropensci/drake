@@ -36,23 +36,6 @@ Duplicates the rows of a workflow plan data frame.
 Prefixes are appended to the new target names
 so targets still have unique names.
 }
-\examples{
-\dontrun{
-suppressWarnings({
-# Create the part of the workflow plan for the datasets.
-datasets <- drake_plan(
-  small = simulate(5),
-  large = simulate(50)
-)
-# Create replicates. If you want repeat targets,
-# this is convenient.
-expand_plan(datasets, values = c("rep1", "rep2", "rep3"))
-# Choose whether to rename the targets based on the values.
-expand_plan(datasets, values = 1:3, rename = TRUE)
-expand_plan(datasets, values = 1:3, rename = FALSE)
-})
-}
-}
 \seealso{
 \code{\link[=drake_plan]{drake_plan()}}
 }

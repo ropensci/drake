@@ -36,6 +36,7 @@ for ordinary error messages printed to the console.
 }
 \examples{
 \dontrun{
+isolate_example("contain side effects", {
 if (suppressWarnings(require("knitr"))) {
 # Build a plan doomed to fail:
 bad_plan <- drake_plan(x = function_doesnt_exist())
@@ -50,6 +51,7 @@ names(e)
 e$error
 names(e$error)
 }
+})
 }
 }
 \seealso{

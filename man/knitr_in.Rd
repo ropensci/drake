@@ -51,6 +51,7 @@ Intended for advanced custom memory management.
 
 \examples{
 \dontrun{
+isolate_example("contain side effects", {
 # `knitr_in()` is like `file_in()`
 # except that it analyzes active code chunks in your `knitr`
 # source file and detects non-file dependencies.
@@ -70,6 +71,7 @@ make(my_plan)
 # to analyze the active code chunks. There, it spotted
 # where `small`, `large`, and `coef_regression2_small`
 # were read from the cache using calls to `loadd()` and `readd()`.
+})
 }
 }
 \seealso{

@@ -21,9 +21,13 @@ Show the command that produced a target
 or indicate that the object or file was imported.
 }
 \examples{
+\dontrun{
+isolate_example("contain side effects", {
 plan <- drake_plan(x = sample.int(15))
 cache <- storr::storr_environment() # custom in-memory cache
 make(plan, cache = cache)
 config <- drake_config(plan, cache = cache)
 show_source(x, config)
+})
+}
 }

@@ -45,9 +45,6 @@ Calling this function to create a log file and later calling
 \code{make()} with the \code{cache_log_file} argument to create the cache log. This
 way ensures that the log is always up to date with \code{make()} results.
 }
-\examples{
-# Deprecated
-}
 \seealso{
 \code{\link[=drake_cache_log]{drake_cache_log()}}, \code{\link[=make]{make()}}, \code{\link[=get_cache]{get_cache()}}
 }

@@ -37,8 +37,6 @@ assign_to_envir <- function(target, value, config) {
 #' @param downstream Optional, character vector of any targets
 #'   assumed to be downstream.
 #' @param jobs Number of jobs for local parallel computing
-#' @examples
-#' # Users should use make().
 manage_memory <- function(target, config, downstream = NULL, jobs = 1) {
   stopifnot(length(target) == 1L)
   if (identical(config$garbage_collection, TRUE)) {

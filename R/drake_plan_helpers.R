@@ -19,7 +19,6 @@
 #' )
 #' your_plan <- bind_plans(download_plan, analysis_plan)
 #' your_plan
-#' # make(your_plan) # nolint
 bind_plans <- function(...) {
   sanitize_plan(drake_bind_rows(...))
 }

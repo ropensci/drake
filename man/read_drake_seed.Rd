@@ -35,6 +35,8 @@ this one central seed. That way, reproducibility is protected,
 even under randomness.
 }
 \examples{
+\dontrun{
+isolate_example("contain side effects", {
 cache <- storr::storr_environment() # Just for the examples.
 my_plan <- drake_plan(
   target1 = sqrt(1234),
@@ -67,4 +69,6 @@ cache <- storr::storr_environment() # Just for the examples.
 make(my_plan, cache = cache, seed = 1234)
 read_drake_seed(cache = cache)
 readd(target2, cache = cache)
+})
+}
 }

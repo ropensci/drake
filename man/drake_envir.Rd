@@ -40,6 +40,8 @@ Intended for advanced custom memory management.
 }
 
 \examples{
+\dontrun{
+isolate_example("contain side effects", {
 plan <- drake_plan(
   large_data_1 = sample.int(1e4),
   large_data_2 = sample.int(1e4),
@@ -53,6 +55,8 @@ plan <- drake_plan(
   }
 )
 make(plan, cache = storr::storr_environment(), session_info = FALSE)
+})
+}
 }
 \seealso{
 \code{\link[=from_plan]{from_plan()}}

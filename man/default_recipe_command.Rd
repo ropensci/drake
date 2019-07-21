@@ -12,7 +12,4 @@ A character scalar with the default recipe command.
 \description{
 2019-01-02
 }
-\examples{
-# deprecated
-}
 \keyword{internal}

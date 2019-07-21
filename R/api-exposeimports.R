@@ -32,6 +32,7 @@
 #'   of the imports.
 #' @examples
 #' \dontrun{
+#' isolate_example("contain side effects", {
 #' # Suppose you have a workflow that uses the `digest()` function,
 #' # which computes the hash of an object.
 #'
@@ -84,6 +85,7 @@
 #' }
 #' config <- drake_config(plan, cache = cache, history = FALSE)
 #' tracked(config)
+#' })
 #' }
 expose_imports <- function(
   package,

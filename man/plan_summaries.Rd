@@ -38,7 +38,4 @@ for details.
 \details{
 2019-01-13
 }
-\examples{
-# Deprecated
-}
 \keyword{internal}

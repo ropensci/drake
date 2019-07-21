@@ -146,6 +146,7 @@ plan_to_text <- function(plan) {
     plan[, c("target", "command")],
     envir = new.env(parent = emptyenv()),
     cache = storr::storr_environment(),
+    history = FALSE,
     verbose = FALSE
   )$graph
   order <- igraph::topo_sort(graph)$name

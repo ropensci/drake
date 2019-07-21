@@ -12,7 +12,4 @@ A character vector of names of available hash algorithms.
 \description{
 Deprecated on 2018-12-12.
 }
-\examples{
-# deprecated
-}
 \keyword{internal}

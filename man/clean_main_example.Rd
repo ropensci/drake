@@ -19,13 +19,4 @@ in the current working directory. Your working directory
 \details{
 Deprecated 2018-12-31.
 }
-\examples{
-\dontrun{
-# The code for this example is hosted at
-# https://github.com/wlandau/drake-examples/tree/master/main
-# You can download it with drake_example("main")
-# or watch a video tutorial about it at
-# https://ropenscilabs.github.io/drake-manual/.
-}
-}
 \keyword{internal}

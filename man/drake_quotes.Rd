@@ -18,7 +18,4 @@ Character vector with quotes around it.
 \description{
 Deprecated on 2019-01-01
 }
-\examples{
-# deprecated
-}
 \keyword{internal}

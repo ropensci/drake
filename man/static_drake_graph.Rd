@@ -96,7 +96,4 @@ Use \code{\link[=drake_ggraph]{drake_ggraph()}} instead.
 \details{
 Deprecated on 2018-07-25.
 }
-\examples{
-# See drake_ggraph()
-}
 \keyword{internal}

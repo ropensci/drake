@@ -47,38 +47,6 @@ it takes a function name and a grid of arguments, and
 writes out all the commands calls to apply the function to
 each row of arguments.
 }
-\examples{
-\dontrun{
-suppressWarnings({
-# For the full tutorial, visit
-# https://ropenscilabs.github.io/drake-manual/plans.html#map_plan.
-my_model_fit <- function(x1, x2, data) {
-  lm(as.formula(paste("mpg ~", x1, "+", x1)), data = data)
-}
-covariates <- setdiff(colnames(mtcars), "mpg")
-args <- t(combn(covariates, 2))
-colnames(args) <- c("x1", "x2")
-# Use tibble::as_tibble(args) for better printing # nolint
-# Below, stringsAsFactors = FALSE is very important! # nolint
-args <- as.data.frame(args, stringsAsFactors = FALSE)
-args$data <- "mtcars"
-args$data <- rlang::syms(args$data)
-args$id <- paste0("fit_", args$x1, "_", args$x2)
-# print(args) # Requires `args` to be a tibble # nolint
-plan <- map_plan(args, my_model_fit)
-plan
-# Consider `trace = TRUE` to include the columns in `args`
-# in your plan.
-plan <- map_plan(args, my_model_fit, trace = TRUE)
-# print(plan) # If you have tibble installed # nolint
-# And of course, you can execute the plan and
-# inspect your results.
-cache <- storr::storr_environment()
-make(plan, verbose = FALSE, cache = cache)
-readd(fit_cyl_disp, cache = cache)
-})
-}
-}
 \seealso{
 \code{\link[=drake_plan]{drake_plan()}}
 }

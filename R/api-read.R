@@ -415,6 +415,8 @@ bind_load_target <- function(target, cache, namespace, envir, verbose) {
 #' @inheritParams cached
 #'
 #' @examples
+#' \dontrun{
+#' isolate_example("contain side effects", {
 #' cache <- storr::storr_environment() # Just for the examples.
 #' my_plan <- drake_plan(
 #'   target1 = sqrt(1234),
@@ -447,6 +449,8 @@ bind_load_target <- function(target, cache, namespace, envir, verbose) {
 #' make(my_plan, cache = cache, seed = 1234)
 #' read_drake_seed(cache = cache)
 #' readd(target2, cache = cache)
+#' })
+#' }
 read_drake_seed <- function(
   path = NULL,
   search = NULL,

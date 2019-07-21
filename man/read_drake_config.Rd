@@ -33,7 +33,4 @@ improves speed.
 \details{
 2019-01-06
 }
-\examples{
-# deprecated
-}
 \keyword{internal}

@@ -34,7 +34,4 @@ Deprecated. Use \code{\link[=drake_get_session_info]{drake_get_session_info()}} 
 \details{
 Deprecated on 2018-12-06.
 }
-\examples{
-# See ?drake_get_session_info for examples.
-}
 \keyword{internal}

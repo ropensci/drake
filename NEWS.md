@@ -1,3 +1,10 @@
+# Version 7.5.2
+
+## Bug fixes
+
+- Eliminate accidental creations of `.drake_history` in `plan_to_code()`, `plan_to_notebook()`, and the examples in the help files.
+
+
 # Version 7.5.1
 
 ## Bug fixes

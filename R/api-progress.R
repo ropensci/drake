@@ -142,6 +142,7 @@ running <- function(
 #' @param upstream_only Deprecated.
 #' @examples
 #' \dontrun{
+#' isolate_example("contain side effects", {
 #' if (suppressWarnings(require("knitr"))) {
 #' # Build a plan doomed to fail:
 #' bad_plan <- drake_plan(x = function_doesnt_exist())
@@ -156,6 +157,7 @@ running <- function(
 #' e$error
 #' names(e$error)
 #' }
+#' })
 #' }
 failed <- function(
   path = NULL,

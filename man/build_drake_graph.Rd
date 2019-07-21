@@ -79,7 +79,4 @@ Use \code{\link[=drake_config]{drake_config()}} instead.
 \details{
 Deprecated on 2018-11-02.
 }
-\examples{
-# See ?drake_config for examples.
-}
 \keyword{internal}

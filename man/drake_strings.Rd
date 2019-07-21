@@ -15,7 +15,4 @@ A character vector.
 \description{
 Deprecated on 2019-01-01
 }
-\examples{
-# deprecated
-}
 \keyword{internal}

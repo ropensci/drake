@@ -106,11 +106,15 @@ multiline_message <- function(x) {
 #'   `target` as a symbol (`FALSE`) or character vector
 #'   (`TRUE`).
 #' @examples
+#' \dontrun{
+#' isolate_example("contain side effects", {
 #' plan <- drake_plan(x = sample.int(15))
 #' cache <- storr::storr_environment() # custom in-memory cache
 #' make(plan, cache = cache)
 #' config <- drake_config(plan, cache = cache)
 #' show_source(x, config)
+#' })
+#' }
 show_source <- function(target, config, character_only = FALSE) {
   if (!character_only) {
     target <- as.character(substitute(target))

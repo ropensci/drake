@@ -185,6 +185,7 @@ file_out <- file_in
 #'   source files supplied to a command in your workflow plan data frame.
 #' @examples
 #' \dontrun{
+#' isolate_example("contain side effects", {
 #' # `knitr_in()` is like `file_in()`
 #' # except that it analyzes active code chunks in your `knitr`
 #' # source file and detects non-file dependencies.
@@ -204,6 +205,7 @@ file_out <- file_in
 #' # to analyze the active code chunks. There, it spotted
 #' # where `small`, `large`, and `coef_regression2_small`
 #' # were read from the cache using calls to `loadd()` and `readd()`.
+#' })
 #' }
 knitr_in <- file_in
 
@@ -317,6 +319,8 @@ no_deps <- function(x = NULL) {
 #' @seealso [from_plan()]
 #' @return The environment where `drake` builds targets.
 #' @examples
+#' \dontrun{
+#' isolate_example("contain side effects", {
 #' plan <- drake_plan(
 #'   large_data_1 = sample.int(1e4),
 #'   large_data_2 = sample.int(1e4),
@@ -330,6 +334,8 @@ no_deps <- function(x = NULL) {
 #'   }
 #' )
 #' make(plan, cache = storr::storr_environment(), session_info = FALSE)
+#' })
+#' }
 drake_envir <- function() {
   envir <- environment()
   for (i in seq_len(getOption("expressions"))) {

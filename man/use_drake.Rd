@@ -35,5 +35,7 @@ and download examples with \code{\link[=drake_example]{drake_example()}}
 }
 }
 \examples{
+\dontrun{
 # use_drake(open = FALSE) # nolint
+}
 }

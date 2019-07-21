@@ -23,14 +23,4 @@ Deprecated. Use \code{\link[=deps_target]{deps_target()}} (singular) instead.
 \details{
 Deprecated on 2018-08-30.
 }
-\examples{
-\dontrun{
-isolate_example("Quarantine side effects.", {
-load_mtcars_example() # Get the code with drake_example("mtcars").
-config <- drake_config(my_plan)
-deps_targets("regression1_small", config = config)
-deps_targets(c("small", "large"), config = config, reverse = TRUE)
-})
-}
-}
 \keyword{internal}

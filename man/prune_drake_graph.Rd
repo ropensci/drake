@@ -19,7 +19,4 @@ An \code{igraph} object
 \description{
 2019-01-08
 }
-\examples{
-# deprecated
-}
 \keyword{internal}

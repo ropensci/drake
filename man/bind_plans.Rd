@@ -28,7 +28,6 @@ analysis_plan <- drake_plan(
 )
 your_plan <- bind_plans(download_plan, analysis_plan)
 your_plan
-# make(your_plan) # nolint
 }
 \seealso{
 \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
