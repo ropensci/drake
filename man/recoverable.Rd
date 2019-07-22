@@ -78,7 +78,7 @@ diagnose(small)$date
 # If you set the same seed as before, you can even
 # rename targets without having to build them again.
 # For an example, see
-# https://github.com/ropensci/drake/blob/master/README.md#automatic-recovery-and-renaming. # nolint
+# https://github.com/ropensci/drake/blob/master/README.md#reproducible-data-recovery-and-renaming. # nolint
 }
 })
 }
