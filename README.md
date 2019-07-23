@@ -415,9 +415,7 @@ diagnose(raw_data)$date
 
 ### Renaming
 
-You can even rename your targets\! All you have to do is use the same
-target seed as last time. Just be aware that renaming invalidates
-downstream targets.
+You can use recovery to rename a target. The trick is to supply the random number generator seed that `drake` used with the old target name. Also, renaming a target unavoidably invalidates downstream targets.
 
 ``` r
 # Get the old seed.
