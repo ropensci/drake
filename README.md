@@ -382,13 +382,13 @@ cache$get_value(hash)
 
 ## Reproducible data recovery and renaming
 
-The following scenarios are fairly typical:
+`drake`'s new data recovery feature is another way to avoid rerunning commands. It is useful if:
 
 - You want to revert to your old code, maybe with `git reset`.
 - You accidentally `clean()`ed a target and you want to get it back.
-- You want to rename a target and keep everything else the same.
+- You want to rename an expensive target.
 
-`drake`'s new data recovery feature tries to solve these problems. In version 7.5.2 and above, `make(recover = TRUE)` can salvage
+In version 7.5.2 and above, `make(recover = TRUE)` can salvage
 the values of old targets. Before building a target, `drake` checks if
 you have ever built something else with the same command, dependencies,
 seed, etc. that you have right now. If appropriate, `drake` assigns the
