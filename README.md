@@ -330,7 +330,7 @@ make(plan) # Independently re-create the results from the code and input data.
 
 ## History and provenance
 
-As of version 7.5.0, `drake` tracks the history and provenance of your
+As of version 7.5.2, `drake` tracks the history and provenance of your
 targets: what you built, when you built it, how you built it, the
 arguments you used in your function calls, and how to get the data back.
 (Disable with `make(history = FALSE)`)
@@ -339,20 +339,20 @@ arguments you used in your function calls, and how to get the data back.
 history <- drake_history(analyze = TRUE)
 history
 #> # A tibble: 12 x 10
-#>    target time  hash  exists command  runtime   seed latest quiet
-#>    <chr>  <chr> <chr> <lgl>  <chr>      <dbl>  <int> <lgl>  <lgl>
-#>  1 data   2019… e580… TRUE   raw_da… 0.001    1.29e9 FALSE  NA   
-#>  2 data   2019… e580… TRUE   raw_da… 0        1.29e9 TRUE   NA   
-#>  3 fit    2019… 62a1… TRUE   lm(Sep… 0.002    1.11e9 FALSE  NA   
-#>  4 fit    2019… 62a1… TRUE   lm(Sep… 0.001000 1.11e9 TRUE   NA   
-#>  5 hist   2019… 10bc… TRUE   create… 0.006    2.10e8 FALSE  NA   
-#>  6 hist   2019… 5252… TRUE   create… 0.004    2.10e8 FALSE  NA   
-#>  7 hist   2019… 00fa… TRUE   create… 0.007    2.10e8 TRUE   NA   
-#>  8 raw_d… 2019… 6317… TRUE   "readx… 0.009    1.20e9 FALSE  NA   
-#>  9 raw_d… 2019… 6317… TRUE   "readx… 0.00600  1.20e9 TRUE   NA   
-#> 10 report 2019… 3e2b… TRUE   "rmark… 0.481    1.30e9 FALSE  TRUE 
-#> 11 report 2019… 3e2b… TRUE   "rmark… 0.358    1.30e9 FALSE  TRUE 
-#> 12 report 2019… 3e2b… TRUE   "rmark… 0.356    1.30e9 TRUE   TRUE 
+#>    target current built exists hash  command   seed runtime quiet
+#>    <chr>  <lgl>   <chr> <lgl>  <chr> <chr>    <int>   <dbl> <lgl>
+#>  1 data   TRUE    2019… TRUE   e580… raw_da… 1.29e9 0.01000 NA   
+#>  2 data   TRUE    2019… TRUE   e580… raw_da… 1.29e9 0.001   NA   
+#>  3 fit    TRUE    2019… TRUE   62a1… lm(Sep… 1.11e9 0.003   NA   
+#>  4 fit    TRUE    2019… TRUE   62a1… lm(Sep… 1.11e9 0.001   NA   
+#>  5 hist   FALSE   2019… TRUE   10bc… create… 2.10e8 0.008   NA   
+#>  6 hist   FALSE   2019… TRUE   5252… create… 2.10e8 0.004   NA   
+#>  7 hist   TRUE    2019… TRUE   00fa… create… 2.10e8 0.00600 NA   
+#>  8 raw_d… TRUE    2019… TRUE   6317… "readx… 1.20e9 0.0130  NA   
+#>  9 raw_d… TRUE    2019… TRUE   6317… "readx… 1.20e9 0.00700 NA   
+#> 10 report TRUE    2019… TRUE   47a7… "rmark… 1.30e9 1.20    TRUE 
+#> 11 report TRUE    2019… TRUE   47a7… "rmark… 1.30e9 0.440   TRUE 
+#> 12 report TRUE    2019… TRUE   47a7… "rmark… 1.30e9 0.424   TRUE 
 #> # … with 1 more variable: output_file <chr>
 ```
 
@@ -380,14 +380,21 @@ cache$get_value(hash)
 
 <img src="https://ropensci.github.io/drake/figures/hist1.png" alt="hist1" align="center" style = "border: none; float: center;" width = "600px">
 
-## Automated recovery and renaming
+## Reproducible data recovery and renaming
 
-Note: this feature is still experimental.
+In `drake` version 7.5.2 and above, `make(recover = TRUE)` can salvage
+the values of old targets. Before building a target, `drake` checks if
+you have ever built something else with the same command, dependencies,
+seed, etc. that you have right now. If appropriate, `drake` assigns the
+old value to the new target instead of rerunning the command.
 
-In `drake` version 7.5.0 and above, `make(recover = TRUE)` can salvage
-old targets from the distant past. This may not be a good idea if your
-external dependencies have changed a lot over time (R version, package
-environment, etc) but it can be useful under the right circumstances.
+Caveats:
+
+1.  This feature is still experimental.
+2.  Recovery may not be a good idea if your external dependencies have
+    changed a lot over time (R version, package environment, etc.).
+
+### Basic recovery
 
 ``` r
 # Is the data really gone?
@@ -403,11 +410,14 @@ make(plan, recover = TRUE) # The report still builds since report.md is gone.
 
 # When was the raw data *really* first built?
 diagnose(raw_data)$date
-#> [1] "2019-07-18 20:19:48.110163 -0400 GMT"
+#> [1] "2019-07-23 10:44:38.040644 -0400 GMT"
 ```
 
-You can even rename your targets\! All you have to do is use the same  target seed as last time. Just be aware that this invalidates downstream
-targets.
+### Renaming
+
+You can even rename your targets\! All you have to do is use the same
+target seed as last time. Just be aware that renaming invalidates
+downstream targets.
 
 ``` r
 # Get the old seed.

@@ -270,7 +270,7 @@ make(plan) # Independently re-create the results from the code and input data.
 
 ## History and provenance
 
-As of version 7.5.0, `drake` tracks the history and provenance of your targets:
+As of version 7.5.2, `drake` tracks the history and provenance of your targets:
 what you built, when you built it, how you built it, the arguments you
 used in your function calls, and how to get the data back. (Disable with `make(history = FALSE)`)
 
@@ -301,9 +301,14 @@ cache$get_value(hash)
 
 ## Reproducible data recovery and renaming
 
-Note: this feature is still experimental.
+In `drake` version 7.5.2 and above, `make(recover = TRUE)` can salvage the values of old targets. Before building a target, `drake` checks if you have ever built something else with the same command, dependencies, seed, etc. that you have right now. If appropriate, `drake` assigns the old value to the new target instead of rerunning the command.
 
-In `drake` version 7.5.0 and above, `make(recover = TRUE)` can salvage old targets from the distant past. This may not be a good idea if your external dependencies have changed a lot over time (R version, package environment, etc) but it can be useful under the right circumstances.
+Caveats:
+
+1. This feature is still experimental.
+2. Recovery may not be a good idea if your external dependencies have changed a lot over time (R version, package environment, etc.).
+
+### Basic recovery
 
 ```{r}
 # Is the data really gone?
@@ -315,6 +320,8 @@ make(plan, recover = TRUE) # The report still builds since report.md is gone.
 # When was the raw data *really* first built?
 diagnose(raw_data)$date
 ```
+
+### Renaming
 
 You can even rename your targets! All you have to do is use the same target seed as last time. Just be aware that renaming invalidates downstream targets.
 
