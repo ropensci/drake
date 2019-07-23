@@ -301,7 +301,7 @@ cache$get_value(hash)
 
 ## Reproducible data recovery and renaming
 
-`drake`'s new data recovery feature is another way to avoid rerunning commands. It is useful if:
+`drake`'s data recovery feature is another way to avoid rerunning commands. It is useful if:
 
 - You want to revert to your old code, maybe with `git reset`.
 - You accidentally `clean()`ed a target and want to get it back.
