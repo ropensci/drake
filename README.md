@@ -382,6 +382,8 @@ cache$get_value(hash)
 
 ## Reproducible data recovery and renaming
 
+Imagine each of these scenarios:
+
 - You want to revert to an old `drake` plan or an old set of functions, maybe with `git reset`.
 - You accidentally `clean()`ed a target and you want to get it back.
 - You want to rename a target and keep everything else the same.
