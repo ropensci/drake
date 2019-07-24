@@ -2,7 +2,7 @@
 % Please edit documentation in R/api-clean.R
 \name{clean}
 \alias{clean}
-\title{Remove targets/imports from the cache.}
+\title{Invalidate and unregister targets.}
 \usage{
 clean(..., list = character(0), destroy = FALSE, path = NULL,
   search = NULL, cache = drake::drake_cache(path = path, verbose =
@@ -61,64 +61,52 @@ metadata namespaces such as "meta", "build_times", and "errors".}
 Invisibly return \code{NULL}.
 }
 \description{
-Cleans up the work done by \code{\link[=make]{make()}}.
+Force targets to be out of date and remove target names
+from the data in the cache.
 }
 \details{
-By default, \code{clean()} removes references to cached data.
-To deep-clean the data to free up storage/memory, use
-\code{clean(garbage_collection = TRUE)}. Garbage collection is slower,
-but it purges data with no remaining references. To just do garbage
-collection without cleaning, see \code{\link[=drake_gc]{drake_gc()}}.
-Also, for \code{clean()}, you must be in your project's working directory
-or a subdirectory of it.
-WARNING: This deletes ALL work done with \code{\link[=make]{make()}},
-which includes
-file targets as well as the entire drake cache. Only use \code{clean()}
-if you're sure you won't lose anything important.
-}
-\section{Safeguards}{
-
-If you run \code{\link[=clean]{clean()}} with no arguments, \code{drake}'s response is to
-remove all the targets etc. from the cache. To prevent you from
-doing this accidentally in an interactive session, \code{\link[=clean]{clean()}}
-prompts you with a menu to confirm. The menu only appears
-once per session. You can disable it with
-\code{options(drake_clean_menu = FALSE)}.
+By default, \code{\link[=clean]{clean()}} invalidates \strong{all} targets,
+so be careful. \code{\link[=clean]{clean()}} always:
+\enumerate{
+\item Forces targets to be out of date so the next \code{\link[=make]{make()}}
+does not skip them.
+\item Dissociates targets' names from their values, so
+\code{loadd(your_target)} and \code{readd(your_target)} no longer work.
 }
 
+By default, \code{clean()} does not actually remove the underlying data.
+Even old targets from the distant past are still in the cache
+and recoverable via \code{drake_history()} and \code{make(recover = TRUE)}.
+To actually remove target data from the cache, as well as any
+\code{\link[=file_out]{file_out()}} files associated with as-yet uncleaned targets,
+run \code{clean(garbage_collection = TRUE)}.
+Garbage collection is slow, but it reduces the storage burden of the cache.
+}
 \examples{
 \dontrun{
 isolate_example("Quarantine side effects.", {
 if (suppressWarnings(require("knitr"))) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 make(my_plan) # Run the project, build the targets.
-# List objects in the cache, excluding R objects
-# imported from your workspace.
-cached(no_imported_objects = TRUE)
-# Remove 'summ_regression1_large' and 'small' from the cache.
-clean(summ_regression1_large, small)
-# Those objects should be gone.
-cached(no_imported_objects = TRUE)
-# Rebuild the missing targets.
-make(my_plan)
-# Remove all the targets and imports.
-# On non-Windows machines, parallelize over at most 2 jobs.
-clean(jobs = 2)
-# Make the targets again.
-make(my_plan)
-# Garbage collection removes data whose references are no longer present.
-# It is slow, but you should enable it if you want to reduce the
-# size of the cache.
-clean(garbage_collection = TRUE)
-# All the targets and imports are gone.
+# Show all registered targets in the cache.
 cached()
-# But there is still cached metadata.
-build_times()
-# To make even more room, use the "purge" flag.
-clean(purge = TRUE)
-build_times()
-# Completely remove the entire cache (default: '.drake/' folder).
-clean(destroy = TRUE)
+# Unregister 'summ_regression1_large' and 'small' in the cache.
+clean(summ_regression1_large, small)
+# Those objects are no longer registered as targets.
+cached()
+# Rebuild the invalidated/outdated targets.
+make(my_plan)
+# Clean everything.
+clean()
+# But the data objects and files are not actually gone!
+file.exists("report.md")
+drake_history()
+make(my_plan, recover = TRUE)
+# You need garbage collection to actually remove the data
+# and any file_out() files of any uncleaned targets.
+clean(garbage_collection = TRUE)
+drake_history()
+make(my_plan, recover = TRUE)
 }
 })
 }

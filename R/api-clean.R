@@ -1,24 +1,21 @@
-#' @title Remove targets/imports from the cache.
-#' @description Cleans up the work done by [make()].
-#' @details
-#' By default, `clean()` removes references to cached data.
-#' To deep-clean the data to free up storage/memory, use
-#' `clean(garbage_collection = TRUE)`. Garbage collection is slower,
-#' but it purges data with no remaining references. To just do garbage
-#' collection without cleaning, see [drake_gc()].
-#' Also, for `clean()`, you must be in your project's working directory
-#' or a subdirectory of it.
-#' WARNING: This deletes ALL work done with [make()],
-#' which includes
-#' file targets as well as the entire drake cache. Only use `clean()`
-#' if you're sure you won't lose anything important.
-#' @section Safeguards:
-#' If you run [clean()] with no arguments, `drake`'s response is to
-#' remove all the targets etc. from the cache. To prevent you from
-#' doing this accidentally in an interactive session, [clean()]
-#' prompts you with a menu to confirm. The menu only appears
-#' once per session. You can disable it with
-#' `options(drake_clean_menu = FALSE)`.
+#' @title Invalidate and unregister targets.
+#' @description Force targets to be out of date and remove target names
+#'   from the data in the cache.
+#' @details By default, [clean()] invalidates **all** targets,
+#'   so be careful. [clean()] always:
+#'
+#'   1. Forces targets to be out of date so the next [make()]
+#'     does not skip them.
+#'   2. Dissociates targets' names from their values, so
+#'     `loadd(your_target)` and `readd(your_target)` no longer work.
+#'
+#' By default, `clean()` does not actually remove the underlying data.
+#' Even old targets from the distant past are still in the cache
+#' and recoverable via `drake_history()` and `make(recover = TRUE)`.
+#' To actually remove target data from the cache, as well as any
+#' [file_out()] files associated with as-yet uncleaned targets,
+#' run `clean(garbage_collection = TRUE)`.
+#' Garbage collection is slow, but it reduces the storage burden of the cache.
 #' @seealso [drake_gc()], [make()]
 #' @export
 #' @return Invisibly return `NULL`.
@@ -63,33 +60,25 @@
 #' if (suppressWarnings(require("knitr"))) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Run the project, build the targets.
-#' # List objects in the cache, excluding R objects
-#' # imported from your workspace.
-#' cached(no_imported_objects = TRUE)
-#' # Remove 'summ_regression1_large' and 'small' from the cache.
-#' clean(summ_regression1_large, small)
-#' # Those objects should be gone.
-#' cached(no_imported_objects = TRUE)
-#' # Rebuild the missing targets.
-#' make(my_plan)
-#' # Remove all the targets and imports.
-#' # On non-Windows machines, parallelize over at most 2 jobs.
-#' clean(jobs = 2)
-#' # Make the targets again.
-#' make(my_plan)
-#' # Garbage collection removes data whose references are no longer present.
-#' # It is slow, but you should enable it if you want to reduce the
-#' # size of the cache.
-#' clean(garbage_collection = TRUE)
-#' # All the targets and imports are gone.
+#' # Show all registered targets in the cache.
 #' cached()
-#' # But there is still cached metadata.
-#' build_times()
-#' # To make even more room, use the "purge" flag.
-#' clean(purge = TRUE)
-#' build_times()
-#' # Completely remove the entire cache (default: '.drake/' folder).
-#' clean(destroy = TRUE)
+#' # Unregister 'summ_regression1_large' and 'small' in the cache.
+#' clean(summ_regression1_large, small)
+#' # Those objects are no longer registered as targets.
+#' cached()
+#' # Rebuild the invalidated/outdated targets.
+#' make(my_plan)
+#' # Clean everything.
+#' clean()
+#' # But the data objects and files are not actually gone!
+#' file.exists("report.md")
+#' drake_history()
+#' make(my_plan, recover = TRUE)
+#' # You need garbage collection to actually remove the data
+#' # and any file_out() files of any uncleaned targets.
+#' clean(garbage_collection = TRUE)
+#' drake_history()
+#' make(my_plan, recover = TRUE)
 #' }
 #' })
 #' }
@@ -136,7 +125,8 @@ clean <- function(
     FUN = clean_single_target,
     jobs = jobs,
     cache = cache,
-    namespaces = namespaces
+    namespaces = namespaces,
+    garbage_collection = garbage_collection
   )
   if (destroy) {
     cache$destroy()
@@ -152,7 +142,7 @@ clean_single_target <- function(
   cache,
   namespaces,
   graph,
-  layout
+  garbage_collection
 ) {
   files <- character(0)
   if (cache$exists(target, namespace = "meta")) {
@@ -163,7 +153,7 @@ clean_single_target <- function(
       try(cache$del(key = key, namespace = namespace))
     }
   }
-  if (length(files)) {
+  if (garbage_collection && length(files)) {
     unlink(decode_path(files), recursive = TRUE)
   }
 }

@@ -40,7 +40,7 @@ test_with_dir("scratch build with custom filesystem cache.", {
   # clean specific targets
   clean(b, c, list = c("drake_target_1", "nextone"),
     cache = cache)
-  expect_false(file.exists("intermediatefile.rds"))
+  expect_true(file.exists("intermediatefile.rds"))
   expect_true(file.exists("input.rds"))
   expect_equal(
     sort(config$cache$list()),
@@ -68,6 +68,14 @@ test_with_dir("scratch build with custom filesystem cache.", {
   expect_false("f" %in% config$cache$list())
 
   clean(destroy = FALSE, cache = cache)
+  expect_equal(config$cache$list(), character(0))
+  expect_true(file.exists("intermediatefile.rds"))
+  expect_true(file.exists("input.rds"))
+  expect_false(file.exists(default_cache_path()))
+  expect_true(file.exists(path))
+
+  testrun(config)
+  clean(destroy = FALSE, cache = cache, garbage_collection = TRUE)
   expect_equal(config$cache$list(), character(0))
   expect_false(file.exists("intermediatefile.rds"))
   expect_true(file.exists("input.rds"))
