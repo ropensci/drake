@@ -78,38 +78,6 @@ Development
 </table>
 <br>
 
-# The drake R package <img src="https://ropensci.github.io/drake/figures/logo.svg" align="right" alt="logo" width="120" height = "139" style = "border: none; float: right;">
-
-Data analysis can be slow. A round of scientific computation can take
-several minutes, hours, or even days to complete. After it finishes, if
-you update your code or data, your hard-earned results may no longer be
-valid. How much of that valuable output can you keep, and how much do
-you need to update? How much runtime must you endure all over again?
-
-For projects in R, the `drake` package can help. It [analyzes your
-workflow](https://ropenscilabs.github.io/drake-manual/plans.html), skips
-steps with up-to-date results, and orchestrates the rest with [optional
-distributed
-computing](https://ropenscilabs.github.io/drake-manual/hpc.html). At the
-end, `drake` provides evidence that your results match the underlying
-code and data, which increases your ability to trust your research.
-
-# 6-minute video
-
-Visit the [first page of the
-manual](https://ropenscilabs.github.io/drake-manual/) to watch a short
-introduction.
-
-<center>
-
-<a href="https://ropenscilabs.github.io/drake-manual">
-<img src="https://ropensci.github.io/drake/figures/video.png" alt="video" align="center" style = "border: none; float: center;">
-</a>
-
-</center>
-
-<br>
-
 # What gets done stays done.
 
 Too many data science projects follow a [Sisyphean
@@ -341,18 +309,18 @@ history
 #> # A tibble: 12 x 10
 #>    target current built exists hash  command   seed runtime quiet
 #>    <chr>  <lgl>   <chr> <lgl>  <chr> <chr>    <int>   <dbl> <lgl>
-#>  1 data   TRUE    2019… TRUE   e580… raw_da… 1.29e9 0.01000 NA   
-#>  2 data   TRUE    2019… TRUE   e580… raw_da… 1.29e9 0.001   NA   
-#>  3 fit    TRUE    2019… TRUE   62a1… lm(Sep… 1.11e9 0.003   NA   
+#>  1 data   TRUE    2019… TRUE   e580… raw_da… 1.29e9 0.00300 NA   
+#>  2 data   TRUE    2019… TRUE   e580… raw_da… 1.29e9 0       NA   
+#>  3 fit    TRUE    2019… TRUE   62a1… lm(Sep… 1.11e9 0.004   NA   
 #>  4 fit    TRUE    2019… TRUE   62a1… lm(Sep… 1.11e9 0.001   NA   
 #>  5 hist   FALSE   2019… TRUE   10bc… create… 2.10e8 0.008   NA   
-#>  6 hist   FALSE   2019… TRUE   5252… create… 2.10e8 0.004   NA   
-#>  7 hist   TRUE    2019… TRUE   00fa… create… 2.10e8 0.00600 NA   
-#>  8 raw_d… TRUE    2019… TRUE   6317… "readx… 1.20e9 0.0130  NA   
-#>  9 raw_d… TRUE    2019… TRUE   6317… "readx… 1.20e9 0.00700 NA   
-#> 10 report TRUE    2019… TRUE   47a7… "rmark… 1.30e9 1.20    TRUE 
-#> 11 report TRUE    2019… TRUE   47a7… "rmark… 1.30e9 0.440   TRUE 
-#> 12 report TRUE    2019… TRUE   47a7… "rmark… 1.30e9 0.424   TRUE 
+#>  6 hist   FALSE   2019… TRUE   5252… create… 2.10e8 0.005   NA   
+#>  7 hist   TRUE    2019… TRUE   00fa… create… 2.10e8 0.007   NA   
+#>  8 raw_d… TRUE    2019… TRUE   6317… "readx… 1.20e9 0.016   NA   
+#>  9 raw_d… TRUE    2019… TRUE   6317… "readx… 1.20e9 0.007   NA   
+#> 10 report TRUE    2019… TRUE   7660… "rmark… 1.30e9 0.912   TRUE 
+#> 11 report TRUE    2019… TRUE   7660… "rmark… 1.30e9 0.45    TRUE 
+#> 12 report TRUE    2019… TRUE   7660… "rmark… 1.30e9 0.433   TRUE 
 #> # … with 1 more variable: output_file <chr>
 ```
 
@@ -382,15 +350,16 @@ cache$get_value(hash)
 
 ## Reproducible data recovery and renaming
 
-`drake`'s data recovery feature is another way to avoid rerunning commands. It is useful if:
+`drake`’s data recovery feature is another way to avoid rerunning
+commands. It is useful if:
 
-- You want to revert to your old code, maybe with `git reset`.
-- You accidentally `clean()`ed a target and want to get it back.
-- You want to rename an expensive target.
+  - You want to revert to your old code, maybe with `git reset`.
+  - You accidentally `clean()`ed a target and want to get it back.
+  - You want to rename an expensive target.
 
-In version 7.5.2 and above, `make(recover = TRUE)` can salvage
-the values of old targets. Before building a target, `drake` checks if
-you have ever built something else with the same command, dependencies,
+In version 7.5.2 and above, `make(recover = TRUE)` can salvage the
+values of old targets. Before building a target, `drake` checks if you
+have ever built something else with the same command, dependencies,
 seed, etc. that you have right now. If appropriate, `drake` assigns the
 old value to the new target instead of rerunning the command.
 
@@ -404,24 +373,26 @@ Caveats:
 
 ``` r
 # Is the data really gone?
-clean() # garbage_collection = FALSE
+clean()
 
-# Nope!
-make(plan, recover = TRUE) # The report still builds since report.md is gone.
+# Nope! You need clean(garbage_collection = TRUE) to delete stuff.
+make(plan, recover = TRUE)
 #> recover raw_data
 #> recover data
 #> recover fit
 #> recover hist
-#> target report
+#> recover report
 
 # When was the raw data *really* first built?
 diagnose(raw_data)$date
-#> [1] "2019-07-23 10:44:38.040644 -0400 GMT"
+#> [1] "2019-07-24 14:46:22.522768 -0400 GMT"
 ```
 
 ### Renaming
 
-You can use recovery to rename a target. The trick is to supply the random number generator seed that `drake` used with the old target name. Also, renaming a target unavoidably invalidates downstream targets.
+You can use recovery to rename a target. The trick is to supply the
+random number generator seed that `drake` used with the old target name.
+Also, renaming a target unavoidably invalidates downstream targets.
 
 ``` r
 # Get the old seed.

@@ -318,10 +318,10 @@ Caveats:
 
 ```{r}
 # Is the data really gone?
-clean() # garbage_collection = FALSE
+clean()
 
-# Nope!
-make(plan, recover = TRUE) # The report still builds since report.md is gone.
+# Nope! You need clean(garbage_collection = TRUE) to delete stuff.
+make(plan, recover = TRUE)
 
 # When was the raw data *really* first built?
 diagnose(raw_data)$date

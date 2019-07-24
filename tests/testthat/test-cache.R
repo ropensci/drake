@@ -22,6 +22,7 @@ test_with_dir("clean() removes the correct files", {
     cache = cache,
     session_info = FALSE
   )
+  clean(cache = cache)
   expect_true(file.exists("a.txt"))
   expect_true(file.exists("b.txt"))
   expect_true(file.exists("d.rds"))
@@ -29,7 +30,13 @@ test_with_dir("clean() removes the correct files", {
   expect_true(dir.exists("xyz"))
   expect_true(file.exists("abc/c.txt"))
   expect_true(file.exists("xyz/e.txt"))
-  clean(cache = cache)
+  make(
+    plan,
+    cache = cache,
+    session_info = FALSE,
+    recover = TRUE
+  )
+  clean(cache = cache, garbage_collection = TRUE)
   expect_true(file.exists("a.txt"))
   expect_true(file.exists("b.txt"))
   expect_false(file.exists("d.rds"))
