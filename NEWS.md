@@ -1,5 +1,8 @@
 # Version 7.5.2.9000
 
+## Enhancements
+
+- Keep `file_out()` files in `clean()`. That way, `make(recover = TRUE)` is a true "undo button" for `clean()`. `clean(garbage_collection = TRUE)` still removes data in the cache, as well as any `file_out()` files from uncleaned targets.
 
 # Version 7.5.2
 
