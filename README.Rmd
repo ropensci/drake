@@ -302,6 +302,8 @@ create_plot <- function(data) {
 
 # The report still needs to run in order to restore report.html.
 make(plan, recover = TRUE)
+
+readd(hist) # old histogram
 ```
 
 `drake`'s data recovery feature is another way to avoid rerunning commands. It is useful if:
