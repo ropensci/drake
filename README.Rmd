@@ -13,7 +13,7 @@ knitr::opts_knit$set(root.dir = dir)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "README-"
+  fig.path = "man/figures/"
 )
 ```
 
@@ -202,12 +202,9 @@ readd(data) # See also loadd().
 
 You may look back on your work and see room for improvement, but it's all good! The whole point of `drake` is to help you go back and change things quickly and painlessly. For example, we forgot to give our histogram a bin width.
 
-```{r loaddhist, eval = FALSE}
+```{r readdhist}
 readd(hist)
-#> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
-
-<img src="https://ropensci.github.io/drake/figures/hist1.png" alt="hist1" align="center" style = "border: none; float: center;" width = "500px">
 
 So let's fix the plotting function.
 
@@ -218,7 +215,6 @@ create_plot <- function(data) {
     theme_gray(20)
 }
 ```
-
 
 `drake` knows which results are affected.
 
@@ -235,12 +231,10 @@ The next `make()` just builds `hist` and `report.html`. No point in wasting time
 make(plan)
 ```
 
-```{r hist2, eval = FALSE}
+```{r hist2}
 loadd(hist)
 hist
 ```
-
-<img src="https://ropensci.github.io/drake/figures/hist2.png" alt="hist1" align="center" style = "border: none; float: center;" width = "500px">
 
 # Reproducibility with confidence
 
@@ -287,24 +281,33 @@ Remarks:
 
 Let's use the history to recover the oldest histogram.
 
-```{r, eval = FALSE}
+```{r histhistory}
 hash <- history %>%
   filter(target == "hist") %>%
   pull(hash) %>%
   head(n = 1)
 cache <- drake_cache()
 cache$get_value(hash)
-#> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
-
-<img src="https://ropensci.github.io/drake/figures/hist1.png" alt="hist1" align="center" style = "border: none; float: center;" width = "600px">
 
 ## Reproducible data recovery and renaming
 
+Remember how we made that change to our histogram? What if we want to change it back? If we revert `create_plot()`, `make(plan, recover = TRUE)` restores the original plot.
+
+```{r recoverhist}
+create_plot <- function(data) {
+  ggplot(data, aes(x = Petal.Width, fill = Species)) +
+    geom_histogram()
+}
+
+# The report still needs to run in order to restore report.html.
+make(plan, recover = TRUE)
+```
+
 `drake`'s data recovery feature is another way to avoid rerunning commands. It is useful if:
 
-- You want to revert to your old code, maybe with `git reset`.
-- You accidentally `clean()`ed a target and want to get it back.
+- You want to revert to your old code.
+- You accidentally `clean()` a target and want to get it back.
 - You want to rename an expensive target.
 
 In version 7.5.2 and above, `make(recover = TRUE)` can salvage the values of old targets. Before building a target, `drake` checks if you have ever built something else with the same command, dependencies, seed, etc. that you have right now. If appropriate, `drake` assigns the old value to the new target instead of rerunning the command.
@@ -314,7 +317,7 @@ Caveats:
 1. This feature is still experimental.
 2. Recovery may not be a good idea if your external dependencies have changed a lot over time (R version, package environment, etc.).
 
-### Basic recovery
+### Undoing `clean()`
 
 ```{r}
 # Is the data really gone?
