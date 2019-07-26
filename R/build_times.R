@@ -88,6 +88,45 @@ build_times <- function(
   )
 }
 
+error_tibble_times <- function(e) {
+  stop(
+    "Failed converting a data frame of times to a tibble. ",
+    "Please install version 1.2.1 or greater of the pillar package.",
+    call. = FALSE
+  )
+}
+
+round_times <- function(times, digits) {
+  for (col in time_columns) {
+    if (length(times[[col]])) {
+      times[[col]] <- round(times[[col]], digits = digits)
+    }
+  }
+  times
+}
+
+to_build_duration_df <- function(times) {
+  eval(parse(text = "require(methods, quietly = TRUE)")) # needed for lubridate
+  for (col in time_columns) {
+    if (length(times[[col]])) {
+      times[[col]] <- to_build_duration(times[[col]])
+    }
+  }
+  times
+}
+
+time_columns <- c("elapsed", "user", "system")
+
+# From lubridate issue 472,
+# we need to round to the nearest second
+# for times longer than a minute.
+to_build_duration <- function(x) {
+  assert_pkg("lubridate")
+  round_these <- x >= 60
+  x[round_these] <- round(x[round_these], digits = 0)
+  lubridate::dseconds(x)
+}
+
 fetch_runtime <- function(key, cache, type) {
   x <- read_from_meta(
     key = key,
@@ -102,6 +141,10 @@ fetch_runtime <- function(key, cache, type) {
   weak_as_tibble(x)
 }
 
+is_bad_time <- function(x) {
+  !length(x) || is.na(x[1])
+}
+
 empty_times <- function() {
   list(
     target = character(0),
@@ -111,15 +154,6 @@ empty_times <- function() {
   )
 }
 
-round_times <- function(times, digits) {
-  for (col in time_columns) {
-    if (length(times[[col]])) {
-      times[[col]] <- round(times[[col]], digits = digits)
-    }
-  }
-  times
-}
-
 runtime_entry <- function(runtime, target) {
   list(
     target = target,
@@ -127,30 +161,4 @@ runtime_entry <- function(runtime, target) {
     user = runtime[["user.self"]],
     system = runtime[["sys.self"]]
   )
-}
-
-to_build_duration_df <- function(times) {
-  eval(parse(text = "require(methods, quietly = TRUE)")) # needed for lubridate
-  for (col in time_columns) {
-    if (length(times[[col]])) {
-      times[[col]] <- to_build_duration(times[[col]])
-    }
-  }
-  times
-}
-
-# From lubridate issue 472,
-# we need to round to the nearest second
-# for times longer than a minute.
-to_build_duration <- function(x) {
-  assert_pkg("lubridate")
-  round_these <- x >= 60
-  x[round_these] <- round(x[round_these], digits = 0)
-  lubridate::dseconds(x)
-}
-
-time_columns <- c("elapsed", "user", "system")
-
-is_bad_time <- function(x) {
-  !length(x) || is.na(x[1])
 }
