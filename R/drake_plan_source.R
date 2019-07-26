@@ -37,6 +37,14 @@ drake_plan_source <- function(plan) {
   text
 }
 
+#' @export
+print.drake_plan_source <- function(x, ...) {
+  if (requireNamespace("prettycode", quietly = TRUE)) {
+    x <- prettycode::highlight(x)
+  }
+  cat(x, sep = "\n")
+}
+
 drake_plan_call <- function(plan) {
   target_calls <- drake_pmap(plan, drake_target_call)
   names(target_calls) <- plan$target
@@ -44,7 +52,7 @@ drake_plan_call <- function(plan) {
 }
 
 drake_target_call <- function(...) {
-  args <- select_valid(list(...))
+  args <- select_valid_args(list(...))
   target <- parse(text = args$target)[[1]]
   args$target <- NULL
   if (is.character(args[["command"]])) {
@@ -59,6 +67,17 @@ drake_target_call <- function(...) {
     args[["command"]] <- as.call(c(quote(target), args))
   }
   args[["command"]]
+}
+
+select_valid_args <- function(x) {
+  index <- vapply(
+    X = x,
+    FUN = function(y) {
+      length(y) > 0 && !safe_is_na(y)
+    },
+    FUN.VALUE = logical(1)
+  )
+  x[index]
 }
 
 style_recursive <- function(expr, name, append_comma) {
@@ -110,14 +129,6 @@ style_leaf <- function(name, expr, append_comma) {
     text[length(text)] <- paste0(text[length(text)], ",")
   }
   text
-}
-
-#' @export
-print.drake_plan_source <- function(x, ...) {
-  if (requireNamespace("prettycode", quietly = TRUE)) {
-    x <- prettycode::highlight(x)
-  }
-  cat(x, sep = "\n")
 }
 
 is_trigger_call <- function(expr) {

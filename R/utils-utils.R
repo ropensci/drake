@@ -193,17 +193,6 @@ select_nonempty <- function(x) {
   x[keep]
 }
 
-select_valid <- function(x) {
-  index <- vapply(
-    X = x,
-    FUN = function(y) {
-      length(y) > 0 && !safe_is_na(y)
-    },
-    FUN.VALUE = logical(1)
-  )
-  x[index]
-}
-
 standardize_key <- function(text) {
   if (any(grepl("::", text))) {
     text <- encode_namespaced(text)
