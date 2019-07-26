@@ -701,7 +701,6 @@ drake_config <- function(
     recover = recover,
     recoverable = recoverable
   )
-  out <- enforce_compatible_config(out)
   config_checks(out)
   log_msg("end drake_config()", config = out)
   out

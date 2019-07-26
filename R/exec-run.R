@@ -120,3 +120,44 @@ resolve_timeouts <- function(target, config) {
     FUN.VALUE = numeric(1)
   )
 }
+
+# From withr https://github.com/r-lib/withr, copyright RStudio, GPL (>=2)
+with_seed <- function(seed, code) {
+  force(seed)
+  with_preserve_seed({
+    set.seed(seed)
+    code
+  })
+}
+
+# From withr https://github.com/r-lib/withr, copyright RStudio, GPL (>=2)
+with_preserve_seed <- function(code) {
+  old_seed <- get_valid_seed()
+  on.exit(assign(".Random.seed", old_seed, globalenv()), add = TRUE)
+  code
+}
+
+# From withr https://github.com/r-lib/withr, copyright RStudio, GPL (>=2)
+get_valid_seed <- function() {
+  seed <- get_seed()
+  if (is.null(seed)) {
+    # Trigger initialisation of RNG
+    sample.int(1L) # nocov
+    seed <- get_seed() # nocov
+  }
+  seed
+}
+
+# From withr https://github.com/r-lib/withr, copyright RStudio, GPL (>=2)
+get_seed <- function() {
+  no_seed_yet <- !exists(
+    ".Random.seed",
+    globalenv(),
+    mode = "integer",
+    inherits = FALSE
+  )
+  if (no_seed_yet) {
+    return(NULL) # nocov
+  }
+  get(".Random.seed", globalenv(), mode = "integer", inherits = FALSE)
+}
