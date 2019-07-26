@@ -19,7 +19,7 @@ recover_target <- function(target, meta, config) {
     target,
     target = target,
     config = config,
-    color = colors["recover"],
+    color = "recover",
     tier = 1L
   )
   log_msg(

@@ -3,7 +3,7 @@ log_msg <- function(
   target = character(0),
   config,
   tier = 2L,
-  color = colors["default"]
+  color = "default"
 ) {
   assert_config_not_plan(config)
   drake_log(..., target = target, config = config)
@@ -17,8 +17,9 @@ log_msg <- function(
     return()
   }
   msg <- c(...)
-  if (!is.null(color) && requireNamespace("crayon", quietly = TRUE)) {
-    msg[1] <- crayon::make_style(color)(msg[1])
+  hex <- text_color(color)
+  if (!is.null(hex) && requireNamespace("crayon", quietly = TRUE)) {
+    msg[1] <- crayon::make_style(hex)(msg[1])
   }
   if (config$verbose > 1L) {
     msg[1] <- paste0("\r", msg[1])
@@ -131,3 +132,19 @@ show_source <- function(target, config, character_only = FALSE) {
       prefix, target, " was built from command:\n  ", target, " = ", command)
   }
 }
+
+text_color <- Vectorize(function(x) {
+  color <- switch(
+    x,
+    default = "dodgerblue3",
+    target = "green3",
+    recover = "dodgerblue3",
+    retry = "#9400d3",
+    missing = "#9400d3",
+    fail = "red",
+    "#888888"
+  )
+  col2hex(color)
+},
+"x", USE.NAMES = FALSE)
+

@@ -88,26 +88,30 @@ test_with_dir("drake_build works as expected", {
 
 test_with_dir("colors and shapes", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_is(color_of("target"), "character")
-  expect_is(color_of("import"), "character")
-  expect_is(color_of("not found"), "character")
-  expect_is(color_of("not found"), "character")
-  expect_equal(color_of("bluhlaksjdf"), color_of("other"))
-  expect_is(shape_of("object"), "character")
-  expect_is(shape_of("file"), "character")
-  expect_is(shape_of("not found"), "character")
-  expect_equal(shape_of("bluhlaksjdf"), shape_of("other"))
+  expect_is(text_color("target"), "character")
+  expect_is(text_color("import"), "character")
+  expect_is(text_color("not found"), "character")
+  expect_is(text_color("not found"), "character")
+  expect_is(node_color("target"), "character")
+  expect_is(node_color("import"), "character")
+  expect_is(node_color("not found"), "character")
+  expect_is(node_color("not found"), "character")
+  expect_equal(node_color("bluhlaksjdf"), node_color("other"))
+  expect_is(node_shape("object"), "character")
+  expect_is(node_shape("file"), "character")
+  expect_is(node_shape("not found"), "character")
+  expect_equal(node_shape("bluhlaksjdf"), node_shape("other"))
 })
 
 test_with_dir("shapes", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_is(shape_of("target"), "character")
-  expect_is(shape_of("import"), "character")
-  expect_is(shape_of("not found"), "character")
-  expect_is(shape_of("object"), "character")
-  expect_is(color_of("file"), "character")
-  expect_is(color_of("not found"), "character")
-  expect_equal(color_of("bluhlaksjdf"), color_of("other"))
+  expect_is(node_shape("target"), "character")
+  expect_is(node_shape("import"), "character")
+  expect_is(node_shape("not found"), "character")
+  expect_is(node_shape("object"), "character")
+  expect_is(node_color("file"), "character")
+  expect_is(node_color("not found"), "character")
+  expect_equal(node_color("bluhlaksjdf"), node_color("other"))
 })
 
 test_with_dir("make() with skip_targets", {

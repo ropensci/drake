@@ -174,7 +174,7 @@ file_hover_text <- Vectorize(function(encoded_file, targets, config) {
 "encoded_file")
 
 filter_legend_nodes <- function(legend_nodes, all_nodes) {
-  colors <- c(unique(all_nodes$color), color_of("object"))
+  colors <- c(unique(all_nodes$color), node_color("object"))
   shapes <- unique(all_nodes$shape)
   ln <- legend_nodes
   ln[ln$color %in% colors & ln$shape %in% shapes, , drop = FALSE] # nolint
@@ -291,16 +291,16 @@ legend_nodes <- function(font_size = 20) {
       "File",
       "Cluster"
     ),
-    color = color_of(c(
+    color = node_color(c(
       "up_to_date",
       "outdated",
       "running",
       "failed",
-      "import_node",
-      "missing_node",
+      "import",
+      "missing",
       rep("generic", 4)
     )),
-    shape = shape_of(c(
+    shape = node_shape(c(
       rep("object", 7),
       "funct",
       "file",
@@ -382,16 +382,16 @@ resolve_levels <- function(config) {
 style_nodes <- function(config) {
   with(config, {
     nodes$font.size <- font_size # nolint
-    nodes[nodes$status == "imported", "color"] <- color_of("import_node")
-    nodes[nodes$status == "running", "color"] <- color_of("running")
-    nodes[nodes$status == "failed", "color"] <- color_of("failed")
-    nodes[nodes$status == "missing", "color"] <- color_of("missing_node")
-    nodes[nodes$status == "outdated", "color"] <- color_of("outdated")
-    nodes[nodes$status == "up to date", "color"] <- color_of("up_to_date")
-    nodes[nodes$type == "object", "shape"] <- shape_of("object")
-    nodes[nodes$type == "file", "shape"] <- shape_of("file")
-    nodes[nodes$type == "function", "shape"] <- shape_of("funct")
-    nodes[nodes$type == "cluster", "shape"] <- shape_of("cluster")
+    nodes[nodes$status == "imported", "color"] <- node_color("import")
+    nodes[nodes$status == "running", "color"] <- node_color("running")
+    nodes[nodes$status == "failed", "color"] <- node_color("failed")
+    nodes[nodes$status == "missing", "color"] <- node_color("missing")
+    nodes[nodes$status == "outdated", "color"] <- node_color("outdated")
+    nodes[nodes$status == "up to date", "color"] <- node_color("up_to_date")
+    nodes[nodes$type == "object", "shape"] <- node_shape("object")
+    nodes[nodes$type == "file", "shape"] <- node_shape("file")
+    nodes[nodes$type == "function", "shape"] <- node_shape("funct")
+    nodes[nodes$type == "cluster", "shape"] <- node_shape("cluster")
     nodes
   })
 }
@@ -424,7 +424,7 @@ trim_node_categories <- function(config) {
   config
 }
 
-shape_of <- Vectorize(function(x) {
+node_shape <- Vectorize(function(x) {
   switch(
     x,
     object = "dot",
@@ -435,3 +435,32 @@ shape_of <- Vectorize(function(x) {
   )
 },
 "x", USE.NAMES = FALSE)
+
+node_color <- Vectorize(function(x) {
+  color <- switch(
+    x,
+    default = "dodgerblue3",
+    fail = "red",
+    up_to_date = "forestgreen",
+    outdated = "#000000",
+    failed = "#aa0000",
+    import = "dodgerblue3",
+    missing = "darkorchid3",
+    running = "#ff7221",
+    "#888888"
+  )
+  col2hex(color)
+},
+"x", USE.NAMES = FALSE)
+
+# copied from the gtools package
+col2hex <- function(cname) {
+  assert_pkg("grDevices")
+  col_mat <- grDevices::col2rgb(cname)
+  grDevices::rgb(
+    red = col_mat[1, ] / 255,
+    green = col_mat[2, ] / 255,
+    blue = col_mat[3, ] / 255
+  )
+}
+

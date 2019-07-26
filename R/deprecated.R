@@ -1267,6 +1267,21 @@ drake_palette <- function() {
 # Show drake's color palette.
 drake_palette_ <- function() {
   assert_pkg("crayon")
+  colors <- c(
+    default = "dodgerblue3",
+    target = "green3",
+    recover = "dodgerblue3",
+    retry = "#9400d3",
+    missing = "#9400d3",
+    fail = "red",
+    up_to_date = "forestgreen",
+    outdated = "#000000",
+    failed = "#aa0000",
+    import_node = "dodgerblue3",
+    missing_node = "darkorchid3",
+    running = "#ff7221",
+    other = "#888888"
+  )
   for (i in seq_along(colors)) {
     message(crayon::make_style(colors[i])(names(colors)[i]))
   }

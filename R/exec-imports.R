@@ -27,7 +27,7 @@ process_import <- function(import, config) {
       "missing",
       target = display_key(import, config),
       config = config,
-      color = colors["missing"]
+      color = "missing"
     )
   } else {
     log_msg("import", target = display_key(import, config), config = config)

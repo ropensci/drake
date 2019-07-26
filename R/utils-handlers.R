@@ -22,7 +22,7 @@ handle_build_exceptions <- function(target, meta, config) {
       target,
       target = target,
       config = config,
-      color = colors["fail"],
+      color = "fail",
       tier = 1L
     )
     store_failure(target = target, meta = meta, config = config)

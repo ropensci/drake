@@ -10,7 +10,7 @@ announce_build <- function(target, meta, config) {
     target,
     target = target,
     config = config,
-    color = colors["target"],
+    color = "target",
     tier = 1L
   )
 }
@@ -46,7 +46,7 @@ build_target <- function(target, meta, config) {
         max_retries,
         target = target,
         config = config,
-        color = colors["retry"],
+        color = "retry",
         tier = 1L
       )
     }
