@@ -17,14 +17,6 @@ colors <- c(
   other = "#888888"
 )
 
-# Show drake's color palette.
-drake_palette_ <- function() {
-  assert_pkg("crayon")
-  for (i in seq_along(colors)) {
-    message(crayon::make_style(colors[i])(names(colors)[i]))
-  }
-}
-
 color_of <- Vectorize(function(x) {
   available <- x %in% names(colors)
   if (!available) {

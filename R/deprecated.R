@@ -1264,6 +1264,14 @@ drake_palette <- function() {
   drake_palette_()
 }
 
+# Show drake's color palette.
+drake_palette_ <- function() {
+  assert_pkg("crayon")
+  for (i in seq_along(colors)) {
+    message(crayon::make_style(colors[i])(names(colors)[i]))
+  }
+}
+
 #' @title Deprecated. Output a random tip about drake.
 #' @description Deprecated on 2019-01-12.
 #' @details Tips are usually related to news and usage.
