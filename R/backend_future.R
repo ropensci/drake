@@ -159,11 +159,11 @@ future_build <- function(target, meta, config, layout, protect) {
   do_prework(config = config, verbose_packages = FALSE)
   build <- build_target(target = target, meta = meta, config = config)
   if (identical(config$caching, "master")) {
-    build$checksum <- mc_get_outfile_checksum(target, config)
+    build$checksum <- get_outfile_checksum(target, config)
     return(build)
   }
   conclude_build(build = build, config = config)
-  list(target = target, checksum = mc_get_checksum(target, config))
+  list(target = target, checksum = get_checksum(target, config))
 }
 
 running_targets <- function(workers, config) {
@@ -210,14 +210,14 @@ conclude_worker <- function(worker, config, queue) {
   }
   build <- resolve_worker_value(worker = worker, config = config)
   if (identical(config$caching, "worker")) {
-    mc_wait_checksum(
+    wait_checksum(
       target = build$target,
       checksum = build$checksum,
       config = config
     )
     return(out)
   }
-  mc_wait_outfile_checksum(
+  wait_outfile_checksum(
     target = build$target,
     checksum = build$checksum,
     config = config

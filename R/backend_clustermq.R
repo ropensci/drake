@@ -98,14 +98,14 @@ cmq_conclude_build <- function(msg, config) {
   }
   cmq_conclude_target(target = build$target, config = config)
   if (identical(config$caching, "worker")) {
-    mc_wait_checksum(
+    wait_checksum(
       target = build$target,
       checksum = build$checksum,
       config = config
     )
     return()
   }
-  mc_wait_outfile_checksum(
+  wait_outfile_checksum(
     target = build$target,
     checksum = build$checksum,
     config = config
@@ -191,11 +191,11 @@ cmq_build <- function(target, meta, deps, layout, config) {
   }
   build <- build_target(target = target, meta = meta, config = config)
   if (identical(config$caching, "master")) {
-    build$checksum <- mc_get_outfile_checksum(target, config)
+    build$checksum <- get_outfile_checksum(target, config)
     return(build)
   }
   conclude_build(build = build, config = config)
-  list(target = target, checksum = mc_get_checksum(target, config))
+  list(target = target, checksum = get_checksum(target, config))
 }
 
 cmq_local_build <- function(target, config) {

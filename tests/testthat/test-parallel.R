@@ -60,27 +60,27 @@ test_with_dir("checksum functionality", {
   config$jobs <- 1
   config$cache <- storr::storr_environment()
   testrun(config)
-  checksum <- mc_get_checksum(target = "combined", config = config)
+  checksum <- get_checksum(target = "combined", config = config)
   bad <- "askldfklhjsdfkj"
   expect_false(grepl("NA", checksum))
   expect_true(
-    mc_is_good_checksum(
+    is_good_checksum(
       target = "combined", checksum = checksum, config = config))
   expect_false(
-    mc_is_good_checksum(
+    is_good_checksum(
       target = "combined", checksum = bad, config = config))
   expect_silent(
-    mc_wait_checksum(
+    wait_checksum(
       target = "combined", checksum = checksum, config = config, timeout = 0.1))
   expect_error(
-    mc_wait_checksum(
+    wait_checksum(
       target = "combined", checksum = bad, config = config, timeout = 0.1))
-  checksum <- mc_get_outfile_checksum(target = "combined", config = config)
+  checksum <- get_outfile_checksum(target = "combined", config = config)
   expect_silent(
-    mc_wait_outfile_checksum(
+    wait_outfile_checksum(
       target = "combined", checksum = checksum, config = config, timeout = 0.1))
   expect_error(
-    mc_wait_outfile_checksum(
+    wait_outfile_checksum(
       target = "combined", checksum = bad, config = config, timeout = 0.1))
 })
 
