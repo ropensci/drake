@@ -1,4 +1,4 @@
-#' @title Invalidate and unregister targets.
+#' @title Invalidate and deregister targets.
 #' @description Force targets to be out of date and remove target names
 #'   from the data in the cache.
 #' @details By default, [clean()] invalidates **all** targets,
@@ -6,14 +6,14 @@
 #'
 #'   1. Forces targets to be out of date so the next [make()]
 #'     does not skip them.
-#'   2. Dissociates targets' names from their values, so
-#'     `loadd(your_target)` and `readd(your_target)` no longer work.
+#'   2. Deregisters targets so `loadd(your_target)` and `readd(your_target)`
+#'     no longer work.
 #'
 #' By default, `clean()` does not actually remove the underlying data.
 #' Even old targets from the distant past are still in the cache
 #' and recoverable via `drake_history()` and `make(recover = TRUE)`.
 #' To actually remove target data from the cache, as well as any
-#' [file_out()] files associated with as-yet uncleaned targets,
+#' [file_out()] files from any targets you are currently cleaning,
 #' run `clean(garbage_collection = TRUE)`.
 #' Garbage collection is slow, but it reduces the storage burden of the cache.
 #' @seealso [drake_gc()], [make()]
@@ -62,7 +62,7 @@
 #' make(my_plan) # Run the project, build the targets.
 #' # Show all registered targets in the cache.
 #' cached()
-#' # Unregister 'summ_regression1_large' and 'small' in the cache.
+#' # Deregister 'summ_regression1_large' and 'small' in the cache.
 #' clean(summ_regression1_large, small)
 #' # Those objects are no longer registered as targets.
 #' cached()
@@ -109,10 +109,10 @@ clean <- function(
       namespaces = target_namespaces_()
     )
   }
+  if (garbage_collection && abort_gc(cache$driver$path)) {
+    return(invisible()) # tested manually in test-always-skipped.R # nocov
+  }
   if (!length(targets) && is.null(c(...))) {
-    if (abort_full_clean(cache$driver$path)) {
-      return(invisible()) # nocov
-    }
     targets <- cache$list()
   }
   if (purge) {
@@ -159,10 +159,12 @@ clean_single_target <- function(
 }
 
 #' @title Do garbage collection on the drake cache.
-#' @description The cache is a key-value store.
-#' By default, the [clean()] function removes
-#' values, but not keys.
-#' Garbage collection removes the remaining dangling files.
+#' @description Garbage collection removes obsolete target values
+#' from the cache.
+#' @details Caution: garbage collection *actually* removes data
+#' so it is no longer recoverable with [drake_history()] or
+#' `make(recover = TRUE)`. You cannot undo this operation.
+#' Use at your own risk.
 #' @seealso [clean()]
 #' @export
 #' @return`NULL`
@@ -276,6 +278,9 @@ rescue_cache <- function(
     )
   }
   if (garbage_collection) {
+    if (abort_gc(cache$driver$path)) {
+      return(invisible()) # tested manually in test-always-skipped.R # nocov
+    }
     cache$gc()
   }
   invisible()
@@ -299,16 +304,21 @@ touch_storr_object <- function(key, cache, namespace) {
   invisible(NULL)
 }
 
-abort_full_clean <- function(path) {
+abort_gc <- function(path) {
   menu_enabled <- .pkg_envir[["drake_clean_menu"]] %||%
     getOption("drake_clean_menu") %||%
     TRUE
   if (!(interactive() && menu_enabled)) {
     return(FALSE)
   }
+  # tested manually in test-always-skipped.R
   # nocov start
   title <- paste0(
-    "Really delete everything in the drake cache at ",
+    "clean(garbage_collection = TRUE), ",
+    "rescue_cache(garbage_collection = TRUE), and drake_gc() ",
+    "*actually* remove data, ",
+    "including file_out() files of targets you are currently cleaning. ",
+    "Really use garbage collection on the cache at ",
     shQuote(path),
     "? (Prompt shown once per session.)",
     sep = "\n"

@@ -2,7 +2,7 @@
 % Please edit documentation in R/api-clean.R
 \name{clean}
 \alias{clean}
-\title{Invalidate and unregister targets.}
+\title{Invalidate and deregister targets.}
 \usage{
 clean(..., list = character(0), destroy = FALSE, path = NULL,
   search = NULL, cache = drake::drake_cache(path = path, verbose =
@@ -70,15 +70,15 @@ so be careful. \code{\link[=clean]{clean()}} always:
 \enumerate{
 \item Forces targets to be out of date so the next \code{\link[=make]{make()}}
 does not skip them.
-\item Dissociates targets' names from their values, so
-\code{loadd(your_target)} and \code{readd(your_target)} no longer work.
+\item Deregisters targets so \code{loadd(your_target)} and \code{readd(your_target)}
+no longer work.
 }
 
 By default, \code{clean()} does not actually remove the underlying data.
 Even old targets from the distant past are still in the cache
 and recoverable via \code{drake_history()} and \code{make(recover = TRUE)}.
 To actually remove target data from the cache, as well as any
-\code{\link[=file_out]{file_out()}} files associated with as-yet uncleaned targets,
+\code{\link[=file_out]{file_out()}} files from any targets you are currently cleaning,
 run \code{clean(garbage_collection = TRUE)}.
 Garbage collection is slow, but it reduces the storage burden of the cache.
 }
@@ -90,7 +90,7 @@ load_mtcars_example() # Get the code with drake_example("mtcars").
 make(my_plan) # Run the project, build the targets.
 # Show all registered targets in the cache.
 cached()
-# Unregister 'summ_regression1_large' and 'small' in the cache.
+# Deregister 'summ_regression1_large' and 'small' in the cache.
 clean(summ_regression1_large, small)
 # Those objects are no longer registered as targets.
 cached()

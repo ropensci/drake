@@ -48,6 +48,7 @@ DataFest
 del
 demografia
 deps
+deregister
 dereferenced
 deterministically
 devtools
@@ -218,7 +219,6 @@ un
 unhandled
 Univa
 unparsable
-unregister
 untimed
 vectorization
 vectorized

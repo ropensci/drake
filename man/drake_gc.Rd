@@ -32,10 +32,14 @@ running version of drake.}
 \code{NULL}
 }
 \description{
-The cache is a key-value store.
-By default, the \code{\link[=clean]{clean()}} function removes
-values, but not keys.
-Garbage collection removes the remaining dangling files.
+Garbage collection removes obsolete target values
+from the cache.
+}
+\details{
+Caution: garbage collection \emph{actually} removes data
+so it is no longer recoverable with \code{\link[=drake_history]{drake_history()}} or
+\code{make(recover = TRUE)}. You cannot undo this operation.
+Use at your own risk.
 }
 \examples{
 \dontrun{

@@ -181,13 +181,13 @@ test_with_dir("make() in interactive mode", {
   expect_equal(cached(), sort(my_plan$target))
   expect_equal(sort(outdated(config)), character(0))
   expect_equal(sort(justbuilt(config)), sort(my_plan$target))
-  clean() # Select 1.
+  clean(garbage_collection = TRUE) # Select 1.
   .pkg_envir$drake_make_menu <- NULL
   make(my_plan) # Select 1.
   expect_equal(cached(), sort(my_plan$target))
   expect_equal(sort(outdated(config)), character(0))
   expect_equal(sort(justbuilt(config)), sort(my_plan$target))
-  clean() # No menu
+  clean(garbage_collection = TRUE) # No menu
   .pkg_envir$drake_make_menu <- NULL
   options(drake_make_menu = FALSE)
   make(my_plan) # No menu.
@@ -209,23 +209,40 @@ test_with_dir("clean() in interactive mode", {
   config <- drake_config(my_plan)
   make(my_plan) # Select 1.
   expect_equal(sort(cached()), sort(my_plan$target))
-  clean() # Select 2.
+  clean(garbage_collection = TRUE) # Select 2.
   expect_equal(sort(cached()), sort(my_plan$target))
   .pkg_envir$drake_clean_menu <- NULL
-  clean() # Select 0.
+  clean(garbage_collection = TRUE) # Select 0.
   expect_equal(sort(cached()), sort(my_plan$target))
   .pkg_envir$drake_clean_menu <- NULL
-  clean() # Select 1.
+  clean(garbage_collection = TRUE) # Select 1.
   expect_equal(sort(cached()), character(0))
   make(my_plan)
   expect_equal(sort(cached()), sort(my_plan$target))
-  clean() # No menu.
+  clean(garbage_collection = TRUE) # No menu.
   expect_equal(sort(cached()), character(0))
   make(my_plan)
   .pkg_envir$drake_clean_menu <- NULL
   options(drake_clean_menu = FALSE)
-  clean() # No menu.
+  clean(garbage_collection = TRUE) # No menu.
   expect_equal(sort(cached()), character(0))
+})
+
+test_with_dir("rescue_cache() in interactive mode", {
+  # Must run this test in a fresh new interactive session.
+  # Cannot be fully automated like the other tests.
+  options(drake_make_menu = TRUE, drake_clean_menu = TRUE)
+  load_mtcars_example()
+  config <- drake_config(my_plan)
+  make(my_plan) # Select 1.
+  expect_equal(sort(cached()), sort(my_plan$target))
+  clean(garbage_collection = FALSE)
+  rescue_cache(garbage_collection = TRUE) # Select 2.
+  expect_equal(sort(cached()), sort(my_plan$target))
+  .pkg_envir$drake_clean_menu <- NULL
+  clean(garbage_collection = FALSE)
+  rescue_cache(garbage_collection = TRUE) # Select 1.
+  expect_equal(sort(cached()), sort(my_plan$target))
 })
 
 test_with_dir("r_make() + clustermq", {
