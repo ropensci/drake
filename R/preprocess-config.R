@@ -811,3 +811,17 @@ progress_hash <- function(key, cache) {
   gsub("^.", substr(key, 1, 1), out)
 }
 
+choose_seed <- function(supplied, cache) {
+  supplied %||%
+    get_previous_seed(cache = cache) %||%
+    0L
+}
+
+get_previous_seed <- function(cache) {
+  if (cache$exists(key = "seed", namespace = "session")) {
+    cache$get(key = "seed", namespace = "session")
+  } else {
+    NULL
+  }
+}
+

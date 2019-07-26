@@ -315,3 +315,14 @@ dir_size <- function(x) {
   sizes <- vapply(files, file_size, FUN.VALUE = numeric(1))
   max(sizes %||% 0)
 }
+
+# A numeric hash that could be used as a
+# random number generator seed. Generated
+# from arguments of basic types such as
+# numerics and characters.
+seed_from_basic_types <- function(...) {
+  x <- paste0(..., collapse = "")
+  hash <- digest::digest(x, algo = "murmur32", serialize = FALSE)
+  hexval <- paste0("0x", hash)
+  utils::type.convert(hexval) %% .Machine$integer.max
+}
