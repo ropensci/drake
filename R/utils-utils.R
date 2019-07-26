@@ -158,12 +158,6 @@ na_omit <- function(x) {
   x[!is.na(x)]
 }
 
-padded_scale <- function(x) {
-  r <- range(x)
-  pad <- 0.2 * (r[2] - r[1])
-  c(r[1] - pad, r[2] + pad)
-}
-
 rehash_storage_size_cutoff <- 1e5
 
 safe_is_na <- function(x) {

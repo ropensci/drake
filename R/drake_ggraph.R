@@ -162,3 +162,9 @@ render_drake_ggraph <- function(
   }
   out
 }
+
+padded_scale <- function(x) {
+  r <- range(x)
+  pad <- 0.2 * (r[2] - r[1])
+  c(r[1] - pad, r[2] + pad)
+}

@@ -423,3 +423,15 @@ trim_node_categories <- function(config) {
   }
   config
 }
+
+shape_of <- Vectorize(function(x) {
+  switch(
+    x,
+    object = "dot",
+    file = "square",
+    funct = "triangle",
+    cluster = "diamond",
+    "dot"
+  )
+},
+"x", USE.NAMES = FALSE)
