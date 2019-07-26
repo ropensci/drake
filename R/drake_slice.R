@@ -66,17 +66,6 @@ drake_slice <- function(data, slices, index, margin = 1L, drop = FALSE) {
   do.call(`[`, args)
 }
 
-slice_indices <- function(length, slices, index) {
-  if (length < 1L || slices < 1L || index < 1L || index > slices) {
-    return(integer(0))
-  }
-  inc <- as.integer(length / slices)
-  mod <- length %% slices
-  n <- inc + as.integer(index <= mod)
-  from <- 1L + inc * (index - 1L) + min(index - 1L, mod)
-  seq(from = from, length.out = n)
-}
-
 check_drake_slice_args <- function(slices, index, margin) {
   sclr <- length(slices) == 1L && length(index) && length(margin) == 1L
   if (sclr) {
@@ -87,4 +76,15 @@ check_drake_slice_args <- function(slices, index, margin) {
     "and index must each have length 1.",
     call. = FALSE
   )
+}
+
+slice_indices <- function(length, slices, index) {
+  if (length < 1L || slices < 1L || index < 1L || index > slices) {
+    return(integer(0))
+  }
+  inc <- as.integer(length / slices)
+  mod <- length %% slices
+  n <- inc + as.integer(index <= mod)
+  from <- 1L + inc * (index - 1L) + min(index - 1L, mod)
+  seq(from = from, length.out = n)
 }
