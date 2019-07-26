@@ -160,6 +160,68 @@ clean_single_target <- function(
   }
 }
 
+cleaned_namespaces_ <- function(
+  default = storr::storr_environment()$default_namespace
+) {
+  out <- c(default, "meta")
+  sort(out)
+}
+
+# List the `storr` cache namespaces that store target-level information.
+target_namespaces_ <- function(
+  default = storr::storr_environment()$default_namespace
+) {
+  out <- c(
+    cleaned_namespaces_(default = default),
+    "progress"
+  )
+  sort(out)
+}
+
+clean_recovery_msg <- function() {
+  msg_enabled <- .pkg_envir[["drake_clean_recovery_msg"]] %||%
+    getOption("drake_clean_recovery_msg") %||%
+    TRUE
+  if (!(interactive() && msg_enabled)) {
+    return(FALSE)
+  }
+  # invoked manually in test-always-skipped.R
+  # nocov start
+  message(
+    "Undo clean(garbage_collection = FALSE) with make(recovery = TRUE). ",
+    "Also builds unrecoverable targets. Message shown once per session ",
+    "if options(drake_clean_recovery_msg) is not FALSE."
+  )
+  .pkg_envir[["drake_clean_recovery_msg"]] <- FALSE
+  invisible()
+  # nocov end
+}
+
+abort_gc <- function(path) {
+  menu_enabled <- .pkg_envir[["drake_clean_menu"]] %||%
+    getOption("drake_clean_menu") %||%
+    TRUE
+  if (!(interactive() && menu_enabled)) {
+    return(FALSE)
+  }
+  # tested manually in test-always-skipped.R
+  # nocov start
+  title <- paste0(
+    "clean(garbage_collection = TRUE), ",
+    "rescue_cache(garbage_collection = TRUE), and drake_gc() ",
+    "*actually* remove data, ",
+    "including file_out() files of targets you are currently cleaning. ",
+    "Really use garbage collection on the cache at ",
+    shQuote(path),
+    "? (Prompt shown once per session.)",
+    sep = "\n"
+  )
+  response <- utils::menu(choices = c("yes", "no"), title = title)
+  .pkg_envir[["drake_clean_menu"]] <- FALSE
+  !identical(as.integer(response), 1L)
+  # nocov end
+}
+
 #' @title Do garbage collection on the drake cache.
 #' @description Garbage collection removes obsolete target values
 #' from the cache.
@@ -304,48 +366,4 @@ touch_storr_object <- function(key, cache, namespace) {
   value <- cache$get_value(hash = hash, use_cache = FALSE)
   remove(value, envir = envir)
   invisible(NULL)
-}
-
-abort_gc <- function(path) {
-  menu_enabled <- .pkg_envir[["drake_clean_menu"]] %||%
-    getOption("drake_clean_menu") %||%
-    TRUE
-  if (!(interactive() && menu_enabled)) {
-    return(FALSE)
-  }
-  # tested manually in test-always-skipped.R
-  # nocov start
-  title <- paste0(
-    "clean(garbage_collection = TRUE), ",
-    "rescue_cache(garbage_collection = TRUE), and drake_gc() ",
-    "*actually* remove data, ",
-    "including file_out() files of targets you are currently cleaning. ",
-    "Really use garbage collection on the cache at ",
-    shQuote(path),
-    "? (Prompt shown once per session.)",
-    sep = "\n"
-  )
-  response <- utils::menu(choices = c("yes", "no"), title = title)
-  .pkg_envir[["drake_clean_menu"]] <- FALSE
-  !identical(as.integer(response), 1L)
-  # nocov end
-}
-
-clean_recovery_msg <- function() {
-  msg_enabled <- .pkg_envir[["drake_clean_recovery_msg"]] %||%
-    getOption("drake_clean_recovery_msg") %||%
-    TRUE
-  if (!(interactive() && msg_enabled)) {
-    return(FALSE)
-  }
-  # invoked manually in test-always-skipped.R
-  # nocov start
-  message(
-    "Undo clean(garbage_collection = FALSE) with make(recovery = TRUE). ",
-    "Also builds unrecoverable targets. Message shown once per session ",
-    "if options(drake_clean_recovery_msg) is not FALSE."
-  )
-  .pkg_envir[["drake_clean_recovery_msg"]] <- FALSE
-  invisible()
-  # nocov end
 }

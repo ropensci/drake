@@ -120,28 +120,6 @@ drake_pmap <- function(.l, .f, jobs = 1, ...) {
     jobs = jobs)
 }
 
-drake_tidyselect_cache <- function(
-  ...,
-  list = character(0),
-  cache,
-  namespaces = cache$default_namespace
-) {
-  suppressPackageStartupMessages(
-    suppressWarnings(
-      eval(parse(text = "require('tidyselect', quietly = TRUE)"))
-    )
-  )
-  out <- tidyselect::vars_select(
-    .vars = list_multiple_namespaces(cache = cache, namespaces = namespaces),
-    ...,
-    .strict = FALSE
-  )
-  out <- unname(out)
-  c(out, list)
-}
-
-
-
 file_extn <- function(x) {
   x <- basename(x)
   x <- strsplit(x, split = ".", fixed = TRUE)

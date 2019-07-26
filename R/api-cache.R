@@ -653,3 +653,34 @@ drake_cache_version <- function(cache) {
     as.character(utils::packageVersion("drake"))
   }
 }
+
+list_multiple_namespaces <- function(cache, namespaces, jobs = 1) {
+  out <- lightly_parallelize(
+    X = namespaces,
+    FUN = function(namespace) {
+      cache$list(namespace = namespace)
+    },
+    jobs = jobs
+  )
+  Reduce(out, f = base::union)
+}
+
+drake_tidyselect_cache <- function(
+  ...,
+  list = character(0),
+  cache,
+  namespaces = cache$default_namespace
+) {
+  suppressPackageStartupMessages(
+    suppressWarnings(
+      eval(parse(text = "require('tidyselect', quietly = TRUE)"))
+    )
+  )
+  out <- tidyselect::vars_select(
+    .vars = list_multiple_namespaces(cache = cache, namespaces = namespaces),
+    ...,
+    .strict = FALSE
+  )
+  out <- unname(out)
+  c(out, list)
+}
