@@ -343,7 +343,7 @@ clean_recovery_msg <- function() {
   message(
     "Undo clean(garbage_collection = FALSE) with make(recovery = TRUE). ",
     "Also builds unrecoverable targets. Message shown once per session ",
-    "if options(drake_clean_recovery_msg) is TRUE."
+    "if options(drake_clean_recovery_msg) is not FALSE."
   )
   .pkg_envir[["drake_clean_recovery_msg"]] <- FALSE
   invisible()
