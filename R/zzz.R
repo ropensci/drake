@@ -1,11 +1,43 @@
-.pkg_envir <- new.env(parent = emptyenv())
-
 .onAttach <- function(libname, pkgname) {
   verbose <- interactive() && (sample.int(n = 10, size = 1) < 1.5)
   f <- ifelse(verbose, invisible, suppressPackageStartupMessages)
   f(drake_tip_message())
   invisible()
 }
+
+drake_tip_message <- function() {
+  packageStartupMessage(drake_tip_())
+}
+
+drake_tip_ <- function() {
+  tips <- c(
+    "A new and improved way to create large drake plans:
+     https://ropenscilabs.github.io/drake-manual/plans.html#large-plans",
+
+    "Use diagnose() to retrieve
+     errors, warnings, messages, commands, runtimes, etc.",
+
+    "Use drake_example() to download code for a small drake workflow.",
+
+    "Check out the reference website https://ropensci.github.io/drake
+     and user manual https://ropenscilabs.github.io/drake-manual.",
+
+    "drake quickstart:
+     load_mtcars_example();
+     make(my_plan);
+     readd(small)"
+  )
+  tips <- wrap_text(tips)
+  sample(tips, 1)
+}
+
+wrap_text <- Vectorize(
+  function(x) {
+    x <- paste(strwrap(x), collapse = "\n")
+    unname(x)
+  },
+  "x"
+)
 
 .onLoad <- function(libname, pkgname) {
   warn_rdata()
@@ -31,7 +63,10 @@ warn_rdata <- function() {
 
 try_spinner <- function() {
   use_cli <- requireNamespace("cli", quietly = TRUE) &&
-    compareVersion(as.character(utils::packageVersion("cli")), "1.1.0") >= 0L
+    utils::compareVersion(
+      as.character(utils::packageVersion("cli")),
+      "1.1.0"
+    ) >= 0L
   if (use_cli) {
     .pkg_envir$spinner <- cli::make_spinner()
     return()
@@ -43,3 +78,5 @@ try_spinner <- function() {
   )
   # nocov end
 }
+
+.pkg_envir <- new.env(parent = emptyenv())
