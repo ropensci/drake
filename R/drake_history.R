@@ -151,6 +151,12 @@ drake_history <- function(
   weak_as_tibble(out)
 }
 
+default_history_queue <- function(cache_path) {
+  cache_dir <- dirname(cache_path)
+  history_path <- file.path(cache_dir, ".drake_history")
+  txtq::txtq(history_path)
+}
+
 history_from_cache <- function(meta_hash, cache) {
   if (!cache$exists_object(meta_hash)) {
     return(
@@ -211,24 +217,4 @@ history_analyze_value <- function(name, value, ht) {
   if (is.atomic(value) && length(value) == 1) {
     ht_set(ht = ht, x = name, value = value)
   }
-}
-
-default_history_queue <- function(cache_path) {
-  cache_dir <- dirname(cache_path)
-  history_path <- file.path(cache_dir, ".drake_history")
-  txtq::txtq(history_path)
-}
-
-is_history <- function(history) {
-  inherits(history, "R6_txtq")
-}
-
-initialize_history <- function(history, cache_path) {
-  if (identical(history, TRUE)) {
-    history <- default_history_queue(cache_path)
-  }
-  if (!is.null(history) && !identical(history, FALSE)) {
-    stopifnot(is_history(history))
-  }
-  history
 }

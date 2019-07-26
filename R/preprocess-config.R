@@ -780,3 +780,17 @@ sanitize_targets <- function(targets, plan) {
   }
   out
 }
+
+initialize_history <- function(history, cache_path) {
+  if (identical(history, TRUE)) {
+    history <- default_history_queue(cache_path)
+  }
+  if (!is.null(history) && !identical(history, FALSE)) {
+    stopifnot(is_history(history))
+  }
+  history
+}
+
+is_history <- function(history) {
+  inherits(history, "R6_txtq")
+}
