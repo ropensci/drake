@@ -42,6 +42,17 @@ text_color <- Vectorize(function(x) {
 },
 "x", USE.NAMES = FALSE)
 
+# copied from the gtools package
+col2hex <- function(cname) {
+  assert_pkg("grDevices")
+  col_mat <- grDevices::col2rgb(cname)
+  grDevices::rgb(
+    red = col_mat[1, ] / 255,
+    green = col_mat[2, ] / 255,
+    blue = col_mat[3, ] / 255
+  )
+}
+
 crop_text <- Vectorize(function(x, width = getOption("width")) {
   if (nchar(x) > width) {
     x <- paste0(substr(x, 1, width - 3), "...")
