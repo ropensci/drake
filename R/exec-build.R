@@ -83,10 +83,12 @@ assert_output_files <- function(target, meta, config) {
   files <- decode_path(files, config)
   missing_files <- files[!file.exists(files)]
   if (length(missing_files)) {
-    drake_warning(
-      "Missing files for target ", target, ":\n",
-      multiline_message(missing_files),
-      config = config
+    msg <- paste0(
+      "Missing files for target ",
+      target, ":\n",
+      multiline_message(missing_files)
     )
+    drake_log(paste("Warning:", msg), config = config)
+    warning(msg, call. = FALSE)
   }
 }

@@ -192,11 +192,12 @@ condition_trigger <- function(target, meta, config) {
     value <- as.logical(meta$trigger$condition)
   }
   if (length(value) != 1 || !is.logical(value)) {
-    drake_error(
+    msg <- paste0(
       "The `condition` trigger must evaluate to a logical of length 1. ",
-      "got `", value, "` for target ", target, ".",
-      config = config
+      "got `", value, "` for target ", target, "."
     )
+    drake_log(paste("Error:", msg), config = config)
+    stop(msg, call. = FALSE)
   }
   condition_decision(value = value, mode = meta$trigger$mode)
 }

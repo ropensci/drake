@@ -27,12 +27,13 @@ handle_build_exceptions <- function(target, meta, config) {
     )
     store_failure(target = target, meta = meta, config = config)
     if (!config$keep_going) {
-      drake_error(
+      msg <- paste0(
         "Target `", target, "` failed. Call `diagnose(", target,
         ")` for details. Error message:\n  ",
-        meta$error$message,
-        config = config
+        meta$error$message
       )
+      drake_log(paste("Error:", msg), config = config)
+      stop(msg, call. = FALSE)
     }
   }
 }

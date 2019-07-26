@@ -470,3 +470,40 @@ read_drake_seed <- function(
     stop("Pseudo-random seed not found in the cache.")
   }
 }
+
+#' @title Show how a target/import was produced.
+#' @description Show the command that produced a target
+#'   or indicate that the object or file was imported.
+#' @export
+#' @param target Symbol denoting the target or import
+#'   or a character vector if character_only is `TRUE`.
+#' @param config A [drake_config()] list.
+#' @param character_only Logical, whether to interpret
+#'   `target` as a symbol (`FALSE`) or character vector
+#'   (`TRUE`).
+#' @examples
+#' \dontrun{
+#' isolate_example("contain side effects", {
+#' plan <- drake_plan(x = sample.int(15))
+#' cache <- storr::storr_environment() # custom in-memory cache
+#' make(plan, cache = cache)
+#' config <- drake_config(plan, cache = cache)
+#' show_source(x, config)
+#' })
+#' }
+show_source <- function(target, config, character_only = FALSE) {
+  if (!character_only) {
+    target <- as.character(substitute(target))
+  }
+  cache <- config$cache
+  meta <- diagnose(target = target, cache = cache, character_only = TRUE)
+  prefix <- ifelse(is_encoded_path(target), "File ", "Target ")
+  if (meta$imported) {
+    message(prefix, target, " was imported.")
+  } else {
+    command <- gsub("^\\{\n ", "", meta$command)
+    command <- gsub(" \n\\}$", "", command)
+    message(
+      prefix, target, " was built from command:\n  ", target, " = ", command)
+  }
+}

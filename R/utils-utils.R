@@ -297,6 +297,11 @@ make_unique <- function(x) {
   y[order(ord)]
 }
 
-microtime <- function() {
-  format(Sys.time(), "%Y-%m-%d %H:%M:%OS9 %z GMT")
+multiline_message <- function(x) {
+  n <- 30
+  if (length(x) > n) {
+    x <- c(x[1:(n - 1)], "...")
+  }
+  x <- paste0("  ", x)
+  paste(x, collapse = "\n")
 }

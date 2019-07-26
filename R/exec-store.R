@@ -118,7 +118,7 @@ finalize_meta <- function(target, meta, hash, config) {
   meta$time_start <- NULL
   meta$date <- microtime()
   if (!meta$imported && !is_encoded_path(target)) {
-    console_time(target, meta, config)
+    log_time(target, meta, config)
   }
   meta$hash <- hash
   meta
@@ -179,4 +179,23 @@ store_failure <- function(target, meta, config) {
     namespace = "meta",
     use_cache = FALSE
   )
+}
+
+log_time <- function(target, meta, config) {
+  if (is.null(config$console_log_file)) {
+    log_msg(config = config)
+    return()
+  }
+  if (requireNamespace("lubridate", quietly = TRUE)) {
+    exec <- round(lubridate::dseconds(meta$time_command$elapsed), 3)
+    total <- round(lubridate::dseconds( meta$time_build$elapsed), 3)
+    tail <- paste("", exec, "|", total, " (exec | total)")
+  } else {
+    tail <- " (install lubridate)" # nocov
+  }
+  log_msg("time", tail = tail, target = target, config = config)
+}
+
+microtime <- function() {
+  format(Sys.time(), "%Y-%m-%d %H:%M:%OS9 %z GMT")
 }

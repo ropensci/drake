@@ -82,11 +82,13 @@ mc_wait_checksum <- function(
     }
     i <- i + 1
   }
-  drake_error(
+  msg <- paste0(
     "Target `", target, "` did not download from your ",
     "network file system. Checksum verification timed out after about ",
-    timeout, " seconds.", config = config
+    timeout, " seconds."
   )
+  drake_log(paste("Error:", msg), config = config)
+  stop(msg, call. = FALSE)
 }
 
 mc_wait_outfile_checksum <- function(target, checksum, config, timeout = 300) {
@@ -100,8 +102,7 @@ mc_wait_outfile_checksum <- function(target, checksum, config, timeout = 300) {
 }
 
 mc_warn_no_checksum <- function(target, config) {
-  drake_warning(
-    "No checksum available for target ", target, ".",
-    config = config
-  )
+  msg <- paste0("No checksum available for target ", target, ".")
+  drake_log(paste("Warning:", msg), config = config)
+  warning(msg, call. = FALSE)
 }
