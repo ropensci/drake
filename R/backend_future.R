@@ -46,37 +46,33 @@ backend_future <- function(config) {
   }
 }
 
-#' @title Task passed to individual futures in the `"future"` backend
-#' @description For internal use only. Only exported to make available
-#' to futures.
-#' @keywords internal
-#' @export
-#' @return Either the target value or a list of build results.
-#' @param target Name of the target.
-#' @param meta A list of metadata.
-#' @param config A [drake_config()] list.
-#' @param protect Names of targets that still need their
-#' dependencies available in memory.
-future_build <- function(target, meta, config, layout, protect) {
-  config$layout <- list()
-  config$layout[[target]] <- layout
-  if (identical(config$caching, "worker")) {
-    manage_memory(target = target, config = config, downstream = protect)
-  }
-  do_prework(config = config, verbose_packages = FALSE)
-  build <- build_target(target = target, meta = meta, config = config)
-  if (identical(config$caching, "master")) {
-    build$checksum <- mc_get_outfile_checksum(target, config)
-    return(build)
-  }
-  conclude_build(build = build, config = config)
-  list(target = target, checksum = mc_get_checksum(target, config))
-}
-
 future_local_build <- function(target, config, queue, protect) {
   log_msg("local target", target = target, config = config)
   loop_build(target, config, downstream = protect)
   decrease_revdep_keys(queue, target, config)
+}
+
+ft_config <- function(config) {
+  discard <- c(
+    "imports",
+    "layout",
+    "plan",
+    "graph",
+    "targets",
+    "trigger"
+  )
+  for (x in discard) {
+    config[[x]] <- NULL
+  }
+  config$cache$flush_cache()
+  config
+}
+
+initialize_workers <- function(config) {
+  out <- list()
+  for (i in seq_len(config$jobs))
+    out[[i]] <- empty_worker(target = NA_character_)
+  out
 }
 
 new_worker <- function(id, target, config, ft_config, protect) {
@@ -143,44 +139,31 @@ future_globals <- function(target, meta, config, layout, protect) {
   globals
 }
 
-empty_worker <- function(target) {
-  structure(NA_character_, target = target)
-}
-
-is_empty_worker <- function(worker) {
-  !inherits(worker, "Future")
-}
-
-concluded_worker <- function() {
-  empty_worker(target = NULL)
-}
-
-is_concluded_worker <- function(worker) {
-  is.null(attr(worker, "target"))
-}
-
-# Need to check if the worker quit in error early somehow.
-# Maybe the job scheduler failed.
-# This should be the responsibility of the `future` package
-# or something lower level.
-is_idle <- function(worker) {
-  is_empty_worker(worker) ||
-    is_concluded_worker(worker) ||
-    future::resolved(worker)
-}
-
-work_remains <- function(queue, workers, config) {
-  !queue$empty() ||
-    !all_concluded(workers = workers, config = config)
-}
-
-all_concluded <- function(workers, config) {
-  for (worker in workers) {
-    if (!is_concluded_worker(worker)) {
-      return(FALSE)
-    }
+#' @title Task passed to individual futures in the `"future"` backend
+#' @description For internal use only. Only exported to make available
+#' to futures.
+#' @keywords internal
+#' @export
+#' @return Either the target value or a list of build results.
+#' @param target Name of the target.
+#' @param meta A list of metadata.
+#' @param config A [drake_config()] list.
+#' @param protect Names of targets that still need their
+#' dependencies available in memory.
+future_build <- function(target, meta, config, layout, protect) {
+  config$layout <- list()
+  config$layout[[target]] <- layout
+  if (identical(config$caching, "worker")) {
+    manage_memory(target = target, config = config, downstream = protect)
   }
-  TRUE
+  do_prework(config = config, verbose_packages = FALSE)
+  build <- build_target(target = target, meta = meta, config = config)
+  if (identical(config$caching, "master")) {
+    build$checksum <- mc_get_outfile_checksum(target, config)
+    return(build)
+  }
+  conclude_build(build = build, config = config)
+  list(target = target, checksum = mc_get_checksum(target, config))
 }
 
 running_targets <- function(workers, config) {
@@ -201,35 +184,18 @@ running_targets <- function(workers, config) {
   unlist(out)
 }
 
-initialize_workers <- function(config) {
-  out <- list()
-  for (i in seq_len(config$jobs))
-    out[[i]] <- empty_worker(target = NA_character_)
-  out
+# Need to check if the worker quit in error early somehow.
+# Maybe the job scheduler failed.
+# This should be the responsibility of the `future` package
+# or something lower level.
+is_idle <- function(worker) {
+  is_empty_worker(worker) ||
+    is_concluded_worker(worker) ||
+    future::resolved(worker)
 }
 
-ft_config <- function(config) {
-  discard <- c(
-    "imports",
-    "layout",
-    "plan",
-    "graph",
-    "targets",
-    "trigger"
-  )
-  for (x in discard) {
-    config[[x]] <- NULL
-  }
-  config$cache$flush_cache()
-  config
-}
-
-ft_decrease_revdep_keys <- function(worker, config, queue) {
-  target <- attr(worker, "target")
-  if (!length(target) || safe_is_na(target) || !is.character(target)) {
-    return()
-  }
-  decrease_revdep_keys(queue, target, config)
+is_empty_worker <- function(worker) {
+  !inherits(worker, "Future")
 }
 
 conclude_worker <- function(worker, config, queue) {
@@ -258,6 +224,22 @@ conclude_worker <- function(worker, config, queue) {
   )
   conclude_build(build = build, config = config)
   out
+}
+
+concluded_worker <- function() {
+  empty_worker(target = NULL)
+}
+
+empty_worker <- function(target) {
+  structure(NA_character_, target = target)
+}
+
+ft_decrease_revdep_keys <- function(worker, config, queue) {
+  target <- attr(worker, "target")
+  if (!length(target) || safe_is_na(target) || !is.character(target)) {
+    return()
+  }
+  decrease_revdep_keys(queue, target, config)
 }
 
 # Also caches error information if available.
@@ -291,4 +273,22 @@ resolve_worker_value <- function(worker, config) {
       )
     }
   )
+}
+
+work_remains <- function(queue, workers, config) {
+  !queue$empty() ||
+    !all_concluded(workers = workers, config = config)
+}
+
+all_concluded <- function(workers, config) {
+  for (worker in workers) {
+    if (!is_concluded_worker(worker)) {
+      return(FALSE)
+    }
+  }
+  TRUE
+}
+
+is_concluded_worker <- function(worker) {
+  is.null(attr(worker, "target"))
 }
