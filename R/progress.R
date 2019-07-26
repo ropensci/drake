@@ -1,3 +1,84 @@
+#' @title List running targets.
+#' @description List the targets that either
+#'   (1) are currently being built during a call to [make()], or
+#'   (2) if [make()] was interrupted, the targets that were running
+#'     at the time.
+#' @seealso [failed()], [make()]
+#' @export
+#' @return A character vector of target names.
+#' @inheritParams cached
+#' @examples
+#' \dontrun{
+#' isolate_example("Quarantine side effects.", {
+#' if (suppressWarnings(require("knitr"))) {
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
+#' make(my_plan) # Run the project, build the targets.
+#' running() # Everything should be done.
+#' # nolint start
+#' # Run make() in one R session...
+#' # slow_plan <- drake_plan(x = Sys.sleep(2))
+#' # make(slow_plan)
+#' # and see the progress in another session.
+#' # running()
+#' # nolint end
+#' }
+#' })
+#' }
+running <- function(
+  path = NULL,
+  search = NULL,
+  cache = drake::drake_cache(path = path, verbose = verbose),
+  verbose = 1L
+) {
+  deprecate_search(search)
+  prog <- progress(path = path, search = search, cache = cache)
+  prog$target[prog$progress == "running"]
+}
+
+#' @title List failed targets.
+#'   to [make()].
+#' @description Together, functions `failed()` and
+#' [diagnose()] should eliminate the strict need
+#' for ordinary error messages printed to the console.
+#' @seealso [running()], [make()]
+#' @export
+#' @return A character vector of target names.
+#' @inheritParams cached
+#' @param upstream_only Deprecated.
+#' @examples
+#' \dontrun{
+#' isolate_example("contain side effects", {
+#' if (suppressWarnings(require("knitr"))) {
+#' # Build a plan doomed to fail:
+#' bad_plan <- drake_plan(x = function_doesnt_exist())
+#' cache <- storr::storr_environment() # optional
+#' try(
+#'   make(bad_plan, cache = cache, history = FALSE),
+#'   silent = TRUE
+#' ) # error
+#' failed(cache = cache) # "x"
+#' e <- diagnose(x, cache = cache) # Retrieve the cached error log of x.
+#' names(e)
+#' e$error
+#' names(e$error)
+#' }
+#' })
+#' }
+failed <- function(
+  path = NULL,
+  search = NULL,
+  cache = drake::drake_cache(path = path, verbose = verbose),
+  verbose = 1L,
+  upstream_only = NULL
+) {
+  deprecate_search(search)
+  if (!is.null(upstream_only)) {
+    warning("argument upstream_only is deprecated.")
+  }
+  prog <- progress(path = path, search = search, cache = cache)
+  prog$target[prog$progress == "failed"]
+}
+
 #' @title Get the build progress of your targets
 #'   during a [make()].
 #' @description Objects that drake imported, built, or attempted
@@ -82,96 +163,12 @@ progress <- function(
   if (is.null(progress)) {
     return(out)
   }
-
   progress <- match.arg(
     progress,
     choices = c("done", "running", "failed", "none"),
     several.ok = TRUE
   )
-
-  out <- out[out$progress %in% progress, ]
-  out
-}
-
-#' @title List running targets.
-#' @description List the targets that either
-#'   (1) are currently being built during a call to [make()], or
-#'   (2) if [make()] was interrupted, the targets that were running
-#'     at the time.
-#' @seealso [failed()], [make()]
-#' @export
-#' @return A character vector of target names.
-#' @inheritParams cached
-#' @examples
-#' \dontrun{
-#' isolate_example("Quarantine side effects.", {
-#' if (suppressWarnings(require("knitr"))) {
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' make(my_plan) # Run the project, build the targets.
-#' running() # Everything should be done.
-#' # nolint start
-#' # Run make() in one R session...
-#' # slow_plan <- drake_plan(x = Sys.sleep(2))
-#' # make(slow_plan)
-#' # and see the progress in another session.
-#' # running()
-#' # nolint end
-#' }
-#' })
-#' }
-running <- function(
-  path = NULL,
-  search = NULL,
-  cache = drake::drake_cache(path = path, verbose = verbose),
-  verbose = 1L
-) {
-  deprecate_search(search)
-  prog <- progress(path = path, search = search, cache = cache)
-  prog$target[prog$progress == "running"]
-}
-
-#' @title List failed targets.
-#'   to [make()].
-#' @description Together, functions `failed()` and
-#' [diagnose()] should eliminate the strict need
-#' for ordinary error messages printed to the console.
-#' @seealso [running()], [make()]
-#' @export
-#' @return A character vector of target names.
-#' @inheritParams cached
-#' @param upstream_only Deprecated.
-#' @examples
-#' \dontrun{
-#' isolate_example("contain side effects", {
-#' if (suppressWarnings(require("knitr"))) {
-#' # Build a plan doomed to fail:
-#' bad_plan <- drake_plan(x = function_doesnt_exist())
-#' cache <- storr::storr_environment() # optional
-#' try(
-#'   make(bad_plan, cache = cache, history = FALSE),
-#'   silent = TRUE
-#' ) # error
-#' failed(cache = cache) # "x"
-#' e <- diagnose(x, cache = cache) # Retrieve the cached error log of x.
-#' names(e)
-#' e$error
-#' names(e$error)
-#' }
-#' })
-#' }
-failed <- function(
-  path = NULL,
-  search = NULL,
-  cache = drake::drake_cache(path = path, verbose = verbose),
-  verbose = 1L,
-  upstream_only = NULL
-) {
-  deprecate_search(search)
-  if (!is.null(upstream_only)) {
-    warning("argument upstream_only is deprecated.")
-  }
-  prog <- progress(path = path, search = search, cache = cache)
-  prog$target[prog$progress == "failed"]
+  out[out$progress %in% progress, ]
 }
 
 get_progress_single <- function(target, cache) {
@@ -187,34 +184,4 @@ get_progress_single <- function(target, cache) {
   } else{
     "none"
   }
-}
-
-set_progress <- function(target, meta, value, config) {
-  skip_progress <- !identical(config$running_make, TRUE) ||
-    !config$log_progress ||
-    (meta$imported %||% FALSE)
-  if (skip_progress) {
-    return()
-  }
-  config$cache$driver$set_hash(
-    key = target,
-    namespace = "progress",
-    hash = config$progress_hashmap[[value]]
-  )
-}
-
-progress_hashmap <- function(cache) {
-  keys <- c("running", "done", "failed")
-  out <- lapply(keys, progress_hash, cache = cache)
-  names(out) <- keys
-  out
-}
-
-progress_hash <- function(key, cache) {
-  out <- digest::digest(
-    key,
-    algo = cache_hash_algorithm(cache),
-    serialize = FALSE
-  )
-  gsub("^.", substr(key, 1, 1), out)
 }

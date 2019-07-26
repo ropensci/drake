@@ -794,3 +794,20 @@ initialize_history <- function(history, cache_path) {
 is_history <- function(history) {
   inherits(history, "R6_txtq")
 }
+
+progress_hashmap <- function(cache) {
+  keys <- c("running", "done", "failed")
+  out <- lapply(keys, progress_hash, cache = cache)
+  names(out) <- keys
+  out
+}
+
+progress_hash <- function(key, cache) {
+  out <- digest::digest(
+    key,
+    algo = cache_hash_algorithm(cache),
+    serialize = FALSE
+  )
+  gsub("^.", substr(key, 1, 1), out)
+}
+

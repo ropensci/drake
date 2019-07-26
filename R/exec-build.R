@@ -15,6 +15,20 @@ announce_build <- function(target, meta, config) {
   )
 }
 
+set_progress <- function(target, meta, value, config) {
+  skip_progress <- !identical(config$running_make, TRUE) ||
+    !config$log_progress ||
+    (meta$imported %||% FALSE)
+  if (skip_progress) {
+    return()
+  }
+  config$cache$driver$set_hash(
+    key = target,
+    namespace = "progress",
+    hash = config$progress_hashmap[[value]]
+  )
+}
+
 build_target <- function(target, meta, config) {
   if (identical(config$garbage_collection, TRUE)) {
     on.exit(gc())
