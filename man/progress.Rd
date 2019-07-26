@@ -61,7 +61,6 @@ make(my_plan) # Run the project, build the targets.
 progress() # List all the targets reached so far.
 progress(small, large) # Just see the progress of some targets.
 progress(list = c("small", "large")) # Same as above.
-progress(no_imported_objects = TRUE) # Ignore imported R objects.
 }
 })
 }

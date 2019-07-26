@@ -8,14 +8,14 @@ output: html_document
 
 Is there an association between the weight and the fuel efficiency of cars? To find out, we use the `mtcars` dataset from the `datasets` package. The `mtcars` data originally came from the 1974 Motor Trend US magazine, and it contains design and performance data on 32 models of automobile.
 
-```{r showmtcars}
+```{r mtcars}
 # ?mtcars # more info
 head(mtcars)
 ```
 
 Here, `wt` is weight in tons, and `mpg` is fuel efficiency in miles per gallon. We want to figure out if there is an association between `wt` and `mpg`. The `mtcars` dataset itself only has 32 rows, so we generated two larger bootstrapped datasets. We called them `small` and `large`.
 
-```{r example_chunk}
+```{r load_datasets}
 library(drake)
 head(readd(small)) # 48 rows
 loadd(large)       # 64 rows
@@ -24,7 +24,7 @@ head(large)
 
 Then, we fit a couple regression models to the `small` and `large` to try to detect an association between `wt` and `mpg`. Here are the coefficients and p-values from one of the model fits.
 
-```{r second_example_chunk}
+```{r load_coef}
 readd(coef_regression2_small)
 ```
 
