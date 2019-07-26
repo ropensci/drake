@@ -229,7 +229,12 @@ test_with_dir("force with a non-back-compatible cache", {
   expect_equal(cache_vers_check(NULL), character(0))
   expect_null(drake_cache())
   expect_true(inherits(suppressWarnings(recover_cache()), "storr"))
-  write_v6.2.1_project() # nolint
+  zip <- system.file(
+    file.path("testing", "built_mtcars_example_v6.2.1.zip"),
+    package = "drake",
+    mustWork = TRUE
+  )
+  unzip(zip, exdir = ".", setTimes = TRUE)
   expect_warning(drake_cache(), regexp = "compatible")
   expect_warning(recover_cache(), regexp = "compatible")
   suppressWarnings(

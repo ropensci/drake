@@ -18,6 +18,19 @@ test_with_dir("set_testing_scenario", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   original <- get_testing_scenario_name()
   original_opt <- getOption(test_option_name)
+  with_all_options <- function(code) {
+    old <- options()
+    on.exit(restore_options(old))
+    force(code)
+  }
+  restore_options <- function(old) {
+    current <- options()
+    remove_these <- setdiff(names(current), names(old))
+    removal_list <- as.list(old[remove_these])
+    names(removal_list) <- remove_these
+    do.call(options, removal_list)
+    options(old)
+  }
   with_all_options({
     expect_equal(get_testing_scenario_name(), original)
     expect_error(set_testing_scenario("lskdjf"))

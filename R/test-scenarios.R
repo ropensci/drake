@@ -72,6 +72,10 @@ set_testing_scenario <- function(scenario = NULL) {
   options(new)
 }
 
+set_test_backend <- function() {
+  eval(parse(text = get_testing_scenario()$backend))
+}
+
 should_skip <- function(scenario_name, os = this_os()) {
   scenarios <- testing_scenarios()
   scenario_name <- match.arg(
@@ -111,4 +115,20 @@ test_scenarios <- function(
       )
     }
   }
+}
+
+unit_test_files <- function(path = getwd(), max_depth = 100) {
+  # find the package root
+  p <- normalizePath(dirname(path))
+  criterion <- "DESCRIPTION"
+  for (i in seq_len(max_depth)) {
+    if (length(list.files(p, pattern = criterion))) {
+      # found criterion file; make sure it's ours
+      if (any(grepl("^Package: drake$", readLines(file.path(p, criterion))))) {
+        return(file.path(p, "tests", "testthat"))
+      }
+    }
+    p <- dirname(p)
+  }
+  stop("Maximum search of ", max_depth, " exceeded for ", path)
 }
