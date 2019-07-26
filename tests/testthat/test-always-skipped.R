@@ -204,6 +204,7 @@ test_with_dir("make() in interactive mode", {
 test_with_dir("clean() in interactive mode", {
   # Must run this test in a fresh new interactive session.
   # Cannot be fully automated like the other tests.
+  .pkg_envir$drake_clean_menu <- NULL
   options(drake_make_menu = TRUE, drake_clean_menu = TRUE)
   load_mtcars_example()
   config <- drake_config(my_plan)
@@ -231,18 +232,34 @@ test_with_dir("clean() in interactive mode", {
 test_with_dir("rescue_cache() in interactive mode", {
   # Must run this test in a fresh new interactive session.
   # Cannot be fully automated like the other tests.
+  .pkg_envir$drake_clean_menu <- NULL
   options(drake_make_menu = TRUE, drake_clean_menu = TRUE)
   load_mtcars_example()
   config <- drake_config(my_plan)
   make(my_plan) # Select 1.
   expect_equal(sort(cached()), sort(my_plan$target))
   clean(garbage_collection = FALSE)
-  rescue_cache(garbage_collection = TRUE) # Select 2.
-  expect_equal(sort(cached()), sort(my_plan$target))
+  rescue_cache(garbage_collection = TRUE) # Select 2
+  expect_equal(sort(cached()), character(0))
   .pkg_envir$drake_clean_menu <- NULL
   clean(garbage_collection = FALSE)
   rescue_cache(garbage_collection = TRUE) # Select 1.
-  expect_equal(sort(cached()), sort(my_plan$target))
+  expect_equal(sort(cached()), character(0))
+})
+
+test_with_dir("recovery ad in clean()", {
+  # Must run this test in a fresh new interactive session.
+  # Cannot be fully automated like the other tests.
+  .pkg_envir$drake_clean_menu <- NULL
+  options(drake_clean_recovery_msg = TRUE)
+  plan <- drake_plan(x = 1)
+  make(plan)
+  .pkg_envir$drake_clean_recovery_msg <- NULL
+  expect_message(clean(garbage_collection = FALSE), regexp = "recover")
+  expect_silent(clean(garbage_collection = FALSE))
+  options(drake_clean_recovery_msg = TRUE)
+  .pkg_envir$drake_clean_recovery_msg <- NULL
+  expect_message(clean(garbage_collection = FALSE), regexp = "recover")
 })
 
 test_with_dir("r_make() + clustermq", {

@@ -133,6 +133,8 @@ clean <- function(
   }
   if (garbage_collection) {
     cache$gc()
+  } else {
+    clean_recovery_msg()
   }
   invisible()
 }
@@ -326,5 +328,24 @@ abort_gc <- function(path) {
   response <- utils::menu(choices = c("yes", "no"), title = title)
   .pkg_envir[["drake_clean_menu"]] <- FALSE
   !identical(as.integer(response), 1L)
+  # nocov end
+}
+
+clean_recovery_msg <- function() {
+  msg_enabled <- .pkg_envir[["drake_clean_recovery_msg"]] %||%
+    getOption("drake_clean_recovery_msg") %||%
+    TRUE
+  if (!(interactive() && msg_enabled)) {
+    return(FALSE)
+  }
+  # invoked manually in test-always-skipped.R
+  # nocov start
+  message(
+    "Undo clean(garbage_collection = FALSE) with make(recovery = TRUE). ",
+    "Also builds unrecoverable targets. Message shown once per session ",
+    "if options(drake_clean_recovery_msg) is TRUE."
+  )
+  .pkg_envir[["drake_clean_recovery_msg"]] <- FALSE
+  invisible()
   # nocov end
 }
