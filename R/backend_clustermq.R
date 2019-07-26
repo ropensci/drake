@@ -53,6 +53,21 @@ cmq_set_common_data <- function(config) {
   )
 }
 
+cmq_config <- function(config) {
+  discard <- c(
+    "imports",
+    "layout",
+    "plan",
+    "targets",
+    "trigger"
+  )
+  for (x in discard) {
+    config[[x]] <- NULL
+  }
+  config$cache$flush_cache()
+  config
+}
+
 cmq_master <- function(config) {
   on.exit(config$workers$finalize())
   log_msg("begin scheduling targets", config = config)
@@ -71,6 +86,31 @@ cmq_master <- function(config) {
   if (config$workers$cleanup()) {
     on.exit()
   }
+}
+
+cmq_conclude_build <- function(msg, config) {
+  build <- msg$result
+  if (is.null(build)) {
+    return()
+  }
+  if (inherits(build, "try-error")) {
+    stop(attr(build, "condition")$message, call. = FALSE) # nocov
+  }
+  cmq_conclude_target(target = build$target, config = config)
+  if (identical(config$caching, "worker")) {
+    mc_wait_checksum(
+      target = build$target,
+      checksum = build$checksum,
+      config = config
+    )
+    return()
+  }
+  mc_wait_outfile_checksum(
+    target = build$target,
+    checksum = build$checksum,
+    config = config
+  )
+  conclude_build(build = build, config = config)
 }
 
 cmq_next_target <- function(config) {
@@ -115,21 +155,6 @@ cmq_send_target <- function(target, config) {
   )
 }
 
-cmq_config <- function(config) {
-  discard <- c(
-    "imports",
-    "layout",
-    "plan",
-    "targets",
-    "trigger"
-  )
-  for (x in discard) {
-    config[[x]] <- NULL
-  }
-  config$cache$flush_cache()
-  config
-}
-
 cmq_deps_list <- function(target, config) {
   deps <- config$layout[[target]]$deps_build$memory
   out <- lapply(
@@ -140,12 +165,6 @@ cmq_deps_list <- function(target, config) {
   )
   names(out) <- deps
   out
-}
-
-cmq_local_build <- function(target, config) {
-  log_msg("build", "locally", target = target, config = config)
-  loop_build(target, config, downstream = NULL)
-  cmq_conclude_target(target = target, config = config)
 }
 
 #' @title Build a target using the clustermq backend
@@ -179,29 +198,10 @@ cmq_build <- function(target, meta, deps, layout, config) {
   list(target = target, checksum = mc_get_checksum(target, config))
 }
 
-cmq_conclude_build <- function(msg, config) {
-  build <- msg$result
-  if (is.null(build)) {
-    return()
-  }
-  if (inherits(build, "try-error")) {
-    stop(attr(build, "condition")$message, call. = FALSE) # nocov
-  }
-  cmq_conclude_target(target = build$target, config = config)
-  if (identical(config$caching, "worker")) {
-    mc_wait_checksum(
-      target = build$target,
-      checksum = build$checksum,
-      config = config
-    )
-    return()
-  }
-  mc_wait_outfile_checksum(
-    target = build$target,
-    checksum = build$checksum,
-    config = config
-  )
-  conclude_build(build = build, config = config)
+cmq_local_build <- function(target, config) {
+  log_msg("build", "locally", target = target, config = config)
+  loop_build(target, config, downstream = NULL)
+  cmq_conclude_target(target = target, config = config)
 }
 
 cmq_conclude_target <- function(target, config) {
