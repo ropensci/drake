@@ -51,7 +51,8 @@
 #' # If you set the same seed as before, you can even
 #' # rename targets without having to build them again.
 #' # For an example, see
-#' # https://github.com/ropensci/drake/blob/master/README.md#reproducible-data-recovery-and-renaming. # nolint
+#' # the "Reproducible data recovery and renaming" section of
+#' # https://github.com/ropensci/drake/blob/master/README.md.
 #' }
 #' })
 #' }
