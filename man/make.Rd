@@ -551,7 +551,7 @@ if (suppressWarnings(require("knitr"))) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 config <- drake_config(my_plan)
 outdated(config) # Which targets need to be (re)built?
-make(my_plan, jobs = 2) # Build what needs to be built.
+make(my_plan) # Build what needs to be built.
 outdated(config) # Everything is up to date.
 # Change one of your imported function dependencies.
 reg2 = function(d) {
@@ -565,6 +565,9 @@ if (requireNamespace("visNetwork", quietly = TRUE)) {
 vis_drake_graph(config) # See how they fit in an interactive graph.
 make(my_plan, cache_log_file = TRUE) # Write a CSV log file this time.
 vis_drake_graph(config) # The colors changed in the graph.
+# Run targets in parallel:
+# options(clustermq.scheduler = "multicore") # nolint
+# make(my_plan, parallelism = "clustermq", jobs = 2) # nolint
 }
 clean() # Start from scratch next time around.
 }

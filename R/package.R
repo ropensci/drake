@@ -25,16 +25,6 @@
 #' readd(small)
 #' loadd(large)
 #' head(large)
-#' clean() # Restart from scratch.
-#' make(my_plan, jobs = 2) # Distribute over 2 parallel jobs.
-#' clean() # Restart from scratch.
-#' # Parallelize over at most 4 separate R sessions.
-#' # Requires Rtools on Windows.
-#' # make(my_plan, jobs = 4, parallelism = "clustermq") # nolint
-#' # Everything is already up to date.
-#' # make(my_plan, jobs = 4, parallelism = "clustermq") # nolint
-#' clean(destroy = TRUE) # Totally remove the cache.
-#' unlink("report.Rmd") # Clean up the remaining files.
 #' }
 #' })
 #' }

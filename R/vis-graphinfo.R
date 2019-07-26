@@ -209,3 +209,477 @@ drake_graph_info <- function(
     default_title = default_graph_title()
   )
 }
+
+hover_lines <- 10
+hover_width <- 49
+
+append_build_times <- function(config) {
+  with(config, {
+    time_data <- build_times(
+      digits = digits,
+      cache = cache,
+      type = build_times
+    )
+    timed <- intersect(time_data$target, nodes$id)
+    if (!length(timed)) {
+      return(nodes)
+    }
+    time_labels <- as.character(time_data$elapsed)
+    names(time_labels) <- time_data$target
+    time_labels <- time_labels[timed]
+    nodes[timed, "label"] <-
+      paste(nodes[timed, "label"], time_labels, sep = "\n")
+    nodes
+  })
+}
+
+append_output_file_nodes <- function(config) {
+  with(config, {
+    cols <- setdiff(colnames(nodes), c("id", "label", "level", "shape", "type"))
+    for (target in intersect(names(file_out), nodes$id)) {
+      files <- intersect(file_out[[target]], nodes$id)
+      if (length(files)){
+        for (col in cols) {
+          nodes[files, col] <- nodes[target, col]
+        }
+      }
+    }
+    nodes
+  })
+}
+
+categorize_nodes <- function(config) {
+  with(config, {
+    nodes$status <- "imported"
+    nodes[targets, "status"] <- "up to date"
+    nodes[missing, "status"] <- "missing"
+    nodes[outdated, "status"] <- "outdated"
+    nodes[running, "status"] <- "running"
+    nodes[failed, "status"] <- "failed"
+    nodes$type <- "object"
+    nodes[is_encoded_path(nodes$id), "type"] <- "file"
+    nodes[functions, "type"] <- "function"
+    nodes
+  })
+}
+
+cluster_nodes <- function(config) {
+  for (cluster in config$clusters) {
+    index <- config$nodes[[config$group]] == cluster
+    index[is.na(index)] <- FALSE
+    if (!any(index)) {
+      next
+    }
+    new_node <- config$nodes[index, ]
+    status <- cluster_status(new_node$status)
+    new_node <- new_node[which.max(new_node$level), ]
+    new_node$status <- status
+    new_node$type <- "cluster"
+    new_node <- style_nodes(
+      config = list(nodes = new_node, font_size = config$font_size))
+    new_node$label <- new_node$id <-
+      paste0(config$group, ": ", cluster)
+    matching <- config$nodes$id[index]
+    new_node$title <- paste(matching, collapse = ", ")
+    new_node$title <- crop_text(new_node$title, width = hover_width)
+    config$nodes <- rbind(config$nodes[!index, ], new_node)
+    config$edges$from[config$edges$from %in% matching] <- new_node$id
+    config$edges$to[config$edges$to %in% matching] <- new_node$id
+  }
+  config$nodes$level <- as.integer(ordered(config$nodes$level))
+  config$edges <- config$edges[!duplicated(config$edges), ]
+  config$edges <- config$edges[config$edges$from != config$edges$to, ]
+  config
+}
+
+cluster_status <- function(statuses) {
+  precedence <- c(
+    "other",
+    "imported",
+    "up to date",
+    "missing",
+    "outdated",
+    "running",
+    "failed"
+  )
+  out <- "other"
+  for (status in precedence) {
+    if (status %in% statuses) {
+      out <- status
+    }
+  }
+  out
+}
+
+configure_nodes <- function(config) {
+  rownames(config$nodes) <- config$nodes$id
+  config$nodes$label <- display_keys(config$nodes$label, config)
+  config$nodes <- categorize_nodes(config = config)
+  config$nodes <- style_nodes(config = config)
+  config$nodes <- resolve_levels(config = config)
+  if (config$build_times != "none") {
+    config$nodes <- append_build_times(config = config)
+  }
+  hover_text(config = config)
+}
+
+coord_set <- function(nodes) {
+  nodes <- coord_x(nodes)
+  nodes <- coord_y(nodes)
+  nodes
+}
+
+coord_rescale <- function(x, min, max) {
+  x <- x - min(x)
+  x <- x / max(x)
+  x <- x * (max - min)
+  x <- x + min
+  x [!is.finite(x)] <- (min + max) / 2
+  x
+}
+
+coord_x <- function(nodes, min = -1, max = 1) {
+  nodes$x <- coord_rescale(nodes$level, min = min, max = max)
+  nodes
+}
+
+coord_y <- function(nodes, min = -1, max = 1) {
+  splits <- split(nodes, nodes$x)
+  out <- lapply(splits, coord_y_stage, min = min, max = max)
+  out <- do.call(rbind, out)
+  out$y <- coord_rescale(out$y, min = min, max = max)
+  out
+}
+
+coord_y_stage <- function(nodes, min, max) {
+  y <- seq(from = min, to = max, length.out = nrow(nodes) + 2)
+  nodes$y <- y[c(-1, -length(y))]
+  nodes
+}
+
+#' @title Return the default title for graph visualizations
+#' @description For internal use only.
+#' @export
+#' @keywords internal
+#' @return A character scalar with the default graph title.
+#' @examples
+#' default_graph_title()
+default_graph_title <- function() {
+  "Dependency graph"
+}
+
+file_hover_text <- Vectorize(function(encoded_file, targets, config) {
+  decoded_file <- decode_path(encoded_file, config)
+  if (encoded_file %in% targets || !file.exists(decoded_file)) {
+    return(encoded_file)
+  }
+  tryCatch({
+    x <- readLines(decoded_file, n = 20, warn = FALSE)
+    x <- crop_lines(x, n = hover_lines)
+    x <- crop_text(x, width = hover_width)
+    paste0(x, collapse = "<br>")
+  },
+  error = function(e) encoded_file,
+  warning = function(w) encoded_file
+  )
+},
+"encoded_file")
+
+filter_legend_nodes <- function(legend_nodes, all_nodes) {
+  colors <- c(unique(all_nodes$color), node_color("object"))
+  shapes <- unique(all_nodes$shape)
+  ln <- legend_nodes
+  ln[ln$color %in% colors & ln$shape %in% shapes, , drop = FALSE] # nolint
+}
+
+filtered_legend_nodes <- function(all_nodes, full_legend, font_size) {
+  legend_nodes <- legend_nodes(font_size = font_size)
+  if (full_legend) {
+    legend_nodes
+  } else {
+    filter_legend_nodes(legend_nodes = legend_nodes, all_nodes = all_nodes)
+  }
+}
+
+function_hover_text <- Vectorize(function(function_name, envir) {
+  x <- tryCatch(
+    get(x = function_name, envir = envir),
+    error = function(e) function_name
+  )
+  x <- unwrap_function(x)
+  style_hover_text(x)
+},
+"function_name")
+
+get_cluster_grouping <- function(config, group) {
+  vapply(
+    X = config$nodes$id,
+    FUN = function(x) {
+      out <- config$layout[[x]][[group]]
+      if (!is.character(out)) {
+        out <- safe_deparse(out)
+      }
+      out %||% NA_character_
+    },
+    FUN.VALUE = character(1)
+  )
+}
+
+get_raw_node_category_data <- function(config) {
+  all_labels <- V(config$graph)$name
+  config$targets <- all_targets(config)
+  config$outdated <- resolve_graph_outdated(config = config)
+  config$running <- running(cache = config$cache)
+  config$failed <- failed(cache = config$cache)
+  config$files <- parallel_filter(
+    x = all_labels,
+    f = is_encoded_path,
+    jobs = config$jobs_preprocess
+  )
+  config$functions <- parallel_filter(
+    x = config$import_names,
+    f = function(x) {
+      is.function(get_import_from_memory(x, config = config))
+    },
+    jobs = config$jobs_preprocess
+  )
+  config$missing <- parallel_filter(
+    x = config$import_names,
+    f = function(x) {
+      missing_import(x, config = config)
+    },
+    jobs = config$jobs_preprocess
+  )
+  config
+}
+
+hover_text <- function(config) {
+  with(config, {
+    if (!hover) {
+      nodes$title <-
+        "Call drake_graph_info(hover = TRUE) for informative text."
+      return(nodes)
+    }
+    nodes$title <- nodes$id
+    import_files <- setdiff(files, targets)
+    nodes[import_files, "title"] <-
+      file_hover_text(encoded_file = import_files, targets, config)
+    nodes[functions, "title"] <-
+      function_hover_text(function_name = functions, envir = config$envir)
+    nodes[targets, "title"] <-
+      target_hover_text(targets = targets, config = config)
+    nodes
+  })
+}
+
+#' @title Create the nodes data frame used in the legend
+#'   of the graph visualizations.
+#' @export
+#' @description Output a `visNetwork`-friendly
+#' data frame of nodes. It tells you what
+#' the colors and shapes mean
+#' in the graph visualizations.
+#' @param font_size Font size of the node label text.
+#' @return A data frame of legend nodes for the graph visualizations.
+#' @examples
+#' \dontrun{
+#' # Show the legend nodes used in graph visualizations.
+#' # For example, you may want to inspect the color palette more closely.
+#' if (requireNamespace("visNetwork", quietly = TRUE)) {
+#' # visNetwork::visNetwork(nodes = legend_nodes()) # nolint
+#' }
+#' }
+legend_nodes <- function(font_size = 20) {
+  out <- weak_tibble(
+    label = c(
+      "Up to date",
+      "Outdated",
+      "Running",
+      "Failed",
+      "Imported",
+      "Missing",
+      "Object",
+      "Function",
+      "File",
+      "Cluster"
+    ),
+    color = node_color(c(
+      "up_to_date",
+      "outdated",
+      "running",
+      "failed",
+      "import",
+      "missing",
+      rep("generic", 4)
+    )),
+    shape = node_shape(c(
+      rep("object", 7),
+      "funct",
+      "file",
+      "cluster"
+    )),
+    font.color = "black",
+    font.size = font_size
+  )
+  out$id <- seq_len(nrow(out))
+  out
+}
+
+null_graph <- function() {
+  assert_pkg("visNetwork")
+  nodes <- data.frame(id = 1, label = "Nothing to plot.")
+  visNetwork::visNetwork(
+    nodes = nodes,
+    edges = data.frame(from = NA_character_, to = NA_character_),
+    main = "Nothing to plot."
+  )
+}
+
+# I would use styler for indentation here,
+# but it adds a lot of processing time
+# for large functions.
+style_hover_text <- function(x) {
+  if (!is.character(x)) {
+    x <- safe_deparse(x)
+  }
+  x <- crop_lines(x, n = hover_lines)
+  x <- crop_text(x, width = hover_width)
+  x <- gsub(pattern = " ", replacement = "&nbsp;", x = x)
+  x <- gsub(pattern = "\n", replacement = "<br>", x = x)
+  paste0(x, collapse = "<br>")
+}
+
+resolve_build_times <- function(build_times) {
+  if (is.logical(build_times)) {
+    warning(
+      "The build_times argument to the visualization functions ",
+      "should be a character string: \"build\", \"command\", or \"none\". ",
+      "The change will be forced in a later version of `drake`. ",
+      "see the `build_times()` function for details."
+    )
+    if (build_times) {
+      build_times <- "build"
+    } else {
+      build_times <- "none"
+    }
+  }
+  build_times
+}
+
+resolve_graph_outdated <- function(config) {
+  if (config$from_scratch) {
+    config$outdated <- all_targets(config)
+  } else {
+    config$outdated <- outdated(
+      config = config,
+      make_imports = config$make_imports
+    )
+  }
+}
+
+resolve_levels <- function(config) {
+  config$nodes$level <- level <- 0
+  graph <- config$graph
+  check_drake_graph(graph)
+  while (length(V(graph))) {
+    level <- level + 1
+    leaves <- leaf_nodes(graph)
+    leaves <- intersect(leaves, config$nodes$id)
+    config$nodes[leaves, "level"] <- level
+    graph <- igraph::delete_vertices(graph = graph, v = leaves)
+  }
+  config$nodes
+}
+
+style_nodes <- function(config) {
+  with(config, {
+    nodes$font.size <- font_size # nolint
+    nodes[nodes$status == "imported", "color"] <- node_color("import")
+    nodes[nodes$status == "running", "color"] <- node_color("running")
+    nodes[nodes$status == "failed", "color"] <- node_color("failed")
+    nodes[nodes$status == "missing", "color"] <- node_color("missing")
+    nodes[nodes$status == "outdated", "color"] <- node_color("outdated")
+    nodes[nodes$status == "up to date", "color"] <- node_color("up_to_date")
+    nodes[nodes$type == "object", "shape"] <- node_shape("object")
+    nodes[nodes$type == "file", "shape"] <- node_shape("file")
+    nodes[nodes$type == "function", "shape"] <- node_shape("funct")
+    nodes[nodes$type == "cluster", "shape"] <- node_shape("cluster")
+    nodes
+  })
+}
+
+target_hover_text <- function(targets, config) {
+  commands <- vapply(
+    X = targets,
+    FUN = function(target) {
+      config$layout[[target]]$command_standardized
+    },
+    FUN.VALUE = character(1),
+    USE.NAMES = FALSE
+  )
+  vapply(
+    X = commands,
+    FUN = style_hover_text,
+    FUN.VALUE = character(1),
+    USE.NAMES = FALSE
+  )
+}
+
+trim_node_categories <- function(config) {
+  elts <- c(
+    "failed", "files", "functions", "running", "missing",
+    "outdated", "targets"
+  )
+  for (elt in elts) {
+    config[[elt]] <- intersect(config[[elt]], config$nodes$id)
+  }
+  config
+}
+
+node_shape <- Vectorize(function(x) {
+  switch(
+    x,
+    object = "dot",
+    file = "square",
+    funct = "triangle",
+    cluster = "diamond",
+    "dot"
+  )
+},
+"x", USE.NAMES = FALSE)
+
+node_color <- Vectorize(function(x) {
+  color <- switch(
+    x,
+    default = "dodgerblue3",
+    fail = "red",
+    up_to_date = "forestgreen",
+    outdated = "#000000",
+    failed = "#aa0000",
+    import = "dodgerblue3",
+    missing = "darkorchid3",
+    running = "#ff7221",
+    "#888888"
+  )
+  col2hex(color)
+},
+"x", USE.NAMES = FALSE)
+
+# copied from the gtools package
+col2hex <- function(cname) {
+  assert_pkg("grDevices")
+  col_mat <- grDevices::col2rgb(cname)
+  grDevices::rgb(
+    red = col_mat[1, ] / 255,
+    green = col_mat[2, ] / 255,
+    blue = col_mat[3, ] / 255
+  )
+}
+
+crop_lines <- function(x, n = 10) {
+  if (length(x) > n) {
+    x <- x[1:(n - 1)]
+    x[n] <- "..."
+  }
+  x
+}
