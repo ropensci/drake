@@ -419,3 +419,8 @@ test_with_dir("running()", {
   )
   expect_equal(running(cache = cache), "a")
 })
+
+test_with_dir("isolate_example()", {
+  isolate_example("example", file.create("abc"))
+  expect_false(file.exists("abc"))
+})
