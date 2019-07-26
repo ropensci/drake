@@ -260,3 +260,15 @@ render_drake_graph <- function(
   }
   out
 }
+
+is_image_filename <- function(x) {
+  tolower(file_extn(x)) %in% c("jpg", "jpeg", "pdf", "png")
+}
+
+random_tempdir <- function() {
+  while (file.exists(dir <- tempfile())) {
+    Sys.sleep(1e-6) # nocov
+  }
+  dir.create(dir)
+  dir
+}

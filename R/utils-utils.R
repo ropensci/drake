@@ -150,10 +150,6 @@ file_extn <- function(x) {
   x[1]
 }
 
-is_image_filename <- function(x) {
-  tolower(file_extn(x)) %in% c("jpg", "jpeg", "pdf", "png")
-}
-
 is_imported <- function(target, config) {
   config$layout[[target]]$imported %||% TRUE
 }
@@ -166,14 +162,6 @@ padded_scale <- function(x) {
   r <- range(x)
   pad <- 0.2 * (r[2] - r[1])
   c(r[1] - pad, r[2] + pad)
-}
-
-random_tempdir <- function() {
-  while (file.exists(dir <- tempfile())) {
-    Sys.sleep(1e-6) # nocov
-  }
-  dir.create(dir)
-  dir
 }
 
 rehash_storage_size_cutoff <- 1e5
