@@ -112,7 +112,7 @@ test_with_dir("can gracefully conclude a crashed worker", {
         conclude_worker(
           worker = worker,
           config = con,
-          queue = new_priority_queue(config = con)
+          queue = priority_queue(config = con)
         )
       ),
       regexp = "failed"

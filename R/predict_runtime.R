@@ -197,7 +197,7 @@ worker_prediction_info <- function(
       order = igraph::gorder(config$graph)
     )
   }
-  queue <- new_priority_queue(config, jobs = 1)
+  queue <- priority_queue(config, jobs = 1)
   running <- data.frame(
     target = character(0),
     time = numeric(0),
