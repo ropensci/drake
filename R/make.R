@@ -255,66 +255,6 @@ make <- function(
   invisible()
 }
 
-check_make_call <- function(call) {
-  x <- names(call)
-  if ("config" %in% names(call) && sum(nzchar(x)) > 1L) {
-    warning(
-      "if you supply a ", shQuote("config"),
-      " argument to ", shQuote("make()"),
-      " then all additional arguments are ignored. ",
-      "For example, in ", shQuote("make(config = config, verbose = 0L)"),
-      "verbosity remains at ", shQuote("config$verbose"), ".",
-      call. = FALSE
-    )
-  }
-}
-
-outdated_subgraph <- function(config) {
-  outdated <- outdated(config, do_prework = FALSE, make_imports = FALSE)
-  log_msg("isolate oudated targets", config = config)
-  igraph::induced_subgraph(graph = config$graph, vids = outdated)
-}
-
-process_targets <- function(config) {
-  if (is.character(config$parallelism)) {
-    run_native_backend(config)
-  } else {
-    run_external_backend(config)
-  }
-}
-
-run_native_backend <- function(config) {
-  parallelism <- match.arg(
-    config$parallelism,
-    c("loop", "clustermq", "future")
-  )
-  if (igraph::gorder(config$graph)) {
-    get(
-      paste0("backend_", parallelism),
-      envir = getNamespace("drake")
-    )(config)
-  } else {
-    log_msg(
-      "All targets are already up to date.",
-      config = config,
-      tier = 1L
-    )
-  }
-}
-
-run_external_backend <- function(config) {
-  warning(
-    "`drake` can indeed accept a custom scheduler function for the ",
-    "`parallelism` argument of `make()` ",
-    "but this is only for the sake of experimentation ",
-    "and graceful deprecation. ",
-    "Your own custom schedulers may cause surprising errors. ",
-    "Use at your own risk.",
-    call. = FALSE
-  )
-  config$parallelism(config = config)
-}
-
 process_imports <- function(config) {
   if (on_windows() && config$jobs_preprocess > 1L) {
     process_imports_parLapply(config) # nocov
@@ -425,6 +365,52 @@ process_imports_parLapply <- function(config) { # nolint
   invisible()
 }
 
+process_targets <- function(config) {
+  if (is.character(config$parallelism)) {
+    run_native_backend(config)
+  } else {
+    run_external_backend(config)
+  }
+}
+
+run_native_backend <- function(config) {
+  parallelism <- match.arg(
+    config$parallelism,
+    c("loop", "clustermq", "future")
+  )
+  if (igraph::gorder(config$graph)) {
+    get(
+      paste0("backend_", parallelism),
+      envir = getNamespace("drake")
+    )(config)
+  } else {
+    log_msg(
+      "All targets are already up to date.",
+      config = config,
+      tier = 1L
+    )
+  }
+}
+
+run_external_backend <- function(config) {
+  warning(
+    "`drake` can indeed accept a custom scheduler function for the ",
+    "`parallelism` argument of `make()` ",
+    "but this is only for the sake of experimentation ",
+    "and graceful deprecation. ",
+    "Your own custom schedulers may cause surprising errors. ",
+    "Use at your own risk.",
+    call. = FALSE
+  )
+  config$parallelism(config = config)
+}
+
+outdated_subgraph <- function(config) {
+  outdated <- outdated(config, do_prework = FALSE, make_imports = FALSE)
+  log_msg("isolate oudated targets", config = config)
+  igraph::induced_subgraph(graph = config$graph, vids = outdated)
+}
+
 initialize_session <- function(config) {
   runtime_checks(config = config)
   config$cache$set(key = "seed", value = config$seed, namespace = "session")
@@ -479,6 +465,97 @@ conclude_session <- function(config) {
     gc()
   }
   invisible()
+}
+
+check_make_call <- function(call) {
+  x <- names(call)
+  if ("config" %in% names(call) && sum(nzchar(x)) > 1L) {
+    warning(
+      "if you supply a ", shQuote("config"),
+      " argument to ", shQuote("make()"),
+      " then all additional arguments are ignored. ",
+      "For example, in ", shQuote("make(config = config, verbose = 0L)"),
+      "verbosity remains at ", shQuote("config$verbose"), ".",
+      call. = FALSE
+    )
+  }
+}
+
+runtime_checks <- function(config) {
+  if (identical(config$skip_safety_checks, TRUE)) {
+    return(invisible())
+  }
+  missing_input_files(config = config)
+  subdirectory_warning(config = config)
+  assert_outside_cache(config = config)
+}
+
+missing_input_files <- function(config) {
+  files <- parallel_filter(
+    all_imports(config),
+    f = is_encoded_path,
+    jobs = config$jobs_preprocess
+  )
+  files <- decode_path(x = files, config = config)
+  missing_files <- files[!file_dep_exists(files)]
+  if (length(missing_files)) {
+    warning(
+      "missing input files:\n",
+      multiline_message(missing_files),
+      call. = FALSE
+    )
+  }
+  invisible()
+}
+
+subdirectory_warning <- function(config) {
+  if (identical(Sys.getenv("drake_warn_subdir"), "false")) {
+    return()
+  }
+  dir_cache <- config$cache$driver$path
+  if (is.null(dir_cache)) {
+    return()
+  }
+  if (!identical(basename(dir_cache), basename(default_cache_path()))) {
+    return()
+  }
+  dir_wd <- getwd()
+  in_root <- is.null(dir_cache) ||
+    basename(dir_cache) %in% list.files(path = dir_wd, all.files = TRUE)
+  if (in_root) {
+    return()
+  }
+  warning(
+    "Running make() in a subdirectory of your project. \n",
+    "This could cause problems if your ",
+    "file_in()/file_out()/knitr_in() files ",
+    "are relative paths.\n",
+    "Please either\n",
+    "  (1) run make() from your drake project root, or\n",
+    "  (2) create a cache in your working ",
+    "directory with new_cache('path_name'), or\n",
+    "  (3) supply a cache of your own (e.g. make(cache = your_cache))\n",
+    "      whose folder name is not '.drake'.\n",
+    "  running make() from: ", dir_wd, "\n",
+    "  drake project root:  ", dirname(dir_cache), "\n",
+    "  cache directory:     ", dir_cache,
+    call. = FALSE
+  )
+}
+
+assert_outside_cache <- function(config) {
+  work_dir <- normalizePath(getwd(), mustWork = FALSE)
+  cache_dir <- normalizePath(config$cache_path, mustWork = FALSE)
+  if (identical(work_dir, cache_dir)) {
+    stop(
+      "cannot run make() from inside the cache: ", shQuote(cache_dir),
+      ". The cache path must be different from your working directory. ",
+      "If your drake project lives at ", shQuote("/your/project/root/"), # nolint
+      " then you should run ", shQuote("make()"), " from this directory, ",
+      "and your cache should be in a subfolder, e.g. ",
+      shQuote("/your/project/root/.drake/") # nolint
+    )
+  }
 }
 
 prompt_intv_make <- function(config) {

@@ -1,6 +1,6 @@
-if (FALSE) {
+drake_context("manual tests")
 
-drake_context("always skipped")
+if (FALSE) {
 
 test_with_dir("imported online file with no internet", {
   # Disconnect from the internet.
@@ -170,6 +170,8 @@ test_with_dir("forks + lock_envir = informative error msg", {
 test_with_dir("make() in interactive mode", {
   # Must run this test in a fresh new interactive session.
   # Cannot be fully automated like the other tests.
+  .pkg_envir$drake_make_menu <- NULL
+  .pkg_envir$drake_clean_menu <- NULL
   options(drake_make_menu = TRUE, drake_clean_menu = TRUE)
   load_mtcars_example()
   config <- drake_config(my_plan)
@@ -204,6 +206,7 @@ test_with_dir("make() in interactive mode", {
 test_with_dir("clean() in interactive mode", {
   # Must run this test in a fresh new interactive session.
   # Cannot be fully automated like the other tests.
+  .pkg_envir$drake_make_menu <- NULL
   .pkg_envir$drake_clean_menu <- NULL
   options(drake_make_menu = TRUE, drake_clean_menu = TRUE)
   load_mtcars_example()
@@ -232,6 +235,7 @@ test_with_dir("clean() in interactive mode", {
 test_with_dir("rescue_cache() in interactive mode", {
   # Must run this test in a fresh new interactive session.
   # Cannot be fully automated like the other tests.
+  .pkg_envir$drake_make_menu <- NULL
   .pkg_envir$drake_clean_menu <- NULL
   options(drake_make_menu = TRUE, drake_clean_menu = TRUE)
   load_mtcars_example()
@@ -250,10 +254,15 @@ test_with_dir("rescue_cache() in interactive mode", {
 test_with_dir("recovery ad in clean()", {
   # Must run this test in a fresh new interactive session.
   # Cannot be fully automated like the other tests.
+  .pkg_envir$drake_make_menu <- NULL
   .pkg_envir$drake_clean_menu <- NULL
-  options(drake_clean_recovery_msg = TRUE)
+  options(
+    drake_make_menu = TRUE,
+    drake_clean_menu = TRUE,
+    drake_clean_recovery_msg = TRUE
+  )
   plan <- drake_plan(x = 1)
-  make(plan)
+  make(plan) # Select 1.
   .pkg_envir$drake_clean_recovery_msg <- NULL
   expect_message(clean(garbage_collection = FALSE), regexp = "recover")
   expect_silent(clean(garbage_collection = FALSE))

@@ -823,3 +823,111 @@ get_previous_seed <- function(cache) {
     NULL
   }
 }
+
+plan_checks <- function(plan) {
+  stopifnot(is.data.frame(plan))
+  if (!all(c("target", "command") %in% colnames(plan))) {
+    stop(
+      "The columns of your workflow plan data frame ",
+      "must include 'target' and 'command'.",
+      call. = FALSE
+    )
+  }
+  if (any(bad_symbols %in% plan$target)) {
+    stop(
+      "symbols that cannot be target names: \n",
+      multiline_message(shQuote(bad_symbols)),
+      call. = FALSE
+    )
+  }
+}
+
+config_checks <- function(config) {
+  if (identical(config$skip_safety_checks, TRUE)) {
+    return(invisible())
+  }
+  check_case_sensitivity(config)
+  check_drake_graph(graph = config$graph)
+  cache_vers_stop(config$cache)
+  check_parallelism(config$parallelism, config$jobs)
+  check_jobs(config$jobs)
+}
+
+check_case_sensitivity <- function(config) {
+  x <- igraph::V(config$graph)$name
+  x <- x[!is_encoded_path(x) & !is_encoded_namespaced(x)]
+  lower <- tolower(x)
+  i <- duplicated(lower)
+  if (!any(i)) {
+    return()
+  }
+  dups <- sort(x[which(lower %in% lower[i])])
+  warning(
+    "Duplicated target/import names when converting to lowercase:\n",
+    multiline_message(dups),
+    "\nDuplicates cause problems on Windows ",
+    "because the file system is case insensitive. Options:\n",
+    "  (1) Make your target/import names more unique.\n",
+    "  (2) Use a more portable custom cache, ",
+    "e.g. make(cache = storr::storr_rds(mangle_key = TRUE))\n",
+    "  (3) Avoid Windows.",
+    call. = FALSE
+  )
+}
+
+check_drake_graph <- function(graph) {
+  if (is_dag(graph)) {
+    return()
+  }
+  comp <- igraph::components(graph, mode = "strong")
+  cycle_component_indices <- which(comp$csize > 1)
+  cycles <- lapply(cycle_component_indices, function(i) {
+    out <- names(comp$membership[comp$membership == i])
+    out <- paste(out, collapse = " ")
+  })
+  cycles <- unlist(cycles)
+  stop(
+    "Circular workflow:\n",
+    "  at least one target in your drake plan\n",
+    "  ultimately depends on itself.\n",
+    "If you believe a dependency was detected in error\n",
+    "  (example: https://github.com/ropensci/drake/issues/578)\n",
+    "  then consider using ignore() to mask sections \n",
+    "  of your commands or imported functions.\n",
+    "Cycles:\n",
+    multiline_message(cycles),
+    call. = FALSE
+  )
+}
+
+check_parallelism <- function(parallelism, jobs) {
+  stopifnot(is.character(parallelism) || is.function(parallelism))
+  stopifnot(length(parallelism) > 0)
+  if (length(parallelism) > 1) {
+    stop(
+      "The `parallelism` argument of `make()` should be of length 1.",
+      call. = FALSE
+    )
+  }
+  if (identical(parallelism, "loop") && jobs > 1L) {
+    warning(
+      "In make(), `parallelism` should not be \"loop\" if `jobs` > 1",
+      call. = FALSE
+    )
+  }
+}
+
+check_jobs <- function(jobs) {
+  stopifnot(length(jobs) > 0)
+  stopifnot(is.numeric(jobs) || is.integer(jobs))
+  stopifnot(all(jobs > 0))
+  if (length(jobs) > 1) {
+    stop(
+      "The `jobs` argument of `make()` should be of length 1. ",
+      "Use the `jobs_preprocess` argument to parallelize the imports ",
+      "and other preprocessing tasks.",
+      call. = FALSE
+    )
+  }
+}
+
