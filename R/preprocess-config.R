@@ -930,4 +930,3 @@ check_jobs <- function(jobs) {
     )
   }
 }
-

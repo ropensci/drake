@@ -32,12 +32,12 @@
 #' deps_code("x + y + 123")
 deps_code <- function(x) {
   if (is.function(x)) {
-    out <- import_dependencies(x)
+    out <- cdl_import_dependencies(x)
   } else {
     if (is.character(x)) {
       x <- parse(text = x)
     }
-    out <- command_dependencies(x)
+    out <- cdl_command_dependencies(x)
   }
   display_deps_list(decode_deps_list(out))
 }
@@ -293,33 +293,4 @@ tracked <- function(config) {
 #' }
 file_store <- function(x) {
   encode_path(x)
-}
-
-import_dependencies <- function(
-  expr, exclude = character(0), allowed_globals = NULL
-) {
-  deps <- analyze_code(
-    expr = expr,
-    exclude = exclude,
-    allowed_globals = allowed_globals
-  )
-  deps$file_out <- deps$strings <- NULL
-  select_nonempty(deps)
-}
-
-command_dependencies <- function(
-  command,
-  exclude = character(0),
-  allowed_globals = NULL
-) {
-  if (!length(command)) {
-    return()
-  }
-  deps <- analyze_code(
-    command,
-    exclude = exclude,
-    allowed_globals = allowed_globals
-  )
-  deps$strings <- NULL
-  select_nonempty(deps)
 }

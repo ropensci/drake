@@ -827,4 +827,3 @@ unnamed <- function(x) {
   if (is.null(names(x))) return(x)
   x[!nzchar(names(x))]
 }
-

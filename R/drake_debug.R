@@ -74,7 +74,7 @@ drake_debug <- function(
     tidyselect = FALSE,
     config = config
   )
-  config$layout[[target]]$command_build <- preprocess_command(
+  config$layout[[target]]$command_build <- cdl_preprocess_command(
     debug_command(config$layout[[target]]$command)
   )
   meta <- drake_meta_(target = target, config = config)

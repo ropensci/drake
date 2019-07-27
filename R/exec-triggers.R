@@ -111,17 +111,6 @@ trigger <- function(
   )
 }
 
-parse_trigger <- function(trigger, envir) {
-  if (is.symbol(trigger)) {
-    trigger <- safe_deparse(trigger)
-  }
-  if (is.character(trigger)) {
-    trigger <- convert_old_trigger(trigger)
-    trigger <- parse(text = trigger)
-  }
-  eval(trigger, envir = envir)
-}
-
 command_trigger <- function(target, meta, config) {
   if (is.null(meta$command)) {
     return(FALSE)

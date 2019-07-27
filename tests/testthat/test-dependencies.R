@@ -54,7 +54,7 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
   )
   file.copy(
     from = path, to = file.path(getwd(), "report.Rmd"), overwrite = TRUE)
-  x <- command_dependencies(cmd)
+  x <- cdl_command_dependencies(cmd)
   x <- decode_deps_list(x)
   x0 <- list(
     file_in = "x", file_out = "y", loadd = "large",
@@ -64,7 +64,7 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
   for (i in names(x)) {
     expect_equal(sort(x[[i]]), sort(x0[[i]]))
   }
-  y <- import_dependencies(f)
+  y <- cdl_import_dependencies(f)
   y <- decode_deps_list(y)
   y0 <- list(
     file_in = "x",
@@ -91,9 +91,9 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
 test_with_dir("deps_code() and deps_target()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(nrow(deps_code("")), 0)
-  expect_equal(length(command_dependencies(NA)), 0)
-  expect_equal(length(command_dependencies(NULL)), 0)
-  expect_equal(length(command_dependencies(character(0))), 0)
+  expect_equal(length(cdl_command_dependencies(NA)), 0)
+  expect_equal(length(cdl_command_dependencies(NULL)), 0)
+  expect_equal(length(cdl_command_dependencies(character(0))), 0)
   expect_equal(deps_code(base::c)$name, character(0))
   expect_equal(deps_code(base::list)$name, character(0))
   f <- function(x, y) {
@@ -312,45 +312,45 @@ test_with_dir("ignore() works on its own", {
 })
 
 test_with_dir("Standardized commands have no attributes", {
-  expect_null(attributes(standardize_command("")))
-  expect_null(attributes(standardize_command("f(x) + y + function(abc){}")))
-  expect_null(attributes(standardize_command(quote(NULL))))
-  expect_null(attributes(standardize_command(digest::digest)))
-  expect_null(attributes(standardize_command(body(digest::digest))))
+  expect_null(attributes(cdl_standardize_command("")))
+  expect_null(attributes(cdl_standardize_command("f(x) + y + function(abc){}")))
+  expect_null(attributes(cdl_standardize_command(quote(NULL))))
+  expect_null(attributes(cdl_standardize_command(digest::digest)))
+  expect_null(attributes(cdl_standardize_command(body(digest::digest))))
 })
 
 test_with_dir("Can standardize commands", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_true(is.character(standardize_command(parse(text = ""))))
+  expect_true(is.character(cdl_standardize_command(parse(text = ""))))
   expect_identical(
-    standardize_command(parse(text = "f(x +2) + 2")),
-    standardize_command(parse(text = "f(x + 2) + 2"))
+    cdl_standardize_command(parse(text = "f(x +2) + 2")),
+    cdl_standardize_command(parse(text = "f(x + 2) + 2"))
   )
   expect_identical(
-    standardize_command(quote(f(x + 2) + 2)),
-    standardize_command(parse(text = "f(x + 2) + 2"))
+    cdl_standardize_command(quote(f(x + 2) + 2)),
+    cdl_standardize_command(parse(text = "f(x + 2) + 2"))
   )
   expect_false(
     identical(
-      standardize_command(parse(text = "f(x + 2) + 2")),
-      standardize_command(parse(text = "f(x + 1 - 1) + 2"))
+      cdl_standardize_command(parse(text = "f(x + 2) + 2")),
+      cdl_standardize_command(parse(text = "f(x + 1 - 1) + 2"))
     )
   )
   expect_identical(
-    standardize_command(parse(text = "b->a")),
-    standardize_command(parse(text = "a <- b"))
+    cdl_standardize_command(parse(text = "b->a")),
+    cdl_standardize_command(parse(text = "a <- b"))
   )
   expect_identical(
-    standardize_command(parse(text = "y=sqrt(x=1)")),
-    standardize_command(parse(text = "y = sqrt(x = 1)"))
+    cdl_standardize_command(parse(text = "y=sqrt(x=1)")),
+    cdl_standardize_command(parse(text = "y = sqrt(x = 1)"))
   )
   expect_identical(
-    standardize_command(
+    cdl_standardize_command(
       parse(text = "abcdefg = hijklmnop <- qrstuvwxyz\n\n")
     ),
-    standardize_command(parse(text = "abcdefg = hijklmnop <- qrstuvwxyz"))
+    cdl_standardize_command(parse(text = "abcdefg = hijklmnop <- qrstuvwxyz"))
   )
-  a <- standardize_command(parse(text = "z = {f('#') # comment
+  a <- cdl_standardize_command(parse(text = "z = {f('#') # comment
     x = 5
 
     y <-
@@ -359,14 +359,14 @@ test_with_dir("Can standardize commands", {
 
     x2 <- 'test2'
   }"))
-  b <- standardize_command(parse(text = "z = {f('#') # comment X
+  b <- cdl_standardize_command(parse(text = "z = {f('#') # comment X
   x = 5
 
   y <- 'test'
   z <- 4
   'test2' -> x2
   }"))
-  c <- standardize_command(parse(text = "z = {f('#') # comment X
+  c <- cdl_standardize_command(parse(text = "z = {f('#') # comment X
   x = 5
 
   y <- 'test3'
@@ -380,42 +380,42 @@ test_with_dir("Can standardize commands", {
 test_with_dir("standardized commands with ignore()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(
-    standardize_command(
+    cdl_standardize_command(
       parse(text = "f(     sqrt( ignore(fun(arg) + 7) + 123))")
     ),
-    standardize_command(parse(text = "f(sqrt(ignore() + 123))"))
+    cdl_standardize_command(parse(text = "f(sqrt(ignore() + 123))"))
   )
   expect_equal(
-    standardize_command(
+    cdl_standardize_command(
       parse(text = "f(sqrt( ignore  (fun(arg) + 7)+123) ) # noooop")
     ),
-    standardize_command(parse(text = "f(sqrt(ignore() + 123))"))
+    cdl_standardize_command(parse(text = "f(sqrt(ignore() + 123))"))
   )
   expect_equal(
-    standardize_command(
+    cdl_standardize_command(
       parse(text = " f (sqrt( drake::ignore(fun(arg) + 7) + 123 ))")
     ),
-    standardize_command(parse(text = "f(sqrt(ignore() + 123))"))
+    cdl_standardize_command(parse(text = "f(sqrt(ignore() + 123))"))
   )
   expect_equal(
-    standardize_command(
+    cdl_standardize_command(
       parse(text = "\tf(sqrt( drake ::: ignore  (fun(arg) + 7) + 123))")
     ),
-    standardize_command(parse(text = "f(sqrt(ignore() + 123))"))
+    cdl_standardize_command(parse(text = "f(sqrt(ignore() + 123))"))
   )
   expect_equal(
-    standardize_command(
+    cdl_standardize_command(
       parse(text = "function(x){(sqrt( ignore(fun(arg) + 7) + 123))}")
     ),
-    standardize_command(
+    cdl_standardize_command(
       parse(text = "function(x) {\n    (sqrt(ignore() + 123))\n}")
     )
   )
   expect_equal(
-    standardize_command(
+    cdl_standardize_command(
       parse(text = "f(sqrt( ignore(fun(arg) + 7) + 123)); g(ignore(i))")
     ),
-    standardize_command(
+    cdl_standardize_command(
       parse(text = "f(sqrt( ignore() + 123)); g(ignore())")
     )
   )
@@ -432,9 +432,9 @@ test_with_dir("standardized commands with ignore()", {
 test_with_dir("Can standardize commands from expr or lang", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- parse(text = "f(x +2) + 2")
-  y <- standardize_command(x)
-  z <- standardize_command(x)
-  w <- standardize_command(x[[1]])
+  y <- cdl_standardize_command(x)
+  z <- cdl_standardize_command(x)
+  w <- cdl_standardize_command(x[[1]])
   s <- safe_deparse(quote(f(x + 2) + 2))
   expect_equal(y, s)
   expect_equal(z, s)
