@@ -164,6 +164,16 @@ store_function <- function(target, value, meta, config) {
   store_object(target, value, meta, config)
 }
 
+standardize_imported_function <- function(fun) {
+  fun <- unwrap_function(fun)
+  str <- safe_deparse(fun) # Because the function body still has attributes.
+  if (any(grepl("ignore", str, fixed = TRUE))) {
+    fun <- ignore_ignore(fun)
+    str <- safe_deparse(fun) # Worth it: ignore_ignore is slow.
+  }
+  gsub("<pointer: 0x[0-9a-zA-Z]*>", "", str)
+}
+
 store_failure <- function(target, meta, config) {
   set_progress(
     target = target,

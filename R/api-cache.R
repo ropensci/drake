@@ -654,6 +654,39 @@ drake_cache_version <- function(cache) {
   }
 }
 
+#' @title Return the [sessionInfo()]
+#'   of the last call to [make()].
+#' @description By default, session info is saved
+#' during [make()] to ensure reproducibility.
+#' Your loaded packages and their versions are recorded, for example.
+#' @seealso [diagnose()], [cached()],
+#'   [readd()], [drake_plan()], [make()]
+#' @export
+#' @return [sessionInfo()] of the last
+#'   call to [make()]
+#' @inheritParams cached
+#' @examples
+#' \dontrun{
+#' isolate_example("Quarantine side effects.", {
+#' if (suppressWarnings(require("knitr"))) {
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
+#' make(my_plan) # Run the project, build the targets.
+#' drake_get_session_info() # Get the cached sessionInfo() of the last make().
+#' }
+#' })
+#' }
+drake_get_session_info <- function(
+  path = NULL,
+  search = NULL,
+  cache = drake::drake_cache(path = path, verbose = verbose),
+  verbose = 1L
+) {
+  if (is.null(cache)) {
+    stop("No drake::make() session detected.")
+  }
+  return(cache$get("sessionInfo", namespace = "session"))
+}
+
 list_multiple_namespaces <- function(cache, namespaces, jobs = 1) {
   out <- lightly_parallelize(
     X = namespaces,

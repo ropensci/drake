@@ -132,20 +132,6 @@ check_parallelism <- function(parallelism, jobs) {
   }
 }
 
-check_make_call <- function(call) {
-  x <- names(call)
-  if ("config" %in% names(call) && sum(nzchar(x)) > 1L) {
-    warning(
-      "if you supply a ", shQuote("config"),
-      " argument to ", shQuote("make()"),
-      " then all additional arguments are ignored. ",
-      "For example, in ", shQuote("make(config = config, verbose = 0L)"),
-      "verbosity remains at ", shQuote("config$verbose"), ".",
-      call. = FALSE
-    )
-  }
-}
-
 subdirectory_warning <- function(config) {
   if (identical(Sys.getenv("drake_warn_subdir"), "false")) {
     return()

@@ -229,9 +229,11 @@ should_rehash_storage <- function(
 ) {
   small <- (new_size < size_cutoff) %||NA% TRUE
   touched <- (new_mtime > old_mtime) %||NA% TRUE
-  resized <- (abs(new_size - old_size) > drake_tol) %||NA% TRUE
+  resized <- (abs(new_size - old_size) > rehash_tol) %||NA% TRUE
   small || touched || resized
 }
+
+rehash_tol <- .Machine$double.eps ^ 0.5
 
 storage_hash <- function(
   target,

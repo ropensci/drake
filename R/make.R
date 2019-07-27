@@ -254,3 +254,261 @@ make <- function(
   log_msg("end make()", config = config)
   invisible()
 }
+
+check_make_call <- function(call) {
+  x <- names(call)
+  if ("config" %in% names(call) && sum(nzchar(x)) > 1L) {
+    warning(
+      "if you supply a ", shQuote("config"),
+      " argument to ", shQuote("make()"),
+      " then all additional arguments are ignored. ",
+      "For example, in ", shQuote("make(config = config, verbose = 0L)"),
+      "verbosity remains at ", shQuote("config$verbose"), ".",
+      call. = FALSE
+    )
+  }
+}
+
+outdated_subgraph <- function(config) {
+  outdated <- outdated(config, do_prework = FALSE, make_imports = FALSE)
+  log_msg("isolate oudated targets", config = config)
+  igraph::induced_subgraph(graph = config$graph, vids = outdated)
+}
+
+process_targets <- function(config) {
+  if (is.character(config$parallelism)) {
+    run_native_backend(config)
+  } else {
+    run_external_backend(config)
+  }
+}
+
+run_native_backend <- function(config) {
+  parallelism <- match.arg(
+    config$parallelism,
+    c("loop", "clustermq", "future")
+  )
+  if (igraph::gorder(config$graph)) {
+    get(
+      paste0("backend_", parallelism),
+      envir = getNamespace("drake")
+    )(config)
+  } else {
+    log_msg(
+      "All targets are already up to date.",
+      config = config,
+      tier = 1L
+    )
+  }
+}
+
+run_external_backend <- function(config) {
+  warning(
+    "`drake` can indeed accept a custom scheduler function for the ",
+    "`parallelism` argument of `make()` ",
+    "but this is only for the sake of experimentation ",
+    "and graceful deprecation. ",
+    "Your own custom schedulers may cause surprising errors. ",
+    "Use at your own risk.",
+    call. = FALSE
+  )
+  config$parallelism(config = config)
+}
+
+process_imports <- function(config) {
+  if (on_windows() && config$jobs_preprocess > 1L) {
+    process_imports_parLapply(config) # nocov
+  } else {
+    process_imports_mclapply(config)
+  }
+}
+
+#' @title internal function
+#' @description only used inside process_imports(). Not a user-side function.
+#' @export
+#' @keywords internal
+#' @param import Character, name of an import to process
+#' @param config [drake_config()] object
+process_import <- function(import, config) {
+  meta <- drake_meta_(import, config)
+  if (meta$isfile) {
+    value <- NA_character_
+    path <- decode_path(import, config)
+    is_missing <- !file.exists(path) && !is_url(path)
+  } else {
+    value <- get_import_from_memory(import, config = config)
+    is_missing <- identical(value, NA_character_)
+  }
+  if (is_missing) {
+    log_msg(
+      "missing",
+      target = display_key(import, config),
+      config = config,
+      color = "missing"
+    )
+  } else {
+    log_msg("import", target = display_key(import, config), config = config)
+  }
+  store_single_output(
+    target = import,
+    value = value,
+    meta = meta,
+    config = config
+  )
+}
+
+process_imports_mclapply <- function(config) {
+  if (config$jobs_preprocess > 1L) {
+    assert_pkg("parallel")
+  }
+  imports_graph <- subset_graph(config$graph, all_imports(config))
+  while (length(V(imports_graph)$name)) {
+    imports <- leaf_nodes(imports_graph)
+    lightly_parallelize(
+      X = imports,
+      FUN = drake::process_import,
+      config = config,
+      jobs = config$jobs_preprocess
+    )
+    imports_graph <- delete_vertices(imports_graph, v = imports)
+  }
+  invisible()
+}
+
+process_imports_parLapply <- function(config) { # nolint
+  assert_pkg("parallel")
+  log_msg(
+    "load parallel socket cluster with",
+    config$jobs_preprocess,
+    "workers",
+    config = config
+  )
+  config$cluster <- parallel::makePSOCKcluster(config$jobs_preprocess)
+  on.exit(parallel::stopCluster(cl = config$cluster))
+  parallel::clusterExport(
+    cl = config$cluster, varlist = "config",
+    envir = environment())
+  if (identical(config$envir, globalenv()) || length(config$debug)) {
+    # nocov start
+    parallel::clusterExport(
+      cl = config$cluster,
+      varlist = ls(globalenv(), all.names = TRUE),
+      envir = globalenv()
+    )
+    # nocov end
+  }
+  parallel::clusterCall(
+    cl = config$cluster,
+    fun = function() {
+      eval(parse(text = "suppressPackageStartupMessages(require(drake))"))
+    }
+  )
+  parallel::clusterCall(
+    cl = config$cluster,
+    fun = drake::do_prework,
+    config = config,
+    verbose_packages = FALSE
+  )
+  imports_graph <- subset_graph(config$graph, all_imports(config))
+  while (length(V(imports_graph)$name)) {
+    imports <- leaf_nodes(imports_graph)
+    parallel::parLapply(
+      cl = config$cluster,
+      X = imports,
+      fun = function(import, config) {
+        drake::process_import(import = import, config = config)
+      },
+      config = config
+    )
+    imports_graph <- delete_vertices(imports_graph, v = imports)
+  }
+  invisible()
+}
+
+initialize_session <- function(config) {
+  runtime_checks(config = config)
+  config$cache$set(key = "seed", value = config$seed, namespace = "session")
+  init_common_values(config$cache)
+  config$eval[[drake_envir_marker]] <- TRUE
+  if (config$log_progress) {
+    clear_tmp_namespace(
+      cache = config$cache,
+      jobs = config$jobs_preprocess,
+      namespace = "progress"
+    )
+  }
+  drake_set_session_info(cache = config$cache, full = config$session_info)
+  do_prework(config = config, verbose_packages = config$verbose)
+  invisible()
+}
+
+drake_set_session_info <- function(
+  path = NULL,
+  search = NULL,
+  cache = drake::drake_cache(path = path, verbose = verbose),
+  verbose = 1L,
+  full = TRUE
+) {
+  if (is.null(cache)) {
+    stop("No drake::make() session detected.")
+  }
+  if (full) {
+    cache$set(
+      key = "sessionInfo",
+      value = utils::sessionInfo(),
+      namespace = "session"
+    )
+  }
+  cache$set(
+    key = "drake_version",
+    value = as.character(utils::packageVersion("drake")),
+    namespace = "session"
+  )
+  invisible()
+}
+
+conclude_session <- function(config) {
+  drake_cache_log_file_(
+    file = config$cache_log_file,
+    cache = config$cache,
+    jobs = config$jobs_preprocess
+  )
+  remove(list = names(config$eval), envir = config$eval)
+  config$cache$flush_cache()
+  if (config$garbage_collection) {
+    gc()
+  }
+  invisible()
+}
+
+prompt_intv_make <- function(config) {
+  menu_enabled <- .pkg_envir[["drake_make_menu"]] %||%
+    getOption("drake_make_menu") %||%
+    TRUE
+  interactive() &&
+    igraph::gorder(config$graph) &&
+    menu_enabled
+}
+
+abort_intv_make <- function(config) {
+  # nocov start
+  on.exit(
+    assign(
+      x = "drake_make_menu",
+      value = FALSE,
+      envir = .pkg_envir,
+      inherits = FALSE
+    )
+  )
+  title <- paste(
+    paste(igraph::gorder(config$graph), "outdated targets:"),
+    multiline_message(igraph::V(config$graph)$name),
+    "\nPlease read the \"Interactive mode\" section of the make() help file.",
+    "This prompt only appears once per session.",
+    "\nReally run make() instead of r_make() in interactive mode?",
+    sep = "\n"
+  )
+  out <- utils::menu(choices = c("yes", "no"), title = title)
+  !identical(as.integer(out), 1L)
+  # nocov end
+}

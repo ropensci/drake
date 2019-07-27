@@ -1,4 +1,3 @@
-# Should probably have used S3 dispatch. Oh well...
 ht_new <- function(x = NULL, hash = TRUE) {
   out <- new.env(hash = hash, parent = emptyenv())
   if (!is.null(x)) {
@@ -29,10 +28,6 @@ ht_del <- function(ht, x) {
   remove(list = x, envir = ht, inherits = FALSE)
 }
 
-ht_exists <- function(ht, x) {
-  exists(x, envir = ht, inherits = FALSE)
-}
-
 ht_list <- function(ht) {
   names(ht)
 }
@@ -53,6 +48,10 @@ ht_filter <- function(ht, x) {
     ht = ht
   )
   x[index]
+}
+
+ht_exists <- function(ht, x) {
+  exists(x, envir = ht, inherits = FALSE)
 }
 
 # Merge y into x

@@ -1,6 +1,3 @@
-# From testthat
-drake_tol <- .Machine$double.eps ^ 0.5
-
 # From lintr
 `%||%` <- function(x, y) {
   if (is.null(x) || length(x) <= 0) {
@@ -184,10 +181,6 @@ unhidden_names <- function(envir) {
   out
 }
 
-
-
-
-
 long_deparse <- function(x, collapse = "\n") {
   paste(deparse(x), collapse = collapse)
 }
@@ -201,7 +194,6 @@ unnamed <- function(x) {
   if (is.null(names(x))) return(x)
   x[!nzchar(names(x))]
 }
-
 
 # From https://stackoverflow.com/a/54623901/3704549
 splice_inner <- function(x, replacements) {
