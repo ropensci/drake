@@ -464,28 +464,6 @@ parse_lang_cols <- function(plan) {
   plan
 }
 
-# weak_as_tibble - use as_tibble() if available but fall back to
-# as.data.frame() if necessary
-weak_as_tibble <- function(..., .force_df = FALSE) {
-  no_tibble <- !suppressWarnings(requireNamespace("tibble", quietly = TRUE))
-  if (.force_df || no_tibble) {
-    as.data.frame(..., stringsAsFactors = FALSE)
-  } else {
-    tibble::as_tibble(...)
-  }
-}
-
-# weak_tibble - use tibble() if available but fall back to
-# data.frame() if necessary
-weak_tibble <- function(..., .force_df = FALSE) {
-  no_tibble <- !suppressWarnings(requireNamespace("tibble", quietly = TRUE))
-  if (.force_df || no_tibble) {
-    data.frame(..., stringsAsFactors = FALSE)
-  } else {
-    tibble::tibble(...)
-  }
-}
-
 complete_target_names <- function(commands_list) {
   if (!length(names(commands_list))) {
     # Should not actually happen, but it's better to have anyway.

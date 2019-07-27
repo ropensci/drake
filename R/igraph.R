@@ -9,16 +9,6 @@ deps_graph <- function(targets, graph, reverse = FALSE) {
   )
 }
 
-drake_adjacent_vertices <- function(graph, v, mode) {
-  opt <- igraph::igraph_opt("return.vs.es")
-  on.exit(igraph::igraph_options(return.vs.es = opt))
-  igraph::igraph_options(return.vs.es = FALSE)
-  index <- adjacent_vertices(graph = graph, v = v, mode = mode)
-  index <- unlist(index, use.names = FALSE)
-  index <- unique(index)
-  igraph::V(graph)$name[index + 1]
-}
-
 downstream_nodes <- function(graph, from) {
   nbhd_vertices(
     graph = graph,
@@ -26,11 +16,6 @@ downstream_nodes <- function(graph, from) {
     mode = "out",
     order = igraph::gorder(graph)
   )
-}
-
-leaf_nodes <- function(graph) {
-  is_leaf <- igraph::degree(graph, mode = "in") == 0
-  V(graph)[is_leaf]$name
 }
 
 nbhd_graph <- function(graph, vertices, mode, order) {
@@ -56,10 +41,25 @@ nbhd_vertices <- function(graph, vertices, mode, order) {
   vertices
 }
 
+drake_adjacent_vertices <- function(graph, v, mode) {
+  opt <- igraph::igraph_opt("return.vs.es")
+  on.exit(igraph::igraph_options(return.vs.es = opt))
+  igraph::igraph_options(return.vs.es = FALSE)
+  index <- adjacent_vertices(graph = graph, v = v, mode = mode)
+  index <- unlist(index, use.names = FALSE)
+  index <- unique(index)
+  igraph::V(graph)$name[index + 1]
+}
+
 subset_graph <- function(graph, subset) {
   if (!length(subset)) {
     return(igraph::make_empty_graph())
   }
   subset <- intersect(subset, igraph::V(graph)$name)
   igraph::induced_subgraph(graph = graph, vids = subset)
+}
+
+leaf_nodes <- function(graph) {
+  is_leaf <- igraph::degree(graph, mode = "in") == 0
+  V(graph)[is_leaf]$name
 }

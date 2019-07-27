@@ -576,6 +576,38 @@ args_combine_entry <- function(name, transform, plan) {
   lapply(as.character(na_omit(unique(plan[[name]]))), as.symbol)
 }
 
+splice_args <- function(x, replacements) {
+  out <- splice_inner(x, replacements)
+  # Avoid edge cases like #715
+  out <- parse(text = safe_deparse(out)) # safe_deparse() is internal to drake.
+  if (length(out)) {
+    out <- out[[1]]
+  }
+  out
+}
+
+# From https://stackoverflow.com/a/54623901/3704549
+splice_inner <- function(x, replacements) {
+  if (is.call(x)) {
+    as.call(
+      do.call(
+        "c",
+        lapply(as.list(x), splice_inner, replacements),
+        quote = TRUE
+      )
+    )
+  } else if (is.name(x)) {
+    nm <- deparse(x)
+    if (nm %in% names(replacements)) {
+      return(replacements[[nm]])
+    } else {
+      list(x)
+    }
+  } else {
+    list(x)
+  }
+}
+
 dsl_deps <- function(transform) UseMethod("dsl_deps")
 
 dsl_deps.map <- function(transform) {
@@ -687,6 +719,10 @@ find_old_groupings.cross <- function(transform, plan) {
   })
 }
 
+na_omit <- function(x) {
+  x[!is.na(x)]
+}
+
 find_old_groupings.combine <- function(transform, plan) NULL
 
 new_groupings <- function(...) UseMethod("new_groupings")
@@ -727,6 +763,10 @@ explicit_new_groupings <- function(code, exclude = character(0)) {
     }
     as.character(lapply(as.list(x), long_deparse))
   })
+}
+
+long_deparse <- function(x, collapse = "\n") {
+  paste(deparse(x), collapse = collapse)
 }
 
 dsl_combine <- function(...) UseMethod("dsl_combine")
@@ -777,3 +817,14 @@ lang.command <- lang.transform <- function(x) x[[1]]
 char <- function(...) UseMethod("char")
 
 char.transform <- function(x) safe_deparse(lang(x))
+
+named <- function(x, exclude = character(0)) {
+  if (is.null(names(x))) return(NULL)
+  x[!(names(x) %in% c("", exclude))]
+}
+
+unnamed <- function(x) {
+  if (is.null(names(x))) return(x)
+  x[!nzchar(names(x))]
+}
+

@@ -170,6 +170,23 @@ progress <- function(
   out[out$progress %in% progress, ]
 }
 
+# should replace with tidyselect stuff
+targets_from_dots <- function(dots, list) {
+  valid <- vapply(
+    dots,
+    function(x) is.symbol(x) || is.character(x),
+    NA,
+    USE.NAMES = FALSE
+  )
+  invalid <- length(dots) && !all(valid)
+  if (invalid) {
+    stop("... must contain names or character strings", call. = FALSE)
+  }
+  names <- vapply(dots, as.character, "")
+  targets <- unique(c(names, list))
+  standardize_key(targets)
+}
+
 get_progress_single <- function(target, cache) {
   if (cache$exists(key = target, namespace = "progress")) {
     hash <- cache$get_hash(key = target, namespace = "progress")

@@ -265,6 +265,14 @@ is_image_filename <- function(x) {
   tolower(file_extn(x)) %in% c("jpg", "jpeg", "pdf", "png")
 }
 
+file_extn <- function(x) {
+  x <- basename(x)
+  x <- strsplit(x, split = ".", fixed = TRUE)
+  x <- unlist(x)
+  x <- rev(x)
+  x[1]
+}
+
 random_tempdir <- function() {
   while (file.exists(dir <- tempfile())) {
     Sys.sleep(1e-6) # nocov

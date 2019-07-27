@@ -442,6 +442,11 @@ safe_get_hash <- function(key, namespace, config) {
   out
 }
 
+# Should be used as sparingly as possible.
+just_try <- function(code) {
+  try(suppressWarnings(code), silent = TRUE)
+}
+
 target_exists <- function(target, config) {
   config$cache$exists(key = target)
 }

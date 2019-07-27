@@ -39,6 +39,13 @@ display_path <- function(x, config) {
   }
 }
 
+standardize_key <- function(text) {
+  if (any(grepl("::", text))) {
+    text <- encode_namespaced(text)
+  }
+  text
+}
+
 encode_path <- function(x, config = NULL) {
   if (is.null(config) || is.null(config$ht_encode_path)) {
     reencode_path(x)

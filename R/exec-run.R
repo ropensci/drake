@@ -58,6 +58,29 @@ with_handling <- function(target, meta, config) {
   )
 }
 
+prepend_fork_advice <- function(msg) {
+  if (!length(msg)) {
+    return(msg)
+  }
+  # Loop so we can use fixed = TRUE, which is fast. # nolint
+  fork_error <- sum(vapply(
+    c("parallel", "core"),
+    function(pattern) any(grepl(pattern, msg, fixed = TRUE)),
+    FUN.VALUE = logical(1)
+  ))
+  if (!fork_error) {
+    return(msg)
+  }
+  out <- paste(
+    "\n Having problems with parallel::mclapply(),",
+    "future::future(), or furrr::future_map() in drake?",
+    "Try one of the workarounds at",
+    "https://ropenscilabs.github.io/drake-manual/hpc.html#parallel-computing-within-targets", # nolint
+    "or https://github.com/ropensci/drake/issues/675. \n\n"
+  )
+  c(out, msg)
+}
+
 # Taken directly from the `evaluate::try_capture_stack()`.
 # https://github.com/r-lib/evaluate/blob/b43d54f1ea2fe4296f53316754a28246903cd703/R/traceback.r#L20-L47 # nolint
 # Copyright Hadley Wickham and Yihui Xie, 2008 - 2018. MIT license.
@@ -96,6 +119,49 @@ with_call_stack <- function(target, config) {
     error = identity
   )
 }
+
+lock_environment <- function(envir) {
+  lockEnvironment(envir, bindings = FALSE)
+  lapply(X = unhidden_names(envir), FUN = lockBinding, env = envir)
+  invisible()
+}
+
+unlock_environment <- function(envir) {
+  if (is.null(envir)) {
+    stop("use of NULL environment is defunct")
+  }
+  if (!inherits(envir, "environment")) {
+    stop("not an environment")
+  }
+  .Call(Cunlock_environment, envir)
+  lapply(
+    X = unhidden_names(envir),
+    FUN = unlockBinding,
+    env = envir
+  )
+  stopifnot(!environmentIsLocked(envir))
+}
+
+unhidden_names <- function(envir) {
+  out <- names(envir)
+  out <- out[substr(out, 0, 1) != "."]
+  out
+}
+
+mention_pure_functions <- function(e) {
+  msg1 <- "locked binding"
+  msg2 <- "locked environment"
+  locked_envir <- grepl(msg1, e$message) || grepl(msg2, e$message)
+  if (locked_envir) {
+    e$message <- paste0(e$message, ". ", locked_envir_msg)
+  }
+  e
+}
+
+locked_envir_msg <- paste(
+  "\nPlease read the \"Self-invalidation\"",
+  "section of the make() help file."
+)
 
 # Taken from `R.utils::withTimeout()` and simplified.
 # https://github.com/HenrikBengtsson/R.utils/blob/13e9d000ac9900bfbbdf24096d635da723da76c8/R/withTimeout.R # nolint

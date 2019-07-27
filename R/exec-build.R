@@ -92,3 +92,43 @@ assert_output_files <- function(target, meta, config) {
     warning(msg, call. = FALSE)
   }
 }
+
+handle_build_exceptions <- function(target, meta, config) {
+  if (length(meta$warnings) && config$verbose) {
+    warn_opt <- max(1, getOption("warn"))
+    with_options(
+      new = list(warn = warn_opt),
+      warning(
+        "target ", target, " warnings:\n",
+        multiline_message(meta$warnings),
+        call. = FALSE
+      )
+    )
+  }
+  if (length(meta$messages) && config$verbose) {
+    message(
+      "Target ", target, " messages:\n",
+      multiline_message(meta$messages)
+    )
+  }
+  if (inherits(meta$error, "error")) {
+    log_msg(
+      "fail",
+      target,
+      target = target,
+      config = config,
+      color = "fail",
+      tier = 1L
+    )
+    store_failure(target = target, meta = meta, config = config)
+    if (!config$keep_going) {
+      msg <- paste0(
+        "Target `", target, "` failed. Call `diagnose(", target,
+        ")` for details. Error message:\n  ",
+        meta$error$message
+      )
+      drake_log(paste("Error:", msg), config = config)
+      stop(msg, call. = FALSE)
+    }
+  }
+}

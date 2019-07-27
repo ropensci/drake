@@ -270,6 +270,8 @@ storage_hash <- function(
   )
 }
 
+rehash_storage_size_cutoff <- 1e5
+
 storage_mtime <- function(x) {
   if (dir.exists(x)) {
     dir_mtime(x)

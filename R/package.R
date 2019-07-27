@@ -56,9 +56,9 @@ NULL
 isolate_example <- function(desc, code) {
   new <- tempfile()
   dir.create(new)
-  with_dir(new = new, {
-    opts <- list(drake_make_menu = FALSE, drake_clean_menu = FALSE)
-    with_options(new = opts, code)
-  })
+  old <- setwd(new) # nolint
+  on.exit(setwd(old)) # nolint
+  opts <- list(drake_make_menu = FALSE, drake_clean_menu = FALSE)
+  with_options(new = opts, code)
   invisible()
 }
