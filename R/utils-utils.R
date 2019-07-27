@@ -89,10 +89,6 @@ clean_nested_char_list <- function(x) {
   x <- unique(x)
 }
 
-complete_cases <- function(x) {
-  !as.logical(Reduce(`|`, lapply(x, is.na)))
-}
-
 # Simple version of purrr::pmap for use in drake
 # Applies function .f to list .l elements in parallel, i.e.
 # .f(.l[[1]][1], .l[[2]][1], ..., .l[[n]][1]) and then
@@ -254,25 +250,6 @@ targets_from_dots <- function(dots, list) {
   names <- vapply(dots, as.character, "")
   targets <- unique(c(names, list))
   standardize_key(targets)
-}
-
-make_unique <- function(x) {
-  if (!length(x)) {
-    return(character(0))
-  }
-  ord <- order(x)
-  y <- x[ord]
-  dup <- duplicated(y)
-  if (!any(dup)) {
-    return(x)
-  }
-  suffix <- as.integer(
-    do.call(c, tapply(dup, y, FUN = cumsum, simplify = FALSE))
-  )
-  i <- suffix > 0L
-  suffix <- suffix + i
-  y[i] <- paste(y[i], suffix[i], sep = "_")
-  y[order(ord)]
 }
 
 multiline_message <- function(x) {

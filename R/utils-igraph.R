@@ -63,22 +63,3 @@ subset_graph <- function(graph, subset) {
   subset <- intersect(subset, igraph::V(graph)$name)
   igraph::induced_subgraph(graph = graph, vids = subset)
 }
-
-trim_vs_protect_cons <- function(edges, keep) {
-  delete <- unique(setdiff(c(edges$from, edges$to), keep))
-  for (v in delete) {
-    edges <- delete_v_protect_con(edges, v)
-  }
-  edges
-}
-
-delete_v_protect_con <- function(edges, v) {
-  from <- edges$from[edges$to == v]
-  to <- edges$to[edges$from == v]
-  edges <- edges[edges$from != v & edges$to != v, ]
-  if (!length(from) || !length(to)) {
-    return(edges)
-  }
-  nbhd_edges <- expand.grid(from = from, to = to, stringsAsFactors = FALSE)
-  rbind(edges, nbhd_edges)
-}
