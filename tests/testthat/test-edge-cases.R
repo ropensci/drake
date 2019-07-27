@@ -164,8 +164,6 @@ test_with_dir("error handlers", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(error_na(1), NA_character_)
   expect_false(error_false(1))
-  expect_equal(error_character0(1), character(0))
-  expect_null(error_null(1))
   expect_error(error_tibble_times(123))
 })
 

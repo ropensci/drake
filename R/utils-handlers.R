@@ -38,20 +38,12 @@ handle_build_exceptions <- function(target, meta, config) {
   }
 }
 
-error_character0 <- function(e) {
-  character(0)
-}
-
 error_false <- function(e) {
   FALSE
 }
 
 error_na <- function(e) {
   NA_character_
-}
-
-error_null <- function(e) {
-  NULL
 }
 
 # Should be used as sparingly as possible.
