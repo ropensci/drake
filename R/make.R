@@ -416,11 +416,7 @@ initialize_session <- function(config) {
   config$cache$set(key = "seed", value = config$seed, namespace = "session")
   config$eval[[drake_envir_marker]] <- TRUE
   if (config$log_progress) {
-    clear_tmp_namespace(
-      cache = config$cache,
-      jobs = config$jobs_preprocess,
-      namespace = "progress"
-    )
+    config$cache$clear(namespace = "progress")
   }
   drake_set_session_info(cache = config$cache, full = config$session_info)
   do_prework(config = config, verbose_packages = config$verbose)
@@ -518,6 +514,41 @@ conclude_session <- function(config) {
     gc()
   }
   invisible()
+}
+
+# Generate a flat csv log file to represent the state of the cache.
+drake_cache_log_file_ <- function(
+  file = "drake_cache.csv",
+  path = NULL,
+  search = NULL,
+  cache = drake::drake_cache(path = path, verbose = verbose),
+  verbose = 1L,
+  jobs = 1L,
+  targets_only = FALSE
+) {
+  deprecate_search(search)
+  if (!length(file) || identical(file, FALSE)) {
+    return(invisible())
+  } else if (identical(file, TRUE)) {
+    file <- formals(drake_cache_log_file_)$file
+  }
+  out <- drake_cache_log(
+    path = path,
+    cache = cache,
+    verbose = verbose,
+    jobs = jobs,
+    targets_only = targets_only
+  )
+  # Suppress partial arg match warnings.
+  suppressWarnings(
+    write.table(
+      x = out,
+      file = file,
+      quote = FALSE,
+      row.names = FALSE,
+      sep = ","
+    )
+  )
 }
 
 check_make_call <- function(call) {

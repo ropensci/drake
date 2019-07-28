@@ -113,7 +113,6 @@ test_with_dir("Missing cache", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   s <- storr::storr_rds("s")
   unlink(s$driver$path, recursive = TRUE)
-  expect_error(assert_cache(s), regexp = "drake cache missing")
   expect_equal(cached(), character(0))
 })
 

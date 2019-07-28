@@ -155,3 +155,74 @@ with_options <- function(new, code) {
 set_options <- function(new_options) {
   do.call(options, as.list(new_options))
 }
+
+safe_get <- function(key, namespace, config) {
+  out <- just_try(config$cache$get(key = key, namespace = namespace))
+  if (inherits(out, "try-error")) {
+    out <- NA_character_
+  }
+  out
+}
+
+safe_get_hash <- function(key, namespace, config) {
+  out <- just_try(config$cache$get_hash(key = key, namespace = namespace))
+  if (inherits(out, "try-error")) {
+    out <- NA_character_
+  }
+  out
+}
+
+# Should be used as sparingly as possible.
+just_try <- function(code) {
+  try(suppressWarnings(code), silent = TRUE)
+}
+
+memo_expr <- function(expr, cache, ...) {
+  if (is.null(cache)) {
+    return(force(expr))
+  }
+  lang <- match.call(expand.dots = FALSE)$expr
+
+  key <- digest::digest(list(lang, ...), algo = cache_hash_algorithm(cache))
+  if (cache$exists(key = key, namespace = "memoize")) {
+    return(cache$get(key = key, namespace = "memoize"))
+  }
+  value <- force(expr)
+  cache$set(key = key, value = value, namespace = "memoize")
+  value
+}
+
+cache_hash_algorithm <- function(cache) {
+  cache$driver$hash_algorithm %||% "xxhash64"
+}
+
+drake_tidyselect_cache <- function(
+  ...,
+  list = character(0),
+  cache,
+  namespaces = cache$default_namespace
+) {
+  suppressPackageStartupMessages(
+    suppressWarnings(
+      eval(parse(text = "require('tidyselect', quietly = TRUE)"))
+    )
+  )
+  out <- tidyselect::vars_select(
+    .vars = list_multiple_namespaces(cache = cache, namespaces = namespaces),
+    ...,
+    .strict = FALSE
+  )
+  out <- unname(out)
+  c(out, list)
+}
+
+list_multiple_namespaces <- function(cache, namespaces, jobs = 1) {
+  out <- lightly_parallelize(
+    X = namespaces,
+    FUN = function(namespace) {
+      cache$list(namespace = namespace)
+    },
+    jobs = jobs
+  )
+  Reduce(out, f = base::union)
+}

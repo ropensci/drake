@@ -274,6 +274,11 @@ rm_bad_cache_filenames <- function(cache) {
   }
 }
 
+keys_are_mangled <- function(cache) {
+  "driver_rds" %in% class(cache$driver) &&
+    identical(cache$driver$mangle_key, TRUE)
+}
+
 #' @title Try to repair a drake cache that is prone
 #'   to throwing `storr`-related errors.
 #' @description Sometimes, `storr` caches may have

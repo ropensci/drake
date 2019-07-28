@@ -159,7 +159,7 @@ first_outdated <- function(config) {
     do_build <- lightly_parallelize(
       X = new_leaves,
       FUN = function(target) {
-        if (!target_exists(target, config)) {
+        if (!config$cache$exists(key = target)) {
           return(TRUE)
         }
         meta <- drake_meta_(target, config)

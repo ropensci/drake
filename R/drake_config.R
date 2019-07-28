@@ -738,6 +738,21 @@ memory_strategies <- function() {
   )
 }
 
+force_cache_path <- function(cache = NULL) {
+  cache_path_(cache) %||% default_cache_path()
+}
+
+# Return the file path where the cache is stored, if applicable.
+cache_path_ <- function(cache = NULL) {
+  if (is.null(cache)) {
+    NULL
+  } else if ("storr" %in% class(cache)) {
+    cache$driver$path
+  } else {
+    NULL
+  }
+}
+
 choose_seed <- function(supplied, cache) {
   supplied %||%
     get_previous_seed(cache = cache) %||%

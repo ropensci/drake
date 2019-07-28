@@ -5,7 +5,7 @@ drake_meta_ <- function(target, config) {
     name = target,
     target = target,
     imported = layout$imported %||% TRUE,
-    missing = !target_exists(target = target, config = config),
+    missing = !config$cache$exists(key = target),
     seed = as.integer(
       layout$seed %||NA% seed_from_basic_types(config$seed, target)
     ),
