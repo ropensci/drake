@@ -189,7 +189,7 @@ cmq_build <- function(target, meta, deps, layout, config) {
   } else {
     manage_memory(target = target, config = config, jobs = 1)
   }
-  build <- build_target(target = target, meta = meta, config = config)
+  build <- try_build(target = target, meta = meta, config = config)
   if (identical(config$caching, "master")) {
     build$checksum <- get_outfile_checksum(target, config)
     return(build)
@@ -200,7 +200,7 @@ cmq_build <- function(target, meta, deps, layout, config) {
 
 cmq_local_build <- function(target, config) {
   log_msg("build", "locally", target = target, config = config)
-  loop_build(target, config, downstream = NULL)
+  local_build(target, config, downstream = NULL)
   cmq_conclude_target(target = target, config = config)
 }
 

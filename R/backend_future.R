@@ -48,7 +48,7 @@ backend_future <- function(config) {
 
 future_local_build <- function(target, config, queue, protect) {
   log_msg("local target", target = target, config = config)
-  loop_build(target, config, downstream = protect)
+  local_build(target, config, downstream = protect)
   decrease_revdep_keys(queue, target, config)
 }
 
@@ -157,7 +157,7 @@ future_build <- function(target, meta, config, layout, protect) {
     manage_memory(target = target, config = config, downstream = protect)
   }
   do_prework(config = config, verbose_packages = FALSE)
-  build <- build_target(target = target, meta = meta, config = config)
+  build <- try_build(target = target, meta = meta, config = config)
   if (identical(config$caching, "master")) {
     build$checksum <- get_outfile_checksum(target, config)
     return(build)

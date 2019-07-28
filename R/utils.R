@@ -125,15 +125,3 @@ multiline_message <- function(x) {
   x <- paste0("  ", x)
   paste(x, collapse = "\n")
 }
-
-# From withr https://github.com/r-lib/withr, copyright RStudio, GPL (>=2)
-with_options <- function(new, code) {
-  old <- set_options(new_options = new)
-  on.exit(set_options(new_options = old))
-  force(code)
-}
-
-# From withr https://github.com/r-lib/withr, copyright RStudio, GPL (>=2)
-set_options <- function(new_options) {
-  do.call(options, as.list(new_options))
-}
