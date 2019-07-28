@@ -207,42 +207,6 @@ new_cache <- function(
   cache
 }
 
-# Load an existing drake files system cache if it exists
-# or create a new one otherwise.
-recover_cache_ <- function(
-  path = NULL,
-  hash_algorithm = NULL,
-  short_hash_algo = NULL,
-  long_hash_algo = NULL,
-  force = FALSE,
-  verbose = 1L,
-  fetch_cache = NULL,
-  console_log_file = NULL
-) {
-  path <- path %||% default_cache_path()
-  deprecate_force(force)
-  deprecate_fetch_cache(fetch_cache)
-  deprecate_hash_algo_args(short_hash_algo, long_hash_algo)
-  hash_algorithm <- sanitize_hash_algorithm(hash_algorithm)
-  cache <- this_cache_(
-    path = path,
-    verbose = verbose,
-    fetch_cache = fetch_cache,
-    console_log_file = console_log_file
-  )
-  if (is.null(cache)) {
-    cache <- new_cache(
-      path = path,
-      verbose = verbose,
-      hash_algorithm = hash_algorithm,
-      fetch_cache = fetch_cache,
-      console_log_file = console_log_file
-    )
-  }
-  init_common_values(cache)
-  cache
-}
-
 # Generate a flat csv log file to represent the state of the cache.
 drake_cache_log_file_ <- function(
   file = "drake_cache.csv",
@@ -397,16 +361,6 @@ single_cache_log <- function(key, cache) {
 
 default_cache_path <- function(root = getwd()) {
   file.path(root, ".drake")
-}
-
-# Pre-set the values to avoid https://github.com/richfitz/storr/issues/80.
-init_common_values <- function(cache) {
-  common_values <- list(TRUE, FALSE)
-  cache$mset(
-    key = as.character(common_values),
-    value = common_values,
-    namespace = "common"
-  )
 }
 
 clear_tmp_namespace <- function(cache, jobs, namespace) {

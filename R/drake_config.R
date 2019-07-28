@@ -706,60 +706,6 @@ drake_config <- function(
   out
 }
 
-#' @title Do the prework in the `prework`
-#'   argument to [make()].
-#' @export
-#' @keywords internal
-#' @description For internal use only.
-#' The only reason this function is exported
-#' is to set up parallel socket (PSOCK) clusters
-#' without too much fuss.
-#' @return Inivisibly returns `NULL`.
-#' @param config internal configuration list
-#' @param verbose_packages logical, whether to print
-#'   package startup messages
-#' @examples
-#' \dontrun{
-#' isolate_example("Quarantine side effects.", {
-#' if (suppressWarnings(require("knitr"))) {
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' # Create a master internal configuration list with prework.
-#' con <- drake_config(my_plan, prework = c("library(knitr)", "x <- 1"))
-#' # Do the prework. Usually done at the beginning of `make()`,
-#' # and for distributed computing backends like "future_lapply",
-#' # right before each target is built.
-#' do_prework(config = con, verbose_packages = TRUE)
-#' # The `eval` element is the environment where the prework
-#' # and the commands in your workflow plan data frame are executed.
-#' identical(con$eval$x, 1) # Should be TRUE.
-#' }
-#' })
-#' }
-do_prework <- function(config, verbose_packages) {
-  for (package in union(c("methods", "drake"), config$packages)) {
-    expr <- as.call(c(
-      quote(require),
-      package = package,
-      lib.loc = as.call(c(quote(c), config$lib_loc)),
-      quietly = TRUE,
-      character.only = TRUE
-    ))
-    if (verbose_packages) {
-      expr <- as.call(c(quote(suppressPackageStartupMessages), expr))
-    }
-    eval(expr, envir = config$eval)
-  }
-  if (is.character(config$prework)) {
-    config$prework <- parse(text = config$prework)
-  }
-  if (is.language(config$prework)) {
-    eval(config$prework, envir = config$eval)
-  } else if (is.list(config$prework)) {
-    lapply(config$prework, eval, envir = config$eval)
-  }
-  invisible()
-}
-
 sanitize_targets <- function(targets, plan) {
   if (is.null(try(targets, silent = TRUE))) {
     return(plan$target)
@@ -780,18 +726,30 @@ sanitize_targets <- function(targets, plan) {
   out
 }
 
-initialize_history <- function(history, cache_path) {
-  if (identical(history, TRUE)) {
-    history <- default_history_queue(cache_path)
-  }
-  if (!is.null(history) && !identical(history, FALSE)) {
-    stopifnot(is_history(history))
-  }
-  history
+memory_strategies <- function() {
+  c(
+    "speed",
+    "autoclean",
+    "preclean",
+    "lookahead",
+    "unload",
+    "none",
+    "memory" # deprecated on 2019-06-22
+  )
 }
 
-is_history <- function(history) {
-  inherits(history, "R6_txtq")
+choose_seed <- function(supplied, cache) {
+  supplied %||%
+    get_previous_seed(cache = cache) %||%
+    0L
+}
+
+get_previous_seed <- function(cache) {
+  if (cache$exists(key = "seed", namespace = "session")) {
+    cache$get(key = "seed", namespace = "session")
+  } else {
+    NULL
+  }
 }
 
 progress_hashmap <- function(cache) {
@@ -810,18 +768,53 @@ progress_hash <- function(key, cache) {
   gsub("^.", substr(key, 1, 1), out)
 }
 
-choose_seed <- function(supplied, cache) {
-  supplied %||%
-    get_previous_seed(cache = cache) %||%
-    0L
+initialize_history <- function(history, cache_path) {
+  if (identical(history, TRUE)) {
+    history <- default_history_queue(cache_path)
+  }
+  if (!is.null(history) && !identical(history, FALSE)) {
+    stopifnot(is_history(history))
+  }
+  history
 }
 
-get_previous_seed <- function(cache) {
-  if (cache$exists(key = "seed", namespace = "session")) {
-    cache$get(key = "seed", namespace = "session")
-  } else {
-    NULL
+is_history <- function(history) {
+  inherits(history, "R6_txtq")
+}
+
+# Load an existing drake files system cache if it exists
+# or create a new one otherwise.
+recover_cache_ <- function(
+  path = NULL,
+  hash_algorithm = NULL,
+  short_hash_algo = NULL,
+  long_hash_algo = NULL,
+  force = FALSE,
+  verbose = 1L,
+  fetch_cache = NULL,
+  console_log_file = NULL
+) {
+  path <- path %||% default_cache_path()
+  deprecate_force(force)
+  deprecate_fetch_cache(fetch_cache)
+  deprecate_hash_algo_args(short_hash_algo, long_hash_algo)
+  hash_algorithm <- sanitize_hash_algorithm(hash_algorithm)
+  cache <- this_cache_(
+    path = path,
+    verbose = verbose,
+    fetch_cache = fetch_cache,
+    console_log_file = console_log_file
+  )
+  if (is.null(cache)) {
+    cache <- new_cache(
+      path = path,
+      verbose = verbose,
+      hash_algorithm = hash_algorithm,
+      fetch_cache = fetch_cache,
+      console_log_file = console_log_file
+    )
   }
+  cache
 }
 
 plan_checks <- function(plan) {

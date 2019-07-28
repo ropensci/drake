@@ -414,7 +414,6 @@ outdated_subgraph <- function(config) {
 initialize_session <- function(config) {
   runtime_checks(config = config)
   config$cache$set(key = "seed", value = config$seed, namespace = "session")
-  init_common_values(config$cache)
   config$eval[[drake_envir_marker]] <- TRUE
   if (config$log_progress) {
     clear_tmp_namespace(
@@ -450,6 +449,60 @@ drake_set_session_info <- function(
     value = as.character(utils::packageVersion("drake")),
     namespace = "session"
   )
+  invisible()
+}
+
+#' @title Do the prework in the `prework`
+#'   argument to [make()].
+#' @export
+#' @keywords internal
+#' @description For internal use only.
+#' The only reason this function is exported
+#' is to set up parallel socket (PSOCK) clusters
+#' without too much fuss.
+#' @return Inivisibly returns `NULL`.
+#' @param config internal configuration list
+#' @param verbose_packages logical, whether to print
+#'   package startup messages
+#' @examples
+#' \dontrun{
+#' isolate_example("Quarantine side effects.", {
+#' if (suppressWarnings(require("knitr"))) {
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
+#' # Create a master internal configuration list with prework.
+#' con <- drake_config(my_plan, prework = c("library(knitr)", "x <- 1"))
+#' # Do the prework. Usually done at the beginning of `make()`,
+#' # and for distributed computing backends like "future_lapply",
+#' # right before each target is built.
+#' do_prework(config = con, verbose_packages = TRUE)
+#' # The `eval` element is the environment where the prework
+#' # and the commands in your workflow plan data frame are executed.
+#' identical(con$eval$x, 1) # Should be TRUE.
+#' }
+#' })
+#' }
+do_prework <- function(config, verbose_packages) {
+  for (package in union(c("methods", "drake"), config$packages)) {
+    expr <- as.call(c(
+      quote(require),
+      package = package,
+      lib.loc = as.call(c(quote(c), config$lib_loc)),
+      quietly = TRUE,
+      character.only = TRUE
+    ))
+    if (verbose_packages) {
+      expr <- as.call(c(quote(suppressPackageStartupMessages), expr))
+    }
+    eval(expr, envir = config$eval)
+  }
+  if (is.character(config$prework)) {
+    config$prework <- parse(text = config$prework)
+  }
+  if (is.language(config$prework)) {
+    eval(config$prework, envir = config$eval)
+  } else if (is.list(config$prework)) {
+    lapply(config$prework, eval, envir = config$eval)
+  }
   invisible()
 }
 

@@ -1,15 +1,3 @@
-memory_strategies <- function() {
-  c(
-    "speed",
-    "autoclean",
-    "preclean",
-    "lookahead",
-    "unload",
-    "none",
-    "memory" # deprecated on 2019-06-22
-  )
-}
-
 assign_to_envir <- function(target, value, config) {
   memory_strategy <- config$layout[[target]]$memory_strategy %||NA%
     config$memory_strategy
