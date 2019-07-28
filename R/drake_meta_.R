@@ -1,4 +1,3 @@
-# Compute the initial pre-build metadata of a target or import.
 drake_meta_ <- function(target, config) {
   layout <- config$layout[[target]]
   meta <- list(
@@ -42,6 +41,17 @@ drake_meta_ <- function(target, config) {
   meta
 }
 
+# A numeric hash that could be used as a
+# random number generator seed. Generated
+# from arguments of basic types such as
+# numerics and characters.
+seed_from_basic_types <- function(...) {
+  x <- paste0(..., collapse = "")
+  hash <- digest::digest(x, algo = "murmur32", serialize = FALSE)
+  hexval <- paste0("0x", hash)
+  utils::type.convert(hexval) %% .Machine$integer.max
+}
+
 dependency_hash <- function(target, config) {
   x <- config$layout[[target]]$deps_build
   deps <- c(x$globals, x$namespaced, x$loadd, x$readd)
@@ -77,10 +87,14 @@ self_hash <- function(target, config) {
   )
 }
 
+is_imported <- function(target, config) {
+  config$layout[[target]]$imported %||% TRUE
+}
+
 input_file_hash <- function(
   target,
   config,
-  size_cutoff = rehash_storage_size_cutoff
+  size_threshold = rehash_storage_size_threshold
 ) {
   deps <- config$layout[[target]]$deps_build
   files <- sort(unique(as.character(c(deps$file_in, deps$knitr_in))))
@@ -92,7 +106,7 @@ input_file_hash <- function(
     x = files,
     fun = storage_hash,
     config = config,
-    size_cutoff = size_cutoff
+    size_threshold = size_threshold
   )
   out <- paste(out, collapse = "")
   digest::digest(
@@ -105,7 +119,7 @@ input_file_hash <- function(
 output_file_hash <- function(
   target,
   config,
-  size_cutoff = rehash_storage_size_cutoff
+  size_threshold = rehash_storage_size_threshold
 ) {
   deps <- config$layout[[target]]$deps_build
   files <- sort(unique(as.character(deps$file_out)))
@@ -117,7 +131,7 @@ output_file_hash <- function(
     FUN = storage_hash,
     FUN.VALUE = character(1),
     config = config,
-    size_cutoff = size_cutoff
+    size_threshold = size_threshold
   )
   out <- paste(out, collapse = "")
   digest::digest(
@@ -125,6 +139,105 @@ output_file_hash <- function(
     algo = config$hash_algorithm,
     serialize = FALSE
   )
+}
+
+storage_hash <- function(
+  target,
+  config,
+  size_threshold = rehash_storage_size_threshold
+) {
+  if (!is_encoded_path(target)) {
+    return(NA_character_)
+  }
+  file <- decode_path(target, config)
+  if (is_url(file)) {
+    return(rehash_storage(target = target, file = file, config = config))
+  }
+  if (!file.exists(file)) {
+    return(NA_character_)
+  }
+  not_cached <- !config$cache$exists(key = target) ||
+    !config$cache$exists(key = target, namespace = "meta")
+  if (not_cached) {
+    return(rehash_storage(target = target, file = file, config = config))
+  }
+  meta <- config$cache$get(key = target, namespace = "meta")
+  should_rehash <- should_rehash_storage(
+    size_threshold = size_threshold,
+    new_mtime = storage_mtime(file),
+    old_mtime = meta$mtime %||% -Inf,
+    new_size = storage_size(file),
+    old_size = meta$size
+  )
+  ifelse (
+    should_rehash,
+    rehash_storage(target = target, config = config),
+    config$cache$get(key = target)
+  )
+}
+
+should_rehash_storage <- function(
+  size_threshold,
+  new_mtime,
+  old_mtime,
+  new_size,
+  old_size
+) {
+  small <- (new_size < size_threshold) %||NA% TRUE
+  touched <- (new_mtime > old_mtime) %||NA% TRUE
+  resized <- (abs(new_size - old_size) > rehash_storage_size_tol) %||NA% TRUE
+  small || touched || resized
+}
+
+rehash_storage_size_threshold <- 1e5
+rehash_storage_size_tol <- .Machine$double.eps ^ 0.5
+
+storage_mtime <- function(x) {
+  if (dir.exists(x)) {
+    dir_mtime(x)
+  } else {
+    file.mtime(x)
+  }
+}
+
+dir_mtime <- function(x) {
+  files <- list.files(
+    path = x,
+    all.files = TRUE,
+    full.names = TRUE,
+    recursive = TRUE,
+    include.dirs = FALSE
+  )
+  times <- vapply(files, file.mtime, FUN.VALUE = numeric(1))
+  max(times %||% Inf)
+}
+
+storage_size <- function(x) {
+  if (dir.exists(x)) {
+    dir_size(x)
+  } else {
+    file_size(x)
+  }
+}
+
+dir_size <- function(x) {
+  files <- list.files(
+    path = x,
+    all.files = TRUE,
+    full.names = TRUE,
+    recursive = TRUE,
+    include.dirs = FALSE
+  )
+  sizes <- vapply(files, file_size, FUN.VALUE = numeric(1))
+  max(sizes %||% 0)
+}
+
+file_size <- function(x) {
+  if (file.exists(x)) {
+    file.size(x)
+  } else {
+    NA_real_
+  }
 }
 
 rehash_storage <- function(target, file = NULL, config) {
@@ -145,15 +258,6 @@ rehash_storage <- function(target, file = NULL, config) {
   } else {
     rehash_file(file, config)
   }
-}
-
-rehash_file <- function(file, config) {
-  digest::digest(
-    object = file,
-    algo = config$hash_algorithm,
-    file = TRUE,
-    serialize = FALSE
-  )
 }
 
 rehash_dir <- function(dir, config) {
@@ -178,6 +282,15 @@ rehash_dir <- function(dir, config) {
   )
 }
 
+rehash_file <- function(file, config) {
+  digest::digest(
+    object = file,
+    algo = config$hash_algorithm,
+    file = TRUE,
+    serialize = FALSE
+  )
+}
+
 rehash_url <- function(url) {
   assert_pkg("curl")
   headers <- NULL
@@ -193,127 +306,12 @@ rehash_url <- function(url) {
   return(paste(etag, mtime))
 }
 
-assert_useful_headers <- function(headers, url) {
-  if (!any(c("etag", "last-modified") %in% names(headers))) {
-    stop("no ETag or Last-Modified for url: ", url, call. = FALSE)
-  }
-}
-
 is_url <- function(x) {
   grepl("^http://|^https://|^ftp://", x)
 }
 
-file_dep_exists <- function(x) {
-  file.exists(x) | is_url(x)
-}
-
-should_rehash_storage <- function(
-  size_cutoff,
-  new_mtime,
-  old_mtime,
-  new_size,
-  old_size
-) {
-  small <- (new_size < size_cutoff) %||NA% TRUE
-  touched <- (new_mtime > old_mtime) %||NA% TRUE
-  resized <- (abs(new_size - old_size) > rehash_tol) %||NA% TRUE
-  small || touched || resized
-}
-
-rehash_tol <- .Machine$double.eps ^ 0.5
-
-storage_hash <- function(
-  target,
-  config,
-  size_cutoff = rehash_storage_size_cutoff
-) {
-  if (!is_encoded_path(target)) {
-    return(NA_character_)
+assert_useful_headers <- function(headers, url) {
+  if (!any(c("etag", "last-modified") %in% names(headers))) {
+    stop("no ETag or Last-Modified for url: ", url, call. = FALSE)
   }
-  file <- decode_path(target, config)
-  if (is_url(file)) {
-    return(rehash_storage(target = target, file = file, config = config))
-  }
-  if (!file.exists(file)) {
-    return(NA_character_)
-  }
-  not_cached <- !config$cache$exists(key = target) ||
-    !config$cache$exists(key = target, namespace = "meta")
-  if (not_cached) {
-    return(rehash_storage(target = target, file = file, config = config))
-  }
-  meta <- config$cache$get(key = target, namespace = "meta")
-  should_rehash <- should_rehash_storage(
-    size_cutoff = size_cutoff,
-    new_mtime = storage_mtime(file),
-    old_mtime = meta$mtime %||% -Inf,
-    new_size = storage_size(file),
-    old_size = meta$size
-  )
-  ifelse (
-    should_rehash,
-    rehash_storage(target = target, config = config),
-    config$cache$get(key = target)
-  )
-}
-
-rehash_storage_size_cutoff <- 1e5
-
-storage_mtime <- function(x) {
-  if (dir.exists(x)) {
-    dir_mtime(x)
-  } else {
-    file.mtime(x)
-  }
-}
-
-storage_size <- function(x) {
-  if (dir.exists(x)) {
-    dir_size(x)
-  } else {
-    file_size(x)
-  }
-}
-
-file_size <- function(x) {
-  if (file.exists(x)) {
-    file.size(x)
-  } else {
-    NA_real_
-  }
-}
-
-dir_mtime <- function(x) {
-  files <- list.files(
-    path = x,
-    all.files = TRUE,
-    full.names = TRUE,
-    recursive = TRUE,
-    include.dirs = FALSE
-  )
-  times <- vapply(files, file.mtime, FUN.VALUE = numeric(1))
-  max(times %||% Inf)
-}
-
-dir_size <- function(x) {
-  files <- list.files(
-    path = x,
-    all.files = TRUE,
-    full.names = TRUE,
-    recursive = TRUE,
-    include.dirs = FALSE
-  )
-  sizes <- vapply(files, file_size, FUN.VALUE = numeric(1))
-  max(sizes %||% 0)
-}
-
-# A numeric hash that could be used as a
-# random number generator seed. Generated
-# from arguments of basic types such as
-# numerics and characters.
-seed_from_basic_types <- function(...) {
-  x <- paste0(..., collapse = "")
-  hash <- digest::digest(x, algo = "murmur32", serialize = FALSE)
-  hexval <- paste0("0x", hash)
-  utils::type.convert(hexval) %% .Machine$integer.max
 }

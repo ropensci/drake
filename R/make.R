@@ -482,6 +482,10 @@ missing_input_files <- function(config) {
   invisible()
 }
 
+file_dep_exists <- function(x) {
+  file.exists(x) | is_url(x)
+}
+
 subdirectory_warning <- function(config) {
   if (identical(Sys.getenv("drake_warn_subdir"), "false")) {
     return()

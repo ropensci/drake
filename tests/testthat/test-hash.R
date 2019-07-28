@@ -56,7 +56,7 @@ test_with_dir("hashing decisions", {
       old_mtime = 0,
       old_size = 0,
       new_size = 0,
-      size_cutoff = Inf
+      size_threshold = Inf
     )
   )
   for (i in c(0, 1)) {
@@ -66,7 +66,7 @@ test_with_dir("hashing decisions", {
         old_mtime = i,
         old_size = 0,
         new_size = 0,
-        size_cutoff = -Inf
+        size_threshold = -Inf
       )
     )
     expect_true(
@@ -75,7 +75,7 @@ test_with_dir("hashing decisions", {
         old_mtime = i,
         old_size = 0,
         new_size = 0,
-        size_cutoff = Inf
+        size_threshold = Inf
       )
     )
   }
@@ -86,7 +86,7 @@ test_with_dir("hashing decisions", {
         old_mtime = 0,
         old_size = 0,
         new_size = 0,
-        size_cutoff = s
+        size_threshold = s
       )
     )
     expect_true(
@@ -95,7 +95,7 @@ test_with_dir("hashing decisions", {
         old_mtime = 0,
         old_size = 1,
         new_size = 0,
-        size_cutoff = s
+        size_threshold = s
       )
     )
     expect_true(
@@ -104,7 +104,7 @@ test_with_dir("hashing decisions", {
         old_mtime = 0,
         old_size = 0,
         new_size = 1,
-        size_cutoff = s
+        size_threshold = s
       )
     )
   }

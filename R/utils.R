@@ -32,10 +32,6 @@ all_imports <- function(config) {
   V(config$graph)$name[V(config$graph)$imported]
 }
 
-is_imported <- function(target, config) {
-  config$layout[[target]]$imported %||% TRUE
-}
-
 assert_config_not_plan <- function(config) {
   if (!inherits(config, "drake_plan")) {
     return()
