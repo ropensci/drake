@@ -220,3 +220,10 @@ missed <- function(config) {
   }
   display_keys(imports[is_missing])
 }
+
+missing_import <- function(x, config) {
+  if (is_encoded_path(x)) {
+    return(!file_dep_exists(decode_path(x, config)))
+  }
+  identical(get_import_from_memory(x, config = config), NA_character_)
+}

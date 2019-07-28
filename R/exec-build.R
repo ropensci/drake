@@ -132,3 +132,19 @@ handle_build_exceptions <- function(target, meta, config) {
     }
   }
 }
+
+assign_to_envir <- function(target, value, config) {
+  memory_strategy <- config$layout[[target]]$memory_strategy %||NA%
+    config$memory_strategy
+  if (memory_strategy %in% c("autoclean", "unload", "none")) {
+    return()
+  }
+  if (
+    identical(config$lazy_load, "eager") &&
+    !is_encoded_path(target) &&
+    !is_imported(target, config)
+  ) {
+    assign(x = target, value = value, envir = config$eval)
+  }
+  invisible()
+}
