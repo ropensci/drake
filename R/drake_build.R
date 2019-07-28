@@ -201,4 +201,3 @@ debug_and_run <- function(f) {
   f()
   # nocov end
 }
-
