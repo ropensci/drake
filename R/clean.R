@@ -128,13 +128,13 @@ clean <- function(
     namespaces = namespaces,
     garbage_collection = garbage_collection
   )
-  if (destroy) {
-    cache$destroy()
-  }
   if (garbage_collection) {
     cache$gc()
   } else {
     clean_recovery_msg()
+  }
+  if (destroy) {
+    cache$destroy()
   }
   invisible()
 }

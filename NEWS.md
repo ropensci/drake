@@ -1,5 +1,9 @@
 # Version 7.5.2.9000
 
+## Bug fixes
+
+- Repair `clean(garbage_collection = TRUE, destroy = TRUE)`. Previously it threw an error.
+
 ## New features
 
 - Add `tidyselect` functionality for `...` in `progress()`, analogous to `loadd()`, `build_times()`, and `clean()`.

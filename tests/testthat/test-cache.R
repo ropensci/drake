@@ -557,3 +557,14 @@ test_with_dir("loadd(x, deps = TRUE) when x is not cached", {
     regexp = "Disabling"
   )
 })
+
+test_with_dir("clean: garbage_collection and destroy", {
+  skip_on_cran()
+  plan <- drake_plan(x = file.create(file_out("abc")))
+  make(plan)
+  expect_true(file.exists(".drake"))
+  expect_true(file.exists("abc"))
+  clean(garbage_collection = TRUE, destroy = TRUE)
+  expect_false(file.exists(".drake"))
+  expect_false(file.exists("abc"))
+})
