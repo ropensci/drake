@@ -2,7 +2,7 @@
 
 ## Bug fixes
 
-- Repair `clean(garbage_collection = TRUE, destroy = TRUE)`. Previously it threw an error.
+- Repair `clean(garbage_collection = TRUE, destroy = TRUE)`. Previously it destroyed the cache before trying to collect garbage.
 
 ## New features
 
