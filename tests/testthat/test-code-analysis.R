@@ -269,9 +269,10 @@ test_with_dir("dollar sign (#938)", {
 })
 
 test_with_dir("user-defined S3 (#959)", {
+  skip_on_cran()
   dostuff <- function(...) {
     do.stuff.class2 <- 40 # nolint
-    if (a == 1) {
+    if (1 == 1) {
       UseMethod("do.stuff")
     } else {
       sqrt(5)
@@ -290,7 +291,11 @@ test_with_dir("user-defined S3 (#959)", {
       invisible()
     }
   # nolint end
-  plan <- drake_plan(x = dostuff())
+  plan <- drake_plan(x = {
+    y <- list(123)
+    class(y) <- "class1"
+    dostuff(y)
+  })
   config <- drake_config(
     plan,
     history = FALSE,
@@ -299,6 +304,16 @@ test_with_dir("user-defined S3 (#959)", {
   out <- sort(deps_target(dostuff, config)$name)
   exp <- sort(c("do.stuff.class1", "do.stuff.class3"))
   expect_equal(out, exp)
+  make(config = config)
+  expect_equal(justbuilt(config), "x")
+  make(config = config)
+  expect_equal(justbuilt(config), character(0))
+  do.stuff.class1 <- function(...) { # nolint
+    message(123)
+    invisible()
+  }
+  make(config = config)
+  expect_equal(justbuilt(config), "x")
   dostuff <- function(...) {
     do.stuff.class2 <- 40 # nolint
     if (a == 1) {
