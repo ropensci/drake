@@ -1203,8 +1203,9 @@ failed <- function(
 #' @inheritParams cached
 #'
 #' @param ... Objects to load from the cache, as names (unquoted)
-#'   or character strings (quoted). Similar to `...` in
-#'   `remove()` and `rm()`.
+#'   or character strings (quoted). If the `tidyselect` package is installed,
+#'   you can also supply `dplyr`-style `tidyselect`
+#'   commands such as `starts_with()`, `ends_with()`, and `one_of()`.
 #'
 #' @param list Character vector naming objects to be loaded from the
 #'   cache. Similar to the `list` argument of [remove()].
@@ -1217,7 +1218,7 @@ failed <- function(
 #'
 #' @param progress Character vector for filtering the build progress results.
 #'   Defaults to `NULL` (no filtering) to report progress of all objects.
-#'   Supported filters are `"done"`, `"running"`, `"failed"` and `"none"`.
+#'   Supported filters are `"done"`, `"running"`, and `"failed"`.
 #'
 #' @examples
 #' \dontrun{
@@ -1274,13 +1275,12 @@ progress <- function(
   )
   out <- weak_tibble(target = targets, progress = progress_results)
   rownames(out) <- NULL
-
   if (is.null(progress)) {
     return(out)
   }
   progress <- match.arg(
     progress,
-    choices = c("done", "running", "failed", "none"),
+    choices = c("done", "running", "failed"),
     several.ok = TRUE
   )
   out[out$progress %in% progress, ]

@@ -484,11 +484,10 @@ test_with_dir("loadd() does not load imports", {
   )
 })
 
-test_with_dir("can select and filter progress", {
+test_with_dir("selection and filtering in progress", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   plan <- drake_plan(x_a = TRUE, y_b = TRUE, x_c = stop())
   expect_error(make(plan))
-
   out <- progress(x_a, y_b, x_c, d)
   exp <- weak_tibble(
     target = c("x_a", "y_b", "x_c"),
@@ -517,6 +516,8 @@ test_with_dir("can select and filter progress", {
   expect_error(progress(progress = "stuck"), "should be one of")
   skip_if_not_installed("tidyselect")
   expect_equivalent(progress(tidyselect::starts_with("x_")), exp4)
+  cache <- drake_cache()
+  expect_equal(get_progress_single("12345", cache), "none")
 })
 
 test_with_dir("make() writes a cache log file", {
