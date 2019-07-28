@@ -133,6 +133,23 @@ handle_build_exceptions <- function(target, meta, config) {
   }
 }
 
+store_failure <- function(target, meta, config) {
+  set_progress(
+    target = target,
+    meta = meta,
+    value = "failed",
+    config = config
+  )
+  fields <- intersect(c("messages", "warnings", "error"), names(meta))
+  meta <- meta[fields]
+  config$cache$set(
+    key = target,
+    value = meta,
+    namespace = "meta",
+    use_cache = FALSE
+  )
+}
+
 assign_to_envir <- function(target, value, config) {
   memory_strategy <- config$layout[[target]]$memory_strategy %||NA%
     config$memory_strategy

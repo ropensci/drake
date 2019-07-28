@@ -11,8 +11,9 @@ progress(..., list = character(0), no_imported_objects = NULL,
 }
 \arguments{
 \item{...}{Objects to load from the cache, as names (unquoted)
-or character strings (quoted). Similar to \code{...} in
-\code{remove()} and \code{rm()}.}
+or character strings (quoted). If the \code{tidyselect} package is installed,
+you can also supply \code{dplyr}-style \code{tidyselect}
+commands such as \code{starts_with()}, \code{ends_with()}, and \code{one_of()}.}
 
 \item{list}{Character vector naming objects to be loaded from the
 cache. Similar to the \code{list} argument of \code{\link[=remove]{remove()}}.}
@@ -40,7 +41,7 @@ If supplied, \code{path} is ignored.}
 
 \item{progress}{Character vector for filtering the build progress results.
 Defaults to \code{NULL} (no filtering) to report progress of all objects.
-Supported filters are \code{"done"}, \code{"running"}, \code{"failed"} and \code{"none"}.}
+Supported filters are \code{"done"}, \code{"running"}, and \code{"failed"}.}
 }
 \value{
 The build progress of each target reached by

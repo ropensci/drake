@@ -153,12 +153,3 @@ empty_times <- function() {
     system = numeric(0)
   )
 }
-
-runtime_entry <- function(runtime, target) {
-  list(
-    target = target,
-    elapsed = runtime[["elapsed"]],
-    user = runtime[["user.self"]],
-    system = runtime[["sys.self"]]
-  )
-}
