@@ -54,6 +54,8 @@ walk_code <- function(expr, results, locals, allowed_globals) {
       analyze_assign(expr, results, locals, allowed_globals)
     } else if (name == "delayedAssign") {
       analyze_delayed_assign(expr, results, locals, allowed_globals)
+    } else if (name == "UseMethod") {
+      analyze_usemethod(expr, results, locals, allowed_globals)
     } else if (name %in% loadd_fns) {
       analyze_loadd(expr, results)
     } else if (name %in% readd_fns) {
@@ -68,6 +70,7 @@ walk_code <- function(expr, results, locals, allowed_globals) {
       walk_call(expr, results, locals, allowed_globals)
     }
   }
+  invisible()
 }
 
 analyze_arrow <- function(expr, results, locals, allowed_globals) {
@@ -181,6 +184,28 @@ analyze_function <- function(expr, results, locals, allowed_globals) {
   ignore(walk_code)(body(expr), results, locals, allowed_globals)
 }
 
+analyze_usemethod <- function(expr, results, locals, allowed_globals) {
+  generic <- expr[["generic"]] %||% expr[[2]]
+  if (!is.character(generic) || length(generic) != 1L) {
+    return()
+  }
+  pattern <- gsub(".", "\\.", generic, fixed = TRUE)
+  pattern <- sprintf("^%s\\.", pattern)
+  methods <- grep(
+    pattern = pattern,
+    x = ht_list(allowed_globals),
+    value = TRUE
+  )
+  lapply(
+    X = methods,
+    FUN = analyze_global,
+    results = results,
+    locals = locals,
+    allowed_globals = allowed_globals
+  )
+  invisible()
+}
+
 analyze_strings <- function(expr) {
   ht <- ht_new()
   walk_strings(expr, ht)
@@ -213,6 +238,7 @@ walk_call <- function(expr, results, locals, allowed_globals) {
     locals = locals,
     allowed_globals = allowed_globals
   )
+  invisible()
 }
 
 walk_strings <- function(expr, ht) {
@@ -227,6 +253,7 @@ walk_strings <- function(expr, ht) {
   } else if (is.pairlist(expr) || is_callish(expr)) {
     lapply(expr, walk_strings, ht = ht)
   }
+  invisible()
 }
 
 ignore_ignore <- function(x) {

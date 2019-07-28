@@ -267,3 +267,50 @@ test_with_dir("dollar sign (#938)", {
   exp <- sort(c("diagnose", "%||%"))
   expect_equal(out, exp)
 })
+
+test_with_dir("user-defined S3 (#959)", {
+  dostuff <- function(...) {
+    do.stuff.class2 <- 40 # nolint
+    if (a == 1) {
+      UseMethod("do.stuff")
+    } else {
+      sqrt(5)
+    }
+  }
+  # nolint start
+  do.stuff.class1 <-
+    do.stuffclass1 <-
+    do.stuff_class1 <-
+    do_stuff.class1 <-
+    do_stuff_class1 <-
+    dostuff.class1 <-
+    do.stuff.class2 <-
+    do.stuff.class3 <-
+    function(...) {
+      invisible()
+    }
+  # nolint end
+  plan <- drake_plan(x = dostuff())
+  config <- drake_config(
+    plan,
+    history = FALSE,
+    cache = storr::storr_environment()
+  )
+  out <- sort(deps_target(dostuff, config)$name)
+  exp <- sort(c("do.stuff.class1", "do.stuff.class3"))
+  expect_equal(out, exp)
+  dostuff <- function(...) {
+    do.stuff.class2 <- 40 # nolint
+    if (a == 1) {
+      dont_use_method("do.stuff")
+    } else {
+      sqrt(5)
+    }
+  }
+  config <- drake_config(
+    plan,
+    history = FALSE,
+    cache = storr::storr_environment()
+  )
+  expect_equal(deps_target(dostuff, config)$name, character(0))
+})

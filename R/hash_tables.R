@@ -18,6 +18,7 @@ ht_set <- function(ht, x, value = TRUE) {
     envir = ht,
     inherits = FALSE
   )
+  invisible()
 }
 
 ht_get <- function(ht, x) {
