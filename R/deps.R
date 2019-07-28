@@ -112,6 +112,18 @@ get_deps_knitr <- function(target) {
   list_code_analysis_results(out)
 }
 
+decode_deps_list <- function(x) {
+  for (field in c("file_in", "file_out", "knitr_in")) {
+    if (length(x[[field]])) {
+      x[[field]] <- decode_path(x[[field]])
+    }
+  }
+  if (length(x$namespaced)) {
+    x$namespaced <- decode_namespaced(x$namespaced)
+  }
+  x
+}
+
 display_deps_list <- function(x) {
   if (!length(x)) {
     return(weak_tibble(name = character(0), type = character(0)))
@@ -254,43 +266,16 @@ tracked <- function(config) {
   display_keys(clean_dependency_list(out), config)
 }
 
-#' @title Tell `drake` that you want information
-#' on a *file* (target or import), not an ordinary object.
-#' @description This function simply wraps literal double quotes around
-#' the argument `x` so `drake` knows it is the name of a file.
-#' Use when you are calling functions like `deps_code()`: for example,
-#' `deps_code(file_store("report.md"))`. See the examples for details.
-#' Internally, `drake` wraps the names of file targets/imports
-#' inside literal double quotes to avoid confusion between
-#' files and generic R objects.
-#' @export
-#' @return A single-quoted character string: i.e., a filename
-#' understandable by drake.
-#' @param x Character string to be turned into a filename
-#' understandable by drake (i.e., a string with literal
-#' single quotes on both ends).
-#' @examples
-#' # Wraps the string in single quotes.
-#' file_store("my_file.rds") # "'my_file.rds'"
-#' \dontrun{
-#' isolate_example("contain side effects", {
-#' if (suppressWarnings(require("knitr"))) {
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' make(my_plan) # Run the workflow to build the targets
-#' list.files() # Should include input "report.Rmd" and output "report.md".
-#' head(readd(small)) # You can use symbols for ordinary objects.
-#' # But if you want to read cached info on files, use `file_store()`.
-#' readd(file_store("report.md"), character_only = TRUE) # File fingerprint.
-#' deps_code(file_store("report.Rmd"))
-#' config <- drake_config(my_plan)
-#' deps_profile(
-#'   file_store("report.Rmd"),
-#'   config = config,
-#'   character_only = TRUE
-#' )
-#' }
-#' })
-#' }
-file_store <- function(x) {
-  encode_path(x)
+clean_dependency_list <- function(x) {
+  sort(clean_nested_char_list(x))
+}
+
+clean_nested_char_list <- function(x) {
+  if (!length(x)){
+    return(character(0))
+  }
+  x <- unlist(x)
+  x <- unname(x)
+  x <- as.character(x)
+  x <- unique(x)
 }

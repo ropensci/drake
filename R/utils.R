@@ -76,20 +76,6 @@ assert_pkg <- function(pkg, version = NULL, install = "install.packages") {
   invisible()
 }
 
-clean_dependency_list <- function(x) {
-  sort(clean_nested_char_list(x))
-}
-
-clean_nested_char_list <- function(x) {
-  if (!length(x)){
-    return(character(0))
-  }
-  x <- unlist(x)
-  x <- unname(x)
-  x <- as.character(x)
-  x <- unique(x)
-}
-
 # weak_as_tibble - use as_tibble() if available but fall back to
 # as.data.frame() if necessary
 weak_as_tibble <- function(..., .force_df = FALSE) {
