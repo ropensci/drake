@@ -1,4 +1,4 @@
-drake_context("code analysis")
+drake_context("analysis")
 
 test_with_dir("busy function", {
   f <- function(a = 1, b = k(i), nineteen, string_args = c("sa1", "sa2")) {
@@ -1016,4 +1016,3 @@ test_with_dir("standardizing Rcpp functions", {
 test_with_dir("utils for code analysis fns", {
   expect_equal(pair_text("x", c("y", "z")), c("xy", "xz"))
 })
-

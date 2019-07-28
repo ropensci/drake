@@ -67,4 +67,3 @@ test_with_dir("file_store quotes properly", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(file_store("x"), encode_path("x"))
 })
-

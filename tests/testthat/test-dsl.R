@@ -2583,4 +2583,3 @@ test_with_dir("complete_cases()", {
   x <- data.frame(a = 1:6, b = c(1:3, rep(NA_integer_, 3)))
   expect_equal(complete_cases(x), rep(c(TRUE, FALSE), each = 3))
 })
-

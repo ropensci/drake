@@ -1,4 +1,4 @@
-drake_context("priority queue")
+drake_context("queue")
 
 test_with_dir("empty queue", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).

@@ -627,4 +627,3 @@ test_with_dir("warning when file_out() files not produced", {
     regexp = "Missing files for target"
   )
 })
-
