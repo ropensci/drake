@@ -270,7 +270,7 @@ test_with_dir("dollar sign (#938)", {
 
 test_with_dir("user-defined S3 (#959)", {
   skip_on_cran()
-  dostuff <- function(...) {
+  dostuff <- function(x) {
     do.stuff.class2 <- 40 # nolint
     if (1 == 1) {
       UseMethod("do.stuff")
@@ -287,7 +287,7 @@ test_with_dir("user-defined S3 (#959)", {
     dostuff.class1 <-
     do.stuff.class2 <-
     do.stuff.class3 <-
-    function(...) {
+    function(x) {
       invisible()
     }
   # nolint end
@@ -304,6 +304,21 @@ test_with_dir("user-defined S3 (#959)", {
   out <- sort(deps_target(dostuff, config)$name)
   exp <- sort(c("do.stuff.class1", "do.stuff.class3"))
   expect_equal(out, exp)
+    dostuff <- function(x) {
+    do.stuff.class2 <- 40 # nolint
+    if (1 == 1) {
+      UseMethod(object = x, generic = "do.stuff")
+    } else {
+      sqrt(5)
+    }
+  }
+  config <- drake_config(
+    plan,
+    history = FALSE,
+    cache = storr::storr_environment()
+  )
+  out <- sort(deps_target(dostuff, config)$name)
+  exp <- sort(c("do.stuff.class1", "do.stuff.class3"))
   make(config = config)
   expect_equal(justbuilt(config), "x")
   make(config = config)
@@ -321,6 +336,15 @@ test_with_dir("user-defined S3 (#959)", {
     } else {
       sqrt(5)
     }
+  }
+  config <- drake_config(
+    plan,
+    history = FALSE,
+    cache = storr::storr_environment()
+  )
+  expect_equal(deps_target(dostuff, config)$name, character(0))
+  dostuff <- function(x) {
+    UseMethod(paste0("do", ".", "stuff"))
   }
   config <- drake_config(
     plan,
