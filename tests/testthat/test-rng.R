@@ -1,4 +1,4 @@
-drake_context("reproducible random numbers")
+drake_context("rng")
 
 test_with_dir("seed_from_basic_types", {
   set.seed(0)

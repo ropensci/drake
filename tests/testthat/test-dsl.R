@@ -2439,3 +2439,148 @@ test_with_dir("transform_plan() on its own", {
   )
   equivalent_plans(out3, exp3)
 })
+
+test_with_dir("splice_args()", {
+  out <- splice_args(
+    quote(1 + g(f(h(y), z), z)),
+    list(y = list(1, 2), z = list(4, quote(x)))
+  )
+  expect_equal(deparse(out), "1 + g(f(h(1, 2), 4, x), 4, x)")
+  out <- splice_args(
+    quote(f(x, 5)),
+    list(x = list(a = 1, b = quote(sym), c = "char"))
+  )
+  expect_equal(deparse(out), "f(a = 1, b = sym, c = \"char\", 5)")
+})
+
+test_with_dir("make_unique()", {
+  skip_on_cran()
+  expect_equal(make_unique(character(0)), character(0))
+  expect_equal(make_unique(letters), letters)
+  x <- c("d", "c", "b", "b", "b", "d", "a", "a", "c", "d")
+  out <- make_unique(x)
+  exp <- c("d", "c", "b", "b_2", "b_3", "d_2", "a", "a_2", "c_2", "d_3")
+  expect_equal(out, exp)
+  set.seed(0)
+  x <- sample(letters[seq_len(4)], size = 1e3, replace = TRUE)
+  out <- make_unique(x)
+  out <- vapply(
+    out,
+    function(x) {
+      y <- strsplit(x, split = "_")[[1]]
+      if (length(y) == 1L) {
+        return(y)
+      }
+      suffix <- as.integer(y[2])
+      expect_true(suffix > 1L)
+      paste(y[1], suffix - 1L, sep = ".")
+    },
+    FUN.VALUE = character(1),
+    USE.NAMES = FALSE
+  )
+  exp <- make.unique(x, sep = ".")
+  expect_equal(out, exp)
+})
+
+test_with_dir("slice_indices", {
+  all_slices <- function(length, slices) {
+    lapply(seq_len(slices), slice_indices, length = length, slices = slices)
+  }
+  for (i in seq_len(50)) {
+    for (j in seq_len(i + 2)) {
+      s <- all_slices(i, j)
+      expect_equal(sort(unlist(s)), seq_len(i))
+      lengths <- vapply(s, length, FUN.VALUE = integer(1))
+      diff <- max(lengths) - min(lengths)
+      expect_true(diff <= 1L)
+    }
+  }
+})
+
+test_with_dir("slice_indices edge cases", {
+  expect_equal(slice_indices(100, slices = 1, index = 1), seq_len(100))
+  expect_equal(slice_indices(100, slices = 1, index = 2), integer(0))
+  expect_equal(slice_indices(100, slices = 2, index = 3), integer(0))
+  for (i in c(0, 100)) {
+    for (j in c(0, 1)) {
+      for (k in c(0, 1)) {
+        if (i > 0L && j > 0L && k > 0L) {
+          next
+        }
+        expect_equal(slice_indices(i, slices = j, index = k), integer(0))
+      }
+    }
+  }
+})
+
+test_with_dir("drake_slice edge cases", {
+  expect_error(
+    drake_slice(mtcars, margin = 1:2),
+    regexp = "must each have length 1"
+  )
+})
+
+test_with_dir("drake_slice on a vector", {
+  expect_equal(drake_slice(letters, slices = 3, index = 1), letters[1:9])
+  expect_equal(drake_slice(letters, slices = 3, index = 2), letters[10:18])
+  expect_equal(drake_slice(letters, slices = 3, index = 3), letters[19:26])
+})
+
+test_with_dir("drake_slice on a list", {
+  x <- as.list(letters)
+  expect_equal(drake_slice(x, slices = 3, index = 1), x[1:9])
+  expect_equal(drake_slice(x, slices = 3, index = 2), x[10:18])
+  expect_equal(drake_slice(x, slices = 3, index = 3), x[19:26])
+})
+
+test_with_dir("drake_slice on arrays", {
+  skip_if_not_installed("abind")
+  for (ndim in 1:4) {
+    dim <- seq(from = 8, length.out = ndim)
+    x <- array(seq_len(prod(dim)), dim = dim)
+    for (slices in c(3, 4, 5)) {
+      for (margin in seq_len(ndim)) {
+        lst <- lapply(
+          seq_len(slices),
+          function(i) {
+            drake_slice(data = x, slices = slices, margin = margin, index = i)
+          }
+        )
+        lst$along <- margin
+        # unfixable partial arg match warnings:
+        out <- suppressWarnings(do.call(abind::abind, lst))
+        expect_equivalent(x, out)
+      }
+    }
+  }
+})
+
+test_with_dir("drake_slice on a data frame", {
+  lst <- lapply(
+    seq_len(4),
+    function(i) {
+      drake_slice(data = mtcars, slices = 4, margin = 1, index = i)
+    }
+  )
+  out <- do.call(rbind, lst)
+  expect_equal(out, mtcars)
+})
+
+test_with_dir("drake_slice and drop", {
+  x <- matrix(seq_len(20), nrow = 5)
+  out <- drake_slice(x, slices = 3, margin = 2, index = 2)
+  expect_equal(out, matrix(11:15, ncol = 1))
+  out <- drake_slice(x, slices = 3, margin = 2, index = 2, drop = TRUE)
+  expect_equal(out, 11:15)
+})
+
+test_with_dir("complete_cases()", {
+  for (empty in list(data.frame(), mtcars[NULL, ], mtcars[, NULL])) {
+    expect_equivalent(complete_cases(empty), logical(0))
+  }
+  x <- data.frame(a = letters, b = LETTERS)
+  expect_equal(complete_cases(x), rep(TRUE, length(letters)))
+  x <- data.frame(a = 1:6, b = c(1:3, rep(NA_integer_, 3)))
+  expect_equal(complete_cases(x), rep(c(TRUE, FALSE), each = 3))
+})
+

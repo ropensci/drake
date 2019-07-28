@@ -1,4 +1,4 @@
-drake_context("command changes")
+drake_context("commands")
 
 test_with_dir("changes to commands are handled well", {
   config <- dbug()

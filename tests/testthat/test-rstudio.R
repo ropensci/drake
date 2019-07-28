@@ -1,4 +1,4 @@
-drake_context("rstudio loadd")
+drake_context("rstudio")
 
 test_with_dir("loading targets at cursor works under a real conditions", {
   skip_on_cran()

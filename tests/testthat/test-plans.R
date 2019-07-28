@@ -495,3 +495,136 @@ test_with_dir("handle weird missing symbols", {
   exp <- drake_plan(a = 1, b = f(x))
   equivalent_plans(out, exp)
 })
+
+# From Kendon Bell: https://github.com/ropensci/drake/issues/200
+test_with_dir("drake_plan does tidy eval", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  my_variable <- 5
+  plan1 <- drake_plan(a = !!my_variable)
+  plan2 <- weak_tibble(target = "a", command = "5")
+  equivalent_plans(plan1, plan2)
+})
+
+# From Alex Axthelm: https://github.com/ropensci/drake/issues/200
+test_with_dir("drake_plan tidy eval can be customized and disabled", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  my_variable <- 5
+  plan1 <- drake_plan(
+    a = !!my_variable,
+    b = !!my_variable + 1,
+    c = target(1 + 1, custom = !!my_variable),
+    tidy_eval = FALSE
+  )
+  plan1$custom <- unlist(lapply(plan1[["custom"]], rlang::expr_text))
+  plan2 <- drake_plan(
+    a = !!my_variable,
+    b = !!my_variable + 1,
+    c = target(1 + 1, custom = !!my_variable),
+    tidy_eval = TRUE
+  )
+  plan1$command <- unclass(deparse_lang_col(plan1$command))
+  plan2$command <- unclass(deparse_lang_col(plan2$command))
+  expect_equal(plan1$target, plan2$target)
+  expect_false(any(grepl("5", plan1$command)))
+  expect_equal(plan2$command, c("5", "5 + 1", "1 + 1"))
+  expect_false(any(grepl("5", plan1[["custom"]])))
+  expect_equal(plan2$custom, c(NA, NA, 5))
+})
+
+# From Kendon Bell: https://github.com/ropensci/drake/issues/200
+test_with_dir("make() does tidy eval in commands", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  plan <- drake_plan(
+    little_b = "b",
+    letter = !!little_b,
+    tidy_eval = FALSE
+  )
+  make(plan)
+  expect_equal(readd(letter), "b")
+})
+
+test_with_dir("stringsAsFactors can be TRUE", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  f <- function(x) {
+    return(x)
+  }
+  myplan <- data.frame(target = "a", command = "f(\"helloworld\")",
+    stringsAsFactors = TRUE)
+  expect_true(is.factor(myplan$target))
+  expect_true(is.factor(myplan$command))
+  make(myplan, verbose = 0L, session_info = FALSE)
+  expect_equal(readd(a), "helloworld")
+})
+
+test_with_dir("case sensitivity", {
+  plan <- drake_plan(
+    a = 1,
+    b = 2,
+    B = A(),
+    c = 15
+  )
+  A <- function(){
+    1 + 1
+  }
+  expect_warning(
+    config <- drake_config(
+      plan,
+      cache = storr::storr_environment(),
+      session_info = FALSE
+    ),
+    regexp = "case insensitive"
+  )
+})
+
+test_with_dir("Strings stay strings, not symbols", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  expect_silent(x <- drake_plan(a = "A"))
+  expect_silent(make(x, verbose = 0L, session_info = FALSE))
+})
+
+test_with_dir("Trailing slashes in file paths on Windows", {
+  skip_on_cran()
+  skip_if_not_installed("knitr")
+  dir.create("in")
+  dir.create("knitr")
+  writeLines("abc", "in/abc.txt")
+  plan <- drake_plan(
+    x = {
+      file_in("in/")
+      file_out("out/")
+      dir.create("out")
+      writeLines("123", "out/out.txt")
+      123
+    }
+  )
+  # Should produce warnings if the bug comes back:
+  make(
+    plan,
+    cache = storr::storr_environment(),
+    session_info = FALSE,
+    log_progress = FALSE,
+    verbose = 0L
+  )
+  expect_true(file.exists("out/out.txt"))
+})
+
+test_with_dir("supplied a plan instead of a config", {
+  skip_if_not_installed("visNetwork")
+  plan <- drake_plan(x = 1)
+  expect_error(vis_drake_graph(plan), regexp = "supplied a drake plan")
+})
+
+test_with_dir("warning when file_out() files not produced", {
+  skip_on_cran()
+  plan <- drake_plan(
+    x = {
+      file.create(file_out("a"))
+      file_out("b", "c")
+    }
+  )
+  expect_warning(
+    make(plan, cache = storr::storr_environment(), session_info = FALSE),
+    regexp = "Missing files for target"
+  )
+})
+

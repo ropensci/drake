@@ -1,16 +1,4 @@
-drake_context("hash")
-
-test_with_dir("illegal hashes", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  x <- drake_plan(a = 1)
-  expect_error(
-    make(
-      x,
-      hash_algorithm = "no_such_algo_aslkdjfoiewlk",
-      session_info = FALSE
-    )
-  )
-})
+drake_context("meta")
 
 test_with_dir("stress test storage hash", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
@@ -108,4 +96,12 @@ test_with_dir("hashing decisions", {
       )
     )
   }
+})
+
+test_with_dir("storage hash of a non-existent path", {
+  expect_false(file.exists("asdf"))
+  expect_true(is.na(storage_hash("asdf", config = list())))
+  expect_true(is.na(rehash_storage("asdf", config = list())))
+  expect_true(is.na(storage_hash(encode_path("asdf"), config = list())))
+  expect_true(is.na(rehash_storage(encode_path("asdf"), config = list())))
 })

@@ -1,5 +1,10 @@
 drake_context("visuals")
 
+test_with_dir("file system", {
+  expect_equal(file_extn("a.b/c.d/e/f/g_h.i.j.k"), "k")
+  expect_equal(file_extn("123"), "123")
+})
+
 test_with_dir("visNetwork graph runs", {
   skip_on_cran()
   skip_if_not_installed("lubridate")
@@ -86,4 +91,32 @@ test_with_dir("Sankey diagram runs", {
   expect_true(file.exists(file))
   expect_false(any(grepl("*.html", list.files())))
   expect_false(any(grepl("*_files", list.files())))
+})
+
+test_with_dir("colors and shapes", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  expect_is(text_color("target"), "character")
+  expect_is(text_color("import"), "character")
+  expect_is(text_color("not found"), "character")
+  expect_is(text_color("not found"), "character")
+  expect_is(node_color("target"), "character")
+  expect_is(node_color("import"), "character")
+  expect_is(node_color("not found"), "character")
+  expect_is(node_color("not found"), "character")
+  expect_equal(node_color("bluhlaksjdf"), node_color("other"))
+  expect_is(node_shape("object"), "character")
+  expect_is(node_shape("file"), "character")
+  expect_is(node_shape("not found"), "character")
+  expect_equal(node_shape("bluhlaksjdf"), node_shape("other"))
+})
+
+test_with_dir("shapes", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  expect_is(node_shape("target"), "character")
+  expect_is(node_shape("import"), "character")
+  expect_is(node_shape("not found"), "character")
+  expect_is(node_shape("object"), "character")
+  expect_is(node_color("file"), "character")
+  expect_is(node_color("not found"), "character")
+  expect_equal(node_color("bluhlaksjdf"), node_color("other"))
 })

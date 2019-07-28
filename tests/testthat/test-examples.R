@@ -18,14 +18,6 @@ test_with_dir("examples are listed and written", {
   expect_warning(drake_example(example, destination = getwd()))
 })
 
-test_with_dir("example template files", {
-  expect_true(is.character(drake_hpc_template_files()))
-  expect_true(length(drake_hpc_template_files()) > 0)
-  expect_false(file.exists("slurm_batchtools.tmpl"))
-  expect_silent(drake_hpc_template_file("slurm_batchtools.tmpl"))
-  expect_true(file.exists("slurm_batchtools.tmpl"))
-})
-
 test_with_dir("mtcars example works", {
   skip_if_not_installed("knitr")
   scenario <- get_testing_scenario()

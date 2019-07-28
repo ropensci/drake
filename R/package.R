@@ -43,22 +43,3 @@
 #' @importFrom utils compareVersion flush.console head menu packageVersion
 #'   read.csv sessionInfo stack type.convert unzip write.table
 NULL
-
-#' @title Isolate the side effects of an example.
-#' @description Runs code in a temporary directory
-#'   in a controlled environment with a controlled
-#'   set of options.
-#' @export
-#' @keywords internal
-#' @return Nothing.
-#' @param desc Character, description of the example.
-#' @param ... Code to run.
-isolate_example <- function(desc, code) {
-  new <- tempfile()
-  dir.create(new)
-  old <- setwd(new) # nolint
-  on.exit(setwd(old)) # nolint
-  opts <- list(drake_make_menu = FALSE, drake_clean_menu = FALSE)
-  with_options(new = opts, code)
-  invisible()
-}

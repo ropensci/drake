@@ -15,6 +15,10 @@ test_with_dir("Recursive functions are okay", {
   expect_equal(readd(output, cache = cache), factorial(10))
 })
 
+test_with_dir("empty deps_graph()", {
+  expect_equal(deps_graph(NULL, 1, 2), character(0))
+})
+
 test_with_dir("null graph", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("lubridate")
@@ -457,4 +461,16 @@ test_with_dir("text graph", {
   expect_message(text_drake_graph(config))
   expect_message(text_drake_graph(config, nchar = 0L))
   expect_message(text_drake_graph(config, nchar = 5L))
+})
+
+test_with_dir("GitHub issue 460", {
+  plan <- drake_plan(a = base::sqrt(1), b = a, c = b)
+  config <- drake_config(
+    plan,
+    targets = "b",
+    cache = storr::storr_environment()
+  )
+  exp <- c(letters[1:2], encode_namespaced("base::sqrt"))
+  expect_true(all(exp %in% igraph::V(config$graph)$name))
+  process_targets(config)
 })

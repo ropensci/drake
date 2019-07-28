@@ -1,26 +1,20 @@
-# From lintr
-`%||%` <- function(x, y) {
-  if (is.null(x) || length(x) <= 0) {
-    y
-  } else {
-    x
-  }
-}
-
-`%|||%` <- function(x, y) {
-  if (is.null(x)) {
-    y
-  } else {
-    x
-  }
-}
-
-`%||NA%` <- function(x, y) {
-  if (is.null(x) || length(x) < 1 || anyNA(x)) {
-    y
-  } else {
-    x
-  }
+#' @title Isolate the side effects of an example.
+#' @description Runs code in a temporary directory
+#'   in a controlled environment with a controlled
+#'   set of options.
+#' @export
+#' @keywords internal
+#' @return Nothing.
+#' @param desc Character, description of the example.
+#' @param ... Code to run.
+isolate_example <- function(desc, code) {
+  new <- tempfile()
+  dir.create(new)
+  old <- setwd(new) # nolint
+  on.exit(setwd(old)) # nolint
+  opts <- list(drake_make_menu = FALSE, drake_clean_menu = FALSE)
+  with_options(new = opts, code)
+  invisible()
 }
 
 all_targets <- function(config) {
@@ -124,4 +118,29 @@ multiline_message <- function(x) {
   }
   x <- paste0("  ", x)
   paste(x, collapse = "\n")
+}
+
+# From lintr
+`%||%` <- function(x, y) {
+  if (is.null(x) || length(x) <= 0) {
+    y
+  } else {
+    x
+  }
+}
+
+`%|||%` <- function(x, y) {
+  if (is.null(x)) {
+    y
+  } else {
+    x
+  }
+}
+
+`%||NA%` <- function(x, y) {
+  if (is.null(x) || length(x) < 1 || anyNA(x)) {
+    y
+  } else {
+    x
+  }
 }

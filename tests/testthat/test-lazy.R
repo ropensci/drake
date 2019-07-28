@@ -1,4 +1,4 @@
-drake_context("lazy load")
+drake_context("lazy")
 
 test_with_dir("no overt errors lazy load for the debug example", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).

@@ -1,4 +1,12 @@
-drake_context("parallel")
+drake_context("hpc")
+
+test_with_dir("example template files", {
+  expect_true(is.character(drake_hpc_template_files()))
+  expect_true(length(drake_hpc_template_files()) > 0)
+  expect_false(file.exists("slurm_batchtools.tmpl"))
+  expect_silent(drake_hpc_template_file("slurm_batchtools.tmpl"))
+  expect_true(file.exists("slurm_batchtools.tmpl"))
+})
 
 test_with_dir("safe_jobs()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
@@ -96,4 +104,60 @@ test_with_dir("direct users to GitHub issue #675", {
     make(plan, envir = globalenv(), session_info = FALSE, cache = cache),
     regexp = regexp
   )
+})
+
+test_with_dir("drake_pmap", {
+  # Basic functionality: example from purrr::pmap
+  x <- list(1, 10, 100)
+  y <- list(1, 2, 3)
+  z <- list(5, 50, 500)
+  ans <- list(x[[1]] + y[[1]] + z[[1]],
+              x[[2]] + y[[2]] + z[[2]],
+              x[[3]] + y[[3]] + z[[3]])
+  expect_identical(ans, drake_pmap(list(x, y, z), sum))
+
+  # Catches inputs of wrong type
+  expect_error(drake_pmap("not a list", sum))
+  expect_error(drake_pmap(list(), "not a function"))
+
+  # Handles empty list
+  expect_identical(list(), drake_pmap(list(), sum))
+
+  # Passes dots to function
+  x[2] <- NA
+  ans[[2]] <- sum(x[[2]], y[[2]], z[[2]], na.rm = TRUE)
+  expect_identical(ans, drake_pmap(list(x, y, z), sum, na.rm = TRUE))
+
+  # Catches unequally-lengthed sublists
+  x[[2]] <- NULL
+  expect_error(drake_pmap(list(x, y, z), sum))
+})
+
+test_with_dir("parallelism can be a scheduler function", {
+  plan <- drake_plan(x = file.create("x"))
+  build_ <- function(target, config){
+    tidy_expr <- eval(
+      expr = config$layout[[target]]$command_build,
+      envir = config$eval
+    )
+    eval(expr = tidy_expr, envir = config$eval)
+  }
+  loop_ <- function(config) {
+    targets <- igraph::topo_sort(config$graph)$name
+    for (target in targets) {
+      log_msg(target, config = config, newline = TRUE)
+      config$eval[[target]] <- build_(
+        target = target,
+        config = config
+      )
+    }
+    invisible()
+  }
+  config <- drake_config(plan, parallelism = loop_)
+  expect_warning(
+    make(config = config),
+    regexp = "Use at your own risk"
+  )
+  expect_true(file.exists("x"))
+  expect_false(config$cache$exists("x"))
 })

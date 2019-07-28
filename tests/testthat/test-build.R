@@ -1,4 +1,4 @@
-drake_context("build")
+drake_context("drake_build")
 
 test_with_dir("drake_build() works as expected", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).

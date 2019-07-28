@@ -1,4 +1,4 @@
-drake_context("manual tests")
+drake_context("interactive")
 
 if (FALSE) {
 
