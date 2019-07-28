@@ -1,13 +1,5 @@
 drake_context("cache")
 
-test_with_dir("illegal hashes", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_error(
-    new_cache("x", hash_algorithm = "no_such_algo_aslkdjfoiewlk"),
-    regexp = "should be one of"
-  )
-})
-
 test_with_dir("clean() removes the correct files", {
   skip_if_not_installed("knitr")
   cache <- storr::storr_environment()
