@@ -355,8 +355,8 @@ test_with_dir("cache functions work from various working directories", {
     prog <- progress()
     expect_equal(sort(prog$target), sort(config$plan$target))
     expect_true(all(prog$progress == "done"))
-    prog <- progress(nothing)
-    expect_equal(prog, weak_tibble(target = "nothing", progress = "none"))
+    prog2 <- progress(nothing)
+    expect_equal(prog, prog2)
 
     # cached and diagnose
     expect_equal(sort(diagnose()), sort(config$cache$list()))
@@ -484,38 +484,39 @@ test_with_dir("loadd() does not load imports", {
   )
 })
 
-test_with_dir("can filter progress", {
+test_with_dir("can select and filter progress", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  plan <- drake_plan(a = TRUE, b = TRUE, c = stop())
+  plan <- drake_plan(x_a = TRUE, y_b = TRUE, x_c = stop())
   expect_error(make(plan))
 
-  out <- progress(a, b, c, d)
+  out <- progress(x_a, y_b, x_c, d)
   exp <- weak_tibble(
-    target = c("a", "b", "c", "d"),
-    progress = c("done", "done", "failed", "none")
-  )
-  expect_equivalent(out, exp)
-
-  exp1 <- weak_tibble(
-    target = c("a", "b", "c"),
+    target = c("x_a", "y_b", "x_c"),
     progress = c("done", "done", "failed")
   )
+  expect_equivalent(out, exp)
+  exp1 <- weak_tibble(
+    target = c("x_a", "x_c", "y_b"),
+    progress = c("done", "failed", "done")
+  )
   exp2 <- weak_tibble(
-    target = c("a", "b"),
+    target = c("x_a", "y_b"),
     progress = c("done", "done")
   )
   exp3 <- weak_tibble(
-    target = "c",
+    target = "x_c",
     progress = "failed"
   )
-
+  exp4 <- weak_tibble(
+    target = c("x_a", "x_c"),
+    progress = c("done", "failed")
+  )
   expect_equivalent(progress(progress = c("done", "failed")), exp1)
   expect_equivalent(progress(progress = "done"), exp2)
   expect_equivalent(progress(progress = "failed"), exp3)
-
-  expect_error(
-    progress(progress = "stuck"),
-    "should be one of")
+  expect_error(progress(progress = "stuck"), "should be one of")
+  skip_if_not_installed("tidyselect")
+  expect_equivalent(progress(tidyselect::starts_with("x_")), exp4)
 })
 
 test_with_dir("make() writes a cache log file", {

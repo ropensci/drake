@@ -223,7 +223,6 @@ test_with_dir("misc utils", {
   config <- list()
   expect_error(config_checks(config))
   expect_error(plan_checks(data.frame(x = 1, y = 2)), "columns")
-  expect_error(targets_from_dots(123, NULL), regexp = "must contain names")
 })
 
 test_with_dir("make(..., skip_imports = TRUE) works", {
