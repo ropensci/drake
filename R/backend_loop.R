@@ -17,7 +17,7 @@ backend_loop <- function(config) {
 
 loop_build <- function(target, config, downstream) {
   meta <- drake_meta_(target = target, config = config)
-  if (skip_command(target, meta, config)) {
+  if (handle_trigger(target, meta, config)) {
     return()
   }
   announce_build(target, meta, config)

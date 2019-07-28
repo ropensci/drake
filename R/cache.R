@@ -1351,6 +1351,19 @@ list_multiple_namespaces <- function(cache, namespaces, jobs = 1) {
   Reduce(out, f = base::union)
 }
 
+read_from_meta <- function(key, field, cache) {
+  object <- safe_get(
+    key = key,
+    namespace = "meta",
+    config = list(cache = cache)
+  )
+  if (field %in% names(object)) {
+    object[[field]]
+  } else {
+    NA_character_
+  }
+}
+
 safe_get <- function(key, namespace, config) {
   out <- just_try(config$cache$get(key = key, namespace = namespace))
   if (inherits(out, "try-error")) {

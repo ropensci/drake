@@ -163,7 +163,7 @@ first_outdated <- function(config) {
           return(TRUE)
         }
         meta <- drake_meta_(target, config)
-        should_build_target(target, meta, config)
+        sense_trigger(target, meta, config)
       },
       jobs = config$jobs_preprocess
     )

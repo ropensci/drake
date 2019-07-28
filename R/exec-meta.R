@@ -42,19 +42,6 @@ drake_meta_ <- function(target, config) {
   meta
 }
 
-read_from_meta <- function(key, field, cache) {
-  object <- safe_get(
-    key = key,
-    namespace = "meta",
-    config = list(cache = cache)
-  )
-  if (field %in% names(object)) {
-    object[[field]]
-  } else {
-    NA_character_
-  }
-}
-
 dependency_hash <- function(target, config) {
   x <- config$layout[[target]]$deps_build
   deps <- c(x$globals, x$namespaced, x$loadd, x$readd)
