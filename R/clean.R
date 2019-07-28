@@ -130,7 +130,7 @@ clean <- function(
   )
   if (garbage_collection) {
     cache$gc()
-  } else {
+  } else if (!destroy){
     clean_recovery_msg()
   }
   if (destroy) {
