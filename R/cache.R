@@ -1306,13 +1306,17 @@ memo_expr <- function(expr, cache, ...) {
     return(force(expr))
   }
   lang <- match.call(expand.dots = FALSE)$expr
-
   key <- digest::digest(list(lang, ...), algo = cache_hash_algorithm(cache))
   if (cache$exists(key = key, namespace = "memoize")) {
-    return(cache$get(key = key, namespace = "memoize"))
+    return(cache$get(key = key, namespace = "memoize", use_cache = FALSE))
   }
   value <- force(expr)
-  cache$set(key = key, value = value, namespace = "memoize")
+  cache$set(
+    key = key,
+    value = value,
+    namespace = "memoize",
+    use_cache = FALSE
+  )
   value
 }
 
