@@ -2574,6 +2574,23 @@ test_with_dir("drake_slice and drop", {
   expect_equal(out, 11:15)
 })
 
+test_with_dir("slice(), grouping vars, and .id (#963)", {
+  x <- data.frame(var = letters[5:8], id = letters[1:4], stringsAsFactors = FALSE)
+  out <- drake_plan(
+    y = target(
+      f(x),
+      transform = split(x, slices = !!nrow(x), id = !!x$id, .id = id)
+    )
+  )
+  exp <- drake_plan(
+    y_a = f(drake_slice(data = x, slices = 4L, index = 1)),
+    y_b = f(drake_slice(data = x, slices = 4L, index = 2)),
+    y_c = f(drake_slice(data = x, slices = 4L, index = 3)),
+    y_d = f(drake_slice(data = x, slices = 4L, index = 4))
+  )
+  equivalent_plans(out, exp)
+})
+
 test_with_dir("complete_cases()", {
   for (empty in list(data.frame(), mtcars[NULL, ], mtcars[, NULL])) {
     expect_equivalent(complete_cases(empty), logical(0))

@@ -124,12 +124,21 @@ convert_split_to_map <- function(target, command, transform) {
   slice[[1]] <- quote(drake_slice)
   index <- paste0(target, "_index")
   slice$index <- as.symbol(index)
+  args <- setdiff(names(transform), names(formals(drake_slice)))
+  args <- args[nzchar(args)]
+  for (arg in args) {
+    slice[[arg]] <- NULL
+  }
+  arglist <- as.list(transform)[args]
   slice <- match.call(drake_slice, slice)
   sub <- list(slice = slice)
   names(sub) <- safe_deparse(slice$data)
   command <- eval(call("substitute", command, sub), envir = baseenv())
   transform <- as.call(c(quote(map), slice$data))
   transform[[index]] <- as.numeric(seq_len(slice$slices))
+  for (arg in args){
+    transform[[arg]] <- arglist[[arg]]
+  }
   list(command = command, transform = transform)
 }
 
