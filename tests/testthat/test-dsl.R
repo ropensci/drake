@@ -2575,7 +2575,11 @@ test_with_dir("drake_slice and drop", {
 })
 
 test_with_dir("slice(), grouping vars, and .id (#963)", {
-  x <- data.frame(var = letters[5:8], id = letters[1:4], stringsAsFactors = FALSE)
+  x <- data.frame(
+    var = letters[5:8],
+    id = letters[1:4],
+    stringsAsFactors = FALSE
+  )
   out <- drake_plan(
     y = target(
       f(x),
