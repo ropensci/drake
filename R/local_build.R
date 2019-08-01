@@ -377,6 +377,7 @@ handle_build_exceptions <- function(target, meta, config) {
         meta$error$message
       )
       drake_log(paste("Error:", msg), config = config)
+      unlock_environment(config$envir)
       stop(msg, call. = FALSE)
     }
   }

@@ -194,3 +194,18 @@ test_with_dir("callr RStudio addins", {
   graph <- rs_addin_r_vis_drake_graph(r_args, .print = FALSE)
   expect_true(inherits(graph, "visNetwork"))
 })
+
+test_with_dir("errors keep their informative messages (#969)", {
+  code <- c(
+    "library(drake)",
+    "my_plan <- drake_plan(",
+    "  x = stop('7a3f077af6c8e425')",
+    ")",
+    "drake_config(my_plan)"
+  )
+  writeLines(code, "_drake.R")
+  expect_error(
+    r_make(r_args = list(show = FALSE)),
+    regexp = "7a3f077af6c8e425"
+  )
+})

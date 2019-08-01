@@ -4,6 +4,7 @@
 
 - Make `drake_plan(transform = slice())` understand `.id` and grouping variables (#963).
 - Repair `clean(garbage_collection = TRUE, destroy = TRUE)`. Previously it destroyed the cache before trying to collect garbage.
+- Ensure that `r_make()` passes informative error messages back to the calling process (#969),
 
 ## New features
 
