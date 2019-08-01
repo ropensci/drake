@@ -206,6 +206,7 @@ test_with_dir("errors keep their informative messages (#969)", {
   writeLines(code, "_drake.R")
   expect_error(
     r_make(r_args = list(show = FALSE)),
-    regexp = "7a3f077af6c8e425"
+    regexp = "7a3f077af6c8e425",
+    class = "callr_error"
   )
 })
