@@ -11,9 +11,6 @@
 #' @param jobs Number of jobs for local parallel computing
 manage_memory <- function(target, config, downstream = NULL, jobs = 1) {
   stopifnot(length(target) == 1L)
-  if (identical(config$garbage_collection, TRUE)) {
-    gc()
-  }
   class(target) <- config$layout[[target]]$memory_strategy %||NA%
     config$memory_strategy
   manage_deps(
@@ -29,6 +26,9 @@ manage_deps <- function(target, config, downstream, jobs) {
 }
 
 manage_deps.speed <- function(target, config, downstream, jobs) {
+  if (identical(config$garbage_collection, TRUE)) {
+    gc()
+  }
   already_loaded <- setdiff(names(config$eval), drake_markers)
   target_deps <- deps_memory(targets = target, config = config)
   target_deps <- setdiff(target_deps, target)
@@ -43,6 +43,9 @@ manage_deps.autoclean <- function(target, config, downstream, jobs) {
   if (length(discard_these)) {
     log_msg("unload", discard_these, target = target, config = config)
     rm(list = discard_these, envir = config$eval)
+  }
+  if (identical(config$garbage_collection, TRUE)) {
+    gc()
   }
   target_deps <- setdiff(target_deps, target)
   target_deps <- setdiff(target_deps, already_loaded)
@@ -62,6 +65,9 @@ manage_deps.lookahead <- function(target, config, downstream, jobs) {
     log_msg("unload", discard_these, target = target, config = config)
     rm(list = discard_these, envir = config$eval)
   }
+  if (identical(config$garbage_collection, TRUE)) {
+    gc()
+  }
   target_deps <- setdiff(target_deps, target)
   target_deps <- setdiff(target_deps, already_loaded)
   try_load(targets = target_deps, config = config, jobs = jobs)
@@ -73,9 +79,15 @@ manage_deps.unload <- function(target, config, downstream, jobs) {
     log_msg("unload", discard_these, target = target, config = config)
     rm(list = discard_these, envir = config$eval)
   }
+  if (identical(config$garbage_collection, TRUE)) {
+    gc()
+  }
 }
 
-manage_deps.none <- function(...) {
+manage_deps.none <- function(target, config, downstream, jobs) {
+  if (identical(config$garbage_collection, TRUE)) {
+    gc()
+  }
   return()
 }
 
