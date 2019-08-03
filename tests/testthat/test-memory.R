@@ -4,7 +4,8 @@ test_with_dir("manage_memory() warns if loading missing deps", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   con <- drake_config(
     drake_plan(a = 1, b = a),
-    memory_strategy = "lookahead"
+    memory_strategy = "lookahead",
+    garbage_collection = TRUE
   )
   capture.output(
     suppressWarnings( # https://github.com/richfitz/storr/issues/105 # nolint
@@ -66,7 +67,8 @@ test_with_dir("a close look at the memory strategies", {
     plan,
     cache = storr::storr_environment(),
     session_info = FALSE,
-    memory_strategy = "lookahead"
+    memory_strategy = "lookahead",
+    garbage_collection = TRUE
   )
 
   # actually run
@@ -209,7 +211,7 @@ test_with_dir("The unload and none strategies do not hold on to targets", {
     )
     clean()
     make(plan, memory_strategy = mem)
-    config <- drake_config(plan)
+    config <- drake_config(plan, garbage_collection = TRUE)
     expect_equal(sort(justbuilt(config)), sort(plan$target))
     rm(envir = config$eval)
     rm(envir = config$cache$envir)
