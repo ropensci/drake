@@ -12,7 +12,7 @@ test_with_dir("busy function", {
     delayedAssign(x = "iter4", value = val2)
     x <- g(a + b) + iter + iter2 + iter3 + iter4
     g(a - b) -> y
-    z = g(a * b) # nolint
+    z <- g(a * b)
     local({
       xyz1 <- 5
     })
@@ -49,6 +49,14 @@ test_with_dir("busy function", {
   expect_equal(sort(out$globals), exp)
   str <- sort(c(str, "w", "x", "y", "z"))
   expect_equal(sort(analyze_strings(f)), str)
+})
+
+test_with_dir("equals analysis", {
+  for (text in c("z = g(a * b)", "function(x) {z = g(a * b)}")) {
+    expr <- parse(text = text)
+    out <- analyze_code(expr)
+    expect_equal(sort(out$globals), sort(c("a", "b", "g")))
+  }
 })
 
 # https://github.com/cran/codetools/blob/master/tests/tests.R # nolint
