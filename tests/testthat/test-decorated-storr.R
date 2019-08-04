@@ -15,9 +15,9 @@ test_with_dir("Can save fst", {
   expect_true(inherits(cache$storr$get("x"), "saved_fst"))
 })
 
-test_with_dir("Can save hdf5", {
+test_with_dir("Can save keras", {
   plan <- drake_plan(
-    x = return_hdf5(
+    x = return_keras(
       structure(list("keras_model"), class = "keras.engine.training.Model")
     )
   )
@@ -26,7 +26,7 @@ test_with_dir("Can save hdf5", {
   exp <- structure(list("keras_model"), class = "keras.engine.training.Model")
   expect_equal(out, exp)
   cache <- drake_cache()
-  expect_true(inherits(cache$storr$get("x"), "saved_hdf5"))
+  expect_true(inherits(cache$storr$get("x"), "saved_keras"))
 })
 
 test_with_dir("can save rds", {
@@ -55,7 +55,7 @@ test_with_dir("Can save rds with envir cache", {
   expect_true(inherits(cache$storr$get("x"), "saved_rds"))
   exp <- list(x = letters, y = letters)
   expect_equal(out, exp)
-  special <- file.path(".drake", "drake")
+  special <- file.path(".drake", "drake", "data")
   expect.true(file.exists(special))
   special_files <- list.files(special, pattern = ".*\\.rds$")
   expect_equal(length(special_files), 1L)
@@ -69,7 +69,7 @@ test_with_dir("garbage collection", {
   )
   make(plan)
   cache <- drake_cache()
-  special <- file.path(".drake", "drake")
+  special <- file.path(".drake", "drake", "data")
   file <- list.files(special, pattern = ".*\\.rds$", full.names = TRUE)
   expect_true(file.exists(file))
   cache$gc()
