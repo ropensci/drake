@@ -619,7 +619,11 @@ drake_config <- function(
       fetch_cache = fetch_cache,
       console_log_file = console_log_file
     )
+  } else {
+    cache <- decorate_storr(cache)
   }
+  cache_path <- force_cache_path(cache)
+  hash_algorithm <- cache_hash_algorithm(cache)
   seed <- choose_seed(supplied = seed, cache = cache)
   if (identical(force, TRUE)) {
     drake_set_session_info(cache = cache, full = session_info)
@@ -642,8 +646,6 @@ drake_config <- function(
     console_log_file = console_log_file,
     verbose = verbose
   )
-  cache_path <- force_cache_path(cache)
-  hash_algorithm <- cache_hash_algorithm(cache)
   history <- initialize_history(history, cache_path)
   lazy_load <- parse_lazy_arg(lazy_load)
   caching <- match.arg(caching)
@@ -746,7 +748,7 @@ force_cache_path <- function(cache = NULL) {
 cache_path_ <- function(cache = NULL) {
   if (is.null(cache)) {
     NULL
-  } else if ("storr" %in% class(cache)) {
+  } else if (inherits(cache, "refclass_decorated_storr")) {
     cache$driver$path
   } else {
     NULL

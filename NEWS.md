@@ -8,6 +8,7 @@
 
 ## New features
 
+- Support specialized data storage via a decorated cache and `return_*()` functions (#971). This allows users to leverage faster ways to save and load targets, such as `write_fst()` for data frames and `save_model_hdf5()` for Keras models. It also improves memory because it prevents `storr` from making a serialized in-memory copy of large data objects.
 - Add `tidyselect` functionality for `...` in `progress()`, analogous to `loadd()`, `build_times()`, and `clean()`.
 - Support S3 for user-defined generics (#959). If the generic `do_stuff()` and the method `stuff.your_class()` are defined in `envir`, and if `do_stuff()` has a call to `UseMethod("stuff")`, then `drake`'s code analysis will detect `stuff.your_class()` as a dependency of `do_stuff()`.
 

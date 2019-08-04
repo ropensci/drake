@@ -201,19 +201,19 @@ test_with_dir("drake_cache() can search", {
     file.path("w", "x", "y", "z"),
     drake_cache()
   )
-  expect_true(inherits(cache, "storr"))
+  expect_true(inherits(cache, "refclass_decorated_storr"))
   cache <- drake_cache(file.path("w", "x", ".drake"))
-  expect_true(inherits(cache, "storr"))
+  expect_true(inherits(cache, "refclass_decorated_storr"))
   cache <- with_dir(
     file.path("w", "x", ".drake", "keys"),
     drake_cache()
   )
-  expect_true(inherits(cache, "storr"))
+  expect_true(inherits(cache, "refclass_decorated_storr"))
   cache <- with_dir(
     file.path("w", "x"),
     drake_cache()
   )
-  expect_true(inherits(cache, "storr"))
+  expect_true(inherits(cache, "refclass_decorated_storr"))
 })
 
 test_with_dir("neighboring caches", {

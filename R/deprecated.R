@@ -140,11 +140,13 @@ configure_cache <- function(
 # Pre-set the values to avoid https://github.com/richfitz/storr/issues/80.
 init_common_values <- function(cache) {
   common_values <- list(TRUE, FALSE)
-  cache$mset(
-    key = as.character(common_values),
-    value = common_values,
-    namespace = "common"
-  )
+  for (val in as.character(common_values)) {
+    cache$set(
+      key = as.character(val),
+      value = val,
+      namespace = "common"
+    )
+  }
 }
 
 #' @title Deprecated. Return the default long hash algorithm for `make()`.

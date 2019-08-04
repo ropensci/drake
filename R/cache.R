@@ -772,6 +772,7 @@ new_cache <- function(
     mangle_key = FALSE,
     hash_algorithm = hash_algorithm
   )
+  cache <- decorate_storr(cache)
   writeLines(
     text = c("*", "!/.gitignore"),
     con = file.path(path, ".gitignore")
@@ -816,7 +817,7 @@ drake_fetch_rds <- function(path) {
   if (!file.exists(path)) {
     return(NULL)
   }
-  storr::storr_rds(path = path)
+  decorate_storr(storr::storr_rds(path = path))
 }
 
 cache_vers_stop <- function(cache){
