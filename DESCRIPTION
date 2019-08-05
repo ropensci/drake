@@ -99,6 +99,7 @@ Suggests:
   curl (>= 2.7),
   datasets,
   downloader,
+  fst,
   future,
   ggplot2,
   ggraph,

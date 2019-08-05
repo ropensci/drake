@@ -159,28 +159,40 @@ test_with_dir("return_rds() and recovery", {
   expect_equal(cache$get_value(hash), list(x = letters[1:3]))
 })
 
-# To do: reactivate tests
-if (FALSE) {
-
 test_with_dir("Can save fst data frames", {
   skip_if_not_installed("fst")
   plan <- drake_plan(
-    x = return_fst(
-      data.frame(x = letters, y = letters, stringsAsFactors = FALSE)
+    x = target(
+      data.frame(x = letters, y = letters, stringsAsFactors = FALSE),
+      format = "fst"
     )
   )
   make(plan)
   out <- readd(x)
   exp <- data.frame(x = letters, y = letters, stringsAsFactors = FALSE)
   expect_equal(out, exp)
-  expect_equal(cache$get_value(cache$get_hash("x")), exp)
   cache <- drake_cache()
+  expect_equal(cache$get_value(cache$get_hash("x")), exp)
   ref <- cache$storr$get("x")
-  expect_true(inherits(ref, "return_fst"))
+  expect_true(inherits(ref, "drake_format_fst"))
   expect_equal(length(ref), 1L)
   expect_true(nchar(ref) < 100)
   expect_false(is.list(ref))
 })
+
+test_with_dir("fst format requires data frames", {
+  skip_if_not_installed("fst")
+  plan <- drake_plan(
+    x = target(
+      list(x = letters, y = letters, stringsAsFactors = FALSE),
+      format = "fst"
+    )
+  )
+  expect_error(make(plan), regexp = "data frame")
+})
+
+# To do: reactivate tests
+if (FALSE) {
 
 test_with_dir("Can save keras models", {
   plan <- drake_plan(

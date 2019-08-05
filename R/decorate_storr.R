@@ -117,7 +117,8 @@ dcst_get_.default <- function(value, key, .self) {
 }
 
 dcst_get_.drake_format_fst <- function(value, key, .self) {
-  value
+  assert_pkg("fst")
+  fst::read_fst(.self$file_return_key(key))
 }
 
 dcst_get_.drake_format_keras <- function(value, key, .self) {
@@ -142,7 +143,8 @@ dcst_get_value_.default <- function(value, hash, .self) {
 }
 
 dcst_get_value_.drake_format_fst <- function(value, hash, .self) { # nolint
-  value
+  assert_pkg("fst")
+  fst::read_fst(.self$file_return_hash(hash))
 }
 
 dcst_get_value_.drake_format_keras <- function(value, hash, .self) { # nolint
@@ -164,7 +166,9 @@ dcst_set.default <- function(value, key, ..., .self) {
 dcst_set.drake_format_fst <- function(value, key, ..., .self) {
   assert_pkg("fst")
   .self$assert_dirs()
-  .self$storr$set(key = key, value = value, ...)
+  tmp <- .self$file_tmp()
+  fst::write_fst(x = value$value, path = tmp)
+  dcst_set_move_tmp(key = key, value = value, tmp = tmp, .self = .self)
 }
 
 dcst_set.drake_format_keras <- function(value, key, ..., .self) {
@@ -175,6 +179,7 @@ dcst_set.drake_format_keras <- function(value, key, ..., .self) {
 
 dcst_set.drake_format_rds <- function(value, key, ..., .self) {
   .self$assert_dirs()
+  # Need R >= 3.5.0 for ALTREP
   r_version <- paste0(R.version$major, ".", R.version$minor)
   sufficient_r_version <- utils::compareVersion(r_version, "3.5.0") >= 0L
   stopifnot(sufficient_r_version)
