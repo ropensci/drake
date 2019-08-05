@@ -3,7 +3,7 @@ drake_context("decorated storr")
 # To do: reactivate tests
 if (FALSE) {
 
-test_with_dir("Can save fst", {
+test_with_dir("Can save fst data frames", {
   skip_if_not_installed("fst")
   plan <- drake_plan(
     x = return_fst(
@@ -18,7 +18,7 @@ test_with_dir("Can save fst", {
   expect_true(inherits(cache$storr$get("x"), "saved_fst"))
 })
 
-test_with_dir("Can save keras", {
+test_with_dir("Can save keras models", {
   plan <- drake_plan(
     x = return_keras(
       structure(list("keras_model"), class = "keras.engine.training.Model")
@@ -119,3 +119,44 @@ test_with_dir("recovery with return_rds()", {
 })
 
 }
+
+test_with_dir("runthrough of decorated storr methods", {
+  skip_on_cran()
+  x <- drake_config(drake_plan(x = 1))$cache
+  x$archive_export(tempfile())
+  x$archive_import(tempfile())
+  x$check()
+  x$clear()
+  x$clone()
+  x$set("x", 1)
+  x$duplicate("x", "y")
+  x$del("x")
+  x$exists("x")
+  x$exists_object("x")
+  y <- storr::storr_environment()
+  x$set("x", 1)
+  x$export(y, "x")
+  x$fill("z", 2)
+  x$flush_cache()
+  x$get("x")
+  x$get_value(x$get_hash("x"))
+  x$hash_object("x")
+  x$hash_raw("x")
+  x$import(y)
+  x$index_export()
+  x$index_import(x$index_export()[1:2, ])
+  x$list()
+  x$list_hashes()
+  x$list_namespaces()
+  x$mget("x")
+  x$mget_hash("x")
+  x$mget_value(x$get_hash("x"))
+  x$mset("x", 1)
+  x$mset_by_value("x")
+  x$mset_value("x")
+  x$repair()
+  x$serialize_object("x")
+  x$set_by_value("x")
+  x$set_value("x")
+  x$destroy()
+})

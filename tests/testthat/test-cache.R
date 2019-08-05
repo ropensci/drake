@@ -858,3 +858,16 @@ test_with_dir("running()", {
   )
   expect_equal(running(cache = cache), "a")
 })
+
+test_with_dir("need a storr for a decorated storr", {
+  expect_error(decorate_storr(123), regexp = "not a storr")
+})
+
+test_with_dir("dir_create()", {
+  x <- tempfile()
+  dir_create(x)
+  expect_true(dir.exists(x))
+  x <- tempfile()
+  file.create(x)
+  expect_error(dir_create(x), regexp = "cannot create directory")
+})
