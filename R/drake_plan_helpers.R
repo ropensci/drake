@@ -806,3 +806,66 @@ is_trigger_call <- function(expr) {
     error = error_false
   )
 }
+
+#' @title Efficient big data storage
+#' @description Customize the format in which `drake` stores a target.
+#'   More efficient for big data than `drake`'s default storage.
+#' @details The optional `return_*()` functions go at the end of your
+#'   [drake_plan()] commands and imported functions.
+#'   Each `return_*()` function tells `drake`
+#'   to bypass `storr` and save your target to a specialized format.
+#'   This approach almost always reduces memory consumption,
+#'   and it can dramatically boost speed and reduce storage space too.
+#'   No matter what storage format you choose for a target,
+#'   the correct value is returned from [loadd()], [readd()],
+#'   and `drake_cache()$get()`. (But if you load the cache with
+#'   `cache <- storr_rds(".drake/")`, then `cache$get()` will
+#'   only return a reference to the target, not the actual target itself.)
+#' @section Return functions:
+#' - `return_fst()`: Save the target with `write_fst()`.
+#'   Requires the `fst` package. The target must be a data frame.
+#' - `return_rds()`: Save the target with `saveRDS()`. This is just like
+#'   what `drake` does by default except that we avoid making a serialized
+#'   copy of the data in memory.
+#' - `return_keras()`: Save the target with `save_model_hdf5()`.
+#'   Requires the `keras` package. The target must be a Keras model.
+#' @export
+#' @seealso [make()]
+#' @param x A large target to save in a specialized (big-data-friendly)
+#'   format.
+#' @examples
+#' \dontrun{
+#' isolate_example("quarantine side effects", {
+#' if (requireNamespace("fst")) {
+#' create_large_data <- function() {
+#'   data.frame(x = runif(1e8)) # 800 MB
+#' }
+#' plan <- drake_plan(x = return_fst(create_large_data()))
+#' system.time(make(plan)) # Should be fast for 800 MB
+#' system.time(loadd(x)) # Should be fast for 800 MB
+#' head(x)
+#' }
+#' })
+#' }
+return_fst <- function(x) {
+  assert_pkg("fst")
+  class(x) <- "return_fst"
+  x
+}
+
+#' @rdname return_fst
+#' @export
+#' @inheritParams return_fst
+return_keras <- function(x) {
+  assert_pkg("keras")
+  class(x) <- "return_keras"
+  x
+}
+
+#' @rdname return_fst
+#' @export
+#' @inheritParams return_fst
+return_rds <- function(x) {
+  class(x) <- "return_rds"
+  x
+}
