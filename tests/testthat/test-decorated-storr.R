@@ -115,7 +115,8 @@ test_with_dir("return_rds() and recovery", {
     x = target({
       file.create("x")
       list(x = letters)
-    }, format = "rds")
+    },
+    format = "rds")
   )
   make(plan)
   expect_true(file.exists("x"))
@@ -124,7 +125,8 @@ test_with_dir("return_rds() and recovery", {
     x = target({
       file.create("y")
       list(x = letters[1:3])
-    }, format = "rds")
+    },
+    format = "rds")
   )
   make(plan)
   expect_true(file.exists("y"))
@@ -135,7 +137,8 @@ test_with_dir("return_rds() and recovery", {
     x = target({
       file.create("x")
       list(x = letters)
-    }, format = "rds")
+    },
+    format = "rds")
   )
   make(plan, recover = TRUE)
   expect_false(file.exists("x"))
