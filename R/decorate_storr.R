@@ -121,9 +121,13 @@ dcst_get_.drake_format_fst <- function(value, key, .self) {
   fst::read_fst(.self$file_return_key(key))
 }
 
+# Requires Python Keras and TensorFlow to test. Tested in test-interactive.R.
+# nocov start
 dcst_get_.drake_format_keras <- function(value, key, .self) {
-  value
+  assert_pkg("keras")
+  keras::load_model_hdf5(.self$file_return_key(key))
 }
+# nocov end
 
 dcst_get_.drake_format_rds <- function(value, key, .self) {
   readRDS(.self$file_return_key(key))
@@ -147,9 +151,13 @@ dcst_get_value_.drake_format_fst <- function(value, hash, .self) { # nolint
   fst::read_fst(.self$file_return_hash(hash))
 }
 
+# Requires Python Keras and TensorFlow to test. Tested in test-interactive.R.
+# nocov start
 dcst_get_value_.drake_format_keras <- function(value, hash, .self) { # nolint
-  value
+  assert_pkg("keras")
+  keras::load_model_hdf5(.self$file_return_hash(hash))
 }
+# nocov end
 
 dcst_get_value_.drake_format_rds <- function(value, hash, .self) { # nolint
   readRDS(.self$file_return_hash(hash))
@@ -171,11 +179,16 @@ dcst_set.drake_format_fst <- function(value, key, ..., .self) {
   dcst_set_move_tmp(key = key, value = value, tmp = tmp, .self = .self)
 }
 
+# Requires Python Keras and TensorFlow to test. Tested in test-interactive.R.
+# nocov start
 dcst_set.drake_format_keras <- function(value, key, ..., .self) {
   assert_pkg("keras")
   .self$assert_dirs()
-  .self$storr$set(key = key, value = value, ...)
+  tmp <- .self$file_tmp()
+  keras::save_model_hdf5(object = value$value, filepath = tmp)
+  dcst_set_move_tmp(key = key, value = value, tmp = tmp, .self = .self)
 }
+# nocov end
 
 dcst_set.drake_format_rds <- function(value, key, ..., .self) {
   .self$assert_dirs()

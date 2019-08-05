@@ -104,6 +104,7 @@ Suggests:
   ggplot2,
   ggraph,
   grDevices,
+  keras,
   knitr,
   lubridate,
   networkD3,

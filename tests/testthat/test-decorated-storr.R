@@ -194,30 +194,3 @@ test_with_dir("fst format requires data frames", {
   )
   expect_error(make(plan), regexp = "data frame")
 })
-
-# To do: reactivate tests
-if (FALSE) {
-
-test_with_dir("Can save keras models", {
-  plan <- drake_plan(
-    x = return_keras(
-      structure(list("keras_model"), class = "keras.engine.training.Model")
-    )
-  )
-  make(plan)
-  out <- readd(x)
-  exp <- structure(list("keras_model"), class = "keras.engine.training.Model")
-  expect_equal(out, exp)
-  expect_equal(cache$get_value(cache$get_hash("x")), exp)
-  out <- cache$storr$get("x")
-  exp <- structure(cache$storr$get_hash("x"), class = "return_keras")
-  expect_equal(out, exp)
-  cache <- drake_cache()
-  ref <- cache$storr$get("x")
-  expect_true(inherits(ref, "return_fst"))
-  expect_equal(length(ref), 1L)
-  expect_true(nchar(ref) < 100)
-  expect_false(is.list(ref))
-})
-
-}
