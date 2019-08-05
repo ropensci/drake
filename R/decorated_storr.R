@@ -9,19 +9,14 @@ decorate_storr <- function(storr) {
     storr = storr,
     driver = storr$driver,
     default_namespace = storr$default_namespace,
-    envir = storr$envir
+    envir = storr$envir,
+    path = force_cache_path(storr)
   )
-}
-
-delegate_storr <- function(storr, name, ...) {
-  function(storr, name, ...) {
-    storr[[name]](...)
-  }
 }
 
 refclass_decorated_storr <- methods::setRefClass(
   Class = "refclass_decorated_storr",
-  fields = c("storr", "driver", "default_namespace", "envir"),
+  fields = c("storr", "driver", "default_namespace", "envir", "path"),
   # Tedious, but better than inheritance, which would
   # prevent users from supplying their own true `storr`s.
   methods = list(
@@ -38,8 +33,8 @@ refclass_decorated_storr <- methods::setRefClass(
     export = function(...) .self$storr$export(...),
     fill = function(...) .self$storr$fill(...),
     flush_cache = function(...) .self$storr$flush_cache(...),
-    gc = function(...) decorated_storr_gc(.self$storr, ...),
-    get = function(...) decorated_storr_get(.self$storr, ...),
+    gc = function(...) decst_gc(.self = .self, ...),
+    get = function(...) decst_get(.self = .self, ...),
     get_hash = function(...) .self$storr$get_hash(...),
     get_value = function(...) .self$storr$get_value(...),
     hash_object = function(...) .self$storr$hash_object(...),
@@ -59,55 +54,60 @@ refclass_decorated_storr <- methods::setRefClass(
     repair = function(...) .self$storr$repair(...),
     serialize_object = function(...) .self$storr$serialize_object(...),
     set = function(key, value, ...) {
-      decorated_storr_set(.self$storr, key = key, value = value, ...)
+      decst_set(value = value, .self = .self, key = key, ...)
     },
     set_by_value = function(...) .self$storr$set_by_value(...),
     set_value = function(...) .self$storr$set_value(...)
   )
 )
 
-decorated_storr_gc <- function(storr, ...) {
-  storr$gc(...)
+decst_gc <- function(.self, ...) {
+  .self$storr$gc(...)
 }
 
-decorated_storr_get <- function(storr, ...) {
-  UseMethod("decorated_storr_get")
+decst_get <- function(.self, ...) {
+  value <- .self$storr$get(...)
+  decst_inner_get(value, .self)
 }
 
-decorated_storr_get.default <- function(storr, ...) {
-  storr$get(...)
+decst_inner_get <- function(value, .self) {
+  UseMethod("decst_inner_get")
 }
 
-decorated_storr_get.return_fst <- function(storr, ...) {
-  storr$get(...)
+decst_inner_get.default <- function(value, .self) {
+  value
 }
 
-decorated_storr_get.return_keras <- function(storr, ...) {
-  storr$get(...)
+decst_inner_get.return_fst <- function(value, .self) {
+  value
 }
 
-decorated_storr_get.return_rds <- function(storr, ...) {
-  storr$get(...)
+decst_inner_get.return_keras <- function(value, .self) {
+  value
 }
 
-decorated_storr_set <- function(storr, key, value, ...) {
-  UseMethod("decorated_storr_set")
+decst_inner_get.return_rds <- function(.self, value) {
+  value
 }
 
-decorated_storr_set.default <- function(storr, key, value, ...) {
-  storr$set(key = key, value = value, ...)
+decst_set <- function(value, .self, key, ...) {
+  UseMethod("decst_set")
 }
 
-decorated_storr_set.return_fst <- function(storr, key, value, ...) {
-  storr$set(key = key, value = value, ...)
+decst_set.default <- function(value, .self, key, ...) {
+  .self$storr$set(key = key, value = value, ...)
 }
 
-decorated_storr_set.return_keras <- function(storr, key, value, ...) {
-  storr$set(key = key, value = value, ...)
+decst_set.return_fst <- function(value, .self, key, ...) {
+  .self$storr$set(key = key, value = value, ...)
 }
 
-decorated_storr_set.return_rds <- function(storr, key, value, ...) {
-  storr$set(key = key, value = value, ...)
+decst_set.return_keras <- function(value, .self, key, ...) {
+  .self$storr$set(key = key, value = value, ...)
+}
+
+decst_set.return_rds <- function(value, .self, key, ...) {
+  .self$storr$set(key = key, value = value, ...)
 }
 
 dir_create <- function(x) {
