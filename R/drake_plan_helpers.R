@@ -826,7 +826,8 @@ is_trigger_call <- function(expr) {
 #'   Requires the `fst` package. The target must be a data frame.
 #' - `return_rds()`: Save the target with `saveRDS()`. This is just like
 #'   what `drake` does by default except that we avoid making a serialized
-#'   copy of the data in memory.
+#'   copy of the data in memory. Requires R >- 3.5.0 to use serialization
+#'   version 3 (ALTREP).
 #' - `return_keras()`: Save the target with `save_model_hdf5()`.
 #'   Requires the `keras` package. The target must be a Keras model.
 #' @export
@@ -848,7 +849,6 @@ is_trigger_call <- function(expr) {
 #' })
 #' }
 return_fst <- function(value) {
-  assert_pkg("fst")
   return_special_value(value = value, class = "return_fst")
 }
 
@@ -856,7 +856,6 @@ return_fst <- function(value) {
 #' @export
 #' @inheritParams return_fst
 return_keras <- function(value) {
-  assert_pkg("keras")
   return_special_value(value = value, class = "return_keras")
 }
 

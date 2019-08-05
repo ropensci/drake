@@ -100,6 +100,7 @@ clean <- function(
   if (is.null(cache)) {
     return(invisible())
   }
+  cache <- decorate_storr(cache)
   targets <- c(as.character(match.call(expand.dots = FALSE)$...), list)
   if (requireNamespace("tidyselect", quietly = TRUE)) {
     targets <- drake_tidyselect_cache(
@@ -260,6 +261,7 @@ drake_gc <- function(
 ) {
   deprecate_search(search)
   if (!is.null(cache)) {
+    cache <- decorate_storr(cache)
     cache$gc()
     rm_bad_cache_filenames(cache)
   }
@@ -333,6 +335,7 @@ rescue_cache <- function(
   if (is.null(cache)) {
     return(invisible())
   }
+  cache <- decorate_storr(cache)
   for (namespace in cache$list_namespaces()) {
     X <- cache$list(namespace = namespace)
     if (!is.null(targets)) {

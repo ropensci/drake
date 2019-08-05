@@ -1,5 +1,38 @@
 drake_context("decorated storr")
 
+test_with_dir("can save rds", {
+  plan <- drake_plan(x = return_rds(list(x = letters, y = letters)))
+  make(plan)
+  out <- readd(x)
+  exp <- list(x = letters, y = letters)
+  expect_equal(out, exp)
+  cache <- drake_cache()
+  ref <- cache$storr$get("x")
+  expect_true(inherits(ref, "return_rds"))
+  expect_equal(length(ref), 1L)
+  expect_true(nchar(ref) < 100)
+  expect_false(is.list(ref))
+})
+
+test_with_dir("Can save rds with envir cache", {
+  plan <- drake_plan(x = return_rds(list(x = letters, y = letters)))
+  cache <- storr::storr_environment()
+  make(plan, cache = cache)
+  out <- readd(x, cache = cache)
+  cache <- drake_config(plan, cache = cache)$cache
+  exp <- list(x = letters, y = letters)
+  expect_equal(out, exp)
+  ref <- cache$storr$get("x")
+  expect_true(inherits(ref, "return_rds"))
+  expect_equal(length(ref), 1L)
+  expect_true(nchar(ref) < 100)
+  expect_false(is.list(ref))
+  special <- file.path(".drake", "drake", "return")
+  expect_true(file.exists(special))
+  special_files <- list.files(special)
+  expect_equal(length(special_files), 1L)
+})
+
 # To do: reactivate tests
 if (FALSE) {
 
@@ -15,7 +48,11 @@ test_with_dir("Can save fst data frames", {
   exp <- data.frame(x = letters, y = letters, stringsAsFactors = FALSE)
   expect_equal(out, exp)
   cache <- drake_cache()
-  expect_true(inherits(cache$storr$get("x"), "saved_fst"))
+  ref <- cache$storr$get("x")
+  expect_true(inherits(ref, "return_fst"))
+  expect_equal(length(ref), 1L)
+  expect_true(nchar(ref) < 100)
+  expect_false(is.list(ref))
 })
 
 test_with_dir("Can save keras models", {
@@ -28,40 +65,15 @@ test_with_dir("Can save keras models", {
   out <- readd(x)
   exp <- structure(list("keras_model"), class = "keras.engine.training.Model")
   expect_equal(out, exp)
-  cache <- drake_cache()
-  expect_true(inherits(cache$storr$get("x"), "saved_keras"))
-})
-
-test_with_dir("can save rds", {
-  plan <- drake_plan(
-    x = return_rds(
-      list(x = letters, y = letters)
-    )
-  )
-  make(plan)
-  out <- readd(x)
-  exp <- list(x = letters, y = letters)
+  out <- cache$storr$get("x")
+  exp <- structure(cache$storr$get_hash("x"), class = "return_keras")
   expect_equal(out, exp)
   cache <- drake_cache()
-  expect_true(inherits(cache$storr$get("x"), "saved_rds"))
-})
-
-test_with_dir("Can save rds with envir cache", {
-  plan <- drake_plan(
-    x = return_rds(
-      list(x = letters, y = letters, stringsAsFactors = FALSE)
-    )
-  )
-  cache <- storr::storr_environment()
-  make(plan)
-  out <- readd(x, cache = cache)
-  expect_true(inherits(cache$storr$get("x"), "saved_rds"))
-  exp <- list(x = letters, y = letters)
-  expect_equal(out, exp)
-  special <- file.path(".drake", "drake", "data")
-  expect.true(file.exists(special))
-  special_files <- list.files(special, pattern = ".*\\.rds$")
-  expect_equal(length(special_files), 1L)
+  ref <- cache$storr$get("x")
+  expect_true(inherits(ref, "return_fst"))
+  expect_equal(length(ref), 1L)
+  expect_true(nchar(ref) < 100)
+  expect_false(is.list(ref))
 })
 
 test_with_dir("garbage collection", {
@@ -111,7 +123,7 @@ test_with_dir("recovery with return_rds()", {
   )
   make(plan, recover = TRUE)
   expect_false(file.exists("x"))
-  expect_equal(readd(x), list(x = letters, stringsAsFactors = FALSE))
+  expect_equal(readd(x), list(x = letters))
   history <- drake_history()
   hash <- history[history$target == "x" & !history$current, "hash"]
   cache <- drake_cache()

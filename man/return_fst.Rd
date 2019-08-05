@@ -40,7 +40,8 @@ only return a reference to the target, not the actual target itself.)
 Requires the \code{fst} package. The target must be a data frame.
 \item \code{return_rds()}: Save the target with \code{saveRDS()}. This is just like
 what \code{drake} does by default except that we avoid making a serialized
-copy of the data in memory.
+copy of the data in memory. Requires R >- 3.5.0 to use serialization
+version 3 (ALTREP).
 \item \code{return_keras()}: Save the target with \code{save_model_hdf5()}.
 Requires the \code{keras} package. The target must be a Keras model.
 }

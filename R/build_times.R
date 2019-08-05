@@ -45,6 +45,7 @@ build_times <- function(
   if (is.null(cache)) {
     return(weak_as_tibble(empty_times()))
   }
+  cache <- decorate_storr(cache)
   eval(parse(text = "require(methods, quietly = TRUE)")) # needed for lubridate
   targets <- c(as.character(match.call(expand.dots = FALSE)$...), list)
   if (requireNamespace("tidyselect", quietly = TRUE)) {

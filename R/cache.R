@@ -85,6 +85,7 @@ readd <- function(
   if (is.null(cache)) {
     stop("cannot find drake cache.")
   }
+  cache <- decorate_storr(cache)
   if (!character_only) {
     target <- as.character(substitute(target))
   }
@@ -224,6 +225,7 @@ loadd <- function(
   if (is.null(cache)) {
     stop("cannot find drake cache.")
   }
+  cache <- decorate_storr(cache)
   if (is.null(namespace)) {
     namespace <- cache$default_namespace
   }
@@ -503,6 +505,7 @@ read_drake_seed <- function(
   if (is.null(cache)) {
     stop("cannot find drake cache.")
   }
+  cache <- decorate_storr(cache)
   if (cache$exists(key = "seed", namespace = "session")) {
     cache$get(key = "seed", namespace = "session")
   } else {
@@ -914,6 +917,7 @@ drake_get_session_info <- function(
   if (is.null(cache)) {
     stop("No drake::make() session detected.")
   }
+  cache <- decorate_storr(cache)
   return(cache$get("sessionInfo", namespace = "session"))
 }
 
@@ -1008,6 +1012,7 @@ drake_cache_log <- function(
       )
     )
   }
+  cache <- decorate_storr(cache)
   out <- lightly_parallelize(
     X = cache$list(),
     FUN = single_cache_log,
@@ -1100,6 +1105,7 @@ diagnose <- function(
   if (is.null(cache)) {
     return(character(0))
   }
+  cache <- decorate_storr(cache)
   if (!character_only) {
     target <- as.character(substitute(target))
   }
@@ -1257,6 +1263,7 @@ progress <- function(
   if (is.null(cache)) {
     return(weak_tibble(target = character(0), progress = character(0)))
   }
+  cache <- decorate_storr(cache)
   if (!is.null(no_imported_objects)) {
     warning(
       "Argument `no_imported_objects` of progress() is deprecated. ",
