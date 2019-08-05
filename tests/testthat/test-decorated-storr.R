@@ -178,5 +178,3 @@ test_with_dir("Can save keras models", {
 })
 
 }
-
-
