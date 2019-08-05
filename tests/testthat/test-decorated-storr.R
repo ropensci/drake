@@ -64,6 +64,7 @@ test_with_dir("no special format", {
   plan <- drake_plan(y = "normal format")
   make(plan)
   expect_identical(readd(y), "normal format")
+  cache <- drake_cache()
   ref2 <- cache$storr$get("y")
   expect_identical(ref2, "normal format")
   expect_false(inherits(ref2, "drake_format_rds"))
