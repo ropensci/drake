@@ -1,7 +1,6 @@
 drake_context("decorated storr")
 
 test_with_dir("run through decorated storr methods", {
-  skip_on_cran()
   x <- drake_config(drake_plan(x = 1))$cache
   x$archive_export(tempfile())
   x$archive_import(tempfile())
