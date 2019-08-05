@@ -56,7 +56,7 @@ R code to produce it.
 \details{
 Besides \code{"target"} and \code{"command"}, \code{\link[=drake_plan]{drake_plan()}}
 understands a special set of optional columns. For details, visit
-\url{https://ropenscilabs.github.io/drake-manual/plans.html#special-custom-columns-in-your-plan}
+\url{https://ropenscilabs.github.io/drake-manual/plans.html#special-custom-columns-in-your-plan} # nolint
 }
 \section{Columns}{
 
@@ -73,6 +73,19 @@ but \code{drake} looks for them at various points in the workflow.
 \itemize{
 \item \code{elapsed} and \code{cpu}: number of seconds to wait for the target to build
 before timing out (\code{elapsed} for elapsed time and \code{cpu} for CPU time).
+\item \code{format}: set a storage format to save big targets more efficiently.
+Most formats are faster than ordinary storage, and they consume
+far less memory. Available formats:
+\itemize{
+\item \code{"fst"}: save big data frames fast. The target must be a data frame,
+and you must have the \code{fst} package installed.
+\item \code{"keras"}: save Keras models as HDF5 files.
+Requires the \code{keras} package.
+\item \code{"rds"}: save any object. This is similar to the default storage
+except we avoid creating a serialized copy of
+the entire target in memory.
+Requires R >= 3.5.0 so drake can use ALTREP.
+}
 \item \code{hpc}: logical values (\code{TRUE}/\code{FALSE}/\code{NA}) whether to send each target
 to parallel workers.
 Visit \url{https://ropenscilabs.github.io/drake-manual/hpc.html#selectivity}

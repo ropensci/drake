@@ -39,21 +39,6 @@ reference:
   - '`make`'
   - '`drake_config`'
   - '`drake_build`'
-- title: Reproducible R session management
-  contents:
-  - '`r_make`'
-  - '`r_drake_build`'
-  - '`r_outdated`'
-  - '`r_recoverable`'
-  - '`r_missed`'
-  - '`r_deps_target`'
-  - '`r_drake_graph_info`'
-  - '`r_vis_drake_graph`'
-  - '`r_sankey_drake_graph`'
-  - '`r_drake_ggraph`'
-  - '`r_text_drake_graph`'
-  - '`r_predict_runtime`'
-  - '`r_predict_workers`'
 - title: drake plans and helpers
   contents:
   - '`drake_plan`'
@@ -73,6 +58,21 @@ reference:
   - '`no_deps`'
   - '`drake_envir`'
   - '`trigger`'
+- title: Reproducible R session management
+  contents:
+  - '`r_make`'
+  - '`r_drake_build`'
+  - '`r_outdated`'
+  - '`r_recoverable`'
+  - '`r_missed`'
+  - '`r_deps_target`'
+  - '`r_drake_graph_info`'
+  - '`r_vis_drake_graph`'
+  - '`r_sankey_drake_graph`'
+  - '`r_drake_ggraph`'
+  - '`r_text_drake_graph`'
+  - '`r_predict_runtime`'
+  - '`r_predict_workers`'
 - title: Network graphs and visualization
   contents:
   - '`vis_drake_graph`'
@@ -120,7 +120,6 @@ reference:
   - '`readd`'
   - '`cached`'
   - '`drake_cache_log`'
-  - '`drake_cache_log_file`'
   - '`drake_get_session_info`'
   - '`read_drake_seed`'
   - '`show_source`'

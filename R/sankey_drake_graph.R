@@ -22,7 +22,7 @@
 #' if (requireNamespace("networkD3", quietly = TRUE)) {
 #' if (requireNamespace("visNetwork", quietly = TRUE)) {
 #' # Plot the network graph representation of the workflow.
-#' sankey_drake_graph(config, width = '100%') # The width is passed to visNetwork
+#' sankey_drake_graph(config, width = '100%')
 #' # Show the legend separately.
 #' visNetwork::visNetwork(nodes = drake::legend_nodes())
 #' make(my_plan) # Run the project, build the targets.
@@ -135,7 +135,7 @@ sankey_drake_graph <- function(
 #' # You can pass the data frames right to render_sankey_drake_graph()
 #' # (as in sankey_drake_graph()) or you can create
 #' # your own custom visNewtork graph.
-#' render_sankey_drake_graph(graph, width = '100%') # Width is passed to visNetwork.
+#' render_sankey_drake_graph(graph, width = '100%')
 #' }
 #' }
 #' }

@@ -6,6 +6,7 @@ acyclic
 addin
 advisor
 algo
+ALTREP
 Ane
 args
 Args
@@ -80,6 +81,8 @@ globals
 gridlines
 gsp
 Halotype
+HDF
+HDF5
 hotfix
 HPC
 hpc
@@ -96,8 +99,10 @@ Jeroen
 joelnitta
 JOSS
 Karthik
-Kendon
 kbroman
+Kendon
+Keras
+keras
 Kirill
 Kirill's
 knitr

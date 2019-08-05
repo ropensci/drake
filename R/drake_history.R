@@ -97,6 +97,7 @@ drake_history <- function(
   if (is.null(cache)) {
     stop("cannot find drake cache.")
   }
+  cache <- decorate_storr(cache)
   if (is.null(history)) {
     history <- default_history_queue(force_cache_path(cache))
   }

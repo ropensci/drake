@@ -8,7 +8,8 @@ rs_addin_r_vis_drake_graph(r_args = list(), .print = TRUE)
 }
 \arguments{
 \item{r_args}{List of arguments to \code{r_fn}, not including \code{func} or \code{args}.
-Example: \code{r_make(r_fn = callr::r_bg, r_args = list(stdout = "stdout.log"))}.}
+Example:
+\code{r_make(r_fn = callr::r_bg, r_args = list(stdout = "stdout.log"))}.}
 
 \item{.print}{Logical, whether to \code{print()} the result
 to the console. Required for the addin.}

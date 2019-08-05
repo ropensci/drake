@@ -58,7 +58,7 @@
 #'
 #' @param parallelism Character scalar, type of parallelism to use.
 #'   For detailed explanations, see the
-#'   [high-performance computing chapter](https://ropenscilabs.github.io/drake-manual/hpc.html)
+#'   [high-performance computing chapter](https://ropenscilabs.github.io/drake-manual/hpc.html) # nolint
 #'   of the user manual.
 #'
 #'   You could also supply your own scheduler function
@@ -619,7 +619,11 @@ drake_config <- function(
       fetch_cache = fetch_cache,
       console_log_file = console_log_file
     )
+  } else {
+    cache <- decorate_storr(cache)
   }
+  cache_path <- force_cache_path(cache)
+  hash_algorithm <- cache_hash_algorithm(cache)
   seed <- choose_seed(supplied = seed, cache = cache)
   if (identical(force, TRUE)) {
     drake_set_session_info(cache = cache, full = session_info)
@@ -642,8 +646,6 @@ drake_config <- function(
     console_log_file = console_log_file,
     verbose = verbose
   )
-  cache_path <- force_cache_path(cache)
-  hash_algorithm <- cache_hash_algorithm(cache)
   history <- initialize_history(history, cache_path)
   lazy_load <- parse_lazy_arg(lazy_load)
   caching <- match.arg(caching)
@@ -746,7 +748,10 @@ force_cache_path <- function(cache = NULL) {
 cache_path_ <- function(cache = NULL) {
   if (is.null(cache)) {
     NULL
-  } else if ("storr" %in% class(cache)) {
+  }
+  is_cache <- inherits(cache, "refclass_decorated_storr") ||
+    inherits(cache, "storr")
+  if (is_cache) {
     cache$driver$path
   } else {
     NULL
@@ -834,6 +839,12 @@ recover_cache_ <- function(
 
 plan_checks <- function(plan) {
   stopifnot(is.data.frame(plan))
+  plan_check_required_cols(plan)
+  plan_check_bad_symbols(plan)
+  plan_check_format_col(plan)
+}
+
+plan_check_required_cols <- function(plan) {
   if (!all(c("target", "command") %in% colnames(plan))) {
     stop(
       "The columns of your workflow plan data frame ",
@@ -841,6 +852,9 @@ plan_checks <- function(plan) {
       call. = FALSE
     )
   }
+}
+
+plan_check_bad_symbols <- function(plan) {
   if (any(bad_symbols %in% plan$target)) {
     stop(
       "symbols that cannot be target names: \n",
@@ -848,6 +862,24 @@ plan_checks <- function(plan) {
       call. = FALSE
     )
   }
+}
+
+plan_check_format_col <- function(plan) {
+  if (!("format" %in% colnames(plan))) {
+    return()
+  }
+  format <- plan$format
+  format <- format[!is.na(format)]
+  illegal <- setdiff(unique(format), c("fst", "keras", "rds"))
+  if (!length(illegal)) {
+    return()
+  }
+  stop(
+    "the format column of your drake plan can only have values ",
+    "\"fst\", \"keras\", \"rds\", or NA. Illegal values found:\n",
+    multiline_message(illegal),
+    call. = FALSE
+  )
 }
 
 config_checks <- function(config) {

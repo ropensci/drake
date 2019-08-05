@@ -29,7 +29,8 @@
 #' @param r_fn A `callr` function such as `callr::r` or `callr::r_bg`.
 #'   Example: `r_make(r_fn = callr::r)`.
 #' @param r_args List of arguments to `r_fn`, not including `func` or `args`.
-#'   Example: `r_make(r_fn = callr::r_bg, r_args = list(stdout = "stdout.log"))`.
+#'   Example:
+#'   `r_make(r_fn = callr::r_bg, r_args = list(stdout = "stdout.log"))`.
 #' @examples
 #' \dontrun{
 #' isolate_example("quarantine side effects", {

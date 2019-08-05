@@ -228,7 +228,12 @@ test_with_dir("force with a non-back-compatible cache", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(cache_vers_check(NULL), character(0))
   expect_null(drake_cache())
-  expect_true(inherits(suppressWarnings(recover_cache()), "storr"))
+  expect_true(
+    inherits(
+      suppressWarnings(recover_cache()),
+      "refclass_decorated_storr"
+    )
+  )
   zip <- system.file(
     file.path("testing", "built_mtcars_example_v6.2.1.zip"),
     package = "drake",
@@ -1469,8 +1474,8 @@ test_with_dir("get_cache", {
   make(drake_plan(x = 1), session_info = FALSE)
   tmp1 <- expect_warning(get_cache(search = TRUE), regexp = "deprecated")
   tmp2 <- expect_warning(get_cache(search = FALSE), regexp = "deprecated")
-  expect_true(inherits(tmp1, "storr"))
-  expect_true(inherits(tmp2, "storr"))
+  expect_true(inherits(tmp1, "refclass_decorated_storr"))
+  expect_true(inherits(tmp2, "refclass_decorated_storr"))
 })
 
 test_with_dir("deprecated memory strategies", {

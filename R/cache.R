@@ -85,6 +85,7 @@ readd <- function(
   if (is.null(cache)) {
     stop("cannot find drake cache.")
   }
+  cache <- decorate_storr(cache)
   if (!character_only) {
     target <- as.character(substitute(target))
   }
@@ -224,6 +225,7 @@ loadd <- function(
   if (is.null(cache)) {
     stop("cannot find drake cache.")
   }
+  cache <- decorate_storr(cache)
   if (is.null(namespace)) {
     namespace <- cache$default_namespace
   }
@@ -503,6 +505,7 @@ read_drake_seed <- function(
   if (is.null(cache)) {
     stop("cannot find drake cache.")
   }
+  cache <- decorate_storr(cache)
   if (cache$exists(key = "seed", namespace = "session")) {
     cache$get(key = "seed", namespace = "session")
   } else {
@@ -579,6 +582,7 @@ cached <- function(
   if (is.null(cache)) {
     return(character(0))
   }
+  cache <- decorate_storr(cache)
   if (is.null(namespace)) {
     namespace <- cache$default_namespace
   }
@@ -628,6 +632,9 @@ is_imported_cache <- Vectorize(function(target, cache) {
 #'   You can also supply your own `storr` cache to the `cache`
 #'   argument of `make()`. The `drake_cache()` function retrieves
 #'   this cache.
+#' @details `drake_cache()` actually returns a *decorated* `storr`,
+#'   an object that *contains* a `storr` (plus bells and whistles).
+#'   To get the *actual* inner `storr`, use `drake_cache()$storr`.
 #' @seealso [new_cache()], [drake_config()]
 #' @export
 #' @return A drake/storr cache in a folder called `.drake/`,
@@ -650,9 +657,12 @@ is_imported_cache <- Vectorize(function(target, cache) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Run the project, build the targets.
 #' x <- drake_cache() # Now, there is a cache.
-#' y <- storr::storr_rds(".drake") # Equivalent.
+#' y <- storr::storr_rds(".drake") # Nearly equivalent.
 #' # List the objects readable from the cache with readd().
 #' x$list()
+#' # drake_cache() actually returns a *decorated* storr.
+#' # The *real* storr is inside.
+#' drake_cache()$storr
 #' }
 #' })
 #' }
@@ -732,8 +742,10 @@ find_cache <- function(
 #'   Use `storr` to customize your caches instead.
 #' @param hash_algorithm Name of a hash algorithm to use.
 #'   See the `algo` argument of the `digest` package for your options.
-#' @param short_hash_algo Deprecated on 2018-12-12. Use `hash_algorithm` instead.
-#' @param long_hash_algo Deprecated on 2018-12-12. Use `hash_algorithm` instead.
+#' @param short_hash_algo Deprecated on 2018-12-12.
+#'   Use `hash_algorithm` instead.
+#' @param long_hash_algo Deprecated on 2018-12-12.
+#'   Use `hash_algorithm` instead.
 #' @param ... other arguments to the cache constructor.
 #' @examples
 #' \dontrun{
@@ -772,6 +784,7 @@ new_cache <- function(
     mangle_key = FALSE,
     hash_algorithm = hash_algorithm
   )
+  cache <- decorate_storr(cache)
   writeLines(
     text = c("*", "!/.gitignore"),
     con = file.path(path, ".gitignore")
@@ -816,7 +829,7 @@ drake_fetch_rds <- function(path) {
   if (!file.exists(path)) {
     return(NULL)
   }
-  storr::storr_rds(path = path)
+  decorate_storr(storr::storr_rds(path = path))
 }
 
 cache_vers_stop <- function(cache){
@@ -905,6 +918,7 @@ drake_get_session_info <- function(
   if (is.null(cache)) {
     stop("No drake::make() session detected.")
   }
+  cache <- decorate_storr(cache)
   return(cache$get("sessionInfo", namespace = "session"))
 }
 
@@ -999,6 +1013,7 @@ drake_cache_log <- function(
       )
     )
   }
+  cache <- decorate_storr(cache)
   out <- lightly_parallelize(
     X = cache$list(),
     FUN = single_cache_log,
@@ -1091,6 +1106,7 @@ diagnose <- function(
   if (is.null(cache)) {
     return(character(0))
   }
+  cache <- decorate_storr(cache)
   if (!character_only) {
     target <- as.character(substitute(target))
   }
@@ -1248,6 +1264,7 @@ progress <- function(
   if (is.null(cache)) {
     return(weak_tibble(target = character(0), progress = character(0)))
   }
+  cache <- decorate_storr(cache)
   if (!is.null(no_imported_objects)) {
     warning(
       "Argument `no_imported_objects` of progress() is deprecated. ",

@@ -1801,10 +1801,10 @@ test_with_dir("unequal trace vars are not duplicated in map()", {
   out <- drake_plan(
     wide1 = target(
       ez_parallel(a),
-      transform = map(a = !!inputs, type = !!types) ),
+      transform = map(a = !!inputs, type = !!types)),
     prelim = target(
       preliminary(wide1),
-      transform = combine(wide1, .by = type) ),
+      transform = combine(wide1, .by = type)),
     main = target(
       expensive_calc(prelim),
       transform = map(prelim)

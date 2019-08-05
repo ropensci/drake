@@ -8,7 +8,7 @@
 #'
 #' @details Besides `"target"` and `"command"`, [drake_plan()]
 #'   understands a special set of optional columns. For details, visit
-#'   <https://ropenscilabs.github.io/drake-manual/plans.html#special-custom-columns-in-your-plan>
+#'   <https://ropenscilabs.github.io/drake-manual/plans.html#special-custom-columns-in-your-plan> # nolint
 #'
 #' @section Columns:
 #' [drake_plan()] creates a special data frame. At minimum, that data frame
@@ -24,6 +24,17 @@
 #'
 #' - `elapsed` and `cpu`: number of seconds to wait for the target to build
 #'   before timing out (`elapsed` for elapsed time and `cpu` for CPU time).
+#' - `format`: set a storage format to save big targets more efficiently.
+#'   Most formats are faster than ordinary storage, and they consume
+#'   far less memory. Available formats:
+#'   - `"fst"`: save big data frames fast. The target must be a data frame,
+#'     and you must have the `fst` package installed.
+#'   - `"keras"`: save Keras models as HDF5 files.
+#'     Requires the `keras` package.
+#'   - `"rds"`: save any object. This is similar to the default storage
+#'     except we avoid creating a serialized copy of
+#'     the entire target in memory.
+#'     Requires R >= 3.5.0 so drake can use ALTREP.
 #' - `hpc`: logical values (`TRUE`/`FALSE`/`NA`) whether to send each target
 #'   to parallel workers.
 #'   Visit <https://ropenscilabs.github.io/drake-manual/hpc.html#selectivity>
@@ -319,11 +330,9 @@ sanitize_plan <- function(
   force(envir)
   fields <- intersect(colnames(plan), c("command", "target", "trigger"))
   for (field in fields) {
-    if (!is.null(plan[[field]])) {
-      plan[[field]] <- factor_to_character(plan[[field]])
-      if (is.character(plan[[field]])) {
-        plan[[field]] <- trimws(plan[[field]])
-      }
+    plan[[field]] <- factor_to_character(plan[[field]])
+    if (is.character(plan[[field]])) {
+      plan[[field]] <- trimws(plan[[field]])
     }
   }
   plan$target <- make.names(plan$target, unique = FALSE, allow_ = TRUE)
