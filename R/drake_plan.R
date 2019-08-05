@@ -329,11 +329,9 @@ sanitize_plan <- function(
   force(envir)
   fields <- intersect(colnames(plan), c("command", "target", "trigger"))
   for (field in fields) {
-    if (!is.null(plan[[field]])) {
-      plan[[field]] <- factor_to_character(plan[[field]])
-      if (is.character(plan[[field]])) {
-        plan[[field]] <- trimws(plan[[field]])
-      }
+    plan[[field]] <- factor_to_character(plan[[field]])
+    if (is.character(plan[[field]])) {
+      plan[[field]] <- trimws(plan[[field]])
     }
   }
   plan$target <- make.names(plan$target, unique = FALSE, allow_ = TRUE)

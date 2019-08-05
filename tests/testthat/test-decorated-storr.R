@@ -70,6 +70,14 @@ test_with_dir("no special format", {
   expect_false(inherits(ref2, "drake_format_rds"))
 })
 
+test_with_dir("illegal format", {
+  plan <- drake_plan(y = target("bad format", format = "bad format"))
+  expect_error(
+    drake_config(plan),
+    regexp = "format column of your drake plan can only have values"
+  )
+})
+
 test_with_dir("rds format", {
   plan <- drake_plan(
     x = target(list(x = letters, y = letters), format = "rds"),

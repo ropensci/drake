@@ -839,6 +839,12 @@ recover_cache_ <- function(
 
 plan_checks <- function(plan) {
   stopifnot(is.data.frame(plan))
+  plan_check_required_cols(plan)
+  plan_check_bad_symbols(plan)
+  plan_check_format_col(plan)
+}
+
+plan_check_required_cols <- function(plan) {
   if (!all(c("target", "command") %in% colnames(plan))) {
     stop(
       "The columns of your workflow plan data frame ",
@@ -846,6 +852,9 @@ plan_checks <- function(plan) {
       call. = FALSE
     )
   }
+}
+
+plan_check_bad_symbols <- function(plan) {
   if (any(bad_symbols %in% plan$target)) {
     stop(
       "symbols that cannot be target names: \n",
@@ -853,6 +862,24 @@ plan_checks <- function(plan) {
       call. = FALSE
     )
   }
+}
+
+plan_check_format_col <- function(plan) {
+  if (!("format" %in% colnames(plan))) {
+    return()
+  }
+  format <- plan$format
+  format <- format[!is.na(format)]
+  illegal <- setdiff(unique(format), c("fst", "keras", "rds"))
+  if (!length(illegal)) {
+    return()
+  }
+  stop(
+    "the format column of your drake plan can only have values ",
+    "\"fst\", \"keras\", \"rds\", or NA. Illegal values found:\n",
+    multiline_message(illegal),
+    call. = FALSE
+  )
 }
 
 config_checks <- function(config) {
