@@ -179,10 +179,7 @@ dcst_set.drake_format_keras <- function(value, key, ..., .self) {
 
 dcst_set.drake_format_rds <- function(value, key, ..., .self) {
   .self$assert_dirs()
-  # Need R >= 3.5.0 for ALTREP
-  r_version <- paste0(R.version$major, ".", R.version$minor)
-  sufficient_r_version <- utils::compareVersion(r_version, "3.5.0") >= 0L
-  stopifnot(sufficient_r_version)
+  stopifnot(getRversion() >= "3.5.0") # for ALTREP
   tmp <- .self$file_tmp()
   saveRDS(
     object = value$value,
