@@ -628,6 +628,9 @@ is_imported_cache <- Vectorize(function(target, cache) {
 #'   You can also supply your own `storr` cache to the `cache`
 #'   argument of `make()`. The `drake_cache()` function retrieves
 #'   this cache.
+#' @details `drake_cache()` actually returns a *decorated* `storr`,
+#'   an object that *contains* a `storr` (plus bells and whistles).
+#'   To get the *actual* inner `storr`, use `drake_cache()$storr`.
 #' @seealso [new_cache()], [drake_config()]
 #' @export
 #' @return A drake/storr cache in a folder called `.drake/`,
@@ -650,9 +653,12 @@ is_imported_cache <- Vectorize(function(target, cache) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Run the project, build the targets.
 #' x <- drake_cache() # Now, there is a cache.
-#' y <- storr::storr_rds(".drake") # Equivalent.
+#' y <- storr::storr_rds(".drake") # Nearly equivalent.
 #' # List the objects readable from the cache with readd().
 #' x$list()
+#' # drake_cache() actually returns a *decorated* storr.
+#' # The *real* storr is inside.
+#' drake_cache()$storr
 #' }
 #' })
 #' }
