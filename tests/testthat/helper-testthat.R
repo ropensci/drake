@@ -34,3 +34,12 @@ with_dir <- function(new, code) {
   on.exit(setwd(old)) # nolint
   force(code)
 }
+
+skip_below_r_version <- function(version) {
+  r_version <- paste0(R.version$major, ".", R.version$minor)
+  if (utils::compareVersion(r_version, version) < 0L) {
+    testthat::skip(
+      paste0("test requires version ", version, " (running ", r_version, ")")
+    )
+  }
+}

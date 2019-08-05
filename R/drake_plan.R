@@ -34,6 +34,7 @@
 #'   - `"rds"`: save any object. This is similar to the default storage
 #'     except we avoid creating a serialized copy of
 #'     the entire target in memory.
+#'     Requires R >= 3.5.0 so drake can use ALTREP.
 #' - `hpc`: logical values (`TRUE`/`FALSE`/`NA`) whether to send each target
 #'   to parallel workers.
 #'   Visit <https://ropenscilabs.github.io/drake-manual/hpc.html#selectivity>
