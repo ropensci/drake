@@ -831,7 +831,7 @@ is_trigger_call <- function(expr) {
 #'   Requires the `keras` package. The target must be a Keras model.
 #' @export
 #' @seealso [make()]
-#' @param x A large target to save in a specialized (big-data-friendly)
+#' @param value The return value of a target.
 #'   format.
 #' @examples
 #' \dontrun{
@@ -847,25 +847,28 @@ is_trigger_call <- function(expr) {
 #' }
 #' })
 #' }
-return_fst <- function(x) {
+return_fst <- function(value) {
   assert_pkg("fst")
-  class(x) <- "return_fst"
-  x
+  return_special_value(value = x, class = "return_fst")
 }
 
 #' @rdname return_fst
 #' @export
 #' @inheritParams return_fst
-return_keras <- function(x) {
+return_keras <- function(value) {
   assert_pkg("keras")
-  class(x) <- "return_keras"
-  x
+  return_special_value(value = x, class = "return_keras")
 }
 
 #' @rdname return_fst
 #' @export
 #' @inheritParams return_fst
-return_rds <- function(x) {
-  class(x) <- "return_rds"
-  x
+return_rds <- function(value) {
+  return_special_value(value = x, class = "return_rds")
+}
+
+return_special_value <- function(value, class) {
+  out <- list(value = value)
+  class(out) <- class
+  out
 }

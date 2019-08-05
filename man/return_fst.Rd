@@ -6,14 +6,14 @@
 \alias{return_rds}
 \title{Efficient big data storage}
 \usage{
-return_fst(x)
+return_fst(value)
 
-return_keras(x)
+return_keras(value)
 
-return_rds(x)
+return_rds(value)
 }
 \arguments{
-\item{x}{A large target to save in a specialized (big-data-friendly)
+\item{value}{The return value of a target.
 format.}
 }
 \description{
