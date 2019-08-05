@@ -58,11 +58,6 @@ reference:
   - '`no_deps`'
   - '`drake_envir`'
   - '`trigger`'
-- title: efficient big data storage
-  contents:
-  - '`return_fst`'
-  - '`return_keras`'
-  - '`return_rds`'
 - title: Reproducible R session management
   contents:
   - '`r_make`'

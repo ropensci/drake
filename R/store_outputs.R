@@ -27,6 +27,7 @@ store_outputs <- function(target, value, meta, config) {
       target = target, config = config)
   }
   meta$name <- target
+  value <- assign_format(value = value, format = layout$format)
   store_single_output(
     target = target,
     value = value,
@@ -39,6 +40,15 @@ store_outputs <- function(target, value, meta, config) {
     value = "done",
     config = config
   )
+}
+
+assign_format <- function(value, format) {
+  if (is.null(format) || is.na(format)) {
+    return(value)
+  }
+  out <- list(value = value)
+  class(out) <- paste0("drake_format_", format)
+  out
 }
 
 store_output_files <- function(files, meta, config) {

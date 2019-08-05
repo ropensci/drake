@@ -42,8 +42,9 @@ test_with_dir("run through decorated storr methods", {
 
 test_with_dir("garbage collection", {
   plan <- drake_plan(
-    x = return_rds(
-      list(x = letters, y = letters)
+    x = target(
+      list(x = letters, y = letters),
+      format = "rds"
     )
   )
   make(plan)
@@ -59,8 +60,20 @@ test_with_dir("garbage collection", {
   expect_false(file.exists(file))
 })
 
-test_with_dir("return_rds()", {
-  plan <- drake_plan(x = return_rds(list(x = letters, y = letters)))
+test_with_dir("no special format", {
+  plan <- drake_plan(y = "normal format")
+  make(plan)
+  expect_identical(readd(y), "normal format")
+  ref2 <- cache$storr$get("y")
+  expect_identical(ref2, "normal format")
+  expect_false(inherits(ref2, "drake_format_rds"))
+})
+
+test_with_dir("rds format", {
+  plan <- drake_plan(
+    x = target(list(x = letters, y = letters), format = "rds"),
+    y = "normal format"
+  )
   make(plan)
   out <- readd(x)
   exp <- list(x = letters, y = letters)
@@ -68,14 +81,17 @@ test_with_dir("return_rds()", {
   cache <- drake_cache()
   expect_equal(cache$get_value(cache$get_hash("x")), exp)
   ref <- cache$storr$get("x")
-  expect_true(inherits(ref, "return_rds"))
+  expect_true(inherits(ref, "drake_format_rds"))
   expect_equal(length(ref), 1L)
   expect_true(nchar(ref) < 100)
   expect_false(is.list(ref))
+  ref2 <- cache$storr$get("y")
+  expect_identical(ref2, "normal format")
+  expect_false(inherits(ref2, "drake_format_rds"))
 })
 
-test_with_dir("return_rds() with environment storr", {
-  plan <- drake_plan(x = return_rds(list(x = letters, y = letters)))
+test_with_dir("rds format with environment storr", {
+  plan <- drake_plan(x = target(list(x = letters, y = letters), format = "rds"))
   cache <- storr::storr_environment()
   make(plan, cache = cache)
   out <- readd(x, cache = cache)
@@ -84,7 +100,7 @@ test_with_dir("return_rds() with environment storr", {
   expect_equal(out, exp)
   expect_equal(cache$get_value(cache$get_hash("x")), exp)
   ref <- cache$storr$get("x")
-  expect_true(inherits(ref, "return_rds"))
+  expect_true(inherits(ref, "drake_format_rds"))
   expect_equal(length(ref), 1L)
   expect_true(nchar(ref) < 100)
   expect_false(is.list(ref))
@@ -96,19 +112,19 @@ test_with_dir("return_rds() with environment storr", {
 
 test_with_dir("return_rds() and recovery", {
   plan <- drake_plan(
-    x = {
+    x = target({
       file.create("x")
-      return_rds(list(x = letters))
-    }
+      list(x = letters)
+    }, format = "rds")
   )
   make(plan)
   expect_true(file.exists("x"))
   unlink("x")
   plan <- drake_plan(
-    x = {
+    x = target({
       file.create("y")
-      return_rds(list(x = letters[1:3]))
-    }
+      list(x = letters[1:3])
+    }, format = "rds")
   )
   make(plan)
   expect_true(file.exists("y"))
@@ -116,10 +132,10 @@ test_with_dir("return_rds() and recovery", {
   expect_false(file.exists("x"))
   expect_false(file.exists("y"))
   plan <- drake_plan(
-    x = {
+    x = target({
       file.create("x")
-      return_rds(list(x = letters))
-    }
+      list(x = letters)
+    }, format = "rds")
   )
   make(plan, recover = TRUE)
   expect_false(file.exists("x"))
