@@ -67,10 +67,6 @@ refclass_decorated_storr <- methods::setRefClass(
 )
 
 decorated_storr_gc <- function(storr, ...) {
-  UseMethod("decorated_storr_gc")
-}
-
-decorated_storr_gc.default <- function(storr, ...) {
   storr$gc(...)
 }
 
@@ -82,11 +78,35 @@ decorated_storr_get.default <- function(storr, ...) {
   storr$get(...)
 }
 
+decorated_storr_get.return_fst <- function(storr, ...) {
+  storr$get(...)
+}
+
+decorated_storr_get.return_keras <- function(storr, ...) {
+  storr$get(...)
+}
+
+decorated_storr_get.return_rds <- function(storr, ...) {
+  storr$get(...)
+}
+
 decorated_storr_set <- function(storr, key, value, ...) {
   UseMethod("decorated_storr_set")
 }
 
 decorated_storr_set.default <- function(storr, key, value, ...) {
+  storr$set(key = key, value = value, ...)
+}
+
+decorated_storr_set.return_fst <- function(storr, key, value, ...) {
+  storr$set(key = key, value = value, ...)
+}
+
+decorated_storr_set.return_keras <- function(storr, key, value, ...) {
+  storr$set(key = key, value = value, ...)
+}
+
+decorated_storr_set.return_rds <- function(storr, key, value, ...) {
   storr$set(key = key, value = value, ...)
 }
 
