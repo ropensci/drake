@@ -47,6 +47,11 @@ You can also supply your own \code{storr} cache to the \code{cache}
 argument of \code{make()}. The \code{drake_cache()} function retrieves
 this cache.
 }
+\details{
+\code{drake_cache()} actually returns a \emph{decorated} \code{storr},
+an object that \emph{contains} a \code{storr} (plus bells and whistles).
+To get the \emph{actual} inner \code{storr}, use \code{drake_cache()$storr}.
+}
 \examples{
 \dontrun{
 isolate_example("Quarantine side effects.", {
@@ -57,9 +62,12 @@ drake_cache() # NULL
 load_mtcars_example() # Get the code with drake_example("mtcars").
 make(my_plan) # Run the project, build the targets.
 x <- drake_cache() # Now, there is a cache.
-y <- storr::storr_rds(".drake") # Equivalent.
+y <- storr::storr_rds(".drake") # Nearly equivalent.
 # List the objects readable from the cache with readd().
 x$list()
+# drake_cache() actually returns a *decorated* storr.
+# The *real* storr is inside.
+drake_cache()$storr
 }
 })
 }

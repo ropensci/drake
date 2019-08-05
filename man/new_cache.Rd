@@ -25,9 +25,11 @@ Use \code{storr} to customize your caches instead.}
 \item{hash_algorithm}{Name of a hash algorithm to use.
 See the \code{algo} argument of the \code{digest} package for your options.}
 
-\item{short_hash_algo}{Deprecated on 2018-12-12. Use \code{hash_algorithm} instead.}
+\item{short_hash_algo}{Deprecated on 2018-12-12.
+Use \code{hash_algorithm} instead.}
 
-\item{long_hash_algo}{Deprecated on 2018-12-12. Use \code{hash_algorithm} instead.}
+\item{long_hash_algo}{Deprecated on 2018-12-12.
+Use \code{hash_algorithm} instead.}
 
 \item{...}{other arguments to the cache constructor.}
 

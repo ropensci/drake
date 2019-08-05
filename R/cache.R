@@ -738,8 +738,10 @@ find_cache <- function(
 #'   Use `storr` to customize your caches instead.
 #' @param hash_algorithm Name of a hash algorithm to use.
 #'   See the `algo` argument of the `digest` package for your options.
-#' @param short_hash_algo Deprecated on 2018-12-12. Use `hash_algorithm` instead.
-#' @param long_hash_algo Deprecated on 2018-12-12. Use `hash_algorithm` instead.
+#' @param short_hash_algo Deprecated on 2018-12-12.
+#'   Use `hash_algorithm` instead.
+#' @param long_hash_algo Deprecated on 2018-12-12.
+#'   Use `hash_algorithm` instead.
 #' @param ... other arguments to the cache constructor.
 #' @examples
 #' \dontrun{
