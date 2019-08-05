@@ -84,6 +84,7 @@ Requires the \code{keras} package.
 \item \code{"rds"}: save any object. This is similar to the default storage
 except we avoid creating a serialized copy of
 the entire target in memory.
+Requires R >= 3.5.0 so drake can use ALTREP.
 }
 \item \code{hpc}: logical values (\code{TRUE}/\code{FALSE}/\code{NA}) whether to send each target
 to parallel workers.

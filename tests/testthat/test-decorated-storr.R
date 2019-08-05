@@ -41,7 +41,7 @@ test_with_dir("run through decorated storr methods", {
 })
 
 test_with_dir("garbage collection", {
-  skip_below_r_version("3.5.0")
+  skip_if(getRversion() < "3.5.0")
   plan <- drake_plan(
     x = target(
       list(x = letters, y = letters),
@@ -80,7 +80,7 @@ test_with_dir("illegal format", {
 })
 
 test_with_dir("rds format", {
-  skip_below_r_version("3.5.0")
+  skip_if(getRversion() < "3.5.0")
   plan <- drake_plan(
     x = target(list(x = letters, y = letters), format = "rds"),
     y = "normal format"
@@ -102,7 +102,7 @@ test_with_dir("rds format", {
 })
 
 test_with_dir("rds format with environment storr", {
-  skip_below_r_version("3.5.0")
+  skip_if(getRversion() < "3.5.0")
   plan <- drake_plan(x = target(list(x = letters, y = letters), format = "rds"))
   cache <- storr::storr_environment()
   make(plan, cache = cache)
@@ -123,7 +123,7 @@ test_with_dir("rds format with environment storr", {
 })
 
 test_with_dir("rds format and recovery", {
-  skip_below_r_version("3.5.0")
+  skip_if(getRversion() < "3.5.0")
   plan <- drake_plan(
     x = target({
       file.create("x")
