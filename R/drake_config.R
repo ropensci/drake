@@ -58,7 +58,7 @@
 #'
 #' @param parallelism Character scalar, type of parallelism to use.
 #'   For detailed explanations, see the
-#'   [high-performance computing chapter](https://ropenscilabs.github.io/drake-manual/hpc.html)
+#'   [high-performance computing chapter](https://ropenscilabs.github.io/drake-manual/hpc.html) # nolint
 #'   of the user manual.
 #'
 #'   You could also supply your own scheduler function
@@ -748,7 +748,10 @@ force_cache_path <- function(cache = NULL) {
 cache_path_ <- function(cache = NULL) {
   if (is.null(cache)) {
     NULL
-  } else if (inherits(cache, "refclass_decorated_storr")) {
+  }
+  is_cache <- inherits(cache, "refclass_decorated_storr") ||
+    inherits(cache, "storr")
+  if (is_cache) {
     cache$driver$path
   } else {
     NULL

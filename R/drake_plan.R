@@ -8,7 +8,7 @@
 #'
 #' @details Besides `"target"` and `"command"`, [drake_plan()]
 #'   understands a special set of optional columns. For details, visit
-#'   <https://ropenscilabs.github.io/drake-manual/plans.html#special-custom-columns-in-your-plan>
+#'   <https://ropenscilabs.github.io/drake-manual/plans.html#special-custom-columns-in-your-plan> # nolint
 #'
 #' @section Columns:
 #' [drake_plan()] creates a special data frame. At minimum, that data frame

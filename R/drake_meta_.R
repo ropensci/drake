@@ -169,7 +169,7 @@ storage_hash <- function(
     new_size = storage_size(file),
     old_size = meta$size
   )
-  ifelse (
+  ifelse(
     should_rehash,
     rehash_storage(target = target, config = config),
     config$cache$get(key = target)

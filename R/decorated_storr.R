@@ -37,8 +37,11 @@ refclass_decorated_storr <- methods::setRefClass(
   # prevent users from supplying their own true `storr`s.
   methods = list(
     # Custom:
-    file_return_hash = function(hash) {
+    assert_dirs = function() {
       dir_create(.self$path_return)
+      dir_create(.self$path_tmp)
+    },
+    file_return_hash = function(hash) {
       file.path(.self$path_return, hash)
     },
     file_return_key = function(key) {
@@ -46,13 +49,15 @@ refclass_decorated_storr <- methods::setRefClass(
       .self$file_return_hash(hash)
     },
     file_tmp = function() {
-      dir_create(.self$path_tmp)
       file.path(.self$path_tmp, basename(tempfile()))
     },
-    gc = function(...) decst_gc(..., .self = .self),
-    get = function(key, ...) decst_get(key = key, ..., .self = .self),
+    gc = function(...) dcst_gc(..., .self = .self),
+    get = function(key, ...) dcst_get(key = key, ..., .self = .self),
+    get_value = function(hash, ...) {
+      dcst_get_value(hash = hash, ..., .self = .self)
+    },
     set = function(key, value, ...) {
-      decst_set(value = value, key = key, ..., .self = .self)
+      dcst_set(value = value, key = key, ..., .self = .self)
     },
     # Delegate to storr:
     archive_export = function(...) .self$storr$archive_export(...),
@@ -69,7 +74,6 @@ refclass_decorated_storr <- methods::setRefClass(
     fill = function(...) .self$storr$fill(...),
     flush_cache = function(...) .self$storr$flush_cache(...),
     get_hash = function(...) .self$storr$get_hash(...),
-    get_value = function(...) .self$storr$get_value(...),
     hash_object = function(...) .self$storr$hash_object(...),
     hash_raw = function(...) .self$storr$hash_raw(...),
     import = function(...) .self$storr$import(...),
@@ -91,54 +95,86 @@ refclass_decorated_storr <- methods::setRefClass(
   )
 )
 
-decst_gc <- function(..., .self) {
+dcst_gc <- function(..., .self) {
+  before <- .self$storr$list_hashes()
   .self$storr$gc(...)
+  after <- .self$storr$list_hashes()
+  removed <- setdiff(before, after)
+  unlink(.self$file_return_hash(removed))
 }
 
-decst_get <- function(key, ..., .self) {
+dcst_get <- function(key, ..., .self) {
   value <- .self$storr$get(key = key, ...)
-  decst_inner_get(value = value, key = key, .self = .self)
+  dcst_get_(value = value, key = key, .self = .self)
 }
 
-decst_inner_get <- function(value, key, .self) {
-  UseMethod("decst_inner_get")
+dcst_get_ <- function(value, key, .self) {
+  UseMethod("dcst_get_")
 }
 
-decst_inner_get.default <- function(value, key, .self) {
+dcst_get_.default <- function(value, key, .self) {
   value
 }
 
-decst_inner_get.return_fst <- function(value, key, .self) {
+dcst_get_.return_fst <- function(value, key, .self) {
   value
 }
 
-decst_inner_get.return_keras <- function(value, key, .self) {
+dcst_get_.return_keras <- function(value, key, .self) {
   value
 }
 
-decst_inner_get.return_rds <- function(value, key, .self) {
+dcst_get_.return_rds <- function(value, key, .self) {
   readRDS(.self$file_return_key(key))
 }
 
-decst_set <- function(value, key, ..., .self) {
-  UseMethod("decst_set")
+dcst_get_value <- function(hash, ..., .self) {
+  value <- .self$storr$get_value(hash = hash, ...)
+  dcst_get_value_(value = value, hash = hash, .self = .self)
 }
 
-decst_set.default <- function(value, key, ..., .self) {
+dcst_get_value_ <- function(value, hash, .self) {
+  UseMethod("dcst_get_value_")
+}
+
+dcst_get_value_.default <- function(value, hash, .self) {
+  value
+}
+
+dcst_get_value_.return_fst <- function(value, hash, .self) {
+  value
+}
+
+dcst_get_value_.return_keras <- function(value, hash, .self) {
+  value
+}
+
+dcst_get_value_.return_rds <- function(value, hash, .self) {
+  readRDS(.self$file_return_hash(hash))
+}
+
+dcst_set <- function(value, key, ..., .self) {
+  UseMethod("dcst_set")
+}
+
+dcst_set.default <- function(value, key, ..., .self) {
   .self$storr$set(key = key, value = value, ...)
 }
 
-decst_set.return_fst <- function(value, key, ..., .self) {
+dcst_set.return_fst <- function(value, key, ..., .self) {
   assert_pkg("fst")
+  .self$assert_dirs()
   .self$storr$set(key = key, value = value, ...)
 }
 
-decst_set.return_keras <- function(value, key, ..., .self) {
+dcst_set.return_keras <- function(value, key, ..., .self) {
   assert_pkg("keras")
+  .self$assert_dirs()
   .self$storr$set(key = key, value = value, ...)
 }
 
-decst_set.return_rds <- function(value, key, ..., .self) {
+dcst_set.return_rds <- function(value, key, ..., .self) {
+  .self$assert_dirs()
   r_version <- paste0(R.version$major, ".", R.version$minor)
   sufficient_r_version <- utils::compareVersion(r_version, "3.5.0") >= 0L
   stopifnot(sufficient_r_version)
@@ -151,10 +187,10 @@ decst_set.return_rds <- function(value, key, ..., .self) {
     compress = TRUE,
     refhook = NULL
   )
-  decst_set_move_tmp(key = key, value = value, tmp = tmp, .self = .self)
+  dcst_set_move_tmp(key = key, value = value, tmp = tmp, .self = .self)
 }
 
-decst_set_move_tmp <- function(key, value, tmp, .self) {
+dcst_set_move_tmp <- function(key, value, tmp, .self) {
   hash_tmp <- digest::digest(
     object = tmp,
     algo = .self$hash_algorithm,

@@ -1233,7 +1233,8 @@ dataset_wildcard <- function() {
   dataset_wildcard_()
 }
 
-#' @title Deprecated. Compute the initial pre-build metadata of a target or import.
+#' @title Deprecated. Compute the initial pre-build metadata
+#'   of a target or import.
 #' @description Deprecated on 2019-01-12.
 #' @details The metadata helps determine if the
 #' target is up to date or outdated. The metadata of imports
@@ -1355,7 +1356,7 @@ in_progress <- function(
     package = "drake",
     msg = "in_progress() in drake is deprecated. Use running() instead."
   )
-  running(path, search, cache, verbose )
+  running(path, search, cache, verbose)
 }
 
 #' @title Deprecated. Load an existing drake files system cache

@@ -582,6 +582,7 @@ cached <- function(
   if (is.null(cache)) {
     return(character(0))
   }
+  cache <- decorate_storr(cache)
   if (is.null(namespace)) {
     namespace <- cache$default_namespace
   }

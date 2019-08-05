@@ -68,7 +68,7 @@ See also \code{\link[=drake_cache]{drake_cache()}}.}
 
 \item{parallelism}{Character scalar, type of parallelism to use.
 For detailed explanations, see the
-\href{https://ropenscilabs.github.io/drake-manual/hpc.html}{high-performance computing chapter}
+\href{https://ropenscilabs.github.io/drake-manual/hpc.html}{high-performance computing chapter} # nolint
 of the user manual.
 
 You could also supply your own scheduler function

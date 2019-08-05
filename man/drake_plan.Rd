@@ -56,7 +56,7 @@ R code to produce it.
 \details{
 Besides \code{"target"} and \code{"command"}, \code{\link[=drake_plan]{drake_plan()}}
 understands a special set of optional columns. For details, visit
-\url{https://ropenscilabs.github.io/drake-manual/plans.html#special-custom-columns-in-your-plan}
+\url{https://ropenscilabs.github.io/drake-manual/plans.html#special-custom-columns-in-your-plan} # nolint
 }
 \section{Columns}{
 

@@ -8,7 +8,8 @@
 \description{
 drake is a pipeline toolkit
 (\url{https://github.com/pditommaso/awesome-pipeline})
-and a scalable, R-focused solution for reproducibility and high-performance computing.
+and a scalable, R-focused solution for reproducibility
+and high-performance computing.
 }
 \examples{
 \dontrun{

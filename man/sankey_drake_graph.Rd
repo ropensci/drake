@@ -123,7 +123,7 @@ config <- drake_config(my_plan)
 if (requireNamespace("networkD3", quietly = TRUE)) {
 if (requireNamespace("visNetwork", quietly = TRUE)) {
 # Plot the network graph representation of the workflow.
-sankey_drake_graph(config, width = '100\%') # The width is passed to visNetwork
+sankey_drake_graph(config, width = '100\%')
 # Show the legend separately.
 visNetwork::visNetwork(nodes = drake::legend_nodes())
 make(my_plan) # Run the project, build the targets.

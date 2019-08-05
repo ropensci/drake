@@ -8,7 +8,8 @@ rs_addin_r_make(r_args = list())
 }
 \arguments{
 \item{r_args}{List of arguments to \code{r_fn}, not including \code{func} or \code{args}.
-Example: \code{r_make(r_fn = callr::r_bg, r_args = list(stdout = "stdout.log"))}.}
+Example:
+\code{r_make(r_fn = callr::r_bg, r_args = list(stdout = "stdout.log"))}.}
 }
 \value{
 Nothing.
