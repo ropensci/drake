@@ -849,7 +849,7 @@ is_trigger_call <- function(expr) {
 #' }
 return_fst <- function(value) {
   assert_pkg("fst")
-  return_special_value(value = x, class = "return_fst")
+  return_special_value(value = value, class = "return_fst")
 }
 
 #' @rdname return_fst
@@ -857,14 +857,14 @@ return_fst <- function(value) {
 #' @inheritParams return_fst
 return_keras <- function(value) {
   assert_pkg("keras")
-  return_special_value(value = x, class = "return_keras")
+  return_special_value(value = value, class = "return_keras")
 }
 
 #' @rdname return_fst
 #' @export
 #' @inheritParams return_fst
 return_rds <- function(value) {
-  return_special_value(value = x, class = "return_rds")
+  return_special_value(value = value, class = "return_rds")
 }
 
 return_special_value <- function(value, class) {
