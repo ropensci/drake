@@ -66,7 +66,7 @@ dependency_hash <- function(target, config) {
   deps <- unique(deps)
   deps <- sort(deps)
   out <- ht_memo(
-    ht = config$ht_get_hash,
+    ht = config$cache$ht_hash,
     x = deps,
     fun = self_hash,
     config = config
@@ -102,7 +102,7 @@ input_file_hash <- function(
     return("")
   }
   out <- ht_memo(
-    ht = config$ht_get_hash,
+    ht = config$cache$ht_hash,
     x = files,
     fun = storage_hash,
     config = config,

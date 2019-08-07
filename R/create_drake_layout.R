@@ -18,8 +18,7 @@ create_drake_layout <- function(
     console_log_file = console_log_file,
     trigger = cdl_parse_trigger(trigger = trigger, envir = envir),
     allowed_globals_imports = ht_new(import_names),
-    allowed_globals_targets = ht_new(c(import_names, plan$target)),
-    ht_targets = ht_new(plan$target)
+    allowed_globals_targets = ht_new(c(import_names, plan$target))
   )
   imports <- cdl_prepare_imports(config)
   imports_kernel <- cdl_imports_kernel(config, imports)
@@ -169,13 +168,14 @@ cdl_analyze_commands <- function(config) {
     X = layout,
     FUN = cdl_prepare_layout,
     jobs = config$jobs,
-    config = config
+     config = config,
+    ht_targets = ht_new(config$plan$target)
   )
   names(out) <- config$plan$target
   out
 }
 
-cdl_prepare_layout <- function(config, layout){
+cdl_prepare_layout <- function(config, layout, ht_targets){
   log_msg("analyze", target = layout$target, config = config)
   layout$deps_build <- cdl_command_dependencies(
     command = layout$command,
@@ -205,7 +205,7 @@ cdl_prepare_layout <- function(config, layout){
   }
   for (field in c("deps_build", "deps_condition", "deps_change")) {
     layout[[field]]$memory <- ht_filter(
-      ht = config$ht_targets,
+      ht = ht_targets,
       x = layout[[field]]$globals
     )
   }

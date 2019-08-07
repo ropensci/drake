@@ -649,11 +649,6 @@ drake_config <- function(
   caching <- match.arg(caching)
   recover <- as.logical(recover)
   recoverable <- as.logical(recoverable)
-  ht_encode_path <- ht_new()
-  ht_decode_path <- ht_new()
-  ht_encode_namespaced <- ht_new()
-  ht_decode_namespaced <- ht_new()
-  progress_hashmap <- progress_hashmap(cache)
   out <- list(
     envir = envir,
     eval = new.env(parent = envir),
@@ -666,10 +661,6 @@ drake_config <- function(
     lib_loc = lib_loc,
     prework = prework,
     layout = layout,
-    ht_encode_path = ht_encode_path,
-    ht_decode_path = ht_decode_path,
-    ht_encode_namespaced = ht_encode_namespaced,
-    ht_decode_namespaced = ht_decode_namespaced,
     graph = graph,
     seed = seed,
     trigger = trigger,
@@ -681,7 +672,6 @@ drake_config <- function(
     skip_imports = skip_imports,
     skip_safety_checks = skip_safety_checks,
     log_progress = log_progress,
-    progress_hashmap = progress_hashmap,
     lazy_load = lazy_load,
     session_info = session_info,
     cache_log_file = cache_log_file,
@@ -750,17 +740,17 @@ get_previous_seed <- function(cache) {
   }
 }
 
-progress_hashmap <- function(cache) {
+ht_progress <- function(hash_algorithm) {
   keys <- c("running", "done", "failed")
-  out <- lapply(keys, progress_hash, cache = cache)
+  out <- lapply(keys, progress_hash, hash_algorithm = hash_algorithm)
   names(out) <- keys
   out
 }
 
-progress_hash <- function(key, cache) {
+progress_hash <- function(key, hash_algorithm) {
   out <- digest::digest(
     key,
-    algo = cache$hash_algorithm,
+    algo = hash_algorithm,
     serialize = FALSE
   )
   gsub("^.", substr(key, 1, 1), out)

@@ -76,37 +76,41 @@ standardize_key <- function(text) {
 }
 
 encode_path <- function(x, config = NULL) {
-  if (is.null(config) || is.null(config$ht_encode_path)) {
+  if (is.null(config) || is.null(config$cache$ht_encode_path)) {
     reencode_path(x)
   } else {
-    ht_memo(ht = config$ht_encode_path, x = x, fun = reencode_path)
+    ht_memo(ht = config$cache$ht_encode_path, x = x, fun = reencode_path)
   }
 }
 
 decode_path <- function(x, config = NULL) {
-  if (is.null(config) || is.null(config$ht_decode_path)) {
+  if (is.null(config) || is.null(config$cache$ht_decode_path)) {
     redecode_path(x)
   } else {
-    ht_memo(ht = config$ht_decode_path, x = x, fun = redecode_path)
+    ht_memo(ht = config$cache$ht_decode_path, x = x, fun = redecode_path)
   }
 }
 
 encode_namespaced <- function(x, config = NULL) {
-  if (is.null(config) || is.null(config$ht_encode_namespaced)) {
+  if (is.null(config) || is.null(config$cache$ht_encode_namespaced)) {
     reencode_namespaced(x)
   } else {
     ht_memo(
-      ht = config$ht_encode_namespaced, x = x, fun = reencode_namespaced
+      ht = config$cache$ht_encode_namespaced,
+      x = x,
+      fun = reencode_namespaced
     )
   }
 }
 
 decode_namespaced <- function(x, config = NULL) {
-  if (is.null(config) || is.null(config$ht_encode_namespaced)) {
+  if (is.null(config) || is.null(config$cache$ht_encode_namespaced)) {
     redecode_namespaced(x)
   } else {
     ht_memo(
-      ht = config$ht_decode_namespaced, x = x, fun = redecode_namespaced
+      ht = config$cache$ht_decode_namespaced,
+      x = x,
+      fun = redecode_namespaced
     )
   }
 }

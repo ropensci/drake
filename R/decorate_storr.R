@@ -7,17 +7,21 @@ decorate_storr <- function(storr) {
   }
   hash_algorithm <- storr$driver$hash_algorithm %||% "xxhash64"
   path <- storr$driver$path %||% default_cache_path()
-  path_return <- file.path(path, "drake", "return")
-  path_tmp <- file.path(path, "drake", "tmp")
   refclass_decorated_storr$new(
     storr = storr,
     driver = storr$driver,
     default_namespace = storr$default_namespace,
     envir = storr$envir,
     hash_algorithm = hash_algorithm,
+    ht_encode_path = ht_new(),
+    ht_decode_path = ht_new(),
+    ht_encode_namespaced = ht_new(),
+    ht_decode_namespaced = ht_new(),
+    ht_hash = ht_new(),
+    ht_progress = ht_progress(hash_algorithm),
     path = path,
-    path_return = path_return,
-    path_tmp = path_tmp
+    path_return = file.path(path, "drake", "return"),
+    path_tmp = file.path(path, "drake", "tmp")
   )
 }
 
@@ -28,10 +32,16 @@ refclass_decorated_storr <- methods::setRefClass(
     "driver",
     "default_namespace",
     "envir",
+    "hash_algorithm",
+    "ht_encode_path",
+    "ht_decode_path",
+    "ht_encode_namespaced",
+    "ht_decode_namespaced",
+    "ht_hash",
+    "ht_progress",
     "path",
     "path_return",
-    "path_tmp",
-    "hash_algorithm"
+    "path_tmp"
   ),
   # Tedious, but better than inheritance, which would
   # prevent users from supplying their own true `storr`s.
@@ -58,6 +68,9 @@ refclass_decorated_storr <- methods::setRefClass(
     },
     set = function(key, value, ...) {
       dcst_set(value = value, key = key, ..., .self = .self)
+    },
+    reset_ht_hash = function() {
+      ht_clear(.self$ht_hash)
     },
     # Delegate to storr:
     archive_export = function(...) .self$storr$archive_export(...),

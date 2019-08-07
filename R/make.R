@@ -229,11 +229,17 @@ make <- function(
       recoverable = recoverable
     )
   }
-  assert_config_not_plan(config)
+  runtime_checks(config = config)
   config$running_make <- TRUE
-  initialize_session(config = config)
-  config$ht_get_hash <- ht_new() # Memoize getting hashes from the cache.
-  on.exit(ht_clear(config$ht_get_hash)) # Needs to be empty afterwards.
+  config$cache$reset_ht_hash()
+  on.exit(config$cache$reset_ht_hash())
+  config$cache$set(key = "seed", value = config$seed, namespace = "session")
+  config$eval[[drake_envir_marker]] <- TRUE
+  if (config$log_progress) {
+    config$cache$clear(namespace = "progress")
+  }
+  drake_set_session_info(cache = config$cache, full = config$session_info)
+  do_prework(config = config, verbose_packages = config$verbose)
   if (!config$skip_imports) {
     process_imports(config)
   }
@@ -250,7 +256,16 @@ make <- function(
   if (!config$skip_targets) {
     process_targets(config)
   }
-  conclude_session(config)
+  drake_cache_log_file_(
+    file = config$cache_log_file,
+    cache = config$cache,
+    jobs = config$jobs_preprocess
+  )
+  remove(list = names(config$eval), envir = config$eval)
+  config$cache$flush_cache()
+  if (config$garbage_collection) {
+    gc()
+  }
   log_msg("end make()", config = config)
   invisible()
 }
@@ -299,18 +314,6 @@ outdated_subgraph <- function(config) {
   outdated <- outdated(config, do_prework = FALSE, make_imports = FALSE)
   log_msg("isolate oudated targets", config = config)
   igraph::induced_subgraph(graph = config$graph, vids = outdated)
-}
-
-initialize_session <- function(config) {
-  runtime_checks(config = config)
-  config$cache$set(key = "seed", value = config$seed, namespace = "session")
-  config$eval[[drake_envir_marker]] <- TRUE
-  if (config$log_progress) {
-    config$cache$clear(namespace = "progress")
-  }
-  drake_set_session_info(cache = config$cache, full = config$session_info)
-  do_prework(config = config, verbose_packages = config$verbose)
-  invisible()
 }
 
 drake_set_session_info <- function(
@@ -392,20 +395,6 @@ do_prework <- function(config, verbose_packages) {
   invisible()
 }
 
-conclude_session <- function(config) {
-  drake_cache_log_file_(
-    file = config$cache_log_file,
-    cache = config$cache,
-    jobs = config$jobs_preprocess
-  )
-  remove(list = names(config$eval), envir = config$eval)
-  config$cache$flush_cache()
-  if (config$garbage_collection) {
-    gc()
-  }
-  invisible()
-}
-
 # Generate a flat csv log file to represent the state of the cache.
 drake_cache_log_file_ <- function(
   file = "drake_cache.csv",
@@ -456,6 +445,7 @@ check_make_call <- function(call) {
 }
 
 runtime_checks <- function(config) {
+  assert_config_not_plan(config)
   if (identical(config$skip_safety_checks, TRUE)) {
     return(invisible())
   }

@@ -422,6 +422,6 @@ set_progress <- function(target, meta, value, config) {
   config$cache$driver$set_hash(
     key = target,
     namespace = "progress",
-    hash = config$progress_hashmap[[value]]
+    hash = config$cache$ht_progress[[value]]
   )
 }
