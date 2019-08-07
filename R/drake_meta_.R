@@ -74,7 +74,7 @@ dependency_hash <- function(target, config) {
   out <- paste(out, collapse = "")
   digest::digest(
     out,
-    algo = config$hash_algorithm,
+    algo = config$cache$hash_algorithm,
     serialize = FALSE
   )
 }
@@ -111,7 +111,7 @@ input_file_hash <- function(
   out <- paste(out, collapse = "")
   digest::digest(
     out,
-    algo = config$hash_algorithm,
+    algo = config$cache$hash_algorithm,
     serialize = FALSE
   )
 }
@@ -136,7 +136,7 @@ output_file_hash <- function(
   out <- paste(out, collapse = "")
   digest::digest(
     out,
-    algo = config$hash_algorithm,
+    algo = config$cache$hash_algorithm,
     serialize = FALSE
   )
 }
@@ -277,7 +277,7 @@ rehash_dir <- function(dir, config) {
   out <- paste(out, collapse = "")
   digest::digest(
     out,
-    algo = config$hash_algorithm,
+    algo = config$cache$hash_algorithm,
     serialize = FALSE
   )
 }
@@ -285,7 +285,7 @@ rehash_dir <- function(dir, config) {
 rehash_file <- function(file, config) {
   digest::digest(
     object = file,
-    algo = config$hash_algorithm,
+    algo = config$cache$hash_algorithm,
     file = TRUE,
     serialize = FALSE
   )

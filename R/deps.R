@@ -210,14 +210,14 @@ deps_profile <- function(
   old_values <- unname(old_values)
   old_values[1] <- digest::digest(
     paste(old_values[1], collapse = ""),
-    algo = config$hash_algorithm,
+    algo = config$cache$hash_algorithm,
     serialize = FALSE
   )
   layout <- config$layout[[target]]
   new_values <- c(
     digest::digest(
       paste(layout$command_standardized, collapse = ""),
-      algo = config$hash_algorithm,
+      algo = config$cache$hash_algorithm,
       serialize = FALSE
     ),
     dependency_hash(target, config),

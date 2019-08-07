@@ -178,7 +178,7 @@ get_outfile_checksum <- function(target, config) {
   out <- paste(out, collapse = "")
   digest::digest(
     out,
-    algo = config$hash_algorithm,
+    algo = config$cache$hash_algorithm,
     serialize = FALSE
   )
 }

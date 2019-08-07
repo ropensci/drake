@@ -623,7 +623,6 @@ drake_config <- function(
     cache <- decorate_storr(cache)
   }
   cache_path <- force_cache_path(cache)
-  hash_algorithm <- cache$hash_algorithm
   seed <- choose_seed(supplied = seed, cache = cache)
   if (identical(force, TRUE)) {
     drake_set_session_info(cache = cache, full = session_info)
@@ -661,7 +660,6 @@ drake_config <- function(
     eval = new.env(parent = envir),
     cache = cache,
     cache_path = cache_path,
-    hash_algorithm = hash_algorithm,
     parallelism = parallelism,
     jobs = jobs,
     jobs_preprocess = jobs_preprocess,
