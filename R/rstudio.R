@@ -67,7 +67,7 @@ rs_addin_loadd <- function(context = NULL){
     "Loading target ",
     shQuote(target),
     " into global evironment.\nCache: ",
-    shQuote(cache$driver$path)
+    shQuote(cache$path)
   )
   loadd(
     list = target,

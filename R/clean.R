@@ -110,7 +110,7 @@ clean <- function(
       namespaces = target_namespaces_()
     )
   }
-  if (garbage_collection && abort_gc(cache$driver$path)) {
+  if (garbage_collection && abort_gc(cache$path)) {
     return(invisible()) # tested manually in test-always-skipped.R # nocov
   }
   if (!length(targets) && is.null(c(...))) {
@@ -270,7 +270,7 @@ drake_gc <- function(
 
 rm_bad_cache_filenames <- function(cache) {
   if (keys_are_mangled(cache)) {
-    files <- list.files(path = cache$driver$path, recursive = TRUE)
+    files <- list.files(path = cache$path, recursive = TRUE)
     keep <- grepl(pattern = "^[-_./\\0-9a-zA-Z]*$", x = files)
     unlink(files[!keep], recursive = TRUE)
   }
@@ -350,7 +350,7 @@ rescue_cache <- function(
     )
   }
   if (garbage_collection) {
-    if (abort_gc(cache$driver$path)) {
+    if (abort_gc(cache$path)) {
       return(invisible()) # tested manually in test-always-skipped.R # nocov
     }
     cache$gc()

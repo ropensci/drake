@@ -99,7 +99,7 @@ drake_history <- function(
   }
   cache <- decorate_storr(cache)
   if (is.null(history)) {
-    history <- default_history_queue(force_cache_path(cache))
+    history <- default_history_queue(cache)
   }
   from_txtq <- history$list()
   from_cache <- lapply(from_txtq$message, history_from_cache, cache = cache)
@@ -152,8 +152,8 @@ drake_history <- function(
   weak_as_tibble(out)
 }
 
-default_history_queue <- function(cache_path) {
-  cache_dir <- dirname(cache_path)
+default_history_queue <- function(cache) {
+  cache_dir <- dirname(cache$path)
   history_path <- file.path(cache_dir, ".drake_history")
   txtq::txtq(history_path)
 }

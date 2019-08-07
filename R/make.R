@@ -490,7 +490,7 @@ subdirectory_warning <- function(config) {
   if (identical(Sys.getenv("drake_warn_subdir"), "false")) {
     return()
   }
-  dir_cache <- config$cache$driver$path
+  dir_cache <- config$cache$path
   if (is.null(dir_cache)) {
     return()
   }
@@ -523,7 +523,7 @@ subdirectory_warning <- function(config) {
 
 assert_outside_cache <- function(config) {
   work_dir <- normalizePath(getwd(), mustWork = FALSE)
-  cache_dir <- normalizePath(config$cache_path, mustWork = FALSE)
+  cache_dir <- normalizePath(config$cache$path, mustWork = FALSE)
   if (identical(work_dir, cache_dir)) {
     stop(
       "cannot run make() from inside the cache: ", shQuote(cache_dir),

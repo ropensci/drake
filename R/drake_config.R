@@ -622,7 +622,6 @@ drake_config <- function(
   } else {
     cache <- decorate_storr(cache)
   }
-  cache_path <- force_cache_path(cache)
   seed <- choose_seed(supplied = seed, cache = cache)
   if (identical(force, TRUE)) {
     drake_set_session_info(cache = cache, full = session_info)
@@ -645,7 +644,7 @@ drake_config <- function(
     console_log_file = console_log_file,
     verbose = verbose
   )
-  history <- initialize_history(history, cache_path)
+  history <- initialize_history(history, cache)
   lazy_load <- parse_lazy_arg(lazy_load)
   caching <- match.arg(caching)
   recover <- as.logical(recover)
@@ -659,7 +658,6 @@ drake_config <- function(
     envir = envir,
     eval = new.env(parent = envir),
     cache = cache,
-    cache_path = cache_path,
     parallelism = parallelism,
     jobs = jobs,
     jobs_preprocess = jobs_preprocess,
@@ -738,24 +736,6 @@ memory_strategies <- function() {
   )
 }
 
-force_cache_path <- function(cache = NULL) {
-  cache_path_(cache) %||% default_cache_path()
-}
-
-# Return the file path where the cache is stored, if applicable.
-cache_path_ <- function(cache = NULL) {
-  if (is.null(cache)) {
-    NULL
-  }
-  is_cache <- inherits(cache, "refclass_decorated_storr") ||
-    inherits(cache, "storr")
-  if (is_cache) {
-    cache$driver$path
-  } else {
-    NULL
-  }
-}
-
 choose_seed <- function(supplied, cache) {
   supplied %||%
     get_previous_seed(cache = cache) %||%
@@ -786,9 +766,9 @@ progress_hash <- function(key, cache) {
   gsub("^.", substr(key, 1, 1), out)
 }
 
-initialize_history <- function(history, cache_path) {
+initialize_history <- function(history, cache) {
   if (identical(history, TRUE)) {
-    history <- default_history_queue(cache_path)
+    history <- default_history_queue(cache)
   }
   if (!is.null(history) && !identical(history, FALSE)) {
     stopifnot(is_history(history))

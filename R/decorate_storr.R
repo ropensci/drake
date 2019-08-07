@@ -6,7 +6,7 @@ decorate_storr <- function(storr) {
     stop("not a storr", call. = FALSE)
   }
   hash_algorithm <- storr$driver$hash_algorithm %||% "xxhash64"
-  path <- force_cache_path(storr)
+  path <- storr$driver$path %||% default_cache_path()
   path_return <- file.path(path, "drake", "return")
   path_tmp <- file.path(path, "drake", "tmp")
   refclass_decorated_storr$new(
