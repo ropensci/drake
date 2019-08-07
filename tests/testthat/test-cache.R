@@ -591,7 +591,11 @@ test_with_dir("Pick the hash", {
   expect_true(file.exists("new"))
   y <- storr::storr_rds(path = "new")
   expect_true(file.exists("new"))
-  expect_equal(y$driver$hash_algorithm, "murmur32")
+  expect_equal(x$hash_algorithm, "murmur32")
+  y <- storr::storr_rds(path = "new")
+  z <- drake_cache("new")
+  expect_true(file.exists("new"))
+  expect_equal(z$hash_algorithm, "murmur32")
 })
 
 test_with_dir("totally off the default cache", {
@@ -658,7 +662,7 @@ test_with_dir("use two differnt file system caches", {
 
   expect_equal(o1, character(0))
   expect_equal(
-    cache$driver$hash_algorithm,
+    cache$hash_algorithm,
     "murmur32"
   )
 
@@ -691,7 +695,7 @@ test_with_dir("use two differnt file system caches", {
   expect_equal(o2, targ)
   expect_equal(o3, character(0))
   expect_equal(
-    cache2$driver$hash_algorithm,
+    cache2$hash_algorithm,
     "crc32"
   )
   expect_false(file.exists(".drake"))
@@ -703,9 +707,9 @@ test_with_dir("use two differnt file system caches", {
 
 test_with_dir("storr_environment is usable", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  x <- storr_environment(hash_algorithm = "murmur32")
+  x <- decorate_storr(storr_environment(hash_algorithm = "murmur32"))
   expect_false(file.exists(default_cache_path()))
-  expect_equal(x$driver$hash_algorithm, "murmur32")
+  expect_equal(x$hash_algorithm, "murmur32")
   expect_error(drake_get_session_info(cache = x))
   pln <- drake_plan(y = 1)
   make(pln, cache = x, verbose = 0L, session_info = FALSE)
@@ -748,7 +752,7 @@ test_with_dir("arbitrary storr in-memory cache", {
     lm(y ~ x3, data = d)
   }
   expect_false(file.exists(default_cache_path()))
-  expect_equal(con$cache$driver$hash_algorithm, "murmur32")
+  expect_equal(con$cache$hash_algorithm, "murmur32")
 
   expect_equal(cached(verbose = 0L), character(0))
   targets <- con$plan$target

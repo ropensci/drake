@@ -5,7 +5,7 @@ decorate_storr <- function(storr) {
   if (!inherits(storr, "storr")) {
     stop("not a storr", call. = FALSE)
   }
-  hash_algorithm <- cache_hash_algorithm(storr)
+  hash_algorithm <- storr$driver$hash_algorithm %||% "xxhash64"
   path <- force_cache_path(storr)
   path_return <- file.path(path, "drake", "return")
   path_tmp <- file.path(path, "drake", "tmp")

@@ -1323,7 +1323,7 @@ memo_expr <- function(expr, cache, ...) {
     return(force(expr))
   }
   lang <- match.call(expand.dots = FALSE)$expr
-  key <- digest::digest(list(lang, ...), algo = cache_hash_algorithm(cache))
+  key <- digest::digest(list(lang, ...), algo = cache$hash_algorithm)
   if (cache$exists(key = key, namespace = "memoize")) {
     return(cache$get(key = key, namespace = "memoize", use_cache = TRUE))
   }
@@ -1335,10 +1335,6 @@ memo_expr <- function(expr, cache, ...) {
     use_cache = TRUE
   )
   value
-}
-
-cache_hash_algorithm <- function(cache) {
-  cache$driver$hash_algorithm %||% "xxhash64"
 }
 
 drake_tidyselect_cache <- function(

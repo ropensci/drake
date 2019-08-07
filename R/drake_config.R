@@ -623,7 +623,7 @@ drake_config <- function(
     cache <- decorate_storr(cache)
   }
   cache_path <- force_cache_path(cache)
-  hash_algorithm <- cache_hash_algorithm(cache)
+  hash_algorithm <- cache$hash_algorithm
   seed <- choose_seed(supplied = seed, cache = cache)
   if (identical(force, TRUE)) {
     drake_set_session_info(cache = cache, full = session_info)
@@ -782,7 +782,7 @@ progress_hashmap <- function(cache) {
 progress_hash <- function(key, cache) {
   out <- digest::digest(
     key,
-    algo = cache_hash_algorithm(cache),
+    algo = cache$hash_algorithm,
     serialize = FALSE
   )
   gsub("^.", substr(key, 1, 1), out)
