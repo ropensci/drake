@@ -283,3 +283,11 @@ random_tempdir <- function() {
   dir.create(dir)
   dir
 }
+
+default_on_select <- function(){
+  js <- "
+  function(props) {
+    alert('selected node with on_select_col: ' +
+            this.body.data.nodes.get(properties.nodes[0]).on_select_col);
+  }"
+}
