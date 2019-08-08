@@ -706,9 +706,10 @@ test_with_dir("storr_environment is usable", {
   config <- drake_config(
     pln, cache = x, verbose = 0L, session_info = FALSE)
   expect_equal(cached(cache = x), "y")
-  expect_false(file.exists(default_cache_path()))
+  cached_data <- file.path(default_cache_path(), "data")
+  expect_false(file.exists(cached_data))
   expect_equal(outdated(config), character(0))
-  expect_false(file.exists(default_cache_path()))
+  expect_false(file.exists(cached_data))
 })
 
 test_with_dir("arbitrary storr in-memory cache", {
@@ -721,6 +722,7 @@ test_with_dir("arbitrary storr in-memory cache", {
   cache <- storr::storr_environment(hash_algorithm = "murmur32")
   load_mtcars_example(envir = envir)
   my_plan <- envir$my_plan
+  my_plan <- my_plan[my_plan$target != "report", ]
   make(
     my_plan,
     envir = envir,
@@ -741,52 +743,47 @@ test_with_dir("arbitrary storr in-memory cache", {
     d$x3 <- d$x ^ 3
     lm(y ~ x3, data = d)
   }
-  expect_false(file.exists(default_cache_path()))
+  cached_data <- file.path(default_cache_path(), "data")
+  expect_false(file.exists(cached_data))
   expect_equal(con$cache$hash_algorithm, "murmur32")
 
-  expect_equal(cached(verbose = 0L), character(0))
-  targets <- con$plan$target
+  targets <- my_plan$target
   expect_true(all(targets %in% cached(cache = cache, verbose = 0L)))
-  expect_false(file.exists(default_cache_path()))
+  expect_false(file.exists(cached_data))
 
-  expect_error(drake_get_session_info(verbose = 0L))
   expect_true(is.list(drake_get_session_info(cache = cache, verbose = 0L)))
-  expect_false(file.exists(default_cache_path()))
+  expect_false(file.exists(cached_data))
 
-  imp <- setdiff(cached(targets_only = FALSE), cached(targets_only = TRUE))
-  expect_equal(length(imp), 0)
   imp <- setdiff(cached(cache = cache, targets_only = FALSE),
                  cached(cache = cache, targets_only = TRUE))
   expect_true(length(imp) > 0)
-  expect_false(file.exists(default_cache_path()))
+  expect_false(file.exists(cached_data))
 
-  expect_equal(length(cached(verbose = 0L)), 0)
   expect_true(length(cached(cache = cache)) > 0)
-  expect_false(file.exists(default_cache_path()))
+  expect_false(file.exists(cached_data))
 
-  expect_equal(nrow(build_times(verbose = 0L)), 0)
   expect_true(nrow(build_times(cache = cache)) > 0)
-  expect_false(file.exists(default_cache_path()))
+  expect_false(file.exists(cached_data))
 
   o1 <- outdated(con)
-  expect_equal(length(o1), 7)
-  expect_false(file.exists(default_cache_path()))
+  expect_equal(length(o1), 6)
+  expect_false(file.exists(cached_data))
 
   p1 <- progress(verbose = 0L)
   unlink(default_cache_path(), recursive = TRUE)
   p2 <- progress(cache = cache, verbose = 0L)
   expect_true(nrow(p2) > nrow(p1))
-  expect_false(file.exists(default_cache_path()))
+  expect_false(file.exists(cached_data))
 
   expect_error(readd(small, verbose = 0L))
   expect_true(is.data.frame(readd(small, cache = cache, verbose = 0L)))
-  expect_false(file.exists(default_cache_path()))
+  expect_false(file.exists(cached_data))
 
   expect_error(loadd(large, verbose = 0L))
   expect_silent(loadd(large, cache = cache, verbose = 0L))
   expect_true(nrow(large) > 0)
   rm(large)
-  expect_false(file.exists(default_cache_path()))
+  expect_false(file.exists(cached_data))
 })
 
 test_with_dir("safe_get", {

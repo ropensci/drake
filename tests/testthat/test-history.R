@@ -122,3 +122,28 @@ test_with_dir("file history", {
     expect_equal(out[[x]], x)
   }
 })
+
+test_with_dir("migrate history", {
+  plan <- drake_plan(x = 1)
+  history <- txtq::txtq(".drake_history")
+  make(plan, history = history)
+  expect_true(file.exists(".drake_history"))
+  make(plan)
+  expect_false(file.exists(".drake_history"))
+  expect_true(
+    file.exists(file.path(default_cache_path(), "drake", "history"))
+  )
+  expect_equal(nrow(drake_history()), 1L)
+})
+
+test_with_dir("migrate history with drake_history()", {
+  plan <- drake_plan(x = 1)
+  history <- txtq::txtq(".drake_history")
+  make(plan, history = history)
+  expect_true(file.exists(".drake_history"))
+  drake_history()
+  expect_false(file.exists(".drake_history"))
+  expect_true(
+    file.exists(file.path(default_cache_path(), "drake", "history"))
+  )
+})

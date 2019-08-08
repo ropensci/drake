@@ -757,6 +757,7 @@ progress_hash <- function(key, hash_algorithm) {
 }
 
 initialize_history <- function(history, cache) {
+  migrate_history(history, cache)
   if (identical(history, TRUE)) {
     history <- default_history_queue(cache)
   }
@@ -764,6 +765,17 @@ initialize_history <- function(history, cache) {
     stopifnot(is_history(history))
   }
   history
+}
+
+migrate_history <- function(history, cache) {
+  if (is_history(history)) {
+    return()
+  }
+  old_path <- file.path(dirname(cache$path), ".drake_history")
+  if (file.exists(old_path)) {
+    dir_create(file.path(cache$path, "drake"))
+    file.rename(old_path, file.path(cache$path, "drake", "history"))
+  }
 }
 
 is_history <- function(history) {

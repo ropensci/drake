@@ -98,6 +98,7 @@ drake_history <- function(
     stop("cannot find drake cache.")
   }
   cache <- decorate_storr(cache)
+  migrate_history(history, cache)
   if (is.null(history)) {
     history <- default_history_queue(cache)
   }
@@ -153,8 +154,7 @@ drake_history <- function(
 }
 
 default_history_queue <- function(cache) {
-  cache_dir <- dirname(cache$path)
-  history_path <- file.path(cache_dir, ".drake_history")
+  history_path <- file.path(cache$path, "drake", "history")
   txtq::txtq(history_path)
 }
 
