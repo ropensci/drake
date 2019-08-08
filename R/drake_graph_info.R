@@ -133,7 +133,8 @@ drake_graph_info <- function(
   group = NULL,
   clusters = NULL,
   show_output_files = TRUE,
-  hover = FALSE
+  hover = FALSE,
+  on_select_col = NULL
 ) {
   log_msg("begin drake_graph_info()", config = config)
   on.exit(log_msg("end drake_graph_info()", config = config), add = TRUE)
@@ -150,6 +151,7 @@ drake_graph_info <- function(
   config$group <- as.character(group)
   config$clusters <- as.character(clusters)
   config$hover <- hover
+  config$on_select_col <- on_select_col
   config$file_out <- lapply(all_targets(config), function(target) {
     config$layout[[target]]$deps_build$file_out
   })
@@ -195,6 +197,10 @@ drake_graph_info <- function(
   if (nrow(config$edges)) {
     config$edges$arrows <- "to"
   }
+  if (!is.null(config$on_select_col)){
+    config$nodes$on_select_col <- get_select_col(config)
+  }
+
   if (length(config$group)) {
     config <- cluster_nodes(config)
   }
@@ -290,6 +296,10 @@ resolve_build_times <- function(build_times) {
     }
   }
   build_times
+}
+
+get_select_col <- function(config) {
+  get_cluster_grouping(config, config$on_select_col)
 }
 
 get_cluster_grouping <- function(config, group) {
@@ -412,6 +422,11 @@ cluster_nodes <- function(config) {
       config = list(nodes = new_node, font_size = config$font_size))
     new_node$label <- new_node$id <-
       paste0(config$group, ": ", cluster)
+
+    if (!is.null(config$on_select_col)){
+      new_node$on_select_col <- config$nodes[index, "on_select_col"][[1]]
+    }
+
     matching <- config$nodes$id[index]
     new_node$title <- paste(matching, collapse = ", ")
     new_node$title <- crop_text(new_node$title, width = hover_width)
