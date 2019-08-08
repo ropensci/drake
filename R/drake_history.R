@@ -154,7 +154,9 @@ drake_history <- function(
 }
 
 default_history_queue <- function(cache) {
-  history_path <- file.path(cache$path, "drake", "history")
+  history_dir <- file.path(cache$path, "drake")
+  dir_create(history_dir)
+  history_path <- file.path(history_dir, "history")
   txtq::txtq(history_path)
 }
 
