@@ -28,3 +28,23 @@ test_with_dir("hash tables work", {
   ht_clear(y)
   expect_equal(ht_list(y), character(0))
 })
+
+test_with_dir("hash-table-based memoization", {
+  f <- function(x) {
+    file.create(x)
+    x
+  }
+  ht_memo(NULL, x = "a", fun = f)
+  expect_true(file.exists("a"))
+  unlink("a")
+  expect_false(file.exists("a"))
+  ht_memo(NULL, x = "a", fun = f)
+  expect_true(file.exists("a"))
+  ht <- ht_new()
+  ht_memo(ht, x = "a", fun = f)
+  expect_true(file.exists("a"))
+  unlink("a")
+  expect_false(file.exists("a"))
+  ht_memo(ht, x = "a", fun = f)
+  expect_false(file.exists("a"))
+})

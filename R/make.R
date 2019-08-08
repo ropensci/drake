@@ -481,9 +481,6 @@ subdirectory_warning <- function(config) {
     return()
   }
   dir_cache <- config$cache$path
-  if (is.null(dir_cache)) {
-    return()
-  }
   if (!identical(basename(dir_cache), basename(default_cache_path()))) {
     return()
   }
