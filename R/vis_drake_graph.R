@@ -75,7 +75,9 @@ vis_drake_graph <- function(
     group = group,
     clusters = clusters,
     show_output_files = show_output_files,
-    hover = hover
+    hover = hover,
+    on_select = NULL,
+    on_select_col = NULL,
   )
   if (is.null(main)) {
     main <- graph_info$default_title
@@ -186,6 +188,7 @@ render_drake_graph <- function(
   navigationButtons = TRUE, # nolint
   ncol_legend = 1,
   collapse = TRUE,
+  on_select = NULL,
   ...
 ) {
   assert_pkg("visNetwork")
