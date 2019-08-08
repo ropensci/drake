@@ -21,6 +21,7 @@ addons:
 
 r_packages:
   - clustermq
+  - covr
   - downloader
   - forcats
   - ggplot2
@@ -28,7 +29,6 @@ r_packages:
   - readxl
 
 r_github_packages:
-  - r-lib/covr
   - r-lib/pkgdown
 
 before_script:
