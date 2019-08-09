@@ -301,7 +301,7 @@ history
 Remarks:
 
 - The `quiet` column appears above because one of the `drake_plan()` commands has `knit(quiet = TRUE)`.
-- The `hash` column identifies all the previous the versions of your targets. As long as `exists` is `TRUE`, you can recover old data.
+- The `hash` column identifies all the previous versions of your targets. As long as `exists` is `TRUE`, you can recover old data.
 - Advanced: if you use `make(cache_log_file = TRUE)` and put the cache log file under version control, you can match the hashes from `drake_history()` with the `git` commit history of your code.
 
 Let's use the history to recover the oldest histogram.
