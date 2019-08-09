@@ -248,7 +248,7 @@ rehash_storage <- function(target, file = NULL, config) {
     file <- decode_path(target, config)
   }
   if (is_url(file)) {
-    return(rehash_url(url = file))
+    return(rehash_url(url = file, config = config))
   }
   if (!file.exists(file)) {
     return(NA_character_)
@@ -291,16 +291,23 @@ rehash_file <- function(file, config) {
   )
 }
 
-rehash_url <- function(url) {
+rehash_url <- function(url, config) {
   assert_pkg("curl")
   headers <- NULL
   if (!curl::has_internet()) {
     # Tested in tests/testthat/test-always-skipped.R.
     stop("no internet. Cannot check url: ", url, call. = FALSE) # nocov
   }
-  req <- curl::curl_fetch_memory(url,  handle = curl::new_handle(nobody = TRUE))
+  # Find the longest name of the handle that matches the url.
+  choices <- names(config$curl_handles)
+  name <- longest_match(choices = choices, against = url) %||% NA_character_
+  handle <- config$curl_handles[[name]] %||% curl::new_handle()
+  # Do not download the whole URL.
+  handle <- curl::handle_setopt(handle, nobody = TRUE)
+  req <- curl::curl_fetch_memory(url, handle = handle)
   stopifnot(length(req$content) < 1L)
   headers <- curl::parse_headers_list(req$headers)
+  assert_status_code(req, url)
   assert_useful_headers(headers, url)
   etag <- paste(headers[["etag"]], collapse = "")
   mtime <- paste(headers[["last-modified"]], collapse = "")
@@ -309,6 +316,12 @@ rehash_url <- function(url) {
 
 is_url <- function(x) {
   grepl("^http://|^https://|^ftp://", x)
+}
+
+assert_status_code <- function(req, url) {
+  if (req$status_code != 200L) {
+    stop("could not access url: ", url, call. = FALSE)
+  }
 }
 
 assert_useful_headers <- function(headers, url) {

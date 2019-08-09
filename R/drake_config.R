@@ -436,7 +436,8 @@
 #'   consider `make(recoverable = FALSE, progress = FALSE)`.
 #'
 #' @param curl_handles A named list of curl handles. Each value is an
-#'   object from `curl::new_handle()`, and each name is a URL.
+#'   object from `curl::new_handle()`, and each name is a URL
+#'   (and should start with "http", "https", or "ftp").
 #'   Example:
 #'   list(
 #'     `http://httpbin.org/basic-auth` = curl::new_handle(
@@ -448,11 +449,12 @@
 #'   `drake` will authenticate using the username and password of the handle
 #'   for `http://httpbin.org/basic-auth/`.
 #'
-#'   `drake` uses partial matching to
+#'   `drake` uses partial matching on text to
 #'   find the right handle of the `file_in()` URL, so the name of the handle
 #'   could be the complete URL (`"http://httpbin.org/basic-auth/user/passwd"`)
 #'   or a part of the URL (e.g. `"http://httpbin.org/"` or
-#'   `"http://httpbin.org/basic-auth/"`),
+#'   `"http://httpbin.org/basic-auth/"`). If you have multiple handles
+#'   whose names match your URL, `drake` will choose the closest match.
 #'
 #' @examples
 #' \dontrun{

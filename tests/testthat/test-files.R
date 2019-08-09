@@ -200,12 +200,12 @@ test_with_dir("bad URL", {
   )
   expect_error(
     make(config = config),
-    "no ETag or Last-Modified for url|resolve host"
+    "could not access url|resolve host"
   )
   expect_equal(justbuilt(config), character(0))
   expect_error(
     make(config = config),
-    "no ETag or Last-Modified for url|resolve host"
+    "could not access url|resolve host"
   )
   expect_equal(justbuilt(config), character(0))
 })
@@ -215,7 +215,27 @@ test_with_dir("authentication", {
   skip_if_offline()
   skip_if_not_installed("curl")
   plan <- drake_plan(x = file_in("http://httpbin.org/basic-auth/user/passwd"))
-  make(plan)
+  expect_error(make(plan), regexp = "could not access url")
+  handles <- list(`http://httpbin.org/basic-auth` = curl::new_handle())
+  expect_error(
+    make(plan, curl_handles = handles),
+    regexp = "could not access url"
+  )
+  # Make sure we get the most specific URL.
+  handles <- list(
+    `http://httpbin.org/basic-auth` = curl::new_handle(),
+    `http://httpbin.org/basic-auth/user` = curl::new_handle(),
+    `http://WRONG` = curl::new_handle()
+  )
+  handles[[2]] <- curl::handle_setopt(
+    handles[[2]],
+    username = "user",
+    password = "passwd"
+  )
+  expect_error(
+    make(plan, curl_handles = handles),
+    regexp = "no ETag or Last-Modified for url"
+  )
 })
 
 test_with_dir("assert_useful_headers()", {

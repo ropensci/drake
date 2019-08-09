@@ -120,6 +120,17 @@ multiline_message <- function(x) {
   paste(x, collapse = "\n")
 }
 
+longest_match <- function(choices, against) {
+  index <- vapply(
+    choices,
+    pmatch,
+    table = against,
+    FUN.VALUE = integer(1)
+  )
+  matches <- names(index[!is.na(index)])
+  matches[which.max(nchar(matches))]
+}
+
 # From lintr
 `%||%` <- function(x, y) {
   if (is.null(x) || length(x) <= 0) {

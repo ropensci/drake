@@ -368,16 +368,18 @@ trigger <- function(
 #' @title Declare input files and directories.
 #' @description `file_in()` marks individual files
 #'   (and whole directories) that your targets depend on.
-#' @details As of `drake` 7.4.0, `file_in()` and `file_out()` have
-#'   experimental support for URLs. If the file name begins with
+#' @section URLs:
+#'   As of `drake` 7.4.0, `file_in()` and `file_out()` have
+#'   support for URLs. If the file name begins with
 #'   "http://", "https://", or "ftp://", [make()] attempts
 #'   to check the ETag to see if the data changed from last time.
 #'   If no ETag can be found, `drake` simply uses the ETag
 #'   from last [make()] and registers the file as unchanged
 #'   (which prevents your workflow from breaking if you lose
-#'   internet access). If this approach to tracking remote data
-#'   does not work for you, consider a custom trigger:
-#'   <https://ropenscilabs.github.io/drake-manual/triggers.html>.
+#'   internet access). If your `file_in()` URLs require
+#'   authentication, see the `curl_handles` argument of
+#'   `make()` and `drake_config()` to learn how to supply credentials.
+#'
 #' @export
 #' @inheritSection drake_plan Keywords
 #' @seealso [file_out()], [knitr_in()], [ignore()], [no_deps()]

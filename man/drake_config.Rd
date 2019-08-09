@@ -456,7 +456,8 @@ If you need to limit the cache size or the number of files in the cache,
 consider \code{make(recoverable = FALSE, progress = FALSE)}.}
 
 \item{curl_handles}{A named list of curl handles. Each value is an
-object from \code{curl::new_handle()}, and each name is a URL.
+object from \code{curl::new_handle()}, and each name is a URL
+(and should start with "http", "https", or "ftp").
 Example:
 list(
 \code{http://httpbin.org/basic-auth} = curl::new_handle(
@@ -468,11 +469,12 @@ Then, if your plan has
 \code{drake} will authenticate using the username and password of the handle
 for \code{http://httpbin.org/basic-auth/}.
 
-\code{drake} uses partial matching to
+\code{drake} uses partial matching on text to
 find the right handle of the \code{file_in()} URL, so the name of the handle
 could be the complete URL (\code{"http://httpbin.org/basic-auth/user/passwd"})
 or a part of the URL (e.g. \code{"http://httpbin.org/"} or
-\code{"http://httpbin.org/basic-auth/"}),}
+\code{"http://httpbin.org/basic-auth/"}). If you have multiple handles
+whose names match your URL, \code{drake} will choose the closest match.}
 }
 \value{
 The master internal configuration list of a project.
