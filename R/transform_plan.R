@@ -479,12 +479,12 @@ dsl_transform.map <- dsl_transform.cross <- function(
     )
   }
   grid <- do.call(cbind, unname(gridlist))
+  grid <- grid[, cols, drop = FALSE]
   sub_cols <- intersect(colnames(grid), group_names(transform))
   new_targets <- new_targets(
     target, grid, cols = sub_cols, id = dsl_id(transform)
   )
   out <- data.frame(target = new_targets, stringsAsFactors = FALSE)
-  grid <- grid[, unique(colnames(grid))]
   grid$.id_chr <- sprintf("\"%s\"", new_targets)
   for (col in setdiff(old_cols(plan), c("target", "transform"))) {
     if (is.language(row[[col]][[1]])) {
