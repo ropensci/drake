@@ -22,7 +22,7 @@ make(plan, targets = NULL, envir = parent.frame(), verbose = 1L,
   garbage_collection = FALSE, template = list(), sleep = function(i)
   0.01, hasty_build = NULL, memory_strategy = "speed", layout = NULL,
   lock_envir = TRUE, history = TRUE, recover = FALSE,
-  recoverable = TRUE)
+  recoverable = TRUE, curl_handles = list())
 }
 \arguments{
 \item{plan}{Workflow plan data frame.
@@ -471,6 +471,25 @@ and it prevents old metadata from being removed with garbage collection
 (\code{clean(garbage_collection = TRUE)}, \code{gc()} in \code{storr}s).
 If you need to limit the cache size or the number of files in the cache,
 consider \code{make(recoverable = FALSE, progress = FALSE)}.}
+
+\item{curl_handles}{A named list of curl handles. Each value is an
+object from \code{curl::new_handle()}, and each name is a URL.
+Example:
+list(
+\code{http://httpbin.org/basic-auth} = curl::new_handle(
+username = "user", password = "passwd"
+)
+)
+Then, if your plan has
+\code{file_in("http://httpbin.org/basic-auth/user/passwd")}
+\code{drake} will authenticate using the username and password of the handle
+for \code{http://httpbin.org/basic-auth/}.
+
+\code{drake} uses partial matching to
+find the right handle of the \code{file_in()} URL, so the name of the handle
+could be the complete URL (\code{"http://httpbin.org/basic-auth/user/passwd"})
+or a part of the URL (e.g. \code{"http://httpbin.org/"} or
+\code{"http://httpbin.org/basic-auth/"}),}
 }
 \value{
 nothing

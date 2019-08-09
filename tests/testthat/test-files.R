@@ -66,7 +66,6 @@ test_with_dir("same with an imported directory", {
   expect_equal(justbuilt(config), sort(c(
     "drake_target_1", "combined", "final", "myinput", "nextone")))
   expect_false(length(final0) == length(readd(final)))
-
 })
 
 test_with_dir("drake_config() memoizes against knitr files (#887)", {
@@ -148,6 +147,7 @@ test_with_dir("drake_config() memoizes against knitr files (#887)", {
 test_with_dir("good URL with an ETag", {
   skip_on_cran()
   skip_if_offline()
+  skip_if_not_installed("curl")
   plan <- drake_plan(
     x = file_in("https://github.com/ropensci/drake/archive/v7.3.0.tar.gz")
   )
@@ -171,6 +171,7 @@ test_with_dir("good URL with an ETag", {
 test_with_dir("good URL with a timestamp", {
   skip_on_cran()
   skip_if_offline()
+  skip_if_not_installed("curl")
   plan <- drake_plan(x = file_in("https://nytimes.com"))
   config <- drake_config(
     plan,
@@ -187,6 +188,7 @@ test_with_dir("good URL with a timestamp", {
 test_with_dir("bad URL", {
   skip_on_cran()
   skip_if_offline()
+  skip_if_not_installed("curl")
   plan <- drake_plan(
     x = file_in("https://aklsdjflkjsiofjlekjsiolkjiufhalskdjf")
   )
@@ -206,6 +208,14 @@ test_with_dir("bad URL", {
     "no ETag or Last-Modified for url|resolve host"
   )
   expect_equal(justbuilt(config), character(0))
+})
+
+test_with_dir("authentication", {
+  skip_on_cran()
+  skip_if_offline()
+  skip_if_not_installed("curl")
+  plan <- drake_plan(x = file_in("http://httpbin.org/basic-auth/user/passwd"))
+  make(plan)
 })
 
 test_with_dir("assert_useful_headers()", {

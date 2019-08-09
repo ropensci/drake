@@ -168,7 +168,8 @@ make <- function(
   lock_envir = TRUE,
   history = TRUE,
   recover = FALSE,
-  recoverable = TRUE
+  recoverable = TRUE,
+  curl_handles = list()
 ) {
   log_msg(
     "begin make()",
@@ -226,7 +227,8 @@ make <- function(
       lock_envir = lock_envir,
       history = history,
       recover = recover,
-      recoverable = recoverable
+      recoverable = recoverable,
+      curl_handles = curl_handles
     )
   }
   runtime_checks(config = config)

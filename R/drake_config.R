@@ -435,6 +435,25 @@
 #'   If you need to limit the cache size or the number of files in the cache,
 #'   consider `make(recoverable = FALSE, progress = FALSE)`.
 #'
+#' @param curl_handles A named list of curl handles. Each value is an
+#'   object from `curl::new_handle()`, and each name is a URL.
+#'   Example:
+#'   list(
+#'     `http://httpbin.org/basic-auth` = curl::new_handle(
+#'       username = "user", password = "passwd"
+#'     )
+#'   )
+#'   Then, if your plan has
+#'   `file_in("http://httpbin.org/basic-auth/user/passwd")`
+#'   `drake` will authenticate using the username and password of the handle
+#'   for `http://httpbin.org/basic-auth/`.
+#'
+#'   `drake` uses partial matching to
+#'   find the right handle of the `file_in()` URL, so the name of the handle
+#'   could be the complete URL (`"http://httpbin.org/basic-auth/user/passwd"`)
+#'   or a part of the URL (e.g. `"http://httpbin.org/"` or
+#'   `"http://httpbin.org/basic-auth/"`),
+#'
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {
@@ -503,7 +522,8 @@ drake_config <- function(
   lock_envir = TRUE,
   history = TRUE,
   recover = FALSE,
-  recoverable = TRUE
+  recoverable = TRUE,
+  curl_handles = list()
 ) {
   log_msg(
     "begin drake_config()",
@@ -687,7 +707,8 @@ drake_config <- function(
     force = force,
     history = history,
     recover = recover,
-    recoverable = recoverable
+    recoverable = recoverable,
+    curl_handles = curl_handles
   )
   config_checks(out)
   log_msg("end drake_config()", config = out)
