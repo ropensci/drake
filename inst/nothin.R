@@ -1,0 +1,21 @@
+library(drake)
+
+
+plan   <- readRDS("~/Documents/plan.rds")
+
+plan['resources'] <- NULL
+
+unique_stems <- plan$cluster_id %>% unique()
+
+config <- plan %>% drake_config()
+
+graph_info <- drake_graph_info(
+  config,
+  targets_only = TRUE,
+  group = "cluster_id",
+  clusters = unique_stems,
+  show_output_files = FALSE,
+  build_times = "none",
+  hover = FALSE,
+  on_select_col = "number"
+)
