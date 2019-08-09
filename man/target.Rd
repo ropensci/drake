@@ -12,10 +12,6 @@ target(command = NULL, ...)
 \item{...}{Optional columns of the plan for a given target.
 See the Columns section of this help file for a selection
 of special columns that \code{drake} understands.}
-
-\item{transform}{A call to \code{\link[=map]{map()}}, \code{\link[=split]{split()}},
-\code{\link[=cross]{cross()}}, or \code{\link[=combine]{combine()}} to define multiple targets
-using a single entry of \code{\link[=drake_plan]{drake_plan()}}.}
 }
 \value{
 A one-row workflow plan data frame with the named
