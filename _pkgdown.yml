@@ -51,13 +51,18 @@ reference:
   - '`drake_slice`'
 - title: drake plan keywords
   contents:
+  - '`target`'
+  - '`trigger`'
+  - '`map`'
+  - '`split`'
+  - '`cross`'
+  - '`combine`'
   - '`file_in`'
   - '`file_out`'
   - '`knitr_in`'
   - '`ignore`'
   - '`no_deps`'
   - '`drake_envir`'
-  - '`trigger`'
 - title: Reproducible R session management
   contents:
   - '`r_make`'

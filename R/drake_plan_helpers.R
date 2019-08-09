@@ -1,15 +1,16 @@
 #' @title Define custom columns in a [drake_plan()].
-#' @description Not a user-side function. Please use from within
-#'   [drake_plan()] only.
+#' @description Not a user-side function. Must be called inside
+#'   [drake_plan()].
 #' @export
-#' @keywords internal
+#' @inheritSection drake_plan Columns
 #' @inheritSection drake_plan Keywords
 #' @seealso [drake_plan()], [make()]
 #' @return A one-row workflow plan data frame with the named
 #' arguments as columns.
 #' @param command The command to build the target.
-#' @param ... Named arguments specifying non-standard
-#'   fields of the workflow plan.
+#' @param ... Optional columns of the plan for a given target.
+#'   See the Columns section of this help file for a selection
+#'   of special columns that `drake` understands.
 #' @examples
 #' # Use target() to create your own custom columns in a drake plan.
 #' # See ?triggers for more on triggers.
@@ -21,6 +22,27 @@
 #'   ),
 #'   analysis = analyze(website_data)
 #' )
+#' models <- c("glm", "hierarchical")
+#' plan <- drake_plan(
+#'   data = target(
+#'     get_data(x),
+#'     transform = map(x = c("simulated", "survey"))
+#'   ),
+#'   analysis = target(
+#'     analyze_data(data, model),
+#'     transform = cross(data, model = !!models, .id = c(x, model))
+#'   ),
+#'   summary = target(
+#'     summarize_analysis(analysis),
+#'     transform = map(analysis, .id = c(x, model))
+#'   ),
+#'   results = target(
+#'     bind_rows(summary),
+#'     transform = combine(summary, .by = data)
+#'   )
+#' )
+#' plan
+#' drake_plan_source(plan)
 target <- function(command = NULL, ...) {
   # TODO: remove this warning when we unexport target().
   if (!nzchar(Sys.getenv("drake_target_silent"))) {
@@ -49,6 +71,185 @@ target <- function(command = NULL, ...) {
     }
   }
   out
+}
+
+#' @title Define multiple targets at once
+#' @description Similar to `pmap()` from `purrr`, except `drake`'s
+#'   `map()` defines new targets.
+#' @details Only valid within a call to [target()] in
+#'   [drake_plan()]. See the examples below.
+#' @inheritSection drake_plan Keywords
+#' @seealso split, cross, combine, drake_plan, target
+#' @param ... Grouping variables. New grouping variables must be
+#'   supplied with their names and values, existing grouping variables
+#'   can be given as symbols without any values assigned.
+#' @param .data A data frame of new grouping variables with
+#'   grouping variable names as column names and values as elements.
+#' @param .id Symbol or vector of symbols naming grouping variables
+#'   to incorporate into target names. Useful for creating short target
+#'   names. Set `.id = FALSE` to use integer indices as target name suffixes.
+#' @param .tag_in A symbol or vector of symbols. Tags assign targets
+#'   to grouping variables. Use `.tag_in` to assign *untransformed*
+#'   targets to grouping variables.
+#' @param .tag_out Just like `.tag_in`, except that `.tag_out`
+#'   assigns *transformed* targets to grouping variables.
+#' @examples
+#' models <- c("glm", "hierarchical")
+#' plan <- drake_plan(
+#'   data = target(
+#'     get_data(x),
+#'     transform = map(x = c("simulated", "survey"))
+#'   ),
+#'   analysis = target(
+#'     analyze_data(data, model),
+#'     transform = cross(data, model = !!models, .id = c(x, model))
+#'   ),
+#'   summary = target(
+#'     summarize_analysis(analysis),
+#'     transform = map(analysis, .id = c(x, model))
+#'   ),
+#'   results = target(
+#'     bind_rows(summary),
+#'     transform = combine(summary, .by = data)
+#'   )
+#' )
+#' plan
+#' drake_plan_source(plan)
+#' # Tags:
+#' drake_plan(
+#'   x = target(
+#'     command,
+#'     transform = map(y = c(1, 2), .tag_in = from, .tag_out = c(to, out))
+#'   ),
+#'   trace = TRUE
+#' )
+#' plan <- drake_plan(
+#'   survey = target(
+#'     survey_data(x),
+#'     transform = map(x = c(1, 2), .tag_in = source, .tag_out = dataset)
+#'   ),
+#'   download = target(
+#'     download_data(),
+#'     transform = map(y = c(5, 6), .tag_in = source, .tag_out = dataset)
+#'   ),
+#'   analysis = target(
+#'     analyze(dataset),
+#'     transform = map(dataset)
+#'   ),
+#'   results = target(
+#'     bind_rows(analysis),
+#'     transform = combine(analysis, .by = source)
+#'   )
+#' )
+#' plan
+#' drake_plan_source(plan)
+map <- function(..., .data, .id, .tag_in, .tag_out) {
+  stop(
+    "map() in drake must be called inside target() in drake_plan()",
+    call. = FALSE
+  )
+}
+
+#' @title Define a target for each subset of data
+#' @description Similar `group_map()`, from `dplyr`, except it
+#'   defines new targets in `drake`.
+#' @details Only valid within a call to [target()] in
+#'   [drake_plan()]. See the examples below.
+#' @inheritSection drake_plan Keywords
+#' @seealso map, cross, combine, drake_plan, target, drake_slice
+#' @inheritParams map
+#' @inheritParams drake_slice
+#' @examples
+#' plan <- drake_plan(
+#'   analysis = target(
+#'     analyze(data),
+#'     transform = split(data, slices = 3L, margin = 1L, drop = FALSE)
+#'   )
+#' )
+#' print(plan)
+#' drake_plan_source(plan)
+split <- function(..., .id, .tag_in, .tag_out) {
+  stop(
+    "split() in drake must be called inside target() in drake_plan()",
+    call. = FALSE
+  )
+}
+
+#' @title Define a target for each combination of values
+#' @description Similar `crossing()`, from `tidyr`, except it
+#'   defines new targets in `drake`.
+#' @details Only valid within a call to [target()] in
+#'   [drake_plan()]. See the examples below.
+#' @inheritSection drake_plan Keywords
+#' @seealso map, split, combine, drake_plan, target
+#' @inheritParams map
+#' @examples
+#' models <- c("glm", "hierarchical")
+#' plan <- drake_plan(
+#'   data = target(
+#'     get_data(x),
+#'     transform = map(x = c("simulated", "survey"))
+#'   ),
+#'   analysis = target(
+#'     analyze_data(data, model),
+#'     transform = cross(data, model = !!models, .id = c(x, model))
+#'   ),
+#'   summary = target(
+#'     summarize_analysis(analysis),
+#'     transform = map(analysis, .id = c(x, model))
+#'   ),
+#'   results = target(
+#'     bind_rows(summary),
+#'     transform = combine(summary, .by = data)
+#'   )
+#' )
+#' plan
+#' drake_plan_source(plan)
+cross <- function(..., .data, .id, .tag_in, .tag_out) {
+  stop(
+    "cross() in drake must be called inside target() in drake_plan()",
+    call. = FALSE
+  )
+}
+
+#' @title Define aggregates of other targets
+#' @description Similar `summarize()`, from `dplyr`, except it
+#'   defines new targets in `drake`.
+#' @details Only valid within a call to [target()] in
+#'   [drake_plan()]. See the examples below.
+#' @inheritSection drake_plan Keywords
+#' @seealso map, split, cross, drake_plan, target
+#' @inheritParams map
+#' @param .by Symbol or vector of symbols of grouping variables.
+#'   `combine()` aggregates/groups targets by the grouping variables
+#'   in `.by`
+#' @examples
+#' models <- c("glm", "hierarchical")
+#' plan <- drake_plan(
+#'   data = target(
+#'     get_data(x),
+#'     transform = map(x = c("simulated", "survey"))
+#'   ),
+#'   analysis = target(
+#'     analyze_data(data, model),
+#'     transform = cross(data, model = !!models, .id = c(x, model))
+#'   ),
+#'   summary = target(
+#'     summarize_analysis(analysis),
+#'     transform = map(analysis, .id = c(x, model))
+#'   ),
+#'   results = target(
+#'     bind_rows(summary),
+#'     transform = combine(summary, .by = data)
+#'   )
+#' )
+#' plan
+#' drake_plan_source(plan)
+combine <- function(..., .by, .id, .tag_in, .tag_out) {
+  stop(
+    "combine() in drake must be called inside target() in drake_plan()",
+    call. = FALSE
+  )
 }
 
 #' @title Customize the decision rules for rebuilding targets

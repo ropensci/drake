@@ -651,7 +651,7 @@ coord_x <- function(nodes, min = -1, max = 1) {
 }
 
 coord_y <- function(nodes, min = -1, max = 1) {
-  splits <- split(nodes, nodes$x)
+  splits <- base::split(nodes, nodes$x)
   out <- lapply(splits, coord_y_stage, min = min, max = max)
   out <- do.call(rbind, out)
   out$y <- coord_rescale(out$y, min = min, max = max)

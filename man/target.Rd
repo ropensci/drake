@@ -9,26 +9,93 @@ target(command = NULL, ...)
 \arguments{
 \item{command}{The command to build the target.}
 
-\item{...}{Named arguments specifying non-standard
-fields of the workflow plan.}
+\item{...}{Optional columns of the plan for a given target.
+See the Columns section of this help file for a selection
+of special columns that \code{drake} understands.}
+
+\item{transform}{A call to \code{\link[=map]{map()}}, \code{\link[=split]{split()}},
+\code{\link[=cross]{cross()}}, or \code{\link[=combine]{combine()}} to define multiple targets
+using a single entry of \code{\link[=drake_plan]{drake_plan()}}.}
 }
 \value{
 A one-row workflow plan data frame with the named
 arguments as columns.
 }
 \description{
-Not a user-side function. Please use from within
-\code{\link[=drake_plan]{drake_plan()}} only.
+Not a user-side function. Must be called inside
+\code{\link[=drake_plan]{drake_plan()}}.
 }
+\section{Columns}{
+
+\code{\link[=drake_plan]{drake_plan()}} creates a special data frame. At minimum, that data frame
+must have columns \code{target} and \code{command} with the target names and the
+R code chunks to build them, respectively.
+
+You can add custom columns yourself, either with \code{target()} (e.g.
+\code{drake_plan(y = target(f(x), transform = map(c(1, 2)), format = "fst"))})
+or by appending columns post-hoc (e.g. \code{plan$col <- vals}).
+
+Some of these custom columns are special. They are optional,
+but \code{drake} looks for them at various points in the workflow.
+\itemize{
+\item \code{transform}: a call to \code{\link[=map]{map()}}, \code{\link[=split]{split()}}, \code{\link[=cross]{cross()}}, or
+\code{\link[=combine]{combine()}} to create and manipulate large collections of targets.
+Details: (\url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}). # nolint
+\item \code{format}: set a storage format to save big targets more efficiently.
+Most formats are faster than ordinary storage, and they consume
+far less memory. Available formats:
+\itemize{
+\item \code{"fst"}: save big data frames fast. The target must be a data frame,
+and you must have the \code{fst} package installed.
+\item \code{"keras"}: save Keras models as HDF5 files.
+Requires the \code{keras} package.
+\item \code{"rds"}: save any object. This is similar to the default storage
+except we avoid creating a serialized copy of
+the entire target in memory.
+Requires R >= 3.5.0 so drake can use ALTREP.
+}
+\item \code{trigger}: rule to decide whether a target needs to run.
+It is recommended that you define this one with \code{target()}.
+Details: \url{https://ropenscilabs.github.io/drake-manual/triggers.html}.
+\item \code{hpc}: logical values (\code{TRUE}/\code{FALSE}/\code{NA}) whether to send each target
+to parallel workers.
+Visit \url{https://ropenscilabs.github.io/drake-manual/hpc.html#selectivity}
+to learn more.
+\item \code{resources}: target-specific lists of resources for a computing cluster.
+See
+\url{https://ropenscilabs.github.io/drake-manual/hpc.html#advanced-options}
+for details.
+\item \code{elapsed} and \code{cpu}: number of seconds to wait for the target to build
+before timing out (\code{elapsed} for elapsed time and \code{cpu} for CPU time).
+\item \code{retries}: number of times to retry building a target
+in the event of an error.
+\item \code{seed}: an optional pseudo-random number generator (RNG)
+seed for each target. \code{drake} usually comes up with its own
+unique reproducible target-specific seeds using the global seed
+(the \code{seed} argument to \code{\link[=make]{make()}} and \code{\link[=drake_config]{drake_config()}})
+and the target names, but you can overwrite these automatic seeds.
+\code{NA} entries default back to \code{drake}'s automatic seeds.
+}
+}
+
 \section{Keywords}{
 
 \code{\link[=drake_plan]{drake_plan()}} understands special keyword functions for your commands.
 With the exception of \code{\link[=target]{target()}}, each one is a proper function
 with its own help file.
 \itemize{
-\item \code{\link[=target]{target()}}: declare more than just the command,
-e.g. assign a trigger or transform.
-Examples: \url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}. # nolint
+\item \code{\link[=target]{target()}}: give the target more than just a command.
+Using \code{\link[=target]{target()}}, you can apply a transformation
+(examples: \url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}), # nolint
+supply a trigger (\url{https://ropenscilabs.github.io/drake-manual/triggers.html}), # nolint
+or set any number of custom columns.
+\item \code{\link[=map]{map()}}: create multiple targets. Called inside \code{\link[=target]{target()}}.
+\item \code{\link[=split]{split()}}: create a target for each subset of data.
+Called inside \code{\link[=target]{target()}}.
+\item \code{\link[=cross]{cross()}}: create a target for each combination of values.
+Called inside \code{\link[=target]{target()}}.
+\item \code{\link[=combine]{combine()}}: aggregate groups of targets into other targets.
+Called inside \code{\link[=target]{target()}}.
 \item \code{\link[=file_in]{file_in()}}: declare an input file dependency.
 \item \code{\link[=file_out]{file_out()}}: declare an output file to be produced
 when the target is built.
@@ -54,8 +121,28 @@ drake_plan(
   ),
   analysis = analyze(website_data)
 )
+models <- c("glm", "hierarchical")
+plan <- drake_plan(
+  data = target(
+    get_data(x),
+    transform = map(x = c("simulated", "survey"))
+  ),
+  analysis = target(
+    analyze_data(data, model),
+    transform = cross(data, model = !!models, .id = c(x, model))
+  ),
+  summary = target(
+    summarize_analysis(analysis),
+    transform = map(analysis, .id = c(x, model))
+  ),
+  results = target(
+    bind_rows(summary),
+    transform = combine(summary, .by = data)
+  )
+)
+plan
+drake_plan_source(plan)
 }
 \seealso{
 \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
 }
-\keyword{internal}

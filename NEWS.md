@@ -14,6 +14,7 @@
 
 ## Enhancements
 
+- Document DSL keywords as if they were true functions: `target()`, `map()`, `split()`, `cross()`, and `combine()` (#979).
 - Do garbage collection between the unloading and loading phases of memory management.
 - Keep `file_out()` files in `clean()` unless `garbage_collection` is `TRUE`. That way, `make(recover = TRUE)` is a true "undo button" for `clean()`. `clean(garbage_collection = TRUE)` still removes data in the cache, as well as any `file_out()` files from targets currently being cleaned.
 - The menu in `clean()` only appears if `garbage_collection` is `TRUE`. Also, this menu is added to `rescue_cache(garbage_collection = TRUE)`.

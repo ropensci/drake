@@ -4,6 +4,7 @@
 #'   `drake` plan.
 #' @details <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans> # nolint
 #' @export
+#' @seealso drake_plan, map, split, cross, combine
 #' @param plan A `drake` plan with a `transform` column
 #' @param envir Environment for tidy evaluation.
 #' @param trace Logical, whether to add columns to show
@@ -34,6 +35,55 @@
 #' )
 #' plan <- bind_plans(plan1, plan2)
 #' transform_plan(plan)
+#' models <- c("glm", "hierarchical")
+#' plan <- drake_plan(
+#'   data = target(
+#'     get_data(x),
+#'     transform = map(x = c("simulated", "survey"))
+#'   ),
+#'   analysis = target(
+#'     analyze_data(data, model),
+#'     transform = cross(data, model = !!models, .id = c(x, model))
+#'   ),
+#'   summary = target(
+#'     summarize_analysis(analysis),
+#'     transform = map(analysis, .id = c(x, model))
+#'   ),
+#'   results = target(
+#'     bind_rows(summary),
+#'     transform = combine(summary, .by = data)
+#'   )
+#' )
+#' plan
+#' drake_plan_source(plan)
+#' # Tags:
+#' drake_plan(
+#'   x = target(
+#'     command,
+#'     transform = map(y = c(1, 2), .tag_in = from, .tag_out = c(to, out))
+#'   ),
+#'   trace = TRUE
+#' )
+#' plan <- drake_plan(
+#'   survey = target(
+#'     survey_data(x),
+#'     transform = map(x = c(1, 2), .tag_in = source, .tag_out = dataset)
+#'   ),
+#'   download = target(
+#'     download_data(),
+#'     transform = map(y = c(5, 6), .tag_in = source, .tag_out = dataset)
+#'   ),
+#'   analysis = target(
+#'     analyze(dataset),
+#'     transform = map(dataset)
+#'   ),
+#'   results = target(
+#'     bind_rows(analysis),
+#'     transform = combine(analysis, .by = source)
+#'   )
+#' )
+#' plan
+#' drake_plan_source(plan)
 transform_plan <- function(
   plan,
   envir = parent.frame(),
@@ -555,7 +605,7 @@ split_by <- function(.x, .by = character(0)) {
     return(list(.x))
   }
   fact <- lapply(.x[, .by, drop = FALSE], factor, exclude = c())
-  splits <- split(x = .x, f = fact)
+  splits <- base::split(x = .x, f = fact)
   Filter(x = splits, f = nrow)
 }
 

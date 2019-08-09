@@ -1,5 +1,12 @@
 drake_context("dsl")
 
+test_with_dir("dsl placeholders", {
+  expect_error(map(), regexp = "must be called inside target")
+  expect_error(split(), regexp = "must be called inside target")
+  expect_error(cross(), regexp = "must be called inside target")
+  expect_error(combine(), regexp = "must be called inside target")
+})
+
 test_with_dir("nothing to transform", {
   exp <- drake_plan(a = 1)
   out <- transform_plan(exp)
