@@ -516,14 +516,13 @@ dsl_left_outer_join <- function(x, y) {
   # Need to profile.
   out <- merge(x = x, y = y, by = by, all.x = TRUE, sort = FALSE)
   out <- out[, union(colnames(x), colnames(y)), drop = FALSE]
-  is_na_col <- vapply(
-    out,
-    function(x) {
-      all(is.na(x))
-    },
-    FUN.VALUE = logical(1)
-  )
-  out[, !is_na_col, drop = FALSE]
+  is_na_col <- vapply(out, all_is_na, FUN.VALUE = logical(1))
+  out <- out[, !is_na_col, drop = FALSE]
+  out[order(x), ]
+}
+
+all_is_na <- function(x) {
+  all(is.na(x))
 }
 
 upstream_trace_vars <- function(target, plan, graph) {

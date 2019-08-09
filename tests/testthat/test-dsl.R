@@ -1205,12 +1205,18 @@ test_with_dir("trace has correct provenance", {
     ),
     d_b_a_1_3_c_b_a_1_3_2 = target(
       command = b_a_1_3,
+      x = "1",
+      y = "3",
+      a = "a_1_3",
       b = "b_a_1_3",
       c = "c_b_a_1_3_2",
       d = "d_b_a_1_3_c_b_a_1_3_2"
     ),
     d_b_a_1_3_2_c_b_a_1_3 = target(
       command = b_a_1_3_2,
+      x = "1",
+      y = "3",
+      a = "a_1_3_2",
       b = "b_a_1_3_2",
       c = "c_b_a_1_3",
       d = "d_b_a_1_3_2_c_b_a_1_3"
@@ -2194,37 +2200,37 @@ test_with_dir("max_expand", {
     analysis_m_100L_data_100L = m(data_100L, 100L),
     analysis_z_100L_data_100L = z(data_100L, 100L),
     result_a = bind_rows(
+      analysis_a_1L_data_100L,
+      analysis_a_50L_data_100L,
+      analysis_a_100L_data_100L,
       analysis_a_1L_data_1L,
       analysis_a_50L_data_1L,
       analysis_a_100L_data_1L,
       analysis_a_1L_data_50L,
       analysis_a_50L_data_50L,
-      analysis_a_100L_data_50L,
-      analysis_a_1L_data_100L,
-      analysis_a_50L_data_100L,
-      analysis_a_100L_data_100L
+      analysis_a_100L_data_50L
     ),
     result_m = bind_rows(
+      analysis_m_1L_data_100L,
+      analysis_m_50L_data_100L,
+      analysis_m_100L_data_100L,
       analysis_m_1L_data_1L,
       analysis_m_50L_data_1L,
       analysis_m_100L_data_1L,
       analysis_m_1L_data_50L,
       analysis_m_50L_data_50L,
-      analysis_m_100L_data_50L,
-      analysis_m_1L_data_100L,
-      analysis_m_50L_data_100L,
-      analysis_m_100L_data_100L
+      analysis_m_100L_data_50L
     ),
     result_z = bind_rows(
+      analysis_z_1L_data_100L,
+      analysis_z_50L_data_100L,
+      analysis_z_100L_data_100L,
       analysis_z_1L_data_1L,
       analysis_z_50L_data_1L,
       analysis_z_100L_data_1L,
       analysis_z_1L_data_50L,
       analysis_z_50L_data_50L,
-      analysis_z_100L_data_50L,
-      analysis_z_1L_data_100L,
-      analysis_z_50L_data_100L,
-      analysis_z_100L_data_100L
+      analysis_z_100L_data_50L
     )
   )
   equivalent_plans(out, exp)
@@ -2610,4 +2616,138 @@ test_with_dir("complete_cases()", {
   expect_equal(complete_cases(x), rep(TRUE, length(letters)))
   x <- data.frame(a = 1:6, b = c(1:3, rep(NA_integer_, 3)))
   expect_equal(complete_cases(x), rep(c(TRUE, FALSE), each = 3))
+})
+
+test_with_dir("side-by-side map keeps grouping vars (#983)", {
+  out <- drake_plan(
+    trace = TRUE,
+    data = target(simulate(nrow), transform = map(nrow = c(5, 10))),
+    data2 = target(simulate(ncol), transform = map(ncol = c(51, 101))),
+    data3 = target(somefun(data, data2), transform = map(data, data2)),
+  )
+  exp <- drake_plan(
+    data_5 = target(
+      command = simulate(5),
+      nrow = "5",
+      data = "data_5"
+    ),
+    data_10 = target(
+      command = simulate(10),
+      nrow = "10",
+      data = "data_10"
+    ),
+    data2_51 = target(
+      command = simulate(51),
+      ncol = "51",
+      data2 = "data2_51"
+    ),
+    data2_101 = target(
+      command = simulate(101),
+      ncol = "101",
+      data2 = "data2_101"
+    ),
+    data3_data_10_data2_101 = target(
+      command = somefun(data_10, data2_101),
+      nrow = "10",
+      data = "data_10",
+      ncol = "101",
+      data2 = "data2_101",
+      data3 = "data3_data_10_data2_101"
+    ),
+    data3_data_5_data2_51 = target(
+      command = somefun(data_5, data2_51),
+      nrow = "5",
+      data = "data_5",
+      ncol = "51",
+      data2 = "data2_51",
+      data3 = "data3_data_5_data2_51"
+    )
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("side-by-side cross keeps grouping vars (#983)", {
+  out <- drake_plan(
+    trace = TRUE,
+    data = target(simulate(nrow), transform = map(nrow = c(5, 10))),
+    data2 = target(simulate(ncol), transform = map(ncol = c(51, 101))),
+    data3 = target(somefun(data, data2), transform = cross(data, data2)),
+  )
+  exp <- drake_plan(
+    data_5 = target(
+      command = simulate(5),
+      nrow = "5",
+      data = "data_5"
+    ),
+    data_10 = target(
+      command = simulate(10),
+      nrow = "10",
+      data = "data_10"
+    ),
+    data2_51 = target(
+      command = simulate(51),
+      ncol = "51",
+      data2 = "data2_51"
+    ),
+    data2_101 = target(
+      command = simulate(101),
+      ncol = "101",
+      data2 = "data2_101"
+    ),
+    data3_data_5_data2_101 = target(
+      command = somefun(data_5, data2_101),
+      nrow = "5",
+      data = "data_5",
+      ncol = "101",
+      data2 = "data2_101",
+      data3 = "data3_data_5_data2_101"
+    ),
+    data3_data_10_data2_101 = target(
+      command = somefun(data_10, data2_101),
+      nrow = "10",
+      data = "data_10",
+      ncol = "101",
+      data2 = "data2_101",
+      data3 = "data3_data_10_data2_101"
+    ),
+    data3_data_5_data2_51 = target(
+      command = somefun(data_5, data2_51),
+      nrow = "5",
+      data = "data_5",
+      ncol = "51",
+      data2 = "data2_51",
+      data3 = "data3_data_5_data2_51"
+    ),
+    data3_data_10_data2_51 = target(
+      command = somefun(data_10, data2_51),
+      nrow = "10",
+      data = "data_10",
+      ncol = "51",
+      data2 = "data2_51",
+      data3 = "data3_data_10_data2_51"
+    )
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("side-by-side cross of nested vars (#983)", {
+  out <- drake_plan(
+    a = target(x, transform = map(x = c(1, 1), y = c(3, 3))),
+    b = target(a, transform = map(a)),
+    c = target(b, transform = map(b)),
+    d = target(list(b, c), transform = cross(b, c)),
+  )
+  exp <- drake_plan(
+    a_1_3 = 1,
+    a_1_3_2 = 1,
+    b_a_1_3 = a_1_3,
+    b_a_1_3_2 = a_1_3_2,
+    c_b_a_1_3 = b_a_1_3,
+    c_b_a_1_3_2 = b_a_1_3_2,
+    d_b_a_1_3_c_b_a_1_3 = list(b_a_1_3, c_b_a_1_3),
+    d_b_a_1_3_2_c_b_a_1_3 = list(b_a_1_3_2, c_b_a_1_3),
+    d_b_a_1_3_c_b_a_1_3_2 = list(b_a_1_3, c_b_a_1_3_2),
+    d_b_a_1_3_2_c_b_a_1_3_2 = list(b_a_1_3_2, c_b_a_1_3_2)
+  )
+  equivalent_plans(out, exp)
 })

@@ -332,7 +332,7 @@ make(plan) # Independently re-create the results from the code and input data.
 
 ## Big data efficiency
 
-Select a secialized data format to increase speed and reduce memory consumption. In version 7.5.2.9000 and above, the available formats are ["fst"](https://github.com/fstpackage/fst) for data frames (example below) and "keras" for [Keras](https://keras.rstudio.com/) models ([example here](https://ropenscilabs.github.io/drake-manual/churn.html#plan)).
+Select specialized data formats to increase speed and reduce memory consumption. In version 7.5.2.9000 and above, the available formats are ["fst"](https://github.com/fstpackage/fst) for data frames (example below) and "keras" for [Keras](https://keras.rstudio.com/) models ([example here](https://ropenscilabs.github.io/drake-manual/churn.html#plan)).
 
 ```{r, eval = FALSE}
 library(drake)
