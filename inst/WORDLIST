@@ -73,6 +73,7 @@ Falster
 faq
 FitzJohn
 flowlines
+fst
 ftp
 Genotype
 ggplot
@@ -226,6 +227,7 @@ unhandled
 Univa
 unparsable
 untimed
+untransformed
 vectorization
 vectorized
 VignetteEncoding

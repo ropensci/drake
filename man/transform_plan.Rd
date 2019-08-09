@@ -51,4 +51,56 @@ plan2 <- drake_plan(
 )
 plan <- bind_plans(plan1, plan2)
 transform_plan(plan)
+models <- c("glm", "hierarchical")
+plan <- drake_plan(
+  data = target(
+    get_data(x),
+    transform = map(x = c("simulated", "survey"))
+  ),
+  analysis = target(
+    analyze_data(data, model),
+    transform = cross(data, model = !!models, .id = c(x, model))
+  ),
+  summary = target(
+    summarize_analysis(analysis),
+    transform = map(analysis, .id = c(x, model))
+  ),
+  results = target(
+    bind_rows(summary),
+    transform = combine(summary, .by = data)
+  )
+)
+plan
+drake_plan_source(plan)
+# Tags:
+drake_plan(
+  x = target(
+    command,
+    transform = map(y = c(1, 2), .tag_in = from, .tag_out = c(to, out))
+  ),
+  trace = TRUE
+)
+plan <- drake_plan(
+  survey = target(
+    survey_data(x),
+    transform = map(x = c(1, 2), .tag_in = source, .tag_out = dataset)
+  ),
+  download = target(
+    download_data(),
+    transform = map(y = c(5, 6), .tag_in = source, .tag_out = dataset)
+  ),
+  analysis = target(
+    analyze(dataset),
+    transform = map(dataset)
+  ),
+  results = target(
+    bind_rows(analysis),
+    transform = combine(analysis, .by = source)
+  )
+)
+plan
+drake_plan_source(plan)
+}
+\seealso{
+drake_plan, map, split, cross, combine
 }

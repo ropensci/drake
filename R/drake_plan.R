@@ -10,20 +10,22 @@
 #'   understands a special set of optional columns. For details, visit
 #'   <https://ropenscilabs.github.io/drake-manual/plans.html#special-custom-columns-in-your-plan> # nolint
 #'
+#' @seealso make, drake_config, transform_plan, map, split, cross, combine
+#'
 #' @section Columns:
 #' [drake_plan()] creates a special data frame. At minimum, that data frame
 #' must have columns `target` and `command` with the target names and the
 #' R code chunks to build them, respectively.
 #'
-#' You can add custom columns yourself, either with `target()`
-#' (e.g. `drake_plan(targ = target(my_cmd(), custom = "column"))`)
+#' You can add custom columns yourself, either with `target()` (e.g.
+#' `drake_plan(y = target(f(x), transform = map(c(1, 2)), format = "fst"))`)
 #' or by appending columns post-hoc (e.g. `plan$col <- vals`).
 #'
 #' Some of these custom columns are special. They are optional,
 #' but `drake` looks for them at various points in the workflow.
-#'
-#' - `elapsed` and `cpu`: number of seconds to wait for the target to build
-#'   before timing out (`elapsed` for elapsed time and `cpu` for CPU time).
+#' - `transform`: a call to [map()], [split()], [cross()], or
+#'   [combine()] to create and manipulate large collections of targets.
+#'   Details: (<https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>). # nolint
 #' - `format`: set a storage format to save big targets more efficiently.
 #'   Most formats are faster than ordinary storage, and they consume
 #'   far less memory. Available formats:
@@ -35,6 +37,9 @@
 #'     except we avoid creating a serialized copy of
 #'     the entire target in memory.
 #'     Requires R >= 3.5.0 so drake can use ALTREP.
+#' - `trigger`: rule to decide whether a target needs to run.
+#'   It is recommended that you define this one with `target()`.
+#'   Details: <https://ropenscilabs.github.io/drake-manual/triggers.html>.
 #' - `hpc`: logical values (`TRUE`/`FALSE`/`NA`) whether to send each target
 #'   to parallel workers.
 #'   Visit <https://ropenscilabs.github.io/drake-manual/hpc.html#selectivity>
@@ -43,6 +48,8 @@
 #'   See
 #'   <https://ropenscilabs.github.io/drake-manual/hpc.html#advanced-options>
 #'   for details.
+#' - `elapsed` and `cpu`: number of seconds to wait for the target to build
+#'   before timing out (`elapsed` for elapsed time and `cpu` for CPU time).
 #' - `retries`: number of times to retry building a target
 #'   in the event of an error.
 #' - `seed`: an optional pseudo-random number generator (RNG)
@@ -51,17 +58,23 @@
 #'   (the `seed` argument to [make()] and [drake_config()])
 #'   and the target names, but you can overwrite these automatic seeds.
 #'   `NA` entries default back to `drake`'s automatic seeds.
-#' - `trigger`: rule to decide whether a target needs to run.
-#'   It is recommended that you define this one with `target()`.
-#'   Details: <https://ropenscilabs.github.io/drake-manual/triggers.html>.
 #'
 #' @section Keywords:
 #' [drake_plan()] understands special keyword functions for your commands.
 #' With the exception of [target()], each one is a proper function
 #' with its own help file.
-#' - [target()]: declare more than just the command,
-#'   e.g. assign a trigger or transform.
-#'   Examples: <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>. # nolint
+#' - [target()]: give the target more than just a command.
+#'   Using [target()], you can apply a transformation
+#'   (examples: <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>), # nolint
+#'   supply a trigger (<https://ropenscilabs.github.io/drake-manual/triggers.html>), # nolint
+#'   or set any number of custom columns.
+#' - [map()]: create multiple targets. Called inside [target()].
+#' - [split()]: create a target for each subset of data.
+#'   Called inside [target()].
+#' - [cross()]: create a target for each combination of values.
+#'   Called inside [target()].
+#' - [combine()]: aggregate groups of targets into other targets.
+#'   Called inside [target()].
 #' - [file_in()]: declare an input file dependency.
 #' - [file_out()]: declare an output file to be produced
 #'   when the target is built.
@@ -124,6 +137,18 @@
 #' # There, `drake` sees that `small`, `large`, and `coef_regression2_small`
 #' # are loaded in with calls to `loadd()` and `readd()`.
 #' deps_code("report.Rmd")
+#'
+#' # Formats are great for big data: https://github.com/ropensci/drake/pull/977
+#' # Below, each target is 1.6 GB in memory.
+#' # Run make() on this plan to see how much faster fst is!
+#' n <- 1e8
+#' plan <- drake_plan(
+#'   data_fst = target(
+#'     data.frame(x = runif(n), y = runif(n)),
+#'     format = "fst"
+#'   ),
+#'   data_old = data.frame(x = runif(n), y = runif(n))
+#' )
 #'
 #' # Use transformations to generate large plans.
 #' # Read more at
@@ -269,7 +294,7 @@ drake_plan <- function(
 parse_custom_plan_columns <- function(plan, envir) {
   Sys.setenv("drake_target_silent" = "true")
   on.exit(Sys.setenv("drake_target_silent" = ""))
-  splits <- split(plan, seq_len(nrow(plan)))
+  splits <- base::split(plan, seq_len(nrow(plan)))
   out <- lapply(splits, parse_custom_plan_row, envir = envir)
   out <- do.call(drake_bind_rows, out)
 }

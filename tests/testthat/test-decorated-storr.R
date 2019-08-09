@@ -101,6 +101,35 @@ test_with_dir("rds format", {
   expect_false(inherits(ref2, "drake_format_rds"))
 })
 
+test_with_dir("flow with rds format", {
+  skip_if(getRversion() < "3.5.0")
+  plan <- drake_plan(
+    x = target("a", format = "rds"),
+    y = target(x, format = "rds")
+  )
+  config <- drake_config(plan)
+  make(plan)
+  for (target in c("x", "y")) {
+    ref <- config$cache$storr$get("x")
+    expect_true(inherits(ref, "drake_format_rds"))
+  }
+  expect_equal(sort(justbuilt(config)), sort(c("x", "y")))
+  plan <- drake_plan(
+    x = target(c("a"), format = "rds"),
+    y = target(x, format = "rds")
+  )
+  make(plan)
+  expect_equal(justbuilt(config), "x")
+  make(plan)
+  expect_equal(justbuilt(config), character(0))
+  plan <- drake_plan(
+    x = target("b", format = "rds"),
+    y = target(x, format = "rds")
+  )
+  make(plan)
+  expect_equal(sort(justbuilt(config)), sort(c("x", "y")))
+})
+
 test_with_dir("rds format with environment storr", {
   skip_if(getRversion() < "3.5.0")
   plan <- drake_plan(x = target(list(x = letters, y = letters), format = "rds"))

@@ -64,15 +64,16 @@ understands a special set of optional columns. For details, visit
 must have columns \code{target} and \code{command} with the target names and the
 R code chunks to build them, respectively.
 
-You can add custom columns yourself, either with \code{target()}
-(e.g. \code{drake_plan(targ = target(my_cmd(), custom = "column"))})
+You can add custom columns yourself, either with \code{target()} (e.g.
+\code{drake_plan(y = target(f(x), transform = map(c(1, 2)), format = "fst"))})
 or by appending columns post-hoc (e.g. \code{plan$col <- vals}).
 
 Some of these custom columns are special. They are optional,
 but \code{drake} looks for them at various points in the workflow.
 \itemize{
-\item \code{elapsed} and \code{cpu}: number of seconds to wait for the target to build
-before timing out (\code{elapsed} for elapsed time and \code{cpu} for CPU time).
+\item \code{transform}: a call to \code{\link[=map]{map()}}, \code{\link[=split]{split()}}, \code{\link[=cross]{cross()}}, or
+\code{\link[=combine]{combine()}} to create and manipulate large collections of targets.
+Details: (\url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}). # nolint
 \item \code{format}: set a storage format to save big targets more efficiently.
 Most formats are faster than ordinary storage, and they consume
 far less memory. Available formats:
@@ -86,6 +87,9 @@ except we avoid creating a serialized copy of
 the entire target in memory.
 Requires R >= 3.5.0 so drake can use ALTREP.
 }
+\item \code{trigger}: rule to decide whether a target needs to run.
+It is recommended that you define this one with \code{target()}.
+Details: \url{https://ropenscilabs.github.io/drake-manual/triggers.html}.
 \item \code{hpc}: logical values (\code{TRUE}/\code{FALSE}/\code{NA}) whether to send each target
 to parallel workers.
 Visit \url{https://ropenscilabs.github.io/drake-manual/hpc.html#selectivity}
@@ -94,6 +98,8 @@ to learn more.
 See
 \url{https://ropenscilabs.github.io/drake-manual/hpc.html#advanced-options}
 for details.
+\item \code{elapsed} and \code{cpu}: number of seconds to wait for the target to build
+before timing out (\code{elapsed} for elapsed time and \code{cpu} for CPU time).
 \item \code{retries}: number of times to retry building a target
 in the event of an error.
 \item \code{seed}: an optional pseudo-random number generator (RNG)
@@ -102,9 +108,6 @@ unique reproducible target-specific seeds using the global seed
 (the \code{seed} argument to \code{\link[=make]{make()}} and \code{\link[=drake_config]{drake_config()}})
 and the target names, but you can overwrite these automatic seeds.
 \code{NA} entries default back to \code{drake}'s automatic seeds.
-\item \code{trigger}: rule to decide whether a target needs to run.
-It is recommended that you define this one with \code{target()}.
-Details: \url{https://ropenscilabs.github.io/drake-manual/triggers.html}.
 }
 }
 
@@ -114,9 +117,18 @@ Details: \url{https://ropenscilabs.github.io/drake-manual/triggers.html}.
 With the exception of \code{\link[=target]{target()}}, each one is a proper function
 with its own help file.
 \itemize{
-\item \code{\link[=target]{target()}}: declare more than just the command,
-e.g. assign a trigger or transform.
-Examples: \url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}. # nolint
+\item \code{\link[=target]{target()}}: give the target more than just a command.
+Using \code{\link[=target]{target()}}, you can apply a transformation
+(examples: \url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}), # nolint
+supply a trigger (\url{https://ropenscilabs.github.io/drake-manual/triggers.html}), # nolint
+or set any number of custom columns.
+\item \code{\link[=map]{map()}}: create multiple targets. Called inside \code{\link[=target]{target()}}.
+\item \code{\link[=split]{split()}}: create a target for each subset of data.
+Called inside \code{\link[=target]{target()}}.
+\item \code{\link[=cross]{cross()}}: create a target for each combination of values.
+Called inside \code{\link[=target]{target()}}.
+\item \code{\link[=combine]{combine()}}: aggregate groups of targets into other targets.
+Called inside \code{\link[=target]{target()}}.
 \item \code{\link[=file_in]{file_in()}}: declare an input file dependency.
 \item \code{\link[=file_out]{file_out()}}: declare an output file to be produced
 when the target is built.
@@ -169,6 +181,18 @@ head(my_plan)
 # There, `drake` sees that `small`, `large`, and `coef_regression2_small`
 # are loaded in with calls to `loadd()` and `readd()`.
 deps_code("report.Rmd")
+
+# Formats are great for big data: https://github.com/ropensci/drake/pull/977
+# Below, each target is 1.6 GB in memory.
+# Run make() on this plan to see how much faster fst is!
+n <- 1e8
+plan <- drake_plan(
+  data_fst = target(
+    data.frame(x = runif(n), y = runif(n)),
+    format = "fst"
+  ),
+  data_old = data.frame(x = runif(n), y = runif(n))
+)
 
 # Use transformations to generate large plans.
 # Read more at
@@ -245,4 +269,7 @@ sms <- rlang::syms(letters) # To sub in character args, skip this.
 drake_plan(x = target(f(char), transform = map(char = !!sms)))
 })
 }
+}
+\seealso{
+make, drake_config, transform_plan, map, split, cross, combine
 }
