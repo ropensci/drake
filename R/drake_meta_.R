@@ -299,6 +299,7 @@ rehash_url <- function(url) {
     stop("no internet. Cannot check url: ", url, call. = FALSE) # nocov
   }
   req <- curl::curl_fetch_memory(url,  handle = curl::new_handle(nobody = TRUE))
+  stopifnot(length(req$content) < 1L)
   headers <- curl::parse_headers_list(req$headers)
   assert_useful_headers(headers, url)
   etag <- paste(headers[["etag"]], collapse = "")
