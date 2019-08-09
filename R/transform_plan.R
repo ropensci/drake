@@ -479,7 +479,8 @@ dsl_transform.map <- dsl_transform.cross <- function(
     )
   }
   grid <- do.call(cbind, unname(gridlist))
-  grid <- grid[, cols, drop = FALSE]
+  grid_cols <- c(names(groupings), setdiff(colnames(grid), names(groupings)))
+  grid <- grid[, grid_cols, drop = FALSE]
   sub_cols <- intersect(colnames(grid), group_names(transform))
   new_targets <- new_targets(
     target, grid, cols = sub_cols, id = dsl_id(transform)
