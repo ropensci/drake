@@ -464,18 +464,27 @@ dsl_transform.map <- dsl_transform.cross <- function(
 ) {
   groupings <- groupings(transform)
   groupings <- thin_groupings(groupings, max_expand)
+  cols <- upstream_trace_vars(target, plan, graph)
   grid <- dsl_grid(transform, groupings)
   if (any(dim(grid) < 1L)) {
     warn_empty_transform(target)
     return()
   }
-  cols <- upstream_trace_vars(target, plan, graph)
-  grid <- dsl_left_outer_join(grid, plan[, cols, drop = FALSE])
+  gridlist <- lapply(grid, as.data.frame, stringsAsFactors = FALSE)
+  for (i in seq_len(ncol(grid))) {
+    colnames(gridlist[[i]]) <- colnames(grid)[i]
+    gridlist[[i]] <- dsl_left_outer_join(
+      gridlist[[i]],
+      plan[, cols, drop = FALSE]
+    )
+  }
+  grid <- do.call(cbind, unname(gridlist))
   sub_cols <- intersect(colnames(grid), group_names(transform))
   new_targets <- new_targets(
     target, grid, cols = sub_cols, id = dsl_id(transform)
   )
   out <- data.frame(target = new_targets, stringsAsFactors = FALSE)
+  grid <- grid[, unique(colnames(grid))]
   grid$.id_chr <- sprintf("\"%s\"", new_targets)
   for (col in setdiff(old_cols(plan), c("target", "transform"))) {
     if (is.language(row[[col]][[1]])) {
@@ -505,7 +514,15 @@ dsl_left_outer_join <- function(x, y) {
   # Is merge() a performance bottleneck?
   # Need to profile.
   out <- merge(x = x, y = y, by = by, all.x = TRUE, sort = FALSE)
-  out[, union(colnames(x), colnames(y)), drop = FALSE]
+  out <- out[, union(colnames(x), colnames(y)), drop = FALSE]
+  is_na_col <- vapply(
+    out,
+    function(x) {
+      all(is.na(x))
+    },
+    FUN.VALUE = logical(1)
+  )
+  out[, !is_na_col, drop = FALSE]
 }
 
 upstream_trace_vars <- function(target, plan, graph) {
