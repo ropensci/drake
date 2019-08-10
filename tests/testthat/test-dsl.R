@@ -3,10 +3,12 @@ drake_context("dsl")
 # Keep test_that(). test_with_dir() somehow fools the
 # hpc test suite into thinking combine() does not come from drake.
 test_with_dir("dsl placeholders", {
-  expect_error(map(), regexp = "must be called inside target")
-  expect_error(split(), regexp = "must be called inside target")
-  expect_error(cross(), regexp = "must be called inside target")
-  expect_error(combine(), regexp = "must be called inside target")
+  # nolint start
+  expect_error(drake:::map(), regexp = "must be called inside target")
+  expect_error(drake:::split(), regexp = "must be called inside target")
+  expect_error(drake:::cross(), regexp = "must be called inside target")
+  expect_error(drake:::combine(), regexp = "must be called inside target")
+  # nolint end
 })
 
 test_with_dir("nothing to transform", {
