@@ -460,7 +460,7 @@ test_with_dir("run make() from subdir", {
   with_dir("subdir", {
     expect_warning(make(plan), regexp = "subdirectory")
     expect_warning(make(plan), regexp = "subdirectory")
-    make(plan, cache = y)
+    expect_warning(make(plan, cache = y), regexp = "subdirectory")
     new_cache(".drake")
     make(plan)
     make(plan, cache = storr::storr_environment())

@@ -482,14 +482,9 @@ subdirectory_warning <- function(config) {
   if (identical(Sys.getenv("drake_warn_subdir"), "false")) {
     return()
   }
-  dir_cache <- config$cache$path
-  if (!identical(basename(dir_cache), basename(default_cache_path()))) {
-    return()
-  }
-  dir_wd <- getwd()
-  in_root <- is.null(dir_cache) ||
-    basename(dir_cache) %in% list.files(path = dir_wd, all.files = TRUE)
-  if (in_root) {
+  dir <- dirname(config$cache$path)
+  wd <- getwd()
+  if (!length(dir) || wd == dir || is.na(pmatch(dir, wd))) {
     return()
   }
   warning(
@@ -503,9 +498,9 @@ subdirectory_warning <- function(config) {
     "directory with new_cache('path_name'), or\n",
     "  (3) supply a cache of your own (e.g. make(cache = your_cache))\n",
     "      whose folder name is not '.drake'.\n",
-    "  running make() from: ", dir_wd, "\n",
-    "  drake project root:  ", dirname(dir_cache), "\n",
-    "  cache directory:     ", dir_cache,
+    "  running make() from: ", wd, "\n",
+    "  drake project root:  ", dir, "\n",
+    "  cache directory:     ", config$cache$path,
     call. = FALSE
   )
 }
