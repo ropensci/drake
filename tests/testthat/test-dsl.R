@@ -1,6 +1,8 @@
 drake_context("dsl")
 
-test_with_dir("dsl placeholders", {
+# Keep test_that(). test_with_dir() somehow fools the
+# hpc test suite into thinking combine() does not come from drake.
+test_that("dsl placeholders", {
   expect_error(map(), regexp = "must be called inside target")
   expect_error(split(), regexp = "must be called inside target")
   expect_error(cross(), regexp = "must be called inside target")
