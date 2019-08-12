@@ -1267,8 +1267,9 @@ drake_meta <- function(target, config) {
   drake_meta_(target, config)
 }
 
-#' @title Deprecated. Show drake's color palette.
+#' @title Show drake's color palette.
 #' @description Deprecated on 2019-01-12.
+#' \lifecycle{deprecated}
 #' @export
 #' @keywords internal
 #' @details This function is
