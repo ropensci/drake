@@ -56,3 +56,21 @@ test_with_dir("isolate_example()", {
   isolate_example("example", file.create("abc"))
   expect_false(file.exists("abc"))
 })
+
+test_with_dir("lifecycle", {
+  stages <- c(
+    "experimental",
+    "maturing",
+    "stable",
+    "questioning",
+    "retired",
+    "archived",
+    "soft-deprecated",
+    "deprecated",
+    "defunct"
+  )
+  for (stage in stages) {
+    expect_true(is.character(lifecycle(stage)))
+  }
+  expect_error(lifecycle("not-a-stage"), regexp = "Unknown lifecycle stage")
+})

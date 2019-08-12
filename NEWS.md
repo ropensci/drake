@@ -23,6 +23,7 @@
 - The menu in `clean()` only appears if `garbage_collection` is `TRUE`. Also, this menu is added to `rescue_cache(garbage_collection = TRUE)`.
 - Reorganize the internal code files and functions to make development easier.
 - Move the history inside the cache folder `.drake/`. The old `.drake_history/` folder was awkward. Old histories are migrated during `drake_config()`, and `drake_history()`.
+- Add lifecycle badges to exported functions.
 
 # Version 7.5.2
 
