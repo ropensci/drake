@@ -274,11 +274,3 @@ file_extn <- function(x) {
   x <- rev(x)
   x[1]
 }
-
-random_tempdir <- function() {
-  while (file.exists(dir <- tempfile())) {
-    Sys.sleep(1e-6) # nocov
-  }
-  dir.create(dir)
-  dir
-}

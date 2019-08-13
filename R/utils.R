@@ -132,6 +132,26 @@ longest_match <- function(choices, against) {
   matches[which.max(nchar(matches))]
 }
 
+random_string <- function(exclude) {
+  key <- NULL
+  while (is.null(key) || (key %in% exclude)) {
+    key <- basename(tempfile())
+  }
+  key
+}
+
+random_tempdir <- function() {
+  while (file.exists(dir <- tempfile())) {
+    Sys.sleep(1e-6) # nocov
+  }
+  dir.create(dir)
+  dir
+}
+
+all_is_na <- function(x) {
+  all(is.na(x))
+}
+
 # From lintr
 `%||%` <- function(x, y) {
   if (is.null(x) || length(x) <= 0) {

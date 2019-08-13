@@ -514,13 +514,16 @@ dsl_left_outer_join <- function(x, y) {
   y <- y[rows_keep,, drop = FALSE] # nolint
   # Just a precaution. We should actually be okay by now.
   y <- y[!duplicated(y[, by, drop = FALSE]),, drop = FALSE] # nolint
-  # Is merge() a performance bottleneck?
-  # Need to profile.
+  # Need to recover the original row order
+  key <- random_string(exclude = c(colnames(x), colnames(y)))
+  x[[key]] <- seq_len(nrow(x))
   out <- merge(x = x, y = y, by = by, all.x = TRUE, sort = FALSE)
-  out <- out[, union(colnames(x), colnames(y)), drop = FALSE]
+  out <- out[, !duplicated(colnames(out)), drop = FALSE]
   is_na_col <- vapply(out, all_is_na, FUN.VALUE = logical(1))
   out <- out[, !is_na_col, drop = FALSE]
-  out[order(x), ]
+  out <- out[order(out[[key]]),, drop = FALSE] # nolint
+  out[[key]] <- NULL
+  out
 }
 
 all_is_na <- function(x) {

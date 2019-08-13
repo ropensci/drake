@@ -2204,37 +2204,37 @@ test_with_dir("max_expand", {
     analysis_m_100L_data_100L = m(data_100L, 100L),
     analysis_z_100L_data_100L = z(data_100L, 100L),
     result_a = bind_rows(
-      analysis_a_1L_data_100L,
-      analysis_a_50L_data_100L,
-      analysis_a_100L_data_100L,
       analysis_a_1L_data_1L,
       analysis_a_50L_data_1L,
       analysis_a_100L_data_1L,
       analysis_a_1L_data_50L,
       analysis_a_50L_data_50L,
-      analysis_a_100L_data_50L
+      analysis_a_100L_data_50L,
+      analysis_a_1L_data_100L,
+      analysis_a_50L_data_100L,
+      analysis_a_100L_data_100L
     ),
     result_m = bind_rows(
-      analysis_m_1L_data_100L,
-      analysis_m_50L_data_100L,
-      analysis_m_100L_data_100L,
       analysis_m_1L_data_1L,
       analysis_m_50L_data_1L,
       analysis_m_100L_data_1L,
       analysis_m_1L_data_50L,
       analysis_m_50L_data_50L,
-      analysis_m_100L_data_50L
+      analysis_m_100L_data_50L,
+      analysis_m_1L_data_100L,
+      analysis_m_50L_data_100L,
+      analysis_m_100L_data_100L
     ),
     result_z = bind_rows(
-      analysis_z_1L_data_100L,
-      analysis_z_50L_data_100L,
-      analysis_z_100L_data_100L,
       analysis_z_1L_data_1L,
       analysis_z_50L_data_1L,
       analysis_z_100L_data_1L,
       analysis_z_1L_data_50L,
       analysis_z_50L_data_50L,
-      analysis_z_100L_data_50L
+      analysis_z_100L_data_50L,
+      analysis_z_1L_data_100L,
+      analysis_z_50L_data_100L,
+      analysis_z_100L_data_100L
     )
   )
   equivalent_plans(out, exp)
@@ -2752,6 +2752,40 @@ test_with_dir("side-by-side cross of nested vars (#983)", {
     d_b_a_1_3_2_c_b_a_1_3 = list(b_a_1_3_2, c_b_a_1_3),
     d_b_a_1_3_c_b_a_1_3_2 = list(b_a_1_3, c_b_a_1_3_2),
     d_b_a_1_3_2_c_b_a_1_3_2 = list(b_a_1_3_2, c_b_a_1_3_2)
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("cross finds the correct combinations (#986)", {
+  out <- drake_plan(
+    radar = target(
+      get_radar_info(radar),
+      transform = map(radar = c("a", "b"))
+    ),
+    set = target(
+      get_data(year, month),
+      transform = cross(year = c(2015, 2016), month = c(9, 10))
+    ),
+    cut = target(
+      some_crop_function(set, radar),
+      transform = cross(radar, set)
+    )
+  )
+  exp <- drake_plan(
+    radar_a = get_radar_info("a"),
+    radar_b = get_radar_info("b"),
+    set_2015_9 = get_data(2015, 9),
+    set_2016_9 = get_data(2016, 9),
+    set_2015_10 = get_data(2015, 10),
+    set_2016_10 = get_data(2016, 10),
+    cut_radar_a_set_2015_9 = some_crop_function(set_2015_9, radar_a),
+    cut_radar_b_set_2015_9 = some_crop_function(set_2015_9, radar_b),
+    cut_radar_a_set_2016_9 = some_crop_function(set_2016_9, radar_a),
+    cut_radar_b_set_2016_9 = some_crop_function(set_2016_9, radar_b),
+    cut_radar_a_set_2015_10 = some_crop_function(set_2015_10, radar_a),
+    cut_radar_b_set_2015_10 = some_crop_function(set_2015_10, radar_b),
+    cut_radar_a_set_2016_10 = some_crop_function(set_2016_10, radar_a),
+    cut_radar_b_set_2016_10 = some_crop_function(set_2016_10, radar_b)
   )
   equivalent_plans(out, exp)
 })
