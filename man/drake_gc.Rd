@@ -2,7 +2,8 @@
 % Please edit documentation in R/clean.R
 \name{drake_gc}
 \alias{drake_gc}
-\title{Do garbage collection on the drake cache.}
+\title{Do garbage collection on the drake cache.
+\lifecycle{maturing}}
 \usage{
 drake_gc(path = NULL, search = NULL, verbose = 1L,
   cache = drake::drake_cache(path = path, verbose = verbose),

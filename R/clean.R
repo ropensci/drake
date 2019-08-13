@@ -1,4 +1,5 @@
 #' @title Invalidate and deregister targets.
+#' \lifecycle{maturing}
 #' @description Force targets to be out of date and remove target names
 #'   from the data in the cache.
 #' @details By default, [clean()] invalidates **all** targets,
@@ -224,6 +225,7 @@ abort_gc <- function(path) {
 }
 
 #' @title Do garbage collection on the drake cache.
+#' \lifecycle{maturing}
 #' @description Garbage collection removes obsolete target values
 #' from the cache.
 #' @details Caution: garbage collection *actually* removes data
@@ -283,6 +285,7 @@ keys_are_mangled <- function(cache) {
 
 #' @title Try to repair a drake cache that is prone
 #'   to throwing `storr`-related errors.
+#' \lifecycle{questioning}
 #' @description Sometimes, `storr` caches may have
 #' dangling orphaned files that prevent you from loading or cleaning.
 #' This function tries to remove those files so you can use the

@@ -2,7 +2,8 @@
 % Please edit documentation in R/clean.R
 \name{clean}
 \alias{clean}
-\title{Invalidate and deregister targets.}
+\title{Invalidate and deregister targets.
+\lifecycle{maturing}}
 \usage{
 clean(..., list = character(0), destroy = FALSE, path = NULL,
   search = NULL, cache = drake::drake_cache(path = path, verbose =

@@ -3,7 +3,8 @@
 \name{rescue_cache}
 \alias{rescue_cache}
 \title{Try to repair a drake cache that is prone
-to throwing \code{storr}-related errors.}
+to throwing \code{storr}-related errors.
+\lifecycle{questioning}}
 \usage{
 rescue_cache(targets = NULL, path = NULL, search = NULL,
   verbose = 1L, force = FALSE, cache = drake::drake_cache(path =
