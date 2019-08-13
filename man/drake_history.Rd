@@ -2,7 +2,8 @@
 % Please edit documentation in R/drake_history.R
 \name{drake_history}
 \alias{drake_history}
-\title{History and provenance}
+\title{History and provenance
+\lifecycle{experimental}}
 \usage{
 drake_history(cache = NULL, history = NULL, analyze = TRUE,
   verbose = TRUE)

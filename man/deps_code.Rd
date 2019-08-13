@@ -2,7 +2,8 @@
 % Please edit documentation in R/deps.R
 \name{deps_code}
 \alias{deps_code}
-\title{List the dependencies of a function or command}
+\title{List the dependencies of a function or command
+\lifecycle{stable}}
 \usage{
 deps_code(x)
 }

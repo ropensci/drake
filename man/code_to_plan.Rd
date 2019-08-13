@@ -2,8 +2,9 @@
 % Please edit documentation in R/drake_plan_helpers.R
 \name{code_to_plan}
 \alias{code_to_plan}
-\title{Turn an R script file or knitr / R Markdown report
-into a \code{drake} workflow plan data frame.}
+\title{Turn an R script file or \code{knitr} / R Markdown report
+into a \code{drake} plan.
+\lifecycle{stable}}
 \usage{
 code_to_plan(path)
 }

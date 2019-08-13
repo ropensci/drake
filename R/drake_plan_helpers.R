@@ -1,6 +1,7 @@
-#' @title Define custom columns in a [drake_plan()].
-#' @description Not a user-side function. Must be called inside
-#'   [drake_plan()].
+#' @title Customize a target in [drake_plan()].
+#' \lifecycle{maturing}
+#' @description Must be called inside [drake_plan()].
+#'   Invalid otherwise.
 #' @export
 #' @inheritSection drake_plan Columns
 #' @inheritSection drake_plan Keywords
@@ -74,6 +75,7 @@ target <- function(command = NULL, ...) {
 }
 
 #' @title Define multiple targets at once
+#' \lifecycle{maturing}
 #' @description Similar to `pmap()` from `purrr`, except `drake`'s
 #'   `map()` defines new targets.
 #' @details Only valid within a call to [target()] in
@@ -151,6 +153,7 @@ map <- function(..., .data, .id, .tag_in, .tag_out) {
 }
 
 #' @title Define a target for each subset of data
+#' \lifecycle{maturing}
 #' @description Similar `group_map()`, from `dplyr`, except it
 #'   defines new targets in `drake`.
 #' @details Only valid within a call to [target()] in
@@ -176,6 +179,7 @@ split <- function(..., .id, .tag_in, .tag_out) {
 }
 
 #' @title Define a target for each combination of values
+#' \lifecycle{maturing}
 #' @description Similar `crossing()`, from `tidyr`, except it
 #'   defines new targets in `drake`.
 #' @details Only valid within a call to [target()] in
@@ -213,6 +217,7 @@ cross <- function(..., .data, .id, .tag_in, .tag_out) {
 }
 
 #' @title Define aggregates of other targets
+#' \lifecycle{maturing}
 #' @description Similar `summarize()`, from `dplyr`, except it
 #'   defines new targets in `drake`.
 #' @details Only valid within a call to [target()] in
@@ -253,6 +258,7 @@ combine <- function(..., .by, .id, .tag_in, .tag_out) {
 }
 
 #' @title Customize the decision rules for rebuilding targets
+#' \lifecycle{stable}
 #' @description  Use this function inside a target's command
 #'   in your [drake_plan()] or the `trigger` argument to
 #'   [make()] or [drake_config()].
@@ -366,6 +372,7 @@ trigger <- function(
 }
 
 #' @title Declare input files and directories.
+#' \lifecycle{stable}
 #' @description `file_in()` marks individual files
 #'   (and whole directories) that your targets depend on.
 #' @section URLs:
@@ -432,6 +439,7 @@ file_in <- function(...) {
 }
 
 #' @title Declare output files and directories.
+#' \lifecycle{stable}
 #' @description `file_out()` marks individual files
 #'   (and whole directories) that your targets create.
 #' @export
@@ -485,6 +493,7 @@ file_out <- file_in
 
 #' @title Declare `knitr`/`rmarkdown` source files
 #'   as dependencies.
+#' \lifecycle{stable}
 #' @description `knitr_in()` marks individual `knitr`/R Markdown
 #'   reports as dependencies. In `drake`, these reports are pieces
 #'   of the pipeline. R Markdown is a great tool for *displaying*
@@ -526,6 +535,7 @@ file_out <- file_in
 knitr_in <- file_in
 
 #' @title Ignore code
+#' \lifecycle{stable}
 #' @description Ignore sections of commands and imported functions.
 #' @details In user-defined functions and [drake_plan()] commands, you can
 #' wrap code chunks in `ignore()` to
@@ -579,6 +589,7 @@ ignore <- function(x = NULL) {
 }
 
 #' @title Suppress dependency detection.
+#' \lifecycle{stable}
 #' @description Tell `drake` to not search for dependencies in a chunk of code.
 #' @details `no_deps()` is similar to [ignore()], but it still lets `drake`
 #'   track meaningful changes to the code itself.
@@ -625,6 +636,7 @@ no_deps <- function(x = NULL) {
 }
 
 #' @title Get the environment where drake builds targets
+#' \lifecycle{questioning}
 #' @description Call this function inside the commands in your plan
 #'   to get the environment where `drake` builds targets.
 #'   That way, you can strategically remove targets from memory
@@ -679,6 +691,7 @@ drake_markers <- c(
 )
 
 #' @title Row-bind together drake plans
+#' \lifecycle{stable}
 #' @description Combine drake plans together in a way that
 #'   correctly fills in missing entries.
 #' @export
@@ -703,8 +716,9 @@ bind_plans <- function(...) {
   sanitize_plan(drake_bind_rows(...))
 }
 
-#' @title Turn an R script file or knitr / R Markdown report
-#'   into a `drake` workflow plan data frame.
+#' @title Turn an R script file or `knitr` / R Markdown report
+#'   into a `drake` plan.
+#' \lifecycle{stable}
 #' @export
 #' @seealso [drake_plan()], [make()], [plan_to_code()],
 #'   [plan_to_notebook()]
@@ -761,8 +775,8 @@ node_plan <- function(node) {
   )
 }
 
-#' @title Turn a `drake` workflow plan data frame
-#'   into a plain R script file.
+#' @title Turn a `drake` plan into a plain R script file.
+#' \lifecycle{stable}
 #' @export
 #' @seealso [drake_plan()], [make()], [code_to_plan()],
 #'   [plan_to_notebook()]
@@ -798,8 +812,8 @@ plan_to_code <- function(plan, con = stdout()) {
   writeLines(text = plan_to_text(plan), con = con)
 }
 
-#' @title Turn a `drake` workflow plan data frame
-#'   into an R notebook,
+#' @title Turn a `drake` plan into an R notebook.
+#' \lifecycle{stable}
 #' @export
 #' @seealso [drake_plan()], [make()], [code_to_plan()],
 #'   [plan_to_code()]
@@ -870,7 +884,8 @@ plan_to_text <- function(plan) {
   text
 }
 
-#' @title Show the code required to produce a given workflow plan data frame
+#' @title Show the code required to produce a given `drake` plan
+#' \lifecycle{stable}
 #' @description You supply a plan, and [drake_plan_source()]
 #'   supplies code to generate that plan. If you have the
 #'   [`prettycode` package](https://github.com/r-lib/prettycode),

@@ -2,7 +2,8 @@
 % Please edit documentation in R/drake_plan_helpers.R
 \name{no_deps}
 \alias{no_deps}
-\title{Suppress dependency detection.}
+\title{Suppress dependency detection.
+\lifecycle{stable}}
 \usage{
 no_deps(x = NULL)
 }

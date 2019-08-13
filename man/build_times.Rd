@@ -2,7 +2,8 @@
 % Please edit documentation in R/build_times.R
 \name{build_times}
 \alias{build_times}
-\title{List the time it took to build each target.}
+\title{See the time it took to build each target.
+\lifecycle{}}
 \usage{
 build_times(..., path = NULL, search = NULL, digits = 3,
   cache = drake_cache(path = path, verbose = verbose),

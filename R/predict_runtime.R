@@ -1,5 +1,6 @@
 #' @title Predict the elapsed runtime of the next call to `make()`
 #'   for non-staged parallel backends.
+#' \lifecycle{maturing}
 #' @description Take the past recorded runtimes times from
 #'   [build_times()] and use them to predict how the targets
 #'   will be distributed among the available workers in the
@@ -72,6 +73,7 @@ predict_runtime <- function(
 
 #' @title Predict the load balancing of the next call to `make()`
 #'   for non-staged parallel backends.
+#' \lifecycle{maturing}
 #' @description Take the past recorded runtimes times from
 #'   [build_times()] and use them to predict how the targets
 #'   will be distributed among the available workers in the

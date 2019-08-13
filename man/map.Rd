@@ -2,7 +2,8 @@
 % Please edit documentation in R/drake_plan_helpers.R
 \name{map}
 \alias{map}
-\title{Define multiple targets at once}
+\title{Define multiple targets at once
+\lifecycle{maturing}}
 \usage{
 map(..., .data, .id, .tag_in, .tag_out)
 }

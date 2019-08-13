@@ -1,4 +1,5 @@
 #' @title Read and return a drake target/import from the cache.
+#' \lifecycle{maturing}
 #' @description [readd()] returns an object from the cache,
 #' and [loadd()] loads one or more objects from the cache
 #' into your environment or session. These objects are usually
@@ -107,6 +108,7 @@ readd <- function(
 }
 
 #' @title Load one or more targets or imports from the drake cache.
+#' \lifecycle{maturing}
 #' @rdname readd
 #' @seealso [cached()], [drake_plan()], [make()]
 #' @export
@@ -342,6 +344,7 @@ load_target <- function(target, cache, namespace, envir, verbose, lazy) {
 }
 
 #' @title Load a target right away (internal function)
+#' \lifecycle{stable}
 #' @description This function is only exported
 #' to make active bindings work safely.
 #' It is not actually a user-side function.
@@ -407,6 +410,7 @@ bind_load_target <- function(target, cache, namespace, envir, verbose) {
 
 
 #' @title Show how a target/import was produced.
+#' \lifecycle{stable}
 #' @description Show the command that produced a target
 #'   or indicate that the object or file was imported.
 #' @export
@@ -444,6 +448,7 @@ show_source <- function(target, config, character_only = FALSE) {
 }
 
 #' @title Read the pseudo-random number generator seed of the project.
+#' \lifecycle{maturing}
 #' @description When a project is created with [make()]
 #' or [drake_config()], the project's pseudo-random number generator
 #' seed is cached. Then, unless the cache is destroyed,
@@ -514,6 +519,7 @@ read_drake_seed <- function(
 }
 
 #' @title List targets in the cache.
+#' \lifecycle{maturing}
 #' @description Tip: read/load a cached item with [readd()]
 #'   or [loadd()].
 #' @seealso [readd()], [loadd()],
@@ -626,6 +632,7 @@ is_imported_cache <- Vectorize(function(target, cache) {
 "target", SIMPLIFY = TRUE)
 
 #' @title Get the cache of a `drake` project.
+#' \lifecycle{stable}
 #' @description [make()] saves the values of your targets so
 #'   you rarely need to think about output files. By default,
 #'   the cache is a hidden folder called `.drake/`.
@@ -683,6 +690,7 @@ drake_cache <- function(
 
 
 #' @title Search up the file system for the nearest drake cache.
+#' \lifecycle{stable}
 #' @description Only works if the cache is a file system in a
 #' hidden folder named `.drake/` (default).
 #' @seealso [drake_plan()], [make()],
@@ -729,6 +737,7 @@ find_cache <- function(
 }
 
 #' @title  Make a new `drake` cache.
+#' \lifecycle{maturing}
 #' @description Uses the [storr_rds()] function
 #' from the `storr` package.
 #' @export
@@ -888,8 +897,8 @@ drake_cache_version <- function(cache) {
   }
 }
 
-#' @title Return the [sessionInfo()]
-#'   of the last call to [make()].
+#' @title Session info of the last call to [make()].
+#' \lifecycle{maturing}
 #' @description By default, session info is saved
 #' during [make()] to ensure reproducibility.
 #' Your loaded packages and their versions are recorded, for example.
@@ -922,8 +931,9 @@ drake_get_session_info <- function(
   return(cache$get("sessionInfo", namespace = "session"))
 }
 
-#' @title Get a table that represents the state of the cache.
-#' @description
+#' @title Get the state of the cache.
+#' \lifecycle{maturing}
+#' @description Get the fingerprints of all the targets in a data frame.
 #' This functionality is like
 #' `make(..., cache_log_file = TRUE)`,
 #' but separated and more customizable. Hopefully, this functionality
@@ -1041,6 +1051,7 @@ single_cache_log <- function(key, cache) {
 }
 
 #' @title Get diagnostic metadata on a target.
+#' \lifecycle{maturing}
 #' @description Diagnostics include errors, warnings,
 #'   messages, runtimes, and other context/metadata from when a
 #'   target was built or an import was processed.
@@ -1124,6 +1135,7 @@ diagnose <- function(
 }
 
 #' @title List running targets.
+#' \lifecycle{maturing}
 #' @description List the targets that either
 #'   (1) are currently being built during a call to [make()], or
 #'   (2) if [make()] was interrupted, the targets that were running
@@ -1161,7 +1173,7 @@ running <- function(
 }
 
 #' @title List failed targets.
-#'   to [make()].
+#' \lifecycle{maturing}
 #' @description Together, functions `failed()` and
 #' [diagnose()] should eliminate the strict need
 #' for ordinary error messages printed to the console.
@@ -1205,7 +1217,7 @@ failed <- function(
 }
 
 #' @title Get the build progress of your targets
-#'   during a [make()].
+#' \lifecycle{maturing}
 #' @description Objects that drake imported, built, or attempted
 #' to build are listed as `"done"` or `"running"`.
 #' Skipped objects are not listed.

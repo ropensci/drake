@@ -2,7 +2,8 @@
 % Please edit documentation in R/drake_build.R
 \name{debug_and_run}
 \alias{debug_and_run}
-\title{Run a function in debug mode.}
+\title{Run a function in debug mode.
+\lifecycle{stable}}
 \usage{
 debug_and_run(f)
 }

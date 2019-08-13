@@ -2,8 +2,8 @@
 % Please edit documentation in R/drake_config.R
 \name{drake_config}
 \alias{drake_config}
-\title{Create the internal runtime parameter list
-used internally in \code{\link[=make]{make()}}.}
+\title{Interpret the plan and prepare for \code{\link[=make]{make()}}
+\lifecycle{maturing}}
 \usage{
 drake_config(plan, targets = NULL, envir = parent.frame(),
   verbose = 1L, hook = NULL, cache = drake::drake_cache(verbose =
@@ -480,12 +480,11 @@ whose names match your URL, \code{drake} will choose the closest match.}
 The master internal configuration list of a project.
 }
 \description{
-\code{\link[=drake_config]{drake_config()}} collects and sanitizes the multitude of
-parameters and settings that \code{\link[=make]{make()}} needs to do its job:
-the plan, packages,
-the environment of functions and initial data objects,
-parallel computing instructions,
-verbosity level, etc.
+\code{\link[=drake_config]{drake_config()}} does all the preprocessing that
+\code{\link[=make]{make()}} needs to build targets. This includes interpreting
+the plan (from \code{\link[=drake_plan]{drake_plan()}}) and analyzing how all the
+targets fit together. The result is a list of objects
+that \code{\link[=make]{make()}} needs to keep track of everything during runtime.
 }
 \details{
 Once you create a list with \code{\link[=drake_config]{drake_config()}},

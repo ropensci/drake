@@ -1,4 +1,5 @@
 #' @title List the most upstream *recoverable* outdated targets.
+#' \lifecycle{experimental}
 #' @description Only shows the most upstream updated targets.
 #'   Whether downstream targets are recoverable depends on
 #'   the eventual values of the upstream targets in the next [make()].
@@ -94,6 +95,7 @@ is_recoverable <- function(target, config) {
 }
 
 #' @title List the targets that are out of date.
+#' \lifecycle{stable}
 #' @description Outdated targets will be rebuilt in the next
 #'   [make()].
 #' @export
@@ -181,6 +183,7 @@ first_outdated <- function(config) {
 
 #' @title Report any import objects required by your drake_plan
 #'   plan but missing from your workspace or file system.
+#' \lifecycle{stable}
 #' @description Checks your workspace/environment and
 #' file system.
 #' @export

@@ -2,7 +2,8 @@
 % Please edit documentation in R/rstudio.R
 \name{rs_addin_r_outdated}
 \alias{rs_addin_r_outdated}
-\title{RStudio addin for r_outdated()}
+\title{RStudio addin for r_outdated()
+\lifecycle{stable}}
 \usage{
 rs_addin_r_outdated(r_args = list(), .print = TRUE)
 }

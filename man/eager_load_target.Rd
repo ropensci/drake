@@ -2,7 +2,8 @@
 % Please edit documentation in R/cache.R
 \name{eager_load_target}
 \alias{eager_load_target}
-\title{Load a target right away (internal function)}
+\title{Load a target right away (internal function)
+\lifecycle{stable}}
 \usage{
 eager_load_target(target, cache, namespace, envir, verbose)
 }

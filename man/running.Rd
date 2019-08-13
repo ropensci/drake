@@ -2,7 +2,8 @@
 % Please edit documentation in R/cache.R
 \name{running}
 \alias{running}
-\title{List running targets.}
+\title{List running targets.
+\lifecycle{maturing}}
 \usage{
 running(path = NULL, search = NULL, cache = drake::drake_cache(path =
   path, verbose = verbose), verbose = 1L)

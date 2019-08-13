@@ -2,7 +2,8 @@
 % Please edit documentation in R/drake_plan_helpers.R
 \name{file_in}
 \alias{file_in}
-\title{Declare input files and directories.}
+\title{Declare input files and directories.
+\lifecycle{stable}}
 \usage{
 file_in(...)
 }

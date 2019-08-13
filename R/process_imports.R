@@ -6,8 +6,9 @@ process_imports <- function(config) {
   }
 }
 
-#' @title internal function
-#' @description only used inside process_imports(). Not a user-side function.
+#' @title Process an imported data object
+#' \lifecycle{stable}
+#' @description For internal use only. Not a user-side function.
 #' @export
 #' @keywords internal
 #' @param import Character, name of an import to process

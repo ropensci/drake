@@ -2,8 +2,8 @@
 % Please edit documentation in R/cache.R
 \name{drake_get_session_info}
 \alias{drake_get_session_info}
-\title{Return the \code{\link[=sessionInfo]{sessionInfo()}}
-of the last call to \code{\link[=make]{make()}}.}
+\title{Session info of the last call to \code{\link[=make]{make()}}.
+\lifecycle{maturing}}
 \usage{
 drake_get_session_info(path = NULL, search = NULL,
   cache = drake::drake_cache(path = path, verbose = verbose),

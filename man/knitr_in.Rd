@@ -3,7 +3,8 @@
 \name{knitr_in}
 \alias{knitr_in}
 \title{Declare \code{knitr}/\code{rmarkdown} source files
-as dependencies.}
+as dependencies.
+\lifecycle{stable}}
 \usage{
 knitr_in(...)
 }

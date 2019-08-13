@@ -2,7 +2,8 @@
 % Please edit documentation in R/make.R
 \name{make}
 \alias{make}
-\title{Run your project (build the outdated targets).}
+\title{Run your project (build the outdated targets).
+\lifecycle{maturing}}
 \usage{
 make(plan, targets = NULL, envir = parent.frame(), verbose = 1L,
   hook = NULL, cache = drake::drake_cache(verbose = verbose,

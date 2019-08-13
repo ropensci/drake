@@ -1,4 +1,5 @@
-#' @title List the time it took to build each target.
+#' @title See the time it took to build each target.
+#' \lifecycle{}
 #' @description Applies to targets in your plan, not imports or files.
 #' @seealso [predict_runtime()]
 #' @export

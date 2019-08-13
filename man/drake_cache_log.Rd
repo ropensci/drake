@@ -2,7 +2,8 @@
 % Please edit documentation in R/cache.R
 \name{drake_cache_log}
 \alias{drake_cache_log}
-\title{Get a table that represents the state of the cache.}
+\title{Get the state of the cache.
+\lifecycle{maturing}}
 \usage{
 drake_cache_log(path = NULL, search = NULL,
   cache = drake::drake_cache(path = path, verbose = verbose),
@@ -36,6 +37,7 @@ Data frame of the hash keys of the targets and imports
 in the cache
 }
 \description{
+Get the fingerprints of all the targets in a data frame.
 This functionality is like
 \code{make(..., cache_log_file = TRUE)},
 but separated and more customizable. Hopefully, this functionality

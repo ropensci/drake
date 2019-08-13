@@ -1,4 +1,5 @@
 #' @title Manage the in-memory dependencies of a target.
+#' \lifecycle{stable}
 #' @description Load/unload a target's dependencies.
 #'   Not a user-side function.
 #' @export

@@ -2,7 +2,8 @@
 % Please edit documentation in R/drake_plan_helpers.R
 \name{cross}
 \alias{cross}
-\title{Define a target for each combination of values}
+\title{Define a target for each combination of values
+\lifecycle{maturing}}
 \usage{
 cross(..., .data, .id, .tag_in, .tag_out)
 }

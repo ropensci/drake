@@ -1,4 +1,5 @@
 #' @title Isolate the side effects of an example.
+#' \lifecycle{stable}
 #' @description Runs code in a temporary directory
 #'   in a controlled environment with a controlled
 #'   set of options.

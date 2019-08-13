@@ -3,7 +3,7 @@
 \name{failed}
 \alias{failed}
 \title{List failed targets.
-to \code{\link[=make]{make()}}.}
+\lifecycle{maturing}}
 \usage{
 failed(path = NULL, search = NULL, cache = drake::drake_cache(path =
   path, verbose = verbose), verbose = 1L, upstream_only = NULL)

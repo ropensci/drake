@@ -2,8 +2,8 @@
 % Please edit documentation in R/drake_plan_helpers.R
 \name{plan_to_notebook}
 \alias{plan_to_notebook}
-\title{Turn a \code{drake} workflow plan data frame
-into an R notebook,}
+\title{Turn a \code{drake} plan into an R notebook.
+\lifecycle{stable}}
 \usage{
 plan_to_notebook(plan, con)
 }

@@ -2,7 +2,8 @@
 % Please edit documentation in R/drake_plan_helpers.R
 \name{trigger}
 \alias{trigger}
-\title{Customize the decision rules for rebuilding targets}
+\title{Customize the decision rules for rebuilding targets
+\lifecycle{stable}}
 \usage{
 trigger(command = TRUE, depend = TRUE, file = TRUE, seed = TRUE,
   condition = FALSE, change = NULL, mode = c("whitelist",

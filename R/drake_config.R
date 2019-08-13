@@ -1,11 +1,10 @@
-#' @title Create the internal runtime parameter list
-#'   used internally in [make()].
-#' @description [drake_config()] collects and sanitizes the multitude of
-#'   parameters and settings that [make()] needs to do its job:
-#'   the plan, packages,
-#'   the environment of functions and initial data objects,
-#'   parallel computing instructions,
-#'   verbosity level, etc.
+#' @title Interpret the plan and prepare for [make()]
+#' \lifecycle{maturing}
+#' @description [drake_config()] does all the preprocessing that
+#'   [make()] needs to build targets. This includes interpreting
+#'   the plan (from [drake_plan()]) and analyzing how all the
+#'   targets fit together. The result is a list of objects
+#'   that [make()] needs to keep track of everything during runtime.
 #' @details Once you create a list with [drake_config()],
 #'   do not modify it by hand.
 #'

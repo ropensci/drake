@@ -2,7 +2,8 @@
 % Please edit documentation in R/drake_plan_helpers.R
 \name{drake_envir}
 \alias{drake_envir}
-\title{Get the environment where drake builds targets}
+\title{Get the environment where drake builds targets
+\lifecycle{questioning}}
 \usage{
 drake_envir()
 }

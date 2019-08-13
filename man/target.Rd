@@ -2,7 +2,8 @@
 % Please edit documentation in R/drake_plan_helpers.R
 \name{target}
 \alias{target}
-\title{Define custom columns in a \code{\link[=drake_plan]{drake_plan()}}.}
+\title{Customize a target in \code{\link[=drake_plan]{drake_plan()}}.
+\lifecycle{maturing}}
 \usage{
 target(command = NULL, ...)
 }
@@ -18,8 +19,8 @@ A one-row workflow plan data frame with the named
 arguments as columns.
 }
 \description{
-Not a user-side function. Must be called inside
-\code{\link[=drake_plan]{drake_plan()}}.
+Must be called inside \code{\link[=drake_plan]{drake_plan()}}.
+Invalid otherwise.
 }
 \section{Columns}{
 

@@ -2,7 +2,8 @@
 % Please edit documentation in R/process_imports.R
 \name{process_import}
 \alias{process_import}
-\title{internal function}
+\title{Process an imported data object
+\lifecycle{stable}}
 \usage{
 process_import(import, config)
 }
@@ -12,6 +13,6 @@ process_import(import, config)
 \item{config}{\code{\link[=drake_config]{drake_config()}} object}
 }
 \description{
-only used inside process_imports(). Not a user-side function.
+For internal use only. Not a user-side function.
 }
 \keyword{internal}

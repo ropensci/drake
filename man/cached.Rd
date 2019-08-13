@@ -2,7 +2,8 @@
 % Please edit documentation in R/cache.R
 \name{cached}
 \alias{cached}
-\title{List targets in the cache.}
+\title{List targets in the cache.
+\lifecycle{maturing}}
 \usage{
 cached(..., list = character(0), no_imported_objects = FALSE,
   path = NULL, search = NULL, cache = drake_cache(path = path,

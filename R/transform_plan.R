@@ -1,4 +1,5 @@
 #' @title Transform a plan
+#' \lifecycle{maturing}
 #' @description Evaluate the `map()`, `cross()`, `split()` and
 #'   `combine()` operations in the `transform` column of a
 #'   `drake` plan.
@@ -193,6 +194,7 @@ convert_split_to_map <- function(target, command, transform) {
 }
 
 #' @title Take a strategic subset of a dataset.
+#' \lifecycle{maturing}
 #' @description `drake_slice()` is similar to `split()`.
 #'   Both functions partition data into disjoint subsets,
 #'   but whereas `split()` returns *all* the subsets, `drake_slice()`

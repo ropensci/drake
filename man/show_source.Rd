@@ -2,7 +2,8 @@
 % Please edit documentation in R/cache.R
 \name{show_source}
 \alias{show_source}
-\title{Show how a target/import was produced.}
+\title{Show how a target/import was produced.
+\lifecycle{stable}}
 \usage{
 show_source(target, config, character_only = FALSE)
 }

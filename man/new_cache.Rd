@@ -2,7 +2,8 @@
 % Please edit documentation in R/cache.R
 \name{new_cache}
 \alias{new_cache}
-\title{Make a new \code{drake} cache.}
+\title{Make a new \code{drake} cache.
+\lifecycle{maturing}}
 \usage{
 new_cache(path = NULL, verbose = 1L, type = NULL,
   hash_algorithm = NULL, short_hash_algo = NULL,

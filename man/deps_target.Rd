@@ -2,7 +2,8 @@
 % Please edit documentation in R/deps.R
 \name{deps_target}
 \alias{deps_target}
-\title{List the dependencies of a target}
+\title{List the dependencies of a target
+\lifecycle{stable}}
 \usage{
 deps_target(target, config, character_only = FALSE)
 }

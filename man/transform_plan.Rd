@@ -2,7 +2,8 @@
 % Please edit documentation in R/transform_plan.R
 \name{transform_plan}
 \alias{transform_plan}
-\title{Transform a plan}
+\title{Transform a plan
+\lifecycle{maturing}}
 \usage{
 transform_plan(plan, envir = parent.frame(), trace = FALSE,
   max_expand = NULL, tidy_eval = TRUE)

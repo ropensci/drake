@@ -1,5 +1,5 @@
-#' @title Show a `ggraph`/`ggplot2` representation
-#'   of your drake project.
+#' @title Visualize the workflow with `ggraph`/`ggplot2`
+#' \lifecycle{stable}
 #' @description This function requires packages `ggplot2` and `ggraph`.
 #'   Install them with `install.packages(c("ggplot2", "ggraph"))`.
 #' @export
@@ -70,8 +70,9 @@ drake_ggraph <- function(
   )
 }
 
-#' @title Render a static `ggplot2`/`ggraph` visualization from
+#' @title Visualize the workflow with `ggplot2`/`ggraph` using
 #'   [drake_graph_info()] output.
+#' \lifecycle{stable}
 #' @description This function requires packages `ggplot2` and `ggraph`.
 #'   Install them with `install.packages(c("ggplot2", "ggraph"))`.
 #' @export

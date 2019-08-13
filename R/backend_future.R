@@ -140,6 +140,7 @@ future_globals <- function(target, meta, config, layout, protect) {
 }
 
 #' @title Task passed to individual futures in the `"future"` backend
+#' \lifecycle{stable}
 #' @description For internal use only. Only exported to make available
 #' to futures.
 #' @keywords internal

@@ -1,5 +1,5 @@
-#' @title Tell `drake` that you want information
-#' on a *file* (target or import), not an ordinary object.
+#' @title Show a file's encoded representation in the cache
+#' \lifecycle{stable}
 #' @description This function simply wraps literal double quotes around
 #' the argument `x` so `drake` knows it is the name of a file.
 #' Use when you are calling functions like `deps_code()`: for example,

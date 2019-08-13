@@ -2,7 +2,8 @@
 % Please edit documentation in R/drake_plan_helpers.R
 \name{split}
 \alias{split}
-\title{Define a target for each subset of data}
+\title{Define a target for each subset of data
+\lifecycle{maturing}}
 \usage{
 split(..., .id, .tag_in, .tag_out)
 }

@@ -3,7 +3,8 @@
 \name{drake_plan}
 \alias{drake_plan}
 \title{Create a workflow plan data frame
-for the \code{plan} argument of \code{\link[=make]{make()}}.}
+for the \code{plan} argument of \code{\link[=make]{make()}}.
+\lifecycle{maturing}}
 \usage{
 drake_plan(..., list = character(0), file_targets = NULL,
   strings_in_dots = NULL, tidy_evaluation = NULL, transform = TRUE,

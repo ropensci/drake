@@ -3,7 +3,8 @@
 \name{readd}
 \alias{readd}
 \alias{loadd}
-\title{Read and return a drake target/import from the cache.}
+\title{Read and return a drake target/import from the cache.
+\lifecycle{maturing}}
 \usage{
 readd(target, character_only = FALSE, path = NULL, search = NULL,
   cache = drake::drake_cache(path = path, verbose = verbose),

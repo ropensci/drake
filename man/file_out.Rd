@@ -2,7 +2,8 @@
 % Please edit documentation in R/drake_plan_helpers.R
 \name{file_out}
 \alias{file_out}
-\title{Declare output files and directories.}
+\title{Declare output files and directories.
+\lifecycle{stable}}
 \usage{
 file_out(...)
 }

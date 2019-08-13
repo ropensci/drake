@@ -2,7 +2,8 @@
 % Please edit documentation in R/drake_plan_helpers.R
 \name{ignore}
 \alias{ignore}
-\title{Ignore code}
+\title{Ignore code
+\lifecycle{stable}}
 \usage{
 ignore(x = NULL)
 }

@@ -3,7 +3,7 @@
 \name{progress}
 \alias{progress}
 \title{Get the build progress of your targets
-during a \code{\link[=make]{make()}}.}
+\lifecycle{maturing}}
 \usage{
 progress(..., list = character(0), no_imported_objects = NULL,
   path = NULL, search = NULL, cache = drake::drake_cache(path = path,

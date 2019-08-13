@@ -2,7 +2,8 @@
 % Please edit documentation in R/drake_plan_helpers.R
 \name{combine}
 \alias{combine}
-\title{Define aggregates of other targets}
+\title{Define aggregates of other targets
+\lifecycle{maturing}}
 \usage{
 combine(..., .by, .id, .tag_in, .tag_out)
 }

@@ -2,7 +2,8 @@
 % Please edit documentation in R/drake_build.R
 \name{drake_build}
 \alias{drake_build}
-\title{Build/process a single target or import.}
+\title{Build/process a single target or import.
+\lifecycle{maturing}}
 \usage{
 drake_build(target, config = NULL, meta = NULL,
   character_only = FALSE, envir = NULL, jobs = 1, replace = FALSE)

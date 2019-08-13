@@ -2,7 +2,8 @@
 % Please edit documentation in R/cache.R
 \name{diagnose}
 \alias{diagnose}
-\title{Get diagnostic metadata on a target.}
+\title{Get diagnostic metadata on a target.
+\lifecycle{maturing}}
 \usage{
 diagnose(target = NULL, character_only = FALSE, path = NULL,
   search = NULL, cache = drake::drake_cache(path = path, verbose =

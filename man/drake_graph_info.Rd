@@ -2,8 +2,8 @@
 % Please edit documentation in R/drake_graph_info.R
 \name{drake_graph_info}
 \alias{drake_graph_info}
-\title{Create the underlying node and edge data frames
-behind \code{\link[=vis_drake_graph]{vis_drake_graph()}}.}
+\title{Prepare the workflow graph for visualization
+\lifecycle{stable}}
 \usage{
 drake_graph_info(config, from = NULL, mode = c("out", "in", "all"),
   order = NULL, subset = NULL, build_times = "build", digits = 3,

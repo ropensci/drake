@@ -2,8 +2,8 @@
 % Please edit documentation in R/drake_plan_helpers.R
 \name{plan_to_code}
 \alias{plan_to_code}
-\title{Turn a \code{drake} workflow plan data frame
-into a plain R script file.}
+\title{Turn a \code{drake} plan into a plain R script file.
+\lifecycle{stable}}
 \usage{
 plan_to_code(plan, con = stdout())
 }

@@ -2,7 +2,8 @@
 % Please edit documentation in R/use_drake.R
 \name{use_drake}
 \alias{use_drake}
-\title{Use drake in a project}
+\title{Use drake in a project
+\lifecycle{questioning}}
 \usage{
 use_drake(open = interactive())
 }

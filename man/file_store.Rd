@@ -2,8 +2,8 @@
 % Please edit documentation in R/encoding.R
 \name{file_store}
 \alias{file_store}
-\title{Tell \code{drake} that you want information
-on a \emph{file} (target or import), not an ordinary object.}
+\title{Show a file's encoded representation in the cache
+\lifecycle{stable}}
 \usage{
 file_store(x)
 }

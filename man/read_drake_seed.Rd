@@ -2,7 +2,8 @@
 % Please edit documentation in R/cache.R
 \name{read_drake_seed}
 \alias{read_drake_seed}
-\title{Read the pseudo-random number generator seed of the project.}
+\title{Read the pseudo-random number generator seed of the project.
+\lifecycle{maturing}}
 \usage{
 read_drake_seed(path = NULL, search = NULL, cache = NULL,
   verbose = 1L)

@@ -2,7 +2,8 @@
 % Please edit documentation in R/cache.R
 \name{drake_cache}
 \alias{drake_cache}
-\title{Get the cache of a \code{drake} project.}
+\title{Get the cache of a \code{drake} project.
+\lifecycle{stable}}
 \usage{
 drake_cache(path = NULL, verbose = 1L, console_log_file = NULL)
 }

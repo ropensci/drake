@@ -1,4 +1,5 @@
 #' @title Use drake in a project
+#' \lifecycle{questioning}
 #' @description Add top-level R script files to use `drake`
 #'   in your data analysis project. For details, read
 #'   <https://ropenscilabs.github.io/drake-manual/projects.html>
