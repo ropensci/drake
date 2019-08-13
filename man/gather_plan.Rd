@@ -2,9 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{gather_plan}
 \alias{gather_plan}
-\title{Deprecated:
-write commands to combine several targets into one
-or more overarching targets.}
+\title{Combine targets
+\lifecycle{deprecated}}
 \usage{
 gather_plan(plan = NULL, target = "target", gather = "list",
   append = FALSE)

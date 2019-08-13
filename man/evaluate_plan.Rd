@@ -2,8 +2,9 @@
 % Please edit documentation in R/deprecated.R
 \name{evaluate_plan}
 \alias{evaluate_plan}
-\title{Deprecated: use wildcard templating to create a
-workflow plan data frame from a template data frame.}
+\title{Use wildcard templating to create a
+workflow plan data frame from a template data frame.
+\lifecycle{deprecated}}
 \usage{
 evaluate_plan(plan, rules = NULL, wildcard = NULL, values = NULL,
   expand = TRUE, rename = expand, trace = FALSE,

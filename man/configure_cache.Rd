@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{configure_cache}
 \alias{configure_cache}
-\title{Deprecated. Configure the hash algorithms, etc. of a drake cache.}
+\title{Configure the hash algorithms, etc. of a drake cache.
+\lifecycle{deprecated}}
 \usage{
 configure_cache(cache = drake::get_cache(verbose = verbose),
   short_hash_algo = drake::default_short_hash_algo(cache = cache),

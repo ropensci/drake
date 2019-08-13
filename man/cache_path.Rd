@@ -2,8 +2,9 @@
 % Please edit documentation in R/deprecated.R
 \name{cache_path}
 \alias{cache_path}
-\title{Deprecated. Return the file path where the cache is stored,
-if applicable.}
+\title{Return the file path where the cache is stored,
+if applicable.
+\lifecycle{deprecated}}
 \usage{
 cache_path(cache = NULL)
 }

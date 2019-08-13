@@ -2,8 +2,9 @@
 % Please edit documentation in R/deprecated.R
 \name{analysis_wildcard}
 \alias{analysis_wildcard}
-\title{Deprecated. Show the analysis wildcard
-used in \code{\link[=plan_summaries]{plan_summaries()}}.}
+\title{Show the analysis wildcard
+used in \code{\link[=plan_summaries]{plan_summaries()}}.
+\lifecycle{deprecated}}
 \usage{
 analysis_wildcard()
 }

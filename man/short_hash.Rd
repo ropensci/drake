@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{short_hash}
 \alias{short_hash}
-\title{Deprecated. \code{drake} now only uses one hash algorithm per cache.}
+\title{\code{drake} now only uses one hash algorithm per cache.
+\lifecycle{deprecated}}
 \usage{
 short_hash(cache = drake::get_cache(verbose = verbose), verbose = 1L)
 }

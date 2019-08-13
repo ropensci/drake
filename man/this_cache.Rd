@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{this_cache}
 \alias{this_cache}
-\title{Get the cache at the exact file path specified.}
+\title{Get the cache at the exact file path specified.
+\lifecycle{deprecated}}
 \usage{
 this_cache(path = NULL, force = FALSE, verbose = 1L,
   fetch_cache = NULL, console_log_file = NULL)

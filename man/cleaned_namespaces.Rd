@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{cleaned_namespaces}
 \alias{cleaned_namespaces}
-\title{Deprecated utility function}
+\title{Auxiliary storr namespaces
+\lifecycle{deprecated}}
 \usage{
 
   cleaned_namespaces(default = storr::storr_environment()$default_namespace)

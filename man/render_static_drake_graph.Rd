@@ -3,7 +3,8 @@
 \name{render_static_drake_graph}
 \alias{render_static_drake_graph}
 \title{Deprecated: render a \code{ggraph}/\code{ggplot2} representation
-of your drake project.}
+of your drake project.
+\lifecycle{deprecated}}
 \usage{
 render_static_drake_graph(graph_info, main = graph_info$default_title)
 }

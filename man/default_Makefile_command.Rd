@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{default_Makefile_command}
 \alias{default_Makefile_command}
-\title{Deprecated}
+\title{Default Makefile command
+\lifecycle{deprecated}}
 \usage{
 default_Makefile_command()
 }

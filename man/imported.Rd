@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{imported}
 \alias{imported}
-\title{Deprecated. List all the imports in the drake cache.}
+\title{List all the imports in the drake cache.
+\lifecycle{deprecated}}
 \usage{
 imported(files_only = FALSE, path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose =

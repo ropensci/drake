@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{read_drake_config}
 \alias{read_drake_config}
-\title{Deprecated}
+\title{Read a config object from the cache
+\lifecycle{deprecated}}
 \usage{
 read_drake_config(path = getwd(), search = TRUE, cache = NULL,
   verbose = 1L, jobs = 1, envir = parent.frame())

@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{check_plan}
 \alias{check_plan}
-\title{Deprecated. Check a workflow plan data frame for obvious errors.}
+\title{Check a workflow plan data frame for obvious errors.
+\lifecycle{deprecated}}
 \usage{
 check_plan(plan = NULL, targets = NULL, envir = parent.frame(),
   cache = drake::get_cache(verbose = verbose), verbose = 1L,

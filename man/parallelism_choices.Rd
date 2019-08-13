@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{parallelism_choices}
 \alias{parallelism_choices}
-\title{Deprecated}
+\title{Names of old parallel backends
+\lifecycle{deprecated}}
 \usage{
 parallelism_choices(distributed_only = FALSE)
 }

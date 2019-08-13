@@ -2,9 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{in_progress}
 \alias{in_progress}
-\title{Deprecated. List the targets that either
-(1) are currently being built during a \code{\link[=make]{make()}}, or
-(2) were being built if the last \code{\link[=make]{make()}} quit unexpectedly.}
+\title{List the targets in progress
+\lifecycle{deprecated}}
 \usage{
 in_progress(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose =

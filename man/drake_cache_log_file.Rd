@@ -2,8 +2,9 @@
 % Please edit documentation in R/deprecated.R
 \name{drake_cache_log_file}
 \alias{drake_cache_log_file}
-\title{Deprecated. Generate a flat text log file to represent the state of
-the cache.}
+\title{Generate a flat text log file to represent the state of
+the cache.
+\lifecycle{deprecated}}
 \usage{
 drake_cache_log_file(file = "drake_cache.log", path = getwd(),
   search = TRUE, cache = drake::get_cache(path = path, search = search,

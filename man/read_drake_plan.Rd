@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{read_drake_plan}
 \alias{read_drake_plan}
-\title{Deprecated}
+\title{Read the plan from the cache
+\lifecycle{deprecated}}
 \usage{
 read_drake_plan(path = getwd(), search = TRUE, cache = NULL,
   verbose = 1L)

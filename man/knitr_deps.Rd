@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{knitr_deps}
 \alias{knitr_deps}
-\title{Deprecated in favor of \code{\link[=deps_knitr]{deps_knitr()}}}
+\title{Dependencies of a knitr report
+\lifecycle{deprecated}}
 \usage{
 knitr_deps(target)
 }

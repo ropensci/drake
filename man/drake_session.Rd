@@ -2,8 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{drake_session}
 \alias{drake_session}
-\title{Deprecated. Return the \code{\link[=sessionInfo]{sessionInfo()}}
-of the last call to \code{\link[=make]{make()}}.}
+\title{Session info of the last call to \code{\link[=make]{make()}}.
+\lifecycle{deprecated}}
 \usage{
 drake_session(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose =

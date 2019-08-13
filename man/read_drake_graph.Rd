@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{read_drake_graph}
 \alias{read_drake_graph}
-\title{Deprecated}
+\title{Read a workflow graph from the cache
+\lifecycle{deprecated}}
 \usage{
 read_drake_graph(path = getwd(), search = TRUE, cache = NULL,
   verbose = 1L)

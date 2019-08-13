@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{get_cache}
 \alias{get_cache}
-\title{Deprecated: the default cache of a \code{drake} project.}
+\title{The default cache of a \code{drake} project.
+\lifecycle{deprecated}}
 \usage{
 get_cache(path = getwd(), search = TRUE, verbose = 1L,
   force = FALSE, fetch_cache = NULL, console_log_file = NULL)

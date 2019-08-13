@@ -2,8 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{recover_cache}
 \alias{recover_cache}
-\title{Deprecated. Load an existing drake files system cache
-if it exists or create a new one otherwise.}
+\title{Load or create a drake cache
+\lifecycle{deprecated}}
 \usage{
 recover_cache(path = NULL, hash_algorithm = NULL,
   short_hash_algo = NULL, long_hash_algo = NULL, force = FALSE,

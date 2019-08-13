@@ -2,8 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{gather_by}
 \alias{gather_by}
-\title{Deprecated:
-gather multiple groupings of targets}
+\title{Gather multiple groupings of targets
+\lifecycle{deprecated}}
 \usage{
 gather_by(plan, ..., prefix = "target", gather = "list",
   append = TRUE, filter = NULL, sep = "_")

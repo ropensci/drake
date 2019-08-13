@@ -37,7 +37,7 @@ lifecycle_img <- function(stage, url) {
   )
 }
 
-upcase1 <- function (x) {
+upcase1 <- function(x) {
   substr(x, 1, 1) <- toupper(substr(x, 1, 1))
   x
 }

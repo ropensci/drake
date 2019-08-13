@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{drake_palette}
 \alias{drake_palette}
-\title{Show drake's color palette.}
+\title{Show drake's color palette.
+\lifecycle{deprecated}}
 \usage{
 drake_palette()
 }
@@ -12,7 +13,6 @@ but the actual return value is \code{NULL}.
 }
 \description{
 Deprecated on 2019-01-12.
-\lifecycle{deprecated}
 }
 \details{
 This function is

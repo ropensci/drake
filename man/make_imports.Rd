@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{make_imports}
 \alias{make_imports}
-\title{deprecated}
+\title{Just process the imports
+\lifecycle{deprecated}}
 \usage{
 make_imports(config)
 }

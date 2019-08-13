@@ -3,7 +3,8 @@
 \name{static_drake_graph}
 \alias{static_drake_graph}
 \title{Deprecated: show a \code{ggraph}/\code{ggplot2} representation
-of your drake project.}
+of your drake project.
+\lifecycle{deprecated}}
 \usage{
 static_drake_graph(config, build_times = "build", digits = 3,
   targets_only = FALSE, main = NULL, from = NULL, mode = c("out",

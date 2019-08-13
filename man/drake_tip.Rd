@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{drake_tip}
 \alias{drake_tip}
-\title{Deprecated. Output a random tip about drake.}
+\title{Output a random tip about drake.
+\lifecycle{deprecated}}
 \usage{
 drake_tip()
 }
