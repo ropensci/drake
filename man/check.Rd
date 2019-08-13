@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{check}
 \alias{check}
-\title{Defunct function}
+\title{check \lifecycle{defunct}}
 \usage{
 check(...)
 }

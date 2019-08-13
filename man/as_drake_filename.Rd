@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{as_drake_filename}
 \alias{as_drake_filename}
-\title{Defunct function}
+\title{as_drake_filename \lifecycle{defunct}}
 \usage{
 as_drake_filename(...)
 }

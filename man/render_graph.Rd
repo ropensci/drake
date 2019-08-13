@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{render_graph}
 \alias{render_graph}
-\title{Defunct function}
+\title{render_graph \lifecycle{defunct}}
 \usage{
 render_graph(...)
 }

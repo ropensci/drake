@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{migrate_drake_project}
 \alias{migrate_drake_project}
-\title{Defunct function}
+\title{migrate_drake_project \lifecycle{defunct}}
 \usage{
 migrate_drake_project(...)
 }

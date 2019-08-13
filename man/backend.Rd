@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{backend}
 \alias{backend}
-\title{Defunct function}
+\title{backend \lifecycle{defunct}}
 \usage{
 backend(...)
 }

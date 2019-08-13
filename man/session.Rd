@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{session}
 \alias{session}
-\title{Defunct function}
+\title{session \lifecycle{defunct}}
 \usage{
 session(...)
 }

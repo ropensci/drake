@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{workflow}
 \alias{workflow}
-\title{Defunct function}
+\title{workflow \lifecycle{defunct}}
 \usage{
 workflow(...)
 }
