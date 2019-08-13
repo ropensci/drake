@@ -3,7 +3,7 @@
 \name{build_times}
 \alias{build_times}
 \title{See the time it took to build each target.
-\lifecycle{}}
+\lifecycle{maturing}}
 \usage{
 build_times(..., path = NULL, search = NULL, digits = 3,
   cache = drake_cache(path = path, verbose = verbose),
