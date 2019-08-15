@@ -23,13 +23,7 @@
 #' but they easily grow stale.
 #' Targets can falsely invalidate if you accidentally change
 #' a function or data object in your environment.
-#' So in interactive mode, `make()` now pauses with a menu
-#' to protect you from environment-related instability.
 #'
-#' You can control this menu with the `drake_make_menu` global option.
-#' Run `options(drake_make_menu = TRUE)` to show the menu once per session
-#' and `options(drake_make_menu = FALSE)` to disable it entirely.
-#' You may wish to add a call to `options()` in your local `.Rprofile` file.
 #' @section Self-invalidation:
 #' It is possible to construct a workflow that tries to invalidate itself.
 #' Example:
@@ -249,13 +243,7 @@ make <- function(
   if (is.character(config$parallelism)) {
     config$graph <- outdated_subgraph(config)
   }
-  abort <- FALSE
-  if (prompt_intv_make(config)) {
-    abort <- abort_intv_make(config) # nocov
-  }
-  if (abort) {
-    return(invisible()) # nocov
-  }
+  r_make_message(force = FALSE)
   if (!config$skip_targets) {
     process_targets(config)
   }
@@ -522,34 +510,21 @@ assert_outside_cache <- function(config) {
   }
 }
 
-prompt_intv_make <- function(config) {
-  menu_enabled <- .pkg_envir[["drake_make_menu"]] %||%
-    getOption("drake_make_menu") %||%
-    TRUE
-  interactive() &&
-    igraph::gorder(config$graph) &&
-    menu_enabled
-}
-
-abort_intv_make <- function(config) {
-  # nocov start
+r_make_message <- function(force) {
+  r_make_message <- .pkg_envir[["r_make_message"]] %||% TRUE
   on.exit(
     assign(
-      x = "drake_make_menu",
+      x = "r_make_message",
       value = FALSE,
       envir = .pkg_envir,
       inherits = FALSE
     )
   )
-  title <- paste(
-    paste(igraph::gorder(config$graph), "outdated targets:"),
-    multiline_message(igraph::V(config$graph)$name),
-    "\nPlease read the \"Interactive mode\" section of the make() help file.",
-    "This prompt only appears once per session.",
-    "\nReally run make() instead of r_make() in interactive mode?",
-    sep = "\n"
-  )
-  out <- utils::menu(choices = c("yes", "no"), title = title)
-  !identical(as.integer(out), 1L)
-  # nocov end
+  if (force || (r_make_message && sample.int(n = 10, size = 1) < 1.5)) {
+    message(
+      "In drake, consider r_make() instead of make(). ",
+      "r_make() runs make() in a fresh R session ",
+      "for enhanced robustness and reproducibility."
+    )
+  }
 }

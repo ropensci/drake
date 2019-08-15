@@ -523,13 +523,6 @@ Interactive R sessions are still useful,
 but they easily grow stale.
 Targets can falsely invalidate if you accidentally change
 a function or data object in your environment.
-So in interactive mode, \code{make()} now pauses with a menu
-to protect you from environment-related instability.
-
-You can control this menu with the \code{drake_make_menu} global option.
-Run \code{options(drake_make_menu = TRUE)} to show the menu once per session
-and \code{options(drake_make_menu = FALSE)} to disable it entirely.
-You may wish to add a call to \code{options()} in your local \code{.Rprofile} file.
 }
 
 \section{Self-invalidation}{

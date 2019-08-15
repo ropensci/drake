@@ -167,51 +167,14 @@ test_with_dir("forks + lock_envir = informative error msg", {
   )
 })
 
-test_with_dir("make() in interactive mode", {
-  # Must run this test in a fresh new interactive session.
-  # Cannot be fully automated like the other tests.
-  .pkg_envir$drake_make_menu <- NULL
-  .pkg_envir$drake_clean_menu <- NULL
-  options(drake_make_menu = TRUE, drake_clean_menu = TRUE)
-  load_mtcars_example()
-  config <- drake_config(my_plan)
-  make(my_plan) # Select 2.
-  expect_equal(cached(), character(0))
-  expect_equal(sort(outdated(config)), sort(my_plan$target))
-  expect_equal(sort(justbuilt(config)), character(0))
-  make(my_plan) # No menu
-  expect_equal(cached(), sort(my_plan$target))
-  expect_equal(sort(outdated(config)), character(0))
-  expect_equal(sort(justbuilt(config)), sort(my_plan$target))
-  clean(garbage_collection = TRUE) # Select 1.
-  .pkg_envir$drake_make_menu <- NULL
-  make(my_plan) # Select 1.
-  expect_equal(cached(), sort(my_plan$target))
-  expect_equal(sort(outdated(config)), character(0))
-  expect_equal(sort(justbuilt(config)), sort(my_plan$target))
-  clean(garbage_collection = TRUE) # No menu
-  .pkg_envir$drake_make_menu <- NULL
-  options(drake_make_menu = FALSE)
-  make(my_plan) # No menu.
-  expect_equal(sort(outdated(config)), character(0))
-  expect_equal(sort(justbuilt(config)), sort(my_plan$target))
-  unlink(".drake", recursive = TRUE)
-  .pkg_envir$drake_make_menu <- NULL
-  options(drake_make_menu = TRUE)
-  make(my_plan) # Select 0.
-  expect_equal(sort(outdated(config)), sort(my_plan$target))
-  expect_equal(sort(justbuilt(config)), character(0))
-})
-
 test_with_dir("clean() in interactive mode", {
   # Must run this test in a fresh new interactive session.
   # Cannot be fully automated like the other tests.
-  .pkg_envir$drake_make_menu <- NULL
   .pkg_envir$drake_clean_menu <- NULL
-  options(drake_make_menu = TRUE, drake_clean_menu = TRUE)
+  options(drake_clean_menu = TRUE)
   load_mtcars_example()
   config <- drake_config(my_plan)
-  make(my_plan) # Select 1.
+  make(my_plan)
   expect_equal(sort(cached()), sort(my_plan$target))
   clean(garbage_collection = TRUE) # Select 2.
   expect_equal(sort(cached()), sort(my_plan$target))
@@ -235,12 +198,11 @@ test_with_dir("clean() in interactive mode", {
 test_with_dir("rescue_cache() in interactive mode", {
   # Must run this test in a fresh new interactive session.
   # Cannot be fully automated like the other tests.
-  .pkg_envir$drake_make_menu <- NULL
   .pkg_envir$drake_clean_menu <- NULL
-  options(drake_make_menu = TRUE, drake_clean_menu = TRUE)
+  options(drake_clean_menu = TRUE)
   load_mtcars_example()
   config <- drake_config(my_plan)
-  make(my_plan) # Select 1.
+  make(my_plan)
   expect_equal(sort(cached()), sort(my_plan$target))
   clean(garbage_collection = FALSE)
   rescue_cache(garbage_collection = TRUE) # Select 2
@@ -254,15 +216,13 @@ test_with_dir("rescue_cache() in interactive mode", {
 test_with_dir("recovery ad in clean()", {
   # Must run this test in a fresh new interactive session.
   # Cannot be fully automated like the other tests.
-  .pkg_envir$drake_make_menu <- NULL
   .pkg_envir$drake_clean_menu <- NULL
   options(
-    drake_make_menu = TRUE,
     drake_clean_menu = TRUE,
     drake_clean_recovery_msg = TRUE
   )
   plan <- drake_plan(x = 1)
-  make(plan) # Select 1.
+  make(plan)
   .pkg_envir$drake_clean_recovery_msg <- NULL
   expect_message(clean(garbage_collection = FALSE), regexp = "recover")
   expect_silent(clean(garbage_collection = FALSE))

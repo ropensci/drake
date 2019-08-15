@@ -1,5 +1,9 @@
 drake_context("callr")
 
+test_with_dir("r_make_message", {
+  expect_message(r_make_message(force = TRUE))
+})
+
 test_with_dir("config file missing", {
   skip_on_cran()
   skip_if_not_installed("callr")

@@ -17,7 +17,6 @@ test_with_dir <- function(desc, ...) {
   with_dir(new, {
     opts <- list(
       clustermq.scheduler = "multicore",
-      drake_make_menu = FALSE,
       drake_clean_menu = FALSE
     )
     with_options(new = opts, {
