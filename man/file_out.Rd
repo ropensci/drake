@@ -87,7 +87,9 @@ file.exists("dir/mtcars.csv")
 
 # See the connections that the file relationships create:
 config <- drake_config(plan)
-vis_drake_graph(config)
+if (requireNamespace("visNetwork", quietly = TRUE)) {
+  vis_drake_graph(config)
+}
 })
 }
 }

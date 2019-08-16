@@ -43,7 +43,9 @@
 #'   )
 #' )
 #' plan
-#' drake_plan_source(plan)
+#' if (requireNamespace("styler", quietly = TRUE)) {
+#'   print(drake_plan_source(plan))
+#' }
 target <- function(command = NULL, ...) {
   # TODO: remove this warning when we unexport target().
   if (!nzchar(Sys.getenv("drake_target_silent"))) {
@@ -116,7 +118,9 @@ target <- function(command = NULL, ...) {
 #'   )
 #' )
 #' plan
-#' drake_plan_source(plan)
+#' if (requireNamespace("styler")) {
+#'   print(drake_plan_source(plan))
+#' }
 #' # Tags:
 #' drake_plan(
 #'   x = target(
@@ -144,7 +148,9 @@ target <- function(command = NULL, ...) {
 #'   )
 #' )
 #' plan
-#' drake_plan_source(plan)
+#' if (requireNamespace("styler", quietly = TRUE)) {
+#'   print(drake_plan_source(plan))
+#' }
 map <- function(..., .data, .id, .tag_in, .tag_out) {
   stop(
     "map() in drake must be called inside target() in drake_plan()",
@@ -170,7 +176,9 @@ map <- function(..., .data, .id, .tag_in, .tag_out) {
 #'   )
 #' )
 #' print(plan)
-#' drake_plan_source(plan)
+#' if (requireNamespace("styler", quietly = TRUE)) {
+#'   print(drake_plan_source(plan))
+#' }
 split <- function(..., .id, .tag_in, .tag_out) {
   stop(
     "split() in drake must be called inside target() in drake_plan()",
@@ -208,7 +216,9 @@ split <- function(..., .id, .tag_in, .tag_out) {
 #'   )
 #' )
 #' plan
-#' drake_plan_source(plan)
+#' if (requireNamespace("styler", quietly = TRUE)) {
+#'   print(drake_plan_source(plan))
+#' }
 cross <- function(..., .data, .id, .tag_in, .tag_out) {
   stop(
     "cross() in drake must be called inside target() in drake_plan()",
@@ -249,7 +259,9 @@ cross <- function(..., .data, .id, .tag_in, .tag_out) {
 #'   )
 #' )
 #' plan
-#' drake_plan_source(plan)
+#' if (requireNamespace("styler", quietly = TRUE)) {
+#'   print(drake_plan_source(plan))
+#' }
 combine <- function(..., .by, .id, .tag_in, .tag_out) {
   stop(
     "combine() in drake must be called inside target() in drake_plan()",
@@ -431,7 +443,9 @@ trigger <- function(
 #'
 #' # See the connections that the file relationships create:
 #' config <- drake_config(plan)
-#' vis_drake_graph(config)
+#' if (requireNamespace("visNetwork", quietly = TRUE)) {
+#'   vis_drake_graph(config)
+#' }
 #' })
 #' }
 file_in <- function(...) {
@@ -486,7 +500,9 @@ file_in <- function(...) {
 #'
 #' # See the connections that the file relationships create:
 #' config <- drake_config(plan)
-#' vis_drake_graph(config)
+#' if (requireNamespace("visNetwork", quietly = TRUE)) {
+#'   vis_drake_graph(config)
+#' }
 #' })
 #' }
 file_out <- file_in

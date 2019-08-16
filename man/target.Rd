@@ -138,7 +138,9 @@ plan <- drake_plan(
   )
 )
 plan
-drake_plan_source(plan)
+if (requireNamespace("styler", quietly = TRUE)) {
+  print(drake_plan_source(plan))
+}
 }
 \seealso{
 \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}

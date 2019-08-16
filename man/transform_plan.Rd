@@ -72,7 +72,9 @@ plan <- drake_plan(
   )
 )
 plan
-drake_plan_source(plan)
+if (requireNamespace("styler", quietly = TRUE)) {
+  print(drake_plan_source(plan))
+}
 # Tags:
 drake_plan(
   x = target(
@@ -100,7 +102,9 @@ plan <- drake_plan(
   )
 )
 plan
-drake_plan_source(plan)
+if (requireNamespace("styler", quietly = TRUE)) {
+  print(drake_plan_source(plan))
+}
 }
 \seealso{
 drake_plan, map, split, cross, combine

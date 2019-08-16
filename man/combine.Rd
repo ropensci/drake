@@ -88,7 +88,9 @@ plan <- drake_plan(
   )
 )
 plan
-drake_plan_source(plan)
+if (requireNamespace("styler", quietly = TRUE)) {
+  print(drake_plan_source(plan))
+}
 }
 \seealso{
 map, split, cross, drake_plan, target

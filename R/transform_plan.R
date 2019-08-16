@@ -56,7 +56,9 @@
 #'   )
 #' )
 #' plan
-#' drake_plan_source(plan)
+#' if (requireNamespace("styler", quietly = TRUE)) {
+#'   print(drake_plan_source(plan))
+#' }
 #' # Tags:
 #' drake_plan(
 #'   x = target(
@@ -84,7 +86,9 @@
 #'   )
 #' )
 #' plan
-#' drake_plan_source(plan)
+#' if (requireNamespace("styler", quietly = TRUE)) {
+#'   print(drake_plan_source(plan))
+#' }
 transform_plan <- function(
   plan,
   envir = parent.frame(),
