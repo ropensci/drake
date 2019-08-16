@@ -1305,7 +1305,8 @@ progress <- function(
   out <- weak_tibble(target = targets, progress = progress_results)
   rownames(out) <- NULL
   if (is.null(progress)) {
-    return(out)
+    # to enforce consistent behavior with and without tidyselect:
+    return(out[out$progres != "none", ])
   }
   progress <- match.arg(
     progress,

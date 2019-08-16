@@ -8,6 +8,7 @@
 - Avoid downloading full contents of URLs when rehashing (#982)
 - Retain upstream grouping variables of `map()` and `cross()` on topologically side-by-side targets (#983).
 - Manually enforce the correct ordering in `dsl_left_outer_join()` so `cross()` selects the right combinations of existing targets (#986). This bug was probably introduced in the solution to #983.
+- Make the output of `progress()` more consistent, less dependent on whether `tidyselect` is installed.
 
 ## New features
 

@@ -39,8 +39,12 @@ test_with_dir("basic functions with default _drake.R file", {
     is.data.frame(r_drake_build(small, r_args = list(show = FALSE)))
   )
   skip_if_not_installed("visNetwork")
-  info <- r_drake_graph_info(r_args = list(show = FALSE))
+  info <- r_drake_graph_info(
+    r_args = list(show = FALSE),
+    build_times = "none"
+  )
   expect_true(all(c("nodes", "edges") %in% names(info)))
+  skip_if_not_installed("lubridate")
   out <- r_predict_workers(r_args = list(show = FALSE))
   expect_equal(sort(colnames(out)), c("target", "worker"))
   skip_if_not_installed("lubridate")
@@ -194,6 +198,7 @@ test_with_dir("callr RStudio addins", {
   expect_true(length(rs_addin_r_outdated(r_args, .print = FALSE)) > 1)
   rs_addin_r_make(r_args)
   expect_equal(rs_addin_r_outdated(r_args, .print = FALSE), character(0))
+  skip_if_not_installed("lubridate")
   skip_if_not_installed("visNetwork")
   graph <- rs_addin_r_vis_drake_graph(r_args, .print = FALSE)
   expect_true(inherits(graph, "visNetwork"))
