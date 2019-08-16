@@ -1306,7 +1306,7 @@ progress <- function(
   rownames(out) <- NULL
   if (is.null(progress)) {
     # to enforce consistent behavior with and without tidyselect:
-    return(out[out$progres != "none", ])
+    return(out[out$progress != "none",, drop = FALSE])
   }
   progress <- match.arg(
     progress,
