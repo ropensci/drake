@@ -1306,14 +1306,14 @@ progress <- function(
   rownames(out) <- NULL
   if (is.null(progress)) {
     # to enforce consistent behavior with and without tidyselect:
-    return(out[out$progress != "none",, drop = FALSE])
+    return(out[out$progress != "none",, drop = FALSE]) # nolint
   }
   progress <- match.arg(
     progress,
     choices = c("done", "running", "failed"),
     several.ok = TRUE
   )
-  out[out$progress %in% progress, ]
+  out[out$progress %in% progress,, drop = FALSE] # nolint
 }
 
 get_progress_single <- function(target, cache) {
