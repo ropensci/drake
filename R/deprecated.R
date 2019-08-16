@@ -2138,7 +2138,7 @@ map_plan <- function(
     )
   }
   command <- as.character(unlist(drake_pmap(
-    .l = args[, cols],
+    .l = args[, cols, drop = FALSE],
     .f = function(...) {
       out <- list(as.name(fun), ...)
       out <- as.call(out)

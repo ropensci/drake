@@ -69,6 +69,8 @@ test_with_dir("same with an imported directory", {
 })
 
 test_with_dir("drake_config() memoizes against knitr files (#887)", {
+  skip_if_not_installed("knitr")
+
   # Setup
   plan <- drake_plan(
     a = TRUE,

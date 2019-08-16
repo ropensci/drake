@@ -200,6 +200,7 @@ test_with_dir("callr RStudio addins", {
 })
 
 test_with_dir("errors keep their informative messages (#969)", {
+  skip_if_not_installed("callr")
   code <- c(
     "library(drake)",
     "my_plan <- drake_plan(",

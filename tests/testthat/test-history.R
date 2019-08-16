@@ -9,6 +9,7 @@ test_with_dir("edge_cases", {
 })
 
 test_with_dir("basic history", {
+  skip_if_not_installed("knitr")
   skip_if_not_installed("txtq")
   # Iterate.
   load_mtcars_example()
