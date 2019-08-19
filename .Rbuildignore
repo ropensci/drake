@@ -19,6 +19,7 @@
 ^pkgdown\.sh$
 ^paper\.bib$
 ^paper\.md$
+^README\.md$
 ^README\.Rmd$
 ^LICENSE$
 vignettes/.*\.html
