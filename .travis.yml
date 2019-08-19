@@ -28,13 +28,9 @@ r_packages:
   - lintr
   - readxl
 
-r_github_packages:
-  - r-lib/pkgdown
-  - r-lib/remotes
-
 before_script:
   - R -q -e 'install.packages("remotes")'
-  - R -q -e 'remotes::install_github("r-lib/remotes")'
+  - R -q -e 'remotes::install_github("r-lib/pkgdown")'
   - R -q -e 'remotes::install_github("ropensci/rotemplate")'
   - R -q -e 'install.packages("webshot")'
   - R -q -e 'webshot::install_phantomjs()'
