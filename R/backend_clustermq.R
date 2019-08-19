@@ -97,7 +97,8 @@ cmq_conclude_build <- function(msg, config) {
     stop(attr(build, "condition")$message, call. = FALSE) # nocov
   }
   cmq_conclude_target(target = build$target, config = config)
-  if (identical(config$caching, "worker")) {
+  caching <- caching(build$target, config)
+  if (identical(caching, "worker")) {
     wait_checksum(
       target = build$target,
       checksum = build$checksum,
@@ -136,7 +137,8 @@ cmq_send_target <- function(target, config) {
     return()
   }
   announce_build(target = target, meta = meta, config = config)
-  if (identical(config$caching, "master")) {
+  caching <- caching(target, config)
+  if (identical(caching, "master")) {
     manage_memory(target = target, config = config, jobs = 1)
     deps <- cmq_deps_list(target = target, config = config)
   } else {
@@ -183,7 +185,8 @@ cmq_build <- function(target, meta, deps, layout, config) {
   config$layout <- list()
   config$layout[[target]] <- layout
   do_prework(config = config, verbose_packages = FALSE)
-  if (identical(config$caching, "master")) {
+  caching <- caching(target, config)
+  if (identical(caching, "master")) {
     for (dep in names(deps)) {
       config$eval[[dep]] <- deps[[dep]]
     }
@@ -191,12 +194,17 @@ cmq_build <- function(target, meta, deps, layout, config) {
     manage_memory(target = target, config = config, jobs = 1)
   }
   build <- try_build(target = target, meta = meta, config = config)
-  if (identical(config$caching, "master")) {
+  if (identical(caching, "master")) {
     build$checksum <- get_outfile_checksum(target, config)
     return(build)
   }
   conclude_build(build = build, config = config)
   list(target = target, checksum = get_checksum(target, config))
+}
+
+caching <- function(target, config) {
+  out <- config$layout[[target]]$caching %||NA% config$caching
+  match.arg(out, choices = c("master", "worker"))
 }
 
 cmq_local_build <- function(target, config) {

@@ -1,3 +1,10 @@
+# Version 7.6.0.9000
+
+## New features
+
+- Support a custom "caching" column of the plan to select master vs worker caching for each target individually (#988).
+
+
 # Version 7.6.0
 
 ## Bug fixes

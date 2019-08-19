@@ -62,6 +62,13 @@ to learn more.
 See
 \url{https://ropenscilabs.github.io/drake-manual/hpc.html#advanced-options}
 for details.
+\item \code{caching}: overrides the \code{caching} argument of \code{\link[=make]{make()}} for each target
+individually. Possible values:
+\itemize{
+\item "master": tell the master process to store the target in the cache.
+\item "worker": tell the HPC worker to store the target in the cache.
+\item NA: default to the \code{caching} argument of \code{\link[=make]{make()}}.
+}
 \item \code{elapsed} and \code{cpu}: number of seconds to wait for the target to build
 before timing out (\code{elapsed} for elapsed time and \code{cpu} for CPU time).
 \item \code{retries}: number of times to retry building a target
