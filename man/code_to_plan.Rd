@@ -33,6 +33,7 @@ The target/command binding should be permanent.
 }
 }
 \examples{
+\dontrun{
 plan <- drake_plan(
   raw_data = read_excel(file_in("raw_data.xlsx")),
   data = raw_data,
@@ -46,6 +47,7 @@ plan_to_code(plan, file)
 cat(readLines(file), sep = "\\n")
 # Convert back to a drake plan.
 code_to_plan(file)
+}
 }
 \seealso{
 \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}, \code{\link[=plan_to_code]{plan_to_code()}},

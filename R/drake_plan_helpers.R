@@ -755,6 +755,7 @@ bind_plans <- function(...) {
 #'     `assign()` and similar functions.
 #' @param path A file path to an R script or `knitr` report.
 #' @examples
+#' \dontrun{
 #' plan <- drake_plan(
 #'   raw_data = read_excel(file_in("raw_data.xlsx")),
 #'   data = raw_data,
@@ -768,6 +769,7 @@ bind_plans <- function(...) {
 #' cat(readLines(file), sep = "\n")
 #' # Convert back to a drake plan.
 #' code_to_plan(file)
+#' }
 code_to_plan <- function(path) {
   stopifnot(file.exists(path))
   txt <- readLines(path)
@@ -811,6 +813,7 @@ node_plan <- function(node) {
 #'   for details.
 #' @param con A file path or connection to write to.
 #' @examples
+#' \dontrun{
 #' plan <- drake_plan(
 #'   raw_data = read_excel(file_in("raw_data.xlsx")),
 #'   data = raw_data,
@@ -824,6 +827,7 @@ node_plan <- function(node) {
 #' cat(readLines(file), sep = "\n")
 #' # Convert back to a drake plan.
 #' code_to_plan(file)
+#' }
 plan_to_code <- function(plan, con = stdout()) {
   writeLines(text = plan_to_text(plan), con = con)
 }
@@ -846,6 +850,7 @@ plan_to_code <- function(plan, con = stdout()) {
 #'   2. Triggers disappear.
 #' @inheritParams plan_to_code
 #' @examples
+#' \dontrun{
 #' if (suppressWarnings(require("knitr"))) {
 #' plan <- drake_plan(
 #'   raw_data = read_excel(file_in("raw_data.xlsx")),
@@ -860,6 +865,7 @@ plan_to_code <- function(plan, con = stdout()) {
 #' cat(readLines(file), sep = "\n")
 #' # Convert back to a drake plan.
 #' code_to_plan(file)
+#' }
 #' }
 plan_to_notebook <- function(plan, con) {
   out <- c(
@@ -913,6 +919,7 @@ plan_to_text <- function(plan) {
 #'   is a call to [drake_plan()] that produces the plan you provide.
 #' @param plan A workflow plan data frame (see [drake_plan()])
 #' @examples
+#' \dontrun{
 #' plan <- drake::drake_plan(
 #'   small_data = download_data("https://some_website.com"),
 #'   large_data_raw = target(
@@ -931,6 +938,7 @@ plan_to_text <- function(plan) {
 #'   print(source) # Install the prettycode package for syntax highlighting.
 #'   file <- tempfile() # Path to an R script to contain the drake_plan() call.
 #'   writeLines(source, file) # Save the code to an R script.
+#' }
 #' }
 drake_plan_source <- function(plan) {
   assert_pkg("styler")
