@@ -895,7 +895,7 @@ plan_to_text <- function(plan) {
   }
   text <- paste(plan$target, "<-", plan$command)
   if (requireNamespace("styler")) {
-    text <- styler::style_text(text)
+    try(text <- styler::style_text(text), silent = TRUE)
   }
   text
 }
@@ -1026,7 +1026,8 @@ style_recursive_loop <- function(expr) {
 }
 
 style_leaf <- function(name, expr, append_comma) {
-  text <- styler::style_text(safe_deparse(expr))
+  text <- safe_deparse(expr)
+  try(text <- styler::style_text(text), silent = TRUE)
   text[1] <- paste(name, "=", text[1])
   if (append_comma) {
     text[length(text)] <- paste0(text[length(text)], ",")

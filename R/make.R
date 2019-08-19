@@ -410,6 +410,7 @@ drake_cache_log_file_ <- function(
     jobs = jobs,
     targets_only = targets_only
   )
+  out <- as.data.frame(out)
   # Suppress partial arg match warnings.
   suppressWarnings(
     write.table(
