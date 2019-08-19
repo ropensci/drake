@@ -2,7 +2,7 @@
 
 ## Bug fixes
 
-- CRAN hotfix: Remove README.md from CRAN altogether. The links trigger too many CRAN notes, which made the automated checks too brittle.
+- CRAN hotfix: Remove README.md from CRAN altogether. Also remove all links from the news and vignette. The links trigger too many CRAN notes, which made the automated checks too brittle.
 
 
 # Version 7.6.1
@@ -418,7 +418,7 @@ to tell the user if the command, a dependency, an input file, or an output file 
 # Version 5.4.0
 
 - Overhaul the interface for triggers and add new trigger types ("condition" and "change").
-- Offload `drake`'s code examples to the `drake-examples` GitHub repo and make make `drake_example()` and `drake_examples()` download examples from there.
+- Offload `drake`'s code examples to the `drake-examples` GitHub repository and make make `drake_example()` and `drake_examples()` download examples from there.
 - Optionally show output files in graph visualizations. See the `show_output_files` argument to `vis_drake_graph()` and friends.
 - Repair output file checksum operations for distributed backends like `"clustermq_staged"` and `"future_lapply"`.
 - Internally refactor the `igraph` attributes of the dependency graph to allow for smarter dependency/memory management during `make()`.
