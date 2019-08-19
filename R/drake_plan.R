@@ -33,7 +33,15 @@
 #'   - `"fst"`: save big data frames fast. The target must be a data frame,
 #'     and you must have the `fst` package installed.
 #'   - `"keras"`: save Keras models as HDF5 files.
-#'     Requires the `keras` package.
+#'     Requires the `keras` package. Warning: `format = "keras"`
+#'     is incompatible with certain kinds of high-performance computing.
+#'     This is because a Keras model must be serialized before being
+#'     sent to another R process, and `format = "keras"` does not serialize
+#'     models. If you use HPC and master caching (e.g.
+#'     `make(parallelism = "clustermq", caching = "master")`)
+#'     consider one of the workarounds listed in the
+#'     "High-performance computing caveats" section of
+#'     <https://ropenscilabs.github.io/drake-manual/churn.html>.
 #'   - `"rds"`: save any object. This is similar to the default storage
 #'     except we avoid creating a serialized copy of
 #'     the entire target in memory.

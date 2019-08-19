@@ -82,7 +82,15 @@ far less memory. Available formats:
 \item \code{"fst"}: save big data frames fast. The target must be a data frame,
 and you must have the \code{fst} package installed.
 \item \code{"keras"}: save Keras models as HDF5 files.
-Requires the \code{keras} package.
+Requires the \code{keras} package. Warning: \code{format = "keras"}
+is incompatible with certain kinds of high-performance computing.
+This is because a Keras model must be serialized before being
+sent to another R process, and \code{format = "keras"} does not serialize
+models. If you use HPC and master caching (e.g.
+\code{make(parallelism = "clustermq", caching = "master")})
+consider one of the workarounds listed in the
+"High-performance computing caveats" section of
+\url{https://ropenscilabs.github.io/drake-manual/churn.html}.
 \item \code{"rds"}: save any object. This is similar to the default storage
 except we avoid creating a serialized copy of
 the entire target in memory.
