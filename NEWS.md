@@ -1,4 +1,4 @@
-# Version 7.6.0.9000
+# Version 7.6.1.9000
 
 ## New features
 
