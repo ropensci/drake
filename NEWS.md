@@ -1,8 +1,8 @@
-# Version 7.6.2
+# Version 7.6.1.9000
 
 ## Bug fixes
 
-- CRAN hotfix: Remove README.md from CRAN altogether. Also remove all links from the news and vignette. The links trigger too many CRAN notes, which made the automated checks too brittle.
+- Remove README.md from CRAN altogether. Also remove all links from the news and vignette. The links trigger too many CRAN notes, which made the automated checks too brittle.
 
 
 # Version 7.6.1
