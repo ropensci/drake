@@ -45,7 +45,15 @@ far less memory. Available formats:
 \item \code{"fst"}: save big data frames fast. The target must be a data frame,
 and you must have the \code{fst} package installed.
 \item \code{"keras"}: save Keras models as HDF5 files.
-Requires the \code{keras} package.
+Requires the \code{keras} package. Warning: \code{format = "keras"}
+is incompatible with certain kinds of high-performance computing.
+This is because a Keras model must be serialized before being
+sent to another R process, and \code{format = "keras"} does not serialize
+models. If you use HPC and master caching (e.g.
+\code{make(parallelism = "clustermq", caching = "master")})
+consider one of the workarounds listed in the
+"High-performance computing caveats" section of
+\url{https://ropenscilabs.github.io/drake-manual/churn.html}.
 \item \code{"rds"}: save any object. This is similar to the default storage
 except we avoid creating a serialized copy of
 the entire target in memory.
@@ -62,6 +70,13 @@ to learn more.
 See
 \url{https://ropenscilabs.github.io/drake-manual/hpc.html#advanced-options}
 for details.
+\item \code{caching}: overrides the \code{caching} argument of \code{\link[=make]{make()}} for each target
+individually. Possible values:
+\itemize{
+\item "master": tell the master process to store the target in the cache.
+\item "worker": tell the HPC worker to store the target in the cache.
+\item NA: default to the \code{caching} argument of \code{\link[=make]{make()}}.
+}
 \item \code{elapsed} and \code{cpu}: number of seconds to wait for the target to build
 before timing out (\code{elapsed} for elapsed time and \code{cpu} for CPU time).
 \item \code{retries}: number of times to retry building a target

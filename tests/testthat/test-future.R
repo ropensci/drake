@@ -77,6 +77,7 @@ test_with_dir("future package functionality", {
   }
 
   # Workers can wait for dependencies.
+  skip_on_os("windows")
   for (i in 1:2) {
     e$my_plan$command[[2]] <- as.call(
       c(quote(identity), quote({

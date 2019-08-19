@@ -33,7 +33,15 @@
 #'   - `"fst"`: save big data frames fast. The target must be a data frame,
 #'     and you must have the `fst` package installed.
 #'   - `"keras"`: save Keras models as HDF5 files.
-#'     Requires the `keras` package.
+#'     Requires the `keras` package. Warning: `format = "keras"`
+#'     is incompatible with certain kinds of high-performance computing.
+#'     This is because a Keras model must be serialized before being
+#'     sent to another R process, and `format = "keras"` does not serialize
+#'     models. If you use HPC and master caching (e.g.
+#'     `make(parallelism = "clustermq", caching = "master")`)
+#'     consider one of the workarounds listed in the
+#'     "High-performance computing caveats" section of
+#'     <https://ropenscilabs.github.io/drake-manual/churn.html>.
 #'   - `"rds"`: save any object. This is similar to the default storage
 #'     except we avoid creating a serialized copy of
 #'     the entire target in memory.
@@ -49,6 +57,11 @@
 #'   See
 #'   <https://ropenscilabs.github.io/drake-manual/hpc.html#advanced-options>
 #'   for details.
+#' - `caching`: overrides the `caching` argument of [make()] for each target
+#'   individually. Possible values:
+#'   - "master": tell the master process to store the target in the cache.
+#'   - "worker": tell the HPC worker to store the target in the cache.
+#'   - NA: default to the `caching` argument of [make()].
 #' - `elapsed` and `cpu`: number of seconds to wait for the target to build
 #'   before timing out (`elapsed` for elapsed time and `cpu` for CPU time).
 #' - `retries`: number of times to retry building a target

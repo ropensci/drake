@@ -4,8 +4,13 @@
 
 - Remove README.md from CRAN altogether. Also remove all links from the news and vignette. The links trigger too many CRAN notes, which made the automated checks too brittle.
 
+## New features
+
+- Support a custom "caching" column of the plan to select master vs worker caching for each target individually (#988).
+
 ## Enhancements
 
+- Document the HPC limitations of `target(format = "keras")` (#989).
 - Remove the now-superfluous vignette.
 
 
