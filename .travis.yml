@@ -19,16 +19,20 @@ addons:
       - libudunits2-dev
       - libzmq3-dev
 
+r_packages:
+  - clustermq
+  - covr
+  - downloader
+  - forcats
+  - ggplot2
+  - lintr
+  - readxl
+
+r_github_packages:
+  - r-lib/pkgdown
+
 before_script:
-  - R -q -e 'install.packages("clustermq")'
-  - R -q -e 'install.packages("covr")'
-  - R -q -e 'install.packages("downloader")'
-  - R -q -e 'install.packages("forcats")'
-  - R -q -e 'install.packages("ggplot2")'
-  - R -q -e 'install.packages("lintr")'
   - R -q -e 'install.packages("remotes")'
-  - R -q -e 'install.packages("readxl")'
-  - R -q -e 'remotes::install_github("r-lib/pkgdown")'
   - R -q -e 'remotes::install_github("ropensci/rotemplate")'
   - R -q -e 'install.packages("webshot")'
   - R -q -e 'webshot::install_phantomjs()'
