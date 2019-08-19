@@ -22,7 +22,6 @@ installed, you also get nice syntax highlighting in the console
 when you print it.
 }
 \examples{
-\dontrun{
 plan <- drake::drake_plan(
   small_data = download_data("https://some_website.com"),
   large_data_raw = target(
@@ -41,7 +40,6 @@ if (requireNamespace("styler", quietly = TRUE)) {
   print(source) # Install the prettycode package for syntax highlighting.
   file <- tempfile() # Path to an R script to contain the drake_plan() call.
   writeLines(source, file) # Save the code to an R script.
-}
 }
 }
 \seealso{
