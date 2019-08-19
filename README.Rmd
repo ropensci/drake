@@ -552,7 +552,7 @@ However, data poses a challenge. The datasets created by `make()` can get large 
 
 ### workflowr
 
-The [`workflowr`](https://github.com/jdblischak/workflowr) package is a project manager that focuses on literate programming, sharing over the web, file organization, and version control. Its brand of reproducibility is all about transparency, communication, and discoverability. For an example of [`workflowr`](https://github.com/jdblischak/workflowr) and `drake` working together, see [this machine learning project](https://2019-feature-selection.pjs-web.de/report-defoliation.html) by [Patrick Schratz](https://github.com/pat-s) ([source](https://github.com/pat-s/2019-feature-selection)).
+The [`workflowr`](https://github.com/jdblischak/workflowr) package is a project manager that focuses on literate programming, sharing over the web, file organization, and version control. Its brand of reproducibility is all about transparency, communication, and discoverability. For an example of [`workflowr`](https://github.com/jdblischak/workflowr) and `drake` working together, see [this machine learning project](https://github.com/pat-s/2019-feature-selection) by [Patrick Schratz](https://github.com/pat-s).
 
 # Acknowledgements
 

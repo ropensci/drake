@@ -1,3 +1,9 @@
+# Version 7.6.1
+
+## Bug fixes
+
+- CRAN hotfix: remove a broken link in the README.
+
 # Version 7.6.0
 
 ## Bug fixes
