@@ -4,6 +4,10 @@
 
 - Remove README.md from CRAN altogether. Also remove all links from the news and vignette. The links trigger too many CRAN notes, which made the automated checks too brittle.
 
+## Enhancements
+
+- Remove the now-superfluous vignette.
+
 
 # Version 7.6.1
 
