@@ -4,6 +4,17 @@
 
 - Support a custom "caching" column of the plan to select master vs worker caching for each target individually (#988).
 
+## Enhancements
+
+- Document the HPC limitations of `target(format = "keras")` (#989).
+
+
+# Version 7.6.1
+
+## Bug fixes
+
+- CRAN hotfix: remove a broken link in the README.
+
 
 # Version 7.6.0
 
