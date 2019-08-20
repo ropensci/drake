@@ -101,6 +101,30 @@ test_with_dir("rds format", {
   expect_false(inherits(ref2, "drake_format_rds"))
 })
 
+test_with_dir("rds format with hpc checksum", {
+  skip_if(getRversion() < "3.5.0")
+  skip_if_not_installed("future")
+  future::plan(future::sequential)
+  plan <- drake_plan(
+    x = target(list(x = letters, y = letters), format = "rds"),
+    y = "normal format"
+  )
+  make(plan, parallelism = "future", caching = "worker")
+  out <- readd(x)
+  exp <- list(x = letters, y = letters)
+  expect_equal(out, exp)
+  cache <- drake_cache()
+  expect_equal(cache$get_value(cache$get_hash("x")), exp)
+  ref <- cache$storr$get("x")
+  expect_true(inherits(ref, "drake_format_rds"))
+  expect_equal(length(ref), 1L)
+  expect_true(nchar(ref) < 100)
+  expect_false(is.list(ref))
+  ref2 <- cache$storr$get("y")
+  expect_identical(ref2, "normal format")
+  expect_false(inherits(ref2, "drake_format_rds"))
+})
+
 test_with_dir("flow with rds format", {
   skip_if(getRversion() < "3.5.0")
   plan <- drake_plan(

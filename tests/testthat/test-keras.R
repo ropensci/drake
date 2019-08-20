@@ -117,7 +117,7 @@ test_with_dir("keras + future", {
   skip_if_not_installed("future")
   skip_if_not_installed("keras")
   skip_on_os("windows")
-  future::plan(future::multisession)
+  future::plan(future::sequential)
   keras_model <- function() {
     model <- keras_model_sequential() %>%
       layer_conv_2d(
@@ -150,7 +150,7 @@ test_with_dir("keras + future", {
     plan,
     packages = "keras",
     parallelism = "future",
-    caching = "master"
+    caching = "worker"
   )
   out <- readd(x)
   expect_true(inherits(out, "keras.engine.training.Model"))

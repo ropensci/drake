@@ -135,13 +135,19 @@ is_good_checksum <- function(target, checksum, config) {
   if (!identical(local_checksum, checksum)) {
     return(FALSE)
   }
-  all(
+  out <- all(
     vapply(
       X = unlist(strsplit(local_checksum, " "))[1:2],
       config$cache$exists_object,
       FUN.VALUE = logical(1)
     )
   )
+  format <- config$layout[[target]]$format
+  if (!is.null(format) && !is.na(format)) {
+    format_file <- config$cache$file_return_key(target)
+    out <- out && file.exists(format_file)
+  }
+  out
 }
 
 is_good_outfile_checksum <- function(target, checksum, config) {
