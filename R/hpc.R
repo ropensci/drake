@@ -271,11 +271,14 @@ serialize_build <- function(build) {
   UseMethod("serialize_build")
 }
 
+# Requires Python Keras and TensorFlow to test. Tested in test-keras.R.
+# nocov start
 serialize_build.drake_build_keras <- function(build) {
   assert_pkg("keras")
   build$value <- keras::serialize_model(build$value)
   build
 }
+# nocov end
 
 serialize_build.default <- function(build) {
   build
@@ -285,11 +288,14 @@ unserialize_build <- function(build) {
   UseMethod("unserialize_build")
 }
 
+# Requires Python Keras and TensorFlow to test. Tested in test-keras.R.
+# nocov start
 unserialize_build.drake_build_keras <- function(build) {
   assert_pkg("keras")
   build$value <- keras::unserialize_model(build$value)
   build
 }
+# nocov end
 
 unserialize_build.default <- function(build) {
   build
