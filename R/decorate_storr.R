@@ -134,7 +134,7 @@ dcst_get_.drake_format_fst <- function(value, key, .self) {
   fst::read_fst(.self$file_return_key(key))
 }
 
-# Requires Python Keras and TensorFlow to test. Tested in test-interactive.R.
+# Requires Python Keras and TensorFlow to test. Tested in test-keras.R.
 # nocov start
 dcst_get_.drake_format_keras <- function(value, key, .self) {
   assert_pkg("keras")
@@ -164,7 +164,7 @@ dcst_get_value_.drake_format_fst <- function(value, hash, .self) { # nolint
   fst::read_fst(.self$file_return_hash(hash))
 }
 
-# Requires Python Keras and TensorFlow to test. Tested in test-interactive.R.
+# Requires Python Keras and TensorFlow to test. Tested in test-keras.R.
 # nocov start
 dcst_get_value_.drake_format_keras <- function(value, hash, .self) { # nolint
   assert_pkg("keras")
@@ -192,7 +192,7 @@ dcst_set.drake_format_fst <- function(value, key, ..., .self) {
   dcst_set_move_tmp(key = key, value = value, tmp = tmp, .self = .self)
 }
 
-# Requires Python Keras and TensorFlow to test. Tested in test-interactive.R.
+# Requires Python Keras and TensorFlow to test. Tested in test-test-keras.R
 # nocov start
 dcst_set.drake_format_keras <- function(value, key, ..., .self) {
   assert_pkg("keras")

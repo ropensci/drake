@@ -135,13 +135,19 @@ is_good_checksum <- function(target, checksum, config) {
   if (!identical(local_checksum, checksum)) {
     return(FALSE)
   }
-  all(
+  out <- all(
     vapply(
       X = unlist(strsplit(local_checksum, " "))[1:2],
       config$cache$exists_object,
       FUN.VALUE = logical(1)
     )
   )
+  format <- config$layout[[target]]$format
+  if (!is.null(format) && !is.na(format)) {
+    format_file <- config$cache$file_return_key(target)
+    out <- out && file.exists(format_file)
+  }
+  out
 }
 
 is_good_outfile_checksum <- function(target, checksum, config) {
@@ -259,4 +265,44 @@ on_windows <- function() {
 
 this_os <- function() {
   unname(tolower(Sys.info()["sysname"]))
+}
+
+classify_build <- function(build, config) {
+  class <- paste0("drake_build_", config$layout[[build$target]]$format)
+  class(build) <- class
+  build
+}
+
+serialize_build <- function(build) {
+  UseMethod("serialize_build")
+}
+
+# Requires Python Keras and TensorFlow to test. Tested in test-keras.R.
+# nocov start
+serialize_build.drake_build_keras <- function(build) {
+  assert_pkg("keras")
+  build$value <- keras::serialize_model(build$value)
+  build
+}
+# nocov end
+
+serialize_build.default <- function(build) {
+  build
+}
+
+unserialize_build <- function(build) {
+  UseMethod("unserialize_build")
+}
+
+# Requires Python Keras and TensorFlow to test. Tested in test-keras.R.
+# nocov start
+unserialize_build.drake_build_keras <- function(build) {
+  assert_pkg("keras")
+  build$value <- keras::unserialize_model(build$value)
+  build
+}
+# nocov end
+
+unserialize_build.default <- function(build) {
+  build
 }
