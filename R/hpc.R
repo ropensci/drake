@@ -260,3 +260,28 @@ on_windows <- function() {
 this_os <- function() {
   unname(tolower(Sys.info()["sysname"]))
 }
+
+serialize_build <- function(build, config) {
+  UseMethod("seralize_build")
+}
+
+serialize_build.keras <- function(build, config) {
+  browser()
+}
+
+serialize_build.default <- function(build, config) {
+  build
+}
+
+unserialize_build <- function(build, config) {
+  UseMethod("unseralize_build")
+}
+
+unserialize_build.keras <- function(build, config) {
+  browser()
+}
+
+unserialize_build.default <- function(build, config) {
+  build
+}
+
