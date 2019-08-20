@@ -163,6 +163,8 @@ future_build <- function(target, meta, config, layout, protect) {
   build <- try_build(target = target, meta = meta, config = config)
   if (identical(caching, "master")) {
     build$checksum <- get_outfile_checksum(target, config)
+    build <- classify_build(build, config)
+    build <- serialize_build(build)
     return(build)
   }
   conclude_build(build = build, config = config)
@@ -220,6 +222,8 @@ conclude_worker <- function(worker, config, queue) {
       config = config
     )
     return(out)
+  } else {
+    build <- unserialize_build(build)
   }
   wait_outfile_checksum(
     target = build$target,

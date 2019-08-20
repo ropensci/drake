@@ -3,6 +3,7 @@ drake_context("keras")
 if (FALSE) {
 
 test_with_dir("custom keras format", {
+  skip_on_cran()
   skip_if_not_installed("keras")
   keras_model <- function() {
     model <- keras_model_sequential() %>%
@@ -50,6 +51,7 @@ test_with_dir("custom keras format", {
 })
 
 test_with_dir("keras + clustermq", {
+  skip_on_cran()
   skip_if_not_installed("clustermq")
   skip_if_not_installed("keras")
   skip_on_os("windows")
@@ -85,7 +87,12 @@ test_with_dir("keras + clustermq", {
     model
   }
   plan <- drake_plan(x = target(keras_model(), format = "keras"))
-  make(plan, packages = "keras", parallelism = "clustermq")
+  make(
+    plan,
+    packages = "keras",
+    parallelism = "clustermq",
+    caching = "master"
+  )
   out <- readd(x)
   expect_true(inherits(out, "keras.engine.training.Model"))
   cache <- drake_cache()
@@ -106,6 +113,7 @@ test_with_dir("keras + clustermq", {
 })
 
 test_with_dir("keras + future", {
+  skip_on_cran()
   skip_if_not_installed("future")
   skip_if_not_installed("keras")
   skip_on_os("windows")
@@ -138,7 +146,12 @@ test_with_dir("keras + future", {
     model
   }
   plan <- drake_plan(x = target(keras_model(), format = "keras"))
-  make(plan, packages = "keras", parallelism = "future")
+  make(
+    plan,
+    packages = "keras",
+    parallelism = "future",
+    caching = "master"
+  )
   out <- readd(x)
   expect_true(inherits(out, "keras.engine.training.Model"))
   cache <- drake_cache()

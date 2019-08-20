@@ -261,27 +261,36 @@ this_os <- function() {
   unname(tolower(Sys.info()["sysname"]))
 }
 
-serialize_build <- function(build, config) {
-  UseMethod("seralize_build")
-}
-
-serialize_build.keras <- function(build, config) {
-  browser()
-}
-
-serialize_build.default <- function(build, config) {
+classify_build <- function(build, config) {
+  class <- paste0("drake_build_", config$layout[[build$target]]$format)
+  class(build) <- class
   build
 }
 
-unserialize_build <- function(build, config) {
-  UseMethod("unseralize_build")
+serialize_build <- function(build) {
+  UseMethod("serialize_build")
 }
 
-unserialize_build.keras <- function(build, config) {
-  browser()
-}
-
-unserialize_build.default <- function(build, config) {
+serialize_build.drake_build_keras <- function(build) {
+  assert_pkg("keras")
+  build$value <- keras::serialize_model(build$value)
   build
 }
 
+serialize_build.default <- function(build) {
+  build
+}
+
+unserialize_build <- function(build) {
+  UseMethod("unserialize_build")
+}
+
+unserialize_build.drake_build_keras <- function(build) {
+  assert_pkg("keras")
+  build$value <- keras::unserialize_model(build$value)
+  build
+}
+
+unserialize_build.default <- function(build) {
+  build
+}

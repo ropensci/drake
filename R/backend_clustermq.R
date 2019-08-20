@@ -105,6 +105,8 @@ cmq_conclude_build <- function(msg, config) {
       config = config
     )
     return()
+  } else {
+    build <- unserialize_build(build)
   }
   wait_outfile_checksum(
     target = build$target,
@@ -196,6 +198,8 @@ cmq_build <- function(target, meta, deps, layout, config) {
   build <- try_build(target = target, meta = meta, config = config)
   if (identical(caching, "master")) {
     build$checksum <- get_outfile_checksum(target, config)
+    build <- classify_build(build, config)
+    build <- serialize_build(build)
     return(build)
   }
   conclude_build(build = build, config = config)
