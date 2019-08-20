@@ -109,7 +109,7 @@ test_with_dir("keras + future", {
   skip_if_not_installed("future")
   skip_if_not_installed("keras")
   skip_on_os("windows")
-  future::plan(future::multicore)
+  future::plan(future::multisession)
   keras_model <- function() {
     model <- keras_model_sequential() %>%
       layer_conv_2d(
