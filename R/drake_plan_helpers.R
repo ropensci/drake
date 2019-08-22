@@ -50,8 +50,11 @@
 #' if (requireNamespace("styler", quietly = TRUE)) {
 #'   print(drake_plan_source(plan))
 #' }
-target <- function(command = NULL, transform = NULL, ...) {
-  # TODO: remove this warning when we unexport target().
+target <- function(
+  command = NULL,
+  transform = NULL,
+  ...
+) {
   if (!nzchar(Sys.getenv("drake_target_silent"))) {
     warning(
       "target() in drake is not a standalone user-side function. ",
@@ -64,7 +67,11 @@ target <- function(command = NULL, transform = NULL, ...) {
   lst <- call$...
   lst <- select_nonempty(lst)
   lst <- lst[nzchar(names(lst))]
-  lst <- c(command = call$command, transform = call$transform, lst)
+  lst <- c(
+    command = call$command,
+    transform = call$transform,
+    lst
+  )
   out <- data.frame(command = NA, stringsAsFactors = FALSE)
   for (col in names(lst)) {
     if (is.language(lst[[col]])) {
