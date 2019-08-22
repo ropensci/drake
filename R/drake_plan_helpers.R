@@ -64,14 +64,13 @@ target <- function(
     )
   }
   call <- match.call(expand.dots = FALSE)
-  lst <- call$...
-  lst <- select_nonempty(lst)
-  lst <- lst[nzchar(names(lst))]
   lst <- c(
     command = call$command,
     transform = call$transform,
-    lst
+    call$...
   )
+  lst <- select_nonempty(lst)
+  lst <- lst[nzchar(names(lst))]
   out <- data.frame(command = NA, stringsAsFactors = FALSE)
   for (col in names(lst)) {
     if (is.language(lst[[col]])) {
