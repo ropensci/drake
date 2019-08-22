@@ -16,7 +16,7 @@ test_with_dir("defunct functions", {
 })
 
 test_with_dir("deprecation: target()", {
-  expect_warning(target(123), regexp = "deprecated")
+  expect_warning(target(123), regexp = "user-side")
 })
 
 test_with_dir("deprecation: fetch_cache", {

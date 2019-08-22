@@ -53,15 +53,11 @@
 target <- function(command = NULL, transform = NULL, ...) {
   # TODO: remove this warning when we unexport target().
   if (!nzchar(Sys.getenv("drake_target_silent"))) {
-    .Deprecated(
-      "target",
-      package = "drake",
-      msg = paste(
-        "target() is deprecated as a user-side function.",
-        "Use target from inside drake_plan(). See",
-        "https://ropenscilabs.github.io/drake-manual/plans.html#large-plans",
-        "for details."
-      )
+    warning(
+      "target() in drake is not a standalone user-side function. ",
+      "It must be called from inside drake_plan(). Details: ",
+      "https://ropenscilabs.github.io/drake-manual/plans.html#large-plans",
+      call. = FALSE
     )
   }
   call <- match.call(expand.dots = FALSE)
