@@ -2789,3 +2789,35 @@ test_with_dir("cross finds the correct combinations (#986)", {
   )
   equivalent_plans(out, exp)
 })
+
+test_with_dir("transform is a formal arg of target() (#993)", {
+  out <- drake_plan(
+    radar = target(
+      get_radar_info(radar),
+      map(radar = c("a", "b"))
+    )
+  )
+  exp <- drake_plan(
+    radar_a = get_radar_info("a"),
+    radar_b = get_radar_info("b")
+  )
+  equivalent_plans(out, exp)
+  out <- drake_plan(
+    radar = target(
+      get_radar_info(radar),
+      map(radar = c("a", "b")),
+      a = 1
+    )
+  )
+  exp <- drake_plan(
+    radar_a = target(
+      command = get_radar_info("a"),
+      a = 1
+    ),
+    radar_b = target(
+      command = get_radar_info("b"),
+      a = 1
+    )
+  )
+  equivalent_plans(out, exp)
+})

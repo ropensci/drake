@@ -5,10 +5,15 @@
 \title{Customize a target in \code{\link[=drake_plan]{drake_plan()}}.
 \lifecycle{maturing}}
 \usage{
-target(command = NULL, ...)
+target(command = NULL, transform = NULL, ...)
 }
 \arguments{
 \item{command}{The command to build the target.}
+
+\item{transform}{A call to \code{\link[=map]{map()}}, \code{\link[=split]{split()}},
+\code{\link[=cross]{cross()}}, or \code{\link[=combine]{combine()}} to create or aggregate
+multiple targets at once.
+Details: \url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}}
 
 \item{...}{Optional columns of the plan for a given target.
 See the Columns section of this help file for a selection

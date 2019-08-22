@@ -9,6 +9,10 @@
 #' @return A one-row workflow plan data frame with the named
 #' arguments as columns.
 #' @param command The command to build the target.
+#' @param transform A call to [map()], [split()],
+#'   [cross()], or [combine()] to create or aggregate
+#'   multiple targets at once.
+#'   Details: <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>
 #' @param ... Optional columns of the plan for a given target.
 #'   See the Columns section of this help file for a selection
 #'   of special columns that `drake` understands.
@@ -46,7 +50,7 @@
 #' if (requireNamespace("styler", quietly = TRUE)) {
 #'   print(drake_plan_source(plan))
 #' }
-target <- function(command = NULL, ...) {
+target <- function(command = NULL, transform = NULL, ...) {
   # TODO: remove this warning when we unexport target().
   if (!nzchar(Sys.getenv("drake_target_silent"))) {
     .Deprecated(
@@ -64,7 +68,7 @@ target <- function(command = NULL, ...) {
   lst <- call$...
   lst <- select_nonempty(lst)
   lst <- lst[nzchar(names(lst))]
-  lst <- c(command = call$command, lst)
+  lst <- c(command = call$command, transform = call$transform, lst)
   out <- data.frame(command = NA, stringsAsFactors = FALSE)
   for (col in names(lst)) {
     if (is.language(lst[[col]])) {

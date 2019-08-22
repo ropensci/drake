@@ -9,6 +9,7 @@
 ## New features
 
 - Support a custom "caching" column of the plan to select master vs worker caching for each target individually (#988).
+- Make `transform` a formal argument of `target()` so that users do not have to type "transform =" all the time in `drake_plan()` (#993).
 
 ## Enhancements
 
