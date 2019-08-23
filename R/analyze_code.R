@@ -106,7 +106,7 @@ analyze_knitr_file <- function(file, results) {
   if (!length(file)) {
     return(list())
   }
-  fragments <- safe_get_tangled_frags(file)
+  fragments <- get_tangled_frags(file)
   out <- ignore(analyze_code)(fragments, as_list = FALSE)
   if (length(out)){
     for (slot in knitr_in_slots) {
@@ -273,21 +273,7 @@ is_callish <- function(x) {
   length(x) > 0 && is.language(x) && (is.call(x) || is.recursive(x))
 }
 
-# From https://github.com/duncantl/CodeDepends/blob/master/R/sweave.R#L15
-get_tangled_frags <- function(doc) {
-  assert_pkg("knitr")
-  id <- make.names(tempfile(), unique = FALSE, allow_ = TRUE)
-  con <- textConnection(id, "w", local = TRUE)
-  on.exit(close(con))
-  with_options(
-    new = list(knitr.purl.inline = TRUE),
-    code = knitr::knit(doc, output = con, tangle = TRUE, quiet = TRUE)
-  )
-  code <- textConnectionValue(con)
-  parse(text = code)
-}
-
-safe_get_tangled_frags <- function(file) {
+get_tangled_frags <- function(file) {
   if (!length(file)) {
     return(character(0))
   }
@@ -300,7 +286,7 @@ safe_get_tangled_frags <- function(file) {
     return(character(0))
   }
   fragments <- tryCatch({
-    get_tangled_frags(file)
+    parse(text = get_tangled_text(file))
   },
   error = function(e) {
     warning(
@@ -310,6 +296,19 @@ safe_get_tangled_frags <- function(file) {
     )
     character(0)
   })
+}
+
+# From https://github.com/duncantl/CodeDepends/blob/master/R/sweave.R#L15
+get_tangled_text <- function(doc) {
+  assert_pkg("knitr")
+  id <- make.names(tempfile(), unique = FALSE, allow_ = TRUE)
+  con <- textConnection(id, "w", local = TRUE)
+  on.exit(close(con))
+  with_options(
+    new = list(knitr.purl.inline = TRUE),
+    code = knitr::knit(doc, output = con, tangle = TRUE, quiet = TRUE)
+  )
+  textConnectionValue(con)
 }
 
 # Functions borrowed directly from codetools to deal with

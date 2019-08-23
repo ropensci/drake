@@ -780,10 +780,9 @@ code_to_plan <- function(path) {
   # From CodeDepends: https://github.com/duncantl/CodeDepends/blob/7c9cf7eceffaea1d26fe25836c7a455f059e13c1/R/frags.R#L74 # nolint
   # Checks if the file is a knitr report.
   if (any(grepl("^(### chunk number|<<[^>]*>>=|```\\{r.*\\})", txt))) { # nolint
-    nodes <- get_tangled_frags(path)
-  } else {
-    nodes <- parse(text = txt)
+    txt <- get_tangled_text(path)
   }
+  nodes <- parse(text = txt)
   out <- lapply(nodes, node_plan)
   out <- do.call(rbind, out)
   out <- parse_custom_plan_columns(out)
