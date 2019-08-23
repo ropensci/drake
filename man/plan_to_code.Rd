@@ -3,7 +3,7 @@
 \name{plan_to_code}
 \alias{plan_to_code}
 \title{Turn a \code{drake} plan into a plain R script file.
-\lifecycle{stable}}
+\lifecycle{questioning}}
 \usage{
 plan_to_code(plan, con = stdout())
 }

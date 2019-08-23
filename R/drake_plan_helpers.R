@@ -740,7 +740,7 @@ bind_plans <- function(...) {
 
 #' @title Turn an R script file or `knitr` / R Markdown report
 #'   into a `drake` plan.
-#' \lifecycle{stable}
+#' \lifecycle{questioning}
 #' @export
 #' @seealso [drake_plan()], [make()], [plan_to_code()],
 #'   [plan_to_notebook()]
@@ -797,7 +797,7 @@ node_plan <- function(node) {
 }
 
 #' @title Turn a `drake` plan into a plain R script file.
-#' \lifecycle{stable}
+#' \lifecycle{questioning}
 #' @export
 #' @seealso [drake_plan()], [make()], [code_to_plan()],
 #'   [plan_to_notebook()]
@@ -834,7 +834,7 @@ plan_to_code <- function(plan, con = stdout()) {
 }
 
 #' @title Turn a `drake` plan into an R notebook.
-#' \lifecycle{stable}
+#' \lifecycle{questioning}
 #' @export
 #' @seealso [drake_plan()], [make()], [code_to_plan()],
 #'   [plan_to_code()]
