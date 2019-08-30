@@ -5,10 +5,11 @@
 - Remove README.md from CRAN altogether. Also remove all links from the news and vignette. The links trigger too many CRAN notes, which made the automated checks too brittle.
 - Serialize formats that need serialization (like "keras") before sending the data from HPC workers to the master process (#989).
 - Check for custom-formatted files when checking checksums.
-- Force fst-formatted
+- Force fst-formatted targets to plain data frames. Same goes for the new "fst_dt" format.
 
 ## New features
 
+- Add a new "fst_dt" format for `fst`-powered saving of `data.table` objects.
 - Support a custom "caching" column of the plan to select master vs worker caching for each target individually (#988).
 - Make `transform` a formal argument of `target()` so that users do not have to type "transform =" all the time in `drake_plan()` (#993).
 
