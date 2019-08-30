@@ -34,16 +34,19 @@
 #'       1. The `fst` package must be installed.
 #'       2. The target's value must be a plain data frame. If it is not a
 #'         plain data frame (for example, a tibble or data.table)
-#'         then drake will attempt
-#'         to convert it to a plain data frame with `as.data.frame()`.
+#'         then drake will coerce it to a plain data frame with
+#'         `as.data.frame()`.
+#'         All non-data-frame-specific attributes are lost
+#'         when `drake` saves the target.
 #'   - `"fst_dt"`: Like `"fst"` format, but for `data.table` objects.
 #'      Requirements:
 #'       1. The `data.table` and `fst` packages must be installed.
 #'       2. The target's value must be a data.table object. If it is not a
 #'         data.table object (for example, a data frame or tibble)
-#'         then drake will attempt
-#'         to convert it to a data.table object using
+#'         then drake will coerce it to a data.table object using
 #'         `data.table::as.data.table()`.
+#'         All non-data-table-specific attributes are lost
+#'         when `drake` saves the target.
 #'   - `"keras"`: save Keras models as HDF5 files.
 #'     Requires the `keras` package.
 #'   - `"rds"`: save any object. This is similar to the default storage

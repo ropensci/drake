@@ -1,4 +1,3 @@
-url: https://ropensci.github.io/drake
 destination: docs/
 template:
   package: rotemplate
