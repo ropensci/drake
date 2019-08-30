@@ -59,7 +59,7 @@ thin_format.default <- function(x, target, config) {
   x
 }
 
-thin_format.drake_format_fst <- function(x, target, config) {
+thin_format.drake_format_fst <- function(x, target, config) { # nolint
   if (!identical(class(x$value), "data.frame")) {
     msg <- paste0(
       "Error: you selected fst format for target ", target,
@@ -71,6 +71,22 @@ thin_format.drake_format_fst <- function(x, target, config) {
     log_msg(msg, target = target, config = config)
   }
   x$value <- as.data.frame(x$value)
+  x
+}
+
+thin_format.drake_format_fst_dt <- function(x, target, config) { # nolint
+  assert_pkg("data.table")
+  if (!identical(class(x$value), "data.frame")) {
+    msg <- paste0(
+      "Error: you selected fst_dt format for target ", target,
+      ", so drake will convert it from class ",
+      safe_deparse(class(x$value)),
+      " to a data.table object."
+    )
+    warning(msg, call. = FALSE)
+    log_msg(msg, target = target, config = config)
+  }
+  x$value <- data.table::as.data.table(x$value)
   x
 }
 

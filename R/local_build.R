@@ -346,6 +346,21 @@ sanitize_format.drake_format_fst <- function(x, target, config) {
   as.data.frame(x)
 }
 
+sanitize_format.drake_format_dt <- function(x, target, config) {
+  browser()
+  if (!identical(class(x$value), "data.frame")) {
+    msg <- paste0(
+      "You selected fst format for target ", target,
+      ", so drake will convert it from class ",
+      safe_deparse(class(x$value)),
+      " to a plain data frame."
+    )
+    warning(msg, call. = FALSE)
+    log_msg(msg, target = target, config = config)
+  }
+  as.data.frame(x)
+}
+
 assign_to_envir <- function(target, value, config) {
   memory_strategy <- config$layout[[target]]$memory_strategy %||NA%
     config$memory_strategy

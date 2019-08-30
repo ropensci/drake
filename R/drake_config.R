@@ -872,13 +872,15 @@ plan_check_format_col <- function(plan) {
   }
   format <- plan$format
   format <- format[!is.na(format)]
-  illegal <- setdiff(unique(format), c("fst", "keras", "rds"))
+  formats <- c("fst", "fst_dt", "keras", "rds")
+  illegal <- setdiff(unique(format), formats)
   if (!length(illegal)) {
     return()
   }
   stop(
     "the format column of your drake plan can only have values ",
-    "\"fst\", \"keras\", \"rds\", or NA. Illegal values found:\n",
+    "\"fst\", \"fst_dt\", \"keras\", \"rds\", or NA. ",
+    "Illegal values found:\n",
     multiline_message(illegal),
     call. = FALSE
   )
