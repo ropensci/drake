@@ -79,8 +79,24 @@ Details: (\url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plan
 Most formats are faster than ordinary storage, and they consume
 far less memory. Available formats:
 \itemize{
-\item \code{"fst"}: save big data frames fast. The target must be a data frame,
-and you must have the \code{fst} package installed.
+\item \code{"fst"}: save big data frames fast. Requirements:
+\enumerate{
+\item The \code{fst} package must be installed.
+\item The target's value must be a plain data frame. If it is not a
+plain data frame (for example, a tibble or data.table)
+then drake will attempt
+to convert it to a plain data frame with \code{as.data.frame()}.
+}
+\item \code{"fst_dt"}: Like \code{"fst"} format, but for \code{data.table} objects.
+Requirements:
+\enumerate{
+\item The \code{data.table} and \code{fst} packages must be installed.
+\item The target's value must be a data.table object. If it is not a
+data.table object (for example, a data frame or tibble)
+then drake will attempt
+to convert it to a data.table object using
+\code{data.table::as.data.table()}.
+}
 \item \code{"keras"}: save Keras models as HDF5 files.
 Requires the \code{keras} package.
 \item \code{"rds"}: save any object. This is similar to the default storage
