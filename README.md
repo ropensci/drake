@@ -2,7 +2,7 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 <center>
-<img src="https://ropensci.github.io/drake/figures/infographic.svg" alt="infographic" align="center" style = "border: none; float: center;">
+<img src="https://docs.ropensci.org/drake/reference/figures/infographic.svg" alt="infographic" align="center" style = "border: none; float: center;">
 </center>
 <table class="table">
 <thead>
@@ -78,7 +78,7 @@ Development
 </table>
 <br>
 
-# The drake R package <img src="https://ropensci.github.io/drake/figures/logo.svg" align="right" alt="logo" width="120" height = "139" style = "border: none; float: right;">
+# The drake R package <img src="https://docs.ropensci.org/drake/reference/figures/logo.svg" align="right" alt="logo" width="120" height = "139" style = "border: none; float: right;">
 
 Data analysis can be slow. A round of scientific computation can take
 several minutes, hours, or even days to complete. After it finishes, if
@@ -103,7 +103,7 @@ introduction.
 <center>
 
 <a href="https://ropenscilabs.github.io/drake-manual">
-<img src="https://ropensci.github.io/drake/figures/video.png" alt="video" align="center" style = "border: none; float: center;">
+<img src="https://docs.ropensci.org/drake/reference/figures/video.png" alt="video" align="center" style = "border: none; float: center;">
 </a>
 
 </center>
@@ -125,7 +125,7 @@ Ordinarily, it is hard to avoid rerunning the code from scratch.
 
 <center>
 
-<img src="https://ropensci.github.io/drake/figures/tweet.png" alt="tweet" align="center" style = "border: none; float: center;">
+<img src="https://docs.ropensci.org/drake/reference/figures/tweet.png" alt="tweet" align="center" style = "border: none; float: center;">
 
 </center>
 
@@ -254,7 +254,7 @@ config <- drake_config(plan)
 vis_drake_graph(config) # Interactive graph: zoom, drag, etc.
 ```
 
-<img src="https://ropensci.github.io/drake/figures/graph.png" alt="hist1" align="center" style = "border: none; float: center;" width = "600px">
+<img src="https://docs.ropensci.org/drake/reference/figures/graph.png" alt="hist1" align="center" style = "border: none; float: center;" width = "600px">
 
 The next `make()` just builds `hist` and `report.html`. No point in
 wasting time on the data or model.
