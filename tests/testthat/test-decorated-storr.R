@@ -264,7 +264,7 @@ test_with_dir("fst format and tibbles", {
     regexp = "plain data frame"
   )
   expect_equal(readd(y), "data.frame")
-  expect_false(inherits(readd(x)), "tibble")
+  expect_false(inherits(readd(x), "tibble"))
 })
 
 test_with_dir("fst_dt", {

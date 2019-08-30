@@ -332,7 +332,6 @@ sanitize_format.default <- function(x, target, config) {
 }
 
 sanitize_format.drake_format_fst <- function(x, target, config) {
-  browser()
   if (!identical(class(x$value), "data.frame")) {
     msg <- paste0(
       "You selected fst format for target ", target,
@@ -343,22 +342,24 @@ sanitize_format.drake_format_fst <- function(x, target, config) {
     warning(msg, call. = FALSE)
     log_msg(msg, target = target, config = config)
   }
-  as.data.frame(x)
+  x$value <- as.data.frame(x$value)
+  x
 }
 
-sanitize_format.drake_format_dt <- function(x, target, config) {
-  browser()
-  if (!identical(class(x$value), "data.frame")) {
+sanitize_format.drake_format_fst_dt <- function(x, target, config) {
+  assert_pkg("data.table")
+  if (!inherits(x$value, "data.table")) {
     msg <- paste0(
-      "You selected fst format for target ", target,
+      "You selected fst_dt format for target ", target,
       ", so drake will convert it from class ",
       safe_deparse(class(x$value)),
-      " to a plain data frame."
+      " to a data.table object."
     )
     warning(msg, call. = FALSE)
     log_msg(msg, target = target, config = config)
   }
-  as.data.frame(x)
+  x$value <- data.table::as.data.table(x$value)
+  x
 }
 
 assign_to_envir <- function(target, value, config) {
@@ -438,7 +439,7 @@ handle_build_exceptions <- function(target, meta, config) {
         ")` for details. Error message:\n  ",
         meta$error$message
       )
-      drake_log(paste("Error:", msg), config = config)
+      drake_log(paste(msg), config = config)
       unlock_environment(config$envir)
       stop(msg, call. = FALSE)
     }

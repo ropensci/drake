@@ -41,55 +41,6 @@ store_outputs <- function(target, value, meta, config) {
   )
 }
 
-assign_format <- function(target, value, format, config) {
-  if (is.null(format) || is.na(format)) {
-    return(value)
-  }
-  log_msg("format", format, target = target, config = config)
-  out <- list(value = value)
-  class(out) <- paste0("drake_format_", format)
-  thin_format(x = out, target = target, config = config)
-}
-
-thin_format <- function(x, target, config) {
-  UseMethod("thin_format")
-}
-
-thin_format.default <- function(x, target, config) {
-  x
-}
-
-thin_format.drake_format_fst <- function(x, target, config) { # nolint
-  if (!identical(class(x$value), "data.frame")) {
-    msg <- paste0(
-      "Error: you selected fst format for target ", target,
-      ", so drake will convert it from class ",
-      safe_deparse(class(x$value)),
-      " to a plain data frame."
-    )
-    warning(msg, call. = FALSE)
-    log_msg(msg, target = target, config = config)
-  }
-  x$value <- as.data.frame(x$value)
-  x
-}
-
-thin_format.drake_format_fst_dt <- function(x, target, config) { # nolint
-  assert_pkg("data.table")
-  if (!identical(class(x$value), "data.frame")) {
-    msg <- paste0(
-      "Error: you selected fst_dt format for target ", target,
-      ", so drake will convert it from class ",
-      safe_deparse(class(x$value)),
-      " to a data.table object."
-    )
-    warning(msg, call. = FALSE)
-    log_msg(msg, target = target, config = config)
-  }
-  x$value <- data.table::as.data.table(x$value)
-  x
-}
-
 store_output_files <- function(files, meta, config) {
   meta$isfile <- TRUE
   for (file in files) {

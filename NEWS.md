@@ -5,6 +5,7 @@
 - Remove README.md from CRAN altogether. Also remove all links from the news and vignette. The links trigger too many CRAN notes, which made the automated checks too brittle.
 - Serialize formats that need serialization (like "keras") before sending the data from HPC workers to the master process (#989).
 - Check for custom-formatted files when checking checksums.
+- Force fst-formatted
 
 ## New features
 
