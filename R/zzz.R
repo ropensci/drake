@@ -19,7 +19,7 @@ drake_tip_ <- function() {
 
     "Use drake_example() to download code for a small drake workflow.",
 
-    "Check out the reference website https://ropensci.github.io/drake
+    "Check out the reference website https://docs.ropensci.org/drake
      and user manual https://ropenscilabs.github.io/drake-manual.",
 
     "drake quickstart:

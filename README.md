@@ -523,10 +523,9 @@ could potentially improve the integrity of independent replication.
 Ideally, independent observers should be able to read your code and
 understand it. `drake` helps in several ways.
 
-  - The [workflow plan data
-    frame](https://ropensci.github.io/drake/reference/drake_plan.html)
+  - The [drake plan](https://docs.ropensci.org/drake/reference/drake_plan.html)
     explicitly outlines the steps of the analysis, and
-    [`vis_drake_graph()`](https://ropensci.github.io/drake/reference/vis_drake_graph.html)
+    [`vis_drake_graph()`](https://docs.ropensci.org/drake/reference/vis_drake_graph.html)
     visualizes how those steps depend on each other.
   - `drake` takes care of the parallel scheduling and high-performance
     computing (HPC) for you. That means the HPC code is no longer
@@ -582,7 +581,7 @@ install_github("ropensci/drake")
 # Function reference
 
 The [reference
-section](https://ropensci.github.io/drake/reference/index.html) lists
+section](https://docs.ropensci.org/drake/reference/index.html) lists
 all the available functions. Here are the most important ones.
 
   - `drake_plan()`: create a workflow data frame (like `my_plan`).
@@ -611,7 +610,7 @@ all the available functions. Here are the most important ones.
 # Documentation
 
   - The [user manual](https://ropenscilabs.github.io/drake-manual/)
-  - The [reference website](https://ropensci.github.io/drake/).
+  - The [reference website](https://docs.ropensci.org/drake/).
   - The [official repository of example
     code](https://github.com/wlandau/drake-examples). Download an
     example workflow from here with `drake_example()`.
@@ -877,7 +876,6 @@ early in development.
   - [Kirill Müller](https://github.com/krlmlr)
   - [Michael Schubert](https://github.com/mschubert)
 
-Credit for images is [attributed
-here](https://ropensci.github.io/drake/figures/image-credit.md).
+Credit for images is [attributed here](https://github.com/ropensci/drake/blob/master/man/figures/image-credit.md).
 
 [![ropensci\_footer](https://ropensci.org/public_images/github_footer.png)](https://ropensci.org)
