@@ -302,9 +302,64 @@ conclude_build <- function(build, config) {
   meta <- build$meta
   assert_output_files(target = target, meta = meta, config = config)
   handle_build_exceptions(target = target, meta = meta, config = config)
+  value <- assign_format(
+    target = target,
+    value = value,
+    format = config$layout[[target]]$format,
+    config = config
+  )
   store_outputs(target = target, value = value, meta = meta, config = config)
   assign_to_envir(target = target, value = value, config = config)
   invisible(value)
+}
+
+assign_format <- function(target, value, format, config) {
+  if (is.null(format) || is.na(format)) {
+    return(value)
+  }
+  log_msg("format", format, target = target, config = config)
+  out <- list(value = value)
+  class(out) <- paste0("drake_format_", format)
+  sanitize_format(x = out, target = target, config = config)
+}
+
+sanitize_format <- function(x, target, config) {
+  UseMethod("sanitize_format")
+}
+
+sanitize_format.default <- function(x, target, config) {
+  x
+}
+
+sanitize_format.drake_format_fst <- function(x, target, config) {
+  if (!identical(class(x$value), "data.frame")) {
+    msg <- paste0(
+      "You selected fst format for target ", target,
+      ", so drake will convert it from class ",
+      safe_deparse(class(x$value)),
+      " to a plain data frame."
+    )
+    warning(msg, call. = FALSE)
+    log_msg(msg, target = target, config = config)
+  }
+  x$value <- as.data.frame(x$value)
+  x
+}
+
+sanitize_format.drake_format_fst_dt <- function(x, target, config) {
+  assert_pkg("data.table")
+  if (!inherits(x$value, "data.table")) {
+    msg <- paste0(
+      "You selected fst_dt format for target ", target,
+      ", so drake will convert it from class ",
+      safe_deparse(class(x$value)),
+      " to a data.table object."
+    )
+    warning(msg, call. = FALSE)
+    log_msg(msg, target = target, config = config)
+  }
+  x$value <- data.table::as.data.table(x$value)
+  x
 }
 
 assign_to_envir <- function(target, value, config) {
@@ -318,9 +373,17 @@ assign_to_envir <- function(target, value, config) {
     !is_encoded_path(target) &&
     !is_imported(target, config)
   ) {
-    assign(x = target, value = value, envir = config$eval)
+    assign(x = target, value = value_format(value), envir = config$eval)
   }
   invisible()
+}
+
+value_format <- function(x) {
+  if (any(grepl("^drake_format_", class(x)))) {
+    x$value
+  } else {
+    x
+  }
 }
 
 assert_output_files <- function(target, meta, config) {
@@ -376,7 +439,7 @@ handle_build_exceptions <- function(target, meta, config) {
         ")` for details. Error message:\n  ",
         meta$error$message
       )
-      drake_log(paste("Error:", msg), config = config)
+      drake_log(paste(msg), config = config)
       unlock_environment(config$envir)
       stop(msg, call. = FALSE)
     }

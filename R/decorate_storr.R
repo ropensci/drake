@@ -134,6 +134,12 @@ dcst_get_.drake_format_fst <- function(value, key, .self) {
   fst::read_fst(.self$file_return_key(key))
 }
 
+dcst_get_.drake_format_fst_dt <- function(value, key, .self) { # nolint
+  assert_pkg("data.table")
+  assert_pkg("fst")
+  fst::read_fst(.self$file_return_key(key), as.data.table = TRUE)
+}
+
 # Requires Python Keras and TensorFlow to test. Tested in test-keras.R.
 # nocov start
 dcst_get_.drake_format_keras <- function(value, key, .self) {
@@ -164,6 +170,12 @@ dcst_get_value_.drake_format_fst <- function(value, hash, .self) { # nolint
   fst::read_fst(.self$file_return_hash(hash))
 }
 
+dcst_get_value_.drake_format_fst_dt <- function(value, hash, .self) { # nolint
+  assert_pkg("data.table")
+  assert_pkg("fst")
+  fst::read_fst(.self$file_return_hash(hash), as.data.table = TRUE)
+}
+
 # Requires Python Keras and TensorFlow to test. Tested in test-keras.R.
 # nocov start
 dcst_get_value_.drake_format_keras <- function(value, hash, .self) { # nolint
@@ -185,6 +197,15 @@ dcst_set.default <- function(value, key, ..., .self) {
 }
 
 dcst_set.drake_format_fst <- function(value, key, ..., .self) {
+  assert_pkg("fst")
+  .self$assert_dirs()
+  tmp <- .self$file_tmp()
+  fst::write_fst(x = value$value, path = tmp)
+  dcst_set_move_tmp(key = key, value = value, tmp = tmp, .self = .self)
+}
+
+dcst_set.drake_format_fst_dt <- function(value, key, ..., .self) {
+  assert_pkg("data.table")
   assert_pkg("fst")
   .self$assert_dirs()
   tmp <- .self$file_tmp()

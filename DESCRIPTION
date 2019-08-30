@@ -105,6 +105,7 @@ Suggests:
   clustermq (>= 0.8.8),
   crayon,
   curl (>= 2.7),
+  data.table,
   datasets,
   downloader,
   fst,

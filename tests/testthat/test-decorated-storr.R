@@ -237,13 +237,71 @@ test_with_dir("Can save fst data frames", {
   expect_false(is.list(ref))
 })
 
-test_with_dir("fst format requires data frames", {
+test_with_dir("fst format forces data frames", {
   skip_if_not_installed("fst")
   plan <- drake_plan(
     x = target(
-      list(x = letters, y = letters, stringsAsFactors = FALSE),
+      list(x = letters, y = letters),
       format = "fst"
     )
   )
-  expect_error(make(plan), regexp = "data frame")
+  expect_warning(make(plan), regexp = "plain data frame")
+  expect_true(inherits(readd(x), "data.frame"))
+})
+
+test_with_dir("fst format and tibbles", {
+  skip_if_not_installed("fst")
+  skip_if_not_installed("tibble")
+  plan <- drake_plan(
+    x = target(
+      tibble::tibble(x = letters, y = letters),
+      format = "fst"
+    ),
+    y = class(x)
+  )
+  expect_warning(
+    make(plan, memory_strategy = "speed"),
+    regexp = "plain data frame"
+  )
+  expect_equal(readd(y), "data.frame")
+  expect_false(inherits(readd(x), "tibble"))
+})
+
+test_with_dir("fst_dt", {
+  skip_if_not_installed("data.table")
+  skip_if_not_installed("fst")
+  plan <- drake_plan(
+    x = target(
+      data.table::as.data.table(
+        data.frame(x = letters, y = letters, stringsAsFactors = FALSE)
+      ),
+      format = "fst_dt"
+    )
+  )
+  make(plan)
+  out <- readd(x)
+  exp <- data.table::as.data.table(
+    data.frame(x = letters, y = letters, stringsAsFactors = FALSE)
+  )
+  expect_equal(out, exp)
+  cache <- drake_cache()
+  expect_equal(cache$get_value(cache$get_hash("x")), exp)
+  ref <- cache$storr$get("x")
+  expect_true(inherits(ref, "drake_format_fst_dt"))
+  expect_equal(length(ref), 1L)
+  expect_true(nchar(ref) < 100)
+  expect_false(is.list(ref))
+})
+
+test_with_dir("fst_dt format forces data.tables", {
+  skip_if_not_installed("data.table")
+  skip_if_not_installed("fst")
+  plan <- drake_plan(
+    x = target(
+      list(x = letters, y = letters),
+      format = "fst_dt"
+    )
+  )
+  expect_warning(make(plan), regexp = "data.table")
+  expect_true(inherits(readd(x), "data.table"))
 })
