@@ -237,7 +237,7 @@ test_with_dir("Can save fst data frames", {
   expect_false(is.list(ref))
 })
 
-test_with_dir("fst format requires data frames", {
+test_with_dir("fst format forces data frames", {
   skip_if_not_installed("fst")
   plan <- drake_plan(
     x = target(
@@ -245,5 +245,22 @@ test_with_dir("fst format requires data frames", {
       format = "fst"
     )
   )
-  expect_error(make(plan), regexp = "data frame")
+  expect_warning(make(plan), regexp = "plain data frame")
+})
+
+test_with_dir("fst format and tibbles", {
+  skip_if_not_installed("fst")
+  skip_if_not_installed("tibble")
+  plan <- drake_plan(
+    x = target(
+      tibble::tibble(x = letters, y = letters),
+      format = "fst"
+    ),
+    y = class(x)
+  )
+  expect_warning(
+    make(plan, memory_strategy = "speed"),
+    regexp = "plain data frame"
+  )
+  expect_equal(readd(y), "data.frame")
 })

@@ -27,12 +27,6 @@ store_outputs <- function(target, value, meta, config) {
       target = target, config = config)
   }
   meta$name <- target
-  value <- assign_format(
-    target = target,
-    value = value,
-    format = layout$format,
-    config = config
-  )
   store_single_output(
     target = target,
     value = value,
@@ -54,7 +48,30 @@ assign_format <- function(target, value, format, config) {
   log_msg("format", format, target = target, config = config)
   out <- list(value = value)
   class(out) <- paste0("drake_format_", format)
-  out
+  thin_format(x = out, target = target, config = config)
+}
+
+thin_format <- function(x, target, config) {
+  UseMethod("thin_format")
+}
+
+thin_format.default <- function(x, target, config) {
+  x
+}
+
+thin_format.drake_format_fst <- function(x, target, config) {
+  if (!identical(class(x$value), "data.frame")) {
+    msg <- paste0(
+      "Error: you selected fst format for target ", target,
+      ", so drake will convert it from class ",
+      safe_deparse(class(x$value)),
+      " to a plain data frame."
+    )
+    warning(msg, call. = FALSE)
+    log_msg(msg, target = target, config = config)
+  }
+  x$value <- as.data.frame(x$value)
+  x
 }
 
 store_output_files <- function(files, meta, config) {
