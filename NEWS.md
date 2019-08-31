@@ -12,6 +12,7 @@
 - Add a new "fst_dt" format for `fst`-powered saving of `data.table` objects.
 - Support a custom "caching" column of the plan to select master vs worker caching for each target individually (#988).
 - Make `transform` a formal argument of `target()` so that users do not have to type "transform =" all the time in `drake_plan()` (#993).
+- Migrate the documentation website from `ropensci.github.io/drake` to `docs.ropensci.org/drake`.
 
 ## Enhancements
 
