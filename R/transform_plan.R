@@ -10,11 +10,15 @@
 #' @param envir Environment for tidy evaluation.
 #' @param trace Logical, whether to add columns to show
 #'   what happens during target transformations.
-#' @param max_expand Positive integer, optional upper bound on the lengths
-#'   of grouping variables for `map()` and `cross()`. Comes in handy
-#'   when you have a massive number of targets and you want to test
-#'   on a miniature version of your workflow before you scale up
-#'   to production.
+#' @param max_expand Positive integer, optional.
+#'   Maximum number of targets to generate in each
+#'   `map()`, `split()`, or `cross()` transform.
+#'   If massive number of targets, consider setting `max_expand`
+#'   to a small number. That way, you can test and visualize
+#'   your workflow before scaling up to production.
+#'   Note: `max_expand` is not for production workflows.
+#'   When it comes time to generate the end product,
+#'   either unset `max_expand` or manually set it to `NULL`.
 #' @param tidy_eval Logical, whether to use tidy evaluation
 #'   (e.g. unquoting/`!!`) when resolving commands.
 #'   Tidy evaluation in transformations is always turned on
