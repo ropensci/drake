@@ -7,6 +7,7 @@
 - Check for custom-formatted files when checking checksums.
 - Force fst-formatted targets to plain data frames. Same goes for the new "fst_dt" format.
 - Change the meaning and behavior of `max_expand` in `drake_plan()`. `max_expand` is now the maximum number of targets produced by `map()`, `split()`, and `cross()`. For `cross()`, this reduces the number of targets (less cumbersome) and makes the subsample of targets more representative of the complete grid. It also. ensures consistent target naming when `.id` is `FALSE` (#1002). Note: `max_expand` is not for production workflows anyway, so this change does not break anything important. Unfortunately, we do lose the speed boost in `drake_plan()` originally due to `max_expand`, but `drake_plan()` is still fast, so that is not so bad.
+- Drop specialized formats of `NULL` targets (#998).
 
 ## New features
 
