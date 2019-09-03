@@ -2793,3 +2793,24 @@ test_with_dir("max_expand thins consistently (#1002)", {
   equivalent_plans(plan[c(1, 6), ], sub2)
   equivalent_plans(plan[c(1, 6), ], sub2)
 })
+
+test_with_dir("max_expand works on split()", {
+  out <- drake_plan(
+    analysis = target(
+      analyze(data),
+      transform = split(data, slices = 10L, margin = 1L, drop = FALSE)
+    ),
+    max_expand = 2
+  )
+  exp <- drake_plan(
+    analysis_1 = analyze(drake_slice(
+      data = data, slices = 10L, index = 1, margin = 1L,
+      drop = FALSE
+    )),
+    analysis_10 = analyze(drake_slice(
+      data = data, slices = 10L, index = 10, margin = 1L,
+      drop = FALSE
+    ))
+  )
+  equivalent_plans(out, exp)
+})
