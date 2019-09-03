@@ -314,7 +314,7 @@ conclude_build <- function(build, config) {
 }
 
 assign_format <- function(target, value, format, config) {
-  if (is.null(format) || is.na(format)) {
+  if (is.null(format) || is.na(format) || is.null(value)) {
     return(value)
   }
   log_msg("format", format, target = target, config = config)

@@ -305,3 +305,14 @@ test_with_dir("fst_dt format forces data.tables", {
   expect_warning(make(plan), regexp = "data.table")
   expect_true(inherits(readd(x), "data.table"))
 })
+
+test_with_dir("drop format for NULL values (#998)", {
+  skip_if(getRversion() < "3.5.0")
+  f <- function() {
+    NULL
+  }
+  plan <- drake_plan(x = target(f(), format = "rds"))
+  make(plan)
+  expect_null(readd(x))
+  expect_null(drake_cache()$storr$get("x"))
+})
