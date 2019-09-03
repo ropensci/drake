@@ -2821,3 +2821,30 @@ test_with_dir("transform is a formal arg of target() (#993)", {
   )
   equivalent_plans(out, exp)
 })
+
+test_with_dir("max_expand thins consistently (#1002)", {
+  fns <- letters[seq_len(6)]
+  plan <- drake_plan(
+    print_fn = target(
+      print(fn),
+      transform = map(fn = !!fns, .id = FALSE)
+    )
+  )
+  sub2 <- drake_plan(
+    print_fn = target(
+      print(fn),
+      transform = map(fn = !!fns, .id = FALSE)
+    ),
+    max_expand = 2
+  )
+  sub3 <- drake_plan(
+    print_fn = target(
+      print(fn),
+      transform = map(fn = !!fns, .id = FALSE)
+    ),
+    max_expand = 3
+  )
+  equivalent_plans(sub2, sub3[-2, ])
+  equivalent_plans(plan[c(1, 6), ], sub2)
+  equivalent_plans(plan[c(1, 6), ], sub2)
+})
