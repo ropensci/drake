@@ -240,12 +240,7 @@ dcst_set.drake_format_rds <- function(value, key, ..., .self) {
 }
 
 dcst_set_move_tmp <- function(key, value, tmp, .self) {
-  hash_tmp <- digest::digest(
-    object = tmp,
-    algo = .self$hash_algorithm,
-    serialize = FALSE,
-    file = TRUE
-  )
+  hash_tmp <- rehash_local(tmp, .self$hash_algorithm)
   class(hash_tmp) <- class(value)
   hash <- .self$storr$set(key = key, value = hash_tmp)
   file <- .self$file_return_hash(hash)
