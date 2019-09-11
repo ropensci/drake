@@ -253,14 +253,18 @@ rehash_storage <- function(target, file = NULL, config) {
   if (!file.exists(file)) {
     return(NA_character_)
   }
+  rehash_local(file, hash_algorithm = config$cache$hash_algorithm)
+}
+
+rehash_local <- function(file, hash_algorithm) {
   if (dir.exists(file)) {
-    rehash_dir(file, config)
+    rehash_dir(file, hash_algorithm)
   } else {
-    rehash_file(file, config)
+    rehash_file(file, hash_algorithm)
   }
 }
 
-rehash_dir <- function(dir, config) {
+rehash_dir <- function(dir, hash_algorithm) {
   files <- list.files(
     path = dir,
     all.files = TRUE,
@@ -272,20 +276,20 @@ rehash_dir <- function(dir, config) {
     files,
     rehash_file,
     FUN.VALUE = character(1),
-    config = config
+    hash_algorithm = hash_algorithm
   )
   out <- paste(out, collapse = "")
   digest::digest(
     out,
-    algo = config$cache$hash_algorithm,
+    algo = hash_algorithm,
     serialize = FALSE
   )
 }
 
-rehash_file <- function(file, config) {
+rehash_file <- function(file, hash_algorithm) {
   digest::digest(
     object = file,
-    algo = config$cache$hash_algorithm,
+    algo = hash_algorithm,
     file = TRUE,
     serialize = FALSE
   )
