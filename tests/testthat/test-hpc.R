@@ -145,7 +145,7 @@ test_with_dir("parallelism can be a scheduler function", {
   loop_ <- function(config) {
     targets <- igraph::topo_sort(config$graph)$name
     for (target in targets) {
-      log_msg(target, config = config, newline = TRUE)
+      config$logger$minor(target)
       config$eval[[target]] <- build_(
         target = target,
         config = config

@@ -73,7 +73,8 @@ test_with_dir("changes to commands are handled well", {
   config$layout <- create_drake_layout(
     plan = config$plan,
     envir = config$envir,
-    cache = config$cache
+    cache = config$cache,
+    logger = config$logger
   )$layout
   testrun(config)
   expect_equal(

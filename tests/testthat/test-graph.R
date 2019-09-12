@@ -23,7 +23,9 @@ test_with_dir("null graph", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("lubridate")
   skip_if_not_installed("visNetwork")
-  x <- drake_graph_info(config = list(graph = igraph::make_empty_graph()))
+  config <- drake_config(drake_plan(x = 1))
+  config$graph <- igraph::make_empty_graph()
+  x <- drake_graph_info(config)
   expect_equal(x, null_graph())
 })
 
