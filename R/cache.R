@@ -686,7 +686,7 @@ drake_cache <- function(
   console_log_file = NULL
 ) {
   deprecate_verbose(verbose)
-  deprecate_console_log_file(verbose)
+  deprecate_console_log_file(console_log_file)
   if (is.null(path)) {
     path <- find_cache(path = getwd())
   }
