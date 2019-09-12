@@ -884,7 +884,7 @@ plan_to_notebook <- function(plan, con) {
 plan_to_text <- function(plan) {
   . <- NULL
   graph <- drake_config(
-    plan[, c("target", "command")],
+    plan[, c("target", "command","code_to_function")],
     envir = new.env(parent = emptyenv()),
     cache = storr::storr_environment(),
     history = FALSE,
@@ -1047,3 +1047,6 @@ is_trigger_call <- function(expr) {
     error = error_false
   )
 }
+
+
+
