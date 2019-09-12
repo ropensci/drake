@@ -22,13 +22,11 @@ announce_build <- function(target, meta, config) {
     value = "running",
     config = config
   )
-  log_msg(
+  config$logger$major(
     "target",
     target,
     target = target,
-    config = config,
-    color = "target",
-    tier = 1L
+    color = "target"
   )
 }
 
@@ -41,16 +39,14 @@ try_build <- function(target, meta, config) {
   max_retries <- as.numeric(layout$retries %||NA% config$retries)
   while (retries <= max_retries) {
     if (retries > 0L) {
-      log_msg(
+      config$logger$major(
         "retry",
         target,
         retries,
         "of",
         max_retries,
         target = target,
-        config = config,
-        color = "retry",
-        tier = 1L
+        color = "retry"
       )
     }
     build <- with_seed_timeout(
@@ -157,21 +153,13 @@ with_handling <- function(target, meta, config) {
   withCallingHandlers(
     value <- with_call_stack(target = target, config = config),
     warning = function(w) {
-      drake_log(
-        paste("Warning:", w$message),
-        target = target,
-        config = config
-      )
+      config$logger$minor(paste("Warning:", w$message), target = target)
       warnings <<- c(warnings, w$message)
       invokeRestart("muffleWarning")
     },
     message = function(m) {
       msg <- gsub(pattern = "\n$", replacement = "", x = m$message)
-      drake_log(
-        msg,
-        target = target,
-        config = config
-      )
+      config$logger$minor(msg, target = target)
       messages <<- c(messages, msg)
       invokeRestart("muffleMessage")
     }
@@ -317,7 +305,7 @@ assign_format <- function(target, value, format, config) {
   if (is.null(format) || is.na(format) || is.null(value)) {
     return(value)
   }
-  log_msg("format", format, target = target, config = config)
+  config$logger$minor("format", format, target = target)
   out <- list(value = value)
   class(out) <- paste0("drake_format_", format)
   sanitize_format(x = out, target = target, config = config)
@@ -340,7 +328,7 @@ sanitize_format.drake_format_fst <- function(x, target, config) {
       " to a plain data frame."
     )
     warning(msg, call. = FALSE)
-    log_msg(msg, target = target, config = config)
+    config$logger$minor(msg, target = target)
   }
   x$value <- as.data.frame(x$value)
   x
@@ -356,7 +344,7 @@ sanitize_format.drake_format_fst_dt <- function(x, target, config) {
       " to a data.table object."
     )
     warning(msg, call. = FALSE)
-    log_msg(msg, target = target, config = config)
+    config$logger$minor(msg, target = target)
   }
   x$value <- data.table::as.data.table(x$value)
   x
@@ -400,13 +388,13 @@ assert_output_files <- function(target, meta, config) {
       target, ":\n",
       multiline_message(missing_files)
     )
-    drake_log(paste("Warning:", msg), config = config)
+    config$logger$minor(paste("Warning:", msg))
     warning(msg, call. = FALSE)
   }
 }
 
 handle_build_exceptions <- function(target, meta, config) {
-  if (length(meta$warnings) && config$verbose) {
+  if (length(meta$warnings) && config$logger$verbose) {
     warn_opt <- max(1, getOption("warn"))
     with_options(
       new = list(warn = warn_opt),
@@ -417,20 +405,18 @@ handle_build_exceptions <- function(target, meta, config) {
       )
     )
   }
-  if (length(meta$messages) && config$verbose) {
+  if (length(meta$messages) && config$logger$verbose) {
     message(
       "Target ", target, " messages:\n",
       multiline_message(meta$messages)
     )
   }
   if (inherits(meta$error, "error")) {
-    log_msg(
+    config$logger$major(
       "fail",
       target,
       target = target,
-      config = config,
-      color = "fail",
-      tier = 1L
+      color = "fail"
     )
     store_failure(target = target, meta = meta, config = config)
     if (!config$keep_going) {
@@ -439,7 +425,7 @@ handle_build_exceptions <- function(target, meta, config) {
         ")` for details. Error message:\n  ",
         meta$error$message
       )
-      drake_log(paste(msg), config = config)
+      config$logger$minor(msg)
       unlock_environment(config$envir)
       stop(msg, call. = FALSE)
     }

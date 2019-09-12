@@ -6,7 +6,7 @@
 \lifecycle{experimental}}
 \usage{
 drake_history(cache = NULL, history = NULL, analyze = TRUE,
-  verbose = TRUE)
+  verbose = NULL)
 }
 \arguments{
 \item{cache}{drake cache as created by \code{\link[=new_cache]{new_cache()}}.
@@ -29,6 +29,8 @@ lots of R code.}
 \item \code{1}: print targets, retries, and failures.
 \item \code{2}: also show a spinner when preprocessing tasks are underway.
 }}
+
+\item{verbsose}{Deprecated on 2019-09-11.}
 }
 \value{
 A data frame of target history.

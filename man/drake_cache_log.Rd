@@ -6,8 +6,8 @@
 \lifecycle{maturing}}
 \usage{
 drake_cache_log(path = NULL, search = NULL,
-  cache = drake::drake_cache(path = path, verbose = verbose),
-  verbose = 1L, jobs = 1, targets_only = FALSE)
+  cache = drake::drake_cache(path = path), verbose = 1L, jobs = 1,
+  targets_only = FALSE)
 }
 \arguments{
 \item{path}{Path to a \code{drake} cache
@@ -18,12 +18,7 @@ drake_cache_log(path = NULL, search = NULL,
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} is ignored.}
 
-\item{verbose}{Integer, control printing to the console/terminal.
-\itemize{
-\item \code{0}: print nothing.
-\item \code{1}: print targets, retries, and failures.
-\item \code{2}: also show a spinner when preprocessing tasks are underway.
-}}
+\item{verbose}{Deprecated on 2019-09-11.}
 
 \item{jobs}{Number of jobs/workers for parallel processing.}
 

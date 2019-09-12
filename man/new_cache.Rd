@@ -5,7 +5,7 @@
 \title{Make a new \code{drake} cache.
 \lifecycle{maturing}}
 \usage{
-new_cache(path = NULL, verbose = 1L, type = NULL,
+new_cache(path = NULL, verbose = NULL, type = NULL,
   hash_algorithm = NULL, short_hash_algo = NULL,
   long_hash_algo = NULL, ..., console_log_file = NULL)
 }
@@ -13,12 +13,7 @@ new_cache(path = NULL, verbose = 1L, type = NULL,
 \item{path}{File path to the cache if the cache
 is a file system cache.}
 
-\item{verbose}{Integer, control printing to the console/terminal.
-\itemize{
-\item \code{0}: print nothing.
-\item \code{1}: print targets, retries, and failures.
-\item \code{2}: also show a spinner when preprocessing tasks are underway.
-}}
+\item{verbose}{Deprecated on 2019-09-11.}
 
 \item{type}{Deprecated argument. Once stood for cache type.
 Use \code{storr} to customize your caches instead.}
@@ -34,19 +29,7 @@ Use \code{hash_algorithm} instead.}
 
 \item{...}{other arguments to the cache constructor.}
 
-\item{console_log_file}{Optional character scalar of a file name or
-connection object (such as \code{stdout()}) to dump maximally verbose
-log information for \code{\link[=make]{make()}} and other functions (all functions that
-accept a \code{config} argument, plus \code{drake_config()}).
-If you choose to use a text file as the console log,
-it will persist over multiple function calls
-until you delete it manually.
-Fields in each row the log file, from left to right:
-- The node name (short host name) of the
-computer (from \code{Sys.info()["nodename"]}).
-- The process ID (from \code{Sys.getpid()}).
-- A timestamp with the date and time (in microseconds).
-- A brief description of what \code{drake} was doing.\code{ The fields are separated by pipe symbols (}"|"`).}
+\item{console_log_file}{Deprecated on 2019-09-11.}
 }
 \value{
 A newly created drake cache as a storr object.

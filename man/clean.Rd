@@ -6,8 +6,8 @@
 \lifecycle{maturing}}
 \usage{
 clean(..., list = character(0), destroy = FALSE, path = NULL,
-  search = NULL, cache = drake::drake_cache(path = path, verbose =
-  verbose), verbose = 1L, jobs = 1, force = FALSE,
+  search = NULL, cache = drake::drake_cache(path = path),
+  verbose = 1L, jobs = 1, force = FALSE,
   garbage_collection = FALSE, purge = FALSE)
 }
 \arguments{
@@ -33,12 +33,7 @@ session metadata, etc.}
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} is ignored.}
 
-\item{verbose}{Integer, control printing to the console/terminal.
-\itemize{
-\item \code{0}: print nothing.
-\item \code{1}: print targets, retries, and failures.
-\item \code{2}: also show a spinner when preprocessing tasks are underway.
-}}
+\item{verbose}{Deprecated on 2019-09-11.}
 
 \item{jobs}{Number of jobs for light parallelism
 (disabled on Windows).}

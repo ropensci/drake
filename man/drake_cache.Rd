@@ -5,7 +5,7 @@
 \title{Get the cache of a \code{drake} project.
 \lifecycle{stable}}
 \usage{
-drake_cache(path = NULL, verbose = 1L, console_log_file = NULL)
+drake_cache(path = NULL, verbose = NULL, console_log_file = NULL)
 }
 \arguments{
 \item{path}{Character.
@@ -15,26 +15,9 @@ or \code{drake::new_cache()}. If the \code{path} argument is \code{NULL},
 \code{drake_cache()} searches up through parent directories
 to find a folder called \code{.drake/}.}
 
-\item{verbose}{Integer, control printing to the console/terminal.
-\itemize{
-\item \code{0}: print nothing.
-\item \code{1}: print targets, retries, and failures.
-\item \code{2}: also show a spinner when preprocessing tasks are underway.
-}}
+\item{verbose}{Deprecated on 2019-09-11.}
 
-\item{console_log_file}{Optional character scalar of a file name or
-connection object (such as \code{stdout()}) to dump maximally verbose
-log information for \code{\link[=make]{make()}} and other functions (all functions that
-accept a \code{config} argument, plus \code{drake_config()}).
-If you choose to use a text file as the console log,
-it will persist over multiple function calls
-until you delete it manually.
-Fields in each row the log file, from left to right:
-- The node name (short host name) of the
-computer (from \code{Sys.info()["nodename"]}).
-- The process ID (from \code{Sys.getpid()}).
-- A timestamp with the date and time (in microseconds).
-- A brief description of what \code{drake} was doing.\code{ The fields are separated by pipe symbols (}"|"`).}
+\item{console_log_file}{Deprecated on 2019-09-11.}
 }
 \value{
 A drake/storr cache in a folder called \code{.drake/},

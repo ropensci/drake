@@ -116,7 +116,7 @@ wait_checksum <- function(
     "network file system. Checksum verification timed out after about ",
     timeout, " seconds."
   )
-  drake_log(paste("Error:", msg), config = config)
+  config$logger$minor(paste("Error:", msg))
   stop(msg, call. = FALSE)
 }
 
@@ -193,7 +193,7 @@ get_outfile_checksum <- function(target, config) {
 
 warn_no_checksum <- function(target, config) {
   msg <- paste0("No checksum available for target ", target, ".")
-  drake_log(paste("Warning:", msg), config = config)
+  config$logger$minor(paste("Warning:", msg))
   warning(msg, call. = FALSE)
 }
 

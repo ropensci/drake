@@ -76,7 +76,7 @@ readd <- function(
   character_only = FALSE,
   path = NULL,
   search = NULL,
-  cache = drake::drake_cache(path = path, verbose = verbose),
+  cache = drake::drake_cache(path = path),
   namespace = NULL,
   verbose = 1L,
   show_source = FALSE
@@ -202,7 +202,7 @@ loadd <- function(
   imported_only = NULL,
   path = NULL,
   search = NULL,
-  cache = drake::drake_cache(path = path, verbose = verbose),
+  cache = drake::drake_cache(path = path),
   namespace = NULL,
   envir = parent.frame(),
   jobs = 1,
@@ -459,6 +459,7 @@ show_source <- function(target, config, character_only = FALSE) {
 #' @return An integer vector.
 #'
 #' @inheritParams cached
+#' @param verbose Deprecated on 2019-09-11.
 #'
 #' @examples
 #' \dontrun{
@@ -501,11 +502,12 @@ read_drake_seed <- function(
   path = NULL,
   search = NULL,
   cache = NULL,
-  verbose = 1L
+  verbose = NULL
 ) {
+  deprecate_verbose(verbose)
   deprecate_search(search)
   if (is.null(cache)) {
-    cache <- drake_cache(path = path, verbose = verbose)
+    cache <- drake_cache(path = path)
   }
   if (is.null(cache)) {
     stop("cannot find drake cache.")
@@ -559,6 +561,8 @@ read_drake_seed <- function(
 #'
 #' @param jobs Number of jobs/workers for parallel processing.
 #'
+#' @param verbose Deprecated on 2019-09-11.
+#'
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {
@@ -578,12 +582,13 @@ cached <- function(
   no_imported_objects = FALSE,
   path = NULL,
   search = NULL,
-  cache = drake_cache(path = path, verbose = verbose),
-  verbose = 1L,
+  cache = drake::drake_cache(path = path),
+  verbose = NULL,
   namespace = NULL,
   jobs = 1,
   targets_only = TRUE
 ) {
+  deprecate_verbose(verbose)
   deprecate_search(search)
   if (is.null(cache)) {
     return(character(0))
@@ -654,6 +659,8 @@ is_imported_cache <- Vectorize(function(target, cache) {
 #'   or `drake::new_cache()`. If the `path` argument is `NULL`,
 #'   `drake_cache()` searches up through parent directories
 #'   to find a folder called `.drake/`.
+#' @param verbose Deprecated on 2019-09-11.
+#' @param console_log_file Deprecated on 2019-09-11.
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {
@@ -675,17 +682,15 @@ is_imported_cache <- Vectorize(function(target, cache) {
 #' }
 drake_cache <- function(
   path = NULL,
-  verbose = 1L,
+  verbose = NULL,
   console_log_file = NULL
 ) {
+  deprecate_verbose(verbose)
+  deprecate_console_log_file(verbose)
   if (is.null(path)) {
     path <- find_cache(path = getwd())
   }
-  this_cache_(
-    path = path,
-    verbose = verbose,
-    console_log_file = console_log_file
-  )
+  this_cache_(path = path)
 }
 
 
@@ -755,6 +760,8 @@ find_cache <- function(
 #'   Use `hash_algorithm` instead.
 #' @param long_hash_algo Deprecated on 2018-12-12.
 #'   Use `hash_algorithm` instead.
+#' @param verbose Deprecated on 2019-09-11.
+#' @param console_log_file Deprecated on 2019-09-11.
 #' @param ... other arguments to the cache constructor.
 #' @examples
 #' \dontrun{
@@ -768,7 +775,7 @@ find_cache <- function(
 #' }
 new_cache <- function(
   path = NULL,
-  verbose = 1L,
+  verbose = NULL,
   type = NULL,
   hash_algorithm = NULL,
   short_hash_algo = NULL,
@@ -776,6 +783,8 @@ new_cache <- function(
   ...,
   console_log_file = NULL
 ) {
+  deprecate_verbose(verbose)
+  deprecate_console_log_file(console_log_file)
   path <- path %||% default_cache_path()
   hash_algorithm <- sanitize_hash_algorithm(hash_algorithm)
   if (!is.null(type)) {
@@ -786,8 +795,6 @@ new_cache <- function(
     )
   }
   deprecate_hash_algo_args(short_hash_algo, long_hash_algo)
-  config <- list(verbose = verbose, console_log_file = console_log_file)
-  log_msg("cache", path, config = config)
   cache <- storr::storr_rds(
     path = path,
     mangle_key = FALSE,
@@ -809,22 +816,12 @@ sanitize_hash_algorithm <- function(hash_algorithm) {
   }
 }
 
-this_cache_ <- function(
-  path = NULL,
-  force = FALSE,
-  verbose = 1L,
-  fetch_cache = NULL,
-  console_log_file = NULL
-) {
+this_cache_ <- function(path = NULL) {
   path <- path %||% default_cache_path()
-  deprecate_force(force)
-  deprecate_fetch_cache(fetch_cache)
   usual_path_missing <- is.null(path) || !file.exists(path)
   if (usual_path_missing) {
     return(NULL)
   }
-  config <- list(verbose = verbose, console_log_file = console_log_file)
-  log_msg("cache", path, config = config)
   cache <- drake_fetch_rds(path = path)
   cache_vers_warn(cache = cache)
   cache
@@ -921,7 +918,7 @@ drake_cache_version <- function(cache) {
 drake_get_session_info <- function(
   path = NULL,
   search = NULL,
-  cache = drake::drake_cache(path = path, verbose = verbose),
+  cache = drake::drake_cache(path = path),
   verbose = 1L
 ) {
   if (is.null(cache)) {
@@ -1008,7 +1005,7 @@ drake_get_session_info <- function(
 drake_cache_log <- function(
   path = NULL,
   search = NULL,
-  cache = drake::drake_cache(path = path, verbose = verbose),
+  cache = drake::drake_cache(path = path),
   verbose = 1L,
   jobs = 1,
   targets_only = FALSE
@@ -1110,7 +1107,7 @@ diagnose <- function(
   character_only = FALSE,
   path = NULL,
   search = NULL,
-  cache = drake::drake_cache(path = path, verbose = verbose),
+  cache = drake::drake_cache(path = path),
   verbose = 1L
 ) {
   deprecate_search(search)
@@ -1164,7 +1161,7 @@ diagnose <- function(
 running <- function(
   path = NULL,
   search = NULL,
-  cache = drake::drake_cache(path = path, verbose = verbose),
+  cache = drake::drake_cache(path = path),
   verbose = 1L
 ) {
   deprecate_search(search)
@@ -1204,7 +1201,7 @@ running <- function(
 failed <- function(
   path = NULL,
   search = NULL,
-  cache = drake::drake_cache(path = path, verbose = verbose),
+  cache = drake::drake_cache(path = path),
   verbose = 1L,
   upstream_only = NULL
 ) {
@@ -1267,7 +1264,7 @@ progress <- function(
   no_imported_objects = NULL,
   path = NULL,
   search = NULL,
-  cache = drake::drake_cache(path = path, verbose = verbose),
+  cache = drake::drake_cache(path = path),
   verbose = 1L,
   jobs = 1,
   progress = NULL
