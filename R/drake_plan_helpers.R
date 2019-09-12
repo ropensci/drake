@@ -12,7 +12,8 @@
 #' @param transform A call to [map()], [split()],
 #'   [cross()], or [combine()] to create or aggregate
 #'   multiple targets at once.
-#'   Details: <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>
+#'   Details:
+#'   <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>
 #' @param ... Optional columns of the plan for a given target.
 #'   See the Columns section of this help file for a selection
 #'   of special columns that `drake` understands.

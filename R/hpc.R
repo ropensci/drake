@@ -279,7 +279,7 @@ serialize_build <- function(build) {
 
 # Requires Python Keras and TensorFlow to test. Tested in test-keras.R.
 # nocov start
-serialize_build.drake_build_keras <- function(build) {
+serialize_build.drake_build_keras <- function(build) { # nolint
   assert_pkg("keras")
   build$value <- keras::serialize_model(build$value)
   build
@@ -296,7 +296,7 @@ unserialize_build <- function(build) {
 
 # Requires Python Keras and TensorFlow to test. Tested in test-keras.R.
 # nocov start
-unserialize_build.drake_build_keras <- function(build) {
+unserialize_build.drake_build_keras <- function(build) { # nolint
   assert_pkg("keras")
   build$value <- keras::unserialize_model(build$value)
   build

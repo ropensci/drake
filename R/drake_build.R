@@ -45,7 +45,7 @@ drake_build <- function(
 ) {
   config$logger$minor("begin drake_build()", target = target)
   on.exit(
-    config$logger$minor( "end drake_build()", target = target),
+    config$logger$minor("end drake_build()", target = target),
     add = TRUE
   )
   if (!is.null(meta)) {
