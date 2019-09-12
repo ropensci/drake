@@ -1,0 +1,16 @@
+- AppVeyor
+- Travis
+- Win Builder
+- spelling
+- manual tests
+  - `tests/testthat/test-interactive.R`
+  - `tests/testthat/test-keras.R`
+- `devtools::run_examples(run = FALSE)`
+- `devtools::run_examples(run = TRUE)`
+- `goodpractice`
+- HPC test suite on SGE.
+- `tests/scenarios` on Mac, Linux, and Windows
+- regular tests R 3.3.0
+- test suite without Suggests packages
+- Update the version in the `DESCRIPTION` and in `NEWS.md`.
+- AppVeyor and Travis on the GitHub release.
