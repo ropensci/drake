@@ -20,7 +20,7 @@ Files written:
 \enumerate{
 \item \code{make.R}: a suggested master R script for batch mode.
 \item \code{_drake.R}: a configuration R script for
-the \href{https://ropensci.github.io/drake/reference/r_make.html}{r_*()} functions documented at # nolint
+the \href{https://docs.ropensci.org/drake/reference/r_make.html}{r_*()} functions documented at # nolint
 \url{https://ropenscilabs.github.io/drake-manual/projects.html#safer-interactivity}. # nolint
 Remarks:
 }

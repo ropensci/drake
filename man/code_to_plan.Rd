@@ -4,7 +4,7 @@
 \alias{code_to_plan}
 \title{Turn an R script file or \code{knitr} / R Markdown report
 into a \code{drake} plan.
-\lifecycle{stable}}
+\lifecycle{questioning}}
 \usage{
 code_to_plan(path)
 }

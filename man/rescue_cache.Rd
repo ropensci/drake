@@ -8,7 +8,7 @@ to throwing \code{storr}-related errors.
 \usage{
 rescue_cache(targets = NULL, path = NULL, search = NULL,
   verbose = 1L, force = FALSE, cache = drake::drake_cache(path =
-  path, verbose = verbose), jobs = 1, garbage_collection = FALSE)
+  path), jobs = 1, garbage_collection = FALSE)
 }
 \arguments{
 \item{targets}{Character vector, names of the targets to rescue.
@@ -27,12 +27,7 @@ to find a folder called \code{.drake/}.}
 
 \item{search}{Deprecated.}
 
-\item{verbose}{Integer, control printing to the console/terminal.
-\itemize{
-\item \code{0}: print nothing.
-\item \code{1}: print targets, retries, and failures.
-\item \code{2}: also show a spinner when preprocessing tasks are underway.
-}}
+\item{verbose}{Deprecated on 2019-09-11.}
 
 \item{force}{Deprecated.}
 

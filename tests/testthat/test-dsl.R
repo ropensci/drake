@@ -2177,65 +2177,10 @@ test_with_dir("max_expand", {
     data_50L = get_data(50L),
     data_100L = get_data(100L),
     analysis_a_1L_data_1L = a(data_1L, 1L),
-    analysis_m_1L_data_1L = m(data_1L, 1L),
-    analysis_z_1L_data_1L = z(data_1L, 1L),
-    analysis_a_50L_data_1L = a(data_1L, 50L),
-    analysis_m_50L_data_1L = m(data_1L, 50L),
-    analysis_z_50L_data_1L = z(data_1L, 50L),
-    analysis_a_100L_data_1L = a(data_1L, 100L),
-    analysis_m_100L_data_1L = m(data_1L, 100L),
-    analysis_z_100L_data_1L = z(data_1L, 100L),
-    analysis_a_1L_data_50L = a(data_50L, 1L),
-    analysis_m_1L_data_50L = m(data_50L, 1L),
-    analysis_z_1L_data_50L = z(data_50L, 1L),
-    analysis_a_50L_data_50L = a(data_50L, 50L),
-    analysis_m_50L_data_50L = m(data_50L, 50L),
     analysis_z_50L_data_50L = z(data_50L, 50L),
-    analysis_a_100L_data_50L = a(data_50L, 100L),
-    analysis_m_100L_data_50L = m(data_50L, 100L),
-    analysis_z_100L_data_50L = z(data_50L, 100L),
-    analysis_a_1L_data_100L = a(data_100L, 1L),
-    analysis_m_1L_data_100L = m(data_100L, 1L),
-    analysis_z_1L_data_100L = z(data_100L, 1L),
-    analysis_a_50L_data_100L = a(data_100L, 50L),
-    analysis_m_50L_data_100L = m(data_100L, 50L),
-    analysis_z_50L_data_100L = z(data_100L, 50L),
-    analysis_a_100L_data_100L = a(data_100L, 100L),
-    analysis_m_100L_data_100L = m(data_100L, 100L),
     analysis_z_100L_data_100L = z(data_100L, 100L),
-    result_a = bind_rows(
-      analysis_a_1L_data_1L,
-      analysis_a_50L_data_1L,
-      analysis_a_100L_data_1L,
-      analysis_a_1L_data_50L,
-      analysis_a_50L_data_50L,
-      analysis_a_100L_data_50L,
-      analysis_a_1L_data_100L,
-      analysis_a_50L_data_100L,
-      analysis_a_100L_data_100L
-    ),
-    result_m = bind_rows(
-      analysis_m_1L_data_1L,
-      analysis_m_50L_data_1L,
-      analysis_m_100L_data_1L,
-      analysis_m_1L_data_50L,
-      analysis_m_50L_data_50L,
-      analysis_m_100L_data_50L,
-      analysis_m_1L_data_100L,
-      analysis_m_50L_data_100L,
-      analysis_m_100L_data_100L
-    ),
-    result_z = bind_rows(
-      analysis_z_1L_data_1L,
-      analysis_z_50L_data_1L,
-      analysis_z_100L_data_1L,
-      analysis_z_1L_data_50L,
-      analysis_z_50L_data_50L,
-      analysis_z_100L_data_50L,
-      analysis_z_1L_data_100L,
-      analysis_z_50L_data_100L,
-      analysis_z_100L_data_100L
-    )
+    result_a = bind_rows(analysis_a_1L_data_1L),
+    result_z = bind_rows(analysis_z_50L_data_50L, analysis_z_100L_data_100L)
   )
   equivalent_plans(out, exp)
 })
@@ -2272,16 +2217,16 @@ test_with_dir("max_expand with a .data grid for cross()", {
         .id = c(x, y, z)
       )
     ),
-    max_expand = 2
+    max_expand = 8
   )
   exp <- drake_plan(
     data_1L_a_5L = get_data(1L, "a", 5L),
-    data_1L_a_8L = get_data(1L, "a", 8L),
-    data_26L_a_5L = get_data(26L, "a", 5L),
-    data_26L_a_8L = get_data(26L, "a", 8L),
-    data_1L_z_5L = get_data(1L, "z", 5L),
-    data_1L_z_8L = get_data(1L, "z", 8L),
-    data_26L_z_5L = get_data(26L, "z", 5L),
+    data_19L_d_7L = get_data(19L, "d", 7L),
+    data_12L_h_5L = get_data(12L, "h", 5L),
+    data_4L_l_7L = get_data(4L, "l", 7L),
+    data_23L_o_5L = get_data(23L, "o", 5L),
+    data_15L_s_7L = get_data(15L, "s", 7L),
+    data_8L_w_5L = get_data(8L, "w", 5L),
     data_26L_z_8L = get_data(26L, "z", 8L)
   )
   equivalent_plans(out, exp)
@@ -2818,6 +2763,54 @@ test_with_dir("transform is a formal arg of target() (#993)", {
       command = get_radar_info("b"),
       a = 1
     )
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("max_expand thins consistently (#1002)", {
+  fns <- letters[seq_len(6)]
+  plan <- drake_plan(
+    print_fn = target(
+      print(fn),
+      transform = map(fn = !!fns, .id = FALSE)
+    )
+  )
+  sub2 <- drake_plan(
+    print_fn = target(
+      print(fn),
+      transform = map(fn = !!fns, .id = FALSE)
+    ),
+    max_expand = 2
+  )
+  sub3 <- drake_plan(
+    print_fn = target(
+      print(fn),
+      transform = map(fn = !!fns, .id = FALSE)
+    ),
+    max_expand = 3
+  )
+  equivalent_plans(sub2, sub3[-2, ])
+  equivalent_plans(plan[c(1, 6), ], sub2)
+  equivalent_plans(plan[c(1, 6), ], sub2)
+})
+
+test_with_dir("max_expand works on split()", {
+  out <- drake_plan(
+    analysis = target(
+      analyze(data),
+      transform = split(data, slices = 10L, margin = 1L, drop = FALSE)
+    ),
+    max_expand = 2
+  )
+  exp <- drake_plan(
+    analysis_1 = analyze(drake_slice(
+      data = data, slices = 10L, index = 1, margin = 1L,
+      drop = FALSE
+    )),
+    analysis_10 = analyze(drake_slice(
+      data = data, slices = 10L, index = 10, margin = 1L,
+      drop = FALSE
+    ))
   )
   equivalent_plans(out, exp)
 })

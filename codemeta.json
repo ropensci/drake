@@ -5,12 +5,12 @@
   ],
   "@type": "SoftwareSourceCode",
   "identifier": "drake",
-  "description": "A general-purpose computational engine for data analysis,\n  drake rebuilds intermediate data objects when their dependencies change,\n  and it skips work when the results are already up to date.\n  Not every execution starts from scratch,\n  there is native support for parallel and distributed computing,\n  and completed projects have tangible evidence\n  that they are reproducible.\n  Extensive documentation, from beginner-friendly tutorials\n  to practical examples and more, is available at the reference website\n  <https://ropensci.github.io/drake/> and the online manual\n  <https://ropenscilabs.github.io/drake-manual/>.",
+  "description": "A general-purpose computational engine for data\n  analysis, drake rebuilds intermediate data objects when their\n  dependencies change, and it skips work when the results are already up\n  to date.  Not every execution starts from scratch, there is native\n  support for parallel and distributed computing, and completed projects\n  have tangible evidence that they are reproducible.  Extensive\n  documentation, from beginner-friendly tutorials to practical examples\n  and more, is available at the reference website\n  <https://docs.ropensci.org/drake/> and the online manual\n  <https://ropenscilabs.github.io/drake-manual/>.",
   "name": "drake: A Pipeline Toolkit for Reproducible Computation at Scale",
   "codeRepository": "https://github.com/ropensci/drake",
   "issueTracker": "https://github.com/ropensci/drake/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "7.4.0.9000",
+  "version": "7.6.1.9000",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -72,6 +72,13 @@
       "familyName": "McBain",
       "email": "miles.mcbain@gmail.com",
       "@id": "https://orcid.org/0000-0003-2865-2548"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Noam",
+      "familyName": "Ross",
+      "email": "noam.ross@gmail.com",
+      "@id": "https://orcid.org/0000-0002-2136-0000"
     }
   ],
   "copyrightHolder": [
@@ -179,6 +186,18 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "data.table",
+      "name": "data.table",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=data.table"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "datasets",
       "name": "datasets"
     },
@@ -193,6 +212,18 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=downloader"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "fst",
+      "name": "fst",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=fst"
     },
     {
       "@type": "SoftwareApplication",
@@ -234,6 +265,18 @@
       "@type": "SoftwareApplication",
       "identifier": "grDevices",
       "name": "grDevices"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "keras",
+      "name": "keras",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=keras"
     },
     {
       "@type": "SoftwareApplication",
@@ -506,14 +549,14 @@
       "@type": "SoftwareApplication",
       "identifier": "txtq",
       "name": "txtq",
-      "version": ">= 0.1.4",
+      "version": ">= 0.1.3",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
         "name": "Comprehensive R Archive Network (CRAN)",
         "url": "https://cran.r-project.org"
       },
-      "sameAs": "https://github.com/wlandau/txtq"
+      "sameAs": "https://CRAN.R-project.org/package=txtq"
     },
     {
       "@type": "SoftwareApplication",
@@ -523,7 +566,7 @@
   ],
   "releaseNotes": "https://github.com/ropensci/drake/blob/master/NEWS.md",
   "readme": "https://github.com/ropensci/drake/blob/master/README.md",
-  "fileSize": "905.247KB",
+  "fileSize": "903.991KB",
   "contIntegration": [
     "https://ci.appveyor.com/project/ropensci/drake",
     "https://travis-ci.org/ropensci/drake",
@@ -550,6 +593,31 @@
     "ropensci",
     "peer-reviewed"
   ],
-  "relatedLink": "https://CRAN.R-project.org/package=drake",
-  "funder": {}
+  "relatedLink": ["https://CRAN.R-project.org/package=drake", "https://docs.ropensci.org/drake", "https://github.com/ropenscilabs/drake-manual"],
+  "funder": {},
+  "citation": [
+    {
+      "@type": "ScholarlyArticle",
+      "datePublished": "2018",
+      "author": [
+        {
+          "@type": "Person",
+          "givenName": ["William", "Michael"],
+          "familyName": "Landau"
+        }
+      ],
+      "name": "The drake R package: a pipeline toolkit for reproducibility and high-performance computing",
+      "url": "https://doi.org/10.21105/joss.00550",
+      "isPartOf": {
+        "@type": "PublicationIssue",
+        "issueNumber": "21",
+        "datePublished": "2018",
+        "isPartOf": {
+          "@type": ["PublicationVolume", "Periodical"],
+          "volumeNumber": "3",
+          "name": "Journal of Open Source Software"
+        }
+      }
+    }
+  ]
 }

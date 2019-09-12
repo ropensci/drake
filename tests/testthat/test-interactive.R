@@ -1,5 +1,31 @@
 drake_context("interactive")
 
+test_with_dir("logger", {
+  # testthat suppresses messages,
+  # so we need to inspect the console output manually.
+  files <- list.files()
+  x <- logger(verbose = 0L, file = NULL)
+  x$major("abc") # Should be empty.
+  x$minor("abc") # Should be empty.
+  x <- logger(verbose = 1L, file = NULL)
+  x$major("abc") # Should show "abc".
+  x$minor("abc") # Should be empty.
+  x <- logger(verbose = 2L, file = NULL)
+  x$major("abc") # Should show "abc".
+  x$minor("abc") # Should show the spinner.
+  expect_equal(files, list.files())
+  for (verbose in c(0L, 1L, 2L)) {
+    tmp <- tempfile()
+    x <- logger(verbose = 0L, file = tmp)
+    expect_equal(x$file, tmp)
+    expect_false(file.exists(tmp))
+    x$major("abc")
+    expect_equal(length(readLines(tmp)), 1L)
+    x$minor("abc")
+    expect_equal(length(readLines(tmp)), 2L)
+  }
+})
+
 if (FALSE) {
 
 test_with_dir("imported online file with no internet", {

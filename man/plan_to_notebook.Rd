@@ -3,7 +3,7 @@
 \name{plan_to_notebook}
 \alias{plan_to_notebook}
 \title{Turn a \code{drake} plan into an R notebook.
-\lifecycle{stable}}
+\lifecycle{questioning}}
 \usage{
 plan_to_notebook(plan, con)
 }

@@ -135,10 +135,10 @@ drake_graph_info <- function(
   show_output_files = TRUE,
   hover = FALSE
 ) {
-  log_msg("begin drake_graph_info()", config = config)
-  on.exit(log_msg("end drake_graph_info()", config = config), add = TRUE)
   assert_pkg("visNetwork")
   assert_config_not_plan(config)
+  config$logger$minor("begin drake_graph_info()")
+  on.exit(config$logger$minor("end drake_graph_info()"), add = TRUE)
   if (!length(V(config$graph)$name)) {
     return(null_graph())
   }

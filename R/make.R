@@ -116,10 +116,7 @@ make <- function(
   envir = parent.frame(),
   verbose = 1L,
   hook = NULL,
-  cache = drake::drake_cache(
-    verbose = verbose,
-    console_log_file = console_log_file
-  ),
+  cache = drake::drake_cache(),
   fetch_cache = NULL,
   parallelism = "loop",
   jobs = 1L,
@@ -166,10 +163,6 @@ make <- function(
   recoverable = TRUE,
   curl_handles = list()
 ) {
-  log_msg(
-    "begin make()",
-    config = config %||% list(console_log_file = console_log_file)
-  )
   check_make_call(match.call())
   force(envir)
   if (is.null(config)) {
@@ -226,6 +219,7 @@ make <- function(
       curl_handles = curl_handles
     )
   }
+  config$logger$minor("begin make()")
   runtime_checks(config = config)
   config$running_make <- TRUE
   config$cache$reset_ht_hash()
@@ -236,7 +230,7 @@ make <- function(
     config$cache$clear(namespace = "progress")
   }
   drake_set_session_info(cache = config$cache, full = config$session_info)
-  do_prework(config = config, verbose_packages = config$verbose)
+  do_prework(config = config, verbose_packages = config$logger$verbose)
   if (!config$skip_imports) {
     process_imports(config)
   }
@@ -257,7 +251,7 @@ make <- function(
   if (config$garbage_collection) {
     gc()
   }
-  log_msg("end make()", config = config)
+  config$logger$minor("end make()")
   invisible()
 }
 
@@ -280,11 +274,7 @@ run_native_backend <- function(config) {
       envir = getNamespace("drake")
     )(config)
   } else {
-    log_msg(
-      "All targets are already up to date.",
-      config = config,
-      tier = 1L
-    )
+    config$logger$major("All targets are already up to date.")
   }
 }
 
@@ -303,17 +293,18 @@ run_external_backend <- function(config) {
 
 outdated_subgraph <- function(config) {
   outdated <- outdated(config, do_prework = FALSE, make_imports = FALSE)
-  log_msg("isolate oudated targets", config = config)
+  config$logger$minor("isolate oudated targets")
   igraph::induced_subgraph(graph = config$graph, vids = outdated)
 }
 
 drake_set_session_info <- function(
   path = NULL,
   search = NULL,
-  cache = drake::drake_cache(path = path, verbose = verbose),
-  verbose = 1L,
+  cache = drake::drake_cache(path = path),
+  verbose = NULL,
   full = TRUE
 ) {
+  deprecate_verbose(verbose)
   if (is.null(cache)) {
     stop("No drake::make() session detected.")
   }
@@ -392,7 +383,7 @@ drake_cache_log_file_ <- function(
   file = "drake_cache.csv",
   path = NULL,
   search = NULL,
-  cache = drake::drake_cache(path = path, verbose = verbose),
+  cache = drake::drake_cache(path = path),
   verbose = 1L,
   jobs = 1L,
   targets_only = FALSE
@@ -431,7 +422,7 @@ check_make_call <- function(call) {
       " argument to ", shQuote("make()"),
       " then all additional arguments are ignored. ",
       "For example, in ", shQuote("make(config = config, verbose = 0L)"),
-      "verbosity remains at ", shQuote("config$verbose"), ".",
+      "verbosity remains at ", shQuote("config$logger$verbose"), ".",
       call. = FALSE
     )
   }

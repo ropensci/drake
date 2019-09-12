@@ -2,7 +2,7 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 <center>
-<img src="https://ropensci.github.io/drake/figures/infographic.svg" alt="infographic" align="center" style = "border: none; float: center;">
+<img src="https://docs.ropensci.org/drake/reference/figures/infographic.svg" alt="infographic" align="center" style = "border: none; float: center;">
 </center>
 <table class="table">
 <thead>
@@ -78,7 +78,7 @@ Development
 </table>
 <br>
 
-# The drake R package <img src="https://ropensci.github.io/drake/figures/logo.svg" align="right" alt="logo" width="120" height = "139" style = "border: none; float: right;">
+# The drake R package <img src="https://docs.ropensci.org/drake/reference/figures/logo.svg" align="right" alt="logo" width="120" height = "139" style = "border: none; float: right;">
 
 Data analysis can be slow. A round of scientific computation can take
 several minutes, hours, or even days to complete. After it finishes, if
@@ -103,7 +103,7 @@ introduction.
 <center>
 
 <a href="https://ropenscilabs.github.io/drake-manual">
-<img src="https://ropensci.github.io/drake/figures/video.png" alt="video" align="center" style = "border: none; float: center;">
+<img src="https://docs.ropensci.org/drake/reference/figures/video.png" alt="video" align="center" style = "border: none; float: center;">
 </a>
 
 </center>
@@ -125,7 +125,7 @@ Ordinarily, it is hard to avoid rerunning the code from scratch.
 
 <center>
 
-<img src="https://ropensci.github.io/drake/figures/tweet.png" alt="tweet" align="center" style = "border: none; float: center;">
+<img src="https://docs.ropensci.org/drake/reference/figures/tweet.png" alt="tweet" align="center" style = "border: none; float: center;">
 
 </center>
 
@@ -254,7 +254,7 @@ config <- drake_config(plan)
 vis_drake_graph(config) # Interactive graph: zoom, drag, etc.
 ```
 
-<img src="https://ropensci.github.io/drake/figures/graph.png" alt="hist1" align="center" style = "border: none; float: center;" width = "600px">
+<img src="https://docs.ropensci.org/drake/reference/figures/graph.png" alt="hist1" align="center" style = "border: none; float: center;" width = "600px">
 
 The next `make()` just builds `hist` and `report.html`. No point in
 wasting time on the data or model.
@@ -523,10 +523,9 @@ could potentially improve the integrity of independent replication.
 Ideally, independent observers should be able to read your code and
 understand it. `drake` helps in several ways.
 
-  - The [workflow plan data
-    frame](https://ropensci.github.io/drake/reference/drake_plan.html)
+  - The [drake plan](https://docs.ropensci.org/drake/reference/drake_plan.html)
     explicitly outlines the steps of the analysis, and
-    [`vis_drake_graph()`](https://ropensci.github.io/drake/reference/vis_drake_graph.html)
+    [`vis_drake_graph()`](https://docs.ropensci.org/drake/reference/vis_drake_graph.html)
     visualizes how those steps depend on each other.
   - `drake` takes care of the parallel scheduling and high-performance
     computing (HPC) for you. That means the HPC code is no longer
@@ -582,7 +581,7 @@ install_github("ropensci/drake")
 # Function reference
 
 The [reference
-section](https://ropensci.github.io/drake/reference/index.html) lists
+section](https://docs.ropensci.org/drake/reference/index.html) lists
 all the available functions. Here are the most important ones.
 
   - `drake_plan()`: create a workflow data frame (like `my_plan`).
@@ -611,7 +610,7 @@ all the available functions. Here are the most important ones.
 # Documentation
 
   - The [user manual](https://ropenscilabs.github.io/drake-manual/)
-  - The [reference website](https://ropensci.github.io/drake/).
+  - The [reference website](https://docs.ropensci.org/drake/).
   - The [official repository of example
     code](https://github.com/wlandau/drake-examples). Download an
     example workflow from here with `drake_example()`.
@@ -877,7 +876,6 @@ early in development.
   - [Kirill Müller](https://github.com/krlmlr)
   - [Michael Schubert](https://github.com/mschubert)
 
-Credit for images is [attributed
-here](https://ropensci.github.io/drake/figures/image-credit.md).
+Credit for images is [attributed here](https://github.com/ropensci/drake/blob/master/man/figures/image-credit.md).
 
 [![ropensci\_footer](https://ropensci.org/public_images/github_footer.png)](https://ropensci.org)

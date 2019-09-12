@@ -6,10 +6,9 @@
 \lifecycle{maturing}}
 \usage{
 drake_config(plan, targets = NULL, envir = parent.frame(),
-  verbose = 1L, hook = NULL, cache = drake::drake_cache(verbose =
-  verbose, console_log_file = console_log_file), fetch_cache = NULL,
-  parallelism = "loop", jobs = 1L, jobs_preprocess = 1L,
-  packages = rev(.packages()), lib_loc = NULL,
+  verbose = 1L, hook = NULL, cache = drake::drake_cache(),
+  fetch_cache = NULL, parallelism = "loop", jobs = 1L,
+  jobs_preprocess = 1L, packages = rev(.packages()), lib_loc = NULL,
   prework = character(0), prepend = NULL, command = NULL,
   args = NULL, recipe_command = NULL, timeout = NULL, cpu = Inf,
   elapsed = Inf, retries = 0, force = FALSE, log_progress = TRUE,

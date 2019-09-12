@@ -479,8 +479,7 @@ drake_config <- function(
   envir = parent.frame(),
   verbose = 1L,
   hook = NULL,
-  cache = drake::drake_cache(
-    verbose = verbose, console_log_file = console_log_file),
+  cache = drake::drake_cache(),
   fetch_cache = NULL,
   parallelism = "loop",
   jobs = 1L,
@@ -526,10 +525,8 @@ drake_config <- function(
   recoverable = TRUE,
   curl_handles = list()
 ) {
-  log_msg(
-    "begin drake_config()",
-    config = list(console_log_file = console_log_file)
-  )
+  logger <- logger(verbose = verbose, file = console_log_file)
+  logger$minor("begin drake_config()")
   deprecate_fetch_cache(fetch_cache)
   if (!is.null(hook)) {
     warning(
@@ -635,14 +632,10 @@ drake_config <- function(
   trigger <- convert_old_trigger(trigger)
   sleep <- `environment<-`(sleep, new.env(parent = globalenv()))
   if (is.null(cache)) {
-    cache <- recover_cache_(
-      verbose = verbose,
-      fetch_cache = fetch_cache,
-      console_log_file = console_log_file
-    )
-  } else {
-    cache <- decorate_storr(cache)
+    cache <- new_cache()
   }
+  cache <- decorate_storr(cache)
+  logger$minor("cache", cache$path)
   seed <- choose_seed(supplied = seed, cache = cache)
   if (identical(force, TRUE)) {
     drake_set_session_info(cache = cache, full = session_info)
@@ -650,9 +643,8 @@ drake_config <- function(
   layout <- create_drake_layout(
     plan = plan,
     envir = envir,
-    verbose = verbose,
+    logger = logger,
     jobs = jobs_preprocess,
-    console_log_file = console_log_file,
     trigger = trigger,
     cache = cache
   )
@@ -662,8 +654,7 @@ drake_config <- function(
     targets = targets,
     cache = cache,
     jobs = jobs_preprocess,
-    console_log_file = console_log_file,
-    verbose = verbose
+    logger = logger
   )
   history <- initialize_history(history, cache)
   lazy_load <- parse_lazy_arg(lazy_load)
@@ -677,7 +668,7 @@ drake_config <- function(
     parallelism = parallelism,
     jobs = jobs,
     jobs_preprocess = jobs_preprocess,
-    verbose = verbose,
+    logger = logger,
     packages = packages,
     lib_loc = lib_loc,
     prework = prework,
@@ -699,7 +690,6 @@ drake_config <- function(
     caching = caching,
     keep_going = keep_going,
     memory_strategy = memory_strategy,
-    console_log_file = console_log_file,
     garbage_collection = garbage_collection,
     template = template,
     sleep = sleep,
@@ -712,7 +702,7 @@ drake_config <- function(
     curl_handles = curl_handles
   )
   config_checks(out)
-  log_msg("end drake_config()", config = out)
+  logger$minor("end drake_config()")
   out
 }
 
@@ -806,35 +796,13 @@ is_history <- function(history) {
 
 # Load an existing drake files system cache if it exists
 # or create a new one otherwise.
-recover_cache_ <- function(
-  path = NULL,
-  hash_algorithm = NULL,
-  short_hash_algo = NULL,
-  long_hash_algo = NULL,
-  force = FALSE,
-  verbose = 1L,
-  fetch_cache = NULL,
-  console_log_file = NULL
-) {
+# TO DO: remove all the arguments when we make recover_cache() defunct.
+recover_cache_ <- function(path = NULL, hash_algorithm = NULL) {
   path <- path %||% default_cache_path()
-  deprecate_force(force)
-  deprecate_fetch_cache(fetch_cache)
-  deprecate_hash_algo_args(short_hash_algo, long_hash_algo)
   hash_algorithm <- sanitize_hash_algorithm(hash_algorithm)
-  cache <- this_cache_(
-    path = path,
-    verbose = verbose,
-    fetch_cache = fetch_cache,
-    console_log_file = console_log_file
-  )
+  cache <- this_cache_(path = path)
   if (is.null(cache)) {
-    cache <- new_cache(
-      path = path,
-      verbose = verbose,
-      hash_algorithm = hash_algorithm,
-      fetch_cache = fetch_cache,
-      console_log_file = console_log_file
-    )
+    cache <- new_cache(path = path, hash_algorithm = hash_algorithm)
   }
   cache
 }
@@ -872,13 +840,15 @@ plan_check_format_col <- function(plan) {
   }
   format <- plan$format
   format <- format[!is.na(format)]
-  illegal <- setdiff(unique(format), c("fst", "keras", "rds"))
+  formats <- c("fst", "fst_dt", "keras", "rds")
+  illegal <- setdiff(unique(format), formats)
   if (!length(illegal)) {
     return()
   }
   stop(
     "the format column of your drake plan can only have values ",
-    "\"fst\", \"keras\", \"rds\", or NA. Illegal values found:\n",
+    "\"fst\", \"fst_dt\", \"keras\", \"rds\", or NA. ",
+    "Illegal values found:\n",
     multiline_message(illegal),
     call. = FALSE
   )

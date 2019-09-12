@@ -24,14 +24,13 @@ process_import <- function(import, config) {
     is_missing <- identical(value, NA_character_)
   }
   if (is_missing) {
-    log_msg(
+    config$logger$minor(
       "missing",
       target = display_key(import, config),
-      config = config,
       color = "missing"
     )
   } else {
-    log_msg("import", target = display_key(import, config), config = config)
+    config$logger$minor("import", target = display_key(import, config))
   }
   store_single_output(
     target = import,
@@ -86,11 +85,10 @@ process_imports_mclapply <- function(config) {
 
 process_imports_parLapply <- function(config) { # nolint
   assert_pkg("parallel")
-  log_msg(
+  config$logger$minor(
     "load parallel socket cluster with",
     config$jobs_preprocess,
-    "workers",
-    config = config
+    "workers"
   )
   config$cluster <- parallel::makePSOCKcluster(config$jobs_preprocess)
   on.exit(parallel::stopCluster(cl = config$cluster))

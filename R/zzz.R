@@ -19,7 +19,7 @@ drake_tip_ <- function() {
 
     "Use drake_example() to download code for a small drake workflow.",
 
-    "Check out the reference website https://ropensci.github.io/drake
+    "Check out the reference website https://docs.ropensci.org/drake
      and user manual https://ropenscilabs.github.io/drake-manual.",
 
     "drake quickstart:
@@ -41,7 +41,6 @@ wrap_text <- Vectorize(
 
 .onLoad <- function(libname, pkgname) {
   warn_rdata()
-  try_spinner()
   invisible()
 }
 
@@ -59,24 +58,6 @@ warn_rdata <- function() {
     "in the RStudio IDE settings.",
     call. = FALSE
   )
-}
-
-try_spinner <- function() {
-  use_cli <- requireNamespace("cli", quietly = TRUE) &&
-    utils::compareVersion(
-      as.character(utils::packageVersion("cli")),
-      "1.1.0"
-    ) >= 0L
-  if (use_cli) {
-    .pkg_envir$spinner <- cli::make_spinner()
-    return()
-  }
-  # nocov start
-  message(
-    "Install the ", shQuote("cli"), " package version 1.1.0 or above ",
-    "to show a console spinner for make(verbose = 2)."
-  )
-  # nocov end
 }
 
 .pkg_envir <- new.env(parent = emptyenv())

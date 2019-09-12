@@ -38,11 +38,15 @@ what happens during target transformations.}
 Tidy evaluation in transformations is always turned on
 regardless of the value you supply to this argument.}
 
-\item{max_expand}{Positive integer, optional upper bound on the lengths
-of grouping variables for \code{map()} and \code{cross()}. Comes in handy
-when you have a massive number of targets and you want to test
-on a miniature version of your workflow before you scale up
-to production.}
+\item{max_expand}{Positive integer, optional.
+Maximum number of targets to generate in each
+\code{map()}, \code{split()}, or \code{cross()} transform.
+If massive number of targets, consider setting \code{max_expand}
+to a small number. That way, you can test and visualize
+your workflow before scaling up to production.
+Note: \code{max_expand} is not for production workflows.
+When it comes time to generate the end product,
+either unset \code{max_expand} or manually set it to \code{NULL}.}
 }
 \value{
 A data frame of targets, commands, and optional
@@ -79,8 +83,27 @@ Details: (\url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plan
 Most formats are faster than ordinary storage, and they consume
 far less memory. Available formats:
 \itemize{
-\item \code{"fst"}: save big data frames fast. The target must be a data frame,
-and you must have the \code{fst} package installed.
+\item \code{"fst"}: save big data frames fast. Requirements:
+\enumerate{
+\item The \code{fst} package must be installed.
+\item The target's value must be a plain data frame. If it is not a
+plain data frame (for example, a tibble or data.table)
+then drake will coerce it to a plain data frame with
+\code{as.data.frame()}.
+All non-data-frame-specific attributes are lost
+when \code{drake} saves the target.
+}
+\item \code{"fst_dt"}: Like \code{"fst"} format, but for \code{data.table} objects.
+Requirements:
+\enumerate{
+\item The \code{data.table} and \code{fst} packages must be installed.
+\item The target's value must be a data.table object. If it is not a
+data.table object (for example, a data frame or tibble)
+then drake will coerce it to a data.table object using
+\code{data.table::as.data.table()}.
+All non-data-table-specific attributes are lost
+when \code{drake} saves the target.
+}
 \item \code{"keras"}: save Keras models as HDF5 files.
 Requires the \code{keras} package.
 \item \code{"rds"}: save any object. This is similar to the default storage

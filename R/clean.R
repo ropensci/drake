@@ -89,7 +89,7 @@ clean <- function(
   destroy = FALSE,
   path = NULL,
   search = NULL,
-  cache = drake::drake_cache(path = path, verbose = verbose),
+  cache = drake::drake_cache(path = path),
   verbose = 1L,
   jobs = 1,
   force = FALSE,
@@ -258,7 +258,7 @@ drake_gc <- function(
   path = NULL,
   search = NULL,
   verbose = 1L,
-  cache = drake::drake_cache(path = path, verbose = verbose),
+  cache = drake::drake_cache(path = path),
   force = FALSE
 ) {
   deprecate_search(search)
@@ -329,7 +329,7 @@ rescue_cache <- function(
   search = NULL,
   verbose = 1L,
   force = FALSE,
-  cache = drake::drake_cache(path = path, verbose = verbose),
+  cache = drake::drake_cache(path = path),
   jobs = 1,
   garbage_collection = FALSE
 ) {

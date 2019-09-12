@@ -6,7 +6,7 @@
 #' @details Files written:
 #'   1. `make.R`: a suggested master R script for batch mode.
 #'   2. `_drake.R`: a configuration R script for
-#'     the [`r_*()`](https://ropensci.github.io/drake/reference/r_make.html) functions documented at # nolint
+#'     the [`r_*()`](https://docs.ropensci.org/drake/reference/r_make.html) functions documented at # nolint
 #'     <https://ropenscilabs.github.io/drake-manual/projects.html#safer-interactivity>. # nolint
 #' Remarks:
 #'   - There is nothing magical about the name, `make.R`.

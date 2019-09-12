@@ -6,8 +6,8 @@
 \lifecycle{maturing}}
 \usage{
 diagnose(target = NULL, character_only = FALSE, path = NULL,
-  search = NULL, cache = drake::drake_cache(path = path, verbose =
-  verbose), verbose = 1L)
+  search = NULL, cache = drake::drake_cache(path = path),
+  verbose = 1L)
 }
 \arguments{
 \item{target}{Name of the target of the error to get.
@@ -26,12 +26,7 @@ Just like \code{character.only} in \code{\link[=library]{library()}}.}
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} is ignored.}
 
-\item{verbose}{Integer, control printing to the console/terminal.
-\itemize{
-\item \code{0}: print nothing.
-\item \code{1}: print targets, retries, and failures.
-\item \code{2}: also show a spinner when preprocessing tasks are underway.
-}}
+\item{verbose}{Deprecated on 2019-09-11.}
 }
 \value{
 Either a character vector of target names or an object

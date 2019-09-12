@@ -6,8 +6,7 @@
 \lifecycle{maturing}}
 \usage{
 drake_gc(path = NULL, search = NULL, verbose = 1L,
-  cache = drake::drake_cache(path = path, verbose = verbose),
-  force = FALSE)
+  cache = drake::drake_cache(path = path), force = FALSE)
 }
 \arguments{
 \item{path}{Path to a \code{drake} cache
@@ -15,12 +14,7 @@ drake_gc(path = NULL, search = NULL, verbose = 1L,
 
 \item{search}{Deprecated.}
 
-\item{verbose}{Integer, control printing to the console/terminal.
-\itemize{
-\item \code{0}: print nothing.
-\item \code{1}: print targets, retries, and failures.
-\item \code{2}: also show a spinner when preprocessing tasks are underway.
-}}
+\item{verbose}{Deprecated on 2019-09-11.}
 
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} is ignored.}

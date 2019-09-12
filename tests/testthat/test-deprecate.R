@@ -212,6 +212,11 @@ test_with_dir("deprecated arguments", {
     drake_config(plan = pl, ensure_workers = TRUE),
     regexp = "deprecated"
   )
+  expect_warning(cached(verbose = 1L), regexp = "deprecated")
+  expect_warning(
+    drake_cache(console_log_file = "123"),
+    regexp = "deprecated"
+  )
 })
 
 test_with_dir("example template files (deprecated)", {

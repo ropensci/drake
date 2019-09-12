@@ -13,7 +13,8 @@ target(command = NULL, transform = NULL, ...)
 \item{transform}{A call to \code{\link[=map]{map()}}, \code{\link[=split]{split()}},
 \code{\link[=cross]{cross()}}, or \code{\link[=combine]{combine()}} to create or aggregate
 multiple targets at once.
-Details: \url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}}
+Details:
+\url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}}
 
 \item{...}{Optional columns of the plan for a given target.
 See the Columns section of this help file for a selection
@@ -47,8 +48,27 @@ Details: (\url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plan
 Most formats are faster than ordinary storage, and they consume
 far less memory. Available formats:
 \itemize{
-\item \code{"fst"}: save big data frames fast. The target must be a data frame,
-and you must have the \code{fst} package installed.
+\item \code{"fst"}: save big data frames fast. Requirements:
+\enumerate{
+\item The \code{fst} package must be installed.
+\item The target's value must be a plain data frame. If it is not a
+plain data frame (for example, a tibble or data.table)
+then drake will coerce it to a plain data frame with
+\code{as.data.frame()}.
+All non-data-frame-specific attributes are lost
+when \code{drake} saves the target.
+}
+\item \code{"fst_dt"}: Like \code{"fst"} format, but for \code{data.table} objects.
+Requirements:
+\enumerate{
+\item The \code{data.table} and \code{fst} packages must be installed.
+\item The target's value must be a data.table object. If it is not a
+data.table object (for example, a data frame or tibble)
+then drake will coerce it to a data.table object using
+\code{data.table::as.data.table()}.
+All non-data-table-specific attributes are lost
+when \code{drake} saves the target.
+}
 \item \code{"keras"}: save Keras models as HDF5 files.
 Requires the \code{keras} package.
 \item \code{"rds"}: save any object. This is similar to the default storage

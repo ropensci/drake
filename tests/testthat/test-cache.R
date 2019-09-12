@@ -88,7 +88,8 @@ test_with_dir("dependency profile", {
   config$layout <- create_drake_layout(
     plan = config$plan,
     envir = config$envir,
-    cache = config$cache
+    cache = config$cache,
+    logger = config$logger
   )$layout
   dp <- deps_profile(target = a, config = config)
   expect_true(as.logical(dp[dp$name == "command", "changed"]))
@@ -748,10 +749,10 @@ test_with_dir("arbitrary storr in-memory cache", {
   expect_equal(con$cache$hash_algorithm, "murmur32")
 
   targets <- my_plan$target
-  expect_true(all(targets %in% cached(cache = cache, verbose = 0L)))
+  expect_true(all(targets %in% cached(cache = cache)))
   expect_false(file.exists(cached_data))
 
-  expect_true(is.list(drake_get_session_info(cache = cache, verbose = 0L)))
+  expect_true(is.list(drake_get_session_info(cache = cache)))
   expect_false(file.exists(cached_data))
 
   imp <- setdiff(cached(cache = cache, targets_only = FALSE),

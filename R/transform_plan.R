@@ -10,11 +10,15 @@
 #' @param envir Environment for tidy evaluation.
 #' @param trace Logical, whether to add columns to show
 #'   what happens during target transformations.
-#' @param max_expand Positive integer, optional upper bound on the lengths
-#'   of grouping variables for `map()` and `cross()`. Comes in handy
-#'   when you have a massive number of targets and you want to test
-#'   on a miniature version of your workflow before you scale up
-#'   to production.
+#' @param max_expand Positive integer, optional.
+#'   Maximum number of targets to generate in each
+#'   `map()`, `split()`, or `cross()` transform.
+#'   If massive number of targets, consider setting `max_expand`
+#'   to a small number. That way, you can test and visualize
+#'   your workflow before scaling up to production.
+#'   Note: `max_expand` is not for production workflows.
+#'   When it comes time to generate the end product,
+#'   either unset `max_expand` or manually set it to `NULL`.
 #' @param tidy_eval Logical, whether to use tidy evaluation
 #'   (e.g. unquoting/`!!`) when resolving commands.
 #'   Tidy evaluation in transformations is always turned on
@@ -469,7 +473,6 @@ dsl_transform.map <- dsl_transform.cross <- function(
   max_expand
 ) {
   groupings <- groupings(transform)
-  groupings <- thin_groupings(groupings, max_expand)
   cols <- upstream_trace_vars(target, plan, graph)
   grid <- dsl_grid(transform, groupings)
   if (any(dim(grid) < 1L)) {
@@ -501,7 +504,8 @@ dsl_transform.map <- dsl_transform.cross <- function(
     }
   }
   grid$.id_chr <- NULL
-  cbind(out, grid)
+  out <- cbind(out, grid)
+  df_max_expand(out, max_expand)
 }
 
 group_names <- function(transform) {
@@ -546,19 +550,19 @@ upstream_trace_vars <- function(target, plan, graph) {
   intersect(out, colnames(plan))
 }
 
-thin_groupings <- function(groupings, max_expand) {
+df_max_expand <- function(df, max_expand) {
   if (is.null(max_expand)) {
-    return(groupings)
+    return(df)
   }
-  lapply(groupings, thin_grouping, max_expand = max_expand)
+  rows <- seq_max_expand(nrow(df), max_expand)
+  df[rows,, drop = FALSE] # nolint
 }
 
-thin_grouping <- function(x, max_expand) {
-  len <- min(length(x), max_expand)
-  i <- seq(from = 1L, to = length(x), length.out = len)
+seq_max_expand <- function(n, max_expand) {
+  max_expand <- min(n, max_expand)
+  i <- seq(from = 1L, to = n, length.out = max_expand)
   i <- floor(i)
-  i <- unique(i)
-  x[i]
+  unique(i)
 }
 
 dsl_transform.combine <- function(transform, target, row, plan, graph, ...) {

@@ -16,11 +16,15 @@ transform_plan(plan, envir = parent.frame(), trace = FALSE,
 \item{trace}{Logical, whether to add columns to show
 what happens during target transformations.}
 
-\item{max_expand}{Positive integer, optional upper bound on the lengths
-of grouping variables for \code{map()} and \code{cross()}. Comes in handy
-when you have a massive number of targets and you want to test
-on a miniature version of your workflow before you scale up
-to production.}
+\item{max_expand}{Positive integer, optional.
+Maximum number of targets to generate in each
+\code{map()}, \code{split()}, or \code{cross()} transform.
+If massive number of targets, consider setting \code{max_expand}
+to a small number. That way, you can test and visualize
+your workflow before scaling up to production.
+Note: \code{max_expand} is not for production workflows.
+When it comes time to generate the end product,
+either unset \code{max_expand} or manually set it to \code{NULL}.}
 
 \item{tidy_eval}{Logical, whether to use tidy evaluation
 (e.g. unquoting/\code{!!}) when resolving commands.

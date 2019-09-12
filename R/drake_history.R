@@ -49,11 +49,12 @@
 #'        `filename` is not detected because the value must be atomic.
 #' @export
 #' @return A data frame of target history.
+#' @inheritParams drake_config
 #' @param analyze Logical, whether to analyze [drake_plan()]
 #'   commands for arguments to function calls.
 #'   Could be slow because this requires parsing and analyzing
 #'   lots of R code.
-#' @inheritParams drake_config
+#' @param verbose Deprecated on 2019-09-11.
 #' @examples
 #' \dontrun{
 #' isolate_example("contain side-effects", {
@@ -90,10 +91,11 @@ drake_history <- function(
   cache = NULL,
   history = NULL,
   analyze = TRUE,
-  verbose = TRUE
+  verbose = NULL
 ) {
+  deprecate_verbose(verbose)
   if (is.null(cache)) {
-    cache <- drake_cache(verbose = verbose)
+    cache <- drake_cache()
   }
   if (is.null(cache)) {
     stop("cannot find drake cache.")

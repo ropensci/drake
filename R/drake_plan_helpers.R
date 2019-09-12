@@ -12,7 +12,8 @@
 #' @param transform A call to [map()], [split()],
 #'   [cross()], or [combine()] to create or aggregate
 #'   multiple targets at once.
-#'   Details: <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>
+#'   Details:
+#'   <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>
 #' @param ... Optional columns of the plan for a given target.
 #'   See the Columns section of this help file for a selection
 #'   of special columns that `drake` understands.
@@ -740,7 +741,7 @@ bind_plans <- function(...) {
 
 #' @title Turn an R script file or `knitr` / R Markdown report
 #'   into a `drake` plan.
-#' \lifecycle{stable}
+#' \lifecycle{questioning}
 #' @export
 #' @seealso [drake_plan()], [make()], [plan_to_code()],
 #'   [plan_to_notebook()]
@@ -780,10 +781,9 @@ code_to_plan <- function(path) {
   # From CodeDepends: https://github.com/duncantl/CodeDepends/blob/7c9cf7eceffaea1d26fe25836c7a455f059e13c1/R/frags.R#L74 # nolint
   # Checks if the file is a knitr report.
   if (any(grepl("^(### chunk number|<<[^>]*>>=|```\\{r.*\\})", txt))) { # nolint
-    nodes <- get_tangled_frags(path)
-  } else {
-    nodes <- parse(text = txt)
+    txt <- get_tangled_text(path)
   }
+  nodes <- parse(text = txt)
   out <- lapply(nodes, node_plan)
   out <- do.call(rbind, out)
   out <- parse_custom_plan_columns(out)
@@ -798,7 +798,7 @@ node_plan <- function(node) {
 }
 
 #' @title Turn a `drake` plan into a plain R script file.
-#' \lifecycle{stable}
+#' \lifecycle{questioning}
 #' @export
 #' @seealso [drake_plan()], [make()], [code_to_plan()],
 #'   [plan_to_notebook()]
@@ -835,7 +835,7 @@ plan_to_code <- function(plan, con = stdout()) {
 }
 
 #' @title Turn a `drake` plan into an R notebook.
-#' \lifecycle{stable}
+#' \lifecycle{questioning}
 #' @export
 #' @seealso [drake_plan()], [make()], [code_to_plan()],
 #'   [plan_to_code()]

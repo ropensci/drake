@@ -6,8 +6,7 @@
 \lifecycle{maturing}}
 \usage{
 make(plan, targets = NULL, envir = parent.frame(), verbose = 1L,
-  hook = NULL, cache = drake::drake_cache(verbose = verbose,
-  console_log_file = console_log_file), fetch_cache = NULL,
+  hook = NULL, cache = drake::drake_cache(), fetch_cache = NULL,
   parallelism = "loop", jobs = 1L, jobs_preprocess = 1L,
   packages = rev(.packages()), lib_loc = NULL,
   prework = character(0), prepend = NULL, command = NULL,

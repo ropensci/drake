@@ -5,18 +5,24 @@
 - Remove README.md from CRAN altogether. Also remove all links from the news and vignette. The links trigger too many CRAN notes, which made the automated checks too brittle.
 - Serialize formats that need serialization (like "keras") before sending the data from HPC workers to the master process (#989).
 - Check for custom-formatted files when checking checksums.
+- Force fst-formatted targets to plain data frames. Same goes for the new "fst_dt" format.
+- Change the meaning and behavior of `max_expand` in `drake_plan()`. `max_expand` is now the maximum number of targets produced by `map()`, `split()`, and `cross()`. For `cross()`, this reduces the number of targets (less cumbersome) and makes the subsample of targets more representative of the complete grid. It also. ensures consistent target naming when `.id` is `FALSE` (#1002). Note: `max_expand` is not for production workflows anyway, so this change does not break anything important. Unfortunately, we do lose the speed boost in `drake_plan()` originally due to `max_expand`, but `drake_plan()` is still fast, so that is not so bad.
+- Drop specialized formats of `NULL` targets (#998).
 
 ## New features
 
+- Add a new "fst_dt" format for `fst`-powered saving of `data.table` objects.
 - Support a custom "caching" column of the plan to select master vs worker caching for each target individually (#988).
 - Make `transform` a formal argument of `target()` so that users do not have to type "transform =" all the time in `drake_plan()` (#993).
 - Add new function `code_to_function()` to allow for parsing script based workflows into functions so `drake_plan()` can begin to manage the workflow and track dependencies. 
-- Add new function `code_to_function()` to allow for parsing script based workflows into functions so `drake_plan()` can begin to manage the workflow and track dependencies. 
+- Migrate the documentation website from `ropensci.github.io/drake` to `docs.ropensci.org/drake`.
 
 ## Enhancements
 
 - Document the HPC limitations of `target(format = "keras")` (#989).
 - Remove the now-superfluous vignette.
+- Wrap up console and text file logging functionality into a reference class (#964).
+- Deprecate the `verbose` argument in various caching functions. The location of the cache is now only printed in `make()`. This made the previous feature easier to implement.
 
 
 # Version 7.6.1

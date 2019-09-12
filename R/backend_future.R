@@ -47,7 +47,7 @@ backend_future <- function(config) {
 }
 
 future_local_build <- function(target, config, queue, protect) {
-  log_msg("local target", target = target, config = config)
+  config$logger$minor("local target", target = target)
   local_build(target, config, downstream = protect)
   decrease_revdep_keys(queue, target, config)
 }

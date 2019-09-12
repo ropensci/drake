@@ -57,8 +57,8 @@ predict_runtime <- function(
   default_time = 0,
   warn = TRUE
 ) {
-  log_msg("begin predict_runtime()", config = config)
-  on.exit(log_msg("end predict_runtime()", config = config), add = TRUE)
+  config$logger$minor("begin predict_runtime()")
+  on.exit(config$logger$minor("end predict_runtime()"), add = TRUE)
   worker_prediction_info(
     config = config,
     targets = targets,
@@ -155,8 +155,8 @@ predict_workers <- function(
   default_time = 0,
   warn = TRUE
 ) {
-  log_msg("begin predict_workers()", config = config)
-  on.exit(log_msg("end predict_workers()", config = config), add = TRUE)
+  config$logger$minor("begin predict_workers()")
+  on.exit(config$logger$minor("end predict_workers()"), add = TRUE)
   worker_prediction_info(
     config,
     targets = targets,

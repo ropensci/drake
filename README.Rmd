@@ -28,7 +28,7 @@ invisible(file.copy("main/report.Rmd", ".", overwrite = TRUE))
 ```
 
 <center>
-<img src="https://ropensci.github.io/drake/figures/infographic.svg" alt="infographic" align="center" style = "border: none; float: center;">
+<img src="https://docs.ropensci.org/drake/reference/figures/infographic.svg" alt="infographic" align="center" style = "border: none; float: center;">
 </center>
 <table class="table">
 <thead>
@@ -104,7 +104,7 @@ Development
 </table>
 <br>
 
-# The drake R package <img src="https://ropensci.github.io/drake/figures/logo.svg" align="right" alt="logo" width="120" height = "139" style = "border: none; float: right;">
+# The drake R package <img src="https://docs.ropensci.org/drake/reference/figures/logo.svg" align="right" alt="logo" width="120" height = "139" style = "border: none; float: right;">
 
 Data analysis can be slow. A round of scientific computation can take several minutes, hours, or even days to complete. After it finishes, if you update your code or data, your hard-earned results may no longer be valid. How much of that valuable output can you keep, and how much do you need to update? How much runtime must you endure all over again?
 
@@ -116,7 +116,7 @@ Visit the [first page of the manual](https://ropenscilabs.github.io/drake-manual
 
 <center>
 <a href="https://ropenscilabs.github.io/drake-manual">
-<img src="https://ropensci.github.io/drake/figures/video.png" alt="video" align="center" style = "border: none; float: center;">
+<img src="https://docs.ropensci.org/drake/reference/figures/video.png" alt="video" align="center" style = "border: none; float: center;">
 </a>
 </center>
 <br>
@@ -134,7 +134,7 @@ Ordinarily, it is hard to avoid rerunning the code from scratch.
 <br>
 
 <center>
-<img src="https://ropensci.github.io/drake/figures/tweet.png" alt="tweet" align="center" style = "border: none; float: center;">
+<img src="https://docs.ropensci.org/drake/reference/figures/tweet.png" alt="tweet" align="center" style = "border: none; float: center;">
 </center>
 <br>
 
@@ -223,7 +223,7 @@ config <- drake_config(plan)
 vis_drake_graph(config) # Interactive graph: zoom, drag, etc.
 ```
 
-<img src="https://ropensci.github.io/drake/figures/graph.png" alt="hist1" align="center" style = "border: none; float: center;" width = "600px">
+<img src="https://docs.ropensci.org/drake/reference/figures/graph.png" alt="hist1" align="center" style = "border: none; float: center;" width = "600px">
 
 The next `make()` just builds `hist` and `report.html`. No point in wasting time on the data or model.
 
@@ -399,7 +399,7 @@ With even more evidence and confidence, you can invest the time to independently
 
 Ideally, independent observers should be able to read your code and understand it. `drake` helps in several ways.
 
-- The [workflow plan data frame](https://ropensci.github.io/drake/reference/drake_plan.html) explicitly outlines the steps of the analysis, and [`vis_drake_graph()`](https://ropensci.github.io/drake/reference/vis_drake_graph.html) visualizes how those steps depend on each other.
+- The [drake plan](https://docs.ropensci.org/drake/reference/drake_plan.html) explicitly outlines the steps of the analysis, and [`vis_drake_graph()`](https://docs.ropensci.org/drake/reference/vis_drake_graph.html) visualizes how those steps depend on each other.
 - `drake` takes care of the parallel scheduling and high-performance computing (HPC) for you. That means the HPC code is no longer tangled up with the code that actually expresses your ideas.
 - You can [generate large collections of targets](https://ropenscilabs.github.io/drake-manual/gsp.html) without necessarily changing your code base of imported functions, another nice separation between the concepts and the execution of your workflow
 
@@ -436,7 +436,7 @@ install_github("ropensci/drake")
 
 # Function reference
 
-The [reference section](https://ropensci.github.io/drake/reference/index.html) lists all the available functions. Here are the most important ones.
+The [reference section](https://docs.ropensci.org/drake/reference/index.html) lists all the available functions. Here are the most important ones.
 
 - `drake_plan()`: create a workflow data frame (like `my_plan`).
 - `make()`: build your project.
@@ -455,7 +455,7 @@ The [reference section](https://ropensci.github.io/drake/reference/index.html) l
 # Documentation
 
 - The [user manual](https://ropenscilabs.github.io/drake-manual/)
-- The [reference website](https://ropensci.github.io/drake/).
+- The [reference website](https://docs.ropensci.org/drake/).
 - The [official repository of example code](https://github.com/wlandau/drake-examples). Download an example workflow from here with `drake_example()`.
 - [`drakeplanner`](https://github.com/wlandau/drakeplanner), an R/Shiny app to help learn `drake` and create new projects. Run locally with `drakeplanner::drakeplanner()` or access it at <https://wlandau.shinyapps.io/drakeplanner>.
 - [`learndrake`](https://github.com/wlandau/learndrake), an R package for teaching an extended `drake` workshop. It contains notebooks, slides, Shiny apps, the latter two of which are publicly deployed. See the [README](https://github.com/wlandau/learndrake/blob/master/README.md) for instructions and links.
@@ -571,6 +571,6 @@ Many thanks to [Julia Lowndes](https://github.com/jules32), [Ben Marwick](https:
 - [Kirill M&uuml;ller](https://github.com/krlmlr)
 - [Michael Schubert](https://github.com/mschubert)
 
-Credit for images is [attributed here](https://ropensci.github.io/drake/figures/image-credit.md).
+Credit for images is [attributed here](https://github.com/ropensci/drake/blob/master/man/figures/image-credit.md).
 
 [![ropensci_footer](https://ropensci.org/public_images/github_footer.png)](https://ropensci.org)

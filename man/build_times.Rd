@@ -6,9 +6,9 @@
 \lifecycle{maturing}}
 \usage{
 build_times(..., path = NULL, search = NULL, digits = 3,
-  cache = drake_cache(path = path, verbose = verbose),
-  targets_only = NULL, verbose = 1L, jobs = 1, type = c("build",
-  "command"), list = character(0))
+  cache = drake::drake_cache(path = path), targets_only = NULL,
+  verbose = NULL, jobs = 1, type = c("build", "command"),
+  list = character(0))
 }
 \arguments{
 \item{...}{Targets to load from the cache: as names (symbols) or
@@ -28,12 +28,7 @@ If supplied, \code{path} is ignored.}
 
 \item{targets_only}{Deprecated.}
 
-\item{verbose}{Integer, control printing to the console/terminal.
-\itemize{
-\item \code{0}: print nothing.
-\item \code{1}: print targets, retries, and failures.
-\item \code{2}: also show a spinner when preprocessing tasks are underway.
-}}
+\item{verbose}{Deprecated on 2019-09-11.}
 
 \item{jobs}{Number of jobs/workers for parallel processing.}
 
