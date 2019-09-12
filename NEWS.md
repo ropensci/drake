@@ -1,6 +1,3 @@
-
-
-
 # Version 7.6.1.9000
 
 ## Bug fixes
@@ -13,6 +10,7 @@
 
 - Support a custom "caching" column of the plan to select master vs worker caching for each target individually (#988).
 - Make `transform` a formal argument of `target()` so that users do not have to type "transform =" all the time in `drake_plan()` (#993).
+- Add new function `code_to_function()` to allow for parsing script based workflows into functions so `drake_plan()` can begin to manage the workflow and track dependencies. 
 - Add new function `code_to_function()` to allow for parsing script based workflows into functions so `drake_plan()` can begin to manage the workflow and track dependencies. 
 
 ## Enhancements
