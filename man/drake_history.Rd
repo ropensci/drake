@@ -23,14 +23,7 @@ commands for arguments to function calls.
 Could be slow because this requires parsing and analyzing
 lots of R code.}
 
-\item{verbose}{Integer, control printing to the console/terminal.
-\itemize{
-\item \code{0}: print nothing.
-\item \code{1}: print targets, retries, and failures.
-\item \code{2}: also show a spinner when preprocessing tasks are underway.
-}}
-
-\item{verbsose}{Deprecated on 2019-09-11.}
+\item{verbose}{Deprecated on 2019-09-11.}
 }
 \value{
 A data frame of target history.

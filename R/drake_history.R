@@ -54,7 +54,7 @@
 #'   commands for arguments to function calls.
 #'   Could be slow because this requires parsing and analyzing
 #'   lots of R code.
-#' @param verbsose Deprecated on 2019-09-11.
+#' @param verbose Deprecated on 2019-09-11.
 #' @examples
 #' \dontrun{
 #' isolate_example("contain side-effects", {
