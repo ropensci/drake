@@ -43,8 +43,6 @@ text_drake_graph <- function(
   nchar = 1L,
   print = TRUE
 ) {
-  config$logger$minor("begin text_drake_graph()")
-  on.exit(config$logger$minor("end text_drake_graph()"), add = TRUE)
   assert_pkg("visNetwork")
   graph_info <- drake_graph_info(
     config = config,
@@ -64,6 +62,8 @@ text_drake_graph <- function(
     show_output_files = show_output_files,
     hover = FALSE
   )
+  config$logger$minor("begin text_drake_graph()")
+  on.exit(config$logger$minor("end text_drake_graph()"), add = TRUE)
   render_text_drake_graph(
     graph_info = graph_info,
     nchar = nchar,

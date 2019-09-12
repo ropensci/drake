@@ -39,8 +39,6 @@ drake_ggraph <- function(
   label_nodes = FALSE,
   transparency = TRUE
 ) {
-  config$logger$minor("begin drake_ggraph()")
-  on.exit(config$logger$minor("end drake_ggraph()"), add = TRUE)
   assert_pkg("ggplot2")
   assert_pkg("ggraph")
   graph_info <- drake_graph_info(
@@ -59,6 +57,8 @@ drake_ggraph <- function(
     clusters = clusters,
     show_output_files = show_output_files
   )
+  config$logger$minor("begin drake_ggraph()")
+  on.exit(config$logger$minor("end drake_ggraph()"), add = TRUE)
   if (is.null(main)) {
     main <- graph_info$default_title
   }
