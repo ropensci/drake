@@ -7,15 +7,14 @@
 \lifecycle{maturing}}
 \usage{
 readd(target, character_only = FALSE, path = NULL, search = NULL,
-  cache = drake::drake_cache(path = path, verbose = verbose),
-  namespace = NULL, verbose = 1L, show_source = FALSE)
+  cache = drake::drake_cache(path = path), namespace = NULL,
+  verbose = 1L, show_source = FALSE)
 
 loadd(..., list = character(0), imported_only = NULL, path = NULL,
-  search = NULL, cache = drake::drake_cache(path = path, verbose =
-  verbose), namespace = NULL, envir = parent.frame(), jobs = 1,
-  verbose = 1L, deps = FALSE, lazy = "eager", graph = NULL,
-  replace = TRUE, show_source = FALSE, tidyselect = !deps,
-  config = NULL)
+  search = NULL, cache = drake::drake_cache(path = path),
+  namespace = NULL, envir = parent.frame(), jobs = 1, verbose = 1L,
+  deps = FALSE, lazy = "eager", graph = NULL, replace = TRUE,
+  show_source = FALSE, tidyselect = !deps, config = NULL)
 }
 \arguments{
 \item{target}{If \code{character_only} is \code{TRUE}, then
@@ -38,12 +37,7 @@ If supplied, \code{path} is ignored.}
 \item{namespace}{Optional character string,
 name of the \code{storr} namespace to read from.}
 
-\item{verbose}{Integer, control printing to the console/terminal.
-\itemize{
-\item \code{0}: print nothing.
-\item \code{1}: print targets, retries, and failures.
-\item \code{2}: also show a spinner when preprocessing tasks are underway.
-}}
+\item{verbose}{Deprecated on 2019-09-11.}
 
 \item{show_source}{Logical, option to show the command
 that produced the target or indicate that the object

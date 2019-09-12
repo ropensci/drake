@@ -13,7 +13,8 @@ target(command = NULL, transform = NULL, ...)
 \item{transform}{A call to \code{\link[=map]{map()}}, \code{\link[=split]{split()}},
 \code{\link[=cross]{cross()}}, or \code{\link[=combine]{combine()}} to create or aggregate
 multiple targets at once.
-Details: \url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}}
+Details:
+\url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}}
 
 \item{...}{Optional columns of the plan for a given target.
 See the Columns section of this help file for a selection

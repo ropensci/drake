@@ -2,7 +2,7 @@ store_outputs <- function(target, value, meta, config) {
   if (inherits(meta$error, "error")) {
     return()
   }
-  log_msg("store", target = target, config = config)
+  config$logger$minor("store", target = target)
   layout <- config$layout[[target]]
   if (is.null(meta$command)) {
     meta$command <- layout$command_standardized
@@ -173,8 +173,7 @@ finalize_meta <- function(target, meta, hash, config) {
 }
 
 log_time <- function(target, meta, config) {
-  if (is.null(config$console_log_file)) {
-    log_msg(config = config)
+  if (is.null(config$logger$file)) {
     return()
   }
   if (requireNamespace("lubridate", quietly = TRUE)) {
@@ -182,9 +181,9 @@ log_time <- function(target, meta, config) {
     total <- round(lubridate::dseconds(meta$time_build$elapsed), 3)
     tail <- paste("", exec, "|", total, " (exec | total)")
   } else {
-    tail <- " (install lubridate)" # nocov
+    tail <- " (install lubridate to print runtimes in the log)" # nocov
   }
-  log_msg("time", tail = tail, target = target, config = config)
+  config$logger$minor("time", tail, target = target)
 }
 
 runtime_entry <- function(runtime, target) {

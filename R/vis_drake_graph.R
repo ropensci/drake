@@ -57,8 +57,6 @@ vis_drake_graph <- function(
   collapse = TRUE,
   ...
 ) {
-  log_msg("begin vis_drake_graph()", config = config)
-  on.exit(log_msg("end vis_drake_graph()", config = config), add = TRUE)
   assert_pkg("visNetwork")
   graph_info <- drake_graph_info(
     config = config,
@@ -78,6 +76,8 @@ vis_drake_graph <- function(
     show_output_files = show_output_files,
     hover = hover
   )
+  config$logger$minor("begin vis_drake_graph()")
+  on.exit(config$logger$minor("end vis_drake_graph()"), add = TRUE)
   if (is.null(main)) {
     main <- graph_info$default_title
   }

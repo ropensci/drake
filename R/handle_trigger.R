@@ -19,19 +19,16 @@ recover_target <- function(target, meta, config) {
   if (!exists_data) {
     return(FALSE) # nocov # Should not happen, just to be safe...
   }
-  log_msg(
+  config$logger$major(
     "recover",
     target,
     target = target,
-    config = config,
-    color = "recover",
-    tier = 1L
+    color = "recover"
   )
-  log_msg(
+  config$logger$minor(
     "recovered target originally stored on",
     recovery_meta$date,
-    target = target,
-    config = config
+    target = target
   )
   config$cache$driver$set_hash(
     key = target,
@@ -84,47 +81,47 @@ sense_trigger <- function(target, meta, config) {
     return(TRUE)
   }
   if (meta$missing) {
-    log_msg("trigger missing", target = target, config = config)
+    config$logger$minor("trigger missing", target = target)
     return(TRUE)
   }
   condition <- condition_trigger(target = target, meta = meta, config = config)
   if (is.logical(condition)) {
     if (condition) {
-      log_msg("trigger condition", target = target, config = config)
+      config$logger$minor("trigger condition", target = target)
     }
     return(condition)
   }
   if (identical(meta$trigger$command, TRUE)) {
     if (command_trigger(target = target, meta = meta, config = config)) {
-      log_msg("trigger command", target = target, config = config)
+      config$logger$minor("trigger command", target = target)
       return(TRUE)
     }
   }
   if (identical(meta$trigger$depend, TRUE)) {
     if (depend_trigger(target = target, meta = meta, config = config)) {
-      log_msg("trigger depend", target = target, config = config)
+      config$logger$minor("trigger depend", target = target)
       return(TRUE)
     }
   }
   if (identical(meta$trigger$file, TRUE)) {
     if (file_trigger(target = target, meta = meta, config = config)) {
-      log_msg("trigger file", target = target, config = config)
+      config$logger$minor("trigger file", target = target)
       return(TRUE)
     }
   }
   if (identical(meta$trigger$seed, TRUE)) {
     if (seed_trigger(target = target, meta = meta, config = config)) {
-      log_msg("trigger seed", target = target, config = config)
+      config$logger$minor("trigger seed", target = target)
       return(TRUE)
     }
   }
   if (!is.null(meta$trigger$change)) {
     if (change_trigger(target = target, meta = meta, config = config)) {
-      log_msg("trigger change", target = target, config = config)
+      config$logger$minor("trigger change", target = target)
       return(TRUE)
     }
   }
-  log_msg("skip", target = target, config = config)
+  config$logger$minor("skip", target = target)
   FALSE
 }
 
@@ -200,7 +197,7 @@ condition_trigger <- function(target, meta, config) {
       "The `condition` trigger must evaluate to a logical of length 1. ",
       "got `", value, "` for target ", target, "."
     )
-    drake_log(paste("Error:", msg), config = config)
+    config$logger$minor(paste("Error:", msg))
     stop(msg, call. = FALSE)
   }
   condition_decision(value = value, mode = meta$trigger$mode)

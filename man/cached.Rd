@@ -6,8 +6,8 @@
 \lifecycle{maturing}}
 \usage{
 cached(..., list = character(0), no_imported_objects = FALSE,
-  path = NULL, search = NULL, cache = drake_cache(path = path,
-  verbose = verbose), verbose = 1L, namespace = NULL, jobs = 1,
+  path = NULL, search = NULL, cache = drake::drake_cache(path =
+  path), verbose = NULL, namespace = NULL, jobs = 1,
   targets_only = TRUE)
 }
 \arguments{
@@ -31,12 +31,7 @@ cache. Similar to the \code{list} argument of \code{\link[=remove]{remove()}}.}
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} is ignored.}
 
-\item{verbose}{Integer, control printing to the console/terminal.
-\itemize{
-\item \code{0}: print nothing.
-\item \code{1}: print targets, retries, and failures.
-\item \code{2}: also show a spinner when preprocessing tasks are underway.
-}}
+\item{verbose}{Deprecated on 2019-09-11.}
 
 \item{namespace}{Character scalar, name of the storr namespace
 to use for listing objects.}

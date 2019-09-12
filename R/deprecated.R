@@ -1434,8 +1434,9 @@ recover_cache <- function(
     package = "drake",
     msg = "recover_cache() in drake is deprecated. Use get_cache() instead."
   )
-  recover_cache_(path, hash_algorithm, short_hash_algo, long_hash_algo,
-                 force, verbose, fetch_cache, console_log_file)
+  deprecate_force(force)
+  deprecate_hash_algo_args(short_hash_algo, long_hash_algo)
+  recover_cache_(path, hash_algorithm)
 }
 
 #' @title Storr namespaces for targets
@@ -1747,13 +1748,7 @@ this_cache <- function(
       "Use get_cache() or storr::storr_rds() instead."
     )
   )
-  this_cache_(
-    path = path,
-    force = force,
-    verbose = verbose,
-    fetch_cache = fetch_cache,
-    console_log_file = console_log_file
-  )
+  this_cache_(path = path)
 }
 
 #' @title Generate a flat text log file to represent the state of
@@ -2498,12 +2493,7 @@ get_cache <- function(
   } else {
     path <- default_cache_path(root = path)
   }
-  this_cache_(
-    path = path,
-    verbose = verbose,
-    fetch_cache = fetch_cache,
-    console_log_file = console_log_file
-  )
+  this_cache_(path = path)
 }
 
 # 2019-05-25 # nolint
@@ -2513,6 +2503,27 @@ deprecate_search <- function(search) {
       "Argument ",
       shQuote("search"),
       " is deprecated in drake functions.",
+      call. = FALSE
+    )
+  }
+}
+
+# 2019-09-11 # nolint
+deprecate_verbose <- function(verbose) {
+  if (!identical(verbose, NULL)) {
+    warning(
+      "Argument `verbose` is deprecated some minor drake utility functions.",
+      call. = FALSE
+    )
+  }
+}
+
+# 2019-09-11 # nolint
+deprecate_console_log_file <- function(console_log_file) {
+  if (!identical(console_log_file, NULL)) {
+    warning(
+      "Argument `console_log_file` ",
+      "is deprecated some minor drake utility functions.",
       call. = FALSE
     )
   }

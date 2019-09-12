@@ -112,5 +112,5 @@ test_with_dir("spinner (or lack thereof) does not break things", {
     session_info = FALSE
   )
   make(config = config)
-  expect_equal(config$verbose, 2L)
+  expect_equal(config$logger$verbose, 2L)
 })

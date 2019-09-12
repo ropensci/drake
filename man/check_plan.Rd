@@ -19,12 +19,7 @@ check_plan(plan = NULL, targets = NULL, envir = parent.frame(),
 
 \item{cache}{Optional drake cache. See \code{\link[=new_cache]{new_cache()}}.}
 
-\item{verbose}{Integer, control printing to the console/terminal.
-\itemize{
-\item \code{0}: print nothing.
-\item \code{1}: print targets, retries, and failures.
-\item \code{2}: also show a spinner when preprocessing tasks are underway.
-}}
+\item{verbose}{Deprecated on 2019-09-11.}
 
 \item{jobs}{Number of jobs/workers for parallel processing.}
 }

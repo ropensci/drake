@@ -43,13 +43,9 @@ drake_build <- function(
   jobs = 1,
   replace = FALSE
 ) {
-  log_msg("begin drake_build()", target = target, config = config)
+  config$logger$minor("begin drake_build()", target = target)
   on.exit(
-    log_msg(
-      "end drake_build()",
-      target = target,
-      config = config
-    ),
+    config$logger$minor("end drake_build()", target = target),
     add = TRUE
   )
   if (!is.null(meta)) {
