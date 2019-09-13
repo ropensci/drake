@@ -541,7 +541,7 @@ test_with_dir("deps_knitr() works", {
   expect_false(file.exists("test.md"))
   expect_warning(x <- deps_knitr("report.Rmd"))
   expect_warning(expect_equal(x$name, sort(
-    deps_knitr(encode_path("report.Rmd"))$name)))
+    deps_knitr(reencode_path("report.Rmd"))$name)))
   expect_true(!nrow(x))
   load_mtcars_example()
   w <- deps_code("funct(knitr_in(report.Rmd))")

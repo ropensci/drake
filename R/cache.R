@@ -610,7 +610,7 @@ cached <- function(
   if (targets_only) {
     targets <- targets_only(targets, cache, jobs)
   }
-  display_keys(targets)
+  redisplay_keys(targets)
 }
 
 targets_only <- function(targets, cache, jobs) {
@@ -1031,7 +1031,7 @@ drake_cache_log <- function(
   if (targets_only) {
     out <- out[out$type == "target", ]
   }
-  out$name <- display_keys(out$name)
+  out$name <- redisplay_keys(out$name)
   out
 }
 
@@ -1314,18 +1314,7 @@ progress <- function(
 }
 
 get_progress_single <- function(target, cache) {
-  if (cache$exists(key = target, namespace = "progress")) {
-    hash <- cache$get_hash(key = target, namespace = "progress")
-    switch(
-      substr(hash, 1, 1),
-      r = "running",
-      d = "done",
-      f = "failed",
-      NA_character_
-    )
-  } else{
-    "none"
-  }
+  cache$get_progress(target = target)
 }
 
 memo_expr <- function(expr, cache, ...) {

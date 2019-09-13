@@ -380,7 +380,7 @@ assert_output_files <- function(target, meta, config) {
     return()
   }
   files <- unique(as.character(deps$file_out))
-  files <- decode_path(files, config)
+  files <- config$cache$decode_path(files)
   missing_files <- files[!file.exists(files)]
   if (length(missing_files)) {
     msg <- paste0(
@@ -468,9 +468,5 @@ set_progress <- function(target, meta, value, config) {
   if (skip_progress) {
     return()
   }
-  config$cache$driver$set_hash(
-    key = target,
-    namespace = "progress",
-    hash = config$cache$ht_progress[[value]]
-  )
+  config$cache$set_progress(target = target, value = value)
 }

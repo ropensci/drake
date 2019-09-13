@@ -6,7 +6,7 @@ create_drake_graph <- function(
   jobs,
   logger
 ) {
-  config <- list(plan = plan, jobs = jobs, logger = logger)
+  config <- list(plan = plan, jobs = jobs, logger = logger, cache = cache)
   edges <- memo_expr(
     cdg_create_edges(config, layout),
     cache,
@@ -78,7 +78,7 @@ cdg_edges_thru_file_out <- function(edges, config) {
 }
 
 cdg_transitive_edges <- function(vertex, edges, config) {
-  config$logger$minor("file_out", target = display_key(vertex, config))
+  config$logger$minor("file_out", target = config$cache$display_keys(vertex))
   from <- unique(edges$from[edges$to == vertex])
   to <- unique(edges$to[edges$from == vertex])
   expand.grid(from = from, to = to, stringsAsFactors = FALSE)

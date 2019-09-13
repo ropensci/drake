@@ -45,7 +45,7 @@ store_output_files <- function(files, meta, config) {
   meta$isfile <- TRUE
   for (file in files) {
     meta$name <- file
-    meta$mtime <- storage_mtime(decode_path(file, config))
+    meta$mtime <- storage_mtime(config$cache$decode_path(file))
     meta$isfile <- TRUE
     store_single_output(
       target = file,

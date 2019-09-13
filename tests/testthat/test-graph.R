@@ -233,28 +233,28 @@ test_with_dir("file_out()/file_in() connections", {
   expect_equal(dependencies("saver1", config), character(0))
   expect_equal(
     sort(dependencies("reader3", config)),
-    sort(c("saver1", "saver2", encode_path("b"), encode_path("d")))
+    sort(c("saver1", "saver2", reencode_path("b"), reencode_path("d")))
   )
   expect_equal(dependencies("saver2", config), character(0))
   expect_equal(dependencies("out2", config), "reader2")
   expect_equal(
     sort(dependencies("reader1", config)),
-    sort(c("saver1", "saver2", encode_path("c"), encode_path("d")))
+    sort(c("saver1", "saver2", reencode_path("c"), reencode_path("d")))
   )
   expect_equal(
     sort(dependencies("reader2", config)),
-    sort(c("saver1", encode_path("a"), encode_path("b")))
+    sort(c("saver1", reencode_path("a"), reencode_path("b")))
   )
   expect_equal(dependencies("out1", config, reverse = TRUE), character(0))
   expect_equal(
     sort(dependencies("saver1", config, reverse = TRUE)),
     sort(c("out1", "reader1", "reader2", "reader3",
-           encode_path("a"), encode_path("b"), encode_path("c")))
+           reencode_path("a"), reencode_path("b"), reencode_path("c")))
   )
   expect_equal(dependencies("reader3", config, reverse = TRUE), character(0))
   expect_equal(
     sort(dependencies("saver2", config, reverse = TRUE)),
-    sort(c("reader1", "reader3", encode_path("d")))
+    sort(c("reader1", "reader3", reencode_path("d")))
   )
   expect_equal(dependencies("out2", config, reverse = TRUE), character(0))
   expect_equal(dependencies("reader1", config, reverse = TRUE), character(0))
@@ -472,7 +472,7 @@ test_with_dir("GitHub issue 460", {
     targets = "b",
     cache = storr::storr_environment()
   )
-  exp <- c(letters[1:2], encode_namespaced("base::sqrt"))
+  exp <- c(letters[1:2], reencode_namespaced("base::sqrt"))
   expect_true(all(exp %in% igraph::V(config$graph)$name))
   process_targets(config)
 })

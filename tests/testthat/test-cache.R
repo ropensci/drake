@@ -278,20 +278,20 @@ test_with_dir("cache functions work from various working directories", {
     # targets and imports
     imports <- sort(
       c(
-        encode_path("input.rds"),
+        config$cache$encode_path("input.rds"),
         "a", "b", "c", "f", "g",
         "h", "i", "j"
       )
     )
     builds <- sort(config$plan$target)
-    out_files <- encode_path("intermediatefile.rds")
+    out_files <- config$cache$encode_path("intermediatefile.rds")
     all <- sort(c(builds, imports, out_files))
 
     # build_times
     x <- config$cache
     bt <- build_times()
     expect_equal(
-      sort(display_keys(x$list(namespace = "meta"))),
+      sort(redisplay_keys(x$list(namespace = "meta"))),
       sort(cached(targets_only = FALSE))
     )
     expect_equal(

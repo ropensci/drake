@@ -617,10 +617,6 @@ valid_splitting_plan <- function(plan, transform) {
   out
 }
 
-complete_cases <- function(x) {
-  !as.logical(Reduce(`|`, lapply(x, is.na)))
-}
-
 map_by <- function(.x, .by, .f, ...) {
   splits <- split_by(.x, .by = .by)
   out <- lapply(
@@ -800,7 +796,7 @@ splice_inner <- function(x, replacements) {
 
 combine_tagalongs <- function(plan, transform, old_cols) {
   combined_plan <- plan[, dsl_combine(transform), drop = FALSE]
-  out <- plan[complete.cases(combined_plan),, drop = FALSE] # nolint
+  out <- plan[complete_cases(combined_plan),, drop = FALSE] # nolint
   drop <- c(old_cols, dsl_combine(transform), dsl_by(transform))
   keep <- setdiff(colnames(out), drop)
   out <- out[, keep, drop = FALSE]

@@ -66,7 +66,7 @@ test_with_dir("checksum functionality", {
   config <- dbug()
   config$parallelism <- "loop"
   config$jobs <- 1
-  config$cache <- storr::storr_environment()
+  config$cache <- decorate_storr(storr::storr_environment())
   testrun(config)
   checksum <- get_checksum(target = "combined", config = config)
   bad <- "askldfklhjsdfkj"
