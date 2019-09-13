@@ -150,8 +150,8 @@ outdated <-  function(
 }
 
 first_outdated <- function(config) {
-  config$cache$reset_ht_hash()
-  on.exit(config$cache$reset_ht_hash())
+  config$cache$reset_memo_hash()
+  on.exit(config$cache$reset_memo_hash())
   out <- character(0)
   old_leaves <- NULL
   config$graph <- subset_graph(config$graph, all_targets(config))

@@ -468,9 +468,5 @@ set_progress <- function(target, meta, value, config) {
   if (skip_progress) {
     return()
   }
-  config$cache$driver$set_hash(
-    key = target,
-    namespace = "progress",
-    hash = config$cache$ht_progress[[value]]
-  )
+  config$cache$set_progress(target = target, value = value)
 }

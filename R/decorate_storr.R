@@ -69,7 +69,14 @@ refclass_decorated_storr <- methods::setRefClass(
     set = function(key, value, ...) {
       dcst_set(value = value, key = key, ..., .self = .self)
     },
+    memo_hash = function(x, fun, ...) {
+      ht_memo(ht = .self$ht_hash, x = x, fun = fun, ...)
+    },
+    reset_memo_hash = function() {
+      ht_clear(.self$ht_hash)
+    },
     reset_ht_hash = function() {
+      # deprecated on 2019-09-13
       ht_clear(.self$ht_hash)
     },
     encode_path = function(x) {
@@ -92,6 +99,16 @@ refclass_decorated_storr <- methods::setRefClass(
         USE.NAMES = FALSE,
         .self = .self
       )
+    },
+    set_progress = function(target, value) {
+      .self$driver$set_hash(
+        key = target,
+        namespace = "progress",
+        hash = .self$ht_progress[[value]]
+      )
+    },
+    get_progress = function(target) {
+      retrieve_progress(target = target, cache = .self)
     },
     # Delegate to storr:
     archive_export = function(...) .self$storr$archive_export(...),
@@ -397,4 +414,35 @@ standardize_key <- function(text) {
     text <- reencode_namespaced(text)
   }
   text
+}
+
+ht_progress <- function(hash_algorithm) {
+  keys <- c("running", "done", "failed")
+  out <- lapply(keys, progress_hash, hash_algorithm = hash_algorithm)
+  names(out) <- keys
+  out
+}
+
+progress_hash <- function(key, hash_algorithm) {
+  out <- digest::digest(
+    key,
+    algo = hash_algorithm,
+    serialize = FALSE
+  )
+  gsub("^.", substr(key, 1, 1), out)
+}
+
+retrieve_progress <- function(target, cache) {
+  if (cache$exists(key = target, namespace = "progress")) {
+    hash <- cache$get_hash(key = target, namespace = "progress")
+    switch(
+      substr(hash, 1, 1),
+      r = "running",
+      d = "done",
+      f = "failed",
+      NA_character_
+    )
+  } else{
+    "none"
+  }
 }

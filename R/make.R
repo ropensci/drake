@@ -222,8 +222,8 @@ make <- function(
   config$logger$minor("begin make()")
   runtime_checks(config = config)
   config$running_make <- TRUE
-  config$cache$reset_ht_hash()
-  on.exit(config$cache$reset_ht_hash())
+  config$cache$reset_memo_hash()
+  on.exit(config$cache$reset_memo_hash())
   config$cache$set(key = "seed", value = config$seed, namespace = "session")
   config$eval[[drake_envir_marker]] <- TRUE
   if (config$log_progress) {
