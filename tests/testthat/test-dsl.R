@@ -3017,3 +3017,58 @@ test_with_dir("keep nested grouping vars in combine() (#1008)", {
   )
   equivalent_plans(out, exp)
 })
+
+test_with_dir("NAs removed from old grouping vars grid (#1010)", {
+  cvo <- c("a3", "7")
+  out <- drake_plan(
+    data = target(
+      command = crossValOmit(radar, crossValOmission),
+      transform = cross(
+        radar = !!"dd",
+        crossValOmission = !!cvo,
+        .id = c(radar, crossValOmission)
+      )
+    ),
+    br = target(
+      command = annotate_model(data),
+      transform = combine(data, .by = data)
+    ),
+    b = target(
+      command = list(crossValId, data),
+      transform = cross(
+        data,
+        crossValId = !!1,
+        .id = c(radar, crossValOmission, crossValId)
+      )
+    ),
+    a = target(
+      command = list(b),
+      transform = combine(b, .by = data)
+    ),
+    dataTrainList = target(
+      command = list2(a, data),
+      transform = map(a, data, .id = c(crossValOmission, radar)
+      )
+    ),
+    dataTestList = target(
+      command = list(a, data),
+      transform = map(a, data, .id = c(crossValOmission, radar)
+      )
+    )
+  )
+  exp <- drake_plan(
+    data_dd_a3 = crossValOmit("dd", "a3"),
+    data_dd_7 = crossValOmit("dd", "7"),
+    br_data_dd_7 = annotate_model(data_dd_7),
+    br_data_dd_a3 = annotate_model(data_dd_a3),
+    b_dd_a3_1 = list(1, data_dd_a3),
+    b_dd_7_1 = list(1, data_dd_7),
+    a_data_dd_7 = list(b_dd_7_1),
+    a_data_dd_a3 = list(b_dd_a3_1),
+    dataTrainList_7_dd = list2(a_data_dd_7, data_dd_7),
+    dataTrainList_a3_dd = list2(a_data_dd_a3, data_dd_a3),
+    dataTestList_7_dd = list(a_data_dd_7, data_dd_7),
+    dataTestList_a3_dd = list(a_data_dd_a3, data_dd_a3)
+  )
+  equivalent_plans(out, exp)
+})

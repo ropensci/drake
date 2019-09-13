@@ -617,6 +617,10 @@ valid_splitting_plan <- function(plan, transform) {
   out
 }
 
+complete_cases <- function(x) {
+  !as.logical(Reduce(`|`, lapply(x, is.na)))
+}
+
 map_by <- function(.x, .by, .f, ...) {
   splits <- split_by(.x, .by = .by)
   out <- lapply(
@@ -796,7 +800,7 @@ splice_inner <- function(x, replacements) {
 
 combine_tagalongs <- function(plan, transform, old_cols) {
   combined_plan <- plan[, dsl_combine(transform), drop = FALSE]
-  out <- plan[complete_cases(combined_plan),, drop = FALSE] # nolint
+  out <- plan[complete.cases(combined_plan),, drop = FALSE] # nolint
   drop <- c(old_cols, dsl_combine(transform), dsl_by(transform))
   keep <- setdiff(colnames(out), drop)
   out <- out[, keep, drop = FALSE]
@@ -897,16 +901,42 @@ find_old_groupings.map <- function(transform, plan) {
   group_names <- as.character(unnamed(lang(transform))[-1])
   group_names <- intersect(group_names, names(plan))
   subplan <- plan[, group_names, drop = FALSE]
+  keep <- apply(subplan, 1, function(x) {
+    !all(is.na(x))
+  })
+  subplan <- subplan[keep,, drop = FALSE] # nolint
   if (any(dim(subplan) < 1L)) {
     return(list())
   }
-  out <- select_nonempty(lapply(subplan, na_omit))
+  # Look for blocks of nested grouping variables.
+  blocks <- column_components(subplan)
+  blocks <- lapply(blocks, function(x) {
+    as.list(x[complete_cases(x),, drop = FALSE]) # nolint
+  })
+  out <- do.call(c, blocks)
+  out <- select_nonempty(lapply(out, na_omit))
   min_length <- min(vapply(out, length, FUN.VALUE = integer(1)))
   out <- as.data.frame(
     lapply(out, head, n = min_length),
     stringsAsFactors = FALSE
   )
   as.list(out[!duplicated(out),, drop = FALSE]) # nolint
+}
+
+column_components <- function(x) {
+  adj <- crossprod(!is.na(x)) > 0L
+  graph <- igraph::graph_from_adjacency_matrix(adj)
+  membership <- sort(igraph::components(graph)$membership)
+  out <- tapply(
+    X = names(membership),
+    INDEX = membership,
+    function(cols) {
+      x[, cols, drop = FALSE]
+    },
+    simplify = FALSE
+  )
+  names(out) <- NULL
+  out
 }
 
 find_old_groupings.cross <- function(transform, plan) {
