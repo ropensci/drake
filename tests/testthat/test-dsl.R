@@ -2828,7 +2828,7 @@ test_with_dir("eliminate partial tagalong grouping vars (#1009)", {
       transform = cross(dataRadar, dataEPL, .id = c(radar, month))
     ),
     dataEPL = target(
-      command = get_ecmwf_pressure_level_request(month),
+      command = geplr(month),
       transform = cross(month = !!m)
     ),
     dataESL = target(
@@ -2849,8 +2849,8 @@ test_with_dir("eliminate partial tagalong grouping vars (#1009)", {
     dataEPLRadar_b_8L = st_crop(dataEPL_8L, dataRadar_b),
     dataEPLRadar_a_9L = st_crop(dataEPL_9L, dataRadar_a),
     dataEPLRadar_b_9L = st_crop(dataEPL_9L, dataRadar_b),
-    dataEPL_8L = get_ecmwf_pressure_level_request(8L),
-    dataEPL_9L = get_ecmwf_pressure_level_request(9L),
+    dataEPL_8L = geplr(8L),
+    dataEPL_9L = geplr(9L),
     dataESL_8L = get_ecmwf_single_level_request(8L),
     dataESL_9L = get_ecmwf_single_level_request(9L),
     dataESLRadar_a_8L = st_crop(dataESL_8L, dataRadar_a),
