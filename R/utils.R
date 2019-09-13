@@ -101,6 +101,10 @@ error_na <- function(e) {
   NA_character_
 }
 
+complete_cases <- function(x) {
+  !as.logical(Reduce(`|`, lapply(x, is.na)))
+}
+
 select_nonempty <- function(x) {
   keep <- vapply(
     X = x,
