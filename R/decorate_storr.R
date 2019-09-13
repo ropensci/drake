@@ -337,7 +337,7 @@ file_store <- function(x) {
   reencode_path(x)
 }
 
-display_key = function(x, .self) {
+display_key <- function(x, .self) {
   if (is_encoded_path(x)) {
     display_path(x = x, .self = .self)
   } else if (is_encoded_namespaced(x)) {
@@ -347,7 +347,7 @@ display_key = function(x, .self) {
   }
 }
 
-display_path = function(x, .self) {
+display_path <- function(x, .self) {
   path_ <- .self$decode_path(x = x)
   if (is_url(path_)) {
     sprintf("url %s", path_)
