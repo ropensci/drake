@@ -2814,3 +2814,47 @@ test_with_dir("max_expand works on split()", {
   )
   equivalent_plans(out, exp)
 })
+
+test_with_dir("eliminate partial tagalong grouping vars (#1009)", {
+  m <- c(8L, 9L)
+  radars <- c("a", "b")
+  out <- drake_plan(
+    dataEPLRadar = target(
+      command = st_crop(dataEPL, dataRadar),
+      transform = cross(dataRadar, dataEPL, .id = c(radar, month))
+    ),
+    dataEPL = target(
+      command = get_ecmwf_pressure_level_request(month),
+      transform = cross(month = !!m)
+    ),
+    dataESL = target(
+      command = get_ecmwf_single_level_request(month),
+      transform = cross(month = !!m)
+    ),
+    dataESLRadar = target(
+      command = st_crop(dataESL, dataRadar),
+      transform = cross(dataRadar, dataESL, .id = c(radar, month))
+    ),
+    dataRadar = target(
+      command = get_radar_info(radar),
+      transform = map(radar = !!radars)
+    )
+  )
+  exp <- drake_plan(
+    dataEPLRadar_a_8L = st_crop(dataEPL_8L, dataRadar_a),
+    dataEPLRadar_b_8L = st_crop(dataEPL_8L, dataRadar_b),
+    dataEPLRadar_a_9L = st_crop(dataEPL_9L, dataRadar_a),
+    dataEPLRadar_b_9L = st_crop(dataEPL_9L, dataRadar_b),
+    dataEPL_8L = get_ecmwf_pressure_level_request(8L),
+    dataEPL_9L = get_ecmwf_pressure_level_request(9L),
+    dataESL_8L = get_ecmwf_single_level_request(8L),
+    dataESL_9L = get_ecmwf_single_level_request(9L),
+    dataESLRadar_a_8L = st_crop(dataESL_8L, dataRadar_a),
+    dataESLRadar_b_8L = st_crop(dataESL_8L, dataRadar_b),
+    dataESLRadar_a_9L = st_crop(dataESL_9L, dataRadar_a),
+    dataESLRadar_b_9L = st_crop(dataESL_9L, dataRadar_b),
+    dataRadar_a = get_radar_info("a"),
+    dataRadar_b = get_radar_info("b")
+  )
+  equivalent_plans(out, exp)
+})

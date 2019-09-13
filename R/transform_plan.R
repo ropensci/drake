@@ -517,9 +517,15 @@ dsl_left_outer_join <- function(x, y) {
   if (!length(by)) {
     return(x)
   }
-  # The output must have the same number of rows as x.
+  # The output must have the same number of rows as x,
+  # and the ID variables must all be nonmissing.
   rows_keep <- complete_cases(y[, by, drop = FALSE])
   y <- y[rows_keep,, drop = FALSE] # nolint
+  # Drop the columns that only partially tag along.
+  # These grouping variables never truly belonged to the
+  # ID variables in x.
+  cols_keep <- !vapply(y, anyNA, FUN.VALUE = logical(1))
+  y <- y[, cols_keep, drop = FALSE]
   # Just a precaution. We should actually be okay by now.
   y <- y[!duplicated(y[, by, drop = FALSE]),, drop = FALSE] # nolint
   # Need to recover the original row order
