@@ -1302,10 +1302,14 @@ test_with_dir("trace has correct provenance", {
     ),
     i = target(
       command = list(e_c_b_a_1_3, e_c_b_a_1_3_2),
+      x = "1",
+      y = "3",
       i = "i"
     ),
     j = target(
       command = list(f_c_b_a_1_3, f_c_b_a_1_3_2),
+      x = "1",
+      y = "3",
       j = "j"
     )
   )
@@ -2855,6 +2859,161 @@ test_with_dir("eliminate partial tagalong grouping vars (#1009)", {
     dataESLRadar_b_9L = st_crop(dataESL_9L, dataRadar_b),
     dataRadar_a = get_radar_info("a"),
     dataRadar_b = get_radar_info("b")
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("keep nested grouping vars in combine() (#1008)", {
+  out <- drake_plan(
+    i = target(p, transform = map(p = !!(1:2))),
+    a = target(x * i, transform = cross(i, x = !!(1:2))),
+    b = target(a * y, transform = cross(a, y = !!(1:2), .id = c(p, x))),
+    d = target(c(b), transform = combine(b, .by = c(a))),
+    trace = TRUE
+  )
+  exp <- drake_plan(
+    i_1L = target(
+      command = 1L,
+      p = "1L",
+      i = "i_1L"
+    ),
+    i_2L = target(
+      command = 2L,
+      p = "2L",
+      i = "i_2L"
+    ),
+    a_1L_i_1L = target(
+      command = 1L * i_1L,
+      p = "1L",
+      i = "i_1L",
+      x = "1L",
+      a = "a_1L_i_1L"
+    ),
+    a_2L_i_1L = target(
+      command = 2L * i_1L,
+      p = "1L",
+      i = "i_1L",
+      x = "2L",
+      a = "a_2L_i_1L"
+    ),
+    a_1L_i_2L = target(
+      command = 1L * i_2L,
+      p = "2L",
+      i = "i_2L",
+      x = "1L",
+      a = "a_1L_i_2L"
+    ),
+    a_2L_i_2L = target(
+      command = 2L * i_2L,
+      p = "2L",
+      i = "i_2L",
+      x = "2L",
+      a = "a_2L_i_2L"
+    ),
+    b_1L_1L = target(
+      command = a_1L_i_1L * 1L,
+      p = "1L",
+      i = "i_1L",
+      x = "1L",
+      a = "a_1L_i_1L",
+      y = "1L",
+      b = "b_1L_1L"
+    ),
+    b_1L_1L_2 = target(
+      command = a_1L_i_1L * 2L,
+      p = "1L",
+      i = "i_1L",
+      x = "1L",
+      a = "a_1L_i_1L",
+      y = "2L",
+      b = "b_1L_1L_2"
+    ),
+    b_1L_2L = target(
+      command = a_2L_i_1L * 1L,
+      p = "1L",
+      i = "i_1L",
+      x = "2L",
+      a = "a_2L_i_1L",
+      y = "1L",
+      b = "b_1L_2L"
+    ),
+    b_1L_2L_2 = target(
+      command = a_2L_i_1L * 2L,
+      p = "1L",
+      i = "i_1L",
+      x = "2L",
+      a = "a_2L_i_1L",
+      y = "2L",
+      b = "b_1L_2L_2"
+    ),
+    b_2L_1L = target(
+      command = a_1L_i_2L * 1L,
+      p = "2L",
+      i = "i_2L",
+      x = "1L",
+      a = "a_1L_i_2L",
+      y = "1L",
+      b = "b_2L_1L"
+    ),
+    b_2L_1L_2 = target(
+      command = a_1L_i_2L * 2L,
+      p = "2L",
+      i = "i_2L",
+      x = "1L",
+      a = "a_1L_i_2L",
+      y = "2L",
+      b = "b_2L_1L_2"
+    ),
+    b_2L_2L = target(
+      command = a_2L_i_2L * 1L,
+      p = "2L",
+      i = "i_2L",
+      x = "2L",
+      a = "a_2L_i_2L",
+      y = "1L",
+      b = "b_2L_2L"
+    ),
+    b_2L_2L_2 = target(
+      command = a_2L_i_2L * 2L,
+      p = "2L",
+      i = "i_2L",
+      x = "2L",
+      a = "a_2L_i_2L",
+      y = "2L",
+      b = "b_2L_2L_2"
+    ),
+    d_a_1L_i_1L = target(
+      command = c(b_1L_1L, b_1L_1L_2),
+      p = "1L",
+      i = "i_1L",
+      x = "1L",
+      a = "a_1L_i_1L",
+      d = "d_a_1L_i_1L"
+    ),
+    d_a_1L_i_2L = target(
+      command = c(b_2L_1L, b_2L_1L_2),
+      p = "2L",
+      i = "i_2L",
+      x = "1L",
+      a = "a_1L_i_2L",
+      d = "d_a_1L_i_2L"
+    ),
+    d_a_2L_i_1L = target(
+      command = c(b_1L_2L, b_1L_2L_2),
+      p = "1L",
+      i = "i_1L",
+      x = "2L",
+      a = "a_2L_i_1L",
+      d = "d_a_2L_i_1L"
+    ),
+    d_a_2L_i_2L = target(
+      command = c(b_2L_2L, b_2L_2L_2),
+      p = "2L",
+      i = "i_2L",
+      x = "2L",
+      a = "a_2L_i_2L",
+      d = "d_a_2L_i_2L"
+    )
   )
   equivalent_plans(out, exp)
 })

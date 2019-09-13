@@ -23,6 +23,7 @@
 - Remove the now-superfluous vignette.
 - Wrap up console and text file logging functionality into a reference class (#964).
 - Deprecate the `verbose` argument in various caching functions. The location of the cache is now only printed in `make()`. This made the previous feature easier to implement.
+- Carry forward nested grouping variables in `combine()` (#1008).
 
 
 # Version 7.6.1

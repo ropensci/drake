@@ -633,7 +633,7 @@ map_by <- function(.x, .by, .f, ...) {
       out
     }
   )
-  do.call(what = rbind, args = out)
+  do.call(what = drake_bind_rows, args = out)
 }
 
 split_by <- function(.x, .by = character(0)) {
@@ -735,6 +735,10 @@ combine_step <- function(plan, row, transform, old_cols) {
       out[[col]] <- row[[col]]
     }
   }
+  groupings <- combine_tagalongs(plan, transform, old_cols)
+  if (nrow(groupings) == 1L) {
+    out <- cbind(out, groupings)
+  }
   out
 }
 
@@ -792,6 +796,18 @@ splice_inner <- function(x, replacements) {
   } else {
     list(x)
   }
+}
+
+combine_tagalongs <- function(plan, transform, old_cols) {
+  combined_plan <- plan[, dsl_combine(transform), drop = FALSE]
+  out <- plan[complete.cases(combined_plan),, drop = FALSE] # nolint
+  drop <- c(old_cols, dsl_combine(transform), dsl_by(transform))
+  keep <- setdiff(colnames(out), drop)
+  out <- out[, keep, drop = FALSE]
+  keep <- !vapply(out, anyNA, FUN.VALUE = logical(1))
+  out <- out[, keep, drop = FALSE]
+  keep <- vapply(out, num_unique, FUN.VALUE = integer(1)) == 1L
+  utils::head(out[, keep, drop = FALSE], n = 1)
 }
 
 dsl_deps <- function(transform) UseMethod("dsl_deps")

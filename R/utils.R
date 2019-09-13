@@ -132,6 +132,10 @@ longest_match <- function(choices, against) {
   matches[which.max(nchar(matches))]
 }
 
+num_unique <- function(x) {
+  length(unique(x))
+}
+
 random_string <- function(exclude) {
   key <- NULL
   while (is.null(key) || (key %in% exclude)) {
