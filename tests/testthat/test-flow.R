@@ -27,8 +27,8 @@ test_with_dir("scratch build with custom filesystem cache.", {
   cache <- storr::storr_rds(path = path)
 
   # take this opportunity to test clean() and prune()
-  all <- sort(c(encode_path("input.rds"),
-    encode_path("intermediatefile.rds"), "drake_target_1", "a",
+  all <- sort(c(reencode_path("input.rds"),
+    reencode_path("intermediatefile.rds"), "drake_target_1", "a",
     "b", "c", "combined", "f", "final", "g", "h", "i", "j",
     "myinput", "nextone", "yourinput"))
   expect_equal(config$cache$list(), all)
@@ -47,17 +47,17 @@ test_with_dir("scratch build with custom filesystem cache.", {
     sort(setdiff(
       all,
       c("b", "c", "drake_target_1",
-        encode_path("intermediatefile.rds"), "nextone")
+        reencode_path("intermediatefile.rds"), "nextone")
     ))
   )
 
   # clean does not remove imported files
   expect_true(file.exists("input.rds"))
-  expect_true(encode_path("input.rds") %in%
+  expect_true(reencode_path("input.rds") %in%
     config$cache$list())
-  clean(list = encode_path("input.rds"), cache = cache)
+  clean(list = reencode_path("input.rds"), cache = cache)
   expect_true(file.exists("input.rds"))
-  expect_false(encode_path("input.rds") %in%
+  expect_false(reencode_path("input.rds") %in%
     config$cache$list())
 
   # clean removes imported functions and cleans up 'functions'
@@ -125,8 +125,8 @@ test_with_dir("make(..., skip_imports = TRUE) works", {
   )
   expect_equal(
     sort(cached(targets_only = FALSE)),
-    sort(display_keys(
-      c(encode_path("intermediatefile.rds"), plan$target)
+    sort(redisplay_keys(
+      c(reencode_path("intermediatefile.rds"), plan$target)
     ))
   )
 

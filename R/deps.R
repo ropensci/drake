@@ -268,7 +268,7 @@ tracked <- function(config) {
     },
     jobs = config$jobs_preprocess
   )
-  display_keys(clean_dependency_list(out), config)
+  config$cache$display_keys(clean_dependency_list(out))
 }
 
 clean_dependency_list <- function(x) {

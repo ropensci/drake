@@ -102,6 +102,6 @@ test_with_dir("storage hash of a non-existent path", {
   expect_false(file.exists("asdf"))
   expect_true(is.na(storage_hash("asdf", config = list())))
   expect_true(is.na(rehash_storage("asdf", config = list())))
-  expect_true(is.na(storage_hash(encode_path("asdf"), config = list())))
-  expect_true(is.na(rehash_storage(encode_path("asdf"), config = list())))
+  expect_true(is.na(storage_hash(reencode_path("asdf"), config = list())))
+  expect_true(is.na(rehash_storage(reencode_path("asdf"), config = list())))
 })

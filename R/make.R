@@ -444,7 +444,7 @@ missing_input_files <- function(config) {
     f = is_encoded_path,
     jobs = config$jobs_preprocess
   )
-  files <- decode_path(x = files, config = config)
+  files <- config$cache$decode_path(x = files)
   missing_files <- files[!file_dep_exists(files)]
   if (length(missing_files)) {
     warning(

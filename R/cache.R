@@ -610,7 +610,7 @@ cached <- function(
   if (targets_only) {
     targets <- targets_only(targets, cache, jobs)
   }
-  display_keys(targets)
+  redisplay_keys(targets)
 }
 
 targets_only <- function(targets, cache, jobs) {
@@ -1031,7 +1031,7 @@ drake_cache_log <- function(
   if (targets_only) {
     out <- out[out$type == "target", ]
   }
-  out$name <- display_keys(out$name)
+  out$name <- redisplay_keys(out$name)
   out
 }
 

@@ -17,7 +17,7 @@ process_import <- function(import, config) {
   meta <- drake_meta_(import, config)
   if (meta$isfile) {
     value <- NA_character_
-    path <- decode_path(import, config)
+    path <- config$cache$decode_path(import)
     is_missing <- !file.exists(path) && !is_url(path)
   } else {
     value <- get_import_from_memory(import, config = config)
@@ -26,11 +26,11 @@ process_import <- function(import, config) {
   if (is_missing) {
     config$logger$minor(
       "missing",
-      target = display_key(import, config),
+      target = config$cache$display_keys(import),
       color = "missing"
     )
   } else {
-    config$logger$minor("import", target = display_key(import, config))
+    config$logger$minor("import", target = config$cache$display_keys(import))
   }
   store_single_output(
     target = import,
@@ -45,7 +45,7 @@ get_import_from_memory <- function(target, config) {
     return(NA_character_)
   }
   if (is_encoded_namespaced(target)) {
-    target <- decode_namespaced(target, config)
+    target <- config$cache$decode_namespaced(target)
   }
   if (exists(x = target, envir = config$envir, inherits = FALSE)) {
     return(get(x = target, envir = config$envir, inherits = FALSE))

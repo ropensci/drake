@@ -472,7 +472,7 @@ test_with_dir("GitHub issue 460", {
     targets = "b",
     cache = storr::storr_environment()
   )
-  exp <- c(letters[1:2], encode_namespaced("base::sqrt"))
+  exp <- c(letters[1:2], reencode_namespaced("base::sqrt"))
   expect_true(all(exp %in% igraph::V(config$graph)$name))
   process_targets(config)
 })

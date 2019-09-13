@@ -518,11 +518,11 @@ test_with_dir("tracked() works", {
   config <- dbug()
   x <- sort(tracked(config))
   y <- sort(c(
-    display_keys(encode_path("intermediatefile.rds")),
+    redisplay_keys(reencode_path("intermediatefile.rds")),
     "drake_target_1",
     "yourinput", "nextone",
     "combined", "myinput", "final", "j", "i", "h", "g", "f",
-    "c", "b", "a",  display_keys(encode_path("input.rds"))
+    "c", "b", "a",  redisplay_keys(reencode_path("input.rds"))
   ))
   expect_equal(x, y)
 })

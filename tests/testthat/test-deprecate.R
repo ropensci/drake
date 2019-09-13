@@ -71,7 +71,7 @@ test_with_dir("deprecation: built", {
   expect_warning(built(cache = NULL))
   expect_equal(
     sort(suppressWarnings(built())),
-    sort(display_keys(plan$target))
+    sort(redisplay_keys(plan$target))
   )
   twopiece <- sort(
     c(
@@ -81,7 +81,7 @@ test_with_dir("deprecation: built", {
   )
   expect_equal(
     sort(cached()),
-    sort(display_keys(twopiece))
+    sort(redisplay_keys(twopiece))
   )
   expect_warning(imported(files_only = TRUE))
 })

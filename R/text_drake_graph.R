@@ -126,7 +126,7 @@ render_text_drake_graph <- function(graph_info, nchar = 1L, print = TRUE) {
     X = graph_info$nodes,
     MARGIN = 1,
     FUN = function(node) {
-      id <- display_keys(node["id"])
+      id <- redisplay_keys(node["id"])
       id <- substr(x = id, start = 0L, stop = nchar)
       id <- ifelse(nchar > 0, id, " ")
       if (requireNamespace("crayon", quietly = TRUE)) {

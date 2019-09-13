@@ -380,7 +380,7 @@ assert_output_files <- function(target, meta, config) {
     return()
   }
   files <- unique(as.character(deps$file_out))
-  files <- decode_path(files, config)
+  files <- config$cache$decode_path(files)
   missing_files <- files[!file.exists(files)]
   if (length(missing_files)) {
     msg <- paste0(
