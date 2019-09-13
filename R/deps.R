@@ -109,7 +109,7 @@ get_deps_knitr <- function(target) {
   }
   out <- new_code_analysis_results()
   if (is_encoded_path(target)) {
-    target <- decode_path(target)
+    target <- redecode_path(target)
   }
   analyze_knitr_file(target, out)
   list_code_analysis_results(out)
@@ -118,11 +118,11 @@ get_deps_knitr <- function(target) {
 decode_deps_list <- function(x) {
   for (field in c("file_in", "file_out", "knitr_in")) {
     if (length(x[[field]])) {
-      x[[field]] <- decode_path(x[[field]])
+      x[[field]] <- redecode_path(x[[field]])
     }
   }
   if (length(x$namespaced)) {
-    x$namespaced <- decode_namespaced(x$namespaced)
+    x$namespaced <- redecode_namespaced(x$namespaced)
   }
   x
 }

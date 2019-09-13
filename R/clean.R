@@ -158,7 +158,7 @@ clean_single_target <- function(
     }
   }
   if (garbage_collection && length(files)) {
-    unlink(decode_path(files), recursive = TRUE)
+    unlink(redecode_path(files), recursive = TRUE)
   }
 }
 

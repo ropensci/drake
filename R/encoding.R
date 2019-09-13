@@ -123,8 +123,6 @@ is_encoded_namespaced <- function(x) {
   substr(x = x, start = 1, stop = 2) == "n-"
 }
 
-# Do not call the following functions except in the above internal API.
-
 reencode_path <- function(x) {
   y <- base64url::base32_encode(x = x, use.padding = FALSE)
   sprintf("p-%s", y)
