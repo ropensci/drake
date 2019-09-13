@@ -131,8 +131,6 @@ Suggests:
   usethis,
   visNetwork,
   webshot
-VignetteBuilder: 
-  knitr
 Encoding: UTF-8
 Language: en-US
 Roxygen: list(markdown = TRUE)
