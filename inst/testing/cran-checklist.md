@@ -14,4 +14,4 @@
 - test suite without Suggests packages
 - Update the version in the `DESCRIPTION` and in `NEWS.md`.
 - AppVeyor and Travis on the GitHub release.
-- Win Builder on gz file.
+- Win Builder on gz file release.
