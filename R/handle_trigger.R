@@ -178,7 +178,7 @@ seed_trigger <- function(target, meta, config) {
     field = "seed",
     cache = config$cache
   )
-  !identical(seed, meta$seed)
+  seed!=meta$seed
 }
 
 condition_trigger <- function(target, meta, config) {
