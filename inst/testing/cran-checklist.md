@@ -8,6 +8,7 @@
 - `devtools::run_examples(run = FALSE)`
 - `devtools::run_examples(run = TRUE)`
 - `goodpractice`
+- Regular tests with `tests/testthat/helper-operators.R` activated.
 - HPC test suite on SGE.
 - `tests/scenarios` on Mac, Linux, and Windows
 - regular tests R 3.3.0
