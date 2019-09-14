@@ -1,6 +1,5 @@
 - AppVeyor
 - Travis
-- Win Builder
 - spelling
 - manual tests
   - `tests/testthat/test-interactive.R`
@@ -15,3 +14,4 @@
 - test suite without Suggests packages
 - Update the version in the `DESCRIPTION` and in `NEWS.md`.
 - AppVeyor and Travis on the GitHub release.
+- Win Builder on gz file.
