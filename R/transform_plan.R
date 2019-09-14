@@ -913,7 +913,7 @@ find_old_groupings.map <- function(transform, plan) {
   blocks <- lapply(blocks, function(x) {
     as.list(x[complete_cases(x),, drop = FALSE]) # nolint
   })
-  out <- do.call(c, setNames(blocks, NULL))
+  out <- do.call(c, set_names(blocks, NULL))
   out <- select_nonempty(lapply(out, na_omit))
   min_length <- min(vapply(out, length, FUN.VALUE = integer(1)))
   out <- as.data.frame(
