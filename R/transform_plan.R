@@ -913,7 +913,7 @@ find_old_groupings.map <- function(transform, plan) {
   blocks <- lapply(blocks, function(x) {
     as.list(x[complete_cases(x),, drop = FALSE]) # nolint
   })
-  out <- do.call(c, blocks)
+  out <- do.call(c, setNames(blocks, NULL))
   out <- select_nonempty(lapply(out, na_omit))
   min_length <- min(vapply(out, length, FUN.VALUE = integer(1)))
   out <- as.data.frame(
@@ -927,7 +927,7 @@ column_components <- function(x) {
   adj <- crossprod(!is.na(x)) > 0L
   graph <- igraph::graph_from_adjacency_matrix(adj)
   membership <- sort(igraph::components(graph)$membership)
-  out <- tapply(
+  tapply(
     X = names(membership),
     INDEX = membership,
     function(cols) {
@@ -935,8 +935,6 @@ column_components <- function(x) {
     },
     simplify = FALSE
   )
-  names(out) <- NULL
-  out
 }
 
 find_old_groupings.cross <- function(transform, plan) {
