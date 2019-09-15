@@ -1,5 +1,9 @@
 # Version 7.6.2.9000
 
+## Enhancements
+
+- Coerce seeds to integers in `seed_trigger()` (#1013, @CreRecombinase).
+
 
 # Version 7.6.2
 
