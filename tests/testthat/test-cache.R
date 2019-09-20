@@ -863,3 +863,13 @@ test_with_dir("dir_create()", {
   file.create(x)
   expect_error(dir_create(x), regexp = "cannot create directory")
 })
+
+test_with_dir("which_clean() (#1014)", {
+  plan <- drake_plan(x = 1, y = 2, z = 3)
+  cache <- storr::storr_environment()
+  make(plan, cache = cache, session_info = FALSE, history = FALSE)
+  expect_equal(sort(c("x", "y", "z")), sort(cached(cache = cache)))
+  expect_equal(sort(which_clean(x, y, cache = cache)), sort(c("x", "y")))
+  clean(x, y, cache = cache)       # Invalidates targets x and y.
+  expect_equal(cached(cache = cache), "z")
+})

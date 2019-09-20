@@ -7,16 +7,17 @@
 \usage{
 clean(..., list = character(0), destroy = FALSE, path = NULL,
   search = NULL, cache = drake::drake_cache(path = path),
-  verbose = 1L, jobs = 1, force = FALSE,
+  verbose = NULL, jobs = 1, force = FALSE,
   garbage_collection = FALSE, purge = FALSE)
 }
 \arguments{
-\item{...}{Targets to remove from the cache: as names (symbols) or
-character strings. If the \code{tidyselect} package is installed,
-you can also supply \code{dplyr}-style \code{tidyselect}
-commands such as \code{starts_with()}, \code{ends_with()}, and \code{one_of()}.}
+\item{...}{Deprecated. Do not use.
+Objects to load from the cache, as names (unquoted)
+or character strings (quoted). Similar to \code{...} in
+\code{remove()}.}
 
-\item{list}{Character vector naming targets to be removed from the
+\item{list}{Deprecated. Do not use.
+Character vector naming objects to be loaded from the
 cache. Similar to the \code{list} argument of \code{\link[=remove]{remove()}}.}
 
 \item{destroy}{Logical, whether to totally remove the drake cache.
@@ -58,7 +59,9 @@ Invisibly return \code{NULL}.
 }
 \description{
 Force targets to be out of date and remove target names
-from the data in the cache.
+from the data in the cache. Be careful and run \code{\link[=which_clean]{which_clean()}} before
+\code{\link[=clean]{clean()}}. That way, you know beforehand which targets will be
+compromised.
 }
 \details{
 By default, \code{\link[=clean]{clean()}} invalidates \strong{all} targets,
@@ -108,5 +111,5 @@ make(my_plan, recover = TRUE)
 }
 }
 \seealso{
-\code{\link[=drake_gc]{drake_gc()}}, \code{\link[=make]{make()}}
+\code{\link[=which_clean]{which_clean()}}, \code{\link[=drake_gc]{drake_gc()}}
 }

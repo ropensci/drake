@@ -7,7 +7,7 @@ to throwing \code{storr}-related errors.
 \lifecycle{questioning}}
 \usage{
 rescue_cache(targets = NULL, path = NULL, search = NULL,
-  verbose = 1L, force = FALSE, cache = drake::drake_cache(path =
+  verbose = NULL, force = FALSE, cache = drake::drake_cache(path =
   path), jobs = 1, garbage_collection = FALSE)
 }
 \arguments{

@@ -1,5 +1,9 @@
 # Version 7.6.2.9000
 
+## New features
+
+- Add a new `which_clean()` function to preview which targets will be invalidated by `clean()` (#1014, @pat-s).
+
 ## Enhancements
 
 - Coerce seeds to integers in `seed_trigger()` (#1013, @CreRecombinase).
