@@ -126,6 +126,7 @@ clean <- function(
 #'   invalidate (or remove if `garbage_collection` is `TRUE`).
 #'   It helps you avoid accidentally removing targets you care about.
 #' @export
+#' @seealso [clean()]
 #' @inheritParams cached
 #' @param ... Targets to remove from the cache: as names (symbols) or
 #'   character strings. If the `tidyselect` package is installed,

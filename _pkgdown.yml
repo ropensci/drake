@@ -131,6 +131,7 @@ reference:
 - title: Cache maintenance
   contents:
   - '`clean`'
+  - '`which_clean`'
   - '`drake_gc`'
   - '`rescue_cache`'
 - title: Progress

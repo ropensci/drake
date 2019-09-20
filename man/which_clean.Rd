@@ -41,3 +41,6 @@ cached()          # [1] "z"
 })
 }
 }
+\seealso{
+\code{\link[=clean]{clean()}}
+}
