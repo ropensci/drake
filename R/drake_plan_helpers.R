@@ -1052,7 +1052,9 @@ is_trigger_call <- function(expr) {
 #' \lifecycle{experimental}
 #' @description `code_to_function()` parses individual \*.R/\*.RMD files into
 #'   functions so they can be added into the drake workflow. The returned function
-#'   contains all the code inside the script.
+#'   contains all the code inside the script. When the script is used in drake,
+#'   it will automatically invalidate all downstream functions to ensure everything
+#'   is kept up to date without.
 #'
 #' @export
 #' @inheritSection drake_plan Keywords
@@ -1112,16 +1114,12 @@ code_to_function <- function(path) {
   if (any(grepl(knitr_pattern, lines))) {
     lines <- get_tangled_text(path)
   }
-  source_digest<-digest::digest(lines)
-  lines <- c(
-    "function(...){",
-    lines,
-    "}"
-  )
+
+  lines <- c("function(...){",
+             lines,
+             "list(time = Sys.time(),tempfile = tempfile())",
+             "}")
   text <- paste(lines, sep = "\n")
-
-  eval(safe_parse(text))
-
+  func <- eval(safe_parse(text))
+  func
 }
-
-

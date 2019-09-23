@@ -16,7 +16,9 @@ A function to be input into the drake plan
 \description{
 \code{code_to_function()} parses individual *.R/*.RMD files into
 functions so they can be added into the drake workflow. The returned function
-contains all the code inside the script.
+contains all the code inside the script. When the script is used in drake,
+it will automatically invalidate all downstream functions to ensure everything
+is kept up to date without.
 }
 \section{Keywords}{
 
