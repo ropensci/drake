@@ -1110,7 +1110,7 @@ is_trigger_call <- function(expr) {
 
 code_to_function <- function(path) {
   lines <- readLines(path)
-  knitr_pattern <- "^(### chunk number|<<[^>]*>>=|```\\{r.*\\})"
+  knitr_pattern <- "^(### chunk number|<<[^>]*>>=|```\\{r.*\\})" # nolint
   if (any(grepl(knitr_pattern, lines))) {
     lines <- get_tangled_text(path)
   }
