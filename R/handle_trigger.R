@@ -155,7 +155,7 @@ file_trigger <- function(target, meta, config) {
   }
   file_out <- config$layout[[target]]$deps_build$file_out
   for (file in file_out) {
-    if (!file.exists(decode_path(file, config))) {
+    if (!file.exists(config$cache$decode_path(file))) {
       return(TRUE)
     }
   }
@@ -178,7 +178,7 @@ seed_trigger <- function(target, meta, config) {
     field = "seed",
     cache = config$cache
   )
-  !identical(seed, meta$seed)
+  !identical(as.integer(seed), as.integer(meta$seed))
 }
 
 condition_trigger <- function(target, meta, config) {

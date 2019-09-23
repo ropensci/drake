@@ -89,16 +89,24 @@ weak_tibble <- function(..., .force_df = FALSE) {
   }
 }
 
-safe_is_na <- function(x) {
-  tryCatch(is.na(x), error = error_false, warning = error_false)
-}
-
 error_false <- function(e) {
   FALSE
 }
 
 error_na <- function(e) {
   NA_character_
+}
+
+all_is_na <- function(x) {
+  all(is.na(x))
+}
+
+safe_is_na <- function(x) {
+  tryCatch(is.na(x), error = error_false, warning = error_false)
+}
+
+complete_cases <- function(x) {
+  !as.logical(Reduce(`|`, lapply(x, is.na)))
 }
 
 select_nonempty <- function(x) {
@@ -112,15 +120,6 @@ select_nonempty <- function(x) {
   x[keep]
 }
 
-multiline_message <- function(x) {
-  n <- 30
-  if (length(x) > n) {
-    x <- c(x[1:(n - 1)], "...")
-  }
-  x <- paste0("  ", x)
-  paste(x, collapse = "\n")
-}
-
 longest_match <- function(choices, against) {
   index <- vapply(
     choices,
@@ -130,6 +129,15 @@ longest_match <- function(choices, against) {
   )
   matches <- names(index[!is.na(index)])
   matches[which.max(nchar(matches))]
+}
+
+num_unique <- function(x) {
+  length(unique(x))
+}
+
+set_names <- function(x, nms) {
+  names(x) <- nms
+  x
 }
 
 random_string <- function(exclude) {
@@ -148,8 +156,13 @@ random_tempdir <- function() {
   dir
 }
 
-all_is_na <- function(x) {
-  all(is.na(x))
+multiline_message <- function(x) {
+  n <- 30
+  if (length(x) > n) {
+    x <- c(x[1:(n - 1)], "...")
+  }
+  x <- paste0("  ", x)
+  paste(x, collapse = "\n")
 }
 
 # From lintr

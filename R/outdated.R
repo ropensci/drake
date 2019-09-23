@@ -150,8 +150,8 @@ outdated <-  function(
 }
 
 first_outdated <- function(config) {
-  config$cache$reset_ht_hash()
-  on.exit(config$cache$reset_ht_hash())
+  config$cache$reset_memo_hash()
+  on.exit(config$cache$reset_memo_hash())
   out <- character(0)
   old_leaves <- NULL
   config$graph <- subset_graph(config$graph, all_targets(config))
@@ -221,12 +221,12 @@ missed <- function(config) {
   if (!any(is_missing)) {
     return(character(0))
   }
-  display_keys(imports[is_missing])
+  config$cache$display_keys(imports[is_missing])
 }
 
 missing_import <- function(x, config) {
   if (is_encoded_path(x)) {
-    return(!file_dep_exists(decode_path(x, config)))
+    return(!file_dep_exists(config$cache$decode_path(x)))
   }
   identical(get_import_from_memory(x, config = config), NA_character_)
 }

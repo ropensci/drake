@@ -722,7 +722,7 @@ built <- function(
     },
     jobs = jobs
   )
-  display_keys(out)
+  redisplay_keys(out)
 }
 
 #' @title Search up the file system
@@ -1120,7 +1120,7 @@ imported <- function(
   )
   if (files_only)
     targets <- parallel_filter(targets, f = is_encoded_path, jobs = jobs)
-  display_keys(targets)
+  redisplay_keys(targets)
 }
 
 #' @title Prune the graph

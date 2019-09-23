@@ -1302,10 +1302,14 @@ test_with_dir("trace has correct provenance", {
     ),
     i = target(
       command = list(e_c_b_a_1_3, e_c_b_a_1_3_2),
+      x = "1",
+      y = "3",
       i = "i"
     ),
     j = target(
       command = list(f_c_b_a_1_3, f_c_b_a_1_3_2),
+      x = "1",
+      y = "3",
       j = "j"
     )
   )
@@ -2811,6 +2815,260 @@ test_with_dir("max_expand works on split()", {
       data = data, slices = 10L, index = 10, margin = 1L,
       drop = FALSE
     ))
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("eliminate partial tagalong grouping vars (#1009)", {
+  m <- c(8L, 9L)
+  radars <- c("a", "b")
+  out <- drake_plan(
+    dataEPLRadar = target(
+      command = st_crop(dataEPL, dataRadar),
+      transform = cross(dataRadar, dataEPL, .id = c(radar, month))
+    ),
+    dataEPL = target(
+      command = geplr(month),
+      transform = cross(month = !!m)
+    ),
+    dataESL = target(
+      command = get_ecmwf_single_level_request(month),
+      transform = cross(month = !!m)
+    ),
+    dataESLRadar = target(
+      command = st_crop(dataESL, dataRadar),
+      transform = cross(dataRadar, dataESL, .id = c(radar, month))
+    ),
+    dataRadar = target(
+      command = get_radar_info(radar),
+      transform = map(radar = !!radars)
+    )
+  )
+  exp <- drake_plan(
+    dataEPLRadar_a_8L = st_crop(dataEPL_8L, dataRadar_a),
+    dataEPLRadar_b_8L = st_crop(dataEPL_8L, dataRadar_b),
+    dataEPLRadar_a_9L = st_crop(dataEPL_9L, dataRadar_a),
+    dataEPLRadar_b_9L = st_crop(dataEPL_9L, dataRadar_b),
+    dataEPL_8L = geplr(8L),
+    dataEPL_9L = geplr(9L),
+    dataESL_8L = get_ecmwf_single_level_request(8L),
+    dataESL_9L = get_ecmwf_single_level_request(9L),
+    dataESLRadar_a_8L = st_crop(dataESL_8L, dataRadar_a),
+    dataESLRadar_b_8L = st_crop(dataESL_8L, dataRadar_b),
+    dataESLRadar_a_9L = st_crop(dataESL_9L, dataRadar_a),
+    dataESLRadar_b_9L = st_crop(dataESL_9L, dataRadar_b),
+    dataRadar_a = get_radar_info("a"),
+    dataRadar_b = get_radar_info("b")
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("keep nested grouping vars in combine() (#1008)", {
+  out <- drake_plan(
+    i = target(p, transform = map(p = !!(1:2))),
+    a = target(x * i, transform = cross(i, x = !!(1:2))),
+    b = target(a * y, transform = cross(a, y = !!(1:2), .id = c(p, x))),
+    d = target(c(b), transform = combine(b, .by = c(a))),
+    trace = TRUE
+  )
+  exp <- drake_plan(
+    i_1L = target(
+      command = 1L,
+      p = "1L",
+      i = "i_1L"
+    ),
+    i_2L = target(
+      command = 2L,
+      p = "2L",
+      i = "i_2L"
+    ),
+    a_1L_i_1L = target(
+      command = 1L * i_1L,
+      p = "1L",
+      i = "i_1L",
+      x = "1L",
+      a = "a_1L_i_1L"
+    ),
+    a_2L_i_1L = target(
+      command = 2L * i_1L,
+      p = "1L",
+      i = "i_1L",
+      x = "2L",
+      a = "a_2L_i_1L"
+    ),
+    a_1L_i_2L = target(
+      command = 1L * i_2L,
+      p = "2L",
+      i = "i_2L",
+      x = "1L",
+      a = "a_1L_i_2L"
+    ),
+    a_2L_i_2L = target(
+      command = 2L * i_2L,
+      p = "2L",
+      i = "i_2L",
+      x = "2L",
+      a = "a_2L_i_2L"
+    ),
+    b_1L_1L = target(
+      command = a_1L_i_1L * 1L,
+      p = "1L",
+      i = "i_1L",
+      x = "1L",
+      a = "a_1L_i_1L",
+      y = "1L",
+      b = "b_1L_1L"
+    ),
+    b_1L_1L_2 = target(
+      command = a_1L_i_1L * 2L,
+      p = "1L",
+      i = "i_1L",
+      x = "1L",
+      a = "a_1L_i_1L",
+      y = "2L",
+      b = "b_1L_1L_2"
+    ),
+    b_1L_2L = target(
+      command = a_2L_i_1L * 1L,
+      p = "1L",
+      i = "i_1L",
+      x = "2L",
+      a = "a_2L_i_1L",
+      y = "1L",
+      b = "b_1L_2L"
+    ),
+    b_1L_2L_2 = target(
+      command = a_2L_i_1L * 2L,
+      p = "1L",
+      i = "i_1L",
+      x = "2L",
+      a = "a_2L_i_1L",
+      y = "2L",
+      b = "b_1L_2L_2"
+    ),
+    b_2L_1L = target(
+      command = a_1L_i_2L * 1L,
+      p = "2L",
+      i = "i_2L",
+      x = "1L",
+      a = "a_1L_i_2L",
+      y = "1L",
+      b = "b_2L_1L"
+    ),
+    b_2L_1L_2 = target(
+      command = a_1L_i_2L * 2L,
+      p = "2L",
+      i = "i_2L",
+      x = "1L",
+      a = "a_1L_i_2L",
+      y = "2L",
+      b = "b_2L_1L_2"
+    ),
+    b_2L_2L = target(
+      command = a_2L_i_2L * 1L,
+      p = "2L",
+      i = "i_2L",
+      x = "2L",
+      a = "a_2L_i_2L",
+      y = "1L",
+      b = "b_2L_2L"
+    ),
+    b_2L_2L_2 = target(
+      command = a_2L_i_2L * 2L,
+      p = "2L",
+      i = "i_2L",
+      x = "2L",
+      a = "a_2L_i_2L",
+      y = "2L",
+      b = "b_2L_2L_2"
+    ),
+    d_a_1L_i_1L = target(
+      command = c(b_1L_1L, b_1L_1L_2),
+      p = "1L",
+      i = "i_1L",
+      x = "1L",
+      a = "a_1L_i_1L",
+      d = "d_a_1L_i_1L"
+    ),
+    d_a_1L_i_2L = target(
+      command = c(b_2L_1L, b_2L_1L_2),
+      p = "2L",
+      i = "i_2L",
+      x = "1L",
+      a = "a_1L_i_2L",
+      d = "d_a_1L_i_2L"
+    ),
+    d_a_2L_i_1L = target(
+      command = c(b_1L_2L, b_1L_2L_2),
+      p = "1L",
+      i = "i_1L",
+      x = "2L",
+      a = "a_2L_i_1L",
+      d = "d_a_2L_i_1L"
+    ),
+    d_a_2L_i_2L = target(
+      command = c(b_2L_2L, b_2L_2L_2),
+      p = "2L",
+      i = "i_2L",
+      x = "2L",
+      a = "a_2L_i_2L",
+      d = "d_a_2L_i_2L"
+    )
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("NAs removed from old grouping vars grid (#1010)", {
+  cvo <- c("a3", "7")
+  out <- drake_plan(
+    data = target(
+      command = crossValOmit(radar, crossValOmission),
+      transform = cross(
+        radar = !!"dd",
+        crossValOmission = !!cvo,
+        .id = c(radar, crossValOmission)
+      )
+    ),
+    br = target(
+      command = annotate_model(data),
+      transform = combine(data, .by = data)
+    ),
+    b = target(
+      command = list(crossValId, data),
+      transform = cross(
+        data,
+        crossValId = !!1,
+        .id = c(radar, crossValOmission, crossValId)
+      )
+    ),
+    a = target(
+      command = list(b),
+      transform = combine(b, .by = data)
+    ),
+    dataTrainList = target(
+      command = list2(a, data),
+      transform = map(a, data, .id = c(crossValOmission, radar)
+      )
+    ),
+    dataTestList = target(
+      command = list(a, data),
+      transform = map(a, data, .id = c(crossValOmission, radar)
+      )
+    )
+  )
+  exp <- drake_plan(
+    data_dd_a3 = crossValOmit("dd", "a3"),
+    data_dd_7 = crossValOmit("dd", "7"),
+    br_data_dd_7 = annotate_model(data_dd_7),
+    br_data_dd_a3 = annotate_model(data_dd_a3),
+    b_dd_a3_1 = list(1, data_dd_a3),
+    b_dd_7_1 = list(1, data_dd_7),
+    a_data_dd_7 = list(b_dd_7_1),
+    a_data_dd_a3 = list(b_dd_a3_1),
+    dataTrainList_7_dd = list2(a_data_dd_7, data_dd_7),
+    dataTrainList_a3_dd = list2(a_data_dd_a3, data_dd_a3),
+    dataTestList_7_dd = list(a_data_dd_7, data_dd_7),
+    dataTestList_a3_dd = list(a_data_dd_a3, data_dd_a3)
   )
   equivalent_plans(out, exp)
 })

@@ -278,20 +278,20 @@ test_with_dir("cache functions work from various working directories", {
     # targets and imports
     imports <- sort(
       c(
-        encode_path("input.rds"),
+        config$cache$encode_path("input.rds"),
         "a", "b", "c", "f", "g",
         "h", "i", "j"
       )
     )
     builds <- sort(config$plan$target)
-    out_files <- encode_path("intermediatefile.rds")
+    out_files <- config$cache$encode_path("intermediatefile.rds")
     all <- sort(c(builds, imports, out_files))
 
     # build_times
     x <- config$cache
     bt <- build_times()
     expect_equal(
-      sort(display_keys(x$list(namespace = "meta"))),
+      sort(redisplay_keys(x$list(namespace = "meta"))),
       sort(cached(targets_only = FALSE))
     )
     expect_equal(
@@ -862,4 +862,14 @@ test_with_dir("dir_create()", {
   x <- tempfile()
   file.create(x)
   expect_error(dir_create(x), regexp = "cannot create directory")
+})
+
+test_with_dir("which_clean() (#1014)", {
+  plan <- drake_plan(x = 1, y = 2, z = 3)
+  cache <- storr::storr_environment()
+  make(plan, cache = cache, session_info = FALSE, history = FALSE)
+  expect_equal(sort(c("x", "y", "z")), sort(cached(cache = cache)))
+  expect_equal(sort(which_clean(x, y, cache = cache)), sort(c("x", "y")))
+  clean(x, y, cache = cache)       # Invalidates targets x and y.
+  expect_equal(cached(cache = cache), "z")
 })

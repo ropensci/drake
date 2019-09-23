@@ -448,7 +448,7 @@ cluster_status <- function(statuses) {
 
 configure_nodes <- function(config) {
   rownames(config$nodes) <- config$nodes$id
-  config$nodes$label <- display_keys(config$nodes$label, config)
+  config$nodes$label <- config$cache$display_keys(config$nodes$label)
   config$nodes <- categorize_nodes(config = config)
   config$nodes <- style_nodes(config = config)
   config$nodes <- resolve_levels(config = config)
@@ -573,7 +573,7 @@ hover_text <- function(config) {
 }
 
 file_hover_text <- Vectorize(function(encoded_file, targets, config) {
-  decoded_file <- decode_path(encoded_file, config)
+  decoded_file <- config$cache$decode_path(encoded_file)
   if (encoded_file %in% targets || !file.exists(decoded_file)) {
     return(encoded_file)
   }

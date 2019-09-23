@@ -20,7 +20,7 @@ drake_meta_ <- function(target, config) {
   }
   # For imported files.
   if (meta$isfile) {
-    path <- decode_path(target, config)
+    path <- config$cache$decode_path(target)
     meta$mtime <- storage_mtime(path)
     meta$size <- storage_size(path)
   }
@@ -65,8 +65,7 @@ dependency_hash <- function(target, config) {
   deps <- as.character(deps)
   deps <- unique(deps)
   deps <- sort(deps)
-  out <- ht_memo(
-    ht = config$cache$ht_hash,
+  out <- config$cache$memo_hash(
     x = deps,
     fun = self_hash,
     config = config
@@ -101,8 +100,7 @@ input_file_hash <- function(
   if (!length(files)) {
     return("")
   }
-  out <- ht_memo(
-    ht = config$cache$ht_hash,
+  out <- config$cache$memo_hash(
     x = files,
     fun = storage_hash,
     config = config,
@@ -149,7 +147,7 @@ storage_hash <- function(
   if (!is_encoded_path(target)) {
     return(NA_character_)
   }
-  file <- decode_path(target, config)
+  file <- config$cache$decode_path(target)
   if (is_url(file)) {
     return(rehash_storage(target = target, file = file, config = config))
   }
@@ -245,7 +243,7 @@ rehash_storage <- function(target, file = NULL, config) {
     return(NA_character_)
   }
   if (is.null(file)) {
-    file <- decode_path(target, config)
+    file <- config$cache$decode_path(target)
   }
   if (is_url(file)) {
     return(rehash_url(url = file, config = config))

@@ -752,22 +752,6 @@ get_previous_seed <- function(cache) {
   }
 }
 
-ht_progress <- function(hash_algorithm) {
-  keys <- c("running", "done", "failed")
-  out <- lapply(keys, progress_hash, hash_algorithm = hash_algorithm)
-  names(out) <- keys
-  out
-}
-
-progress_hash <- function(key, hash_algorithm) {
-  out <- digest::digest(
-    key,
-    algo = hash_algorithm,
-    serialize = FALSE
-  )
-  gsub("^.", substr(key, 1, 1), out)
-}
-
 initialize_history <- function(history, cache) {
   migrate_history(history, cache)
   if (identical(history, TRUE)) {

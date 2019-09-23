@@ -1,7 +1,9 @@
 #' @title Invalidate and deregister targets.
 #' \lifecycle{maturing}
 #' @description Force targets to be out of date and remove target names
-#'   from the data in the cache.
+#'   from the data in the cache. Be careful and run [which_clean()] before
+#'   [clean()]. That way, you know beforehand which targets will be
+#'   compromised.
 #' @details By default, [clean()] invalidates **all** targets,
 #'   so be careful. [clean()] always:
 #'
@@ -17,33 +19,21 @@
 #' [file_out()] files from any targets you are currently cleaning,
 #' run `clean(garbage_collection = TRUE)`.
 #' Garbage collection is slow, but it reduces the storage burden of the cache.
-#' @seealso [drake_gc()], [make()]
+#' @seealso [which_clean()], [drake_gc()]
 #' @export
 #' @return Invisibly return `NULL`.
-#'
 #' @inheritParams cached
-#'
-#' @param ... Targets to remove from the cache: as names (symbols) or
-#'   character strings. If the `tidyselect` package is installed,
-#'   you can also supply `dplyr`-style `tidyselect`
-#'   commands such as `starts_with()`, `ends_with()`, and `one_of()`.
-#'
-#' @param list Character vector naming targets to be removed from the
-#'   cache. Similar to the `list` argument of [remove()].
-#'
+#' @inheritParams which_clean
 #' @param destroy Logical, whether to totally remove the drake cache.
 #'   If `destroy` is `FALSE`, only the targets
 #'   from `make()`
 #'   are removed. If `TRUE`, the whole cache is removed, including
 #'   session metadata, etc.
-#'
 #' @param jobs Number of jobs for light parallelism
 #'   (disabled on Windows).
-#'
 #' @param force Logical, whether to try to clean the cache
 #'   even though the project may not be back compatible with the
 #'   current version of drake.
-#'
 #' @param garbage_collection Logical, whether to call
 #'   `cache$gc()` to do garbage collection.
 #'   If `TRUE`, cached data with no remaining references
@@ -51,10 +41,8 @@
 #'   This will slow down `clean()`, but the cache
 #'   could take up far less space afterwards.
 #'   See the `gc()` method for `storr` caches.
-#'
 #' @param purge Logical, whether to remove objects from
 #'   metadata namespaces such as "meta", "build_times", and "errors".
-#'
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {
@@ -90,7 +78,7 @@ clean <- function(
   path = NULL,
   search = NULL,
   cache = drake::drake_cache(path = path),
-  verbose = 1L,
+  verbose = NULL,
   jobs = 1,
   force = FALSE,
   garbage_collection = FALSE,
@@ -98,30 +86,20 @@ clean <- function(
 ) {
   deprecate_force(force)
   deprecate_search(search)
+  deprecate_verbose(verbose)
   if (is.null(cache)) {
     return(invisible())
   }
   cache <- decorate_storr(cache)
-  targets <- c(as.character(match.call(expand.dots = FALSE)$...), list)
-  if (requireNamespace("tidyselect", quietly = TRUE)) {
-    targets <- drake_tidyselect_cache(
-      ...,
-      list = list,
-      cache = cache,
-      namespaces = target_namespaces_()
-    )
-  }
   if (garbage_collection && abort_gc(cache$path)) {
     return(invisible()) # tested manually in test-always-skipped.R # nocov
-  }
-  if (!length(targets) && is.null(c(...))) {
-    targets <- cache$list()
   }
   if (purge) {
     namespaces <- target_namespaces_(default = cache$default_namespace)
   } else {
     namespaces <- cleaned_namespaces_(default = cache$default_namespace)
   }
+  targets <- which_clean(..., list = list, cache = cache)
   lightly_parallelize(
     X = targets,
     FUN = clean_single_target,
@@ -141,6 +119,53 @@ clean <- function(
   invisible()
 }
 
+#' @title Which targets will `clean()` invalidate?
+#' \lifecycle{maturing}
+#' @description `which_clean()` is a safety check for `clean()`.
+#'   It shows you the targets that `clean()` will
+#'   invalidate (or remove if `garbage_collection` is `TRUE`).
+#'   It helps you avoid accidentally removing targets you care about.
+#' @export
+#' @seealso [clean()]
+#' @inheritParams cached
+#' @param ... Targets to remove from the cache: as names (symbols) or
+#'   character strings. If the `tidyselect` package is installed,
+#'   you can also supply `dplyr`-style `tidyselect`
+#'   commands such as `starts_with()`, `ends_with()`, and `one_of()`.
+#' @param list Character vector naming targets to be removed from the
+#'   cache. Similar to the `list` argument of [remove()].
+#' @examples
+#' \dontrun{
+#' isolate_example("Quarantine side effects.", {
+#' plan <- drake_plan(x = 1, y = 2, z = 3)
+#' make(plan)
+#' cached()
+#' which_clean(x, y) # [1] "x" "y"
+#' clean(x, y)       # Invalidates targets x and y.
+#' cached()          # [1] "z"
+#' })
+#' }
+which_clean <- function(
+  ...,
+  list = character(0),
+  path = NULL,
+  cache = drake::drake_cache(path = path)
+) {
+  targets <- c(as.character(match.call(expand.dots = FALSE)$...), list)
+  if (requireNamespace("tidyselect", quietly = TRUE)) {
+    targets <- drake_tidyselect_cache(
+      ...,
+      list = list,
+      cache = cache,
+      namespaces = target_namespaces_()
+    )
+  }
+  if (!length(targets) && is.null(c(...))) {
+    targets <- cache$list()
+  }
+  targets
+}
+
 clean_single_target <- function(
   target,
   cache,
@@ -158,7 +183,7 @@ clean_single_target <- function(
     }
   }
   if (garbage_collection && length(files)) {
-    unlink(decode_path(files), recursive = TRUE)
+    unlink(redecode_path(files), recursive = TRUE)
   }
 }
 
@@ -257,11 +282,12 @@ abort_gc <- function(path) {
 drake_gc <- function(
   path = NULL,
   search = NULL,
-  verbose = 1L,
+  verbose = NULL,
   cache = drake::drake_cache(path = path),
   force = FALSE
 ) {
   deprecate_search(search)
+  deprecate_verbose(verbose)
   if (!is.null(cache)) {
     cache <- decorate_storr(cache)
     cache$gc()
@@ -327,7 +353,7 @@ rescue_cache <- function(
   targets = NULL,
   path = NULL,
   search = NULL,
-  verbose = 1L,
+  verbose = NULL,
   force = FALSE,
   cache = drake::drake_cache(path = path),
   jobs = 1,
@@ -335,6 +361,7 @@ rescue_cache <- function(
 ) {
   deprecate_search(search)
   deprecate_force(force)
+  deprecate_verbose(verbose)
   if (is.null(cache)) {
     return(invisible())
   }

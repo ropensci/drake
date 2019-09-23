@@ -1,6 +1,117 @@
 drake_context("decorated storr")
 
-test_with_dir("run through decorated storr methods", {
+test_with_dir("encoding empty keys", {
+  x <- character(0)
+  expect_equal(reencode_path(x), x)
+  expect_equal(redecode_path(x), x)
+  expect_equal(reencode_namespaced(x), x)
+  expect_equal(redecode_namespaced(x), x)
+})
+
+test_with_dir("empty keys with decorated storr", {
+  cache <- new_cache()
+  x <- character(0)
+  expect_equal(cache$encode_path(x), x)
+  expect_equal(cache$decode_path(x), x)
+  expect_equal(cache$encode_namespaced(x), x)
+  expect_equal(cache$decode_namespaced(x), x)
+})
+
+test_with_dir("key encoding for paths and namespaced functions", {
+  x <- c("myfunny:::variablename", "relative/path\na\\m//e")
+  expect_false(all(is_encoded_path(x)))
+  expect_false(all(is_encoded_namespaced(x)))
+
+  y <- reencode_path(x)
+  z <- reencode_namespaced(x)
+  expect_false(any(y == z))
+
+  expect_true(all(is_encoded_path(y)))
+  expect_false(all(is_encoded_path(z)))
+
+  expect_false(all(is_encoded_namespaced(y)))
+  expect_true(all(is_encoded_namespaced(z)))
+
+  expect_equal(redecode_path(y), x)
+  expect_equal(redecode_namespaced(z), x)
+
+  expect_true(all(file.create(y)))
+  expect_true(all(file.create(z)))
+})
+
+test_with_dir("deco storr: key encoding for paths and namespaced fns", {
+  cache <- new_cache()
+
+  x <- c("myfunny:::variablename", "relative/path\na\\m//e")
+  expect_false(all(is_encoded_path(x)))
+  expect_false(all(is_encoded_namespaced(x)))
+
+  y <- cache$encode_path(x)
+  z <- cache$encode_namespaced(x)
+  expect_false(any(y == z))
+
+  expect_true(all(is_encoded_path(y)))
+  expect_false(all(is_encoded_path(z)))
+
+  expect_false(all(is_encoded_namespaced(y)))
+  expect_true(all(is_encoded_namespaced(z)))
+
+  expect_equal(cache$decode_path(y), x)
+  expect_equal(cache$decode_namespaced(z), x)
+
+  expect_true(all(file.create(y)))
+  expect_true(all(file.create(z)))
+})
+
+
+test_with_dir("memoization encoding in decorated storr", {
+  cache <- new_cache()
+  x <- c("myfunny:::variablename", "relative/path\na\\m//e")
+  expect_false(all(is_encoded_path(x)))
+  expect_false(all(is_encoded_namespaced(x)))
+  for (i in 1:3) {
+    y <- cache$encode_path(x)
+    z <- cache$encode_namespaced(x)
+    expect_false(any(y == z))
+
+    expect_true(all(is_encoded_path(y)))
+    expect_false(all(is_encoded_path(z)))
+
+    expect_false(all(is_encoded_namespaced(y)))
+    expect_true(all(is_encoded_namespaced(z)))
+
+    expect_equal(cache$decode_path(y), x)
+    expect_equal(cache$decode_namespaced(z), x)
+
+    expect_true(all(file.create(y)))
+    expect_true(all(file.create(z)))
+  }
+  expect_equal(cache$decode_path("p-GEZDG"), "123")
+  expect_equal(cache$decode_namespaced("n-GEZDG"), "123")
+})
+
+test_with_dir("redisplay keys", {
+  expect_true(grepl("url", redisplay_keys(reencode_path("https://url"))))
+  expect_true(grepl("file", redisplay_keys(reencode_path("123"))))
+  expect_true(grepl("::", redisplay_keys(reencode_namespaced("pkg::fn"))))
+})
+
+test_with_dir("decorated storr: redisplay paths", {
+  cache <- new_cache()
+  cache$encode_path("https://url")
+  expect_true(grepl("url", cache$display_keys(reencode_path("https://url"))))
+  cache$encode_path("123")
+  expect_true(grepl("file", cache$display_keys(reencode_path("123"))))
+  cache$encode_namespaced("pkg::fn")
+  expect_equal(cache$display_keys(reencode_namespaced("pkg::fn")), "pkg::fn")
+})
+
+test_with_dir("file_store quotes properly", {
+  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  expect_equal(file_store("x"), reencode_path("x"))
+})
+
+test_with_dir("run through non-encoder decorated storr methods", {
   x <- drake_config(drake_plan(x = 1))$cache
   x$archive_export(tempfile())
   x$archive_import(tempfile())

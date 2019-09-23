@@ -1,4 +1,15 @@
-# Version 7.6.1.9000
+# Version 7.6.2.9000
+
+## New features
+
+- Add a new `which_clean()` function to preview which targets will be invalidated by `clean()` (#1014, @pat-s).
+
+## Enhancements
+
+- Coerce seeds to integers in `seed_trigger()` (#1013, @CreRecombinase).
+
+
+# Version 7.6.2
 
 ## Bug fixes
 
@@ -8,6 +19,8 @@
 - Force fst-formatted targets to plain data frames. Same goes for the new "fst_dt" format.
 - Change the meaning and behavior of `max_expand` in `drake_plan()`. `max_expand` is now the maximum number of targets produced by `map()`, `split()`, and `cross()`. For `cross()`, this reduces the number of targets (less cumbersome) and makes the subsample of targets more representative of the complete grid. It also. ensures consistent target naming when `.id` is `FALSE` (#1002). Note: `max_expand` is not for production workflows anyway, so this change does not break anything important. Unfortunately, we do lose the speed boost in `drake_plan()` originally due to `max_expand`, but `drake_plan()` is still fast, so that is not so bad.
 - Drop specialized formats of `NULL` targets (#998).
+- Prevent false grouping variables from partially tagging along in `cross()` (#1009). The same fix should apply to `map()` and `split()` too.
+- Respect graph topology when recovering old grouping variables for `map()` (#1010).
 
 ## New features
 
@@ -23,6 +36,8 @@
 - Remove the now-superfluous vignette.
 - Wrap up console and text file logging functionality into a reference class (#964).
 - Deprecate the `verbose` argument in various caching functions. The location of the cache is now only printed in `make()`. This made the previous feature easier to implement.
+- Carry forward nested grouping variables in `combine()` (#1008).
+- Improve the encapsulation of hash tables in the decorated `storr` (#968).
 
 
 # Version 7.6.1

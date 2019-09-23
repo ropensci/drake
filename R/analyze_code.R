@@ -83,14 +83,14 @@ analyze_knitr_in <- function(expr, results) {
   expr <- ignore_ignore(expr)
   files <- analyze_strings(expr[-1])
   lapply(files, analyze_knitr_file, results = results)
-  ht_set(results$knitr_in, encode_path(files))
+  ht_set(results$knitr_in, reencode_path(files))
 }
 
 analyze_file_in <- function(expr, results) {
   expr <- ignore_ignore(expr)
   x <- analyze_strings(expr[-1])
   x <- file.path(x)
-  x <- encode_path(x)
+  x <- reencode_path(x)
   ht_set(results$file_in, x)
 }
 
@@ -98,7 +98,7 @@ analyze_file_out <- function(expr, results) {
   expr <- ignore_ignore(expr)
   x <- analyze_strings(expr[-1])
   x <- file.path(x)
-  x <- encode_path(x)
+  x <- reencode_path(x)
   ht_set(results$file_out, x)
 }
 
@@ -118,7 +118,7 @@ analyze_knitr_file <- function(file, results) {
 analyze_namespaced <- function(expr, results, locals, allowed_globals) {
   x <- safe_deparse(expr)
   if (!ht_exists(locals, x)) {
-    ht_set(results$namespaced, encode_namespaced(x))
+    ht_set(results$namespaced, reencode_namespaced(x))
   }
 }
 
