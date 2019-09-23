@@ -3,6 +3,7 @@
 ## New features
 
 - Add a new `which_clean()` function to preview which targets will be invalidated by `clean()` (#1014, @pat-s).
+- Add new function `code_to_function()` to allow for parsing script based workflows into functions so `drake_plan()` can begin to manage the workflow and track dependencies. (#994, @thebioengineer)
 
 ## Enhancements
 
@@ -27,7 +28,6 @@
 - Add a new "fst_dt" format for `fst`-powered saving of `data.table` objects.
 - Support a custom "caching" column of the plan to select master vs worker caching for each target individually (#988).
 - Make `transform` a formal argument of `target()` so that users do not have to type "transform =" all the time in `drake_plan()` (#993).
-- Add new function `code_to_function()` to allow for parsing script based workflows into functions so `drake_plan()` can begin to manage the workflow and track dependencies. 
 - Migrate the documentation website from `ropensci.github.io/drake` to `docs.ropensci.org/drake`.
 
 ## Enhancements
