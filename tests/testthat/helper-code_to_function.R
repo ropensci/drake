@@ -4,57 +4,54 @@ setup_scripts <- function() {
   script3 <- tempfile()
 
   tempDir <- normalizePath(tempdir(), winslash = "/")
-  writeLines(c("data <- mtcars",
-               "data$newcol <- 1",
-               paste0("saveRDS(data, \"",
-                      file.path(tempDir, "testobject.rds"), "\")")),
-             script1)
-  writeLines(c(paste0("data <- readRDS(\"",
-                      file.path(tempDir, "testobject.rds"), "\")"),
-               "data$newcol2 <- 2",
-               paste0("saveRDS(data, \"",
-                      file.path(tempDir, "testobject2.rds"), "\")")),
-             script2)
-  writeLines(c(paste0("data <- readRDS(\"",
-                      file.path(tempDir, "testobject2.rds"), "\")"),
-               "plot(data$newcol,data$newcol2)"),
-             script3)
+  writeLines(c(
+    "data <- mtcars",
+    "data$newcol <- 1",
+    paste0("saveRDS(data, \"", file.path(tempDir, "testobject.rds"), "\")")),
+    script1)
+  writeLines(c(
+    paste0("data <- readRDS(\"", file.path(tempDir, "testobject.rds"), "\")"),
+    "data$newcol2 <- 2",
+    paste0("saveRDS(data, \"", file.path(tempDir, "testobject2.rds"), "\")")),
+    script2)
+  writeLines(c(
+    paste0("data <- readRDS(\"", file.path(tempDir, "testobject2.rds"), "\")"),
+    "plot(data$newcol,data$newcol2)"),
+    script3)
 
-  return(list(script1 = script1,
-              script2 = script2,
-              script3 = script3,
-              tempDir = tempDir))
+  return(list(
+    script1 = script1,
+    script2 = script2,
+    script3 = script3,
+    tempDir = tempDir))
 }
 
 update_script2_trivial <- function(script, tempDir) {
-  writeLines(c(paste0("data <- readRDS(\"",
-                      file.path(tempDir, "testobject.rds"), "\")"),
-               "# trivial changes",
-               "data$newcol2 <- 2",
-               paste0("saveRDS(data, \"",
-                      file.path(tempDir, "testobject2.rds"), "\")")),
-             script)
+  writeLines(c(
+    paste0("data <- readRDS(\"", file.path(tempDir, "testobject.rds"), "\")"),
+    "# trivial changes",
+    "data$newcol2 <- 2",
+    paste0("saveRDS(data, \"", file.path(tempDir, "testobject2.rds"), "\")")),
+    script)
   code_to_function(script)
 }
 
 update_script2_non_trivial <- function(script, tempDir) {
-  writeLines(c(paste0("data <- readRDS(\"",
-                      file.path(tempDir, "testobject.rds"), "\")"),
-               "data$newcol2 <- 3",
-               paste0("saveRDS(data, \"",
-                      file.path(tempDir, "testobject2.rds"), "\")")),
-             script)
+  writeLines(c(
+    paste0("data <- readRDS(\"", file.path(tempDir, "testobject.rds"), "\")"),
+    "data$newcol2 <- 3",
+    paste0("saveRDS(data, \"", file.path(tempDir, "testobject2.rds"), "\")")),
+    script)
   code_to_function(script)
 }
 
 update_script2_same_output <- function(script, tempDir) {
-  writeLines(c(paste0("data <- readRDS(\"",
-                      file.path(tempDir, "testobject.rds"), "\")"),
-               "data$newcol2 <- 4",
-               "data$newcol2 <- 3",
-               paste0("saveRDS(data, \"",
-                      file.path(tempDir, "testobject2.rds"), "\")")),
-             script)
+  writeLines(c(
+    paste0("data <- readRDS(\"", file.path(tempDir, "testobject.rds"), "\")"),
+    "data$newcol2 <- 4",
+    "data$newcol2 <- 3",
+    paste0("saveRDS(data, \"", file.path(tempDir, "testobject2.rds"), "\")")),
+    script)
   code_to_function(script)
 }
 
@@ -94,24 +91,24 @@ setup_rmd <- function() {
     "```"),
     rmd1)
   writeLines(c(
-      "---",
-      "title: \"Test RMD 2\"",
-      "author: \"Unknown\"",
-      "output: html_document",
-      "---",
-      "This is a test rmd to load a priorly edited `mtcars` dataset.",
-      "```{r load_data}",
-      paste0("data <- readRDS(\"", file.path(tempDir, "testobject.rds"), "\")"),
-      "```",
-      "We will now add a new column!",
-      "```{r manipulate}",
-      "data$newcol2 <- 2",
-      "```",
-      "Now, we will save it!",
-      "```{r save_data}",
-      paste0("saveRDS(data, \"", file.path(tempDir, "testobject2.rds"), "\")"),
-      "```"),
-      rmd2)
+    "---",
+    "title: \"Test RMD 2\"",
+    "author: \"Unknown\"",
+    "output: html_document",
+    "---",
+    "This is a test rmd to load a priorly edited `mtcars` dataset.",
+    "```{r load_data}",
+    paste0("data <- readRDS(\"", file.path(tempDir, "testobject.rds"), "\")"),
+    "```",
+    "We will now add a new column!",
+    "```{r manipulate}",
+    "data$newcol2 <- 2",
+    "```",
+    "Now, we will save it!",
+    "```{r save_data}",
+    paste0("saveRDS(data, \"", file.path(tempDir, "testobject2.rds"), "\")"),
+    "```"),
+    rmd2)
   writeLines(c(
     "---",
     "title: \"Test RMD 3\"",
@@ -128,10 +125,11 @@ setup_rmd <- function() {
     "```"),
     rmd3)
 
-  return(list(rmd1 = rmd1,
-              rmd2 = rmd2,
-              rmd3 = rmd3,
-              tempDir = tempDir))
+  return(list(
+    rmd1 = rmd1,
+    rmd2 = rmd2,
+    rmd3 = rmd3,
+    tempDir = tempDir))
 }
 
 update_rmd2_trivial <- function(rmd, tempDir) {

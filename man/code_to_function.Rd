@@ -2,7 +2,7 @@
 % Please edit documentation in R/drake_plan_helpers.R
 \name{code_to_function}
 \alias{code_to_function}
-\title{Declare existing scripts to be run
+\title{Turn a script into a function.
 \lifecycle{experimental}}
 \usage{
 code_to_function(path)
@@ -14,62 +14,54 @@ code_to_function(path)
 A function to be input into the drake plan
 }
 \description{
-\code{code_to_function()} parses individual *.R/*.RMD files into
-functions so they can be added into the drake workflow. The returned function
-contains all the code inside the script. When the script is used in drake,
-it will automatically invalidate all downstream functions to ensure everything
-is kept up to date without.
+\code{code_to_function()}is a quick (and very dirty) way to
+retrofit \code{drake} to an existing script-based project. It parses individual
+*.R/*.RMD files into functions so they can be added into the drake
+workflow.
 }
-\section{Keywords}{
-
-\code{\link[=drake_plan]{drake_plan()}} understands special keyword functions for your commands.
-With the exception of \code{\link[=target]{target()}}, each one is a proper function
-with its own help file.
-\itemize{
-\item \code{\link[=target]{target()}}: give the target more than just a command.
-Using \code{\link[=target]{target()}}, you can apply a transformation
-(examples: \url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}), # nolint
-supply a trigger (\url{https://ropenscilabs.github.io/drake-manual/triggers.html}), # nolint
-or set any number of custom columns.
-\item \code{\link[=map]{map()}}: create multiple targets. Called inside \code{\link[=target]{target()}}.
-\item \code{\link[=split]{split()}}: create a target for each subset of data.
-Called inside \code{\link[=target]{target()}}.
-\item \code{\link[=cross]{cross()}}: create a target for each combination of values.
-Called inside \code{\link[=target]{target()}}.
-\item \code{\link[=combine]{combine()}}: aggregate groups of targets into other targets.
-Called inside \code{\link[=target]{target()}}.
-\item \code{\link[=file_in]{file_in()}}: declare an input file dependency.
-\item \code{\link[=file_out]{file_out()}}: declare an output file to be produced
-when the target is built.
-\item \code{\link[=knitr_in]{knitr_in()}}: declare a \code{knitr} file dependency such as an
-R Markdown (\code{*.Rmd}) or R LaTeX (\code{*.Rnw}) file.
-\item \code{\link[=ignore]{ignore()}}: force \code{drake} to entirely ignore a piece of code:
-do not track it for changes and do not analyze it for dependencies.
-\item \code{\link[=no_deps]{no_deps()}}: tell \code{drake} to not track the dependencies
-of a piece of code. \code{drake} still tracks the code itself for changes.
-\item \code{\link[=drake_envir]{drake_envir()}}: get the environment where drake builds targets.
-Intended for advanced custom memory management.
+\details{
+Most data science workflows consist of imperative scripts.
+\code{drake}, on the other hand, assumes you write \emph{functions}.
+\code{code_to_function()} allows for pre-exising workflows to incorporate
+drake as a workflow management tool seamlessly for cases where re-factoring
+is unfeasible. So drake can monitor dependencies, the targets are passed
+as arguments of the dependent functions.
 }
-}
-
 \examples{
 \dontrun{
 isolate_example("contain side effects", {
-# The `code_to_function()` function creates a function that makes it available for drake to
-# process as part of the workflow.
-# The main purpose is to allow pre-exising workflows to
-# incorporate drake into the workflow seamlessly for cases where re-factoring is unfeasible.
-# So drake can monitor dependencies, the targets are passed as arguments of the dependent functions.
+# The `code_to_function()` function creates a function that makes it
+# available for drake to process as part of the workflow.
+# The main purpose is to allow pre-exising workflows to incorporate drake
+# into the workflow seamlessly for cases where re-factoring is unfeasible.
 #
 
 script1 <- tempfile()
 script2 <- tempfile()
 script3 <- tempfile()
 script4 <- tempfile()
-writeLines(c("data <- mtcars", "munge(data)"), script1)
-writeLines("analyze(munged)", script2)
-writeLines("summarize_results(analysis)", script3)
-writeLines("plot_results(analysis)", script4)
+
+writeLines(c(
+  "data <- mtcars",
+  "data$make <- do.call('c',lapply(strsplit(rownames(data),split=\\" \\"),`[`,1))",
+  "saveRDS(data,\\"mtcars_alt.RDS\\")"),
+  script1)
+writeLines(c(
+  "data<-readRDS(\\"mtcars_alt.RDS\\")",
+  "mtcars_lm<-lm(mpg~cyl+disp+vs+gear+make,data=data)",
+  "saveRDS(mtcars_lm,\\"mtcars_lm.RDS\\")"),
+  script2)
+writeLines(c(
+  "mtcars_lm<-readRDS(\\"mtcars_lm.RDS\\")",
+  "summary(mtcars_lm)"),
+  script3)
+writeLines(c(
+  "data<-readRDS(\\"mtcars_alt.RDS\\")",
+  "gg <- ggplot2::ggplot(data)+",
+  "ggplot2::geom_point(ggplot2::aes(",
+  "x=disp,y=mpg,shape=vs,color=make))",
+  "saveRDS(gg,\\"mtcars_plot.RDS\\")"),
+  script4)
 
 
 do_munge<-code_to_function(script1)
@@ -81,7 +73,7 @@ plan <- drake_plan(
   munged   = do_munge(),
   analysis = do_analysis(munged),
   summary  = do_summarize(analysis),
-  plot     = do_viz(analysis)
+  plot     = do_viz(munged)
  )
 
 plan
@@ -99,5 +91,6 @@ if (requireNamespace("visNetwork", quietly = TRUE)) {
 }
 }
 \seealso{
-\code{\link[=file_in]{file_in()}}, \code{\link[=file_out]{file_out()}}, \code{\link[=knitr_in]{knitr_in()}}, \code{\link[=ignore]{ignore()}}, \code{\link[=no_deps]{no_deps()}}
+\code{\link[=file_in]{file_in()}}, \code{\link[=file_out]{file_out()}}, \code{\link[=knitr_in]{knitr_in()}}, \code{\link[=ignore]{ignore()}}, \code{\link[=no_deps]{no_deps()}},
+\code{\link[=code_to_plan]{code_to_plan()}}, \code{\link[=plan_to_code]{plan_to_code()}}, \code{\link[=plan_to_notebook]{plan_to_notebook()}}
 }

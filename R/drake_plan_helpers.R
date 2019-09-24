@@ -1048,38 +1048,61 @@ is_trigger_call <- function(expr) {
   )
 }
 
-#' @title Declare existing scripts to be run
+#' @title Turn a script into a function.
 #' \lifecycle{experimental}
-#' @description `code_to_function()` parses individual \*.R/\*.RMD files into
-#'   functions so they can be added into the drake workflow. The returned function
-#'   contains all the code inside the script. When the script is used in drake,
-#'   it will automatically invalidate all downstream functions to ensure everything
-#'   is kept up to date without.
+#' @description `code_to_function()`is a quick (and very dirty) way to
+#'   retrofit `drake` to an existing script-based project. It parses individual
+#'   \*.R/\*.RMD files into functions so they can be added into the drake
+#'   workflow.
+#'
+#' @details Most data science workflows consist of imperative scripts.
+#'   `drake`, on the other hand, assumes you write *functions*.
+#'   `code_to_function()` allows for pre-exising workflows to incorporate
+#'   drake as a workflow management tool seamlessly for cases where re-factoring
+#'   is unfeasible. So drake can monitor dependencies, the targets are passed
+#'   as arguments of the dependent functions.
 #'
 #' @export
-#' @inheritSection drake_plan Keywords
-#' @seealso [file_in()], [file_out()], [knitr_in()], [ignore()], [no_deps()]
+#' @seealso [file_in()], [file_out()], [knitr_in()], [ignore()], [no_deps()],
+#' [code_to_plan()], [plan_to_code()], [plan_to_notebook()]
 #' @return A function to be input into the drake plan
 #' @param path Character vector, path to script.
 #' @export
 #' @examples
 #' \dontrun{
 #' isolate_example("contain side effects", {
-#' # The `code_to_function()` function creates a function that makes it available for drake to
-#' # process as part of the workflow.
-#' # The main purpose is to allow pre-exising workflows to
-#' # incorporate drake into the workflow seamlessly for cases where re-factoring is unfeasible.
-#' # So drake can monitor dependencies, the targets are passed as arguments of the dependent functions.
+#' # The `code_to_function()` function creates a function that makes it
+#' # available for drake to process as part of the workflow.
+#' # The main purpose is to allow pre-exising workflows to incorporate drake
+#' # into the workflow seamlessly for cases where re-factoring is unfeasible.
 #' #
 #'
 #' script1 <- tempfile()
 #' script2 <- tempfile()
 #' script3 <- tempfile()
 #' script4 <- tempfile()
-#' writeLines(c("data <- mtcars", "munge(data)"), script1)
-#' writeLines("analyze(munged)", script2)
-#' writeLines("summarize_results(analysis)", script3)
-#' writeLines("plot_results(analysis)", script4)
+#'
+#' writeLines(c(
+#'   "data <- mtcars",
+#'   "data$make <- do.call('c',lapply(strsplit(rownames(data),split=\" \"),`[`,1))",
+#'   "saveRDS(data,\"mtcars_alt.RDS\")"),
+#'   script1)
+#' writeLines(c(
+#'   "data<-readRDS(\"mtcars_alt.RDS\")",
+#'   "mtcars_lm<-lm(mpg~cyl+disp+vs+gear+make,data=data)",
+#'   "saveRDS(mtcars_lm,\"mtcars_lm.RDS\")"),
+#'   script2)
+#' writeLines(c(
+#'   "mtcars_lm<-readRDS(\"mtcars_lm.RDS\")",
+#'   "summary(mtcars_lm)"),
+#'   script3)
+#' writeLines(c(
+#'   "data<-readRDS(\"mtcars_alt.RDS\")",
+#'   "gg <- ggplot2::ggplot(data)+",
+#'   "ggplot2::geom_point(ggplot2::aes(",
+#'   "x=disp,y=mpg,shape=vs,color=make))",
+#'   "saveRDS(gg,\"mtcars_plot.RDS\")"),
+#'   script4)
 #'
 #'
 #' do_munge<-code_to_function(script1)
@@ -1091,7 +1114,7 @@ is_trigger_call <- function(expr) {
 #'   munged   = do_munge(),
 #'   analysis = do_analysis(munged),
 #'   summary  = do_summarize(analysis),
-#'   plot     = do_viz(analysis)
+#'   plot     = do_viz(munged)
 #'  )
 #'
 #' plan
@@ -1115,10 +1138,11 @@ code_to_function <- function(path) {
     lines <- get_tangled_text(path)
   }
 
-  lines <- c("function(...){",
-             lines,
-             "list(time = Sys.time(),tempfile = tempfile())",
-             "}")
+  lines <- c(
+    "function(...){",
+    lines,
+    "list(time = Sys.time(),tempfile = tempfile())",
+    "}")
   text <- paste(lines, sep = "\n")
   func <- eval(safe_parse(text))
   func
