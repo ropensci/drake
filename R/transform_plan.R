@@ -473,23 +473,18 @@ dsl_transform.map <- dsl_transform.cross <- function(
   max_expand
 ) {
   groupings <- groupings(transform)
-  cols <- upstream_trace_vars(target, plan, graph)
   grid <- dsl_grid(transform, groupings)
   if (any(dim(grid) < 1L)) {
     warn_empty_transform(target)
-    return()
+    return(grid)
   }
-  gridlist <- lapply(grid, as.data.frame, stringsAsFactors = FALSE)
-  for (i in seq_len(ncol(grid))) {
-    colnames(gridlist[[i]]) <- colnames(grid)[i]
-    gridlist[[i]] <- dsl_left_outer_join(
-      gridlist[[i]],
-      plan[, cols, drop = FALSE]
-    )
-  }
-  grid <- do.call(cbind, unname(gridlist))
-  grid_cols <- c(names(groupings), setdiff(colnames(grid), names(groupings)))
-  grid <- grid[, grid_cols, drop = FALSE]
+  grid <- dsl_map_join_plan(
+    grid = grid,
+    plan = plan,
+    graph = graph,
+    target = target,
+    transform = transform
+  )
   sub_cols <- intersect(colnames(grid), group_names(transform))
   new_targets <- new_targets(
     target, grid, cols = sub_cols, id = dsl_id(transform)
@@ -506,6 +501,21 @@ dsl_transform.map <- dsl_transform.cross <- function(
   grid$.id_chr <- NULL
   out <- cbind(out, grid)
   df_max_expand(out, max_expand)
+}
+
+dsl_map_join_plan <- function(grid, plan, graph, target, transform) {
+  cols <- upstream_trace_vars(target, plan, graph)
+  gridlist <- lapply(grid, as.data.frame, stringsAsFactors = FALSE)
+  for (i in seq_len(ncol(grid))) {
+    colnames(gridlist[[i]]) <- colnames(grid)[i]
+    gridlist[[i]] <- dsl_left_outer_join(
+      gridlist[[i]],
+      plan[, cols, drop = FALSE]
+    )
+  }
+  grid <- do.call(cbind, unname(gridlist))
+  grid_cols <- c(names(groupings), setdiff(colnames(grid), names(groupings)))
+  grid[, grid_cols, drop = FALSE]
 }
 
 group_names <- function(transform) {
@@ -615,10 +625,6 @@ valid_splitting_plan <- function(plan, transform) {
   out <- plan[rows_keep,, drop = FALSE] # nolint
   old_cols(out) <- old_cols
   out
-}
-
-complete_cases <- function(x) {
-  !as.logical(Reduce(`|`, lapply(x, is.na)))
 }
 
 map_by <- function(.x, .by, .f, ...) {
