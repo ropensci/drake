@@ -82,13 +82,20 @@ Data analysis can be slow. A round of scientific computation can take several mi
 
 For projects in R, the `drake` package can help. It [analyzes your workflow](https://ropenscilabs.github.io/drake-manual/plans.html), skips steps with up-to-date results, and orchestrates the rest with [optional distributed computing](https://ropenscilabs.github.io/drake-manual/hpc.html). At the end, `drake` provides evidence that your results match the underlying code and data, which increases your ability to trust your research.
 
-6-minute video
-==============
+Videos
+======
 
-Visit the [first page of the manual](https://ropenscilabs.github.io/drake-manual/) to watch a short introduction.
+Visit the [first page of the manual](https://ropenscilabs.github.io/drake-manual/) to watch a 6-minute introduction.
 
 <center>
 <a href="https://ropenscilabs.github.io/drake-manual"> <img src="https://docs.ropensci.org/drake/reference/figures/video.png" alt="video" align="center" style = "border: none; float: center;"> </a>
+</center>
+<br>
+
+The [rOpenSci Community Call from 2019-09-24](https://ropensci.org/commcalls/2019-09-24/) was an hour-long webinar consisting of a 20-minute presentation on `drake` and a 40-minute Q&A session. The [web page](https://ropensci.org/commcalls/2019-09-24/) contains the abstract, a list of helpful resources, and the complete video recording.
+
+<center>
+<a href="https://ropensci.org/commcalls/2019-09-24/"> <img src="https://docs.ropensci.org/drake/reference/figures/commcall.png" alt="commcall" align="center" style = "border: none; float: center;"> </a>
 </center>
 <br>
 
@@ -317,20 +324,20 @@ As of version 7.5.2, `drake` tracks the history and provenance of your targets: 
 history <- drake_history(analyze = TRUE)
 history
 #> # A tibble: 12 x 10
-#>    target current built exists hash  command   seed runtime quiet
-#>    <chr>  <lgl>   <chr> <lgl>  <chr> <chr>    <int>   <dbl> <lgl>
-#>  1 data   TRUE    2019… TRUE   e580… raw_da… 1.29e9 0.002   NA   
-#>  2 data   TRUE    2019… TRUE   e580… raw_da… 1.29e9 0       NA   
-#>  3 fit    TRUE    2019… TRUE   62a1… lm(Sep… 1.11e9 0.00300 NA   
-#>  4 fit    TRUE    2019… TRUE   62a1… lm(Sep… 1.11e9 0.001   NA   
-#>  5 hist   FALSE   2019… TRUE   22a2… create… 2.10e8 0.006   NA   
-#>  6 hist   TRUE    2019… TRUE   6909… create… 2.10e8 0.008   NA   
-#>  7 hist   TRUE    2019… TRUE   6909… create… 2.10e8 0.006   NA   
-#>  8 raw_d… TRUE    2019… TRUE   6317… "readx… 1.20e9 0.00700 NA   
-#>  9 raw_d… TRUE    2019… TRUE   6317… "readx… 1.20e9 0.00500 NA   
-#> 10 report TRUE    2019… TRUE   5739… "rmark… 1.30e9 0.551   TRUE 
-#> 11 report TRUE    2019… TRUE   5739… "rmark… 1.30e9 0.389   TRUE 
-#> 12 report TRUE    2019… TRUE   5739… "rmark… 1.30e9 0.389   TRUE 
+#>    target current built exists hash  command   seed  runtime quiet
+#>    <chr>  <lgl>   <chr> <lgl>  <chr> <chr>    <int>    <dbl> <lgl>
+#>  1 data   TRUE    2019… TRUE   e580… raw_da… 1.29e9 0.001000 NA   
+#>  2 data   TRUE    2019… TRUE   e580… raw_da… 1.29e9 0        NA   
+#>  3 fit    TRUE    2019… TRUE   62a1… lm(Sep… 1.11e9 0.00300  NA   
+#>  4 fit    TRUE    2019… TRUE   62a1… lm(Sep… 1.11e9 0.001000 NA   
+#>  5 hist   FALSE   2019… TRUE   22a2… create… 2.10e8 0.006    NA   
+#>  6 hist   TRUE    2019… TRUE   6909… create… 2.10e8 0.007    NA   
+#>  7 hist   TRUE    2019… TRUE   6909… create… 2.10e8 0.006    NA   
+#>  8 raw_d… TRUE    2019… TRUE   6317… "readx… 1.20e9 0.006    NA   
+#>  9 raw_d… TRUE    2019… TRUE   6317… "readx… 1.20e9 0.006    NA   
+#> 10 report TRUE    2019… TRUE   3c35… "rmark… 1.30e9 0.563    TRUE 
+#> 11 report TRUE    2019… TRUE   3c35… "rmark… 1.30e9 0.392    TRUE 
+#> 12 report TRUE    2019… TRUE   3c35… "rmark… 1.30e9 0.407    TRUE 
 #> # … with 1 more variable: output_file <chr>
 ```
 
@@ -405,7 +412,7 @@ make(plan, recover = TRUE)
 
 # When was the raw data *really* first built?
 diagnose(raw_data)$date
-#> [1] "2019-09-26 18:27:30.056641 -0400 GMT"
+#> [1] "2019-09-26 19:02:05.925226 -0400 GMT"
 ```
 
 ### Renaming
