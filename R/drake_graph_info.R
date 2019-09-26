@@ -452,6 +452,7 @@ configure_nodes <- function(config) {
   config$nodes <- categorize_nodes(config = config)
   config$nodes <- style_nodes(config = config)
   config$nodes <- resolve_levels(config = config)
+  config$nodes <- wrap_labels(config = config)
   if (config$build_times != "none") {
     config$nodes <- append_build_times(config = config)
   }
@@ -484,6 +485,11 @@ resolve_levels <- function(config) {
     config$nodes[leaves, "level"] <- level
     graph <- igraph::delete_vertices(graph = graph, v = leaves)
   }
+  config$nodes
+}
+
+wrap_labels <- function(config) {
+  config$nodes$label <- hard_wrap(config$nodes$label, width = hover_width)
   config$nodes
 }
 

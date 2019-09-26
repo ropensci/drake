@@ -165,6 +165,30 @@ multiline_message <- function(x) {
   paste(x, collapse = "\n")
 }
 
+hard_wrap <- Vectorize(
+  function(x, width = 0.9 * getOption("width")) {
+    if (nchar(x) <= width) {
+      return(x)
+    }
+    chars <- strsplit(x, "")[[1]]
+    max_index <- ceiling(nchar(x) / width)
+    index <- rep(seq_len(max_index), each = width, length.out = nchar(x))
+    lines <- tapply(X = chars, INDEX = index, FUN = paste, collapse = "")
+    paste(lines, collapse = "\n")
+  },
+  vectorize.args = "x",
+  USE.NAMES = FALSE
+)
+
+soft_wrap <- Vectorize(
+  function(x, width = 0.9 * getOption("width")) {
+    x <- paste(strwrap(x), collapse = "\n")
+    unname(x)
+  },
+  vectorize.args = "x",
+  USE.NAMES = FALSE
+)
+
 # From lintr
 `%||%` <- function(x, y) {
   if (is.null(x) || length(x) <= 0) {

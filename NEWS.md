@@ -7,6 +7,7 @@
 ## Enhancements
 
 - Coerce seeds to integers in `seed_trigger()` (#1013, @CreRecombinase).
+- Hard wrap long labels in graph visuals (#1017)
 
 
 # Version 7.6.2

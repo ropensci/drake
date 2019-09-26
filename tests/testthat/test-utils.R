@@ -74,3 +74,11 @@ test_with_dir("lifecycle", {
   }
   expect_error(lifecycle("not-a-stage"), regexp = "Unknown lifecycle stage")
 })
+
+test_with_dir("text wrapping", {
+  x <- paste(letters, collapse = "")
+  expect_equal(x, soft_wrap(x, width = 2))
+  expect_equal(x, soft_wrap(x, width = 100))
+  expect_equal("ab\ncd\ne", hard_wrap("abcde", width = 2))
+  expect_equal(x, hard_wrap(x, width = 100))
+})
