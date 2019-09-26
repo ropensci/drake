@@ -91,6 +91,7 @@ Visit the [first page of the manual](https://ropenscilabs.github.io/drake-manual
 <a href="https://ropenscilabs.github.io/drake-manual"> <img src="https://docs.ropensci.org/drake/reference/figures/video.png" alt="video" align="center" style = "border: none; float: center;"> </a>
 </center>
 <br>
+<br>
 
 The [rOpenSci Community Call from 2019-09-24](https://ropensci.org/commcalls/2019-09-24/) is a much longer presentation on `drake` (20 min talk, 35 min Q&A). Visit the [call's page](https://ropensci.org/commcalls/2019-09-24/) for links to additional resources, and [chime in here](https://github.com/ropensci-org/community-calls) to propose and vote for ideas for new Community Call topics and speakers.
 
