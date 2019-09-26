@@ -92,7 +92,7 @@ Visit the [first page of the manual](https://ropenscilabs.github.io/drake-manual
 </center>
 <br>
 
-The [rOpenSci Community Call from 2019-09-24](https://ropensci.org/commcalls/2019-09-24/) was an hour-long webinar consisting of a 20-minute presentation on `drake` and a 40-minute Q&A session. The [web page](https://ropensci.org/commcalls/2019-09-24/) contains the abstract, a list of helpful resources, and the complete video recording.
+You can also watch the video recording of the [rOpenSci Community Call from 2019-09-24](https://ropensci.org/commcalls/2019-09-24/). Visit the [call's page](https://ropensci.org/commcalls/2019-09-24/) for links to additional resources, and [chime in here](https://github.com/ropensci-org/community-calls) to propose and vote for ideas for new Community Call topics and speakers.
 
 <center>
 <a href="https://ropensci.org/commcalls/2019-09-24/"> <img src="https://docs.ropensci.org/drake/reference/figures/commcall.png" alt="commcall" align="center" style = "border: none; float: center;"> </a>
@@ -326,18 +326,18 @@ history
 #> # A tibble: 12 x 10
 #>    target current built exists hash  command   seed  runtime quiet
 #>    <chr>  <lgl>   <chr> <lgl>  <chr> <chr>    <int>    <dbl> <lgl>
-#>  1 data   TRUE    2019… TRUE   e580… raw_da… 1.29e9 0.001000 NA   
-#>  2 data   TRUE    2019… TRUE   e580… raw_da… 1.29e9 0        NA   
-#>  3 fit    TRUE    2019… TRUE   62a1… lm(Sep… 1.11e9 0.00300  NA   
-#>  4 fit    TRUE    2019… TRUE   62a1… lm(Sep… 1.11e9 0.001000 NA   
+#>  1 data   TRUE    2019… TRUE   e580… raw_da… 1.29e9 0.002    NA   
+#>  2 data   TRUE    2019… TRUE   e580… raw_da… 1.29e9 0.001000 NA   
+#>  3 fit    TRUE    2019… TRUE   62a1… lm(Sep… 1.11e9 0.003    NA   
+#>  4 fit    TRUE    2019… TRUE   62a1… lm(Sep… 1.11e9 0.001    NA   
 #>  5 hist   FALSE   2019… TRUE   22a2… create… 2.10e8 0.006    NA   
-#>  6 hist   TRUE    2019… TRUE   6909… create… 2.10e8 0.007    NA   
-#>  7 hist   TRUE    2019… TRUE   6909… create… 2.10e8 0.006    NA   
-#>  8 raw_d… TRUE    2019… TRUE   6317… "readx… 1.20e9 0.006    NA   
-#>  9 raw_d… TRUE    2019… TRUE   6317… "readx… 1.20e9 0.006    NA   
-#> 10 report TRUE    2019… TRUE   3c35… "rmark… 1.30e9 0.563    TRUE 
-#> 11 report TRUE    2019… TRUE   3c35… "rmark… 1.30e9 0.392    TRUE 
-#> 12 report TRUE    2019… TRUE   3c35… "rmark… 1.30e9 0.407    TRUE 
+#>  6 hist   TRUE    2019… TRUE   6909… create… 2.10e8 0.00700  NA   
+#>  7 hist   TRUE    2019… TRUE   6909… create… 2.10e8 0.005    NA   
+#>  8 raw_d… TRUE    2019… TRUE   6317… "readx… 1.20e9 0.00600  NA   
+#>  9 raw_d… TRUE    2019… TRUE   6317… "readx… 1.20e9 0.004    NA   
+#> 10 report TRUE    2019… TRUE   a427… "rmark… 1.30e9 0.517    TRUE 
+#> 11 report TRUE    2019… TRUE   a427… "rmark… 1.30e9 0.441    TRUE 
+#> 12 report TRUE    2019… TRUE   a427… "rmark… 1.30e9 0.383    TRUE 
 #> # … with 1 more variable: output_file <chr>
 ```
 
@@ -412,7 +412,7 @@ make(plan, recover = TRUE)
 
 # When was the raw data *really* first built?
 diagnose(raw_data)$date
-#> [1] "2019-09-26 19:02:05.925226 -0400 GMT"
+#> [1] "2019-09-26 19:40:15.049119 -0400 GMT"
 ```
 
 ### Renaming
