@@ -137,8 +137,8 @@ store_meta <- function(target, meta, hash, config) {
     use_cache = FALSE
   )
   is_target <- !meta$imported && !is_encoded_path(target)
-  if (is_target && is_history(config$history)) {
-    config$history$push(title = target, message = meta_hash)
+  if (is_target && is_history(config$cache$history)) {
+    config$cache$history$push(title = target, message = meta_hash)
   }
   if (is_target && config$recoverable) {
     store_recovery(target, meta, meta_hash, config)

@@ -189,6 +189,36 @@ soft_wrap <- Vectorize(
   USE.NAMES = FALSE
 )
 
+dir_create <- function(x) {
+  if (!file.exists(x)) {
+    dir.create(x, showWarnings = FALSE, recursive = TRUE)
+  }
+  if (!dir.exists(x)) {
+    stop("cannot create directory at ", shQuote(x), call. = FALSE)
+  }
+  invisible()
+}
+
+dir_move(from, to, overwrite = FALSE, jobs = 1L) {
+  if (!overwrite && file.exists(to)) {
+    warning(
+      "cannot move ", from, " to ", to, ". ",
+      to, " already exists.",
+      call. = FALSE
+    )
+    return(invisible())
+  }
+  unlink(to, recursive = TRUE)
+  files <- list.files(from, all.files = TRUE, recursive = TRUE)
+  args <- list(
+    from = file.path(from, files),
+    to = file.path(to, files)
+  )
+  drake_pmap(.l = args, .f = file.rename, jobs = jobs)
+  unlink(from, recursive = TRUE)
+  invisible()
+}
+
 # From lintr
 `%||%` <- function(x, y) {
   if (is.null(x) || length(x) <= 0) {

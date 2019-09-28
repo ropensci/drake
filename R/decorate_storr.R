@@ -13,6 +13,7 @@ decorate_storr <- function(storr) {
     default_namespace = storr$default_namespace,
     envir = storr$envir,
     hash_algorithm = hash_algorithm,
+    history = recover_default_history(path),
     ht_encode_path = ht_new(),
     ht_decode_path = ht_new(),
     ht_encode_namespaced = ht_new(),
@@ -33,6 +34,7 @@ refclass_decorated_storr <- methods::setRefClass(
     "default_namespace",
     "envir",
     "hash_algorithm",
+    "history",
     "ht_encode_path",
     "ht_decode_path",
     "ht_encode_namespaced",
@@ -109,6 +111,9 @@ refclass_decorated_storr <- methods::setRefClass(
     },
     get_progress = function(target) {
       retrieve_progress(target = target, cache = .self)
+    },
+    set_history = function(history) {
+      .self$history <- manage_history(history, cache_path = .self$path)
     },
     # Delegate to storr:
     archive_export = function(...) .self$storr$archive_export(...),
@@ -286,16 +291,6 @@ dcst_set_move_tmp <- function(key, value, tmp, .self) {
   invisible(hash)
 }
 
-dir_create <- function(x) {
-  if (!file.exists(x)) {
-    dir.create(x, showWarnings = FALSE, recursive = TRUE)
-  }
-  if (!dir.exists(x)) {
-    stop("cannot create directory at ", shQuote(x), call. = FALSE)
-  }
-  invisible()
-}
-
 #' @title Show a file's encoded representation in the cache
 #' \lifecycle{stable}
 #' @description This function simply wraps literal double quotes around
@@ -445,4 +440,49 @@ retrieve_progress <- function(target, cache) {
   } else{
     "none"
   }
+}
+
+manage_history <- function(history, cache_path) {
+  migrate_history(cache_path)
+  if (is.null(history)) {
+    history <- recover_default_history(cache_path)
+  } else if (identical(history, TRUE)) {
+    history <- initialize_history(cache_path)
+  } else if (identical(history, FALSE)) {
+    history <- NULL
+  }
+  stopifnot(is.null(history) || is_history(history))
+  history
+}
+
+migrate_history <- function(cache_path) {
+  old_path <- file.path(dirname(cache_path), ".drake_history")
+  if (file.exists(old_path)) {
+    dir_create(file.path(cache_path, "drake"))
+    file.rename(old_path, default_history_path(cache_path))
+  }
+}
+
+recover_default_history <- function(cache_path) {
+  history_path <- default_history_path(cache_path)
+  if (file.exists(history_path)) {
+    history_queue(history_path)
+  }
+}
+
+initialize_history <- function(cache_path) {
+  history_queue(default_history_path(cache_path))
+}
+
+default_history_path <- function(cache_path) {
+  file.path(cache_path, "drake", "history")
+}
+
+history_queue <- function(history_path) {
+  dir_create(history_path)
+  txtq::txtq(history_path)
+}
+
+is_history <- function(history) {
+  inherits(history, "R6_txtq")
 }
