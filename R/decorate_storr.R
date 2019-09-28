@@ -112,7 +112,7 @@ refclass_decorated_storr <- methods::setRefClass(
     get_progress = function(target) {
       retrieve_progress(target = target, cache = .self)
     },
-    set_history = function(history) {
+    set_history = function(history = NULL) {
       .self$history <- manage_history(history, cache_path = .self$path)
     },
     # Delegate to storr:
@@ -443,7 +443,9 @@ retrieve_progress <- function(target, cache) {
 }
 
 manage_history <- function(history, cache_path) {
-  migrate_history(cache_path)
+  if (!is_history(history)) {
+    migrate_history(history, cache_path)
+  }
   if (is.null(history)) {
     history <- recover_default_history(cache_path)
   } else if (identical(history, TRUE)) {
@@ -455,11 +457,10 @@ manage_history <- function(history, cache_path) {
   history
 }
 
-migrate_history <- function(cache_path) {
+migrate_history <- function(history, cache_path) {
   old_path <- file.path(dirname(cache_path), ".drake_history")
   if (file.exists(old_path)) {
-    dir_create(file.path(cache_path, "drake"))
-    file.rename(old_path, default_history_path(cache_path))
+    dir_move(old_path, default_history_path(cache_path))
   }
 }
 

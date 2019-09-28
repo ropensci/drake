@@ -165,3 +165,12 @@ test_with_dir("migrate history with drake_history()", {
     file.exists(file.path(default_cache_path(), "drake", "history"))
   )
 })
+
+test_with_dir("custom history txtq", {
+  plan <- drake_plan(x = 1)
+  q <- txtq::txtq("hist")
+  make(plan, history = q)
+  expect_false(file.exists(default_history_path(drake_cache()$path)))
+  history <- drake_history(history = q)
+  expect_true(nrow(history) > 0L)
+})
