@@ -174,3 +174,10 @@ test_with_dir("custom history txtq", {
   history <- drake_history(history = q)
   expect_true(nrow(history) > 0L)
 })
+
+test_with_dir("txtq present but emtpy", {
+  q <- txtq::txtq(tempfile())
+  expect_equal(nrow(q$list()), 0L)
+  cache <- new_cache()
+  expect_error(drake_history(history = q), "no history")
+})
