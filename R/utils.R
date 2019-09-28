@@ -209,6 +209,7 @@ dir_move(from, to, overwrite = FALSE, jobs = 1L) {
     return(invisible())
   }
   unlink(to, recursive = TRUE)
+  dir_create(to)
   files <- list.files(from, all.files = TRUE, recursive = TRUE)
   args <- list(
     from = file.path(from, files),
