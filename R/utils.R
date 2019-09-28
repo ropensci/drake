@@ -189,17 +189,7 @@ soft_wrap <- Vectorize(
   USE.NAMES = FALSE
 )
 
-dir_create <- function(x) {
-  if (!file.exists(x)) {
-    dir.create(x, showWarnings = FALSE, recursive = TRUE)
-  }
-  if (!dir.exists(x)) {
-    stop("cannot create directory at ", shQuote(x), call. = FALSE)
-  }
-  invisible()
-}
-
-dir_move(from, to, overwrite = FALSE, jobs = 1L) {
+dir_move <- function(from, to, overwrite = FALSE, jobs = 1L) {
   if (!overwrite && file.exists(to)) {
     warning(
       "cannot move ", from, " to ", to, ". ",
@@ -215,8 +205,23 @@ dir_move(from, to, overwrite = FALSE, jobs = 1L) {
     from = file.path(from, files),
     to = file.path(to, files)
   )
-  drake_pmap(.l = args, .f = file.rename, jobs = jobs)
+  drake_pmap(.l = args, .f = file_move, jobs = jobs)
   unlink(from, recursive = TRUE)
+  invisible()
+}
+
+file_move <- function(from, to) {
+  dir_create(dirname(to))
+  file.rename(from = from, to = to)
+}
+
+dir_create <- function(x) {
+  if (!file.exists(x)) {
+    dir.create(x, showWarnings = FALSE, recursive = TRUE)
+  }
+  if (!dir.exists(x)) {
+    stop("cannot create directory at ", shQuote(x), call. = FALSE)
+  }
   invisible()
 }
 
