@@ -7,7 +7,6 @@
 - Add a new `"diskframe"` format for larger-than-memory data (#1004, @xiaodaigh).
 - Add a new `drake_tempfile()` function to help with `"diskframe"` format. It makes sure we are not copying large datasets across different physical storage media (#1004, @xiaodaigh).
 
-
 ## Enhancements
 
 - Coerce seeds to integers in `seed_trigger()` (#1013, @CreRecombinase).
