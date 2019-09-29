@@ -218,6 +218,12 @@ dcst_get_.drake_format_fst_dt <- function(value, key, .self) { # nolint
   fst::read_fst(.self$file_return_key(key), as.data.table = TRUE)
 }
 
+dcst_get_.drake_format_diskframe <- function(value, key, .self) { # nolint
+  assert_pkg("disk.frame")
+  assert_pkg("fst")
+  disk.frame::disk.frame(.self$file_return_key(key), backend = "fst")
+}
+
 # Requires Python Keras and TensorFlow to test. Tested in test-keras.R.
 # nocov start
 dcst_get_.drake_format_keras <- function(value, key, .self) {
@@ -252,6 +258,12 @@ dcst_get_value_.drake_format_fst_dt <- function(value, hash, .self) { # nolint
   assert_pkg("data.table")
   assert_pkg("fst")
   fst::read_fst(.self$file_return_hash(hash), as.data.table = TRUE)
+}
+
+dcst_get_value_.drake_format_diskframe <- function(value, hash, .self) { # nolint
+  assert_pkg("disk.frame")
+  assert_pkg("fst")
+  disk.frame::disk.frame(.self$file_return_hash(hash), backend = "fst")
 }
 
 # Requires Python Keras and TensorFlow to test. Tested in test-keras.R.
@@ -291,6 +303,14 @@ dcst_set.drake_format_fst_dt <- function(value, key, ..., .self) {
   dcst_set_move_tmp(key = key, value = value, tmp = tmp, .self = .self)
 }
 
+dcst_set.drake_format_diskframe <- function(value, key, ..., .self) {
+  assert_pkg("disk.frame")
+  assert_pkg("fst")
+  .self$assert_dirs()
+  tmp <- attr(value, "path")
+  dcst_set_move_tmp(key = key, value = value, tmp = tmp, .self = .self)
+}
+
 # Requires Python Keras and TensorFlow to test. Tested in test-test-keras.R
 # nocov start
 dcst_set.drake_format_keras <- function(value, key, ..., .self) {
@@ -322,7 +342,7 @@ dcst_set_move_tmp <- function(key, value, tmp, .self) {
   class(hash_tmp) <- class(value)
   hash <- .self$storr$set(key = key, value = hash_tmp)
   file <- .self$file_return_hash(hash)
-  file.copy(tmp, file)
+  storage_move(tmp, file, overwrite = TRUE, merge = FALSE)
   invisible(hash)
 }
 

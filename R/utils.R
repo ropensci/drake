@@ -189,6 +189,27 @@ soft_wrap <- Vectorize(
   USE.NAMES = FALSE
 )
 
+storage_move <- function(
+  from,
+  to,
+  overwrite = FALSE,
+  merge = FALSE,
+  jobs = 1L
+) {
+  if (dir.exists(from)) {
+    dir_move(
+      from = from,
+      to = to,
+      overwrite = overwrite,
+      merge = merge,
+      jobs = jobs
+    )
+  } else {
+    file_move(from = from, to = to)
+  }
+  invisible()
+}
+
 dir_move <- function(from, to, overwrite = FALSE, merge = FALSE, jobs = 1L) {
   if (!overwrite && file.exists(to)) {
     warning(
@@ -215,6 +236,7 @@ dir_move <- function(from, to, overwrite = FALSE, merge = FALSE, jobs = 1L) {
 file_move <- function(from, to) {
   dir_create(dirname(to))
   file.rename(from = from, to = to)
+  invisible()
 }
 
 dir_create <- function(x) {
