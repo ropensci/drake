@@ -17,6 +17,14 @@ test_with_dir("empty keys with decorated storr", {
   expect_equal(cache$decode_namespaced(x), x)
 })
 
+test_with_dir("drake_tempfile()", {
+  expect_error(drake_tempfile())
+  cache <- new_cache()
+  x <- drake_tempfile(cache = cache)
+  expect_true(grepl("drake", x))
+  expect_true(grepl("tmp", x))
+})
+
 test_with_dir("key encoding for paths and namespaced functions", {
   x <- c("myfunny:::variablename", "relative/path\na\\m//e")
   expect_false(all(is_encoded_path(x)))

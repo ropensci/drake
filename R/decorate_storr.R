@@ -346,6 +346,40 @@ dcst_set_move_tmp <- function(key, value, tmp, .self) {
   invisible(hash)
 }
 
+#' @title drake tempfile
+#' @description Create the path to a temporary file inside drake's cache.
+#' @details This function is just like the `tempfile()` function in base R
+#'   except that the path points to a special location inside `drake`'s cache.
+#'   This ensures that if the file needs to be copied to
+#'   persistent storage in the cache, `drake` does not need to copy across
+#'   physical storage media. Example: the `"diskframe"` format. See the
+#'   "Formats" and "Columns" sections of the [drake_plan()] help file.
+#'   Unless you supply the cache or the path to the cache
+#'   (see [drake_cache()]) `drake` will assume the cache folder is named
+#'   `.drake/` and it is located either in your working directory or an
+#'   ancestor of your working directory.
+#' @export
+#' @seealso [drake_cache()], [new_cache()]
+#' @inheritParams cached
+#' @examples
+#' drake_tempfile()
+#' drake_plan(
+#'   x = target(
+#'     as.disk.frame(large_data, outdir = drake_tempfile()),
+#'     format = "diskframe"
+#'   )
+#' )
+drake_tempfile <- function(
+  path = NULL,
+  cache = drake::drake_cache(path = path)
+) {
+  if (is.null(cache)) {
+    stop("drake cache not found", call. = FALSE)
+  }
+  cache <- decorate_storr(cache)
+  cache$file_tmp()
+}
+
 #' @title Show a file's encoded representation in the cache
 #' \lifecycle{stable}
 #' @description This function simply wraps literal double quotes around

@@ -4,6 +4,9 @@
 
 - Add a new `which_clean()` function to preview which targets will be invalidated by `clean()` (#1014, @pat-s).
 - Add serious import and export methods for the decorated `storr` (#1015, @billdenney, @noamross).
+- Add a new `"diskframe"` format for larger-than-memory data (#1004, @xiaodaigh).
+- Add a new `drake_tempfile()` function to help with `"diskframe"` format. It makes sure we are not copying large datasets across different physical storage media (#1004, @xiaodaigh).
+
 
 ## Enhancements
 
