@@ -15,17 +15,17 @@ A function to be input into the drake plan
 }
 \description{
 \code{code_to_function()}is a quick (and very dirty) way to
-retrofit \code{drake} to an existing script-based project. It parses individual
-*.R/*.RMD files into functions so they can be added into the drake
-workflow.
+retrofit \code{drake} to an existing script-based project. It parses
+individual *.R/*.RMD files into functions so they can be added
+into the drake workflow.
 }
 \details{
 Most data science workflows consist of imperative scripts.
 \code{drake}, on the other hand, assumes you write \emph{functions}.
 \code{code_to_function()} allows for pre-exising workflows to incorporate
-drake as a workflow management tool seamlessly for cases where re-factoring
-is unfeasible. So drake can monitor dependencies, the targets are passed
-as arguments of the dependent functions.
+drake as a workflow management tool seamlessly for cases where
+re-factoring is unfeasible. So drake can monitor dependencies, the
+targets are passed as arguments of the dependent functions.
 }
 \examples{
 \dontrun{
@@ -43,42 +43,54 @@ script4 <- tempfile()
 
 writeLines(c(
   "data <- mtcars",
-  "data$make <- do.call('c',lapply(strsplit(rownames(data),split=\\" \\"),`[`,1))",
-  "saveRDS(data,\\"mtcars_alt.RDS\\")"),
-  script1)
+  "data$make <- do.call('c',",
+  "lapply(strsplit(rownames(data), split=\\" \\"), `[`, 1))",
+  "saveRDS(data, \\"mtcars_alt.RDS\\")"
+ ),
+  script1
+)
+
 writeLines(c(
-  "data<-readRDS(\\"mtcars_alt.RDS\\")",
-  "mtcars_lm<-lm(mpg~cyl+disp+vs+gear+make,data=data)",
-  "saveRDS(mtcars_lm,\\"mtcars_lm.RDS\\")"),
-  script2)
+  "data <- readRDS(\\"mtcars_alt.RDS\\")",
+  "mtcars_lm <- lm(mpg~cyl+disp+vs+gear+make,data=data)",
+  "saveRDS(mtcars_lm, \\"mtcars_lm.RDS\\")"
+  ),
+  script2
+)
 writeLines(c(
-  "mtcars_lm<-readRDS(\\"mtcars_lm.RDS\\")",
-  "summary(mtcars_lm)"),
-  script3)
+  "mtcars_lm <- readRDS(\\"mtcars_lm.RDS\\")",
+  "lm_summary <- summary(mtcars_lm)",
+  "saveRDS(lm_summary, \\"mtcars_lm_summary.RDS\\")"
+  ),
+  script3
+)
 writeLines(c(
   "data<-readRDS(\\"mtcars_alt.RDS\\")",
   "gg <- ggplot2::ggplot(data)+",
   "ggplot2::geom_point(ggplot2::aes(",
-  "x=disp,y=mpg,shape=vs,color=make))",
-  "saveRDS(gg,\\"mtcars_plot.RDS\\")"),
-  script4)
+  "x=disp, y=mpg, shape=as.factor(vs), color=make))",
+  "ggplot2::ggsave(\\"mtcars_plot.png\\", gg)"
+ ),
+  script4
+)
 
 
-do_munge<-code_to_function(script1)
-do_analysis<-code_to_function(script2)
-do_summarize<-code_to_function(script3)
-do_viz<-code_to_function(script4)
+do_munge <- code_to_function(script1)
+do_analysis <- code_to_function(script2)
+do_summarize <- code_to_function(script3)
+do_vis <- code_to_function(script4)
 
 plan <- drake_plan(
   munged   = do_munge(),
   analysis = do_analysis(munged),
   summary  = do_summarize(analysis),
-  plot     = do_viz(munged)
+  plot     = do_vis(munged)
  )
 
 plan
-# drake knows  "script1" is the first script to be evaluated and ran, because it has no dependencies on other code
-# and a dependency of `analysis`. See for yourself:
+# drake knows  "script1" is the first script to be evaluated and ran,
+# because it has no dependencies on other code and a dependency of
+# `analysis`. See for yourself:
 
 make(plan)
 
