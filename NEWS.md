@@ -3,6 +3,7 @@
 ## New features
 
 - Add a new `which_clean()` function to preview which targets will be invalidated by `clean()` (#1014, @pat-s).
+- Add serious import and export methods for the decorated `storr` (#1015, @billdenney, @noamross).
 
 ## Enhancements
 

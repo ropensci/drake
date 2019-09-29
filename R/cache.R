@@ -647,6 +647,21 @@ is_imported_cache <- Vectorize(function(target, cache) {
 #' @details `drake_cache()` actually returns a *decorated* `storr`,
 #'   an object that *contains* a `storr` (plus bells and whistles).
 #'   To get the *actual* inner `storr`, use `drake_cache()$storr`.
+#'   Most methods are delegated to the inner `storr`.
+#'   Some methods and objects are new or overwritten. Here
+#'   are the ones relevant to users.
+#'   - `history`: `drake`'s history (which powers [drake_history()])
+#'     is a [`txtq`](https://github.com/wlandau/txtq). Access it
+#'     with `drake_cache()$history`.
+#'   - `import()`: The `import()` method is a function that can import
+#'     targets, function dependencies, etc. from one decorated `storr`
+#'     to another. Arguments:
+#'     - `...` and `list`: specify targets to import just like with [loadd()].
+#'       Leave these blank to import everything.
+#'     - `from`: the decorated `storr` from which to import targets.
+#'     - `jobs`: number of local processes for parallel computing.
+#'     - `gc`: `TRUE` or `FALSE`, whether to run garbage collection for memory
+#'       after importing each target. Recommended, but slow.
 #' @seealso [new_cache()], [drake_config()]
 #' @export
 #' @return A drake/storr cache in a folder called `.drake/`,
@@ -678,6 +693,23 @@ is_imported_cache <- Vectorize(function(target, cache) {
 #' # The *real* storr is inside.
 #' drake_cache()$storr
 #' }
+#' # You can import and export targets to and from decorated storrs.
+#' plan1 <- drake_plan(w = "w", x = "x")
+#' plan2 <- drake_plan(a = "a", x = "x2")
+#' cache1 <- new_cache("cache1")
+#' cache2 <- new_cache("cache2")
+#' make(plan1, cache = cache1)
+#' make(plan2, cache = cache2)
+#' cache1$import(cache2, a)
+#' cache1$get("a")
+#' cache1$get("x")
+#' cache1$import(cache2)
+#' cache1$get("x")
+#' # With txtq >= 0.1.6.9002, you can import history from one cache into
+#' # another.
+#' # drake_history(cache = cache1)
+#' # cache1$history$import(cache2$history)
+#' # drake_history(cache = cache1)
 #' })
 #' }
 drake_cache <- function(
