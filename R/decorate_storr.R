@@ -342,7 +342,13 @@ dcst_set_move_tmp <- function(key, value, tmp, .self) {
   class(hash_tmp) <- class(value)
   hash <- .self$storr$set(key = key, value = hash_tmp)
   file <- .self$file_return_hash(hash)
-  storage_move(tmp, file, overwrite = TRUE, merge = FALSE)
+  storage_move(
+    tmp,
+    file,
+    overwrite = FALSE,
+    merge = FALSE,
+    warn = FALSE
+  )
   invisible(hash)
 }
 

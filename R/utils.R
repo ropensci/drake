@@ -194,6 +194,7 @@ storage_move <- function(
   to,
   overwrite = FALSE,
   merge = FALSE,
+  warn = TRUE,
   jobs = 1L
 ) {
   if (dir.exists(from)) {
@@ -202,6 +203,7 @@ storage_move <- function(
       to = to,
       overwrite = overwrite,
       merge = merge,
+      warn = warn,
       jobs = jobs
     )
   } else {
@@ -210,13 +212,22 @@ storage_move <- function(
   invisible()
 }
 
-dir_move <- function(from, to, overwrite = FALSE, merge = FALSE, jobs = 1L) {
+dir_move <- function(
+  from,
+  to,
+  overwrite = FALSE,
+  merge = FALSE,
+  warn = TRUE,
+  jobs = 1L
+) {
   if (!overwrite && file.exists(to)) {
-    warning(
-      "cannot move ", from, " to ", to, ". ",
-      to, " already exists.",
-      call. = FALSE
-    )
+    if (warn) {
+      warning(
+        "cannot move ", from, " to ", to, ". ",
+        to, " already exists.",
+        call. = FALSE
+      )
+    }
     return(invisible())
   }
   if (!merge) {
