@@ -35,6 +35,28 @@ this cache.
 \code{drake_cache()} actually returns a \emph{decorated} \code{storr},
 an object that \emph{contains} a \code{storr} (plus bells and whistles).
 To get the \emph{actual} inner \code{storr}, use \code{drake_cache()$storr}.
+Most methods are delegated to the inner \code{storr}.
+Some methods and objects are new or overwritten. Here
+are the ones relevant to users.
+\itemize{
+\item \code{history}: \code{drake}'s history (which powers \code{\link[=drake_history]{drake_history()}})
+is a \href{https://github.com/wlandau/txtq}{txtq}. Access it
+with \code{drake_cache()$history}.
+\item \code{import()}: The \code{import()} method is a function that can import
+targets, function dependencies, etc. from one decorated \code{storr}
+to another. History is not imported. For that, you have to work
+with the history \code{txtq}s themselves, Arguments to \code{import()}:
+\itemize{
+\item \code{...} and \code{list}: specify targets to import just like with \code{\link[=loadd]{loadd()}}.
+Leave these blank to import everything.
+\item \code{from}: the decorated \code{storr} from which to import targets.
+\item \code{jobs}: number of local processes for parallel computing.
+\item \code{gc}: \code{TRUE} or \code{FALSE}, whether to run garbage collection for memory
+after importing each target. Recommended, but slow.
+}
+\item \code{export()}: Same as \code{import()}, except the \code{from} argument is replaced
+by \code{to}: the decorated \code{storr} where the targets end up.
+}
 }
 \examples{
 \dontrun{
@@ -53,6 +75,25 @@ x$list()
 # The *real* storr is inside.
 drake_cache()$storr
 }
+# You can import and export targets to and from decorated storrs.
+plan1 <- drake_plan(w = "w", x = "x")
+plan2 <- drake_plan(a = "a", x = "x2")
+cache1 <- new_cache("cache1")
+cache2 <- new_cache("cache2")
+make(plan1, cache = cache1)
+make(plan2, cache = cache2)
+cache1$import(cache2, a)
+cache1$get("a")
+cache1$get("x")
+cache1$import(cache2)
+cache1$get("x")
+# With txtq >= 0.1.6.9002, you can import history from one cache into
+# another.
+# nolint start
+# drake_history(cache = cache1)
+# cache1$history$import(cache2$history)
+# drake_history(cache = cache1)
+# nolint end
 })
 }
 }

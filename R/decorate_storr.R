@@ -115,6 +115,43 @@ refclass_decorated_storr <- methods::setRefClass(
     set_history = function(history = NULL) {
       .self$history <- manage_history(history, cache_path = .self$path)
     },
+    import = function(
+      from,
+      ...,
+      list = NULL,
+      jobs = 1L,
+      gc = TRUE
+    ) {
+      stopifnot(inherits(from, "refclass_decorated_storr"))
+      import_targets(
+        ...,
+        list = list,
+        from = from,
+        to = .self,
+        jobs = jobs,
+        gc = gc
+      )
+      invisible()
+    },
+    export = function(
+      to,
+      ...,
+      list = NULL,
+      targets = NULL,
+      jobs = 1L,
+      gc = TRUE
+    ) {
+      stopifnot(inherits(to, "refclass_decorated_storr"))
+      import_targets(
+        ...,
+        list = list,
+        from = .self,
+        to = to,
+        jobs = jobs,
+        gc = gc
+      )
+      invisible()
+    },
     # Delegate to storr:
     archive_export = function(...) .self$storr$archive_export(...),
     archive_import = function(...) .self$storr$archive_import(...),
@@ -126,13 +163,11 @@ refclass_decorated_storr <- methods::setRefClass(
     duplicate = function(...) .self$storr$duplicate(...),
     exists = function(...) .self$storr$exists(...),
     exists_object = function(...) .self$storr$exists_object(...),
-    export = function(...) .self$storr$export(...),
     fill = function(...) .self$storr$fill(...),
     flush_cache = function(...) .self$storr$flush_cache(...),
     get_hash = function(...) .self$storr$get_hash(...),
     hash_object = function(...) .self$storr$hash_object(...),
     hash_raw = function(...) .self$storr$hash_raw(...),
-    import = function(...) .self$storr$import(...),
     index_export = function(...) .self$storr$index_export(...),
     index_import = function(...) .self$storr$index_import(...),
     list = function(...) .self$storr$list(...),
@@ -460,7 +495,7 @@ manage_history <- function(history, cache_path) {
 migrate_history <- function(history, cache_path) {
   old_path <- file.path(dirname(cache_path), ".drake_history")
   if (file.exists(old_path)) {
-    dir_move(old_path, default_history_path(cache_path))
+    dir_move(old_path, default_history_path(cache_path), merge = FALSE)
   }
 }
 
@@ -486,4 +521,53 @@ history_queue <- function(history_path) {
 
 is_history <- function(history) {
   inherits(history, "R6_txtq")
+}
+
+import_targets <- function(..., list = character(0), from, to, jobs, gc) {
+  targets <- c(as.character(match.call(expand.dots = FALSE)$...), list)
+  if (requireNamespace("tidyselect", quietly = TRUE)) {
+    targets <- drake_tidyselect_cache(
+      ...,
+      list = list,
+      cache = from,
+      namespaces = "meta"
+    )
+  }
+  if (!length(targets)) {
+    targets <- from$list()
+  }
+  lightly_parallelize(
+    X = targets %||% from$list(),
+    FUN = import_target,
+    jobs = jobs,
+    from = from,
+    to = to,
+    gc = gc
+  )
+}
+
+import_target <- function(target, from, to, gc) {
+  import_target_storr(target = target, from = from, to = to, gc = gc)
+  import_target_formatted(target = target, from = from, to = to)
+}
+
+import_target_storr <- function(target, from, to, gc) {
+  for (ns in setdiff(from$storr$list_namespaces(), "progress")) {
+    if (from$storr$exists(target, namespace = ns)) {
+      value <- from$get(key = target, namespace = ns)
+      to$set(key = target, value = value, namespace = ns)
+    }
+    if (gc) {
+      gc()
+    }
+  }
+}
+
+import_target_formatted <- function(target, from, to) {
+  if (file.exists(from$file_return_key(target))) {
+    file_move(
+      from = from$file_return_key(target),
+      to = to$file_return_key(target)
+    )
+  }
 }

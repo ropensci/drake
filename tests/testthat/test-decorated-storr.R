@@ -125,14 +125,12 @@ test_with_dir("run through non-encoder decorated storr methods", {
   x$exists_object("x")
   y <- storr::storr_environment()
   x$set("x", 1)
-  x$export(y, "x")
   x$fill("z", 2)
   x$flush_cache()
   x$get("x")
   x$get_value(x$get_hash("x"))
   x$hash_object("x")
   x$hash_raw("x")
-  x$import(y)
   x$index_export()
   x$index_import(x$index_export()[1:2, ])
   x$list()
@@ -426,4 +424,104 @@ test_with_dir("drop format for NULL values (#998)", {
   make(plan)
   expect_null(readd(x))
   expect_null(drake_cache()$storr$get("x"))
+})
+
+test_with_dir("decorated storr import (#1015)", {
+  skip_if(getRversion() < "3.5.0")
+  plan1 <- drake_plan(
+    w = "w",
+    x = "x",
+    y = target("y", format = "rds"),
+    z = target("z", format = "rds")
+  )
+  plan2 <- drake_plan(
+    a = "a",
+    x = "x",
+    b = target("b", format = "rds"),
+    z = target("z2", format = "rds")
+  )
+  cache1 <- new_cache("cache1")
+  cache2 <- new_cache("cache2")
+  make(plan1, cache = cache1)
+  make(plan2, cache = cache2)
+  cache1$import(cache2)
+  expect_equal(cache1$get("a"), "a")
+  expect_true(is.list(cache1$get("a", namespace = "meta")))
+  expect_equal(cache1$get("b"), "b")
+  expect_equal(cache1$get("z"), "z2")
+})
+
+test_with_dir("decorated storr export (#1015)", {
+  skip_if(getRversion() < "3.5.0")
+  plan1 <- drake_plan(
+    w = "w",
+    x = "x",
+    y = target("y", format = "rds"),
+    z = target("z", format = "rds")
+  )
+  plan2 <- drake_plan(
+    a = "a",
+    x = "x",
+    b = target("b", format = "rds"),
+    z = target("z2", format = "rds")
+  )
+  cache1 <- new_cache("cache1")
+  cache2 <- new_cache("cache2")
+  make(plan1, cache = cache1)
+  make(plan2, cache = cache2)
+  cache2$export(cache1, gc = FALSE)
+  expect_equal(cache1$get("a"), "a")
+  expect_true(is.list(cache1$get("a", namespace = "meta")))
+  expect_equal(cache1$get("b"), "b")
+  expect_equal(cache1$get("z"), "z2")
+})
+
+test_with_dir("decorated storr import specific targets (#1015)", {
+  skip_if(getRversion() < "3.5.0")
+  plan1 <- drake_plan(
+    w = "w",
+    x = "x",
+    y = target("y", format = "rds"),
+    z = target("z", format = "rds")
+  )
+  plan2 <- drake_plan(
+    a = "a",
+    x = "x",
+    b = target("b", format = "rds"),
+    z = target("z2", format = "rds")
+  )
+  cache1 <- new_cache("cache1")
+  cache2 <- new_cache("cache2")
+  make(plan1, cache = cache1)
+  make(plan2, cache = cache2)
+  cache1$import(cache2, a)
+  expect_equal(cache1$get("a"), "a")
+  expect_true(is.list(cache1$get("a", namespace = "meta")))
+  expect_false(cache1$exists("b"))
+  expect_equal(cache1$get("z"), "z")
+})
+
+test_with_dir("decorated storr import specific targets (#1015)", {
+  skip_if(getRversion() < "3.5.0")
+  plan1 <- drake_plan(
+    w = "w",
+    x = "x",
+    y = target("y", format = "rds"),
+    z = target("z", format = "rds")
+  )
+  plan2 <- drake_plan(
+    a = "a",
+    x = "x",
+    b = target("b", format = "rds"),
+    z = target("z2", format = "rds")
+  )
+  cache1 <- new_cache("cache1")
+  cache2 <- new_cache("cache2")
+  make(plan1, cache = cache1)
+  make(plan2, cache = cache2)
+  cache2$export(cache1, a)
+  expect_equal(cache1$get("a"), "a")
+  expect_true(is.list(cache1$get("a", namespace = "meta")))
+  expect_false(cache1$exists("b"))
+  expect_equal(cache1$get("z"), "z")
 })

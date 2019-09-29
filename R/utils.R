@@ -189,7 +189,7 @@ soft_wrap <- Vectorize(
   USE.NAMES = FALSE
 )
 
-dir_move <- function(from, to, overwrite = FALSE, jobs = 1L) {
+dir_move <- function(from, to, overwrite = FALSE, merge = FALSE, jobs = 1L) {
   if (!overwrite && file.exists(to)) {
     warning(
       "cannot move ", from, " to ", to, ". ",
@@ -198,7 +198,9 @@ dir_move <- function(from, to, overwrite = FALSE, jobs = 1L) {
     )
     return(invisible())
   }
-  unlink(to, recursive = TRUE)
+  if (!merge) {
+    unlink(to, recursive = TRUE)
+  }
   dir_create(to)
   files <- list.files(from, all.files = TRUE, recursive = TRUE)
   args <- list(
