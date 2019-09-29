@@ -473,12 +473,30 @@ dsl_transform.map <- dsl_transform.cross <- function(
   max_expand
 ) {
   groupings <- groupings(transform)
-  cols <- upstream_trace_vars(target, plan, graph)
   grid <- dsl_grid(transform, groupings)
   if (any(dim(grid) < 1L)) {
     warn_empty_transform(target)
-    return()
+    return(grid)
   }
+  grid <- dsl_map_join_plan(
+    grid = grid,
+    plan = plan,
+    graph = graph,
+    target = target,
+    transform = transform
+  )
+  dsl_map_new_targets(
+    transform = transform,
+    target = target,
+    row = row,
+    grid = grid,
+    plan = plan,
+    max_expand = max_expand
+  )
+}
+
+dsl_map_join_plan <- function(grid, plan, graph, target, transform) {
+  cols <- upstream_trace_vars(target, plan, graph)
   gridlist <- lapply(grid, as.data.frame, stringsAsFactors = FALSE)
   for (i in seq_len(ncol(grid))) {
     colnames(gridlist[[i]]) <- colnames(grid)[i]
@@ -489,13 +507,23 @@ dsl_transform.map <- dsl_transform.cross <- function(
   }
   grid <- do.call(cbind, unname(gridlist))
   grid_cols <- c(names(groupings), setdiff(colnames(grid), names(groupings)))
-  grid <- grid[, grid_cols, drop = FALSE]
+  grid[, grid_cols, drop = FALSE]
+}
+
+dsl_map_new_targets <- function(
+  transform,
+  target,
+  row,
+  grid,
+  plan,
+  max_expand
+) {
   sub_cols <- intersect(colnames(grid), group_names(transform))
-  new_targets <- new_targets(
+  new_target_names <- new_target_names(
     target, grid, cols = sub_cols, id = dsl_id(transform)
   )
-  out <- data.frame(target = new_targets, stringsAsFactors = FALSE)
-  grid$.id_chr <- sprintf("\"%s\"", new_targets)
+  out <- data.frame(target = new_target_names, stringsAsFactors = FALSE)
+  grid$.id_chr <- sprintf("\"%s\"", new_target_names)
   for (col in setdiff(old_cols(plan), c("target", "transform"))) {
     if (is.language(row[[col]][[1]])) {
       out[[col]] <- grid_subs(row[[col]][[1]], grid)
@@ -577,7 +605,23 @@ dsl_transform.combine <- function(transform, target, row, plan, graph, ...) {
     warn_empty_transform(target)
     return()
   }
-  out <- map_by(
+  out <- dsl_commands_combine(transform = transform, row = row, plan = plan)
+  if (!nrow(out)) {
+    warn_empty_transform(target)
+    return()
+  }
+  out$target <- new_target_names(
+    target,
+    out,
+    cols = dsl_by(transform),
+    id = dsl_id(transform)
+  )
+  out <- id_chr_sub(plan = out, cols = old_cols(plan), .id_chr = out$target)
+  out
+}
+
+dsl_commands_combine <- function(transform, row, plan) {
+  map_by(
     .x = plan,
     .by = dsl_by(transform),
     .f = combine_step,
@@ -585,15 +629,6 @@ dsl_transform.combine <- function(transform, target, row, plan, graph, ...) {
     transform = transform,
     old_cols = old_cols(plan)
   )
-  if (!nrow(out)) {
-    warn_empty_transform(target)
-    return()
-  }
-  out$target <- new_targets(
-    target, out, cols = dsl_by(transform), id = dsl_id(transform)
-  )
-  out <- id_chr_sub(plan = out, cols = old_cols(plan), .id_chr = out$target)
-  out
 }
 
 warn_empty_transform <- function(target) {
@@ -615,10 +650,6 @@ valid_splitting_plan <- function(plan, transform) {
   out <- plan[rows_keep,, drop = FALSE] # nolint
   old_cols(out) <- old_cols
   out
-}
-
-complete_cases <- function(x) {
-  !as.logical(Reduce(`|`, lapply(x, is.na)))
 }
 
 map_by <- function(.x, .by, .f, ...) {
@@ -687,7 +718,7 @@ dsl_sym <- function(x) {
   tryCatch(parse(text = x)[[1]], error = function(e) as.symbol(x))
 }
 
-new_targets <- function(target, grid, cols, id) {
+new_target_names <- function(target, grid, cols, id) {
   if (is.character(id)) {
     cols <- intersect(id, colnames(grid))
   }
@@ -735,7 +766,7 @@ combine_step <- function(plan, row, transform, old_cols) {
       out[[col]] <- row[[col]]
     }
   }
-  groupings <- combine_tagalongs(plan, transform, old_cols)
+  groupings <- dsl_combine_join_plan(plan, transform, old_cols)
   if (nrow(groupings) == 1L) {
     out <- cbind(out, groupings)
   }
@@ -798,7 +829,7 @@ splice_inner <- function(x, replacements) {
   }
 }
 
-combine_tagalongs <- function(plan, transform, old_cols) {
+dsl_combine_join_plan <- function(plan, transform, old_cols) {
   combined_plan <- plan[, dsl_combine(transform), drop = FALSE]
   out <- plan[complete_cases(combined_plan),, drop = FALSE] # nolint
   drop <- c(old_cols, dsl_combine(transform), dsl_by(transform))

@@ -27,17 +27,9 @@ drake_tip_ <- function() {
      make(my_plan);
      readd(small)"
   )
-  tips <- wrap_text(tips)
+  tips <- soft_wrap(tips)
   sample(tips, 1)
 }
-
-wrap_text <- Vectorize(
-  function(x) {
-    x <- paste(strwrap(x), collapse = "\n")
-    unname(x)
-  },
-  "x"
-)
 
 .onLoad <- function(libname, pkgname) {
   warn_rdata()

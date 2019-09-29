@@ -110,13 +110,23 @@ Data analysis can be slow. A round of scientific computation can take several mi
 
 For projects in R, the `drake` package can help. It [analyzes your workflow](https://ropenscilabs.github.io/drake-manual/plans.html), skips steps with up-to-date results, and orchestrates the rest with [optional distributed computing](https://ropenscilabs.github.io/drake-manual/hpc.html). At the end, `drake` provides evidence that your results match the underlying code and data, which increases your ability to trust your research.
 
-# 6-minute video
+# Videos
 
-Visit the [first page of the manual](https://ropenscilabs.github.io/drake-manual/) to watch a short introduction.
+Visit the [first page of the manual](https://ropenscilabs.github.io/drake-manual/) to watch a 6-minute introduction.
 
 <center>
 <a href="https://ropenscilabs.github.io/drake-manual">
 <img src="https://docs.ropensci.org/drake/reference/figures/video.png" alt="video" align="center" style = "border: none; float: center;">
+</a>
+</center>
+<br>
+<br>
+
+The [rOpenSci Community Call from 2019-09-24](https://ropensci.org/commcalls/2019-09-24/) is a much longer presentation on `drake` (20 min talk, 35 min Q&A). Visit the [call's page](https://ropensci.org/commcalls/2019-09-24/) for links to additional resources, and [chime in here](https://github.com/ropensci-org/community-calls) to propose and vote for ideas for new Community Call topics and speakers.
+
+<center>
+<a href="https://ropensci.org/commcalls/2019-09-24/">
+<img src="https://docs.ropensci.org/drake/reference/figures/commcall.png" alt="commcall" align="center" style = "border: none; float: center;">
 </a>
 </center>
 <br>
@@ -419,6 +429,15 @@ options(
 )
 make(plan, parallelism = "clustermq", jobs = 4)
 ```
+
+# With Docker
+
+`drake` and Docker are compatible and complementary. Here are some examples that run `drake` inside a Docker image.
+
+- [`drake-gitlab-docker-example`](https://gitlab.com/ecohealthalliance/drake-gitlab-docker-example): A small pedagogical example workflow that leverages `drake`, Docker, GitLab, and continuous integration in a reproducible analysis pipeline. Created by [Noam Ross](https://www.noamross.net/).
+- [`pleurosoriopsis`](https://github.com/joelnitta/pleurosoriopsis): The workflow that supports [Ebihara *et al.* 2019. "Growth Dynamics of the Independent Gametophytes of *Pleurorosiopsis makinoi* (Polypodiaceae)" *Bulletin of the National Science Museum Series B (Botany)* 45:77-86.](https://www.kahaku.go.jp/research/publication/botany.html). Created by [Joel Nitta](https://github.com/joelnitta).
+
+Alternatively, it is possible to run `drake` outside Docker and use the [`future`](https://github.com/HenrikBengtsson/future) package to send targets to a Docker image. `drake`'s [`Docker-psock`](https://github.com/wlandau/drake-examples/tree/master/Docker-psock) example demonstrates how. Download the code with `drake_example("Docker-psock")`.
 
 # Installation
 

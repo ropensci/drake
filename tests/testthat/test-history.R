@@ -1,5 +1,22 @@
 drake_context("history")
 
+test_with_dir("history can be disabled", {
+  plan <- drake_plan(x = 1)
+  cache <- storr::storr_environment()
+  make(plan, cache = cache, history = FALSE)
+  expect_false(file.exists(default_cache_path()))
+  expect_false(file.exists(default_history_path(default_cache_path())))
+})
+
+test_with_dir("history works with environment storrs", {
+  plan <- drake_plan(x = 1)
+  cache <- storr::storr_environment()
+  make(plan, cache = cache, history = TRUE)
+  expect_true(file.exists(default_cache_path()))
+  expect_true(file.exists(default_history_path(default_cache_path())))
+  expect_true(nrow(drake_history(cache = cache)) > 0L)
+})
+
 test_with_dir("edge_cases", {
   skip_if_not_installed("txtq")
   expect_error(drake_history(), regexp = "cannot find drake cache")
@@ -124,7 +141,7 @@ test_with_dir("file history", {
   }
 })
 
-test_with_dir("migrate history", {
+test_with_dir("history migration", {
   plan <- drake_plan(x = 1)
   history <- txtq::txtq(".drake_history")
   make(plan, history = history)
@@ -147,4 +164,20 @@ test_with_dir("migrate history with drake_history()", {
   expect_true(
     file.exists(file.path(default_cache_path(), "drake", "history"))
   )
+})
+
+test_with_dir("custom history txtq", {
+  plan <- drake_plan(x = 1)
+  q <- txtq::txtq("hist")
+  make(plan, history = q)
+  expect_false(file.exists(default_history_path(drake_cache()$path)))
+  history <- drake_history(history = q)
+  expect_true(nrow(history) > 0L)
+})
+
+test_with_dir("txtq present but emtpy", {
+  q <- txtq::txtq(tempfile())
+  expect_equal(nrow(q$list()), 0L)
+  cache <- new_cache()
+  expect_error(drake_history(history = q), "no history")
 })

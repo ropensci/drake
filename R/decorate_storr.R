@@ -13,6 +13,7 @@ decorate_storr <- function(storr) {
     default_namespace = storr$default_namespace,
     envir = storr$envir,
     hash_algorithm = hash_algorithm,
+    history = recover_default_history(path),
     ht_encode_path = ht_new(),
     ht_decode_path = ht_new(),
     ht_encode_namespaced = ht_new(),
@@ -33,6 +34,7 @@ refclass_decorated_storr <- methods::setRefClass(
     "default_namespace",
     "envir",
     "hash_algorithm",
+    "history",
     "ht_encode_path",
     "ht_decode_path",
     "ht_encode_namespaced",
@@ -110,6 +112,46 @@ refclass_decorated_storr <- methods::setRefClass(
     get_progress = function(target) {
       retrieve_progress(target = target, cache = .self)
     },
+    set_history = function(history = NULL) {
+      .self$history <- manage_history(history, cache_path = .self$path)
+    },
+    import = function(
+      from,
+      ...,
+      list = NULL,
+      jobs = 1L,
+      gc = TRUE
+    ) {
+      stopifnot(inherits(from, "refclass_decorated_storr"))
+      import_targets(
+        ...,
+        list = list,
+        from = from,
+        to = .self,
+        jobs = jobs,
+        gc = gc
+      )
+      invisible()
+    },
+    export = function(
+      to,
+      ...,
+      list = NULL,
+      targets = NULL,
+      jobs = 1L,
+      gc = TRUE
+    ) {
+      stopifnot(inherits(to, "refclass_decorated_storr"))
+      import_targets(
+        ...,
+        list = list,
+        from = .self,
+        to = to,
+        jobs = jobs,
+        gc = gc
+      )
+      invisible()
+    },
     # Delegate to storr:
     archive_export = function(...) .self$storr$archive_export(...),
     archive_import = function(...) .self$storr$archive_import(...),
@@ -121,13 +163,11 @@ refclass_decorated_storr <- methods::setRefClass(
     duplicate = function(...) .self$storr$duplicate(...),
     exists = function(...) .self$storr$exists(...),
     exists_object = function(...) .self$storr$exists_object(...),
-    export = function(...) .self$storr$export(...),
     fill = function(...) .self$storr$fill(...),
     flush_cache = function(...) .self$storr$flush_cache(...),
     get_hash = function(...) .self$storr$get_hash(...),
     hash_object = function(...) .self$storr$hash_object(...),
     hash_raw = function(...) .self$storr$hash_raw(...),
-    import = function(...) .self$storr$import(...),
     index_export = function(...) .self$storr$index_export(...),
     index_import = function(...) .self$storr$index_import(...),
     list = function(...) .self$storr$list(...),
@@ -178,6 +218,12 @@ dcst_get_.drake_format_fst_dt <- function(value, key, .self) { # nolint
   fst::read_fst(.self$file_return_key(key), as.data.table = TRUE)
 }
 
+dcst_get_.drake_format_diskframe <- function(value, key, .self) { # nolint
+  assert_pkg("disk.frame")
+  assert_pkg("fst")
+  disk.frame::disk.frame(.self$file_return_key(key), backend = "fst")
+}
+
 # Requires Python Keras and TensorFlow to test. Tested in test-keras.R.
 # nocov start
 dcst_get_.drake_format_keras <- function(value, key, .self) {
@@ -212,6 +258,12 @@ dcst_get_value_.drake_format_fst_dt <- function(value, hash, .self) { # nolint
   assert_pkg("data.table")
   assert_pkg("fst")
   fst::read_fst(.self$file_return_hash(hash), as.data.table = TRUE)
+}
+
+dcst_get_value_.drake_format_diskframe <- function(value, hash, .self) { # nolint
+  assert_pkg("disk.frame")
+  assert_pkg("fst")
+  disk.frame::disk.frame(.self$file_return_hash(hash), backend = "fst")
 }
 
 # Requires Python Keras and TensorFlow to test. Tested in test-keras.R.
@@ -251,6 +303,14 @@ dcst_set.drake_format_fst_dt <- function(value, key, ..., .self) {
   dcst_set_move_tmp(key = key, value = value, tmp = tmp, .self = .self)
 }
 
+dcst_set.drake_format_diskframe <- function(value, key, ..., .self) {
+  assert_pkg("disk.frame")
+  assert_pkg("fst")
+  .self$assert_dirs()
+  tmp <- attr(value$value, "path")
+  dcst_set_move_tmp(key = key, value = value, tmp = tmp, .self = .self)
+}
+
 # Requires Python Keras and TensorFlow to test. Tested in test-test-keras.R
 # nocov start
 dcst_set.drake_format_keras <- function(value, key, ..., .self) {
@@ -282,18 +342,51 @@ dcst_set_move_tmp <- function(key, value, tmp, .self) {
   class(hash_tmp) <- class(value)
   hash <- .self$storr$set(key = key, value = hash_tmp)
   file <- .self$file_return_hash(hash)
-  file.copy(tmp, file)
+  storage_move(
+    tmp,
+    file,
+    overwrite = FALSE,
+    merge = FALSE,
+    warn = FALSE
+  )
   invisible(hash)
 }
 
-dir_create <- function(x) {
-  if (!file.exists(x)) {
-    dir.create(x, showWarnings = FALSE, recursive = TRUE)
+#' @title drake tempfile
+#' \lifecycle{experimental}
+#' @description Create the path to a temporary file inside drake's cache.
+#' @details This function is just like the `tempfile()` function in base R
+#'   except that the path points to a special location inside `drake`'s cache.
+#'   This ensures that if the file needs to be copied to
+#'   persistent storage in the cache, `drake` does not need to copy across
+#'   physical storage media. Example: the `"diskframe"` format. See the
+#'   "Formats" and "Columns" sections of the [drake_plan()] help file.
+#'   Unless you supply the cache or the path to the cache
+#'   (see [drake_cache()]) `drake` will assume the cache folder is named
+#'   `.drake/` and it is located either in your working directory or an
+#'   ancestor of your working directory.
+#' @export
+#' @seealso [drake_cache()], [new_cache()]
+#' @inheritParams cached
+#' @examples
+#' cache <- new_cache(tempfile())
+#' # No need to supply a cache if a .drake/ folder exists.
+#' drake_tempfile(cache = cache)
+#' drake_plan(
+#'   x = target(
+#'     as.disk.frame(large_data, outdir = drake_tempfile()),
+#'     format = "diskframe"
+#'   )
+#' )
+drake_tempfile <- function(
+  path = NULL,
+  cache = drake::drake_cache(path = path)
+) {
+  if (is.null(cache)) {
+    stop("drake cache not found", call. = FALSE)
   }
-  if (!dir.exists(x)) {
-    stop("cannot create directory at ", shQuote(x), call. = FALSE)
-  }
-  invisible()
+  cache <- decorate_storr(cache)
+  cache$file_tmp()
 }
 
 #' @title Show a file's encoded representation in the cache
@@ -444,5 +537,100 @@ retrieve_progress <- function(target, cache) {
     )
   } else{
     "none"
+  }
+}
+
+manage_history <- function(history, cache_path) {
+  if (!is_history(history)) {
+    migrate_history(history, cache_path)
+  }
+  if (is.null(history)) {
+    history <- recover_default_history(cache_path)
+  } else if (identical(history, TRUE)) {
+    history <- initialize_history(cache_path)
+  } else if (identical(history, FALSE)) {
+    history <- NULL
+  }
+  stopifnot(is.null(history) || is_history(history))
+  history
+}
+
+migrate_history <- function(history, cache_path) {
+  old_path <- file.path(dirname(cache_path), ".drake_history")
+  if (file.exists(old_path)) {
+    dir_move(old_path, default_history_path(cache_path), merge = FALSE)
+  }
+}
+
+recover_default_history <- function(cache_path) {
+  history_path <- default_history_path(cache_path)
+  if (file.exists(history_path)) {
+    history_queue(history_path)
+  }
+}
+
+initialize_history <- function(cache_path) {
+  history_queue(default_history_path(cache_path))
+}
+
+default_history_path <- function(cache_path) {
+  file.path(cache_path, "drake", "history")
+}
+
+history_queue <- function(history_path) {
+  dir_create(history_path)
+  txtq::txtq(history_path)
+}
+
+is_history <- function(history) {
+  inherits(history, "R6_txtq")
+}
+
+import_targets <- function(..., list = character(0), from, to, jobs, gc) {
+  targets <- c(as.character(match.call(expand.dots = FALSE)$...), list)
+  if (requireNamespace("tidyselect", quietly = TRUE)) {
+    targets <- drake_tidyselect_cache(
+      ...,
+      list = list,
+      cache = from,
+      namespaces = "meta"
+    )
+  }
+  if (!length(targets)) {
+    targets <- from$list()
+  }
+  lightly_parallelize(
+    X = targets %||% from$list(),
+    FUN = import_target,
+    jobs = jobs,
+    from = from,
+    to = to,
+    gc = gc
+  )
+}
+
+import_target <- function(target, from, to, gc) {
+  import_target_storr(target = target, from = from, to = to, gc = gc)
+  import_target_formatted(target = target, from = from, to = to)
+}
+
+import_target_storr <- function(target, from, to, gc) {
+  for (ns in setdiff(from$storr$list_namespaces(), "progress")) {
+    if (from$storr$exists(target, namespace = ns)) {
+      value <- from$get(key = target, namespace = ns)
+      to$set(key = target, value = value, namespace = ns)
+    }
+    if (gc) {
+      gc()
+    }
+  }
+}
+
+import_target_formatted <- function(target, from, to) {
+  if (file.exists(from$file_return_key(target))) {
+    file_move(
+      from = from$file_return_key(target),
+      to = to$file_return_key(target)
+    )
   }
 }

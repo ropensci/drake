@@ -165,6 +165,101 @@ multiline_message <- function(x) {
   paste(x, collapse = "\n")
 }
 
+hard_wrap <- Vectorize(
+  function(x, width = 0.9 * getOption("width")) {
+    if (nchar(x) <= width) {
+      return(x)
+    }
+    chars <- strsplit(x, "")[[1]]
+    max_index <- ceiling(nchar(x) / width)
+    index <- rep(seq_len(max_index), each = width, length.out = nchar(x))
+    lines <- tapply(X = chars, INDEX = index, FUN = paste, collapse = "")
+    paste(lines, collapse = "\n")
+  },
+  vectorize.args = "x",
+  USE.NAMES = FALSE
+)
+
+soft_wrap <- Vectorize(
+  function(x, width = 0.9 * getOption("width")) {
+    x <- paste(strwrap(x), collapse = "\n")
+    unname(x)
+  },
+  vectorize.args = "x",
+  USE.NAMES = FALSE
+)
+
+storage_move <- function(
+  from,
+  to,
+  overwrite = FALSE,
+  merge = FALSE,
+  warn = TRUE,
+  jobs = 1L
+) {
+  if (dir.exists(from)) {
+    dir_move(
+      from = from,
+      to = to,
+      overwrite = overwrite,
+      merge = merge,
+      warn = warn,
+      jobs = jobs
+    )
+  } else {
+    file_move(from = from, to = to)
+  }
+  invisible()
+}
+
+dir_move <- function(
+  from,
+  to,
+  overwrite = FALSE,
+  merge = FALSE,
+  warn = TRUE,
+  jobs = 1L
+) {
+  if (!overwrite && file.exists(to)) {
+    if (warn) {
+      warning(
+        "cannot move ", from, " to ", to, ". ",
+        to, " already exists.",
+        call. = FALSE
+      )
+    }
+    return(invisible())
+  }
+  if (!merge) {
+    unlink(to, recursive = TRUE)
+  }
+  dir_create(to)
+  files <- list.files(from, all.files = TRUE, recursive = TRUE)
+  args <- list(
+    from = file.path(from, files),
+    to = file.path(to, files)
+  )
+  drake_pmap(.l = args, .f = file_move, jobs = jobs)
+  unlink(from, recursive = TRUE)
+  invisible()
+}
+
+file_move <- function(from, to) {
+  dir_create(dirname(to))
+  file.rename(from = from, to = to)
+  invisible()
+}
+
+dir_create <- function(x) {
+  if (!file.exists(x)) {
+    dir.create(x, showWarnings = FALSE, recursive = TRUE)
+  }
+  if (!dir.exists(x)) {
+    stop("cannot create directory at ", shQuote(x), call. = FALSE)
+  }
+  invisible()
+}
+
 # From lintr
 `%||%` <- function(x, y) {
   if (is.null(x) || length(x) <= 0) {

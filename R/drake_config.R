@@ -635,6 +635,7 @@ drake_config <- function(
     cache <- new_cache()
   }
   cache <- decorate_storr(cache)
+  cache$set_history(history)
   logger$minor("cache", cache$path)
   seed <- choose_seed(supplied = seed, cache = cache)
   if (identical(force, TRUE)) {
@@ -656,7 +657,6 @@ drake_config <- function(
     jobs = jobs_preprocess,
     logger = logger
   )
-  history <- initialize_history(history, cache)
   lazy_load <- parse_lazy_arg(lazy_load)
   caching <- match.arg(caching)
   recover <- as.logical(recover)
@@ -696,7 +696,6 @@ drake_config <- function(
     hasty_build = hasty_build,
     lock_envir = lock_envir,
     force = force,
-    history = history,
     recover = recover,
     recoverable = recoverable,
     curl_handles = curl_handles
@@ -752,32 +751,6 @@ get_previous_seed <- function(cache) {
   }
 }
 
-initialize_history <- function(history, cache) {
-  migrate_history(history, cache)
-  if (identical(history, TRUE)) {
-    history <- default_history_queue(cache)
-  }
-  if (!is.null(history) && !identical(history, FALSE)) {
-    stopifnot(is_history(history))
-  }
-  history
-}
-
-migrate_history <- function(history, cache) {
-  if (is_history(history)) {
-    return()
-  }
-  old_path <- file.path(dirname(cache$path), ".drake_history")
-  if (file.exists(old_path)) {
-    dir_create(file.path(cache$path, "drake"))
-    file.rename(old_path, file.path(cache$path, "drake", "history"))
-  }
-}
-
-is_history <- function(history) {
-  inherits(history, "R6_txtq")
-}
-
 # Load an existing drake files system cache if it exists
 # or create a new one otherwise.
 # TO DO: remove all the arguments when we make recover_cache() defunct.
@@ -824,7 +797,7 @@ plan_check_format_col <- function(plan) {
   }
   format <- plan$format
   format <- format[!is.na(format)]
-  formats <- c("fst", "fst_dt", "keras", "rds")
+  formats <- c("fst", "fst_dt", "diskframe", "keras", "rds")
   illegal <- setdiff(unique(format), formats)
   if (!length(illegal)) {
     return()
