@@ -423,6 +423,50 @@ test_with_dir("fst_dt format forces data.tables", {
   expect_true(inherits(readd(x), "data.table"))
 })
 
+test_with_dir("disk.frame (#1004)", {
+  skip_if_not_installed("disk.frame")
+  skip_if_not_installed("fst")
+  plan <- drake_plan(
+    x = target(
+      disk.frame::as.disk.frame(
+        data.frame(x = letters, y = letters, stringsAsFactors = FALSE),
+        outdir = drake_tempfile()
+      ),
+      format = "diskframe"
+    )
+  )
+  make(plan)
+  out <- readd(x)
+  expect_true(inherits(out, "disk.frame"))
+  exp <- data.table::as.data.table(
+    data.frame(x = letters, y = letters, stringsAsFactors = FALSE)
+  )
+  expect_equivalent(as.data.frame(out), exp)
+  cache <- drake_cache()
+  expect_equivalent(
+    as.data.frame(cache$get_value(cache$get_hash("x"))),
+    exp
+  )
+  ref <- cache$storr$get("x")
+  expect_true(inherits(ref, "drake_format_diskframe"))
+  expect_equal(length(ref), 1L)
+  expect_true(nchar(ref) < 100)
+  expect_false(is.list(ref))
+})
+
+test_with_dir("diskframe format forces disk.frames", {
+  skip_if_not_installed("disk.frame")
+  skip_if_not_installed("fst")
+  plan <- drake_plan(
+    x = target(
+      data.frame(x = letters, y = letters),
+      format = "diskframe"
+    )
+  )
+  expect_warning(make(plan), regexp = "disk.frame")
+  expect_true(inherits(readd(x), "disk.frame"))
+})
+
 test_with_dir("drop format for NULL values (#998)", {
   skip_if(getRversion() < "3.5.0")
   f <- function() {

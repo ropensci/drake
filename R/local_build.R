@@ -364,11 +364,11 @@ sanitize_format.drake_format_diskframe <- function(x, target, config) { # nolint
     )
     warning(msg, call. = FALSE)
     config$logger$minor(msg, target = target)
+    x$value <- disk.frame::as.disk.frame(
+      df = x$value,
+      outdir = config$cache$file_tmp()
+    )
   }
-  x$value <- disk.frame::as.disk.frame(
-    df = x$value,
-    outdir = config$cache$file_tmp()
-  )
   x
 }
 

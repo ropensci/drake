@@ -307,7 +307,7 @@ dcst_set.drake_format_diskframe <- function(value, key, ..., .self) {
   assert_pkg("disk.frame")
   assert_pkg("fst")
   .self$assert_dirs()
-  tmp <- attr(value, "path")
+  tmp <- attr(value$value, "path")
   dcst_set_move_tmp(key = key, value = value, tmp = tmp, .self = .self)
 }
 
@@ -347,6 +347,7 @@ dcst_set_move_tmp <- function(key, value, tmp, .self) {
 }
 
 #' @title drake tempfile
+#' \lifecycle{experimental}
 #' @description Create the path to a temporary file inside drake's cache.
 #' @details This function is just like the `tempfile()` function in base R
 #'   except that the path points to a special location inside `drake`'s cache.

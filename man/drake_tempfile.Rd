@@ -2,7 +2,8 @@
 % Please edit documentation in R/decorate_storr.R
 \name{drake_tempfile}
 \alias{drake_tempfile}
-\title{drake tempfile}
+\title{drake tempfile
+\lifecycle{experimental}}
 \usage{
 drake_tempfile(path = NULL, cache = drake::drake_cache(path = path))
 }
