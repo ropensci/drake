@@ -2,7 +2,7 @@
 % Please edit documentation in R/drake_plan.R
 \name{drake_plan}
 \alias{drake_plan}
-\title{Create a workflow plan data frame
+\title{Create a drake plan
 for the \code{plan} argument of \code{\link[=make]{make()}}.
 \lifecycle{maturing}}
 \usage{
@@ -80,37 +80,7 @@ but \code{drake} looks for them at various points in the workflow.
 \code{\link[=combine]{combine()}} to create and manipulate large collections of targets.
 Details: (\url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}). # nolint
 \item \code{format}: set a storage format to save big targets more efficiently.
-Most formats are faster than ordinary storage, and they consume
-far less memory. Available formats:
-\itemize{
-\item \code{"fst"}: save big data frames fast. Requirements:
-\enumerate{
-\item The \code{fst} package must be installed.
-\item The target's value must be a plain data frame. If it is not a
-plain data frame (for example, a tibble or data.table)
-then drake will coerce it to a plain data frame with
-\code{as.data.frame()}.
-All non-data-frame-specific attributes are lost
-when \code{drake} saves the target.
-}
-\item \code{"fst_dt"}: Like \code{"fst"} format, but for \code{data.table} objects.
-Requirements:
-\enumerate{
-\item The \code{data.table} and \code{fst} packages must be installed.
-\item The target's value must be a data.table object. If it is not a
-data.table object (for example, a data frame or tibble)
-then drake will coerce it to a data.table object using
-\code{data.table::as.data.table()}.
-All non-data-table-specific attributes are lost
-when \code{drake} saves the target.
-}
-\item \code{"keras"}: save Keras models as HDF5 files.
-Requires the \code{keras} package.
-\item \code{"rds"}: save any object. This is similar to the default storage
-except we avoid creating a serialized copy of
-the entire target in memory.
-Requires R >= 3.5.0 so drake can use ALTREP.
-}
+See the "Formats" section of this help file for more details.
 \item \code{trigger}: rule to decide whether a target needs to run.
 It is recommended that you define this one with \code{target()}.
 Details: \url{https://ropenscilabs.github.io/drake-manual/triggers.html}.
@@ -139,6 +109,55 @@ unique reproducible target-specific seeds using the global seed
 (the \code{seed} argument to \code{\link[=make]{make()}} and \code{\link[=drake_config]{drake_config()}})
 and the target names, but you can overwrite these automatic seeds.
 \code{NA} entries default back to \code{drake}'s automatic seeds.
+}
+}
+
+\section{Formats}{
+
+drake supports specialized data formats. Purpose:
+\itemize{
+\item Save targets that cannot be saved in RDS format (like Keras models).
+\item Reduce the time, memory, and storage required to save targets.
+"format" is one of the custom columns supported in plans.
+To use it, just specify a format to \code{target()}, e.g.
+\code{drake_plan(x = target(big_data_frame, format = "fst"))}.
+You can also append a \code{format} column to your plan post-hoc.
+Available formats:
+\item \code{"fst"}: save big data frames fast. Requirements:
+\enumerate{
+\item The \code{fst} package must be installed.
+\item The target's value must be a plain data frame. If it is not a
+plain data frame (for example, a tibble or data.table)
+then drake will coerce it to a plain data frame with
+\code{as.data.frame()}.
+All non-data-frame-specific attributes are lost
+when \code{drake} saves the target.
+}
+\item \code{"fst_dt"}: Like \code{"fst"} format, but for \code{data.table} objects.
+Requirements:
+\enumerate{
+\item The \code{data.table} and \code{fst} packages must be installed.
+\item The target's value must be a data.table object. If it is not a
+data.table object (for example, a data frame or tibble)
+then drake will coerce it to a data.table object using
+\code{data.table::as.data.table()}.
+All non-data-table-specific attributes are lost
+when \code{drake} saves the target.
+}
+\item \code{"diskframe"}: Experimental.
+Store larger-than-memory data as a \code{disk.frame} object.
+Uses the \code{fst} backend. Requires the \code{disk.frame} and \code{fst} packages.
+Note: \code{disk.frame}s get moved to the \code{drake} cache
+(a subfolder of \code{.drake/} for most workflows). It is best to
+create \code{disk.frame} objects that initially reside on the same storage
+drive as the cache. \code{\link[=drake_tempfile]{drake_tempfile()}} can help with this,
+e.g. \code{as.disk.frame(your_dataset, outdir = drake_tempfile())}.
+\item \code{"keras"}: save Keras models as HDF5 files.
+Requires the \code{keras} package.
+\item \code{"rds"}: save any object. This is similar to the default storage
+except we avoid creating a serialized copy of
+the entire target in memory.
+Requires R >= 3.5.0 so drake can use ALTREP.
 }
 }
 

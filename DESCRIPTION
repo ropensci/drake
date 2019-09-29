@@ -107,6 +107,7 @@ Suggests:
   curl (>= 2.7),
   data.table,
   datasets,
+  disk.frame,
   downloader,
   fst,
   future,
