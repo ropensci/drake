@@ -113,12 +113,12 @@ reference:
   - '`build_times`'
   - '`predict_runtime`'
   - '`predict_workers`'
-- title: Caches
+- title: Cache creation
   contents:
   - '`drake_cache`'
   - '`new_cache`'
   - '`find_cache`'
-- title: Cache inspection
+- title: Cache usage
   contents:
   - '`loadd`'
   - '`readd`'
@@ -128,6 +128,7 @@ reference:
   - '`read_drake_seed`'
   - '`show_source`'
   - '`file_store`'
+  - '`drake_tempfile`'
 - title: Cache maintenance
   contents:
   - '`clean`'
