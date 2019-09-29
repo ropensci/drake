@@ -30,7 +30,9 @@ Unless you supply the cache or the path to the cache
 ancestor of your working directory.
 }
 \examples{
-drake_tempfile()
+cache <- new_cache(tempfile())
+# No need to supply a cache if a .drake/ folder exists.
+drake_tempfile(cache = cache)
 drake_plan(
   x = target(
     as.disk.frame(large_data, outdir = drake_tempfile()),

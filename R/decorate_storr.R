@@ -363,7 +363,9 @@ dcst_set_move_tmp <- function(key, value, tmp, .self) {
 #' @seealso [drake_cache()], [new_cache()]
 #' @inheritParams cached
 #' @examples
-#' drake_tempfile()
+#' cache <- new_cache(tempfile())
+#' # No need to supply a cache if a .drake/ folder exists.
+#' drake_tempfile(cache = cache)
 #' drake_plan(
 #'   x = target(
 #'     as.disk.frame(large_data, outdir = drake_tempfile()),
