@@ -655,13 +655,16 @@ is_imported_cache <- Vectorize(function(target, cache) {
 #'     with `drake_cache()$history`.
 #'   - `import()`: The `import()` method is a function that can import
 #'     targets, function dependencies, etc. from one decorated `storr`
-#'     to another. Arguments:
+#'     to another. History is not imported. For that, you have to work
+#'     with the history `txtq`s themselves, Arguments to `import()`:
 #'     - `...` and `list`: specify targets to import just like with [loadd()].
 #'       Leave these blank to import everything.
 #'     - `from`: the decorated `storr` from which to import targets.
 #'     - `jobs`: number of local processes for parallel computing.
 #'     - `gc`: `TRUE` or `FALSE`, whether to run garbage collection for memory
 #'       after importing each target. Recommended, but slow.
+#'   - `export()`: Same as `import()`, except the `from` argument is replaced
+#'     by `to`: the decorated `storr` where the targets end up.
 #' @seealso [new_cache()], [drake_config()]
 #' @export
 #' @return A drake/storr cache in a folder called `.drake/`,
@@ -707,9 +710,11 @@ is_imported_cache <- Vectorize(function(target, cache) {
 #' cache1$get("x")
 #' # With txtq >= 0.1.6.9002, you can import history from one cache into
 #' # another.
+#' # nolint start
 #' # drake_history(cache = cache1)
 #' # cache1$history$import(cache2$history)
 #' # drake_history(cache = cache1)
+#' # nolint end
 #' })
 #' }
 drake_cache <- function(
@@ -724,7 +729,6 @@ drake_cache <- function(
   }
   this_cache_(path = path)
 }
-
 
 #' @title Search up the file system for the nearest drake cache.
 #' \lifecycle{stable}
