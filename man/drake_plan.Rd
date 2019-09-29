@@ -144,7 +144,8 @@ then drake will coerce it to a data.table object using
 All non-data-table-specific attributes are lost
 when \code{drake} saves the target.
 }
-\item \code{"diskframe"}: Store larger-than-memory data as a \code{disk.frame} object.
+\item \code{"diskframe"}: Experimental.
+Store larger-than-memory data as a \code{disk.frame} object.
 Uses the \code{fst} backend. Requires the \code{disk.frame} and \code{fst} packages.
 Note: \code{disk.frame}s get moved to the \code{drake} cache
 (a subfolder of \code{.drake/} for most workflows). It is best to

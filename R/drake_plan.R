@@ -82,7 +82,8 @@
 #'         `data.table::as.data.table()`.
 #'         All non-data-table-specific attributes are lost
 #'         when `drake` saves the target.
-#'   - `"diskframe"`: Store larger-than-memory data as a `disk.frame` object.
+#'   - `"diskframe"`: Experimental.
+#'     Store larger-than-memory data as a `disk.frame` object.
 #'     Uses the `fst` backend. Requires the `disk.frame` and `fst` packages.
 #'     Note: `disk.frame`s get moved to the `drake` cache
 #'     (a subfolder of `.drake/` for most workflows). It is best to
