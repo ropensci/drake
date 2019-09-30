@@ -4,6 +4,7 @@ Thumbs.db
 *.bbl
 *.blg
 *.dcf
+*.dll
 *.gcda
 *.gcno
 *.httr-oauth

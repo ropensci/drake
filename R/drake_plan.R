@@ -1,4 +1,4 @@
-#' @title Create a workflow plan data frame
+#' @title Create a drake plan
 #'   for the `plan` argument of [make()].
 #' \lifecycle{maturing}
 #'
@@ -28,31 +28,7 @@
 #'   [combine()] to create and manipulate large collections of targets.
 #'   Details: (<https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>). # nolint
 #' - `format`: set a storage format to save big targets more efficiently.
-#'   Most formats are faster than ordinary storage, and they consume
-#'   far less memory. Available formats:
-#'   - `"fst"`: save big data frames fast. Requirements:
-#'       1. The `fst` package must be installed.
-#'       2. The target's value must be a plain data frame. If it is not a
-#'         plain data frame (for example, a tibble or data.table)
-#'         then drake will coerce it to a plain data frame with
-#'         `as.data.frame()`.
-#'         All non-data-frame-specific attributes are lost
-#'         when `drake` saves the target.
-#'   - `"fst_dt"`: Like `"fst"` format, but for `data.table` objects.
-#'      Requirements:
-#'       1. The `data.table` and `fst` packages must be installed.
-#'       2. The target's value must be a data.table object. If it is not a
-#'         data.table object (for example, a data frame or tibble)
-#'         then drake will coerce it to a data.table object using
-#'         `data.table::as.data.table()`.
-#'         All non-data-table-specific attributes are lost
-#'         when `drake` saves the target.
-#'   - `"keras"`: save Keras models as HDF5 files.
-#'     Requires the `keras` package.
-#'   - `"rds"`: save any object. This is similar to the default storage
-#'     except we avoid creating a serialized copy of
-#'     the entire target in memory.
-#'     Requires R >= 3.5.0 so drake can use ALTREP.
+#'   See the "Formats" section of this help file for more details.
 #' - `trigger`: rule to decide whether a target needs to run.
 #'   It is recommended that you define this one with `target()`.
 #'   Details: <https://ropenscilabs.github.io/drake-manual/triggers.html>.
@@ -79,6 +55,47 @@
 #'   (the `seed` argument to [make()] and [drake_config()])
 #'   and the target names, but you can overwrite these automatic seeds.
 #'   `NA` entries default back to `drake`'s automatic seeds.
+#'
+#' @section Formats:
+#'   drake supports specialized data formats. Purpose:
+#'   - Save targets that cannot be saved in RDS format (like Keras models).
+#'   - Reduce the time, memory, and storage required to save targets.
+#'   "format" is one of the custom columns supported in plans.
+#'   To use it, just specify a format to `target()`, e.g.
+#'   `drake_plan(x = target(big_data_frame, format = "fst"))`.
+#'   You can also append a `format` column to your plan post-hoc.
+#'   Available formats:
+#'   - `"fst"`: save big data frames fast. Requirements:
+#'       1. The `fst` package must be installed.
+#'       2. The target's value must be a plain data frame. If it is not a
+#'         plain data frame (for example, a tibble or data.table)
+#'         then drake will coerce it to a plain data frame with
+#'         `as.data.frame()`.
+#'         All non-data-frame-specific attributes are lost
+#'         when `drake` saves the target.
+#'   - `"fst_dt"`: Like `"fst"` format, but for `data.table` objects.
+#'      Requirements:
+#'       1. The `data.table` and `fst` packages must be installed.
+#'       2. The target's value must be a data.table object. If it is not a
+#'         data.table object (for example, a data frame or tibble)
+#'         then drake will coerce it to a data.table object using
+#'         `data.table::as.data.table()`.
+#'         All non-data-table-specific attributes are lost
+#'         when `drake` saves the target.
+#'   - `"diskframe"`: Experimental.
+#'     Store larger-than-memory data as a `disk.frame` object.
+#'     Uses the `fst` backend. Requires the `disk.frame` and `fst` packages.
+#'     Note: `disk.frame`s get moved to the `drake` cache
+#'     (a subfolder of `.drake/` for most workflows). It is best to
+#'     create `disk.frame` objects that initially reside on the same storage
+#'     drive as the cache. [drake_tempfile()] can help with this,
+#'     e.g. `as.disk.frame(your_dataset, outdir = drake_tempfile())`.
+#'   - `"keras"`: save Keras models as HDF5 files.
+#'     Requires the `keras` package.
+#'   - `"rds"`: save any object. This is similar to the default storage
+#'     except we avoid creating a serialized copy of
+#'     the entire target in memory.
+#'     Requires R >= 3.5.0 so drake can use ALTREP.
 #'
 #' @section Keywords:
 #' [drake_plan()] understands special keyword functions for your commands.

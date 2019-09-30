@@ -56,6 +56,12 @@ Authors@R: c(
     comment = c(ORCID = "0000-0002-2136-0000")
   ),
   person(
+    given = "Ellis",
+    family = "Hughes",
+    role = "ctb",
+    email = "ellishughes@live.com"
+  ),
+  person(
     given = "Ben",
     family = "Marwick",
     role = "rev",
@@ -107,6 +113,7 @@ Suggests:
   curl (>= 2.7),
   data.table,
   datasets,
+  disk.frame,
   downloader,
   fst,
   future,

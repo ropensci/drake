@@ -90,8 +90,7 @@ Visit the [first page of the manual](https://ropenscilabs.github.io/drake-manual
 <center>
 <a href="https://ropenscilabs.github.io/drake-manual"> <img src="https://docs.ropensci.org/drake/reference/figures/video.png" alt="video" align="center" style = "border: none; float: center;"> </a>
 </center>
-<br>
-<br>
+<br> <br>
 
 The [rOpenSci Community Call from 2019-09-24](https://ropensci.org/commcalls/2019-09-24/) is a much longer presentation on `drake` (20 min talk, 35 min Q&A). Visit the [call's page](https://ropensci.org/commcalls/2019-09-24/) for links to additional resources, and [chime in here](https://github.com/ropensci-org/community-calls) to propose and vote for ideas for new Community Call topics and speakers.
 
@@ -216,7 +215,7 @@ readd(hist)
 #> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-![](man/figures/readdhist-1.png)
+![](man/figures/unnamed-chunk-9-1.png)
 
 So let's fix the plotting function.
 
@@ -250,7 +249,7 @@ loadd(hist)
 hist
 ```
 
-![](man/figures/hist2-1.png)
+![](man/figures/unnamed-chunk-13-1.png)
 
 Reproducibility with confidence
 ===============================
@@ -329,16 +328,16 @@ history
 #>    <chr>  <lgl>   <chr> <lgl>  <chr> <chr>    <int>    <dbl> <lgl>
 #>  1 data   TRUE    2019… TRUE   e580… raw_da… 1.29e9 0.001000 NA   
 #>  2 data   TRUE    2019… TRUE   e580… raw_da… 1.29e9 0.001    NA   
-#>  3 fit    TRUE    2019… TRUE   62a1… lm(Sep… 1.11e9 0.002    NA   
-#>  4 fit    TRUE    2019… TRUE   62a1… lm(Sep… 1.11e9 0.001    NA   
-#>  5 hist   FALSE   2019… TRUE   22a2… create… 2.10e8 0.00500  NA   
+#>  3 fit    TRUE    2019… TRUE   62a1… lm(Sep… 1.11e9 0.00300  NA   
+#>  4 fit    TRUE    2019… TRUE   62a1… lm(Sep… 1.11e9 0.001000 NA   
+#>  5 hist   FALSE   2019… TRUE   22a2… create… 2.10e8 0.006    NA   
 #>  6 hist   TRUE    2019… TRUE   6909… create… 2.10e8 0.00700  NA   
 #>  7 hist   TRUE    2019… TRUE   6909… create… 2.10e8 0.006    NA   
-#>  8 raw_d… TRUE    2019… TRUE   6317… "readx… 1.20e9 0.00700  NA   
-#>  9 raw_d… TRUE    2019… TRUE   6317… "readx… 1.20e9 0.006    NA   
-#> 10 report TRUE    2019… TRUE   31c5… "rmark… 1.30e9 0.538    TRUE 
-#> 11 report TRUE    2019… TRUE   31c5… "rmark… 1.30e9 0.368    TRUE 
-#> 12 report TRUE    2019… TRUE   31c5… "rmark… 1.30e9 0.387    TRUE 
+#>  8 raw_d… TRUE    2019… TRUE   6317… "readx… 1.20e9 0.007    NA   
+#>  9 raw_d… TRUE    2019… TRUE   6317… "readx… 1.20e9 0.005    NA   
+#> 10 report TRUE    2019… TRUE   0176… "rmark… 1.30e9 0.574    TRUE 
+#> 11 report TRUE    2019… TRUE   0176… "rmark… 1.30e9 0.396    TRUE 
+#> 12 report TRUE    2019… TRUE   0176… "rmark… 1.30e9 0.400    TRUE 
 #> # … with 1 more variable: output_file <chr>
 ```
 
@@ -360,7 +359,7 @@ cache$get_value(hash)
 #> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-![](man/figures/histhistory-1.png)
+![](man/figures/unnamed-chunk-18-1.png)
 
 Reproducible data recovery and renaming
 ---------------------------------------
@@ -382,7 +381,7 @@ readd(hist) # old histogram
 #> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-![](man/figures/recoverhist-1.png)
+![](man/figures/unnamed-chunk-19-1.png)
 
 `drake`'s data recovery feature is another way to avoid rerunning commands. It is useful if:
 
@@ -413,7 +412,7 @@ make(plan, recover = TRUE)
 
 # When was the raw data *really* first built?
 diagnose(raw_data)$date
-#> [1] "2019-09-26 19:43:02.201232 -0400 GMT"
+#> [1] "2019-09-29 23:02:00.616430 -0400 GMT"
 ```
 
 ### Renaming

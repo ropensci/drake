@@ -218,6 +218,12 @@ dcst_get_.drake_format_fst_dt <- function(value, key, .self) { # nolint
   fst::read_fst(.self$file_return_key(key), as.data.table = TRUE)
 }
 
+dcst_get_.drake_format_diskframe <- function(value, key, .self) { # nolint
+  assert_pkg("disk.frame")
+  assert_pkg("fst")
+  disk.frame::disk.frame(.self$file_return_key(key), backend = "fst")
+}
+
 # Requires Python Keras and TensorFlow to test. Tested in test-keras.R.
 # nocov start
 dcst_get_.drake_format_keras <- function(value, key, .self) {
@@ -252,6 +258,12 @@ dcst_get_value_.drake_format_fst_dt <- function(value, hash, .self) { # nolint
   assert_pkg("data.table")
   assert_pkg("fst")
   fst::read_fst(.self$file_return_hash(hash), as.data.table = TRUE)
+}
+
+dcst_get_value_.drake_format_diskframe <- function(value, hash, .self) { # nolint
+  assert_pkg("disk.frame")
+  assert_pkg("fst")
+  disk.frame::disk.frame(.self$file_return_hash(hash), backend = "fst")
 }
 
 # Requires Python Keras and TensorFlow to test. Tested in test-keras.R.
@@ -291,6 +303,14 @@ dcst_set.drake_format_fst_dt <- function(value, key, ..., .self) {
   dcst_set_move_tmp(key = key, value = value, tmp = tmp, .self = .self)
 }
 
+dcst_set.drake_format_diskframe <- function(value, key, ..., .self) {
+  assert_pkg("disk.frame")
+  assert_pkg("fst")
+  .self$assert_dirs()
+  tmp <- attr(value$value, "path")
+  dcst_set_move_tmp(key = key, value = value, tmp = tmp, .self = .self)
+}
+
 # Requires Python Keras and TensorFlow to test. Tested in test-test-keras.R
 # nocov start
 dcst_set.drake_format_keras <- function(value, key, ..., .self) {
@@ -322,8 +342,51 @@ dcst_set_move_tmp <- function(key, value, tmp, .self) {
   class(hash_tmp) <- class(value)
   hash <- .self$storr$set(key = key, value = hash_tmp)
   file <- .self$file_return_hash(hash)
-  file.copy(tmp, file)
+  storage_move(
+    tmp,
+    file,
+    overwrite = FALSE,
+    merge = FALSE,
+    warn = FALSE
+  )
   invisible(hash)
+}
+
+#' @title drake tempfile
+#' \lifecycle{experimental}
+#' @description Create the path to a temporary file inside drake's cache.
+#' @details This function is just like the `tempfile()` function in base R
+#'   except that the path points to a special location inside `drake`'s cache.
+#'   This ensures that if the file needs to be copied to
+#'   persistent storage in the cache, `drake` does not need to copy across
+#'   physical storage media. Example: the `"diskframe"` format. See the
+#'   "Formats" and "Columns" sections of the [drake_plan()] help file.
+#'   Unless you supply the cache or the path to the cache
+#'   (see [drake_cache()]) `drake` will assume the cache folder is named
+#'   `.drake/` and it is located either in your working directory or an
+#'   ancestor of your working directory.
+#' @export
+#' @seealso [drake_cache()], [new_cache()]
+#' @inheritParams cached
+#' @examples
+#' cache <- new_cache(tempfile())
+#' # No need to supply a cache if a .drake/ folder exists.
+#' drake_tempfile(cache = cache)
+#' drake_plan(
+#'   x = target(
+#'     as.disk.frame(large_data, outdir = drake_tempfile()),
+#'     format = "diskframe"
+#'   )
+#' )
+drake_tempfile <- function(
+  path = NULL,
+  cache = drake::drake_cache(path = path)
+) {
+  if (is.null(cache)) {
+    stop("drake cache not found", call. = FALSE)
+  }
+  cache <- decorate_storr(cache)
+  cache$file_tmp()
 }
 
 #' @title Show a file's encoded representation in the cache
