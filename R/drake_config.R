@@ -804,7 +804,7 @@ plan_check_format_col <- function(plan) {
   }
   stop(
     "the format column of your drake plan can only have values ",
-    "\"fst\", \"fst_dt\", \"keras\", \"rds\", or NA. ",
+    "\"diskframe\", \"fst\", \"fst_dt\", \"keras\", \"rds\", or NA. ",
     "Illegal values found:\n",
     multiline_message(illegal),
     call. = FALSE
