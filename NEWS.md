@@ -6,6 +6,7 @@
 - Add serious import and export methods for the decorated `storr` (#1015, @billdenney, @noamross).
 - Add a new `"diskframe"` format for larger-than-memory data (#1004, @xiaodaigh).
 - Add a new `drake_tempfile()` function to help with `"diskframe"` format. It makes sure we are not copying large datasets across different physical storage media (#1004, @xiaodaigh).
+- Add new function `code_to_function()` to allow for parsing script based workflows into functions so `drake_plan()` can begin to manage the workflow and track dependencies. (#994, @thebioengineer)
 
 ## Enhancements
 

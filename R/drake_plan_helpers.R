@@ -780,7 +780,7 @@ code_to_plan <- function(path) {
   txt <- readLines(path)
   # From CodeDepends: https://github.com/duncantl/CodeDepends/blob/7c9cf7eceffaea1d26fe25836c7a455f059e13c1/R/frags.R#L74 # nolint
   # Checks if the file is a knitr report.
-  if (any(grepl("^(### chunk number|<<[^>]*>>=|```\\{r.*\\})", txt))) { # nolint
+  if (any(grepl(knitr_pattern, txt))) { # nolint
     txt <- get_tangled_text(path)
   }
   nodes <- parse(text = txt)
@@ -1047,3 +1047,117 @@ is_trigger_call <- function(expr) {
     error = error_false
   )
 }
+
+#' @title Turn a script into a function.
+#' \lifecycle{experimental}
+#' @description `code_to_function()`is a quick (and very dirty) way to
+#'   retrofit `drake` to an existing script-based project. It parses
+#'   individual \*.R/\*.RMD files into functions so they can be added
+#'   into the drake workflow.
+#'
+#' @details Most data science workflows consist of imperative scripts.
+#'   `drake`, on the other hand, assumes you write *functions*.
+#'   `code_to_function()` allows for pre-exising workflows to incorporate
+#'   drake as a workflow management tool seamlessly for cases where
+#'   re-factoring is unfeasible. So drake can monitor dependencies, the
+#'   targets are passed as arguments of the dependent functions.
+#'
+#' @export
+#' @seealso [file_in()], [file_out()], [knitr_in()], [ignore()], [no_deps()],
+#' [code_to_plan()], [plan_to_code()], [plan_to_notebook()]
+#' @return A function to be input into the drake plan
+#' @param path Character vector, path to script.
+#' @export
+#' @examples
+#' \dontrun{
+#' isolate_example("contain side effects", {
+#' # The `code_to_function()` function creates a function that makes it
+#' # available for drake to process as part of the workflow.
+#' # The main purpose is to allow pre-exising workflows to incorporate drake
+#' # into the workflow seamlessly for cases where re-factoring is unfeasible.
+#' #
+#'
+#' script1 <- tempfile()
+#' script2 <- tempfile()
+#' script3 <- tempfile()
+#' script4 <- tempfile()
+#'
+#' writeLines(c(
+#'   "data <- mtcars",
+#'   "data$make <- do.call('c',",
+#'   "lapply(strsplit(rownames(data), split=\" \"), `[`, 1))",
+#'   "saveRDS(data, \"mtcars_alt.RDS\")"
+#'  ),
+#'   script1
+#' )
+#'
+#' writeLines(c(
+#'   "data <- readRDS(\"mtcars_alt.RDS\")",
+#'   "mtcars_lm <- lm(mpg~cyl+disp+vs+gear+make,data=data)",
+#'   "saveRDS(mtcars_lm, \"mtcars_lm.RDS\")"
+#'   ),
+#'   script2
+#' )
+#' writeLines(c(
+#'   "mtcars_lm <- readRDS(\"mtcars_lm.RDS\")",
+#'   "lm_summary <- summary(mtcars_lm)",
+#'   "saveRDS(lm_summary, \"mtcars_lm_summary.RDS\")"
+#'   ),
+#'   script3
+#' )
+#' writeLines(c(
+#'   "data<-readRDS(\"mtcars_alt.RDS\")",
+#'   "gg <- ggplot2::ggplot(data)+",
+#'   "ggplot2::geom_point(ggplot2::aes(",
+#'   "x=disp, y=mpg, shape=as.factor(vs), color=make))",
+#'   "ggplot2::ggsave(\"mtcars_plot.png\", gg)"
+#'  ),
+#'   script4
+#' )
+#'
+#'
+#' do_munge <- code_to_function(script1)
+#' do_analysis <- code_to_function(script2)
+#' do_summarize <- code_to_function(script3)
+#' do_vis <- code_to_function(script4)
+#'
+#' plan <- drake_plan(
+#'   munged   = do_munge(),
+#'   analysis = do_analysis(munged),
+#'   summary  = do_summarize(analysis),
+#'   plot     = do_vis(munged)
+#'  )
+#'
+#' plan
+#' # drake knows  "script1" is the first script to be evaluated and ran,
+#' # because it has no dependencies on other code and a dependency of
+#' # `analysis`. See for yourself:
+#'
+#' make(plan)
+#'
+#' # See the connections that the sourced scripts create:
+#' config <- drake_config(plan)
+#' if (requireNamespace("visNetwork", quietly = TRUE)) {
+#'   vis_drake_graph(config)
+#' }
+#' })
+#' }
+
+code_to_function <- function(path) {
+  lines <- readLines(path)
+  if (any(grepl(knitr_pattern, lines))) {
+    lines <- get_tangled_text(path)
+  }
+
+  lines <- c(
+    "function(...){",
+    lines,
+    "list(time = Sys.time(),tempfile = tempfile())",
+    "}"
+    )
+  text <- paste(lines, sep = "\n")
+  func <- eval(safe_parse(text))
+  func
+}
+
+knitr_pattern <- "^(### chunk number|<<[^>]*>>=|```\\{r.*\\})" # nolint
