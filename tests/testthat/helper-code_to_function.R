@@ -5,7 +5,8 @@ setup_scripts <- function() {
 
   temp_dir <- normalizePath(
     tempfile(),
-    winslash = "/"
+    winslash = "/",
+    mustWork = FALSE
   )
 
   dir.create(temp_dir)
@@ -141,7 +142,8 @@ setup_rmd <- function() {
 
   temp_dir <- normalizePath(
     tempfile(),
-    winslash = "/"
+    winslash = "/",
+    mustWork = FALSE
   )
 
   dir.create(temp_dir)
