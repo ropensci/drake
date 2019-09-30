@@ -22,7 +22,7 @@ into the drake workflow.
 \details{
 Most data science workflows consist of imperative scripts.
 \code{drake}, on the other hand, assumes you write \emph{functions}.
-\code{code_to_function()} allows for pre-exising workflows to incorporate
+\code{code_to_function()} allows for pre-existing workflows to incorporate
 drake as a workflow management tool seamlessly for cases where
 re-factoring is unfeasible. So drake can monitor dependencies, the
 targets are passed as arguments of the dependent functions.
@@ -32,7 +32,7 @@ targets are passed as arguments of the dependent functions.
 isolate_example("contain side effects", {
 # The `code_to_function()` function creates a function that makes it
 # available for drake to process as part of the workflow.
-# The main purpose is to allow pre-exising workflows to incorporate drake
+# The main purpose is to allow pre-existing workflows to incorporate drake
 # into the workflow seamlessly for cases where re-factoring is unfeasible.
 #
 

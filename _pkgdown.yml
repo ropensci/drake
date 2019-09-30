@@ -43,6 +43,7 @@ reference:
   - '`drake_plan`'
   - '`transform_plan`'
   - '`drake_plan_source`'
+  - '`code_to_function`'
   - '`code_to_plan`'
   - '`plan_to_code`'
   - '`plan_to_notebook`'
