@@ -180,26 +180,33 @@ render_sankey_drake_graph <- function(
     colourScale = color,
     ... = ...
   )
-  if (length(file)) {
-    file <- path.expand(file)
-    if (is_image_filename(file)) {
-      assert_pkg("webshot")
-      url <- file.path(random_tempdir(), "tmp.html")
-      networkD3::saveNetwork(
-        network = sankey,
-        file = url,
-        selfcontained = FALSE
-      )
-      webshot::webshot(url = url, file = file)
-    } else {
-      networkD3::saveNetwork(
-        network = sankey,
-        file = file,
-        selfcontained = selfcontained
-      )
-    }
-    invisible()
-  } else {
-    sankey
+  sankey_render_webshot(
+    file = file,
+    graph = sankey,
+    selfcontained = selfcontained
+  )
+}
+
+sankey_render_webshot <- function(file, graph, selfcontained) {
+  if (!length(file)) {
+    return(graph)
   }
+  file <- path.expand(file)
+  if (is_image_filename(file)) {
+    assert_pkg("webshot")
+    url <- file.path(random_tempdir(), "tmp.html")
+    networkD3::saveNetwork(
+      network = graph,
+      file = url,
+      selfcontained = FALSE
+    )
+    webshot::webshot(url = url, file = file)
+  } else {
+    networkD3::saveNetwork(
+      network = graph,
+      file = file,
+      selfcontained = selfcontained
+    )
+  }
+  invisible()
 }
