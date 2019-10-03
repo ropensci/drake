@@ -387,7 +387,7 @@ test_with_dir("session arg to make()", {
   skip_on_cran()
   expect_warning(
     make(drake_plan(x = 1), session = "callr::r_vanilla"),
-    regexp = "lock_envir"
+    regexp = "deprecated"
   )
 })
 

@@ -2528,3 +2528,14 @@ deprecate_console_log_file <- function(console_log_file) {
     )
   }
 }
+
+deprecate_arg <- function(value, name, alt = NULL) {
+  if (is.null(value)) {
+    return()
+  }
+  msg <- paste("argument", name, "is deprecated.")
+  if (!is.null(alt)) {
+    msg <- paste(msg, "Use", alt, "instead.")
+  }
+  warning(msg, call. = FALSE)
+}

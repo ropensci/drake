@@ -155,9 +155,9 @@ test_with_dir("target conflicts with previous import", {
 
 test_with_dir("imported functions cannot depend on targets", {
   global_import <- 1
-  my_fun <- function(){
+  my_fun <- function() {
     global_import
-    other_fun <- function(){
+    other_fun <- function() {
       target_in_plan
     }
   }
