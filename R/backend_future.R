@@ -3,47 +3,66 @@ backend_future <- function(config) {
   queue <- priority_queue(config = config)
   workers <- initialize_workers(config)
   # While any targets are queued or running...
-  i <- 1
+  iter <- 1
   ft_config <- ft_config(config)
   while (work_remains(queue = queue, workers = workers, config = config)) {
     for (id in seq_along(workers)) {
       if (is_idle(workers[[id]])) {
-        # Also calls decrease-key on the queue.
-        workers[[id]] <- conclude_worker(
-          worker = workers[[id]],
+        workers <- future_iterate_workers(
+          iter = iter,
+          id = id,
+          queue = queue,
+          workers = workers,
           config = config,
-          queue = queue
+          ft_config = ft_config
         )
-        # Pop the head target only if its priority is 0
-        next_target <- queue$pop0()
-        if (!length(next_target)) {
-          # It's hard to make this line run in a small test workflow
-          # suitable enough for unit testing, but
-          # I did artificially stall targets and verified that this line
-          # is reached in the future::multisession backend as expected.
-          # nocov start
-          Sys.sleep(config$sleep(max(0L, i)))
-          i <- i + 1
-          next
-          # nocov end
-        }
-        i <- 1
-        running <- running_targets(workers = workers, config = config)
-        protect <- c(running, queue$list())
-        if (identical(config$layout[[next_target]]$hpc, FALSE)) {
-          future_local_build(next_target, config, queue, protect)
-        } else {
-          workers[[id]] <- new_worker(
-            id,
-            next_target,
-            config,
-            ft_config,
-            protect
-          )
-        }
       }
     }
   }
+}
+
+future_iterate_workers <- function(
+  iter,
+  id,
+  queue,
+  workers,
+  config,
+  ft_config
+) {
+  # Also calls decrease-key on the queue.
+  workers[[id]] <- conclude_worker(
+    worker = workers[[id]],
+    config = config,
+    queue = queue
+  )
+  # Pop the head target only if its priority is 0
+  next_target <- queue$pop0()
+  if (!length(next_target)) {
+    # It's hard to make this line run in a small test workflow
+    # suitable enough for unit testing, but
+    # I did artificially stall targets and verified that this line
+    # is reached in the future::multisession backend as expected.
+    # nocov start
+    Sys.sleep(config$sleep(max(0L, iter)))
+    iter <- iter + 1
+    return(workers)
+    # nocov end
+  }
+  iter <- 1
+  running <- running_targets(workers = workers, config = config)
+  protect <- c(running, queue$list())
+  if (identical(config$layout[[next_target]]$hpc, FALSE)) {
+    future_local_build(next_target, config, queue, protect)
+  } else {
+    workers[[id]] <- new_worker(
+      id,
+      next_target,
+      config,
+      ft_config,
+      protect
+    )
+  }
+  workers
 }
 
 future_local_build <- function(target, config, queue, protect) {
