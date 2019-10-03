@@ -136,7 +136,7 @@ test_with_dir("a close look at the memory strategies", {
   expect_equal(sort(deps), sort(ls(config$eval)))
 
   # autoclean and preclean
-  for(strategy in c("preclean", "autoclean")) {
+  for (strategy in c("preclean", "autoclean")) {
     config$memory_strategy <- strategy
     remove(list = ls(config$eval), envir = config$eval)
 

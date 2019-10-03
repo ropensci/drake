@@ -2474,7 +2474,10 @@ test_with_dir("slice_indices edge cases", {
   )
   grid <- grid[!(grid$i > 0L & grid$j > 0L & grid$k > 0L), ]
   apply(grid, 1, function(x) {
-    expect_equal(slice_indices(x["i"], slices = x["j"], index = x["k"]), integer(0))
+    expect_equal(
+      slice_indices(x["i"], slices = x["j"], index = x["k"]),
+      integer(0)
+    )
   })
 })
 
