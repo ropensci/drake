@@ -216,28 +216,14 @@ loadd <- function(
   config = NULL
 ) {
   deprecate_search(search)
+  deprecate_arg(graph, "graph") # 2019-01-04 # nolint
+  deprecate_arg(imported_only, "imported_only") # 2019-01-01 # nolint
   force(envir)
   lazy <- parse_lazy_arg(lazy)
-  if (!is.null(graph)) {
-    warning(
-      "argument `graph` is deprecated.",
-      call. = FALSE
-    ) # 2019-01-04 # nolint
-  }
-  if (is.null(cache)) {
-    stop("cannot find drake cache.")
-  }
+  assert_cache(cache)
   cache <- decorate_storr(cache)
-  if (is.null(namespace)) {
-    namespace <- cache$default_namespace
-  }
-  if (tidyselect && deps) {
-    tidyselect <- FALSE
-    message(
-      "Disabling `tidyselect` in `loadd()` because `deps` is `TRUE`. ",
-      "For details, see the `deps` argument in the `loadd()` help file."
-    )
-  }
+  namespace <- namespace %||% cache$default_namespace
+  tidyselect <- loadd_use_tidyselect(tidyselect, deps)
   if (tidyselect && requireNamespace("tidyselect", quietly = TRUE)) {
     targets <- drake_tidyselect_cache(
       ...,
@@ -248,31 +234,12 @@ loadd <- function(
   } else {
     targets <- c(as.character(match.call(expand.dots = FALSE)$...), list)
   }
-  if (!length(targets) && !length(list(...))) {
-    targets <- cache$list()
-  }
-  if (!is.null(imported_only)) {
-    warning(
-      "The `imported_only` argument of `loadd()` is deprecated. ",
-      "In drake >= 7.0.0, loadd() only loads targets listed in the plan. ",
-      "Do not give the names of imports or files ",
-      "except to list them as dependencies ",
-      "from within an R Markdown/knitr report. ",
-      "Otherwise, imports and files are deliberately ignored.",
-      call. = FALSE
-    )
-  }
-  if (deps) {
-    if (is.null(config)) {
-      stop(
-        "In `loadd(deps = TRUE)`, you must supply a `drake_config()` ",
-        "object to the `config` argument.",
-        call. = FALSE
-      )
-    }
-    assert_config_not_plan(config)
-    targets <- deps_memory(targets = targets, config = config)
-  }
+  targets <- loadd_handle_empty_targets(
+    targets = targets,
+    cache = cache,
+    ...
+  )
+  targets <- loadd_use_deps(targets = targets, config = config, deps = deps)
   exists <- lightly_parallelize(
     X = targets,
     FUN = cache$exists,
@@ -281,29 +248,79 @@ loadd <- function(
   exists <- unlist(exists)
   targets <- targets[exists]
   targets <- targets_only(targets, cache = cache, jobs = jobs)
-  if (!length(targets) && !deps) {
-    if (verbose) {
-      message("No targets to load in loadd().")
-    }
-    stop(return(invisible))
+  if (!loadd_any_targets(targets, deps, verbose)) {
+    return(invisible())
   }
-  if (!replace) {
-    targets <- setdiff(targets, names(envir))
-  }
-  if (show_source) {
-    lapply(
-      X = targets,
-      FUN = show_source,
-      config = list(cache = cache),
-      character_only = TRUE
-    )
-  }
+  targets <- loadd_handle_replace(targets, envir, replace)
+  loadd_show_source(targets, cache = cache, show_source = show_source)
   lightly_parallelize(
     X = targets, FUN = load_target, cache = cache,
     namespace = namespace, envir = envir,
     verbose = verbose, lazy = lazy
   )
   invisible()
+}
+
+loadd_handle_empty_targets <- function(targets, cache, ...) {
+  if (!length(targets) && !length(list(...))) {
+    targets <- cache$list()
+  }
+  targets
+}
+
+loadd_use_tidyselect <- function(tidyselect, deps) {
+  if (tidyselect && deps) {
+    message(
+      "Disabling `tidyselect` in `loadd()` because `deps` is `TRUE`. ",
+      "For details, see the `deps` argument in the `loadd()` help file."
+    )
+    return(FALSE)
+  }
+  tidyselect
+}
+
+loadd_use_deps <- function(targets, config, deps) {
+  if (!deps) {
+    return(targets)
+  }
+  if (is.null(config)) {
+    stop(
+      "In `loadd(deps = TRUE)`, you must supply a `drake_config()` ",
+      "object to the `config` argument.",
+      call. = FALSE
+    )
+  }
+  assert_config_not_plan(config)
+  targets <- deps_memory(targets = targets, config = config)
+}
+
+loadd_show_source <- function(targets, cache, show_source) {
+  if (!show_source) {
+    return()
+  }
+  lapply(
+    X = targets,
+    FUN = show_source,
+    config = list(cache = cache),
+    character_only = TRUE
+  )
+}
+
+loadd_handle_replace <- function(targets, envir, replace) {
+  if (!replace) {
+    targets <- setdiff(targets, names(envir))
+  }
+  targets
+}
+
+loadd_any_targets <- function(targets, deps, verbose) {
+  if (!length(targets) && !deps) {
+    if (verbose) {
+      message("No targets to load in loadd().")
+    }
+    FALSE
+  }
+  TRUE
 }
 
 parse_lazy_arg <- function(lazy) {

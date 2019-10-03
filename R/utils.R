@@ -67,6 +67,12 @@ assert_pkg <- function(pkg, version = NULL, install = "install.packages") {
   invisible()
 }
 
+assert_cache <- function(cache) {
+  if (is.null(cache)) {
+    stop("cannot find drake cache.", call. = FALSE)
+  }
+}
+
 # weak_as_tibble - use as_tibble() if available but fall back to
 # as.data.frame() if necessary
 weak_as_tibble <- function(..., .force_df = FALSE) {
