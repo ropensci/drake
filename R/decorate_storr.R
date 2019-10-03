@@ -303,7 +303,7 @@ dcst_set.drake_format_fst_dt <- function(value, key, ..., .self) {
   dcst_set_move_tmp(key = key, value = value, tmp = tmp, .self = .self)
 }
 
-dcst_set.drake_format_diskframe <- function(value, key, ..., .self) {
+dcst_set.drake_format_diskframe <- function(value, key, ..., .self) { # nolint
   assert_pkg("disk.frame")
   assert_pkg("fst")
   .self$assert_dirs()

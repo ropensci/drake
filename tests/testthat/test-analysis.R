@@ -675,7 +675,9 @@ test_with_dir("ignore() works on its own", {
 
 test_with_dir("Standardized commands have no attributes", {
   expect_null(attributes(cdl_standardize_command("")))
-  expect_null(attributes(cdl_standardize_command("f(x) + y + function(abc) {}")))
+  expect_null(attributes(
+    cdl_standardize_command("f(x) + y + function(abc) {}"))
+  )
   expect_null(attributes(cdl_standardize_command(quote(NULL))))
   expect_null(attributes(cdl_standardize_command(digest::digest)))
   expect_null(attributes(cdl_standardize_command(body(digest::digest))))

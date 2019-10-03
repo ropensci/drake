@@ -2467,16 +2467,15 @@ test_with_dir("slice_indices edge cases", {
   expect_equal(slice_indices(100, slices = 1, index = 1), seq_len(100))
   expect_equal(slice_indices(100, slices = 1, index = 2), integer(0))
   expect_equal(slice_indices(100, slices = 2, index = 3), integer(0))
-  for (i in c(0, 100)) {
-    for (j in c(0, 1)) {
-      for (k in c(0, 1)) {
-        if (i > 0L && j > 0L && k > 0L) {
-          next
-        }
-        expect_equal(slice_indices(i, slices = j, index = k), integer(0))
-      }
-    }
-  }
+  grid <- expand.grid(
+    i = c(0L, 100L),
+    j = c(0L, 1L),
+    k = c(0L, 1L)
+  )
+  grid <- grid[!(grid$i > 0L & grid$j > 0L & grid$k > 0L), ]
+  apply(grid, 1, function(x) {
+    expect_equal(slice_indices(x["i"], slices = x["j"], index = x["k"]), integer(0))
+  })
 })
 
 test_with_dir("drake_slice edge cases", {
