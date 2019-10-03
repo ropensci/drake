@@ -31,50 +31,59 @@ walk_code <- function(expr, results, locals, allowed_globals) {
       ht_set(results$strings, x)
     }
   } else if (is.pairlist(expr)) {
-    walk_call(expr, results, locals, allowed_globals)
+    walk_recursive(expr, results, locals, allowed_globals)
   } else if (is.call(expr) || is.recursive(expr)) {
-    name <- safe_deparse(expr[[1]])
-    if (name == "local") {
-      locals <- ht_clone(locals)
-    }
-    if (name == "$") {
-      expr[[3]] <- substitute()
-    }
-    if (name %in% c("expression", "quote", "Quote")) {
-      analyze_global(name, results, locals, allowed_globals)
-    } else if (name %in% c("<-", "=")) {
-      analyze_arrow(expr, results, locals, allowed_globals)
-    } else if (name %in% c("::", ":::")) {
-      analyze_namespaced(expr, results, locals, allowed_globals)
-    } else if (name == "for") {
-      analyze_for(expr, results, locals, allowed_globals)
-    } else if (name == "function") {
-      analyze_function(eval(expr), results, locals, allowed_globals)
-    } else if (name == "assign") {
-      analyze_assign(expr, results, locals, allowed_globals)
-    } else if (name == "delayedAssign") {
-      analyze_delayed_assign(expr, results, locals, allowed_globals)
-    } else if (name == "UseMethod") {
-      analyze_usemethod(expr, results, locals, allowed_globals)
-    } else if (name %in% loadd_fns) {
-      analyze_loadd(expr, results)
-    } else if (name %in% readd_fns) {
-      analyze_readd(expr, results)
-    } else if (name %in% file_in_fns) {
-      analyze_file_in(expr, results)
-    } else if (name %in% file_out_fns) {
-      analyze_file_out(expr, results)
-    } else if (name %in% c(knitr_in_fns)) {
-      analyze_knitr_in(expr, results)
-    } else if (!(name %in% no_deps_fns)) {
-      walk_call(expr, results, locals, allowed_globals)
-    }
+    walk_call(expr, results, locals, allowed_globals)
   }
   invisible()
 }
 
+walk_call <- function(expr, results, locals, allowed_globals) {
+  name <- safe_deparse(expr[[1]])
+  if (name == "local") {
+    locals <- ht_clone(locals)
+  }
+  if (name == "$") {
+    expr[[3]] <- substitute()
+  }
+  if (name %in% c("expression", "quote", "Quote")) {
+    analyze_global(name, results, locals, allowed_globals)
+  } else if (name %in% c("<-", "=")) {
+    analyze_arrow(expr, results, locals, allowed_globals)
+  } else if (name %in% c("::", ":::")) {
+    analyze_namespaced(expr, results, locals, allowed_globals)
+  } else if (name == "for") {
+    analyze_for(expr, results, locals, allowed_globals)
+  } else if (name == "function") {
+    analyze_function(eval(expr), results, locals, allowed_globals)
+  } else if (name == "assign") {
+    analyze_assign(expr, results, locals, allowed_globals)
+  } else if (name == "delayedAssign") {
+    analyze_delayed_assign(expr, results, locals, allowed_globals)
+  } else if (name == "UseMethod") {
+    analyze_usemethod(expr, results, locals, allowed_globals)
+  } else if (name %in% loadd_fns) {
+    analyze_loadd(expr, results)
+  } else if (name %in% readd_fns) {
+    analyze_readd(expr, results)
+  } else if (name %in% file_in_fns) {
+    analyze_file_in(expr, results)
+  } else if (name %in% file_out_fns) {
+    analyze_file_out(expr, results)
+  } else if (name %in% c(knitr_in_fns)) {
+    analyze_knitr_in(expr, results)
+  } else if (!(name %in% no_deps_fns)) {
+    walk_recursive(expr, results, locals, allowed_globals)
+  }
+}
+
 analyze_arrow <- function(expr, results, locals, allowed_globals) {
-  walk_call(flatten_assignment(expr[[2]]), results, locals, allowed_globals)
+  walk_recursive(
+    flatten_assignment(expr[[2]]),
+    results,
+    locals,
+    allowed_globals
+  )
   ignore(walk_code)(expr[[3]], results, locals, allowed_globals)
   ht_set(locals, get_assigned_var(expr))
 }
@@ -154,7 +163,7 @@ analyze_assign <- function(expr, results, locals, allowed_globals) {
     analyze_global(expr$x, results, locals, allowed_globals)
   }
   expr$x <- NULL
-  walk_call(expr, results, locals, allowed_globals)
+  walk_recursive(expr, results, locals, allowed_globals)
 }
 
 analyze_delayed_assign <- function(expr, results, locals, allowed_globals) {
@@ -170,7 +179,7 @@ analyze_delayed_assign <- function(expr, results, locals, allowed_globals) {
     analyze_global(expr$x, results, locals, allowed_globals)
   }
   expr$x <- NULL
-  walk_call(expr, results, locals, allowed_globals)
+  walk_recursive(expr, results, locals, allowed_globals)
 }
 
 analyze_function <- function(expr, results, locals, allowed_globals) {
@@ -214,7 +223,7 @@ analyze_strings <- function(expr) {
 
 analyze_for <- function(expr, results, locals, allowed_globals) {
   ht_set(locals, as.character(expr[[2]]))
-  walk_call(expr[-2], results, locals, allowed_globals)
+  walk_recursive(expr[-2], results, locals, allowed_globals)
 }
 
 analyze_global <- function(expr, results, locals, allowed_globals) {
@@ -230,7 +239,7 @@ analyze_global <- function(expr, results, locals, allowed_globals) {
   }
 }
 
-walk_call <- function(expr, results, locals, allowed_globals) {
+walk_recursive <- function(expr, results, locals, allowed_globals) {
   lapply(
     X = expr,
     FUN = ignore(walk_code),
