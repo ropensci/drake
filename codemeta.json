@@ -10,7 +10,7 @@
   "codeRepository": "https://github.com/ropensci/drake",
   "issueTracker": "https://github.com/ropensci/drake/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "7.6.1.9000",
+  "version": "7.6.2.9000",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -79,6 +79,12 @@
       "familyName": "Ross",
       "email": "noam.ross@gmail.com",
       "@id": "https://orcid.org/0000-0002-2136-0000"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Ellis",
+      "familyName": "Hughes",
+      "email": "ellishughes@live.com"
     }
   ],
   "copyrightHolder": [
@@ -200,6 +206,18 @@
       "@type": "SoftwareApplication",
       "identifier": "datasets",
       "name": "datasets"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "disk.frame",
+      "name": "disk.frame",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=disk.frame"
     },
     {
       "@type": "SoftwareApplication",
@@ -566,7 +584,7 @@
   ],
   "releaseNotes": "https://github.com/ropensci/drake/blob/master/NEWS.md",
   "readme": "https://github.com/ropensci/drake/blob/master/README.md",
-  "fileSize": "903.991KB",
+  "fileSize": "1072.234KB",
   "contIntegration": [
     "https://ci.appveyor.com/project/ropensci/drake",
     "https://travis-ci.org/ropensci/drake",
@@ -593,7 +611,11 @@
     "ropensci",
     "peer-reviewed"
   ],
-  "relatedLink": ["https://CRAN.R-project.org/package=drake", "https://docs.ropensci.org/drake", "https://github.com/ropenscilabs/drake-manual"],
+  "relatedLink": [
+    "https://CRAN.R-project.org/package=drake",
+    "https://docs.ropensci.org/drake",
+    "https://github.com/ropenscilabs/drake-manual"
+  ],
   "funder": {},
   "citation": [
     {
