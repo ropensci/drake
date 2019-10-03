@@ -38,7 +38,7 @@ walk_code <- function(expr, results, locals, allowed_globals) {
   invisible()
 }
 
-walk_call <- function(expr, results, locals, allowed_globals) {
+walk_call <- function(expr, results, locals, allowed_globals) { # nolint
   name <- safe_deparse(expr[[1]])
   if (name == "local") {
     locals <- ht_clone(locals)
@@ -46,6 +46,14 @@ walk_call <- function(expr, results, locals, allowed_globals) {
   if (name == "$") {
     expr[[3]] <- substitute()
   }
+  if (walk_base(expr, results, locals, allowed_globals, name)) {
+    return()
+  }
+  walk_drake(expr, results, locals, allowed_globals, name)
+}
+
+walk_base <- function(expr, results, locals, allowed_globals, name) {
+  out <- TRUE
   if (name %in% c("expression", "quote", "Quote")) {
     analyze_global(name, results, locals, allowed_globals)
   } else if (name %in% c("<-", "=")) {
@@ -62,7 +70,14 @@ walk_call <- function(expr, results, locals, allowed_globals) {
     analyze_delayed_assign(expr, results, locals, allowed_globals)
   } else if (name == "UseMethod") {
     analyze_usemethod(expr, results, locals, allowed_globals)
-  } else if (name %in% loadd_fns) {
+  } else {
+    out <- FALSE
+  }
+  out
+}
+
+walk_drake <- function(expr, results, locals, allowed_globals, name) {
+  if (name %in% loadd_fns) {
     analyze_loadd(expr, results)
   } else if (name %in% readd_fns) {
     analyze_readd(expr, results)

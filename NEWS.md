@@ -13,6 +13,7 @@
 - Coerce seeds to integers in `seed_trigger()` (#1013, @CreRecombinase).
 - Hard wrap long labels in graph visuals (#1017)
 - Wrap history `txtq` into decorated `storr` API (#1020).
+- Reduce cyclomatic complexity of internal functions.
 
 
 # Version 7.6.2
