@@ -77,7 +77,7 @@ initialize_workers <- function(config) {
 
 new_worker <- function(id, target, config, ft_config, protect) {
   meta <- drake_meta_(target = target, config = config)
-  if (handle_trigger(target, meta, config)) {
+  if (handle_triggers(target, meta, config)) {
     return(empty_worker(target = target))
   }
   caching <- caching(target, config)

@@ -1,5 +1,5 @@
-handle_trigger <- function(target, meta, config) {
-  !sense_trigger(target, meta, config) ||
+handle_triggers <- function(target, meta, config) {
+  !any_triggers(target, meta, config) ||
     recover_target(target, meta, config)
 }
 
@@ -76,14 +76,71 @@ recovery_key <- function(target, meta, config) {
   )
 }
 
-sense_trigger <- function(target, meta, config) {
+any_triggers <- function(target, meta, config) {
+  if (check_triggers_stage1(target, meta, config)) {
+    return(TRUE)
+  }
+  condition <- check_trigger_condition(target, meta, config)
+  if (is_final_trigger(condition)) {
+    return(condition)
+  }
+  if (condition) {
+    return(TRUE)
+  }
+  if (check_triggers_stage2(target, meta, config)) {
+    return(TRUE)
+  }
+  FALSE
+}
+
+check_triggers_stage1 <- function(target, meta, config) {
+  if (check_trigger_imported(target, meta, config)) {
+    return(TRUE)
+  }
+  if (check_trigger_imported(target, meta, config)) {
+    return(TRUE)
+  }
+  if (check_trigger_missing(target, meta, config)) {
+    return(TRUE)
+  }
+  FALSE
+}
+
+check_triggers_stage2 <- function(target, meta, config) {
+  if (check_trigger_command(target, meta, config)) {
+    return(TRUE)
+  }
+  if (check_trigger_depend(target, meta, config)) {
+    return(TRUE)
+  }
+  if (check_trigger_file(target, meta, config)) {
+    return(TRUE)
+  }
+  if (check_trigger_seed(target, meta, config)) {
+    return(TRUE)
+  }
+  if (check_trigger_change(target, meta, config)) {
+    return(TRUE)
+  }
+  FALSE
+}
+
+check_trigger_imported <- function(target, meta, config) {
   if (meta$imported) {
     return(TRUE)
   }
+  FALSE
+}
+
+check_trigger_missing <- function(target, meta, config) {
   if (meta$missing) {
     config$logger$minor("trigger missing", target = target)
     return(TRUE)
   }
+  FALSE
+}
+
+check_trigger_condition <- function(target, meta, config) {
   condition <- condition_trigger(target = target, meta = meta, config = config)
   if (is.logical(condition)) {
     if (condition) {
@@ -91,30 +148,50 @@ sense_trigger <- function(target, meta, config) {
     }
     return(condition)
   }
+  FALSE
+}
+
+check_trigger_command <- function(target, meta, config) {
   if (identical(meta$trigger$command, TRUE)) {
     if (command_trigger(target = target, meta = meta, config = config)) {
       config$logger$minor("trigger command", target = target)
       return(TRUE)
     }
   }
+  FALSE
+}
+
+check_trigger_depend <- function(target, meta, config) {
   if (identical(meta$trigger$depend, TRUE)) {
     if (depend_trigger(target = target, meta = meta, config = config)) {
       config$logger$minor("trigger depend", target = target)
       return(TRUE)
     }
   }
+  FALSE
+}
+
+check_trigger_file <- function(target, meta, config) {
   if (identical(meta$trigger$file, TRUE)) {
     if (file_trigger(target = target, meta = meta, config = config)) {
       config$logger$minor("trigger file", target = target)
       return(TRUE)
     }
   }
+  FALSE
+}
+
+check_trigger_seed <- function(target, meta, config) {
   if (identical(meta$trigger$seed, TRUE)) {
     if (seed_trigger(target = target, meta = meta, config = config)) {
       config$logger$minor("trigger seed", target = target)
       return(TRUE)
     }
   }
+  FALSE
+}
+
+check_trigger_change <- function(target, meta, config) {
   if (!is.null(meta$trigger$change)) {
     if (change_trigger(target = target, meta = meta, config = config)) {
       config$logger$minor("trigger change", target = target)
@@ -208,12 +285,20 @@ condition_decision <- function(value, mode) {
     return(TRUE)
   }
   if (identical(mode, "blacklist") && identical(value, FALSE)) {
-    return(FALSE)
+    return(as_final_trigger(FALSE))
   }
   if (identical(mode, "condition")) {
-    return(value)
+    return(as_final_trigger(value))
   }
-  "defer"
+  FALSE
+}
+
+as_final_trigger <- function(x) {
+  structure(x, class = "final_trigger")
+}
+
+is_final_trigger <- function(x) {
+  inherits(x, "final_trigger")
 }
 
 change_trigger <- function(target, meta, config) {

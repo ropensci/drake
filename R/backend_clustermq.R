@@ -28,7 +28,7 @@ cmq_local_master <- function(config) {
       next
     }
     meta <- drake_meta_(target = target, config = config)
-    if (!handle_trigger(target, meta, config)) {
+    if (!handle_triggers(target, meta, config)) {
       return()
     }
     config$queue$pop0()
@@ -133,7 +133,7 @@ cmq_next_target <- function(config) {
 
 cmq_send_target <- function(target, config) {
   meta <- drake_meta_(target = target, config = config)
-  if (handle_trigger(target, meta, config)) {
+  if (handle_triggers(target, meta, config)) {
     cmq_conclude_target(target = target, config = config)
     config$workers$send_wait()
     return()

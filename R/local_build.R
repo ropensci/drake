@@ -1,6 +1,6 @@
 local_build <- function(target, config, downstream) {
   meta <- drake_meta_(target = target, config = config)
-  if (handle_trigger(target, meta, config)) {
+  if (handle_triggers(target, meta, config)) {
     return()
   }
   announce_build(target, meta, config)
