@@ -230,12 +230,26 @@ file_trigger <- function(target, meta, config) {
   if (!length(target) || !length(config) || !length(meta)) {
     return(FALSE)
   }
+  if (file_trigger_missing(target, meta, config)) {
+    return(TRUE)
+  }
+  if (file_trigger_hash(target, meta, config)) {
+    return(TRUE)
+  }
+  FALSE
+}
+
+file_trigger_missing <- function(target, meta, config) {
   file_out <- config$layout[[target]]$deps_build$file_out
   for (file in file_out) {
     if (!file.exists(config$cache$decode_path(file))) {
       return(TRUE)
     }
   }
+  FALSE
+}
+
+file_trigger_hash <- function(target, meta, config) {
   for (hash_name in c("input_file_hash", "output_file_hash")) {
     old_file_hash <- read_from_meta(
       key = target,
