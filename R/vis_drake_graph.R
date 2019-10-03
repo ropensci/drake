@@ -194,22 +194,8 @@ render_drake_graph <- function(
   if (!hover) {
     graph_info$nodes$title <- NULL
   }
-  if (!is.null(direction)) {
-    # 2019-04-16 # nolint
-    warning(
-      "the `direction` argument of `vis_drake_graph()` ",
-      "and `render_drake_graph()` is deprecated.",
-      call. = FALSE
-    )
-  }
-  if (!is.null(layout)) {
-    # 2019-04-16 # nolint
-    warning(
-      "the `layout` argument of `vis_drake_graph()` ",
-      "and `render_drake_graph()` is deprecated.",
-      call. = FALSE
-    )
-  }
+  deprecate_arg(direction, "direction") # 2019-04-16 # nolint
+  deprecate_arg(layout, "layout") # 2019-04-16 # nolint
   out <- visNetwork::visNetwork(
     nodes = graph_info$nodes,
     edges = graph_info$edges,
@@ -247,20 +233,27 @@ render_drake_graph <- function(
   if (navigationButtons) { # nolint
     out <- visNetwork::visInteraction(out, navigationButtons = TRUE) # nolint
   }
-  if (length(file)) {
-    file <- path.expand(file)
-    if (is_image_filename(file)) {
-      assert_pkg("webshot")
-      url <- file.path(random_tempdir(), "tmp.html")
-      visNetwork::visSave(graph = out, file = url, selfcontained = FALSE)
-      webshot::webshot(url = url, file = file)
-    } else {
-      visNetwork::visSave(graph = out, file = file,
-        selfcontained = selfcontained)
-    }
-    return(invisible())
+  vis_render_webshot(graph = out, file = file, selfcontained = selfcontained)
+}
+
+vis_render_webshot <- function(graph, file, selfcontained) {
+  if (!length(file)) {
+    return(graph)
   }
-  out
+  file <- path.expand(file)
+  if (is_image_filename(file)) {
+    assert_pkg("webshot")
+    url <- file.path(random_tempdir(), "tmp.html")
+    visNetwork::visSave(graph = graph, file = url, selfcontained = FALSE)
+    webshot::webshot(url = url, file = file)
+  } else {
+    visNetwork::visSave(
+      graph = graph,
+      file = file,
+      selfcontained = selfcontained
+    )
+  }
+  return(invisible())
 }
 
 is_image_filename <- function(x) {
