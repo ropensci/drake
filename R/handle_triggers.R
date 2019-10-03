@@ -97,9 +97,6 @@ check_triggers_stage1 <- function(target, meta, config) {
   if (check_trigger_imported(target, meta, config)) {
     return(TRUE)
   }
-  if (check_trigger_imported(target, meta, config)) {
-    return(TRUE)
-  }
   if (check_trigger_missing(target, meta, config)) {
     return(TRUE)
   }
@@ -141,19 +138,17 @@ check_trigger_missing <- function(target, meta, config) {
 }
 
 check_trigger_condition <- function(target, meta, config) {
-  condition <- condition_trigger(target = target, meta = meta, config = config)
-  if (is.logical(condition)) {
-    if (condition) {
-      config$logger$minor("trigger condition", target = target)
-    }
-    return(condition)
+  condition <- trigger_condition(target = target, meta = meta, config = config)
+  stopifnot(is.logical(condition))
+  if (condition) {
+    config$logger$minor("trigger condition", target = target)
   }
-  FALSE
+  return(condition)
 }
 
 check_trigger_command <- function(target, meta, config) {
   if (identical(meta$trigger$command, TRUE)) {
-    if (command_trigger(target = target, meta = meta, config = config)) {
+    if (trigger_command(target = target, meta = meta, config = config)) {
       config$logger$minor("trigger command", target = target)
       return(TRUE)
     }
@@ -163,7 +158,7 @@ check_trigger_command <- function(target, meta, config) {
 
 check_trigger_depend <- function(target, meta, config) {
   if (identical(meta$trigger$depend, TRUE)) {
-    if (depend_trigger(target = target, meta = meta, config = config)) {
+    if (trigger_depend(target = target, meta = meta, config = config)) {
       config$logger$minor("trigger depend", target = target)
       return(TRUE)
     }
@@ -173,7 +168,7 @@ check_trigger_depend <- function(target, meta, config) {
 
 check_trigger_file <- function(target, meta, config) {
   if (identical(meta$trigger$file, TRUE)) {
-    if (file_trigger(target = target, meta = meta, config = config)) {
+    if (trigger_file(target = target, meta = meta, config = config)) {
       config$logger$minor("trigger file", target = target)
       return(TRUE)
     }
@@ -183,7 +178,7 @@ check_trigger_file <- function(target, meta, config) {
 
 check_trigger_seed <- function(target, meta, config) {
   if (identical(meta$trigger$seed, TRUE)) {
-    if (seed_trigger(target = target, meta = meta, config = config)) {
+    if (trigger_seed(target = target, meta = meta, config = config)) {
       config$logger$minor("trigger seed", target = target)
       return(TRUE)
     }
@@ -193,7 +188,7 @@ check_trigger_seed <- function(target, meta, config) {
 
 check_trigger_change <- function(target, meta, config) {
   if (!is.null(meta$trigger$change)) {
-    if (change_trigger(target = target, meta = meta, config = config)) {
+    if (trigger_change(target = target, meta = meta, config = config)) {
       config$logger$minor("trigger change", target = target)
       return(TRUE)
     }
@@ -202,7 +197,7 @@ check_trigger_change <- function(target, meta, config) {
   FALSE
 }
 
-command_trigger <- function(target, meta, config) {
+trigger_command <- function(target, meta, config) {
   if (is.null(meta$command)) {
     return(FALSE)
   }
@@ -214,7 +209,7 @@ command_trigger <- function(target, meta, config) {
   !identical(command, meta$command)
 }
 
-depend_trigger <- function(target, meta, config) {
+trigger_depend <- function(target, meta, config) {
   if (is.null(meta$dependency_hash)) {
     return(FALSE)
   }
@@ -226,20 +221,20 @@ depend_trigger <- function(target, meta, config) {
   !identical(dependency_hash, meta$dependency_hash)
 }
 
-file_trigger <- function(target, meta, config) {
+trigger_file <- function(target, meta, config) {
   if (!length(target) || !length(config) || !length(meta)) {
     return(FALSE)
   }
-  if (file_trigger_missing(target, meta, config)) {
+  if (trigger_file_missing(target, meta, config)) {
     return(TRUE)
   }
-  if (file_trigger_hash(target, meta, config)) {
+  if (trigger_file_hash(target, meta, config)) {
     return(TRUE)
   }
   FALSE
 }
 
-file_trigger_missing <- function(target, meta, config) {
+trigger_file_missing <- function(target, meta, config) {
   file_out <- config$layout[[target]]$deps_build$file_out
   for (file in file_out) {
     if (!file.exists(config$cache$decode_path(file))) {
@@ -249,7 +244,7 @@ file_trigger_missing <- function(target, meta, config) {
   FALSE
 }
 
-file_trigger_hash <- function(target, meta, config) {
+trigger_file_hash <- function(target, meta, config) {
   for (hash_name in c("input_file_hash", "output_file_hash")) {
     old_file_hash <- read_from_meta(
       key = target,
@@ -263,7 +258,7 @@ file_trigger_hash <- function(target, meta, config) {
   FALSE
 }
 
-seed_trigger <- function(target, meta, config) {
+trigger_seed <- function(target, meta, config) {
   seed <- read_from_meta(
     key = target,
     field = "seed",
@@ -272,17 +267,17 @@ seed_trigger <- function(target, meta, config) {
   !identical(as.integer(seed), as.integer(meta$seed))
 }
 
-condition_trigger <- function(target, meta, config) {
+trigger_condition <- function(target, meta, config) {
   if (!length(target) || !length(config) || !length(meta)) {
     return(FALSE)
   }
   if (is.language(meta$trigger$condition)) {
     try_load(config$layout[[target]]$deps_condition$memory, config = config)
     value <- eval(meta$trigger$condition, envir = config$eval)
-    value <- as.logical(value)
   } else {
-    value <- as.logical(meta$trigger$condition)
+    value <- meta$trigger$condition
   }
+  value <- as.logical(value)
   if (length(value) != 1 || !is.logical(value)) {
     msg <- paste0(
       "The `condition` trigger must evaluate to a logical of length 1. ",
@@ -315,7 +310,7 @@ is_final_trigger <- function(x) {
   inherits(x, "final_trigger")
 }
 
-change_trigger <- function(target, meta, config) {
+trigger_change <- function(target, meta, config) {
   if (!length(target) || !length(config) || !length(meta)) {
     return(FALSE)
   }

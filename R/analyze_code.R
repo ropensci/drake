@@ -390,20 +390,28 @@ get_assigned_var <- function(e) {
 
 make_assignment_fn <- function(fun) {
   if (typeof(fun) == "symbol") {
-    as.name(paste0(as.character(fun), "<-"))
+    return(make_assignment_fn_symbol(fun))
   } else {
-    is_correctly_namespaced <- typeof(fun) == "language" &&
-      typeof(fun[[1]]) == "symbol" &&
-      as.character(fun[[1]]) %in% c("::", ":::") &&
-      length(fun) == 3 &&
-      typeof(fun[[3]]) == "symbol"
-    if (is_correctly_namespaced) {
-      fun[[3]] <- as.name(paste0(as.character(fun[[3]]), "<-"))
-      fun
-    }
-    else {
-      stop("bad function in complex assignments: ", dsq(fun), call. = FALSE)
-    }
+    make_assignment_fn_impl(fun)
+  }
+}
+
+make_assignment_fn_symbol <- function(fun) {
+  as.name(paste0(as.character(fun), "<-"))
+}
+
+make_assignment_fn_impl <- function(fun) {
+  is_correctly_namespaced <- typeof(fun) == "language" &&
+    typeof(fun[[1]]) == "symbol" &&
+    as.character(fun[[1]]) %in% c("::", ":::") &&
+    length(fun) == 3 &&
+    typeof(fun[[3]]) == "symbol"
+  if (is_correctly_namespaced) {
+    fun[[3]] <- as.name(paste0(as.character(fun[[3]]), "<-"))
+    fun
+  }
+  else {
+    stop("bad function in complex assignments: ", dsq(fun), call. = FALSE)
   }
 }
 

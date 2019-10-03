@@ -265,7 +265,7 @@
 #' }
 drake_plan <- function(
   ...,
-  list = character(0),
+  list = NULL,
   file_targets = NULL,
   strings_in_dots = NULL,
   tidy_evaluation = NULL,
@@ -275,30 +275,10 @@ drake_plan <- function(
   tidy_eval = TRUE,
   max_expand = NULL
 ) {
-  if (length(file_targets) || length(strings_in_dots)) {
-    # 2019-02-01 nolint
-    warning(
-      "Arguments `file_targets` and `strings_in_dots` ",
-      "of `drake_plan()` are deprecated.",
-      call. = FALSE
-    )
-  }
-  if (length(list)) {
-    # 2019-02-01 nolint
-    warning(
-      "The `list` argument of `drake_plan()` is deprecated. ",
-      "Use the interface described at ",
-      "https://ropenscilabs.github.io/drake-manual/plans.html#large-plans."
-    )
-  }
-  if (!is.null(tidy_evaluation)) {
-    # 2019-04-02 nolint
-    warning(
-      "The `tidy_evaluation` argument of `drake_plan()` is deprecated. ",
-      "Use the `tidy_eval` argument instead."
-    )
-    tidy_eval <- tidy_evaluation
-  }
+  deprecate_arg(file_targets, "file_targets") # 2019-02-01 nolint
+  deprecate_arg(strings_in_dots, "strings_in_dots") # 2019-02-01 nolint
+  deprecate_arg(list, "list") # 2019-02-01 nolint
+  deprecate_arg(tidy_evaluation, "tidy_evaluation", "tidy_eval") # 2019-04-02 # nolint
   force(envir)
   dots <- match.call(expand.dots = FALSE)$...
   warn_arrows(dots)

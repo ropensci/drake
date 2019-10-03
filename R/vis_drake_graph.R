@@ -196,6 +196,26 @@ render_drake_graph <- function(
   }
   deprecate_arg(direction, "direction") # 2019-04-16 # nolint
   deprecate_arg(layout, "layout") # 2019-04-16 # nolint
+  out <- initialize_vis_network(
+    graph_info = graph_info,
+    collapse = collapse,
+    ncol_legend = ncol_legend,
+    main = main,
+    navigationButtons = navigationButtons,
+    ...
+  )
+  out <- adjust_visnetwork_layout(graph = out, graph_info = graph_info)
+  vis_render_webshot(graph = out, file = file, selfcontained = selfcontained)
+}
+
+initialize_vis_network <- function(
+  graph_info,
+  collapse,
+  ncol_legend,
+  main,
+  navigationButtons,
+  ...
+) {
   out <- visNetwork::visNetwork(
     nodes = graph_info$nodes,
     edges = graph_info$edges,
@@ -214,26 +234,30 @@ render_drake_graph <- function(
       ncol = ncol_legend
     )
   }
+  if (navigationButtons) { # nolint
+    out <- visNetwork::visInteraction(out, navigationButtons = TRUE) # nolint
+  }
+  out
+}
+
+adjust_visnetwork_layout <- function(graph, graph_info) {
   sugiyama <- nrow(graph_info$edges) &&
     nrow(graph_info$nodes) > 10 &&
     abs(diff(range(graph_info$nodes$x))) > 0.1 &&
     abs(diff(range(graph_info$nodes$x))) > 0.1
   if (sugiyama) {
-    out <- visNetwork::visIgraphLayout(
-      graph = out,
+    graph <- visNetwork::visIgraphLayout(
+      graph = graph,
       physics = FALSE,
       randomSeed = 2017,
       layout = "layout_with_sugiyama"
     )
   } else {
-    out <- visNetwork::visHierarchicalLayout(out, direction = "LR")
+    graph <- visNetwork::visHierarchicalLayout(graph, direction = "LR")
   }
-  out$x$nodes$x <- graph_info$nodes$x
-  out$x$nodes$y <- graph_info$nodes$y
-  if (navigationButtons) { # nolint
-    out <- visNetwork::visInteraction(out, navigationButtons = TRUE) # nolint
-  }
-  vis_render_webshot(graph = out, file = file, selfcontained = selfcontained)
+  graph$x$nodes$x <- graph_info$nodes$x
+  graph$x$nodes$y <- graph_info$nodes$y
+  graph
 }
 
 vis_render_webshot <- function(graph, file, selfcontained) {

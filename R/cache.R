@@ -318,7 +318,7 @@ loadd_any_targets <- function(targets, deps, verbose) {
     if (verbose) {
       message("No targets to load in loadd().")
     }
-    FALSE
+    return(FALSE)
   }
   TRUE
 }
