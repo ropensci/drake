@@ -265,7 +265,7 @@ append_output_file_nodes <- function(config) {
     cols <- setdiff(colnames(nodes), c("id", "label", "level", "shape", "type"))
     for (target in intersect(names(file_out), nodes$id)) {
       files <- intersect(file_out[[target]], nodes$id)
-      if (length(files)){
+      if (length(files)) {
         for (col in cols) {
           nodes[files, col] <- nodes[target, col]
         }

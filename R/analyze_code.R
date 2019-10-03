@@ -34,7 +34,7 @@ walk_code <- function(expr, results, locals, allowed_globals) {
     walk_call(expr, results, locals, allowed_globals)
   } else if (is.call(expr) || is.recursive(expr)) {
     name <- safe_deparse(expr[[1]])
-    if (name == "local"){
+    if (name == "local") {
       locals <- ht_clone(locals)
     }
     if (name == "$") {
@@ -108,7 +108,7 @@ analyze_knitr_file <- function(file, results) {
   }
   fragments <- get_tangled_frags(file)
   out <- ignore(analyze_code)(fragments, as_list = FALSE)
-  if (length(out)){
+  if (length(out)) {
     for (slot in knitr_in_slots) {
       ht_merge(results[[slot]], out[[slot]])
     }

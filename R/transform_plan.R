@@ -195,7 +195,7 @@ convert_split_to_map <- function(target, command, transform) {
   command <- eval(call("substitute", command, sub), envir = baseenv())
   transform <- as.call(c(quote(map), slice$data))
   transform[[index]] <- as.numeric(seq_len(slice$slices))
-  for (arg in args){
+  for (arg in args) {
     transform[[arg]] <- arglist[[arg]]
   }
   list(command = command, transform = transform)
@@ -656,7 +656,7 @@ map_by <- function(.x, .by, .f, ...) {
   splits <- split_by(.x, .by = .by)
   out <- lapply(
     X = splits,
-    FUN = function(split){
+    FUN = function(split) {
       out <- .f(split, ...)
       if (nrow(out)) {
         out[, .by] <- split[replicate(nrow(out), 1), .by]
@@ -1002,7 +1002,7 @@ data_arg_groupings <- function(data_arg) {
   if (is.null(data_arg)) {
     return(list())
   }
-  lapply(data_arg, function(x){
+  lapply(data_arg, function(x) {
     x <- factor_to_character(x)
     vapply(x, safe_deparse, FUN.VALUE = character(1))
   })

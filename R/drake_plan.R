@@ -366,7 +366,7 @@ drake_bind_rows <- function(...) {
   do.call(rbind, dfs)
 }
 
-flatten_df_list <- function(args, df_env){
+flatten_df_list <- function(args, df_env) {
   if (!is.null(dim(args))) {
     index <- length(df_env$dfs) + 1
     df_env$dfs[[index]] <- weak_as_tibble(args)

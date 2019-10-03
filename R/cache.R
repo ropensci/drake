@@ -874,14 +874,14 @@ drake_fetch_rds <- function(path) {
   decorate_storr(storr::storr_rds(path = path))
 }
 
-cache_vers_stop <- function(cache){
+cache_vers_stop <- function(cache) {
   msg <- cache_vers_check(cache)
   if (length(msg)) {
     stop(msg, call. = FALSE)
   }
 }
 
-cache_vers_warn <- function(cache){
+cache_vers_warn <- function(cache) {
   msg <- cache_vers_check(cache)
   if (length(msg)) {
     warning(msg, call. = FALSE)

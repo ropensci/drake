@@ -1148,7 +1148,7 @@ code_to_function <- function(path) {
     lines <- get_tangled_text(path)
   }
   lines <- c(
-    "function(...){",
+    "function(...) {",
     lines,
     "list(time = Sys.time(),tempfile = tempfile())",
     "}"

@@ -59,7 +59,7 @@ rs_addin_r_vis_drake_graph <- function(r_args = list(), .print = TRUE) {
 #' @return Nothing.
 #' @keywords internal
 #' @export
-rs_addin_loadd <- function(context = NULL){
+rs_addin_loadd <- function(context = NULL) {
   assert_pkg("rstudioapi")
   context <- context %||% rstudioapi::getActiveDocumentContext()
   target <- rs_get_symbol_at_cursor(context)
@@ -98,7 +98,7 @@ rs_get_symbol_at_cursor <- function(context) {
     cursor_column >= match_starts &
       cursor_column <= match_ends
   )
-  if (length(match_index) == 0){
+  if (length(match_index) == 0) {
     message("Couldn't find an object name at cursor position.")
     return(NULL)
   }
