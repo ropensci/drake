@@ -4,7 +4,7 @@ test_with_dir("empty triggers return logical", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_identical(trigger_depend("x", list(), list()), FALSE)
   expect_identical(trigger_command("x", list(), list()), FALSE)
-  expect_identical(trigger_file("x", list(), list()), FALSE)
+  expect_identical(trigger_file("x", list(), list(), list()), FALSE)
   expect_identical(trigger_condition("x", list(), list()), FALSE)
   expect_identical(trigger_change("x", list(), list()), FALSE)
 })

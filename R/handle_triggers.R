@@ -1,5 +1,6 @@
 handle_triggers <- function(target, meta, config) {
-  !any_triggers(target, meta, config) ||
+  meta_old <- old_meta(key = target, cache = config$cache)
+  !any_triggers(target, meta, meta_old, config) ||
     recover_target(target, meta, config)
 }
 
@@ -76,7 +77,7 @@ recovery_key <- function(target, meta, config) {
   )
 }
 
-any_triggers <- function(target, meta, config) {
+any_triggers <- function(target, meta, meta_old, config) {
   if (check_triggers_stage1(target, meta, config)) {
     return(TRUE)
   }
@@ -87,7 +88,7 @@ any_triggers <- function(target, meta, config) {
   if (condition) {
     return(TRUE)
   }
-  if (check_triggers_stage2(target, meta, config)) {
+  if (check_triggers_stage2(target, meta, meta_old, config)) {
     return(TRUE)
   }
   FALSE
@@ -103,17 +104,17 @@ check_triggers_stage1 <- function(target, meta, config) {
   FALSE
 }
 
-check_triggers_stage2 <- function(target, meta, config) {
-  if (check_trigger_command(target, meta, config)) {
+check_triggers_stage2 <- function(target, meta, meta_old, config) {
+  if (check_trigger_command(target, meta, meta_old, config)) {
     return(TRUE)
   }
-  if (check_trigger_depend(target, meta, config)) {
+  if (check_trigger_depend(target, meta, meta_old, config)) {
     return(TRUE)
   }
-  if (check_trigger_file(target, meta, config)) {
+  if (check_trigger_file(target, meta, meta_old, config)) {
     return(TRUE)
   }
-  if (check_trigger_seed(target, meta, config)) {
+  if (check_trigger_seed(target, meta, meta_old, config)) {
     return(TRUE)
   }
   if (check_trigger_change(target, meta, config)) {
@@ -146,9 +147,9 @@ check_trigger_condition <- function(target, meta, config) {
   return(condition)
 }
 
-check_trigger_command <- function(target, meta, config) {
+check_trigger_command <- function(target, meta, meta_old, config) {
   if (identical(meta$trigger$command, TRUE)) {
-    if (trigger_command(target = target, meta = meta, config = config)) {
+    if (trigger_command(target, meta, meta_old, config)) {
       config$logger$minor("trigger command", target = target)
       return(TRUE)
     }
@@ -156,9 +157,9 @@ check_trigger_command <- function(target, meta, config) {
   FALSE
 }
 
-check_trigger_depend <- function(target, meta, config) {
+check_trigger_depend <- function(target, meta, meta_old, config) {
   if (identical(meta$trigger$depend, TRUE)) {
-    if (trigger_depend(target = target, meta = meta, config = config)) {
+    if (trigger_depend(target, meta, meta_old, config)) {
       config$logger$minor("trigger depend", target = target)
       return(TRUE)
     }
@@ -166,9 +167,9 @@ check_trigger_depend <- function(target, meta, config) {
   FALSE
 }
 
-check_trigger_file <- function(target, meta, config) {
+check_trigger_file <- function(target, meta, meta_old, config) {
   if (identical(meta$trigger$file, TRUE)) {
-    if (trigger_file(target = target, meta = meta, config = config)) {
+    if (trigger_file(target, meta, meta_old, config)) {
       config$logger$minor("trigger file", target = target)
       return(TRUE)
     }
@@ -176,9 +177,9 @@ check_trigger_file <- function(target, meta, config) {
   FALSE
 }
 
-check_trigger_seed <- function(target, meta, config) {
+check_trigger_seed <- function(target, meta, meta_old, config) {
   if (identical(meta$trigger$seed, TRUE)) {
-    if (trigger_seed(target = target, meta = meta, config = config)) {
+    if (trigger_seed(target, meta, meta_old, config)) {
       config$logger$minor("trigger seed", target = target)
       return(TRUE)
     }
@@ -197,38 +198,30 @@ check_trigger_change <- function(target, meta, config) {
   FALSE
 }
 
-trigger_command <- function(target, meta, config) {
+trigger_command <- function(target, meta, meta_old, config) {
   if (is.null(meta$command)) {
     return(FALSE)
   }
-  command <- read_from_meta(
-    key = target,
-    field = "command",
-    cache = config$cache
-  )
+  command <- meta_elt(field = "command", meta = meta_old)
   !identical(command, meta$command)
 }
 
-trigger_depend <- function(target, meta, config) {
+trigger_depend <- function(target, meta, meta_old, config) {
   if (is.null(meta$dependency_hash)) {
     return(FALSE)
   }
-  dependency_hash <- read_from_meta(
-    key = target,
-    field = "dependency_hash",
-    cache = config$cache
-  )
+  dependency_hash <- meta_elt(field = "dependency_hash", meta = meta_old)
   !identical(dependency_hash, meta$dependency_hash)
 }
 
-trigger_file <- function(target, meta, config) {
+trigger_file <- function(target, meta, meta_old, config) {
   if (!length(target) || !length(config) || !length(meta)) {
     return(FALSE)
   }
   if (trigger_file_missing(target, meta, config)) {
     return(TRUE)
   }
-  if (trigger_file_hash(target, meta, config)) {
+  if (trigger_file_hash(target, meta, meta_old, config)) {
     return(TRUE)
   }
   FALSE
@@ -244,13 +237,9 @@ trigger_file_missing <- function(target, meta, config) {
   FALSE
 }
 
-trigger_file_hash <- function(target, meta, config) {
+trigger_file_hash <- function(target, meta, meta_old, config) {
   for (hash_name in c("input_file_hash", "output_file_hash")) {
-    old_file_hash <- read_from_meta(
-      key = target,
-      field = hash_name,
-      cache = config$cache
-    )
+    old_file_hash <- meta_elt(field = hash_name, meta = meta_old)
     if (!identical(old_file_hash, meta[[hash_name]])) {
       return(TRUE)
     }
@@ -258,12 +247,8 @@ trigger_file_hash <- function(target, meta, config) {
   FALSE
 }
 
-trigger_seed <- function(target, meta, config) {
-  seed <- read_from_meta(
-    key = target,
-    field = "seed",
-    cache = config$cache
-  )
+trigger_seed <- function(target, meta, meta_old, config) {
+  seed <- meta_elt(field = "seed", meta = meta_old)
   !identical(as.integer(seed), as.integer(meta$seed))
 }
 

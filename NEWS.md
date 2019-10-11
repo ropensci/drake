@@ -14,6 +14,7 @@
 - Hard wrap long labels in graph visuals (#1017)
 - Wrap history `txtq` into decorated `storr` API (#1020).
 - Reduce cyclomatic complexity of internal functions.
+- Reduce retrievals of old target metadata to try to improve performance (#1027).
 
 
 # Version 7.6.2

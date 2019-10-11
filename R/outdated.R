@@ -165,7 +165,8 @@ first_outdated <- function(config) {
           return(TRUE)
         }
         meta <- drake_meta_(target, config)
-        any_triggers(target, meta, config)
+        meta_old <- old_meta(key = target, cache = config$cache)
+        any_triggers(target, meta, meta_old, config)
       },
       jobs = config$jobs_preprocess
     )
