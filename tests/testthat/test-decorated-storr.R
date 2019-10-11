@@ -71,7 +71,6 @@ test_with_dir("deco storr: key encoding for paths and namespaced fns", {
   expect_true(all(file.create(z)))
 })
 
-
 test_with_dir("memoization encoding in decorated storr", {
   cache <- new_cache()
   x <- c("myfunny:::variablename", "relative/path\na\\m//e")
@@ -576,4 +575,15 @@ test_with_dir("decorated storr import specific targets (#1015)", {
   expect_true(is.list(cache1$get("a", namespace = "meta")))
   expect_false(cache1$exists("b"))
   expect_equal(cache1$get("z"), "z")
+})
+
+test_with_dir("safe_get*() methods", {
+  cache <- new_cache(tempfile())
+  for (ns in c(cache$default_namespace, "meta")) {
+    expect_equal(cache$safe_get("x", namespace = ns), NA_character_)
+    expect_equal(cache$safe_get_hash("x", namespace = ns), NA_character_)
+    cache$set("a", "b", namespace = ns)
+    expect_equal(cache$safe_get("a", namespace = ns), "b")
+    expect_false(is.na(cache$safe_get_hash("a", namespace = ns)))
+  }
 })

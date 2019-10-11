@@ -68,6 +68,20 @@ refclass_decorated_storr <- methods::setRefClass(
     get_value = function(hash, ...) {
       dcst_get_value(hash = hash, ..., .self = .self)
     },
+    safe_get = function(key, ...) {
+      out <- just_try(.self$get(key = key, ...))
+      if (inherits(out, "try-error")) {
+        out <- NA_character_
+      }
+      out
+    },
+    safe_get_hash = function(key, ...) {
+      out <- just_try(.self$get_hash(key = key, ...))
+      if (inherits(out, "try-error")) {
+        out <- NA_character_
+      }
+      out
+    },
     set = function(key, value, ...) {
       dcst_set(value = value, key = key, ..., .self = .self)
     },
@@ -634,3 +648,9 @@ import_target_formatted <- function(target, from, to) {
     )
   }
 }
+
+# Should be used as sparingly as possible.
+just_try <- function(code) {
+  try(suppressWarnings(code), silent = TRUE)
+}
+

@@ -1421,11 +1421,7 @@ list_multiple_namespaces <- function(cache, namespaces, jobs = 1) {
 }
 
 read_from_meta <- function(key, field, cache) {
-  meta <- safe_get(
-    key = key,
-    namespace = "meta",
-    config = list(cache = cache)
-  )
+  meta <- cache$safe_get(key = key, namespace = "meta")
   meta_elt(field, meta)
 }
 
@@ -1435,25 +1431,4 @@ meta_elt <- function(field, meta) {
   } else {
     NA_character_
   }
-}
-
-safe_get <- function(key, namespace, config) {
-  out <- just_try(config$cache$get(key = key, namespace = namespace))
-  if (inherits(out, "try-error")) {
-    out <- NA_character_
-  }
-  out
-}
-
-safe_get_hash <- function(key, namespace, config) {
-  out <- just_try(config$cache$get_hash(key = key, namespace = namespace))
-  if (inherits(out, "try-error")) {
-    out <- NA_character_
-  }
-  out
-}
-
-# Should be used as sparingly as possible.
-just_try <- function(code) {
-  try(suppressWarnings(code), silent = TRUE)
 }

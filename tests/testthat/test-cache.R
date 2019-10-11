@@ -125,12 +125,6 @@ test_with_dir("Cache namespaces", {
   expect_false(all(y %in% z))
 })
 
-test_with_dir("safe_get", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  con <- list(cache = storr::storr_environment())
-  expect_true(is.na(safe_get(key = "x", namespace = "y", config = con)))
-})
-
 test_with_dir("clean() works if there is no cache already", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   clean(list = "no_cache")
@@ -785,12 +779,6 @@ test_with_dir("arbitrary storr in-memory cache", {
   expect_true(nrow(large) > 0)
   rm(large)
   expect_false(file.exists(cached_data))
-})
-
-test_with_dir("safe_get", {
-  config <- drake_config(drake_plan(a = 1))
-  expect_true(is.na(safe_get("a", "b", config)))
-  expect_true(is.na(safe_get_hash("a", "b", config)))
 })
 
 test_with_dir("clean a nonexistent cache", {

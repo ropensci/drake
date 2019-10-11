@@ -62,11 +62,7 @@ cdl_get_knitr_hash <- function(config, layout) {
   if (!config$cache$exists(key = "knitr", namespace = "memoize")) {
     return(NA_character_)
   }
-  knitr_files <- safe_get(
-    key = "knitr",
-    namespace = "memoize",
-    config = config
-  )
+  knitr_files <- config$cache$safe_get(key = "knitr", namespace = "memoize")
   knitr_hashes <- lightly_parallelize(
     X = knitr_files,
     FUN = storage_hash,

@@ -163,12 +163,11 @@ is_good_outfile_checksum <- function(target, checksum, config) {
 
 get_checksum <- function(target, config) {
   paste(
-    safe_get_hash(
+    config$cache$safe_get_hash(
       key = target,
-      namespace = config$cache$default_namespace,
-      config = config
+      namespace = config$cache$default_namespace
     ),
-    safe_get_hash(key = target, namespace = "meta", config = config),
+    config$cache$safe_get_hash(key = target, namespace = "meta"),
     get_outfile_checksum(target, config),
     sep = " "
   )

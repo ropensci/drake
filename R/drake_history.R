@@ -128,11 +128,10 @@ drake_history <- function(
   )
   out <- out[order(out$target, out$built), ]
   current_hash <- vapply(
-    out$target,
-    safe_get_hash,
+    X = out$target,
+    FUN = cache$safe_get_hash,
     FUN.VALUE = character(1),
-    namespace = cache$default_namespace,
-    config = list(cache = cache)
+    namespace = cache$default_namespace
   )
   out$current <- out$hash == current_hash
   out$current[is.na(out$current)] <- FALSE
