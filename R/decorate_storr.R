@@ -653,4 +653,3 @@ import_target_formatted <- function(target, from, to) {
 just_try <- function(code) {
   try(suppressWarnings(code), silent = TRUE)
 }
-
