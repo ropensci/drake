@@ -1421,8 +1421,12 @@ list_multiple_namespaces <- function(cache, namespaces, jobs = 1) {
 }
 
 read_from_meta <- function(key, field, cache) {
-  meta <- cache$safe_get(key = key, namespace = "meta")
+  meta <- old_meta(key = key, cache = cache)
   meta_elt(field, meta)
+}
+
+old_meta <- function(key, cache) {
+  cache$safe_get(key = key, namespace = "meta")
 }
 
 meta_elt <- function(field, meta) {
