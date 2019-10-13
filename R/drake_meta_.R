@@ -227,7 +227,7 @@ dir_size <- function(x) {
     include.dirs = FALSE
   )
   sizes <- vapply(files, file_size, FUN.VALUE = numeric(1))
-  max(sizes %||% 0)
+  sum(sizes %||% 0)
 }
 
 file_size <- function(x) {
