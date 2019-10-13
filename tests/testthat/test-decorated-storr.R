@@ -440,10 +440,14 @@ test_with_dir("disk.frame (#1004)", {
   exp <- data.table::as.data.table(
     data.frame(x = letters, y = letters, stringsAsFactors = FALSE)
   )
-  expect_equivalent(as.data.frame(out), exp)
+  clean_up <- function(out) {
+    out <- as.data.frame(out)
+    out[order(out$x), ]
+  }
+  expect_equivalent(clean_up(out), exp)
   cache <- drake_cache()
   expect_equivalent(
-    as.data.frame(cache$get_value(cache$get_hash("x"))),
+    clean_up(cache$get_value(cache$get_hash("x"))),
     exp
   )
   ref <- cache$storr$get("x")
