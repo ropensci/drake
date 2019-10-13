@@ -1,5 +1,9 @@
 # Version 7.6.2.9000
 
+## Bug fixes
+
+- Take the sum instead of the max in `dir_size()`. Incurs rehashing for some workflows, but should not invalidate any targets.
+
 ## New features
 
 - Add a new `which_clean()` function to preview which targets will be invalidated by `clean()` (#1014, @pat-s).
