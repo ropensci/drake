@@ -14,9 +14,9 @@ code_to_function(path)
 A function to be input into the drake plan
 }
 \description{
-\code{code_to_function()}is a quick (and very dirty) way to
-retrofit \code{drake} to an existing script-based project. It parses
-individual *.R/*.RMD files into functions so they can be added
+\code{code_to_function()} is a quick (and very dirty) way to
+retrofit drake to an existing script-based project. It parses
+individual \code{\*.R/\*.RMD} files into functions so they can be added
 into the drake workflow.
 }
 \details{

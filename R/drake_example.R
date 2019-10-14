@@ -114,7 +114,6 @@ drake_examples <- function(quiet = TRUE) {
 #' @export
 #' @seealso [clean_mtcars_example()] [drake_examples()]
 #' @return Nothing.
-#' @inheritParams drake_config
 #' @param envir The environment to load the example into.
 #'   Defaults to your workspace.
 #'   For an insulated workspace,

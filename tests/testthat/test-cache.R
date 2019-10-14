@@ -853,6 +853,8 @@ test_with_dir("dir_create()", {
 })
 
 test_with_dir("which_clean() (#1014)", {
+  cache <- storr::storr_environment()
+  expect_equal(which_clean(cache = cache), character(0))
   plan <- drake_plan(x = 1, y = 2, z = 3)
   cache <- storr::storr_environment()
   make(plan, cache = cache, session_info = FALSE, history = FALSE)

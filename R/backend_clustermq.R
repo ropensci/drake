@@ -176,7 +176,6 @@ cmq_deps_list <- function(target, config) {
 #' @description For internal use only
 #' @export
 #' @keywords internal
-#' @inheritParams drake_build
 #' @param target Target name.
 #' @param meta List of metadata.
 #' @param deps Named list of target dependencies.

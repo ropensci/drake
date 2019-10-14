@@ -5,7 +5,7 @@
 \title{Type summary printing
 \lifecycle{stable}}
 \usage{
-\method{type_sum}{expr_list}(x)
+type_sum.expr_list(x)
 }
 \arguments{
 \item{x}{List of language objects.}

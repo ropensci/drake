@@ -1050,9 +1050,9 @@ is_trigger_call <- function(expr) {
 
 #' @title Turn a script into a function.
 #' \lifecycle{experimental}
-#' @description `code_to_function()`is a quick (and very dirty) way to
-#'   retrofit `drake` to an existing script-based project. It parses
-#'   individual \*.R/\*.RMD files into functions so they can be added
+#' @description `code_to_function()` is a quick (and very dirty) way to
+#'   retrofit drake to an existing script-based project. It parses
+#'   individual `\*.R/\*.RMD` files into functions so they can be added
 #'   into the drake workflow.
 #'
 #' @details Most data science workflows consist of imperative scripts.
