@@ -94,12 +94,21 @@ clean <- function(
   if (garbage_collection && abort_gc(cache$path)) {
     return(invisible()) # tested manually in test-always-skipped.R # nocov
   }
-  if (purge) {
-    namespaces <- target_namespaces_(default = cache$default_namespace)
-  } else {
-    namespaces <- cleaned_namespaces_(default = cache$default_namespace)
+  namespaces <- clean_select_namespaces(cache = cache, purge = purge)
+  targets <- c(as.character(match.call(expand.dots = FALSE)$...), list)
+  # Need to duplicate which_clean() because of trouble with dots
+  # in R 3.3.0.
+  if (requireNamespace("tidyselect", quietly = TRUE)) {
+    targets <- drake_tidyselect_cache(
+      ...,
+      list = list,
+      cache = cache,
+      namespaces = target_namespaces_()
+    )
   }
-  targets <- which_clean(..., list = list, cache = cache)
+  if (!length(targets) && is.null(c(...))) {
+    targets <- cache$list()
+  }
   lightly_parallelize(
     X = targets,
     FUN = clean_single_target,
@@ -108,6 +117,19 @@ clean <- function(
     namespaces = namespaces,
     garbage_collection = garbage_collection
   )
+  clean_cleanup(cache, garbage_collection, destroy)
+  invisible()
+}
+
+clean_select_namespaces <- function(cache, purge) {
+  if (purge) {
+    target_namespaces_(default = cache$default_namespace)
+  } else {
+    cleaned_namespaces_(default = cache$default_namespace)
+  }
+}
+
+clean_cleanup <- function(cache, garbage_collection, destroy) {
   if (garbage_collection) {
     cache$gc()
   } else if (!destroy) {
@@ -116,7 +138,6 @@ clean <- function(
   if (destroy) {
     cache$destroy()
   }
-  invisible()
 }
 
 #' @title Which targets will `clean()` invalidate?
