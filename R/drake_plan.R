@@ -556,6 +556,8 @@ print.drake_plan <- function(x, ...) {
   NextMethod(object = x)
 }
 
+type_sum <- function(x) UseMethod("type_sum")
+
 #' @title Type summary printing
 #' \lifecycle{stable}
 #' @description Ensures `<expr>` is printed at the top
