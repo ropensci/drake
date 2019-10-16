@@ -39,3 +39,8 @@ graph_info <- drake_graph_info(
 ```
 drake::render_drake_graph(graph_info = graph_info, on_select = TRUE)
 ```
+
+```{r}
+drake::vis_drake_graph(config, clusters = unique_stems, hover = FALSE, on_select_col = "number", on_select = NULL)
+```
+
