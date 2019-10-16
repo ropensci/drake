@@ -51,7 +51,7 @@ drake::render_drake_graph(graph_info = graph_info, on_select = TRUE)
 ```{r}
 drake::vis_drake_graph(config, clusters = unique_stems, hover = FALSE, on_select_col = "link", on_select = NULL)
 ```
-```{r}
+
 ```{r}
 drake::vis_drake_graph(config, clusters = unique_stems, hover = FALSE, on_select_col = "link", on_select = TRUE)
 ```
