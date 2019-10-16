@@ -2,13 +2,19 @@ library(drake)
 library(magrittr)
 
 ```{r}
+mtcars_link <- "https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/mtcars.html"
+iris_link <- "https://archive.ics.uci.edu/ml/datasets/iris"
+iris3_link <- "https://www.rdocumentation.org/packages/datasets/versions/3.6.1/topics/iris"
+
 plan <- drake::drake_plan(
   mtc = target({
     mtcars
-  }),
+  },
+  link = !!mtcars_link),
   ir = target({
     iris
-  }),
+  },
+  link = !!iris_link),
   ir3 = target({
     input <- iris3
 
@@ -16,7 +22,9 @@ plan <- drake::drake_plan(
     iris3
 
   },
-  transform = map(number = !!c(1:3), .tag_in = cluster_id )),
+  transform = map(number = !!c(1:3),
+                  .tag_in = cluster_id ),
+  link = !!iris3_link),
   trace = TRUE
 )
 
@@ -33,14 +41,19 @@ graph_info <- drake_graph_info(
   show_output_files = FALSE,
   build_times = "none",
   hover = FALSE,
-  on_select_col = "number"
+  on_select_col = "link"
 )
 ```
-```
+```{r}
 drake::render_drake_graph(graph_info = graph_info, on_select = TRUE)
 ```
 
 ```{r}
-drake::vis_drake_graph(config, clusters = unique_stems, hover = FALSE, on_select_col = "number", on_select = NULL)
+drake::vis_drake_graph(config, clusters = unique_stems, hover = FALSE, on_select_col = "link", on_select = NULL)
+```
+```{r}
+```{r}
+drake::vis_drake_graph(config, clusters = unique_stems, hover = FALSE, on_select_col = "link", on_select = TRUE)
+```
 ```
 
