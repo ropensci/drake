@@ -2,7 +2,8 @@
 % Please edit documentation in R/backend_clustermq.R
 \name{cmq_build}
 \alias{cmq_build}
-\title{Build a target using the clustermq backend}
+\title{Build a target using the clustermq backend
+\lifecycle{stable}}
 \usage{
 cmq_build(target, meta, deps, layout, config)
 }

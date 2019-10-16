@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{dependency_profile}
 \alias{dependency_profile}
-\title{Deprecated in favor of \code{\link[=deps_profile]{deps_profile()}}.}
+\title{States of the dependencies of a target
+\lifecycle{deprecated}}
 \usage{
 dependency_profile(target, config, character_only = FALSE)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{build_graph}
 \alias{build_graph}
-\title{Defunct function}
+\title{build_graph \lifecycle{defunct}}
 \usage{
 build_graph(...)
 }

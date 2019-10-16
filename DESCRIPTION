@@ -1,83 +1,97 @@
 Package: drake
 Title: A Pipeline Toolkit for Reproducible Computation at Scale
-Description: A general-purpose computational engine for data analysis,
-  drake rebuilds intermediate data objects when their dependencies change,
-  and it skips work when the results are already up to date.
-  Not every execution starts from scratch,
-  there is native support for parallel and distributed computing,
-  and completed projects have tangible evidence
-  that they are reproducible.
-  Extensive documentation, from beginner-friendly tutorials
-  to practical examples and more, is available at the reference website
-  <https://ropensci.github.io/drake/> and the online manual
-  <https://ropenscilabs.github.io/drake-manual/>.
-Version: 7.5.2.9000
-License: GPL-3
-URL: https://github.com/ropensci/drake
-BugReports: https://github.com/ropensci/drake/issues
+Version: 7.7.0.9000
 Authors@R: c(
   person(
-    family = "Landau",
     given = c("William", "Michael"),
-    email = "will.landau@gmail.com",
+    family = "Landau",
     role = c("aut", "cre"),
+    email = "will.landau@gmail.com",
     comment = c(ORCID = "0000-0003-1878-3253")
   ),
   person(
-    family = "Axthelm",
     given = "Alex",
-    email = "aaxthelm@che.IN.gov",
-    role = "ctb"
-  ),
-  person(
-    family = "Clarkberg",
-    given = "Jasper",
-    email = "jasper@clarkberg.org",
-    role = "ctb"
-  ),
-  person(
-    family = "Müller",
-    given = "Kirill",
-    email = "krlmlr+r@mailbox.org",
-    role = "ctb"
-  ),
-  person(
-    family = "Bond-Lamberty",
-    given = "Ben",
-    email = "bondlamberty@pnnl.gov",
+    family = "Axthelm",
     role = "ctb",
+    email = "aaxthelm@che.IN.gov"
+  ),
+  person(
+    given = "Jasper",
+    family = "Clarkberg",
+    role = "ctb",
+    email = "jasper@clarkberg.org"
+  ),
+  person(
+    given = "Kirill",
+    family = "Müller",
+    role = "ctb",
+    email = "krlmlr+r@mailbox.org"
+  ),
+  person(
+    given = "Ben",
+    family = "Bond-Lamberty",
+    role = "ctb",
+    email = "bondlamberty@pnnl.gov",
     comment = c(ORCID = "0000-0001-9525-4633")
   ),
   person(
-    family = "Mahr",
     given = "Tristan",
-    email = "tristan.mahr@wisc.edu",
+    family = "Mahr",
     role = "ctb",
+    email = "tristan.mahr@wisc.edu",
     comment = c(ORCID = "0000-0002-8890-5116")
   ),
   person(
-    family = "McBain",
     given = "Miles",
-    email = "miles.mcbain@gmail.com",
+    family = "McBain",
     role = "ctb",
+    email = "miles.mcbain@gmail.com",
     comment = c(ORCID = "0000-0003-2865-2548")
   ),
   person(
-    family = "Marwick",
-    given = "Ben",
-    email = "bmarwick@uw.edu",
-    role = "rev"
+    given = "Noam",
+    family = "Ross",
+    role = "ctb",
+    email = "noam.ross@gmail.com",
+    comment = c(ORCID = "0000-0002-2136-0000")
   ),
   person(
-    family = "Slaughter",
+    given = "Ellis",
+    family = "Hughes",
+    role = "ctb",
+    email = "ellishughes@live.com"
+  ),
+  person(
+    given = "Ben",
+    family = "Marwick",
+    role = "rev",
+    email = "bmarwick@uw.edu"
+  ),
+  person(
     given = "Peter",
-    email = "slaughter@nceas.ucsb.edu",
-    role = "rev"
+    family = "Slaughter",
+    role = "rev",
+    email = "slaughter@nceas.ucsb.edu"
   ),
   person(
     family = "Eli Lilly and Company",
     role = "cph"
   ))
+Description: A general-purpose computational engine for data
+  analysis, drake rebuilds intermediate data objects when their
+  dependencies change, and it skips work when the results are already up
+  to date.  Not every execution starts from scratch, there is native
+  support for parallel and distributed computing, and completed projects
+  have tangible evidence that they are reproducible.  Extensive
+  documentation, from beginner-friendly tutorials to practical examples
+  and more, is available at the reference website
+  <https://docs.ropensci.org/drake/> and the online manual
+  <https://ropenscilabs.github.io/drake-manual/>.
+License: GPL-3
+URL: https://github.com/ropensci/drake,
+  https://docs.ropensci.org/drake,
+  https://github.com/ropenscilabs/drake-manual
+BugReports: https://github.com/ropensci/drake/issues
 Depends:
   R (>= 3.3.0)
 Imports:
@@ -97,7 +111,9 @@ Suggests:
   clustermq (>= 0.8.8),
   crayon,
   curl (>= 2.7),
+  data.table,
   datasets,
+  disk.frame,
   downloader,
   fst,
   future,
@@ -122,8 +138,7 @@ Suggests:
   usethis,
   visNetwork,
   webshot
-VignetteBuilder: knitr
 Encoding: UTF-8
 Language: en-US
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 6.1.1
+RoxygenNote: 6.1.99.9001

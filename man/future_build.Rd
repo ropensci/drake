@@ -2,7 +2,8 @@
 % Please edit documentation in R/backend_future.R
 \name{future_build}
 \alias{future_build}
-\title{Task passed to individual futures in the \code{"future"} backend}
+\title{Task passed to individual futures in the \code{"future"} backend
+\lifecycle{stable}}
 \usage{
 future_build(target, meta, config, layout, protect)
 }

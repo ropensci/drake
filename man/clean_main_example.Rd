@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{clean_main_example}
 \alias{clean_main_example}
-\title{Deprecated: clean the main example from \code{drake_example("main")}}
+\title{Deprecated: clean the main example from \code{drake_example("main")}
+\lifecycle{deprecated}}
 \usage{
 clean_main_example()
 }

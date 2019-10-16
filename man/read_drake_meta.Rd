@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{read_drake_meta}
 \alias{read_drake_meta}
-\title{Defunct function}
+\title{read_drake_meta \lifecycle{defunct}}
 \usage{
 read_drake_meta(...)
 }

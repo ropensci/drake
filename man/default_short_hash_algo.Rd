@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{default_short_hash_algo}
 \alias{default_short_hash_algo}
-\title{Deprecated. Return the default short hash algorithm for \code{make()}.}
+\title{Return the default short hash algorithm for \code{make()}.
+\lifecycle{deprecated}}
 \usage{
 default_short_hash_algo(cache = NULL)
 }

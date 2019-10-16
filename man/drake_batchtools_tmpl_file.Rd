@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{drake_batchtools_tmpl_file}
 \alias{drake_batchtools_tmpl_file}
-\title{Deprecated. Get a template file for execution on a cluster.}
+\title{Get a template file for execution on a cluster.
+\lifecycle{deprecated}}
 \usage{
 drake_batchtools_tmpl_file(example = drake::drake_hpc_template_files(),
   to = getwd(), overwrite = FALSE)

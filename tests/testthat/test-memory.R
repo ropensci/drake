@@ -63,8 +63,10 @@ test_with_dir("a close look at the memory strategies", {
     waitforme = c(a_x, c_y, s_b_x, t_a_z),
     waitformetoo = c(waitforme, y)
   )
+  envir <- environment()
   config <- drake_config(
     plan,
+    envir = envir,
     cache = storr::storr_environment(),
     session_info = FALSE,
     memory_strategy = "lookahead",
@@ -79,14 +81,14 @@ test_with_dir("a close look at the memory strategies", {
   # lookahead
   remove(list = ls(config$eval), envir = config$eval)
   expect_equal(ls(config$eval), character(0))
-  for (x in c("x", "y", "z")) {
+  lapply(c("x", "y", "z"), function(x) {
     manage_memory(x, config)
     expect_equal(ls(config$eval), character(0))
-  }
-  for (x in c("a_x", "b_x", "c_x")) {
+  })
+  lapply(c("a_x", "b_x", "c_x"), function(x) {
     manage_memory(x, config)
     expect_equal(ls(config$eval), "x")
-  }
+  })
   manage_memory("a_y", config, downstream = "a_x")
   expect_equal(sort(ls(config$eval)), sort(c("x", "y")))
   manage_memory("s", config)
@@ -109,14 +111,14 @@ test_with_dir("a close look at the memory strategies", {
   config$memory_strategy <- "speed"
   remove(list = ls(config$eval), envir = config$eval)
   expect_equal(ls(config$eval), character(0))
-  for (x in c("x", "y", "z")) {
+  lapply(c("x", "y", "z"), function(x) {
     manage_memory(x, config)
     expect_equal(ls(config$eval), character(0))
-  }
-  for (x in c("a_x", "b_x", "c_x")) {
+  })
+  lapply(c("a_x", "b_x", "c_x"), function(x) {
     manage_memory(x, config)
     expect_equal(ls(config$eval), "x")
-  }
+  })
   manage_memory("a_y", config)
   expect_equal(sort(ls(config$eval)), sort(c("x", "y")))
   manage_memory("s", config)
@@ -140,14 +142,14 @@ test_with_dir("a close look at the memory strategies", {
 
     # initial discard and load
     expect_equal(ls(config$eval), character(0))
-    for (x in c("x", "y", "z")) {
+    lapply(c("x", "y", "z"), function(x) {
       manage_memory(x, config)
       expect_equal(ls(config$eval), character(0))
-    }
-    for (x in c("a_x", "b_x", "c_x")) {
+    })
+    lapply(c("a_x", "b_x", "c_x"), function(x) {
       manage_memory(x, config)
       expect_equal(ls(config$eval), "x")
-    }
+    })
     manage_memory("a_y", config)
     expect_equal(ls(config$eval), "y")
     manage_memory("s", config)

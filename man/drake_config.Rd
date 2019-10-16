@@ -2,14 +2,13 @@
 % Please edit documentation in R/drake_config.R
 \name{drake_config}
 \alias{drake_config}
-\title{Create the internal runtime parameter list
-used internally in \code{\link[=make]{make()}}.}
+\title{Interpret the plan and prepare for \code{\link[=make]{make()}}
+\lifecycle{maturing}}
 \usage{
 drake_config(plan, targets = NULL, envir = parent.frame(),
-  verbose = 1L, hook = NULL, cache = drake::drake_cache(verbose =
-  verbose, console_log_file = console_log_file), fetch_cache = NULL,
-  parallelism = "loop", jobs = 1L, jobs_preprocess = 1L,
-  packages = rev(.packages()), lib_loc = NULL,
+  verbose = 1L, hook = NULL, cache = drake::drake_cache(),
+  fetch_cache = NULL, parallelism = "loop", jobs = 1L,
+  jobs_preprocess = 1L, packages = rev(.packages()), lib_loc = NULL,
   prework = character(0), prepend = NULL, command = NULL,
   args = NULL, recipe_command = NULL, timeout = NULL, cpu = Inf,
   elapsed = Inf, retries = 0, force = FALSE, log_progress = TRUE,
@@ -22,7 +21,7 @@ drake_config(plan, targets = NULL, envir = parent.frame(),
   garbage_collection = FALSE, template = list(), sleep = function(i)
   0.01, hasty_build = NULL, memory_strategy = "speed", layout = NULL,
   lock_envir = TRUE, history = TRUE, recover = FALSE,
-  recoverable = TRUE)
+  recoverable = TRUE, curl_handles = list())
 }
 \arguments{
 \item{plan}{Workflow plan data frame.
@@ -454,17 +453,37 @@ and it prevents old metadata from being removed with garbage collection
 (\code{clean(garbage_collection = TRUE)}, \code{gc()} in \code{storr}s).
 If you need to limit the cache size or the number of files in the cache,
 consider \code{make(recoverable = FALSE, progress = FALSE)}.}
+
+\item{curl_handles}{A named list of curl handles. Each value is an
+object from \code{curl::new_handle()}, and each name is a URL
+(and should start with "http", "https", or "ftp").
+Example:
+list(
+\code{http://httpbin.org/basic-auth} = curl::new_handle(
+username = "user", password = "passwd"
+)
+)
+Then, if your plan has
+\code{file_in("http://httpbin.org/basic-auth/user/passwd")}
+\code{drake} will authenticate using the username and password of the handle
+for \code{http://httpbin.org/basic-auth/}.
+
+\code{drake} uses partial matching on text to
+find the right handle of the \code{file_in()} URL, so the name of the handle
+could be the complete URL (\code{"http://httpbin.org/basic-auth/user/passwd"})
+or a part of the URL (e.g. \code{"http://httpbin.org/"} or
+\code{"http://httpbin.org/basic-auth/"}). If you have multiple handles
+whose names match your URL, \code{drake} will choose the closest match.}
 }
 \value{
 The master internal configuration list of a project.
 }
 \description{
-\code{\link[=drake_config]{drake_config()}} collects and sanitizes the multitude of
-parameters and settings that \code{\link[=make]{make()}} needs to do its job:
-the plan, packages,
-the environment of functions and initial data objects,
-parallel computing instructions,
-verbosity level, etc.
+\code{\link[=drake_config]{drake_config()}} does all the preprocessing that
+\code{\link[=make]{make()}} needs to build targets. This includes interpreting
+the plan (from \code{\link[=drake_plan]{drake_plan()}}) and analyzing how all the
+targets fit together. The result is a list of objects
+that \code{\link[=make]{make()}} needs to keep track of everything during runtime.
 }
 \details{
 Once you create a list with \code{\link[=drake_config]{drake_config()}},

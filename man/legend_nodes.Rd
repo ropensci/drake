@@ -3,7 +3,8 @@
 \name{legend_nodes}
 \alias{legend_nodes}
 \title{Create the nodes data frame used in the legend
-of the graph visualizations.}
+of the graph visualizations.
+\lifecycle{soft-deprecated}}
 \usage{
 legend_nodes(font_size = 20)
 }

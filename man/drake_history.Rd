@@ -2,10 +2,11 @@
 % Please edit documentation in R/drake_history.R
 \name{drake_history}
 \alias{drake_history}
-\title{History and provenance}
+\title{History and provenance
+\lifecycle{experimental}}
 \usage{
 drake_history(cache = NULL, history = NULL, analyze = TRUE,
-  verbose = TRUE)
+  verbose = NULL)
 }
 \arguments{
 \item{cache}{drake cache as created by \code{\link[=new_cache]{new_cache()}}.
@@ -22,12 +23,7 @@ commands for arguments to function calls.
 Could be slow because this requires parsing and analyzing
 lots of R code.}
 
-\item{verbose}{Integer, control printing to the console/terminal.
-\itemize{
-\item \code{0}: print nothing.
-\item \code{1}: print targets, retries, and failures.
-\item \code{2}: also show a spinner when preprocessing tasks are underway.
-}}
+\item{verbose}{Deprecated on 2019-09-11.}
 }
 \value{
 A data frame of target history.

@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{available_hash_algos}
 \alias{available_hash_algos}
-\title{Deprecated. List the available hash algorithms for drake caches.}
+\title{List the available hash algorithms for drake caches.
+\lifecycle{deprecated}}
 \usage{
 available_hash_algos()
 }

@@ -2,7 +2,8 @@
 % Please edit documentation in R/cache.R
 \name{eager_load_target}
 \alias{eager_load_target}
-\title{Load a target right away (internal function)}
+\title{Load a target right away (internal function)
+\lifecycle{stable}}
 \usage{
 eager_load_target(target, cache, namespace, envir, verbose)
 }
@@ -21,12 +22,7 @@ name of the \code{storr} namespace to read from.}
 \item{envir}{Environment to load objects into. Defaults to the
 calling environment (current workspace).}
 
-\item{verbose}{Integer, control printing to the console/terminal.
-\itemize{
-\item \code{0}: print nothing.
-\item \code{1}: print targets, retries, and failures.
-\item \code{2}: also show a spinner when preprocessing tasks are underway.
-}}
+\item{verbose}{Deprecated on 2019-09-11.}
 }
 \description{
 This function is only exported

@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{imported}
 \alias{imported}
-\title{Deprecated. List all the imports in the drake cache.}
+\title{List all the imports in the drake cache.
+\lifecycle{deprecated}}
 \usage{
 imported(files_only = FALSE, path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose =
@@ -22,12 +23,7 @@ imported objects could get really cumbersome.}
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} is ignored.}
 
-\item{verbose}{Integer, control printing to the console/terminal.
-\itemize{
-\item \code{0}: print nothing.
-\item \code{1}: print targets, retries, and failures.
-\item \code{2}: also show a spinner when preprocessing tasks are underway.
-}}
+\item{verbose}{Deprecated on 2019-09-11.}
 
 \item{jobs}{Number of jobs/workers for parallel processing.}
 }

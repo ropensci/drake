@@ -3,7 +3,8 @@
 \name{drake_hpc_template_files}
 \alias{drake_hpc_template_files}
 \title{List the available example template files for deploying
-work to a cluster / job scheduler.}
+work to a cluster / job scheduler.
+\lifecycle{stable}}
 \usage{
 drake_hpc_template_files()
 }

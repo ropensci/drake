@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{read_drake_graph}
 \alias{read_drake_graph}
-\title{Deprecated}
+\title{Read a workflow graph from the cache
+\lifecycle{deprecated}}
 \usage{
 read_drake_graph(path = getwd(), search = TRUE, cache = NULL,
   verbose = 1L)
@@ -16,12 +17,7 @@ read_drake_graph(path = getwd(), search = TRUE, cache = NULL,
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} is ignored.}
 
-\item{verbose}{Integer, control printing to the console/terminal.
-\itemize{
-\item \code{0}: print nothing.
-\item \code{1}: print targets, retries, and failures.
-\item \code{2}: also show a spinner when preprocessing tasks are underway.
-}}
+\item{verbose}{Deprecated on 2019-09-11.}
 }
 \description{
 drake no longer stores the config object,

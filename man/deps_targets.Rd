@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{deps_targets}
 \alias{deps_targets}
-\title{Deprecated.}
+\title{See the dependencies of a target
+\lifecycle{deprecated}}
 \usage{
 deps_targets(targets, config, reverse = FALSE)
 }
@@ -18,7 +19,7 @@ deps_targets(targets, config, reverse = FALSE)
 Names of dependencies listed by type (object, input file, etc).
 }
 \description{
-Deprecated. Use \code{\link[=deps_target]{deps_target()}} (singular) instead.
+Use \code{\link[=deps_target]{deps_target()}} (singular) instead.
 }
 \details{
 Deprecated on 2018-08-30.

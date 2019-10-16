@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{doc_of_function_call}
 \alias{doc_of_function_call}
-\title{Defunct function}
+\title{doc_of_function_call \lifecycle{defunct}}
 \usage{
 doc_of_function_call(...)
 }

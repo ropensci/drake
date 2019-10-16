@@ -1,4 +1,5 @@
 #' @title Isolate the side effects of an example.
+#' \lifecycle{stable}
 #' @description Runs code in a temporary directory
 #'   in a controlled environment with a controlled
 #'   set of options.
@@ -12,7 +13,7 @@ isolate_example <- function(desc, code) {
   dir.create(new)
   old <- setwd(new) # nolint
   on.exit(setwd(old)) # nolint
-  opts <- list(drake_make_menu = FALSE, drake_clean_menu = FALSE)
+  opts <- list(drake_clean_menu = FALSE)
   with_options(new = opts, code)
   invisible()
 }
@@ -66,6 +67,12 @@ assert_pkg <- function(pkg, version = NULL, install = "install.packages") {
   invisible()
 }
 
+assert_cache <- function(cache) {
+  if (is.null(cache)) {
+    stop("cannot find drake cache.", call. = FALSE)
+  }
+}
+
 # weak_as_tibble - use as_tibble() if available but fall back to
 # as.data.frame() if necessary
 weak_as_tibble <- function(..., .force_df = FALSE) {
@@ -88,16 +95,24 @@ weak_tibble <- function(..., .force_df = FALSE) {
   }
 }
 
-safe_is_na <- function(x) {
-  tryCatch(is.na(x), error = error_false, warning = error_false)
-}
-
 error_false <- function(e) {
   FALSE
 }
 
 error_na <- function(e) {
   NA_character_
+}
+
+all_is_na <- function(x) {
+  all(is.na(x))
+}
+
+safe_is_na <- function(x) {
+  tryCatch(is.na(x), error = error_false, warning = error_false)
+}
+
+complete_cases <- function(x) {
+  !as.logical(Reduce(`|`, lapply(x, is.na)))
 }
 
 select_nonempty <- function(x) {
@@ -111,6 +126,42 @@ select_nonempty <- function(x) {
   x[keep]
 }
 
+longest_match <- function(choices, against) {
+  index <- vapply(
+    choices,
+    pmatch,
+    table = against,
+    FUN.VALUE = integer(1)
+  )
+  matches <- names(index[!is.na(index)])
+  matches[which.max(nchar(matches))]
+}
+
+num_unique <- function(x) {
+  length(unique(x))
+}
+
+set_names <- function(x, nms) {
+  names(x) <- nms
+  x
+}
+
+random_string <- function(exclude) {
+  key <- NULL
+  while (is.null(key) || (key %in% exclude)) {
+    key <- basename(tempfile())
+  }
+  key
+}
+
+random_tempdir <- function() {
+  while (file.exists(dir <- tempfile())) {
+    Sys.sleep(1e-6) # nocov
+  }
+  dir.create(dir)
+  dir
+}
+
 multiline_message <- function(x) {
   n <- 30
   if (length(x) > n) {
@@ -118,6 +169,101 @@ multiline_message <- function(x) {
   }
   x <- paste0("  ", x)
   paste(x, collapse = "\n")
+}
+
+hard_wrap <- Vectorize(
+  function(x, width = 0.9 * getOption("width")) {
+    if (nchar(x) <= width) {
+      return(x)
+    }
+    chars <- strsplit(x, "")[[1]]
+    max_index <- ceiling(nchar(x) / width)
+    index <- rep(seq_len(max_index), each = width, length.out = nchar(x))
+    lines <- tapply(X = chars, INDEX = index, FUN = paste, collapse = "")
+    paste(lines, collapse = "\n")
+  },
+  vectorize.args = "x",
+  USE.NAMES = FALSE
+)
+
+soft_wrap <- Vectorize(
+  function(x, width = 0.9 * getOption("width")) {
+    x <- paste(strwrap(x), collapse = "\n")
+    unname(x)
+  },
+  vectorize.args = "x",
+  USE.NAMES = FALSE
+)
+
+storage_move <- function(
+  from,
+  to,
+  overwrite = FALSE,
+  merge = FALSE,
+  warn = TRUE,
+  jobs = 1L
+) {
+  if (dir.exists(from)) {
+    dir_move(
+      from = from,
+      to = to,
+      overwrite = overwrite,
+      merge = merge,
+      warn = warn,
+      jobs = jobs
+    )
+  } else {
+    file_move(from = from, to = to)
+  }
+  invisible()
+}
+
+dir_move <- function(
+  from,
+  to,
+  overwrite = FALSE,
+  merge = FALSE,
+  warn = TRUE,
+  jobs = 1L
+) {
+  if (!overwrite && file.exists(to)) {
+    if (warn) {
+      warning(
+        "cannot move ", from, " to ", to, ". ",
+        to, " already exists.",
+        call. = FALSE
+      )
+    }
+    return(invisible())
+  }
+  if (!merge) {
+    unlink(to, recursive = TRUE)
+  }
+  dir_create(to)
+  files <- list.files(from, all.files = TRUE, recursive = TRUE)
+  args <- list(
+    from = file.path(from, files),
+    to = file.path(to, files)
+  )
+  drake_pmap(.l = args, .f = file_move, jobs = jobs)
+  unlink(from, recursive = TRUE)
+  invisible()
+}
+
+file_move <- function(from, to) {
+  dir_create(dirname(to))
+  file.rename(from = from, to = to)
+  invisible()
+}
+
+dir_create <- function(x) {
+  if (!file.exists(x)) {
+    dir.create(x, showWarnings = FALSE, recursive = TRUE)
+  }
+  if (!dir.exists(x)) {
+    stop("cannot create directory at ", shQuote(x), call. = FALSE)
+  }
+  invisible()
 }
 
 # From lintr

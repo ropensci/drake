@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{r_recipe_wildcard}
 \alias{r_recipe_wildcard}
-\title{deprecated}
+\title{Default Makefile recipe wildcard
+\lifecycle{deprecated}}
 \usage{
 r_recipe_wildcard()
 }

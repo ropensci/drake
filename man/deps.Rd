@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{deps}
 \alias{deps}
-\title{Defunct function}
+\title{deps \lifecycle{defunct}}
 \usage{
 deps(...)
 }

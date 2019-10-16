@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{deprecate_wildcard}
 \alias{deprecate_wildcard}
-\title{Defunct function}
+\title{deprecate_wildcard \lifecycle{defunct}}
 \usage{
 deprecate_wildcard(...)
 }

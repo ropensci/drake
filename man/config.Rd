@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{config}
 \alias{config}
-\title{Defunct function}
+\title{config \lifecycle{defunct}}
 \usage{
 config(...)
 }

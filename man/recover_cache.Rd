@@ -2,8 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{recover_cache}
 \alias{recover_cache}
-\title{Deprecated. Load an existing drake files system cache
-if it exists or create a new one otherwise.}
+\title{Load or create a drake cache
+\lifecycle{deprecated}}
 \usage{
 recover_cache(path = NULL, hash_algorithm = NULL,
   short_hash_algo = NULL, long_hash_algo = NULL, force = FALSE,
@@ -25,28 +25,11 @@ Use \code{hash_algorithm} instead.}
 despite any back compatibility issues with the
 running version of drake.}
 
-\item{verbose}{Integer, control printing to the console/terminal.
-\itemize{
-\item \code{0}: print nothing.
-\item \code{1}: print targets, retries, and failures.
-\item \code{2}: also show a spinner when preprocessing tasks are underway.
-}}
+\item{verbose}{Deprecated on 2019-09-11.}
 
 \item{fetch_cache}{Deprecated.}
 
-\item{console_log_file}{Optional character scalar of a file name or
-connection object (such as \code{stdout()}) to dump maximally verbose
-log information for \code{\link[=make]{make()}} and other functions (all functions that
-accept a \code{config} argument, plus \code{drake_config()}).
-If you choose to use a text file as the console log,
-it will persist over multiple function calls
-until you delete it manually.
-Fields in each row the log file, from left to right:
-- The node name (short host name) of the
-computer (from \code{Sys.info()["nodename"]}).
-- The process ID (from \code{Sys.getpid()}).
-- A timestamp with the date and time (in microseconds).
-- A brief description of what \code{drake} was doing.\code{ The fields are separated by pipe symbols (}"|"`).}
+\item{console_log_file}{Deprecated on 2019-09-11.}
 }
 \value{
 A drake/storr cache.

@@ -1,4 +1,3 @@
-url: https://ropensci.github.io/drake
 destination: docs/
 template:
   package: rotemplate
@@ -44,6 +43,7 @@ reference:
   - '`drake_plan`'
   - '`transform_plan`'
   - '`drake_plan_source`'
+  - '`code_to_function`'
   - '`code_to_plan`'
   - '`plan_to_code`'
   - '`plan_to_notebook`'
@@ -51,13 +51,18 @@ reference:
   - '`drake_slice`'
 - title: drake plan keywords
   contents:
+  - '`target`'
+  - '`trigger`'
+  - '`map`'
+  - '`split`'
+  - '`cross`'
+  - '`combine`'
   - '`file_in`'
   - '`file_out`'
   - '`knitr_in`'
   - '`ignore`'
   - '`no_deps`'
   - '`drake_envir`'
-  - '`trigger`'
 - title: Reproducible R session management
   contents:
   - '`r_make`'
@@ -109,12 +114,12 @@ reference:
   - '`build_times`'
   - '`predict_runtime`'
   - '`predict_workers`'
-- title: Caches
+- title: Cache creation
   contents:
   - '`drake_cache`'
   - '`new_cache`'
   - '`find_cache`'
-- title: Cache inspection
+- title: Cache usage
   contents:
   - '`loadd`'
   - '`readd`'
@@ -124,9 +129,11 @@ reference:
   - '`read_drake_seed`'
   - '`show_source`'
   - '`file_store`'
+  - '`drake_tempfile`'
 - title: Cache maintenance
   contents:
   - '`clean`'
+  - '`which_clean`'
   - '`drake_gc`'
   - '`rescue_cache`'
 - title: Progress

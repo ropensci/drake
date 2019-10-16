@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{reduce_by}
 \alias{reduce_by}
-\title{Deprecated: reduce multiple groupings of targets}
+\title{Reduce multiple groupings of targets
+\lifecycle{deprecated}}
 \usage{
 reduce_by(plan, ..., prefix = "target", begin = "", op = " + ",
   end = "", pairwise = TRUE, append = TRUE, filter = NULL,

@@ -2,8 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{target_namespaces}
 \alias{target_namespaces}
-\title{Deprecated. For drake caches, list the \code{storr} cache
-namespaces that store target-level information.}
+\title{Storr namespaces for targets
+\lifecycle{deprecated}}
 \usage{
 
   target_namespaces(default = storr::storr_environment()$default_namespace)

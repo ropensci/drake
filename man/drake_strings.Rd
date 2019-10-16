@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{drake_strings}
 \alias{drake_strings}
-\title{Turn valid expressions into character strings.}
+\title{Turn valid expressions into character strings.
+\lifecycle{deprecated}}
 \usage{
 drake_strings(...)
 }

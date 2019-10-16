@@ -1,10 +1,11 @@
 ’
 ’s
 Acknowledgements
-ailProbPaper
 acyclic
 addin
 advisor
+ailProbPaper
+al
 algo
 ALTREP
 Ane
@@ -45,6 +46,7 @@ CRAN
 CRAN's
 creatable
 customizable
+cyclomatic
 DataFest
 del
 demografia
@@ -59,6 +61,8 @@ dplyr
 DSL
 drakeplanner
 DropBox
+dt
+Ebihara
 Ecdat
 Econometrics
 econometrics
@@ -66,6 +70,7 @@ efcaguab
 else's
 eng
 envir
+et
 ETag
 eval
 Factual's
@@ -73,10 +78,13 @@ Falster
 faq
 FitzJohn
 flowlines
+fst
 ftp
+Gametophytes
 Genotype
 ggplot
 github
+GitLab
 globals
 gridlines
 gsp
@@ -108,12 +116,14 @@ Kirill's
 knitr
 Knitr
 lapply
+lifecycle
 loadd
 Loadd
 Lowndes
 Maëlle
 Makefile
 Makefiles
+makinoi
 Marwick
 mbostock
 mc
@@ -126,6 +136,7 @@ memoize
 memoization
 Memoization
 memoized
+Nitta
 modularity
 mtcars
 Müller
@@ -148,6 +159,7 @@ parallelization
 parallelize
 parallelizing
 parLapply
+passwd
 Payseur
 PhantomJS
 Pharma
@@ -155,6 +167,8 @@ Phylogenetic
 phyloQTLpaper
 Pinnoi
 pleurosoriopsis
+Pleurorosiopsis
+Polypodiaceae
 pre
 preCCProbPaper
 preclean
@@ -203,10 +217,12 @@ Stawitz
 storr
 Storr
 subcomponents
+subfolder
 subgraphs
 Subgraphs
 sugiyama
 Sungjin
+tempfile
 templating
 tensorflow
 tibble
@@ -226,6 +242,7 @@ unhandled
 Univa
 unparsable
 untimed
+untransformed
 vectorization
 vectorized
 VignetteEncoding
@@ -241,6 +258,7 @@ widehat
 withTimeout
 wlandau
 workflowr
+workplan
 YAML
 Yub
 zeromq

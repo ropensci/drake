@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{default_Makefile_args}
 \alias{default_Makefile_args}
-\title{Deprecated}
+\title{Default arguments of Makefile parallelism
+\lifecycle{deprecated}}
 \usage{
 default_Makefile_args(jobs, verbose)
 }

@@ -61,7 +61,7 @@ test_with_dir("equals analysis", {
 
 # https://github.com/cran/codetools/blob/master/tests/tests.R # nolint
 test_with_dir("local variable tests from the codetools package", {
-  find_locals <- function(expr){
+  find_locals <- function(expr) {
     if (!is.function(expr) && !is.language(expr)) {
       return(list())
     }
@@ -117,7 +117,7 @@ test_with_dir("solitary codetools globals tests", {
   expect_equal(out, character(0))
   out <- analyze_code(quote(local(x <- 1, e)))$globals
   expect_equal(sort(out), sort(c("local", "e")))
-  f <- function(){
+  f <- function() {
     if (is.R()) {
       x
     } else {
@@ -227,7 +227,7 @@ test_with_dir("code analysis error handling", {
     regexp = "bad function in complex assignments"
   )
 
-  f <- function(a, b){
+  f <- function(a, b) {
     invisible()
   }
   expect_error(get_assigned_var(formals(f)), regexp = "missing assignment")
@@ -518,11 +518,11 @@ test_with_dir("tracked() works", {
   config <- dbug()
   x <- sort(tracked(config))
   y <- sort(c(
-    display_keys(encode_path("intermediatefile.rds")),
+    redisplay_keys(reencode_path("intermediatefile.rds")),
     "drake_target_1",
     "yourinput", "nextone",
     "combined", "myinput", "final", "j", "i", "h", "g", "f",
-    "c", "b", "a",  display_keys(encode_path("input.rds"))
+    "c", "b", "a",  redisplay_keys(reencode_path("input.rds"))
   ))
   expect_equal(x, y)
 })
@@ -675,7 +675,9 @@ test_with_dir("ignore() works on its own", {
 
 test_with_dir("Standardized commands have no attributes", {
   expect_null(attributes(cdl_standardize_command("")))
-  expect_null(attributes(cdl_standardize_command("f(x) + y + function(abc){}")))
+  expect_null(attributes(
+    cdl_standardize_command("f(x) + y + function(abc) {}"))
+  )
   expect_null(attributes(cdl_standardize_command(quote(NULL))))
   expect_null(attributes(cdl_standardize_command(digest::digest)))
   expect_null(attributes(cdl_standardize_command(body(digest::digest))))
@@ -767,7 +769,7 @@ test_with_dir("standardized commands with ignore()", {
   )
   expect_equal(
     cdl_standardize_command(
-      parse(text = "function(x){(sqrt( ignore(fun(arg) + 7) + 123))}")
+      parse(text = "function(x) {(sqrt( ignore(fun(arg) + 7) + 123))}")
     ),
     cdl_standardize_command(
       parse(text = "function(x) {\n    (sqrt(ignore() + 123))\n}")

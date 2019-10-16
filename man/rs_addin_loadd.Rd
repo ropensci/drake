@@ -2,7 +2,8 @@
 % Please edit documentation in R/rstudio.R
 \name{rs_addin_loadd}
 \alias{rs_addin_loadd}
-\title{Loadd target at cursor into global environment}
+\title{Loadd target at cursor into global environment
+\lifecycle{stable}}
 \usage{
 rs_addin_loadd(context = NULL)
 }

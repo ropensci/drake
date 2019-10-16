@@ -3,7 +3,8 @@
 \name{missed}
 \alias{missed}
 \title{Report any import objects required by your drake_plan
-plan but missing from your workspace or file system.}
+plan but missing from your workspace or file system.
+\lifecycle{stable}}
 \usage{
 missed(config)
 }

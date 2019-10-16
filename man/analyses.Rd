@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{analyses}
 \alias{analyses}
-\title{Defunct function}
+\title{analyses \lifecycle{defunct}}
 \usage{
 analyses(...)
 }

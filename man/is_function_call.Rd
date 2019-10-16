@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{is_function_call}
 \alias{is_function_call}
-\title{Defunct function}
+\title{is_function_call \lifecycle{defunct}}
 \usage{
 is_function_call(...)
 }

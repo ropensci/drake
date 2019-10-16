@@ -2,7 +2,8 @@
 % Please edit documentation in R/manage_memory.R
 \name{manage_memory}
 \alias{manage_memory}
-\title{Manage the in-memory dependencies of a target.}
+\title{Manage the in-memory dependencies of a target.
+\lifecycle{stable}}
 \usage{
 manage_memory(target, config, downstream = NULL, jobs = 1)
 }

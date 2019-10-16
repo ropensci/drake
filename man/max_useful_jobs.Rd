@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{max_useful_jobs}
 \alias{max_useful_jobs}
-\title{Defunct function}
+\title{max_useful_jobs \lifecycle{defunct}}
 \usage{
 max_useful_jobs(...)
 }

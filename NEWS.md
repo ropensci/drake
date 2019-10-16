@@ -1,24 +1,95 @@
-# Version 7.5.2.9000
+# Version 7.7.0.9000
+
+
+
+# Version 7.7.0
+
+## Bug fixes
+
+- Take the sum instead of the max in `dir_size()`. Incurs rehashing for some workflows, but should not invalidate any targets.
+
+## New features
+
+- Add a new `which_clean()` function to preview which targets will be invalidated by `clean()` (#1014, @pat-s).
+- Add serious import and export methods for the decorated `storr` (#1015, @billdenney, @noamross).
+- Add a new `"diskframe"` format for larger-than-memory data (#1004, @xiaodaigh).
+- Add a new `drake_tempfile()` function to help with `"diskframe"` format. It makes sure we are not copying large datasets across different physical storage media (#1004, @xiaodaigh).
+- Add new function `code_to_function()` to allow for parsing script based workflows into functions so `drake_plan()` can begin to manage the workflow and track dependencies. (#994, @thebioengineer)
+
+## Enhancements
+
+- Coerce seeds to integers in `seed_trigger()` (#1013, @CreRecombinase).
+- Hard wrap long labels in graph visuals (#1017).
+- Nest the history `txtq` API inside decorated `storr` API (#1020).
+- Reduce cyclomatic complexity of internal functions.
+- Reduce retrievals of old target metadata to try to improve performance (#1027).
+
+
+# Version 7.6.2
+
+## Bug fixes
+
+- Remove README.md from CRAN altogether. Also remove all links from the news and vignette. The links trigger too many CRAN notes, which made the automated checks too brittle.
+- Serialize formats that need serialization (like "keras") before sending the data from HPC workers to the master process (#989).
+- Check for custom-formatted files when checking checksums.
+- Force fst-formatted targets to plain data frames. Same goes for the new "fst_dt" format.
+- Change the meaning and behavior of `max_expand` in `drake_plan()`. `max_expand` is now the maximum number of targets produced by `map()`, `split()`, and `cross()`. For `cross()`, this reduces the number of targets (less cumbersome) and makes the subsample of targets more representative of the complete grid. It also. ensures consistent target naming when `.id` is `FALSE` (#1002). Note: `max_expand` is not for production workflows anyway, so this change does not break anything important. Unfortunately, we do lose the speed boost in `drake_plan()` originally due to `max_expand`, but `drake_plan()` is still fast, so that is not so bad.
+- Drop specialized formats of `NULL` targets (#998).
+- Prevent false grouping variables from partially tagging along in `cross()` (#1009). The same fix should apply to `map()` and `split()` too.
+- Respect graph topology when recovering old grouping variables for `map()` (#1010).
+
+## New features
+
+- Add a new "fst_dt" format for `fst`-powered saving of `data.table` objects.
+- Support a custom "caching" column of the plan to select master vs worker caching for each target individually (#988).
+- Make `transform` a formal argument of `target()` so that users do not have to type "transform =" all the time in `drake_plan()` (#993).
+- Migrate the documentation website from `ropensci.github.io/drake` to `docs.ropensci.org/drake`.
+
+## Enhancements
+
+- Document the HPC limitations of `target(format = "keras")` (#989).
+- Remove the now-superfluous vignette.
+- Wrap up console and text file logging functionality into a reference class (#964).
+- Deprecate the `verbose` argument in various caching functions. The location of the cache is now only printed in `make()`. This made the previous feature easier to implement.
+- Carry forward nested grouping variables in `combine()` (#1008).
+- Improve the encapsulation of hash tables in the decorated `storr` (#968).
+
+
+# Version 7.6.1
+
+## Bug fixes
+
+- CRAN hotfix: remove a broken link in the README.
+
+
+# Version 7.6.0
 
 ## Bug fixes
 
 - Make `drake_plan(transform = slice())` understand `.id` and grouping variables (#963).
 - Repair `clean(garbage_collection = TRUE, destroy = TRUE)`. Previously it destroyed the cache before trying to collect garbage.
-- Ensure that `r_make()` passes informative error messages back to the calling process (#969),
+- Ensure that `r_make()` passes informative error messages back to the calling process (#969).
+- Avoid downloading full contents of URLs when rehashing (#982)
+- Retain upstream grouping variables of `map()` and `cross()` on topologically side-by-side targets (#983).
+- Manually enforce the correct ordering in `dsl_left_outer_join()` so `cross()` selects the right combinations of existing targets (#986). This bug was probably introduced in the solution to #983.
+- Make the output of `progress()` more consistent, less dependent on whether `tidyselect` is installed.
 
 ## New features
 
-- Support specialized data storage via a decorated cache and `return_*()` functions (#971). This allows users to leverage faster ways to save and load targets, such as `write_fst()` for data frames and `save_model_hdf5()` for Keras models. It also improves memory because it prevents `storr` from making a serialized in-memory copy of large data objects.
+- Support specialized data storage via a decorated cache and `format` argument of `target()` (#971). This allows users to leverage faster ways to save and load targets, such as `write_fst()` for data frames and `save_model_hdf5()` for Keras models. It also improves memory because it prevents `storr` from making a serialized in-memory copy of large data objects.
 - Add `tidyselect` functionality for `...` in `progress()`, analogous to `loadd()`, `build_times()`, and `clean()`.
 - Support S3 for user-defined generics (#959). If the generic `do_stuff()` and the method `stuff.your_class()` are defined in `envir`, and if `do_stuff()` has a call to `UseMethod("stuff")`, then `drake`'s code analysis will detect `stuff.your_class()` as a dependency of `do_stuff()`.
+- Add authentication support for `file_in()` URLs. Requires the new `curl_handles` argument of `make()` and `drake_config()` (#981).
 
 ## Enhancements
 
+- Document DSL keywords as if they were true functions: `target()`, `map()`, `split()`, `cross()`, and `combine()` (#979).
 - Do garbage collection between the unloading and loading phases of memory management.
 - Keep `file_out()` files in `clean()` unless `garbage_collection` is `TRUE`. That way, `make(recover = TRUE)` is a true "undo button" for `clean()`. `clean(garbage_collection = TRUE)` still removes data in the cache, as well as any `file_out()` files from targets currently being cleaned.
 - The menu in `clean()` only appears if `garbage_collection` is `TRUE`. Also, this menu is added to `rescue_cache(garbage_collection = TRUE)`.
 - Reorganize the internal code files and functions to make development easier.
 - Move the history inside the cache folder `.drake/`. The old `.drake_history/` folder was awkward. Old histories are migrated during `drake_config()`, and `drake_history()`.
+- Add lifecycle badges to exported functions.
 
 # Version 7.5.2
 
@@ -41,8 +112,8 @@
 
 - Add automated data recovery (#945). This is still experimental and disabled by default. Requires `make(recover = TRUE)`.
 - Add new functions `recoverable()` and `r_recoverable()` to show targets that are outdated but recoverable via `make(recover = TRUE)`.
-- Track the history and provenance of targets, viewable with `drake_history()`. Powered by [`txtq`](https://github.com/wlandau/txtq) (#918, #920).
-- Add a new `no_deps()` function, similar to `ignore()`. `no_deps()` suppresses dependency detection but still tracks changes to the literal code ([#910](https://github.com/ropensci/drake/issues/910)).
+- Track the history and provenance of targets, viewable with `drake_history()`. Powered by `txtq` (#918, #920).
+- Add a new `no_deps()` function, similar to `ignore()`. `no_deps()` suppresses dependency detection but still tracks changes to the literal code (#910).
 - Add a new "autoclean" memory strategy (#917).
 - Export `transform_plan()`.
 - Allow a custom `seed` column of `drake` plans to set custom seeds (#947).
@@ -52,7 +123,7 @@
 
 - In `drake_plan()`, interpret custom columns as non-language objects (#942).
 - Suggest and assert `clustermq` >= 0.8.8.
-- Log the target name in a special column in the console log file ([#909](https://github.com/ropensci/drake/issues/909)).
+- Log the target name in a special column in the console log file (#909).
 - Rename the "memory" memory strategy to "preclean" (with deprecation; #917).
 - Deprecate `ensure_workers` in `drake_config()` and `make()`.
 - Warn when the user supplies additional arguments to `make()` after `config` is already supplied.
@@ -79,27 +150,27 @@ These changes are technically breaking changes, but they should only affect adva
 
 ## Bug fixes
 
-- Restore compatibility with `clustermq` ([#898](https://github.com/ropensci/drake/issues/898)). Suggest version >= 0.8.8 but allow 0.8.7 as well.
-- Ensure `drake` recomputes `config$layout` when `knitr` reports change ([#887](https://github.com/ropensci/drake/issues/887)).
-- Do not rehash large imported files every `make()` ([#878](https://github.com/ropensci/drake/issues/878)).
-- Repair parsing of long tidy eval inputs in the DSL ([#878](https://github.com/ropensci/drake/issues/881)).
-- Clear up cache confusion when a custom cache exists adjacent to the default cache ([#883](https://github.com/ropensci/drake/issues/883)).
+- Restore compatibility with `clustermq` (#898). Suggest version >= 0.8.8 but allow 0.8.7 as well.
+- Ensure `drake` recomputes `config$layout` when `knitr` reports change (#887).
+- Do not rehash large imported files every `make()` (#878).
+- Repair parsing of long tidy eval inputs in the DSL (#878).
+- Clear up cache confusion when a custom cache exists adjacent to the default cache (#883).
 - Accept targets as symbols in `r_drake_build()`.
-- Log progress during `r_make()` ([#889](https://github.com/ropensci/drake/issues/889)).
+- Log progress during `r_make()` (#889).
 - Repair `expose_imports()`: do not do the `environment<-` trick unless the object is a non-primitive function.
 - Use different static analyses of `assign()` vs `delayedAssign()`.
-- Fix a superfluous code analysis warning incurred by multiple `file_in()` files and other strings ([#896](https://github.com/ropensci/drake/issues/896)).
+- Fix a superfluous code analysis warning incurred by multiple `file_in()` files and other strings (#896).
 - Make `ignore()` work inside `loadd()`, `readd()`, `file_in()`, `file_out()`, and `knitr_in()`.
 
 ## New features
 
 - Add experimental support for URLs in `file_in()` and `file_out()`. `drake` now treats `file_in()`/`file_out()` files as URLS if they begin with "http://", "https://", or "ftp://". The fingerprint is a concatenation of the ETag and last-modified timestamp. If neither can be found or if there is no internet connection, `drake` throws an error.
-- Implement new memory management strategies `"unload"` and `"none"`, which do not attempt to load a target's dependencies from memory ([#897](https://github.com/ropensci/drake/issues/897)).
-- Allow users to give each target its own memory strategy ([#897](https://github.com/ropensci/drake/issues/897)).
-- Add `drake_slice()` to help split data across multiple targets. Related: [#77](https://github.com/ropensci/drake/issues/77), [#685](https://github.com/ropensci/drake/issues/685), [#833](https://github.com/ropensci/drake/issues/833).
-- Introduce a new `drake_cache()` function, which is now recommended instead of `get_cache()` ([#883](https://github.com/ropensci/drake/issues/883)).
+- Implement new memory management strategies `"unload"` and `"none"`, which do not attempt to load a target's dependencies from memory (#897).
+- Allow users to give each target its own memory strategy (#897).
+- Add `drake_slice()` to help split data across multiple targets. Related: #77, #685, #833.
+- Introduce a new `drake_cache()` function, which is now recommended instead of `get_cache()` (#883).
 - Introduce a new `r_deps_target()` function.
-- Add RStudio addins for `r_make()`, `r_vis_drake_graph()`, and `r_outdated()` ([#892](https://github.com/ropensci/drake/issues/892)).
+- Add RStudio addins for `r_make()`, `r_vis_drake_graph()`, and `r_outdated()` (#892).
 
 ## Enhancements
 
@@ -109,19 +180,19 @@ These changes are technically breaking changes, but they should only affect adva
 - Log the node name (short host name) and process ID in the console log file.
 - Log the name of the calling function in the console log file, e.g. "begin make()" and "end make()". Applies to all functions that accept a `config` argument.
 - Memory management: set `use_cache` to `FALSE` in `storr` function calls for saving and loading targets. Also, at the end of `make()`, call `flush_cache()` (and then `gc()` if garbage collection is enabled).
-- Mention `callr::r()` within commands as [a safe alternative to `lock_envir = FALSE`](https://github.com/rstudio/gt/issues/297#issuecomment-497778735) in the self-invalidation section of the `make()` help file.
+- Mention `callr::r()` within commands as a safe alternative to `lock_envir = FALSE` in the self-invalidation section of the `make()` help file.
 - Use file size to help decide when to rehash `file_in()`/`file_out()`/`knitr_in()` files. We now rehash files if the file is less than 100 KB or the time stamp changed or the **file size** changed.
 
 # Version 7.3.0
 
 ## Bug fixes
 
-- Accommodate `rlang`'s new interpolation operator `{{`, which was causing `make()` to fail when `drake_plan()` commands are enclosed in curly braces ([#864](https://github.com/ropensci/drake/issues/864)).
+- Accommodate `rlang`'s new interpolation operator `{{`, which was causing `make()` to fail when `drake_plan()` commands are enclosed in curly braces (#864).
 - Move "`config$lock_envir <- FALSE`" from `loop_build()` to  `backend_loop()`. This makes sure `config$envir` is correctly locked in `make(parallelism = "clustermq")`.
 - Convert factors to characters in the optional `.data` argument of `map()` and `cross()` in the DSL.
 - In the DSL of `drake_plan()`, repair `cross(.data = !!args)`, where `args` is an optional data frame of grouping variables.
-- Handle trailing slashes in `file_in()`/`file_out()` directories for Windows ([#855](https://github.com/ropensci/drake/issues/855)).
-- Make `.id_chr` work with `combine()` in the DSL ([#867](https://github.com/ropensci/drake/issues/867)).
+- Handle trailing slashes in `file_in()`/`file_out()` directories for Windows (#855).
+- Make `.id_chr` work with `combine()` in the DSL (#867).
 - Do not try `make_spinner()` unless the version of `cli` is at least 1.1.0.
 
 ## New features
@@ -144,13 +215,13 @@ These changes are technically breaking changes, but they should only affect adva
 
 ## Mildly breaking changes
 
-- In the DSL (e.g. `drake_plan(x = target(..., transform = map(...)))` avoid inserting extra dots in target names when the grouping variables are character vectors ([#847](https://github.com/ropensci/drake/issues/847)). Target names come out much nicer this way, but those name changes will invalidate some targets (i.e. they need to be rebuilt with `make()`).
+- In the DSL (e.g. `drake_plan(x = target(..., transform = map(...)))` avoid inserting extra dots in target names when the grouping variables are character vectors (#847). Target names come out much nicer this way, but those name changes will invalidate some targets (i.e. they need to be rebuilt with `make()`).
 
 ## Bug fixes
 
 - Use `config$jobs_preprocess` (local jobs) in several places where `drake` was incorrectly using `config$jobs` (meant for targets).
-- Allow `loadd(x, deps = TRUE, config = your_config)` to work even if `x` is not cached ([#830](https://github.com/ropensci/drake/issues/830)). Required disabling `tidyselect` functionality when `deps` `TRUE`. There is a new note in the help file about this, and an informative console message prints out on `loadd(deps = TRUE, tidyselect = TRUE)`. The default value of `tidyselect` is now `!deps`.
-- Minor: avoid printing messages and warnings twice to the console ([#829](https://github.com/ropensci/drake/issues/829)).
+- Allow `loadd(x, deps = TRUE, config = your_config)` to work even if `x` is not cached (#830). Required disabling `tidyselect` functionality when `deps` `TRUE`. There is a new note in the help file about this, and an informative console message prints out on `loadd(deps = TRUE, tidyselect = TRUE)`. The default value of `tidyselect` is now `!deps`.
+- Minor: avoid printing messages and warnings twice to the console (#829).
 - Ensure compatibility with `testthat` >= 2.0.1.9000.
 
 ## New features
@@ -162,8 +233,8 @@ These changes are technically breaking changes, but they should only affect adva
 
 - Use a custom layout to improve node positions and aspect ratios of `vis_drake_graph()` and `drake_ggraph()` displays. Only activated in `vis_drake_graph()` when there are at least 10 nodes distributed in both the vertical and horizontal directions.
 - Allow nodes to be dragged both vertically and horizontally in `vis_drake_graph()` and `render_drake_graph()`.
-- Prevent dots from showing up in target names when you supply grouping variables to transforms in `drake_plan()` ([#847](https://github.com/ropensci/drake/issues/847)).
-- Do not keep `drake` plans (`drake_plan()`) inside `drake_config()` objects. When other bottlenecks are removed, this will reduce the burden on memory (re [#800](https://github.com/ropensci/drake/issues/800)).
+- Prevent dots from showing up in target names when you supply grouping variables to transforms in `drake_plan()` (#847).
+- Do not keep `drake` plans (`drake_plan()`) inside `drake_config()` objects. When other bottlenecks are removed, this will reduce the burden on memory (re #800).
 - Do not retain the `targets` argument inside `drake_config()` objects. This is to reduce memory consumption.
 - Deprecate the `layout` and `direction` arguments of `vis_drake_graph()` and `render_drake_graph()`. Direction is now always left to right and the layout is always Sugiyama.
 - Write the cache log file in CSV format (now `drake_cache.csv` by default) to avoid issues with spaces (e.g. entry names with spaces in them, such as "file report.Rmd")`.
@@ -175,12 +246,12 @@ These changes are technically breaking changes, but they should only affect adva
 
 - In `drake` 7.0.0, if you run `make()` in interactive mode and respond to the menu prompt with an option other than `1` or `2`, targets will still build. 
 - Make sure file outputs show up in `drake_graph()`. The bug came from `append_output_file_nodes()`, a utility function of `drake_graph_info()`.
-- Repair `r_make(r_fn = callr::r_bg())` re https://github.com/ropensci/drake/issues/799.
+- Repair `r_make(r_fn = callr::r_bg())` re #799.
 - Allow `drake_ggraph()` and `sankey_drake_graph()` to work when the graph has no edges.
 
 ## New features
 
-- Add a new `use_drake()` function to write the `make.R` and `_drake.R` files from the [main example](https://github.com/wlandau/drake-examples/tree/master/main). Does not write other supporting scripts.
+- Add a new `use_drake()` function to write the `make.R` and `_drake.R` files from the "main example". Does not write other supporting scripts.
 - With an optional logical `hpc` column in your `drake_plan()`, you can now select which targets to deploy to HPC and which to run locally.
 - Add a `list` argument to `build_times()`, just like `loadd()`.
 - Add a new RStudio addin: 'loadd target at cursor' which can be bound a keyboard shortcut to load the target identified by the symbol at the cursor position to the global environment.
@@ -193,7 +264,7 @@ These changes are technically breaking changes, but they should only affect adva
   - Hide node labels by default and render the arrows behind the nodes.
   - Print an informative error message when the user supplies a `drake` plan to the `config` argument of a function.
   - By default, use gray arrows and a black-and-white background with no gridlines.
-- For the `map()` and `cross()` transformations in the DSL, prevent the [accidental sorting of targets by name](https://github.com/ropensci/drake/issues/786). Needed `merge(sort = FALSE)` in `dsl_left_outer_join()`.
+- For the `map()` and `cross()` transformations in the DSL, prevent the accidental sorting of targets by name (#786). Needed `merge(sort = FALSE)` in `dsl_left_outer_join()`.
 - Simplify verbosity. The `verbose` argument of `make()` now takes values 0, 1, and 2, and maximum verbosity in the console prints targets, retries, failures, and a spinner. The console log file, on the other hand, dumps maximally verbose runtime info regardless of the `verbose` argument.
 - In previous versions, functions generated with `f <- Rcpp::cppFunction(...)` did not stay up to date from session to session because the addresses corresponding to anonymous pointers were showing up in `deparse(f)`. Now, `drake` ignores those pointers, and `Rcpp` functions compiled inline appear to stay up to date. This problem was more of an edge case than a bug.
 - Prepend time stamps with sub-second times to the lines of the console log file.
@@ -207,7 +278,7 @@ These changes are technically breaking changes, but they should only affect adva
 - The enhancements that increase cache access speed also invalidate targets in old projects. Workflows built with drake <= 6.2.1 will need to run from scratch again.
 - In `drake` plans, the `command` and `trigger` columns are now lists of language objects instead of character vectors. `make()` and friends still work if you have character columns, but the default output of `drake_plan()` has changed to this new format.
 - All parallel backends (`parallelism` argument of `make()`) except "clustermq" and "future" are removed. A new "loop" backend covers local serial execution.
-- A large amount of deprecated functionality is now defunct, including several functions (`built()`, `find_project()`, `imported()`, and `parallel_stages()`; [full list here](https://github.com/ropensci/drake/issues/564)) and the single-quoted file API.
+- A large amount of deprecated functionality is now defunct, including several functions (`built()`, `find_project()`, `imported()`, and `parallel_stages()`; full list at #564) and the single-quoted file API.
 - Set the default value of `lock_envir` to `TRUE` in `make()` and `drake_config()`. So `make()` will automatically quit in error if the act of building a target tries to change upstream dependencies.
 - `make()` no longer returns a value. Users will need to call `drake_config()` separately to get the old return value of `make()`.
 - Require the `jobs` argument to be of length 1 (`make()` and `drake_config()`). To parallelize the imports and other preprocessing steps, use `jobs_preprocess`, also of length 1.
@@ -228,10 +299,10 @@ These changes are technically breaking changes, but they should only affect adva
 
 ## New features
 
-- Introduce a new experimental domain-specific language for generating large plans (#233). Details [here](https://ropenscilabs.github.io/drake-manual/plans.html#large-plans).
-- Implement a `lock_envir` argument to safeguard reproducibility. See [this thread](https://github.com/ropensci/drake/issues/615#issuecomment-447585359) for a demonstration of the problem solved by `make(lock_envir = TRUE)`. More discussion: #619, #620.
+- Introduce a new experimental domain-specific language for generating large plans (#233). Details in the "Plans" chapter of the manual.
+- Implement a `lock_envir` argument to safeguard reproducibility. More discussion: #619, #620.
 - The new `from_plan()` function allows the users to reference custom plan columns from within commands. Changes to values in these columns columns do not invalidate targets.
-- Add a menu prompt (https://github.com/ropensci/drake/pull/762) to safeguard against `make()` pitfalls in interactive mode (https://github.com/ropensci/drake/issues/761). Appears once per session. Disable with `options(drake_make_menu = FALSE)`.
+- Add a menu prompt (#762) to safeguard against `make()` pitfalls in interactive mode (#761). Appears once per session. Disable with `options(drake_make_menu = FALSE)`.
 - Add new API functions `r_make()`, `r_outdated()`, etc. to run `drake` functions more reproducibly in a clean session. See the help file of `r_make()` for details.
 - `progress()` gains a `progress` argument for filtering results. For example, `progress(progress = "failed")` will report targets that failed.
 
@@ -246,7 +317,7 @@ These changes are technically breaking changes, but they should only affect adva
 - Remove packages `DBI` and `RSQLite` from "Suggests".
 - Define a special `config$eval <- new.env(parent = config$envir)` for storing built targets and evaluating commands in the plan. Now, `make()` no longer modifies the user's environment. This move is a long-overdue step toward purity.
 - Remove dependency on the `codetools` package.
-- Deprecate and remove the `session` argument of `make()` and `drake_config()`. Details: https://github.com/ropensci/drake/issues/623#issue-391894088.
+- Deprecate and remove the `session` argument of `make()` and `drake_config()`. Details: in #623.
 - Deprecate the `graph` and `layout` arguments to `make()` and `drake_config()`. The change simplifies the internals, and memoization allows us to do this.
 - Warn the user if running `make()` in a subdirectory of the `drake` project root (determined by the location of the `.drake` folder in relation to the working directory).
 - In the code analysis, explicitly prohibit targets from being dependencies of imported functions.
@@ -300,10 +371,10 @@ Version 6.2.1 is a hotfix to address the failing automated CRAN checks for 6.2.0
 - Deprecate the `force` argument in all functions except `make()` and `drake_config()`.
 - Change the name of `prune_envir()` to `manage_memory()`.
 - Deprecate and rename the `pruning_strategy` argument to `memory_strategy` (`make()` and `drake_config()`).
-- Print warnings and messages to the `console_log_file` in real time ([#588](https://github.com/ropensci/drake/issues/588)).
+- Print warnings and messages to the `console_log_file` in real time (#588).
 - Use HTML line breaks in `vis_drake_graph()` hover text to display commands in the `drake` plan more elegantly.
-- Speed up `predict_load_balancing()` and remove its reliance on internals that will go away in 2019 via [#561](https://github.com/ropensci/drake/issues/561).
-- Remove support for the `worker` column of `config$plan` in `predict_runtime()` and `predict_load_balancing()`. This functionality will go away in 2019 via [#561](https://github.com/ropensci/drake/issues/561).
+- Speed up `predict_load_balancing()` and remove its reliance on internals that will go away in 2019 via #561.
+- Remove support for the `worker` column of `config$plan` in `predict_runtime()` and `predict_load_balancing()`. This functionality will go away in 2019 via #561.
 - Change the names of the return value of `predict_load_balancing()` to `time` and `workers`.
 - Bring the documentation of `predict_runtime()` and `predict_load_balancing()` up to date.
 - Deprecate `drake_session()` and rename to `drake_get_session_info()`.
@@ -326,8 +397,8 @@ Version 6.2.1 is a hotfix to address the failing automated CRAN checks for 6.2.0
 
 ## Bug fixes
 
-- Ensure commands in the plan are re-analyzed for dependencies when new imports are added (https://github.com/ropensci/drake/issues/548). Was a bug in version 6.0.0 only.
-- Call `path.expand()` on the `file` argument to `render_drake_graph()` and `render_sankey_drake_graph()`. That way, tildes in file paths no longer interfere with the rendering of static image files. Compensates for https://github.com/wch/webshot.
+- Ensure commands in the plan are re-analyzed for dependencies when new imports are added (#548). Was a bug in version 6.0.0 only.
+- Call `path.expand()` on the `file` argument to `render_drake_graph()` and `render_sankey_drake_graph()`. That way, tildes in file paths no longer interfere with the rendering of static image files.
 - Skip tests and examples if the required "Suggests" packages are not installed.
 - Stop checking for non-standard columns. Previously, warnings about non-standard columns were incorrectly triggered by `evaluate_plan(trace = TRUE)` followed by `expand_plan()`, `gather_plan()`, `reduce_plan()`, `gather_by()`, or `reduce_by()`. The more relaxed behavior also gives users more options about how to construct and maintain their workflow plan data frames.
 - Use checksums in `"future"` parallelism to make sure files travel over network file systems before proceeding to downstream targets.
@@ -344,7 +415,7 @@ Version 6.2.1 is a hotfix to address the failing automated CRAN checks for 6.2.0
 - Keep non-standard columns in `drake_plan_source()`.
 - `make(verbose = 4)` now prints to the console when a target is stored.
 - `gather_by()` and `reduce_by()` now gather/reduce everything if no columns are specified.
-- Change the default parallelization of the imports. Previously, `make(jobs = 4)` was equivalent to `make(jobs = c(imports = 4, targets = 4))`. Now, `make(jobs = 4)` is equivalent to `make(jobs = c(imports = 1, targets = 4))`. See [issue 553](https://github.com/ropensci/drake/issues/553) for details.
+- Change the default parallelization of the imports. Previously, `make(jobs = 4)` was equivalent to `make(jobs = c(imports = 4, targets = 4))`. Now, `make(jobs = 4)` is equivalent to `make(jobs = c(imports = 1, targets = 4))`. See issue #553 for details.
 - Add a console message for building the priority queue when `verbose` is at least 2.
 - Condense `load_mtcars_example()`.
 - Deprecate the `hook` argument of `make()` and `drake_config()`.
@@ -363,17 +434,17 @@ Version 6.2.1 is a hotfix to address the failing automated CRAN checks for 6.2.0
 - In the call to `unlink()` in `clean()`, set `recursive` and `force` to `FALSE`. This should prevent the accidental deletion of whole directories.
 - Previously, `clean()` deleted input-only files if no targets from the plan were cached. A patch and a unit test are included in this release.
 - `loadd(not_a_target)` no longer loads every target in the cache.
-- Exclude each target from its own dependency metadata in the "deps" `igraph` vertex attribute (fixes https://github.com/ropensci/drake/issues/503).
+- Exclude each target from its own dependency metadata in the "deps" `igraph` vertex attribute (fixes #503).
 - Detect inline code dependencies in `knitr_in()` file code chunks.
 - Remove more calls to `sort(NULL)` that caused warnings in R 3.3.3.
 - Fix a bug on R 3.3.3 where `analyze_loadd()` was sometimes quitting with "Error: attempt to set an attribute on NULL".
 - Do not call `digest::digest(file = TRUE)` on directories. Instead, set hashes of directories to `NA`. Users should still not directories as file dependencies.
-- If files are declared as dependencies of custom triggers ("condition" and "change") include them in `vis_drake_graph()`. Previously, these files were missing from the visualization, but actual workflows worked just fine. Ref: https://stackoverflow.com/questions/52121537/trigger-notification-from-report-generation-in-r-drake-package
+- If files are declared as dependencies of custom triggers ("condition" and "change") include them in `vis_drake_graph()`. Previously, these files were missing from the visualization, but actual workflows worked just fine.
 - Work around mysterious `codetools` failures in R 3.3 (add a `tryCatch()` statement in `find_globals()`).
 
 ## New features
 
-- Add a proper [`clustermq`](https://github.com/mschubert/clustermq)-based parallel backend: `make(parallelism = "clustermq")`.
+- Add a proper `clustermq`-based parallel backend: `make(parallelism = "clustermq")`.
 - `evaluate_plan(trace = TRUE)` now adds a `*_from` column to show the origins of the evaluated targets. Try `evaluate_plan(drake_plan(x = rnorm(n__), y = rexp(n__)), wildcard = "n__", values = 1:2, trace = TRUE)`.
 - Add functions `gather_by()` and `reduce_by()`, which gather on custom columns in the plan (or columns generated by `evaluate_plan(trace = TRUE)`) and append the new targets to the previous plan.
 - Expose the `template` argument of `clustermq` functions (e.g. `Q()` and `workers()`) as an argument of `make()` and `drake_config()`.
@@ -397,7 +468,7 @@ to tell the user if the command, a dependency, an input file, or an output file 
 # Version 5.4.0
 
 - Overhaul the interface for triggers and add new trigger types ("condition" and "change").
-- Offload `drake`'s code examples to [this repository](https://github.com/wlandau/drake-examples) and make make `drake_example()` and `drake_examples()` download examples from there.
+- Offload `drake`'s code examples to the `drake-examples` GitHub repository and make make `drake_example()` and `drake_examples()` download examples from there.
 - Optionally show output files in graph visualizations. See the `show_output_files` argument to `vis_drake_graph()` and friends.
 - Repair output file checksum operations for distributed backends like `"clustermq_staged"` and `"future_lapply"`.
 - Internally refactor the `igraph` attributes of the dependency graph to allow for smarter dependency/memory management during `make()`.
@@ -416,8 +487,8 @@ to tell the user if the command, a dependency, an input file, or an output file 
 - Implement a `trace` argument to `evaluate_plan()` to optionally add indicator columns to show which targets got expanded/evaluated with which wildcard values.
 - Rename the `always_rename` argument to `rename` in `evaluate_plan()`.
 - Add a `rename` argument to `expand_plan()`.
-- Implement `make(parallelism = "clustermq_staged")`, a `clustermq`-based staged parallelism backend (see https://github.com/ropensci/drake/pull/452).
-- Implement `make(parallelism = "future_lapply_staged")`, a `future`-based staged parallelism backend (see https://github.com/ropensci/drake/pull/450).
+- Implement `make(parallelism = "clustermq_staged")`, a `clustermq`-based staged parallelism backend (see #452).
+- Implement `make(parallelism = "future_lapply_staged")`, a `future`-based staged parallelism backend (see #450).
 - Depend on `codetools` rather than `CodeDepends` for finding global variables.
 - Detect `loadd()` and `readd()` dependencies in `knitr` reports referenced with `knitr_in()` inside imported functions. Previously, this feature was only available in explicit `knitr_in()` calls in commands.
 - Skip more tests on CRAN. White-list tests instead of blacklisting them in order to try to keep check time under the official 10-minute cap.
@@ -445,7 +516,7 @@ to tell the user if the command, a dependency, an input file, or an output file 
 - Fix a bug in environment pruning. Previously, dependencies of downstream targets were being dropped from memory in `make(jobs = 1)`. Now, they are kept in memory until no downstream target needs them (for `make(jobs = 1)`).
 - Improve `predict_runtime()`. It is a more sensible way to go about predicting runtimes with multiple jobs. Likely to be more accurate.
 - Calls to `make()` no longer leave targets in the user's environment.
-- Attempt to fix a Solaris CRAN check error. The test at https://github.com/ropensci/drake/blob/b4dbddb840d2549621b76bcaa46c344b0fd2eccc/tests/testthat/test-edge-cases.R#L3 was previously failing on CRAN's Solaris machine (R 3.5.0). In the test, one of the threads deliberately quits in error, and the R/Solaris installation did not handle this properly. The test should work now because it no longer uses any parallelism.
+- Attempt to fix a Solaris CRAN check error. A test was previously failing on CRAN's Solaris machine (R 3.5.0). In the test, one of the threads deliberately quits in error, and the R/Solaris installation did not handle this properly. The test should work now because it no longer uses any parallelism.
 - Deprecate the `imports_only` argument to `make()` and `drake_config()` in favor of `skip_targets`.
 - Deprecate `migrate_drake_project()`.
 - Deprecate `max_useful_jobs()`.
@@ -455,8 +526,8 @@ to tell the user if the command, a dependency, an input file, or an output file 
 - Remove `plyr` as a dependency.
 - Handle duplicated targets better in `drake_plan()` and `bind_plans()`.
 - Add a true function `target()` to help create drake plans with custom columns.
-- In `drake_gc()`, clean out disruptive files in `storr`s with mangled keys (re: https://github.com/ropensci/drake/issues/198).
-- Move all the vignettes to the up and coming user manual: https://ropenscilabs.github.io/drake-manual/
+- In `drake_gc()`, clean out disruptive files in `storr`s with mangled keys (re: #198).
+- Move all the vignettes to the up and coming user manual.
 - Rename the "basic example" to the "mtcars example".
 - Deprecate `load_basic_example()` in favor of `load_mtcars_example()`.
 - Refocus the `README.md` file on the main example rather than the mtcars example.
@@ -515,12 +586,12 @@ across R sessions.
 - Add a new `drake_read_seed()` function to read the seed from the cache. Its examples illustrate what `drake` is doing to try to ensure reproducible random numbers.
 - Evaluate the quasiquotation operator `!!` for the `...` argument to `drake_plan()`. Suppress this behavior using `tidy_evaluation = FALSE` or by passing in commands passed through the `list` argument.
 - Preprocess workflow plan commands with `rlang::expr()` before evaluating them. That means you can use the quasiquotation operator `!!` in your commands, and `make()` will evaluate them according to the tidy evaluation paradigm.
-- Restructure `drake_example("basic")`, `drake_example("gsp")`, and `drake_example("packages")` to demonstrate how to set up the files for serious `drake` projects. More guidance was needed in light of [this issue](https://github.com/ropensci/drake/issues/193).
+- Restructure `drake_example("basic")`, `drake_example("gsp")`, and `drake_example("packages")` to demonstrate how to set up the files for serious `drake` projects. More guidance was needed in light of #193.
 - Improve the examples of `drake_plan()` in the help file (`?drake_plan`).
 
 # Version 5.0.0
 
-- Transfer `drake` to rOpenSci: https://github.com/ropensci/drake
+- Transfer `drake` to rOpenSci GitHub URL.
 - Several functions now require an explicit `config` argument, which you can get from
 `drake_config()` or `make()`. Examples:
     - outdated()
@@ -582,7 +653,7 @@ across R sessions.
 # Version 4.4.0
 
 - Extend `plot_graph()` to display subcomponents. Check out arguments `from`, `mode`, `order`, and `subset`. The graph visualization vignette has demonstrations.
-- Add `"future_lapply"` parallelism: parallel backends supported by the [future](https://github.com/HenrikBengtsson/future) and [future.batchtools](https://github.com/HenrikBengtsson/future.batchtools) packages. See `?backend` for examples and the parallelism vignette for an introductory tutorial. More advanced instruction can be found in the `future` and `future.batchtools` packages themselves.
+- Add `"future_lapply"` parallelism: parallel backends supported by the `future` and `future.batchtools` packages. See `?backend` for examples and the parallelism vignette for an introductory tutorial. More advanced instruction can be found in the `future` and `future.batchtools` packages themselves.
 - Cache diagnostic information of targets that fail and retrieve diagnostic info with `diagnose()`.
 - Add an optional `hook` argument to `make()` to wrap around `build()`. That way, users can more easily control the side effects of distributed jobs. For example, to redirect error messages to a file in `make(..., parallelism = "Makefile", jobs = 2, hook = my_hook)`, `my_hook` should be something like `function(code){withr::with_message_sink("messages.txt", code)}`.
 - Remove console logging for "parLapply" parallelism. `drake` was previously using the `outfile` argument for PSOCK clusters to generate output that could not be caught by `capture.output()`. It was a hack that should have been removed before.
@@ -602,8 +673,8 @@ across R sessions.
 # Version 4.3.0: 2017-10-17
 
 Version 4.3.0 has:
-- [Reproducible random numbers](https://github.com/ropensci/drake/pull/56)
-- [Automatic detection of knitr dependencies](https://github.com/ropensci/drake/issues/9)
+- Reproducible random numbers (#56)
+- Automatic detection of knitr dependencies (#9)
 - More vignettes
 - Bug fixes
 

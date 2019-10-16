@@ -2,7 +2,8 @@
 % Please edit documentation in R/rstudio.R
 \name{rs_addin_r_make}
 \alias{rs_addin_r_make}
-\title{RStudio addin for r_make()}
+\title{RStudio addin for r_make()
+\lifecycle{stable}}
 \usage{
 rs_addin_r_make(r_args = list())
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{read_config}
 \alias{read_config}
-\title{Defunct function}
+\title{read_config \lifecycle{defunct}}
 \usage{
 read_config(...)
 }

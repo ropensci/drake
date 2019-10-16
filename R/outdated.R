@@ -1,4 +1,5 @@
 #' @title List the most upstream *recoverable* outdated targets.
+#' \lifecycle{experimental}
 #' @description Only shows the most upstream updated targets.
 #'   Whether downstream targets are recoverable depends on
 #'   the eventual values of the upstream targets in the next [make()].
@@ -61,11 +62,11 @@ recoverable <-  function(
   make_imports = TRUE,
   do_prework = TRUE
 ) {
-  log_msg("begin recoverable()", config = config)
-  on.exit(log_msg("end recoverable()", config = config), add = TRUE)
+  config$logger$minor("begin recoverable()")
+  on.exit(config$logger$minor("end recoverable()"), add = TRUE)
   assert_config_not_plan(config)
   if (do_prework) {
-    do_prework(config = config, verbose_packages = config$verbose)
+    do_prework(config = config, verbose_packages = config$logger$verbose)
   }
   if (make_imports) {
     process_imports(config = config)
@@ -94,6 +95,7 @@ is_recoverable <- function(target, config) {
 }
 
 #' @title List the targets that are out of date.
+#' \lifecycle{stable}
 #' @description Outdated targets will be rebuilt in the next
 #'   [make()].
 #' @export
@@ -131,30 +133,30 @@ outdated <-  function(
   make_imports = TRUE,
   do_prework = TRUE
 ) {
-  log_msg("begin outdated()", config = config)
-  on.exit(log_msg("end outdated()", config = config), add = TRUE)
+  config$logger$minor("begin outdated()")
+  on.exit(config$logger$minor("end outdated()"), add = TRUE)
   assert_config_not_plan(config)
   if (do_prework) {
-    do_prework(config = config, verbose_packages = config$verbose)
+    do_prework(config = config, verbose_packages = config$logger$verbose)
   }
   if (make_imports) {
     process_imports(config = config)
   }
   from <- first_outdated(config = config)
-  log_msg("find downstream outdated targets", config = config)
+  config$logger$minor("find downstream outdated targets")
   to <- downstream_nodes(config$graph, from)
   out <- sort(unique(as.character(c(from, to))))
   out[!is_encoded_path(out)]
 }
 
 first_outdated <- function(config) {
-  config$cache$reset_ht_hash()
-  on.exit(config$cache$reset_ht_hash())
+  config$cache$reset_memo_hash()
+  on.exit(config$cache$reset_memo_hash())
   out <- character(0)
   old_leaves <- NULL
   config$graph <- subset_graph(config$graph, all_targets(config))
   while (TRUE) {
-    log_msg("find more outdated targets", config = config)
+    config$logger$minor("find more outdated targets")
     new_leaves <- setdiff(leaf_nodes(config$graph), out)
     do_build <- lightly_parallelize(
       X = new_leaves,
@@ -163,7 +165,8 @@ first_outdated <- function(config) {
           return(TRUE)
         }
         meta <- drake_meta_(target, config)
-        sense_trigger(target, meta, config)
+        meta_old <- old_meta(key = target, cache = config$cache)
+        any_triggers(target, meta, meta_old, config)
       },
       jobs = config$jobs_preprocess
     )
@@ -181,6 +184,7 @@ first_outdated <- function(config) {
 
 #' @title Report any import objects required by your drake_plan
 #'   plan but missing from your workspace or file system.
+#' \lifecycle{stable}
 #' @description Checks your workspace/environment and
 #' file system.
 #' @export
@@ -203,8 +207,8 @@ first_outdated <- function(config) {
 #' })
 #' }
 missed <- function(config) {
-  log_msg("begin missed()", config = config)
-  on.exit(log_msg("end missed()", config = config), add = TRUE)
+  config$logger$minor("begin missed()")
+  on.exit(config$logger$minor("end missed()"), add = TRUE)
   assert_config_not_plan(config)
   imports <- all_imports(config)
   is_missing <- lightly_parallelize(
@@ -218,12 +222,12 @@ missed <- function(config) {
   if (!any(is_missing)) {
     return(character(0))
   }
-  display_keys(imports[is_missing])
+  config$cache$display_keys(imports[is_missing])
 }
 
 missing_import <- function(x, config) {
   if (is_encoded_path(x)) {
-    return(!file_dep_exists(decode_path(x, config)))
+    return(!file_dep_exists(config$cache$decode_path(x)))
   }
   identical(get_import_from_memory(x, config = config), NA_character_)
 }

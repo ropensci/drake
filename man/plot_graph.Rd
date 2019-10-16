@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{plot_graph}
 \alias{plot_graph}
-\title{Defunct function}
+\title{plot_graph \lifecycle{defunct}}
 \usage{
 plot_graph(...)
 }

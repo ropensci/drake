@@ -2,9 +2,10 @@
 % Please edit documentation in R/cache.R
 \name{drake_cache}
 \alias{drake_cache}
-\title{Get the cache of a \code{drake} project.}
+\title{Get the cache of a \code{drake} project.
+\lifecycle{stable}}
 \usage{
-drake_cache(path = NULL, verbose = 1L, console_log_file = NULL)
+drake_cache(path = NULL, verbose = NULL, console_log_file = NULL)
 }
 \arguments{
 \item{path}{Character.
@@ -14,26 +15,9 @@ or \code{drake::new_cache()}. If the \code{path} argument is \code{NULL},
 \code{drake_cache()} searches up through parent directories
 to find a folder called \code{.drake/}.}
 
-\item{verbose}{Integer, control printing to the console/terminal.
-\itemize{
-\item \code{0}: print nothing.
-\item \code{1}: print targets, retries, and failures.
-\item \code{2}: also show a spinner when preprocessing tasks are underway.
-}}
+\item{verbose}{Deprecated on 2019-09-11.}
 
-\item{console_log_file}{Optional character scalar of a file name or
-connection object (such as \code{stdout()}) to dump maximally verbose
-log information for \code{\link[=make]{make()}} and other functions (all functions that
-accept a \code{config} argument, plus \code{drake_config()}).
-If you choose to use a text file as the console log,
-it will persist over multiple function calls
-until you delete it manually.
-Fields in each row the log file, from left to right:
-- The node name (short host name) of the
-computer (from \code{Sys.info()["nodename"]}).
-- The process ID (from \code{Sys.getpid()}).
-- A timestamp with the date and time (in microseconds).
-- A brief description of what \code{drake} was doing.\code{ The fields are separated by pipe symbols (}"|"`).}
+\item{console_log_file}{Deprecated on 2019-09-11.}
 }
 \value{
 A drake/storr cache in a folder called \code{.drake/},
@@ -51,6 +35,28 @@ this cache.
 \code{drake_cache()} actually returns a \emph{decorated} \code{storr},
 an object that \emph{contains} a \code{storr} (plus bells and whistles).
 To get the \emph{actual} inner \code{storr}, use \code{drake_cache()$storr}.
+Most methods are delegated to the inner \code{storr}.
+Some methods and objects are new or overwritten. Here
+are the ones relevant to users.
+\itemize{
+\item \code{history}: \code{drake}'s history (which powers \code{\link[=drake_history]{drake_history()}})
+is a \href{https://github.com/wlandau/txtq}{txtq}. Access it
+with \code{drake_cache()$history}.
+\item \code{import()}: The \code{import()} method is a function that can import
+targets, function dependencies, etc. from one decorated \code{storr}
+to another. History is not imported. For that, you have to work
+with the history \code{txtq}s themselves, Arguments to \code{import()}:
+\itemize{
+\item \code{...} and \code{list}: specify targets to import just like with \code{\link[=loadd]{loadd()}}.
+Leave these blank to import everything.
+\item \code{from}: the decorated \code{storr} from which to import targets.
+\item \code{jobs}: number of local processes for parallel computing.
+\item \code{gc}: \code{TRUE} or \code{FALSE}, whether to run garbage collection for memory
+after importing each target. Recommended, but slow.
+}
+\item \code{export()}: Same as \code{import()}, except the \code{from} argument is replaced
+by \code{to}: the decorated \code{storr} where the targets end up.
+}
 }
 \examples{
 \dontrun{
@@ -69,6 +75,25 @@ x$list()
 # The *real* storr is inside.
 drake_cache()$storr
 }
+# You can import and export targets to and from decorated storrs.
+plan1 <- drake_plan(w = "w", x = "x")
+plan2 <- drake_plan(a = "a", x = "x2")
+cache1 <- new_cache("cache1")
+cache2 <- new_cache("cache2")
+make(plan1, cache = cache1)
+make(plan2, cache = cache2)
+cache1$import(cache2, a)
+cache1$get("a")
+cache1$get("x")
+cache1$import(cache2)
+cache1$get("x")
+# With txtq >= 0.1.6.9002, you can import history from one cache into
+# another.
+# nolint start
+# drake_history(cache = cache1)
+# cache1$history$import(cache2$history)
+# drake_history(cache = cache1)
+# nolint end
 })
 }
 }

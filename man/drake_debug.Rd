@@ -2,7 +2,8 @@
 % Please edit documentation in R/drake_build.R
 \name{drake_debug}
 \alias{drake_debug}
-\title{Run a single target's command in debug mode.}
+\title{Run a single target's command in debug mode.'
+\lifecycle{maturing}}
 \usage{
 drake_debug(target = NULL, config = NULL, character_only = FALSE,
   envir = NULL, jobs = 1, replace = FALSE, verbose = TRUE)

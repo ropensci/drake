@@ -2,8 +2,8 @@
 % Please edit documentation in R/drake_ggraph.R
 \name{drake_ggraph}
 \alias{drake_ggraph}
-\title{Show a \code{ggraph}/\code{ggplot2} representation
-of your drake project.}
+\title{Visualize the workflow with \code{ggraph}/\code{ggplot2}
+\lifecycle{stable}}
 \usage{
 drake_ggraph(config, build_times = "build", digits = 3,
   targets_only = FALSE, main = NULL, from = NULL, mode = c("out",

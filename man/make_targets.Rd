@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{make_targets}
 \alias{make_targets}
-\title{deprecated}
+\title{Just make the targets
+\lifecycle{deprecated}}
 \usage{
 make_targets(config)
 }

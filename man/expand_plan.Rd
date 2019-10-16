@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{expand_plan}
 \alias{expand_plan}
-\title{Deprecated: create replicates of targets.}
+\title{Deprecated: create replicates of targets.
+\lifecycle{deprecated}}
 \usage{
 expand_plan(plan, values = NULL, rename = TRUE, sep = "_",
   sanitize = TRUE)

@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{predict_load_balancing}
 \alias{predict_load_balancing}
-\title{Deprecated in favor of \code{\link[=predict_workers]{predict_workers()}}}
+\title{Predict parallel computing behavior
+\lifecycle{deprecated}}
 \usage{
 predict_load_balancing(config, targets = NULL, from_scratch = FALSE,
   targets_only = NULL, jobs = 1, known_times = numeric(0),

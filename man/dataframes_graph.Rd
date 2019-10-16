@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{dataframes_graph}
 \alias{dataframes_graph}
-\title{Defunct function}
+\title{dataframes_graph \lifecycle{defunct}}
 \usage{
 dataframes_graph(...)
 }

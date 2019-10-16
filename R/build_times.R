@@ -1,4 +1,5 @@
-#' @title List the time it took to build each target.
+#' @title See the time it took to build each target.
+#' \lifecycle{maturing}
 #' @description Applies to targets in your plan, not imports or files.
 #' @seealso [predict_runtime()]
 #' @export
@@ -15,6 +16,7 @@
 #'   for the full build time including the time it took to
 #'   store the target, or `"command"` for the time it took
 #'   just to run the command.
+#' @param verbose Deprecated on 2019-09-11.
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {
@@ -33,13 +35,14 @@ build_times <- function(
   path = NULL,
   search = NULL,
   digits = 3,
-  cache = drake_cache(path = path, verbose = verbose),
+  cache = drake::drake_cache(path = path),
   targets_only = NULL,
-  verbose = 1L,
+  verbose = NULL,
   jobs = 1,
   type = c("build", "command"),
   list = character(0)
 ) {
+  deprecate_verbose(verbose)
   deprecate_search(search)
   deprecate_targets_only(targets_only) # 2019-01-03 # nolint
   if (is.null(cache)) {

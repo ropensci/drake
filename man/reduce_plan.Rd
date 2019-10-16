@@ -2,8 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{reduce_plan}
 \alias{reduce_plan}
-\title{Deprecated:
-write commands to reduce several targets down to one.}
+\title{Write commands to reduce several targets down to one.
+\lifecycle{deprecated}}
 \usage{
 reduce_plan(plan = NULL, target = "target", begin = "", op = " + ",
   end = "", pairwise = TRUE, append = FALSE, sep = "_")

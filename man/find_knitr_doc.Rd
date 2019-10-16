@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{find_knitr_doc}
 \alias{find_knitr_doc}
-\title{Defunct function}
+\title{find_knitr_doc \lifecycle{defunct}}
 \usage{
 find_knitr_doc(...)
 }

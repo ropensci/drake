@@ -14,7 +14,8 @@
 \alias{r_text_drake_graph}
 \alias{r_predict_runtime}
 \alias{r_predict_workers}
-\title{Reproducible R session management for drake functions}
+\title{Launch a drake function in a fresh new R process
+\lifecycle{maturing}}
 \usage{
 r_make(source = NULL, r_fn = NULL, r_args = list())
 
@@ -74,13 +75,17 @@ as a character or a symbol
 \code{selfcontained} is an example argument you could supply to the ellipsis.}
 }
 \description{
+The \code{r_*()} functions, such as \code{r_make()},
+enhance reproducibility by launching a \code{drake} function in
+a separate R process.
+}
+\details{
 \code{drake} searches your environment
 to detect dependencies, so functions like \code{\link[=make]{make()}}, \code{\link[=outdated]{outdated()}}, etc.
 are designed to run in fresh clean R sessions. Wrappers \code{\link[=r_make]{r_make()}},
 \code{\link[=r_outdated]{r_outdated()}}, etc. run reproducibly even if your current R session
 is old and stale.
-}
-\details{
+
 \code{\link[=r_outdated]{r_outdated()}} runs the four steps below.
 \code{\link[=r_make]{r_make()}} etc. are similar.
 \enumerate{

@@ -2,10 +2,11 @@
 % Please edit documentation in R/drake_plan.R
 \name{drake_plan}
 \alias{drake_plan}
-\title{Create a workflow plan data frame
-for the \code{plan} argument of \code{\link[=make]{make()}}.}
+\title{Create a drake plan
+for the \code{plan} argument of \code{\link[=make]{make()}}.
+\lifecycle{maturing}}
 \usage{
-drake_plan(..., list = character(0), file_targets = NULL,
+drake_plan(..., list = NULL, file_targets = NULL,
   strings_in_dots = NULL, tidy_evaluation = NULL, transform = TRUE,
   trace = FALSE, envir = parent.frame(), tidy_eval = TRUE,
   max_expand = NULL)
@@ -37,11 +38,15 @@ what happens during target transformations.}
 Tidy evaluation in transformations is always turned on
 regardless of the value you supply to this argument.}
 
-\item{max_expand}{Positive integer, optional upper bound on the lengths
-of grouping variables for \code{map()} and \code{cross()}. Comes in handy
-when you have a massive number of targets and you want to test
-on a miniature version of your workflow before you scale up
-to production.}
+\item{max_expand}{Positive integer, optional.
+Maximum number of targets to generate in each
+\code{map()}, \code{split()}, or \code{cross()} transform.
+If massive number of targets, consider setting \code{max_expand}
+to a small number. That way, you can test and visualize
+your workflow before scaling up to production.
+Note: \code{max_expand} is not for production workflows.
+When it comes time to generate the end product,
+either unset \code{max_expand} or manually set it to \code{NULL}.}
 }
 \value{
 A data frame of targets, commands, and optional
@@ -64,28 +69,21 @@ understands a special set of optional columns. For details, visit
 must have columns \code{target} and \code{command} with the target names and the
 R code chunks to build them, respectively.
 
-You can add custom columns yourself, either with \code{target()}
-(e.g. \code{drake_plan(targ = target(my_cmd(), custom = "column"))})
+You can add custom columns yourself, either with \code{target()} (e.g.
+\code{drake_plan(y = target(f(x), transform = map(c(1, 2)), format = "fst"))})
 or by appending columns post-hoc (e.g. \code{plan$col <- vals}).
 
 Some of these custom columns are special. They are optional,
 but \code{drake} looks for them at various points in the workflow.
 \itemize{
-\item \code{elapsed} and \code{cpu}: number of seconds to wait for the target to build
-before timing out (\code{elapsed} for elapsed time and \code{cpu} for CPU time).
+\item \code{transform}: a call to \code{\link[=map]{map()}}, \code{\link[=split]{split()}}, \code{\link[=cross]{cross()}}, or
+\code{\link[=combine]{combine()}} to create and manipulate large collections of targets.
+Details: (\url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}). # nolint
 \item \code{format}: set a storage format to save big targets more efficiently.
-Most formats are faster than ordinary storage, and they consume
-far less memory. Available formats:
-\itemize{
-\item \code{"fst"}: save big data frames fast. The target must be a data frame,
-and you must have the \code{fst} package installed.
-\item \code{"keras"}: save Keras models as HDF5 files.
-Requires the \code{keras} package.
-\item \code{"rds"}: save any object. This is similar to the default storage
-except we avoid creating a serialized copy of
-the entire target in memory.
-Requires R >= 3.5.0 so drake can use ALTREP.
-}
+See the "Formats" section of this help file for more details.
+\item \code{trigger}: rule to decide whether a target needs to run.
+It is recommended that you define this one with \code{target()}.
+Details: \url{https://ropenscilabs.github.io/drake-manual/triggers.html}.
 \item \code{hpc}: logical values (\code{TRUE}/\code{FALSE}/\code{NA}) whether to send each target
 to parallel workers.
 Visit \url{https://ropenscilabs.github.io/drake-manual/hpc.html#selectivity}
@@ -94,6 +92,15 @@ to learn more.
 See
 \url{https://ropenscilabs.github.io/drake-manual/hpc.html#advanced-options}
 for details.
+\item \code{caching}: overrides the \code{caching} argument of \code{\link[=make]{make()}} for each target
+individually. Possible values:
+\itemize{
+\item "master": tell the master process to store the target in the cache.
+\item "worker": tell the HPC worker to store the target in the cache.
+\item NA: default to the \code{caching} argument of \code{\link[=make]{make()}}.
+}
+\item \code{elapsed} and \code{cpu}: number of seconds to wait for the target to build
+before timing out (\code{elapsed} for elapsed time and \code{cpu} for CPU time).
 \item \code{retries}: number of times to retry building a target
 in the event of an error.
 \item \code{seed}: an optional pseudo-random number generator (RNG)
@@ -102,9 +109,55 @@ unique reproducible target-specific seeds using the global seed
 (the \code{seed} argument to \code{\link[=make]{make()}} and \code{\link[=drake_config]{drake_config()}})
 and the target names, but you can overwrite these automatic seeds.
 \code{NA} entries default back to \code{drake}'s automatic seeds.
-\item \code{trigger}: rule to decide whether a target needs to run.
-It is recommended that you define this one with \code{target()}.
-Details: \url{https://ropenscilabs.github.io/drake-manual/triggers.html}.
+}
+}
+
+\section{Formats}{
+
+drake supports specialized data formats. Purpose:
+\itemize{
+\item Save targets that cannot be saved in RDS format (like Keras models).
+\item Reduce the time, memory, and storage required to save targets.
+"format" is one of the custom columns supported in plans.
+To use it, just specify a format to \code{target()}, e.g.
+\code{drake_plan(x = target(big_data_frame, format = "fst"))}.
+You can also append a \code{format} column to your plan post-hoc.
+Available formats:
+\item \code{"fst"}: save big data frames fast. Requirements:
+\enumerate{
+\item The \code{fst} package must be installed.
+\item The target's value must be a plain data frame. If it is not a
+plain data frame (for example, a tibble or data.table)
+then drake will coerce it to a plain data frame with
+\code{as.data.frame()}.
+All non-data-frame-specific attributes are lost
+when \code{drake} saves the target.
+}
+\item \code{"fst_dt"}: Like \code{"fst"} format, but for \code{data.table} objects.
+Requirements:
+\enumerate{
+\item The \code{data.table} and \code{fst} packages must be installed.
+\item The target's value must be a data.table object. If it is not a
+data.table object (for example, a data frame or tibble)
+then drake will coerce it to a data.table object using
+\code{data.table::as.data.table()}.
+All non-data-table-specific attributes are lost
+when \code{drake} saves the target.
+}
+\item \code{"diskframe"}: Experimental.
+Store larger-than-memory data as a \code{disk.frame} object.
+Uses the \code{fst} backend. Requires the \code{disk.frame} and \code{fst} packages.
+Note: \code{disk.frame}s get moved to the \code{drake} cache
+(a subfolder of \code{.drake/} for most workflows). It is best to
+create \code{disk.frame} objects that initially reside on the same storage
+drive as the cache. \code{\link[=drake_tempfile]{drake_tempfile()}} can help with this,
+e.g. \code{as.disk.frame(your_dataset, outdir = drake_tempfile())}.
+\item \code{"keras"}: save Keras models as HDF5 files.
+Requires the \code{keras} package.
+\item \code{"rds"}: save any object. This is similar to the default storage
+except we avoid creating a serialized copy of
+the entire target in memory.
+Requires R >= 3.5.0 so drake can use ALTREP.
 }
 }
 
@@ -114,9 +167,18 @@ Details: \url{https://ropenscilabs.github.io/drake-manual/triggers.html}.
 With the exception of \code{\link[=target]{target()}}, each one is a proper function
 with its own help file.
 \itemize{
-\item \code{\link[=target]{target()}}: declare more than just the command,
-e.g. assign a trigger or transform.
-Examples: \url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}. # nolint
+\item \code{\link[=target]{target()}}: give the target more than just a command.
+Using \code{\link[=target]{target()}}, you can apply a transformation
+(examples: \url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}), # nolint
+supply a trigger (\url{https://ropenscilabs.github.io/drake-manual/triggers.html}), # nolint
+or set any number of custom columns.
+\item \code{\link[=map]{map()}}: create multiple targets. Called inside \code{\link[=target]{target()}}.
+\item \code{\link[=split]{split()}}: create a target for each subset of data.
+Called inside \code{\link[=target]{target()}}.
+\item \code{\link[=cross]{cross()}}: create a target for each combination of values.
+Called inside \code{\link[=target]{target()}}.
+\item \code{\link[=combine]{combine()}}: aggregate groups of targets into other targets.
+Called inside \code{\link[=target]{target()}}.
 \item \code{\link[=file_in]{file_in()}}: declare an input file dependency.
 \item \code{\link[=file_out]{file_out()}}: declare an output file to be produced
 when the target is built.
@@ -169,6 +231,18 @@ head(my_plan)
 # There, `drake` sees that `small`, `large`, and `coef_regression2_small`
 # are loaded in with calls to `loadd()` and `readd()`.
 deps_code("report.Rmd")
+
+# Formats are great for big data: https://github.com/ropensci/drake/pull/977
+# Below, each target is 1.6 GB in memory.
+# Run make() on this plan to see how much faster fst is!
+n <- 1e8
+plan <- drake_plan(
+  data_fst = target(
+    data.frame(x = runif(n), y = runif(n)),
+    format = "fst"
+  ),
+  data_old = data.frame(x = runif(n), y = runif(n))
+)
 
 # Use transformations to generate large plans.
 # Read more at
@@ -245,4 +319,7 @@ sms <- rlang::syms(letters) # To sub in character args, skip this.
 drake_plan(x = target(f(char), transform = map(char = !!sms)))
 })
 }
+}
+\seealso{
+make, drake_config, transform_plan, map, split, cross, combine
 }
