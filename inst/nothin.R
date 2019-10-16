@@ -11,9 +11,13 @@ plan <- drake::drake_plan(
     iris
   }),
   ir3 = target({
+    input <- iris3
+
+    iris3[[1]] <- iris3[[1]] + number
+    iris3
 
   },
-  transform = map(i = c(1:3), .tag_in = cluster_id )),
+  transform = map(number = !!c(1:3), .tag_in = cluster_id )),
   trace = TRUE
 )
 
