@@ -1,0 +1,41 @@
+library(drake)
+library(magrittr)
+
+```{r}
+plan <- drake::drake_plan(
+  mtc = target({
+    mtcars
+  }),
+  ir = target({
+    iris
+  }),
+  ir3 = target({
+    input <- iris3
+
+    iris3[[1]] <- iris3[[1]] + number
+    iris3
+
+  },
+  transform = map(number = !!c(1:3), .tag_in = cluster_id )),
+  trace = TRUE
+)
+
+
+unique_stems <- plan$cluster_id %>% unique()
+
+config <- plan %>% drake_config()
+
+graph_info <- drake_graph_info(
+  config,
+  targets_only = TRUE,
+  group = "cluster_id",
+  clusters = unique_stems,
+  show_output_files = FALSE,
+  build_times = "none",
+  hover = FALSE,
+  on_select_col = "number"
+)
+```
+```
+drake::render_drake_graph(graph_info = graph_info, on_select = TRUE)
+```
