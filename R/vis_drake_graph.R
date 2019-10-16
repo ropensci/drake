@@ -254,7 +254,7 @@ render_drake_graph <- function(
   # Add on_select action
   if (is.logical(on_select)){
     if (!on_select){on_select <- NULL}
-    else {on_select <- default_on_select()}
+    else {on_select <- on_select_default()}
     }
   if (!is.null(on_select)) out <- visNetwork::visEvents(out, selectNode = on_select)
 
@@ -294,10 +294,19 @@ random_tempdir <- function() {
   dir
 }
 
-default_on_select <- function(){
+on_select_default <- function(){
+  js <- "
+  function(props) {
+    window.open(
+      this.body.data.nodes.get(props.nodes[0]).on_select_col,
+      '_blank');
+  }"
+}
+on_select_alert <- function(){
   js <- "
   function(props) {
     alert('selected node with on_select_col: ' +
             this.body.data.nodes.get(props.nodes[0]).on_select_col);
   }"
 }
+
