@@ -252,7 +252,7 @@ render_drake_graph <- function(
   }
 
   # Add on_select action
-  if (is.logical(on_select) & on_select == TRUE){
+  if (is.logical(on_select)){
     if (!on_select){on_select <- NULL}
     else {on_select <- default_on_select()}
     }
