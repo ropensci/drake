@@ -54,6 +54,8 @@ vis_drake_graph <- function(
   clusters = NULL,
   show_output_files = TRUE,
   collapse = TRUE,
+  on_select_col = NULL,
+  on_select = NULL,
   ...
 ) {
   log_msg("begin vis_drake_graph()", config = config)
@@ -76,8 +78,7 @@ vis_drake_graph <- function(
     clusters = clusters,
     show_output_files = show_output_files,
     hover = hover,
-    on_select = NULL,
-    on_select_col = NULL,
+    on_select_col = on_select_col
   )
   if (is.null(main)) {
     main <- graph_info$default_title
@@ -94,6 +95,7 @@ vis_drake_graph <- function(
     ncol_legend = ncol_legend,
     full_legend = full_legend,
     collapse = collapse,
+    on_select = on_select,
     ...
   )
 }
@@ -248,6 +250,14 @@ render_drake_graph <- function(
   if (navigationButtons) { # nolint
     out <- visNetwork::visInteraction(out, navigationButtons = TRUE) # nolint
   }
+
+  # Add on_select action
+  if (is.logical(on_select) & on_select == TRUE){
+    if (!on_select){on_select <- NULL}
+    else {on_select <- default_on_select()}
+    }
+  if (!is.null(on_select)) out <- visNetwork::visEvents(out, selectNode = on_select)
+
   if (length(file)) {
     file <- path.expand(file)
     if (is_image_filename(file)) {
@@ -288,6 +298,6 @@ default_on_select <- function(){
   js <- "
   function(props) {
     alert('selected node with on_select_col: ' +
-            this.body.data.nodes.get(properties.nodes[0]).on_select_col);
+            this.body.data.nodes.get(props.nodes[0]).on_select_col);
   }"
 }
