@@ -1,9 +1,22 @@
 library(drake)
-
+library(magrittr)
 
 plan   <- readRDS("~/Documents/plan.rds")
 
-plan['resources'] <- NULL
+plan <- drake::drake_plan(
+  mtc = target({
+    mtcars
+  }),
+  ir = target({
+    iris
+  }),
+  ir3 = target({
+
+  },
+  transform = map(i = c(1:3), .tag_in = cluster_id )),
+  trace = TRUE
+)
+
 
 unique_stems <- plan$cluster_id %>% unique()
 
@@ -19,3 +32,5 @@ graph_info <- drake_graph_info(
   hover = FALSE,
   on_select_col = "number"
 )
+
+drake::render_drake_graph(graph_info = graph_info)
