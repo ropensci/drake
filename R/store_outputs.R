@@ -49,6 +49,7 @@ store_output_files <- function(files, meta, config) {
     meta$isfile <- TRUE
     store_single_output(
       target = file,
+      value = NULL,
       meta = meta,
       config = config
     )
@@ -79,6 +80,7 @@ store_single_output <- function(target, value, meta, config) {
   }
   store_meta(
     target = target,
+    value = value,
     meta = meta,
     hash = hash,
     config = config
@@ -121,9 +123,10 @@ store_object <- function(target, value, meta, config) {
   config$cache$set(key = target, value = value, use_cache = FALSE)
 }
 
-store_meta <- function(target, meta, hash, config) {
+store_meta <- function(target, value, meta, hash, config) {
   meta <- finalize_meta(
     target = target,
+    value = value,
     meta = meta,
     hash = hash,
     config = config
@@ -154,7 +157,7 @@ store_recovery <- function(target, meta, meta_hash, config) {
   )
 }
 
-finalize_meta <- function(target, meta, hash, config) {
+finalize_meta <- function(target, value, meta, hash, config) {
   meta$time_command <- runtime_entry(
     runtime = meta$time_command,
     target = target
@@ -169,6 +172,7 @@ finalize_meta <- function(target, meta, hash, config) {
     log_time(target, meta, config)
   }
   meta$hash <- hash
+  meta$size <- NROW(value)
   meta
 }
 
