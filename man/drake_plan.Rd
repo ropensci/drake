@@ -219,7 +219,21 @@ Transformation function usage:
 
 \section{Dynamic branching}{
 
-Not yet implemented.
+Dynamic branching is not yet implemented,
+but this is what it usage will look like.
+\itemize{
+\item \code{map(..., .data)}
+\item \code{split(..., slices, margin = 1L, drop = FALSE)}
+\item \code{cross(...)}
+\item \code{combine(..., .by)}
+}
+
+Differences from static branching:
+\itemize{
+\item \code{...} must contain \emph{unnmaed} symbols with no values supplied,
+and they must be the names of targets.
+\item Arguments \code{.id}, \code{.tag_in}, and \code{.tag_out} no longer apply.
+}
 }
 
 \examples{

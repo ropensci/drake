@@ -1,3 +1,137 @@
+#' @title Transformations in `drake_plan()`.
+#' @name transformations
+#' @aliases map split cross combine
+#' \lifecycle{maturing}
+#' @description In [drake_plan()], you can define whole batches
+#'   of targets with transformations such as
+#'   `map()`, `split()`, `cross()`, and `combine()`.
+#' @details For details, see
+#'   <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>.
+#' @section Transformations:
+#'  `drake` has special syntax for generating large plans.
+#'  Your code will look something like
+#'  `drake_plan(y = target(f(x), transform = map(x = c(1, 2, 3)))`
+#'  You can read about this interface at
+#'  <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>. # nolint
+#' @section Static branching:
+#'   In static branching, you define batches of targets
+#'   based on information you know in advance.
+#'   Overall usage looks like
+#'   `drake_plan(<x> = target(<...>, transform = <call>)`,
+#'   where
+#'   - `<x>` is the name of the target or group of targets.
+#'   - `<...>` is optional arguments to [target()].
+#'   - `<call>` is a call to one of the transformation functions.
+#'
+#'   Transformation function usage:
+#'   - `map(..., .data, .id, .tag_in, .tag_out)`
+#'   - `split(..., slices, margin = 1L, drop = FALSE, .tag_in, .tag_out)`
+#'   - `cross(..., .data, .id, .tag_in, .tag_out)`
+#'   - `combine(..., .by, .id, .tag_in, .tag_out)`
+#' @section Dynamic branching:
+#'   Dynamic branching is not yet implemented,
+#'   but this is what it usage will look like.
+#'   - `map(..., .data)`
+#'   - `split(..., slices, margin = 1L, drop = FALSE)`
+#'   - `cross(...)`
+#'   - `combine(..., .by)`
+#'
+#'  Differences from static branching:
+#'  - `...` must contain *unnmaed* symbols with no values supplied,
+#'    and they must be the names of targets.
+#'  - Arguments `.id`, `.tag_in`, and `.tag_out` no longer apply.
+#'
+#' @param ... Grouping variables. New grouping variables must be
+#'   supplied with their names and values, existing grouping variables
+#'   can be given as symbols without any values assigned.
+#'   For dynamic branching, the entries in `...` must be unnamed symbols
+#'   with no values supplied, and they must be the names of targets.
+#' @param .data A data frame of new grouping variables with
+#'   grouping variable names as column names and values as elements.
+#' @param .id Symbol or vector of symbols naming grouping variables
+#'   to incorporate into target names. Useful for creating short target
+#'   names. Set `.id = FALSE` to use integer indices as target name suffixes.
+#' @param .tag_in A symbol or vector of symbols. Tags assign targets
+#'   to grouping variables. Use `.tag_in` to assign *untransformed*
+#'   targets to grouping variables.
+#' @param .tag_out Just like `.tag_in`, except that `.tag_out`
+#'   assigns *transformed* targets to grouping variables.
+#' @param slice Number of slices into which `split()` partitions the data.
+#' @param margin Which margin to take the slices in `split()`. Same meaning
+#'   as the `MARGIN` argument of `apply()`.
+#' @param drop Logical, whether to drop a dimension if its length is 1.
+#'   Same meaning as `mtcars[, 1L, drop = TRUE]` versus
+#'   `mtcars[, 1L, drop = TRUE]`.
+#' @param .by Symbol or vector of symbols of grouping variables.
+#'   `combine()` aggregates/groups targets by the grouping variables in `.by`.
+#' @examples
+#' # Static branching
+#' models <- c("glm", "hierarchical")
+#' plan <- drake_plan(
+#'   data = target(
+#'     get_data(x),
+#'     transform = map(x = c("simulated", "survey"))
+#'   ),
+#'   analysis = target(
+#'     analyze_data(data, model),
+#'     transform = cross(data, model = !!models, .id = c(x, model))
+#'   ),
+#'   summary = target(
+#'     summarize_analysis(analysis),
+#'     transform = map(analysis, .id = c(x, model))
+#'   ),
+#'   results = target(
+#'     bind_rows(summary),
+#'     transform = combine(summary, .by = data)
+#'   )
+#' )
+#' plan
+#' if (requireNamespace("styler")) {
+#'   print(drake_plan_source(plan))
+#' }
+#' # Static splitting
+#' plan <- drake_plan(
+#'   analysis = target(
+#'     analyze(data),
+#'     transform = split(data, slices = 3L, margin = 1L, drop = FALSE)
+#'   )
+#' )
+#' print(plan)
+#' if (requireNamespace("styler", quietly = TRUE)) {
+#'   print(drake_plan_source(plan))
+#' }
+#' # Static tags:
+#' drake_plan(
+#'   x = target(
+#'     command,
+#'     transform = map(y = c(1, 2), .tag_in = from, .tag_out = c(to, out))
+#'   ),
+#'   trace = TRUE
+#' )
+#' plan <- drake_plan(
+#'   survey = target(
+#'     survey_data(x),
+#'     transform = map(x = c(1, 2), .tag_in = source, .tag_out = dataset)
+#'   ),
+#'   download = target(
+#'     download_data(),
+#'     transform = map(y = c(5, 6), .tag_in = source, .tag_out = dataset)
+#'   ),
+#'   analysis = target(
+#'     analyze(dataset),
+#'     transform = map(dataset)
+#'   ),
+#'   results = target(
+#'     bind_rows(analysis),
+#'     transform = combine(analysis, .by = source)
+#'   )
+#' )
+#' plan
+#' if (requireNamespace("styler", quietly = TRUE)) {
+#'   print(drake_plan_source(plan))
+#' }
+NULL
+
 #' @title Transform a plan
 #' \lifecycle{maturing}
 #' @description Evaluate the `map()`, `cross()`, `split()` and
