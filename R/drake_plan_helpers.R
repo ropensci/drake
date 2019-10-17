@@ -83,14 +83,31 @@ target <- function(
   out
 }
 
-#' @title Define multiple targets at once
+#' @title Transformations in `drake_plan()`.
+#' @name transformations
+#' @aliases map split cross combine
 #' \lifecycle{maturing}
-#' @description Similar to `pmap()` from `purrr`, except `drake`'s
-#'   `map()` defines new targets.
-#' @details Only valid within a call to [target()] in
-#'   [drake_plan()]. See the examples below.
+#' @description In [drake_plan()], you can define whole batches
+#'   of targets with transformations such as
+#'   `map()`, `split()`, `cross()`, and `combine()`.
+#' @details For details, see
+#'   <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>.
+#' @section Static branching:
+#'   In static branching, you define batches of targets
+#'   based on information you know in advance.
+#'   Overall usage looks like
+#'   `drake_plan(<x> = target(<...>, transform = <call>)`,
+#'   where
+#'   - `<x>` is the name of the target or group of targets.
+#'   - `<...>` is optional arguments to [target()].
+#'   - `<call>` is a call to one of the transformation functions.
+#'
+#'   Transformation function usage:
+#'   - `map(..., .data, .id, .tag_in, .tag_out)`
+#'   - `split(..., slices, margin = 1L, drop = FALSE, .tag_in, .tag_out)`
+#'   - `cross(..., .data, .id, .tag_in, .tag_out)`
+#'   - `combine(..., .by, .id, .tag_in, .tag_out)`
 #' @inheritSection drake_plan Keywords
-#' @seealso split, cross, combine, drake_plan, target
 #' @param ... Grouping variables. New grouping variables must be
 #'   supplied with their names and values, existing grouping variables
 #'   can be given as symbols without any values assigned.
@@ -104,7 +121,16 @@ target <- function(
 #'   targets to grouping variables.
 #' @param .tag_out Just like `.tag_in`, except that `.tag_out`
 #'   assigns *transformed* targets to grouping variables.
+#' @param slice Number of slices into which `split()` partitions the data.
+#' @param margin Which margin to take the slices in `split()`. Same meaning
+#'   as the `MARGIN` argument of `apply()`.
+#' @param drop Logical, whether to drop a dimension if its length is 1.
+#'   Same meaning as `mtcars[, 1L, drop = TRUE]` versus
+#'   `mtcars[, 1L, drop = TRUE]`.
+#' @param .by Symbol or vector of symbols of grouping variables.
+#'   `combine()` aggregates/groups targets by the grouping variables in `.by`.
 #' @examples
+#' # Static branching
 #' models <- c("glm", "hierarchical")
 #' plan <- drake_plan(
 #'   data = target(
@@ -128,7 +154,18 @@ target <- function(
 #' if (requireNamespace("styler")) {
 #'   print(drake_plan_source(plan))
 #' }
-#' # Tags:
+#' # Static splitting
+#' plan <- drake_plan(
+#'   analysis = target(
+#'     analyze(data),
+#'     transform = split(data, slices = 3L, margin = 1L, drop = FALSE)
+#'   )
+#' )
+#' print(plan)
+#' if (requireNamespace("styler", quietly = TRUE)) {
+#'   print(drake_plan_source(plan))
+#' }
+#' # Static tags:
 #' drake_plan(
 #'   x = target(
 #'     command,
@@ -158,123 +195,7 @@ target <- function(
 #' if (requireNamespace("styler", quietly = TRUE)) {
 #'   print(drake_plan_source(plan))
 #' }
-map <- function(..., .data, .id, .tag_in, .tag_out) {
-  stop(
-    "map() in drake must be called inside target() in drake_plan()",
-    call. = FALSE
-  )
-}
-
-#' @title Define a target for each subset of data
-#' \lifecycle{maturing}
-#' @description Similar `group_map()`, from `dplyr`, except it
-#'   defines new targets in `drake`.
-#' @details Only valid within a call to [target()] in
-#'   [drake_plan()]. See the examples below.
-#' @inheritSection drake_plan Keywords
-#' @seealso map, cross, combine, drake_plan, target, drake_slice
-#' @inheritParams map
-#' @inheritParams drake_slice
-#' @examples
-#' plan <- drake_plan(
-#'   analysis = target(
-#'     analyze(data),
-#'     transform = split(data, slices = 3L, margin = 1L, drop = FALSE)
-#'   )
-#' )
-#' print(plan)
-#' if (requireNamespace("styler", quietly = TRUE)) {
-#'   print(drake_plan_source(plan))
-#' }
-split <- function(..., .id, .tag_in, .tag_out) {
-  stop(
-    "split() in drake must be called inside target() in drake_plan()",
-    call. = FALSE
-  )
-}
-
-#' @title Define a target for each combination of values
-#' \lifecycle{maturing}
-#' @description Similar `crossing()`, from `tidyr`, except it
-#'   defines new targets in `drake`.
-#' @details Only valid within a call to [target()] in
-#'   [drake_plan()]. See the examples below.
-#' @inheritSection drake_plan Keywords
-#' @seealso map, split, combine, drake_plan, target
-#' @inheritParams map
-#' @examples
-#' models <- c("glm", "hierarchical")
-#' plan <- drake_plan(
-#'   data = target(
-#'     get_data(x),
-#'     transform = map(x = c("simulated", "survey"))
-#'   ),
-#'   analysis = target(
-#'     analyze_data(data, model),
-#'     transform = cross(data, model = !!models, .id = c(x, model))
-#'   ),
-#'   summary = target(
-#'     summarize_analysis(analysis),
-#'     transform = map(analysis, .id = c(x, model))
-#'   ),
-#'   results = target(
-#'     bind_rows(summary),
-#'     transform = combine(summary, .by = data)
-#'   )
-#' )
-#' plan
-#' if (requireNamespace("styler", quietly = TRUE)) {
-#'   print(drake_plan_source(plan))
-#' }
-cross <- function(..., .data, .id, .tag_in, .tag_out) {
-  stop(
-    "cross() in drake must be called inside target() in drake_plan()",
-    call. = FALSE
-  )
-}
-
-#' @title Define aggregates of other targets
-#' \lifecycle{maturing}
-#' @description Similar `summarize()`, from `dplyr`, except it
-#'   defines new targets in `drake`.
-#' @details Only valid within a call to [target()] in
-#'   [drake_plan()]. See the examples below.
-#' @inheritSection drake_plan Keywords
-#' @seealso map, split, cross, drake_plan, target
-#' @inheritParams map
-#' @param .by Symbol or vector of symbols of grouping variables.
-#'   `combine()` aggregates/groups targets by the grouping variables
-#'   in `.by`
-#' @examples
-#' models <- c("glm", "hierarchical")
-#' plan <- drake_plan(
-#'   data = target(
-#'     get_data(x),
-#'     transform = map(x = c("simulated", "survey"))
-#'   ),
-#'   analysis = target(
-#'     analyze_data(data, model),
-#'     transform = cross(data, model = !!models, .id = c(x, model))
-#'   ),
-#'   summary = target(
-#'     summarize_analysis(analysis),
-#'     transform = map(analysis, .id = c(x, model))
-#'   ),
-#'   results = target(
-#'     bind_rows(summary),
-#'     transform = combine(summary, .by = data)
-#'   )
-#' )
-#' plan
-#' if (requireNamespace("styler", quietly = TRUE)) {
-#'   print(drake_plan_source(plan))
-#' }
-combine <- function(..., .by, .id, .tag_in, .tag_out) {
-  stop(
-    "combine() in drake must be called inside target() in drake_plan()",
-    call. = FALSE
-  )
-}
+NULL
 
 #' @title Customize the decision rules for rebuilding targets
 #' \lifecycle{stable}

@@ -1,5 +1,7 @@
 drake_context("dynamic")
 
+if (FALSE) {
+
 test_with_dir("undefined grouping variables become dynamic", {
   expect_silent(
     out <- drake_plan(
@@ -10,3 +12,5 @@ test_with_dir("undefined grouping variables become dynamic", {
     )
   )
 })
+
+}

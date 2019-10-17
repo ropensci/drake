@@ -1,14 +1,5 @@
 drake_context("dsl")
 
-test_with_dir("dsl placeholders", {
-  # nolint start
-  expect_error(drake:::map(), regexp = "must be called inside target")
-  expect_error(drake:::split(), regexp = "must be called inside target")
-  expect_error(drake:::cross(), regexp = "must be called inside target")
-  expect_error(drake:::combine(), regexp = "must be called inside target")
-  # nolint end
-})
-
 test_with_dir("nothing to transform", {
   exp <- drake_plan(a = 1)
   out <- transform_plan(exp)
