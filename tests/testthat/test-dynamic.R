@@ -17,3 +17,15 @@ test_with_dir("dynamic dependency detection", {
   expect_equal(sort(layout[["y"]]$deps_dynamic), sort(c("u", "x", "y")))
   expect_equal(sort(layout[["z"]]$deps_dynamic), sort(c("w", "x", "y")))
 })
+
+test_with_dir("dynamic dependencies in the graph", {
+  plan <- drake_plan(
+    x = 1,
+    y = 1,
+    z = target(x, dynamic = map(y))
+  )
+  config <- drake_config(plan)
+  out <- drake_adjacent_vertices(config$graph, v = "z", mode = "in")
+  exp <- c("x", "y")
+  expect_equal(sort(out), sort(exp))
+})
