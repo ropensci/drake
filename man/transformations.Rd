@@ -48,6 +48,15 @@ of targets with transformations such as
 For details, see
 \url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}.
 }
+\section{Transformations}{
+
+\code{drake} has special syntax for generating large plans.
+Your code will look something like
+\code{drake_plan(y = target(f(x), transform = map(x = c(1, 2, 3)))}
+You can read about this interface at
+\url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}. # nolint
+}
+
 \section{Static branching}{
 
 In static branching, you define batches of targets
@@ -70,36 +79,9 @@ Transformation function usage:
 }
 }
 
-\section{Keywords}{
+\section{Dynamic branching}{
 
-\code{\link[=drake_plan]{drake_plan()}} understands special keyword functions for your commands.
-With the exception of \code{\link[=target]{target()}}, each one is a proper function
-with its own help file.
-\itemize{
-\item \code{\link[=target]{target()}}: give the target more than just a command.
-Using \code{\link[=target]{target()}}, you can apply a transformation
-(examples: \url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}), # nolint
-supply a trigger (\url{https://ropenscilabs.github.io/drake-manual/triggers.html}), # nolint
-or set any number of custom columns.
-\item \code{\link[=map]{map()}}: create multiple targets. Called inside \code{\link[=target]{target()}}.
-\item \code{\link[=split]{split()}}: create a target for each subset of data.
-Called inside \code{\link[=target]{target()}}.
-\item \code{\link[=cross]{cross()}}: create a target for each combination of values.
-Called inside \code{\link[=target]{target()}}.
-\item \code{\link[=combine]{combine()}}: aggregate groups of targets into other targets.
-Called inside \code{\link[=target]{target()}}.
-\item \code{\link[=file_in]{file_in()}}: declare an input file dependency.
-\item \code{\link[=file_out]{file_out()}}: declare an output file to be produced
-when the target is built.
-\item \code{\link[=knitr_in]{knitr_in()}}: declare a \code{knitr} file dependency such as an
-R Markdown (\code{*.Rmd}) or R LaTeX (\code{*.Rnw}) file.
-\item \code{\link[=ignore]{ignore()}}: force \code{drake} to entirely ignore a piece of code:
-do not track it for changes and do not analyze it for dependencies.
-\item \code{\link[=no_deps]{no_deps()}}: tell \code{drake} to not track the dependencies
-of a piece of code. \code{drake} still tracks the code itself for changes.
-\item \code{\link[=drake_envir]{drake_envir()}}: get the environment where drake builds targets.
-Intended for advanced custom memory management.
-}
+Not yet implemented.
 }
 
 \examples{

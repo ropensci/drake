@@ -172,13 +172,6 @@ Using \code{\link[=target]{target()}}, you can apply a transformation
 (examples: \url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}), # nolint
 supply a trigger (\url{https://ropenscilabs.github.io/drake-manual/triggers.html}), # nolint
 or set any number of custom columns.
-\item \code{\link[=map]{map()}}: create multiple targets. Called inside \code{\link[=target]{target()}}.
-\item \code{\link[=split]{split()}}: create a target for each subset of data.
-Called inside \code{\link[=target]{target()}}.
-\item \code{\link[=cross]{cross()}}: create a target for each combination of values.
-Called inside \code{\link[=target]{target()}}.
-\item \code{\link[=combine]{combine()}}: aggregate groups of targets into other targets.
-Called inside \code{\link[=target]{target()}}.
 \item \code{\link[=file_in]{file_in()}}: declare an input file dependency.
 \item \code{\link[=file_out]{file_out()}}: declare an output file to be produced
 when the target is built.
@@ -193,18 +186,40 @@ Intended for advanced custom memory management.
 }
 }
 
-\section{DSL}{
+\section{Transformations}{
 
 \code{drake} has special syntax for generating large plans.
 Your code will look something like
-\code{drake_plan(x = target(cmd, transform = f(y, z), group = g)}
-where \code{f()} is either \code{map()}, \code{cross()}, \code{split()}, or \code{combine()}
-(similar to \code{purrr::pmap()}, \code{tidy::crossing()}, \code{base::split()},
-and  \code{dplyr::summarize()}, respectively).
-These verbs mimic Tidyverse behavior to scale up
-existing plans to large numbers of targets.
+\code{drake_plan(y = target(f(x), transform = map(x = c(1, 2, 3)))}
 You can read about this interface at
 \url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}. # nolint
+}
+
+\section{Static branching}{
+
+In static branching, you define batches of targets
+based on information you know in advance.
+Overall usage looks like
+\code{drake_plan(<x> = target(<...>, transform = <call>)},
+where
+\itemize{
+\item \code{<x>} is the name of the target or group of targets.
+\item \code{<...>} is optional arguments to \code{\link[=target]{target()}}.
+\item \code{<call>} is a call to one of the transformation functions.
+}
+
+Transformation function usage:
+\itemize{
+\item \code{map(..., .data, .id, .tag_in, .tag_out)}
+\item \code{split(..., slices, margin = 1L, drop = FALSE, .tag_in, .tag_out)}
+\item \code{cross(..., .data, .id, .tag_in, .tag_out)}
+\item \code{combine(..., .by, .id, .tag_in, .tag_out)}
+}
+}
+
+\section{Dynamic branching}{
+
+Not yet implemented.
 }
 
 \examples{

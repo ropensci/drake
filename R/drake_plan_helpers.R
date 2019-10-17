@@ -92,6 +92,12 @@ target <- function(
 #'   `map()`, `split()`, `cross()`, and `combine()`.
 #' @details For details, see
 #'   <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>.
+#' @section Transformations:
+#'  `drake` has special syntax for generating large plans.
+#'  Your code will look something like
+#'  `drake_plan(y = target(f(x), transform = map(x = c(1, 2, 3)))`
+#'  You can read about this interface at
+#'  <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>. # nolint
 #' @section Static branching:
 #'   In static branching, you define batches of targets
 #'   based on information you know in advance.
@@ -107,7 +113,8 @@ target <- function(
 #'   - `split(..., slices, margin = 1L, drop = FALSE, .tag_in, .tag_out)`
 #'   - `cross(..., .data, .id, .tag_in, .tag_out)`
 #'   - `combine(..., .by, .id, .tag_in, .tag_out)`
-#' @inheritSection drake_plan Keywords
+#' @section Dynamic branching:
+#'   Not yet implemented.
 #' @param ... Grouping variables. New grouping variables must be
 #'   supplied with their names and values, existing grouping variables
 #'   can be given as symbols without any values assigned.

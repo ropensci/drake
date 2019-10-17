@@ -106,13 +106,6 @@
 #'   (examples: <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>), # nolint
 #'   supply a trigger (<https://ropenscilabs.github.io/drake-manual/triggers.html>), # nolint
 #'   or set any number of custom columns.
-#' - [map()]: create multiple targets. Called inside [target()].
-#' - [split()]: create a target for each subset of data.
-#'   Called inside [target()].
-#' - [cross()]: create a target for each combination of values.
-#'   Called inside [target()].
-#' - [combine()]: aggregate groups of targets into other targets.
-#'   Called inside [target()].
 #' - [file_in()]: declare an input file dependency.
 #' - [file_out()]: declare an output file to be produced
 #'   when the target is built.
@@ -125,17 +118,9 @@
 #' - [drake_envir()]: get the environment where drake builds targets.
 #'   Intended for advanced custom memory management.
 #'
-#' @section DSL:
-#'  `drake` has special syntax for generating large plans.
-#'  Your code will look something like
-#'  `drake_plan(x = target(cmd, transform = f(y, z), group = g)`
-#'  where `f()` is either `map()`, `cross()`, `split()`, or `combine()`
-#'  (similar to `purrr::pmap()`, `tidy::crossing()`, `base::split()`,
-#'  and  `dplyr::summarize()`, respectively).
-#'  These verbs mimic Tidyverse behavior to scale up
-#'  existing plans to large numbers of targets.
-#'  You can read about this interface at
-#'  <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>. # nolint
+#' @inheritSection transformations Transformations
+#' @inheritSection transformations Static branching
+#' @inheritSection transformations Dynamic branching
 #'
 #' @export
 #' @return A data frame of targets, commands, and optional
