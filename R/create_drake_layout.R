@@ -177,6 +177,7 @@ cdl_prepare_layout <- function(config, layout, ht_targets) {
     exclude = layout$target,
     allowed_globals = config$allowed_globals_targets
   )
+  layout$deps_dynamic <- cdl_dynamic_dependencies(layout$dynamic, ht_targets)
   layout$command_standardized <- cdl_standardize_command(layout$command)
   layout$command_build <- cdl_preprocess_command(
     layout$command,
@@ -234,6 +235,10 @@ cdl_command_dependencies <- function(
   )
   deps$strings <- NULL
   select_nonempty(deps)
+}
+
+cdl_dynamic_dependencies <- function(dynamic, ht_targets) {
+  ht_filter(ht_targets, all.vars(dynamic))
 }
 
 # Get the command ready for tidy eval prep
