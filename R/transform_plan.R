@@ -268,16 +268,31 @@ transform_plan_ <- function(
     plan <- sub_in_plan(plan, rows, index)
     old_cols(plan) <- old_cols
   }
+  plan <- dsl_trace(plan = plan, trace = trace)
+  old_cols(plan) <- plan$transform <- NULL
+  plan <- dsl_tidy_eval(plan = plan, tidy_eval = tidy_eval, envir = envir)
+  plan <- dsl_sanitize(plan = plan, sanitize = sanitize, envir = envir)
+  plan
+}
+
+dsl_trace <- function(plan, trace) {
   if (!trace) {
     keep <- as.character(intersect(colnames(plan), old_cols(plan)))
     plan <- plan[, intersect(colnames(plan), old_cols(plan)), drop = FALSE]
   }
-  old_cols(plan) <- plan$transform <- NULL
+  plan
+}
+
+dsl_tidy_eval <- function(plan, tidy_eval, envir) {
   if (tidy_eval) {
     for (col in setdiff(colnames(plan), c("target", "transform"))) {
       plan[[col]] <- tidyeval_exprs(plan[[col]], envir = envir)
     }
   }
+  plan
+}
+
+dsl_sanitize <- function(plan, sanitize, envir) {
   if (sanitize) {
     plan <- sanitize_plan(plan, envir = envir)
   }
