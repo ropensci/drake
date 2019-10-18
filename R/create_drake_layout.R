@@ -146,9 +146,6 @@ cdl_analyze_imports <- function(config, imports) {
 }
 
 cdl_analyze_commands <- function(config) {
-
-  print("!!!")
-
   config$plan$imported <- FALSE
   if ("trigger" %in% colnames(config$plan)) {
     config$plan$trigger <- lapply(

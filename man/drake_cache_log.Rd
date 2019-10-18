@@ -5,13 +5,18 @@
 \title{Get the state of the cache.
 \lifecycle{maturing}}
 \usage{
-drake_cache_log(path = NULL, search = NULL,
-  cache = drake::drake_cache(path = path), verbose = 1L, jobs = 1,
-  targets_only = FALSE)
+drake_cache_log(
+  path = NULL,
+  search = NULL,
+  cache = drake::drake_cache(path = path),
+  verbose = 1L,
+  jobs = 1,
+  targets_only = FALSE
+)
 }
 \arguments{
 \item{path}{Path to a \code{drake} cache
-(usually a hidden \code{.drake/} folder) or \code{NULL}.}
+(usually a hidden \verb{.drake/} folder) or \code{NULL}.}
 
 \item{search}{Deprecated.}
 

@@ -5,11 +5,24 @@
 \title{Prepare the workflow graph for visualization
 \lifecycle{stable}}
 \usage{
-drake_graph_info(config, from = NULL, mode = c("out", "in", "all"),
-  order = NULL, subset = NULL, build_times = "build", digits = 3,
-  targets_only = FALSE, font_size = 20, from_scratch = FALSE,
-  make_imports = TRUE, full_legend = FALSE, group = NULL,
-  clusters = NULL, show_output_files = TRUE, hover = FALSE)
+drake_graph_info(
+  config,
+  from = NULL,
+  mode = c("out", "in", "all"),
+  order = NULL,
+  subset = NULL,
+  build_times = "build",
+  digits = 3,
+  targets_only = FALSE,
+  font_size = 20,
+  from_scratch = FALSE,
+  make_imports = TRUE,
+  full_legend = FALSE,
+  group = NULL,
+  clusters = NULL,
+  show_output_files = TRUE,
+  hover = FALSE
+)
 }
 \arguments{
 \item{config}{A \code{\link[=drake_config]{drake_config()}} configuration list.

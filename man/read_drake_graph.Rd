@@ -5,12 +5,11 @@
 \title{Read a workflow graph from the cache
 \lifecycle{deprecated}}
 \usage{
-read_drake_graph(path = getwd(), search = TRUE, cache = NULL,
-  verbose = 1L)
+read_drake_graph(path = getwd(), search = TRUE, cache = NULL, verbose = 1L)
 }
 \arguments{
 \item{path}{Path to a \code{drake} cache
-(usually a hidden \code{.drake/} folder) or \code{NULL}.}
+(usually a hidden \verb{.drake/} folder) or \code{NULL}.}
 
 \item{search}{Deprecated.}
 

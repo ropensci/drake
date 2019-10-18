@@ -5,12 +5,18 @@
 \title{Read a config object from the cache
 \lifecycle{deprecated}}
 \usage{
-read_drake_config(path = getwd(), search = TRUE, cache = NULL,
-  verbose = 1L, jobs = 1, envir = parent.frame())
+read_drake_config(
+  path = getwd(),
+  search = TRUE,
+  cache = NULL,
+  verbose = 1L,
+  jobs = 1,
+  envir = parent.frame()
+)
 }
 \arguments{
 \item{path}{Path to a \code{drake} cache
-(usually a hidden \code{.drake/} folder) or \code{NULL}.}
+(usually a hidden \verb{.drake/} folder) or \code{NULL}.}
 
 \item{search}{Deprecated.}
 

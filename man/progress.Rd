@@ -5,9 +5,17 @@
 \title{Get the build progress of your targets
 \lifecycle{maturing}}
 \usage{
-progress(..., list = character(0), no_imported_objects = NULL,
-  path = NULL, search = NULL, cache = drake::drake_cache(path =
-  path), verbose = 1L, jobs = 1, progress = NULL)
+progress(
+  ...,
+  list = character(0),
+  no_imported_objects = NULL,
+  path = NULL,
+  search = NULL,
+  cache = drake::drake_cache(path = path),
+  verbose = 1L,
+  jobs = 1,
+  progress = NULL
+)
 }
 \arguments{
 \item{...}{Objects to load from the cache, as names (unquoted)
@@ -23,7 +31,7 @@ about imported files and targets with commands (i.e. whether to ignore
 imported objects that are not files).}
 
 \item{path}{Path to a \code{drake} cache
-(usually a hidden \code{.drake/} folder) or \code{NULL}.}
+(usually a hidden \verb{.drake/} folder) or \code{NULL}.}
 
 \item{search}{Deprecated.}
 

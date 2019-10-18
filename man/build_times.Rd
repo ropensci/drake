@@ -5,10 +5,18 @@
 \title{See the time it took to build each target.
 \lifecycle{maturing}}
 \usage{
-build_times(..., path = NULL, search = NULL, digits = 3,
-  cache = drake::drake_cache(path = path), targets_only = NULL,
-  verbose = NULL, jobs = 1, type = c("build", "command"),
-  list = character(0))
+build_times(
+  ...,
+  path = NULL,
+  search = NULL,
+  digits = 3,
+  cache = drake::drake_cache(path = path),
+  targets_only = NULL,
+  verbose = NULL,
+  jobs = 1,
+  type = c("build", "command"),
+  list = character(0)
+)
 }
 \arguments{
 \item{...}{Targets to load from the cache: as names (symbols) or
@@ -17,7 +25,7 @@ you can also supply \code{dplyr}-style \code{tidyselect}
 commands such as \code{starts_with()}, \code{ends_with()}, and \code{one_of()}.}
 
 \item{path}{Path to a \code{drake} cache
-(usually a hidden \code{.drake/} folder) or \code{NULL}.}
+(usually a hidden \verb{.drake/} folder) or \code{NULL}.}
 
 \item{search}{Deprecated.}
 

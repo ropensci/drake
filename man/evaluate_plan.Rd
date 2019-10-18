@@ -6,9 +6,17 @@
 workflow plan data frame from a template data frame.
 \lifecycle{deprecated}}
 \usage{
-evaluate_plan(plan, rules = NULL, wildcard = NULL, values = NULL,
-  expand = TRUE, rename = expand, trace = FALSE,
-  columns = "command", sep = "_")
+evaluate_plan(
+  plan,
+  rules = NULL,
+  wildcard = NULL,
+  values = NULL,
+  expand = TRUE,
+  rename = expand,
+  trace = FALSE,
+  columns = "command",
+  sep = "_"
+)
 }
 \arguments{
 \item{plan}{Workflow plan data frame, similar to one produced by

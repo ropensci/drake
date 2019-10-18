@@ -9,7 +9,7 @@ drake_tempfile(path = NULL, cache = drake::drake_cache(path = path))
 }
 \arguments{
 \item{path}{Path to a \code{drake} cache
-(usually a hidden \code{.drake/} folder) or \code{NULL}.}
+(usually a hidden \verb{.drake/} folder) or \code{NULL}.}
 
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} is ignored.}
@@ -26,7 +26,7 @@ physical storage media. Example: the \code{"diskframe"} format. See the
 "Formats" and "Columns" sections of the \code{\link[=drake_plan]{drake_plan()}} help file.
 Unless you supply the cache or the path to the cache
 (see \code{\link[=drake_cache]{drake_cache()}}) \code{drake} will assume the cache folder is named
-\code{.drake/} and it is located either in your working directory or an
+\verb{.drake/} and it is located either in your working directory or an
 ancestor of your working directory.
 }
 \examples{

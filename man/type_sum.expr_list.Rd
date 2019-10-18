@@ -11,7 +11,7 @@ type_sum.expr_list(x)
 \item{x}{List of language objects.}
 }
 \description{
-Ensures \code{<expr>} is printed at the top
+Ensures \verb{<expr>} is printed at the top
 of any \code{drake} plan column that is a list of language objects
 (e.g. \code{plan$command}).
 }
