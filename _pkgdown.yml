@@ -60,6 +60,7 @@ reference:
   - '`no_deps`'
   - '`drake_envir`'
 - title: Static branching
+  contents:
   - '`map`'
   - '`split`'
   - '`cross`'

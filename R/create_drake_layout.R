@@ -60,7 +60,12 @@ cdl_set_knitr_files <- function(config, layout) {
 cdl_get_knitr_hash <- function(config, layout) {
   config$logger$minor("get knitr hash")
   if (!config$cache$exists(key = "knitr", namespace = "memoize")) {
-    return(NA_character_)
+    out <- digest::digest(
+      "",
+      algo = config$cache$hash_algorithm,
+      serialize = FALSE
+    )
+    return(out)
   }
   knitr_files <- config$cache$safe_get(key = "knitr", namespace = "memoize")
   knitr_hashes <- lightly_parallelize(
@@ -141,6 +146,9 @@ cdl_analyze_imports <- function(config, imports) {
 }
 
 cdl_analyze_commands <- function(config) {
+
+  print("!!!")
+
   config$plan$imported <- FALSE
   if ("trigger" %in% colnames(config$plan)) {
     config$plan$trigger <- lapply(
