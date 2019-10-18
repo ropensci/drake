@@ -9,7 +9,8 @@ drake_graph_info(config, from = NULL, mode = c("out", "in", "all"),
   order = NULL, subset = NULL, build_times = "build", digits = 3,
   targets_only = FALSE, font_size = 20, from_scratch = FALSE,
   make_imports = TRUE, full_legend = FALSE, group = NULL,
-  clusters = NULL, show_output_files = TRUE, hover = FALSE)
+  clusters = NULL, show_output_files = TRUE, hover = FALSE,
+  on_select_col = NULL)
 }
 \arguments{
 \item{config}{A \code{\link[=drake_config]{drake_config()}} configuration list.
@@ -91,6 +92,9 @@ that you specify in the \code{group} argument to \code{drake_graph_info()}.}
 
 \item{hover}{Logical, whether to show text (file contents,
 commands, etc.) when you hover your cursor over a node.}
+
+\item{on_select_col}{Optional string corresponding to the column name
+in the plan that should provide data for the \code{on_select} event.}
 }
 \value{
 A list of three data frames: one for nodes,

@@ -13,7 +13,8 @@ vis_drake_graph(config, file = character(0), selfcontained = FALSE,
   mode = c("out", "in", "all"), order = NULL, subset = NULL,
   ncol_legend = 1, full_legend = FALSE, make_imports = TRUE,
   from_scratch = FALSE, group = NULL, clusters = NULL,
-  show_output_files = TRUE, collapse = TRUE, ...)
+  show_output_files = TRUE, collapse = TRUE, on_select_col = NULL,
+  on_select = NULL, ...)
 }
 \arguments{
 \item{config}{A \code{\link[=drake_config]{drake_config()}} configuration list.
@@ -132,6 +133,16 @@ that you specify in the \code{group} argument to \code{drake_graph_info()}.}
 if you double click on them.
 Analogous to \code{visNetwork::visOptions(collapse = TRUE)} or
 \code{visNetwork::visOptions(collapse = TRUE)}.}
+
+\item{on_select_col}{Optional string corresponding to the column name
+in the plan that should provide data for the \code{on_select} event.}
+
+\item{on_select}{defines node selection event handling.
+Either a string of valid javascript that may be passed to
+\code{visNetwork::visEvents()}, or one of the following:
+\code{TRUE}, \code{NULL}/\code{FALSE}. If \code{TRUE} , enables the default behaviour of opening
+the link specified by the \code{on_select_col} given to \code{drake_graph_info()}.
+\code{NULL}/\code{FALSE} disables the behaviour.}
 
 \item{...}{Arguments passed to \code{visNetwork()}.}
 }
