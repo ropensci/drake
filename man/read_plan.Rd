@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{read_plan}
 \alias{read_plan}
-\title{Defunct function}
+\title{read_plan \lifecycle{defunct}}
 \usage{
 read_plan(...)
 }

@@ -2,7 +2,8 @@
 % Please edit documentation in R/cache.R
 \name{find_cache}
 \alias{find_cache}
-\title{Search up the file system for the nearest drake cache.}
+\title{Search up the file system for the nearest drake cache.
+\lifecycle{stable}}
 \usage{
 find_cache(path = getwd(), dir = NULL, directory = NULL)
 }

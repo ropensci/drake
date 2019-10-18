@@ -2,11 +2,11 @@ drake_context("triggers")
 
 test_with_dir("empty triggers return logical", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_identical(depend_trigger("x", list(), list()), FALSE)
-  expect_identical(command_trigger("x", list(), list()), FALSE)
-  expect_identical(file_trigger("x", list(), list()), FALSE)
-  expect_identical(condition_trigger("x", list(), list()), FALSE)
-  expect_identical(change_trigger("x", list(), list()), FALSE)
+  expect_identical(trigger_depend("x", list(), list()), FALSE)
+  expect_identical(trigger_command("x", list(), list()), FALSE)
+  expect_identical(trigger_file("x", list(), list(), list()), FALSE)
+  expect_identical(trigger_condition("x", list(), list()), FALSE)
+  expect_identical(trigger_change("x", list(), list()), FALSE)
 })
 
 test_with_dir("triggers can be expressions", {
@@ -138,7 +138,7 @@ test_with_dir("can detect trigger deps without reacting to them", {
   config <- drake_config(
     plan, session_info = FALSE, cache = storr::storr_environment(),
     log_progress = TRUE)
-  deps <- c(encode_path(c("file.rds", "knitr.Rmd")), "f")
+  deps <- c(reencode_path(c("file.rds", "knitr.Rmd")), "f")
   expect_true(all(deps %in% igraph::V(config$graph)$name))
   expect_equal(sort(deps_graph("x", config$graph)), sort(deps))
   expect_equal(outdated(config), "x")
@@ -177,7 +177,7 @@ test_with_dir("same, but with global trigger", {
       change = NULL
     )
   )
-  deps <- c(encode_path(c("file.rds", "knitr.Rmd")), "f")
+  deps <- c(reencode_path(c("file.rds", "knitr.Rmd")), "f")
   expect_true(all(deps %in% igraph::V(config$graph)$name))
   expect_equal(sort(deps_graph("x", config$graph)), sort(deps))
   expect_equal(outdated(config), "x")
@@ -223,7 +223,7 @@ test_with_dir("trigger does not block out command deps", {
   config <- drake_config(
     plan, session_info = FALSE, cache = storr::storr_environment(),
     log_progress = TRUE)
-  deps <- c(encode_path("file.rds"), encode_path("knitr.Rmd"), "f")
+  deps <- c(reencode_path("file.rds"), reencode_path("knitr.Rmd"), "f")
   expect_true(all(deps %in% igraph::V(config$graph)$name))
   expect_equal(sort(deps_graph("x", config$graph)), sort(deps))
   expect_equal(outdated(config), "x")
@@ -867,10 +867,10 @@ test_with_dir("files are collected/encoded from all triggers", {
     )
   )
   config <- drake_config(plan)
-  deps_build <- decode_path(unlist(config$layout[["x"]]$deps_build))
-  deps_condition <- decode_path(
+  deps_build <- redecode_path(unlist(config$layout[["x"]]$deps_build))
+  deps_condition <- redecode_path(
     unlist(config$layout[["x"]]$deps_condition))
-  deps_change <- decode_path(unlist(config$layout[["x"]]$deps_change))
+  deps_change <- redecode_path(unlist(config$layout[["x"]]$deps_change))
   expect_equal(
     sort(deps_build),
     sort(c("command_in", "command_out", "command_knitr_in"))

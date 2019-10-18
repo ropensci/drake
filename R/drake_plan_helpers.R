@@ -1,15 +1,22 @@
-#' @title Define custom columns in a [drake_plan()].
-#' @description Not a user-side function. Please use from within
-#'   [drake_plan()] only.
+#' @title Customize a target in [drake_plan()].
+#' \lifecycle{maturing}
+#' @description Must be called inside [drake_plan()].
+#'   Invalid otherwise.
 #' @export
-#' @keywords internal
+#' @inheritSection drake_plan Columns
 #' @inheritSection drake_plan Keywords
 #' @seealso [drake_plan()], [make()]
 #' @return A one-row workflow plan data frame with the named
 #' arguments as columns.
 #' @param command The command to build the target.
-#' @param ... Named arguments specifying non-standard
-#'   fields of the workflow plan.
+#' @param transform A call to [map()], [split()],
+#'   [cross()], or [combine()] to create or aggregate
+#'   multiple targets at once.
+#'   Details:
+#'   <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>
+#' @param ... Optional columns of the plan for a given target.
+#'   See the Columns section of this help file for a selection
+#'   of special columns that `drake` understands.
 #' @examples
 #' # Use target() to create your own custom columns in a drake plan.
 #' # See ?triggers for more on triggers.
@@ -21,25 +28,50 @@
 #'   ),
 #'   analysis = analyze(website_data)
 #' )
-target <- function(command = NULL, ...) {
-  # TODO: remove this warning when we unexport target().
+#' models <- c("glm", "hierarchical")
+#' plan <- drake_plan(
+#'   data = target(
+#'     get_data(x),
+#'     transform = map(x = c("simulated", "survey"))
+#'   ),
+#'   analysis = target(
+#'     analyze_data(data, model),
+#'     transform = cross(data, model = !!models, .id = c(x, model))
+#'   ),
+#'   summary = target(
+#'     summarize_analysis(analysis),
+#'     transform = map(analysis, .id = c(x, model))
+#'   ),
+#'   results = target(
+#'     bind_rows(summary),
+#'     transform = combine(summary, .by = data)
+#'   )
+#' )
+#' plan
+#' if (requireNamespace("styler", quietly = TRUE)) {
+#'   print(drake_plan_source(plan))
+#' }
+target <- function(
+  command = NULL,
+  transform = NULL,
+  ...
+) {
   if (!nzchar(Sys.getenv("drake_target_silent"))) {
-    .Deprecated(
-      "target",
-      package = "drake",
-      msg = paste(
-        "target() is deprecated as a user-side function.",
-        "Use target from inside drake_plan(). See",
-        "https://ropenscilabs.github.io/drake-manual/plans.html#large-plans",
-        "for details."
-      )
+    warning(
+      "target() in drake is not a standalone user-side function. ",
+      "It must be called from inside drake_plan(). Details: ",
+      "https://ropenscilabs.github.io/drake-manual/plans.html#large-plans",
+      call. = FALSE
     )
   }
   call <- match.call(expand.dots = FALSE)
-  lst <- call$...
+  lst <- c(
+    command = call$command,
+    transform = call$transform,
+    call$...
+  )
   lst <- select_nonempty(lst)
   lst <- lst[nzchar(names(lst))]
-  lst <- c(command = call$command, lst)
   out <- data.frame(command = NA, stringsAsFactors = FALSE)
   for (col in names(lst)) {
     if (is.language(lst[[col]])) {
@@ -51,7 +83,201 @@ target <- function(command = NULL, ...) {
   out
 }
 
+#' @title Define multiple targets at once
+#' \lifecycle{maturing}
+#' @description Similar to `pmap()` from `purrr`, except `drake`'s
+#'   `map()` defines new targets.
+#' @details Only valid within a call to [target()] in
+#'   [drake_plan()]. See the examples below.
+#' @inheritSection drake_plan Keywords
+#' @seealso split, cross, combine, drake_plan, target
+#' @param ... Grouping variables. New grouping variables must be
+#'   supplied with their names and values, existing grouping variables
+#'   can be given as symbols without any values assigned.
+#' @param .data A data frame of new grouping variables with
+#'   grouping variable names as column names and values as elements.
+#' @param .id Symbol or vector of symbols naming grouping variables
+#'   to incorporate into target names. Useful for creating short target
+#'   names. Set `.id = FALSE` to use integer indices as target name suffixes.
+#' @param .tag_in A symbol or vector of symbols. Tags assign targets
+#'   to grouping variables. Use `.tag_in` to assign *untransformed*
+#'   targets to grouping variables.
+#' @param .tag_out Just like `.tag_in`, except that `.tag_out`
+#'   assigns *transformed* targets to grouping variables.
+#' @examples
+#' models <- c("glm", "hierarchical")
+#' plan <- drake_plan(
+#'   data = target(
+#'     get_data(x),
+#'     transform = map(x = c("simulated", "survey"))
+#'   ),
+#'   analysis = target(
+#'     analyze_data(data, model),
+#'     transform = cross(data, model = !!models, .id = c(x, model))
+#'   ),
+#'   summary = target(
+#'     summarize_analysis(analysis),
+#'     transform = map(analysis, .id = c(x, model))
+#'   ),
+#'   results = target(
+#'     bind_rows(summary),
+#'     transform = combine(summary, .by = data)
+#'   )
+#' )
+#' plan
+#' if (requireNamespace("styler")) {
+#'   print(drake_plan_source(plan))
+#' }
+#' # Tags:
+#' drake_plan(
+#'   x = target(
+#'     command,
+#'     transform = map(y = c(1, 2), .tag_in = from, .tag_out = c(to, out))
+#'   ),
+#'   trace = TRUE
+#' )
+#' plan <- drake_plan(
+#'   survey = target(
+#'     survey_data(x),
+#'     transform = map(x = c(1, 2), .tag_in = source, .tag_out = dataset)
+#'   ),
+#'   download = target(
+#'     download_data(),
+#'     transform = map(y = c(5, 6), .tag_in = source, .tag_out = dataset)
+#'   ),
+#'   analysis = target(
+#'     analyze(dataset),
+#'     transform = map(dataset)
+#'   ),
+#'   results = target(
+#'     bind_rows(analysis),
+#'     transform = combine(analysis, .by = source)
+#'   )
+#' )
+#' plan
+#' if (requireNamespace("styler", quietly = TRUE)) {
+#'   print(drake_plan_source(plan))
+#' }
+map <- function(..., .data, .id, .tag_in, .tag_out) {
+  stop(
+    "map() in drake must be called inside target() in drake_plan()",
+    call. = FALSE
+  )
+}
+
+#' @title Define a target for each subset of data
+#' \lifecycle{maturing}
+#' @description Similar `group_map()`, from `dplyr`, except it
+#'   defines new targets in `drake`.
+#' @details Only valid within a call to [target()] in
+#'   [drake_plan()]. See the examples below.
+#' @inheritSection drake_plan Keywords
+#' @seealso map, cross, combine, drake_plan, target, drake_slice
+#' @inheritParams map
+#' @inheritParams drake_slice
+#' @examples
+#' plan <- drake_plan(
+#'   analysis = target(
+#'     analyze(data),
+#'     transform = split(data, slices = 3L, margin = 1L, drop = FALSE)
+#'   )
+#' )
+#' print(plan)
+#' if (requireNamespace("styler", quietly = TRUE)) {
+#'   print(drake_plan_source(plan))
+#' }
+split <- function(..., .id, .tag_in, .tag_out) {
+  stop(
+    "split() in drake must be called inside target() in drake_plan()",
+    call. = FALSE
+  )
+}
+
+#' @title Define a target for each combination of values
+#' \lifecycle{maturing}
+#' @description Similar `crossing()`, from `tidyr`, except it
+#'   defines new targets in `drake`.
+#' @details Only valid within a call to [target()] in
+#'   [drake_plan()]. See the examples below.
+#' @inheritSection drake_plan Keywords
+#' @seealso map, split, combine, drake_plan, target
+#' @inheritParams map
+#' @examples
+#' models <- c("glm", "hierarchical")
+#' plan <- drake_plan(
+#'   data = target(
+#'     get_data(x),
+#'     transform = map(x = c("simulated", "survey"))
+#'   ),
+#'   analysis = target(
+#'     analyze_data(data, model),
+#'     transform = cross(data, model = !!models, .id = c(x, model))
+#'   ),
+#'   summary = target(
+#'     summarize_analysis(analysis),
+#'     transform = map(analysis, .id = c(x, model))
+#'   ),
+#'   results = target(
+#'     bind_rows(summary),
+#'     transform = combine(summary, .by = data)
+#'   )
+#' )
+#' plan
+#' if (requireNamespace("styler", quietly = TRUE)) {
+#'   print(drake_plan_source(plan))
+#' }
+cross <- function(..., .data, .id, .tag_in, .tag_out) {
+  stop(
+    "cross() in drake must be called inside target() in drake_plan()",
+    call. = FALSE
+  )
+}
+
+#' @title Define aggregates of other targets
+#' \lifecycle{maturing}
+#' @description Similar `summarize()`, from `dplyr`, except it
+#'   defines new targets in `drake`.
+#' @details Only valid within a call to [target()] in
+#'   [drake_plan()]. See the examples below.
+#' @inheritSection drake_plan Keywords
+#' @seealso map, split, cross, drake_plan, target
+#' @inheritParams map
+#' @param .by Symbol or vector of symbols of grouping variables.
+#'   `combine()` aggregates/groups targets by the grouping variables
+#'   in `.by`
+#' @examples
+#' models <- c("glm", "hierarchical")
+#' plan <- drake_plan(
+#'   data = target(
+#'     get_data(x),
+#'     transform = map(x = c("simulated", "survey"))
+#'   ),
+#'   analysis = target(
+#'     analyze_data(data, model),
+#'     transform = cross(data, model = !!models, .id = c(x, model))
+#'   ),
+#'   summary = target(
+#'     summarize_analysis(analysis),
+#'     transform = map(analysis, .id = c(x, model))
+#'   ),
+#'   results = target(
+#'     bind_rows(summary),
+#'     transform = combine(summary, .by = data)
+#'   )
+#' )
+#' plan
+#' if (requireNamespace("styler", quietly = TRUE)) {
+#'   print(drake_plan_source(plan))
+#' }
+combine <- function(..., .by, .id, .tag_in, .tag_out) {
+  stop(
+    "combine() in drake must be called inside target() in drake_plan()",
+    call. = FALSE
+  )
+}
+
 #' @title Customize the decision rules for rebuilding targets
+#' \lifecycle{stable}
 #' @description  Use this function inside a target's command
 #'   in your [drake_plan()] or the `trigger` argument to
 #'   [make()] or [drake_config()].
@@ -165,18 +391,21 @@ trigger <- function(
 }
 
 #' @title Declare input files and directories.
+#' \lifecycle{stable}
 #' @description `file_in()` marks individual files
 #'   (and whole directories) that your targets depend on.
-#' @details As of `drake` 7.4.0, `file_in()` and `file_out()` have
-#'   experimental support for URLs. If the file name begins with
+#' @section URLs:
+#'   As of `drake` 7.4.0, `file_in()` and `file_out()` have
+#'   support for URLs. If the file name begins with
 #'   "http://", "https://", or "ftp://", [make()] attempts
 #'   to check the ETag to see if the data changed from last time.
 #'   If no ETag can be found, `drake` simply uses the ETag
 #'   from last [make()] and registers the file as unchanged
 #'   (which prevents your workflow from breaking if you lose
-#'   internet access). If this approach to tracking remote data
-#'   does not work for you, consider a custom trigger:
-#'   <https://ropenscilabs.github.io/drake-manual/triggers.html>.
+#'   internet access). If your `file_in()` URLs require
+#'   authentication, see the `curl_handles` argument of
+#'   `make()` and `drake_config()` to learn how to supply credentials.
+#'
 #' @export
 #' @inheritSection drake_plan Keywords
 #' @seealso [file_out()], [knitr_in()], [ignore()], [no_deps()]
@@ -221,7 +450,9 @@ trigger <- function(
 #'
 #' # See the connections that the file relationships create:
 #' config <- drake_config(plan)
-#' vis_drake_graph(config)
+#' if (requireNamespace("visNetwork", quietly = TRUE)) {
+#'   vis_drake_graph(config)
+#' }
 #' })
 #' }
 file_in <- function(...) {
@@ -229,6 +460,7 @@ file_in <- function(...) {
 }
 
 #' @title Declare output files and directories.
+#' \lifecycle{stable}
 #' @description `file_out()` marks individual files
 #'   (and whole directories) that your targets create.
 #' @export
@@ -275,13 +507,16 @@ file_in <- function(...) {
 #'
 #' # See the connections that the file relationships create:
 #' config <- drake_config(plan)
-#' vis_drake_graph(config)
+#' if (requireNamespace("visNetwork", quietly = TRUE)) {
+#'   vis_drake_graph(config)
+#' }
 #' })
 #' }
 file_out <- file_in
 
 #' @title Declare `knitr`/`rmarkdown` source files
 #'   as dependencies.
+#' \lifecycle{stable}
 #' @description `knitr_in()` marks individual `knitr`/R Markdown
 #'   reports as dependencies. In `drake`, these reports are pieces
 #'   of the pipeline. R Markdown is a great tool for *displaying*
@@ -323,6 +558,7 @@ file_out <- file_in
 knitr_in <- file_in
 
 #' @title Ignore code
+#' \lifecycle{stable}
 #' @description Ignore sections of commands and imported functions.
 #' @details In user-defined functions and [drake_plan()] commands, you can
 #' wrap code chunks in `ignore()` to
@@ -376,6 +612,7 @@ ignore <- function(x = NULL) {
 }
 
 #' @title Suppress dependency detection.
+#' \lifecycle{stable}
 #' @description Tell `drake` to not search for dependencies in a chunk of code.
 #' @details `no_deps()` is similar to [ignore()], but it still lets `drake`
 #'   track meaningful changes to the code itself.
@@ -422,6 +659,7 @@ no_deps <- function(x = NULL) {
 }
 
 #' @title Get the environment where drake builds targets
+#' \lifecycle{questioning}
 #' @description Call this function inside the commands in your plan
 #'   to get the environment where `drake` builds targets.
 #'   That way, you can strategically remove targets from memory
@@ -476,6 +714,7 @@ drake_markers <- c(
 )
 
 #' @title Row-bind together drake plans
+#' \lifecycle{stable}
 #' @description Combine drake plans together in a way that
 #'   correctly fills in missing entries.
 #' @export
@@ -500,8 +739,9 @@ bind_plans <- function(...) {
   sanitize_plan(drake_bind_rows(...))
 }
 
-#' @title Turn an R script file or knitr / R Markdown report
-#'   into a `drake` workflow plan data frame.
+#' @title Turn an R script file or `knitr` / R Markdown report
+#'   into a `drake` plan.
+#' \lifecycle{questioning}
 #' @export
 #' @seealso [drake_plan()], [make()], [plan_to_code()],
 #'   [plan_to_notebook()]
@@ -540,11 +780,10 @@ code_to_plan <- function(path) {
   txt <- readLines(path)
   # From CodeDepends: https://github.com/duncantl/CodeDepends/blob/7c9cf7eceffaea1d26fe25836c7a455f059e13c1/R/frags.R#L74 # nolint
   # Checks if the file is a knitr report.
-  if (any(grepl("^(### chunk number|<<[^>]*>>=|```\\{r.*\\})", txt))) { # nolint
-    nodes <- get_tangled_frags(path)
-  } else {
-    nodes <- parse(text = txt)
+  if (any(grepl(knitr_pattern, txt))) { # nolint
+    txt <- get_tangled_text(path)
   }
+  nodes <- parse(text = txt)
   out <- lapply(nodes, node_plan)
   out <- do.call(rbind, out)
   out <- parse_custom_plan_columns(out)
@@ -558,8 +797,8 @@ node_plan <- function(node) {
   )
 }
 
-#' @title Turn a `drake` workflow plan data frame
-#'   into a plain R script file.
+#' @title Turn a `drake` plan into a plain R script file.
+#' \lifecycle{questioning}
 #' @export
 #' @seealso [drake_plan()], [make()], [code_to_plan()],
 #'   [plan_to_notebook()]
@@ -595,8 +834,8 @@ plan_to_code <- function(plan, con = stdout()) {
   writeLines(text = plan_to_text(plan), con = con)
 }
 
-#' @title Turn a `drake` workflow plan data frame
-#'   into an R notebook,
+#' @title Turn a `drake` plan into an R notebook.
+#' \lifecycle{questioning}
 #' @export
 #' @seealso [drake_plan()], [make()], [code_to_plan()],
 #'   [plan_to_code()]
@@ -662,12 +901,13 @@ plan_to_text <- function(plan) {
   }
   text <- paste(plan$target, "<-", plan$command)
   if (requireNamespace("styler")) {
-    text <- styler::style_text(text)
+    try(text <- styler::style_text(text), silent = TRUE)
   }
   text
 }
 
-#' @title Show the code required to produce a given workflow plan data frame
+#' @title Show the code required to produce a given `drake` plan
+#' \lifecycle{stable}
 #' @description You supply a plan, and [drake_plan_source()]
 #'   supplies code to generate that plan. If you have the
 #'   [`prettycode` package](https://github.com/r-lib/prettycode),
@@ -792,7 +1032,8 @@ style_recursive_loop <- function(expr) {
 }
 
 style_leaf <- function(name, expr, append_comma) {
-  text <- styler::style_text(safe_deparse(expr))
+  text <- safe_deparse(expr)
+  try(text <- styler::style_text(text), silent = TRUE)
   text[1] <- paste(name, "=", text[1])
   if (append_comma) {
     text[length(text)] <- paste0(text[length(text)], ",")
@@ -806,3 +1047,115 @@ is_trigger_call <- function(expr) {
     error = error_false
   )
 }
+
+#' @title Turn a script into a function.
+#' \lifecycle{experimental}
+#' @description `code_to_function()` is a quick (and very dirty) way to
+#'   retrofit drake to an existing script-based project. It parses
+#'   individual `\*.R/\*.RMD` files into functions so they can be added
+#'   into the drake workflow.
+#'
+#' @details Most data science workflows consist of imperative scripts.
+#'   `drake`, on the other hand, assumes you write *functions*.
+#'   `code_to_function()` allows for pre-existing workflows to incorporate
+#'   drake as a workflow management tool seamlessly for cases where
+#'   re-factoring is unfeasible. So drake can monitor dependencies, the
+#'   targets are passed as arguments of the dependent functions.
+#'
+#' @export
+#' @seealso [file_in()], [file_out()], [knitr_in()], [ignore()], [no_deps()],
+#' [code_to_plan()], [plan_to_code()], [plan_to_notebook()]
+#' @return A function to be input into the drake plan
+#' @param path Character vector, path to script.
+#' @export
+#' @examples
+#' \dontrun{
+#' isolate_example("contain side effects", {
+#' # The `code_to_function()` function creates a function that makes it
+#' # available for drake to process as part of the workflow.
+#' # The main purpose is to allow pre-existing workflows to incorporate drake
+#' # into the workflow seamlessly for cases where re-factoring is unfeasible.
+#' #
+#'
+#' script1 <- tempfile()
+#' script2 <- tempfile()
+#' script3 <- tempfile()
+#' script4 <- tempfile()
+#'
+#' writeLines(c(
+#'   "data <- mtcars",
+#'   "data$make <- do.call('c',",
+#'   "lapply(strsplit(rownames(data), split=\" \"), `[`, 1))",
+#'   "saveRDS(data, \"mtcars_alt.RDS\")"
+#'  ),
+#'   script1
+#' )
+#'
+#' writeLines(c(
+#'   "data <- readRDS(\"mtcars_alt.RDS\")",
+#'   "mtcars_lm <- lm(mpg~cyl+disp+vs+gear+make,data=data)",
+#'   "saveRDS(mtcars_lm, \"mtcars_lm.RDS\")"
+#'   ),
+#'   script2
+#' )
+#' writeLines(c(
+#'   "mtcars_lm <- readRDS(\"mtcars_lm.RDS\")",
+#'   "lm_summary <- summary(mtcars_lm)",
+#'   "saveRDS(lm_summary, \"mtcars_lm_summary.RDS\")"
+#'   ),
+#'   script3
+#' )
+#' writeLines(c(
+#'   "data<-readRDS(\"mtcars_alt.RDS\")",
+#'   "gg <- ggplot2::ggplot(data)+",
+#'   "ggplot2::geom_point(ggplot2::aes(",
+#'   "x=disp, y=mpg, shape=as.factor(vs), color=make))",
+#'   "ggplot2::ggsave(\"mtcars_plot.png\", gg)"
+#'  ),
+#'   script4
+#' )
+#'
+#'
+#' do_munge <- code_to_function(script1)
+#' do_analysis <- code_to_function(script2)
+#' do_summarize <- code_to_function(script3)
+#' do_vis <- code_to_function(script4)
+#'
+#' plan <- drake_plan(
+#'   munged   = do_munge(),
+#'   analysis = do_analysis(munged),
+#'   summary  = do_summarize(analysis),
+#'   plot     = do_vis(munged)
+#'  )
+#'
+#' plan
+#' # drake knows  "script1" is the first script to be evaluated and ran,
+#' # because it has no dependencies on other code and a dependency of
+#' # `analysis`. See for yourself:
+#'
+#' make(plan)
+#'
+#' # See the connections that the sourced scripts create:
+#' config <- drake_config(plan)
+#' if (requireNamespace("visNetwork", quietly = TRUE)) {
+#'   vis_drake_graph(config)
+#' }
+#' })
+#' }
+code_to_function <- function(path) {
+  lines <- readLines(path)
+  if (any(grepl(knitr_pattern, lines))) {
+    lines <- get_tangled_text(path)
+  }
+  lines <- c(
+    "function(...) {",
+    lines,
+    "list(time = Sys.time(),tempfile = tempfile())",
+    "}"
+  )
+  text <- paste(lines, sep = "\n")
+  func <- eval(safe_parse(text))
+  func
+}
+
+knitr_pattern <- "^(### chunk number|<<[^>]*>>=|```\\{r.*\\})" # nolint

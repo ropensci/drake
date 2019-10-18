@@ -47,7 +47,7 @@ backend_future <- function(config) {
 }
 
 future_local_build <- function(target, config, queue, protect) {
-  log_msg("local target", target = target, config = config)
+  config$logger$minor("local target", target = target)
   local_build(target, config, downstream = protect)
   decrease_revdep_keys(queue, target, config)
 }
@@ -77,10 +77,11 @@ initialize_workers <- function(config) {
 
 new_worker <- function(id, target, config, ft_config, protect) {
   meta <- drake_meta_(target = target, config = config)
-  if (handle_trigger(target, meta, config)) {
+  if (handle_triggers(target, meta, config)) {
     return(empty_worker(target = target))
   }
-  if (identical(config$caching, "master")) {
+  caching <- caching(target, config)
+  if (identical(caching, "master")) {
     manage_memory(target = target, config = config, downstream = protect)
   }
   DRAKE_GLOBALS__ <- NULL # Fixes warning about undefined globals.
@@ -140,6 +141,7 @@ future_globals <- function(target, meta, config, layout, protect) {
 }
 
 #' @title Task passed to individual futures in the `"future"` backend
+#' \lifecycle{stable}
 #' @description For internal use only. Only exported to make available
 #' to futures.
 #' @keywords internal
@@ -153,13 +155,16 @@ future_globals <- function(target, meta, config, layout, protect) {
 future_build <- function(target, meta, config, layout, protect) {
   config$layout <- list()
   config$layout[[target]] <- layout
-  if (identical(config$caching, "worker")) {
+  caching <- caching(target, config)
+  if (identical(caching, "worker")) {
     manage_memory(target = target, config = config, downstream = protect)
   }
   do_prework(config = config, verbose_packages = FALSE)
   build <- try_build(target = target, meta = meta, config = config)
-  if (identical(config$caching, "master")) {
+  if (identical(caching, "master")) {
     build$checksum <- get_outfile_checksum(target, config)
+    build <- classify_build(build, config)
+    build <- serialize_build(build)
     return(build)
   }
   conclude_build(build = build, config = config)
@@ -209,13 +214,16 @@ conclude_worker <- function(worker, config, queue) {
     return(out)
   }
   build <- resolve_worker_value(worker = worker, config = config)
-  if (identical(config$caching, "worker")) {
+  caching <- caching(build$target, config)
+  if (identical(caching, "worker")) {
     wait_checksum(
       target = build$target,
       checksum = build$checksum,
       config = config
     )
     return(out)
+  } else {
+    build <- unserialize_build(build)
   }
   wait_outfile_checksum(
     target = build$target,
@@ -256,10 +264,12 @@ resolve_worker_value <- function(worker, config) {
         "Is something wrong with your system or job scheduler?"
       )
       meta <- list(error = e)
-      if (config$caching == "worker") {
+      target <- attr(worker, "target")
+      caching <- caching(target, config)
+      if (caching == "worker") {
         # Need to store the error if the worker crashed.
         handle_build_exceptions(
-          target = attr(worker, "target"),
+          target = target,
           meta = meta,
           config = config
         )
@@ -267,7 +277,7 @@ resolve_worker_value <- function(worker, config) {
       # For `caching = "master"`, we need to conclude the build
       # and store the value and metadata.
       list(
-        target = attr(worker, "target"),
+        target = target,
         value = e,
         meta = meta
       )

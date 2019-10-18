@@ -74,6 +74,9 @@ test_with_dir("recovery (#945)", {
     config <- drake_config(plan)
     expect_equal(recoverable(config), character(0))
   }
+
+  skip_if_not_installed("clustermq")
+  skip_if_not_installed("future")
   for (parallelism in c("loop", "clustermq", "future")) {
     for (caching in c("master", "worker")) {
       if (parallelism == "loop" && caching == "worker") {

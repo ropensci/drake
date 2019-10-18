@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{Makefile_recipe}
 \alias{Makefile_recipe}
-\title{Deprecated}
+\title{Default Makefile recipe
+\lifecycle{deprecated}}
 \usage{
 Makefile_recipe(recipe_command = drake::default_recipe_command(),
   target = "your_target", cache_path = NULL)

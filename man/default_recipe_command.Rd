@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{default_recipe_command}
 \alias{default_recipe_command}
-\title{Deprecated}
+\title{Default Makefile recipe command
+\lifecycle{deprecated}}
 \usage{
 default_recipe_command()
 }

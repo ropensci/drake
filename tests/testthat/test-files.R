@@ -66,10 +66,11 @@ test_with_dir("same with an imported directory", {
   expect_equal(justbuilt(config), sort(c(
     "drake_target_1", "combined", "final", "myinput", "nextone")))
   expect_false(length(final0) == length(readd(final)))
-
 })
 
 test_with_dir("drake_config() memoizes against knitr files (#887)", {
+  skip_if_not_installed("knitr")
+
   # Setup
   plan <- drake_plan(
     a = TRUE,
@@ -148,6 +149,7 @@ test_with_dir("drake_config() memoizes against knitr files (#887)", {
 test_with_dir("good URL with an ETag", {
   skip_on_cran()
   skip_if_offline()
+  skip_if_not_installed("curl")
   plan <- drake_plan(
     x = file_in("https://github.com/ropensci/drake/archive/v7.3.0.tar.gz")
   )
@@ -171,6 +173,7 @@ test_with_dir("good URL with an ETag", {
 test_with_dir("good URL with a timestamp", {
   skip_on_cran()
   skip_if_offline()
+  skip_if_not_installed("curl")
   plan <- drake_plan(x = file_in("https://nytimes.com"))
   config <- drake_config(
     plan,
@@ -187,6 +190,7 @@ test_with_dir("good URL with a timestamp", {
 test_with_dir("bad URL", {
   skip_on_cran()
   skip_if_offline()
+  skip_if_not_installed("curl")
   plan <- drake_plan(
     x = file_in("https://aklsdjflkjsiofjlekjsiolkjiufhalskdjf")
   )
@@ -198,14 +202,42 @@ test_with_dir("bad URL", {
   )
   expect_error(
     make(config = config),
-    "no ETag or Last-Modified for url|resolve host"
+    "could not access url|resolve host"
   )
   expect_equal(justbuilt(config), character(0))
   expect_error(
     make(config = config),
-    "no ETag or Last-Modified for url|resolve host"
+    "could not access url|resolve host"
   )
   expect_equal(justbuilt(config), character(0))
+})
+
+test_with_dir("authentication", {
+  skip_on_cran()
+  skip_if_offline()
+  skip_if_not_installed("curl")
+  plan <- drake_plan(x = file_in("http://httpbin.org/basic-auth/user/passwd"))
+  expect_error(make(plan), regexp = "could not access url")
+  handles <- list(`http://httpbin.org/basic-auth` = curl::new_handle())
+  expect_error(
+    make(plan, curl_handles = handles),
+    regexp = "could not access url"
+  )
+  # Make sure we get the most specific URL.
+  handles <- list(
+    `http://httpbin.org/basic-auth` = curl::new_handle(),
+    `http://httpbin.org/basic-auth/user` = curl::new_handle(),
+    `http://WRONG` = curl::new_handle()
+  )
+  handles[[2]] <- curl::handle_setopt(
+    handles[[2]],
+    username = "user",
+    password = "passwd"
+  )
+  expect_error(
+    make(plan, curl_handles = handles),
+    regexp = "no ETag or Last-Modified for url"
+  )
 })
 
 test_with_dir("assert_useful_headers()", {
@@ -479,7 +511,7 @@ test_with_dir("bad knitr report", {
 
 test_with_dir("empty cases", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_equal(safe_get_tangled_frags(NULL), character(0))
+  expect_equal(get_tangled_frags(NULL), character(0))
   expect_silent(tmp <- analyze_knitr_file(NULL, NULL))
 })
 
@@ -509,7 +541,7 @@ test_with_dir("deps_knitr() works", {
   expect_false(file.exists("test.md"))
   expect_warning(x <- deps_knitr("report.Rmd"))
   expect_warning(expect_equal(x$name, sort(
-    deps_knitr(encode_path("report.Rmd"))$name)))
+    deps_knitr(reencode_path("report.Rmd"))$name)))
   expect_true(!nrow(x))
   load_mtcars_example()
   w <- deps_code("funct(knitr_in(report.Rmd))")

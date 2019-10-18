@@ -1,9 +1,8 @@
 create_drake_layout <- function(
   plan,
   envir = parent.frame(),
-  verbose = 1L,
+  logger,
   jobs = 1,
-  console_log_file = NULL,
   trigger = drake::trigger(),
   cache = NULL
 ) {
@@ -12,10 +11,9 @@ create_drake_layout <- function(
   config <- list(
     plan = plan,
     envir = envir,
-    verbose = verbose,
+    logger = logger,
     jobs = jobs,
     cache = cache,
-    console_log_file = console_log_file,
     trigger = cdl_parse_trigger(trigger = trigger, envir = envir),
     allowed_globals_imports = ht_new(import_names),
     allowed_globals_targets = ht_new(c(import_names, plan$target))
@@ -43,7 +41,7 @@ create_drake_layout <- function(
 
 # https://github.com/ropensci/drake/issues/887 # nolint
 cdl_set_knitr_files <- function(config, layout) {
-  log_msg("set knitr files", config = config)
+  config$logger$minor("set knitr files")
   knitr_files <- lightly_parallelize(
     X = layout,
     FUN = function(x) {
@@ -60,15 +58,11 @@ cdl_set_knitr_files <- function(config, layout) {
 }
 
 cdl_get_knitr_hash <- function(config, layout) {
-  log_msg("get knitr hash", config = config)
+  config$logger$minor("get knitr hash")
   if (!config$cache$exists(key = "knitr", namespace = "memoize")) {
     return(NA_character_)
   }
-  knitr_files <- safe_get(
-    key = "knitr",
-    namespace = "memoize",
-    config = config
-  )
+  knitr_files <- config$cache$safe_get(key = "knitr", namespace = "memoize")
   knitr_hashes <- lightly_parallelize(
     X = knitr_files,
     FUN = storage_hash,
@@ -100,23 +94,24 @@ cdl_imports_kernel <- function(config, imports) {
 }
 
 cdl_prepare_imports <- function(config) {
-  log_msg("analyze environment", config = config)
+  config$logger$minor("analyze environment")
   imports <- as.list(config$envir)
   cdl_unload_conflicts(
     imports = names(imports),
     targets = config$plan$target,
     envir = config$envir,
-    verbose = config$verbose
+    logger = config$logger
   )
   import_names <- setdiff(names(imports), config$plan$target)
   imports[import_names]
 }
 
-cdl_unload_conflicts <- function(imports, targets, envir, verbose) {
+cdl_unload_conflicts <- function(imports, targets, envir, logger) {
   common <- intersect(imports, targets)
-  if (verbose & length(common)) {
-    message(
-      "Unloading targets from environment:\n",
+  if (length(common)) {
+    logger$major(
+      "unload",
+      "targets from environment:\n",
       multiline_message(common), sep = ""
     )
   }
@@ -128,7 +123,7 @@ cdl_analyze_imports <- function(config, imports) {
   out <- lightly_parallelize(
     X = seq_along(imports),
     FUN = function(i) {
-      log_msg("analyze", target = names[i], config = config)
+      config$logger$minor("analyze", target = names[i])
       list(
         target = names[i],
         deps_build = cdl_import_dependencies(
@@ -175,8 +170,8 @@ cdl_analyze_commands <- function(config) {
   out
 }
 
-cdl_prepare_layout <- function(config, layout, ht_targets){
-  log_msg("analyze", target = layout$target, config = config)
+cdl_prepare_layout <- function(config, layout, ht_targets) {
+  config$logger$minor("analyze", target = layout$target)
   layout$deps_build <- cdl_command_dependencies(
     command = layout$command,
     exclude = layout$target,
@@ -187,7 +182,7 @@ cdl_prepare_layout <- function(config, layout, ht_targets){
     layout$command,
     config = config
   )
-  if (is.null(layout$trigger) || all(is.na(layout$trigger))){
+  if (is.null(layout$trigger) || all(is.na(layout$trigger))) {
     layout$trigger <- config$trigger
     layout$deps_condition <- config$default_condition_deps
     layout$deps_change <- config$default_change_deps

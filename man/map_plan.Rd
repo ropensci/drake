@@ -2,8 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{map_plan}
 \alias{map_plan}
-\title{Deprecated:
-create a plan that maps a function to a grid of arguments.}
+\title{Create a plan that maps a function to a grid of arguments.
+\lifecycle{deprecated}}
 \usage{
 map_plan(args, fun, id = "id", character_only = FALSE, trace = FALSE)
 }

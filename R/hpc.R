@@ -1,5 +1,6 @@
 #' @title Write a template file for deploying
 #'   work to a cluster / job scheduler.
+#' \lifecycle{stable}
 #' @description See the example files from
 #'  [drake_examples()] and [drake_example()]
 #'   for example usage.
@@ -48,6 +49,7 @@ drake_hpc_template_file <- function(
 
 #' @title List the available example template files for deploying
 #'   work to a cluster / job scheduler.
+#' \lifecycle{stable}
 #' @description See the example files from
 #'  [drake_examples()] and [drake_example()]
 #'   for example usage.
@@ -114,7 +116,7 @@ wait_checksum <- function(
     "network file system. Checksum verification timed out after about ",
     timeout, " seconds."
   )
-  drake_log(paste("Error:", msg), config = config)
+  config$logger$minor(paste("Error:", msg))
   stop(msg, call. = FALSE)
 }
 
@@ -133,13 +135,19 @@ is_good_checksum <- function(target, checksum, config) {
   if (!identical(local_checksum, checksum)) {
     return(FALSE)
   }
-  all(
+  out <- all(
     vapply(
       X = unlist(strsplit(local_checksum, " "))[1:2],
       config$cache$exists_object,
       FUN.VALUE = logical(1)
     )
   )
+  format <- config$layout[[target]]$format
+  if (!is.null(format) && !is.na(format)) {
+    format_file <- config$cache$file_return_key(target)
+    out <- out && file.exists(format_file)
+  }
+  out
 }
 
 is_good_outfile_checksum <- function(target, checksum, config) {
@@ -155,12 +163,11 @@ is_good_outfile_checksum <- function(target, checksum, config) {
 
 get_checksum <- function(target, config) {
   paste(
-    safe_get_hash(
+    config$cache$safe_get_hash(
       key = target,
-      namespace = config$cache$default_namespace,
-      config = config
+      namespace = config$cache$default_namespace
     ),
-    safe_get_hash(key = target, namespace = "meta", config = config),
+    config$cache$safe_get_hash(key = target, namespace = "meta"),
     get_outfile_checksum(target, config),
     sep = " "
   )
@@ -185,7 +192,7 @@ get_outfile_checksum <- function(target, config) {
 
 warn_no_checksum <- function(target, config) {
   msg <- paste0("No checksum available for target ", target, ".")
-  drake_log(paste("Warning:", msg), config = config)
+  config$logger$minor(paste("Warning:", msg))
   warning(msg, call. = FALSE)
 }
 
@@ -257,4 +264,44 @@ on_windows <- function() {
 
 this_os <- function() {
   unname(tolower(Sys.info()["sysname"]))
+}
+
+classify_build <- function(build, config) {
+  class <- paste0("drake_build_", config$layout[[build$target]]$format)
+  class(build) <- class
+  build
+}
+
+serialize_build <- function(build) {
+  UseMethod("serialize_build")
+}
+
+# Requires Python Keras and TensorFlow to test. Tested in test-keras.R.
+# nocov start
+serialize_build.drake_build_keras <- function(build) { # nolint
+  assert_pkg("keras")
+  build$value <- keras::serialize_model(build$value)
+  build
+}
+# nocov end
+
+serialize_build.default <- function(build) {
+  build
+}
+
+unserialize_build <- function(build) {
+  UseMethod("unserialize_build")
+}
+
+# Requires Python Keras and TensorFlow to test. Tested in test-keras.R.
+# nocov start
+unserialize_build.drake_build_keras <- function(build) { # nolint
+  assert_pkg("keras")
+  build$value <- keras::unserialize_model(build$value)
+  build
+}
+# nocov end
+
+unserialize_build.default <- function(build) {
+  build
 }

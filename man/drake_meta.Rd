@@ -2,8 +2,9 @@
 % Please edit documentation in R/deprecated.R
 \name{drake_meta}
 \alias{drake_meta}
-\title{Deprecated. Compute the initial pre-build metadata
-of a target or import.}
+\title{Compute the initial pre-build metadata
+of a target or import.
+\lifecycle{deprecated}}
 \usage{
 drake_meta(target, config)
 }

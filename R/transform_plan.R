@@ -1,18 +1,24 @@
 #' @title Transform a plan
+#' \lifecycle{maturing}
 #' @description Evaluate the `map()`, `cross()`, `split()` and
 #'   `combine()` operations in the `transform` column of a
 #'   `drake` plan.
 #' @details <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans> # nolint
 #' @export
+#' @seealso drake_plan, map, split, cross, combine
 #' @param plan A `drake` plan with a `transform` column
 #' @param envir Environment for tidy evaluation.
 #' @param trace Logical, whether to add columns to show
 #'   what happens during target transformations.
-#' @param max_expand Positive integer, optional upper bound on the lengths
-#'   of grouping variables for `map()` and `cross()`. Comes in handy
-#'   when you have a massive number of targets and you want to test
-#'   on a miniature version of your workflow before you scale up
-#'   to production.
+#' @param max_expand Positive integer, optional.
+#'   Maximum number of targets to generate in each
+#'   `map()`, `split()`, or `cross()` transform.
+#'   If massive number of targets, consider setting `max_expand`
+#'   to a small number. That way, you can test and visualize
+#'   your workflow before scaling up to production.
+#'   Note: `max_expand` is not for production workflows.
+#'   When it comes time to generate the end product,
+#'   either unset `max_expand` or manually set it to `NULL`.
 #' @param tidy_eval Logical, whether to use tidy evaluation
 #'   (e.g. unquoting/`!!`) when resolving commands.
 #'   Tidy evaluation in transformations is always turned on
@@ -34,6 +40,59 @@
 #' )
 #' plan <- bind_plans(plan1, plan2)
 #' transform_plan(plan)
+#' models <- c("glm", "hierarchical")
+#' plan <- drake_plan(
+#'   data = target(
+#'     get_data(x),
+#'     transform = map(x = c("simulated", "survey"))
+#'   ),
+#'   analysis = target(
+#'     analyze_data(data, model),
+#'     transform = cross(data, model = !!models, .id = c(x, model))
+#'   ),
+#'   summary = target(
+#'     summarize_analysis(analysis),
+#'     transform = map(analysis, .id = c(x, model))
+#'   ),
+#'   results = target(
+#'     bind_rows(summary),
+#'     transform = combine(summary, .by = data)
+#'   )
+#' )
+#' plan
+#' if (requireNamespace("styler", quietly = TRUE)) {
+#'   print(drake_plan_source(plan))
+#' }
+#' # Tags:
+#' drake_plan(
+#'   x = target(
+#'     command,
+#'     transform = map(y = c(1, 2), .tag_in = from, .tag_out = c(to, out))
+#'   ),
+#'   trace = TRUE
+#' )
+#' plan <- drake_plan(
+#'   survey = target(
+#'     survey_data(x),
+#'     transform = map(x = c(1, 2), .tag_in = source, .tag_out = dataset)
+#'   ),
+#'   download = target(
+#'     download_data(),
+#'     transform = map(y = c(5, 6), .tag_in = source, .tag_out = dataset)
+#'   ),
+#'   analysis = target(
+#'     analyze(dataset),
+#'     transform = map(dataset)
+#'   ),
+#'   results = target(
+#'     bind_rows(analysis),
+#'     transform = combine(analysis, .by = source)
+#'   )
+#' )
+#' plan
+#' if (requireNamespace("styler", quietly = TRUE)) {
+#'   print(drake_plan_source(plan))
+#' }
 transform_plan <- function(
   plan,
   envir = parent.frame(),
@@ -136,13 +195,14 @@ convert_split_to_map <- function(target, command, transform) {
   command <- eval(call("substitute", command, sub), envir = baseenv())
   transform <- as.call(c(quote(map), slice$data))
   transform[[index]] <- as.numeric(seq_len(slice$slices))
-  for (arg in args){
+  for (arg in args) {
     transform[[arg]] <- arglist[[arg]]
   }
   list(command = command, transform = transform)
 }
 
 #' @title Take a strategic subset of a dataset.
+#' \lifecycle{maturing}
 #' @description `drake_slice()` is similar to `split()`.
 #'   Both functions partition data into disjoint subsets,
 #'   but whereas `split()` returns *all* the subsets, `drake_slice()`
@@ -413,20 +473,57 @@ dsl_transform.map <- dsl_transform.cross <- function(
   max_expand
 ) {
   groupings <- groupings(transform)
-  groupings <- thin_groupings(groupings, max_expand)
   grid <- dsl_grid(transform, groupings)
   if (any(dim(grid) < 1L)) {
     warn_empty_transform(target)
-    return()
+    return(grid)
   }
+  grid <- dsl_map_join_plan(
+    grid = grid,
+    plan = plan,
+    graph = graph,
+    target = target,
+    transform = transform
+  )
+  dsl_map_new_targets(
+    transform = transform,
+    target = target,
+    row = row,
+    grid = grid,
+    plan = plan,
+    max_expand = max_expand
+  )
+}
+
+dsl_map_join_plan <- function(grid, plan, graph, target, transform) {
   cols <- upstream_trace_vars(target, plan, graph)
-  grid <- dsl_left_outer_join(grid, plan[, cols, drop = FALSE])
+  gridlist <- lapply(grid, as.data.frame, stringsAsFactors = FALSE)
+  for (i in seq_len(ncol(grid))) {
+    colnames(gridlist[[i]]) <- colnames(grid)[i]
+    gridlist[[i]] <- dsl_left_outer_join(
+      gridlist[[i]],
+      plan[, cols, drop = FALSE]
+    )
+  }
+  grid <- do.call(cbind, unname(gridlist))
+  grid_cols <- c(names(groupings), setdiff(colnames(grid), names(groupings)))
+  grid[, grid_cols, drop = FALSE]
+}
+
+dsl_map_new_targets <- function(
+  transform,
+  target,
+  row,
+  grid,
+  plan,
+  max_expand
+) {
   sub_cols <- intersect(colnames(grid), group_names(transform))
-  new_targets <- new_targets(
+  new_target_names <- new_target_names(
     target, grid, cols = sub_cols, id = dsl_id(transform)
   )
-  out <- data.frame(target = new_targets, stringsAsFactors = FALSE)
-  grid$.id_chr <- sprintf("\"%s\"", new_targets)
+  out <- data.frame(target = new_target_names, stringsAsFactors = FALSE)
+  grid$.id_chr <- sprintf("\"%s\"", new_target_names)
   for (col in setdiff(old_cols(plan), c("target", "transform"))) {
     if (is.language(row[[col]][[1]])) {
       out[[col]] <- grid_subs(row[[col]][[1]], grid)
@@ -435,7 +532,8 @@ dsl_transform.map <- dsl_transform.cross <- function(
     }
   }
   grid$.id_chr <- NULL
-  cbind(out, grid)
+  out <- cbind(out, grid)
+  df_max_expand(out, max_expand)
 }
 
 group_names <- function(transform) {
@@ -447,15 +545,31 @@ dsl_left_outer_join <- function(x, y) {
   if (!length(by)) {
     return(x)
   }
-  # The output must have the same number of rows as x.
+  # The output must have the same number of rows as x,
+  # and the ID variables must all be nonmissing.
   rows_keep <- complete_cases(y[, by, drop = FALSE])
   y <- y[rows_keep,, drop = FALSE] # nolint
+  # Drop the columns that only partially tag along.
+  # These grouping variables never truly belonged to the
+  # ID variables in x.
+  cols_keep <- !vapply(y, anyNA, FUN.VALUE = logical(1))
+  y <- y[, cols_keep, drop = FALSE]
   # Just a precaution. We should actually be okay by now.
   y <- y[!duplicated(y[, by, drop = FALSE]),, drop = FALSE] # nolint
-  # Is merge() a performance bottleneck?
-  # Need to profile.
+  # Need to recover the original row order
+  key <- random_string(exclude = c(colnames(x), colnames(y)))
+  x[[key]] <- seq_len(nrow(x))
   out <- merge(x = x, y = y, by = by, all.x = TRUE, sort = FALSE)
-  out[, union(colnames(x), colnames(y)), drop = FALSE]
+  out <- out[, !duplicated(colnames(out)), drop = FALSE]
+  is_na_col <- vapply(out, all_is_na, FUN.VALUE = logical(1))
+  out <- out[, !is_na_col, drop = FALSE]
+  out <- out[order(out[[key]]),, drop = FALSE] # nolint
+  out[[key]] <- NULL
+  out
+}
+
+all_is_na <- function(x) {
+  all(is.na(x))
 }
 
 upstream_trace_vars <- function(target, plan, graph) {
@@ -470,19 +584,19 @@ upstream_trace_vars <- function(target, plan, graph) {
   intersect(out, colnames(plan))
 }
 
-thin_groupings <- function(groupings, max_expand) {
+df_max_expand <- function(df, max_expand) {
   if (is.null(max_expand)) {
-    return(groupings)
+    return(df)
   }
-  lapply(groupings, thin_grouping, max_expand = max_expand)
+  rows <- seq_max_expand(nrow(df), max_expand)
+  df[rows,, drop = FALSE] # nolint
 }
 
-thin_grouping <- function(x, max_expand) {
-  len <- min(length(x), max_expand)
-  i <- seq(from = 1L, to = length(x), length.out = len)
+seq_max_expand <- function(n, max_expand) {
+  max_expand <- min(n, max_expand)
+  i <- seq(from = 1L, to = n, length.out = max_expand)
   i <- floor(i)
-  i <- unique(i)
-  x[i]
+  unique(i)
 }
 
 dsl_transform.combine <- function(transform, target, row, plan, graph, ...) {
@@ -491,7 +605,23 @@ dsl_transform.combine <- function(transform, target, row, plan, graph, ...) {
     warn_empty_transform(target)
     return()
   }
-  out <- map_by(
+  out <- dsl_commands_combine(transform = transform, row = row, plan = plan)
+  if (!nrow(out)) {
+    warn_empty_transform(target)
+    return()
+  }
+  out$target <- new_target_names(
+    target,
+    out,
+    cols = dsl_by(transform),
+    id = dsl_id(transform)
+  )
+  out <- id_chr_sub(plan = out, cols = old_cols(plan), .id_chr = out$target)
+  out
+}
+
+dsl_commands_combine <- function(transform, row, plan) {
+  map_by(
     .x = plan,
     .by = dsl_by(transform),
     .f = combine_step,
@@ -499,15 +629,6 @@ dsl_transform.combine <- function(transform, target, row, plan, graph, ...) {
     transform = transform,
     old_cols = old_cols(plan)
   )
-  if (!nrow(out)) {
-    warn_empty_transform(target)
-    return()
-  }
-  out$target <- new_targets(
-    target, out, cols = dsl_by(transform), id = dsl_id(transform)
-  )
-  out <- id_chr_sub(plan = out, cols = old_cols(plan), .id_chr = out$target)
-  out
 }
 
 warn_empty_transform <- function(target) {
@@ -531,15 +652,11 @@ valid_splitting_plan <- function(plan, transform) {
   out
 }
 
-complete_cases <- function(x) {
-  !as.logical(Reduce(`|`, lapply(x, is.na)))
-}
-
 map_by <- function(.x, .by, .f, ...) {
   splits <- split_by(.x, .by = .by)
   out <- lapply(
     X = splits,
-    FUN = function(split){
+    FUN = function(split) {
       out <- .f(split, ...)
       if (nrow(out)) {
         out[, .by] <- split[replicate(nrow(out), 1), .by]
@@ -547,7 +664,7 @@ map_by <- function(.x, .by, .f, ...) {
       out
     }
   )
-  do.call(what = rbind, args = out)
+  do.call(what = drake_bind_rows, args = out)
 }
 
 split_by <- function(.x, .by = character(0)) {
@@ -555,7 +672,7 @@ split_by <- function(.x, .by = character(0)) {
     return(list(.x))
   }
   fact <- lapply(.x[, .by, drop = FALSE], factor, exclude = c())
-  splits <- split(x = .x, f = fact)
+  splits <- base::split(x = .x, f = fact)
   Filter(x = splits, f = nrow)
 }
 
@@ -601,7 +718,7 @@ dsl_sym <- function(x) {
   tryCatch(parse(text = x)[[1]], error = function(e) as.symbol(x))
 }
 
-new_targets <- function(target, grid, cols, id) {
+new_target_names <- function(target, grid, cols, id) {
   if (is.character(id)) {
     cols <- intersect(id, colnames(grid))
   }
@@ -648,6 +765,10 @@ combine_step <- function(plan, row, transform, old_cols) {
     } else {
       out[[col]] <- row[[col]]
     }
+  }
+  groupings <- dsl_combine_join_plan(plan, transform, old_cols)
+  if (nrow(groupings) == 1L) {
+    out <- cbind(out, groupings)
   }
   out
 }
@@ -706,6 +827,18 @@ splice_inner <- function(x, replacements) {
   } else {
     list(x)
   }
+}
+
+dsl_combine_join_plan <- function(plan, transform, old_cols) {
+  combined_plan <- plan[, dsl_combine(transform), drop = FALSE]
+  out <- plan[complete_cases(combined_plan),, drop = FALSE] # nolint
+  drop <- c(old_cols, dsl_combine(transform), dsl_by(transform))
+  keep <- setdiff(colnames(out), drop)
+  out <- out[, keep, drop = FALSE]
+  keep <- !vapply(out, anyNA, FUN.VALUE = logical(1))
+  out <- out[, keep, drop = FALSE]
+  keep <- vapply(out, num_unique, FUN.VALUE = integer(1)) == 1L
+  utils::head(out[, keep, drop = FALSE], n = 1)
 }
 
 dsl_deps <- function(transform) UseMethod("dsl_deps")
@@ -799,16 +932,40 @@ find_old_groupings.map <- function(transform, plan) {
   group_names <- as.character(unnamed(lang(transform))[-1])
   group_names <- intersect(group_names, names(plan))
   subplan <- plan[, group_names, drop = FALSE]
+  keep <- apply(subplan, 1, function(x) {
+    !all(is.na(x))
+  })
+  subplan <- subplan[keep,, drop = FALSE] # nolint
   if (any(dim(subplan) < 1L)) {
     return(list())
   }
-  out <- select_nonempty(lapply(subplan, na_omit))
+  # Look for blocks of nested grouping variables.
+  blocks <- column_components(subplan)
+  blocks <- lapply(blocks, function(x) {
+    as.list(x[complete_cases(x),, drop = FALSE]) # nolint
+  })
+  out <- do.call(c, set_names(blocks, NULL))
+  out <- select_nonempty(lapply(out, na_omit))
   min_length <- min(vapply(out, length, FUN.VALUE = integer(1)))
   out <- as.data.frame(
     lapply(out, head, n = min_length),
     stringsAsFactors = FALSE
   )
   as.list(out[!duplicated(out),, drop = FALSE]) # nolint
+}
+
+column_components <- function(x) {
+  adj <- crossprod(!is.na(x)) > 0L
+  graph <- igraph::graph_from_adjacency_matrix(adj)
+  membership <- sort(igraph::components(graph)$membership)
+  tapply(
+    X = names(membership),
+    INDEX = membership,
+    function(cols) {
+      x[, cols, drop = FALSE]
+    },
+    simplify = FALSE
+  )
 }
 
 find_old_groupings.cross <- function(transform, plan) {
@@ -845,7 +1002,7 @@ data_arg_groupings <- function(data_arg) {
   if (is.null(data_arg)) {
     return(list())
   }
-  lapply(data_arg, function(x){
+  lapply(data_arg, function(x) {
     x <- factor_to_character(x)
     vapply(x, safe_deparse, FUN.VALUE = character(1))
   })

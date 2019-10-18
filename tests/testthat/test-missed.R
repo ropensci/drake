@@ -16,5 +16,5 @@ test_with_dir("missed() works with files", {
   o <- dbug()
   expect_equal(character(0), missed(o))
   unlink("input.rds")
-  expect_equal(display_keys(encode_path("input.rds")), missed(o))
+  expect_equal(redisplay_keys(reencode_path("input.rds")), missed(o))
 })

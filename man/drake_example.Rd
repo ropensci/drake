@@ -2,8 +2,8 @@
 % Please edit documentation in R/drake_example.R
 \name{drake_example}
 \alias{drake_example}
-\title{Download and save the code and data files of an example
-\code{drake}-powered project.}
+\title{Download the files of an example \code{drake} project.
+\lifecycle{maturing}}
 \usage{
 drake_example(example = "main", to = getwd(), destination = NULL,
   overwrite = FALSE, quiet = TRUE)

@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{this_cache}
 \alias{this_cache}
-\title{Get the cache at the exact file path specified.}
+\title{Get the cache at the exact file path specified.
+\lifecycle{deprecated}}
 \usage{
 this_cache(path = NULL, force = FALSE, verbose = 1L,
   fetch_cache = NULL, console_log_file = NULL)
@@ -12,12 +13,7 @@ this_cache(path = NULL, force = FALSE, verbose = 1L,
 
 \item{force}{Deprecated.}
 
-\item{verbose}{Integer, control printing to the console/terminal.
-\itemize{
-\item \code{0}: print nothing.
-\item \code{1}: print targets, retries, and failures.
-\item \code{2}: also show a spinner when preprocessing tasks are underway.
-}}
+\item{verbose}{Deprecated on 2019-09-11.}
 
 \item{fetch_cache}{Deprecated.}
 

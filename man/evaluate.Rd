@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{evaluate}
 \alias{evaluate}
-\title{Defunct function}
+\title{evaluate \lifecycle{defunct}}
 \usage{
 evaluate(...)
 }

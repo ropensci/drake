@@ -2,8 +2,9 @@
 % Please edit documentation in R/deprecated.R
 \name{drake_cache_log_file}
 \alias{drake_cache_log_file}
-\title{Deprecated. Generate a flat text log file to represent the state of
-the cache.}
+\title{Generate a flat text log file to represent the state of
+the cache.
+\lifecycle{deprecated}}
 \usage{
 drake_cache_log_file(file = "drake_cache.log", path = getwd(),
   search = TRUE, cache = drake::get_cache(path = path, search = search,
@@ -20,12 +21,7 @@ drake_cache_log_file(file = "drake_cache.log", path = getwd(),
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} is ignored.}
 
-\item{verbose}{Integer, control printing to the console/terminal.
-\itemize{
-\item \code{0}: print nothing.
-\item \code{1}: print targets, retries, and failures.
-\item \code{2}: also show a spinner when preprocessing tasks are underway.
-}}
+\item{verbose}{Deprecated on 2019-09-11.}
 
 \item{jobs}{Number of jobs/workers for parallel processing.}
 

@@ -1,4 +1,5 @@
 #' @title History and provenance
+#' \lifecycle{experimental}
 #' @description See the history and provenance of your targets:
 #'   what you ran, when you ran it, the function arguments
 #'   you used, and how to get old data back.
@@ -48,11 +49,12 @@
 #'        `filename` is not detected because the value must be atomic.
 #' @export
 #' @return A data frame of target history.
+#' @inheritParams drake_config
 #' @param analyze Logical, whether to analyze [drake_plan()]
 #'   commands for arguments to function calls.
 #'   Could be slow because this requires parsing and analyzing
 #'   lots of R code.
-#' @inheritParams drake_config
+#' @param verbose Deprecated on 2019-09-11.
 #' @examples
 #' \dontrun{
 #' isolate_example("contain side-effects", {
@@ -89,20 +91,21 @@ drake_history <- function(
   cache = NULL,
   history = NULL,
   analyze = TRUE,
-  verbose = TRUE
+  verbose = NULL
 ) {
+  deprecate_verbose(verbose)
   if (is.null(cache)) {
-    cache <- drake_cache(verbose = verbose)
+    cache <- drake_cache()
   }
   if (is.null(cache)) {
     stop("cannot find drake cache.")
   }
   cache <- decorate_storr(cache)
-  migrate_history(history, cache)
-  if (is.null(history)) {
-    history <- default_history_queue(cache)
+  cache$set_history(history)
+  if (is.null(cache$history)) {
+    stop("no history. Call make(history = TRUE) next time.", call. = FALSE)
   }
-  from_txtq <- history$list()
+  from_txtq <- cache$history$list()
   from_cache <- lapply(from_txtq$message, history_from_cache, cache = cache)
   from_cache <- do.call(drake_bind_rows, from_cache)
   if (!nrow(from_txtq)) {
@@ -125,11 +128,10 @@ drake_history <- function(
   )
   out <- out[order(out$target, out$built), ]
   current_hash <- vapply(
-    out$target,
-    safe_get_hash,
+    X = out$target,
+    FUN = cache$safe_get_hash,
     FUN.VALUE = character(1),
-    namespace = cache$default_namespace,
-    config = list(cache = cache)
+    namespace = cache$default_namespace
   )
   out$current <- out$hash == current_hash
   out$current[is.na(out$current)] <- FALSE
@@ -151,13 +153,6 @@ drake_history <- function(
   }
   out$DRAKE_HISTORY_NA_ <- NULL
   weak_as_tibble(out)
-}
-
-default_history_queue <- function(cache) {
-  history_dir <- file.path(cache$path, "drake")
-  dir_create(history_dir)
-  history_path <- file.path(history_dir, "history")
-  txtq::txtq(history_path)
 }
 
 history_from_cache <- function(meta_hash, cache) {

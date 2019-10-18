@@ -2,7 +2,8 @@
 % Please edit documentation in R/sankey_drake_graph.R
 \name{sankey_drake_graph}
 \alias{sankey_drake_graph}
-\title{Show a Sankey graph of your drake project.}
+\title{Show a Sankey graph of your drake project.
+\lifecycle{stable}}
 \usage{
 sankey_drake_graph(config, file = character(0), selfcontained = FALSE,
   build_times = "build", digits = 3, targets_only = FALSE,

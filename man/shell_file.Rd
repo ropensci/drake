@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{shell_file}
 \alias{shell_file}
-\title{Deprecated}
+\title{Shell file for Makefile parallelism
+\lifecycle{deprecated}}
 \usage{
 shell_file(path = "shell.sh", overwrite = FALSE)
 }

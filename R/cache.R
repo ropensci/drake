@@ -1,4 +1,5 @@
 #' @title Read and return a drake target/import from the cache.
+#' \lifecycle{maturing}
 #' @description [readd()] returns an object from the cache,
 #' and [loadd()] loads one or more objects from the cache
 #' into your environment or session. These objects are usually
@@ -75,7 +76,7 @@ readd <- function(
   character_only = FALSE,
   path = NULL,
   search = NULL,
-  cache = drake::drake_cache(path = path, verbose = verbose),
+  cache = drake::drake_cache(path = path),
   namespace = NULL,
   verbose = 1L,
   show_source = FALSE
@@ -107,6 +108,7 @@ readd <- function(
 }
 
 #' @title Load one or more targets or imports from the drake cache.
+#' \lifecycle{maturing}
 #' @rdname readd
 #' @seealso [cached()], [drake_plan()], [make()]
 #' @export
@@ -200,7 +202,7 @@ loadd <- function(
   imported_only = NULL,
   path = NULL,
   search = NULL,
-  cache = drake::drake_cache(path = path, verbose = verbose),
+  cache = drake::drake_cache(path = path),
   namespace = NULL,
   envir = parent.frame(),
   jobs = 1,
@@ -214,28 +216,14 @@ loadd <- function(
   config = NULL
 ) {
   deprecate_search(search)
+  deprecate_arg(graph, "graph") # 2019-01-04 # nolint
+  deprecate_arg(imported_only, "imported_only") # 2019-01-01 # nolint
   force(envir)
   lazy <- parse_lazy_arg(lazy)
-  if (!is.null(graph)) {
-    warning(
-      "argument `graph` is deprecated.",
-      call. = FALSE
-    ) # 2019-01-04 # nolint
-  }
-  if (is.null(cache)) {
-    stop("cannot find drake cache.")
-  }
+  assert_cache(cache)
   cache <- decorate_storr(cache)
-  if (is.null(namespace)) {
-    namespace <- cache$default_namespace
-  }
-  if (tidyselect && deps) {
-    tidyselect <- FALSE
-    message(
-      "Disabling `tidyselect` in `loadd()` because `deps` is `TRUE`. ",
-      "For details, see the `deps` argument in the `loadd()` help file."
-    )
-  }
+  namespace <- namespace %||% cache$default_namespace
+  tidyselect <- loadd_use_tidyselect(tidyselect, deps)
   if (tidyselect && requireNamespace("tidyselect", quietly = TRUE)) {
     targets <- drake_tidyselect_cache(
       ...,
@@ -246,31 +234,12 @@ loadd <- function(
   } else {
     targets <- c(as.character(match.call(expand.dots = FALSE)$...), list)
   }
-  if (!length(targets) && !length(list(...))) {
-    targets <- cache$list()
-  }
-  if (!is.null(imported_only)) {
-    warning(
-      "The `imported_only` argument of `loadd()` is deprecated. ",
-      "In drake >= 7.0.0, loadd() only loads targets listed in the plan. ",
-      "Do not give the names of imports or files ",
-      "except to list them as dependencies ",
-      "from within an R Markdown/knitr report. ",
-      "Otherwise, imports and files are deliberately ignored.",
-      call. = FALSE
-    )
-  }
-  if (deps) {
-    if (is.null(config)) {
-      stop(
-        "In `loadd(deps = TRUE)`, you must supply a `drake_config()` ",
-        "object to the `config` argument.",
-        call. = FALSE
-      )
-    }
-    assert_config_not_plan(config)
-    targets <- deps_memory(targets = targets, config = config)
-  }
+  targets <- loadd_handle_empty_targets(
+    targets = targets,
+    cache = cache,
+    ...
+  )
+  targets <- loadd_use_deps(targets = targets, config = config, deps = deps)
   exists <- lightly_parallelize(
     X = targets,
     FUN = cache$exists,
@@ -279,29 +248,79 @@ loadd <- function(
   exists <- unlist(exists)
   targets <- targets[exists]
   targets <- targets_only(targets, cache = cache, jobs = jobs)
-  if (!length(targets) && !deps) {
-    if (verbose) {
-      message("No targets to load in loadd().")
-    }
-    stop(return(invisible))
+  if (!loadd_any_targets(targets, deps, verbose)) {
+    return(invisible())
   }
-  if (!replace) {
-    targets <- setdiff(targets, names(envir))
-  }
-  if (show_source) {
-    lapply(
-      X = targets,
-      FUN = show_source,
-      config = list(cache = cache),
-      character_only = TRUE
-    )
-  }
+  targets <- loadd_handle_replace(targets, envir, replace)
+  loadd_show_source(targets, cache = cache, show_source = show_source)
   lightly_parallelize(
     X = targets, FUN = load_target, cache = cache,
     namespace = namespace, envir = envir,
     verbose = verbose, lazy = lazy
   )
   invisible()
+}
+
+loadd_handle_empty_targets <- function(targets, cache, ...) {
+  if (!length(targets) && !length(list(...))) {
+    targets <- cache$list()
+  }
+  targets
+}
+
+loadd_use_tidyselect <- function(tidyselect, deps) {
+  if (tidyselect && deps) {
+    message(
+      "Disabling `tidyselect` in `loadd()` because `deps` is `TRUE`. ",
+      "For details, see the `deps` argument in the `loadd()` help file."
+    )
+    return(FALSE)
+  }
+  tidyselect
+}
+
+loadd_use_deps <- function(targets, config, deps) {
+  if (!deps) {
+    return(targets)
+  }
+  if (is.null(config)) {
+    stop(
+      "In `loadd(deps = TRUE)`, you must supply a `drake_config()` ",
+      "object to the `config` argument.",
+      call. = FALSE
+    )
+  }
+  assert_config_not_plan(config)
+  targets <- deps_memory(targets = targets, config = config)
+}
+
+loadd_show_source <- function(targets, cache, show_source) {
+  if (!show_source) {
+    return()
+  }
+  lapply(
+    X = targets,
+    FUN = show_source,
+    config = list(cache = cache),
+    character_only = TRUE
+  )
+}
+
+loadd_handle_replace <- function(targets, envir, replace) {
+  if (!replace) {
+    targets <- setdiff(targets, names(envir))
+  }
+  targets
+}
+
+loadd_any_targets <- function(targets, deps, verbose) {
+  if (!length(targets) && !deps) {
+    if (verbose) {
+      message("No targets to load in loadd().")
+    }
+    return(FALSE)
+  }
+  TRUE
 }
 
 parse_lazy_arg <- function(lazy) {
@@ -342,6 +361,7 @@ load_target <- function(target, cache, namespace, envir, verbose, lazy) {
 }
 
 #' @title Load a target right away (internal function)
+#' \lifecycle{stable}
 #' @description This function is only exported
 #' to make active bindings work safely.
 #' It is not actually a user-side function.
@@ -407,6 +427,7 @@ bind_load_target <- function(target, cache, namespace, envir, verbose) {
 
 
 #' @title Show how a target/import was produced.
+#' \lifecycle{stable}
 #' @description Show the command that produced a target
 #'   or indicate that the object or file was imported.
 #' @export
@@ -444,6 +465,7 @@ show_source <- function(target, config, character_only = FALSE) {
 }
 
 #' @title Read the pseudo-random number generator seed of the project.
+#' \lifecycle{maturing}
 #' @description When a project is created with [make()]
 #' or [drake_config()], the project's pseudo-random number generator
 #' seed is cached. Then, unless the cache is destroyed,
@@ -454,6 +476,7 @@ show_source <- function(target, config, character_only = FALSE) {
 #' @return An integer vector.
 #'
 #' @inheritParams cached
+#' @param verbose Deprecated on 2019-09-11.
 #'
 #' @examples
 #' \dontrun{
@@ -496,11 +519,12 @@ read_drake_seed <- function(
   path = NULL,
   search = NULL,
   cache = NULL,
-  verbose = 1L
+  verbose = NULL
 ) {
+  deprecate_verbose(verbose)
   deprecate_search(search)
   if (is.null(cache)) {
-    cache <- drake_cache(path = path, verbose = verbose)
+    cache <- drake_cache(path = path)
   }
   if (is.null(cache)) {
     stop("cannot find drake cache.")
@@ -514,6 +538,7 @@ read_drake_seed <- function(
 }
 
 #' @title List targets in the cache.
+#' \lifecycle{maturing}
 #' @description Tip: read/load a cached item with [readd()]
 #'   or [loadd()].
 #' @seealso [readd()], [loadd()],
@@ -522,8 +547,6 @@ read_drake_seed <- function(
 #' @return Either a named logical indicating whether the given
 #'   targets or cached or a character vector listing all cached
 #'   items, depending on whether any targets are specified.
-#'
-#' @inheritParams drake_config
 #'
 #' @param ... Deprecated. Do not use.
 #'   Objects to load from the cache, as names (unquoted)
@@ -553,6 +576,8 @@ read_drake_seed <- function(
 #'
 #' @param jobs Number of jobs/workers for parallel processing.
 #'
+#' @param verbose Deprecated on 2019-09-11.
+#'
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {
@@ -572,12 +597,13 @@ cached <- function(
   no_imported_objects = FALSE,
   path = NULL,
   search = NULL,
-  cache = drake_cache(path = path, verbose = verbose),
-  verbose = 1L,
+  cache = drake::drake_cache(path = path),
+  verbose = NULL,
   namespace = NULL,
   jobs = 1,
   targets_only = TRUE
 ) {
+  deprecate_verbose(verbose)
   deprecate_search(search)
   if (is.null(cache)) {
     return(character(0))
@@ -599,7 +625,7 @@ cached <- function(
   if (targets_only) {
     targets <- targets_only(targets, cache, jobs)
   }
-  display_keys(targets)
+  redisplay_keys(targets)
 }
 
 targets_only <- function(targets, cache, jobs) {
@@ -626,6 +652,7 @@ is_imported_cache <- Vectorize(function(target, cache) {
 "target", SIMPLIFY = TRUE)
 
 #' @title Get the cache of a `drake` project.
+#' \lifecycle{stable}
 #' @description [make()] saves the values of your targets so
 #'   you rarely need to think about output files. By default,
 #'   the cache is a hidden folder called `.drake/`.
@@ -635,18 +662,36 @@ is_imported_cache <- Vectorize(function(target, cache) {
 #' @details `drake_cache()` actually returns a *decorated* `storr`,
 #'   an object that *contains* a `storr` (plus bells and whistles).
 #'   To get the *actual* inner `storr`, use `drake_cache()$storr`.
+#'   Most methods are delegated to the inner `storr`.
+#'   Some methods and objects are new or overwritten. Here
+#'   are the ones relevant to users.
+#'   - `history`: `drake`'s history (which powers [drake_history()])
+#'     is a [`txtq`](https://github.com/wlandau/txtq). Access it
+#'     with `drake_cache()$history`.
+#'   - `import()`: The `import()` method is a function that can import
+#'     targets, function dependencies, etc. from one decorated `storr`
+#'     to another. History is not imported. For that, you have to work
+#'     with the history `txtq`s themselves, Arguments to `import()`:
+#'     - `...` and `list`: specify targets to import just like with [loadd()].
+#'       Leave these blank to import everything.
+#'     - `from`: the decorated `storr` from which to import targets.
+#'     - `jobs`: number of local processes for parallel computing.
+#'     - `gc`: `TRUE` or `FALSE`, whether to run garbage collection for memory
+#'       after importing each target. Recommended, but slow.
+#'   - `export()`: Same as `import()`, except the `from` argument is replaced
+#'     by `to`: the decorated `storr` where the targets end up.
 #' @seealso [new_cache()], [drake_config()]
 #' @export
 #' @return A drake/storr cache in a folder called `.drake/`,
 #'   if available. `NULL` otherwise.
-#' @inheritParams cached
-#' @inheritParams drake_config
 #' @param path Character.
 #'   Set `path` to the path of a `storr::storr_rds()` cache
 #'   to retrieve a specific cache generated by `storr::storr_rds()`
 #'   or `drake::new_cache()`. If the `path` argument is `NULL`,
 #'   `drake_cache()` searches up through parent directories
 #'   to find a folder called `.drake/`.
+#' @param verbose Deprecated on 2019-09-11.
+#' @param console_log_file Deprecated on 2019-09-11.
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {
@@ -664,25 +709,42 @@ is_imported_cache <- Vectorize(function(target, cache) {
 #' # The *real* storr is inside.
 #' drake_cache()$storr
 #' }
+#' # You can import and export targets to and from decorated storrs.
+#' plan1 <- drake_plan(w = "w", x = "x")
+#' plan2 <- drake_plan(a = "a", x = "x2")
+#' cache1 <- new_cache("cache1")
+#' cache2 <- new_cache("cache2")
+#' make(plan1, cache = cache1)
+#' make(plan2, cache = cache2)
+#' cache1$import(cache2, a)
+#' cache1$get("a")
+#' cache1$get("x")
+#' cache1$import(cache2)
+#' cache1$get("x")
+#' # With txtq >= 0.1.6.9002, you can import history from one cache into
+#' # another.
+#' # nolint start
+#' # drake_history(cache = cache1)
+#' # cache1$history$import(cache2$history)
+#' # drake_history(cache = cache1)
+#' # nolint end
 #' })
 #' }
 drake_cache <- function(
   path = NULL,
-  verbose = 1L,
+  verbose = NULL,
   console_log_file = NULL
 ) {
+  deprecate_verbose(verbose)
+  deprecate_console_log_file(console_log_file)
   if (is.null(path)) {
     path <- find_cache(path = getwd())
   }
-  this_cache_(
-    path = path,
-    verbose = verbose,
-    console_log_file = console_log_file
-  )
+  this_cache_(path = path)
 }
 
-
 #' @title Search up the file system for the nearest drake cache.
+#' \lifecycle{stable}
 #' @description Only works if the cache is a file system in a
 #' hidden folder named `.drake/` (default).
 #' @seealso [drake_plan()], [make()],
@@ -729,12 +791,11 @@ find_cache <- function(
 }
 
 #' @title  Make a new `drake` cache.
+#' \lifecycle{maturing}
 #' @description Uses the [storr_rds()] function
 #' from the `storr` package.
 #' @export
 #' @return A newly created drake cache as a storr object.
-#' @inheritParams cached
-#' @inheritParams drake_config
 #' @seealso [make()]
 #' @param path File path to the cache if the cache
 #'   is a file system cache.
@@ -746,6 +807,8 @@ find_cache <- function(
 #'   Use `hash_algorithm` instead.
 #' @param long_hash_algo Deprecated on 2018-12-12.
 #'   Use `hash_algorithm` instead.
+#' @param verbose Deprecated on 2019-09-11.
+#' @param console_log_file Deprecated on 2019-09-11.
 #' @param ... other arguments to the cache constructor.
 #' @examples
 #' \dontrun{
@@ -759,7 +822,7 @@ find_cache <- function(
 #' }
 new_cache <- function(
   path = NULL,
-  verbose = 1L,
+  verbose = NULL,
   type = NULL,
   hash_algorithm = NULL,
   short_hash_algo = NULL,
@@ -767,6 +830,8 @@ new_cache <- function(
   ...,
   console_log_file = NULL
 ) {
+  deprecate_verbose(verbose)
+  deprecate_console_log_file(console_log_file)
   path <- path %||% default_cache_path()
   hash_algorithm <- sanitize_hash_algorithm(hash_algorithm)
   if (!is.null(type)) {
@@ -777,8 +842,6 @@ new_cache <- function(
     )
   }
   deprecate_hash_algo_args(short_hash_algo, long_hash_algo)
-  config <- list(verbose = verbose, console_log_file = console_log_file)
-  log_msg("cache", path, config = config)
   cache <- storr::storr_rds(
     path = path,
     mangle_key = FALSE,
@@ -800,22 +863,12 @@ sanitize_hash_algorithm <- function(hash_algorithm) {
   }
 }
 
-this_cache_ <- function(
-  path = NULL,
-  force = FALSE,
-  verbose = 1L,
-  fetch_cache = NULL,
-  console_log_file = NULL
-) {
+this_cache_ <- function(path = NULL) {
   path <- path %||% default_cache_path()
-  deprecate_force(force)
-  deprecate_fetch_cache(fetch_cache)
   usual_path_missing <- is.null(path) || !file.exists(path)
   if (usual_path_missing) {
     return(NULL)
   }
-  config <- list(verbose = verbose, console_log_file = console_log_file)
-  log_msg("cache", path, config = config)
   cache <- drake_fetch_rds(path = path)
   cache_vers_warn(cache = cache)
   cache
@@ -832,14 +885,14 @@ drake_fetch_rds <- function(path) {
   decorate_storr(storr::storr_rds(path = path))
 }
 
-cache_vers_stop <- function(cache){
+cache_vers_stop <- function(cache) {
   msg <- cache_vers_check(cache)
   if (length(msg)) {
     stop(msg, call. = FALSE)
   }
 }
 
-cache_vers_warn <- function(cache){
+cache_vers_warn <- function(cache) {
   msg <- cache_vers_check(cache)
   if (length(msg)) {
     warning(msg, call. = FALSE)
@@ -888,8 +941,8 @@ drake_cache_version <- function(cache) {
   }
 }
 
-#' @title Return the [sessionInfo()]
-#'   of the last call to [make()].
+#' @title Session info of the last call to [make()].
+#' \lifecycle{maturing}
 #' @description By default, session info is saved
 #' during [make()] to ensure reproducibility.
 #' Your loaded packages and their versions are recorded, for example.
@@ -912,7 +965,7 @@ drake_cache_version <- function(cache) {
 drake_get_session_info <- function(
   path = NULL,
   search = NULL,
-  cache = drake::drake_cache(path = path, verbose = verbose),
+  cache = drake::drake_cache(path = path),
   verbose = 1L
 ) {
   if (is.null(cache)) {
@@ -922,8 +975,9 @@ drake_get_session_info <- function(
   return(cache$get("sessionInfo", namespace = "session"))
 }
 
-#' @title Get a table that represents the state of the cache.
-#' @description
+#' @title Get the state of the cache.
+#' \lifecycle{maturing}
+#' @description Get the fingerprints of all the targets in a data frame.
 #' This functionality is like
 #' `make(..., cache_log_file = TRUE)`,
 #' but separated and more customizable. Hopefully, this functionality
@@ -998,7 +1052,7 @@ drake_get_session_info <- function(
 drake_cache_log <- function(
   path = NULL,
   search = NULL,
-  cache = drake::drake_cache(path = path, verbose = verbose),
+  cache = drake::drake_cache(path = path),
   verbose = 1L,
   jobs = 1,
   targets_only = FALSE
@@ -1024,7 +1078,7 @@ drake_cache_log <- function(
   if (targets_only) {
     out <- out[out$type == "target", ]
   }
-  out$name <- display_keys(out$name)
+  out$name <- redisplay_keys(out$name)
   out
 }
 
@@ -1041,6 +1095,7 @@ single_cache_log <- function(key, cache) {
 }
 
 #' @title Get diagnostic metadata on a target.
+#' \lifecycle{maturing}
 #' @description Diagnostics include errors, warnings,
 #'   messages, runtimes, and other context/metadata from when a
 #'   target was built or an import was processed.
@@ -1099,7 +1154,7 @@ diagnose <- function(
   character_only = FALSE,
   path = NULL,
   search = NULL,
-  cache = drake::drake_cache(path = path, verbose = verbose),
+  cache = drake::drake_cache(path = path),
   verbose = 1L
 ) {
   deprecate_search(search)
@@ -1124,6 +1179,7 @@ diagnose <- function(
 }
 
 #' @title List running targets.
+#' \lifecycle{maturing}
 #' @description List the targets that either
 #'   (1) are currently being built during a call to [make()], or
 #'   (2) if [make()] was interrupted, the targets that were running
@@ -1152,7 +1208,7 @@ diagnose <- function(
 running <- function(
   path = NULL,
   search = NULL,
-  cache = drake::drake_cache(path = path, verbose = verbose),
+  cache = drake::drake_cache(path = path),
   verbose = 1L
 ) {
   deprecate_search(search)
@@ -1161,7 +1217,7 @@ running <- function(
 }
 
 #' @title List failed targets.
-#'   to [make()].
+#' \lifecycle{maturing}
 #' @description Together, functions `failed()` and
 #' [diagnose()] should eliminate the strict need
 #' for ordinary error messages printed to the console.
@@ -1192,7 +1248,7 @@ running <- function(
 failed <- function(
   path = NULL,
   search = NULL,
-  cache = drake::drake_cache(path = path, verbose = verbose),
+  cache = drake::drake_cache(path = path),
   verbose = 1L,
   upstream_only = NULL
 ) {
@@ -1205,7 +1261,7 @@ failed <- function(
 }
 
 #' @title Get the build progress of your targets
-#'   during a [make()].
+#' \lifecycle{maturing}
 #' @description Objects that drake imported, built, or attempted
 #' to build are listed as `"done"` or `"running"`.
 #' Skipped objects are not listed.
@@ -1255,7 +1311,7 @@ progress <- function(
   no_imported_objects = NULL,
   path = NULL,
   search = NULL,
-  cache = drake::drake_cache(path = path, verbose = verbose),
+  cache = drake::drake_cache(path = path),
   verbose = 1L,
   jobs = 1,
   progress = NULL
@@ -1293,29 +1349,19 @@ progress <- function(
   out <- weak_tibble(target = targets, progress = progress_results)
   rownames(out) <- NULL
   if (is.null(progress)) {
-    return(out)
+    # to enforce consistent behavior with and without tidyselect:
+    return(out[out$progress != "none",, drop = FALSE]) # nolint
   }
   progress <- match.arg(
     progress,
     choices = c("done", "running", "failed"),
     several.ok = TRUE
   )
-  out[out$progress %in% progress, ]
+  out[out$progress %in% progress,, drop = FALSE] # nolint
 }
 
 get_progress_single <- function(target, cache) {
-  if (cache$exists(key = target, namespace = "progress")) {
-    hash <- cache$get_hash(key = target, namespace = "progress")
-    switch(
-      substr(hash, 1, 1),
-      r = "running",
-      d = "done",
-      f = "failed",
-      NA_character_
-    )
-  } else{
-    "none"
-  }
+  cache$get_progress(target = target)
 }
 
 memo_expr <- function(expr, cache, ...) {
@@ -1323,6 +1369,7 @@ memo_expr <- function(expr, cache, ...) {
     return(force(expr))
   }
   lang <- match.call(expand.dots = FALSE)$expr
+  lang <- safe_deparse(lang)
   key <- digest::digest(list(lang, ...), algo = cache$hash_algorithm)
   if (cache$exists(key = key, namespace = "memoize")) {
     return(cache$get(key = key, namespace = "memoize", use_cache = TRUE))
@@ -1369,35 +1416,18 @@ list_multiple_namespaces <- function(cache, namespaces, jobs = 1) {
 }
 
 read_from_meta <- function(key, field, cache) {
-  object <- safe_get(
-    key = key,
-    namespace = "meta",
-    config = list(cache = cache)
-  )
-  if (field %in% names(object)) {
-    object[[field]]
+  meta <- old_meta(key = key, cache = cache)
+  meta_elt(field, meta)
+}
+
+old_meta <- function(key, cache) {
+  cache$safe_get(key = key, namespace = "meta")
+}
+
+meta_elt <- function(field, meta) {
+  if (field %in% names(meta)) {
+    meta[[field]]
   } else {
     NA_character_
   }
-}
-
-safe_get <- function(key, namespace, config) {
-  out <- just_try(config$cache$get(key = key, namespace = namespace))
-  if (inherits(out, "try-error")) {
-    out <- NA_character_
-  }
-  out
-}
-
-safe_get_hash <- function(key, namespace, config) {
-  out <- just_try(config$cache$get_hash(key = key, namespace = namespace))
-  if (inherits(out, "try-error")) {
-    out <- NA_character_
-  }
-  out
-}
-
-# Should be used as sparingly as possible.
-just_try <- function(code) {
-  try(suppressWarnings(code), silent = TRUE)
 }

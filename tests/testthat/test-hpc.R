@@ -66,7 +66,7 @@ test_with_dir("checksum functionality", {
   config <- dbug()
   config$parallelism <- "loop"
   config$jobs <- 1
-  config$cache <- storr::storr_environment()
+  config$cache <- decorate_storr(storr::storr_environment())
   testrun(config)
   checksum <- get_checksum(target = "combined", config = config)
   bad <- "askldfklhjsdfkj"
@@ -135,7 +135,7 @@ test_with_dir("drake_pmap", {
 
 test_with_dir("parallelism can be a scheduler function", {
   plan <- drake_plan(x = file.create("x"))
-  build_ <- function(target, config){
+  build_ <- function(target, config) {
     tidy_expr <- eval(
       expr = config$layout[[target]]$command_build,
       envir = config$eval
@@ -145,7 +145,7 @@ test_with_dir("parallelism can be a scheduler function", {
   loop_ <- function(config) {
     targets <- igraph::topo_sort(config$graph)$name
     for (target in targets) {
-      log_msg(target, config = config, newline = TRUE)
+      config$logger$minor(target)
       config$eval[[target]] <- build_(
         target = target,
         config = config
@@ -160,4 +160,59 @@ test_with_dir("parallelism can be a scheduler function", {
   )
   expect_true(file.exists("x"))
   expect_false(config$cache$exists("x"))
+})
+
+test_with_dir("caching arg and column", {
+  plan <- drake_plan(
+    x = 1,
+    y = target(x, caching = "master"),
+    z = target(y, caching = "worker")
+  )
+  config <- drake_config(plan, caching = "master")
+  expect_equal(caching("x", config), "master")
+  expect_equal(caching("y", config), "master")
+  expect_equal(caching("z", config), "worker")
+  config <- drake_config(plan, caching = "worker")
+  expect_equal(caching("x", config), "worker")
+  expect_equal(caching("y", config), "master")
+  expect_equal(caching("z", config), "worker")
+  p2 <- drake_plan(x = 1, y = 2)
+  config <- drake_config(p2, caching = "master")
+  expect_equal(caching("x", config), "master")
+  expect_equal(caching("y", config), "master")
+  config <- drake_config(p2, caching = "worker")
+  expect_equal(caching("x", config), "worker")
+  expect_equal(caching("y", config), "worker")
+})
+
+test_with_dir("custom caching column and clustermq", {
+  skip_if_not_installed("clustermq")
+  skip_on_os("windows")
+  if ("package:clustermq" %in% search()) {
+    detach("package:clustermq", unload = TRUE) # nolint
+  }
+  options(clustermq.scheduler = "multicore")
+  plan <- drake_plan(
+    x = 1,
+    y = target(x, caching = "master"),
+    z = target(y, caching = "worker")
+  )
+  make(plan, parallelism = "clustermq", jobs = 1)
+  expect_true(all(plan$target %in% cached()))
+  if ("package:clustermq" %in% search()) {
+    detach("package:clustermq", unload = TRUE) # nolint
+  }
+})
+
+test_with_dir("custom caching column and future", {
+  skip_if_not_installed("future")
+  skip_on_os("windows")
+  future::plan(future::multicore)
+  plan <- drake_plan(
+    x = 1,
+    y = target(x, caching = "master"),
+    z = target(y, caching = "worker")
+  )
+  make(plan, parallelism = "future", jobs = 1)
+  expect_true(all(plan$target %in% cached()))
 })

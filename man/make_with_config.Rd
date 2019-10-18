@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{make_with_config}
 \alias{make_with_config}
-\title{deprecated}
+\title{Apply make() with a pre-computed config object
+\lifecycle{deprecated}}
 \usage{
 make_with_config(config)
 }

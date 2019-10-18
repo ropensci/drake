@@ -2,7 +2,8 @@
 % Please edit documentation in R/deps.R
 \name{tracked}
 \alias{tracked}
-\title{List the targets and imports that are reproducibly tracked.}
+\title{List the targets and imports that are reproducibly tracked.
+\lifecycle{stable}}
 \usage{
 tracked(config)
 }

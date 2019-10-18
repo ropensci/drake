@@ -2,7 +2,8 @@
 % Please edit documentation in R/drake_plan_helpers.R
 \name{bind_plans}
 \alias{bind_plans}
-\title{Row-bind together drake plans}
+\title{Row-bind together drake plans
+\lifecycle{stable}}
 \usage{
 bind_plans(...)
 }

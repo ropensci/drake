@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{triggers}
 \alias{triggers}
-\title{Deprecated. List the old drake triggers.}
+\title{List the old drake triggers.
+\lifecycle{deprecated}}
 \usage{
 triggers()
 }

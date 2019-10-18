@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{default_verbose}
 \alias{default_verbose}
-\title{Deprecated}
+\title{Default verbosity
+\lifecycle{deprecated}}
 \usage{
 default_verbose()
 }

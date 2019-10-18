@@ -6,8 +6,9 @@ process_imports <- function(config) {
   }
 }
 
-#' @title internal function
-#' @description only used inside process_imports(). Not a user-side function.
+#' @title Process an imported data object
+#' \lifecycle{stable}
+#' @description For internal use only. Not a user-side function.
 #' @export
 #' @keywords internal
 #' @param import Character, name of an import to process
@@ -16,21 +17,20 @@ process_import <- function(import, config) {
   meta <- drake_meta_(import, config)
   if (meta$isfile) {
     value <- NA_character_
-    path <- decode_path(import, config)
+    path <- config$cache$decode_path(import)
     is_missing <- !file.exists(path) && !is_url(path)
   } else {
     value <- get_import_from_memory(import, config = config)
     is_missing <- identical(value, NA_character_)
   }
   if (is_missing) {
-    log_msg(
+    config$logger$minor(
       "missing",
-      target = display_key(import, config),
-      config = config,
+      target = config$cache$display_keys(import),
       color = "missing"
     )
   } else {
-    log_msg("import", target = display_key(import, config), config = config)
+    config$logger$minor("import", target = config$cache$display_keys(import))
   }
   store_single_output(
     target = import,
@@ -45,7 +45,7 @@ get_import_from_memory <- function(target, config) {
     return(NA_character_)
   }
   if (is_encoded_namespaced(target)) {
-    target <- decode_namespaced(target, config)
+    target <- config$cache$decode_namespaced(target)
   }
   if (exists(x = target, envir = config$envir, inherits = FALSE)) {
     return(get(x = target, envir = config$envir, inherits = FALSE))
@@ -85,11 +85,10 @@ process_imports_mclapply <- function(config) {
 
 process_imports_parLapply <- function(config) { # nolint
   assert_pkg("parallel")
-  log_msg(
+  config$logger$minor(
     "load parallel socket cluster with",
     config$jobs_preprocess,
-    "workers",
-    config = config
+    "workers"
   )
   config$cluster <- parallel::makePSOCKcluster(config$jobs_preprocess)
   on.exit(parallel::stopCluster(cl = config$cluster))

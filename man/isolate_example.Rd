@@ -2,7 +2,8 @@
 % Please edit documentation in R/utils.R
 \name{isolate_example}
 \alias{isolate_example}
-\title{Isolate the side effects of an example.}
+\title{Isolate the side effects of an example.
+\lifecycle{stable}}
 \usage{
 isolate_example(desc, code)
 }

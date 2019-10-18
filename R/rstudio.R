@@ -1,4 +1,5 @@
 #' @title RStudio addin for r_make()
+#' \lifecycle{stable}
 #' @description Call [r_make()] in an RStudio addin.
 #' @return Nothing.
 #' @inheritParams r_make
@@ -9,6 +10,7 @@ rs_addin_r_make <- function(r_args = list()) {
 }
 
 #' @title RStudio addin for r_outdated()
+#' \lifecycle{stable}
 #' @description Call [r_outdated()] in an RStudio addin.
 #' @return A character vector of outdated targets.
 #' @inheritParams r_make
@@ -26,6 +28,7 @@ rs_addin_r_outdated <- function(r_args = list(), .print = TRUE) {
 }
 
 #' @title RStudio addin for r_vis_drake_graph()
+#' \lifecycle{stable}
 #' @description Call [r_vis_drake_graph()] in an RStudio addin.
 #' @return A `visNetwork` graph.
 #' @inheritParams r_make
@@ -44,6 +47,7 @@ rs_addin_r_vis_drake_graph <- function(r_args = list(), .print = TRUE) {
 }
 
 #' @title Loadd target at cursor into global environment
+#' \lifecycle{stable}
 #' @description This function provides an RStudio addin that will
 #' load the target at the
 #' current cursor location from the cache into the global environment.
@@ -55,7 +59,7 @@ rs_addin_r_vis_drake_graph <- function(r_args = list(), .print = TRUE) {
 #' @return Nothing.
 #' @keywords internal
 #' @export
-rs_addin_loadd <- function(context = NULL){
+rs_addin_loadd <- function(context = NULL) {
   assert_pkg("rstudioapi")
   context <- context %||% rstudioapi::getActiveDocumentContext()
   target <- rs_get_symbol_at_cursor(context)
@@ -94,7 +98,7 @@ rs_get_symbol_at_cursor <- function(context) {
     cursor_column >= match_starts &
       cursor_column <= match_ends
   )
-  if (length(match_index) == 0){
+  if (length(match_index) == 0) {
     message("Couldn't find an object name at cursor position.")
     return(NULL)
   }

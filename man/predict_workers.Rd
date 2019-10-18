@@ -3,7 +3,8 @@
 \name{predict_workers}
 \alias{predict_workers}
 \title{Predict the load balancing of the next call to \code{make()}
-for non-staged parallel backends.}
+for non-staged parallel backends.
+\lifecycle{maturing}}
 \usage{
 predict_workers(config, targets = NULL, from_scratch = FALSE,
   targets_only = NULL, jobs = 1, known_times = numeric(0),

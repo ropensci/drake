@@ -2,9 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{in_progress}
 \alias{in_progress}
-\title{Deprecated. List the targets that either
-(1) are currently being built during a \code{\link[=make]{make()}}, or
-(2) were being built if the last \code{\link[=make]{make()}} quit unexpectedly.}
+\title{List the targets in progress
+\lifecycle{deprecated}}
 \usage{
 in_progress(path = getwd(), search = TRUE,
   cache = drake::get_cache(path = path, search = search, verbose =
@@ -19,12 +18,7 @@ in_progress(path = getwd(), search = TRUE,
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} is ignored.}
 
-\item{verbose}{Integer, control printing to the console/terminal.
-\itemize{
-\item \code{0}: print nothing.
-\item \code{1}: print targets, retries, and failures.
-\item \code{2}: also show a spinner when preprocessing tasks are underway.
-}}
+\item{verbose}{Deprecated on 2019-09-11.}
 }
 \value{
 A character vector of target names.

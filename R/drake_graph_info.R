@@ -1,5 +1,5 @@
-#' @title Create the underlying node and edge data frames
-#'   behind [vis_drake_graph()].
+#' @title Prepare the workflow graph for visualization
+#' \lifecycle{stable}
 #' @description With the returned data frames,
 #' you can plot your own custom `visNetwork` graph.
 #' @export
@@ -136,10 +136,10 @@ drake_graph_info <- function(
   hover = FALSE,
   on_select_col = NULL
 ) {
-  log_msg("begin drake_graph_info()", config = config)
-  on.exit(log_msg("end drake_graph_info()", config = config), add = TRUE)
   assert_pkg("visNetwork")
   assert_config_not_plan(config)
+  config$logger$minor("begin drake_graph_info()")
+  on.exit(config$logger$minor("end drake_graph_info()"), add = TRUE)
   if (!length(V(config$graph)$name)) {
     return(null_graph())
   }
@@ -271,7 +271,7 @@ append_output_file_nodes <- function(config) {
     cols <- setdiff(colnames(nodes), c("id", "label", "level", "shape", "type"))
     for (target in intersect(names(file_out), nodes$id)) {
       files <- intersect(file_out[[target]], nodes$id)
-      if (length(files)){
+      if (length(files)) {
         for (col in cols) {
           nodes[files, col] <- nodes[target, col]
         }
@@ -317,6 +317,7 @@ get_cluster_grouping <- function(config, group) {
 }
 
 #' @title Return the default title for graph visualizations
+#' \lifecycle{soft-deprecated}
 #' @description For internal use only.
 #' @export
 #' @keywords internal
@@ -355,6 +356,7 @@ filter_legend_nodes <- function(legend_nodes, all_nodes) {
 
 #' @title Create the nodes data frame used in the legend
 #'   of the graph visualizations.
+#' \lifecycle{soft-deprecated}
 #' @export
 #' @description Output a `visNetwork`-friendly
 #' data frame of nodes. It tells you what
@@ -461,10 +463,11 @@ cluster_status <- function(statuses) {
 
 configure_nodes <- function(config) {
   rownames(config$nodes) <- config$nodes$id
-  config$nodes$label <- display_keys(config$nodes$label, config)
+  config$nodes$label <- config$cache$display_keys(config$nodes$label)
   config$nodes <- categorize_nodes(config = config)
   config$nodes <- style_nodes(config = config)
   config$nodes <- resolve_levels(config = config)
+  config$nodes <- wrap_labels(config = config)
   if (config$build_times != "none") {
     config$nodes <- append_build_times(config = config)
   }
@@ -497,6 +500,11 @@ resolve_levels <- function(config) {
     config$nodes[leaves, "level"] <- level
     graph <- igraph::delete_vertices(graph = graph, v = leaves)
   }
+  config$nodes
+}
+
+wrap_labels <- function(config) {
+  config$nodes$label <- hard_wrap(config$nodes$label, width = hover_width)
   config$nodes
 }
 
@@ -586,7 +594,7 @@ hover_text <- function(config) {
 }
 
 file_hover_text <- Vectorize(function(encoded_file, targets, config) {
-  decoded_file <- decode_path(encoded_file, config)
+  decoded_file <- config$cache$decode_path(encoded_file)
   if (encoded_file %in% targets || !file.exists(decoded_file)) {
     return(encoded_file)
   }
@@ -666,7 +674,7 @@ coord_x <- function(nodes, min = -1, max = 1) {
 }
 
 coord_y <- function(nodes, min = -1, max = 1) {
-  splits <- split(nodes, nodes$x)
+  splits <- base::split(nodes, nodes$x)
   out <- lapply(splits, coord_y_stage, min = min, max = max)
   out <- do.call(rbind, out)
   out$y <- coord_rescale(out$y, min = min, max = max)

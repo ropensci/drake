@@ -20,7 +20,7 @@ drake_meta_ <- function(target, config) {
   }
   # For imported files.
   if (meta$isfile) {
-    path <- decode_path(target, config)
+    path <- config$cache$decode_path(target)
     meta$mtime <- storage_mtime(path)
     meta$size <- storage_size(path)
   }
@@ -65,8 +65,7 @@ dependency_hash <- function(target, config) {
   deps <- as.character(deps)
   deps <- unique(deps)
   deps <- sort(deps)
-  out <- ht_memo(
-    ht = config$cache$ht_hash,
+  out <- config$cache$memo_hash(
     x = deps,
     fun = self_hash,
     config = config
@@ -101,8 +100,7 @@ input_file_hash <- function(
   if (!length(files)) {
     return("")
   }
-  out <- ht_memo(
-    ht = config$cache$ht_hash,
+  out <- config$cache$memo_hash(
     x = files,
     fun = storage_hash,
     config = config,
@@ -149,7 +147,7 @@ storage_hash <- function(
   if (!is_encoded_path(target)) {
     return(NA_character_)
   }
-  file <- decode_path(target, config)
+  file <- config$cache$decode_path(target)
   if (is_url(file)) {
     return(rehash_storage(target = target, file = file, config = config))
   }
@@ -229,7 +227,7 @@ dir_size <- function(x) {
     include.dirs = FALSE
   )
   sizes <- vapply(files, file_size, FUN.VALUE = numeric(1))
-  max(sizes %||% 0)
+  sum(sizes %||% 0)
 }
 
 file_size <- function(x) {
@@ -245,22 +243,26 @@ rehash_storage <- function(target, file = NULL, config) {
     return(NA_character_)
   }
   if (is.null(file)) {
-    file <- decode_path(target, config)
+    file <- config$cache$decode_path(target)
   }
   if (is_url(file)) {
-    return(rehash_url(url = file))
+    return(rehash_url(url = file, config = config))
   }
   if (!file.exists(file)) {
     return(NA_character_)
   }
+  rehash_local(file, hash_algorithm = config$cache$hash_algorithm)
+}
+
+rehash_local <- function(file, hash_algorithm) {
   if (dir.exists(file)) {
-    rehash_dir(file, config)
+    rehash_dir(file, hash_algorithm)
   } else {
-    rehash_file(file, config)
+    rehash_file(file, hash_algorithm)
   }
 }
 
-rehash_dir <- function(dir, config) {
+rehash_dir <- function(dir, hash_algorithm) {
   files <- list.files(
     path = dir,
     all.files = TRUE,
@@ -272,34 +274,42 @@ rehash_dir <- function(dir, config) {
     files,
     rehash_file,
     FUN.VALUE = character(1),
-    config = config
+    hash_algorithm = hash_algorithm
   )
   out <- paste(out, collapse = "")
   digest::digest(
     out,
-    algo = config$cache$hash_algorithm,
+    algo = hash_algorithm,
     serialize = FALSE
   )
 }
 
-rehash_file <- function(file, config) {
+rehash_file <- function(file, hash_algorithm) {
   digest::digest(
     object = file,
-    algo = config$cache$hash_algorithm,
+    algo = hash_algorithm,
     file = TRUE,
     serialize = FALSE
   )
 }
 
-rehash_url <- function(url) {
+rehash_url <- function(url, config) {
   assert_pkg("curl")
   headers <- NULL
   if (!curl::has_internet()) {
     # Tested in tests/testthat/test-always-skipped.R.
     stop("no internet. Cannot check url: ", url, call. = FALSE) # nocov
   }
-  req <- curl::curl_fetch_memory(url)
+  # Find the longest name of the handle that matches the url.
+  choices <- names(config$curl_handles)
+  name <- longest_match(choices = choices, against = url) %||% NA_character_
+  handle <- config$curl_handles[[name]] %||% curl::new_handle()
+  # Do not download the whole URL.
+  handle <- curl::handle_setopt(handle, nobody = TRUE)
+  req <- curl::curl_fetch_memory(url, handle = handle)
+  stopifnot(length(req$content) < 1L)
   headers <- curl::parse_headers_list(req$headers)
+  assert_status_code(req, url)
   assert_useful_headers(headers, url)
   etag <- paste(headers[["etag"]], collapse = "")
   mtime <- paste(headers[["last-modified"]], collapse = "")
@@ -308,6 +318,12 @@ rehash_url <- function(url) {
 
 is_url <- function(x) {
   grepl("^http://|^https://|^ftp://", x)
+}
+
+assert_status_code <- function(req, url) {
+  if (req$status_code != 200L) {
+    stop("could not access url: ", url, call. = FALSE)
+  }
 }
 
 assert_useful_headers <- function(headers, url) {

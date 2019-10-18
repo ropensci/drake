@@ -2,7 +2,8 @@
 % Please edit documentation in R/drake_plan.R
 \name{type_sum.expr_list}
 \alias{type_sum.expr_list}
-\title{Type summary printing}
+\title{Type summary printing
+\lifecycle{stable}}
 \usage{
 type_sum.expr_list(x)
 }

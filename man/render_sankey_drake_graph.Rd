@@ -2,7 +2,8 @@
 % Please edit documentation in R/sankey_drake_graph.R
 \name{render_sankey_drake_graph}
 \alias{render_sankey_drake_graph}
-\title{Render a Sankey diagram from\code{\link[=drake_graph_info]{drake_graph_info()}}.}
+\title{Render a Sankey diagram from \code{\link[=drake_graph_info]{drake_graph_info()}}.
+\lifecycle{stable}}
 \usage{
 render_sankey_drake_graph(graph_info, file = character(0),
   selfcontained = FALSE, ...)

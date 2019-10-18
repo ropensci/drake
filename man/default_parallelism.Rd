@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{default_parallelism}
 \alias{default_parallelism}
-\title{Deprecated}
+\title{Default parallel backend
+\lifecycle{deprecated}}
 \usage{
 default_parallelism()
 }

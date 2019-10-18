@@ -16,7 +16,7 @@ test_with_dir("can ignore a bad time", {
 test_with_dir("proc_time runtimes can be fetched", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("lubridate")
-  cache <- storr::storr_rds("cache")
+  cache <- new_cache("cache")
   t <- system.time({
     z <- 1
   })
@@ -137,6 +137,7 @@ test_with_dir("runtime predictions", {
 test_with_dir("predict_workers()", {
   skip_on_cran()
   skip_if_not_installed("knitr")
+  skip_if_not_installed("lubridate")
   load_mtcars_example()
   cache <- storr::storr_environment()
   config <- drake_config(my_plan, cache = cache, session_info = FALSE)

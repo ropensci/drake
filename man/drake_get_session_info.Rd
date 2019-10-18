@@ -2,12 +2,11 @@
 % Please edit documentation in R/cache.R
 \name{drake_get_session_info}
 \alias{drake_get_session_info}
-\title{Return the \code{\link[=sessionInfo]{sessionInfo()}}
-of the last call to \code{\link[=make]{make()}}.}
+\title{Session info of the last call to \code{\link[=make]{make()}}.
+\lifecycle{maturing}}
 \usage{
 drake_get_session_info(path = NULL, search = NULL,
-  cache = drake::drake_cache(path = path, verbose = verbose),
-  verbose = 1L)
+  cache = drake::drake_cache(path = path), verbose = 1L)
 }
 \arguments{
 \item{path}{Path to a \code{drake} cache
@@ -18,12 +17,7 @@ drake_get_session_info(path = NULL, search = NULL,
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} is ignored.}
 
-\item{verbose}{Integer, control printing to the console/terminal.
-\itemize{
-\item \code{0}: print nothing.
-\item \code{1}: print targets, retries, and failures.
-\item \code{2}: also show a spinner when preprocessing tasks are underway.
-}}
+\item{verbose}{Deprecated on 2019-09-11.}
 }
 \value{
 \code{\link[=sessionInfo]{sessionInfo()}} of the last

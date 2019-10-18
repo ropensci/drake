@@ -1,4 +1,5 @@
 #' @title Build/process a single target or import.
+#' \lifecycle{maturing}
 #' @description Also load the target's dependencies beforehand.
 #' @export
 #' @seealso [drake_debug()]
@@ -42,13 +43,9 @@ drake_build <- function(
   jobs = 1,
   replace = FALSE
 ) {
-  log_msg("begin drake_build()", target = target, config = config)
+  config$logger$minor("begin drake_build()", target = target)
   on.exit(
-    log_msg(
-      "end drake_build()",
-      target = target,
-      config = config
-    ),
+    config$logger$minor("end drake_build()", target = target),
     add = TRUE
   )
   if (!is.null(meta)) {
@@ -84,7 +81,8 @@ drake_build <- function(
   conclude_build(build = build, config = config)
 }
 
-#' @title Run a single target's command in debug mode.
+#' @title Run a single target's command in debug mode.'
+#' \lifecycle{maturing}
 #' @description `drake_debug()` loads a target's dependencies
 #'   and then runs its command in debug mode (see `browser()`,
 #'   `debug()`, and `debugonce()`). This function does not
@@ -188,6 +186,7 @@ debug_command_char <- function(command) {
 }
 
 #' @title Run a function in debug mode.
+#' \lifecycle{stable}
 #' @description Internal function for [drake_debug()]. Not for general use.
 #' @keywords internal
 #' @seealso [drake_debug()]

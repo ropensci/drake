@@ -1,5 +1,6 @@
 #' @title Predict the elapsed runtime of the next call to `make()`
 #'   for non-staged parallel backends.
+#' \lifecycle{maturing}
 #' @description Take the past recorded runtimes times from
 #'   [build_times()] and use them to predict how the targets
 #'   will be distributed among the available workers in the
@@ -56,8 +57,8 @@ predict_runtime <- function(
   default_time = 0,
   warn = TRUE
 ) {
-  log_msg("begin predict_runtime()", config = config)
-  on.exit(log_msg("end predict_runtime()", config = config), add = TRUE)
+  config$logger$minor("begin predict_runtime()")
+  on.exit(config$logger$minor("end predict_runtime()"), add = TRUE)
   worker_prediction_info(
     config = config,
     targets = targets,
@@ -72,6 +73,7 @@ predict_runtime <- function(
 
 #' @title Predict the load balancing of the next call to `make()`
 #'   for non-staged parallel backends.
+#' \lifecycle{maturing}
 #' @description Take the past recorded runtimes times from
 #'   [build_times()] and use them to predict how the targets
 #'   will be distributed among the available workers in the
@@ -153,8 +155,8 @@ predict_workers <- function(
   default_time = 0,
   warn = TRUE
 ) {
-  log_msg("begin predict_workers()", config = config)
-  on.exit(log_msg("end predict_workers()", config = config), add = TRUE)
+  config$logger$minor("begin predict_workers()")
+  on.exit(config$logger$minor("end predict_workers()"), add = TRUE)
   worker_prediction_info(
     config,
     targets = targets,

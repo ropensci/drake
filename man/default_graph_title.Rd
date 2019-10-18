@@ -2,7 +2,8 @@
 % Please edit documentation in R/drake_graph_info.R
 \name{default_graph_title}
 \alias{default_graph_title}
-\title{Return the default title for graph visualizations}
+\title{Return the default title for graph visualizations
+\lifecycle{soft-deprecated}}
 \usage{
 default_graph_title()
 }
