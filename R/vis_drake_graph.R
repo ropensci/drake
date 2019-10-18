@@ -160,9 +160,9 @@ vis_drake_graph <- function(
 #' @param on_select defines node selection event handling.
 #'   Either a string of valid javascript that may be passed to
 #'   `visNetwork::visEvents()`, or one of the following:
-#'   `TRUE`, `NULL`/`FALSE`. If `TRUE` , enables the default behaviour of opening
-#'   the link specified by the `on_select_col` given to `drake_graph_info()`.
-#'   `NULL`/`FALSE` disables the behaviour.
+#'   `TRUE`, `NULL`/`FALSE`. If `TRUE` , enables the default behaviour of
+#'   opening the link specified by the `on_select_col` given to
+#'   `drake_graph_info()`. `NULL`/`FALSE` disables the behaviour.
 #' @param ... Arguments passed to `visNetwork()`.
 #'
 #' @examples
