@@ -411,8 +411,8 @@ trigger <- function(
 #' @seealso [file_out()], [knitr_in()], [ignore()], [no_deps()]
 #' @return A character vector of declared input file or directory paths.
 #' @param ... Character vector, paths to files and directories. Use
-#'   `.id_chr` to refer to the current target by name. `.id_chr` is not limited
-#'   to use in `file_in()` and `file_out()`.
+#'   `.id_chr` to refer to the current target by name. `.id_chr` is not
+#'    limited to use in `file_in()` and `file_out()`.
 #' @export
 #' @examples
 #' \dontrun{

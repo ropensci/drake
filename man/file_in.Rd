@@ -9,8 +9,8 @@ file_in(...)
 }
 \arguments{
 \item{...}{Character vector, paths to files and directories. Use
-\code{.id_chr} to refer to the current target by name. \code{.id_chr} is not limited
-to use in \code{file_in()} and \code{file_out()}.}
+\code{.id_chr} to refer to the current target by name. \code{.id_chr} is not
+limited to use in \code{file_in()} and \code{file_out()}.}
 }
 \value{
 A character vector of declared input file or directory paths.
