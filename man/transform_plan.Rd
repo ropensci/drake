@@ -2,7 +2,8 @@
 % Please edit documentation in R/transform_plan.R
 \name{transform_plan}
 \alias{transform_plan}
-\title{Transform a plan}
+\title{Transform a plan
+\lifecycle{maturing}}
 \usage{
 transform_plan(plan, envir = parent.frame(), trace = FALSE,
   max_expand = NULL, tidy_eval = TRUE)
@@ -15,11 +16,15 @@ transform_plan(plan, envir = parent.frame(), trace = FALSE,
 \item{trace}{Logical, whether to add columns to show
 what happens during target transformations.}
 
-\item{max_expand}{Positive integer, optional upper bound on the lengths
-of grouping variables for \code{map()} and \code{cross()}. Comes in handy
-when you have a massive number of targets and you want to test
-on a miniature version of your workflow before you scale up
-to production.}
+\item{max_expand}{Positive integer, optional.
+Maximum number of targets to generate in each
+\code{map()}, \code{split()}, or \code{cross()} transform.
+If massive number of targets, consider setting \code{max_expand}
+to a small number. That way, you can test and visualize
+your workflow before scaling up to production.
+Note: \code{max_expand} is not for production workflows.
+When it comes time to generate the end product,
+either unset \code{max_expand} or manually set it to \code{NULL}.}
 
 \item{tidy_eval}{Logical, whether to use tidy evaluation
 (e.g. unquoting/\code{!!}) when resolving commands.
@@ -51,4 +56,60 @@ plan2 <- drake_plan(
 )
 plan <- bind_plans(plan1, plan2)
 transform_plan(plan)
+models <- c("glm", "hierarchical")
+plan <- drake_plan(
+  data = target(
+    get_data(x),
+    transform = map(x = c("simulated", "survey"))
+  ),
+  analysis = target(
+    analyze_data(data, model),
+    transform = cross(data, model = !!models, .id = c(x, model))
+  ),
+  summary = target(
+    summarize_analysis(analysis),
+    transform = map(analysis, .id = c(x, model))
+  ),
+  results = target(
+    bind_rows(summary),
+    transform = combine(summary, .by = data)
+  )
+)
+plan
+if (requireNamespace("styler", quietly = TRUE)) {
+  print(drake_plan_source(plan))
+}
+# Tags:
+drake_plan(
+  x = target(
+    command,
+    transform = map(y = c(1, 2), .tag_in = from, .tag_out = c(to, out))
+  ),
+  trace = TRUE
+)
+plan <- drake_plan(
+  survey = target(
+    survey_data(x),
+    transform = map(x = c(1, 2), .tag_in = source, .tag_out = dataset)
+  ),
+  download = target(
+    download_data(),
+    transform = map(y = c(5, 6), .tag_in = source, .tag_out = dataset)
+  ),
+  analysis = target(
+    analyze(dataset),
+    transform = map(dataset)
+  ),
+  results = target(
+    bind_rows(analysis),
+    transform = combine(analysis, .by = source)
+  )
+)
+plan
+if (requireNamespace("styler", quietly = TRUE)) {
+  print(drake_plan_source(plan))
+}
+}
+\seealso{
+drake_plan, map, split, cross, combine
 }

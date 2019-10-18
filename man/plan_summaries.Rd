@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{plan_summaries}
 \alias{plan_summaries}
-\title{Deprecated}
+\title{Specialized wildcard for summaries
+\lifecycle{deprecated}}
 \usage{
 plan_summaries(plan, analyses, datasets, gather = rep("list",
   nrow(plan)), sep = "_")

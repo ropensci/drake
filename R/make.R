@@ -1,4 +1,5 @@
 #' @title Run your project (build the outdated targets).
+#' \lifecycle{maturing}
 #' @description This is the central, most important function
 #' of the drake package. It runs all the steps of your
 #' workflow in the correct order, skipping any work
@@ -22,13 +23,7 @@
 #' but they easily grow stale.
 #' Targets can falsely invalidate if you accidentally change
 #' a function or data object in your environment.
-#' So in interactive mode, `make()` now pauses with a menu
-#' to protect you from environment-related instability.
 #'
-#' You can control this menu with the `drake_make_menu` global option.
-#' Run `options(drake_make_menu = TRUE)` to show the menu once per session
-#' and `options(drake_make_menu = FALSE)` to disable it entirely.
-#' You may wish to add a call to `options()` in your local `.Rprofile` file.
 #' @section Self-invalidation:
 #' It is possible to construct a workflow that tries to invalidate itself.
 #' Example:
@@ -121,10 +116,7 @@ make <- function(
   envir = parent.frame(),
   verbose = 1L,
   hook = NULL,
-  cache = drake::drake_cache(
-    verbose = verbose,
-    console_log_file = console_log_file
-  ),
+  cache = drake::drake_cache(),
   fetch_cache = NULL,
   parallelism = "loop",
   jobs = 1L,
@@ -168,12 +160,9 @@ make <- function(
   lock_envir = TRUE,
   history = TRUE,
   recover = FALSE,
-  recoverable = TRUE
+  recoverable = TRUE,
+  curl_handles = list()
 ) {
-  log_msg(
-    "begin make()",
-    config = config %||% list(console_log_file = console_log_file)
-  )
   check_make_call(match.call())
   force(envir)
   if (is.null(config)) {
@@ -226,33 +215,29 @@ make <- function(
       lock_envir = lock_envir,
       history = history,
       recover = recover,
-      recoverable = recoverable
+      recoverable = recoverable,
+      curl_handles = curl_handles
     )
   }
+  config$logger$minor("begin make()")
   runtime_checks(config = config)
   config$running_make <- TRUE
-  config$cache$reset_ht_hash()
-  on.exit(config$cache$reset_ht_hash())
+  config$cache$reset_memo_hash()
+  on.exit(config$cache$reset_memo_hash())
   config$cache$set(key = "seed", value = config$seed, namespace = "session")
   config$eval[[drake_envir_marker]] <- TRUE
   if (config$log_progress) {
     config$cache$clear(namespace = "progress")
   }
   drake_set_session_info(cache = config$cache, full = config$session_info)
-  do_prework(config = config, verbose_packages = config$verbose)
+  do_prework(config = config, verbose_packages = config$logger$verbose)
   if (!config$skip_imports) {
     process_imports(config)
   }
   if (is.character(config$parallelism)) {
     config$graph <- outdated_subgraph(config)
   }
-  abort <- FALSE
-  if (prompt_intv_make(config)) {
-    abort <- abort_intv_make(config) # nocov
-  }
-  if (abort) {
-    return(invisible()) # nocov
-  }
+  r_make_message(force = FALSE)
   if (!config$skip_targets) {
     process_targets(config)
   }
@@ -266,7 +251,7 @@ make <- function(
   if (config$garbage_collection) {
     gc()
   }
-  log_msg("end make()", config = config)
+  config$logger$minor("end make()")
   invisible()
 }
 
@@ -289,11 +274,7 @@ run_native_backend <- function(config) {
       envir = getNamespace("drake")
     )(config)
   } else {
-    log_msg(
-      "All targets are already up to date.",
-      config = config,
-      tier = 1L
-    )
+    config$logger$major("All targets are already up to date.")
   }
 }
 
@@ -312,17 +293,18 @@ run_external_backend <- function(config) {
 
 outdated_subgraph <- function(config) {
   outdated <- outdated(config, do_prework = FALSE, make_imports = FALSE)
-  log_msg("isolate oudated targets", config = config)
+  config$logger$minor("isolate oudated targets")
   igraph::induced_subgraph(graph = config$graph, vids = outdated)
 }
 
 drake_set_session_info <- function(
   path = NULL,
   search = NULL,
-  cache = drake::drake_cache(path = path, verbose = verbose),
-  verbose = 1L,
+  cache = drake::drake_cache(path = path),
+  verbose = NULL,
   full = TRUE
 ) {
+  deprecate_verbose(verbose)
   if (is.null(cache)) {
     stop("No drake::make() session detected.")
   }
@@ -343,6 +325,7 @@ drake_set_session_info <- function(
 
 #' @title Do the prework in the `prework`
 #'   argument to [make()].
+#' \lifecycle{stable}
 #' @export
 #' @keywords internal
 #' @description For internal use only.
@@ -400,7 +383,7 @@ drake_cache_log_file_ <- function(
   file = "drake_cache.csv",
   path = NULL,
   search = NULL,
-  cache = drake::drake_cache(path = path, verbose = verbose),
+  cache = drake::drake_cache(path = path),
   verbose = 1L,
   jobs = 1L,
   targets_only = FALSE
@@ -418,6 +401,7 @@ drake_cache_log_file_ <- function(
     jobs = jobs,
     targets_only = targets_only
   )
+  out <- as.data.frame(out)
   # Suppress partial arg match warnings.
   suppressWarnings(
     write.table(
@@ -438,7 +422,7 @@ check_make_call <- function(call) {
       " argument to ", shQuote("make()"),
       " then all additional arguments are ignored. ",
       "For example, in ", shQuote("make(config = config, verbose = 0L)"),
-      "verbosity remains at ", shQuote("config$verbose"), ".",
+      "verbosity remains at ", shQuote("config$logger$verbose"), ".",
       call. = FALSE
     )
   }
@@ -460,7 +444,7 @@ missing_input_files <- function(config) {
     f = is_encoded_path,
     jobs = config$jobs_preprocess
   )
-  files <- decode_path(x = files, config = config)
+  files <- config$cache$decode_path(x = files)
   missing_files <- files[!file_dep_exists(files)]
   if (length(missing_files)) {
     warning(
@@ -480,14 +464,9 @@ subdirectory_warning <- function(config) {
   if (identical(Sys.getenv("drake_warn_subdir"), "false")) {
     return()
   }
-  dir_cache <- config$cache$path
-  if (!identical(basename(dir_cache), basename(default_cache_path()))) {
-    return()
-  }
-  dir_wd <- getwd()
-  in_root <- is.null(dir_cache) ||
-    basename(dir_cache) %in% list.files(path = dir_wd, all.files = TRUE)
-  if (in_root) {
+  dir <- dirname(config$cache$path)
+  wd <- getwd()
+  if (!length(dir) || wd == dir || is.na(pmatch(dir, wd))) {
     return()
   }
   warning(
@@ -501,9 +480,9 @@ subdirectory_warning <- function(config) {
     "directory with new_cache('path_name'), or\n",
     "  (3) supply a cache of your own (e.g. make(cache = your_cache))\n",
     "      whose folder name is not '.drake'.\n",
-    "  running make() from: ", dir_wd, "\n",
-    "  drake project root:  ", dirname(dir_cache), "\n",
-    "  cache directory:     ", dir_cache,
+    "  running make() from: ", wd, "\n",
+    "  drake project root:  ", dir, "\n",
+    "  cache directory:     ", config$cache$path,
     call. = FALSE
   )
 }
@@ -523,34 +502,21 @@ assert_outside_cache <- function(config) {
   }
 }
 
-prompt_intv_make <- function(config) {
-  menu_enabled <- .pkg_envir[["drake_make_menu"]] %||%
-    getOption("drake_make_menu") %||%
-    TRUE
-  interactive() &&
-    igraph::gorder(config$graph) &&
-    menu_enabled
-}
-
-abort_intv_make <- function(config) {
-  # nocov start
+r_make_message <- function(force) {
+  r_make_message <- .pkg_envir[["r_make_message"]] %||% TRUE
   on.exit(
     assign(
-      x = "drake_make_menu",
+      x = "r_make_message",
       value = FALSE,
       envir = .pkg_envir,
       inherits = FALSE
     )
   )
-  title <- paste(
-    paste(igraph::gorder(config$graph), "outdated targets:"),
-    multiline_message(igraph::V(config$graph)$name),
-    "\nPlease read the \"Interactive mode\" section of the make() help file.",
-    "This prompt only appears once per session.",
-    "\nReally run make() instead of r_make() in interactive mode?",
-    sep = "\n"
-  )
-  out <- utils::menu(choices = c("yes", "no"), title = title)
-  !identical(as.integer(out), 1L)
-  # nocov end
+  if (force || (r_make_message && sample.int(n = 10, size = 1) < 1.5)) {
+    message(
+      "In drake, consider r_make() instead of make(). ",
+      "r_make() runs make() in a fresh R session ",
+      "for enhanced robustness and reproducibility."
+    )
+  }
 }

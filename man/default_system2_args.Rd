@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{default_system2_args}
 \alias{default_system2_args}
-\title{Defunct function}
+\title{default_system2_args \lifecycle{defunct}}
 \usage{
 default_system2_args(...)
 }

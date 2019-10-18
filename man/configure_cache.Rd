@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{configure_cache}
 \alias{configure_cache}
-\title{Deprecated. Configure the hash algorithms, etc. of a drake cache.}
+\title{Configure the hash algorithms, etc. of a drake cache.
+\lifecycle{deprecated}}
 \usage{
 configure_cache(cache = drake::get_cache(verbose = verbose),
   short_hash_algo = drake::default_short_hash_algo(cache = cache),
@@ -33,12 +34,7 @@ build progress if this cache was used for previous calls to
 \item{overwrite_hash_algos}{Logical, whether to try to overwrite
 the hash algorithms in the cache with any user-specified ones.}
 
-\item{verbose}{Integer, control printing to the console/terminal.
-\itemize{
-\item \code{0}: print nothing.
-\item \code{1}: print targets, retries, and failures.
-\item \code{2}: also show a spinner when preprocessing tasks are underway.
-}}
+\item{verbose}{Deprecated on 2019-09-11.}
 
 \item{jobs}{Number of jobs for parallel processing}
 

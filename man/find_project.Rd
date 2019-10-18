@@ -2,8 +2,9 @@
 % Please edit documentation in R/deprecated.R
 \name{find_project}
 \alias{find_project}
-\title{Deprecated. Search up the file system
-for the nearest root path of a drake project.}
+\title{Search up the file system
+for the nearest root path of a drake project.
+\lifecycle{deprecated}}
 \usage{
 find_project(path = getwd())
 }

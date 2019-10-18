@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{summaries}
 \alias{summaries}
-\title{Defunct function}
+\title{summaries \lifecycle{defunct}}
 \usage{
 summaries(...)
 }

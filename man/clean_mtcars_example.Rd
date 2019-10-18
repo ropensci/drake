@@ -2,7 +2,8 @@
 % Please edit documentation in R/drake_example.R
 \name{clean_mtcars_example}
 \alias{clean_mtcars_example}
-\title{Clean the mtcars example from \code{drake_example("mtcars")}}
+\title{Clean the mtcars example from \code{drake_example("mtcars")}
+\lifecycle{stable}}
 \usage{
 clean_mtcars_example()
 }

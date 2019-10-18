@@ -2,7 +2,8 @@
 % Please edit documentation in R/outdated.R
 \name{recoverable}
 \alias{recoverable}
-\title{List the most upstream \emph{recoverable} outdated targets.}
+\title{List the most upstream \emph{recoverable} outdated targets.
+\lifecycle{experimental}}
 \usage{
 recoverable(config, make_imports = TRUE, do_prework = TRUE)
 }

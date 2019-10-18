@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{read_graph}
 \alias{read_graph}
-\title{Defunct function}
+\title{read_graph \lifecycle{defunct}}
 \usage{
 read_graph(...)
 }

@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{prune_drake_graph}
 \alias{prune_drake_graph}
-\title{deprecated}
+\title{Prune the graph
+\lifecycle{deprecated}}
 \usage{
 prune_drake_graph(graph, to = igraph::V(graph)$name, jobs = 1)
 }

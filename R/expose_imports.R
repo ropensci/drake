@@ -1,5 +1,6 @@
-#' @title Expose all the imports in a package so `make()` can detect
-#'   all the package's nested functions.
+#' @title Expose all the objects in a package so `make()` can detect
+#'   them as imported dependencies.
+#' \lifecycle{stable}
 #' @description When `drake` analyzes the functions in your environment,
 #'   it understands that some of your functions
 #'   are nested inside other functions.

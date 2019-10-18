@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{as_file}
 \alias{as_file}
-\title{Defunct function}
+\title{as_file \lifecycle{defunct}}
 \usage{
 as_file(...)
 }

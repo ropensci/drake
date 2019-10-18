@@ -6,7 +6,7 @@ test_with_dir("loading targets at cursor works under a real conditions", {
   ## Template for context content. We're testing the addin on target names in
   ## every position occupied by the "%s" placeholder.
   content_template <- c(
-    "foo <- function(a, %s, b){",
+    "foo <- function(a, %s, b) {",
     "  b$%s <- a",
     "  b$%s$a2b3 <- \"foo\"",
     "  %s <- \"foo\"",
@@ -59,7 +59,7 @@ test_with_dir("loading targets at cursor works under a real conditions", {
     target_length
   ) {
     ## helper to mock up rstudio contexts
-    make_context <- function(test_text, column_pos){
+    make_context <- function(test_text, column_pos) {
       structure(list(
         id = "966E9371",
         path = "",
@@ -89,7 +89,7 @@ test_with_dir("loading targets at cursor works under a real conditions", {
     }
 
     mapply(
-      function(test_text, column_pos, target_length){
+      function(test_text, column_pos, target_length) {
         loadd_start <- rs_addin_loadd(make_context(test_text, column_pos))
         loadd_middle <- rs_addin_loadd(
           make_context(

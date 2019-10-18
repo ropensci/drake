@@ -2,7 +2,8 @@
 % Please edit documentation in R/drake_example.R
 \name{load_mtcars_example}
 \alias{load_mtcars_example}
-\title{Load the mtcars example.}
+\title{Load the mtcars example.
+\lifecycle{maturing}}
 \usage{
 load_mtcars_example(envir = parent.frame(), report_file = NULL,
   overwrite = FALSE, force = FALSE)

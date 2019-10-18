@@ -2,11 +2,11 @@
 % Please edit documentation in R/make.R
 \name{make}
 \alias{make}
-\title{Run your project (build the outdated targets).}
+\title{Run your project (build the outdated targets).
+\lifecycle{maturing}}
 \usage{
 make(plan, targets = NULL, envir = parent.frame(), verbose = 1L,
-  hook = NULL, cache = drake::drake_cache(verbose = verbose,
-  console_log_file = console_log_file), fetch_cache = NULL,
+  hook = NULL, cache = drake::drake_cache(), fetch_cache = NULL,
   parallelism = "loop", jobs = 1L, jobs_preprocess = 1L,
   packages = rev(.packages()), lib_loc = NULL,
   prework = character(0), prepend = NULL, command = NULL,
@@ -22,7 +22,7 @@ make(plan, targets = NULL, envir = parent.frame(), verbose = 1L,
   garbage_collection = FALSE, template = list(), sleep = function(i)
   0.01, hasty_build = NULL, memory_strategy = "speed", layout = NULL,
   lock_envir = TRUE, history = TRUE, recover = FALSE,
-  recoverable = TRUE)
+  recoverable = TRUE, curl_handles = list())
 }
 \arguments{
 \item{plan}{Workflow plan data frame.
@@ -471,6 +471,27 @@ and it prevents old metadata from being removed with garbage collection
 (\code{clean(garbage_collection = TRUE)}, \code{gc()} in \code{storr}s).
 If you need to limit the cache size or the number of files in the cache,
 consider \code{make(recoverable = FALSE, progress = FALSE)}.}
+
+\item{curl_handles}{A named list of curl handles. Each value is an
+object from \code{curl::new_handle()}, and each name is a URL
+(and should start with "http", "https", or "ftp").
+Example:
+list(
+\code{http://httpbin.org/basic-auth} = curl::new_handle(
+username = "user", password = "passwd"
+)
+)
+Then, if your plan has
+\code{file_in("http://httpbin.org/basic-auth/user/passwd")}
+\code{drake} will authenticate using the username and password of the handle
+for \code{http://httpbin.org/basic-auth/}.
+
+\code{drake} uses partial matching on text to
+find the right handle of the \code{file_in()} URL, so the name of the handle
+could be the complete URL (\code{"http://httpbin.org/basic-auth/user/passwd"})
+or a part of the URL (e.g. \code{"http://httpbin.org/"} or
+\code{"http://httpbin.org/basic-auth/"}). If you have multiple handles
+whose names match your URL, \code{drake} will choose the closest match.}
 }
 \value{
 nothing
@@ -501,13 +522,6 @@ Interactive R sessions are still useful,
 but they easily grow stale.
 Targets can falsely invalidate if you accidentally change
 a function or data object in your environment.
-So in interactive mode, \code{make()} now pauses with a menu
-to protect you from environment-related instability.
-
-You can control this menu with the \code{drake_make_menu} global option.
-Run \code{options(drake_make_menu = TRUE)} to show the menu once per session
-and \code{options(drake_make_menu = FALSE)} to disable it entirely.
-You may wish to add a call to \code{options()} in your local \code{.Rprofile} file.
 }
 
 \section{Self-invalidation}{

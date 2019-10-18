@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{drake_palette}
 \alias{drake_palette}
-\title{Deprecated. Show drake's color palette.}
+\title{Show drake's color palette.
+\lifecycle{deprecated}}
 \usage{
 drake_palette()
 }

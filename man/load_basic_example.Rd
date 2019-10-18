@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{load_basic_example}
 \alias{load_basic_example}
-\title{Defunct function}
+\title{load_basic_example \lifecycle{defunct}}
 \usage{
 load_basic_example(...)
 }

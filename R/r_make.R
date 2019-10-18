@@ -1,10 +1,15 @@
-#' @title Reproducible R session management for drake functions
-#' @description `drake` searches your environment
+#' @title Launch a drake function in a fresh new R process
+#' \lifecycle{maturing}
+#' @description The `r_*()` functions, such as `r_make()`,
+#'   enhance reproducibility by launching a `drake` function in
+#'   a separate R process.
+#' @details `drake` searches your environment
 #'   to detect dependencies, so functions like [make()], [outdated()], etc.
 #'   are designed to run in fresh clean R sessions. Wrappers [r_make()],
 #'   [r_outdated()], etc. run reproducibly even if your current R session
 #'   is old and stale.
-#' @details [r_outdated()] runs the four steps below.
+#'
+#'  [r_outdated()] runs the four steps below.
 #'   [r_make()] etc. are similar.
 #'   1. Launch a new `callr::r()` session.
 #'   2. In that fresh session, run the R script from the `source` argument.

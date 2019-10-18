@@ -2,8 +2,9 @@
 % Please edit documentation in R/expose_imports.R
 \name{expose_imports}
 \alias{expose_imports}
-\title{Expose all the imports in a package so \code{make()} can detect
-all the package's nested functions.}
+\title{Expose all the objects in a package so \code{make()} can detect
+them as imported dependencies.
+\lifecycle{stable}}
 \usage{
 expose_imports(package, character_only = FALSE, envir = parent.frame(),
   jobs = 1)

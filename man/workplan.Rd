@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{workplan}
 \alias{workplan}
-\title{Defunct function}
+\title{workplan \lifecycle{defunct}}
 \usage{
 workplan(...)
 }

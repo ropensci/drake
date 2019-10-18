@@ -2,7 +2,8 @@
 % Please edit documentation in R/outdated.R
 \name{outdated}
 \alias{outdated}
-\title{List the targets that are out of date.}
+\title{List the targets that are out of date.
+\lifecycle{stable}}
 \usage{
 outdated(config, make_imports = TRUE, do_prework = TRUE)
 }

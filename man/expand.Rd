@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{expand}
 \alias{expand}
-\title{Defunct function}
+\title{expand \lifecycle{defunct}}
 \usage{
 expand(...)
 }

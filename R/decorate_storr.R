@@ -13,6 +13,7 @@ decorate_storr <- function(storr) {
     default_namespace = storr$default_namespace,
     envir = storr$envir,
     hash_algorithm = hash_algorithm,
+    history = recover_default_history(path),
     ht_encode_path = ht_new(),
     ht_decode_path = ht_new(),
     ht_encode_namespaced = ht_new(),
@@ -33,6 +34,7 @@ refclass_decorated_storr <- methods::setRefClass(
     "default_namespace",
     "envir",
     "hash_algorithm",
+    "history",
     "ht_encode_path",
     "ht_decode_path",
     "ht_encode_namespaced",
@@ -66,11 +68,103 @@ refclass_decorated_storr <- methods::setRefClass(
     get_value = function(hash, ...) {
       dcst_get_value(hash = hash, ..., .self = .self)
     },
+    safe_get = function(key, ...) {
+      out <- just_try(.self$get(key = key, ...))
+      if (inherits(out, "try-error")) {
+        out <- NA_character_
+      }
+      out
+    },
+    safe_get_hash = function(key, ...) {
+      out <- just_try(.self$get_hash(key = key, ...))
+      if (inherits(out, "try-error")) {
+        out <- NA_character_
+      }
+      out
+    },
     set = function(key, value, ...) {
       dcst_set(value = value, key = key, ..., .self = .self)
     },
-    reset_ht_hash = function() {
+    memo_hash = function(x, fun, ...) {
+      ht_memo(ht = .self$ht_hash, x = x, fun = fun, ...)
+    },
+    reset_memo_hash = function() {
       ht_clear(.self$ht_hash)
+    },
+    reset_ht_hash = function() {
+      # deprecated on 2019-09-13
+      ht_clear(.self$ht_hash)
+    },
+    encode_path = function(x) {
+      ht_memo(ht = .self$ht_encode_path, x = x, fun = reencode_path)
+    },
+    decode_path = function(x) {
+      ht_memo(ht = .self$ht_decode_path, x = x, fun = redecode_path)
+    },
+    encode_namespaced = function(x) {
+      ht_memo(ht = .self$ht_encode_namespaced, x = x, fun = reencode_namespaced)
+    },
+    decode_namespaced = function(x) {
+      ht_memo(ht = .self$ht_decode_namespaced, x = x, fun = redecode_namespaced)
+    },
+    display_keys = function(x) {
+      vapply(
+        X = x,
+        FUN = display_key,
+        FUN.VALUE = character(1),
+        USE.NAMES = FALSE,
+        .self = .self
+      )
+    },
+    set_progress = function(target, value) {
+      .self$driver$set_hash(
+        key = target,
+        namespace = "progress",
+        hash = .self$ht_progress[[value]]
+      )
+    },
+    get_progress = function(target) {
+      retrieve_progress(target = target, cache = .self)
+    },
+    set_history = function(history = NULL) {
+      .self$history <- manage_history(history, cache_path = .self$path)
+    },
+    import = function(
+      from,
+      ...,
+      list = NULL,
+      jobs = 1L,
+      gc = TRUE
+    ) {
+      stopifnot(inherits(from, "refclass_decorated_storr"))
+      import_targets(
+        ...,
+        list = list,
+        from = from,
+        to = .self,
+        jobs = jobs,
+        gc = gc
+      )
+      invisible()
+    },
+    export = function(
+      to,
+      ...,
+      list = NULL,
+      targets = NULL,
+      jobs = 1L,
+      gc = TRUE
+    ) {
+      stopifnot(inherits(to, "refclass_decorated_storr"))
+      import_targets(
+        ...,
+        list = list,
+        from = .self,
+        to = to,
+        jobs = jobs,
+        gc = gc
+      )
+      invisible()
     },
     # Delegate to storr:
     archive_export = function(...) .self$storr$archive_export(...),
@@ -83,13 +177,11 @@ refclass_decorated_storr <- methods::setRefClass(
     duplicate = function(...) .self$storr$duplicate(...),
     exists = function(...) .self$storr$exists(...),
     exists_object = function(...) .self$storr$exists_object(...),
-    export = function(...) .self$storr$export(...),
     fill = function(...) .self$storr$fill(...),
     flush_cache = function(...) .self$storr$flush_cache(...),
     get_hash = function(...) .self$storr$get_hash(...),
     hash_object = function(...) .self$storr$hash_object(...),
     hash_raw = function(...) .self$storr$hash_raw(...),
-    import = function(...) .self$storr$import(...),
     index_export = function(...) .self$storr$index_export(...),
     index_import = function(...) .self$storr$index_import(...),
     list = function(...) .self$storr$list(...),
@@ -134,7 +226,19 @@ dcst_get_.drake_format_fst <- function(value, key, .self) {
   fst::read_fst(.self$file_return_key(key))
 }
 
-# Requires Python Keras and TensorFlow to test. Tested in test-interactive.R.
+dcst_get_.drake_format_fst_dt <- function(value, key, .self) { # nolint
+  assert_pkg("data.table")
+  assert_pkg("fst")
+  fst::read_fst(.self$file_return_key(key), as.data.table = TRUE)
+}
+
+dcst_get_.drake_format_diskframe <- function(value, key, .self) { # nolint
+  assert_pkg("disk.frame")
+  assert_pkg("fst")
+  disk.frame::disk.frame(.self$file_return_key(key), backend = "fst")
+}
+
+# Requires Python Keras and TensorFlow to test. Tested in test-keras.R.
 # nocov start
 dcst_get_.drake_format_keras <- function(value, key, .self) {
   assert_pkg("keras")
@@ -164,7 +268,19 @@ dcst_get_value_.drake_format_fst <- function(value, hash, .self) { # nolint
   fst::read_fst(.self$file_return_hash(hash))
 }
 
-# Requires Python Keras and TensorFlow to test. Tested in test-interactive.R.
+dcst_get_value_.drake_format_fst_dt <- function(value, hash, .self) { # nolint
+  assert_pkg("data.table")
+  assert_pkg("fst")
+  fst::read_fst(.self$file_return_hash(hash), as.data.table = TRUE)
+}
+
+dcst_get_value_.drake_format_diskframe <- function(value, hash, .self) { # nolint
+  assert_pkg("disk.frame")
+  assert_pkg("fst")
+  disk.frame::disk.frame(.self$file_return_hash(hash), backend = "fst")
+}
+
+# Requires Python Keras and TensorFlow to test. Tested in test-keras.R.
 # nocov start
 dcst_get_value_.drake_format_keras <- function(value, hash, .self) { # nolint
   assert_pkg("keras")
@@ -192,7 +308,24 @@ dcst_set.drake_format_fst <- function(value, key, ..., .self) {
   dcst_set_move_tmp(key = key, value = value, tmp = tmp, .self = .self)
 }
 
-# Requires Python Keras and TensorFlow to test. Tested in test-interactive.R.
+dcst_set.drake_format_fst_dt <- function(value, key, ..., .self) {
+  assert_pkg("data.table")
+  assert_pkg("fst")
+  .self$assert_dirs()
+  tmp <- .self$file_tmp()
+  fst::write_fst(x = value$value, path = tmp)
+  dcst_set_move_tmp(key = key, value = value, tmp = tmp, .self = .self)
+}
+
+dcst_set.drake_format_diskframe <- function(value, key, ..., .self) { # nolint
+  assert_pkg("disk.frame")
+  assert_pkg("fst")
+  .self$assert_dirs()
+  tmp <- attr(value$value, "path")
+  dcst_set_move_tmp(key = key, value = value, tmp = tmp, .self = .self)
+}
+
+# Requires Python Keras and TensorFlow to test. Tested in test-test-keras.R
 # nocov start
 dcst_set.drake_format_keras <- function(value, key, ..., .self) {
   assert_pkg("keras")
@@ -219,25 +352,304 @@ dcst_set.drake_format_rds <- function(value, key, ..., .self) {
 }
 
 dcst_set_move_tmp <- function(key, value, tmp, .self) {
-  hash_tmp <- digest::digest(
-    object = tmp,
-    algo = .self$hash_algorithm,
-    serialize = FALSE,
-    file = TRUE
-  )
+  hash_tmp <- rehash_local(tmp, .self$hash_algorithm)
   class(hash_tmp) <- class(value)
   hash <- .self$storr$set(key = key, value = hash_tmp)
   file <- .self$file_return_hash(hash)
-  file.copy(tmp, file)
+  storage_move(
+    tmp,
+    file,
+    overwrite = FALSE,
+    merge = FALSE,
+    warn = FALSE
+  )
   invisible(hash)
 }
 
-dir_create <- function(x) {
-  if (!file.exists(x)) {
-    dir.create(x, showWarnings = FALSE, recursive = TRUE)
+#' @title drake tempfile
+#' \lifecycle{experimental}
+#' @description Create the path to a temporary file inside drake's cache.
+#' @details This function is just like the `tempfile()` function in base R
+#'   except that the path points to a special location inside `drake`'s cache.
+#'   This ensures that if the file needs to be copied to
+#'   persistent storage in the cache, `drake` does not need to copy across
+#'   physical storage media. Example: the `"diskframe"` format. See the
+#'   "Formats" and "Columns" sections of the [drake_plan()] help file.
+#'   Unless you supply the cache or the path to the cache
+#'   (see [drake_cache()]) `drake` will assume the cache folder is named
+#'   `.drake/` and it is located either in your working directory or an
+#'   ancestor of your working directory.
+#' @export
+#' @seealso [drake_cache()], [new_cache()]
+#' @inheritParams cached
+#' @examples
+#' cache <- new_cache(tempfile())
+#' # No need to supply a cache if a .drake/ folder exists.
+#' drake_tempfile(cache = cache)
+#' drake_plan(
+#'   x = target(
+#'     as.disk.frame(large_data, outdir = drake_tempfile()),
+#'     format = "diskframe"
+#'   )
+#' )
+drake_tempfile <- function(
+  path = NULL,
+  cache = drake::drake_cache(path = path)
+) {
+  if (is.null(cache)) {
+    stop("drake cache not found", call. = FALSE)
   }
-  if (!dir.exists(x)) {
-    stop("cannot create directory at ", shQuote(x), call. = FALSE)
+  cache <- decorate_storr(cache)
+  cache$file_tmp()
+}
+
+#' @title Show a file's encoded representation in the cache
+#' \lifecycle{stable}
+#' @description This function simply wraps literal double quotes around
+#' the argument `x` so `drake` knows it is the name of a file.
+#' Use when you are calling functions like `deps_code()`: for example,
+#' `deps_code(file_store("report.md"))`. See the examples for details.
+#' Internally, `drake` wraps the names of file targets/imports
+#' inside literal double quotes to avoid confusion between
+#' files and generic R objects.
+#' @export
+#' @return A single-quoted character string: i.e., a filename
+#' understandable by drake.
+#' @param x Character string to be turned into a filename
+#' understandable by drake (i.e., a string with literal
+#' single quotes on both ends).
+#' @examples
+#' # Wraps the string in single quotes.
+#' file_store("my_file.rds") # "'my_file.rds'"
+#' \dontrun{
+#' isolate_example("contain side effects", {
+#' if (suppressWarnings(require("knitr"))) {
+#' load_mtcars_example() # Get the code with drake_example("mtcars").
+#' make(my_plan) # Run the workflow to build the targets
+#' list.files() # Should include input "report.Rmd" and output "report.md".
+#' head(readd(small)) # You can use symbols for ordinary objects.
+#' # But if you want to read cached info on files, use `file_store()`.
+#' readd(file_store("report.md"), character_only = TRUE) # File fingerprint.
+#' deps_code(file_store("report.Rmd"))
+#' config <- drake_config(my_plan)
+#' deps_profile(
+#'   file_store("report.Rmd"),
+#'   config = config,
+#'   character_only = TRUE
+#' )
+#' }
+#' })
+#' }
+file_store <- function(x) {
+  reencode_path(x)
+}
+
+display_key <- function(x, .self) {
+  if (is_encoded_path(x)) {
+    display_path(x = x, .self = .self)
+  } else if (is_encoded_namespaced(x)) {
+    sprintf("%s", .self$decode_namespaced(x = x))
+  } else {
+    x
   }
-  invisible()
+}
+
+display_path <- function(x, .self) {
+  path_ <- .self$decode_path(x = x)
+  if (is_url(path_)) {
+    sprintf("url %s", path_)
+  } else {
+    sprintf("file %s", path_)
+  }
+}
+
+redisplay_keys <- function(x) {
+  vapply(
+    X = x,
+    FUN = redisplay_key,
+    FUN.VALUE = character(1),
+    USE.NAMES = FALSE
+  )
+}
+
+redisplay_key <- function(x) {
+  if (is_encoded_path(x)) {
+    redisplay_path(x = x)
+  } else if (is_encoded_namespaced(x)) {
+    sprintf("%s", redecode_namespaced(x = x))
+  } else {
+    x
+  }
+}
+
+redisplay_path <- function(x) {
+  path <- redecode_path(x = x)
+  if (is_url(path)) {
+    sprintf("url %s", path)
+  } else {
+    sprintf("file %s", path)
+  }
+}
+
+is_encoded_path <- function(x) {
+  substr(x = x, start = 1, stop = 2) == "p-"
+}
+
+is_encoded_namespaced <- function(x) {
+  substr(x = x, start = 1, stop = 2) == "n-"
+}
+
+reencode_path <- function(x) {
+  y <- base64url::base32_encode(x = x, use.padding = FALSE)
+  sprintf("p-%s", y)
+}
+
+redecode_path <- function(x) {
+  y <- substr(x = x, start = 3, stop = 1e6)
+  base64url::base32_decode(x = y, use.padding = FALSE)
+}
+
+reencode_namespaced <- function(x) {
+  y <- base64url::base32_encode(x, use.padding = FALSE)
+  sprintf("n-%s", y)
+}
+
+redecode_namespaced <- redecode_path
+
+standardize_key <- function(text) {
+  if (any(grepl("::", text))) {
+    text <- reencode_namespaced(text)
+  }
+  text
+}
+
+ht_progress <- function(hash_algorithm) {
+  keys <- c("running", "done", "failed")
+  out <- lapply(keys, progress_hash, hash_algorithm = hash_algorithm)
+  names(out) <- keys
+  out
+}
+
+progress_hash <- function(key, hash_algorithm) {
+  out <- digest::digest(
+    key,
+    algo = hash_algorithm,
+    serialize = FALSE
+  )
+  gsub("^.", substr(key, 1, 1), out)
+}
+
+retrieve_progress <- function(target, cache) {
+  if (cache$exists(key = target, namespace = "progress")) {
+    hash <- cache$get_hash(key = target, namespace = "progress")
+    switch(
+      substr(hash, 1, 1),
+      r = "running",
+      d = "done",
+      f = "failed",
+      NA_character_
+    )
+  } else{
+    "none"
+  }
+}
+
+manage_history <- function(history, cache_path) {
+  if (!is_history(history)) {
+    migrate_history(history, cache_path)
+  }
+  if (is.null(history)) {
+    history <- recover_default_history(cache_path)
+  } else if (identical(history, TRUE)) {
+    history <- initialize_history(cache_path)
+  } else if (identical(history, FALSE)) {
+    history <- NULL
+  }
+  stopifnot(is.null(history) || is_history(history))
+  history
+}
+
+migrate_history <- function(history, cache_path) {
+  old_path <- file.path(dirname(cache_path), ".drake_history")
+  if (file.exists(old_path)) {
+    dir_move(old_path, default_history_path(cache_path), merge = FALSE)
+  }
+}
+
+recover_default_history <- function(cache_path) {
+  history_path <- default_history_path(cache_path)
+  if (file.exists(history_path)) {
+    history_queue(history_path)
+  }
+}
+
+initialize_history <- function(cache_path) {
+  history_queue(default_history_path(cache_path))
+}
+
+default_history_path <- function(cache_path) {
+  file.path(cache_path, "drake", "history")
+}
+
+history_queue <- function(history_path) {
+  dir_create(history_path)
+  txtq::txtq(history_path)
+}
+
+is_history <- function(history) {
+  inherits(history, "R6_txtq")
+}
+
+import_targets <- function(..., list = character(0), from, to, jobs, gc) {
+  targets <- c(as.character(match.call(expand.dots = FALSE)$...), list)
+  if (requireNamespace("tidyselect", quietly = TRUE)) {
+    targets <- drake_tidyselect_cache(
+      ...,
+      list = list,
+      cache = from,
+      namespaces = "meta"
+    )
+  }
+  if (!length(targets)) {
+    targets <- from$list()
+  }
+  lightly_parallelize(
+    X = targets %||% from$list(),
+    FUN = import_target,
+    jobs = jobs,
+    from = from,
+    to = to,
+    gc = gc
+  )
+}
+
+import_target <- function(target, from, to, gc) {
+  import_target_storr(target = target, from = from, to = to, gc = gc)
+  import_target_formatted(target = target, from = from, to = to)
+}
+
+import_target_storr <- function(target, from, to, gc) {
+  for (ns in setdiff(from$storr$list_namespaces(), "progress")) {
+    if (from$storr$exists(target, namespace = ns)) {
+      value <- from$get(key = target, namespace = ns)
+      to$set(key = target, value = value, namespace = ns)
+    }
+    if (gc) {
+      gc()
+    }
+  }
+}
+
+import_target_formatted <- function(target, from, to) {
+  if (file.exists(from$file_return_key(target))) {
+    file_move(
+      from = from$file_return_key(target),
+      to = to$file_return_key(target)
+    )
+  }
+}
+
+# Should be used as sparingly as possible.
+just_try <- function(code) {
+  try(suppressWarnings(code), silent = TRUE)
 }

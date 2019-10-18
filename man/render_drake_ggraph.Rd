@@ -2,8 +2,9 @@
 % Please edit documentation in R/drake_ggraph.R
 \name{render_drake_ggraph}
 \alias{render_drake_ggraph}
-\title{Render a static \code{ggplot2}/\code{ggraph} visualization from
-\code{\link[=drake_graph_info]{drake_graph_info()}} output.}
+\title{Visualize the workflow with \code{ggplot2}/\code{ggraph} using
+\code{\link[=drake_graph_info]{drake_graph_info()}} output.
+\lifecycle{stable}}
 \usage{
 render_drake_ggraph(graph_info, main = graph_info$default_title,
   label_nodes = FALSE, transparency = TRUE)

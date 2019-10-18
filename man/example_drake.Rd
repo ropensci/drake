@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{example_drake}
 \alias{example_drake}
-\title{Defunct function}
+\title{example_drake \lifecycle{defunct}}
 \usage{
 example_drake(...)
 }

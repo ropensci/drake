@@ -62,7 +62,10 @@ test_with_dir("mtcars example works", {
   # Check that file is not rehashed.
   # Code coverage should cover every line of storage_hash().
   expect_true(is.character(storage_hash(
-    target = encode_path("report.Rmd"), config = con, size_threshold = -1)))
+    target = reencode_path("report.Rmd"),
+    config = con,
+    size_threshold = -1
+  )))
   config <- drake_config(
     my_plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = 1L)

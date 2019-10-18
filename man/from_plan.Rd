@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{from_plan}
 \alias{from_plan}
-\title{Defunct function.}
+\title{from_plan \lifecycle{defunct}}
 \usage{
 from_plan(column)
 }

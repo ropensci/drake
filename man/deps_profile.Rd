@@ -2,7 +2,8 @@
 % Please edit documentation in R/deps.R
 \name{deps_profile}
 \alias{deps_profile}
-\title{Find out why a target is out of date.}
+\title{Find out why a target is out of date.
+\lifecycle{stable}}
 \usage{
 deps_profile(target, config, character_only = FALSE)
 }

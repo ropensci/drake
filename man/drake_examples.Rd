@@ -2,7 +2,8 @@
 % Please edit documentation in R/drake_example.R
 \name{drake_examples}
 \alias{drake_examples}
-\title{List the names of all the drake examples.}
+\title{List the names of all the drake examples.
+\lifecycle{stable}}
 \usage{
 drake_examples(quiet = TRUE)
 }

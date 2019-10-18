@@ -1,11 +1,10 @@
-#' @title Create the internal runtime parameter list
-#'   used internally in [make()].
-#' @description [drake_config()] collects and sanitizes the multitude of
-#'   parameters and settings that [make()] needs to do its job:
-#'   the plan, packages,
-#'   the environment of functions and initial data objects,
-#'   parallel computing instructions,
-#'   verbosity level, etc.
+#' @title Interpret the plan and prepare for [make()]
+#' \lifecycle{maturing}
+#' @description [drake_config()] does all the preprocessing that
+#'   [make()] needs to build targets. This includes interpreting
+#'   the plan (from [drake_plan()]) and analyzing how all the
+#'   targets fit together. The result is a list of objects
+#'   that [make()] needs to keep track of everything during runtime.
 #' @details Once you create a list with [drake_config()],
 #'   do not modify it by hand.
 #'
@@ -435,6 +434,27 @@
 #'   If you need to limit the cache size or the number of files in the cache,
 #'   consider `make(recoverable = FALSE, progress = FALSE)`.
 #'
+#' @param curl_handles A named list of curl handles. Each value is an
+#'   object from `curl::new_handle()`, and each name is a URL
+#'   (and should start with "http", "https", or "ftp").
+#'   Example:
+#'   list(
+#'     `http://httpbin.org/basic-auth` = curl::new_handle(
+#'       username = "user", password = "passwd"
+#'     )
+#'   )
+#'   Then, if your plan has
+#'   `file_in("http://httpbin.org/basic-auth/user/passwd")`
+#'   `drake` will authenticate using the username and password of the handle
+#'   for `http://httpbin.org/basic-auth/`.
+#'
+#'   `drake` uses partial matching on text to
+#'   find the right handle of the `file_in()` URL, so the name of the handle
+#'   could be the complete URL (`"http://httpbin.org/basic-auth/user/passwd"`)
+#'   or a part of the URL (e.g. `"http://httpbin.org/"` or
+#'   `"http://httpbin.org/basic-auth/"`). If you have multiple handles
+#'   whose names match your URL, `drake` will choose the closest match.
+#'
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {
@@ -459,8 +479,7 @@ drake_config <- function(
   envir = parent.frame(),
   verbose = 1L,
   hook = NULL,
-  cache = drake::drake_cache(
-    verbose = verbose, console_log_file = console_log_file),
+  cache = drake::drake_cache(),
   fetch_cache = NULL,
   parallelism = "loop",
   jobs = 1L,
@@ -503,100 +522,26 @@ drake_config <- function(
   lock_envir = TRUE,
   history = TRUE,
   recover = FALSE,
-  recoverable = TRUE
+  recoverable = TRUE,
+  curl_handles = list()
 ) {
-  log_msg(
-    "begin drake_config()",
-    config = list(console_log_file = console_log_file)
-  )
+  logger <- logger(verbose = verbose, file = console_log_file)
+  logger$minor("begin drake_config()")
   deprecate_fetch_cache(fetch_cache)
-  if (!is.null(hook)) {
-    warning(
-      "Argument `hook` is deprecated.",
-      call. = FALSE
-    ) # 2018-10-25 # nolint
-  }
-  if (!is.null(pruning_strategy)) {
-    warning(
-      "Argument `pruning_strategy` is deprecated. ",
-      "Use `memory_strategy` instead.",
-      call. = FALSE
-    ) # 2018-11-01 # nolint
-  }
-  if (!is.null(timeout)) {
-    warning(
-      "Argument `timeout` is deprecated. ",
-      "Use `elapsed` and/or `cpu` instead.",
-      call. = FALSE
-      # 2018-12-07 # nolint
-    )
-  }
-  if (!is.null(graph)) {
-    warning(
-      "Argument `graph` is deprecated. Instead, ",
-      "the preprocessing of the graph is memoized to save time.",
-      call. = FALSE
-      # 2018-12-19 # nolint
-    )
-  }
-  if (!is.null(layout)) {
-    warning(
-      "Argument `layout` is deprecated. Instead, ",
-      "the preprocessing of the layout is memoized to save time.",
-      call. = FALSE
-      # 2018-12-19 # nolint
-    )
-  }
-  if (!is.null(timeout)) {
-    warning(
-      "Argument `timeout` is deprecated. ",
-      "Use `elapsed` and/or `cpu` instead.",
-      call. = FALSE
-      # 2018-12-07 # nolint
-    )
-  }
-  if (!is.null(hasty_build)) {
-    warning(
-      "Argument `hasty_build` is deprecated. ",
-      "Check out https://github.com/wlandau/drake.hasty instead.",
-      call. = FALSE
-      # 2018-12-07 # nolint
-    )
-  }
-  if (!is.null(session)) {
-    # Deprecated on 2018-12-18.
-    warning(
-      "The ", sQuote("session"), " argument of make() and drake_config() ",
-      "is deprecated. make() will NOT run in a separate callr session. ",
-      "For reproducibility, you may wish to try make(lock_envir = TRUE). ",
-      "Details: https://github.com/ropensci/drake/issues/623.",
-      call. = FALSE
-    )
-  }
-  if (!is.null(ensure_workers)) {
-    # Deprecated on 2018-12-18.
-    warning(
-      "The ", sQuote("ensure_workers"),
-      " argument of make() and drake_config() ",
-      "is deprecated.",
-      call. = FALSE
-    )
-  }
-  if (
-    !is.null(command) ||
-    !is.null(args) ||
-    !is.null(recipe_command) ||
-    !is.null(prepend) ||
-    !is.null(makefile_path)
-  ) {
-    warning(
-      "Arguments `command`, `args`, `prepend`, `makefile_path`, ",
-      "`recipe_command` are deprecated ",
-      "because Makefile parallelism is no longer supported.",
-      call. = FALSE
-      # 2019-01-03 # nolint
-    )
-  }
+  deprecate_arg(hook, "hook") # 2018-10-25 # nolint
+  # 2018-11-01 # nolint
+  deprecate_arg(pruning_strategy, "pruning_strategy", "memory_strategy")
+  deprecate_arg(timeout, "timeout", "elapsed and/or cpu")
+  deprecate_arg(graph, "graph")
+  deprecate_arg(layout, "layout")
+  deprecate_arg(hasty_build, "hasty_build")
+  deprecate_arg(session, "session")
+  deprecate_arg(ensure_workers, "ensure_workers")
+  deprecate_arg(command, "command")
+  deprecate_arg(args, "args")
+  deprecate_arg(recipe_command, "recipe_command")
+  deprecate_arg(prepend, "prepend")
+  deprecate_arg(makefile_path, "makefile_path")
   memory_strategy <- match.arg(memory_strategy, choices = memory_strategies())
   if (memory_strategy == "memory") {
     memory_strategy <- "preclean"
@@ -614,14 +559,11 @@ drake_config <- function(
   trigger <- convert_old_trigger(trigger)
   sleep <- `environment<-`(sleep, new.env(parent = globalenv()))
   if (is.null(cache)) {
-    cache <- recover_cache_(
-      verbose = verbose,
-      fetch_cache = fetch_cache,
-      console_log_file = console_log_file
-    )
-  } else {
-    cache <- decorate_storr(cache)
+    cache <- new_cache()
   }
+  cache <- decorate_storr(cache)
+  cache$set_history(history)
+  logger$minor("cache", cache$path)
   seed <- choose_seed(supplied = seed, cache = cache)
   if (identical(force, TRUE)) {
     drake_set_session_info(cache = cache, full = session_info)
@@ -629,9 +571,8 @@ drake_config <- function(
   layout <- create_drake_layout(
     plan = plan,
     envir = envir,
-    verbose = verbose,
+    logger = logger,
     jobs = jobs_preprocess,
-    console_log_file = console_log_file,
     trigger = trigger,
     cache = cache
   )
@@ -641,10 +582,8 @@ drake_config <- function(
     targets = targets,
     cache = cache,
     jobs = jobs_preprocess,
-    console_log_file = console_log_file,
-    verbose = verbose
+    logger = logger
   )
-  history <- initialize_history(history, cache)
   lazy_load <- parse_lazy_arg(lazy_load)
   caching <- match.arg(caching)
   recover <- as.logical(recover)
@@ -656,7 +595,7 @@ drake_config <- function(
     parallelism = parallelism,
     jobs = jobs,
     jobs_preprocess = jobs_preprocess,
-    verbose = verbose,
+    logger = logger,
     packages = packages,
     lib_loc = lib_loc,
     prework = prework,
@@ -678,19 +617,18 @@ drake_config <- function(
     caching = caching,
     keep_going = keep_going,
     memory_strategy = memory_strategy,
-    console_log_file = console_log_file,
     garbage_collection = garbage_collection,
     template = template,
     sleep = sleep,
     hasty_build = hasty_build,
     lock_envir = lock_envir,
     force = force,
-    history = history,
     recover = recover,
-    recoverable = recoverable
+    recoverable = recoverable,
+    curl_handles = curl_handles
   )
   config_checks(out)
-  log_msg("end drake_config()", config = out)
+  logger$minor("end drake_config()")
   out
 }
 
@@ -740,79 +678,15 @@ get_previous_seed <- function(cache) {
   }
 }
 
-ht_progress <- function(hash_algorithm) {
-  keys <- c("running", "done", "failed")
-  out <- lapply(keys, progress_hash, hash_algorithm = hash_algorithm)
-  names(out) <- keys
-  out
-}
-
-progress_hash <- function(key, hash_algorithm) {
-  out <- digest::digest(
-    key,
-    algo = hash_algorithm,
-    serialize = FALSE
-  )
-  gsub("^.", substr(key, 1, 1), out)
-}
-
-initialize_history <- function(history, cache) {
-  migrate_history(history, cache)
-  if (identical(history, TRUE)) {
-    history <- default_history_queue(cache)
-  }
-  if (!is.null(history) && !identical(history, FALSE)) {
-    stopifnot(is_history(history))
-  }
-  history
-}
-
-migrate_history <- function(history, cache) {
-  if (is_history(history)) {
-    return()
-  }
-  old_path <- file.path(dirname(cache$path), ".drake_history")
-  if (file.exists(old_path)) {
-    dir_create(file.path(cache$path, "drake"))
-    file.rename(old_path, file.path(cache$path, "drake", "history"))
-  }
-}
-
-is_history <- function(history) {
-  inherits(history, "R6_txtq")
-}
-
 # Load an existing drake files system cache if it exists
 # or create a new one otherwise.
-recover_cache_ <- function(
-  path = NULL,
-  hash_algorithm = NULL,
-  short_hash_algo = NULL,
-  long_hash_algo = NULL,
-  force = FALSE,
-  verbose = 1L,
-  fetch_cache = NULL,
-  console_log_file = NULL
-) {
+# TO DO: remove all the arguments when we make recover_cache() defunct.
+recover_cache_ <- function(path = NULL, hash_algorithm = NULL) {
   path <- path %||% default_cache_path()
-  deprecate_force(force)
-  deprecate_fetch_cache(fetch_cache)
-  deprecate_hash_algo_args(short_hash_algo, long_hash_algo)
   hash_algorithm <- sanitize_hash_algorithm(hash_algorithm)
-  cache <- this_cache_(
-    path = path,
-    verbose = verbose,
-    fetch_cache = fetch_cache,
-    console_log_file = console_log_file
-  )
+  cache <- this_cache_(path = path)
   if (is.null(cache)) {
-    cache <- new_cache(
-      path = path,
-      verbose = verbose,
-      hash_algorithm = hash_algorithm,
-      fetch_cache = fetch_cache,
-      console_log_file = console_log_file
-    )
+    cache <- new_cache(path = path, hash_algorithm = hash_algorithm)
   }
   cache
 }
@@ -850,13 +724,17 @@ plan_check_format_col <- function(plan) {
   }
   format <- plan$format
   format <- format[!is.na(format)]
-  illegal <- setdiff(unique(format), c("fst", "keras", "rds"))
+  formats <- c("fst", "fst_dt", "diskframe", "keras", "rds")
+  illegal <- setdiff(unique(format), formats)
   if (!length(illegal)) {
     return()
   }
+  formats_str <- paste0("\"", formats, "\"")
+  formats_str <- paste(formats_str, collapse = ", ")
   stop(
     "the format column of your drake plan can only have values ",
-    "\"fst\", \"keras\", \"rds\", or NA. Illegal values found:\n",
+    formats_str,
+    ", or NA. Illegal values found:\n",
     multiline_message(illegal),
     call. = FALSE
   )

@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{plan}
 \alias{plan}
-\title{Defunct function}
+\title{plan \lifecycle{defunct}}
 \usage{
 plan(...)
 }

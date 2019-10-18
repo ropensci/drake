@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{parallel_stages}
 \alias{parallel_stages}
-\title{Defunct function}
+\title{parallel_stages \lifecycle{defunct}}
 \usage{
 parallel_stages(...)
 }

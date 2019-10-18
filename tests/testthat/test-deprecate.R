@@ -1,6 +1,7 @@
 drake_context("deprecation")
 
 test_with_dir("defunct functions", {
+  skip_on_cran()
   suppressWarnings({
     expect_condition(
       drake_defunct(),
@@ -16,7 +17,8 @@ test_with_dir("defunct functions", {
 })
 
 test_with_dir("deprecation: target()", {
-  expect_warning(target(123), regexp = "deprecated")
+  skip_on_cran()
+  expect_warning(target(123), regexp = "user-side")
 })
 
 test_with_dir("deprecation: fetch_cache", {
@@ -65,13 +67,14 @@ test_with_dir("deprecation: cache functions", {
 })
 
 test_with_dir("deprecation: built", {
+  skip_on_cran()
   plan <- drake_plan(x = 1)
   make(plan)
   config <- drake_config(plan)
   expect_warning(built(cache = NULL))
   expect_equal(
     sort(suppressWarnings(built())),
-    sort(display_keys(plan$target))
+    sort(redisplay_keys(plan$target))
   )
   twopiece <- sort(
     c(
@@ -81,12 +84,13 @@ test_with_dir("deprecation: built", {
   )
   expect_equal(
     sort(cached()),
-    sort(display_keys(twopiece))
+    sort(redisplay_keys(twopiece))
   )
   expect_warning(imported(files_only = TRUE))
 })
 
 test_with_dir("deprecation: imported", {
+  skip_on_cran()
   expect_identical(
     suppressWarnings(imported(cache = NULL)),
     character(0)
@@ -102,6 +106,7 @@ test_with_dir("deprecation: imported", {
 })
 
 test_with_dir("deprecation: find_project", {
+  skip_on_cran()
   scratch <- "./scratch"
   dir.create(scratch)
   fp <- suppressWarnings(find_project(path = scratch))
@@ -212,6 +217,11 @@ test_with_dir("deprecated arguments", {
     drake_config(plan = pl, ensure_workers = TRUE),
     regexp = "deprecated"
   )
+  expect_warning(cached(verbose = 1L), regexp = "deprecated")
+  expect_warning(
+    drake_cache(console_log_file = "123"),
+    regexp = "deprecated"
+  )
 })
 
 test_with_dir("example template files (deprecated)", {
@@ -253,11 +263,13 @@ test_with_dir("force with a non-back-compatible cache", {
 })
 
 test_with_dir("deprecate the `force` argument", {
+  skip_on_cran()
   expect_warning(tmp <- recover_cache(force = TRUE), regexp = "deprecated")
   expect_warning(load_mtcars_example(force = TRUE), regexp = "deprecated")
 })
 
 test_with_dir("timeout argument", {
+  skip_on_cran()
   expect_warning(
     make(
       drake_plan(x = 1),
@@ -321,6 +333,7 @@ test_with_dir("mtcars example", {
 })
 
 test_with_dir("deprecated hooks", {
+  skip_on_cran()
   expect_warning(
     make(
       drake_plan(x = 1),
@@ -333,6 +346,7 @@ test_with_dir("deprecated hooks", {
 })
 
 test_with_dir("pruning_strategy", {
+  skip_on_cran()
   expect_warning(
     make(
       drake_plan(x = 1),
@@ -370,13 +384,15 @@ test_with_dir("main example", {
 })
 
 test_with_dir("session arg to make()", {
+  skip_on_cran()
   expect_warning(
     make(drake_plan(x = 1), session = "callr::r_vanilla"),
-    regexp = "lock_envir"
+    regexp = "deprecated"
   )
 })
 
 test_with_dir("deprecated check_plan()", {
+  skip_on_cran()
   # Circular non-DAG plan
   x <- drake_plan(a = b, b = c, c = a)
   expect_error(tmp <- capture.output(suppressWarning(check_plan(x))))
@@ -392,10 +408,12 @@ test_with_dir("deprecated cache_ and target_namespaces() etc.", {
 })
 
 test_with_dir("deprecated drake_tip()", {
+  skip_on_cran()
   expect_true(is.character(suppressWarnings(drake_tip())))
 })
 
 test_with_dir("former external functions that will become internal", {
+  skip_on_cran()
   plan <- drake_plan(x = 1)
   make(plan)
   config <- drake_config(plan)
@@ -413,6 +431,7 @@ test_with_dir("former external functions that will become internal", {
 })
 
 test_with_dir("analyses and summaries", {
+  skip_on_cran()
   datasets <- drake_plan(small = simulate(5), large = simulate(50))
   methods <- drake_plan(
     regression1 = reg1(dataset__),
@@ -603,6 +622,7 @@ test_with_dir("analyses and summaries", {
 })
 
 test_with_dir("wildcards", {
+  skip_on_cran()
   plan <- drake_plan(x = 1)
   expect_warning(map_plan(data.frame(x = 1), f), regexp = "deprecated")
   expect_warning(gather_plan(plan), regexp = "deprecated")
@@ -1471,6 +1491,7 @@ test_with_dir("reduce_by()", suppressWarnings({
 }))
 
 test_with_dir("get_cache", {
+  skip_on_cran()
   make(drake_plan(x = 1), session_info = FALSE)
   tmp1 <- expect_warning(get_cache(search = TRUE), regexp = "deprecated")
   tmp2 <- expect_warning(get_cache(search = FALSE), regexp = "deprecated")
@@ -1479,6 +1500,7 @@ test_with_dir("get_cache", {
 })
 
 test_with_dir("deprecated memory strategies", {
+  skip_on_cran()
   plan <- drake_plan(x = 1)
   expect_warning(
     make(
@@ -1489,4 +1511,10 @@ test_with_dir("deprecated memory strategies", {
     ),
     regexp = "preclean"
   )
+})
+
+test_with_dir("deprecated decorated storr methods", {
+  skip_on_cran()
+  cache <- new_cache()
+  expect_silent(cache$reset_ht_hash())
 })

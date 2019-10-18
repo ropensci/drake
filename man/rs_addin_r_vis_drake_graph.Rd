@@ -2,7 +2,8 @@
 % Please edit documentation in R/rstudio.R
 \name{rs_addin_r_vis_drake_graph}
 \alias{rs_addin_r_vis_drake_graph}
-\title{RStudio addin for r_vis_drake_graph()}
+\title{RStudio addin for r_vis_drake_graph()
+\lifecycle{stable}}
 \usage{
 rs_addin_r_vis_drake_graph(r_args = list(), .print = TRUE)
 }

@@ -3,7 +3,8 @@
 \name{drake_unquote}
 \alias{drake_unquote}
 \title{Remove leading and trailing
-escaped quotes from character strings.}
+escaped quotes from character strings.
+\lifecycle{deprecated}}
 \usage{
 drake_unquote(x = NULL)
 }

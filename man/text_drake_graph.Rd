@@ -2,8 +2,8 @@
 % Please edit documentation in R/text_drake_graph.R
 \name{text_drake_graph}
 \alias{text_drake_graph}
-\title{Use text art to show a visual representation of
-your workflow's dependency graph in your terminal window.}
+\title{Show a workflow graph as text in your terminal window.
+\lifecycle{stable}}
 \usage{
 text_drake_graph(config, from = NULL, mode = c("out", "in", "all"),
   order = NULL, subset = NULL, targets_only = FALSE,

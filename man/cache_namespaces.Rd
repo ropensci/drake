@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{cache_namespaces}
 \alias{cache_namespaces}
-\title{Deprecated. List all the \code{storr} cache namespaces used by drake.}
+\title{List all the \code{storr} cache namespaces used by drake.
+\lifecycle{deprecated}}
 \usage{
 cache_namespaces(default = storr::storr_environment()$default_namespace)
 }

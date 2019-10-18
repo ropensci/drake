@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{drake_quotes}
 \alias{drake_quotes}
-\title{Put quotes around each element of a character vector.}
+\title{Put quotes around each element of a character vector.
+\lifecycle{deprecated}}
 \usage{
 drake_quotes(x = NULL, single = FALSE)
 }

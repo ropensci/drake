@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{plan_analyses}
 \alias{plan_analyses}
-\title{Deprecated.}
+\title{Specialized wildcard for analyses
+\lifecycle{deprecated}}
 \usage{
 plan_analyses(plan, datasets, sep = "_")
 }

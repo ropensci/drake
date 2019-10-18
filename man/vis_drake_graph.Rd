@@ -3,7 +3,8 @@
 \name{vis_drake_graph}
 \alias{vis_drake_graph}
 \title{Show an interactive visual network representation
-of your drake project.}
+of your drake project.
+\lifecycle{maturing}}
 \usage{
 vis_drake_graph(config, file = character(0), selfcontained = FALSE,
   build_times = "build", digits = 3, targets_only = FALSE,

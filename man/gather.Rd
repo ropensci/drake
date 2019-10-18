@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{gather}
 \alias{gather}
-\title{Defunct function}
+\title{gather \lifecycle{defunct}}
 \usage{
 gather(...)
 }

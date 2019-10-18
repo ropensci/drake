@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{build_drake_graph}
 \alias{build_drake_graph}
-\title{Deprecated function \code{build_drake_graph}}
+\title{Function \code{build_drake_graph}
+\lifecycle{deprecated}}
 \usage{
 build_drake_graph(plan, targets = plan$target, envir = parent.frame(),
   verbose = 1L, jobs = 1, console_log_file = NULL,

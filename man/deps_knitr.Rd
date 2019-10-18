@@ -2,7 +2,8 @@
 % Please edit documentation in R/deps.R
 \name{deps_knitr}
 \alias{deps_knitr}
-\title{Find the drake dependencies of a dynamic knitr report target.}
+\title{Find the drake dependencies of a dynamic knitr report target.
+\lifecycle{stable}}
 \usage{
 deps_knitr(path)
 }

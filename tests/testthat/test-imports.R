@@ -132,7 +132,7 @@ test_with_dir("target conflicts with current import or another target", {
                                                command = "1+1"))
   expect_message(drake_config(plan = config$plan,
                             envir = config$envir),
-                 regexp = "Unloading targets from environment")
+                 regexp = "targets from environment")
   config$plan$target <- "repeated"
   expect_error(drake_config(plan = config$plan))
 })
@@ -155,9 +155,9 @@ test_with_dir("target conflicts with previous import", {
 
 test_with_dir("imported functions cannot depend on targets", {
   global_import <- 1
-  my_fun <- function(){
+  my_fun <- function() {
     global_import
-    other_fun <- function(){
+    other_fun <- function() {
       target_in_plan
     }
   }

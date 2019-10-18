@@ -2,20 +2,22 @@
 % Please edit documentation in R/clean.R
 \name{clean}
 \alias{clean}
-\title{Invalidate and deregister targets.}
+\title{Invalidate and deregister targets.
+\lifecycle{maturing}}
 \usage{
 clean(..., list = character(0), destroy = FALSE, path = NULL,
-  search = NULL, cache = drake::drake_cache(path = path, verbose =
-  verbose), verbose = 1L, jobs = 1, force = FALSE,
+  search = NULL, cache = drake::drake_cache(path = path),
+  verbose = NULL, jobs = 1, force = FALSE,
   garbage_collection = FALSE, purge = FALSE)
 }
 \arguments{
-\item{...}{Targets to remove from the cache: as names (symbols) or
-character strings. If the \code{tidyselect} package is installed,
-you can also supply \code{dplyr}-style \code{tidyselect}
-commands such as \code{starts_with()}, \code{ends_with()}, and \code{one_of()}.}
+\item{...}{Deprecated. Do not use.
+Objects to load from the cache, as names (unquoted)
+or character strings (quoted). Similar to \code{...} in
+\code{remove()}.}
 
-\item{list}{Character vector naming targets to be removed from the
+\item{list}{Deprecated. Do not use.
+Character vector naming objects to be loaded from the
 cache. Similar to the \code{list} argument of \code{\link[=remove]{remove()}}.}
 
 \item{destroy}{Logical, whether to totally remove the drake cache.
@@ -32,12 +34,7 @@ session metadata, etc.}
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} is ignored.}
 
-\item{verbose}{Integer, control printing to the console/terminal.
-\itemize{
-\item \code{0}: print nothing.
-\item \code{1}: print targets, retries, and failures.
-\item \code{2}: also show a spinner when preprocessing tasks are underway.
-}}
+\item{verbose}{Deprecated on 2019-09-11.}
 
 \item{jobs}{Number of jobs for light parallelism
 (disabled on Windows).}
@@ -62,7 +59,9 @@ Invisibly return \code{NULL}.
 }
 \description{
 Force targets to be out of date and remove target names
-from the data in the cache.
+from the data in the cache. Be careful and run \code{\link[=which_clean]{which_clean()}} before
+\code{\link[=clean]{clean()}}. That way, you know beforehand which targets will be
+compromised.
 }
 \details{
 By default, \code{\link[=clean]{clean()}} invalidates \strong{all} targets,
@@ -112,5 +111,5 @@ make(my_plan, recover = TRUE)
 }
 }
 \seealso{
-\code{\link[=drake_gc]{drake_gc()}}, \code{\link[=make]{make()}}
+\code{\link[=which_clean]{which_clean()}}, \code{\link[=drake_gc]{drake_gc()}}
 }
