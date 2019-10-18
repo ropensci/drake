@@ -64,7 +64,8 @@ drake::vis_drake_graph(config, clusters = unique_stems, hover = FALSE, on_select
 This time calling from `vis_drake_graph()`
 
 ```{r}
-drake::vis_drake_graph(config, clusters = unique_stems, group = "cluster_id", hover = FALSE, on_select_col = "link", on_select = TRUE)
+drake::vis_drake_graph(config, clusters = unique_stems, group = "cluster_id",
+                       hover = FALSE, on_select_col = "link", on_select = TRUE)
 ```
 
 # Display an alert on select
@@ -78,6 +79,8 @@ alert_behaviour <- function(){
   }"
 }
 
-drake::vis_drake_graph(config, clusters = unique_stems, group = "cluster_id", hover = FALSE, on_select_col = "link", on_select = alert_behaviour())
+drake::vis_drake_graph(config, clusters = unique_stems, group = "cluster_id",
+                       hover = FALSE, on_select_col = "link",
+                       on_select = alert_behaviour())
 ```
 
