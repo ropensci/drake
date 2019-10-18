@@ -302,11 +302,3 @@ on_select_default <- function(){
       '_blank');
   }"
 }
-on_select_alert <- function(){
-  js <- "
-  function(props) {
-    alert('selected node with on_select_col: ' +
-            this.body.data.nodes.get(props.nodes[0]).on_select_col);
-  }"
-}
-
