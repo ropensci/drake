@@ -481,7 +481,7 @@ file_in <- function(...) {
 #' @inheritSection drake_plan Keywords
 #' @seealso [file_in()], [knitr_in()], [ignore()], [no_deps()]
 #' @return A character vector of declared output file or directory paths.
-#' @inheritDotParams file_in
+#' @inheritParams file_in
 #' @export
 #' @examples
 #' \dontrun{

@@ -8,10 +8,9 @@
 file_out(...)
 }
 \arguments{
-\item{...}{Arguments passed on to \code{file_in}
-\describe{
-  \item{}{}
-}}
+\item{...}{Character vector, paths to files and directories. Use
+\code{.id_chr} to refer to the current target by name. \code{.id_chr} is not
+limited to use in \code{file_in()} and \code{file_out()}.}
 }
 \value{
 A character vector of declared output file or directory paths.
