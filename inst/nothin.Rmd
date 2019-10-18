@@ -45,13 +45,23 @@ graph_info <- drake_graph_info(
   on_select_col = "link"
 )
 ```
+
+# Perform the default action on select
+
 ```{r}
 drake::render_drake_graph(graph_info = graph_info, on_select = TRUE)
 ```
+# Perform no action on select
+
+Since `on_select = NULL` was given
 
 ```{r}
 drake::vis_drake_graph(config, clusters = unique_stems, hover = FALSE, on_select_col = "link", on_select = NULL)
 ```
+
+# Perform the default action on select
+
+This time calling from `vis_drake_graph()`
 
 ```{r}
 drake::vis_drake_graph(config, clusters = unique_stems, group = "cluster_id", hover = FALSE, on_select_col = "link", on_select = TRUE)
