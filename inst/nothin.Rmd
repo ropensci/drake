@@ -1,0 +1,82 @@
+## Node Selection
+
+First, we define our plan, adding a custom column named "link".
+
+```{r}
+mtcars_link <- 
+  "https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/mtcars.html"
+iris_link <- 
+  "https://archive.ics.uci.edu/ml/datasets/iris"
+iris3_link <- 
+  "https://www.rdocumentation.org/packages/datasets/versions/3.6.1/topics/iris"
+
+plan <- drake::drake_plan(
+  mtc = target(
+    mtcars,
+    link = !!mtcars_link
+  ),
+  ir = target(
+    iris,
+    link = !!iris_link
+  ),
+  ir3 = target(
+    modify_iris3(iris3, number),
+    transform = map(number = !!c(1:3), .tag_in = cluster_id ),
+    link = !!iris3_link
+  ),
+  trace = TRUE
+)
+```
+```{r}
+config <- drake::drake_config(plan)
+unique_stems <- unique(plan$cluster_id)
+```
+
+
+### Perform the default action on select
+
+By supplying `on_select = TRUE`, `vis_drake_graph()` knows to treat values in
+the column given by `on_select_col` as hyperlinks.
+
+```{r}
+drake::vis_drake_graph(config, clusters = unique_stems, group = "cluster_id",
+                       hover = FALSE, on_select_col = "link", on_select = TRUE)
+```
+
+### Perform no action on select
+
+By supplying `on_select = NULL`, no action will be taken when a node is
+clicked. 
+
+This is the default behaviour.  
+
+Supplying `on_select = FALSE` is equivalent to this.
+```{r}
+drake::vis_drake_graph(config, clusters = unique_stems, hover = FALSE, 
+                       on_select_col = "link", on_select = NULL)
+```
+
+
+### Customize the onSelect event behaviour
+
+What if we instead wanted the browser to display an alert when a node is 
+clicked?
+
+(Any good web developer knows that action blocking browser alerts provide
+the best and most conveninent user experience **;)** )
+
+
+```{r}
+alert_behaviour <- function(){
+  js <- "
+  function(props) {
+    alert('selected node with on_select_col: \\r\\n' +
+            this.body.data.nodes.get(props.nodes[0]).on_select_col);
+  }"
+}
+
+drake::vis_drake_graph(config, clusters = unique_stems, group = "cluster_id",
+                       hover = FALSE, on_select_col = "link",
+                       on_select = alert_behaviour())
+```
+
