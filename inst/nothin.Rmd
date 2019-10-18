@@ -49,7 +49,8 @@ graph_info <- drake_graph_info(
 # Perform the default action on select
 
 ```{r}
-drake::render_drake_graph(graph_info = graph_info, on_select = TRUE)
+graph <- drake::render_drake_graph(graph_info = graph_info, on_select = TRUE)
+graph
 ```
 # Perform no action on select
 
