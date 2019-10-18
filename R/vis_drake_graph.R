@@ -208,6 +208,7 @@ render_drake_graph <- function(
     ...
   )
   out <- adjust_visnetwork_layout(graph = out, graph_info = graph_info)
+  out <- vis_add_on_select(graph = out, on_select = on_select)
   vis_render_webshot(graph = out, file = file, selfcontained = selfcontained)
 }
 
@@ -263,18 +264,28 @@ adjust_visnetwork_layout <- function(graph, graph_info) {
   graph
 }
 
+vis_add_on_select <- function(graph, on_select){
+  out <- graph
+  # Add on_select action
+  if (is.null(on_select)) return(out)
+  if (is.logical(on_select)) {
+    if (!on_select) return(out)
+    on_select <- on_select_default()
+  }
+
+  # Ideally showing a warning here would be nice
+  # If on_select is enabled, there should have been a corresponding
+  # on_select_col given
+  if (is.null(graph$x$nodes$on_select_col)) return(out)
+
+  out <- visNetwork::visEvents(out, selectNode = on_select)
+
+  out
+}
+
 vis_render_webshot <- function(graph, file, selfcontained) {
   if (!length(file)) {
     return(graph)
-  }
-
-  # Add on_select action
-  if (is.logical(on_select)) {
-    if (!on_select){on_select <- NULL}
-    else {on_select <- on_select_default()}
-    }
-  if (!is.null(on_select)) {
-    out <- visNetwork::visEvents(out, selectNode = on_select)
   }
 
   file <- path.expand(file)
