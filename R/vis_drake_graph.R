@@ -252,11 +252,13 @@ render_drake_graph <- function(
   }
 
   # Add on_select action
-  if (is.logical(on_select)){
+  if (is.logical(on_select)) {
     if (!on_select){on_select <- NULL}
     else {on_select <- on_select_default()}
     }
-  if (!is.null(on_select)) out <- visNetwork::visEvents(out, selectNode = on_select)
+  if (!is.null(on_select)) {
+    out <- visNetwork::visEvents(out, selectNode = on_select)
+  }
 
   if (length(file)) {
     file <- path.expand(file)
