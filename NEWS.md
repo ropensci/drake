@@ -1,5 +1,8 @@
 # Version 7.7.0.9000
 
+## Enhancements
+
+- Document transformation functions in a way that avoids having to create true functions (#979).
 
 
 # Version 7.7.0

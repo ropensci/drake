@@ -41,7 +41,12 @@ cdg_node_to_edges <- function(node, config) {
   file_out <- node$deps_build$file_out
   node$deps_build$file_out <- NULL
   inputs <- clean_nested_char_list(
-    c(node$deps_build, node$deps_condition, node$deps_change)
+    c(
+      node$deps_build,
+      node$deps_dynamic,
+      node$deps_condition,
+      node$deps_change
+    )
   )
   out <- NULL
   if (length(inputs)) {
