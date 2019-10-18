@@ -4,29 +4,27 @@ library(magrittr)
 ```
 
 ```{r}
-mtcars_link <- "https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/mtcars.html"
-iris_link <- "https://archive.ics.uci.edu/ml/datasets/iris"
-iris3_link <- "https://www.rdocumentation.org/packages/datasets/versions/3.6.1/topics/iris"
+mtcars_link <- 
+  "https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/mtcars.html"
+iris_link <- 
+  "https://archive.ics.uci.edu/ml/datasets/iris"
+iris3_link <- 
+  "https://www.rdocumentation.org/packages/datasets/versions/3.6.1/topics/iris"
 
 plan <- drake::drake_plan(
-  mtc = target({
-    mtcars
-  },
-  link = !!mtcars_link),
-  ir = target({
-    iris
-  },
-  link = !!iris_link),
-  ir3 = target({
-    input <- iris3
-
-    iris3[[1]] <- iris3[[1]] + number
-    iris3
-
-  },
-  transform = map(number = !!c(1:3),
-                  .tag_in = cluster_id ),
-  link = !!iris3_link),
+  mtc = target(
+    mtcars,
+    link = !!mtcars_link
+  ),
+  ir = target(
+    iris,
+    link = !!iris_link
+  ),
+  ir3 = target(
+    modify_iris3(iris3, number),
+    transform = map(number = !!c(1:3), .tag_in = cluster_id ),
+    link = !!iris3_link
+  ),
   trace = TRUE
 )
 
