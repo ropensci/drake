@@ -1,5 +1,9 @@
 # Version 7.7.0.9000
 
+## New features
+
+- `vis_drake_graph()`, `drake_graph_info()`, and `render_drake_graph()` now 
+  take arguments that allow behaviour to be defined upon selection of nodes. (#1031, @mstr3336).
 
 
 # Version 7.7.0
