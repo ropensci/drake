@@ -1,10 +1,15 @@
-# Version 7.7.0.9000
+# Version 7.7.0.9001
 
 ## New features
 
 - `vis_drake_graph()`, `drake_graph_info()`, and `render_drake_graph()` now 
   take arguments that allow behaviour to be defined upon selection of nodes. (#1031, @mstr3336).
 
+# Version 7.7.0.9000
+
+## Enhancements
+
+- Document transformation functions in a way that avoids having to create true functions (#979).
 
 # Version 7.7.0
 

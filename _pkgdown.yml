@@ -53,16 +53,17 @@ reference:
   contents:
   - '`target`'
   - '`trigger`'
-  - '`map`'
-  - '`split`'
-  - '`cross`'
-  - '`combine`'
   - '`file_in`'
   - '`file_out`'
   - '`knitr_in`'
   - '`ignore`'
   - '`no_deps`'
   - '`drake_envir`'
+- title: Static branching
+  - '`map`'
+  - '`split`'
+  - '`cross`'
+  - '`combine`'
 - title: Reproducible R session management
   contents:
   - '`r_make`'
