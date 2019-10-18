@@ -198,7 +198,7 @@ drake_graph_info <- function(
   if (nrow(config$edges)) {
     config$edges$arrows <- "to"
   }
-  if (!is.null(config$on_select_col)){
+  if (!is.null(config$on_select_col)) {
     config$nodes$on_select_col <- get_select_col(config)
   }
 
@@ -426,7 +426,7 @@ cluster_nodes <- function(config) {
     new_node$label <- new_node$id <-
       paste0(config$group, ": ", cluster)
 
-    if (!is.null(config$on_select_col)){
+    if (!is.null(config$on_select_col)) {
       new_node$on_select_col <- config$nodes[index, "on_select_col"][[1]]
     }
 

@@ -269,7 +269,7 @@ adjust_visnetwork_layout <- function(graph, graph_info) {
   graph
 }
 
-vis_add_on_select <- function(graph, on_select){
+vis_add_on_select <- function(graph, on_select) {
   out <- graph
   # Add on_select action
   if (is.null(on_select)) return(out)
