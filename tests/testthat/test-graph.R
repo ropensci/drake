@@ -494,8 +494,8 @@ test_with_dir("on_select behaviour works", {
     ),
     c = target(
       number,
-      transform = map(number = c(1, 2), link = c("c1.txt", "c2.txt"),
-                      .tag_in = cluster_id)
+      transform = map(number = c(1, 2),
+                      .tag_in = cluster_id, .id = number, .tag_out = link)
     ),
     trace = TRUE
     )
@@ -503,13 +503,13 @@ test_with_dir("on_select behaviour works", {
 
   info <- drake_graph_info(config = config, on_select_col = "link")
   expect_equal(sort(info$nodes$on_select_col),
-               sort(c("a.html", "b.html", "c1.txt", "c2.txt")))
+               sort(c("a.html", "b.html", "c_1", "c_2")))
 
   clusters <- unique(plan$cluster_id)
   info <- drake_graph_info(config, on_select_col = "link",
                            group = "cluster_id", clusters = clusters)
 
   expect_equal(sort(info$nodes$on_select_col),
-               sort(c("a.html", "b.html", "c1.txt")))
+               sort(c("a.html", "b.html", "c_1")))
 
 })
