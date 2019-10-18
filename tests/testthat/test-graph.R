@@ -476,3 +476,40 @@ test_with_dir("GitHub issue 460", {
   expect_true(all(exp %in% igraph::V(config$graph)$name))
   process_targets(config)
 })
+
+
+test_with_dir("on_select behaviour works", {
+  skip_on_cran()
+  skip_if_not_installed("visNetwork")
+  skip_if_not_installed("lubridate")
+
+  plan <- drake_plan(
+    a = target(
+      "a",
+      link = "a.html"
+    ),
+    b = target(
+      "b",
+      link = "b.html"
+    ),
+    c = target(
+      number,
+      transform = map(number = c(1, 2), link = c("c1.txt", "c2.txt"),
+                      .tag_in = cluster_id)
+    ),
+    trace = TRUE
+    )
+  config <- drake_config(plan)
+
+  info <- drake_graph_info(config = config, on_select_col = "link")
+  expect_equal(sort(info$nodes$on_select_col),
+               sort(c("a.html", "b.html", "c1.txt", "c2.txt")))
+
+  clusters <- unique(plan$cluster_id)
+  info <- drake_graph_info(config, on_select_col = "link",
+                           group = "cluster_id", clusters = clusters)
+
+  expect_equal(sort(info$nodes$on_select_col),
+               sort(c("a.html", "b.html", "c1.txt")))
+
+})
