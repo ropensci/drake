@@ -1,7 +1,6 @@
-```{r}
-library(drake)
-library(magrittr)
-```
+## Node Selection
+
+First, we define our plan, adding a custom column named "link".
 
 ```{r}
 mtcars_link <- 
@@ -30,52 +29,41 @@ plan <- drake::drake_plan(
 ```
 ```{r}
 config <- drake::drake_config(plan)
-```
-```{r}
-unique_stems <- plan$cluster_id %>% unique()
-
-graph_info <- drake_graph_info(
-  config,
-  targets_only = TRUE,
-  group = "cluster_id",
-  clusters = unique_stems,
-  show_output_files = FALSE,
-  build_times = "none",
-  hover = FALSE,
-  on_select_col = "link"
-)
+unique_stems <- unique(plan$cluster_id)
 ```
 
-# Perform the default action on select
 
-```{r}
-graph <- drake::render_drake_graph(graph_info = graph_info, on_select = TRUE)
-graph
-```
-# Perform no action on select
+### Perform the default action on select
 
-Since `on_select = NULL` was given
-
-```{r}
-drake::vis_drake_graph(config, clusters = unique_stems, hover = FALSE, on_select_col = "link", on_select = NULL)
-```
-
-# Perform the default action on select
-
-This time calling from `vis_drake_graph()`
+By supplying `on_select = TRUE`, `vis_drake_graph()` knows to treat values in
+the column given by `on_select_col` as hyperlinks.
 
 ```{r}
 drake::vis_drake_graph(config, clusters = unique_stems, group = "cluster_id",
                        hover = FALSE, on_select_col = "link", on_select = TRUE)
 ```
 
-# Customize the onSelect event behaviour
+### Perform no action on select
+
+By supplying `on_select = NULL`, no action will be taken when a node is
+clicked. 
+
+This is the default behaviour.  
+
+Supplying `on_select = FALSE` is equivalent to this.
+```{r}
+drake::vis_drake_graph(config, clusters = unique_stems, hover = FALSE, 
+                       on_select_col = "link", on_select = NULL)
+```
+
+
+### Customize the onSelect event behaviour
 
 What if we instead wanted the browser to display an alert when a node is 
 clicked?
 
 (Any good web developer knows that action blocking browser alerts provide
-the best and most conveninent user experience ;) )
+the best and most conveninent user experience **;)** )
 
 
 ```{r}
