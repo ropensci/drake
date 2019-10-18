@@ -87,7 +87,8 @@
 #'
 #' @param hover Logical, whether to show text (file contents,
 #'   commands, etc.) when you hover your cursor over a node.
-#'
+#' @param on_select_col Optional string corresponding to the column name
+#'   in the plan that should provide data for the `on_select` event.
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {
