@@ -410,7 +410,9 @@ trigger <- function(
 #' @inheritSection drake_plan Keywords
 #' @seealso [file_out()], [knitr_in()], [ignore()], [no_deps()]
 #' @return A character vector of declared input file or directory paths.
-#' @param ... Character vector, paths to files and directories.
+#' @param ... Character vector, paths to files and directories. Use
+#' `.id_chr` to refer to the current target by name. `.id_chr` is not limited
+#' to use in `file_in()` and `file_out`.
 #' @export
 #' @examples
 #' \dontrun{
@@ -430,6 +432,16 @@ trigger <- function(
 #'
 #' make(plan)
 #' file.exists("mtcars.csv")
+#'
+#' # You may use `.id_chr` inside `file_out()` and `file_in()` to refer
+#' # to the current target. This works inside `map()`, `combine()`, `split()`,
+#' # and `cross()`.
+#'
+#' plan <- drake::drake_plan(
+#' data = target(write.csv(data, file_out(paste0(.id_chr, '.csv'))),
+#'               transform = map(data = c(iris, mtcars))))
+#'
+#' plan
 #'
 #' # You can also work with entire directories this way.
 #' # However, in `file_out("your_directory")`, the directory
@@ -467,7 +479,9 @@ file_in <- function(...) {
 #' @inheritSection drake_plan Keywords
 #' @seealso [file_out()], [knitr_in()], [ignore()], [no_deps()]
 #' @return A character vector of declared output file or directory paths.
-#' @param ... Character vector, paths to files and directories.
+#' @param ... Character vector, paths to files and directories. Use
+#' `.id_chr` to refer to the current target name. `id_chr` is not limited
+#' to use in `file_in()` and `file_out`.
 #' @export
 #' @examples
 #' \dontrun{
@@ -487,6 +501,16 @@ file_in <- function(...) {
 #'
 #' make(plan)
 #' file.exists("mtcars.csv")
+#'
+#' # You may use `.id_chr` inside `file_out()` and `file_in()` to refer
+#' # to the current target. This works inside `map()`, `combine()`, `split()`,
+#' # and `cross()`.
+#'
+#' plan <- drake::drake_plan(
+#' data = target(write.csv(data, file_out(paste0(.id_chr, '.csv'))),
+#'               transform = map(data = c(iris, mtcars))))
+#'
+#' plan
 #'
 #' # You can also work with entire directories this way.
 #' # However, in `file_out("your_directory")`, the directory
