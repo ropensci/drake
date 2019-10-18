@@ -27,11 +27,12 @@ plan <- drake::drake_plan(
   ),
   trace = TRUE
 )
-
-
+```
+```{r}
+config <- drake::drake_config(plan)
+```
+```{r}
 unique_stems <- plan$cluster_id %>% unique()
-
-config <- plan %>% drake_config()
 
 graph_info <- drake_graph_info(
   config,
