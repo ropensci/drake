@@ -8,7 +8,10 @@
 file_out(...)
 }
 \arguments{
-\item{...}{Character vector, paths to files and directories.}
+\item{...}{Arguments passed on to \code{file_in}
+\describe{
+  \item{}{}
+}}
 }
 \value{
 A character vector of declared output file or directory paths.
@@ -68,6 +71,19 @@ plan
 make(plan)
 file.exists("mtcars.csv")
 
+ # You may use `.id_chr` inside `file_out()` and `file_in()`
+ # to refer  to the current target. This works inside `map()`,
+ # `combine()`, `split()`, and `cross()`.
+
+plan <- drake::drake_plan(
+  data = target(
+    write.csv(data, file_out(paste0(.id_chr, ".csv"))),
+    transform = map(data = c(iris, mtcars))
+  )
+)
+
+plan
+
 # You can also work with entire directories this way.
 # However, in `file_out("your_directory")`, the directory
 # becomes an entire unit. Thus, `file_in("your_directory")`
@@ -94,5 +110,5 @@ if (requireNamespace("visNetwork", quietly = TRUE)) {
 }
 }
 \seealso{
-\code{\link[=file_out]{file_out()}}, \code{\link[=knitr_in]{knitr_in()}}, \code{\link[=ignore]{ignore()}}, \code{\link[=no_deps]{no_deps()}}
+\code{\link[=file_in]{file_in()}}, \code{\link[=knitr_in]{knitr_in()}}, \code{\link[=ignore]{ignore()}}, \code{\link[=no_deps]{no_deps()}}
 }
