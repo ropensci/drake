@@ -95,6 +95,14 @@ weak_tibble <- function(..., .force_df = FALSE) {
   }
 }
 
+# Get a row of expand_grid from tidyr
+# without actually expanding the grid.
+grid_index <- function(index, size) {
+  reps <- prod(size) / cumprod(size)
+  inc <- ceiling(index / reps) - 1L
+  (inc %% size) + 1L
+}
+
 error_false <- function(e) {
   FALSE
 }

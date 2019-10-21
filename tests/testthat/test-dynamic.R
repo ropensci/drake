@@ -2,13 +2,14 @@ drake_context("dynamic")
 
 test_with_dir("dynamic dependency detection", {
   indices <- seq_len(4)
+  f <- identity
   plan <- drake_plan(
     u = 4,
     v = seq_len(4),
     w = target(f(v), dynamic = map(v, indices)),
-    x = target(w, dynamic = split(w, slices = v)),
+    x = target(w, dynamic = split(w, .by = v)),
     y = target(x, dynamic = cross(x, c(u, y, nope))),
-    z = target(nope, dynamic = combine(y, .by = c(w, x, nope)))
+    z = target(w, dynamic = combine(y, .by = c(w, x, nope)))
   )
   config <- drake_config(plan)
   layout <- config$layout
@@ -38,4 +39,64 @@ test_with_dir("dynamic dependencies in the graph", {
   out <- drake_adjacent_vertices(config$graph, v = "z", mode = "in")
   exp <- c("imported", "x", "y")
   expect_equal(sort(out), sort(exp))
+})
+
+test_with_dir("dynamic target names and indices", {
+  f <- identity
+  z_by <- rep(letters[seq_len(4)], each = 4)
+  plan <- drake_plan(
+    r = seq_len(9),
+    s = rep(seq_len(3), 3),
+    t = 4,
+    u = seq_len(t),
+    v = letters[u],
+    w = target(f(v), dynamic = map(u, v)),
+    x = target(f(r), dynamic = split(r, .by = s)),
+    x2 = target(f(r), dynamic = split(r)),
+    y = target(seq_len(prod(length(u), length(v))), dynamic = cross(u, v)),
+    z = target(f(y), dynamic = combine(y, .by = z_by)),
+    z2 = target(f(y), dynamic = combine(y))
+  )
+  make(plan)
+  config <- drake_config(plan)
+  dw <- config$layout[["w"]]$dynamic
+  dx <- config$layout[["x"]]$dynamic
+  dx2 <- config$layout[["x2"]]$dynamic
+  dy <- config$layout[["y"]]$dynamic
+  dz <- config$layout[["z"]]$dynamic
+  dz2 <- config$layout[["z2"]]$dynamic
+  ew <- paste("w", seq_len(4), sep = "_")
+  ex <- paste("x", seq_len(3), sep = "_")
+  ex2 <- "x2_1"
+  ey <- paste("y", seq_len(16), sep = "_")
+  ez <- paste("z", seq_len(4), sep = "_")
+  ez2 <- "z2_1"
+  for (i in seq_len(2)) {
+    expect_equal(subtarget_names(dw, "w", config), ew)
+    expect_equal(subtarget_names(dx, "x", config), ex)
+    expect_equal(subtarget_names(dx2, "x2", config), ex2)
+    expect_equal(subtarget_names(dy, "y", config), ey)
+    expect_equal(subtarget_names(dz, "z", config), ez)
+    expect_equal(subtarget_names(dz2, "z2", config), ez2)
+  }
+  for (i in seq_len(4)) {
+    ew <- list(u = i, v = i)
+    expect_equal(subtarget_index(dw, "w", config, i), ew)
+  }
+  for (i in seq_len(4)) {
+    for (j in seq_len(4)) {
+      ey <- list(u = i, v = j)
+      k <- 4 * (i - 1) + j
+      expect_equal(subtarget_index(dy, "y", config, k), ey)
+    }
+  }
+  ew <- list(r = c(0L, 3L, 6L))
+  for (i in seq_len(3)) {
+    ew$r <- ew$r + 1L
+    expect_equal(subtarget_index(dx, "x", config, i), ew)
+  }
+  for (i in seq_len(4)) {
+    ez <- list(y = seq(from = 4 * (i - 1) + 1, 4 * i))
+    expect_equal(subtarget_index(dz, "z", config, i), ez)
+  }
 })

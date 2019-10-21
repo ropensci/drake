@@ -33,8 +33,18 @@
 #'   but this is what it usage will look like.
 #'   - `map(...)`
 #'   - `cross(...)`
-#'   - `split(target, .by)`
-#'   - `combine(target, .by)`
+#'   - `split(.x, .by)`
+#'   - `combine(.x, .by)`
+#'
+#'  `map()` and `cross()` create dynamic sub-targets from the variables
+#'  supplied to the dots. As with static branching, the variables
+#'  supplied to `map()` must all have equal length.
+#'  `split(f(data), .by = x)` makes a new dynamic sub-targets from
+#'   pieces of `data` for each unique element of `x`. Here,
+#'   `data` must not be dynamic.
+#'   `combine(f(data), .by = x)` makes new dynamic
+#'   sub-targets from `data`. For `combine()`, `data` must already
+#'   be a dynamic target.
 #'
 #'  Differences from static branching:
 #'  - `...` must contain *unnamed* symbols with no values supplied,
@@ -47,8 +57,8 @@
 #'   can be given as symbols without any values assigned.
 #'   For dynamic branching, the entries in `...` must be unnamed symbols
 #'   with no values supplied, and they must be the names of targets.
-#' @param target The single target to split or single dynamic target
-#'   to combine.
+#' @param .x The target to split or combine in dynamic branching.
+#'   For `combine()`, `.x` must be dynamic.
 #' @param .data A data frame of new grouping variables with
 #'   grouping variable names as column names and values as elements.
 #' @param .id Symbol or vector of symbols naming grouping variables
@@ -68,9 +78,8 @@
 #' @param .by Symbol or vector of symbols of grouping variables.
 #'   `combine()` aggregates/groups targets by the grouping variables in `.by`.
 #'   For dynamic branching, `.by` can only take one variable at a time,
-#'   and that variable must be a vector.
-#'   `split(data, .by = x)` makes a new dynamic sub-target from `data`
-#'   for each unique element of `x`.
+#'   and that variable must be a vector. Ideally, it should take
+#'   little space in memory.
 #' @examples
 #' # Static branching
 #' models <- c("glm", "hierarchical")
