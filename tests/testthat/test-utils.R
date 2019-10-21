@@ -111,3 +111,15 @@ test_with_dir("dir_move()", {
   expect_equal(files_exp, list.files("tmp2", all.files = TRUE))
   expect_false(file.exists(file.path("tmp2", "remove_this")))
 })
+
+test_with_dir("grid_index()", {
+  grid <- expand.grid(seq_len(6), seq_len(3), seq_len(7), seq_len(5))
+  grid <- grid[, rev(seq_len(4))]
+  size <- unname(vapply(grid, max, FUN.VALUE = integer(1)))
+  for (index in seq_len(nrow(grid))) {
+    expect_equal(
+      as.integer(grid[index,, drop = TRUE]), # nolint
+      grid_index(index, size)
+    )
+  }
+})

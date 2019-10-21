@@ -57,6 +57,36 @@ subtarget_names.split <- subtarget_names.combine <- function(
   paste(target, index, sep = "_")
 }
 
+subtarget_index <- function(dynamic, target, config, index) {
+  UseMethod("subtarget_index")
+}
+
+subtarget_index.map <- function(dynamic, target, config, index) {
+  vars <- all.vars(dynamic)
+  out <- as.list(rep(as.integer(index), length(vars)))
+  names(out) <- vars
+  out
+}
+
+subtarget_index.cross <- function(dynamic, target, config, index) {
+  vars <- all.vars(dynamic)
+  size <- unlist(lapply(vars, get_dynamic_size, config = config))
+  out <- grid_index(index, size)
+  out <- as.list(out)
+  names(out) <- vars
+  out
+}
+
+subtarget_index.split <- function(dynamic, target, config, index) {
+  browser()
+
+}
+
+subtarget_index.combine <- function(dynamic, target, config, index) {
+  browser()
+
+}
+
 # nocov start
 def_split <- function(target, .by) {
   NULL

@@ -41,7 +41,7 @@ test_with_dir("dynamic dependencies in the graph", {
   expect_equal(sort(out), sort(exp))
 })
 
-test_with_dir("dynamic target names", {
+test_with_dir("dynamic target names and indices", {
   f <- identity
   plan <- drake_plan(
     r = seq_len(9),
@@ -69,5 +69,16 @@ test_with_dir("dynamic target names", {
     expect_equal(subtarget_names(dx, "x", config), ex)
     expect_equal(subtarget_names(dy, "y", config), ey)
     expect_equal(subtarget_names(dz, "z", config), ez)
+  }
+  for (i in seq_len(4)) {
+    ew <- list(u = i, v = i)
+    expect_equal(subtarget_index(dw, "w", config, i), ew)
+  }
+  for (i in seq_len(4)) {
+    for (j in seq_len(4)) {
+      ey <- list(u = i, v = i)
+      k <- 4 * (i - 1) + j
+      expect_equal(subtarget_index(dy, "y", config, k), ey)
+    }
   }
 })
