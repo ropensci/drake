@@ -625,7 +625,9 @@ drake_config <- function(
     force = force,
     recover = recover,
     recoverable = recoverable,
-    curl_handles = curl_handles
+    curl_handles = curl_handles,
+    ht_dynamic_size = ht_new(),
+    ht_dynamic_nby = ht_new()
   )
   config_checks(out)
   logger$minor("end drake_config()")

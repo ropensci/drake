@@ -1,5 +1,9 @@
 # Version 7.7.0.9000
 
+## New features
+
+- Begin to implement dynamic branching (#685).
+
 ## Enhancements
 
 - Document transformation functions in a way that avoids having to create true functions (#979).
