@@ -43,6 +43,7 @@ test_with_dir("dynamic dependencies in the graph", {
 
 test_with_dir("dynamic target names and indices", {
   f <- identity
+  z_by <- rep(letters[seq_len(4)], each = 4)
   plan <- drake_plan(
     r = seq_len(9),
     s = rep(seq_len(3), 3),
@@ -52,7 +53,7 @@ test_with_dir("dynamic target names and indices", {
     w = target(f(v), dynamic = map(u, v)),
     x = target(f(r), dynamic = split(r, .by = s)),
     y = target(seq_len(prod(length(u), length(v))), dynamic = cross(u, v)),
-    z = target(f(y), dynamic = combine(y, .by = v))
+    z = target(f(y), dynamic = combine(y, .by = z_by))
   )
   make(plan)
   config <- drake_config(plan)
@@ -80,5 +81,14 @@ test_with_dir("dynamic target names and indices", {
       k <- 4 * (i - 1) + j
       expect_equal(subtarget_index(dy, "y", config, k), ey)
     }
+  }
+  ew <- list(r = c(0L, 3L, 6L))
+  for (i in seq_len(3)) {
+    ew$r <- ew$r + 1L
+    expect_equal(subtarget_index(dx, "x", config, i), ew)
+  }
+  for (i in seq_len(4)) {
+    ez <- list(y = seq(from = 4 * (i - 1) + 1, 4 * i))
+    expect_equal(subtarget_index(dz, "z", config, i), ez)
   }
 })

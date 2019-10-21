@@ -30,7 +30,7 @@ def_map <- function(...) {
   NULL
 }
 
-def_split <- function(target, .by = NULL) {
+def_split <- function(.x, .by = NULL) {
   NULL
 }
 # nocov end
@@ -94,17 +94,14 @@ subtarget_index.split <- subtarget_index.combine <- function(
   config,
   index
 ) {
-  if (no_by(dynamic)) {
-    return(1L)
+  key <- which_by(dynamic)
+  out <- list(1L)
+  if (!no_by(dynamic)) {
+    value <- get_dynamic_by(key, config)
+    out <- list(which(value == unique(value)[[index]]))
   }
-  by <- get_dynamic_by(which_by(dynamic), config)
-  browser()
-
-}
-
-get_dynamic_by <- function(target, config) {
-  browser()
-
+  names(out) <- which_var(dynamic)
+  out
 }
 
 get_dynamic_nby <- function(target, config) {
@@ -127,8 +124,29 @@ get_dynamic_size <- function(target, config) {
   size
 }
 
+get_dynamic_by <- function(target, config) {
+  if (exists(target, envir = config$envir, inherits = FALSE)) {
+    return(get(target, envir = config$envir, inherits = FALSE))
+  }
+  load_by(target, config)
+  get(target, envir = config$envir_by, inherits = FALSE)
+}
+
+load_by <- function(target, config) {
+  if (exists(target, envir = config$envir_by, inherits = FALSE)) {
+    return()
+  }
+  value <- config$cache$get(target, use_cache = FALSE)
+  assign(target, value, envir = config$envir_by)
+  invisible()
+}
+
 no_by <- function(dynamic) {
   is.null(which_by(dynamic))
+}
+
+which_var <- function(dynamic) {
+  deparse(dynamic$.x)
 }
 
 which_by <- function(dynamic) {

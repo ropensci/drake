@@ -591,6 +591,7 @@ drake_config <- function(
   out <- list(
     envir = envir,
     eval = new.env(parent = envir),
+    envir_by = new.env(parent = emptyenv()),
     cache = cache,
     parallelism = parallelism,
     jobs = jobs,

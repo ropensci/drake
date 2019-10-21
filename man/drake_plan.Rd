@@ -232,8 +232,8 @@ but this is what it usage will look like.
 \itemize{
 \item \code{map(...)}
 \item \code{cross(...)}
-\item \code{split(target, .by)}
-\item \code{combine(target, .by)}
+\item \code{split(.x, .by)}
+\item \code{combine(.x, .by)}
 }
 
 Differences from static branching:

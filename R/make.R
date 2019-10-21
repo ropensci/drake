@@ -246,7 +246,9 @@ make <- function(
     cache = config$cache,
     jobs = config$jobs_preprocess
   )
-  remove(list = names(config$eval), envir = config$eval)
+  for (key in c("eval", "envir_by")) {
+    remove(list = names(config[[key]]), envir = config[[key]])
+  }
   config$cache$flush_cache()
   if (config$garbage_collection) {
     gc()

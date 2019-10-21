@@ -33,8 +33,8 @@
 #'   but this is what it usage will look like.
 #'   - `map(...)`
 #'   - `cross(...)`
-#'   - `split(target, .by)`
-#'   - `combine(target, .by)`
+#'   - `split(.x, .by)`
+#'   - `combine(.x, .by)`
 #'
 #'  Differences from static branching:
 #'  - `...` must contain *unnamed* symbols with no values supplied,
@@ -47,8 +47,9 @@
 #'   can be given as symbols without any values assigned.
 #'   For dynamic branching, the entries in `...` must be unnamed symbols
 #'   with no values supplied, and they must be the names of targets.
-#' @param target The single target to split or single dynamic target
-#'   to combine.
+#' @param .x The target to split or combine in dynamic branching.
+#'   For `combine()`, `.x` must be dynamic. For `split()`,
+#'   `.x` must **NOT** be dynamic.
 #' @param .data A data frame of new grouping variables with
 #'   grouping variable names as column names and values as elements.
 #' @param .id Symbol or vector of symbols naming grouping variables
