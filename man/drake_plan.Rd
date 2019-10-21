@@ -238,7 +238,7 @@ but this is what it usage will look like.
 
 Differences from static branching:
 \itemize{
-\item \code{...} must contain \emph{unnmaed} symbols with no values supplied,
+\item \code{...} must contain \emph{unnamed} symbols with no values supplied,
 and they must be the names of targets.
 \item Arguments \code{.id}, \code{.tag_in}, and \code{.tag_out} no longer apply.
 }

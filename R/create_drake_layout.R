@@ -15,8 +15,9 @@ create_drake_layout <- function(
     jobs = jobs,
     cache = cache,
     trigger = cdl_parse_trigger(trigger = trigger, envir = envir),
-    allowed_globals_imports = ht_new(import_names),
-    allowed_globals_targets = ht_new(c(import_names, plan$target))
+    ht_targets = ht_new(plan$target),
+    ht_imports = ht_new(import_names),
+    ht_globals = ht_new(c(import_names, plan$target))
   )
   imports <- cdl_prepare_imports(config)
   imports_kernel <- cdl_imports_kernel(config, imports)
@@ -134,7 +135,7 @@ cdl_analyze_imports <- function(config, imports) {
         deps_build = cdl_import_dependencies(
           expr = imports[[i]],
           exclude = names(imports)[[i]],
-          allowed_globals = config$allowed_globals_imports
+          allowed_globals = config$ht_imports
         ),
         imported = TRUE
       )
@@ -158,31 +159,30 @@ cdl_analyze_commands <- function(config) {
   names(layout) <- config$plan$target
   config$default_condition_deps <- cdl_import_dependencies(
     config$trigger$condition,
-    allowed_globals = config$allowed_globals_targets
+    allowed_globals = config$ht_globals
   )
   config$default_change_deps <- cdl_import_dependencies(
     config$trigger$change,
-    allowed_globals = config$allowed_globals_targets
+    allowed_globals = config$ht_globals
   )
   out <- lightly_parallelize(
     X = layout,
     FUN = cdl_prepare_layout,
     jobs = config$jobs,
-     config = config,
-    ht_targets = ht_new(config$plan$target)
+    config = config
   )
   names(out) <- config$plan$target
   out
 }
 
-cdl_prepare_layout <- function(config, layout, ht_targets) {
+cdl_prepare_layout <- function(config, layout) {
   config$logger$minor("analyze", target = layout$target)
   layout$deps_build <- cdl_command_dependencies(
     command = layout$command,
     exclude = layout$target,
-    allowed_globals = config$allowed_globals_targets
+    allowed_globals = config$ht_globals
   )
-  layout$deps_dynamic <- cdl_dynamic_dependencies(layout$dynamic, ht_targets)
+  layout$deps_dynamic <- cdl_dynamic_dependencies(layout$dynamic, config)
   layout$command_standardized <- cdl_standardize_command(layout$command)
   layout$command_build <- cdl_preprocess_command(
     layout$command,
@@ -196,17 +196,17 @@ cdl_prepare_layout <- function(config, layout, ht_targets) {
     layout$deps_condition <- cdl_import_dependencies(
       layout$trigger$condition,
       exclude = layout$target,
-      allowed_globals = config$allowed_globals_targets
+      allowed_globals = config$ht_globals
     )
     layout$deps_change <- cdl_import_dependencies(
       layout$trigger$change,
       exclude = layout$target,
-      allowed_globals = config$allowed_globals_targets
+      allowed_globals = config$ht_globals
     )
   }
   for (field in c("deps_build", "deps_condition", "deps_change")) {
     layout[[field]]$memory <- ht_filter(
-      ht = ht_targets,
+      ht = config$ht_targets,
       x = layout[[field]]$globals
     )
   }
@@ -242,8 +242,8 @@ cdl_command_dependencies <- function(
   select_nonempty(deps)
 }
 
-cdl_dynamic_dependencies <- function(dynamic, ht_targets) {
-  ht_filter(ht_targets, all.vars(dynamic))
+cdl_dynamic_dependencies <- function(dynamic, config) {
+  ht_filter(config$ht_globals, all.vars(dynamic))
 }
 
 # Get the command ready for tidy eval prep
