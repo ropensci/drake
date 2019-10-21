@@ -5,8 +5,14 @@
 \title{The default cache of a \code{drake} project.
 \lifecycle{deprecated}}
 \usage{
-get_cache(path = getwd(), search = TRUE, verbose = 1L,
-  force = FALSE, fetch_cache = NULL, console_log_file = NULL)
+get_cache(
+  path = getwd(),
+  search = TRUE,
+  verbose = 1L,
+  force = FALSE,
+  fetch_cache = NULL,
+  console_log_file = NULL
+)
 }
 \arguments{
 \item{path}{Character, either the root file path of a \code{drake} project
@@ -46,7 +52,7 @@ Fields in each row the log file, from left to right:
 computer (from \code{Sys.info()["nodename"]}).
 - The process ID (from \code{Sys.getpid()}).
 - A timestamp with the date and time (in microseconds).
-- A brief description of what \code{drake} was doing.\code{ The fields are separated by pipe symbols (}"|"`).}
+- A brief description of what \code{drake} was doing.\verb{ The fields are separated by pipe symbols (}"|"`).}
 }
 \description{
 Use \code{\link[=drake_cache]{drake_cache()}} instead.

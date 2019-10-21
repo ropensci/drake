@@ -5,12 +5,25 @@
 \title{Visualize the workflow with \code{ggraph}/\code{ggplot2}
 \lifecycle{stable}}
 \usage{
-drake_ggraph(config, build_times = "build", digits = 3,
-  targets_only = FALSE, main = NULL, from = NULL, mode = c("out",
-  "in", "all"), order = NULL, subset = NULL, make_imports = TRUE,
-  from_scratch = FALSE, full_legend = FALSE, group = NULL,
-  clusters = NULL, show_output_files = TRUE, label_nodes = FALSE,
-  transparency = TRUE)
+drake_ggraph(
+  config,
+  build_times = "build",
+  digits = 3,
+  targets_only = FALSE,
+  main = NULL,
+  from = NULL,
+  mode = c("out", "in", "all"),
+  order = NULL,
+  subset = NULL,
+  make_imports = TRUE,
+  from_scratch = FALSE,
+  full_legend = FALSE,
+  group = NULL,
+  clusters = NULL,
+  show_output_files = TRUE,
+  label_nodes = FALSE,
+  transparency = TRUE
+)
 }
 \arguments{
 \item{config}{A \code{\link[=drake_config]{drake_config()}} configuration list.

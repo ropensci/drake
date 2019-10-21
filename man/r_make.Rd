@@ -19,8 +19,14 @@
 \usage{
 r_make(source = NULL, r_fn = NULL, r_args = list())
 
-r_drake_build(target, character_only = FALSE, ..., source = NULL,
-  r_fn = NULL, r_args = list())
+r_drake_build(
+  target,
+  character_only = FALSE,
+  ...,
+  source = NULL,
+  r_fn = NULL,
+  r_args = list()
+)
 
 r_outdated(..., source = NULL, r_fn = NULL, r_args = list())
 
@@ -28,15 +34,20 @@ r_recoverable(..., source = NULL, r_fn = NULL, r_args = list())
 
 r_missed(..., source = NULL, r_fn = NULL, r_args = list())
 
-r_deps_target(target, character_only = FALSE, ..., source = NULL,
-  r_fn = NULL, r_args = list())
+r_deps_target(
+  target,
+  character_only = FALSE,
+  ...,
+  source = NULL,
+  r_fn = NULL,
+  r_args = list()
+)
 
 r_drake_graph_info(..., source = NULL, r_fn = NULL, r_args = list())
 
 r_vis_drake_graph(..., source = NULL, r_fn = NULL, r_args = list())
 
-r_sankey_drake_graph(..., source = NULL, r_fn = NULL,
-  r_args = list())
+r_sankey_drake_graph(..., source = NULL, r_fn = NULL, r_args = list())
 
 r_drake_ggraph(..., source = NULL, r_fn = NULL, r_args = list())
 
@@ -75,7 +86,7 @@ as a character or a symbol
 \code{selfcontained} is an example argument you could supply to the ellipsis.}
 }
 \description{
-The \code{r_*()} functions, such as \code{r_make()},
+The \verb{r_*()} functions, such as \code{r_make()},
 enhance reproducibility by launching a \code{drake} function in
 a separate R process.
 }

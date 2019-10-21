@@ -5,9 +5,14 @@
 \title{Get diagnostic metadata on a target.
 \lifecycle{maturing}}
 \usage{
-diagnose(target = NULL, character_only = FALSE, path = NULL,
-  search = NULL, cache = drake::drake_cache(path = path),
-  verbose = 1L)
+diagnose(
+  target = NULL,
+  character_only = FALSE,
+  path = NULL,
+  search = NULL,
+  cache = drake::drake_cache(path = path),
+  verbose = 1L
+)
 }
 \arguments{
 \item{target}{Name of the target of the error to get.
@@ -19,7 +24,7 @@ as a character or a symbol.
 Just like \code{character.only} in \code{\link[=library]{library()}}.}
 
 \item{path}{Path to a \code{drake} cache
-(usually a hidden \code{.drake/} folder) or \code{NULL}.}
+(usually a hidden \verb{.drake/} folder) or \code{NULL}.}
 
 \item{search}{Deprecated.}
 

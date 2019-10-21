@@ -5,12 +5,16 @@
 \title{Session info of the last call to \code{\link[=make]{make()}}.
 \lifecycle{maturing}}
 \usage{
-drake_get_session_info(path = NULL, search = NULL,
-  cache = drake::drake_cache(path = path), verbose = 1L)
+drake_get_session_info(
+  path = NULL,
+  search = NULL,
+  cache = drake::drake_cache(path = path),
+  verbose = 1L
+)
 }
 \arguments{
 \item{path}{Path to a \code{drake} cache
-(usually a hidden \code{.drake/} folder) or \code{NULL}.}
+(usually a hidden \verb{.drake/} folder) or \code{NULL}.}
 
 \item{search}{Deprecated.}
 

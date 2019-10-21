@@ -12,7 +12,7 @@ Nothing.
 }
 \description{
 This function deletes files. Use at your own risk.
-Destroys the \code{.drake/} cache and the \code{report.Rmd} file
+Destroys the \verb{.drake/} cache and the \code{report.Rmd} file
 in the current working directory. Your working directory
 (\code{getcwd()}) must be the folder from which you first ran
 \code{load_main_example()} and \code{make(my_plan)}.

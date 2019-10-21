@@ -6,15 +6,36 @@
 \title{Read and return a drake target/import from the cache.
 \lifecycle{maturing}}
 \usage{
-readd(target, character_only = FALSE, path = NULL, search = NULL,
-  cache = drake::drake_cache(path = path), namespace = NULL,
-  verbose = 1L, show_source = FALSE)
+readd(
+  target,
+  character_only = FALSE,
+  path = NULL,
+  search = NULL,
+  cache = drake::drake_cache(path = path),
+  namespace = NULL,
+  verbose = 1L,
+  show_source = FALSE
+)
 
-loadd(..., list = character(0), imported_only = NULL, path = NULL,
-  search = NULL, cache = drake::drake_cache(path = path),
-  namespace = NULL, envir = parent.frame(), jobs = 1, verbose = 1L,
-  deps = FALSE, lazy = "eager", graph = NULL, replace = TRUE,
-  show_source = FALSE, tidyselect = !deps, config = NULL)
+loadd(
+  ...,
+  list = character(0),
+  imported_only = NULL,
+  path = NULL,
+  search = NULL,
+  cache = drake::drake_cache(path = path),
+  namespace = NULL,
+  envir = parent.frame(),
+  jobs = 1,
+  verbose = 1L,
+  deps = FALSE,
+  lazy = "eager",
+  graph = NULL,
+  replace = TRUE,
+  show_source = FALSE,
+  tidyselect = !deps,
+  config = NULL
+)
 }
 \arguments{
 \item{target}{If \code{character_only} is \code{TRUE}, then
@@ -27,7 +48,7 @@ as a character or a symbol
 (just like \code{character.only} in \code{\link[=library]{library()}}).}
 
 \item{path}{Path to a \code{drake} cache
-(usually a hidden \code{.drake/} folder) or \code{NULL}.}
+(usually a hidden \verb{.drake/} folder) or \code{NULL}.}
 
 \item{search}{Deprecated.}
 
@@ -70,7 +91,7 @@ Important note:
 \code{deps = TRUE} disables \code{tidyselect} functionality. For example,
 \code{loadd(starts_with("model_"), config = config, deps = TRUE)}
 does not work. For the selection mechanism to work,
-the \code{model_*} targets to need to already be in the cache,
+the \verb{model_*} targets to need to already be in the cache,
 which is not always the case when you are debugging your projects.
 To help \code{drake} understand what you mean,
 you must name the targets \emph{explicitly} when \code{deps} is \code{TRUE}, e.g.
@@ -119,7 +140,7 @@ When you call \code{\link[=make]{make()}} to run your project,
 You may want to inspect the targets afterwards, possibly in an
 interactive R session. However, the files in the \code{.drake} folder
 are organized in a special format created by the
-\href{https://github.com/richfitz/storr}{storr} package,
+\href{https://github.com/richfitz/storr}{\code{storr}} package,
 which is not exactly human-readable.
 To retrieve a target for manual viewing, use \code{\link[=readd]{readd()}}.
 To load one or more targets into your session, use \code{\link[=loadd]{loadd()}}.

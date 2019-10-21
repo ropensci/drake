@@ -284,7 +284,10 @@ dir_create <- function(x) {
 }
 
 `%||NA%` <- function(x, y) {
-  if (is.null(x) || length(x) < 1 || anyNA(x)) {
+  return_y <- is.null(x) ||
+    length(x) < 1L ||
+    (is.atomic(x) && anyNA(x))
+  if (return_y) {
     y
   } else {
     x

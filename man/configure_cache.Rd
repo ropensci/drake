@@ -5,11 +5,16 @@
 \title{Configure the hash algorithms, etc. of a drake cache.
 \lifecycle{deprecated}}
 \usage{
-configure_cache(cache = drake::get_cache(verbose = verbose),
+configure_cache(
+  cache = drake::get_cache(verbose = verbose),
   short_hash_algo = drake::default_short_hash_algo(cache = cache),
   long_hash_algo = drake::default_long_hash_algo(cache = cache),
-  log_progress = FALSE, overwrite_hash_algos = FALSE, verbose = 1L,
-  jobs = 1, init_common_values = FALSE)
+  log_progress = FALSE,
+  overwrite_hash_algos = FALSE,
+  verbose = 1L,
+  jobs = 1,
+  init_common_values = FALSE
+)
 }
 \arguments{
 \item{cache}{Cache to configure}

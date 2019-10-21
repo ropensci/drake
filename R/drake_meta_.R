@@ -9,7 +9,8 @@ drake_meta_ <- function(target, config) {
       layout$seed %||NA% seed_from_basic_types(config$seed, target)
     ),
     time_start = proc.time(),
-    file_out = layout$deps_build$file_out
+    file_out = layout$deps_build$file_out,
+    dynamic = is.call(layout$dynamic)
   )
   if (meta$imported) {
     meta$isfile <- is_encoded_path(target)
@@ -47,9 +48,13 @@ drake_meta_ <- function(target, config) {
 # numerics and characters.
 seed_from_basic_types <- function(...) {
   x <- paste0(..., collapse = "")
+  integer_hash(x = x, mod = .Machine$integer.max)
+}
+
+integer_hash <- function(x, mod = .Machine$integer.max) {
   hash <- digest::digest(x, algo = "murmur32", serialize = FALSE)
   hexval <- paste0("0x", hash)
-  utils::type.convert(hexval) %% .Machine$integer.max
+  as.integer(utils::type.convert(hexval) %% mod)
 }
 
 dependency_hash <- function(target, config) {

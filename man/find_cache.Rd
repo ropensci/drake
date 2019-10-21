@@ -21,7 +21,7 @@ if no cache is found.
 }
 \description{
 Only works if the cache is a file system in a
-hidden folder named \code{.drake/} (default).
+hidden folder named \verb{.drake/} (default).
 }
 \examples{
 \dontrun{
