@@ -9,7 +9,8 @@ drake_meta_ <- function(target, config) {
       layout$seed %||NA% seed_from_basic_types(config$seed, target)
     ),
     time_start = proc.time(),
-    file_out = layout$deps_build$file_out
+    file_out = layout$deps_build$file_out,
+    dynamic = is.call(layout$dynamic)
   )
   if (meta$imported) {
     meta$isfile <- is_encoded_path(target)

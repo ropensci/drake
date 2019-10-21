@@ -18,6 +18,13 @@ test_with_dir("dynamic dependency detection", {
   expect_equal(sort(layout[["x"]]$deps_dynamic), sort(c("v", "w")))
   expect_equal(sort(layout[["y"]]$deps_dynamic), sort(c("u", "x", "y")))
   expect_equal(sort(layout[["z"]]$deps_dynamic), sort(c("w", "x", "y")))
+  meta1 <- drake_meta_("u", config)
+  meta2 <- drake_meta_("x", config)
+  con2 <- drake_config(drake_plan(x = 1))
+  meta3 <- drake_meta_("x", con2)
+  expect_false(meta1$dynamic)
+  expect_true(meta2$dynamic)
+  expect_false(meta3$dynamic)
 })
 
 test_with_dir("dynamic dependencies in the graph", {
