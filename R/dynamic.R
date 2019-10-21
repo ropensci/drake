@@ -142,7 +142,7 @@ load_by <- function(target, config) {
 }
 
 no_by <- function(dynamic) {
-  is.null(which_by(dynamic))
+  is.null(dynamic$.by)
 }
 
 which_var <- function(dynamic) {

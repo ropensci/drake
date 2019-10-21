@@ -52,24 +52,32 @@ test_with_dir("dynamic target names and indices", {
     v = letters[u],
     w = target(f(v), dynamic = map(u, v)),
     x = target(f(r), dynamic = split(r, .by = s)),
+    x2 = target(f(r), dynamic = split(r)),
     y = target(seq_len(prod(length(u), length(v))), dynamic = cross(u, v)),
-    z = target(f(y), dynamic = combine(y, .by = z_by))
+    z = target(f(y), dynamic = combine(y, .by = z_by)),
+    z2 = target(f(y), dynamic = combine(y))
   )
   make(plan)
   config <- drake_config(plan)
   dw <- config$layout[["w"]]$dynamic
   dx <- config$layout[["x"]]$dynamic
+  dx2 <- config$layout[["x2"]]$dynamic
   dy <- config$layout[["y"]]$dynamic
   dz <- config$layout[["z"]]$dynamic
+  dz2 <- config$layout[["z2"]]$dynamic
   ew <- paste("w", seq_len(4), sep = "_")
   ex <- paste("x", seq_len(3), sep = "_")
+  ex2 <- "x2_1"
   ey <- paste("y", seq_len(16), sep = "_")
   ez <- paste("z", seq_len(4), sep = "_")
+  ez2 <- "z2_1"
   for (i in seq_len(2)) {
     expect_equal(subtarget_names(dw, "w", config), ew)
     expect_equal(subtarget_names(dx, "x", config), ex)
+    expect_equal(subtarget_names(dx2, "x2", config), ex2)
     expect_equal(subtarget_names(dy, "y", config), ey)
     expect_equal(subtarget_names(dz, "z", config), ez)
+    expect_equal(subtarget_names(dz2, "z2", config), ez2)
   }
   for (i in seq_len(4)) {
     ew <- list(u = i, v = i)
