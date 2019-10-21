@@ -31,21 +31,24 @@
 #' @section Dynamic branching:
 #'   Dynamic branching is not yet implemented,
 #'   but this is what it usage will look like.
-#'   - `map(..., .data)`
-#'   - `split(..., slices, margin = 1L, drop = FALSE)`
+#'   - `map(...)`
 #'   - `cross(...)`
-#'   - `combine(..., .by)`
+#'   - `split(target, .by)`
+#'   - `combine(target, .by)`
 #'
 #'  Differences from static branching:
 #'  - `...` must contain *unnamed* symbols with no values supplied,
 #'    and they must be the names of targets.
 #'  - Arguments `.id`, `.tag_in`, and `.tag_out` no longer apply.
+#'  - `split()` has a `.by` argument
 #'
 #' @param ... Grouping variables. New grouping variables must be
 #'   supplied with their names and values, existing grouping variables
 #'   can be given as symbols without any values assigned.
 #'   For dynamic branching, the entries in `...` must be unnamed symbols
 #'   with no values supplied, and they must be the names of targets.
+#' @param target The single target to split or single dynamic target
+#'   to combine.
 #' @param .data A data frame of new grouping variables with
 #'   grouping variable names as column names and values as elements.
 #' @param .id Symbol or vector of symbols naming grouping variables
@@ -64,6 +67,10 @@
 #'   `mtcars[, 1L, drop = TRUE]`.
 #' @param .by Symbol or vector of symbols of grouping variables.
 #'   `combine()` aggregates/groups targets by the grouping variables in `.by`.
+#'   For dynamic branching, `.by` can only take one variable at a time,
+#'   and that variable must be a vector.
+#'   `split(data, .by = x)` makes a new dynamic sub-target from `data`
+#'   for each unique element of `x`.
 #' @examples
 #' # Static branching
 #' models <- c("glm", "hierarchical")

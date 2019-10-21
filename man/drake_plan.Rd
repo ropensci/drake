@@ -230,10 +230,10 @@ Transformation function usage:
 Dynamic branching is not yet implemented,
 but this is what it usage will look like.
 \itemize{
-\item \code{map(..., .data)}
-\item \code{split(..., slices, margin = 1L, drop = FALSE)}
+\item \code{map(...)}
 \item \code{cross(...)}
-\item \code{combine(..., .by)}
+\item \code{split(target, .by)}
+\item \code{combine(target, .by)}
 }
 
 Differences from static branching:
@@ -241,6 +241,7 @@ Differences from static branching:
 \item \code{...} must contain \emph{unnamed} symbols with no values supplied,
 and they must be the names of targets.
 \item Arguments \code{.id}, \code{.tag_in}, and \code{.tag_out} no longer apply.
+\item \code{split()} has a \code{.by} argument
 }
 }
 

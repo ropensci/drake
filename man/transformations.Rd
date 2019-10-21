@@ -15,6 +15,9 @@ can be given as symbols without any values assigned.
 For dynamic branching, the entries in \code{...} must be unnamed symbols
 with no values supplied, and they must be the names of targets.}
 
+\item{target}{The single target to split or single dynamic target
+to combine.}
+
 \item{.data}{A data frame of new grouping variables with
 grouping variable names as column names and values as elements.}
 
@@ -39,7 +42,11 @@ Same meaning as \code{mtcars[, 1L, drop = TRUE]} versus
 \code{mtcars[, 1L, drop = TRUE]}.}
 
 \item{.by}{Symbol or vector of symbols of grouping variables.
-\code{combine()} aggregates/groups targets by the grouping variables in \code{.by}.}
+\code{combine()} aggregates/groups targets by the grouping variables in \code{.by}.
+For dynamic branching, \code{.by} can only take one variable at a time,
+and that variable must be a vector.
+\code{split(data, .by = x)} makes a new dynamic sub-target from \code{data}
+for each unique element of \code{x}.}
 }
 \description{
 In \code{\link[=drake_plan]{drake_plan()}}, you can define whole batches
@@ -86,10 +93,10 @@ Transformation function usage:
 Dynamic branching is not yet implemented,
 but this is what it usage will look like.
 \itemize{
-\item \code{map(..., .data)}
-\item \code{split(..., slices, margin = 1L, drop = FALSE)}
+\item \code{map(...)}
 \item \code{cross(...)}
-\item \code{combine(..., .by)}
+\item \code{split(target, .by)}
+\item \code{combine(target, .by)}
 }
 
 Differences from static branching:
@@ -97,6 +104,7 @@ Differences from static branching:
 \item \code{...} must contain \emph{unnamed} symbols with no values supplied,
 and they must be the names of targets.
 \item Arguments \code{.id}, \code{.tag_in}, and \code{.tag_out} no longer apply.
+\item \code{split()} has a \code{.by} argument
 }
 }
 
