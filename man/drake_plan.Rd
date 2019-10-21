@@ -236,6 +236,16 @@ but this is what it usage will look like.
 \item \code{combine(.x, .by)}
 }
 
+\code{map()} and \code{cross()} create dynamic sub-targets from the variables
+supplied to the dots. As with static branching, the variables
+supplied to \code{map()} must all have equal length.
+\code{split(f(data), .by = x)} makes a new dynamic sub-targets from
+pieces of \code{data} for each unique element of \code{x}. Here,
+\code{data} must not be dynamic.
+\code{combine(f(data), .by = x)} makes new dynamic
+sub-targets from \code{data}. For \code{combine()}, \code{data} must already
+be a dynamic target.
+
 Differences from static branching:
 \itemize{
 \item \code{...} must contain \emph{unnamed} symbols with no values supplied,

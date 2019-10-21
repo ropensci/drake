@@ -16,8 +16,7 @@ For dynamic branching, the entries in \code{...} must be unnamed symbols
 with no values supplied, and they must be the names of targets.}
 
 \item{.x}{The target to split or combine in dynamic branching.
-For \code{combine()}, \code{.x} must be dynamic. For \code{split()},
-\code{.x} must \strong{NOT} be dynamic.}
+For \code{combine()}, \code{.x} must be dynamic.}
 
 \item{.data}{A data frame of new grouping variables with
 grouping variable names as column names and values as elements.}
@@ -45,9 +44,8 @@ Same meaning as \code{mtcars[, 1L, drop = TRUE]} versus
 \item{.by}{Symbol or vector of symbols of grouping variables.
 \code{combine()} aggregates/groups targets by the grouping variables in \code{.by}.
 For dynamic branching, \code{.by} can only take one variable at a time,
-and that variable must be a vector.
-\code{split(data, .by = x)} makes a new dynamic sub-target from \code{data}
-for each unique element of \code{x}.}
+and that variable must be a vector. Ideally, it should take
+little space in memory.}
 }
 \description{
 In \code{\link[=drake_plan]{drake_plan()}}, you can define whole batches
@@ -99,6 +97,16 @@ but this is what it usage will look like.
 \item \code{split(.x, .by)}
 \item \code{combine(.x, .by)}
 }
+
+\code{map()} and \code{cross()} create dynamic sub-targets from the variables
+supplied to the dots. As with static branching, the variables
+supplied to \code{map()} must all have equal length.
+\code{split(f(data), .by = x)} makes a new dynamic sub-targets from
+pieces of \code{data} for each unique element of \code{x}. Here,
+\code{data} must not be dynamic.
+\code{combine(f(data), .by = x)} makes new dynamic
+sub-targets from \code{data}. For \code{combine()}, \code{data} must already
+be a dynamic target.
 
 Differences from static branching:
 \itemize{
