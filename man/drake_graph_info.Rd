@@ -21,7 +21,8 @@ drake_graph_info(
   group = NULL,
   clusters = NULL,
   show_output_files = TRUE,
-  hover = FALSE
+  hover = FALSE,
+  on_select_col = NULL
 )
 }
 \arguments{

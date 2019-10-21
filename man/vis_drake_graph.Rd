@@ -31,6 +31,8 @@ vis_drake_graph(
   clusters = NULL,
   show_output_files = TRUE,
   collapse = TRUE,
+  on_select_col = NULL,
+  on_select = NULL,
   ...
 )
 }
@@ -158,9 +160,9 @@ in the plan that should provide data for the \code{on_select} event.}
 \item{on_select}{defines node selection event handling.
 Either a string of valid javascript that may be passed to
 \code{visNetwork::visEvents()}, or one of the following:
-\code{TRUE}, \code{NULL}/\code{FALSE}. If \code{TRUE} , enables the default behaviour of opening
-the link specified by the \code{on_select_col} given to \code{drake_graph_info()}.
-\code{NULL}/\code{FALSE} disables the behaviour.}
+\code{TRUE}, \code{NULL}/\code{FALSE}. If \code{TRUE} , enables the default behaviour of
+opening the link specified by the \code{on_select_col} given to
+\code{drake_graph_info()}. \code{NULL}/\code{FALSE} disables the behaviour.}
 
 \item{...}{Arguments passed to \code{visNetwork()}.}
 }

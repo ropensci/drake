@@ -17,6 +17,7 @@ render_drake_graph(
   navigationButtons = TRUE,
   ncol_legend = 1,
   collapse = TRUE,
+  on_select = NULL,
   ...
 )
 }
@@ -70,9 +71,9 @@ Analogous to \code{visNetwork::visOptions(collapse = TRUE)} or
 \item{on_select}{defines node selection event handling.
 Either a string of valid javascript that may be passed to
 \code{visNetwork::visEvents()}, or one of the following:
-\code{TRUE}, \code{NULL}/\code{FALSE}. If \code{TRUE} , enables the default behaviour of opening
-the link specified by the \code{on_select_col} given to \code{drake_graph_info()}.
-\code{NULL}/\code{FALSE} disables the behaviour.}
+\code{TRUE}, \code{NULL}/\code{FALSE}. If \code{TRUE} , enables the default behaviour of
+opening the link specified by the \code{on_select_col} given to
+\code{drake_graph_info()}. \code{NULL}/\code{FALSE} disables the behaviour.}
 
 \item{...}{Arguments passed to \code{visNetwork()}.}
 }
