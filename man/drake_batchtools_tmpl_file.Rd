@@ -5,8 +5,11 @@
 \title{Get a template file for execution on a cluster.
 \lifecycle{deprecated}}
 \usage{
-drake_batchtools_tmpl_file(example = drake::drake_hpc_template_files(),
-  to = getwd(), overwrite = FALSE)
+drake_batchtools_tmpl_file(
+  example = drake::drake_hpc_template_files(),
+  to = getwd(),
+  overwrite = FALSE
+)
 }
 \arguments{
 \item{example}{Name of template file.}

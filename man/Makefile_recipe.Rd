@@ -5,8 +5,11 @@
 \title{Default Makefile recipe
 \lifecycle{deprecated}}
 \usage{
-Makefile_recipe(recipe_command = drake::default_recipe_command(),
-  target = "your_target", cache_path = NULL)
+Makefile_recipe(
+  recipe_command = drake::default_recipe_command(),
+  target = "your_target",
+  cache_path = NULL
+)
 }
 \arguments{
 \item{recipe_command}{Character scalar.}

@@ -5,11 +5,24 @@
 \title{Show a Sankey graph of your drake project.
 \lifecycle{stable}}
 \usage{
-sankey_drake_graph(config, file = character(0), selfcontained = FALSE,
-  build_times = "build", digits = 3, targets_only = FALSE,
-  from = NULL, mode = c("out", "in", "all"), order = NULL,
-  subset = NULL, make_imports = TRUE, from_scratch = FALSE,
-  group = NULL, clusters = NULL, show_output_files = TRUE, ...)
+sankey_drake_graph(
+  config,
+  file = character(0),
+  selfcontained = FALSE,
+  build_times = "build",
+  digits = 3,
+  targets_only = FALSE,
+  from = NULL,
+  mode = c("out", "in", "all"),
+  order = NULL,
+  subset = NULL,
+  make_imports = TRUE,
+  from_scratch = FALSE,
+  group = NULL,
+  clusters = NULL,
+  show_output_files = TRUE,
+  ...
+)
 }
 \arguments{
 \item{config}{A \code{\link[=drake_config]{drake_config()}} configuration list.
@@ -21,7 +34,7 @@ the graph is rendered and displayed within R.
 If the file ends in a \code{.png}, \code{.jpg}, \code{.jpeg}, or \code{.pdf} extension,
 then a static image will be saved. In this case,
 the webshot package and PhantomJS are required:
-\code{install.packages("webshot"); webshot::install_phantomjs()}.
+\verb{install.packages("webshot"); webshot::install_phantomjs()}.
 If the file does not end in a \code{.png}, \code{.jpg}, \code{.jpeg}, or \code{.pdf}
 extension, an HTML file will be saved, and you can open the
 interactive graph using a web browser.}

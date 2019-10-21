@@ -5,9 +5,16 @@
 \title{Make a new \code{drake} cache.
 \lifecycle{maturing}}
 \usage{
-new_cache(path = NULL, verbose = NULL, type = NULL,
-  hash_algorithm = NULL, short_hash_algo = NULL,
-  long_hash_algo = NULL, ..., console_log_file = NULL)
+new_cache(
+  path = NULL,
+  verbose = NULL,
+  type = NULL,
+  hash_algorithm = NULL,
+  short_hash_algo = NULL,
+  long_hash_algo = NULL,
+  ...,
+  console_log_file = NULL
+)
 }
 \arguments{
 \item{path}{File path to the cache if the cache

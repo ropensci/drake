@@ -6,8 +6,12 @@
 them as imported dependencies.
 \lifecycle{stable}}
 \usage{
-expose_imports(package, character_only = FALSE, envir = parent.frame(),
-  jobs = 1)
+expose_imports(
+  package,
+  character_only = FALSE,
+  envir = parent.frame(),
+  jobs = 1
+)
 }
 \arguments{
 \item{package}{Name of the package, either a symbol or a string,

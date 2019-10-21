@@ -5,8 +5,12 @@
 \title{Load the main example.
 \lifecycle{deprecated}}
 \usage{
-load_main_example(envir = parent.frame(), report_file = "report.Rmd",
-  overwrite = FALSE, force = FALSE)
+load_main_example(
+  envir = parent.frame(),
+  report_file = "report.Rmd",
+  overwrite = FALSE,
+  force = FALSE
+)
 }
 \arguments{
 \item{envir}{The environment to load the example into.

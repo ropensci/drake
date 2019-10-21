@@ -5,23 +5,58 @@
 \title{Interpret the plan and prepare for \code{\link[=make]{make()}}
 \lifecycle{maturing}}
 \usage{
-drake_config(plan, targets = NULL, envir = parent.frame(),
-  verbose = 1L, hook = NULL, cache = drake::drake_cache(),
-  fetch_cache = NULL, parallelism = "loop", jobs = 1L,
-  jobs_preprocess = 1L, packages = rev(.packages()), lib_loc = NULL,
-  prework = character(0), prepend = NULL, command = NULL,
-  args = NULL, recipe_command = NULL, timeout = NULL, cpu = Inf,
-  elapsed = Inf, retries = 0, force = FALSE, log_progress = TRUE,
-  graph = NULL, trigger = drake::trigger(), skip_targets = FALSE,
-  skip_imports = FALSE, skip_safety_checks = FALSE,
-  lazy_load = "eager", session_info = TRUE, cache_log_file = NULL,
-  seed = NULL, caching = c("master", "worker"), keep_going = FALSE,
-  session = NULL, pruning_strategy = NULL, makefile_path = NULL,
-  console_log_file = NULL, ensure_workers = NULL,
-  garbage_collection = FALSE, template = list(), sleep = function(i)
-  0.01, hasty_build = NULL, memory_strategy = "speed", layout = NULL,
-  lock_envir = TRUE, history = TRUE, recover = FALSE,
-  recoverable = TRUE, curl_handles = list())
+drake_config(
+  plan,
+  targets = NULL,
+  envir = parent.frame(),
+  verbose = 1L,
+  hook = NULL,
+  cache = drake::drake_cache(),
+  fetch_cache = NULL,
+  parallelism = "loop",
+  jobs = 1L,
+  jobs_preprocess = 1L,
+  packages = rev(.packages()),
+  lib_loc = NULL,
+  prework = character(0),
+  prepend = NULL,
+  command = NULL,
+  args = NULL,
+  recipe_command = NULL,
+  timeout = NULL,
+  cpu = Inf,
+  elapsed = Inf,
+  retries = 0,
+  force = FALSE,
+  log_progress = TRUE,
+  graph = NULL,
+  trigger = drake::trigger(),
+  skip_targets = FALSE,
+  skip_imports = FALSE,
+  skip_safety_checks = FALSE,
+  lazy_load = "eager",
+  session_info = TRUE,
+  cache_log_file = NULL,
+  seed = NULL,
+  caching = c("master", "worker"),
+  keep_going = FALSE,
+  session = NULL,
+  pruning_strategy = NULL,
+  makefile_path = NULL,
+  console_log_file = NULL,
+  ensure_workers = NULL,
+  garbage_collection = FALSE,
+  template = list(),
+  sleep = function(i) 0.01,
+  hasty_build = NULL,
+  memory_strategy = "speed",
+  layout = NULL,
+  lock_envir = TRUE,
+  history = TRUE,
+  recover = FALSE,
+  recoverable = TRUE,
+  curl_handles = list()
+)
 }
 \arguments{
 \item{plan}{Workflow plan data frame.
@@ -74,7 +109,7 @@ You could also supply your own scheduler function
 if you want to experiment or aggressively optimize.
 The function should take a single \code{config} argument
 (produced by \code{\link[=drake_config]{drake_config()}}). Existing examples
-from \code{drake}'s internals are the \code{backend_*()} functions:
+from \code{drake}'s internals are the \verb{backend_*()} functions:
 \itemize{
 \item \code{backend_loop()}
 \item \code{backend_clustermq()}
@@ -151,7 +186,7 @@ rather than rerun all your targets from scratch.}
 
 \item{log_progress}{Logical, whether to log the progress
 of individual targets as they are being built. Progress logging
-creates extra files in the cache (usually the \code{.drake/} folder)
+creates extra files in the cache (usually the \verb{.drake/} folder)
 and slows down \code{make()} a little.
 If you need to reduce or limit the number of files in the cache,
 call \code{make(log_progress = FALSE, recover = FALSE)}.}
@@ -189,7 +224,7 @@ with \code{\link[=assign]{assign()}}.
 \code{lazy_load} should not be \code{"promise"}
 for \code{"parLapply"} parallelism combined with \code{jobs} greater than 1.
 For local multi-session parallelism and lazy loading, try
-\code{library(future); future::plan(multisession)} and then
+\verb{library(future); future::plan(multisession)} and then
 \code{make(..., parallelism = "future_lapply", lazy_load = "bind")}.
 
 If \code{lazy_load} is \code{"eager"},
@@ -244,7 +279,7 @@ Here, if the \code{seed} is \code{NULL} (default), \code{drake} uses a \code{see
 On subsequent \code{make()}s for existing projects, the project's
 cached seed will be used in order to ensure reproducibility.
 Thus, the \code{seed} argument must either be \code{NULL} or the same
-seed from the project's cache (usually the \code{.drake/} folder).
+seed from the project's cache (usually the \verb{.drake/} folder).
 To reset the random number generator seed for a project,
 use \code{clean(destroy = TRUE)}.}
 
@@ -284,7 +319,7 @@ Fields in each row the log file, from left to right:
 computer (from \code{Sys.info()["nodename"]}).
 - The process ID (from \code{Sys.getpid()}).
 - A timestamp with the date and time (in microseconds).
-- A brief description of what \code{drake} was doing.\code{ The fields are separated by pipe symbols (}"|"`).}
+- A brief description of what \code{drake} was doing.\verb{ The fields are separated by pipe symbols (}"|"`).}
 
 \item{ensure_workers}{Deprecated.}
 
@@ -411,7 +446,7 @@ and the reproducibility/credibility/trust you can place in your project.
 
 \item{history}{Logical, whether to record the build history
 of your targets. You can also supply a
-\href{https://github.com/wlandau/txtq}{txtq}, which is
+\href{https://github.com/wlandau/txtq}{\code{txtq}}, which is
 how \code{drake} records history.
 Must be \code{TRUE} for \code{\link[=drake_history]{drake_history()}} to work later.}
 
@@ -459,14 +494,14 @@ object from \code{curl::new_handle()}, and each name is a URL
 (and should start with "http", "https", or "ftp").
 Example:
 list(
-\code{http://httpbin.org/basic-auth} = curl::new_handle(
+\verb{http://httpbin.org/basic-auth} = curl::new_handle(
 username = "user", password = "passwd"
 )
 )
 Then, if your plan has
 \code{file_in("http://httpbin.org/basic-auth/user/passwd")}
 \code{drake} will authenticate using the username and password of the handle
-for \code{http://httpbin.org/basic-auth/}.
+for \verb{http://httpbin.org/basic-auth/}.
 
 \code{drake} uses partial matching on text to
 find the right handle of the \code{file_in()} URL, so the name of the handle

@@ -5,12 +5,11 @@
 \title{Read the pseudo-random number generator seed of the project.
 \lifecycle{maturing}}
 \usage{
-read_drake_seed(path = NULL, search = NULL, cache = NULL,
-  verbose = NULL)
+read_drake_seed(path = NULL, search = NULL, cache = NULL, verbose = NULL)
 }
 \arguments{
 \item{path}{Path to a \code{drake} cache
-(usually a hidden \code{.drake/} folder) or \code{NULL}.}
+(usually a hidden \verb{.drake/} folder) or \code{NULL}.}
 
 \item{search}{Deprecated.}
 

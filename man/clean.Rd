@@ -5,10 +5,19 @@
 \title{Invalidate and deregister targets.
 \lifecycle{maturing}}
 \usage{
-clean(..., list = character(0), destroy = FALSE, path = NULL,
-  search = NULL, cache = drake::drake_cache(path = path),
-  verbose = NULL, jobs = 1, force = FALSE,
-  garbage_collection = FALSE, purge = FALSE)
+clean(
+  ...,
+  list = character(0),
+  destroy = FALSE,
+  path = NULL,
+  search = NULL,
+  cache = drake::drake_cache(path = path),
+  verbose = NULL,
+  jobs = 1,
+  force = FALSE,
+  garbage_collection = FALSE,
+  purge = FALSE
+)
 }
 \arguments{
 \item{...}{Deprecated. Do not use.
@@ -27,7 +36,7 @@ are removed. If \code{TRUE}, the whole cache is removed, including
 session metadata, etc.}
 
 \item{path}{Path to a \code{drake} cache
-(usually a hidden \code{.drake/} folder) or \code{NULL}.}
+(usually a hidden \verb{.drake/} folder) or \code{NULL}.}
 
 \item{search}{Deprecated.}
 

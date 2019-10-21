@@ -5,9 +5,16 @@
 \title{Load or create a drake cache
 \lifecycle{deprecated}}
 \usage{
-recover_cache(path = NULL, hash_algorithm = NULL,
-  short_hash_algo = NULL, long_hash_algo = NULL, force = FALSE,
-  verbose = 1L, fetch_cache = NULL, console_log_file = NULL)
+recover_cache(
+  path = NULL,
+  hash_algorithm = NULL,
+  short_hash_algo = NULL,
+  long_hash_algo = NULL,
+  force = FALSE,
+  verbose = 1L,
+  fetch_cache = NULL,
+  console_log_file = NULL
+)
 }
 \arguments{
 \item{path}{File path of the cache.}

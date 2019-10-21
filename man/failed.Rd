@@ -5,12 +5,17 @@
 \title{List failed targets.
 \lifecycle{maturing}}
 \usage{
-failed(path = NULL, search = NULL, cache = drake::drake_cache(path =
-  path), verbose = 1L, upstream_only = NULL)
+failed(
+  path = NULL,
+  search = NULL,
+  cache = drake::drake_cache(path = path),
+  verbose = 1L,
+  upstream_only = NULL
+)
 }
 \arguments{
 \item{path}{Path to a \code{drake} cache
-(usually a hidden \code{.drake/} folder) or \code{NULL}.}
+(usually a hidden \verb{.drake/} folder) or \code{NULL}.}
 
 \item{search}{Deprecated.}
 

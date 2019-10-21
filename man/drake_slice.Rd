@@ -23,7 +23,7 @@ use \code{margin = 1} to split over rows and \code{margin = 2}
 to split over columns. Similar to \code{MARGIN} in \code{apply()}.}
 
 \item{drop}{Logical, for matrices and arrays.
-If \code{TRUE},\code{ the result is coerced to the lowest possible dimension. See ?}[` for details.}
+If \code{TRUE},\verb{ the result is coerced to the lowest possible dimension. See ?}[` for details.}
 }
 \value{
 A subset of \code{data}.

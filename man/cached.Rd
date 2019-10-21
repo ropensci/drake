@@ -5,10 +5,18 @@
 \title{List targets in the cache.
 \lifecycle{maturing}}
 \usage{
-cached(..., list = character(0), no_imported_objects = FALSE,
-  path = NULL, search = NULL, cache = drake::drake_cache(path =
-  path), verbose = NULL, namespace = NULL, jobs = 1,
-  targets_only = TRUE)
+cached(
+  ...,
+  list = character(0),
+  no_imported_objects = FALSE,
+  path = NULL,
+  search = NULL,
+  cache = drake::drake_cache(path = path),
+  verbose = NULL,
+  namespace = NULL,
+  jobs = 1,
+  targets_only = TRUE
+)
 }
 \arguments{
 \item{...}{Deprecated. Do not use.
@@ -24,7 +32,7 @@ cache. Similar to the \code{list} argument of \code{\link[=remove]{remove()}}.}
 \code{targets_only} instead.}
 
 \item{path}{Path to a \code{drake} cache
-(usually a hidden \code{.drake/} folder) or \code{NULL}.}
+(usually a hidden \verb{.drake/} folder) or \code{NULL}.}
 
 \item{search}{Deprecated.}
 

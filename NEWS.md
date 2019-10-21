@@ -10,6 +10,7 @@
 ## Enhancements
 
 - Document transformation functions in a way that avoids having to create true functions (#979).
+- Avoid always invalidating the memoized layout when we set the knitr hash.
 
 # Version 7.7.0
 

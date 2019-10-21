@@ -5,11 +5,21 @@
 \title{Show a workflow graph as text in your terminal window.
 \lifecycle{stable}}
 \usage{
-text_drake_graph(config, from = NULL, mode = c("out", "in", "all"),
-  order = NULL, subset = NULL, targets_only = FALSE,
-  make_imports = TRUE, from_scratch = FALSE, group = NULL,
-  clusters = NULL, show_output_files = TRUE, nchar = 1L,
-  print = TRUE)
+text_drake_graph(
+  config,
+  from = NULL,
+  mode = c("out", "in", "all"),
+  order = NULL,
+  subset = NULL,
+  targets_only = FALSE,
+  make_imports = TRUE,
+  from_scratch = FALSE,
+  group = NULL,
+  clusters = NULL,
+  show_output_files = TRUE,
+  nchar = 1L,
+  print = TRUE
+)
 }
 \arguments{
 \item{config}{A \code{\link[=drake_config]{drake_config()}} configuration list.

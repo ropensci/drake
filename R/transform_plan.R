@@ -37,7 +37,7 @@
 #'   - `combine(..., .by)`
 #'
 #'  Differences from static branching:
-#'  - `...` must contain *unnmaed* symbols with no values supplied,
+#'  - `...` must contain *unnamed* symbols with no values supplied,
 #'    and they must be the names of targets.
 #'  - Arguments `.id`, `.tag_in`, and `.tag_out` no longer apply.
 #'

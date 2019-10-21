@@ -5,8 +5,7 @@
 \title{History and provenance
 \lifecycle{experimental}}
 \usage{
-drake_history(cache = NULL, history = NULL, analyze = TRUE,
-  verbose = NULL)
+drake_history(cache = NULL, history = NULL, analyze = TRUE, verbose = NULL)
 }
 \arguments{
 \item{cache}{drake cache as created by \code{\link[=new_cache]{new_cache()}}.
@@ -14,7 +13,7 @@ See also \code{\link[=drake_cache]{drake_cache()}}.}
 
 \item{history}{Logical, whether to record the build history
 of your targets. You can also supply a
-\href{https://github.com/wlandau/txtq}{txtq}, which is
+\href{https://github.com/wlandau/txtq}{\code{txtq}}, which is
 how \code{drake} records history.
 Must be \code{TRUE} for \code{\link[=drake_history]{drake_history()}} to work later.}
 

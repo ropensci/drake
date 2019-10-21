@@ -8,7 +8,9 @@
 file_in(...)
 }
 \arguments{
-\item{...}{Character vector, paths to files and directories.}
+\item{...}{Character vector, paths to files and directories. Use
+\code{.id_chr} to refer to the current target by name. \code{.id_chr} is not
+limited to use in \code{file_in()} and \code{file_out()}.}
 }
 \value{
 A character vector of declared input file or directory paths.
@@ -46,7 +48,7 @@ or set any number of custom columns.
 \item \code{\link[=file_out]{file_out()}}: declare an output file to be produced
 when the target is built.
 \item \code{\link[=knitr_in]{knitr_in()}}: declare a \code{knitr} file dependency such as an
-R Markdown (\code{*.Rmd}) or R LaTeX (\code{*.Rnw}) file.
+R Markdown (\verb{*.Rmd}) or R LaTeX (\verb{*.Rnw}) file.
 \item \code{\link[=ignore]{ignore()}}: force \code{drake} to entirely ignore a piece of code:
 do not track it for changes and do not analyze it for dependencies.
 \item \code{\link[=no_deps]{no_deps()}}: tell \code{drake} to not track the dependencies
@@ -69,11 +71,23 @@ plan <- drake_plan(
   contents = read.csv(file_in("mtcars.csv"))
 )
 plan
-# drake knows "\\"mtcars.csv\\"" is the first target
+# drake knows "\"mtcars.csv\"" is the first target
 # and a dependency of `contents`. See for yourself:
 
 make(plan)
 file.exists("mtcars.csv")
+
+# You may use `.id_chr` inside `file_out()` and `file_in()`
+# to refer  to the current target. This works inside `map()`,
+# `combine()`, `split()`, and `cross()`.
+
+plan <- drake::drake_plan(
+  data = target(
+    write.csv(data, file_out(paste0(.id_chr, ".csv"))),
+    transform = map(data = c(iris, mtcars))
+  )
+)
+plan
 
 # You can also work with entire directories this way.
 # However, in `file_out("your_directory")`, the directory

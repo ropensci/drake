@@ -5,9 +5,14 @@
 \title{List all the imports in the drake cache.
 \lifecycle{deprecated}}
 \usage{
-imported(files_only = FALSE, path = getwd(), search = TRUE,
-  cache = drake::get_cache(path = path, search = search, verbose =
-  verbose), verbose = 1L, jobs = 1)
+imported(
+  files_only = FALSE,
+  path = getwd(),
+  search = TRUE,
+  cache = drake::get_cache(path = path, search = search, verbose = verbose),
+  verbose = 1L,
+  jobs = 1
+)
 }
 \arguments{
 \item{files_only}{Logical, whether to show imported files only
@@ -16,7 +21,7 @@ all their global variables are imported, the full list of
 imported objects could get really cumbersome.}
 
 \item{path}{Path to a \code{drake} cache
-(usually a hidden \code{.drake/} folder) or \code{NULL}.}
+(usually a hidden \verb{.drake/} folder) or \code{NULL}.}
 
 \item{search}{Deprecated.}
 
