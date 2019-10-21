@@ -7,6 +7,13 @@ as_dynamic <- function(x) {
 }
 
 match_call <- function(dynamic) {
+  class <- class(dynamic)
+  out <- match_call_(dynamic)
+  class(out) <- class
+  out
+}
+
+match_call_ <- function(dynamic) {
   UseMethod("match_call")
 }
 
@@ -52,11 +59,11 @@ subtarget_names.split <- subtarget_names.combine <- function(
   target,
   config
 ) {
-  if (!length(dynamic$.by)) {
+  if (no_by(dynamic)) {
     return(paste0(target, "_1"))
   }
-  .by <- deparse(call$.by)
-  nby <- get_dynamic_nby(.by, config)
+  by <- which_by(dynamic)
+  nby <- get_dynamic_nby(by, config)
   index <- seq_len(nby)
   paste(target, index, sep = "_")
 }
@@ -81,17 +88,33 @@ subtarget_index.cross <- function(dynamic, target, config, index) {
   out
 }
 
-subtarget_index.split <- function(dynamic, target, config, index) {
-  if (!length(dynamic$.by)) {
+subtarget_index.split <- subtarget_index.combine <- function(
+  dynamic,
+  target,
+  config,
+  index
+) {
+  if (no_by(dynamic)) {
     return(1L)
   }
+  by <- get_dynamic_by(which_by(dynamic), config)
   browser()
 
 }
 
-subtarget_index.combine <- function(dynamic, target, config, index) {
+get_dynamic_by <- function(target, config) {
   browser()
 
+}
+
+get_dynamic_nby <- function(target, config) {
+  if (ht_exists(config$ht_dynamic_nby, target)) {
+    return(ht_get(config$ht_dynamic_nby, target))
+  }
+  nby <- length(unique(config$cache$get(target, use_cache = FALSE)))
+  stopifnot(nby > 0L)
+  ht_set(config$ht_dynamic_nby, x = target, value = nby)
+  nby
 }
 
 get_dynamic_size <- function(target, config) {
@@ -104,12 +127,10 @@ get_dynamic_size <- function(target, config) {
   size
 }
 
-get_dynamic_nby <- function(target, config) {
-  if (ht_exists(config$ht_dynamic_nby, target)) {
-    return(ht_get(config$ht_dynamic_nby, target))
-  }
-  nby <- length(unique(config$cache$get(target, use_cache = FALSE)))
-  stopifnot(nby > 0L)
-  ht_set(config$ht_dynamic_nby, x = target, value = nby)
-  nby
+no_by <- function(dynamic) {
+  is.null(which_by(dynamic))
+}
+
+which_by <- function(dynamic) {
+  deparse(dynamic$.by)
 }

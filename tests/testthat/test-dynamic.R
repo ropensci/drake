@@ -76,7 +76,7 @@ test_with_dir("dynamic target names and indices", {
   }
   for (i in seq_len(4)) {
     for (j in seq_len(4)) {
-      ey <- list(u = i, v = i)
+      ey <- list(u = i, v = j)
       k <- 4 * (i - 1) + j
       expect_equal(subtarget_index(dy, "y", config, k), ey)
     }
