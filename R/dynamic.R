@@ -3,28 +3,30 @@ as_dynamic <- function(x) {
     return(x)
   }
   class(x) <- c(x[[1]], "dynamic", class(x))
-  x
+  match_call(x)
 }
 
-get_dynamic_size <- function(target, config) {
-  if (ht_exists(config$ht_dynamic_size, target)) {
-    return(ht_get(config$ht_dynamic_size, target))
-  }
-  size <- config$cache$get(target, namespace = "meta")$size
-  stopifnot(size > 0L)
-  ht_set(config$ht_dynamic_size, x = target, value = size)
-  size
+match_call <- function(dynamic) {
+  UseMethod("match_call")
 }
 
-get_dynamic_nby <- function(target, config) {
-  if (ht_exists(config$ht_dynamic_nby, target)) {
-    return(ht_get(config$ht_dynamic_nby, target))
-  }
-  nby <- length(unique(config$cache$get(target, use_cache = FALSE)))
-  stopifnot(nby > 0L)
-  ht_set(config$ht_dynamic_nby, x = target, value = nby)
-  nby
+match_call.map <- match_call.cross <- function(dynamic) {
+  unname(match.call(definition = def_map, call = dynamic))
 }
+
+match_call.split <- match_call.combine <- function(dynamic) {
+  match.call(definition = def_split, call = dynamic)
+}
+
+# nocov start
+def_map <- function(...) {
+  NULL
+}
+
+def_split <- function(target, .by = NULL) {
+  NULL
+}
+# nocov end
 
 subtarget_names <- function(dynamic, target, config) {
   UseMethod("subtarget_names")
@@ -50,7 +52,9 @@ subtarget_names.split <- subtarget_names.combine <- function(
   target,
   config
 ) {
-  call <- match.call(definition = def_split, call = dynamic)
+  if (!length(dynamic$.by)) {
+    return(paste0(target, "_1"))
+  }
   .by <- deparse(call$.by)
   nby <- get_dynamic_nby(.by, config)
   index <- seq_len(nby)
@@ -78,6 +82,9 @@ subtarget_index.cross <- function(dynamic, target, config, index) {
 }
 
 subtarget_index.split <- function(dynamic, target, config, index) {
+  if (!length(dynamic$.by)) {
+    return(1L)
+  }
   browser()
 
 }
@@ -87,8 +94,22 @@ subtarget_index.combine <- function(dynamic, target, config, index) {
 
 }
 
-# nocov start
-def_split <- function(target, .by) {
-  NULL
+get_dynamic_size <- function(target, config) {
+  if (ht_exists(config$ht_dynamic_size, target)) {
+    return(ht_get(config$ht_dynamic_size, target))
+  }
+  size <- config$cache$get(target, namespace = "meta")$size
+  stopifnot(size > 0L)
+  ht_set(config$ht_dynamic_size, x = target, value = size)
+  size
 }
-# nocov end
+
+get_dynamic_nby <- function(target, config) {
+  if (ht_exists(config$ht_dynamic_nby, target)) {
+    return(ht_get(config$ht_dynamic_nby, target))
+  }
+  nby <- length(unique(config$cache$get(target, use_cache = FALSE)))
+  stopifnot(nby > 0L)
+  ht_set(config$ht_dynamic_nby, x = target, value = nby)
+  nby
+}
