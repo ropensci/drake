@@ -44,7 +44,6 @@ local_dynamic_impl.dynamic <- function(dynamic, target, config) {
 local_subtarget <- function(index, dynamic, target, config) {
   deps <- subtarget_deps_impl(dynamic, target, index, config)
   set_dynamic_deps(deps, config)
-
   browser()
   # Continue here. Run the sub-target and store the value.
 }
