@@ -62,6 +62,15 @@ Authors@R: c(
     email = "ellishughes@live.com"
   ),
   person(
+    given = c("Matthew", "Mark"),
+    family = "Strasiotto",
+    role = "ctb",
+    email = c(
+      "matthew.strasiotto@gmail.com", 
+      "mstr3336@uni.sydney.edu.au"
+    )
+  ),
+  person(
     given = "Ben",
     family = "Marwick",
     role = "rev",
