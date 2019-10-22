@@ -12,20 +12,20 @@ as_dynamic <- function(x) {
 
 match_call <- function(dynamic) {
   class <- class(dynamic)
-  out <- match_call_(dynamic)
+  out <- match_call_impl(dynamic)
   class(out) <- class
   out
 }
 
-match_call_ <- function(dynamic) {
-  UseMethod("match_call")
+match_call_impl <- function(dynamic) {
+  UseMethod("match_call_impl")
 }
 
-match_call.map <- match_call.cross <- function(dynamic) {
+match_call_impl.map <- match_call_impl.cross <- function(dynamic) {
   unname(match.call(definition = def_map, call = dynamic))
 }
 
-match_call.split <- match_call.combine <- function(dynamic) {
+match_call_impl.split <- match_call_impl.combine <- function(dynamic) {
   match.call(definition = def_split, call = dynamic)
 }
 
@@ -44,14 +44,14 @@ subtarget_names <- function(target, config) {
     return(character(0))
   }
   dynamic <- config$layout[[target]]$dynamic
-  subtarget_names_(dynamic, target, config)
+  subtarget_names_impl(dynamic, target, config)
 }
 
-subtarget_names_ <- function(dynamic, target, config) {
-  UseMethod("subtarget_names_")
+subtarget_names_impl <- function(dynamic, target, config) {
+  UseMethod("subtarget_names_impl")
 }
 
-subtarget_names_.map <- function(dynamic, target, config) {
+subtarget_names_impl.map <- function(dynamic, target, config) {
   vars <- all.vars(dynamic)
   sizes <- lapply(vars, get_dynamic_size, config = config)
   stopifnot(length(unique(sizes)) == 1L)
@@ -59,14 +59,14 @@ subtarget_names_.map <- function(dynamic, target, config) {
   paste(target, index, sep = "_")
 }
 
-subtarget_names_.cross <- function(dynamic, target, config) {
+subtarget_names_impl.cross <- function(dynamic, target, config) {
   vars <- all.vars(dynamic)
   sizes <- unlist(lapply(vars, get_dynamic_size, config = config))
   index <- seq_len(prod(sizes))
   paste(target, index, sep = "_")
 }
 
-subtarget_names_.split <- subtarget_names_.combine <- function(
+subtarget_names_impl.split <- subtarget_names_impl.combine <- function(
   dynamic,
   target,
   config
@@ -82,21 +82,21 @@ subtarget_names_.split <- subtarget_names_.combine <- function(
 
 subtarget_index <- function(target, index, config) {
   dynamic <- config$layout[[target]]$dynamic
-  subtarget_index_(dynamic, target, index, config)
+  subtarget_index_impl(dynamic, target, index, config)
 }
 
-subtarget_index_ <- function(dynamic, target, index, config) {
-  UseMethod("subtarget_index_")
+subtarget_index_impl <- function(dynamic, target, index, config) {
+  UseMethod("subtarget_index_impl")
 }
 
-subtarget_index_.map <- function(dynamic, target, index, config) {
+subtarget_index_impl.map <- function(dynamic, target, index, config) {
   vars <- all.vars(dynamic)
   out <- as.list(rep(as.integer(index), length(vars)))
   names(out) <- vars
   out
 }
 
-subtarget_index_.cross <- function(dynamic, target, index, config) {
+subtarget_index_impl.cross <- function(dynamic, target, index, config) {
   vars <- all.vars(dynamic)
   size <- unlist(lapply(vars, get_dynamic_size, config = config))
   out <- grid_index(index, size)
@@ -105,7 +105,7 @@ subtarget_index_.cross <- function(dynamic, target, index, config) {
   out
 }
 
-subtarget_index_.split <- subtarget_index_.combine <- function(
+subtarget_index_impl.split <- subtarget_index_impl.combine <- function(
   dynamic,
   target,
   index,

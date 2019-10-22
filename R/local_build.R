@@ -1,4 +1,17 @@
 local_build <- function(target, config, downstream) {
+  dynamic <- config$layout[[target]]$dynamic
+  local_build_impl(dynamic, target, config, downstream)
+}
+
+local_build_impl <- function(dynamic, target, config, downstream) {
+  UseMethod("local_build_impl")
+}
+
+local_build_impl.dynamic <- function(dynamic, target, config, downstream) {
+  stop("not implemented yet")
+}
+
+local_build_impl.default <- function(dynamic, target, config, downstream) {
   meta <- drake_meta_(target = target, config = config)
   if (handle_triggers(target, meta, config)) {
     return()
