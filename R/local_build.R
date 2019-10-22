@@ -50,7 +50,7 @@ local_subtarget <- function(index, dynamic, target, config) {
 
 set_dynamic_deps <- function(deps, config) {
   browser()
-# Continue here. Slice the dynamic dependencies and assign the slices to config$envir_dynamic.
+# Continue here. Slice the dynamic dependencies and assign the slices to config$eval_dynamic
 }
 
 announce_build <- function(target, meta, config) {
@@ -271,15 +271,13 @@ with_call_stack <- function(target, config) {
   config$eval[[drake_target_marker]] <- target
   tidy_expr <- eval(
     expr = expr,
-    envir = config$eval_dynamic,
-    enclos = config$eval
+    envir = config$eval_dynamic
   ) # tidy eval prep
   tryCatch(
     withCallingHandlers(
       eval(
         expr = tidy_expr,
-        envir = config$eval_dynamic,
-        enclos = config$eval
+        envir = config$eval_dynamic
       ), # pure eval
       error = capture_calls
     ),
