@@ -6,7 +6,7 @@ backend_loop <- function(config) {
   config$lock_envir <- FALSE
   targets <- igraph::topo_sort(config$graph)$name
   ht_parents <- ht_new()
-  while(length(targets)) {
+  while (length(targets)) {
     new_dynamic <- subtarget_names(targets[1], config)
     ht_set(ht = ht_parents, x = new_dynamic, value = targets[1])
     targets <- c(new_dynamic, targets)

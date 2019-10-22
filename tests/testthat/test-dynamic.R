@@ -54,7 +54,7 @@ test_with_dir("dynamic target names and indices", {
     x = target(f(r), dynamic = split(r, .by = s)),
     x2 = target(f(r), dynamic = split(r)),
     y = target(seq_len(prod(length(u), length(v))), dynamic = cross(u, v)),
-    z = target({z_by; f(y)}, dynamic = combine(y, .by = z_by)),
+    z = target({z_by; f(y)}, dynamic = combine(y, .by = z_by)), # nolint
     z2 = target(f(y), dynamic = combine(y))
   )
   make(plan[, c("target", "command")])
