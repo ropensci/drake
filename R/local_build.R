@@ -50,7 +50,8 @@ local_subtarget <- function(index, dynamic, target, config) {
 
 set_dynamic_deps <- function(deps, config) {
   browser()
-  # Continue here. Slice the dynamic dependencies and assign the slices to config$eval_dynamic
+  # Continue here. Slice the dynamic dependencies and
+  # assign the slices to config$eval_dynamic.
 }
 
 announce_build <- function(target, meta, config) {
@@ -268,7 +269,7 @@ with_call_stack <- function(target, config) {
     lock_environment(config$envir)
     on.exit(unlock_environment(config$envir))
   }
-  config$eval[[drake_target_marker]] <- target
+  config$eval_dynamic[[drake_target_marker]] <- target
   tidy_expr <- eval(
     expr = expr,
     envir = config$eval_dynamic
