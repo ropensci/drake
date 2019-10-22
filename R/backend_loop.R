@@ -5,12 +5,19 @@ backend_loop <- function(config) {
   }
   config$lock_envir <- FALSE
   targets <- igraph::topo_sort(config$graph)$name
-  for (i in seq_along(targets)) {
+  ht_parents <- ht_new()
+  while(length(targets)) {
+    new_dynamic <- subtarget_names(targets[1], config)
+    ht_set(ht = ht_parents, x = new_dynamic, value = targets[1])
+    targets <- c(new_dynamic, targets)
+    parent <- ht_safe_get(ht_parents, targets[1])
+    target <- classify_dynamic(targets[1], parent)
     local_build(
-      target = targets[i],
+      target = target,
       config = config,
-      downstream = targets[-seq_len(i)]
+      downstream = targets[-1]
     )
+    targets <- targets[-1]
   }
   invisible()
 }
