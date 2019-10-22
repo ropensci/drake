@@ -41,7 +41,8 @@ test_with_dir("dynamic dependencies in the graph", {
   expect_equal(sort(out), sort(exp))
 })
 
-test_with_dir("dynamic target names and indices", {
+test_with_dir("dynamic sub-target indices", {
+  expect_equal(subtarget_name("x", seq_len(2)), c("x_1", "x_2"))
   f <- identity
   z_by <- rep(letters[seq_len(4)], each = 4)
   plan <- drake_plan(
@@ -59,19 +60,13 @@ test_with_dir("dynamic target names and indices", {
   )
   make(plan[, c("target", "command")])
   config <- drake_config(plan)
-  ew <- paste("w", seq_len(4), sep = "_")
-  ex <- paste("x", seq_len(3), sep = "_")
-  ex2 <- "x2_1"
-  ey <- paste("y", seq_len(16), sep = "_")
-  ez <- paste("z", seq_len(4), sep = "_")
-  ez2 <- "z2_1"
   for (i in seq_len(2)) {
-    expect_equal(subtarget_names("w", config), ew)
-    expect_equal(subtarget_names("x", config), ex)
-    expect_equal(subtarget_names("x2", config), ex2)
-    expect_equal(subtarget_names("y", config), ey)
-    expect_equal(subtarget_names("z", config), ez)
-    expect_equal(subtarget_names("z2", config), ez2)
+    expect_equal(number_subtargets("w", config), 4L)
+    expect_equal(number_subtargets("x", config), 3L)
+    expect_equal(number_subtargets("x2", config), 1L)
+    expect_equal(number_subtargets("y", config), 16L)
+    expect_equal(number_subtargets("z", config), 4L)
+    expect_equal(number_subtargets("z2", config), 1L)
   }
   for (i in seq_len(4)) {
     ew <- list(u = i, v = i)

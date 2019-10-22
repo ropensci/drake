@@ -39,45 +39,45 @@ def_split <- function(.x, .by = NULL) {
 }
 # nocov end
 
-subtarget_names <- function(target, config) {
+subtarget_name <- function(target, index) {
+  paste(target, index, sep = "_")
+}
+
+number_subtargets <- function(target, config) {
   if (!is_dynamic(target, config)) {
-    return(character(0))
+    return(0)
   }
   dynamic <- config$layout[[target]]$dynamic
-  subtarget_names_impl(dynamic, target, config)
+  number_subtargets_impl(dynamic, target, config)
 }
 
-subtarget_names_impl <- function(dynamic, target, config) {
-  UseMethod("subtarget_names_impl")
+number_subtargets_impl <- function(dynamic, target, config) {
+  UseMethod("number_subtargets_impl")
 }
 
-subtarget_names_impl.map <- function(dynamic, target, config) {
+number_subtargets_impl.map <- function(dynamic, target, config) {
   vars <- all.vars(dynamic)
   sizes <- lapply(vars, get_dynamic_size, config = config)
   stopifnot(length(unique(sizes)) == 1L)
-  index <- seq_len(sizes[[1]])
-  paste(target, index, sep = "_")
+  sizes[[1]]
 }
 
-subtarget_names_impl.cross <- function(dynamic, target, config) {
+number_subtargets_impl.cross <- function(dynamic, target, config) {
   vars <- all.vars(dynamic)
   sizes <- unlist(lapply(vars, get_dynamic_size, config = config))
-  index <- seq_len(prod(sizes))
-  paste(target, index, sep = "_")
+  prod(sizes)
 }
 
-subtarget_names_impl.split <- subtarget_names_impl.combine <- function(
+number_subtargets_impl.split <- number_subtargets_impl.combine <- function(
   dynamic,
   target,
   config
 ) {
   if (no_by(dynamic)) {
-    return(paste0(target, "_1"))
+    return(1L)
   }
   by <- which_by(dynamic)
-  nby <- get_dynamic_nby(by, config)
-  index <- seq_len(nby)
-  paste(target, index, sep = "_")
+  get_dynamic_nby(by, config)
 }
 
 subtarget_index <- function(target, index, config) {
