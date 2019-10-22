@@ -1,17 +1,4 @@
 local_build <- function(target, config, downstream) {
-  dynamic <- config$layout[[target]]$dynamic
-  local_build_impl(dynamic, target, config, downstream)
-}
-
-local_build_impl <- function(dynamic, target, config, downstream) {
-  UseMethod("local_build_impl")
-}
-
-local_build_impl.dynamic <- function(dynamic, target, config, downstream) {
-  stop("not implemented yet")
-}
-
-local_build_impl.default <- function(dynamic, target, config, downstream) {
   meta <- drake_meta_(target = target, config = config)
   if (handle_triggers(target, meta, config)) {
     return()
@@ -23,9 +10,35 @@ local_build_impl.default <- function(dynamic, target, config, downstream) {
     downstream = downstream,
     jobs = config$jobs_preprocess
   )
+  local_build_dynamic(target, config)
   build <- try_build(target = target, meta = meta, config = config)
   conclude_build(build = build, config = config)
   invisible()
+}
+
+local_build_dynamic <- function(target, config) {
+  dynamic <- config$layout[[target]]$dynamic
+  UseMethod("local_build_dynamic_impl")
+}
+
+local_build_dynamic_impl.map <- function(dynamic, target, config) {
+  stop("tbd")
+}
+
+local_build_dynamic_impl.cross <- function(dynamic, target, config) { # nolint
+  stop("tbd")
+}
+
+local_build_dynamic_impl.split <- function(dynamic, target, config) { # nolint
+  stop("tbd")
+}
+
+local_build_dynamic_impl.combine <- function(dynamic, target, config) { # nolint
+  stop("tbd")
+}
+
+local_build_dynamic_impl.default <- function(dynamic, target, config) { # nolint
+  return()
 }
 
 announce_build <- function(target, meta, config) {
