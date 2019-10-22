@@ -1,13 +1,4 @@
 local_build <- function(target, config, downstream) {
-  UseMethod("local_build")
-}
-
-local_build.subtarget <- function(target, config, downstream) {
-  browser()
-  # To do: fill this in. Need some S3 logic for specific types of transforms.
-}
-
-local_build.default <- function(target, config, downstream) {
   meta <- drake_meta_(target = target, config = config)
   if (handle_triggers(target, meta, config)) {
     return()

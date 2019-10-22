@@ -39,21 +39,6 @@ def_split <- function(.x, .by = NULL) {
 }
 # nocov end
 
-classify_dynamic <- function(target, parent) {
-  if (is.null(parent)) {
-    return(structure(target, class = "target"))
-  }
-  structure(target, class = "subtarget", parent = parent)
-}
-
-is_subtarget <- function(target) {
-  inherits(target, "subtarget")
-}
-
-subtarget_parent <- function(target) {
-  attr(target, "parent")
-}
-
 subtarget_names <- function(target, config) {
   if (!is_dynamic(target, config)) {
     return(character(0))
