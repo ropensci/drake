@@ -70,23 +70,23 @@ test_with_dir("dynamic sub-target indices", {
   }
   for (i in seq_len(4)) {
     ew <- list(u = i, v = i)
-    expect_equal(subtarget_index("w", i, config), ew)
+    expect_equal(subtarget_deps("w", i, config), ew)
   }
   for (i in seq_len(4)) {
     for (j in seq_len(4)) {
       ey <- list(u = i, v = j)
       k <- 4 * (i - 1) + j
-      expect_equal(subtarget_index("y", k, config), ey)
+      expect_equal(subtarget_deps("y", k, config), ey)
     }
   }
   ew <- list(r = c(0L, 3L, 6L))
   for (i in seq_len(3)) {
     ew$r <- ew$r + 1L
-    expect_equal(subtarget_index("x", i, config), ew)
+    expect_equal(subtarget_deps("x", i, config), ew)
   }
   for (i in seq_len(4)) {
     ez <- list(y = seq(from = 4 * (i - 1) + 1, 4 * i))
-    expect_equal(subtarget_index("z", i, config), ez)
+    expect_equal(subtarget_deps("z", i, config), ez)
   }
 })
 

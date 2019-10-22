@@ -80,23 +80,23 @@ number_subtargets_impl.split <- number_subtargets_impl.combine <- function(
   get_dynamic_nby(by, config)
 }
 
-subtarget_index <- function(target, index, config) {
+subtarget_deps <- function(target, index, config) {
   dynamic <- config$layout[[target]]$dynamic
-  subtarget_index_impl(dynamic, target, index, config)
+  subtarget_deps_impl(dynamic, target, index, config)
 }
 
-subtarget_index_impl <- function(dynamic, target, index, config) {
-  UseMethod("subtarget_index_impl")
+subtarget_deps_impl <- function(dynamic, target, index, config) {
+  UseMethod("subtarget_deps_impl")
 }
 
-subtarget_index_impl.map <- function(dynamic, target, index, config) {
+subtarget_deps_impl.map <- function(dynamic, target, index, config) {
   vars <- all.vars(dynamic)
   out <- as.list(rep(as.integer(index), length(vars)))
   names(out) <- vars
   out
 }
 
-subtarget_index_impl.cross <- function(dynamic, target, index, config) {
+subtarget_deps_impl.cross <- function(dynamic, target, index, config) {
   vars <- all.vars(dynamic)
   size <- unlist(lapply(vars, get_dynamic_size, config = config))
   out <- grid_index(index, size)
@@ -105,7 +105,7 @@ subtarget_index_impl.cross <- function(dynamic, target, index, config) {
   out
 }
 
-subtarget_index_impl.split <- subtarget_index_impl.combine <- function(
+subtarget_deps_impl.split <- subtarget_deps_impl.combine <- function(
   dynamic,
   target,
   index,

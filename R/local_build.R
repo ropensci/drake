@@ -11,6 +11,7 @@ local_build <- function(target, config, downstream) {
     jobs = config$jobs_preprocess
   )
   local_dynamic(target, config)
+  # Continue here. Dynamic targets need to be handled differently.
   build <- try_build(target = target, meta = meta, config = config)
   conclude_build(build = build, config = config)
   invisible()
@@ -31,31 +32,26 @@ local_dynamic_impl.default <- function(dynamic, target, config) {
 
 local_dynamic_impl.dynamic <- function(dynamic, target, config) {
   subtargets <- number_subtargets_impl(dynamic, target, config)
-  command <- config$layout[[target]]$command
-  lapply(seq_len(subtargets), function(index) {
-    local_subtarget(dynamic, index, target, command, config)
-  })
+  lapply(
+    seq_len(subtargets),
+    local_subtarget,
+    dynamic = dynamic,
+    target = target,
+    config = config
+  )
 }
 
-local_subtarget <- function(dynamic, index, target, command, config) {
-  UseMethod("local_subtarget")
-}
+local_subtarget <- function(index, dynamic, target, config) {
+  deps <- subtarget_deps_impl(dynamic, target, index, config)
+  set_dynamic_deps(deps, config)
 
-local_subtarget.map <- function(dynamic, index, target, command, config) {
   browser()
-
+  # Continue here. Run the sub-target and store the value.
 }
 
-local_subtarget.cross <- function(dynamic, index, target, command, config) {
+set_dynamic_deps <- function(deps, config) {
   browser()
-}
-
-local_subtarget.split <- function(dynamic, index, target, command, config) {
-  browser()
-}
-
-local_subtarget.combine <- function(dynamic, index, target, command, config) {
-  browser()
+# Continue here. Slice the dynamic dependencies.
 }
 
 announce_build <- function(target, meta, config) {
@@ -274,10 +270,18 @@ with_call_stack <- function(target, config) {
     on.exit(unlock_environment(config$envir))
   }
   config$eval[[drake_target_marker]] <- target
-  tidy_expr <- eval(expr = expr, envir = config$eval) # tidy eval prep
+  tidy_expr <- eval(
+    expr = expr,
+    envir = config$eval_dynamic,
+    enclos = config$eval
+  ) # tidy eval prep
   tryCatch(
     withCallingHandlers(
-      eval(expr = tidy_expr, envir <- config$eval), # pure eval
+      eval(
+        expr = tidy_expr,
+        envir = config$eval_dynamic,
+        enclos = config$eval
+      ), # pure eval
       error = capture_calls
     ),
     error = identity
