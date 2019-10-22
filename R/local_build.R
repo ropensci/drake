@@ -17,43 +17,6 @@ local_build <- function(target, config, downstream) {
   invisible()
 }
 
-local_dynamic <- function(target, config) {
-  dynamic <- config$layout[[target]]$dynamic
-  local_dynamic_impl(dynamic, target, config)
-}
-
-local_dynamic_impl <- function(dynamic, target, config) {
-  UseMethod("local_dynamic_impl")
-}
-
-local_dynamic_impl.default <- function(dynamic, target, config) {
-  return()
-}
-
-local_dynamic_impl.dynamic <- function(dynamic, target, config) {
-  subtargets <- number_subtargets_impl(dynamic, target, config)
-  lapply(
-    seq_len(subtargets),
-    local_subtarget,
-    dynamic = dynamic,
-    target = target,
-    config = config
-  )
-}
-
-local_subtarget <- function(index, dynamic, target, config) {
-  deps <- subtarget_deps_impl(dynamic, target, index, config)
-  set_dynamic_deps(deps, config)
-  browser()
-  # Continue here. Run the sub-target and store the value.
-}
-
-set_dynamic_deps <- function(deps, config) {
-  browser()
-  # Continue here. Slice the dynamic dependencies and
-  # assign the slices to config$eval_dynamic.
-}
-
 announce_build <- function(target, meta, config) {
   set_progress(
     target = target,
