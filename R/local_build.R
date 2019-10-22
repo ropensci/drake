@@ -18,23 +18,27 @@ local_build <- function(target, config, downstream) {
 
 local_build_dynamic <- function(target, config) {
   dynamic <- config$layout[[target]]$dynamic
+  local_build_dynamic_impl(dynamic, target, config)
+}
+
+local_build_dynamic_impl <- function(dynamic, target, config) {
   UseMethod("local_build_dynamic_impl")
 }
 
 local_build_dynamic_impl.map <- function(dynamic, target, config) {
-  stop("tbd")
+  browser()
 }
 
 local_build_dynamic_impl.cross <- function(dynamic, target, config) { # nolint
-  stop("tbd")
+  browser()
 }
 
 local_build_dynamic_impl.split <- function(dynamic, target, config) { # nolint
-  stop("tbd")
+  browser()
 }
 
 local_build_dynamic_impl.combine <- function(dynamic, target, config) { # nolint
-  stop("tbd")
+  browser()
 }
 
 local_build_dynamic_impl.default <- function(dynamic, target, config) { # nolint
