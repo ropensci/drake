@@ -10,39 +10,52 @@ local_build <- function(target, config, downstream) {
     downstream = downstream,
     jobs = config$jobs_preprocess
   )
-  local_build_dynamic(target, config)
+  local_dynamic(target, config)
   build <- try_build(target = target, meta = meta, config = config)
   conclude_build(build = build, config = config)
   invisible()
 }
 
-local_build_dynamic <- function(target, config) {
+local_dynamic <- function(target, config) {
   dynamic <- config$layout[[target]]$dynamic
-  local_build_dynamic_impl(dynamic, target, config)
+  local_dynamic_impl(dynamic, target, config)
 }
 
-local_build_dynamic_impl <- function(dynamic, target, config) {
-  UseMethod("local_build_dynamic_impl")
+local_dynamic_impl <- function(dynamic, target, config) {
+  UseMethod("local_dynamic_impl")
 }
 
-local_build_dynamic_impl.map <- function(dynamic, target, config) {
-  browser()
-}
-
-local_build_dynamic_impl.cross <- function(dynamic, target, config) { # nolint
-  browser()
-}
-
-local_build_dynamic_impl.split <- function(dynamic, target, config) { # nolint
-  browser()
-}
-
-local_build_dynamic_impl.combine <- function(dynamic, target, config) { # nolint
-  browser()
-}
-
-local_build_dynamic_impl.default <- function(dynamic, target, config) { # nolint
+local_dynamic_impl.default <- function(dynamic, target, config) {
   return()
+}
+
+local_dynamic_impl.dynamic <- function(dynamic, target, config) {
+  subtargets <- number_subtargets_impl(dynamic, target, config)
+  command <- config$layout[[target]]$command
+  lapply(seq_len(subtargets), function(index) {
+    local_subtarget(dynamic, index, target, command, config)
+  })
+}
+
+local_subtarget <- function(dynamic, index, target, command, config) {
+  UseMethod("local_subtarget")
+}
+
+local_subtarget.map <- function(dynamic, index, target, command, config) {
+  browser()
+
+}
+
+local_subtarget.cross <- function(dynamic, index, target, command, config) {
+  browser()
+}
+
+local_subtarget.split <- function(dynamic, index, target, command, config) {
+  browser()
+}
+
+local_subtarget.combine <- function(dynamic, index, target, command, config) {
+  browser()
 }
 
 announce_build <- function(target, meta, config) {
