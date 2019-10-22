@@ -50,7 +50,7 @@ local_subtarget <- function(index, dynamic, target, config) {
 
 set_dynamic_deps <- function(deps, config) {
   browser()
-# Continue here. Slice the dynamic dependencies and assign the slices to config$eval_dynamic
+  # Continue here. Slice the dynamic dependencies and assign the slices to config$eval_dynamic
 }
 
 announce_build <- function(target, meta, config) {
