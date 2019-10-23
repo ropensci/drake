@@ -45,13 +45,18 @@ load_dynamic_dep <- function(dynamic, dep, index, config) {
 }
 
 load_dynamic_dep.map <- function(dynamic, dep, index, config) {
+  browser()
+  # Pick up here. Need to handle dynamic deps that are
+  # dynamic sub-targets.
+
+
   if (exists(dep, envir = config$envir_targets, inherits = FALSE)) {
     envir <- config$envir_targets
   } else {
     envir <- config$envir
   }
   value <- get(dep, envir = envir, inherits = FALSE)
-  value <- dynamic_elt(value, index)
+  value <- dynamic_dep_elt(value, index)
   assign(dep, value, envir = config$envir_dynamic, inherits = FALSE)
 }
 
@@ -75,7 +80,7 @@ get_dynamic <- function(target, config) {
   config$layout[[target]]$dynamic
 }
 
-dynamic_elt <- function(value, index) {
+dynamic_dep_elt <- function(value, index) {
   if (is.null(dim(value))) {
     value[[index]]
   } else {
