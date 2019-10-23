@@ -242,4 +242,3 @@ which_var <- function(dynamic) {
 which_by <- function(dynamic) {
   deparse(dynamic$.by)
 }
-

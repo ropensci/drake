@@ -391,7 +391,11 @@ assign_to_envir <- function(target, value, config) {
     !is_encoded_path(target) &&
     !is_imported(target, config)
   ) {
-    assign(x = target, value = value_format(value), envir = config$envir_targets)
+    assign(
+      x = target,
+      value = value_format(value),
+      envir = config$envir_targets
+    )
   }
   invisible()
 }
