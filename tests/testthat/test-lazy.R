@@ -53,7 +53,9 @@ test_with_dir("lazy loading is actually lazy", {
     verbose = 0L,
     session_info = FALSE
   )
-  config$eval <- eval
+  for (x in names(eval)) {
+    config$eval[[x]] <- eval[[x]]
+  }
   config$graph <- subset_graph(config$graph, all_targets(config))
   backend_loop(config)
   loaded <- ls(envir = config$eval)
