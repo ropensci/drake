@@ -13,7 +13,7 @@ test_with_dir("manage_memory() warns if loading missing deps", {
     ),
     type = "message"
   )
-  expect_false(exists("b", envir = con$eval, inherits = FALSE))
+  expect_false(exists("b", envir = con$envir_targets, inherits = FALSE))
 })
 
 test_with_dir("a close look at the memory strategies", {
@@ -79,18 +79,18 @@ test_with_dir("a close look at the memory strategies", {
   expect_true(all(plan$target %in% cached(cache = config$cache)))
 
   # lookahead
-  remove(list = ls(config$eval), envir = config$eval)
-  expect_equal(ls(config$eval), character(0))
+  remove(list = ls(config$envir_targets), envir = config$envir_targets)
+  expect_equal(ls(config$envir_targets), character(0))
   lapply(c("x", "y", "z"), function(x) {
     manage_memory(x, config)
-    expect_equal(ls(config$eval), character(0))
+    expect_equal(ls(config$envir_targets), character(0))
   })
   lapply(c("a_x", "b_x", "c_x"), function(x) {
     manage_memory(x, config)
-    expect_equal(ls(config$eval), "x")
+    expect_equal(ls(config$envir_targets), "x")
   })
   manage_memory("a_y", config, downstream = "a_x")
-  expect_equal(sort(ls(config$eval)), sort(c("x", "y")))
+  expect_equal(sort(ls(config$envir_targets)), sort(c("x", "y")))
   manage_memory("s", config)
   deps <- paste(
     "s",
@@ -98,29 +98,29 @@ test_with_dir("a close look at the memory strategies", {
     rep(letters[24:26], each = 3),
     sep = "_"
   )
-  expect_equal(sort(deps), sort(ls(config$eval)))
-  config$eval$y <- 1
+  expect_equal(sort(deps), sort(ls(config$envir_targets)))
+  config$envir_targets$y <- 1
   manage_memory("waitforme", config)
   deps <- c("y", "a_x", "c_y", "t_a_z", "s_b_x")
-  expect_equal(sort(deps), sort(ls(config$eval)))
+  expect_equal(sort(deps), sort(ls(config$envir_targets)))
   manage_memory("waitforme", config, downstream = "waitforme")
   deps <- c("a_x", "c_y", "t_a_z", "s_b_x")
-  expect_equal(sort(deps), sort(ls(config$eval)))
+  expect_equal(sort(deps), sort(ls(config$envir_targets)))
 
   # speed
   config$memory_strategy <- "speed"
-  remove(list = ls(config$eval), envir = config$eval)
-  expect_equal(ls(config$eval), character(0))
+  remove(list = ls(config$envir_targets), envir = config$envir_targets)
+  expect_equal(ls(config$envir_targets), character(0))
   lapply(c("x", "y", "z"), function(x) {
     manage_memory(x, config)
-    expect_equal(ls(config$eval), character(0))
+    expect_equal(ls(config$envir_targets), character(0))
   })
   lapply(c("a_x", "b_x", "c_x"), function(x) {
     manage_memory(x, config)
-    expect_equal(ls(config$eval), "x")
+    expect_equal(ls(config$envir_targets), "x")
   })
   manage_memory("a_y", config)
-  expect_equal(sort(ls(config$eval)), sort(c("x", "y")))
+  expect_equal(sort(ls(config$envir_targets)), sort(c("x", "y")))
   manage_memory("s", config)
   deps <- paste(
     "s",
@@ -129,29 +129,29 @@ test_with_dir("a close look at the memory strategies", {
     sep = "_"
   )
   deps <- c(deps, c("x", "y"))
-  expect_equal(sort(deps), sort(ls(config$eval)))
-  config$eval$y <- 1
+  expect_equal(sort(deps), sort(ls(config$envir_targets)))
+  config$envir_targets$y <- 1
   manage_memory("waitforme", config)
   deps <- unique(c(deps, "a_x", "c_y", "t_a_z", "s_b_x"))
-  expect_equal(sort(deps), sort(ls(config$eval)))
+  expect_equal(sort(deps), sort(ls(config$envir_targets)))
 
   # autoclean and preclean
   for (strategy in c("preclean", "autoclean")) {
     config$memory_strategy <- strategy
-    remove(list = ls(config$eval), envir = config$eval)
+    remove(list = ls(config$envir_targets), envir = config$envir_targets)
 
     # initial discard and load
-    expect_equal(ls(config$eval), character(0))
+    expect_equal(ls(config$envir_targets), character(0))
     lapply(c("x", "y", "z"), function(x) {
       manage_memory(x, config)
-      expect_equal(ls(config$eval), character(0))
+      expect_equal(ls(config$envir_targets), character(0))
     })
     lapply(c("a_x", "b_x", "c_x"), function(x) {
       manage_memory(x, config)
-      expect_equal(ls(config$eval), "x")
+      expect_equal(ls(config$envir_targets), "x")
     })
     manage_memory("a_y", config)
-    expect_equal(ls(config$eval), "y")
+    expect_equal(ls(config$envir_targets), "y")
     manage_memory("s", config)
     deps <- paste(
       "s",
@@ -159,33 +159,33 @@ test_with_dir("a close look at the memory strategies", {
       rep(letters[24:26], each = 3),
       sep = "_"
     )
-    expect_equal(sort(deps), sort(ls(config$eval)))
-    config$eval$y <- 1
+    expect_equal(sort(deps), sort(ls(config$envir_targets)))
+    config$envir_targets$y <- 1
     manage_memory("waitforme", config)
     deps <- c("a_x", "c_y", "t_a_z", "s_b_x")
-    expect_equal(sort(deps), sort(ls(config$eval)))
+    expect_equal(sort(deps), sort(ls(config$envir_targets)))
 
     # final discard
-    if (exists("x", envir = config$eval, inherits = FALSE)) {
-      rm(list = "x", envir = config$eval)
+    if (exists("x", envir = config$envir_targets, inherits = FALSE)) {
+      rm(list = "x", envir = config$envir_targets)
     }
     assign_to_envir("x", "value", config)
-    e <- exists("x", envir = config$eval, inherits = FALSE)
+    e <- exists("x", envir = config$envir_targets, inherits = FALSE)
     expect_equal(e, config$memory_strategy == "preclean")
     if (e) {
-      rm(list = "x", envir = config$eval)
+      rm(list = "x", envir = config$envir_targets)
     }
   }
 
   # none
   config$memory_strategy <- "none"
   manage_memory("final1", config)
-  expect_equal(sort(deps), sort(ls(config$eval)))
+  expect_equal(sort(deps), sort(ls(config$envir_targets)))
 
   # unload
   config$memory_strategy <- "unload"
   manage_memory("s", config)
-  expect_equal(ls(config$eval), character(0))
+  expect_equal(ls(config$envir_targets), character(0))
 })
 
 test_with_dir("primary memory strategies actually build everything", {
@@ -215,7 +215,7 @@ test_with_dir("The unload and none strategies do not hold on to targets", {
     make(plan, memory_strategy = mem)
     config <- drake_config(plan, garbage_collection = TRUE)
     expect_equal(sort(justbuilt(config)), sort(plan$target))
-    rm(envir = config$eval)
+    rm(envir = config$envir_targets)
     rm(envir = config$cache$envir)
     clean(destroy = TRUE, cache = config$cache)
     gc()
@@ -240,7 +240,7 @@ test_with_dir("drake_envir() and memory strategies", {
     },
     targety167ff309 = targety84d2fe31,
     targety523e1fba = {
-      saveRDS(ls(envir = drake_envir()), "ls.rds")
+      saveRDS(ls(envir = parent.env(drake_envir())), "ls.rds")
       targety167ff309
     }
   )
@@ -278,11 +278,11 @@ test_with_dir("drake_envir() and memory strategies", {
     },
     targety167ff309 = {
       out <- targety84d2fe31
-      rm(targety84d2fe31, envir = drake_envir())
+      rm(targety84d2fe31, envir = parent.env(drake_envir()))
       out
     },
     c = {
-      saveRDS(ls(envir = drake_envir()), "ls.rds")
+      saveRDS(ls(envir = parent.env(drake_envir())), "ls.rds")
       targety167ff309
     }
   )
@@ -305,15 +305,17 @@ test_with_dir("drake_envir() depth", {
     subset = c(large_data_1[seq_len(10)], large_data_2[seq_len(10)]),
     summary = {
       targs <- c("large_data_1", "large_data_2")
-      expect_true(all(targs %in% ls(envir = drake_envir())))
+      expect_true(all(targs %in% ls(
+        envir = parent.env(drake_envir())
+      )))
       identity(
         invisible(
           invisible(
-            rm(large_data_1, large_data_2, envir = drake_envir())
+            rm(large_data_1, large_data_2, envir = parent.env(drake_envir()))
           )
         )
       )
-      expect_false(any(targs %in% ls(envir = drake_envir())))
+      expect_false(any(targs %in% ls(envir = parent.env(drake_envir()))))
       mean(subset)
     }
   )

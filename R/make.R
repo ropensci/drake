@@ -225,7 +225,7 @@ make <- function(
   config$cache$reset_memo_hash()
   on.exit(config$cache$reset_memo_hash())
   config$cache$set(key = "seed", value = config$seed, namespace = "session")
-  config$eval[[drake_envir_marker]] <- TRUE
+  config$envir_dynamic[[drake_envir_marker]] <- TRUE
   if (config$log_progress) {
     config$cache$clear(namespace = "progress")
   }
@@ -246,7 +246,7 @@ make <- function(
     cache = config$cache,
     jobs = config$jobs_preprocess
   )
-  for (key in c("envir_by", "eval", "eval_dynamic")) {
+  for (key in c("envir_by", "envir_targets", "envir_dynamic")) {
     remove(list = names(config[[key]]), envir = config[[key]])
   }
   config$cache$flush_cache()
@@ -367,15 +367,15 @@ do_prework <- function(config, verbose_packages) {
     if (verbose_packages) {
       expr <- as.call(c(quote(suppressPackageStartupMessages), expr))
     }
-    eval(expr, envir = config$eval)
+    eval(expr, envir = config$envir_targets)
   }
   if (is.character(config$prework)) {
     config$prework <- parse(text = config$prework)
   }
   if (is.language(config$prework)) {
-    eval(config$prework, envir = config$eval)
+    eval(config$prework, envir = config$envir_targets)
   } else if (is.list(config$prework)) {
-    lapply(config$prework, eval, envir = config$eval)
+    lapply(config$prework, eval, envir = config$envir_targets)
   }
   invisible()
 }

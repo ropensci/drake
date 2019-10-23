@@ -17,6 +17,11 @@ That way, you can strategically remove targets from memory
 while \code{\link[=make]{make()}} is running. That way, you can limit the
 amount of computer memory you use.
 }
+\details{
+\code{drake_envir()} is where \code{drake} puts the dependencies
+of \emph{dynamic} targets. To manage the dependencies of \emph{ordinary}
+targets, you need \code{parent.env(drake_envir())}.
+}
 \section{Keywords}{
 
 \code{\link[=drake_plan]{drake_plan()}} understands special keyword functions for your commands.
@@ -50,10 +55,10 @@ plan <- drake_plan(
   large_data_2 = sample.int(1e4),
   subset = c(large_data_1[seq_len(10)], large_data_2[seq_len(10)]),
   summary = {
-    print(ls(envir = drake_envir()))
+    print(ls(envir = parent.env(drake_envir())))
     # We don't need the large_data_* targets in memory anymore.
-    rm(large_data_1, large_data_2, envir = drake_envir())
-    print(ls(envir = drake_envir()))
+    rm(large_data_1, large_data_2, envir = parent.env(drake_envir()))
+    print(ls(envir = parent.env(drake_envir())))
     mean(subset)
   }
 )

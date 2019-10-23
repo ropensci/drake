@@ -68,7 +68,7 @@ drake_build <- function(
   loadd(
     list = target,
     deps = TRUE,
-    envir = config$eval,
+    envir = config$envir_targets,
     cache = config$cache,
     jobs = jobs,
     replace = replace,
@@ -151,7 +151,7 @@ drake_debug <- function(
   loadd(
     list = target,
     deps = TRUE,
-    envir = config$eval,
+    envir = config$envir_targets,
     cache = config$cache,
     jobs = jobs,
     replace = replace,

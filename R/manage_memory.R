@@ -30,7 +30,7 @@ manage_deps.speed <- function(target, config, downstream, jobs) {
   if (identical(config$garbage_collection, TRUE)) {
     gc()
   }
-  already_loaded <- setdiff(names(config$eval), drake_markers)
+  already_loaded <- setdiff(names(config$envir_targets), drake_markers)
   target_deps <- deps_memory(targets = target, config = config)
   target_deps <- setdiff(target_deps, target)
   target_deps <- setdiff(target_deps, already_loaded)
@@ -38,12 +38,12 @@ manage_deps.speed <- function(target, config, downstream, jobs) {
 }
 
 manage_deps.autoclean <- function(target, config, downstream, jobs) {
-  already_loaded <- setdiff(names(config$eval), drake_markers)
+  already_loaded <- setdiff(names(config$envir_targets), drake_markers)
   target_deps <- deps_memory(targets = target, config = config)
   discard_these <- setdiff(x = already_loaded, y = target_deps)
   if (length(discard_these)) {
     config$logger$minor("unload", discard_these, target = target)
-    rm(list = discard_these, envir = config$eval)
+    rm(list = discard_these, envir = config$envir_targets)
   }
   if (identical(config$garbage_collection, TRUE)) {
     gc()
@@ -58,13 +58,13 @@ manage_deps.preclean <- manage_deps.autoclean
 manage_deps.lookahead <- function(target, config, downstream, jobs) {
   downstream <- downstream %||% downstream_nodes(config$graph, target)
   downstream_deps <- deps_memory(targets = downstream, config = config)
-  already_loaded <- setdiff(names(config$eval), drake_markers)
+  already_loaded <- setdiff(names(config$envir_targets), drake_markers)
   target_deps <- deps_memory(targets = target, config = config)
   keep_these <- c(target_deps, downstream_deps)
   discard_these <- setdiff(x = already_loaded, y = keep_these)
   if (length(discard_these)) {
     config$logger$minor("unload", discard_these, target = target)
-    rm(list = discard_these, envir = config$eval)
+    rm(list = discard_these, envir = config$envir_targets)
   }
   if (identical(config$garbage_collection, TRUE)) {
     gc()
@@ -75,10 +75,10 @@ manage_deps.lookahead <- function(target, config, downstream, jobs) {
 }
 
 manage_deps.unload <- function(target, config, downstream, jobs) {
-  discard_these <- setdiff(names(config$eval), drake_markers)
+  discard_these <- setdiff(names(config$envir_targets), drake_markers)
   if (length(discard_these)) {
     config$logger$minor("unload", discard_these, target = target)
-    rm(list = discard_these, envir = config$eval)
+    rm(list = discard_these, envir = config$envir_targets)
   }
   if (identical(config$garbage_collection, TRUE)) {
     gc()
@@ -121,7 +121,7 @@ try_load_target <- function(target, config) {
     load_target(
       target = target,
       namespace = config$cache$default_namespace,
-      envir = config$eval,
+      envir = config$envir_targets,
       cache = config$cache,
       verbose = FALSE,
       lazy = config$lazy_load

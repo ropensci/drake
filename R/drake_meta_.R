@@ -37,7 +37,7 @@ drake_meta_ <- function(target, config) {
   }
   if (!is.null(meta$trigger$change)) {
     try_load(layout$deps_change$memory, config = config)
-    meta$trigger$value <- eval(meta$trigger$change, config$eval)
+    meta$trigger$value <- eval(meta$trigger$change, config$envir_targets)
   }
   meta
 }

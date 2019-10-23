@@ -45,14 +45,14 @@ load_dynamic_dep <- function(dynamic, dep, index, config) {
 }
 
 load_dynamic_dep.map <- function(dynamic, dep, index, config) {
-  if (exists(dep, envir = config$eval, inherits = FALSE)) {
-    envir <- config$eval
+  if (exists(dep, envir = config$envir_targets, inherits = FALSE)) {
+    envir <- config$envir_targets
   } else {
     envir <- config$envir
   }
   value <- get(dep, envir = envir, inherits = FALSE)
   value <- dynamic_elt(value, index)
-  assign(dep, value, envir = config$eval_dynamic, inherits = FALSE)
+  assign(dep, value, envir = config$envir_dynamic, inherits = FALSE)
 }
 
 load_dynamic_dep.cross <- load_dynamic_dep.map

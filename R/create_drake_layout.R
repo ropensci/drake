@@ -152,7 +152,7 @@ cdl_analyze_commands <- function(config) {
     config$plan$trigger <- lapply(
       config$plan$trigger,
       cdl_parse_trigger,
-      envir = config$eval
+      envir = config$envir_targets
     )
   }
   layout <- drake_pmap(.l = config$plan, .f = list, jobs = config$jobs)
@@ -252,7 +252,7 @@ cdl_dynamic_dependencies <- function(dynamic, config) {
 cdl_preprocess_command <- function(command, config) {
   command <- as.call(c(quote(local), command))
   # Here, we really do need expr() instead of quo().
-  # `!!` needs to unquote symbols using config$eval instead of
+  # `!!` needs to unquote symbols using config$envir_targets instead of
   # the environment where the original binding took place.
   # In other words, `drake` already supplies the correct
   # evaluation environment.

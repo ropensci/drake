@@ -8,6 +8,7 @@
 
 - Document transformation functions in a way that avoids having to create true functions (#979).
 - Avoid always invalidating the memoized layout when we set the knitr hash.
+- Change the names of environments in `drake_config()` objects.
 
 
 # Version 7.7.0

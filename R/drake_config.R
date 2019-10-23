@@ -588,12 +588,12 @@ drake_config <- function(
   caching <- match.arg(caching)
   recover <- as.logical(recover)
   recoverable <- as.logical(recoverable)
-  eval <- new.env(parent = envir)
+  envir_targets <- new.env(parent = envir)
   out <- list(
     envir = envir,
-    eval = eval,
+    envir_targets = envir_targets,
     envir_by = new.env(parent = emptyenv()),
-    eval_dynamic = new.env(parent = eval),
+    envir_dynamic = new.env(parent = envir_targets),
     cache = cache,
     parallelism = parallelism,
     jobs = jobs,

@@ -232,16 +232,16 @@ with_call_stack <- function(target, config) {
     lock_environment(config$envir)
     on.exit(unlock_environment(config$envir))
   }
-  config$eval[[drake_target_marker]] <- target
+  config$envir_dynamic[[drake_target_marker]] <- target
   tidy_expr <- eval(
     expr = expr,
-    envir = config$eval_dynamic
+    envir = config$envir_dynamic
   ) # tidy eval prep
   tryCatch(
     withCallingHandlers(
       eval(
         expr = tidy_expr,
-        envir = config$eval_dynamic
+        envir = config$envir_dynamic
       ), # pure eval
       error = capture_calls
     ),
@@ -391,7 +391,7 @@ assign_to_envir <- function(target, value, config) {
     !is_encoded_path(target) &&
     !is_imported(target, config)
   ) {
-    assign(x = target, value = value_format(value), envir = config$eval)
+    assign(x = target, value = value_format(value), envir = config$envir_targets)
   }
   invisible()
 }

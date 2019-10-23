@@ -499,6 +499,9 @@ no_deps <- function(x = NULL) {
 #'   That way, you can strategically remove targets from memory
 #'   while [make()] is running. That way, you can limit the
 #'   amount of computer memory you use.
+#' @details `drake_envir()` is where `drake` puts the dependencies
+#'   of *dynamic* targets. To manage the dependencies of *ordinary*
+#'   targets, you need `parent.env(drake_envir())`.
 #' @export
 #' @inheritSection drake_plan Keywords
 #' @seealso [from_plan()]
@@ -511,10 +514,10 @@ no_deps <- function(x = NULL) {
 #'   large_data_2 = sample.int(1e4),
 #'   subset = c(large_data_1[seq_len(10)], large_data_2[seq_len(10)]),
 #'   summary = {
-#'     print(ls(envir = drake_envir()))
+#'     print(ls(envir = parent.env(drake_envir())))
 #'     # We don't need the large_data_* targets in memory anymore.
-#'     rm(large_data_1, large_data_2, envir = drake_envir())
-#'     print(ls(envir = drake_envir()))
+#'     rm(large_data_1, large_data_2, envir = parent.env(drake_envir()))
+#'     print(ls(envir = parent.env(drake_envir())))
 #'     mean(subset)
 #'   }
 #' )
