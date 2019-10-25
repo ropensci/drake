@@ -13,7 +13,7 @@ backend_loop <- function(config) {
       next
     }
     if (is_dynamic(target, config)) {
-      targets <- c(subtarget_names(target[[1]], config), targets)
+      targets <- c(subtarget_names(target[1], config), targets)
       config <- register_subtargets(target, config)
       next
     }
