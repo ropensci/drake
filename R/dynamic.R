@@ -1,68 +1,14 @@
-# local dynamic branching
-
-local_dynamic <- function(target, config) {
-  dynamic <- config$layout[[target]]$dynamic
-  local_dynamic_impl(dynamic, target, config)
-}
-
-local_dynamic_impl <- function(dynamic, target, config) {
-  UseMethod("local_dynamic_impl")
-}
-
-local_dynamic_impl.default <- function(dynamic, target, config) {
-  return()
-}
-
-local_dynamic_impl.dynamic <- function(dynamic, target, config) {
-  subtargets <- number_subtargets_impl(dynamic, target, config)
-  lapply(
-    seq_len(subtargets),
-    local_subtarget,
-    dynamic = dynamic,
-    target = target,
-    config = config
-  )
-}
-
-local_subtarget <- function(index, dynamic, target, config) {
-  deps <- subtarget_deps_impl(dynamic, target, index, config)
-  manage_memory_dynamic(dynamic, deps, config)
-
-
-  browser()
-  # Continue here. Run the sub-target and store the value.
-}
-
-manage_memory_dynamic <- function(dynamic, deps, config) {
-  args <- list(key = names(deps), value = deps)
-  lapply(names(deps), function(dep) {
-    load_dynamic_dep(dynamic, dep = dep, index = deps[[dep]], config = config)
-  })
-}
-
-load_dynamic_dep <- function(dynamic, dep, index, config) {
-  UseMethod("load_dynamic_dep")
-}
-
-load_dynamic_dep.map <- function(dynamic, dep, index, config) {
-  browser()
-  # Pick up here. Need to handle dynamic deps that are
-  # dynamic sub-targets.
-
-
-  if (exists(dep, envir = config$envir_targets, inherits = FALSE)) {
-    envir <- config$envir_targets
-  } else {
-    envir <- config$envir
+register_subtargets <- function(target, config) {
+  if (!is_dynamic(target, config)) {
+    return(config)
   }
-  value <- get(dep, envir = envir, inherits = FALSE)
-  value <- dynamic_dep_elt(value, index)
-  assign(dep, value, envir = config$envir_dynamic, inherits = FALSE)
+  layout <- config$layout[[target]]
+  dynamic <- layout$dynamic
+
+
+  browser()
+
 }
-
-load_dynamic_dep.cross <- load_dynamic_dep.map
-
-# utilities
 
 is_dynamic <- function(target, config) {
   inherits(config$layout[[target]]$dynamic, "dynamic")
@@ -116,6 +62,13 @@ def_split <- function(.x, .by = NULL) {
   NULL
 }
 # nocov end
+
+subtarget_names <- function(target, config) {
+  if (!is_dynamic(target, config)) {
+    return(character(0))
+  }
+  subtarget_name(target, seq_len(number_targets(target, config)))
+}
 
 subtarget_name <- function(target, index) {
   paste(target, index, sep = "_")

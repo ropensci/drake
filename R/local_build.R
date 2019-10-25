@@ -10,8 +10,6 @@ local_build <- function(target, config, downstream) {
     downstream = downstream,
     jobs = config$jobs_preprocess
   )
-  local_dynamic(target, config)
-  # Continue here. Dynamic targets need to be handled differently.
   build <- try_build(target = target, meta = meta, config = config)
   conclude_build(build = build, config = config)
   invisible()
