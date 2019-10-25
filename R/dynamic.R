@@ -12,9 +12,10 @@ register_subtargets <- function(target, config) {
   )
   config$graph <- igraph::graph.union(config$graph, subgraph)
   subtarget_layouts <- lapply(
-    subtargets,
+    seq_along(subtargets),
     subtarget_layout,
     parent = target,
+    subtargets = subtargets,
     config = config
   )
   names(subtarget_layouts) <- subtargets
@@ -22,12 +23,27 @@ register_subtargets <- function(target, config) {
   config
 }
 
-subtarget_layout <- function(subtarget, parent, config) {
+subtarget_layout <- function(index, parent, subtargets, config) {
+  subtarget <- subtargets[index]
   layout <- config$layout[[parent]]
   layout$target <- subtarget
   layout$dynamic <- NULL
   layout$subtarget <- TRUE
+  layout$subtarget_index <- index
+  layout$subtarget_parent <- parent
   layout$seed <- seed_from_basic_types(config$seed, layout$seed, subtarget)
+  layout <- register_dynamic_subdeps(layout, config)
+  layout
+}
+
+register_dynamic_subdeps <- function(layout, config) {
+  for (target in layout$deps_dynamic) {
+    if (is_dynamic(target, config)) {
+      x <- subtarget_name(target, layout$subtarget_index)
+      layout$deps_build$memory <- c(layout$deps_build$memory, x)
+      layout$deps_build$memory <- setdiff(layout$deps_build$memory, target)
+    }
+  }
   layout
 }
 
@@ -51,12 +67,25 @@ get_dynamic <- function(target, config) {
   config$layout[[target]]$dynamic
 }
 
-dynamic_dep_elt <- function(value, index) {
-  if (is.null(dim(value))) {
-    value[[index]]
-  } else {
-    drake_slice(value, slices = dim(value)[1], index = index)
-  }
+dynamic_subvalue <- function(value, index) {
+  UseMethod("dynamic_subvalue")
+}
+
+dynamic_subvalue.data.frame <- function(value, index) {
+  value[index,, drop = FALSE]
+}
+
+dynamic_subvalue.array <- function(value, index) {
+  ref <- slice.index(value, 1L)
+  out <- value[ref %in% index]
+  dim <- dim(value)
+  dim[1] <- length(index)
+  dim(out) <- dim
+  out
+}
+
+dynamic_subvalue.default <- function(value, index) {
+  value[index]
 }
 
 match_call <- function(dynamic) {

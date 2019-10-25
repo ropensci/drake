@@ -5,6 +5,7 @@ backend_loop <- function(config) {
   }
   config$lock_envir <- FALSE
   targets <- igraph::topo_sort(config$graph)$name
+  deferred <- ht_new()
   while (length(targets)) {
     target <- targets[1]
     meta <- drake_meta_(target = target, config = config)
@@ -12,9 +13,13 @@ backend_loop <- function(config) {
       targets <- targets[-1]
       next
     }
-    if (is_dynamic(target, config)) {
+    should_defer <- is_dynamic(target, config) &&
+      !is_subtarget(target, config) &&
+      !ht_exists(deferred, target)
+    if (should_defer) {
       targets <- c(subtarget_names(target[1], config), targets)
       config <- register_subtargets(target, config)
+      ht_set(deferred, target)
       next
     }
     loop_build(

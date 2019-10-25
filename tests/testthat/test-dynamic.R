@@ -90,15 +90,20 @@ test_with_dir("dynamic sub-target indices", {
   }
 })
 
-if (FALSE) {
-
-# in progress
 test_with_dir("dynamic map", {
   plan <- drake_plan(
     x = seq_len(4),
-    y = target(x + 1, dynamic = map(x))
+    y = target(x + 1, dynamic = map(x)),
+    z = target(y + 1, dynamic = map(y))
   )
   make(plan)
+  expect_equal(readd(x), seq_len(4))
+  expect_equal(readd(y_1), 2)
+  expect_equal(readd(y_2), 3)
+  expect_equal(readd(y_3), 4)
+  expect_equal(readd(y_4), 5)
+  expect_equal(readd(z_1), 3)
+  expect_equal(readd(z_2), 4)
+  expect_equal(readd(z_3), 5)
+  expect_equal(readd(z_4), 6)
 })
-
-}
