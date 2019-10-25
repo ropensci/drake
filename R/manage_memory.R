@@ -70,15 +70,21 @@ manage_deps.lookahead <- function(target, config, downstream, jobs) {
 }
 
 manage_deps.unload <- function(target, config, downstream, jobs) {
-  discard_these <- setdiff(names(config$envir_targets), drake_markers)
-  if (length(discard_these)) {
-    config$logger$minor("unload", discard_these, target = target)
-    rm(list = discard_these, envir = config$envir_targets)
+  for (name in c("envir_targets", "envir_subtargets")) {
+    unload_envir(target = target, envir = config[[name]], config = config)
   }
 }
 
 manage_deps.none <- function(target, config, downstream, jobs) {
   return()
+}
+
+unload_envir <- function(target, envir, config) {
+  discard_these <- setdiff(names(envir), drake_markers)
+  if (length(discard_these)) {
+    config$logger$minor("unload", discard_these, target = target)
+    rm(list = discard_these, envir = envir)
+  }
 }
 
 deps_memory <- function(targets, config) {
