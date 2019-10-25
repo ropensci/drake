@@ -34,6 +34,9 @@ try_build <- function(target, meta, config) {
   if (identical(config$garbage_collection, TRUE)) {
     on.exit(gc())
   }
+  if (is_dynamic(target, config)) {
+    return(dynamic_build(target, meta, config))
+  }
   retries <- 0L
   layout <- config$layout[[target]] %||% list()
   max_retries <- as.numeric(layout$retries %||NA% config$retries)
@@ -60,6 +63,13 @@ try_build <- function(target, meta, config) {
     retries <- retries + 1L
   }
   build
+}
+
+dynamic_build <- function(target, meta, config) {
+  subtargets <- subtarget_names(target, config)
+  meta$time_command <- proc.time() - meta$time_start
+  value <- config$cache$mget_hash(subtargets)
+  list(target = target, meta = meta, value = value)
 }
 
 with_seed_timeout <- function(target, meta, config) {
