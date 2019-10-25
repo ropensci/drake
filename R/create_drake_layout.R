@@ -178,6 +178,7 @@ cdl_analyze_commands <- function(config) {
 cdl_prepare_layout <- function(config, layout) {
   config$logger$minor("analyze", target = layout$target)
   layout$dynamic <- as_dynamic(layout$dynamic)
+  layout$subtarget <- FALSE
   layout$deps_build <- cdl_command_dependencies(
     command = layout$command,
     exclude = layout$target,
@@ -211,11 +212,6 @@ cdl_prepare_layout <- function(config, layout) {
       x = layout[[field]]$globals
     )
   }
-
-  # To do:
-  # 1. Add an S3 class indicating whether the object is an import, static target, or dynamic target.
-  # 2. Do not list dynamic dependencies in deps_build.
-
   layout
 }
 

@@ -2,16 +2,40 @@ register_subtargets <- function(target, config) {
   if (!is_dynamic(target, config)) {
     return(config)
   }
-  layout <- config$layout[[target]]
-  dynamic <- layout$dynamic
+  subtargets <- subtarget_names(target, config)
+  edgelist <- do.call(rbind, lapply(subtargets, c, target))
+  subgraph <- igraph::graph_from_edgelist(edgelist)
+  subgraph <- igraph::set_vertex_attr(
+    subgraph,
+    name = "imported",
+    value = FALSE
+  )
+  config$graph <- igraph::graph.union(config$graph, subgraph)
+  subtarget_layouts <- lapply(
+    subtargets,
+    subtarget_layout,
+    parent = target,
+    config = config
+  )
+  names(subtarget_layouts) <- subtargets
+  config$layout <- c(config$layout, subtarget_layouts)
+  config
+}
 
-
-  browser()
-
+subtarget_layout <- function(subtarget, parent, config) {
+  layout <- config$layout[[parent]]
+  layout$target <- subtarget
+  layout$dynamic <- NULL
+  layout$subtarget <- TRUE
+  layout
 }
 
 is_dynamic <- function(target, config) {
   inherits(config$layout[[target]]$dynamic, "dynamic")
+}
+
+is_subtarget <- function(target, config) {
+  config$layout[[target]]$subtarget
 }
 
 as_dynamic <- function(x) {
@@ -67,7 +91,7 @@ subtarget_names <- function(target, config) {
   if (!is_dynamic(target, config)) {
     return(character(0))
   }
-  subtarget_name(target, seq_len(number_targets(target, config)))
+  subtarget_name(target, seq_len(number_subtargets(target, config)))
 }
 
 subtarget_name <- function(target, index) {
