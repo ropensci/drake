@@ -225,7 +225,7 @@ make <- function(
   config$cache$reset_memo_hash()
   on.exit(config$cache$reset_memo_hash())
   config$cache$set(key = "seed", value = config$seed, namespace = "session")
-  config$envir_dynamic[[drake_envir_marker]] <- TRUE
+  config$envir_subtargets[[drake_envir_marker]] <- TRUE
   if (config$log_progress) {
     config$cache$clear(namespace = "progress")
   }
@@ -246,7 +246,7 @@ make <- function(
     cache = config$cache,
     jobs = config$jobs_preprocess
   )
-  for (key in c("envir_by", "envir_targets", "envir_dynamic")) {
+  for (key in c("envir_by", "envir_targets", "envir_subtargets")) {
     remove(list = names(config[[key]]), envir = config[[key]])
   }
   config$cache$flush_cache()

@@ -593,7 +593,7 @@ drake_config <- function(
     envir = envir,
     envir_targets = envir_targets,
     envir_by = new.env(parent = emptyenv()),
-    envir_dynamic = new.env(parent = envir_targets),
+    envir_subtargets = new.env(parent = envir_targets),
     cache = cache,
     parallelism = parallelism,
     jobs = jobs,

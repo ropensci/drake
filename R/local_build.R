@@ -230,16 +230,16 @@ with_call_stack <- function(target, config) {
     lock_environment(config$envir)
     on.exit(unlock_environment(config$envir))
   }
-  config$envir_dynamic[[drake_target_marker]] <- target
+  config$envir_subtargets[[drake_target_marker]] <- target
   tidy_expr <- eval(
     expr = expr,
-    envir = config$envir_dynamic
+    envir = config$envir_subtargets
   ) # tidy eval prep
   tryCatch(
     withCallingHandlers(
       eval(
         expr = tidy_expr,
-        envir = config$envir_dynamic
+        envir = config$envir_subtargets
       ), # pure eval
       error = capture_calls
     ),

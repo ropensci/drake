@@ -20,12 +20,6 @@ manage_memory <- function(target, config, downstream = NULL, jobs = 1) {
     downstream = downstream,
     jobs = jobs
   )
-#  manage_deps_subtarget(
-#    target = target,
-#    config = config,
-#    downstream = downstream,
-#    jobs = jobs
-#  )
   if (identical(config$garbage_collection, TRUE)) {
     gc()
   }
