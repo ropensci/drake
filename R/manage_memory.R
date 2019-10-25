@@ -14,9 +14,6 @@ manage_memory <- function(target, config, downstream = NULL, jobs = 1) {
   stopifnot(length(target) == 1L)
   class(target) <- config$layout[[target]]$memory_strategy %||NA%
     config$memory_strategy
-  if (identical(config$garbage_collection, TRUE)) {
-    gc()
-  }
   manage_deps(
     target = target,
     config = config,
@@ -30,6 +27,9 @@ manage_memory <- function(target, config, downstream = NULL, jobs = 1) {
       downstream = downstream,
       jobs = jobs
     )
+  }
+  if (identical(config$garbage_collection, TRUE)) {
+    gc()
   }
   invisible()
 }
