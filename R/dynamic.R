@@ -32,16 +32,17 @@ subtarget_layout <- function(index, parent, subtargets, config) {
   layout$subtarget_index <- index
   layout$subtarget_parent <- parent
   layout$seed <- seed_from_basic_types(config$seed, layout$seed, subtarget)
-  layout <- register_dynamic_subdeps(layout, config)
+  index_deps <- subtarget_deps(parent, index, config)
+  layout <- register_dynamic_subdeps(layout, index_deps, config)
   layout
 }
 
-register_dynamic_subdeps <- function(layout, config) {
-  for (target in layout$deps_dynamic) {
-    if (is_dynamic(target, config)) {
-      x <- subtarget_name(target, layout$subtarget_index)
+register_dynamic_subdeps <- function(layout, index_deps, config) {
+  for (subtarget in layout$deps_dynamic) {
+    if (is_dynamic(subtarget, config)) {
+      x <- subtarget_name(subtarget, index_deps[[subtarget]])
       layout$deps_build$memory <- c(layout$deps_build$memory, x)
-      layout$deps_build$memory <- setdiff(layout$deps_build$memory, target)
+      layout$deps_build$memory <- setdiff(layout$deps_build$memory, subtarget)
     }
   }
   layout

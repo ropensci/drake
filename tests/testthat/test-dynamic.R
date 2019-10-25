@@ -121,3 +121,39 @@ test_with_dir("dynamic map", {
   expect_equal(readd(z_3), 5)
   expect_equal(readd(z_4), 6)
 })
+
+test_with_dir("dynamic cross", {
+  plan <- drake_plan(
+    x1 = letters[seq_len(2)],
+    x2 = LETTERS[seq_len(2)],
+    y1 = target(paste0(x1, x2), dynamic = map(x1, x2)),
+    y2 = target(paste0(x2, x1), dynamic = map(x1, x2)),
+    z1 = target(paste0(x1, x2), dynamic = cross(x1, x2)),
+    z2 = target(paste0(x1, y2), dynamic = cross(x1, y2)),
+    z3 = target(paste0(y1, x2), dynamic = cross(y1, x2)),
+    z4 = target(paste0(y1, y2), dynamic = cross(y1, y2)),
+  )
+  make(plan)
+  expect_equal(readd(x1), letters[seq_len(2)])
+  expect_equal(readd(x2), LETTERS[seq_len(2)])
+  expect_equal(readd(y1_1), "aA")
+  expect_equal(readd(y1_2), "bB")
+  expect_equal(readd(y2_1), "Aa")
+  expect_equal(readd(y2_2), "Bb")
+  expect_equal(readd(z1_1), "aA")
+  expect_equal(readd(z1_2), "aB")
+  expect_equal(readd(z1_3), "bA")
+  expect_equal(readd(z1_4), "bB")
+  expect_equal(readd(z2_1), "aAa")
+  expect_equal(readd(z2_2), "aBb")
+  expect_equal(readd(z2_3), "bAa")
+  expect_equal(readd(z2_4), "bBb")
+  expect_equal(readd(z3_1), "aAA")
+  expect_equal(readd(z3_2), "aAB")
+  expect_equal(readd(z3_3), "bBA")
+  expect_equal(readd(z3_4), "bBB")
+  expect_equal(readd(z4_1), "aAAa")
+  expect_equal(readd(z4_2), "aABb")
+  expect_equal(readd(z4_3), "bBAa")
+  expect_equal(readd(z4_4), "bBBb")
+})

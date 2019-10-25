@@ -22,12 +22,21 @@ announce_build <- function(target, meta, config) {
     value = "running",
     config = config
   )
-  config$logger$major(
-    "target",
-    target,
-    target = target,
-    color = "target"
-  )
+  if (is_dynamic(target, config)) {
+    config$logger$minor(
+      "dynamic",
+      target,
+      target = target,
+      color = "target"
+    )
+  } else {
+    config$logger$major(
+      "target",
+      target,
+      target = target,
+      color = "target"
+    )
+  }
 }
 
 try_build <- function(target, meta, config) {
