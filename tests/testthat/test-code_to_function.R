@@ -1,4 +1,4 @@
-drake_context("test-code_to_function")
+drake_context("code to function")
 
 test_with_dir("Scripts eval'd to fns returning times & file paths", {
   script1 <- tempfile()
