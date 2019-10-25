@@ -52,7 +52,7 @@ is_dynamic <- function(target, config) {
 }
 
 is_subtarget <- function(target, config) {
-  config$layout[[target]]$subtarget
+  config$layout[[target]]$subtarget %||% FALSE
 }
 
 as_dynamic <- function(x) {
@@ -72,7 +72,7 @@ dynamic_subvalue <- function(value, index) {
 }
 
 dynamic_subvalue.data.frame <- function(value, index) {
-  value[index,, drop = FALSE]
+  value[index,, drop = FALSE] # nolint
 }
 
 dynamic_subvalue.default <- function(value, index) {
