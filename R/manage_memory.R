@@ -14,12 +14,24 @@ manage_memory <- function(target, config, downstream = NULL, jobs = 1) {
   stopifnot(length(target) == 1L)
   class(target) <- config$layout[[target]]$memory_strategy %||NA%
     config$memory_strategy
+  if (identical(config$garbage_collection, TRUE)) {
+    gc()
+  }
   manage_deps(
     target = target,
     config = config,
     downstream = downstream,
     jobs = jobs
   )
+  if (is_subtarget(target, config)) {
+    manage_deps_subtarget(
+      target = target,
+      config = config,
+      downstream = downstream,
+      jobs = jobs
+    )
+  }
+  invisible()
 }
 
 manage_deps <- function(target, config, downstream, jobs) {
@@ -27,9 +39,6 @@ manage_deps <- function(target, config, downstream, jobs) {
 }
 
 manage_deps.speed <- function(target, config, downstream, jobs) {
-  if (identical(config$garbage_collection, TRUE)) {
-    gc()
-  }
   already_loaded <- setdiff(names(config$envir_targets), drake_markers)
   target_deps <- deps_memory(targets = target, config = config)
   target_deps <- setdiff(target_deps, target)
@@ -44,9 +53,6 @@ manage_deps.autoclean <- function(target, config, downstream, jobs) {
   if (length(discard_these)) {
     config$logger$minor("unload", discard_these, target = target)
     rm(list = discard_these, envir = config$envir_targets)
-  }
-  if (identical(config$garbage_collection, TRUE)) {
-    gc()
   }
   target_deps <- setdiff(target_deps, target)
   target_deps <- setdiff(target_deps, already_loaded)
@@ -66,9 +72,6 @@ manage_deps.lookahead <- function(target, config, downstream, jobs) {
     config$logger$minor("unload", discard_these, target = target)
     rm(list = discard_these, envir = config$envir_targets)
   }
-  if (identical(config$garbage_collection, TRUE)) {
-    gc()
-  }
   target_deps <- setdiff(target_deps, target)
   target_deps <- setdiff(target_deps, already_loaded)
   try_load(targets = target_deps, config = config, jobs = jobs)
@@ -80,15 +83,9 @@ manage_deps.unload <- function(target, config, downstream, jobs) {
     config$logger$minor("unload", discard_these, target = target)
     rm(list = discard_these, envir = config$envir_targets)
   }
-  if (identical(config$garbage_collection, TRUE)) {
-    gc()
-  }
 }
 
 manage_deps.none <- function(target, config, downstream, jobs) {
-  if (identical(config$garbage_collection, TRUE)) {
-    gc()
-  }
   return()
 }
 
