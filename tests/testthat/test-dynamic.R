@@ -90,6 +90,20 @@ test_with_dir("dynamic sub-target indices", {
   }
 })
 
+test_with_dir("dynamic subvalues", {
+  expect_equal(dynamic_subvalue(letters, 2), "b")
+  expect_equal(dynamic_subvalue(letters, c(2, 4)), c("b", "d"))
+  m <- mtcars
+  expect_equal(dynamic_subvalue(m, 4), m[4,, drop = FALSE])
+  expect_equal(dynamic_subvalue(m, c(4, 5)), m[c(4, 5),, drop = FALSE])
+  m <- as.matrix(m)
+  expect_equivalent(dynamic_subvalue(m, 4), m[4,, drop = FALSE])
+  expect_equivalent(dynamic_subvalue(m, c(4, 5)), m[c(4, 5),, drop = FALSE])
+  m <- array(seq_len(prod(seq(2, 6))), dim = seq(2, 6))
+  expect_equivalent(dynamic_subvalue(m, 1), m[1,,,,])
+  expect_equivalent(dynamic_subvalue(m, c(1, 2)), m[c(1, 2),,,,])
+})
+
 test_with_dir("dynamic map", {
   plan <- drake_plan(
     x = seq_len(4),

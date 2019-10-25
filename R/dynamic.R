@@ -75,7 +75,15 @@ dynamic_subvalue.data.frame <- function(value, index) {
   value[index,, drop = FALSE]
 }
 
-dynamic_subvalue.array <- function(value, index) {
+dynamic_subvalue.default <- function(value, index) {
+  if (is.null(dim(value))) {
+    dynamic_subvalue_vector(value, index)
+  } else {
+    dynamic_subvalue_array(value, index)
+  }
+}
+
+dynamic_subvalue_array <- function(value, index) {
   ref <- slice.index(value, 1L)
   out <- value[ref %in% index]
   dim <- dim(value)
@@ -84,7 +92,7 @@ dynamic_subvalue.array <- function(value, index) {
   out
 }
 
-dynamic_subvalue.default <- function(value, index) {
+dynamic_subvalue_vector <- function(value, index) {
   value[index]
 }
 
