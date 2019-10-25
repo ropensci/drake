@@ -21,13 +21,6 @@ ht_set <- function(ht, x, value = TRUE) {
   invisible()
 }
 
-ht_safe_get <- function(ht, x) {
-  if (ht_exists(ht, x)) {
-    return(get(x = x, envir = ht, inherits = FALSE))
-  }
-  NULL
-}
-
 ht_get <- function(ht, x) {
   get(x = x, envir = ht, inherits = FALSE)
 }

@@ -1,7 +1,4 @@
 register_subtargets <- function(target, config) {
-  if (!is_dynamic(target, config)) {
-    return(config)
-  }
   subtargets <- subtarget_names(target, config)
   edgelist <- do.call(rbind, lapply(subtargets, c, target))
   subgraph <- igraph::graph_from_edgelist(edgelist)
@@ -64,10 +61,6 @@ as_dynamic <- function(x) {
   match_call(x)
 }
 
-get_dynamic <- function(target, config) {
-  config$layout[[target]]$dynamic
-}
-
 dynamic_subvalue <- function(value, index) {
   UseMethod("dynamic_subvalue")
 }
@@ -127,9 +120,6 @@ def_split <- function(.x, .by = NULL) {
 # nocov end
 
 subtarget_names <- function(target, config) {
-  if (!is_dynamic(target, config)) {
-    return(character(0))
-  }
   subtarget_name(target, seq_len(number_subtargets(target, config)))
 }
 
@@ -138,9 +128,6 @@ subtarget_name <- function(target, index) {
 }
 
 number_subtargets <- function(target, config) {
-  if (!is_dynamic(target, config)) {
-    return(0)
-  }
   dynamic <- config$layout[[target]]$dynamic
   number_subtargets_impl(dynamic, target, config)
 }
