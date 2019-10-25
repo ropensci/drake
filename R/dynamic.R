@@ -27,6 +27,7 @@ subtarget_layout <- function(subtarget, parent, config) {
   layout$target <- subtarget
   layout$dynamic <- NULL
   layout$subtarget <- TRUE
+  layout$seed <- NULL
   layout
 }
 
