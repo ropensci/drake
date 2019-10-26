@@ -300,3 +300,29 @@ test_with_dir("dynamic combine vars must be dynamic", {
   )
   expect_error(make(plan), "must be dynamic")
 })
+
+test_with_dir("formats applied to subtargets but not their parents", {
+  skip_if(getRversion() < "3.5.0")
+  plan <- drake_plan(
+    x = seq_len(4),
+    y = target(x, format = "rds", dynamic = map(x))
+  )
+  make(plan)
+  cache <- drake_cache()
+  for (i in seq_len(4)) {
+    y <- subtargets(y)[i]
+    expect_equal(readd(y, character_only = TRUE), i)
+    expect_equal(cache$get_value(cache$get_hash(y)), i)
+    ref <- cache$storr$get(y)
+    expect_true(inherits(ref, "drake_format_rds"))
+    expect_equal(length(ref), 1L)
+    expect_true(nchar(ref) < 100)
+    expect_false(is.numeric(ref))
+  }
+  ref <- cache$storr$get("y")
+  expect_false(inherits(ref, "drake_format_rds"))
+  special <- file.path(".drake", "drake", "return")
+  expect_true(file.exists(special))
+  special_files <- list.files(special)
+  expect_equal(length(special_files), 4L)
+})

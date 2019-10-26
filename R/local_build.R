@@ -325,7 +325,11 @@ conclude_build <- function(build, config) {
 }
 
 assign_format <- function(target, value, format, config) {
-  if (is.null(format) || is.na(format) || is.null(value)) {
+  drop_format <- is.null(format) ||
+    is.na(format) ||
+    is.null(value) ||
+    (is_dynamic(target, config) && !is_subtarget(target, config))
+  if (drop_format) {
     return(value)
   }
   config$logger$minor("format", format, target = target)
