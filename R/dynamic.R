@@ -143,8 +143,8 @@ match_call_impl.map <- match_call_impl.cross <- function(dynamic) {
   unname(match.call(definition = def_map, call = dynamic))
 }
 
-match_call_impl.split <- match_call_impl.combine <- function(dynamic) {
-  match.call(definition = def_split, call = dynamic)
+match_call_impl.combine <- function(dynamic) {
+  match.call(definition = def_combine, call = dynamic)
 }
 
 # nocov start
@@ -152,7 +152,7 @@ def_map <- function(...) {
   NULL
 }
 
-def_split <- function(..., .by = NULL) {
+def_combine <- function(..., .by = NULL) {
   NULL
 }
 # nocov end
@@ -181,19 +181,16 @@ dynamic_hash_list.map <- function(dynamic, target, config) {
 
 dynamic_hash_list.cross <- dynamic_hash_list.map
 
-dynamic_hash_list.split <- function(dynamic, target, config) {
-  out <- list()
-
+dynamic_hash_list.combine <- function(dynamic, target, config) {
   browser()
 
+  out <- list()
   out$x <- read_dynamic_hashes(deparse(dynamic$.x), config)
   if (!is.null(dynamic$.by)) {
     out$by <- read_dynamic_hashes(deparse(dynamic$.by), config)
   }
   out
 }
-
-dynamic_hash_list.combine <- dynamic_hash_list.split
 
 read_dynamic_hashes <- function(target, config) {
   meta <- config$cache$get(target, namespace = "meta")
@@ -217,14 +214,10 @@ subtarget_hashes.cross <- function(dynamic, hashes, config) {
   apply(hashes, 1, paste, collapse = " ")
 }
 
-subtarget_hashes.split <- function(dynamic, hashes, config) {
+subtarget_hashes.combine <- function(dynamic, hashes, config) {
   if (is.null(hashes$by)) {
     return(hashes)
   }
-  browser()
-}
-
-subtarget_hashes.combine <- function(dynamic, hashes, config) {
   browser()
 
 }
@@ -254,7 +247,7 @@ subtarget_deps_impl.cross <- function(dynamic, target, index, config) {
   out
 }
 
-subtarget_deps_impl.split <- subtarget_deps_impl.combine <- function(
+subtarget_deps_impl.combine <- function(
   dynamic,
   target,
   index,
@@ -266,7 +259,7 @@ subtarget_deps_impl.split <- subtarget_deps_impl.combine <- function(
     value <- get_dynamic_by(key, config)
     out <- list(which(value == unique(value)[[index]]))
   }
-  names(out) <- which_var(dynamic)
+  names(out) <- which_vars(dynamic)
   out
 }
 
@@ -311,8 +304,9 @@ no_by <- function(dynamic) {
   is.null(dynamic$.by)
 }
 
-which_var <- function(dynamic) {
-  deparse(dynamic$.x)
+which_vars <- function(dynamic) {
+  dynamic$.by <- NULL
+  all.vars(dynamic)
 }
 
 which_by <- function(dynamic) {

@@ -232,8 +232,7 @@ but this is what it usage will look like.
 \itemize{
 \item \code{map(...)}
 \item \code{cross(...)}
-\item \code{split(.x, .by)}
-\item \code{combine(.x, .by)}
+\item \code{combine(..., .by)}
 }
 
 \code{map()} and \code{cross()} create dynamic sub-targets from the variables
@@ -251,7 +250,6 @@ Differences from static branching:
 \item \code{...} must contain \emph{unnamed} symbols with no values supplied,
 and they must be the names of targets.
 \item Arguments \code{.id}, \code{.tag_in}, and \code{.tag_out} no longer apply.
-\item \code{split()} has a \code{.by} argument
 }
 }
 

@@ -500,8 +500,8 @@ no_deps <- function(x = NULL) {
 #'   while [make()] is running. That way, you can limit the
 #'   amount of computer memory you use.
 #' @details `drake_envir()` is where `drake` puts the dependencies
-#'   of *dynamic* targets. To manage the dependencies of *ordinary*
-#'   targets, you need `parent.env(drake_envir())`.
+#'   of *dynamic sub-targets*. To manage ordinary dependencies,
+#'   you need `parent.env(drake_envir())`.
 #' @export
 #' @inheritSection drake_plan Keywords
 #' @seealso [from_plan()]

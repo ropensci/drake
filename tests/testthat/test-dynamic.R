@@ -4,22 +4,20 @@ test_with_dir("dynamic dependency detection", {
   indices <- seq_len(4)
   f <- identity
   plan <- drake_plan(
-    u = 4,
-    v = seq_len(4),
-    w = target(f(v), dynamic = map(v, indices)),
-    x = target(w, dynamic = split(w, .by = v)),
-    y = target(x, dynamic = cross(x, c(u, y, nope))),
-    z = target(w, dynamic = combine(y, .by = c(w, x, nope)))
+    v = 4,
+    w = seq_len(4),
+    x = target(f(v), dynamic = map(v, indices)),
+    y = target(x, dynamic = cross(x, c(v, y, nope))),
+    z = target(w, dynamic = combine(x, y, .by = c(w, nope)))
   )
   config <- drake_config(plan)
   layout <- config$layout
-  expect_equal(layout[["u"]]$deps_dynamic, character(0))
   expect_equal(layout[["v"]]$deps_dynamic, character(0))
-  expect_equal(sort(layout[["w"]]$deps_dynamic), sort(c("indices", "v")))
-  expect_equal(sort(layout[["x"]]$deps_dynamic), sort(c("v", "w")))
-  expect_equal(sort(layout[["y"]]$deps_dynamic), sort(c("u", "x", "y")))
+  expect_equal(layout[["w"]]$deps_dynamic, character(0))
+  expect_equal(sort(layout[["x"]]$deps_dynamic), sort(c("indices", "v")))
+  expect_equal(sort(layout[["y"]]$deps_dynamic), sort(c("v", "x", "y")))
   expect_equal(sort(layout[["z"]]$deps_dynamic), sort(c("w", "x", "y")))
-  meta1 <- drake_meta_("u", config)
+  meta1 <- drake_meta_("v", config)
   meta2 <- drake_meta_("x", config)
   con2 <- drake_config(drake_plan(x = 1))
   meta3 <- drake_meta_("x", con2)
@@ -51,8 +49,6 @@ test_with_dir("dynamic sub-target indices", {
     u = seq_len(t),
     v = letters[u],
     w = target(f(v), dynamic = map(u, v)),
-    x = target(f(r), dynamic = split(r, .by = s)),
-    x2 = target(f(r), dynamic = split(r)),
     y = target(seq_len(prod(length(u), length(v))), dynamic = cross(u, v)),
     z = target({z_by; f(y)}, dynamic = combine(y, .by = z_by)), # nolint
     z2 = target(f(y), dynamic = combine(y))
@@ -69,11 +65,6 @@ test_with_dir("dynamic sub-target indices", {
       k <- 4 * (i - 1) + j
       expect_equal(subtarget_deps("y", k, config), ey)
     }
-  }
-  ew <- list(r = c(0L, 3L, 6L))
-  for (i in seq_len(3)) {
-    ew$r <- ew$r + 1L
-    expect_equal(subtarget_deps("x", i, config), ew)
   }
   for (i in seq_len(4)) {
     ez <- list(y = seq(from = 4 * (i - 1) + 1, 4 * i))
@@ -158,35 +149,4 @@ test_with_dir("dynamic cross", {
   expect_equal(rc(z4[2]), "aABb")
   expect_equal(rc(z4[3]), "bBAa")
   expect_equal(rc(z4[4]), "bBBb")
-})
-
-test_with_dir("simple dynamic split", {
-  plan <- drake_plan(
-    x = letters[seq_len(6)],
-    y = target(toupper(x), dynamic = split(x))
-  )
-  make(plan)
-  expect_equal(readd(x), letters[seq_len(6)])
-  ys <- subtargets(y)
-  for (i in seq_len(6)) {
-    out <- readd(ys[i], character_only = TRUE)
-    exp <- LETTERS[i]
-    expect_equal(out, exp)
-  }
-})
-
-test_with_dir("dynamic split over 2 things", {
-  plan <- drake_plan(
-    x = seq_len(6),
-    y = letters[seq_len(6)],
-    z = target(paste0(x, y), dynamic = split(x, y))
-  )
-  make(plan)
-  expect_equal(readd(x), letters[seq_len(6)])
-  ys <- subtargets(y)
-  for (i in seq_len(6)) {
-    out <- readd(ys[i], character_only = TRUE)
-    exp <- LETTERS[i]
-    expect_equal(out, exp)
-  }
 })

@@ -19,8 +19,8 @@ amount of computer memory you use.
 }
 \details{
 \code{drake_envir()} is where \code{drake} puts the dependencies
-of \emph{dynamic} targets. To manage the dependencies of \emph{ordinary}
-targets, you need \code{parent.env(drake_envir())}.
+of \emph{dynamic sub-targets}. To manage ordinary dependencies,
+you need \code{parent.env(drake_envir())}.
 }
 \section{Keywords}{
 
