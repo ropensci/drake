@@ -216,7 +216,7 @@ subtarget_hashes.cross <- function(dynamic, hashes, config) {
 
 subtarget_hashes.split <- function(dynamic, hashes, config) {
   if (is.null(hashes$by)) {
-    return(hashes)
+    return(hashes$x)
   }
   browser()
 }
@@ -258,7 +258,7 @@ subtarget_deps_impl.split <- subtarget_deps_impl.combine <- function(
   config
 ) {
   key <- which_by(dynamic)
-  out <- list(1L)
+  out <- list(index)
   if (!no_by(dynamic)) {
     value <- get_dynamic_by(key, config)
     out <- list(which(value == unique(value)[[index]]))
