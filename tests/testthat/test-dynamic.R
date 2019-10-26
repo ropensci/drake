@@ -232,3 +232,32 @@ test_with_dir("make a dep dynamic later on", {
   built <- c("y", "z", subtargets(y), subtargets(z))
   expect_equal(sort(built), sort(justbuilt(config)))
 })
+
+test_with_dir("subtarget name invalidation", {
+  plan <- drake_plan(
+    x = seq_len(4),
+    y = target(x + 1, dynamic = map(x))
+  )
+  make(plan)
+  expect_equal(readd(y_0b3474bd), 2)
+  sub1 <- subtargets(y)
+  exp <- c("x", "y", sub1)
+  expect_equal(sort(cached()), sort(exp))
+  plan <- drake_plan(
+    x = seq_len(4),
+    y = target(x + 2, dynamic = map(x))
+  )
+  make(plan)
+  expect_equal(readd(y_0b3474bd), 3)
+  expect_equal(sort(cached()), sort(exp))
+  plan <- drake_plan(
+    x = as.integer(seq_len(4) + 1),
+    y = target(x + 2, dynamic = map(x))
+  )
+  make(plan)
+  sub2 <- subtargets(y)
+  exp <- c("x", "y", sub2)
+  expect_equal(sort(cached()), sort(exp))
+  expect_equal(length(intersect(sub1, sub2)), 3L)
+})
+
