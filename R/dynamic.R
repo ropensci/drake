@@ -158,47 +158,46 @@ def_split <- function(.x, .by = NULL) {
 # nocov end
 
 subtarget_names <- function(target, config) {
-  deps <- config$layout[[target]]$deps_dynamic
   dynamic <- config$layout[[target]]$dynamic
-  hashes <- lapply(
-    deps,
-    read_dynamic_hashes,
-    dynamic = dynamic,
-    config = config
-  )
+  hashes <- dynamic_hash_list(dynamic, target, config)
   hashes <- subtarget_hashes(dynamic, hashes, config)
   hashes <- vapply(hashes, shorten_dynamic_hash, FUN.VALUE = character(1))
   out <- paste(target, hashes, sep = "_")
   make_unique(out)
 }
 
-read_dynamic_hashes <- function(dynamic, target, config) {
-  UseMethod("read_dynamic_hashes")
+shorten_dynamic_hash <- function(hash) {
+  digest::digest(hash, algo = "murmur32", serialize = FALSE)
 }
 
-read_dynamic_hashes.map <- function(dynamic, target, config) {
+dynamic_hash_list <- function(dynamic, target, config) {
+  UseMethod("dynamic_hash_list")
+}
+
+dynamic_hash_list.map <- function(dynamic, target, config) {
+  deps <- config$layout[[target]]$deps_dynamic
+  hashes <- lapply(deps, read_dynamic_hashes, config = config)
+}
+
+dynamic_hash_list.cross <- dynamic_hash_list.map
+
+dynamic_hash_list.split <- function(dynamic, target, config) {
+  browser()
+
+}
+
+dynamic_hash_list.combine <- function(dynamic, target, config) {
+  browser()
+
+}
+
+read_dynamic_hashes <- function(target, config) {
   meta <- config$cache$get(target, namespace = "meta")
   if (is.null(meta$dynamic_hashes)) {
     value <- config$cache$get(target)
     meta$dynamic_hashes <- dynamic_hashes(meta$size, value, config)
   }
   meta$dynamic_hashes
-}
-
-read_dynamic_hashes.cross <- read_dynamic_hashes.map
-
-read_dynamic_hashes.split <- function(dynamic, target, config) {
-  browser()
-
-}
-
-read_dynamic_hashes.combine <- function(dynamic, target, config) {
-  browser()
-
-}
-
-shorten_dynamic_hash <- function(hash) {
-  digest::digest(hash, algo = "murmur32", serialize = FALSE)
 }
 
 subtarget_hashes <- function(dynamic, hashes, config) {
