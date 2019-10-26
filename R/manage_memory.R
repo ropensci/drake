@@ -169,26 +169,21 @@ load_dynamic_subdep_impl.combine <- function( # nolint
   index,
   config
 ) {
-  subdeps <- config$layout[[dep]]$subtargets[index]
-  value <- lapply(
-    subdeps,
-    get,
-    envir = config$envir_targets,
-    inherits = FALSE
-  )
+  subdeps <- config$cache$get(dep, namespace = "meta")$subtargets[index]
+  value <- config$cache$mget(subdeps, use_cache = FALSE)
   assign(
-    x = target,
+    x = dep,
     value = value,
     envir = config$envir_subtargets,
     inherits = FALSE
   )
 }
 
-load_dynamic_subdep_impl.default <- function(dep, index, config) { # nolint
-  subdep <- config$layout[[dep]]$subtargets[[index]]
-  value <- get(subdep, envir = config$envir_targets, inherits = FALSE)
+load_dynamic_subdep_impl.default <- function(dynamic, dep, index, config) { # nolint
+  subdep <- config$cache$get(dep, namespace = "meta")$subtargets[[index]]
+  value <- config$cache$get(subdep, use_cache = FALSE)
   assign(
-    x = target,
+    x = dep,
     value = value,
     envir = config$envir_subtargets,
     inherits = FALSE

@@ -104,6 +104,22 @@ test_with_dir("dynamic map", {
   expect_equal(readd(zs[2], character_only = TRUE), 4)
   expect_equal(readd(zs[3], character_only = TRUE), 5)
   expect_equal(readd(zs[4], character_only = TRUE), 6)
+  plan <- drake_plan(
+    x = seq_len(4),
+    y = target(x + 1, dynamic = map(x)),
+    z = target(y + 2, dynamic = map(y))
+  )
+  make(plan)
+  config <- drake_config(plan)
+  expect_true(all(grepl("^z", justbuilt(config))))
+  expect_equal(readd(ys[1], character_only = TRUE), 2)
+  expect_equal(readd(ys[2], character_only = TRUE), 3)
+  expect_equal(readd(ys[3], character_only = TRUE), 4)
+  expect_equal(readd(ys[4], character_only = TRUE), 5)
+  expect_equal(readd(zs[1], character_only = TRUE), 4)
+  expect_equal(readd(zs[2], character_only = TRUE), 5)
+  expect_equal(readd(zs[3], character_only = TRUE), 6)
+  expect_equal(readd(zs[4], character_only = TRUE), 7)
 })
 
 test_with_dir("dynamic cross", {

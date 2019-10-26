@@ -631,7 +631,6 @@ drake_config <- function(
     recoverable = recoverable,
     curl_handles = curl_handles,
     ht_dynamic_size = ht_new(),
-    ht_dynamic_nby = ht_new(),
     ht_dynamic_deps = ht_dynamic_deps
   )
   config_checks(out)
