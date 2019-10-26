@@ -158,11 +158,11 @@ Analogous to \code{visNetwork::visOptions(collapse = TRUE)} or
 in the plan that should provide data for the \code{on_select} event.}
 
 \item{on_select}{defines node selection event handling.
-Either a string of valid javascript that may be passed to
+Either a string of valid JavaScript that may be passed to
 \code{visNetwork::visEvents()}, or one of the following:
-\code{TRUE}, \code{NULL}/\code{FALSE}. If \code{TRUE} , enables the default behaviour of
+\code{TRUE}, \code{NULL}/\code{FALSE}. If \code{TRUE} , enables the default behavior of
 opening the link specified by the \code{on_select_col} given to
-\code{drake_graph_info()}. \code{NULL}/\code{FALSE} disables the behaviour.}
+\code{drake_graph_info()}. \code{NULL}/\code{FALSE} disables the behavior.}
 
 \item{...}{Arguments passed to \code{visNetwork()}.}
 }

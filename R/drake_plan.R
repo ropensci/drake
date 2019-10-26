@@ -147,6 +147,7 @@
 #'   write.csv(mtcars[, c("mpg", "cyl")], file_out("mtcars.csv")),
 #'   value = read.csv(file_in("mtcars.csv"))
 #' )
+#' plot(mtcars_plan) # fast simplified call to vis_drake_graph()
 #' mtcars_plan
 #' make(mtcars_plan) # Makes `mtcars.csv` and then `value`
 #' head(readd(value))
@@ -154,6 +155,7 @@
 #'
 #' load_mtcars_example()
 #' head(my_plan)
+#' plot(my_plan)
 #'
 #' # The `knitr_in("report.Rmd")` tells `drake` to dive into the active
 #' # code chunks to find dependencies.
@@ -532,6 +534,30 @@ as_drake_plan <- function(plan, .force_df = FALSE) {
   } else {
     tibble::new_tibble(plan, nrow = nrow(plan), subclass = "drake_plan")
   }
+}
+
+#' @export
+#' @keywords internal
+plot.drake_plan <- function(x, ...) {
+  config <- drake_config(
+    x,
+    envir = new.env(parent = baseenv()),
+    verbose = 0L,
+    cache = storr::storr_environment(),
+    history = FALSE,
+    recoverable = FALSE,
+    session_info = FALSE
+  )
+  vis_drake_graph(
+    config,
+    build_times = "none",
+    targets_only = TRUE,
+    main = "",
+    hover = FALSE,
+    ncol_legend = 0,
+    make_imports = FALSE,
+    from_scratch = TRUE
+  )
 }
 
 #' @export

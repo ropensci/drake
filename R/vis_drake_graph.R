@@ -158,11 +158,11 @@ vis_drake_graph <- function(
 #'   Analogous to `visNetwork::visOptions(collapse = TRUE)` or
 #'   `visNetwork::visOptions(collapse = TRUE)`.
 #' @param on_select defines node selection event handling.
-#'   Either a string of valid javascript that may be passed to
+#'   Either a string of valid JavaScript that may be passed to
 #'   `visNetwork::visEvents()`, or one of the following:
-#'   `TRUE`, `NULL`/`FALSE`. If `TRUE` , enables the default behaviour of
+#'   `TRUE`, `NULL`/`FALSE`. If `TRUE` , enables the default behavior of
 #'   opening the link specified by the `on_select_col` given to
-#'   `drake_graph_info()`. `NULL`/`FALSE` disables the behaviour.
+#'   `drake_graph_info()`. `NULL`/`FALSE` disables the behavior.
 #' @param ... Arguments passed to `visNetwork()`.
 #'
 #' @examples
