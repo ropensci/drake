@@ -190,7 +190,7 @@ invalidate_old_subtargets <- function(target, new_subtargets, config) {
   old_meta <- config$cache$get(target, namespace = "meta")
   old_subtargets <- old_meta$subtargets
   invalidate_these <- setdiff(old_subtargets, new_subtargets)
-  for (ns in config$cache$list_namespaces) {
+  for (ns in config$cache$list_namespaces()) {
     config$cache$del(invalidate_these, namespace = ns)
   }
 }

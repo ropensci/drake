@@ -159,3 +159,18 @@ test_with_dir("dynamic cross", {
   expect_equal(rc(z4[3]), "bBAa")
   expect_equal(rc(z4[4]), "bBBb")
 })
+
+test_with_dir("simple dynamic split", {
+  plan <- drake_plan(
+    x = letters[seq_len(6)],
+    y = target(toupper(x), dynamic = split(x))
+  )
+  make(plan)
+  expect_equal(readd(x), letters[seq_len(6)])
+  ys <- subtargets(y)
+  for (i in seq_len(6)) {
+    out <- readd(ys[i], character_only = TRUE)
+    exp <- LETTERS[i]
+    expect_equal(out, exp)
+  }
+})

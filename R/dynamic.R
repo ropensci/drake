@@ -182,14 +182,15 @@ dynamic_hash_list.map <- function(dynamic, target, config) {
 dynamic_hash_list.cross <- dynamic_hash_list.map
 
 dynamic_hash_list.split <- function(dynamic, target, config) {
-  browser()
-
+  out <- list()
+  out$x <- read_dynamic_hashes(deparse(dynamic$.x), config)
+  if (!is.null(dynamic$.by)) {
+    out$by <- read_dynamic_hashes(deparse(dynamic$.by), config)
+  }
+  out
 }
 
-dynamic_hash_list.combine <- function(dynamic, target, config) {
-  browser()
-
-}
+dynamic_hash_list.combine <- dynamic_hash_list.split
 
 read_dynamic_hashes <- function(target, config) {
   meta <- config$cache$get(target, namespace = "meta")
@@ -214,8 +215,10 @@ subtarget_hashes.cross <- function(dynamic, hashes, config) {
 }
 
 subtarget_hashes.split <- function(dynamic, hashes, config) {
+  if (is.null(hashes$by)) {
+    return(hashes)
+  }
   browser()
-
 }
 
 subtarget_hashes.combine <- function(dynamic, hashes, config) {

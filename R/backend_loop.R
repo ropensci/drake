@@ -17,6 +17,7 @@ backend_loop <- function(config) {
       !is_subtarget(target, config) &&
       !ht_exists(deferred, target)
     if (should_defer) {
+      announce_build(target, meta, config)
       config <- register_subtargets(target, config)
       targets <- c(config$layout[[target]]$subtargets, targets)
       ht_set(deferred, target)
@@ -34,7 +35,9 @@ backend_loop <- function(config) {
 }
 
 loop_build <- function(target, meta, config, downstream) {
-  announce_build(target, meta, config)
+  if (!is_dynamic(target, config) || is_subtarget(target, config)) {
+    announce_build(target, meta, config)
+  }
   manage_memory(
     target,
     config,
