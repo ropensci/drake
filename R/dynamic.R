@@ -184,10 +184,12 @@ read_dynamic_hashes.cross <- read_dynamic_hashes.map
 
 read_dynamic_hashes.split <- function(target, config) {
   browser()
+
 }
 
 read_dynamic_hashes.combine <- function(target, config) {
   browser()
+
 }
 
 shorten_dynamic_hash <- function(hash) {
