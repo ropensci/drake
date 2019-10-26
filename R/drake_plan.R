@@ -584,9 +584,9 @@ deparse_lang_col <- function(x) {
 }
 
 lang_cols <- function(plan) {
-  intersect(colnames(plan), c("command", "trigger", "transform"))
+  intersect(colnames(plan), c("command", "dynamic", "trigger", "transform"))
 }
 
 non_lang_cols <- function(plan) {
-  setdiff(colnames(plan), c("command", "trigger", "transform"))
+  setdiff(colnames(plan), c("command", "dynamic", "trigger", "transform"))
 }

@@ -186,6 +186,13 @@ cdl_prepare_layout <- function(config, layout) {
   )
   layout$deps_dynamic <- cdl_dynamic_dependencies(layout$dynamic, config)
   layout$command_standardized <- cdl_standardize_command(layout$command)
+  if (inherits(layout$dynamic, "dynamic")) {
+    dynamic_command <- cdl_standardize_command(layout$dynamic)
+    layout$command_standardized <- paste(
+      layout$command_standardized,
+      dynamic_command
+    )
+  }
   layout$command_build <- cdl_preprocess_command(
     layout$command,
     config = config

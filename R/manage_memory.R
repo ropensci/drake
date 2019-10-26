@@ -156,15 +156,16 @@ load_subtarget_subdep <- function(subtarget, dep, deps, config) {
 load_dynamic_subdep <- function(subtarget, dep, index, config) {
   parent <- config$layout[[subtarget]]$subtarget_parent
   dynamic <- config$layout[[parent]]$dynamic
-  load_dynamic_subdep_impl(dynamic, dep, index, config)
+  load_dynamic_subdep_impl(dynamic, parent, dep, index, config)
 }
 
-load_dynamic_subdep_impl <- function(dynamic, dep, index, config) {
+load_dynamic_subdep_impl <- function(dynamic, parent, dep, index, config) {
   UseMethod("load_dynamic_subdep_impl")
 }
 
 load_dynamic_subdep_impl.combine <- function( # nolint
   dynamic,
+  parent,
   dep,
   index,
   config
@@ -177,9 +178,27 @@ load_dynamic_subdep_impl.combine <- function( # nolint
     envir = config$envir_subtargets,
     inherits = FALSE
   )
+  if (no_by(dynamic)) {
+    return()
+  }
+  by_key <- which_by(dynamic)
+  by_value <- get_dynamic_by(by_key, config)
+  by_value <- unique(by_value[index])
+  assign(
+    x = by_key,
+    value = by_value,
+    envir = config$envir_subtargets,
+    inherits = FALSE
+  )
 }
 
-load_dynamic_subdep_impl.default <- function(dynamic, dep, index, config) { # nolint
+load_dynamic_subdep_impl.default <- function( # nolint
+  dynamic,
+  parent,
+  dep,
+  index,
+  config
+) {
   subdep <- config$cache$get(dep, namespace = "meta")$subtargets[[index]]
   value <- config$cache$get(subdep, use_cache = FALSE)
   assign(

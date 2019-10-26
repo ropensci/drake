@@ -174,6 +174,9 @@ test_with_dir("dynamic combine", {
     z = target(c(y), dynamic = combine(y))
   )
   make(plan)
+  out <- readd(subtargets(z), character_only = TRUE)
+  exp <- list(2, 3, 4, 5)
+  expect_equal(out, exp)
 })
 
 test_with_dir("dynamic combine with by", {
@@ -184,15 +187,15 @@ test_with_dir("dynamic combine with by", {
     x = target(u, dynamic = map(u)),
     y = target(v, dynamic = map(v)),
     z = target(
-      list(x = do.call(c, x), y = do.call(c, y)),
+      list(x = do.call(c, x), y = do.call(c, y), my_by = w),
       dynamic = combine(x, y, .by = w)
     )
   )
   make(plan)
   out1 <- readd(subtargets(z)[1], character_only = TRUE)
   out2 <- readd(subtargets(z)[2], character_only = TRUE)
-  exp1 <- list(x = seq_len(3), y = seq_len(3) + 1)
-  exp2 <- list(x = 4, y = 5)
+  exp1 <- list(x = seq_len(3), y = seq_len(3) + 1, my_by = "b")
+  exp2 <- list(x = 4, y = 5, my_by = "a")
   expect_equal(out1, exp1)
   expect_equal(out2, exp2)
   plan <- drake_plan(
@@ -215,4 +218,17 @@ test_with_dir("dynamic combine with by", {
   exp2 <- list(x = 4, y = 5)
   expect_equal(out1, exp1)
   expect_equal(out2, exp2)
+})
+
+test_with_dir("make a dep dynamic later on", {
+  plan <- drake_plan(
+    x = seq_len(4),
+    y = target(x + 1, dynamic = map(x)),
+    z = target(y + 1, dynamic = map(y))
+  )
+  make(plan[, c("target", "command")])
+  make(plan)
+  config <- drake_config(plan)
+  built <- c("y", "z", subtargets(y), subtargets(z))
+  expect_equal(sort(built), sort(justbuilt(config)))
 })
