@@ -123,6 +123,7 @@ render_drake_ggraph <- function(
   shapes <- graph_info$nodes$shape
   names(shapes) <- graph_info$nodes$type
   shapes <- gsub("dot", "circle", shapes)
+  shapes <- gsub("star", "asterisk", shapes)
   layout <- ggraph::create_layout(graph, layout = "sugiyama")
   layout$x <- graph_info$nodes$x
   layout$y <- graph_info$nodes$y
