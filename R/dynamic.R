@@ -1,3 +1,36 @@
+#' @title List subtargets
+#' @description List the subtargets of a dynamic target.
+#' @export
+#' @return Character vector of subtarget names
+#' @inheritParams diagnose
+#' @param target Character string or symbol, depending on `character_only`.
+#'   Name of a dynamic target.
+#' @examples
+#' plan <- drake_plan(
+#'   x = seq_len(4),
+#'   y = target(x + 1, dynamic = map(x))
+#' )
+#' make(plan)
+#' subtargets(y)
+#' readd(subtargets(y)[1], character_only = TRUE)
+#' readd(subtargets(y)[2], character_only = TRUE)
+subtargets <- function(
+  target = NULL,
+  character_only = FALSE,
+  cache = drake::drake_cache(path = path),
+  path = NULL
+) {
+  if (!character_only) {
+    target <- as.character(substitute(target))
+  }
+  diagnose(
+    target = target,
+    character_only = TRUE,
+    cache = cache,
+    path = path
+  )$subtargets
+}
+
 register_subtargets <- function(target, config) {
   subtargets <- subtarget_names(target, config)
   edgelist <- do.call(rbind, lapply(subtargets, c, target))
@@ -124,16 +157,14 @@ def_split <- function(.x, .by = NULL) {
 }
 # nocov end
 
+# Needs to be specific to the transform.
 subtarget_names <- function(target, config) {
   deps <- config$layout[[target]]$deps_dynamic
   hashes <- lapply(deps, read_dynamic_hashes, config = config)
   hashes <- do.call(paste, hashes)
   hashes <- vapply(hashes, shorten_dynamic_hash, FUN.VALUE = character(1))
-  paste(target, hashes, sep = "_")
-}
-
-shorten_dynamic_hash <- function(hash) {
-  digest::digest(hash, algo = "murmur32", serialize = FALSE)
+  out <- paste(target, hashes, sep = "_")
+  make_unique(out)
 }
 
 read_dynamic_hashes <- function(target, config) {
@@ -145,6 +176,11 @@ read_dynamic_hashes <- function(target, config) {
   meta$dynamic_hashes
 }
 
+shorten_dynamic_hash <- function(hash) {
+  digest::digest(hash, algo = "murmur32", serialize = FALSE)
+}
+
+# begin remove/refactor:
 number_subtargets <- function(target, config) {
   dynamic <- config$layout[[target]]$dynamic
   number_subtargets_impl(dynamic, target, config)
@@ -239,6 +275,7 @@ get_dynamic_size <- function(target, config) {
   ht_set(config$ht_dynamic_size, x = target, value = size)
   size
 }
+# end rethink/refactor
 
 get_dynamic_by <- function(target, config) {
   if (exists(target, envir = config$envir, inherits = FALSE)) {

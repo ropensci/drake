@@ -58,8 +58,10 @@ integer_hash <- function(x, mod = .Machine$integer.max) {
 }
 
 dependency_hash <- function(target, config) {
-  x <- config$layout[[target]]$deps_build
+  layout <- config$layout[[target]]
+  x <- layout$deps_build
   deps <- c(x$globals, x$namespaced, x$loadd, x$readd)
+  deps <- c(deps, layout$subtargets)
   if (is_imported(target, config)) {
     deps <- c(deps, x$file_in, x$knitr_in)
   }

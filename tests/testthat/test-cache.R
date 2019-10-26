@@ -308,7 +308,7 @@ test_with_dir("cache functions work from various working directories", {
 
     # cached, diagnose, rescue
     expect_true(length(diagnose()) > length(config$plan$target))
-    expect_error(diagnose("xyz", cache = config$cache), regexp = "diagnostic")
+    expect_error(diagnose("xyz", cache = config$cache), regexp = "metadata")
     expect_equal(
       sort(cached(targets_only = TRUE)),
       sort(builds)

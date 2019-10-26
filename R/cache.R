@@ -1170,7 +1170,7 @@ diagnose <- function(
   }
   target <- standardize_key(target)
   if (!cache$exists(key = target, namespace = "meta")) {
-    stop("No diagnostic information for target ", target, ".")
+    stop("No metadata for target ", target, ".")
   }
   cache$get(
     key = target,
