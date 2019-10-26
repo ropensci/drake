@@ -183,7 +183,7 @@ test_with_dir("dynamic combine with by", {
     w = c("b", "b", "b", "a"),
     x = target(u, dynamic = map(u)),
     y = target(v, dynamic = map(v)),
-    z = target(c(y), dynamic = combine(x, y, .by = w))
+    z = target(list(x = c(x), y = c(y)), dynamic = combine(x, y, .by = w))
   )
   make(plan)
 })

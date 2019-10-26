@@ -1,7 +1,7 @@
-#' @title List subtargets
-#' @description List the subtargets of a dynamic target.
+#' @title List sub-targets
+#' @description List the sub-targets of a dynamic target.
 #' @export
-#' @return Character vector of subtarget names
+#' @return Character vector of sub-target names
 #' @inheritParams diagnose
 #' @param target Character string or symbol, depending on `character_only`.
 #'   Name of a dynamic target.

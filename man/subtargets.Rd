@@ -2,7 +2,7 @@
 % Please edit documentation in R/dynamic.R
 \name{subtargets}
 \alias{subtargets}
-\title{List subtargets}
+\title{List sub-targets}
 \usage{
 subtargets(
   target = NULL,
@@ -26,10 +26,10 @@ If supplied, \code{path} is ignored.}
 (usually a hidden \verb{.drake/} folder) or \code{NULL}.}
 }
 \value{
-Character vector of subtarget names
+Character vector of sub-target names
 }
 \description{
-List the subtargets of a dynamic target.
+List the sub-targets of a dynamic target.
 }
 \examples{
 plan <- drake_plan(
