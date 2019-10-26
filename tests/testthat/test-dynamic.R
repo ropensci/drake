@@ -150,3 +150,12 @@ test_with_dir("dynamic cross", {
   expect_equal(rc(z4[3]), "bBAa")
   expect_equal(rc(z4[4]), "bBBb")
 })
+
+test_with_dir("dynamic combine", {
+  plan <- drake_plan(
+    x = seq_len(4),
+    y = target(x + 1, dynamic = map(x)),
+    z = target(c(y), dynamic = combine(y))
+  )
+  make(plan)
+})

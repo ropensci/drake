@@ -182,10 +182,7 @@ dynamic_hash_list.map <- function(dynamic, target, config) {
 dynamic_hash_list.cross <- dynamic_hash_list.map
 
 dynamic_hash_list.combine <- function(dynamic, target, config) {
-  browser()
-
-  out <- list()
-  out$x <- read_dynamic_hashes(deparse(dynamic$.x), config)
+  out <- lapply(which_vars(dynamic), read_dynamic_hashes, config = config)
   if (!is.null(dynamic$.by)) {
     out$by <- read_dynamic_hashes(deparse(dynamic$.by), config)
   }
@@ -216,10 +213,11 @@ subtarget_hashes.cross <- function(dynamic, hashes, config) {
 
 subtarget_hashes.combine <- function(dynamic, hashes, config) {
   if (is.null(hashes$by)) {
-    return(hashes)
+    return(lapply(hashes, paste, collapse = " "))
   }
-  browser()
 
+  browser()
+  stop("still need to implement .by in config()")
 }
 
 subtarget_deps <- function(target, index, config) {
@@ -261,16 +259,6 @@ subtarget_deps_impl.combine <- function(
   }
   names(out) <- which_vars(dynamic)
   out
-}
-
-get_dynamic_nby <- function(target, config) {
-  if (ht_exists(config$ht_dynamic_nby, target)) {
-    return(ht_get(config$ht_dynamic_nby, target))
-  }
-  nby <- length(unique(config$cache$get(target, use_cache = FALSE)))
-  stopifnot(nby > 0L)
-  ht_set(config$ht_dynamic_nby, x = target, value = nby)
-  nby
 }
 
 get_dynamic_size <- function(target, config) {
