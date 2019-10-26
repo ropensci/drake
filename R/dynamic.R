@@ -152,7 +152,7 @@ def_map <- function(...) {
   NULL
 }
 
-def_split <- function(.x, .by = NULL) {
+def_split <- function(..., .by = NULL) {
   NULL
 }
 # nocov end
@@ -183,6 +183,9 @@ dynamic_hash_list.cross <- dynamic_hash_list.map
 
 dynamic_hash_list.split <- function(dynamic, target, config) {
   out <- list()
+
+  browser()
+
   out$x <- read_dynamic_hashes(deparse(dynamic$.x), config)
   if (!is.null(dynamic$.by)) {
     out$by <- read_dynamic_hashes(deparse(dynamic$.by), config)
@@ -216,7 +219,7 @@ subtarget_hashes.cross <- function(dynamic, hashes, config) {
 
 subtarget_hashes.split <- function(dynamic, hashes, config) {
   if (is.null(hashes$by)) {
-    return(hashes$x)
+    return(hashes)
   }
   browser()
 }

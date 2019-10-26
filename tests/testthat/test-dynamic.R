@@ -174,3 +174,19 @@ test_with_dir("simple dynamic split", {
     expect_equal(out, exp)
   }
 })
+
+test_with_dir("dynamic split over 2 things", {
+  plan <- drake_plan(
+    x = seq_len(6),
+    y = letters[seq_len(6)],
+    z = target(paste0(x, y), dynamic = split(x, y))
+  )
+  make(plan)
+  expect_equal(readd(x), letters[seq_len(6)])
+  ys <- subtargets(y)
+  for (i in seq_len(6)) {
+    out <- readd(ys[i], character_only = TRUE)
+    exp <- LETTERS[i]
+    expect_equal(out, exp)
+  }
+})
