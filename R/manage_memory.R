@@ -36,7 +36,7 @@ manage_deps.speed <- function(target, config, downstream, jobs) {
   target_deps <- setdiff(target_deps, target)
   target_deps <- setdiff(target_deps, already_loaded)
   try_load(targets = target_deps, config = config, jobs = jobs)
-  load_subtarget_deps(target, config)
+  load_subtarget_subdeps(target, config)
 }
 
 manage_deps.autoclean <- function(target, config, downstream, jobs) {
@@ -51,7 +51,7 @@ manage_deps.autoclean <- function(target, config, downstream, jobs) {
   target_deps <- setdiff(target_deps, target)
   target_deps <- setdiff(target_deps, already_loaded)
   try_load(targets = target_deps, config = config, jobs = jobs)
-  load_subtarget_deps(target, config)
+  load_subtarget_subdeps(target, config)
 }
 
 manage_deps.preclean <- manage_deps.autoclean
@@ -70,7 +70,7 @@ manage_deps.lookahead <- function(target, config, downstream, jobs) {
   target_deps <- setdiff(target_deps, target)
   target_deps <- setdiff(target_deps, already_loaded)
   try_load(targets = target_deps, config = config, jobs = jobs)
-  load_subtarget_deps(target, config)
+  load_subtarget_subdeps(target, config)
 }
 
 manage_deps.unload <- function(target, config, downstream, jobs) {
@@ -128,7 +128,7 @@ try_load_target <- function(target, config) {
   )
 }
 
-load_subtarget_deps <- function(subtarget, config) {
+load_subtarget_subdeps <- function(subtarget, config) {
   if (!is_subtarget(subtarget, config)) {
     return()
   }
@@ -137,24 +137,45 @@ load_subtarget_deps <- function(subtarget, config) {
   deps <- subtarget_deps(parent, index, config)
   lapply(
     names(deps),
-    load_subtarget_dep,
+    load_subtarget_subdep,
+    subtarget = subtarget,
     deps = deps,
     config = config
   )
 }
 
-load_subtarget_dep <- function(dep, deps, config) {
+load_subtarget_subdep <- function(subtarget, dep, deps, config) {
   index <- unlist(deps[[dep]])
   if (is_dynamic(dep, config)) {
-    load_dynamic_subtarget(dep, index, config)
+    load_dynamic_subdep(subtarget, dep, index, config)
   } else {
-    load_static_subtarget(dep, index, config)
+    load_static_subdep(dep, index, config)
   }
 }
 
-load_dynamic_subtarget <- function(target, index, config) {
-  subtarget <- config$layout[[target]]$subtargets[index]
-  value <- get(subtarget, envir = config$envir_targets, inherits = FALSE)
+load_dynamic_subdep <- function(subtarget, dep, index, config) {
+  parent <- config$layout[[subtarget]]$subtarget_parent
+  dynamic <- config$layout[[parent]]$dynamic
+  load_dynamic_subdep_impl(dynamic, dep, index, config)
+}
+
+load_dynamic_subdep_impl <- function(dynamic, dep, index, config) {
+  UseMethod("load_dynamic_subdep_impl")
+}
+
+load_dynamic_subdep_impl.combine <- function( # nolint
+  dynamic,
+  dep,
+  index,
+  config
+) {
+  subdeps <- config$layout[[dep]]$subtargets[index]
+  value <- lapply(
+    subdeps,
+    get,
+    envir = config$envir_targets,
+    inherits = FALSE
+  )
   assign(
     x = target,
     value = value,
@@ -163,11 +184,22 @@ load_dynamic_subtarget <- function(target, index, config) {
   )
 }
 
-load_static_subtarget <- function(target, index, config) {
-  value <- get(target, envir = config$envir_targets, inherits = FALSE)
-  value <- dynamic_subvalue(value, index)
+load_dynamic_subdep_impl.default <- function(dep, index, config) { # nolint
+  subdep <- config$layout[[dep]]$subtargets[[index]]
+  value <- get(subdep, envir = config$envir_targets, inherits = FALSE)
   assign(
     x = target,
+    value = value,
+    envir = config$envir_subtargets,
+    inherits = FALSE
+  )
+}
+
+load_static_subdep <- function(dep, index, config) {
+  value <- get(dep, envir = config$envir_targets, inherits = FALSE)
+  value <- dynamic_subvalue(value, index)
+  assign(
+    x = dep,
     value = value,
     envir = config$envir_subtargets,
     inherits = FALSE

@@ -159,3 +159,16 @@ test_with_dir("dynamic combine", {
   )
   make(plan)
 })
+
+test_with_dir("dynamic combine with by", {
+  plan <- drake_plan(
+    u = seq_len(4),
+    v = seq_len(4) + 1,
+    w = c("b", "b", "b", "a"),
+    x = target(u, dynamic = map(u)),
+    y = target(v, dynamic = map(v)),
+    z = target(c(y), dynamic = combine(x, y, .by = w))
+  )
+  make(plan)
+})
+

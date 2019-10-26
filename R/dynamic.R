@@ -71,8 +71,8 @@ register_dynamic_subdeps <- function(layout, index, parent, config) {
   index_deps <- subtarget_deps(parent, index, config)
   for (dep in layout$deps_dynamic) {
     if (is_dynamic(dep, config)) {
-      subdep <- config$layout[[dep]]$subtargets[[index_deps[[dep]]]]
-      layout$deps_build$memory <- c(layout$deps_build$memory, subdep)
+      subdeps <- config$layout[[dep]]$subtargets[index_deps[[dep]]]
+      layout$deps_build$memory <- c(layout$deps_build$memory, subdeps)
       layout$deps_build$memory <- setdiff(layout$deps_build$memory, dep)
     }
   }
@@ -160,7 +160,7 @@ def_combine <- function(..., .by = NULL) {
 subtarget_names <- function(target, config) {
   dynamic <- config$layout[[target]]$dynamic
   hashes <- dynamic_hash_list(dynamic, target, config)
-  hashes <- subtarget_hashes(dynamic, hashes, config)
+  hashes <- subtarget_hashes(dynamic, target, hashes, config)
   hashes <- vapply(hashes, shorten_dynamic_hash, FUN.VALUE = character(1))
   out <- paste(target, hashes, sep = "_")
   make_unique(out)
@@ -198,26 +198,28 @@ read_dynamic_hashes <- function(target, config) {
   meta$dynamic_hashes
 }
 
-subtarget_hashes <- function(dynamic, hashes, config) {
+subtarget_hashes <- function(dynamic, target, hashes, config) {
   UseMethod("subtarget_hashes")
 }
 
-subtarget_hashes.map <- function(dynamic, hashes, config) {
+subtarget_hashes.map <- function(dynamic, target, hashes, config) {
   do.call(paste, hashes)
 }
 
-subtarget_hashes.cross <- function(dynamic, hashes, config) {
+subtarget_hashes.cross <- function(dynamic, target, hashes, config) {
   hashes <- rev(expand.grid(rev(hashes)))
   apply(hashes, 1, paste, collapse = " ")
 }
 
-subtarget_hashes.combine <- function(dynamic, hashes, config) {
+subtarget_hashes.combine <- function(dynamic, target, hashes, config) {
   if (is.null(hashes$by)) {
     return(lapply(hashes, paste, collapse = " "))
   }
-
-  browser()
-  stop("still need to implement .by in config()")
+  by <- hashes$by
+  by <- ordered(by, levels = unique(by))
+  hashes$by <- NULL
+  hashes <- do.call(paste, hashes)
+  unname(tapply(hashes, INDEX = by, FUN = paste, collapse = " "))
 }
 
 subtarget_deps <- function(target, index, config) {
@@ -251,13 +253,15 @@ subtarget_deps_impl.combine <- function(
   index,
   config
 ) {
-  key <- which_by(dynamic)
-  out <- list(index)
-  if (!no_by(dynamic)) {
-    value <- get_dynamic_by(key, config)
-    out <- list(which(value == unique(value)[[index]]))
+  vars <- which_vars(dynamic)
+  if (no_by(dynamic)) {
+    subtarget_index <- seq_len(get_dynamic_size(vars[1], config))
+  } else {
+    value <- get_dynamic_by(which_by(dynamic), config)
+    subtarget_index <- which(value == unique(value)[[index]])
   }
-  names(out) <- which_vars(dynamic)
+  out <- replicate(length(vars), subtarget_index, simplify = FALSE)
+  names(out) <- vars
   out
 }
 
