@@ -60,14 +60,6 @@ test_with_dir("dynamic sub-target indices", {
   )
   make(plan[, c("target", "command")])
   config <- drake_config(plan)
-  for (i in seq_len(2)) {
-    expect_equal(number_subtargets("w", config), 4L)
-    expect_equal(number_subtargets("x", config), 3L)
-    expect_equal(number_subtargets("x2", config), 1L)
-    expect_equal(number_subtargets("y", config), 16L)
-    expect_equal(number_subtargets("z", config), 4L)
-    expect_equal(number_subtargets("z2", config), 1L)
-  }
   for (i in seq_len(4)) {
     ew <- list(u = i, v = i)
     expect_equal(subtarget_deps("w", i, config), ew)

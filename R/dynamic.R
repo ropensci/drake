@@ -157,11 +157,11 @@ def_split <- function(.x, .by = NULL) {
 }
 # nocov end
 
-# Needs to be specific to the transform.
 subtarget_names <- function(target, config) {
   deps <- config$layout[[target]]$deps_dynamic
+  dynamic <- config$layout[[target]]$dynamic
   hashes <- lapply(deps, read_dynamic_hashes, config = config)
-  hashes <- do.call(paste, hashes)
+  hashes <- subtarget_hashes(dynamic, hashes, config)
   hashes <- vapply(hashes, shorten_dynamic_hash, FUN.VALUE = character(1))
   out <- paste(target, hashes, sep = "_")
   make_unique(out)
@@ -180,39 +180,27 @@ shorten_dynamic_hash <- function(hash) {
   digest::digest(hash, algo = "murmur32", serialize = FALSE)
 }
 
-# begin remove/refactor:
-number_subtargets <- function(target, config) {
-  dynamic <- config$layout[[target]]$dynamic
-  number_subtargets_impl(dynamic, target, config)
+subtarget_hashes <- function(dynamic, hashes, config) {
+  UseMethod("subtarget_hashes")
 }
 
-number_subtargets_impl <- function(dynamic, target, config) {
-  UseMethod("number_subtargets_impl")
+subtarget_hashes.map <- function(dynamic, hashes, config) {
+  do.call(paste, hashes)
 }
 
-number_subtargets_impl.map <- function(dynamic, target, config) {
-  vars <- all.vars(dynamic)
-  sizes <- lapply(vars, get_dynamic_size, config = config)
-  stopifnot(length(unique(sizes)) == 1L)
-  sizes[[1]]
+subtarget_hashes.cross <- function(dynamic, hashes, config) {
+  hashes <- rev(expand.grid(rev(hashes)))
+  apply(hashes, 1, paste, collapse = " ")
 }
 
-number_subtargets_impl.cross <- function(dynamic, target, config) {
-  vars <- all.vars(dynamic)
-  sizes <- unlist(lapply(vars, get_dynamic_size, config = config))
-  prod(sizes)
+subtarget_hashes.split <- function(dynamic, hashes, config) {
+  browser()
+
 }
 
-number_subtargets_impl.split <- number_subtargets_impl.combine <- function(
-  dynamic,
-  target,
-  config
-) {
-  if (no_by(dynamic)) {
-    return(1L)
-  }
-  by <- which_by(dynamic)
-  get_dynamic_nby(by, config)
+subtarget_hashes.combine <- function(dynamic, hashes, config) {
+  browser()
+
 }
 
 subtarget_deps <- function(target, index, config) {
@@ -275,7 +263,6 @@ get_dynamic_size <- function(target, config) {
   ht_set(config$ht_dynamic_size, x = target, value = size)
   size
 }
-# end rethink/refactor
 
 get_dynamic_by <- function(target, config) {
   if (exists(target, envir = config$envir, inherits = FALSE)) {
