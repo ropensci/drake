@@ -168,12 +168,26 @@ subtarget_names <- function(target, config) {
 }
 
 read_dynamic_hashes <- function(target, config) {
+  UseMethod("read_dynamic_hashes")
+}
+
+read_dynamic_hashes.map <- function(target, config) {
   meta <- config$cache$get(target, namespace = "meta")
   if (is.null(meta$dynamic_hashes)) {
     value <- config$cache$get(target)
     meta$dynamic_hashes <- dynamic_hashes(meta$size, value, config)
   }
   meta$dynamic_hashes
+}
+
+read_dynamic_hashes.cross <- read_dynamic_hashes.map
+
+read_dynamic_hashes.split <- function(target, config) {
+  browser()
+}
+
+read_dynamic_hashes.combine <- function(target, config) {
+  browser()
 }
 
 shorten_dynamic_hash <- function(hash) {
