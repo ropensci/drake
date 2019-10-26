@@ -11,6 +11,8 @@ test_with_dir("visNetwork graph runs", {
   skip_if_not_installed("visNetwork")
   config <- dbug()
   pdf(NULL)
+  graph <- plot(dbug_plan())
+  expect_true(inherits(graph, "visNetwork"))
   tmp <- vis_drake_graph(config)
   dev.off()
   for (hover in c(TRUE, FALSE)) {
