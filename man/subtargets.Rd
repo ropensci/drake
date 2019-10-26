@@ -34,10 +34,10 @@ List the subtargets of a dynamic target.
 \examples{
 plan <- drake_plan(
   x = seq_len(4),
-  y = target(x + 1, dynamic = map(x)),
-  z = target(y + 1, dynamic = map(y))
+  y = target(x + 1, dynamic = map(x))
 )
 make(plan)
 subtargets(y)
-readd(subtargets(y)[1])
+readd(subtargets(y)[1], character_only = TRUE)
+readd(subtargets(y)[2], character_only = TRUE)
 }
