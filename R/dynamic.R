@@ -185,16 +185,37 @@ dynamic_hash_list <- function(dynamic, target, config) {
 dynamic_hash_list.map <- function(dynamic, target, config) {
   deps <- config$layout[[target]]$deps_dynamic
   hashes <- lapply(deps, read_dynamic_hashes, config = config)
+  assert_equal_branches(target, deps, hashes, "map")
+  hashes
 }
 
 dynamic_hash_list.cross <- dynamic_hash_list.map
 
 dynamic_hash_list.combine <- function(dynamic, target, config) {
   out <- lapply(which_vars(dynamic), read_dynamic_hashes, config = config)
+  assert_equal_branches(target, which_vars(dynamic), out, "combine")
   if (!is.null(dynamic$.by)) {
     out$by <- read_dynamic_hashes(deparse(dynamic$.by), config)
   }
   out
+}
+
+assert_equal_branches <- function(target, deps, hashes, transform) {
+  lengths <- vapply(hashes, length, FUN.VALUE = integer(1))
+  if (length(unique(lengths)) == 1L) {
+    return()
+  }
+  keep <- !duplicated(lengths)
+  deps <- deps[keep]
+  lengths <- lengths[keep]
+  stop(
+    "for dynamic map() and combine(), all grouping variables ",
+    "must have equal lengths. For target ", target,
+    ", the lengths of ", paste(deps, collapse = ", "),
+    " were ", paste0(lengths, collapse = ", "),
+    ", respectively.",
+    call. = FALSE
+  )
 }
 
 read_dynamic_hashes <- function(target, config) {

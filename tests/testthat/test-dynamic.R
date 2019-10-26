@@ -261,3 +261,23 @@ test_with_dir("subtarget name invalidation", {
   expect_equal(length(intersect(sub1, sub2)), 3L)
 })
 
+test_with_dir("dynamic map over unequal vars", {
+  plan <- drake_plan(
+    x = seq_len(4),
+    y = seq_len(5),
+    z = seq_len(5),
+    w = target(x + y + z, dynamic = map(x, y, z))
+  )
+  expect_error(make(plan), "all grouping variables")
+})
+
+test_with_dir("dynamic combine over unequal vars", {
+  plan <- drake_plan(
+    x = seq_len(4),
+    y = seq_len(5),
+    x2 = target(x, dynamic = map(x)),
+    y2 = target(y, dynamic = map(y)),
+    z = target(c(x2, y2), dynamic = combine(x2, y2))
+  )
+  expect_error(make(plan), "all grouping variables")
+})
