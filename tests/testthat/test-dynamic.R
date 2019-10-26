@@ -183,7 +183,36 @@ test_with_dir("dynamic combine with by", {
     w = c("b", "b", "b", "a"),
     x = target(u, dynamic = map(u)),
     y = target(v, dynamic = map(v)),
-    z = target(list(x = c(x), y = c(y)), dynamic = combine(x, y, .by = w))
+    z = target(
+      list(x = do.call(c, x), y = do.call(c, y)),
+      dynamic = combine(x, y, .by = w)
+    )
   )
   make(plan)
+  out1 <- readd(subtargets(z)[1], character_only = TRUE)
+  out2 <- readd(subtargets(z)[2], character_only = TRUE)
+  exp1 <- list(x = seq_len(3), y = seq_len(3) + 1)
+  exp2 <- list(x = 4, y = 5)
+  expect_equal(out1, exp1)
+  expect_equal(out2, exp2)
+  plan <- drake_plan(
+    u = seq_len(4),
+    v = seq_len(4) + 1,
+    w = c("b", "b", "b", "a"),
+    x = target(u, dynamic = map(u)),
+    y = target(v, dynamic = map(v)),
+    z = target(
+      list(x = sum(do.call(c, x)), y = do.call(c, y)),
+      dynamic = combine(x, y, .by = w)
+    )
+  )
+  make(plan)
+  config <- drake_config(plan)
+  expect_true(all(grepl("^z", justbuilt(config))))
+  out1 <- readd(subtargets(z)[1], character_only = TRUE)
+  out2 <- readd(subtargets(z)[2], character_only = TRUE)
+  exp1 <- list(x = 6, y = seq_len(3) + 1)
+  exp2 <- list(x = 4, y = 5)
+  expect_equal(out1, exp1)
+  expect_equal(out2, exp2)
 })
