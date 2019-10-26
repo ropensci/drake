@@ -326,3 +326,26 @@ test_with_dir("formats applied to subtargets but not their parents", {
   special_files <- list.files(special)
   expect_equal(length(special_files), 4L)
 })
+
+if (FALSE) {
+
+  # need to activate this test
+
+test_with_dir("data recovery for dynamic targets", {
+  skip_on_cran()
+  plan <- drake_plan(
+    x = letters[seq_len(4)],
+    y = target(file.create(x), dynamic = map(x))
+  )
+  make(plan)
+  files <- letters[seq_len(4)]
+  expect_true(all(file.exists(files)))
+  unlink(files)
+  expect_false(any(file.exists(files)))
+  clean(list = c("y", subtargets(y)[c(3, 4)]))
+  make(plan, recover = TRUE)
+  expect_true(all(file.exists(files[c(1, 2)])))
+  expect_false(any(file.exists(files[c(3, 4)])))
+})
+
+}
