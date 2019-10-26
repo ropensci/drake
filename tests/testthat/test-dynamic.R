@@ -42,7 +42,6 @@ test_with_dir("dynamic dependencies in the graph", {
 })
 
 test_with_dir("dynamic sub-target indices", {
-  expect_equal(subtarget_name("x", seq_len(2)), c("x_1", "x_2"))
   f <- identity
   z_by <- rep(letters[seq_len(4)], each = 4)
   plan <- drake_plan(
