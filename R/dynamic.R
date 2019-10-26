@@ -16,6 +16,7 @@ register_subtargets <- function(target, config) {
     config = config
   )
   names(subtarget_layouts) <- subtargets
+  config$layout[[target]]$subtargets <- subtargets
   config$layout <- c(config$layout, subtarget_layouts)
   config
 }
@@ -29,17 +30,17 @@ subtarget_layout <- function(index, parent, subtargets, config) {
   layout$subtarget_index <- index
   layout$subtarget_parent <- parent
   layout$seed <- seed_from_basic_types(config$seed, layout$seed, subtarget)
-  index_deps <- subtarget_deps(parent, index, config)
-  layout <- register_dynamic_subdeps(layout, index_deps, config)
+  layout <- register_dynamic_subdeps(layout, index, parent, config)
   layout
 }
 
-register_dynamic_subdeps <- function(layout, index_deps, config) {
-  for (subtarget in layout$deps_dynamic) {
-    if (is_dynamic(subtarget, config)) {
-      x <- subtarget_name(subtarget, index_deps[[subtarget]])
-      layout$deps_build$memory <- c(layout$deps_build$memory, x)
-      layout$deps_build$memory <- setdiff(layout$deps_build$memory, subtarget)
+register_dynamic_subdeps <- function(layout, index, parent, config) {
+  index_deps <- subtarget_deps(parent, index, config)
+  for (dep in layout$deps_dynamic) {
+    if (is_dynamic(dep, config)) {
+      subdep <- config$layout[[dep]]$subtargets[[index_deps[[dep]]]]
+      layout$deps_build$memory <- c(layout$deps_build$memory, subdep)
+      layout$deps_build$memory <- setdiff(layout$deps_build$memory, dep)
     }
   }
   layout
@@ -47,6 +48,10 @@ register_dynamic_subdeps <- function(layout, index_deps, config) {
 
 is_dynamic <- function(target, config) {
   inherits(config$layout[[target]]$dynamic, "dynamic")
+}
+
+is_dynamic_dep <- function(target, config) {
+  ht_exists(config$ht_dynamic_deps, target)
 }
 
 is_subtarget <- function(target, config) {
@@ -120,11 +125,24 @@ def_split <- function(.x, .by = NULL) {
 # nocov end
 
 subtarget_names <- function(target, config) {
-  subtarget_name(target, seq_len(number_subtargets(target, config)))
+  deps <- config$layout[[target]]$deps_dynamic
+  hashes <- lapply(deps, read_dynamic_hashes, config = config)
+  hashes <- do.call(paste, hashes)
+  hashes <- vapply(hashes, shorten_dynamic_hash, FUN.VALUE = character(1))
+  paste(target, hashes, sep = "_")
 }
 
-subtarget_name <- function(target, index) {
-  paste(target, index, sep = "_")
+shorten_dynamic_hash <- function(hash) {
+  digest::digest(hash, algo = "murmur32", serialize = FALSE)
+}
+
+read_dynamic_hashes <- function(target, config) {
+  meta <- config$cache$get(target, namespace = "meta")
+  if (is.null(meta$dynamic_hashes)) {
+    value <- config$cache$get(target)
+    meta$dynamic_hashes <- dynamic_hashes(meta$size, value, config)
+  }
+  meta$dynamic_hashes
 }
 
 number_subtargets <- function(target, config) {

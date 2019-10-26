@@ -75,7 +75,7 @@ try_build <- function(target, meta, config) {
 }
 
 dynamic_build <- function(target, meta, config) {
-  subtargets <- subtarget_names(target, config)
+  subtargets <- config$layout[[target]]$subtargets
   meta$time_command <- proc.time() - meta$time_start
   value <- config$cache$mget_hash(subtargets)
   list(target = target, meta = meta, value = value)

@@ -17,8 +17,8 @@ backend_loop <- function(config) {
       !is_subtarget(target, config) &&
       !ht_exists(deferred, target)
     if (should_defer) {
-      targets <- c(subtarget_names(target[1], config), targets)
       config <- register_subtargets(target, config)
+      targets <- c(config$layout[[target]]$subtargets, targets)
       ht_set(deferred, target)
       next
     }

@@ -153,7 +153,7 @@ load_subtarget_dep <- function(dep, deps, config) {
 }
 
 load_dynamic_subtarget <- function(target, index, config) {
-  subtarget <- subtarget_name(target, index)
+  subtarget <- config$layout[[target]]$subtargets[index]
   value <- get(subtarget, envir = config$envir_targets, inherits = FALSE)
   assign(
     x = target,
