@@ -6,14 +6,22 @@
 #' @param target Character string or symbol, depending on `character_only`.
 #'   Name of a dynamic target.
 #' @examples
+#' \dontrun{
+#' isolate_example("dynamic branching", {
 #' plan <- drake_plan(
+#'   w = c("a", "a", "b", "b"),
 #'   x = seq_len(4),
-#'   y = target(x + 1, dynamic = map(x))
+#'   y = target(x + 1, dynamic = map(x)),
+#'   z = target(list(y = y, w = w), dynamic = combine(y, .by = w))
 #' )
 #' make(plan)
 #' subtargets(y)
 #' readd(subtargets(y)[1], character_only = TRUE)
 #' readd(subtargets(y)[2], character_only = TRUE)
+#' readd(subtargets(z)[1], character_only = TRUE)
+#' readd(subtargets(z)[2], character_only = TRUE)
+#' })
+#' }
 subtargets <- function(
   target = NULL,
   character_only = FALSE,
