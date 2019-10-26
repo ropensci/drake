@@ -187,4 +187,3 @@ test_with_dir("dynamic combine with by", {
   )
   make(plan)
 })
-
