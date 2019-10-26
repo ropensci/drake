@@ -4,6 +4,7 @@
 ## New features
 
 - Begin to implement dynamic branching (#685).
+- Implement `plot(plan)` (#1036).
 
 ## Enhancements
 
@@ -13,7 +14,8 @@
 ## New features
 
 - `vis_drake_graph()`, `drake_graph_info()`, and `render_drake_graph()` now 
-  take arguments that allow behaviour to be defined upon selection of nodes. (#1031, @mstr3336).
+  take arguments that allow behavior to be defined upon selection of nodes. (#1031, @mstr3336).
+
 
 # Version 7.7.0
 
