@@ -281,3 +281,22 @@ test_with_dir("dynamic combine over unequal vars", {
   )
   expect_error(make(plan), "all grouping variables")
 })
+
+test_with_dir("dynamic combine over unequal vars", {
+  plan <- drake_plan(
+    x = seq_len(4),
+    y = seq_len(5),
+    x2 = target(x, dynamic = map(x)),
+    y2 = target(y, dynamic = map(y)),
+    z = target(x2, dynamic = combine(x2, .by = y))
+  )
+  expect_error(make(plan), "all grouping variables")
+})
+
+test_with_dir("dynamic combine vars must be dynamic", {
+  plan <- drake_plan(
+    x = seq_len(4),
+    y = target(x, dynamic = combine(x))
+  )
+  expect_error(make(plan), "must be dynamic")
+})

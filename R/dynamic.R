@@ -40,6 +40,7 @@ subtargets <- function(
 }
 
 register_subtargets <- function(target, config) {
+  check_dynamic(target, config)
   subtargets <- subtarget_names(target, config)
   edgelist <- do.call(rbind, lapply(subtargets, c, target))
   subgraph <- igraph::graph_from_edgelist(edgelist)
@@ -60,6 +61,32 @@ register_subtargets <- function(target, config) {
   config$layout[[target]]$subtargets <- subtargets
   config$layout <- c(config$layout, subtarget_layouts)
   config
+}
+
+check_dynamic <- function(target, config) {
+  dynamic <- config$layout[[target]]$dynamic
+  check_dynamic_impl(dynamic, target, config)
+}
+
+check_dynamic_impl <- function(dynamic, target, config) {
+  UseMethod("check_dynamic_impl")
+}
+
+check_dynamic_impl.combine <- function(dynamic, target, config) {
+  vars <- which_vars(dynamic)
+  good <- vapply(vars, is_dynamic, config = config, FUN.VALUE = logical(1))
+  if (any(!good)) {
+    stop(
+      "all non-.by grouping variables of dynamic combine() ",
+      "must be dynamic. Offending variables: ",
+      paste(vars[!good], collapse = ", "),
+      call. = FALSE
+    )
+  }
+}
+
+check_dynamic_impl.default <- function(dynamic, target, config) {
+  return()
 }
 
 subtarget_layout <- function(index, parent, subtargets, config) {
@@ -193,10 +220,10 @@ dynamic_hash_list.cross <- dynamic_hash_list.map
 
 dynamic_hash_list.combine <- function(dynamic, target, config) {
   out <- lapply(which_vars(dynamic), read_dynamic_hashes, config = config)
-  assert_equal_branches(target, which_vars(dynamic), out, "combine")
   if (!is.null(dynamic$.by)) {
-    out$by <- read_dynamic_hashes(deparse(dynamic$.by), config)
+    out[["_by"]] <- read_dynamic_hashes(deparse(dynamic$.by), config)
   }
+  assert_equal_branches(target, which_vars(dynamic), out, "combine")
   out
 }
 
@@ -208,6 +235,7 @@ assert_equal_branches <- function(target, deps, hashes, transform) {
   keep <- !duplicated(lengths)
   deps <- deps[keep]
   lengths <- lengths[keep]
+  deps[is.na(deps)] <- ".by"
   stop(
     "for dynamic map() and combine(), all grouping variables ",
     "must have equal lengths. For target ", target,
@@ -241,12 +269,12 @@ subtarget_hashes.cross <- function(dynamic, target, hashes, config) {
 }
 
 subtarget_hashes.combine <- function(dynamic, target, hashes, config) {
-  if (is.null(hashes$by)) {
+  if (is.null(hashes[["_by"]])) {
     return(lapply(hashes, paste, collapse = " "))
   }
-  by <- hashes$by
+  by <- hashes[["_by"]]
   by <- ordered(by, levels = unique(by))
-  hashes$by <- NULL
+  hashes[["_by"]] <- NULL
   hashes <- do.call(paste, hashes)
   unname(tapply(hashes, INDEX = by, FUN = paste, collapse = " "))
 }
