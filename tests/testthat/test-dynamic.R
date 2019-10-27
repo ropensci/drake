@@ -327,6 +327,34 @@ test_with_dir("formats applied to subtargets but not their parents", {
   expect_equal(length(special_files), 4L)
 })
 
+test_with_dir("runtime predictions for dynamic targets", {
+  skip_on_cran()
+  f <- function(x) {
+    x
+  }
+  plan <- drake_plan(
+    x = f(letters[seq_len(4)]),
+    y = target(x, dynamic = map(x)),
+    z = target(y, dynamic = map(y))
+  )
+  config <- drake_config(plan)
+  suppressWarnings(predict_runtime(config))
+  make(plan)
+  predict_runtime(config)
+  known_times <- c(0, 0, rep(1, 9))
+  names(known_times) <- c("y", "z", "x", subtargets(y), subtargets(z))
+  time1 <- as.integer(predict_runtime(config, known_times = known_times))
+  time2 <- as.integer(
+    predict_runtime(config, known_times = known_times, jobs = 2)
+  )
+  time4 <- as.integer(
+    predict_runtime(config, known_times = known_times, jobs = 4)
+  )
+  expect_equal(time1, 8L)
+  expect_equal(time2, 4L)
+  expect_equal(time4, 2L)
+})
+
 if (FALSE) {
 
   # need to activate this test

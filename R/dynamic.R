@@ -42,6 +42,15 @@ subtargets <- function(
 register_subtargets <- function(target, config) {
   check_dynamic(target, config)
   subtargets <- subtarget_names(target, config)
+  config <- register_subtargets_graph(target, subtargets, config)
+  config <- register_subtargets_layout(target, subtargets, config)
+  if (!is.null(config$queue)) {
+    config <- register_subtargets_queue(target, subtargets, config)
+  }
+  config
+}
+
+register_subtargets_graph <- function(target, subtargets, config) {
   edgelist <- do.call(rbind, lapply(subtargets, c, target))
   subgraph <- igraph::graph_from_edgelist(edgelist)
   subgraph <- igraph::set_vertex_attr(
@@ -50,6 +59,10 @@ register_subtargets <- function(target, config) {
     value = FALSE
   )
   config$graph <- igraph::graph.union(config$graph, subgraph)
+  config
+}
+
+register_subtargets_layout <- function(target, subtargets, config) {
   subtarget_layouts <- lapply(
     seq_along(subtargets),
     subtarget_layout,
@@ -61,6 +74,12 @@ register_subtargets <- function(target, config) {
   config$layout[[target]]$subtargets <- subtargets
   config$layout <- c(config$layout, subtarget_layouts)
   config
+}
+
+register_subtargets_queue <- function(target, subtargets, config) {
+  browser()
+  stop("still need to register subtargets in the queue")
+
 }
 
 check_dynamic <- function(target, config) {

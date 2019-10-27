@@ -13,10 +13,10 @@ backend_loop <- function(config) {
       targets <- targets[-1]
       next
     }
-    should_defer <- is_dynamic(target, config) &&
+    should_register_dynamic <- is_dynamic(target, config) &&
       !is_subtarget(target, config) &&
       !ht_exists(deferred, target)
-    if (should_defer) {
+    if (should_register_dynamic) {
       announce_build(target, meta, config)
       config <- register_subtargets(target, config)
       targets <- c(config$layout[[target]]$subtargets, targets)
