@@ -76,6 +76,21 @@ register_subtargets_layout <- function(target, subtargets, config) {
   config
 }
 
+subtarget_layout <- function(index, parent, subtargets, config) {
+  subtarget <- subtargets[index]
+  layout <- config$layout[[parent]]
+  layout$target <- subtarget
+  mem_deps <- which_vars(layout$dynamic)
+  layout$deps_build$memory <- c(layout$deps_build$memory, mem_deps)
+  layout$dynamic <- NULL
+  layout$subtarget <- TRUE
+  layout$subtarget_index <- index
+  layout$subtarget_parent <- parent
+  layout$seed <- seed_from_basic_types(config$seed, layout$seed, subtarget)
+  layout <- register_dynamic_subdeps(layout, index, parent, config)
+  layout
+}
+
 register_subtargets_queue <- function(target, subtargets, config) {
   browser()
   stop("still need to register subtargets in the queue")
@@ -106,19 +121,6 @@ check_dynamic_impl.combine <- function(dynamic, target, config) {
 
 check_dynamic_impl.default <- function(dynamic, target, config) {
   return()
-}
-
-subtarget_layout <- function(index, parent, subtargets, config) {
-  subtarget <- subtargets[index]
-  layout <- config$layout[[parent]]
-  layout$target <- subtarget
-  layout$dynamic <- NULL
-  layout$subtarget <- TRUE
-  layout$subtarget_index <- index
-  layout$subtarget_parent <- parent
-  layout$seed <- seed_from_basic_types(config$seed, layout$seed, subtarget)
-  layout <- register_dynamic_subdeps(layout, index, parent, config)
-  layout
 }
 
 register_dynamic_subdeps <- function(layout, index, parent, config) {

@@ -355,6 +355,60 @@ test_with_dir("runtime predictions for dynamic targets", {
   expect_equal(time4, 2L)
 })
 
+test_with_dir("dynamic subtargets and RNGs", {
+  plan <- drake_plan(
+    x = seq_len(4),
+    y = target(rnorm(1), dynamic = map(x))
+  )
+  config <- drake_config(plan)
+  make(plan)
+  out <- vapply(
+    subtargets(y),
+    readd,
+    character_only = TRUE,
+    FUN.VALUE = numeric(1),
+    USE.NAMES = FALSE
+  )
+  expect_equal(length(unique(out)), 4L)
+  clean(destroy = TRUE)
+  make(plan)
+  out2 <- vapply(
+    subtargets(y),
+    readd,
+    character_only = TRUE,
+    FUN.VALUE = numeric(1),
+    USE.NAMES = FALSE
+  )
+  expect_equal(out, out2)
+  plan <- drake_plan(
+    x = seq_len(4),
+    y = target(rnorm(1), dynamic = map(x), seed = 1234)
+  )
+  make(plan)
+  out3 <- vapply(
+    subtargets(y),
+    readd,
+    character_only = TRUE,
+    FUN.VALUE = numeric(1),
+    USE.NAMES = FALSE
+  )
+  expect_false(any(out2 == out3))
+  plan <- drake_plan(
+    x = seq_len(4),
+    y = target(rnorm(1), dynamic = map(x))
+  )
+  make(plan, seed = 1234)
+  out4 <- vapply(
+    subtargets(y),
+    readd,
+    character_only = TRUE,
+    FUN.VALUE = numeric(1),
+    USE.NAMES = FALSE
+  )
+  expect_false(any(out2 == out4))
+  expect_false(any(out3 == out4))
+})
+
 if (FALSE) {
 
   # need to activate this test
