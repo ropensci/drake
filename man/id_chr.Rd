@@ -6,6 +6,9 @@
 \usage{
 id_chr()
 }
+\value{
+The name of the current target.
+}
 \description{
 \code{id_chr()} gives you the name of the current target
 while \code{\link[=make]{make()}} is running. For static branching in \code{\link[=drake_plan]{drake_plan()}},

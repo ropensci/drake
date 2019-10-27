@@ -498,6 +498,7 @@ no_deps <- function(x = NULL) {
 #'   while [make()] is running. For static branching in [drake_plan()],
 #'   use the `.id_chr` symbol instead. See the examples for details.
 #' @inheritSection drake_plan Keywords
+#' @return The name of the current target.
 #' @examples
 #' try(id_chr()) # Do not use outside the plan.
 #' \dontrun{
