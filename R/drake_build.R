@@ -1,6 +1,6 @@
 #' @title Build/process a single target or import.
 #' \lifecycle{maturing}
-#' @description Also load the target's dependencies beforehand.
+#' @description Not valid for dynamic branching.
 #' @export
 #' @seealso [drake_debug()]
 #' @return The value of the target right after it is built.
@@ -83,7 +83,8 @@ drake_build <- function(
 
 #' @title Run a single target's command in debug mode.'
 #' \lifecycle{maturing}
-#' @description `drake_debug()` loads a target's dependencies
+#' @description Not valid for dynamic branching.
+#'   `drake_debug()` loads a target's dependencies
 #'   and then runs its command in debug mode (see `browser()`,
 #'   `debug()`, and `debugonce()`). This function does not
 #'   store the target's value in the cache

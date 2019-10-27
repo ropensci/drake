@@ -44,6 +44,7 @@ you are debugging.}
 The value of the target right after it is built.
 }
 \description{
+Not valid for dynamic branching.
 \code{drake_debug()} loads a target's dependencies
 and then runs its command in debug mode (see \code{browser()},
 \code{debug()}, and \code{debugonce()}). This function does not
