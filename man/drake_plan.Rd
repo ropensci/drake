@@ -189,6 +189,7 @@ R Markdown (\verb{*.Rmd}) or R LaTeX (\verb{*.Rnw}) file.
 do not track it for changes and do not analyze it for dependencies.
 \item \code{\link[=no_deps]{no_deps()}}: tell \code{drake} to not track the dependencies
 of a piece of code. \code{drake} still tracks the code itself for changes.
+\item \code{\link[=id_chr]{id_chr()}}: Get the name of the current target.
 \item \code{\link[=drake_envir]{drake_envir()}}: get the environment where drake builds targets.
 Intended for advanced custom memory management.
 }

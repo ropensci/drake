@@ -58,7 +58,7 @@ reference:
   - '`knitr_in`'
   - '`ignore`'
   - '`no_deps`'
-  - '`.id_chr`'
+  - '`id_chr`'
   - '`drake_envir`'
 - title: Dynamic branching
   contents:

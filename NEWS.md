@@ -3,6 +3,7 @@
 ## New features
 
 - Begin to implement dynamic branching (#685).
+- Add a new `id_chr()` function to get the name of the target while `make()` is running.
 
 ## Enhancements
 

@@ -115,6 +115,7 @@
 #'   do not track it for changes and do not analyze it for dependencies.
 #' - [no_deps()]: tell `drake` to not track the dependencies
 #'   of a piece of code. `drake` still tracks the code itself for changes.
+#' - [id_chr()]: Get the name of the current target.
 #' - [drake_envir()]: get the environment where drake builds targets.
 #'   Intended for advanced custom memory management.
 #'
