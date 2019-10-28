@@ -409,6 +409,22 @@ test_with_dir("dynamic subtargets and RNGs", {
   expect_false(any(out3 == out4))
 })
 
+test_with_dir("dynamic condition triggers are not allowed", {
+  plan <- drake_plan(
+    x = seq_len(4),
+    y = target(x, trigger = trigger(condition = x > 2), dynamic = map(x))
+  )
+  expect_error(drake_config(plan), regexp = "forbidden")
+})
+
+test_with_dir("dynamic change triggers are not allowed", {
+  plan <- drake_plan(
+    x = seq_len(4),
+    y = target(x, trigger = trigger(change = x), dynamic = map(x))
+  )
+  expect_error(drake_config(plan), regexp = "forbidden")
+})
+
 if (FALSE) {
 
   # need to activate this test

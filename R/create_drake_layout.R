@@ -213,6 +213,7 @@ cdl_prepare_layout <- function(config, layout) {
       allowed_globals = config$ht_globals
     )
   }
+  cdl_no_dynamic_triggers(layout)
   for (field in c("deps_build", "deps_condition", "deps_change")) {
     layout[[field]]$memory <- ht_filter(
       ht = config$ht_targets,
@@ -220,6 +221,32 @@ cdl_prepare_layout <- function(config, layout) {
     )
   }
   layout
+}
+
+cdl_no_dynamic_triggers <- function(layout) {
+  cdl_no_dynamic_triggers_impl(
+    layout$target,
+    layout$deps_dynamic,
+    unlist(layout$deps_condition)
+  )
+  cdl_no_dynamic_triggers_impl(
+    layout$target,
+    layout$deps_dynamic,
+    unlist(layout$deps_change)
+  )
+}
+
+cdl_no_dynamic_triggers_impl <- function(target, deps_dynamic, deps_trigger) {
+  common <- intersect(deps_dynamic, deps_trigger)
+  if (!length(common)) {
+    return()
+  }
+  stop(
+    "Dynamic grouping variables are forbidden in the condition ",
+    "and change triggers. For target ", target, ", found dynamic ",
+    "grouping variables:\n", multiline_message(common),
+    call. = FALSE
+  )
 }
 
 cdl_import_dependencies <- function(
