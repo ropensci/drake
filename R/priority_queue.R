@@ -2,16 +2,7 @@ priority_queue <- function(config, jobs = config$jobs_preprocess) {
   config$logger$minor("construct priority queue")
   targets <- igraph::V(config$envir_graph$graph)$name
   if (!length(targets)) {
-    return(
-      refclass_priority_queue$new(
-        data = data.frame(
-          target = character(0),
-          ndeps = integer(0),
-          priority = numeric(0),
-          stringsAsFactors = FALSE
-        )
-      )
-    )
+    return(empty_queue())
   }
   ndeps <- igraph::degree(
     graph = config$envir_graph$graph,
@@ -21,14 +12,13 @@ priority_queue <- function(config, jobs = config$jobs_preprocess) {
   ndeps <- unlist(ndeps)
   priority <- rep(Inf, length(targets)) # deprecated, 2019-04-16
   names(priority) <- targets
-  queue <- refclass_priority_queue$new(
-    data = data.frame(
-      target = as.character(targets),
-      ndeps = as.integer(ndeps),
-      priority = as.numeric(priority),
-      stringsAsFactors = FALSE
-    )
+  data <- data.frame(
+    target = as.character(targets),
+    ndeps = as.integer(ndeps),
+    priority = as.numeric(priority),
+    stringsAsFactors = FALSE
   )
+  queue <- refclass_priority_queue$new(data = data)
   queue$sort()
   queue
 }
@@ -89,6 +79,16 @@ refclass_priority_queue <- methods::setRefClass(
     }
   )
 )
+
+empty_queue <- function() {
+  data <- data.frame(
+    target = character(0),
+    ndeps = integer(0),
+    priority = numeric(0),
+    stringsAsFactors = FALSE
+  )
+  refclass_priority_queue$new(data = data)
+}
 
 # Very specific to drake, does not belong inside
 # a generic priority queue.
