@@ -89,3 +89,15 @@ test_with_dir("prework can be an expression", {
   expect_equal(readd(x), "set")
   expect_equal(readd(y), "set")
 })
+
+test_with_dir("prework must be interpretable as a language object", {
+  skip_on_cran()
+  plan <- drake_plan(x = 1)
+  f <- function(x) {
+    x + 1
+  }
+  expect_error(
+    make(plan, prework = f),
+    regexp = "prework must be an expression"
+  )
+})

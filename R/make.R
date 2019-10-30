@@ -389,6 +389,12 @@ do_prework <- function(config, verbose_packages) {
     eval(config$prework, envir = config$envir_targets)
   } else if (is.list(config$prework)) {
     lapply(config$prework, eval, envir = config$envir_targets)
+  } else if (length(config$prework)) {
+    stop(
+      "prework must be an expression ",
+      "or a list of expressions",
+      call. = FALSE
+    )
   }
   invisible()
 }
