@@ -57,6 +57,8 @@ test_with_dir("lazy loading is actually lazy", {
     config$envir_targets[[x]] <- eval[[x]]
   }
   config$graph <- subset_graph(config$graph, all_targets(config))
+  config$envir_graph <- ht_new()
+  config$envir_graph$graph <- config$graph
   backend_loop(config)
   loaded <- ls(envir = config$envir_targets)
   expect_true(all(lazily_loaded %in% loaded))

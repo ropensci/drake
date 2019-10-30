@@ -7,6 +7,8 @@ test_with_dir("manage_memory() warns if loading missing deps", {
     memory_strategy = "lookahead",
     garbage_collection = TRUE
   )
+  con$envir_graph <- ht_new()
+  con$envir_graph$graph <- con$graph
   capture.output(
     suppressWarnings( # https://github.com/richfitz/storr/issues/105 # nolint
       manage_memory(target = "b", config = con)
@@ -72,6 +74,7 @@ test_with_dir("a close look at the memory strategies", {
     memory_strategy = "lookahead",
     garbage_collection = TRUE
   )
+  config$envir_graph$graph <- config$graph
 
   # actually run
   config$plan <- plan
