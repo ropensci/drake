@@ -832,7 +832,6 @@ test_with_dir("running()", {
   config$running_make <- TRUE
   set_progress(
     target = "a",
-    meta = list(imported = FALSE),
     value = "running",
     config = config
   )

@@ -43,7 +43,6 @@ recover_target <- function(target, meta, config) {
   )
   set_progress(
     target = target,
-    meta = list(imported = FALSE),
     value = "done",
     config = config
   )

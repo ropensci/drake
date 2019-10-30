@@ -24,7 +24,7 @@ loop_target <- function(config) {
     !is_subtarget(target, config) &&
     !ht_exists(config$deferred, target)
   if (should_register_dynamic) {
-    announce_build(target, meta, config)
+    announce_build(target, config)
     config <- register_subtargets(target, config)
     targets <- c(config$layout[[target]]$subtargets, targets)
     config$targets <- targets
@@ -43,7 +43,7 @@ loop_target <- function(config) {
 
 loop_build <- function(target, meta, config, downstream) {
   if (!is_dynamic(target, config) || is_subtarget(target, config)) {
-    announce_build(target, meta, config)
+    announce_build(target, config)
   }
   manage_memory(
     target,

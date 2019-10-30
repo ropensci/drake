@@ -3,7 +3,7 @@ local_build <- function(target, config, downstream) {
   if (handle_triggers(target, meta, config)) {
     return()
   }
-  announce_build(target, meta, config)
+  announce_build(target, config)
   manage_memory(
     target,
     config,
@@ -15,13 +15,22 @@ local_build <- function(target, config, downstream) {
   invisible()
 }
 
-announce_build <- function(target, meta, config) {
+announce_build <- function(target, config) {
   set_progress(
     target = target,
-    meta = meta,
     value = "running",
     config = config
   )
+  color <- target_color(target, config)
+  config$logger$major(
+    color,
+    target,
+    target = target,
+    color = color
+  )
+}
+
+target_color <- function(target, config) {
   color <- "target"
   if (is_dynamic(target, config)) {
     color <- "dynamic"
@@ -29,12 +38,7 @@ announce_build <- function(target, meta, config) {
   if (is_subtarget(target, config)) {
     color <- "subtarget"
   }
-  config$logger$major(
-    color,
-    target,
-    target = target,
-    color = color
-  )
+  color
 }
 
 try_build <- function(target, meta, config) {
@@ -500,7 +504,6 @@ set_options <- function(new_options) {
 store_failure <- function(target, meta, config) {
   set_progress(
     target = target,
-    meta = meta,
     value = "failed",
     config = config
   )
@@ -514,10 +517,10 @@ store_failure <- function(target, meta, config) {
   )
 }
 
-set_progress <- function(target, meta, value, config) {
+set_progress <- function(target, value, config) {
   skip_progress <- !identical(config$running_make, TRUE) ||
     !config$log_progress ||
-    (meta$imported %||% FALSE)
+    (config$layout[[target]]$imported %||% FALSE)
   if (skip_progress) {
     return()
   }

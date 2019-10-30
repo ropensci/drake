@@ -138,7 +138,7 @@ cmq_send_target <- function(target, config) {
     config$workers$send_wait()
     return()
   }
-  announce_build(target = target, meta = meta, config = config)
+  announce_build(target = target, config = config)
   caching <- caching(target, config)
   if (identical(caching, "master")) {
     manage_memory(target = target, config = config, jobs = 1)

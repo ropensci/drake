@@ -35,7 +35,6 @@ store_outputs <- function(target, value, meta, config) {
   )
   set_progress(
     target = target,
-    meta = meta,
     value = "done",
     config = config
   )

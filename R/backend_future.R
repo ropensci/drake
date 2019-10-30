@@ -96,7 +96,7 @@ new_worker <- function(id, target, config, ft_config, protect) {
     layout = layout,
     protect = protect
   )
-  announce_build(target = target, meta = meta, config = config)
+  announce_build(target = target, config = config)
   structure(
     future::future(
       expr = drake::future_build(

@@ -76,7 +76,7 @@ drake_build <- function(
     config = config
   )
   meta <- drake_meta_(target = target, config = config)
-  announce_build(target = target, meta = meta, config = config)
+  announce_build(target = target, config = config)
   build <- try_build(target = target, meta = meta, config = config)
   conclude_build(build = build, config = config)
 }
@@ -163,7 +163,7 @@ drake_debug <- function(
     debug_command(config$layout[[target]]$command)
   )
   meta <- drake_meta_(target = target, config = config)
-  announce_build(target = target, meta = meta, config = config)
+  announce_build(target = target, config = config)
   build <- try_build(target = target, meta = meta, config = config)
   assert_output_files(target = target, meta = build$meta, config = config)
   handle_build_exceptions(target = target, meta = build$meta, config = config)
