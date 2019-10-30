@@ -309,10 +309,13 @@ parse_custom_plan_row <- function(row, envir) {
   if (!length(expr) || !is_target_call(expr[[1]])) {
     return(row)
   }
+  expr[[1]][[1]] <- namespaced_target
   out <- eval(expr[[1]], envir = envir)
   out$target <- row$target
   out
 }
+
+namespaced_target <- parse(text = ("drake:::target"))[[1]]
 
 is_target_call <- function(expr) {
   tryCatch(

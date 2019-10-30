@@ -1,5 +1,8 @@
-
 # Version 7.7.0.9000
+
+## Bug fixes
+
+- Prevent `drake::drake_plan(x = target(...))` from throwing an error if `drake` is not loaded (#1039, @mstr3336).
 
 ## New features
 
