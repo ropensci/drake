@@ -43,7 +43,7 @@ register_subtargets <- function(target, config) {
   check_dynamic(target, config)
   subtargets <- subtarget_names(target, config)
   config <- register_subtargets_graph(target, subtargets, config)
-  config <- register_subtargets_layout(target, subtargets, config)
+  register_subtargets_layout(target, subtargets, config)
   if (!is.null(config$queue)) {
     config <- register_subtargets_queue(target, subtargets, config)
   }
@@ -72,8 +72,15 @@ register_subtargets_layout <- function(target, subtargets, config) {
   )
   names(subtarget_layouts) <- subtargets
   config$layout[[target]]$subtargets <- subtargets
-  config$layout <- c(config$layout, subtarget_layouts)
-  config
+  for (subtarget in subtargets) {
+    assign(
+      x = subtarget,
+      value = subtarget_layouts[[subtarget]],
+      envir = config$layout,
+      inherits = FALSE
+    )
+  }
+  invisible()
 }
 
 subtarget_layout <- function(index, parent, subtargets, config) {
