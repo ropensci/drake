@@ -1,7 +1,6 @@
-#' @title Transformations in `drake_plan()`.
+#' @title Transformations in `drake_plan()`. \lifecycle{maturing}
 #' @name transformations
 #' @aliases map split cross combine
-#' \lifecycle{maturing}
 #' @description In [drake_plan()], you can define whole batches
 #'   of targets with transformations such as
 #'   `map()`, `split()`, `cross()`, and `combine()`.

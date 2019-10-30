@@ -3,6 +3,7 @@
 ## Bug fixes
 
 - Prevent `drake::drake_plan(x = target(...))` from throwing an error if `drake` is not loaded (#1039, @mstr3336).
+- Move the `transformations` lifecycle badge to the proper location in the docstring (#1040, @jeroen).
 
 ## New features
 
