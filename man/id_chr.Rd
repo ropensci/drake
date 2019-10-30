@@ -2,7 +2,7 @@
 % Please edit documentation in R/drake_plan_helpers.R
 \name{id_chr}
 \alias{id_chr}
-\title{Name of the current target}
+\title{Name of the current target \lifecycle{maturing}}
 \usage{
 id_chr()
 }

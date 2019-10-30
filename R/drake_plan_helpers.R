@@ -492,7 +492,7 @@ no_deps <- function(x = NULL) {
   x
 }
 
-#' @title Name of the current target
+#' @title Name of the current target \lifecycle{maturing}
 #' @export
 #' @description `id_chr()` gives you the name of the current target
 #'   while [make()] is running. For static branching in [drake_plan()],
