@@ -200,9 +200,9 @@ worker_prediction_info <- function(
     )
   }
   config <- register_subtargets_predict(config)
-  config$graph_envir <- new.env(parent = emptyenv())
-  config$graph_envir$graph <- config$graph
-  on.exit(config$graph_envir <- NULL)
+  config$envir_graph <- new.env(parent = emptyenv())
+  config$envir_graph$graph <- config$graph
+  on.exit(config$envir_graph <- NULL)
   queue <- priority_queue(config, jobs = 1)
   running <- data.frame(
     target = character(0),
