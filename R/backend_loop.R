@@ -4,54 +4,22 @@ backend_loop <- function(config) {
     on.exit(unlock_environment(config$envir))
   }
   config$lock_envir <- FALSE
-  config$targets <- igraph::topo_sort(config$envir_graph$graph)$name
-  config$registered <- ht_new()
-  while (length(config$targets)) {
-    config <- loop_target(config)
+  config$ht_registered <- ht_new()
+  config$envir_loop <- new.env(parent = emptyenv())
+  config$envir_loop$targets <- igraph::topo_sort(config$envir_graph$graph)$name
+  while (length(config$envir_loop$targets)) {
+    loop_check(config)
   }
-  invisible()
 }
 
-loop_target <- function(config) {
-  targets <- config$targets
-  target <- targets[1]
-  meta <- drake_meta_(target = target, config = config)
-  if (handle_triggers(target, meta, config)) {
-    config$targets <- targets[-1]
-    return(config)
-  }
-  should_register_dynamic <- is_dynamic(target, config) &&
-    !is_subtarget(target, config) &&
-    !ht_exists(config$registered, target)
-  if (should_register_dynamic) {
-    announce_build(target, config)
-    register_subtargets(target, config)
-    targets <- c(config$layout[[target]]$subtargets, targets)
-    config$targets <- targets
-    ht_set(config$registered, target)
-    return(config)
-  }
-  loop_build(
-    target = target,
-    meta = meta,
+loop_check <- function(config) {
+  n_previous <- n_graph(config)
+  local_build(
+    target = config$envir_loop$targets[1L],
     config = config,
-    downstream = targets[-1]
+    downstream = config$envir_loop$targets[-1L]
   )
-  config$targets <- targets[-1]
-  config
-}
-
-loop_build <- function(target, meta, config, downstream) {
-  if (!is_dynamic(target, config) || is_subtarget(target, config)) {
-    announce_build(target, config)
+  if (n_graph(config) <= n_previous) {
+    config$envir_loop$targets <- config$envir_loop$targets[-1L]
   }
-  manage_memory(
-    target,
-    config,
-    downstream = downstream,
-    jobs = config$jobs_preprocess
-  )
-  build <- try_build(target = target, meta = meta, config = config)
-  conclude_build(build = build, config = config)
-  invisible()
 }

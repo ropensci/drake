@@ -40,13 +40,25 @@ subtargets <- function(
 }
 
 register_subtargets <- function(target, config) {
+  if (config$parallelism != "loop") { # just for now...
+    return()
+  }
+  if (!should_register_dynamic(target, config)) {
+    return()
+  }
+  announce_build(target, config)
   check_dynamic(target, config)
   subtargets <- subtarget_names(target, config)
   register_subtargets_graph(target, subtargets, config)
   register_subtargets_layout(target, subtargets, config)
-  if (!is.null(config$queue)) {
-    register_subtargets_queue(target, subtargets, config)
-  }
+  register_subtargets_queue(target, subtargets, config)
+  register_subtargets_loop(target, subtargets, config)
+  ht_set(config$ht_registered, target)
+}
+
+should_register_dynamic <- function(target, config) {
+  is_dynamic(target, config) &&
+    !ht_exists(config$ht_registered, target)
 }
 
 register_subtargets_graph <- function(target, subtargets, config) {
@@ -64,44 +76,45 @@ register_subtargets_graph <- function(target, subtargets, config) {
 }
 
 register_subtargets_layout <- function(target, subtargets, config) {
+  config$layout[[target]]$subtargets <- subtargets
   subtarget_layouts <- lapply(
     seq_along(subtargets),
-    subtarget_layout,
+    register_subtarget_layout,
     parent = target,
     subtargets = subtargets,
     config = config
   )
-  names(subtarget_layouts) <- subtargets
-  config$layout[[target]]$subtargets <- subtargets
-  for (subtarget in subtargets) {
-    assign(
-      x = subtarget,
-      value = subtarget_layouts[[subtarget]],
-      envir = config$layout,
-      inherits = FALSE
-    )
-  }
 }
 
-subtarget_layout <- function(index, parent, subtargets, config) {
+register_subtarget_layout <- function(index, parent, subtargets, config) {
   subtarget <- subtargets[index]
   layout <- config$layout[[parent]]
   layout$target <- subtarget
-  mem_deps <- which_vars(layout$dynamic)
-  layout$deps_build$memory <- c(layout$deps_build$memory, mem_deps)
-  layout$dynamic <- NULL
-  layout$subtarget <- TRUE
   layout$subtarget_index <- index
   layout$subtarget_parent <- parent
+  layout$subtarget <- TRUE
+  mem_deps <- which_vars(layout$dynamic)
+  layout$dynamic <- NULL
+  layout$deps_build$memory <- c(layout$deps_build$memory, mem_deps)
   layout$seed <- seed_from_basic_types(config$seed, layout$seed, subtarget)
   layout <- register_dynamic_subdeps(layout, index, parent, config)
-  layout
+  config$layout[[subtarget]] <- layout
 }
 
 register_subtargets_queue <- function(target, subtargets, config) {
+  if (is.null(config$queue)) {
+    return()
+  }
   browser()
   stop("still need to register subtargets in the queue")
 
+}
+
+register_subtargets_loop <- function(target, subtargets, config) {
+  if (is.null(config$envir_loop)) {
+    return()
+  }
+  config$envir_loop$targets <- c(subtargets, config$envir_loop$targets)
 }
 
 check_dynamic <- function(target, config) {

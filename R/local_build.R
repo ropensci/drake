@@ -3,7 +3,14 @@ local_build <- function(target, config, downstream) {
   if (handle_triggers(target, meta, config)) {
     return()
   }
-  announce_build(target, config)
+  n_previous <- n_graph(config)
+  register_subtargets(target, config)
+  if (n_graph(config) > n_previous) {
+    return()
+  }
+  if (!is_dynamic(target, config) || is_subtarget(target, config)) {
+    announce_build(target, config)
+  }
   manage_memory(
     target,
     config,
@@ -13,6 +20,10 @@ local_build <- function(target, config, downstream) {
   build <- try_build(target = target, meta = meta, config = config)
   conclude_build(build = build, config = config)
   invisible()
+}
+
+n_graph <- function(config) {
+  igraph::gorder(config$envir_graph$graph)
 }
 
 announce_build <- function(target, config) {
