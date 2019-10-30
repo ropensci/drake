@@ -3,7 +3,8 @@ drake_context("queue")
 test_with_dir("empty queue", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- drake_config(drake_plan(x = 1))
-  config$graph <- igraph::make_empty_graph()
+  config$envir_graph <- ht_new()
+  config$envir_graph$graph <- igraph::make_empty_graph()
   q <- priority_queue(config)
   expect_equal(sort(colnames(q$data)), sort(c("target", "ndeps", "priority")))
   expect_equal(nrow(q$data), 0)

@@ -592,6 +592,7 @@ drake_config <- function(
   envir_targets <- new.env(parent = envir)
   out <- list(
     envir = envir,
+    envir_graph = new.env(parent = emptyenv()),
     envir_targets = envir_targets,
     envir_by = new.env(parent = emptyenv()),
     envir_subtargets = new.env(parent = envir_targets),

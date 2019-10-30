@@ -474,6 +474,8 @@ test_with_dir("GitHub issue 460", {
   )
   exp <- c(letters[1:2], reencode_namespaced("base::sqrt"))
   expect_true(all(exp %in% igraph::V(config$graph)$name))
+  config$envir_graph <- ht_new()
+  config$envir_graph$graph <- config$graph
   process_targets(config)
 })
 
