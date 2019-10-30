@@ -4,34 +4,41 @@ backend_loop <- function(config) {
     on.exit(unlock_environment(config$envir))
   }
   config$lock_envir <- FALSE
-  targets <- igraph::topo_sort(config$graph)$name
-  deferred <- ht_new()
-  while (length(targets)) {
-    target <- targets[1]
-    meta <- drake_meta_(target = target, config = config)
-    if (handle_triggers(target, meta, config)) {
-      targets <- targets[-1]
-      next
-    }
-    should_register_dynamic <- is_dynamic(target, config) &&
-      !is_subtarget(target, config) &&
-      !ht_exists(deferred, target)
-    if (should_register_dynamic) {
-      announce_build(target, meta, config)
-      config <- register_subtargets(target, config)
-      targets <- c(config$layout[[target]]$subtargets, targets)
-      ht_set(deferred, target)
-      next
-    }
-    loop_build(
-      target = target,
-      meta = meta,
-      config = config,
-      downstream = targets[-1]
-    )
-    targets <- targets[-1]
+  config$targets <- igraph::topo_sort(config$graph)$name
+  config$deferred <- ht_new()
+  while (length(config$targets)) {
+    config <- loop_target(config)
   }
   invisible()
+}
+
+loop_target <- function(config) {
+  targets <- config$targets
+  target <- targets[1]
+  meta <- drake_meta_(target = target, config = config)
+  if (handle_triggers(target, meta, config)) {
+    config$targets <- targets[-1]
+    return(config)
+  }
+  should_register_dynamic <- is_dynamic(target, config) &&
+    !is_subtarget(target, config) &&
+    !ht_exists(config$deferred, target)
+  if (should_register_dynamic) {
+    announce_build(target, meta, config)
+    config <- register_subtargets(target, config)
+    targets <- c(config$layout[[target]]$subtargets, targets)
+    config$targets <- targets
+    ht_set(config$deferred, target)
+    return(config)
+  }
+  loop_build(
+    target = target,
+    meta = meta,
+    config = config,
+    downstream = targets[-1]
+  )
+  config$targets <- targets[-1]
+  config
 }
 
 loop_build <- function(target, meta, config, downstream) {
