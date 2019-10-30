@@ -103,6 +103,7 @@ test_with_dir("can gracefully conclude a crashed worker", {
   skip_if_not_installed("future")
   for (caching in c("master", "worker")) {
     con <- dbug()
+    con$envir_graph$graph <- con$graph
     con$caching <- caching
     worker <- structure(list(), target = "myinput")
     class(worker) <- "Future"
