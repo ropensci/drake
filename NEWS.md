@@ -14,6 +14,7 @@
 
 - Document transformation functions in a way that avoids having to create true functions (#979).
 - Avoid always invalidating the memoized layout when we set the knitr hash.
+- Assert that `prework` is a language object, list of language objects, or character vector (#1 at pat-s/multicore-debugging on GitHub, @pat-s)
 
 ## New features
 
