@@ -2,7 +2,7 @@
 % Please edit documentation in R/dynamic.R
 \name{subtargets}
 \alias{subtargets}
-\title{List sub-targets}
+\title{List sub-targets \lifecycle{experimental}}
 \usage{
 subtargets(
   target = NULL,

@@ -1,4 +1,4 @@
-#' @title List sub-targets
+#' @title List sub-targets \lifecycle{experimental}
 #' @description List the sub-targets of a dynamic target.
 #' @export
 #' @return Character vector of sub-target names
