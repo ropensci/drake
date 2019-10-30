@@ -21,7 +21,8 @@ drake_graph_info(
   group = NULL,
   clusters = NULL,
   show_output_files = TRUE,
-  hover = FALSE
+  hover = FALSE,
+  on_select_col = NULL
 )
 }
 \arguments{
@@ -104,6 +105,9 @@ that you specify in the \code{group} argument to \code{drake_graph_info()}.}
 
 \item{hover}{Logical, whether to show text (file contents,
 commands, etc.) when you hover your cursor over a node.}
+
+\item{on_select_col}{Optional string corresponding to the column name
+in the plan that should provide data for the \code{on_select} event.}
 }
 \value{
 A list of three data frames: one for nodes,

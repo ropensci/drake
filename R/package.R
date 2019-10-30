@@ -14,6 +14,7 @@
 #' library(drake)
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Build everything.
+#' plot(my_plan) # fast call to vis_drake_graph()
 #' make(my_plan) # Nothing is done because everything is already up to date.
 #' reg2 = function(d) { # Change one of your functions.
 #'   d$x3 = d$x^3

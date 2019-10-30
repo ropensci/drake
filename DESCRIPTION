@@ -1,6 +1,6 @@
 Package: drake
 Title: A Pipeline Toolkit for Reproducible Computation at Scale
-Version: 7.7.0.9000
+Version: 7.7.0.9001
 Authors@R: c(
   person(
     given = c("William", "Michael"),
@@ -60,6 +60,15 @@ Authors@R: c(
     family = "Hughes",
     role = "ctb",
     email = "ellishughes@live.com"
+  ),
+  person(
+    given = c("Matthew", "Mark"),
+    family = "Strasiotto",
+    role = "ctb",
+    email = c(
+      "matthew.strasiotto@gmail.com", 
+      "mstr3336@uni.sydney.edu.au"
+    )
   ),
   person(
     given = "Ben",

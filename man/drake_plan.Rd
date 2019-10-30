@@ -265,6 +265,7 @@ mtcars_plan <- drake_plan(
   write.csv(mtcars[, c("mpg", "cyl")], file_out("mtcars.csv")),
   value = read.csv(file_in("mtcars.csv"))
 )
+plot(mtcars_plan) # fast simplified call to vis_drake_graph()
 mtcars_plan
 make(mtcars_plan) # Makes `mtcars.csv` and then `value`
 head(readd(value))
@@ -272,6 +273,7 @@ head(readd(value))
 
 load_mtcars_example()
 head(my_plan)
+plot(my_plan)
 
 # The `knitr_in("report.Rmd")` tells `drake` to dive into the active
 # code chunks to find dependencies.

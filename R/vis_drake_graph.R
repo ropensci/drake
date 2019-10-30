@@ -55,6 +55,8 @@ vis_drake_graph <- function(
   clusters = NULL,
   show_output_files = TRUE,
   collapse = TRUE,
+  on_select_col = NULL,
+  on_select = NULL,
   ...
 ) {
   assert_pkg("visNetwork")
@@ -74,7 +76,8 @@ vis_drake_graph <- function(
     group = group,
     clusters = clusters,
     show_output_files = show_output_files,
-    hover = hover
+    hover = hover,
+    on_select_col = on_select_col
   )
   config$logger$minor("begin vis_drake_graph()")
   on.exit(config$logger$minor("end vis_drake_graph()"), add = TRUE)
@@ -93,6 +96,7 @@ vis_drake_graph <- function(
     ncol_legend = ncol_legend,
     full_legend = full_legend,
     collapse = collapse,
+    on_select = on_select,
     ...
   )
 }
@@ -153,7 +157,12 @@ vis_drake_graph <- function(
 #'   if you double click on them.
 #'   Analogous to `visNetwork::visOptions(collapse = TRUE)` or
 #'   `visNetwork::visOptions(collapse = TRUE)`.
-#'
+#' @param on_select defines node selection event handling.
+#'   Either a string of valid JavaScript that may be passed to
+#'   `visNetwork::visEvents()`, or one of the following:
+#'   `TRUE`, `NULL`/`FALSE`. If `TRUE` , enables the default behavior of
+#'   opening the link specified by the `on_select_col` given to
+#'   `drake_graph_info()`. `NULL`/`FALSE` disables the behavior.
 #' @param ... Arguments passed to `visNetwork()`.
 #'
 #' @examples
@@ -186,6 +195,7 @@ render_drake_graph <- function(
   navigationButtons = TRUE, # nolint
   ncol_legend = 1,
   collapse = TRUE,
+  on_select = NULL,
   ...
 ) {
   assert_pkg("visNetwork")
@@ -203,6 +213,7 @@ render_drake_graph <- function(
     ...
   )
   out <- adjust_visnetwork_layout(graph = out, graph_info = graph_info)
+  out <- vis_add_on_select(graph = out, on_select = on_select)
   vis_render_webshot(graph = out, file = file, selfcontained = selfcontained)
 }
 
@@ -258,10 +269,30 @@ adjust_visnetwork_layout <- function(graph, graph_info) {
   graph
 }
 
+vis_add_on_select <- function(graph, on_select) {
+  out <- graph
+  # Add on_select action
+  if (is.null(on_select)) return(out)
+  if (is.logical(on_select)) {
+    if (!on_select) return(out)
+    on_select <- on_select_default()
+  }
+
+  # Ideally showing a warning here would be nice
+  # If on_select is enabled, there should have been a corresponding
+  # on_select_col given
+  if (is.null(graph$x$nodes$on_select_col)) return(out)
+
+  out <- visNetwork::visEvents(out, selectNode = on_select)
+
+  out
+}
+
 vis_render_webshot <- function(graph, file, selfcontained) {
   if (!length(file)) {
     return(graph)
   }
+
   file <- path.expand(file)
   if (is_image_filename(file)) {
     assert_pkg("webshot")
@@ -274,6 +305,7 @@ vis_render_webshot <- function(graph, file, selfcontained) {
       file = file,
       selfcontained = selfcontained
     )
+
   }
   return(invisible())
 }
@@ -288,4 +320,13 @@ file_extn <- function(x) {
   x <- unlist(x)
   x <- rev(x)
   x[1]
+}
+
+on_select_default <- function() {
+  js <- "
+  function(props) {
+    window.open(
+      this.body.data.nodes.get(props.nodes[0]).on_select_col,
+      '_blank');
+  }"
 }

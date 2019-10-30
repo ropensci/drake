@@ -476,3 +476,75 @@ test_with_dir("GitHub issue 460", {
   expect_true(all(exp %in% igraph::V(config$graph)$name))
   process_targets(config)
 })
+
+
+test_with_dir("on_select behaviour works", {
+  skip_on_cran()
+  skip_if_not_installed("visNetwork")
+  skip_if_not_installed("lubridate")
+
+  plan <- drake_plan(
+    a = target(
+      "a",
+      link = "a.html"
+    ),
+    b = target(
+      "b",
+      link = "b.html"
+    ),
+    c = target(
+      number,
+      transform = map(
+        number = c(1, 2),
+        .tag_in = cluster_id, .id = number),
+      link = "c_1"
+    ),
+    trace = TRUE
+  )
+  config <- drake_config(plan)
+
+  info <- drake_graph_info(
+    config = config,
+    on_select_col = "link"
+  )
+
+  exp <- sort(c("a.html", "b.html", "c_1", "c_1"))
+  expect_equal(!!sort(c(info$nodes$on_select_col)),
+               !! exp)
+
+  graph <- vis_drake_graph(
+    config = config,
+    on_select = TRUE,
+    on_select_col = "link")
+
+  action <- graph$x$events$selectNode
+  exp <- on_select_default()
+  expect_equal(as.character(action), exp)
+
+  clusters <- unique(plan$cluster_id)
+  info <- drake_graph_info(
+    config,
+    on_select_col = "link",
+    group = "cluster_id", clusters = clusters
+  )
+
+  exp <- sort(c("a.html", "b.html", "c_1"))
+  expect_equal(!!sort(c(info$nodes$on_select_col)),
+               !!exp)
+
+  graph <- vis_drake_graph(
+    config = config,
+    on_select = FALSE,
+    on_select_col = "link"
+  )
+
+  expect_null(graph$x$events$selectNode)
+
+  graph <- vis_drake_graph(
+    config = config,
+    on_select = TRUE,
+    on_select_col = NULL
+  )
+  expect_null(graph$x$events$selectNode)
+
+})
