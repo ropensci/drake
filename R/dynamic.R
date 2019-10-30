@@ -43,10 +43,6 @@ register_subtargets <- function(target, config) {
   if (config$parallelism != "loop") { # just for now...
     return()
   }
-  if (!should_register_dynamic(target, config)) {
-    return()
-  }
-  announce_build(target, config)
   check_dynamic(target, config)
   subtargets <- subtarget_names(target, config)
   register_subtargets_graph(target, subtargets, config)
@@ -56,9 +52,8 @@ register_subtargets <- function(target, config) {
   ht_set(config$ht_registered, target)
 }
 
-should_register_dynamic <- function(target, config) {
-  is_dynamic(target, config) &&
-    !ht_exists(config$ht_registered, target)
+is_registered <- function(target, config) {
+  ht_exists(config$ht_registered, target)
 }
 
 register_subtargets_graph <- function(target, subtargets, config) {

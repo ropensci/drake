@@ -1,4 +1,7 @@
 handle_triggers <- function(target, meta, config) {
+  if (is_subtarget(target, config)) {
+    return(config$cache$exists(target))
+  }
   meta_old <- old_meta(key = target, cache = config$cache)
   !any_triggers(target, meta, meta_old, config) ||
     recover_target(target, meta, config)

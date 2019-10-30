@@ -13,13 +13,17 @@ backend_loop <- function(config) {
 }
 
 loop_check <- function(config) {
-  n_previous <- n_graph(config)
+  n_previous <- n_loop(config)
   local_build(
     target = config$envir_loop$targets[1L],
     config = config,
     downstream = config$envir_loop$targets[-1L]
   )
-  if (n_graph(config) <= n_previous) {
+  if (n_loop(config) <= n_previous) {
     config$envir_loop$targets <- config$envir_loop$targets[-1L]
   }
+}
+
+n_loop <- function(config) {
+  igraph::gorder(config$envir_graph$graph)
 }
