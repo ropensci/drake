@@ -57,7 +57,10 @@ manage_deps.autoclean <- function(target, config, downstream, jobs) {
 manage_deps.preclean <- manage_deps.autoclean
 
 manage_deps.lookahead <- function(target, config, downstream, jobs) {
-  downstream <- downstream %||% downstream_nodes(config$graph, target)
+  downstream <- downstream %||% downstream_nodes(
+    config$envir_graph$graph,
+    target
+  )
   downstream_deps <- deps_memory(targets = downstream, config = config)
   already_loaded <- setdiff(names(config$envir_targets), drake_markers)
   target_deps <- deps_memory(targets = target, config = config)

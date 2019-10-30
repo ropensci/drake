@@ -248,7 +248,8 @@ make <- function(
     process_imports(config)
   }
   if (is.character(config$parallelism)) {
-    config$graph <- outdated_subgraph(config)
+    config$envir_graph <- new.env(parent = emptyenv())
+    config$envir_graph$graph <- outdated_subgraph(config)
   }
   r_make_message(force = FALSE)
   if (!config$skip_targets) {
@@ -259,7 +260,8 @@ make <- function(
     cache = config$cache,
     jobs = config$jobs_preprocess
   )
-  for (key in c("envir_by", "envir_targets", "envir_subtargets")) {
+  envirs <- c("envir_graph", "envir_by", "envir_targets", "envir_subtargets")
+  for (key in envirs) {
     remove(list = names(config[[key]]), envir = config[[key]])
   }
   config$cache$flush_cache()
@@ -283,7 +285,7 @@ run_native_backend <- function(config) {
     config$parallelism,
     c("loop", "clustermq", "future")
   )
-  if (igraph::gorder(config$graph)) {
+  if (igraph::gorder(config$envir_graph$graph)) {
     get(
       paste0("backend_", parallelism),
       envir = getNamespace("drake")

@@ -42,12 +42,11 @@ subtargets <- function(
 register_subtargets <- function(target, config) {
   check_dynamic(target, config)
   subtargets <- subtarget_names(target, config)
-  config <- register_subtargets_graph(target, subtargets, config)
+  register_subtargets_graph(target, subtargets, config)
   register_subtargets_layout(target, subtargets, config)
   if (!is.null(config$queue)) {
-    config <- register_subtargets_queue(target, subtargets, config)
+    register_subtargets_queue(target, subtargets, config)
   }
-  config
 }
 
 register_subtargets_graph <- function(target, subtargets, config) {
@@ -58,8 +57,10 @@ register_subtargets_graph <- function(target, subtargets, config) {
     name = "imported",
     value = FALSE
   )
-  config$graph <- igraph::graph.union(config$graph, subgraph)
-  config
+  config$envir_graph$graph <- igraph::graph.union(
+    config$envir_graph$graph,
+    subgraph
+  )
 }
 
 register_subtargets_layout <- function(target, subtargets, config) {
@@ -80,7 +81,6 @@ register_subtargets_layout <- function(target, subtargets, config) {
       inherits = FALSE
     )
   }
-  invisible()
 }
 
 subtarget_layout <- function(index, parent, subtargets, config) {

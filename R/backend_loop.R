@@ -4,7 +4,7 @@ backend_loop <- function(config) {
     on.exit(unlock_environment(config$envir))
   }
   config$lock_envir <- FALSE
-  config$targets <- igraph::topo_sort(config$graph)$name
+  config$targets <- igraph::topo_sort(config$envir_graph$graph)$name
   config$deferred <- ht_new()
   while (length(config$targets)) {
     config <- loop_target(config)
@@ -25,7 +25,7 @@ loop_target <- function(config) {
     !ht_exists(config$deferred, target)
   if (should_register_dynamic) {
     announce_build(target, config)
-    config <- register_subtargets(target, config)
+    register_subtargets(target, config)
     targets <- c(config$layout[[target]]$subtargets, targets)
     config$targets <- targets
     ht_set(config$deferred, target)
