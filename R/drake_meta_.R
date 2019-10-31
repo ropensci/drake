@@ -1,4 +1,27 @@
 drake_meta_ <- function(target, config) {
+  class <- ifelse(is_subtarget(target, config), "subtarget", "target")
+  class(target) <- class
+  drake_meta_impl(target, config)
+}
+
+drake_meta_impl <- function(target, config) {
+  UseMethod("drake_meta_impl")
+}
+
+drake_meta_impl.subtarget <- function(target, config) {
+  seed <- config$layout[[target]]$seed %||NA%
+    seed_from_basic_types(config$seed, target)
+  list(
+    name = target,
+    target = target,
+    imported = FALSE,
+    isfile = FALSE,
+    time_start = proc.time(),
+    seed = as.integer(seed)
+  )
+}
+
+drake_meta_impl.default <- function(target, config) {
   layout <- config$layout[[target]]
   meta <- list(
     name = target,
