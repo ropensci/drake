@@ -323,6 +323,6 @@ trigger_change <- function(target, meta, config) {
 }
 
 trigger_dynamic <- function(target, meta, meta_old, config) {
-  is.na(meta_old) ||
+  (length(meta_old) == 1L && is.na(meta_old)) ||
     !identical(meta$dynamic_dependency_hash, meta_old$dynamic_dependency_hash)
 }
