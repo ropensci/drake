@@ -51,7 +51,7 @@ register_subtargets <- function(target, parent_ok, subtargets_ok, config) {
   check_dynamic(target, config)
   subtargets <- subtarget_names(target, config)
   if (parent_ok) {
-    subtargets <- Filter(subtargets, f = config$cache$exists)
+    subtargets <- filter_subtargets(subtargets, config)
   }
   register_subtargets_graph(target, subtargets, config)
   register_subtargets_layout(target, subtargets, config)
@@ -59,8 +59,19 @@ register_subtargets <- function(target, parent_ok, subtargets_ok, config) {
   register_subtargets_loop(target, subtargets, config)
 }
 
+filter_subtargets <- function(subtargets, config) {
+  parallel_filter(
+    x = subtargets,
+    f = function(subtarget) {
+      !config$cache$exists(subtarget)
+    },
+    jobs = config$jobs_preprocess
+  )
+}
+
 is_registered_dynamic <- function(target, config) {
-  ht_exists(config$ht_dynamic, target)
+  !is.null(config$ht_dynamic) &&
+    ht_exists(config$ht_dynamic, target)
 }
 
 register_subtargets_graph <- function(target, subtargets, config) {
