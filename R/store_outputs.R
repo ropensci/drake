@@ -5,7 +5,7 @@ store_outputs <- function(target, value, meta, config) {
   config$logger$minor("store", target = target)
   store_triggers(target, meta, config)
   meta$name <- target
-  store_single_output(
+  store_item(
     target = target,
     value = value,
     meta = meta,
@@ -18,13 +18,28 @@ store_outputs <- function(target, value, meta, config) {
   )
 }
 
+store_triggers <- function(target, meta, config) {
+  if (is_subtarget(target, config)) {
+    return()
+  }
+  if (!is.null(meta$trigger$change)) {
+    config$cache$set(
+      key = target,
+      value = meta$trigger$value,
+      namespace = "change",
+      use_cache = FALSE
+    )
+  }
+  store_output_files(config$layout[[target]]$deps_build$file_out, meta, config)
+}
+
 store_output_files <- function(files, meta, config) {
   meta$isfile <- TRUE
   for (file in files) {
     meta$name <- file
     meta$mtime <- storage_mtime(config$cache$decode_path(file))
     meta$isfile <- TRUE
-    store_single_output(
+    store_item(
       target = file,
       value = NULL,
       meta = meta,
@@ -33,28 +48,9 @@ store_output_files <- function(files, meta, config) {
   }
 }
 
-store_single_output <- function(target, value, meta, config) {
-  if (meta$isfile) {
-    hash <- store_file(
-      target = target,
-      meta = meta,
-      config = config
-    )
-  } else if (is.function(value)) {
-    hash <- store_function(
-      target = target,
-      value = value,
-      meta = meta,
-      config = config
-    )
-  } else {
-    hash <- store_object(
-      target = target,
-      value = value,
-      meta = meta,
-      config = config
-    )
-  }
+store_item <- function(target, value, meta, config) {
+  class(target) <- output_type(value = value, meta = meta)
+  hash <- store_item_impl(target, value, meta, config)
   store_meta(
     target = target,
     value = value,
@@ -64,7 +60,35 @@ store_single_output <- function(target, value, meta, config) {
   )
 }
 
-store_function <- function(target, value, meta, config) {
+output_type <- function(value, meta) {
+  if (meta$isfile) {
+    return("file")
+  }
+  if (is.function(value)) {
+    return("function")
+  }
+  "object"
+}
+
+store_item_impl <- function(target, value, meta, config) {
+  UseMethod("store_item_impl")
+}
+
+store_item_impl.file <- function(target, value = NULL, meta, config) {
+  if (meta$imported) {
+    value <- storage_hash(target = target, config = config)
+  } else {
+    value <- rehash_storage(target = target, config = config)
+  }
+  store_object(
+    target = target,
+    value = value,
+    meta = meta,
+    config = config
+  )
+}
+
+store_item_impl.function <- function(target, value, meta, config) {
   if (meta$imported) {
     value <- standardize_imported_function(value)
     value <- c(value, meta$dependency_hash)
@@ -82,18 +106,8 @@ standardize_imported_function <- function(fun) {
   gsub("<pointer: 0x[0-9a-zA-Z]*>", "", str)
 }
 
-store_file <- function(target, meta, config) {
-  if (meta$imported) {
-    value <- storage_hash(target = target, config = config)
-  } else {
-    value <- rehash_storage(target = target, config = config)
-  }
-  store_object(
-    target = target,
-    value = value,
-    meta = meta,
-    config = config
-  )
+store_item_impl.object <- function(target, value, meta, config) {
+  store_object(target, value, meta, config)
 }
 
 store_object <- function(target, value, meta, config) {
@@ -132,21 +146,6 @@ store_recovery <- function(target, meta, meta_hash, config) {
     namespace = "recover",
     hash = meta_hash
   )
-}
-
-store_triggers <- function(target, meta, config) {
-  if (is_subtarget(target, config)) {
-    return()
-  }
-  if (!is.null(meta$trigger$change)) {
-    config$cache$set(
-      key = target,
-      value = meta$trigger$value,
-      namespace = "change",
-      use_cache = FALSE
-    )
-  }
-  store_output_files(config$layout[[target]]$deps_build$file_out, meta, config)
 }
 
 finalize_meta <- function(target, value, meta, hash, config) {
