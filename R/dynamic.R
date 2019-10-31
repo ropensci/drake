@@ -53,6 +53,9 @@ register_subtargets <- function(target, parent_ok, subtargets_ok, config) {
   if (parent_ok) {
     subtargets <- filter_subtargets(subtargets, config)
   }
+  if (!length(subtargets)) {
+    return()
+  }
   register_subtargets_graph(target, subtargets, config)
   register_subtargets_layout(target, subtargets, config)
   register_subtargets_queue(target, subtargets, config)
