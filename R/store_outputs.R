@@ -3,7 +3,6 @@ store_outputs <- function(target, value, meta, config) {
     return()
   }
   config$logger$minor("store", target = target)
-  meta <- finalize_triggers(target, meta, config)
   store_triggers(target, meta, config)
   meta$name <- target
   store_single_output(
@@ -150,28 +149,8 @@ store_triggers <- function(target, meta, config) {
   store_output_files(config$layout[[target]]$deps_build$file_out, meta, config)
 }
 
-finalize_triggers <- function(target, meta, config) {
-  if (is_subtarget(target, config)) {
-    return(meta)
-  }
-  layout <- config$layout[[target]]
-  if (is.null(meta$command)) {
-    meta$command <- layout$command_standardized
-  }
-  if (is.null(meta$dependency_hash)) {
-    meta$dependency_hash <- dependency_hash(target = target, config = config)
-  }
-  if (is.null(meta$input_file_hash)) {
-    meta$input_file_hash <- input_file_hash(target = target, config = config)
-  }
-  if (length(file_out) || is.null(file_out)) {
-    meta$output_file_hash <- output_file_hash(
-      target = target, config = config)
-  }
-  meta
-}
-
 finalize_meta <- function(target, value, meta, hash, config) {
+  meta <- finalize_triggers(target, meta, config)
   meta$time_command <- runtime_entry(
     runtime = meta$time_command,
     target = target
@@ -193,6 +172,29 @@ finalize_meta <- function(target, value, meta, hash, config) {
   }
   if (is_dynamic_dep(target, config)) {
     meta$dynamic_hashes <- dynamic_hashes(meta$size, value, config)
+  }
+  meta
+}
+
+finalize_triggers <- function(target, meta, config) {
+  if (is_subtarget(target, config)) {
+    return(meta)
+  }
+  layout <- config$layout[[target]]
+  if (is.null(meta$command)) {
+    meta$command <- layout$command_standardized
+  }
+  if (is.null(meta$dependency_hash)) {
+    meta$dependency_hash <- dependency_hash(target = target, config = config)
+  }
+  if (is.null(meta$input_file_hash)) {
+    meta$input_file_hash <- input_file_hash(target = target, config = config)
+  }
+  if (length(file_out) || is.null(file_out)) {
+    meta$output_file_hash <- output_file_hash(
+      target = target,
+      config = config
+    )
   }
   meta
 }
