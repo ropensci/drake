@@ -3,13 +3,7 @@ local_build <- function(target, config, downstream) {
   if (handle_triggers(target, meta, config)) {
     return()
   }
-  if (!is_registered(target, config)) {
-    announce_build(target, config)
-  }
-  if (should_register_subtargets(target, config)) {
-    register_subtargets(target, config)
-    return()
-  }
+  announce_build(target, config)
   manage_memory(
     target,
     config,
@@ -20,18 +14,17 @@ local_build <- function(target, config, downstream) {
   conclude_build(build = build, config = config)
 }
 
-should_register_subtargets <- function(target, config) {
-  is_dynamic(target, config) &&
-    !is_registered(target, config)
-}
-
 announce_build <- function(target, config) {
+  if (is_dynamic(target, config)) {
+    announce_dynamic(target, config)
+    return()
+  }
   set_progress(
     target = target,
     value = "running",
     config = config
   )
-  color <- target_color(target, config)
+  color <- ifelse(is_subtarget(target, config), "subtarget", "target")
   config$logger$major(
     color,
     target,
@@ -40,15 +33,17 @@ announce_build <- function(target, config) {
   )
 }
 
-target_color <- function(target, config) {
-  color <- "target"
-  if (is_dynamic(target, config)) {
-    color <- "dynamic"
-  }
-  if (is_subtarget(target, config)) {
-    color <- "subtarget"
-  }
-  color
+announce_dynamic <- function(target, config) {
+  msg <- ifelse(
+    is_registered_dynamic(target, config),
+    "gather",
+    "dynamic"
+  )
+  config$logger$minor(
+    msg,
+    target,
+    target = target
+  )
 }
 
 try_build <- function(target, meta, config) {

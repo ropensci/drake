@@ -235,10 +235,11 @@ make <- function(
   config$logger$minor("begin make()")
   runtime_checks(config = config)
   config$running_make <- TRUE
+  config$ht_dynamic <- ht_new()
   config$cache$reset_memo_hash()
   on.exit(config$cache$reset_memo_hash())
-  config$cache$set(key = "seed", value = config$seed, namespace = "session")
   config$envir_subtargets[[drake_envir_marker]] <- TRUE
+  config$cache$set(key = "seed", value = config$seed, namespace = "session")
   if (config$log_progress) {
     config$cache$clear(namespace = "progress")
   }

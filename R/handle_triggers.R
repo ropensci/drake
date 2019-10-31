@@ -1,10 +1,19 @@
 handle_triggers <- function(target, meta, config) {
   if (is_subtarget(target, config)) {
-    return(config$cache$exists(target))
+    return(FALSE)
+  }
+  if (is_registered_dynamic(target, config)) {
+    return(ht_get(config$ht_dynamic, target))
   }
   meta_old <- old_meta(key = target, cache = config$cache)
-  !any_triggers(target, meta, meta_old, config) ||
+  parent_ok <- !any_triggers(target, meta, meta_old, config) ||
     recover_target(target, meta, config)
+  if (!is_dynamic(target, config)) {
+    return(parent_ok)
+  }
+  subtargets_ok <- check_trigger_dynamic(target, meta, meta_old, config)
+  register_subtargets(target, parent_ok, subtargets_ok, config)
+  TRUE
 }
 
 recover_target <- function(target, meta, config) {
@@ -200,6 +209,11 @@ check_trigger_change <- function(target, meta, config) {
   FALSE
 }
 
+check_trigger_dynamic <- function(target, meta, meta_old, config) {
+  check_trigger_missing(target, meta, config) ||
+    trigger_dynamic(target, meta, meta_old, config)
+}
+
 trigger_command <- function(target, meta, meta_old, config) {
   if (is.null(meta$command)) {
     return(FALSE)
@@ -306,4 +320,9 @@ trigger_change <- function(target, meta, config) {
   }
   old_value <- config$cache$get(key = target, namespace = "change")
   !identical(old_value, meta$trigger$value)
+}
+
+trigger_dynamic <- function(target, meta, meta_old, config) {
+  is.na(meta_old) ||
+    !identical(meta$dynamic_dependency_hash, meta_old$dynamic_dependency_hash)
 }

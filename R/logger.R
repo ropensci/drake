@@ -92,11 +92,10 @@ drake_log_term <- function(..., target, color, verbose) {
 text_color <- Vectorize(function(x) {
   color <- switch(
     x,
-    default = "dodgerblue3",
-    dynamic = "#ffd700",
-    subtarget = "#aaa9ad",
+    default = "lightGray",
+    subtarget = "dodgerblue3",
     target = "green3",
-    recover = "dodgerblue3",
+    recover = "#ffd700",
     retry = "#9400d3",
     missing = "#9400d3",
     fail = "red",

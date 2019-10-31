@@ -39,6 +39,9 @@ drake_meta_ <- function(target, config) {
     try_load(layout$deps_change$memory, config = config)
     meta$trigger$value <- eval(meta$trigger$change, config$envir_targets)
   }
+  if (is_dynamic(target, config)) {
+    meta$dynamic_dependency_hash <- dynamic_dependency_hash(target, config)
+  }
   meta
 }
 
@@ -64,6 +67,15 @@ dependency_hash <- function(target, config) {
   if (is_imported(target, config)) {
     deps <- c(deps, x$file_in, x$knitr_in)
   }
+  dependency_hash_impl(deps, config)
+}
+
+dynamic_dependency_hash <- function(target, config) {
+  deps <- config$layout[[target]]$deps_dynamic
+  dependency_hash_impl(deps, config)
+}
+
+dependency_hash_impl <- function(deps, config) {
   if (!length(deps)) {
     return("")
   }

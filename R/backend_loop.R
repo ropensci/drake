@@ -4,7 +4,6 @@ backend_loop <- function(config) {
     on.exit(unlock_environment(config$envir))
   }
   config$lock_envir <- FALSE
-  config$ht_registered <- ht_new()
   config$envir_loop <- new.env(parent = emptyenv())
   config$envir_loop$targets <- igraph::topo_sort(config$envir_graph$graph)$name
   while (length(config$envir_loop$targets)) {

@@ -39,21 +39,28 @@ subtargets <- function(
   )$subtargets
 }
 
-register_subtargets <- function(target, config) {
+register_subtargets <- function(target, parent_ok, subtargets_ok, config) {
+  on.exit(ht_set(config$ht_dynamic, target, parent_ok && subtargets_ok))
   if (config$parallelism != "loop") { # just for now...
     return()
   }
+  if (parent_ok && subtargets_ok) {
+    return()
+  }
+  announce_dynamic(target, config)
   check_dynamic(target, config)
   subtargets <- subtarget_names(target, config)
+  if (parent_ok) {
+    subtargets <- Filter(subtargets, f = config$cache$exists)
+  }
   register_subtargets_graph(target, subtargets, config)
   register_subtargets_layout(target, subtargets, config)
   register_subtargets_queue(target, subtargets, config)
   register_subtargets_loop(target, subtargets, config)
-  ht_set(config$ht_registered, target)
 }
 
-is_registered <- function(target, config) {
-  ht_exists(config$ht_registered, target)
+is_registered_dynamic <- function(target, config) {
+  ht_exists(config$ht_dynamic, target)
 }
 
 register_subtargets_graph <- function(target, subtargets, config) {
