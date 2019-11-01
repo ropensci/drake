@@ -498,6 +498,31 @@ test_with_dir("dynamic combine flow with by", {
   out <- lapply(subtargets(z), readd, character_only = TRUE)
   exp <- list(c(3, 2), 4, c(5, 12))
   expect_equal(out, exp)
+  # change some groupings
+  plan <- drake_plan(
+    w = c("a", "b", "b", "c", "c"),
+    x = as.integer(c(1, 0, 2, 3, 10)),
+    y = target(x + 2, dynamic = map(x)),
+    z = target(unlist(y), dynamic = combine(y, .by = w))
+  )
+  make(plan)
+  exp <- c("w", "z", subtargets(z)[-3])
+  expect_equal(sort(justbuilt(config)), sort(exp))
+  out <- lapply(subtargets(z), readd, character_only = TRUE)
+  exp <- list(3, c(2, 4), c(5, 12))
+  expect_equal(out, exp)
+  # change .by but not groupings
+  plan <- drake_plan(
+    w = c("X", "Y", "Y", "Z", "Z"),
+    x = as.integer(c(1, 0, 2, 3, 10)),
+    y = target(x + 2, dynamic = map(x)),
+    z = target(unlist(y), dynamic = combine(y, .by = w))
+  )
+  make(plan)
+  expect_equal(sort(justbuilt(config)), c("w", "z"))
+  out <- lapply(subtargets(z), readd, character_only = TRUE)
+  exp <- list(3, c(2, 4), c(5, 12))
+  expect_equal(out, exp)
 })
 
 test_with_dir("make a dep dynamic later on", {
