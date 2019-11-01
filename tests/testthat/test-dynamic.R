@@ -95,7 +95,7 @@ test_with_dir("invalidating a subtarget invalidates the parent", {
   make(plan)
   clean(list = subtargets(y)[1])
   make(plan)
-  expect_equal(sort(justbuilt(config)), sort(c("y", subtargets(y)[1])))
+  expect_equal(justbuilt(config), subtargets(y)[1])
 })
 
 test_with_dir("dynamic map flow", {
