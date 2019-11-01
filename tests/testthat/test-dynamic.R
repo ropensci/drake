@@ -88,7 +88,7 @@ test_with_dir("dynamic subvalues", {
 
 test_with_dir("invalidating a subtarget invalidates the parent", {
   plan <- drake_plan(
-    x = seq_len(2),
+    x = seq_len(1e3),
     y = target(x, dynamic = map(x))
   )
   make(plan)

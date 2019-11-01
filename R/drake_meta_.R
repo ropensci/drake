@@ -27,7 +27,7 @@ drake_meta_impl.default <- function(target, config) {
     name = target,
     target = target,
     imported = layout$imported %||% TRUE,
-    missing = !config$cache$exists(key = target),
+    missing = target_missing(target, config),
     seed = as.integer(
       layout$seed %||NA% seed_from_basic_types(config$seed, target)
     ),
@@ -66,6 +66,15 @@ drake_meta_impl.default <- function(target, config) {
     meta$dynamic_dependency_hash <- dynamic_dependency_hash(target, config)
   }
   meta
+}
+
+target_missing <- function(target, config) {
+  !target_exists(target, config)
+}
+
+target_exists <- function(target, config) {
+  config$cache$exists(key = target) &&
+    config$cache$exists(key = target, namespace = "meta")
 }
 
 # A numeric hash that could be used as a

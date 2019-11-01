@@ -292,7 +292,7 @@ run_native_backend <- function(config) {
       envir = getNamespace("drake")
     )(config)
   } else {
-    config$logger$major("All targets are already up to date.")
+    config$logger$major("All targets are already up to date.", color = NULL)
   }
 }
 

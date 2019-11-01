@@ -47,12 +47,12 @@ dynamic_build <- function(target, meta, config) {
   list(target = target, meta = meta, value = value)
 }
 
-register_subtargets <- function(target, parent_ok, subtargets_ok, config) {
-  on.exit(ht_set(config$ht_dynamic, target, parent_ok && subtargets_ok))
+register_subtargets <- function(target, parent_ok, subdeps_ok, config) {
+  on.exit(ht_set(config$ht_dynamic, target, parent_ok && subdeps_ok))
   if (config$parallelism != "loop") { # just for now...
     return()
   }
-  if (parent_ok && subtargets_ok) {
+  if (parent_ok && subdeps_ok) {
     return()
   }
   announce_dynamic(target, config)
@@ -71,13 +71,7 @@ register_subtargets <- function(target, parent_ok, subtargets_ok, config) {
 }
 
 filter_subtargets <- function(subtargets, config) {
-  parallel_filter(
-    x = subtargets,
-    f = function(subtarget) {
-      !config$cache$exists(subtarget)
-    },
-    jobs = config$jobs_preprocess
-  )
+  parallel_filter(subtargets, target_missing, jobs = config$jobs_preprocess)
 }
 
 is_registered_dynamic <- function(target, config) {
