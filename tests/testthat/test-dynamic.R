@@ -255,15 +255,138 @@ test_with_dir("dynamic cross values", {
   expect_equal(rc(z4[4]), "bBBb")
 })
 
+
+
+
 test_with_dir("dynamic cross flow", {
-  # continue here
+  # TO DO: change maps to crosses and proceed
   plan <- drake_plan(
-    w = letters[seq_len(2)],
-    x = LETTERS[seq_len(2)],
-    y = target(paste0(w, x), dynamic = cross(w, x)),
-    z = target(y, dynamic = map(y))
+    x = seq_len(4),
+    y = target(x + 1, dynamic = map(x)),
+    z = target(y + 1, dynamic = map(y))
   )
+  make(plan)
+  expect_equal(readd(x), seq_len(4))
+  ys <- subtargets(y)
+  zs <- subtargets(z)
+  expect_equal(readd(ys[1], character_only = TRUE), 2)
+  expect_equal(readd(ys[2], character_only = TRUE), 3)
+  expect_equal(readd(ys[3], character_only = TRUE), 4)
+  expect_equal(readd(ys[4], character_only = TRUE), 5)
+  expect_equal(readd(zs[1], character_only = TRUE), 3)
+  expect_equal(readd(zs[2], character_only = TRUE), 4)
+  expect_equal(readd(zs[3], character_only = TRUE), 5)
+  expect_equal(readd(zs[4], character_only = TRUE), 6)
+  # change a static dep
+  plan <- drake_plan(
+    x = seq_len(4),
+    y = target(x + 1, dynamic = map(x)),
+    z = target(y + 2, dynamic = map(y))
+  )
+  make(plan)
+  config <- drake_config(plan)
+  expect_true(length(justbuilt(config)) > 0L)
+  expect_true(all(grepl("^z", justbuilt(config))))
+  ys <- subtargets(y)
+  zs <- subtargets(z)
+  expect_equal(readd(ys[1], character_only = TRUE), 2)
+  expect_equal(readd(ys[2], character_only = TRUE), 3)
+  expect_equal(readd(ys[3], character_only = TRUE), 4)
+  expect_equal(readd(ys[4], character_only = TRUE), 5)
+  expect_equal(readd(zs[1], character_only = TRUE), 4)
+  expect_equal(readd(zs[2], character_only = TRUE), 5)
+  expect_equal(readd(zs[3], character_only = TRUE), 6)
+  expect_equal(readd(zs[4], character_only = TRUE), 7)
+  # change nothing
+  make(plan)
+  expect_equal(justbuilt(config), character(0))
+  ys <- subtargets(y)
+  zs <- subtargets(z)
+  expect_equal(readd(ys[1], character_only = TRUE), 2)
+  expect_equal(readd(ys[2], character_only = TRUE), 3)
+  expect_equal(readd(ys[3], character_only = TRUE), 4)
+  expect_equal(readd(ys[4], character_only = TRUE), 5)
+  expect_equal(readd(zs[1], character_only = TRUE), 4)
+  expect_equal(readd(zs[2], character_only = TRUE), 5)
+  expect_equal(readd(zs[3], character_only = TRUE), 6)
+  expect_equal(readd(zs[4], character_only = TRUE), 7)
+  # change part of a dynamic dep
+  plan <- drake_plan(
+    x = as.integer(c(1, 5, 3, 6)),
+    y = target(x + 1, dynamic = map(x)),
+    z = target(y + 2, dynamic = map(y))
+  )
+  make(plan)
+  out <- justbuilt(config)
+  exp <- c("x", "y", subtargets(y)[c(2, 4)], "z", subtargets(z)[c(2, 4)])
+  expect_equal(sort(out), sort(exp))
+  ys <- subtargets(y)
+  zs <- subtargets(z)
+  expect_equal(readd(ys[1], character_only = TRUE), 2)
+  expect_equal(readd(ys[2], character_only = TRUE), 6)
+  expect_equal(readd(ys[3], character_only = TRUE), 4)
+  expect_equal(readd(ys[4], character_only = TRUE), 7)
+  expect_equal(readd(zs[1], character_only = TRUE), 4)
+  expect_equal(readd(zs[2], character_only = TRUE), 8)
+  expect_equal(readd(zs[3], character_only = TRUE), 6)
+  expect_equal(readd(zs[4], character_only = TRUE), 9)
+  # change nothing
+  make(plan)
+  expect_equal(justbuilt(config), character(0))
+  expect_equal(readd(ys[1], character_only = TRUE), 2)
+  expect_equal(readd(ys[2], character_only = TRUE), 6)
+  expect_equal(readd(ys[3], character_only = TRUE), 4)
+  expect_equal(readd(ys[4], character_only = TRUE), 7)
+  expect_equal(readd(zs[1], character_only = TRUE), 4)
+  expect_equal(readd(zs[2], character_only = TRUE), 8)
+  expect_equal(readd(zs[3], character_only = TRUE), 6)
+  expect_equal(readd(zs[4], character_only = TRUE), 9)
+  # insert a new dynamic dep
+  plan <- drake_plan(
+    x = as.integer(c(1, 5, 2, 3, 6)),
+    y = target(x + 1, dynamic = map(x)),
+    z = target(y + 2, dynamic = map(y))
+  )
+  make(plan)
+  out <- justbuilt(config)
+  exp <- c("x", "y", subtargets(y)[3], "z", subtargets(z)[3])
+  expect_equal(sort(out), sort(exp))
+  ys <- subtargets(y)
+  zs <- subtargets(z)
+  expect_equal(readd(ys[1], character_only = TRUE), 2)
+  expect_equal(readd(ys[2], character_only = TRUE), 6)
+  expect_equal(readd(ys[3], character_only = TRUE), 3)
+  expect_equal(readd(ys[4], character_only = TRUE), 4)
+  expect_equal(readd(ys[5], character_only = TRUE), 7)
+  expect_equal(readd(zs[1], character_only = TRUE), 4)
+  expect_equal(readd(zs[2], character_only = TRUE), 8)
+  expect_equal(readd(zs[3], character_only = TRUE), 5)
+  expect_equal(readd(zs[4], character_only = TRUE), 6)
+  expect_equal(readd(zs[5], character_only = TRUE), 9)
+  # change dynamic and static dep
+  plan <- drake_plan(
+    x = as.integer(c(7, 8, 9)),
+    y = target(x ^ 2, dynamic = map(x)),
+    z = target(y ^ 2, dynamic = map(y))
+  )
+  make(plan)
+  out <- justbuilt(config)
+  exp <- c("x", "y", subtargets(y), "z", subtargets(z))
+  expect_equal(sort(out), sort(exp))
+  ys <- subtargets(y)
+  zs <- subtargets(z)
+  expect_equal(readd(ys[1], character_only = TRUE), 49)
+  expect_equal(readd(ys[2], character_only = TRUE), 64)
+  expect_equal(readd(ys[3], character_only = TRUE), 81)
+  expect_equal(readd(zs[1], character_only = TRUE), 2401)
+  expect_equal(readd(zs[2], character_only = TRUE), 4096)
+  expect_equal(readd(zs[3], character_only = TRUE), 6561)
 })
+
+
+
+
+
 
 test_with_dir("dynamic combine", {
   plan <- drake_plan(
