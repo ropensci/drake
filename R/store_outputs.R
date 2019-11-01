@@ -141,6 +141,9 @@ store_meta <- function(target, value, meta, hash, config) {
 
 store_recovery <- function(target, meta, meta_hash, config) {
   key <- recovery_key(target = target, meta = meta, config = config)
+  if (is.na(key)) {
+    return()
+  }
   config$cache$driver$set_hash(
     key = key,
     namespace = "recover",

@@ -11,7 +11,8 @@ handle_triggers <- function(target, meta, config) {
   if (!is_dynamic(target, config)) {
     return(parent_ok)
   }
-  register_subtargets(target, parent_ok, config)
+  subdeps_ok <- !check_trigger_dynamic(target, meta, meta_old, config)
+  register_subtargets(target, parent_ok, subdeps_ok, config)
   TRUE
 }
 
@@ -31,18 +32,14 @@ recover_target <- function(target, meta, config) {
   if (!exists_data) {
     return(FALSE) # nocov # Should not happen, just to be safe...
   }
-  if (is_dynamic(target, config)) {
-    recovered_subtargets <- recover_subtargets(target, recovery_meta, config)
-    if (!recovered_subtargets) {
-      return(FALSE)
-    }
+  if (!is_dynamic(target, config)) {
+    config$logger$major(
+      "recover",
+      target,
+      target = target,
+      color = "recover"
+    )
   }
-  config$logger$major(
-    "recover",
-    target,
-    target = target,
-    color = "recover"
-  )
   config$logger$minor(
     "recovered target originally stored on",
     recovery_meta$date,
@@ -66,10 +63,6 @@ recover_target <- function(target, meta, config) {
   TRUE
 }
 
-recover_subtargets <- function(target, meta, config) {
-  all(unlist(lapply(meta$subtargets, recover_subtarget, config = config)))
-}
-
 recover_subtarget <- function(subtarget, config) {
   meta <- drake_meta_(subtarget, config)
   class(subtarget) <- "subtarget"
@@ -77,7 +70,9 @@ recover_subtarget <- function(subtarget, config) {
 }
 
 recovery_key <- function(target, meta, config) {
-  class(target) <- ifelse(is_subtarget(target, config), "subtarget", "target")
+  if (is_subtarget(target, config)){
+    class(target) <- "subtarget"
+  }
   recovery_key_impl(target, meta, config)
 }
 

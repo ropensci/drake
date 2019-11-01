@@ -47,33 +47,40 @@ dynamic_build <- function(target, meta, config) {
   list(target = target, meta = meta, value = value)
 }
 
-register_subtargets <- function(target, parent_ok, config) {
-  on.exit(ht_set(config$ht_dynamic, target, !as.logical(length(subtargets))))
+register_subtargets <- function(target, parent_ok, subdeps_ok, config) {
+  on.exit(ht_set(config$ht_dynamic, target, parent_ok && subdeps_ok))
   if (config$parallelism != "loop") { # just for now...
+    ht_set(config$ht_dynamic, target)
     return()
   }
   announce_dynamic(target, config)
   check_dynamic(target, config)
-  subtargets_all <- subtargets_build <- subtarget_names(target, config)
-  if (parent_ok) {
-    subtargets_build <- filter_subtargets(subtargets_build, config)
-  }
-  if (!length(subtargets)) {
-    return()
-  }
+  subtargets_all <- subtarget_names(target, config)
+  subtargets_build <- filter_subtargets(subtargets_all, parent_ok, config)
   register_subtargets_graph(target, subtargets_all, config)
   register_subtargets_layout(target, subtargets_all, config)
+  if (!length(subtargets_build)) {
+    return()
+  }
   register_subtargets_queue(target, subtargets_build, config)
   register_subtargets_loop(target, subtargets_build, config)
 }
 
-filter_subtargets <- function(subtargets, config) {
+filter_subtargets <- function(subtargets, parent_ok, config) {
   parallel_filter(
     subtargets,
-    target_missing,
+    should_build_subtarget,
     jobs = config$jobs_preprocess,
+    parent_ok = parent_ok,
     config = config
   )
+}
+
+should_build_subtarget <- function(subtarget, parent_ok, config) {
+  if (target_exists(subtarget, config)) {
+    return(!parent_ok)
+  }
+  !recover_subtarget(subtarget, config) || !parent_ok
 }
 
 is_registered_dynamic <- function(target, config) {

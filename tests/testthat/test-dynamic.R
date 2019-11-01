@@ -770,9 +770,12 @@ test_with_dir("subtarget recovery", {
   config <- drake_config(plan)
   make(plan)
   clean(list = subtargets(y)[1])
+  unlink(readd(x))
+  expect_equal(outdated(config), "y")
   make(plan, recover = TRUE)
-  expect_false(file.exists("a"))
-  expect_true(file.exists("b"))
+  expect_equal(outdated(config), character(0))
+  expect_false(any(file.exists(c("a", "b"))))
+  expect_equal(sort(justbuilt(config)), sort(c(subtargets(y)[1])))
 })
 
 test_with_dir("failed dynamic data recovery", {
@@ -787,16 +790,8 @@ test_with_dir("failed dynamic data recovery", {
   expect_true(all(file.exists(files)))
   unlink(files)
   expect_false(any(file.exists(files)))
+  config$cache$del(subtargets(y)[1])
   config$cache$del(subtargets(y)[1], namespace = "recover")
-
-  stop("needs work")
-  browser()
-
-  clean(list = subtargets(y)[1])
-  plan <- drake_plan(
-    x = letters[seq_len(4)],
-    y = target(file.create(x), dynamic = map(x))
-  )
   make(plan, recover = TRUE)
-  expect_true(all(file.exists(files)))
+  expect_true(file.exists("a"))
 })
