@@ -71,7 +71,12 @@ register_subtargets <- function(target, parent_ok, subdeps_ok, config) {
 }
 
 filter_subtargets <- function(subtargets, config) {
-  parallel_filter(subtargets, target_missing, jobs = config$jobs_preprocess)
+  parallel_filter(
+    subtargets,
+    target_missing,
+    jobs = config$jobs_preprocess,
+    config = config
+  )
 }
 
 is_registered_dynamic <- function(target, config) {
