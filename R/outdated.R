@@ -167,7 +167,9 @@ first_outdated <- function(config) {
         }
         meta <- drake_meta_(target, config)
         meta_old <- old_meta(key = target, cache = config$cache)
-        any_triggers(target, meta, meta_old, config)
+        any_triggers(target, meta, meta_old, config) ||
+          check_trigger_dynamic(target, meta, meta_old, config) ||
+          missing_subtargets(target, meta_old, config)
       },
       jobs = config$jobs_preprocess
     )
@@ -181,6 +183,13 @@ first_outdated <- function(config) {
     old_leaves <- new_leaves
   }
   out
+}
+
+missing_subtargets <- function(target, meta, config) {
+  if (!is_dynamic(target, config)) {
+    return(FALSE)
+  }
+  any(targets_missing(meta$subtargets, config))
 }
 
 #' @title Report any import objects required by your drake_plan

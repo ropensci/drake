@@ -88,12 +88,14 @@ test_with_dir("dynamic subvalues", {
 
 test_with_dir("invalidating a subtarget invalidates the parent", {
   plan <- drake_plan(
-    x = seq_len(1e3),
+    x = seq_len(2),
     y = target(x, dynamic = map(x))
   )
+  config <- drake_config(plan)
   make(plan)
   clean(list = subtargets(y)[1])
   make(plan)
+  expect_equal(sort(justbuilt(config)), sort(c("y", subtargets(y)[1])))
 })
 
 test_with_dir("dynamic map flow", {
@@ -740,7 +742,7 @@ test_with_dir("dynamic change triggers are not allowed", {
   expect_error(drake_config(plan), regexp = "forbidden")
 })
 
-test_with_dir("dynamic data recovery", {
+test_with_dir("dynamic parent recovery", {
   skip_on_cran()
   plan <- drake_plan(
     x = letters[seq_len(4)],
@@ -758,6 +760,19 @@ test_with_dir("dynamic data recovery", {
   expect_equal(outdated(config), character(0))
   make(plan)
   expect_equal(justbuilt(config), character(0))
+})
+
+test_with_dir("subtarget recovery", {
+  plan <- drake_plan(
+    x = letters[seq_len(2)],
+    y = target(file.create(x), dynamic = map(x))
+  )
+  config <- drake_config(plan)
+  make(plan)
+  clean(list = subtargets(y)[1])
+  make(plan, recover = TRUE)
+  expect_false(file.exists("a"))
+  expect_true(file.exists("b"))
 })
 
 test_with_dir("failed dynamic data recovery", {

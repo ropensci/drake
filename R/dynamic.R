@@ -47,12 +47,9 @@ dynamic_build <- function(target, meta, config) {
   list(target = target, meta = meta, value = value)
 }
 
-register_subtargets <- function(target, parent_ok, subdeps_ok, config) {
-  on.exit(ht_set(config$ht_dynamic, target, parent_ok && subdeps_ok))
+register_subtargets <- function(target, parent_ok, config) {
+  on.exit(ht_set(config$ht_dynamic, target, !as.logical(length(subtargets))))
   if (config$parallelism != "loop") { # just for now...
-    return()
-  }
-  if (parent_ok && subdeps_ok) {
     return()
   }
   announce_dynamic(target, config)

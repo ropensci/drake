@@ -11,8 +11,7 @@ handle_triggers <- function(target, meta, config) {
   if (!is_dynamic(target, config)) {
     return(parent_ok)
   }
-  subdeps_ok <- !check_trigger_dynamic(target, meta, meta_old, config)
-  register_subtargets(target, parent_ok, subdeps_ok, config)
+  register_subtargets(target, parent_ok, config)
   TRUE
 }
 
@@ -243,8 +242,7 @@ check_trigger_change <- function(target, meta, config) {
 }
 
 check_trigger_dynamic <- function(target, meta, meta_old, config) {
-  check_trigger_missing(target, meta, config) ||
-    trigger_dynamic(target, meta, meta_old, config)
+  trigger_dynamic(target, meta, meta_old, config)
 }
 
 trigger_command <- function(target, meta, meta_old, config) {
@@ -356,6 +354,9 @@ trigger_change <- function(target, meta, config) {
 }
 
 trigger_dynamic <- function(target, meta, meta_old, config) {
-  (length(meta_old) == 1L && is.na(meta_old)) ||
-    !identical(meta$dynamic_dependency_hash, meta_old$dynamic_dependency_hash)
+  if (!is_dynamic(target, config)) {
+    return(FALSE)
+  }
+  old_hash <- meta_elt(field = "dynamic_dependency_hash", meta = meta_old)
+  !identical(meta$dynamic_dependency_hash, old_hash)
 }

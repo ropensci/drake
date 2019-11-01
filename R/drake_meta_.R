@@ -72,6 +72,8 @@ target_missing <- function(target, config) {
   !target_exists(target, config)
 }
 
+targets_missing <- Vectorize(target_missing, vectorize.args = "target")
+
 target_exists <- function(target, config) {
   config$cache$exists(key = target) &&
     config$cache$exists(key = target, namespace = "meta")
