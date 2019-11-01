@@ -86,7 +86,7 @@ test_with_dir("dynamic subvalues", {
   expect_equivalent(dynamic_subvalue(m, c(1, 2)), m[c(1, 2),,,,]) # nolint
 })
 
-test_with_dir("dynamic map", {
+test_with_dir("dynamic map flow", {
   plan <- drake_plan(
     x = seq_len(4),
     y = target(x + 1, dynamic = map(x)),
@@ -355,16 +355,47 @@ test_with_dir("dynamic cross flow", {
   assert_vals(vals)
 })
 
-test_with_dir("dynamic combine", {
+test_with_dir("dynamic combine flow without by", {
   plan <- drake_plan(
     x = seq_len(4),
     y = target(x + 1, dynamic = map(x)),
-    z = target(c(y), dynamic = combine(y))
+    z = target(unlist(y), dynamic = combine(y))
   )
   make(plan)
   out <- readd(subtargets(z), character_only = TRUE)
-  exp <- list(2, 3, 4, 5)
+  exp <- c(2, 3, 4, 5)
   expect_equal(out, exp)
+  # change nothing
+  make(plan)
+  config <- drake_config(plan)
+  expect_equal(justbuilt(config), character(0))
+  # Change static dep
+  plan <- drake_plan(
+    x = seq_len(4),
+    y = target(x + 2, dynamic = map(x)),
+    z = target(unlist(y), dynamic = combine(y))
+  )
+  make(plan)
+  out <- readd(subtargets(z), character_only = TRUE)
+  expect_equal(out, c(3, 4, 5, 6))
+  exp <- c("y", "z", subtargets(y), subtargets(z))
+  expect_equal(sort(justbuilt(config)), sort(exp))
+  # change nothing
+  make(plan)
+  expect_equal(justbuilt(config), character(0))
+  expect_equal(out, c(3, 4, 5, 6))
+  # Insert dynamic dep
+  plan <- drake_plan(
+    x = c(1, 2, 10, 4),
+    y = target(x + 2, dynamic = map(x)),
+    z = target(unlist(y), dynamic = combine(y))
+  )
+  make(plan)
+  out <- readd(subtargets(z), character_only = TRUE)
+  exp <- c(3, 4, 12, 6)
+  expect_equal(out, exp)
+  exp <- c("x", "y", "z", subtargets(y), subtargets(z))
+  expect_equal(sort(justbuilt(config)), sort(exp))
 })
 
 test_with_dir("dynamic combine with by", {
@@ -406,6 +437,67 @@ test_with_dir("dynamic combine with by", {
   exp2 <- list(x = 4, y = 5)
   expect_equal(out1, exp1)
   expect_equal(out2, exp2)
+})
+
+test_with_dir("dynamic combine flow with by", {
+  plan <- drake_plan(
+    w = c("a", "b", "c", "c"),
+    x = seq_len(4),
+    y = target(x + 1, dynamic = map(x)),
+    z = target(unlist(y), dynamic = combine(y, .by = w))
+  )
+  make(plan)
+  out <- lapply(subtargets(z), readd, character_only = TRUE)
+  exp <- list(2, 3, c(4, 5))
+  expect_equal(out, exp)
+  # change nothing
+  make(plan)
+  config <- drake_config(plan)
+  expect_equal(justbuilt(config), character(0))
+  # change static dep
+  plan <- drake_plan(
+    w = c("a", "b", "c", "c"),
+    x = seq_len(4),
+    y = target(x + 2, dynamic = map(x)),
+    z = target(unlist(y), dynamic = combine(y, .by = w))
+  )
+  make(plan)
+  config <- drake_config(plan)
+  exp <- c("y", "z", subtargets(y), subtargets(z)[-1])
+  expect_equal(sort(justbuilt(config)), sort(exp))
+  out <- lapply(subtargets(z), readd, character_only = TRUE)
+  exp <- list(3, 4, c(5, 6))
+  expect_equal(out, exp)
+  # change dynamic sub-dep
+  plan <- drake_plan(
+    w = c("a", "b", "c", "c"),
+    x = as.integer(c(1, 2, 3, 10)),
+    y = target(x + 2, dynamic = map(x)),
+    z = target(unlist(y), dynamic = combine(y, .by = w))
+  )
+  make(plan)
+  exp <- c("x", "y", "z", subtargets(y)[4], subtargets(z)[3])
+  expect_equal(sort(justbuilt(config)), sort(exp))
+  out <- lapply(subtargets(z), readd, character_only = TRUE)
+  exp <- list(3, 4, c(5, 12))
+  expect_equal(out, exp)
+  # change nothing
+  make(plan)
+  config <- drake_config(plan)
+  expect_equal(justbuilt(config), character(0))
+  # insert dynamic sub-dep
+  plan <- drake_plan(
+    w = c("a", "a", "b", "c", "c"),
+    x = as.integer(c(1, 0, 2, 3, 10)),
+    y = target(x + 2, dynamic = map(x)),
+    z = target(unlist(y), dynamic = combine(y, .by = w))
+  )
+  make(plan)
+  exp <- c("w", "x", "y", "z", subtargets(y)[2], subtargets(z)[1])
+  expect_equal(sort(justbuilt(config)), sort(exp))
+  out <- lapply(subtargets(z), readd, character_only = TRUE)
+  exp <- list(c(3, 2), 4, c(5, 12))
+  expect_equal(out, exp)
 })
 
 test_with_dir("make a dep dynamic later on", {
