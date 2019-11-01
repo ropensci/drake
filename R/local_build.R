@@ -81,13 +81,6 @@ try_build <- function(target, meta, config) {
   build
 }
 
-dynamic_build <- function(target, meta, config) {
-  subtargets <- config$layout[[target]]$subtargets
-  meta$time_command <- proc.time() - meta$time_start
-  value <- config$cache$mget_hash(subtargets)
-  list(target = target, meta = meta, value = value)
-}
-
 with_seed_timeout <- function(target, meta, config) {
   timeouts <- resolve_timeouts(target = target, config = config)
   with_timeout(

@@ -210,7 +210,7 @@ test_with_dir("dynamic map", {
   expect_equal(readd(zs[3], character_only = TRUE), 6561)
 })
 
-test_with_dir("dynamic cross", {
+test_with_dir("dynamic cross values", {
   plan <- drake_plan(
     x1 = letters[seq_len(2)],
     x2 = LETTERS[seq_len(2)],
@@ -253,6 +253,15 @@ test_with_dir("dynamic cross", {
   expect_equal(rc(z4[2]), "aABb")
   expect_equal(rc(z4[3]), "bBAa")
   expect_equal(rc(z4[4]), "bBBb")
+})
+
+test_with_dir("dynamic cross flow", {
+  plan <- drake_plan(
+    w = letters[seq_len(2)],
+    x = LETTERS[seq_len(2)],
+    y = target(paste0(w, x), dynamic = cross(w, x)),
+    z = target(y, dynamic = map(y))
+  )
 })
 
 test_with_dir("dynamic combine", {

@@ -39,6 +39,14 @@ subtargets <- function(
   )$subtargets
 }
 
+dynamic_build <- function(target, meta, config) {
+  subtargets <- config$layout[[target]]$subtargets
+  meta$time_command <- proc.time() - meta$time_start
+  value <- config$cache$mget_hash(subtargets)
+  class(value) <- "drake_dynamic"
+  list(target = target, meta = meta, value = value)
+}
+
 register_subtargets <- function(target, parent_ok, subtargets_ok, config) {
   on.exit(ht_set(config$ht_dynamic, target, parent_ok && subtargets_ok))
   if (config$parallelism != "loop") { # just for now...
