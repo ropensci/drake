@@ -256,6 +256,7 @@ test_with_dir("dynamic cross values", {
 })
 
 test_with_dir("dynamic cross flow", {
+  # continue here
   plan <- drake_plan(
     w = letters[seq_len(2)],
     x = LETTERS[seq_len(2)],
