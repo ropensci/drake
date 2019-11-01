@@ -29,6 +29,9 @@ recover_target <- function(target, meta, config) {
   value_hash <- recovery_meta$hash
   exists_data <- config$cache$exists_object(meta_hash) &&
     config$cache$exists_object(value_hash)
+
+  browser()
+
   if (!exists_data) {
     return(FALSE) # nocov # Should not happen, just to be safe...
   }
@@ -62,6 +65,15 @@ recover_target <- function(target, meta, config) {
 }
 
 recovery_key <- function(target, meta, config) {
+  class(target) <- ifelse(is_subtarget(target, config), "subtarget", "target")
+  recovery_key_impl(target, meta, config)
+}
+
+recovery_key_impl <- function(target, meta, config) {
+  UseMethod("recovery_key_impl")
+}
+
+recovery_key_impl.target <- function(target, meta, config) {
   if (is.null(meta$trigger$value)) {
     change_hash <- NA_character_
   } else {
@@ -86,6 +98,10 @@ recovery_key <- function(target, meta, config) {
     algo = config$cache$hash_algorithm,
     serialize = FALSE
   )
+}
+
+recovery_key_impl.subtarget <- function(target, meta, config) {
+  unclass(target)
 }
 
 any_triggers <- function(target, meta, meta_old, config) {
