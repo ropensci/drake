@@ -20,7 +20,7 @@ recover_target <- function(target, meta, config) {
   if (!config$recover) {
     return(FALSE)
   }
-  key <- recovery_key(target = target, meta = meta, config = config)
+  key <- recovery_key_impl(target = target, meta = meta, config = config)
   if (!config$cache$exists(key, namespace = "recover")) {
     return(FALSE)
   }
@@ -29,11 +29,14 @@ recover_target <- function(target, meta, config) {
   value_hash <- recovery_meta$hash
   exists_data <- config$cache$exists_object(meta_hash) &&
     config$cache$exists_object(value_hash)
-
-  browser()
-
   if (!exists_data) {
     return(FALSE) # nocov # Should not happen, just to be safe...
+  }
+  if (is_dynamic(target, config)) {
+    recovered_subtargets <- recover_subtargets(target, recovery_meta, config)
+    if (!recovered_subtargets) {
+      return(FALSE)
+    }
   }
   config$logger$major(
     "recover",
@@ -64,6 +67,16 @@ recover_target <- function(target, meta, config) {
   TRUE
 }
 
+recover_subtargets <- function(target, meta, config) {
+  all(unlist(lapply(meta$subtargets, recover_subtarget, config = config)))
+}
+
+recover_subtarget <- function(subtarget, config) {
+  meta <- drake_meta_(subtarget, config)
+  class(subtarget) <- "subtarget"
+  recover_target(subtarget, meta, config)
+}
+
 recovery_key <- function(target, meta, config) {
   class(target) <- ifelse(is_subtarget(target, config), "subtarget", "target")
   recovery_key_impl(target, meta, config)
@@ -73,7 +86,11 @@ recovery_key_impl <- function(target, meta, config) {
   UseMethod("recovery_key_impl")
 }
 
-recovery_key_impl.target <- function(target, meta, config) {
+recovery_key_impl.subtarget <- function(target, meta, config) {
+  unclass(target)
+}
+
+recovery_key_impl.default <- function(target, meta, config) {
   if (is.null(meta$trigger$value)) {
     change_hash <- NA_character_
   } else {
