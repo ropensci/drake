@@ -86,6 +86,16 @@ test_with_dir("dynamic subvalues", {
   expect_equivalent(dynamic_subvalue(m, c(1, 2)), m[c(1, 2),,,,]) # nolint
 })
 
+test_with_dir("invalidating a subtarget invalidates the parent", {
+  plan <- drake_plan(
+    x = seq_len(2),
+    y = target(x, dynamic = map(x))
+  )
+  make(plan)
+  clean(list = subtargets(y)[1])
+  make(plan)
+})
+
 test_with_dir("dynamic map flow", {
   plan <- drake_plan(
     x = seq_len(4),
