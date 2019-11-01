@@ -730,7 +730,7 @@ test_with_dir("dynamic change triggers are not allowed", {
   expect_error(drake_config(plan), regexp = "forbidden")
 })
 
-test_with_dir("data recovery for dynamic targets", {
+test_with_dir("dynamic data recovery", {
   skip_on_cran()
   plan <- drake_plan(
     x = letters[seq_len(4)],
@@ -748,4 +748,30 @@ test_with_dir("data recovery for dynamic targets", {
   expect_equal(outdated(config), character(0))
   make(plan)
   expect_equal(justbuilt(config), character(0))
+})
+
+test_with_dir("failed dynamic data recovery", {
+  skip_on_cran()
+  plan <- drake_plan(
+    x = letters[seq_len(4)],
+    y = target(file.create(x), dynamic = map(x))
+  )
+  config <- drake_config(plan)
+  make(plan)
+  files <- letters[seq_len(4)]
+  expect_true(all(file.exists(files)))
+  unlink(files)
+  expect_false(any(file.exists(files)))
+  config$cache$del(subtargets(y)[1], namespace = "recover")
+
+  stop("needs work")
+  browser()
+
+  clean(list = subtargets(y)[1])
+  plan <- drake_plan(
+    x = letters[seq_len(4)],
+    y = target(file.create(x), dynamic = map(x))
+  )
+  make(plan, recover = TRUE)
+  expect_true(all(file.exists(files)))
 })
