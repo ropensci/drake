@@ -11,7 +11,7 @@ handle_triggers <- function(target, meta, config) {
   if (!is_dynamic(target, config)) {
     return(parent_ok)
   }
-  subtargets_ok <- check_trigger_dynamic(target, meta, meta_old, config)
+  subtargets_ok <- !check_trigger_dynamic(target, meta, meta_old, config)
   register_subtargets(target, parent_ok, subtargets_ok, config)
   TRUE
 }

@@ -104,6 +104,7 @@ test_with_dir("dynamic map", {
   expect_equal(readd(zs[2], character_only = TRUE), 4)
   expect_equal(readd(zs[3], character_only = TRUE), 5)
   expect_equal(readd(zs[4], character_only = TRUE), 6)
+  # change a static dep
   plan <- drake_plan(
     x = seq_len(4),
     y = target(x + 1, dynamic = map(x)),
@@ -120,6 +121,19 @@ test_with_dir("dynamic map", {
   expect_equal(readd(zs[2], character_only = TRUE), 5)
   expect_equal(readd(zs[3], character_only = TRUE), 6)
   expect_equal(readd(zs[4], character_only = TRUE), 7)
+  # change nothing
+  make(plan)
+  expect_equal(justbuilt(config), character(0))
+  # change part of a dynamic dep
+  plan <- drake_plan(
+    x = as.integer(c(1, 5, 3, 6)),
+    y = target(x + 1, dynamic = map(x)),
+    z = target(y + 2, dynamic = map(y))
+  )
+  make(plan)
+  out <- justbuilt(config)
+  exp <- c("y", subtargets(y)[c(1, 3)], "z", subtargets(z)[c(1, 3)])
+  expect_equal(sort(out), sort(exp))
 })
 
 test_with_dir("dynamic cross", {

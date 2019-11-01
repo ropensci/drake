@@ -49,17 +49,17 @@ register_subtargets <- function(target, parent_ok, subtargets_ok, config) {
   }
   announce_dynamic(target, config)
   check_dynamic(target, config)
-  subtargets <- subtarget_names(target, config)
+  subtargets_all <- subtargets_build <- subtarget_names(target, config)
   if (parent_ok) {
-    subtargets <- filter_subtargets(subtargets, config)
+    subtargets_build <- filter_subtargets(subtargets_build, config)
   }
   if (!length(subtargets)) {
     return()
   }
-  register_subtargets_graph(target, subtargets, config)
-  register_subtargets_layout(target, subtargets, config)
-  register_subtargets_queue(target, subtargets, config)
-  register_subtargets_loop(target, subtargets, config)
+  register_subtargets_graph(target, subtargets_all, config)
+  register_subtargets_layout(target, subtargets_all, config)
+  register_subtargets_queue(target, subtargets_build, config)
+  register_subtargets_loop(target, subtargets_build, config)
 }
 
 filter_subtargets <- function(subtargets, config) {

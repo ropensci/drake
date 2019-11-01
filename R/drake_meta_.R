@@ -90,6 +90,7 @@ dependency_hash <- function(target, config) {
   if (is_imported(target, config)) {
     deps <- c(deps, x$file_in, x$knitr_in)
   }
+  deps <- setdiff(deps, layout$deps_dynamic)
   dependency_hash_impl(deps, config)
 }
 
