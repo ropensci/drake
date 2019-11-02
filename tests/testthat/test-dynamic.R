@@ -620,6 +620,11 @@ test_with_dir("insert .by piece by piece", {
 test_with_dir("dynamic combine flow with by", {
   scenario <- get_testing_scenario()
   envir <- eval(parse(text = scenario$envir))
+  suppressWarnings(rm(
+    a, b, c, f, g, h, i, j, my_function, my_plan,
+    random_rows, reg1, reg2, simulate,
+    envir = envir
+  ))
   parallelism <- scenario$parallelism
   jobs <- scenario$jobs
   caching <- scenario$caching
@@ -1050,7 +1055,7 @@ test_with_dir("dynamic loadd() and readd()", {
   expect_false(is.data.frame(out))
   expect_equal(length(out), 2)
   expect_equal(do.call("rbind", out), mtcars[c(2, 4), ])
-    for (lazy in c("eager", "promise", "bind")) {
+  for (lazy in c("eager", "promise", "bind")) {
     loadd(y, lazy = lazy, subtargets = c(2, 4))
     expect_equal(length(y), 2)
     expect_true(is.list(y))
@@ -1071,6 +1076,11 @@ test_with_dir("dynamic hpc", {
   future::plan(future::multisession, workers = 2L)
   scenario <- get_testing_scenario()
   envir <- eval(parse(text = scenario$envir))
+  suppressWarnings(rm(
+    a, b, c, f, g, h, i, j, my_function, my_plan,
+    random_rows, reg1, reg2, simulate,
+    envir = envir
+  ))
   hpc_tests <- function(envir, parallelism, caching) {
     plan <- drake_plan(
       low = c("a", "b"),
