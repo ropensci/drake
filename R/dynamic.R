@@ -88,6 +88,11 @@ is_registered_dynamic <- function(target, config) {
     ht_exists(config$ht_dynamic, target)
 }
 
+is_unregistered_dynamic <- function(target, config) {
+  is_dynamic(target, config) &&
+    !ht_exists(config$ht_dynamic, target)
+}
+
 register_subtargets_graph <- function(target, subtargets, config) {
   edgelist <- do.call(rbind, lapply(subtargets, c, target))
   subgraph <- igraph::graph_from_edgelist(edgelist)
