@@ -105,14 +105,15 @@ register_in_graph <- function(target, subtargets, config) {
 }
 
 register_in_layout <- function(target, subtargets, config) {
-  config$layout[[target]]$subtargets <- subtargets
-  subtarget_layouts <- lapply(
+  lapply(
     seq_along(subtargets),
     register_subtarget_layout,
     parent = target,
     subtargets = subtargets,
     config = config
   )
+  config$layout[[target]]$subtargets <- subtargets
+  config$layout[[target]]$hpc <- FALSE
 }
 
 register_subtarget_layout <- function(index, parent, subtargets, config) {
