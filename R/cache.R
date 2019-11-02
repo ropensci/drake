@@ -3,8 +3,11 @@
 #' @description [readd()] returns an object from the cache,
 #' and [loadd()] loads one or more objects from the cache
 #' into your environment or session. These objects are usually
-#' targets built by [make()].
-#' @details There are two uses for the
+#' targets built by [make()]. If `target` is dynamic,
+#' [readd()] and [loadd()] retrieve a list of subtarget values.
+#' You can select which subtargets to include with the `subtargets`
+#' argument.
+#' @details There are three uses for the
 #' [loadd()] and [readd()] functions:
 #' 1. Exploring the results outside the `drake`/`make()` pipeline.
 #'   When you call [make()] to run your project,
@@ -57,6 +60,12 @@
 #' @param show_source Logical, option to show the command
 #'   that produced the target or indicate that the object
 #'   was imported (using [show_source()]).
+#' @param subtargets A numeric vector of indices.
+#'   If `target` is dynamic, [loadd()] and [readd()] retrieve
+#'   a list of subtargets. You can restrict which subtargets
+#'   to retrieve with the `subtargets` argument. For example,
+#'   `readd(x, subtargets = seq_len(3))` only retrieves the
+#'   first 3 subtargets.
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {
@@ -79,7 +88,8 @@ readd <- function(
   cache = drake::drake_cache(path = path),
   namespace = NULL,
   verbose = 1L,
-  show_source = FALSE
+  show_source = FALSE,
+  subtargets = NULL
 ) {
   deprecate_search(search)
   # if the cache is null after trying drake_cache:
@@ -105,7 +115,7 @@ readd <- function(
     namespace = namespace,
     use_cache = FALSE
   )
-  get_subtargets(value, cache)
+  get_subtargets(value, cache, subtargets)
 }
 
 #' @title Load one or more targets or imports from the drake cache.
@@ -214,7 +224,8 @@ loadd <- function(
   replace = TRUE,
   show_source = FALSE,
   tidyselect = !deps,
-  config = NULL
+  config = NULL,
+  subtargets = NULL
 ) {
   deprecate_search(search)
   deprecate_arg(graph, "graph") # 2019-01-04 # nolint
@@ -263,38 +274,59 @@ loadd <- function(
     verbose = verbose,
     lazy = lazy
   )
-  lapply(targets, load_subtargets, cache = cache, envir = envir)
+  lapply(
+    targets,
+    load_subtargets,
+    cache = cache,
+    envir = envir,
+    subtargets = subtargets
+  )
   invisible()
 }
 
-load_subtargets <- function(target, cache, envir) {
+load_subtargets <- function(target, cache, envir, subtargets) {
   hashes <- get(target, envir = envir, inherits = FALSE)
-  load_targets_impl(hashes, target, cache, envir)
+  load_targets_impl(hashes, target, cache, envir, subtargets)
 }
 
-load_targets_impl <- function(hashes, target, cache, envir) {
+load_targets_impl <- function(hashes, target, cache, envir, subtargets) {
   UseMethod("load_targets_impl")
 }
 
-load_targets_impl.drake_dynamic <- function(hashes, target, cache, envir) {
-  value <- get_subtargets(hashes, cache)
+load_targets_impl.drake_dynamic <- function(
+  hashes,
+  target,
+  cache,
+  envir,
+  subtargets
+) {
+  value <- get_subtargets(hashes, cache, subtargets)
   rm(list = target, envir = envir, inherits = FALSE)
   assign(target, value, envir = envir, inherits = FALSE)
 }
 
-load_targets_impl.default <- function(hashes, target, cache, envir) {
+load_targets_impl.default <- function(
+  hashes,
+  target,
+  cache,
+  envir,
+  subtargets
+) {
   NULL
 }
 
-get_subtargets <- function(hashes, cache) {
+get_subtargets <- function(hashes, cache, subtargets) {
   UseMethod("get_subtargets")
 }
 
-get_subtargets.drake_dynamic <- function(hashes, cache) {
+get_subtargets.drake_dynamic <- function(hashes, cache, subtargets) {
+  if (!is.null(subtargets)) {
+    hashes <- hashes[subtargets]
+  }
   cache$mget_value(hashes, use_cache = FALSE)
 }
 
-get_subtargets.default <- function(hashes, cache) {
+get_subtargets.default <- function(hashes, cache, subtargets) {
   hashes
 }
 

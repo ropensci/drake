@@ -832,4 +832,17 @@ test_with_dir("dynamic loadd() and readd()", {
     expect_equal(do.call(rbind, y), mtcars[seq_len(4), ])
     rm(y)
   }
+  out <- readd(y, subtargets = c(2, 4))
+  expect_true(is.list(out))
+  expect_false(is.data.frame(out))
+  expect_equal(length(out), 2)
+  expect_equal(do.call(rbind, out), mtcars[c(2, 4), ])
+    for (lazy in c("eager", "promise", "bind")) {
+    loadd(y, lazy = lazy, subtargets = c(2, 4))
+    expect_equal(length(y), 2)
+    expect_true(is.list(y))
+    expect_false(is.data.frame(y))
+    expect_equal(do.call(rbind, y), mtcars[c(2, 4), ])
+    rm(y)
+  }
 })
