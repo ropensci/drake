@@ -1,40 +1,30 @@
 backend_future <- function(config) {
   assert_pkg("future")
-  queue <- priority_queue(config = config)
-  workers <- initialize_workers(config)
+  config$queue <- priority_queue(config)
+  config$workers <- initialize_workers(config)
   # While any targets are queued or running...
   sleeps <- 1L
   ft_config <- ft_config(config)
-  ids <- as.character(seq_along(workers))
-  while (work_remains(queue = queue, workers = workers, config = config)) {
+  ids <- as.character(seq_along(config$workers))
+  while (work_remains(config)) {
     for (id in ids) {
-      if (is_idle(workers[[id]])) {
-        # Also calls decrease-key on the queue.
-        workers[[id]] <- conclude_worker(
-          worker = workers[[id]],
-          config = config,
-          queue = queue
-        )
-        # Pop the head target only if its priority is 0
-        next_target <- queue$pop0()
+      if (is_idle(config$workers[[id]])) {
+        config$workers[[id]] <- conclude_worker(config$workers[[id]], config)
+        next_target <- config$queue$pop0()
         if (!length(next_target)) {
-          # It's hard to make this line run in a small test workflow
-          # suitable enough for unit testing, but
-          # I did artificially stall targets and verified that this line
-          # is reached in the future::multisession backend as expected.
           # nocov start
-          Sys.sleep(config$sleep(max(0L, sleeps)))
+          Sys.sleep(config$sleep(max(0L, sleeps))) # difficult to cover
           sleeps <- sleeps + 1L
           next
           # nocov end
         }
         sleeps <- 1L
-        running <- running_targets(workers = workers, config = config)
-        protect <- c(running, queue$list())
+        running <- running_targets(config = config)
+        protect <- c(running, config$queue$list())
         if (identical(config$layout[[next_target]]$hpc, FALSE)) {
-          future_local_build(next_target, config, queue, protect)
+          future_local_build(next_target, config, protect)
         } else {
-          workers[[id]] <- new_worker(
+          config$workers[[id]] <- new_worker(
             id,
             next_target,
             config,
@@ -47,10 +37,10 @@ backend_future <- function(config) {
   }
 }
 
-future_local_build <- function(target, config, queue, protect) {
+future_local_build <- function(target, config, protect) {
   config$logger$minor("local target", target = target)
   local_build(target, config, downstream = protect)
-  decrease_revdep_keys(queue, target, config)
+  decrease_revdep_keys(config$queue, target, config)
 }
 
 ft_config <- function(config) {
@@ -174,9 +164,9 @@ future_build <- function(target, meta, config, layout, protect) {
   list(target = target, checksum = get_checksum(target, config))
 }
 
-running_targets <- function(workers, config) {
+running_targets <- function(config) {
   out <- eapply(
-    env = workers,
+    env = config$workers,
     FUN = function(worker) {
       if (is_idle(worker)) {
         NULL
@@ -206,17 +196,13 @@ is_empty_worker <- function(worker) {
   !inherits(worker, "Future")
 }
 
-conclude_worker <- function(worker, config, queue) {
-  ft_decrease_revdep_keys(
-    worker = worker,
-    queue = queue,
-    config = config
-  )
+conclude_worker <- function(worker, config) {
+  ft_decrease_revdep_keys(worker, config)
   out <- concluded_worker()
   if (is_empty_worker(worker)) {
     return(out)
   }
-  build <- resolve_worker_value(worker = worker, config = config)
+  build <- resolve_worker_value(worker, config)
   caching <- caching(build$target, config)
   if (identical(caching, "worker")) {
     wait_checksum(
@@ -245,12 +231,12 @@ empty_worker <- function(target) {
   structure(NA_character_, target = target)
 }
 
-ft_decrease_revdep_keys <- function(worker, config, queue) {
+ft_decrease_revdep_keys <- function(worker, config) {
   target <- attr(worker, "target")
   if (!length(target) || safe_is_na(target) || !is.character(target)) {
     return()
   }
-  decrease_revdep_keys(queue, target, config)
+  decrease_revdep_keys(config$queue, target, config)
 }
 
 # Also caches error information if available.
@@ -288,14 +274,14 @@ resolve_worker_value <- function(worker, config) {
   )
 }
 
-work_remains <- function(queue, workers, config) {
-  !queue$empty() ||
-    !all_concluded(workers = workers, config = config)
+work_remains <- function(config) {
+  !config$queue$empty() ||
+    !all_concluded(config)
 }
 
-all_concluded <- function(workers, config) {
-  for (id in names(workers)) {
-    if (!is_concluded_worker(workers[[id]])) {
+all_concluded <- function(config) {
+  for (id in names(config$workers)) {
+    if (!is_concluded_worker(config$workers[[id]])) {
       return(FALSE)
     }
   }
