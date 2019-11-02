@@ -70,7 +70,7 @@ recover_subtarget <- function(subtarget, config) {
 }
 
 recovery_key <- function(target, meta, config) {
-  if (is_subtarget(target, config)){
+  if (is_subtarget(target, config)) {
     class(target) <- "subtarget"
   }
   recovery_key_impl(target, meta, config)
