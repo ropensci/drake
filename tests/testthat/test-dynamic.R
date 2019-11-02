@@ -586,6 +586,37 @@ test_with_dir("dynamic combine with by", {
   expect_equal(out2, exp2)
 })
 
+test_with_dir("insert .by piece by piece", {
+  scenario <- get_testing_scenario()
+  envir <- eval(parse(text = scenario$envir))
+  parallelism <- scenario$parallelism
+  jobs <- scenario$jobs
+  caching <- scenario$caching
+  plan <- drake_plan(
+    w = c("a", "b", "c", "c"),
+    x = seq_len(4),
+    y = target(x + 1, dynamic = map(x)),
+    z = target(
+      list(y = unlist(y), w = w),
+      dynamic = combine(y, .by = w)
+    )
+  )
+  make(
+    plan,
+    envir = envir,
+    parallelism = parallelism,
+    jobs = jobs,
+    caching = caching
+  )
+  out <- readd(z)
+  exp <- list(
+    list(y = 2L, w = "a"),
+    list(y = 3L, w = "b"),
+    list(y = c(4L, 5L), w = "c")
+  )
+  expect_equal(out, exp)
+})
+
 test_with_dir("dynamic combine flow with by", {
   scenario <- get_testing_scenario()
   envir <- eval(parse(text = scenario$envir))
