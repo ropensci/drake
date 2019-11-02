@@ -48,22 +48,23 @@ dynamic_build <- function(target, meta, config) {
 }
 
 register_subtargets <- function(target, parent_ok, subdeps_ok, config) {
-  on.exit(ht_set(config$ht_dynamic, target, parent_ok && subdeps_ok))
   if (config$parallelism != "loop") { # just for now...
     ht_set(config$ht_dynamic, target)
     return()
   }
+  on.exit(register_dynamic(target, config))
   announce_dynamic(target, config)
   check_dynamic(target, config)
   subtargets_all <- subtarget_names(target, config)
   subtargets_build <- filter_subtargets(subtargets_all, parent_ok, config)
-  register_subtargets_graph(target, subtargets_all, config)
-  register_subtargets_layout(target, subtargets_all, config)
-  if (!length(subtargets_build)) {
-    return()
+  register_in_graph(target, subtargets_all, config)
+  register_in_layout(target, subtargets_all, config)
+  register_in_queue(subtargets_build, config)
+  register_in_loop(subtargets_build, config)
+  if (!parent_ok || !subdeps_ok || length(subtargets_build)) {
+    register_in_queue(target, config)
+    register_in_loop(target, config)
   }
-  register_subtargets_queue(target, subtargets_build, config)
-  register_subtargets_loop(target, subtargets_build, config)
 }
 
 filter_subtargets <- function(subtargets, parent_ok, config) {
@@ -83,20 +84,15 @@ should_build_subtarget <- function(subtarget, parent_ok, config) {
   !recover_subtarget(subtarget, config) || !parent_ok
 }
 
-decrement_later <- function(target, config) {
-  !is_unregistered_dynamic(target, config)
-}
-
-is_unregistered_dynamic <- function(target, config) {
-  is_dynamic(target, config) &&
-    !ht_exists(config$ht_dynamic, target)
+register_dynamic <- function(target, config) {
+  ht_set(config$ht_dynamic, target)
 }
 
 is_registered_dynamic <- function(target, config) {
   ht_exists(config$ht_dynamic, target)
 }
 
-register_subtargets_graph <- function(target, subtargets, config) {
+register_in_graph <- function(target, subtargets, config) {
   edgelist <- do.call(rbind, lapply(subtargets, c, target))
   subgraph <- igraph::graph_from_edgelist(edgelist)
   subgraph <- igraph::set_vertex_attr(
@@ -110,7 +106,7 @@ register_subtargets_graph <- function(target, subtargets, config) {
   )
 }
 
-register_subtargets_layout <- function(target, subtargets, config) {
+register_in_layout <- function(target, subtargets, config) {
   config$layout[[target]]$subtargets <- subtargets
   subtarget_layouts <- lapply(
     seq_along(subtargets),
@@ -136,7 +132,7 @@ register_subtarget_layout <- function(index, parent, subtargets, config) {
   config$layout[[subtarget]] <- layout
 }
 
-register_subtargets_queue <- function(target, subtargets, config) {
+register_in_queue <- function(subtargets, config) {
   if (is.null(config$queue)) {
     return()
   }
@@ -145,7 +141,7 @@ register_subtargets_queue <- function(target, subtargets, config) {
 
 }
 
-register_subtargets_loop <- function(target, subtargets, config) {
+register_in_loop <- function(subtargets, config) {
   if (is.null(config$envir_loop)) {
     return()
   }

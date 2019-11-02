@@ -1,5 +1,5 @@
 local_build <- function(target, config, downstream) {
-  meta <- drake_meta_(target = target, config = config)
+  meta <- drake_meta_(target, config)
   if (handle_triggers(target, meta, config)) {
     return()
   }
@@ -10,12 +10,12 @@ local_build <- function(target, config, downstream) {
     downstream = downstream,
     jobs = config$jobs_preprocess
   )
-  build <- try_build(target = target, meta = meta, config = config)
-  conclude_build(build = build, config = config)
+  build <- try_build(target, meta, config)
+  conclude_build(build, config)
 }
 
 announce_build <- function(target, config) {
-  if (is_dynamic(target, config)) {
+  if (is_registered_dynamic(target, config)) {
     announce_dynamic(target, config)
     return()
   }

@@ -11,10 +11,12 @@ test_with_dir("drake_build() works as expected", {
     envir = e,
     lock_envir = TRUE
   )
-
   # can run before any make()
   o <- drake_build(
-    target = "a", character_only = TRUE, config = con)
+    target = "a",
+    character_only = TRUE,
+    config = con
+  )
   x <- cached()
   expect_equal(x, "a")
   make(pl, envir = e)

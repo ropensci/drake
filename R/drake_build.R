@@ -72,6 +72,7 @@ drake_build <- function(
       assign(dep, value, envir = config$envir_targets, inherits = FALSE)
     }
   }
+  config$ht_dynamic <- ht_new()
   meta <- drake_meta_(target = target, config = config)
   announce_build(target = target, config = config)
   build <- try_build(target = target, meta = meta, config = config)
@@ -156,6 +157,7 @@ drake_debug <- function(
   config$layout[[target]]$command_build <- cdl_preprocess_command(
     debug_command(config$layout[[target]]$command)
   )
+  config$ht_dynamic <- ht_new()
   meta <- drake_meta_(target = target, config = config)
   announce_build(target = target, config = config)
   build <- try_build(target = target, meta = meta, config = config)

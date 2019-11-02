@@ -3,7 +3,7 @@ handle_triggers <- function(target, meta, config) {
     return(FALSE)
   }
   if (is_registered_dynamic(target, config)) {
-    return(ht_get(config$ht_dynamic, target))
+    return(FALSE)
   }
   meta_old <- old_meta(key = target, cache = config$cache)
   parent_ok <- !any_triggers(target, meta, meta_old, config) ||
