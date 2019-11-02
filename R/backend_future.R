@@ -147,8 +147,7 @@ future_globals <- function(target, meta, config, layout, protect) {
 #' @param protect Names of targets that still need their
 #' dependencies available in memory.
 future_build <- function(target, meta, config, layout, protect) {
-  config$layout <- list()
-  config$layout[[target]] <- layout
+  config$layout <- layout
   caching <- hpc_caching(target, config)
   if (identical(caching, "worker")) {
     manage_memory(target = target, config = config, downstream = protect)

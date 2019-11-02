@@ -122,7 +122,7 @@ hpc_layout_impl.subtarget <- function(target, config) {
   dynamic_deps <- config$layout[[target]]$deps_dynamic
   keys <- c(target, parent, dynamic_deps)
   for (key in keys) {
-    assign(parent, config$layout[[parent]], envir = layout, inherits = FALSE)
+    assign(key, config$layout[[key]], envir = layout, inherits = FALSE)
   }
   layout
 }
