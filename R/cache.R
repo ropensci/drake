@@ -100,11 +100,12 @@ readd <- function(
       character_only = TRUE
     )
   }
-  cache$get(
+  value <- cache$get(
     standardize_key(target),
     namespace = namespace,
     use_cache = FALSE
   )
+  get_subtargets(value, cache)
 }
 
 #' @title Load one or more targets or imports from the drake cache.
@@ -281,7 +282,7 @@ get_subtargets.drake_dynamic <- function(hashes, cache) {
 }
 
 get_subtargets.default <- function(hashes, cache) {
-  NULL
+  hashes
 }
 
 loadd_handle_empty_targets <- function(targets, cache, ...) {
