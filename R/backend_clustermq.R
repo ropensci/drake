@@ -20,20 +20,25 @@ backend_clustermq <- function(config) {
 }
 
 cmq_local_master <- function(config) {
-  while (!config$queue$empty()) {
-    target <- config$queue$peek0()
-    if (identical(config$layout[[target]]$hpc, FALSE)) {
-      config$queue$pop0()
-      cmq_local_build(target, config)
-      next
-    }
-    meta <- drake_meta_(target = target, config = config)
-    if (!handle_triggers(target, meta, config)) {
-      return()
-    }
-    config$queue$pop0()
-    cmq_conclude_target(target, config)
+  continue <- TRUE
+  while (!config$queue$empty() && continue) {
+    continue <- cmq_local_master_iter(config)
   }
+}
+
+cmq_local_master_iter <- function(config) {
+  target <- config$queue$peek0()
+  if (identical(config$layout[[target]]$hpc, FALSE)) {
+    config$queue$pop0()
+    cmq_local_build(target, config)
+    return(TRUE)
+  }
+  meta <- drake_meta_(target = target, config = config)
+  if (!handle_triggers(target, meta, config)) {
+    return(FALSE)
+  }
+  config$queue$pop0()
+  cmq_conclude_target(target, config)
 }
 
 cmq_set_common_data <- function(config) {
@@ -72,19 +77,23 @@ cmq_master <- function(config) {
   on.exit(config$workers$finalize())
   config$logger$minor("begin scheduling targets")
   while (config$counter$remaining > 0) {
-    msg <- config$workers$receive_data()
-    cmq_conclude_build(msg = msg, config = config)
-    if (!identical(msg$token, "set_common_data_token")) {
-      config$logger$minor("sending common data")
-      config$workers$send_common_data()
-    } else if (!config$queue$empty()) {
-      cmq_next_target(config)
-    } else {
-      config$workers$send_shutdown_worker()
-    }
+    cmq_master_iter(config)
   }
   if (config$workers$cleanup()) {
     on.exit()
+  }
+}
+
+cmq_master_iter <- function(config) {
+  msg <- config$workers$receive_data()
+  cmq_conclude_build(msg = msg, config = config)
+  if (!identical(msg$token, "set_common_data_token")) {
+    config$logger$minor("sending common data")
+    config$workers$send_common_data()
+  } else if (!config$queue$empty()) {
+    cmq_next_target(config)
+  } else {
+    config$workers$send_shutdown_worker()
   }
 }
 
@@ -140,11 +149,10 @@ cmq_send_target <- function(target, config) {
   }
   announce_build(target = target, config = config)
   caching <- caching(target, config)
+  deps <- NULL
   if (identical(caching, "master")) {
     manage_memory(target = target, config = config, jobs = 1)
     deps <- cmq_deps_list(target = target, config = config)
-  } else {
-    deps <- NULL
   }
   layout <- config$layout[[target]]
   config$workers$send_call(
@@ -161,14 +169,13 @@ cmq_send_target <- function(target, config) {
 
 cmq_deps_list <- function(target, config) {
   deps <- config$layout[[target]]$deps_build$memory
-  out <- lapply(
-    X = deps,
-    FUN = function(name) {
-      config$envir_targets[[name]]
-    }
-  )
+  out <- lapply(deps, cmq_get_dep, config = config)
   names(out) <- deps
   out
+}
+
+cmq_get_dep <- function(dep, config) {
+  config$envir_targets[[dep]]
 }
 
 #' @title Build a target using the clustermq backend
@@ -188,9 +195,7 @@ cmq_build <- function(target, meta, deps, layout, config) {
   do_prework(config = config, verbose_packages = FALSE)
   caching <- caching(target, config)
   if (identical(caching, "master")) {
-    for (dep in names(deps)) {
-      config$envir_targets[[dep]] <- deps[[dep]]
-    }
+    cmq_assign_deps(deps, config)
   } else {
     manage_memory(target = target, config = config, jobs = 1)
   }
@@ -203,6 +208,12 @@ cmq_build <- function(target, meta, deps, layout, config) {
   }
   conclude_build(build = build, config = config)
   list(target = target, checksum = get_checksum(target, config))
+}
+
+cmq_assign_deps <- function(deps, config) {
+  for (dep in names(deps)) {
+    config$envir_targets[[dep]] <- deps[[dep]]
+  }
 }
 
 caching <- function(target, config) {
