@@ -230,5 +230,5 @@ cmq_local_build <- function(target, config) {
 
 cmq_conclude_target <- function(target, config) {
   decrease_revdep_keys(queue = config$queue, target = target, config = config)
-  config$counter$remaining <- config$counter$remaining - 1
+  config$counter$remaining <- config$counter$remaining - 1L
 }

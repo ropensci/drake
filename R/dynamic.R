@@ -57,10 +57,12 @@ register_subtargets <- function(target, parent_ok, subdeps_ok, config) {
   register_in_layout(target, subtargets_all, config)
   register_in_loop(subtargets_build, config)
   register_in_queue(subtargets_build, 0, config)
+  register_in_counter(subtargets_build, config)
   ndeps <- length(subtargets_build)
   if (!parent_ok || !subdeps_ok || ndeps) {
     register_in_loop(target, config)
     register_in_queue(target, ndeps, config)
+    register_in_counter(target, config)
     dynamic_pad_revdep_keys(target, config)
   }
 }
@@ -143,6 +145,13 @@ register_in_queue <- function(targets, ndeps, config) {
     return()
   }
   config$queue$push(targets, ndeps)
+}
+
+register_in_counter <- function(targets, config) {
+  if (is.null(config$counter)) {
+    return()
+  }
+  config$counter$remaining <- config$counter$remaining + length(targets)
 }
 
 dynamic_pad_revdep_keys <- function(target, config) {
