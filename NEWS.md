@@ -20,7 +20,7 @@
 - Change the names of environments in `drake_config()` objects.
 - Assert that `prework` is a language object, list of language objects, or character vector (#1 at pat-s/multicore-debugging on GitHub, @pat-s).
 - Use an environment instead of a list for `config$layout`. Supports internal modifications by reference. Required for #685.
-- Clean up the functions of the `"future"` parallelism backend.
+- Clean up the code of the parallel backends.
 
 
 # Version 7.7.0
