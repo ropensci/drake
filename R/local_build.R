@@ -15,7 +15,7 @@ local_build <- function(target, config, downstream) {
 }
 
 announce_build <- function(target, config) {
-  if (is_registered_dynamic(target, config)) {
+  if (is_dynamic(target, config)) {
     announce_dynamic(target, config)
     return()
   }
