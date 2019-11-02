@@ -262,7 +262,26 @@ loadd <- function(
     verbose = verbose,
     lazy = lazy
   )
+  lapply(targets, load_subtargets, cache = cache, envir = envir)
   invisible()
+}
+
+load_subtargets <- function(target, cache, envir) {
+  value <- get(target, envir = envir, inherits = FALSE)
+  load_subtargets_impl(value, target, cache, envir)
+}
+
+load_subtargets_impl <- function(value, target, cache, envir) {
+  UseMethod("load_subtargets_impl")
+}
+
+load_subtargets_impl.drake_dynamic <- function(value, target, cache, envir) {
+  value <- cache$mget_value(value, use_cache = FALSE)
+  assign(target, value, envir = envir, inherits = FALSE)
+}
+
+load_subtargets_impl.default <- function(value, cache, envir) {
+  NULL
 }
 
 loadd_handle_empty_targets <- function(targets, cache, ...) {

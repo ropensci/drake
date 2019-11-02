@@ -811,3 +811,13 @@ test_with_dir("row-wise dynamic map()", {
   df <- do.call(rbind, ys)
   expect_equal(df, mtcars)
 })
+
+test_with_dir("dynamic loadd()", {
+  plan <- drake_plan(
+    x = mtcars[seq_len(4), ],
+    y = target(x, dynamic = map(x))
+  )
+  make(plan)
+  loadd(y)
+  expect_equal(do.call(rbind, y), readd(x))
+})

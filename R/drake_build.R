@@ -69,7 +69,7 @@ drake_build <- function(
   for (dep in deps) {
     if (replace || !exists(dep, envir = config$envir_targets)) {
       value <- config$cache$get(dep)
-      assign(dep, value, envir = config$envir_targets)
+      assign(dep, value, envir = config$envir_targets, inherits = FALSE)
     }
   }
   meta <- drake_meta_(target = target, config = config)
@@ -150,7 +150,7 @@ drake_debug <- function(
   for (dep in deps) {
     if (replace || !exists(dep, envir = config$envir_targets)) {
       value <- config$cache$get(dep)
-      assign(dep, value, envir = config$envir_targets)
+      assign(dep, value, envir = config$envir_targets, inherits = FALSE)
     }
   }
   config$layout[[target]]$command_build <- cdl_preprocess_command(
