@@ -4,7 +4,7 @@ backend_future <- function(config) {
   config$workers <- initialize_workers(config)
   config$sleeps <- new.env(parent = emptyenv())
   config$sleeps$count <- 1L
-  config$ft_config <- ft_config(config)
+  config$ft_config <- hpc_config(config)
   ids <- as.character(seq_along(config$workers))
   while (work_remains(config)) {
     ft_scan_workers(ids, config)
@@ -59,22 +59,6 @@ future_local_build <- function(target, protect, config) {
   decrease_revdep_keys(config$queue, target, config)
 }
 
-ft_config <- function(config) {
-  discard <- c(
-    "imports",
-    "layout",
-    "plan",
-    "graph",
-    "targets",
-    "trigger"
-  )
-  for (x in discard) {
-    config[[x]] <- NULL
-  }
-  config$cache$flush_cache()
-  config
-}
-
 initialize_workers <- function(config) {
   out <- new.env(parent = emptyenv())
   ids <- as.character(seq_len(config$jobs))
@@ -93,12 +77,12 @@ ft_decide_worker <- function(target, protect, config) {
 }
 
 ft_launch_worker <- function(target, meta, protect, config) {
-  caching <- caching(target, config)
+  caching <- hpc_caching(target, config)
   if (identical(caching, "master")) {
     manage_memory(target = target, config = config, downstream = protect)
   }
   DRAKE_GLOBALS__ <- NULL # Avoid name conflicts with other globals.
-  layout <- config$layout[[target]]
+  layout <- hpc_layout(target, config)
   globals <- future_globals(
     target = target,
     meta = meta,
@@ -165,7 +149,7 @@ future_globals <- function(target, meta, config, layout, protect) {
 future_build <- function(target, meta, config, layout, protect) {
   config$layout <- list()
   config$layout[[target]] <- layout
-  caching <- caching(target, config)
+  caching <- hpc_caching(target, config)
   if (identical(caching, "worker")) {
     manage_memory(target = target, config = config, downstream = protect)
   }
@@ -214,7 +198,7 @@ conclude_worker <- function(worker, config) {
     return(out)
   }
   build <- resolve_worker_value(worker, config)
-  caching <- caching(build$target, config)
+  caching <- hpc_caching(build$target, config)
   if (identical(caching, "worker")) {
     wait_checksum(
       target = build$target,
@@ -265,7 +249,7 @@ resolve_worker_value <- function(worker, config) {
       )
       meta <- list(error = e)
       target <- attr(worker, "target")
-      caching <- caching(target, config)
+      caching <- hpc_caching(target, config)
       if (caching == "worker") {
         # Need to store the error if the worker crashed.
         handle_build_exceptions(
