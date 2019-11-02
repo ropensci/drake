@@ -53,12 +53,16 @@ register_subtargets <- function(target, parent_ok, subdeps_ok, config) {
   check_dynamic(target, config)
   subtargets_all <- subtarget_names(target, config)
   subtargets_build <- filter_subtargets(subtargets_all, parent_ok, config)
-  register_in_graph(target, subtargets_all, config)
-  register_in_layout(target, subtargets_all, config)
-  register_in_loop(subtargets_build, config)
-  register_in_queue(subtargets_build, 0, config)
-  register_in_counter(subtargets_build, config)
+  if (length(subtargets_all)) {
+    register_in_graph(target, subtargets_all, config)
+    register_in_layout(target, subtargets_all, config)
+  }
   ndeps <- length(subtargets_build)
+  if (ndeps) {
+    register_in_loop(subtargets_build, config)
+    register_in_queue(subtargets_build, 0, config)
+    register_in_counter(subtargets_build, config)
+  }
   if (!parent_ok || !subdeps_ok || ndeps) {
     register_in_loop(target, config)
     register_in_queue(target, ndeps, config)
