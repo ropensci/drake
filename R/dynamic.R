@@ -48,10 +48,6 @@ dynamic_build <- function(target, meta, config) {
 }
 
 register_subtargets <- function(target, parent_ok, subdeps_ok, config) {
-  if (config$parallelism != "loop") { # just for now...
-    ht_set(config$ht_dynamic, target)
-    return()
-  }
   on.exit(register_dynamic(target, config))
   announce_dynamic(target, config)
   check_dynamic(target, config)
@@ -59,11 +55,12 @@ register_subtargets <- function(target, parent_ok, subdeps_ok, config) {
   subtargets_build <- filter_subtargets(subtargets_all, parent_ok, config)
   register_in_graph(target, subtargets_all, config)
   register_in_layout(target, subtargets_all, config)
-  register_in_queue(subtargets_build, config)
   register_in_loop(subtargets_build, config)
-  if (!parent_ok || !subdeps_ok || length(subtargets_build)) {
-    register_in_queue(target, config)
+  register_in_queue(subtargets_build, 0, config)
+  ndeps <- length(subtargets_build)
+  if (!parent_ok || !subdeps_ok || ndeps) {
     register_in_loop(target, config)
+    register_in_queue(target, ndeps, config)
   }
 }
 
@@ -132,20 +129,18 @@ register_subtarget_layout <- function(index, parent, subtargets, config) {
   config$layout[[subtarget]] <- layout
 }
 
-register_in_queue <- function(subtargets, config) {
+register_in_queue <- function(targets, ndeps, config) {
   if (is.null(config$queue)) {
     return()
   }
-  browser()
-  stop("still need to register subtargets in the queue")
-
+  config$queue$push(targets, ndeps)
 }
 
-register_in_loop <- function(subtargets, config) {
+register_in_loop <- function(targets, config) {
   if (is.null(config$envir_loop)) {
     return()
   }
-  config$envir_loop$targets <- c(subtargets, config$envir_loop$targets)
+  config$envir_loop$targets <- c(targets, config$envir_loop$targets)
 }
 
 check_dynamic <- function(target, config) {

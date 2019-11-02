@@ -61,7 +61,6 @@ test_with_dir("the priority queue works", {
   expect_null(x$peek0())
   expect_null(x$pop0())
   expect_equivalent(x$data, y[-1:-2, ])
-
   priorities[targets == "bar"] <- 1
   priorities[targets == "spren"] <- 2
   x <- refclass_priority_queue$new(
@@ -95,7 +94,6 @@ test_with_dir("the priority queue works", {
   expect_null(x$peek0())
   expect_null(x$pop0())
   expect_equivalent(x$data, y[-1:-2, ])
-
   expect_null(x$list0())
   z <- y[-1:-2, ]
   expect_true(all(c("soup", "Bob") %in% x$data$target))
@@ -106,4 +104,13 @@ test_with_dir("the priority queue works", {
   expect_equivalent(x$data, z[-4:-5, ])
   x$remove(c("soup", "Bob"))
   expect_equivalent(x$data, z[-4:-5, ])
+  data <- x$data
+  x$push(c("a", "b"), 2)
+  exp <- data.frame(
+    target = c("Joe", "a", "b", "baz", "Amy", "foo"),
+    ndeps = c(1, 2, 2, 3, 4, 8),
+    priority = c(1, Inf, Inf, 2, 1, 2),
+    stringsAsFactors = FALSE
+  )
+  expect_equivalent(x$data, exp)
 })

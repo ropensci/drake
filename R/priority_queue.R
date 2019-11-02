@@ -66,6 +66,16 @@ refclass_priority_queue <- methods::setRefClass(
         .self$data$target[.self$data$ndeps < 1]
       }
     },
+    push = function(targets, ndeps) {
+      new_data <- data.frame(
+        target = targets,
+        ndeps = ndeps,
+        priority = Inf,
+        stringsAsFactors = FALSE
+      )
+      .self$data <- rbind(new_data, .self$data)
+      .self$sort()
+    },
     remove = function(targets) {
       .self$data <- .self$data[!(.self$data$target %in% targets), ]
       invisible()
