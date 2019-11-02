@@ -4,44 +4,56 @@ backend_future <- function(config) {
   config$workers <- initialize_workers(config)
   config$sleeps <- new.env(parent = emptyenv())
   config$sleeps$count <- 1L
-  ft_config <- ft_config(config)
+  config$ft_config <- ft_config(config)
   ids <- as.character(seq_along(config$workers))
   while (work_remains(config)) {
-    for (id in ids) {
-      if (is_idle(config$workers[[id]])) {
-        backend_future_iter(id, config, ft_config)
-      }
-    }
+    ft_scan_workers(ids, config)
   }
 }
 
-backend_future_iter <- function(id, config, ft_config) {
-  config$workers[[id]] <- conclude_worker(config$workers[[id]], config)
-  next_target <- config$queue$pop0()
-  if (!length(next_target)) {
-    # nocov start
-    Sys.sleep(config$sleep(max(0L, config$sleeps$count))) # difficult to cover
-    config$sleeps$count <- config$sleeps$count + 1L
-    return()
-    # nocov end
+ft_scan_workers <- function(ids, config) {
+  for (id in ids) {
+    ft_scan_worker(id, config)
   }
+}
+
+ft_scan_worker <- function(id, config) {
+  if (is_idle(config$workers[[id]])) {
+    config$workers[[id]] <- conclude_worker(config$workers[[id]], config)
+    target <- config$queue$pop0()
+    ft_check_target(target, id, config)
+  }
+}
+
+ft_check_target <- function(target, id, config) {
+  if (length(target)) {
+    ft_do_target(target, id, config)
+  } else {
+    ft_skip_target(config) # nocov
+  }
+}
+
+ft_skip_target <- function(config) {
+  Sys.sleep(config$sleep(max(0L, config$sleeps$count)))
+  config$sleeps$count <- config$sleeps$count + 1L
+}
+
+ft_do_target <- function(target, id, config) {
   config$sleeps$count <- 1L
   running <- running_targets(config = config)
   protect <- c(running, config$queue$list())
-  if (identical(config$layout[[next_target]]$hpc, FALSE)) {
-    future_local_build(next_target, config, protect)
+  ft_build_target(target, id, running, protect, config)
+}
+
+ft_build_target <- function(target, id, running, protect, config) {
+  if (identical(config$layout[[target]]$hpc, FALSE)) {
+    future_local_build(target, protect, config)
   } else {
-    config$workers[[id]] <- new_worker(
-      id,
-      next_target,
-      config,
-      ft_config,
-      protect
-    )
+    config$workers[[id]] <- new_worker(target, id, protect, config)
   }
 }
 
-future_local_build <- function(target, config, protect) {
+future_local_build <- function(target, protect, config) {
   config$logger$minor("local target", target = target)
   local_build(target, config, downstream = protect)
   decrease_revdep_keys(config$queue, target, config)
@@ -72,7 +84,7 @@ initialize_workers <- function(config) {
   out
 }
 
-new_worker <- function(id, target, config, ft_config, protect) {
+new_worker <- function(target, id, protect, config) {
   meta <- drake_meta_(target = target, config = config)
   if (handle_triggers(target, meta, config)) {
     return(empty_worker(target = target))
@@ -89,7 +101,7 @@ new_worker <- function(id, target, config, ft_config, protect) {
   globals <- future_globals(
     target = target,
     meta = meta,
-    config = ft_config,
+    config = config$ft_config,
     layout = layout,
     protect = protect
   )
