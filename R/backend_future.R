@@ -3,7 +3,7 @@ backend_future <- function(config) {
   queue <- priority_queue(config = config)
   workers <- initialize_workers(config)
   # While any targets are queued or running...
-  i <- 1
+  sleeps <- 1L
   ft_config <- ft_config(config)
   while (work_remains(queue = queue, workers = workers, config = config)) {
     for (id in seq_along(workers)) {
@@ -22,12 +22,12 @@ backend_future <- function(config) {
           # I did artificially stall targets and verified that this line
           # is reached in the future::multisession backend as expected.
           # nocov start
-          Sys.sleep(config$sleep(max(0L, i)))
-          i <- i + 1
+          Sys.sleep(config$sleep(max(0L, sleeps)))
+          sleeps <- sleeps + 1L
           next
           # nocov end
         }
-        i <- 1
+        sleeps <- 1L
         running <- running_targets(workers = workers, config = config)
         protect <- c(running, queue$list())
         if (identical(config$layout[[next_target]]$hpc, FALSE)) {
@@ -70,8 +70,9 @@ ft_config <- function(config) {
 
 initialize_workers <- function(config) {
   out <- list()
-  for (i in seq_len(config$jobs))
+  for (i in seq_len(config$jobs)) {
     out[[i]] <- empty_worker(target = NA_character_)
+  }
   out
 }
 
