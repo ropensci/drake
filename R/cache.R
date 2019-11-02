@@ -424,8 +424,6 @@ bind_load_target <- function(target, cache, namespace, envir, verbose) {
   )
 }
 
-
-
 #' @title Show how a target/import was produced.
 #' \lifecycle{stable}
 #' @description Show the command that produced a target
