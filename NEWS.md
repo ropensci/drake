@@ -7,7 +7,7 @@
 
 ## New features
 
-- Begin to implement dynamic branching (#685).
+- Implement dynamic branching (#685).
 - Add a new `id_chr()` function to get the name of the target while `make()` is running.
 - Implement `plot(plan)` (#1036).
 - `vis_drake_graph()`, `drake_graph_info()`, and `render_drake_graph()` now 
