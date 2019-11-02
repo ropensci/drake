@@ -99,12 +99,23 @@ test_with_dir("invalidating a subtarget invalidates the parent", {
 })
 
 test_with_dir("dynamic map flow", {
+  scenario <- get_testing_scenario()
+  envir <- eval(parse(text = scenario$envir))
+  parallelism <- scenario$parallelism
+  jobs <- scenario$jobs
+  caching <- scenario$caching
   plan <- drake_plan(
     x = seq_len(4),
     y = target(x + 1, dynamic = map(x)),
     z = target(y + 1, dynamic = map(y))
   )
-  make(plan)
+  make(
+    plan,
+    envir = envir,
+    parallelism = parallelism,
+    jobs = jobs,
+    caching = caching
+  )
   expect_equal(readd(x), seq_len(4))
   ys <- subtargets(y)
   zs <- subtargets(z)
@@ -122,7 +133,13 @@ test_with_dir("dynamic map flow", {
     y = target(x + 1, dynamic = map(x)),
     z = target(y + 2, dynamic = map(y))
   )
-  make(plan)
+  make(
+    plan,
+    envir = envir,
+    parallelism = parallelism,
+    jobs = jobs,
+    caching = caching
+  )
   config <- drake_config(plan)
   expect_true(length(justbuilt(config)) > 0L)
   expect_true(all(grepl("^z", justbuilt(config))))
@@ -137,7 +154,13 @@ test_with_dir("dynamic map flow", {
   expect_equal(readd(zs[3], character_only = TRUE), 6)
   expect_equal(readd(zs[4], character_only = TRUE), 7)
   # change nothing
-  make(plan)
+  make(
+    plan,
+    envir = envir,
+    parallelism = parallelism,
+    jobs = jobs,
+    caching = caching
+  )
   expect_equal(justbuilt(config), character(0))
   ys <- subtargets(y)
   zs <- subtargets(z)
@@ -155,7 +178,13 @@ test_with_dir("dynamic map flow", {
     y = target(x + 1, dynamic = map(x)),
     z = target(y + 2, dynamic = map(y))
   )
-  make(plan)
+  make(
+    plan,
+    envir = envir,
+    parallelism = parallelism,
+    jobs = jobs,
+    caching = caching
+  )
   out <- justbuilt(config)
   exp <- c("x", "y", subtargets(y)[c(2, 4)], "z", subtargets(z)[c(2, 4)])
   expect_equal(sort(out), sort(exp))
@@ -170,7 +199,13 @@ test_with_dir("dynamic map flow", {
   expect_equal(readd(zs[3], character_only = TRUE), 6)
   expect_equal(readd(zs[4], character_only = TRUE), 9)
   # change nothing
-  make(plan)
+  make(
+    plan,
+    envir = envir,
+    parallelism = parallelism,
+    jobs = jobs,
+    caching = caching
+  )
   expect_equal(justbuilt(config), character(0))
   expect_equal(readd(ys[1], character_only = TRUE), 2)
   expect_equal(readd(ys[2], character_only = TRUE), 6)
@@ -186,7 +221,13 @@ test_with_dir("dynamic map flow", {
     y = target(x + 1, dynamic = map(x)),
     z = target(y + 2, dynamic = map(y))
   )
-  make(plan)
+  make(
+    plan,
+    envir = envir,
+    parallelism = parallelism,
+    jobs = jobs,
+    caching = caching
+  )
   out <- justbuilt(config)
   exp <- c("x", "y", subtargets(y)[3], "z", subtargets(z)[3])
   expect_equal(sort(out), sort(exp))
@@ -208,7 +249,13 @@ test_with_dir("dynamic map flow", {
     y = target(x ^ 2, dynamic = map(x)),
     z = target(y ^ 2, dynamic = map(y))
   )
-  make(plan)
+  make(
+    plan,
+    envir = envir,
+    parallelism = parallelism,
+    jobs = jobs,
+    caching = caching
+  )
   out <- justbuilt(config)
   exp <- c("x", "y", subtargets(y), "z", subtargets(z))
   expect_equal(sort(out), sort(exp))
@@ -268,6 +315,11 @@ test_with_dir("dynamic cross values", {
 })
 
 test_with_dir("dynamic cross flow", {
+  scenario <- get_testing_scenario()
+  envir <- eval(parse(text = scenario$envir))
+  parallelism <- scenario$parallelism
+  jobs <- scenario$jobs
+  caching <- scenario$caching
   assert_vals <- function(vals) {
     subs <- c(subtargets(y), subtargets(z))
     expect_equal(length(subs), length(vals))
@@ -282,7 +334,13 @@ test_with_dir("dynamic cross flow", {
     y = target(paste0(w, x), dynamic = cross(w, x)),
     z = target(paste0(v, y), dynamic = cross(v, y))
   )
-  make(plan)
+  make(
+    plan,
+    envir = envir,
+    parallelism = parallelism,
+    jobs = jobs,
+    caching = caching
+  )
   expect_equal(readd(w), letters[seq_len(2)])
   expect_equal(readd(x), LETTERS[seq_len(3)])
   vals <- c("aA", "aB", "aC", "bA", "bB", "bC")
@@ -296,14 +354,26 @@ test_with_dir("dynamic cross flow", {
     y = target(paste0(w, x), dynamic = cross(w, x)),
     z = target(paste0(v, y), dynamic = cross(v, y))
   )
-  make(plan)
+  make(
+    plan,
+    envir = envir,
+    parallelism = parallelism,
+    jobs = jobs,
+    caching = caching
+  )
   config <- drake_config(plan)
   expect_true(length(justbuilt(config)) > 0L)
   expect_equal(sort(justbuilt(config)), sort(c("v", "z", subtargets(z))))
   vals <- gsub("-", "+", vals, fixed = TRUE)
   assert_vals(vals)
   # change nothing
-  make(plan)
+  make(
+    plan,
+    envir = envir,
+    parallelism = parallelism,
+    jobs = jobs,
+    caching = caching
+  )
   expect_equal(justbuilt(config), character(0))
   assert_vals(vals)
   # change part of a dynamic dep
@@ -314,14 +384,26 @@ test_with_dir("dynamic cross flow", {
     y = target(paste0(w, x), dynamic = cross(w, x)),
     z = target(paste0(v, y), dynamic = cross(v, y))
   )
-  make(plan)
+  make(
+    plan,
+    envir = envir,
+    parallelism = parallelism,
+    jobs = jobs,
+    caching = caching
+  )
   out <- justbuilt(config)
   exp <- c("x", "y", "z", subtargets(y)[c(3, 6)], subtargets(z)[c(3, 6)])
   expect_equal(sort(out), sort(exp))
   vals <- gsub("C", "D", vals, fixed = TRUE)
   assert_vals(vals)
   # change nothing
-  make(plan)
+  make(
+    plan,
+    envir = envir,
+    parallelism = parallelism,
+    jobs = jobs,
+    caching = caching
+  )
   expect_equal(justbuilt(config), character(0))
   assert_vals(vals)
   # remove a dynamic dep
@@ -332,7 +414,13 @@ test_with_dir("dynamic cross flow", {
     y = target(paste0(w, x), dynamic = cross(w, x)),
     z = target(paste0(v, y), dynamic = cross(v, y))
   )
-  make(plan)
+  make(
+    plan,
+    envir = envir,
+    parallelism = parallelism,
+    jobs = jobs,
+    caching = caching
+  )
   expect_equal(sort(justbuilt(config)), sort(c("x", "y", "z")))
   vals <- vals[!grepl("A$", vals)]
   assert_vals(vals)
@@ -344,7 +432,13 @@ test_with_dir("dynamic cross flow", {
     y = target(paste0(w, x), dynamic = cross(w, x)),
     z = target(paste0(v, y), dynamic = cross(v, y))
   )
-  make(plan)
+  make(
+    plan,
+    envir = envir,
+    parallelism = parallelism,
+    jobs = jobs,
+    caching = caching
+  )
   exp <- c("w", "y", "z", subtargets(y)[c(3, 4)], subtargets(z)[c(3, 4)])
   expect_equal(sort(justbuilt(config)), sort(exp))
   vals <- c("aB", "aD", "eB", "eD", "bB", "bD")
@@ -358,7 +452,13 @@ test_with_dir("dynamic cross flow", {
     y = target(paste(w, x), dynamic = cross(w, x)),
     z = target(paste0(v, y), dynamic = cross(v, y))
   )
-  make(plan)
+  make(
+    plan,
+    envir = envir,
+    parallelism = parallelism,
+    jobs = jobs,
+    caching = caching
+  )
   out <- justbuilt(config)
   exp <- c("v", "y", subtargets(y), "z", subtargets(z))
   expect_equal(sort(out), sort(exp))
@@ -368,17 +468,34 @@ test_with_dir("dynamic cross flow", {
 })
 
 test_with_dir("dynamic combine flow without by", {
+  scenario <- get_testing_scenario()
+  envir <- eval(parse(text = scenario$envir))
+  parallelism <- scenario$parallelism
+  jobs <- scenario$jobs
+  caching <- scenario$caching
   plan <- drake_plan(
     x = seq_len(4),
     y = target(x + 1, dynamic = map(x)),
     z = target(unlist(y), dynamic = combine(y))
   )
-  make(plan)
+  make(
+    plan,
+    envir = envir,
+    parallelism = parallelism,
+    jobs = jobs,
+    caching = caching
+  )
   out <- readd(subtargets(z), character_only = TRUE)
   exp <- c(2, 3, 4, 5)
   expect_equal(out, exp)
   # change nothing
-  make(plan)
+  make(
+    plan,
+    envir = envir,
+    parallelism = parallelism,
+    jobs = jobs,
+    caching = caching
+  )
   config <- drake_config(plan)
   expect_equal(justbuilt(config), character(0))
   # Change static dep
@@ -387,13 +504,25 @@ test_with_dir("dynamic combine flow without by", {
     y = target(x + 2, dynamic = map(x)),
     z = target(unlist(y), dynamic = combine(y))
   )
-  make(plan)
+  make(
+    plan,
+    envir = envir,
+    parallelism = parallelism,
+    jobs = jobs,
+    caching = caching
+  )
   out <- readd(subtargets(z), character_only = TRUE)
   expect_equal(out, c(3, 4, 5, 6))
   exp <- c("y", "z", subtargets(y), subtargets(z))
   expect_equal(sort(justbuilt(config)), sort(exp))
   # change nothing
-  make(plan)
+  make(
+    plan,
+    envir = envir,
+    parallelism = parallelism,
+    jobs = jobs,
+    caching = caching
+  )
   expect_equal(justbuilt(config), character(0))
   expect_equal(out, c(3, 4, 5, 6))
   # Insert dynamic dep
@@ -402,7 +531,13 @@ test_with_dir("dynamic combine flow without by", {
     y = target(x + 2, dynamic = map(x)),
     z = target(unlist(y), dynamic = combine(y))
   )
-  make(plan)
+  make(
+    plan,
+    envir = envir,
+    parallelism = parallelism,
+    jobs = jobs,
+    caching = caching
+  )
   out <- readd(subtargets(z), character_only = TRUE)
   exp <- c(3, 4, 12, 6)
   expect_equal(out, exp)
@@ -452,13 +587,24 @@ test_with_dir("dynamic combine with by", {
 })
 
 test_with_dir("dynamic combine flow with by", {
+  scenario <- get_testing_scenario()
+  envir <- eval(parse(text = scenario$envir))
+  parallelism <- scenario$parallelism
+  jobs <- scenario$jobs
+  caching <- scenario$caching
   plan <- drake_plan(
     w = c("a", "b", "c", "c"),
     x = seq_len(4),
     y = target(x + 1, dynamic = map(x)),
     z = target(unlist(y), dynamic = combine(y, .by = w))
   )
-  make(plan)
+  make(
+    plan,
+    envir = envir,
+    parallelism = parallelism,
+    jobs = jobs,
+    caching = caching
+  )
   out <- lapply(subtargets(z), readd, character_only = TRUE)
   exp <- list(2, 3, c(4, 5))
   expect_equal(out, exp)
@@ -473,7 +619,13 @@ test_with_dir("dynamic combine flow with by", {
     y = target(x + 2, dynamic = map(x)),
     z = target(unlist(y), dynamic = combine(y, .by = w))
   )
-  make(plan)
+  make(
+    plan,
+    envir = envir,
+    parallelism = parallelism,
+    jobs = jobs,
+    caching = caching
+  )
   config <- drake_config(plan)
   exp <- c("y", "z", subtargets(y), subtargets(z)[-1])
   expect_equal(sort(justbuilt(config)), sort(exp))
@@ -487,14 +639,26 @@ test_with_dir("dynamic combine flow with by", {
     y = target(x + 2, dynamic = map(x)),
     z = target(unlist(y), dynamic = combine(y, .by = w))
   )
-  make(plan)
+  make(
+    plan,
+    envir = envir,
+    parallelism = parallelism,
+    jobs = jobs,
+    caching = caching
+  )
   exp <- c("x", "y", "z", subtargets(y)[4], subtargets(z)[3])
   expect_equal(sort(justbuilt(config)), sort(exp))
   out <- lapply(subtargets(z), readd, character_only = TRUE)
   exp <- list(3, 4, c(5, 12))
   expect_equal(out, exp)
   # change nothing
-  make(plan)
+  make(
+    plan,
+    envir = envir,
+    parallelism = parallelism,
+    jobs = jobs,
+    caching = caching
+  )
   config <- drake_config(plan)
   expect_equal(justbuilt(config), character(0))
   # insert dynamic sub-dep
@@ -504,7 +668,13 @@ test_with_dir("dynamic combine flow with by", {
     y = target(x + 2, dynamic = map(x)),
     z = target(unlist(y), dynamic = combine(y, .by = w))
   )
-  make(plan)
+  make(
+    plan,
+    envir = envir,
+    parallelism = parallelism,
+    jobs = jobs,
+    caching = caching
+  )
   exp <- c("w", "x", "y", "z", subtargets(y)[2], subtargets(z)[1])
   expect_equal(sort(justbuilt(config)), sort(exp))
   out <- lapply(subtargets(z), readd, character_only = TRUE)
@@ -517,7 +687,13 @@ test_with_dir("dynamic combine flow with by", {
     y = target(x + 2, dynamic = map(x)),
     z = target(unlist(y), dynamic = combine(y, .by = w))
   )
-  make(plan)
+  make(
+    plan,
+    envir = envir,
+    parallelism = parallelism,
+    jobs = jobs,
+    caching = caching
+  )
   exp <- c("w", "z", subtargets(z)[-3])
   expect_equal(sort(justbuilt(config)), sort(exp))
   out <- lapply(subtargets(z), readd, character_only = TRUE)
@@ -530,7 +706,13 @@ test_with_dir("dynamic combine flow with by", {
     y = target(x + 2, dynamic = map(x)),
     z = target(unlist(y), dynamic = combine(y, .by = w))
   )
-  make(plan)
+  make(
+    plan,
+    envir = envir,
+    parallelism = parallelism,
+    jobs = jobs,
+    caching = caching
+  )
   expect_equal(sort(justbuilt(config)), c("w", "z"))
   out <- lapply(subtargets(z), readd, character_only = TRUE)
   exp <- list(3, c(2, 4), c(5, 12))
