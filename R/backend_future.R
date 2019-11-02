@@ -5,8 +5,9 @@ backend_future <- function(config) {
   # While any targets are queued or running...
   sleeps <- 1L
   ft_config <- ft_config(config)
+  ids <- as.character(seq_along(workers))
   while (work_remains(queue = queue, workers = workers, config = config)) {
-    for (id in seq_along(workers)) {
+    for (id in ids) {
       if (is_idle(workers[[id]])) {
         # Also calls decrease-key on the queue.
         workers[[id]] <- conclude_worker(
@@ -69,9 +70,10 @@ ft_config <- function(config) {
 }
 
 initialize_workers <- function(config) {
-  out <- list()
-  for (i in seq_len(config$jobs)) {
-    out[[i]] <- empty_worker(target = NA_character_)
+  out <- new.env(parent = emptyenv())
+  ids <- as.character(seq_len(config$jobs))
+  for (id in ids) {
+    out[[id]] <- empty_worker(target = NA_character_)
   }
   out
 }
@@ -173,8 +175,8 @@ future_build <- function(target, meta, config, layout, protect) {
 }
 
 running_targets <- function(workers, config) {
-  out <- lapply(
-    X = workers,
+  out <- eapply(
+    env = workers,
     FUN = function(worker) {
       if (is_idle(worker)) {
         NULL
@@ -292,8 +294,8 @@ work_remains <- function(queue, workers, config) {
 }
 
 all_concluded <- function(workers, config) {
-  for (worker in workers) {
-    if (!is_concluded_worker(worker)) {
+  for (id in names(workers)) {
+    if (!is_concluded_worker(workers[[id]])) {
       return(FALSE)
     }
   }
