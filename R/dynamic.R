@@ -83,14 +83,17 @@ should_build_subtarget <- function(subtarget, parent_ok, config) {
   !recover_subtarget(subtarget, config) || !parent_ok
 }
 
-is_registered_dynamic <- function(target, config) {
-  !is.null(config$ht_dynamic) &&
-    ht_exists(config$ht_dynamic, target)
+decrement_later <- function(target, config) {
+  !is_unregistered_dynamic(target, config)
 }
 
 is_unregistered_dynamic <- function(target, config) {
   is_dynamic(target, config) &&
     !ht_exists(config$ht_dynamic, target)
+}
+
+is_registered_dynamic <- function(target, config) {
+  ht_exists(config$ht_dynamic, target)
 }
 
 register_subtargets_graph <- function(target, subtargets, config) {

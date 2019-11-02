@@ -15,7 +15,7 @@ backend_loop <- function(config) {
 loop_check <- function(config) {
   target <- config$envir_loop$targets[1L]
   targets <- config$envir_loop$targets[-1L]
-  decrement <- !is_unregistered_dynamic(target, config)
+  decrement <- decrement_later(target, config)
   local_build(target = target, config = config, downstream = targets)
   if (decrement) {
     config$envir_loop$targets <- targets
