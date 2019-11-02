@@ -49,7 +49,7 @@ ft_build_target <- function(target, id, running, protect, config) {
   if (identical(config$layout[[target]]$hpc, FALSE)) {
     future_local_build(target, protect, config)
   } else {
-    config$workers[[id]] <- new_worker(target, id, protect, config)
+    config$workers[[id]] <- ft_decide_worker(target, protect, config)
   }
 }
 
@@ -84,19 +84,20 @@ initialize_workers <- function(config) {
   out
 }
 
-new_worker <- function(target, id, protect, config) {
-  meta <- drake_meta_(target = target, config = config)
+ft_decide_worker <- function(target, protect, config) {
+  meta <- drake_meta_(target, config)
   if (handle_triggers(target, meta, config)) {
-    return(empty_worker(target = target))
+    return(empty_worker(target))
   }
+  ft_launch_worker(target, meta, protect, config)
+}
+
+ft_launch_worker <- function(target, meta, protect, config) {
   caching <- caching(target, config)
   if (identical(caching, "master")) {
     manage_memory(target = target, config = config, downstream = protect)
   }
-  DRAKE_GLOBALS__ <- NULL # Fixes warning about undefined globals.
-  # Avoid potential name conflicts with other globals.
-  # When we solve #296, need for such a clumsy workaround
-  # should go away.
+  DRAKE_GLOBALS__ <- NULL # Avoid name conflicts with other globals.
   layout <- config$layout[[target]]
   globals <- future_globals(
     target = target,
@@ -181,21 +182,15 @@ future_build <- function(target, meta, config, layout, protect) {
 }
 
 running_targets <- function(config) {
-  out <- eapply(
-    env = config$workers,
-    FUN = function(worker) {
-      if (is_idle(worker)) {
-        NULL
-      } else {
-        # It's hard to make this line run in a small test workflow
-        # suitable enough for unit testing, but
-        # I did artificially stall targets and verified that this line
-        # is reached in the future::multisession backend as expected.
-        attr(worker, "target") # nocov
-      }
-    }
-  )
-  unlist(out)
+  unlist(eapply(config$workers, running_worker))
+}
+
+running_worker <- function(worker) {
+  if (is_idle(worker)) {
+    NULL
+  } else {
+    attr(worker, "target") # nocov
+  }
 }
 
 # Need to check if the worker quit in error early somehow.

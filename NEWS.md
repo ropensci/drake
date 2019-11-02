@@ -10,6 +10,8 @@
 - Begin to implement dynamic branching (#685).
 - Add a new `id_chr()` function to get the name of the target while `make()` is running.
 - Implement `plot(plan)` (#1036).
+- `vis_drake_graph()`, `drake_graph_info()`, and `render_drake_graph()` now 
+  take arguments that allow behavior to be defined upon selection of nodes. (#1031, @mstr3336).
 
 ## Enhancements
 
@@ -18,11 +20,7 @@
 - Change the names of environments in `drake_config()` objects.
 - Assert that `prework` is a language object, list of language objects, or character vector (#1 at pat-s/multicore-debugging on GitHub, @pat-s).
 - Use an environment instead of a list for `config$layout`. Supports internal modifications by reference. Required for #685.
-
-## New features
-
-- `vis_drake_graph()`, `drake_graph_info()`, and `render_drake_graph()` now 
-  take arguments that allow behavior to be defined upon selection of nodes. (#1031, @mstr3336).
+- Clean up the functions of the `"future"` parallelism backend.
 
 
 # Version 7.7.0
