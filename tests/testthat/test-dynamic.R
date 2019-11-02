@@ -217,7 +217,7 @@ test_with_dir("dynamic map flow", {
   expect_equal(readd(zs[4], character_only = TRUE), 9)
   # insert a new dynamic dep
   plan <- drake_plan(
-    x = as.integer(c(1, 5, 2, 3, 6)),
+    x = as.integer(c(1, 5, 200, 3, 6)),
     y = target(x + 1, dynamic = map(x)),
     z = target(y + 2, dynamic = map(y))
   )
@@ -235,12 +235,12 @@ test_with_dir("dynamic map flow", {
   zs <- subtargets(z)
   expect_equal(readd(ys[1], character_only = TRUE), 2)
   expect_equal(readd(ys[2], character_only = TRUE), 6)
-  expect_equal(readd(ys[3], character_only = TRUE), 3)
+  expect_equal(readd(ys[3], character_only = TRUE), 201)
   expect_equal(readd(ys[4], character_only = TRUE), 4)
   expect_equal(readd(ys[5], character_only = TRUE), 7)
   expect_equal(readd(zs[1], character_only = TRUE), 4)
   expect_equal(readd(zs[2], character_only = TRUE), 8)
-  expect_equal(readd(zs[3], character_only = TRUE), 5)
+  expect_equal(readd(zs[3], character_only = TRUE), 203)
   expect_equal(readd(zs[4], character_only = TRUE), 6)
   expect_equal(readd(zs[5], character_only = TRUE), 9)
   # change dynamic and static dep
@@ -631,7 +631,7 @@ test_with_dir("dynamic combine flow with by", {
   plan <- drake_plan(
     w = c("a", "b", "c", "c"),
     x = seq_len(4),
-    y = target(x + 1, dynamic = map(x)),
+    y = target(x + 101, dynamic = map(x)),
     z = target(unlist(y), dynamic = combine(y, .by = w))
   )
   make(
@@ -642,7 +642,7 @@ test_with_dir("dynamic combine flow with by", {
     caching = caching
   )
   out <- lapply(subtargets(z), readd, character_only = TRUE)
-  exp <- list(2, 3, c(4, 5))
+  exp <- list(102, 103, c(104, 105))
   expect_equal(out, exp)
   # change nothing
   make(plan)
@@ -663,7 +663,7 @@ test_with_dir("dynamic combine flow with by", {
     caching = caching
   )
   config <- drake_config(plan)
-  exp <- c("y", "z", subtargets(y), subtargets(z)[-1])
+  exp <- c("y", "z", subtargets(y), subtargets(z))
   expect_equal(sort(justbuilt(config)), sort(exp))
   out <- lapply(subtargets(z), readd, character_only = TRUE)
   exp <- list(3, 4, c(5, 6))
@@ -730,7 +730,9 @@ test_with_dir("dynamic combine flow with by", {
     jobs = jobs,
     caching = caching
   )
-  exp <- c("w", "z", subtargets(z)[-3])
+  # One of the z sub-targets has the same dynamic sub-dependency hash
+  # as a previous build.
+  exp <- c("w", "z", subtargets(z)[2])
   expect_equal(sort(justbuilt(config)), sort(exp))
   out <- lapply(subtargets(z), readd, character_only = TRUE)
   exp <- list(3, c(2, 4), c(5, 12))
@@ -792,7 +794,7 @@ test_with_dir("subtarget name invalidation", {
   make(plan)
   sub2 <- subtargets(y)
   exp <- c("x", "y", sub2)
-  expect_equal(sort(cached()), sort(exp))
+  expect_true(all(exp %in% cached()))
   expect_equal(length(intersect(sub1, sub2)), 3L)
 })
 

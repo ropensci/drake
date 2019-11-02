@@ -169,7 +169,6 @@ finalize_meta <- function(target, value, meta, hash, config) {
   meta$size <- NROW(value)
   if (is_dynamic(target, config)) {
     meta$subtargets <- config$layout[[target]]$subtargets
-    invalidate_old_subtargets(target, meta$subtargets, config)
   }
   if (is_dynamic_dep(target, config)) {
     meta$dynamic_hashes <- dynamic_hashes(meta$size, value, config)
@@ -198,18 +197,6 @@ finalize_triggers <- function(target, meta, config) {
     )
   }
   meta
-}
-
-invalidate_old_subtargets <- function(target, new_subtargets, config) {
-  if (!config$cache$exists(target, namespace = "meta")) {
-    return()
-  }
-  old_meta <- config$cache$get(target, namespace = "meta")
-  old_subtargets <- old_meta$subtargets
-  invalidate_these <- setdiff(old_subtargets, new_subtargets)
-  for (ns in config$cache$list_namespaces()) {
-    config$cache$del(invalidate_these, namespace = ns)
-  }
 }
 
 dynamic_hashes <- function(size, value, config) {
