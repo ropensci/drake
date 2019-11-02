@@ -1062,6 +1062,7 @@ test_with_dir("dynamic loadd() and readd()", {
 
 test_with_dir("dynamic hpc", {
   skip_on_cran()
+  skip_on_windows()
   skip_if_not_installed("clustermq")
   skip_if_not_installed("future")
   if ("package:clustermq" %in% search()) {
