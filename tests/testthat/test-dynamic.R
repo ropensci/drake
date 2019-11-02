@@ -1033,6 +1033,9 @@ test_with_dir("dynamic hpc", {
   skip_on_cran()
   skip_if_not_installed("clustermq")
   skip_if_not_installed("future")
+  if ("package:clustermq" %in% search()) {
+    detach("package:clustermq", unload = TRUE) # nolint
+  }
   future::plan(future::multisession, workers = 2L)
   scenario <- get_testing_scenario()
   envir <- eval(parse(text = scenario$envir))
@@ -1069,5 +1072,8 @@ test_with_dir("dynamic hpc", {
     for (caching in c("master", "worker")) {
       hpc_tests(plan, envir, parallelism, caching)
     }
+  }
+  if ("package:clustermq" %in% search()) {
+    detach("package:clustermq", unload = TRUE) # nolint
   }
 })
