@@ -150,11 +150,10 @@ cmq_send_target <- function(target, config) {
   }
   announce_build(target = target, config = config)
   caching <- caching(target, config)
-  deps <- NULL
   if (identical(caching, "master")) {
     manage_memory(target = target, config = config, jobs = 1)
-    deps <- cmq_deps_list(target = target, config = config)
   }
+  deps <- cmq_deps_list(target, config)
   layout <- config$layout[[target]]
   config$workers$send_call(
     expr = drake::cmq_build(
@@ -169,14 +168,24 @@ cmq_send_target <- function(target, config) {
 }
 
 cmq_deps_list <- function(target, config) {
-  deps <- config$layout[[target]]$deps_build$memory
-  out <- lapply(deps, cmq_get_dep, config = config)
-  names(out) <- deps
-  out
-}
-
-cmq_get_dep <- function(dep, config) {
-  config$envir_targets[[dep]]
+  layout <- config$layout[[target]]
+  keys_static <- layout$deps_build$memory
+  keys_dynamic <- layout$deps_dynamic
+  vals_static <- lapply(
+    keys_static,
+    get,
+    envir = config$envir_targets,
+    inherits = FALSE
+  )
+  vals_dynamic <- lapply(
+    keys_dynamic,
+    get,
+    envir = config$envir_subtargets,
+    inherits = FALSE
+  )
+  names(vals_static) <- keys_static
+  names(vals_dynamic) <- keys_dynamic
+  list(static = vals_static, dynamic = vals_dynamic)
 }
 
 #' @title Build a target using the clustermq backend
@@ -212,8 +221,21 @@ cmq_build <- function(target, meta, deps, layout, config) {
 }
 
 cmq_assign_deps <- function(deps, config) {
-  for (dep in names(deps)) {
-    config$envir_targets[[dep]] <- deps[[dep]]
+  for (key in names(deps$static)) {
+    assign(
+      x = key,
+      value = deps$static[[key]],
+      envir = config$envir_targets,
+      inherits = FALSE
+    )
+  }
+  for (key in names(deps$dynamic)) {
+    assign(
+      x = key,
+      value = deps$dynamic[[key]],
+      envir = config$envir_subtargets,
+      inherits = FALSE
+    )
   }
 }
 

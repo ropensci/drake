@@ -127,7 +127,7 @@ register_subtarget_layout <- function(index, parent, subtargets, config) {
   layout$subtarget <- TRUE
   mem_deps <- which_vars(layout$dynamic)
   layout$dynamic <- NULL
-  layout$deps_build$memory <- c(layout$deps_build$memory, mem_deps)
+  layout$deps_build$memory <- unique(c(layout$deps_build$memory, mem_deps))
   layout$seed <- seed_from_basic_types(config$seed, layout$seed, subtarget)
   layout <- register_dynamic_subdeps(layout, index, parent, config)
   config$layout[[subtarget]] <- layout
