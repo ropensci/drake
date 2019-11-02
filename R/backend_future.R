@@ -46,7 +46,7 @@ ft_do_target <- function(target, id, config) {
 }
 
 ft_build_target <- function(target, id, running, protect, config) {
-  if (identical(config$layout[[target]]$hpc, FALSE)) {
+  if (no_hpc(target, config)) {
     future_local_build(target, protect, config)
   } else {
     config$workers[[id]] <- ft_decide_worker(target, protect, config)

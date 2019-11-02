@@ -28,7 +28,7 @@ cmq_local_master <- function(config) {
 
 cmq_local_master_iter <- function(config) {
   target <- config$queue$peek0()
-  if (identical(config$layout[[target]]$hpc, FALSE)) {
+  if (no_hpc(target, config)) {
     config$queue$pop0()
     cmq_local_build(target, config)
     return(TRUE)
@@ -133,12 +133,17 @@ cmq_next_target <- function(config) {
     config$workers$send_wait() # nocov
     return() # nocov
   }
-  if (identical(config$layout[[target]]$hpc, FALSE)) {
+  if (no_hpc(target, config)) {
     config$workers$send_wait()
     cmq_local_build(target, config)
   } else {
     cmq_send_target(target, config)
   }
+}
+
+no_hpc <- function(target, config) {
+  identical(config$layout[[target]]$hpc, FALSE) ||
+    is_dynamic(target, config)
 }
 
 cmq_send_target <- function(target, config) {
@@ -150,10 +155,11 @@ cmq_send_target <- function(target, config) {
   }
   announce_build(target = target, config = config)
   caching <- caching(target, config)
+  deps <- NULL
   if (identical(caching, "master")) {
     manage_memory(target = target, config = config, jobs = 1)
+    deps <- cmq_deps_list(target, config)
   }
-  deps <- cmq_deps_list(target, config)
   layout <- config$layout[[target]]
   config$workers$send_call(
     expr = drake::cmq_build(

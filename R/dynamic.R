@@ -115,7 +115,6 @@ register_in_layout <- function(target, subtargets, config) {
     config = config
   )
   config$layout[[target]]$subtargets <- subtargets
-  config$layout[[target]]$hpc <- FALSE
 }
 
 register_subtarget_layout <- function(index, parent, subtargets, config) {

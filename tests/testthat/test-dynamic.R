@@ -1062,7 +1062,7 @@ test_with_dir("dynamic loadd() and readd()", {
 
 test_with_dir("dynamic hpc", {
   skip_on_cran()
-  skip_on_windows()
+  skip_on_os("windows")
   skip_if_not_installed("clustermq")
   skip_if_not_installed("future")
   if ("package:clustermq" %in% search()) {
@@ -1071,14 +1071,17 @@ test_with_dir("dynamic hpc", {
   future::plan(future::multisession, workers = 2L)
   scenario <- get_testing_scenario()
   envir <- eval(parse(text = scenario$envir))
-  plan <- drake_plan(
-    low = c("a", "b"),
-    high = target(toupper(low), dynamic = map(low)),
-    combos = target(paste0(low, high), dynamic = cross(low, high)),
-    index = target(substr(combos, 0L, 1L), dynamic = map(combos)),
-    groups = target(unlist(combos), dynamic = combine(combos, .by = index))
-  )
-  hpc_tests <- function(plan, envir, parallelism, caching) {
+  hpc_tests <- function(envir, parallelism, caching) {
+    plan <- drake_plan(
+      low = c("a", "b"),
+      high = target(toupper(low), dynamic = map(low)),
+      combos = target(paste0(low, high), dynamic = cross(low, high)),
+      index = target(substr(combos, 0L, 1L), dynamic = map(combos)),
+      groups = target(
+        unlist(combos),
+        dynamic = combine(combos, .by = index)
+      )
+    )
     make(
       plan,
       envir = envir,
@@ -1099,10 +1102,36 @@ test_with_dir("dynamic hpc", {
       caching = caching
     )
     expect_equal(justbuilt(config), character(0))
+    plan <- drake_plan(
+      low = c("a", "b"),
+      high = target(toupper(low), dynamic = map(low)),
+      combos = target(paste0(low, high), dynamic = cross(low, high)),
+      index = target(substr(combos, 0L, 1L), dynamic = map(combos)),
+      groups = target(
+        paste0(unlist(combos), "+"),
+        dynamic = combine(combos, .by = index)
+      )
+    )
+    make(
+      plan,
+      envir = envir,
+      jobs = 2L,
+      parallelism = parallelism,
+      caching = caching
+    )
+    out <- justbuilt(config)
+    exp <- c("groups", subtargets(groups))
+    expect_equal(sort(out), sort(exp))
+    out <- readd(groups)
+    exp <- list(c("aA+", "aB+"), c("bA+", "bB+"))
+    expect_equal(out, exp)
+    clean(destroy = TRUE)
   }
   for (parallelism in c("clustermq", "future")) {
     for (caching in c("master", "worker")) {
-      hpc_tests(plan, envir, parallelism, caching)
+      print(parallelism)
+      print(caching)
+      hpc_tests(envir, parallelism, caching)
     }
   }
   if ("package:clustermq" %in% search()) {
