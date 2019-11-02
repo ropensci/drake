@@ -293,7 +293,7 @@ load_targets_impl <- function(hashes, target, cache, envir, subtargets) {
   UseMethod("load_targets_impl")
 }
 
-load_targets_impl.drake_dynamic <- function(
+load_targets_impl.drake_dynamic <- function( # nolint
   hashes,
   target,
   cache,
