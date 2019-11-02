@@ -2,38 +2,42 @@ backend_future <- function(config) {
   assert_pkg("future")
   config$queue <- priority_queue(config)
   config$workers <- initialize_workers(config)
-  # While any targets are queued or running...
-  sleeps <- 1L
+  config$sleeps <- new.env(parent = emptyenv())
+  config$sleeps$count <- 1L
   ft_config <- ft_config(config)
   ids <- as.character(seq_along(config$workers))
   while (work_remains(config)) {
     for (id in ids) {
       if (is_idle(config$workers[[id]])) {
-        config$workers[[id]] <- conclude_worker(config$workers[[id]], config)
-        next_target <- config$queue$pop0()
-        if (!length(next_target)) {
-          # nocov start
-          Sys.sleep(config$sleep(max(0L, sleeps))) # difficult to cover
-          sleeps <- sleeps + 1L
-          next
-          # nocov end
-        }
-        sleeps <- 1L
-        running <- running_targets(config = config)
-        protect <- c(running, config$queue$list())
-        if (identical(config$layout[[next_target]]$hpc, FALSE)) {
-          future_local_build(next_target, config, protect)
-        } else {
-          config$workers[[id]] <- new_worker(
-            id,
-            next_target,
-            config,
-            ft_config,
-            protect
-          )
-        }
+        backend_future_iter(id, config, ft_config)
       }
     }
+  }
+}
+
+backend_future_iter <- function(id, config, ft_config) {
+  config$workers[[id]] <- conclude_worker(config$workers[[id]], config)
+  next_target <- config$queue$pop0()
+  if (!length(next_target)) {
+    # nocov start
+    Sys.sleep(config$sleep(max(0L, config$sleeps$count))) # difficult to cover
+    config$sleeps$count <- config$sleeps$count + 1L
+    return()
+    # nocov end
+  }
+  config$sleeps$count <- 1L
+  running <- running_targets(config = config)
+  protect <- c(running, config$queue$list())
+  if (identical(config$layout[[next_target]]$hpc, FALSE)) {
+    future_local_build(next_target, config, protect)
+  } else {
+    config$workers[[id]] <- new_worker(
+      id,
+      next_target,
+      config,
+      ft_config,
+      protect
+    )
   }
 }
 
