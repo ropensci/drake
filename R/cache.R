@@ -254,9 +254,13 @@ loadd <- function(
   targets <- loadd_handle_replace(targets, envir, replace)
   loadd_show_source(targets, cache = cache, show_source = show_source)
   lightly_parallelize(
-    X = targets, FUN = load_target, cache = cache,
-    namespace = namespace, envir = envir,
-    verbose = verbose, lazy = lazy
+    X = targets,
+    FUN = load_target,
+    cache = cache,
+    namespace = namespace,
+    envir = envir,
+    verbose = verbose,
+    lazy = lazy
   )
   invisible()
 }
