@@ -1099,7 +1099,7 @@ test_with_dir("dynamic hpc", {
     )
     expect_equal(justbuilt(config), character(0))
   }
-  for (parallelism in c("future")) {
+  for (parallelism in c("clustermq", "future")) {
     for (caching in c("master", "worker")) {
       hpc_tests(plan, envir, parallelism, caching)
     }
