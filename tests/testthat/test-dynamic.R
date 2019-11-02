@@ -824,8 +824,12 @@ test_with_dir("dynamic loadd() and readd()", {
   expect_true(is.list(out))
   expect_false(is.data.frame(out))
   expect_equal(do.call(rbind, out), mtcars[seq_len(4), ])
-  loadd(y)
-  expect_true(is.list(y))
-  expect_false(is.data.frame(y))
-  expect_equal(do.call(rbind, y), mtcars[seq_len(4), ])
+  skip_if_not_installed("bindr")
+  for (lazy in c("eager", "promise", "bind")) {
+    loadd(y, lazy = lazy)
+    expect_true(is.list(y))
+    expect_false(is.data.frame(y))
+    expect_equal(do.call(rbind, y), mtcars[seq_len(4), ])
+    rm(y)
+  }
 })
