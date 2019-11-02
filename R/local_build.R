@@ -39,7 +39,7 @@ announce_dynamic <- function(target, config) {
     "gather",
     "dynamic"
   )
-  config$logger$minor(
+  config$logger$major(
     msg,
     target,
     target = target
