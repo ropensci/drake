@@ -418,7 +418,7 @@ test_with_dir("dynamic combine with by", {
     x = target(u, dynamic = map(u)),
     y = target(v, dynamic = map(v)),
     z = target(
-      list(x = do.call(c, x), y = do.call(c, y), my_by = w),
+      list(x = do.call("c", x), y = do.call("c", y), my_by = w),
       dynamic = combine(x, y, .by = w)
     )
   )
