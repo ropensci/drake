@@ -436,7 +436,7 @@ test_with_dir("dynamic combine with by", {
     x = target(u, dynamic = map(u)),
     y = target(v, dynamic = map(v)),
     z = target(
-      list(x = sum(do.call(c, x)), y = do.call(c, y)),
+      list(x = sum(do.call("c", x)), y = do.call("c", y)),
       dynamic = combine(x, y, .by = w)
     )
   )
@@ -808,7 +808,7 @@ test_with_dir("row-wise dynamic map()", {
     expect_true(is.data.frame(y))
     expect_equal(nrow(y), 1)
   }
-  df <- do.call(rbind, ys)
+  df <- do.call("rbind", ys)
   expect_equal(df, mtcars)
 })
 
@@ -823,26 +823,26 @@ test_with_dir("dynamic loadd() and readd()", {
   out <- readd(y)
   expect_true(is.list(out))
   expect_false(is.data.frame(out))
-  expect_equal(do.call(rbind, out), mtcars[seq_len(4), ])
+  expect_equal(do.call("rbind", out), mtcars[seq_len(4), ])
   skip_if_not_installed("bindr")
   for (lazy in c("eager", "promise", "bind")) {
     loadd(y, lazy = lazy)
     expect_true(is.list(y))
     expect_false(is.data.frame(y))
-    expect_equal(do.call(rbind, y), mtcars[seq_len(4), ])
+    expect_equal(do.call("rbind", y), mtcars[seq_len(4), ])
     rm(y)
   }
   out <- readd(y, subtargets = c(2, 4))
   expect_true(is.list(out))
   expect_false(is.data.frame(out))
   expect_equal(length(out), 2)
-  expect_equal(do.call(rbind, out), mtcars[c(2, 4), ])
+  expect_equal(do.call("rbind", out), mtcars[c(2, 4), ])
     for (lazy in c("eager", "promise", "bind")) {
     loadd(y, lazy = lazy, subtargets = c(2, 4))
     expect_equal(length(y), 2)
     expect_true(is.list(y))
     expect_false(is.data.frame(y))
-    expect_equal(do.call(rbind, y), mtcars[c(2, 4), ])
+    expect_equal(do.call("rbind", y), mtcars[c(2, 4), ])
     rm(y)
   }
 })
