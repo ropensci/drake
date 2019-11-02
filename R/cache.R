@@ -4,8 +4,8 @@
 #' and [loadd()] loads one or more objects from the cache
 #' into your environment or session. These objects are usually
 #' targets built by [make()]. If `target` is dynamic,
-#' [readd()] and [loadd()] retrieve a list of subtarget values.
-#' You can select which subtargets to include with the `subtargets`
+#' [readd()] and [loadd()] retrieve a list of sub-target values.
+#' You can restrict which sub-targets to include using the `subtargets`
 #' argument.
 #' @details There are three uses for the
 #' [loadd()] and [readd()] functions:
@@ -62,10 +62,10 @@
 #'   was imported (using [show_source()]).
 #' @param subtargets A numeric vector of indices.
 #'   If `target` is dynamic, [loadd()] and [readd()] retrieve
-#'   a list of subtargets. You can restrict which subtargets
+#'   a list of sub-targets. You can restrict which sub-targets
 #'   to retrieve with the `subtargets` argument. For example,
 #'   `readd(x, subtargets = seq_len(3))` only retrieves the
-#'   first 3 subtargets.
+#'   first 3 sub-targets of dynamic target `x`.
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {

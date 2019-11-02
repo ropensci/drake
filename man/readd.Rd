@@ -68,10 +68,10 @@ was imported (using \code{\link[=show_source]{show_source()}}).}
 
 \item{subtargets}{A numeric vector of indices.
 If \code{target} is dynamic, \code{\link[=loadd]{loadd()}} and \code{\link[=readd]{readd()}} retrieve
-a list of subtargets. You can restrict which subtargets
+a list of sub-targets. You can restrict which sub-targets
 to retrieve with the \code{subtargets} argument. For example,
 \code{readd(x, subtargets = seq_len(3))} only retrieves the
-first 3 subtargets.}
+first 3 sub-targets of dynamic target \code{x}.}
 
 \item{...}{Targets to load from the cache: as names (symbols) or
 character strings. If the \code{tidyselect} package is installed,
@@ -138,8 +138,8 @@ The cached value of the \code{target}.
 and \code{\link[=loadd]{loadd()}} loads one or more objects from the cache
 into your environment or session. These objects are usually
 targets built by \code{\link[=make]{make()}}. If \code{target} is dynamic,
-\code{\link[=readd]{readd()}} and \code{\link[=loadd]{loadd()}} retrieve a list of subtarget values.
-You can select which subtargets to include with the \code{subtargets}
+\code{\link[=readd]{readd()}} and \code{\link[=loadd]{loadd()}} retrieve a list of sub-target values.
+You can restrict which sub-targets to include using the \code{subtargets}
 argument.
 }
 \details{
