@@ -38,10 +38,10 @@ test_with_dir("the priority queue works", {
   expect_null(x$pop0())
   expect_equivalent(x$data, y)
   for (i in 1:2) {
-    x$decrease_key(c("bar", "spren"))
+    x$adjust_key(c("bar", "spren"), -1L)
   }
   for (i in 1:3) {
-    x$decrease_key("spren")
+    x$adjust_key("spren", -1L)
   }
   y <- data.frame(
     target = c("spren", "bar", "Joe", "baz", "Amy", "soup", "Bob", "foo"),
@@ -72,10 +72,10 @@ test_with_dir("the priority queue works", {
     )
   )
   for (i in 1:2) {
-    x$decrease_key(c("bar", "spren"))
+    x$adjust_key(c("bar", "spren"), -1L)
   }
   for (i in 1:3) {
-    x$decrease_key("spren")
+    x$adjust_key("spren", -1L)
   }
   y <- data.frame(
     target = c("bar", "spren", "Joe", "baz", "Amy", "soup", "Bob", "foo"),

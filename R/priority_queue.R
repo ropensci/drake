@@ -82,9 +82,9 @@ refclass_priority_queue <- methods::setRefClass(
     },
     # This is all wrong and inefficient.
     # Needs the actual decrease-key algorithm
-    decrease_key = function(targets) {
+    adjust_key = function(targets, by) {
       index <- .self$data$target %in% targets
-      .self$data$ndeps[index] <- .self$data$ndeps[index] - 1
+      .self$data$ndeps[index] <- .self$data$ndeps[index] + by
       .self$sort()
     }
   )
@@ -100,14 +100,20 @@ empty_queue <- function() {
   refclass_priority_queue$new(data = data)
 }
 
-# Very specific to drake, does not belong inside
-# a generic priority queue.
 decrease_revdep_keys <- function(queue, target, config) {
+  adjust_revdep_keys(queue, target, config, -1L)
+}
+
+increase_revdep_keys <- function(queue, target, config) {
+  adjust_revdep_keys(queue, target, config, 1L)
+}
+
+adjust_revdep_keys <- function(queue, target, config, by) {
   revdeps <- deps_graph(
     targets = target,
     graph = config$envir_graph$graph,
     reverse = TRUE
   )
   revdeps <- intersect(revdeps, queue$list())
-  queue$decrease_key(targets = revdeps)
+  queue$adjust_key(revdeps, by)
 }
