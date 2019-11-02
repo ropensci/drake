@@ -61,7 +61,7 @@ register_subtargets <- function(target, parent_ok, subdeps_ok, config) {
   if (!parent_ok || !subdeps_ok || ndeps) {
     register_in_loop(target, config)
     register_in_queue(target, ndeps, config)
-    dynamic_pad_key(target, config)
+    dynamic_pad_revdep_keys(target, config)
   }
 }
 
@@ -144,7 +144,7 @@ register_in_queue <- function(targets, ndeps, config) {
   config$queue$push(targets, ndeps)
 }
 
-dynamic_pad_key <- function(target, config) {
+dynamic_pad_revdep_keys <- function(target, config) {
   if (is.null(config$queue)) {
     return()
   }
