@@ -795,3 +795,19 @@ test_with_dir("failed dynamic data recovery", {
   make(plan, recover = TRUE)
   expect_true(file.exists("a"))
 })
+
+test_with_dir("row-wise dynamic map()", {
+  skip_on_cran()
+  plan <- drake_plan(
+    x = mtcars,
+    y = target(x, dynamic = map(x))
+  )
+  make(plan)
+  ys <- lapply(subtargets(y), readd, character_only = TRUE)
+  for (y in ys) {
+    expect_true(is.data.frame(y))
+    expect_equal(nrow(y), 1)
+  }
+  df <- do.call(rbind, ys)
+  expect_equal(df, mtcars)
+})
