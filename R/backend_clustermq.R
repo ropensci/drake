@@ -39,6 +39,7 @@ cmq_local_master_iter <- function(config) {
   }
   config$queue$pop0()
   cmq_conclude_target(target, config)
+  TRUE
 }
 
 cmq_set_common_data <- function(config) {
