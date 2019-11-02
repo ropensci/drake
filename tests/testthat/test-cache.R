@@ -817,10 +817,7 @@ test_with_dir("try_build() does not need to access cache", {
   config$cache <- config$cache_log_file <- NULL
   build <- try_build(target = "x", meta = meta, config = config)
   expect_equal(1, build$value)
-  expect_error(
-    drake_build(target = "x", config = config),
-    regexp = "cannot find drake cache"
-  )
+  expect_error(drake_build(target = "x", config = config))
 })
 
 test_with_dir("running()", {

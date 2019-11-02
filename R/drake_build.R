@@ -65,16 +65,13 @@ drake_build <- function(
   if (!character_only) {
     target <- as.character(substitute(target))
   }
-  loadd(
-    list = target,
-    deps = TRUE,
-    envir = config$envir_targets,
-    cache = config$cache,
-    jobs = jobs,
-    replace = replace,
-    tidyselect = FALSE,
-    config = config
-  )
+  deps <- deps_memory(targets = target, config = config)
+  for (dep in deps) {
+    if (replace || !exists(dep, envir = config$envir_targets)) {
+      value <- config$cache$get(dep)
+      assign(dep, value, envir = config$envir_targets)
+    }
+  }
   meta <- drake_meta_(target = target, config = config)
   announce_build(target = target, config = config)
   build <- try_build(target = target, meta = meta, config = config)
@@ -149,16 +146,13 @@ drake_debug <- function(
   if (verbose) {
     message("Building target `", target, "` in debug mode.")
   }
-  loadd(
-    list = target,
-    deps = TRUE,
-    envir = config$envir_targets,
-    cache = config$cache,
-    jobs = jobs,
-    replace = replace,
-    tidyselect = FALSE,
-    config = config
-  )
+  deps <- deps_memory(targets = target, config = config)
+  for (dep in deps) {
+    if (replace || !exists(dep, envir = config$envir_targets)) {
+      value <- config$cache$get(dep)
+      assign(dep, value, envir = config$envir_targets)
+    }
+  }
   config$layout[[target]]$command_build <- cdl_preprocess_command(
     debug_command(config$layout[[target]]$command)
   )
