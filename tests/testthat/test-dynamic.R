@@ -94,8 +94,10 @@ test_with_dir("invalidating a subtarget invalidates the parent", {
   config <- drake_config(plan)
   make(plan)
   clean(list = subtargets(y)[1])
+  expect_equal(outdated(config), "y")
   make(plan)
-  expect_equal(sort(c(justbuilt(config))), sort(c("y", subtargets(y)[1])))
+  exp <- sort(c("y", subtargets(y)[1]))
+  expect_equal(sort(c(justbuilt(config))), exp)
 })
 
 test_with_dir("dynamic map flow", {
