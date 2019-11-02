@@ -269,8 +269,21 @@ loadd <- function(
 
 load_subtargets <- function(target, cache, envir) {
   hashes <- get(target, envir = envir, inherits = FALSE)
+  load_targets_impl(hashes, target, cache, envir)
+}
+
+load_targets_impl <- function(hashes, target, cache, envir) {
+  UseMethod("load_targets_impl")
+}
+
+load_targets_impl.drake_dynamic <- function(hashes, target, cache, envir) {
   value <- get_subtargets(hashes, cache)
+  rm(list = target, envir = envir, inherits = FALSE)
   assign(target, value, envir = envir, inherits = FALSE)
+}
+
+load_targets_impl.default <- function(hashes, target, cache, envir) {
+  NULL
 }
 
 get_subtargets <- function(hashes, cache) {
