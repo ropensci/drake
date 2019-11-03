@@ -126,7 +126,8 @@ register_subtarget_layout <- function(index, parent, subtargets, config) {
   layout$target <- subtarget
   layout$subtarget_index <- index
   layout$subtarget_parent <- parent
-  layout$subtarget <- TRUE
+  layout$is_dynamic <- FALSE
+  layout$is_subtarget <- TRUE
   mem_deps <- which_vars(layout$dynamic)
   layout$dynamic <- NULL
   layout$deps_build$memory <- unique(c(layout$deps_build$memory, mem_deps))
@@ -202,7 +203,7 @@ register_dynamic_subdeps <- function(layout, index, parent, config) {
 }
 
 is_dynamic <- function(target, config) {
-  inherits(config$layout[[target]]$dynamic, "dynamic")
+  config$layout[[target]]$is_dynamic %||% FALSE
 }
 
 is_dynamic_dep <- function(target, config) {
@@ -210,7 +211,7 @@ is_dynamic_dep <- function(target, config) {
 }
 
 is_subtarget <- function(target, config) {
-  config$layout[[target]]$subtarget %||% FALSE
+  config$layout[[target]]$is_subtarget %||% FALSE
 }
 
 as_dynamic <- function(x) {
