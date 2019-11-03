@@ -68,7 +68,6 @@ test_with_dir("dynamic sub-target indices", {
   }
   for (i in seq_len(4)) {
     ez <- list(y = seq(from = 4 * (i - 1) + 1, 4 * i))
-    ez$z_by <- ez$y[1]
     expect_equal(subtarget_deps("z", i, config), ez)
   }
 })
@@ -890,7 +889,7 @@ test_with_dir("dynamic combine over unequal vars", {
   expect_error(make(plan), "all grouping variables")
 })
 
-test_with_dir("combine static targets", {
+test_with_dir("combine: static targets and .by precedence", {
   plan <- drake_plan(
     x = c("a", "a", "b", "b"),
     y = target(x, dynamic = combine(x))
@@ -906,9 +905,17 @@ test_with_dir("combine static targets", {
   expect_equal(readd(z), list(c(1, 2), c(3, 4)))
   plan <- drake_plan(
     x = c("a", "a", "b", "b"),
+    y = as.character(seq_len(4)),
+    z = target(c(x, y), dynamic = combine(y, .by = x))
+  )
+  make(plan)
+  expect_equal(readd(z), list(c("a", "1", "2"), c("b", "3", "4")))
+  plan <- drake_plan(
+    x = c("a", "a", "b", "b"),
     y = target(x, dynamic = combine(x, .by = x))
   )
-  expect_error(make(plan), regexp = "needs to be different")
+  make(plan)
+  expect_equal(readd(y), list(c("a", "a"), c("b", "b")))
 })
 
 test_with_dir("combine multiple targets", {

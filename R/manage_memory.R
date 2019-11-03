@@ -138,6 +138,7 @@ load_subtarget_subdeps <- function(subtarget, config) {
   parent <- config$layout[[subtarget]]$subtarget_parent
   index <- config$layout[[subtarget]]$subtarget_index
   deps <- subtarget_deps(parent, index, config)
+  load_by_as_subdep(parent, index, config)
   lapply(
     names(deps),
     load_subtarget_subdep,
@@ -146,6 +147,23 @@ load_subtarget_subdeps <- function(subtarget, config) {
     config = config
   )
 }
+
+load_by_as_subdep <- function(parent, index, config) {
+  dynamic <- config$layout[[parent]]$dynamic
+  if (no_by(dynamic)) {
+    return()
+  }
+  by_key <- which_by(dynamic)
+  by_value <- get_dynamic_by(by_key, config)
+  by_value <- unique(by_value)[[index]]
+  assign(
+    x = by_key,
+    value = by_value,
+    envir = config$envir_subtargets,
+    inherits = FALSE
+  )
+}
+
 
 load_subtarget_subdep <- function(subtarget, dep, deps, config) {
   index <- unlist(deps[[dep]])
@@ -178,18 +196,6 @@ load_dynamic_subdep_impl.combine <- function( # nolint
   assign(
     x = dep,
     value = value,
-    envir = config$envir_subtargets,
-    inherits = FALSE
-  )
-  if (no_by(dynamic)) {
-    return()
-  }
-  by_key <- which_by(dynamic)
-  by_value <- get_dynamic_by(by_key, config)
-  by_value <- unique(by_value[index])
-  assign(
-    x = by_key,
-    value = by_value,
     envir = config$envir_subtargets,
     inherits = FALSE
   )

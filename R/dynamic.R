@@ -192,30 +192,7 @@ as_dynamic <- function(x) {
     return(x)
   }
   class(x) <- c(x[[1]], "dynamic", class(x))
-  x <- match_call(x)
-  check_dynamic(x)
-  x
-}
-
-check_dynamic <- function(x) {
-  UseMethod("check_dynamic")
-}
-
-check_dynamic.combine <- function(x) {
-  vars <- which_vars(x)
-  by <- which_by(x)
-  if (length(intersect(vars, by))) {
-    stop(
-      "In dynamic combine(), .by needs to be different from the ",
-      "other variables. Found .by = ", by, " for these variables:\n",
-      multiline_message(vars),
-      call. = FALSE
-    )
-  }
-}
-
-check_dynamic.default <- function(x) {
-  NULL
+  match_call(x)
 }
 
 dynamic_subvalue <- function(value, index) {
@@ -398,19 +375,14 @@ subtarget_deps_impl.combine <- function(
   config
 ) {
   vars <- which_vars(dynamic)
-  has_by <- !no_by(dynamic)
-  if (has_by) {
-    by_key <- which_by(dynamic)
-    by_value <- get_dynamic_by(by_key, config)
-    subtarget_index <- which(by_value == unique(by_value)[[index]])
-  } else {
+  if (no_by(dynamic)) {
     subtarget_index <- seq_len(get_dynamic_size(vars[1], config))
+  } else {
+    value <- get_dynamic_by(which_by(dynamic), config)
+    subtarget_index <- which(value == unique(value)[[index]])
   }
   out <- replicate(length(vars), subtarget_index, simplify = FALSE)
   names(out) <- vars
-  if (has_by) {
-    out[[by_key]] <- subtarget_index[[1]]
-  }
   out
 }
 
