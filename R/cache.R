@@ -403,41 +403,15 @@ parse_lazy_arg <- function(lazy) {
 }
 
 load_target <- function(target, cache, namespace, envir, verbose, lazy) {
-  switch(
-    lazy,
-    eager = eager_load_target(
-      target = target,
-      cache = cache,
-      namespace = namespace,
-      envir = envir,
-      verbose = verbose
-    ),
-    promise = promise_load_target(
-      target = target,
-      cache = cache,
-      namespace = namespace,
-      envir = envir,
-      verbose = verbose
-    ),
-    bind = bind_load_target(
-      target = target,
-      cache = cache,
-      namespace = namespace,
-      envir = envir,
-      verbose = verbose
-    )
-  )
+  class(target) <- lazy
+  load_target_impl(target, cache, namespace, envir, verbose)
 }
 
-#' @title Load a target right away (internal function)
-#' \lifecycle{stable}
-#' @description This function is only exported
-#' to make active bindings work safely.
-#' It is not actually a user-side function.
-#' @keywords internal
-#' @export
-#' @inheritParams loadd
-eager_load_target <- function(target, cache, namespace, envir, verbose) {
+load_target_impl <- function(target, cache, namespace, envir, verbose) {
+  UseMethod("load_target_impl")
+}
+
+load_target_impl.eager <- function(target, cache, namespace, envir, verbose) {
   value <- cache$get(
     key = target,
     namespace = namespace,
@@ -449,7 +423,7 @@ eager_load_target <- function(target, cache, namespace, envir, verbose) {
   invisible()
 }
 
-promise_load_target <- function(target, cache, namespace, envir, verbose) {
+load_target_impl.promise <- function(target, cache, namespace, envir, verbose) {
   eval_env <- environment()
   delayedAssign(
     x = target,
@@ -463,7 +437,7 @@ promise_load_target <- function(target, cache, namespace, envir, verbose) {
   )
 }
 
-bind_load_target <- function(target, cache, namespace, envir, verbose) {
+load_target_impl.bind <- function(target, cache, namespace, envir, verbose) {
   assert_pkg("bindr")
   # Allow active bindings to overwrite existing variables.
   if (exists(x = target, envir = envir, inherits = FALSE)) {
