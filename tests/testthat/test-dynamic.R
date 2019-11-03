@@ -294,27 +294,35 @@ test_with_dir("change 2 sub-deps (sub-target filtering)", {
 test_with_dir("identical sub-dep hashes", {
   plan <- drake_plan(
     x = rep("x", 4),
-    y = target(x, dynamic = map(x))
+    y = target(sample.int(n = 1e9, size = 1), dynamic = map(x))
   )
   make(plan)
-  expect_equal(unlist(readd(y)), rep("x", 4))
+  out4 <- unlist(readd(y))
+  expect_equal(length(out4), 4)
+  expect_equal(length(unique(out4)), 4)
   plan <- drake_plan(
     x = rep("x", 5),
-    y = target(x, dynamic = map(x))
+    y = target(sample.int(n = 1e9, size = 1), dynamic = map(x))
   )
   config <- drake_config(plan)
   make(plan)
-  expect_equal(unlist(readd(y)), rep("x", 5))
+  out5 <- unlist(readd(y))
+  expect_equal(length(out5), 5)
+  expect_equal(length(unique(out5)), 5)
+  expect_equal(out5[-5], out4)
   out <- justbuilt(config)
   exp <- c("x", "y", subtargets(y)[5])
   expect_equal(sort(out), sort(exp))
   plan <- drake_plan(
     x = rep("x", 3),
-    y = target(x, dynamic = map(x))
+    y = target(sample.int(n = 1e9, size = 1), dynamic = map(x))
   )
   config <- drake_config(plan)
   make(plan)
-  expect_equal(unlist(readd(y)), rep("x", 3))
+  out3 <- unlist(readd(y))
+  expect_equal(length(out3), 3)
+  expect_equal(length(unique(out3)), 3)
+  expect_equal(out4[-4], out3)
   out <- justbuilt(config)
   exp <- c("x", "y")
   expect_equal(sort(out), sort(exp))
