@@ -271,6 +271,25 @@ test_with_dir("dynamic map flow", {
   expect_equal(readd(zs[3], character_only = TRUE), 6561)
 })
 
+test_with_dir("change 2 sub-deps (sub-target filtering)", {
+  plan <- drake_plan(
+    x = c("a", "b", "c", "d"),
+    y = target(x, dynamic = map(x))
+  )
+  make(plan)
+  expect_equal(unlist(readd(y)), c("a", "b", "c", "d"))
+  plan <- drake_plan(
+    x = c("a", "X", "Y", "d"),
+    y = target(x, dynamic = map(x))
+  )
+  config <- drake_config(plan)
+  make(plan)
+  expect_equal(unlist(readd(y)), c("a", "X", "Y", "d"))
+  out <- justbuilt(config)
+  exp <- c("x", "y", subtargets(y)[c(2, 3)])
+  expect_equal(sort(out), sort(exp))
+})
+
 test_with_dir("dynamic cross values", {
   plan <- drake_plan(
     x1 = letters[seq_len(2)],
