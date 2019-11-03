@@ -25,6 +25,10 @@ ht_get <- function(ht, x) {
   get(x = x, envir = ht, inherits = FALSE)
 }
 
+ht_exists <- function(ht, x) {
+  exists(x, envir = ht, inherits = FALSE)
+}
+
 ht_del <- function(ht, x) {
   remove(list = x, envir = ht, inherits = FALSE)
 }
@@ -49,10 +53,6 @@ ht_filter <- function(ht, x) {
     ht = ht
   )
   x[index]
-}
-
-ht_exists <- function(ht, x) {
-  exists(x, envir = ht, inherits = FALSE)
 }
 
 # Merge y into x

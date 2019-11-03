@@ -20,20 +20,26 @@ backend_clustermq <- function(config) {
 }
 
 cmq_local_master <- function(config) {
-  while (!config$queue$empty()) {
-    target <- config$queue$peek0()
-    if (identical(config$layout[[target]]$hpc, FALSE)) {
-      config$queue$pop0()
-      cmq_local_build(target, config)
-      next
-    }
-    meta <- drake_meta_(target = target, config = config)
-    if (!handle_triggers(target, meta, config)) {
-      return()
-    }
-    config$queue$pop0()
-    cmq_conclude_target(target, config)
+  continue <- TRUE
+  while (!config$queue$empty() && continue) {
+    continue <- cmq_local_master_iter(config)
   }
+}
+
+cmq_local_master_iter <- function(config) {
+  target <- config$queue$peek0()
+  if (no_hpc(target, config)) {
+    config$queue$pop0()
+    cmq_local_build(target, config)
+    return(TRUE)
+  }
+  meta <- drake_meta_(target = target, config = config)
+  if (!handle_triggers(target, meta, config)) {
+    return(FALSE)
+  }
+  config$queue$pop0()
+  cmq_conclude_target(target, config)
+  TRUE
 }
 
 cmq_set_common_data <- function(config) {
@@ -41,7 +47,7 @@ cmq_set_common_data <- function(config) {
   if (identical(config$envir, globalenv())) {
     export <- as.list(config$envir, all.names = TRUE) # nocov
   }
-  export$config <- cmq_config(config)
+  export$config <- hpc_config(config)
   config$workers$set_common_data(
     export = export,
     fun = identity,
@@ -53,38 +59,27 @@ cmq_set_common_data <- function(config) {
   )
 }
 
-cmq_config <- function(config) {
-  discard <- c(
-    "imports",
-    "layout",
-    "plan",
-    "targets",
-    "trigger"
-  )
-  for (x in discard) {
-    config[[x]] <- NULL
-  }
-  config$cache$flush_cache()
-  config
-}
-
 cmq_master <- function(config) {
   on.exit(config$workers$finalize())
   config$logger$minor("begin scheduling targets")
   while (config$counter$remaining > 0) {
-    msg <- config$workers$receive_data()
-    cmq_conclude_build(msg = msg, config = config)
-    if (!identical(msg$token, "set_common_data_token")) {
-      config$logger$minor("sending common data")
-      config$workers$send_common_data()
-    } else if (!config$queue$empty()) {
-      cmq_next_target(config)
-    } else {
-      config$workers$send_shutdown_worker()
-    }
+    cmq_master_iter(config)
   }
   if (config$workers$cleanup()) {
     on.exit()
+  }
+}
+
+cmq_master_iter <- function(config) {
+  msg <- config$workers$receive_data()
+  cmq_conclude_build(msg = msg, config = config)
+  if (!identical(msg$token, "set_common_data_token")) {
+    config$logger$minor("sending common data")
+    config$workers$send_common_data()
+  } else if (!config$queue$empty()) {
+    cmq_next_target(config)
+  } else {
+    config$workers$send_shutdown_worker()
   }
 }
 
@@ -97,7 +92,7 @@ cmq_conclude_build <- function(msg, config) {
     stop(attr(build, "condition")$message, call. = FALSE) # nocov
   }
   cmq_conclude_target(target = build$target, config = config)
-  caching <- caching(build$target, config)
+  caching <- hpc_caching(build$target, config)
   if (identical(caching, "worker")) {
     wait_checksum(
       target = build$target,
@@ -123,7 +118,7 @@ cmq_next_target <- function(config) {
     config$workers$send_wait() # nocov
     return() # nocov
   }
-  if (identical(config$layout[[target]]$hpc, FALSE)) {
+  if (no_hpc(target, config)) {
     config$workers$send_wait()
     cmq_local_build(target, config)
   } else {
@@ -138,15 +133,14 @@ cmq_send_target <- function(target, config) {
     config$workers$send_wait()
     return()
   }
-  announce_build(target = target, meta = meta, config = config)
-  caching <- caching(target, config)
+  announce_build(target = target, config = config)
+  caching <- hpc_caching(target, config)
+  deps <- NULL
   if (identical(caching, "master")) {
     manage_memory(target = target, config = config, jobs = 1)
-    deps <- cmq_deps_list(target = target, config = config)
-  } else {
-    deps <- NULL
+    deps <- cmq_deps_list(target, config)
   }
-  layout <- config$layout[[target]]
+  layout <- hpc_layout(target, config)
   config$workers$send_call(
     expr = drake::cmq_build(
       target = target,
@@ -160,15 +154,24 @@ cmq_send_target <- function(target, config) {
 }
 
 cmq_deps_list <- function(target, config) {
-  deps <- config$layout[[target]]$deps_build$memory
-  out <- lapply(
-    X = deps,
-    FUN = function(name) {
-      config$eval[[name]]
-    }
+  layout <- config$layout[[target]]
+  keys_static <- layout$deps_build$memory
+  keys_dynamic <- layout$deps_dynamic
+  vals_static <- lapply(
+    keys_static,
+    get,
+    envir = config$envir_targets,
+    inherits = FALSE
   )
-  names(out) <- deps
-  out
+  vals_dynamic <- lapply(
+    keys_dynamic,
+    get,
+    envir = config$envir_subtargets,
+    inherits = FALSE
+  )
+  names(vals_static) <- keys_static
+  names(vals_dynamic) <- keys_dynamic
+  list(static = vals_static, dynamic = vals_dynamic)
 }
 
 #' @title Build a target using the clustermq backend
@@ -183,14 +186,11 @@ cmq_deps_list <- function(target, config) {
 #' @param config A [drake_config()] list.
 cmq_build <- function(target, meta, deps, layout, config) {
   config$logger$minor("build on an hpc worker", target = target)
-  config$layout <- list()
-  config$layout[[target]] <- layout
+  config$layout <- layout
   do_prework(config = config, verbose_packages = FALSE)
-  caching <- caching(target, config)
+  caching <- hpc_caching(target, config)
   if (identical(caching, "master")) {
-    for (dep in names(deps)) {
-      config$eval[[dep]] <- deps[[dep]]
-    }
+    cmq_assign_deps(deps, config)
   } else {
     manage_memory(target = target, config = config, jobs = 1)
   }
@@ -205,9 +205,23 @@ cmq_build <- function(target, meta, deps, layout, config) {
   list(target = target, checksum = get_checksum(target, config))
 }
 
-caching <- function(target, config) {
-  out <- config$layout[[target]]$caching %||NA% config$caching
-  match.arg(out, choices = c("master", "worker"))
+cmq_assign_deps <- function(deps, config) {
+  for (key in names(deps$static)) {
+    assign(
+      x = key,
+      value = deps$static[[key]],
+      envir = config$envir_targets,
+      inherits = FALSE
+    )
+  }
+  for (key in names(deps$dynamic)) {
+    assign(
+      x = key,
+      value = deps$dynamic[[key]],
+      envir = config$envir_subtargets,
+      inherits = FALSE
+    )
+  }
 }
 
 cmq_local_build <- function(target, config) {
@@ -218,5 +232,5 @@ cmq_local_build <- function(target, config) {
 
 cmq_conclude_target <- function(target, config) {
   decrease_revdep_keys(queue = config$queue, target = target, config = config)
-  config$counter$remaining <- config$counter$remaining - 1
+  config$counter$remaining <- config$counter$remaining - 1L
 }

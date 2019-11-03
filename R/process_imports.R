@@ -32,7 +32,7 @@ process_import <- function(import, config) {
   } else {
     config$logger$minor("import", target = config$cache$display_keys(import))
   }
-  store_single_output(
+  store_item(
     target = import,
     value = value,
     meta = meta,

@@ -3,15 +3,24 @@ store_outputs <- function(target, value, meta, config) {
     return()
   }
   config$logger$minor("store", target = target)
-  layout <- config$layout[[target]]
-  if (is.null(meta$command)) {
-    meta$command <- layout$command_standardized
-  }
-  if (is.null(meta$dependency_hash)) {
-    meta$dependency_hash <- dependency_hash(target = target, config = config)
-  }
-  if (is.null(meta$input_file_hash)) {
-    meta$input_file_hash <- input_file_hash(target = target, config = config)
+  store_triggers(target, meta, config)
+  meta$name <- target
+  store_item(
+    target = target,
+    value = value,
+    meta = meta,
+    config = config
+  )
+  set_progress(
+    target = target,
+    value = "done",
+    config = config
+  )
+}
+
+store_triggers <- function(target, meta, config) {
+  if (is_subtarget(target, config)) {
+    return()
   }
   if (!is.null(meta$trigger$change)) {
     config$cache$set(
@@ -21,24 +30,7 @@ store_outputs <- function(target, value, meta, config) {
       use_cache = FALSE
     )
   }
-  store_output_files(layout$deps_build$file_out, meta, config)
-  if (length(file_out) || is.null(file_out)) {
-    meta$output_file_hash <- output_file_hash(
-      target = target, config = config)
-  }
-  meta$name <- target
-  store_single_output(
-    target = target,
-    value = value,
-    meta = meta,
-    config = config
-  )
-  set_progress(
-    target = target,
-    meta = meta,
-    value = "done",
-    config = config
-  )
+  store_output_files(config$layout[[target]]$deps_build$file_out, meta, config)
 }
 
 store_output_files <- function(files, meta, config) {
@@ -47,7 +39,7 @@ store_output_files <- function(files, meta, config) {
     meta$name <- file
     meta$mtime <- storage_mtime(config$cache$decode_path(file))
     meta$isfile <- TRUE
-    store_single_output(
+    store_item(
       target = file,
       value = NULL,
       meta = meta,
@@ -56,28 +48,9 @@ store_output_files <- function(files, meta, config) {
   }
 }
 
-store_single_output <- function(target, value, meta, config) {
-  if (meta$isfile) {
-    hash <- store_file(
-      target = target,
-      meta = meta,
-      config = config
-    )
-  } else if (is.function(value)) {
-    hash <- store_function(
-      target = target,
-      value = value,
-      meta = meta,
-      config = config
-    )
-  } else {
-    hash <- store_object(
-      target = target,
-      value = value,
-      meta = meta,
-      config = config
-    )
-  }
+store_item <- function(target, value, meta, config) {
+  class(target) <- output_type(value = value, meta = meta)
+  hash <- store_item_impl(target, value, meta, config)
   store_meta(
     target = target,
     value = value,
@@ -87,7 +60,35 @@ store_single_output <- function(target, value, meta, config) {
   )
 }
 
-store_function <- function(target, value, meta, config) {
+output_type <- function(value, meta) {
+  if (meta$isfile) {
+    return("file")
+  }
+  if (is.function(value)) {
+    return("function")
+  }
+  "object"
+}
+
+store_item_impl <- function(target, value, meta, config) {
+  UseMethod("store_item_impl")
+}
+
+store_item_impl.file <- function(target, value = NULL, meta, config) {
+  if (meta$imported) {
+    value <- storage_hash(target = target, config = config)
+  } else {
+    value <- rehash_storage(target = target, config = config)
+  }
+  store_object(
+    target = target,
+    value = value,
+    meta = meta,
+    config = config
+  )
+}
+
+store_item_impl.function <- function(target, value, meta, config) {
   if (meta$imported) {
     value <- standardize_imported_function(value)
     value <- c(value, meta$dependency_hash)
@@ -105,18 +106,8 @@ standardize_imported_function <- function(fun) {
   gsub("<pointer: 0x[0-9a-zA-Z]*>", "", str)
 }
 
-store_file <- function(target, meta, config) {
-  if (meta$imported) {
-    value <- storage_hash(target = target, config = config)
-  } else {
-    value <- rehash_storage(target = target, config = config)
-  }
-  store_object(
-    target = target,
-    value = value,
-    meta = meta,
-    config = config
-  )
+store_item_impl.object <- function(target, value, meta, config) {
+  store_object(target, value, meta, config)
 }
 
 store_object <- function(target, value, meta, config) {
@@ -150,14 +141,17 @@ store_meta <- function(target, value, meta, hash, config) {
 
 store_recovery <- function(target, meta, meta_hash, config) {
   key <- recovery_key(target = target, meta = meta, config = config)
-  config$cache$driver$set_hash(
-    key = key,
-    namespace = "recover",
-    hash = meta_hash
-  )
+  if (!is.na(key)) {
+    config$cache$driver$set_hash(
+      key = key,
+      namespace = "recover",
+      hash = meta_hash
+    )
+  }
 }
 
 finalize_meta <- function(target, value, meta, hash, config) {
+  meta <- finalize_triggers(target, meta, config)
   meta$time_command <- runtime_entry(
     runtime = meta$time_command,
     target = target
@@ -173,7 +167,51 @@ finalize_meta <- function(target, value, meta, hash, config) {
   }
   meta$hash <- hash
   meta$size <- NROW(value)
+  if (is_dynamic(target, config)) {
+    meta$subtargets <- config$layout[[target]]$subtargets
+  }
+  if (is_dynamic_dep(target, config)) {
+    meta$dynamic_hashes <- dynamic_hashes(meta$size, value, config)
+  }
   meta
+}
+
+finalize_triggers <- function(target, meta, config) {
+  if (is_subtarget(target, config)) {
+    return(meta)
+  }
+  layout <- config$layout[[target]]
+  if (is.null(meta$command)) {
+    meta$command <- layout$command_standardized
+  }
+  if (is.null(meta$dependency_hash)) {
+    meta$dependency_hash <- dependency_hash(target = target, config = config)
+  }
+  if (is.null(meta$input_file_hash)) {
+    meta$input_file_hash <- input_file_hash(target = target, config = config)
+  }
+  if (length(file_out) || is.null(file_out)) {
+    meta$output_file_hash <- output_file_hash(
+      target = target,
+      config = config
+    )
+  }
+  meta
+}
+
+dynamic_hashes <- function(size, value, config) {
+  vapply(
+    seq_len(size),
+    dynamic_hash,
+    FUN.VALUE = character(1),
+    value = value,
+    config = config
+  )
+}
+
+dynamic_hash <- function(index, value, config) {
+  subvalue <- dynamic_subvalue(value, index)
+  digest::digest(subvalue, algo = config$cache$hash_algorithm)
 }
 
 log_time <- function(target, meta, config) {

@@ -82,6 +82,57 @@ drake_hpc_template_files <- function() {
   )
 }
 
+no_hpc <- function(target, config) {
+  identical(config$layout[[target]]$hpc, FALSE) ||
+    is_dynamic(target, config)
+}
+
+hpc_caching <- function(target, config) {
+  out <- config$layout[[target]]$caching %||NA% config$caching
+  match.arg(out, choices = c("master", "worker"))
+}
+
+hpc_config <- function(config) {
+  discard <- c(
+    "imports",
+    "layout",
+    "plan",
+    "targets",
+    "trigger"
+  )
+  for (x in discard) {
+    config[[x]] <- NULL
+  }
+  config$cache$flush_cache()
+  config
+}
+
+hpc_layout <- function(target, config) {
+  class(target) <- ifelse(is_subtarget(target, config), "subtarget", "target")
+  hpc_layout_impl(target, config)
+}
+
+hpc_layout_impl <- function(target, config) {
+  UseMethod("hpc_layout_impl")
+}
+
+hpc_layout_impl.subtarget <- function(target, config) {
+  layout <- new.env(parent = emptyenv())
+  parent <- config$layout[[target]]$subtarget_parent
+  dynamic_deps <- config$layout[[target]]$deps_dynamic
+  keys <- c(target, parent, dynamic_deps)
+  for (key in keys) {
+    assign(key, config$layout[[key]], envir = layout, inherits = FALSE)
+  }
+  layout
+}
+
+hpc_layout_impl.default <- function(target, config) {
+  layout <- new.env(parent = emptyenv())
+  assign(target, config$layout[[target]], envir = layout, inherits = FALSE)
+  layout
+}
+
 wait_outfile_checksum <- function(target, checksum, config, timeout = 300) {
   wait_checksum(
     target = target,

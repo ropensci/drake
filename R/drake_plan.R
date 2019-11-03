@@ -115,6 +115,7 @@
 #'   do not track it for changes and do not analyze it for dependencies.
 #' - [no_deps()]: tell `drake` to not track the dependencies
 #'   of a piece of code. `drake` still tracks the code itself for changes.
+#' - [id_chr()]: Get the name of the current target.
 #' - [drake_envir()]: get the environment where drake builds targets.
 #'   Intended for advanced custom memory management.
 #'
@@ -248,6 +249,20 @@
 #' # Tidy evaluation can help generate super large plans.
 #' sms <- rlang::syms(letters) # To sub in character args, skip this.
 #' drake_plan(x = target(f(char), transform = map(char = !!sms)))
+#'
+#' # Dynamic branching
+#' plan <- drake_plan(
+#'   w = c("a", "a", "b", "b"),
+#'   x = seq_len(4),
+#'   y = target(x + 1, dynamic = map(x)),
+#'   z = target(list(y = y, w = w), dynamic = combine(y, .by = w))
+#' )
+#' make(plan)
+#' subtargets(y)
+#' readd(subtargets(y)[1], character_only = TRUE)
+#' readd(subtargets(y)[2], character_only = TRUE)
+#' readd(subtargets(z)[1], character_only = TRUE)
+#' readd(subtargets(z)[2], character_only = TRUE)
 #' })
 #' }
 drake_plan <- function(
@@ -613,9 +628,9 @@ deparse_lang_col <- function(x) {
 }
 
 lang_cols <- function(plan) {
-  intersect(colnames(plan), c("command", "trigger", "transform"))
+  intersect(colnames(plan), c("command", "dynamic", "trigger", "transform"))
 }
 
 non_lang_cols <- function(plan) {
-  setdiff(colnames(plan), c("command", "trigger", "transform"))
+  setdiff(colnames(plan), c("command", "dynamic", "trigger", "transform"))
 }

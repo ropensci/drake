@@ -80,7 +80,7 @@ drake_log_term <- function(..., target, color, verbose) {
   }
   msg <- c(...)
   hex <- text_color(color)
-  if (!is.null(hex) && requireNamespace("crayon", quietly = TRUE)) {
+  if (length(hex) && requireNamespace("crayon", quietly = TRUE)) {
     msg[1] <- crayon::make_style(hex)(msg[1])
   }
   if (verbose > 1L) {
@@ -92,9 +92,10 @@ drake_log_term <- function(..., target, color, verbose) {
 text_color <- Vectorize(function(x) {
   color <- switch(
     x,
-    default = "dodgerblue3",
+    default = "lightGray",
+    subtarget = "dodgerblue3",
     target = "green3",
-    recover = "dodgerblue3",
+    recover = "#ffd700",
     retry = "#9400d3",
     missing = "#9400d3",
     fail = "red",

@@ -32,8 +32,7 @@
 #'   but this is what it usage will look like.
 #'   - `map(...)`
 #'   - `cross(...)`
-#'   - `split(.x, .by)`
-#'   - `combine(.x, .by)`
+#'   - `combine(..., .by)`
 #'
 #'  `map()` and `cross()` create dynamic sub-targets from the variables
 #'  supplied to the dots. As with static branching, the variables
@@ -49,15 +48,12 @@
 #'  - `...` must contain *unnamed* symbols with no values supplied,
 #'    and they must be the names of targets.
 #'  - Arguments `.id`, `.tag_in`, and `.tag_out` no longer apply.
-#'  - `split()` has a `.by` argument
 #'
 #' @param ... Grouping variables. New grouping variables must be
 #'   supplied with their names and values, existing grouping variables
 #'   can be given as symbols without any values assigned.
 #'   For dynamic branching, the entries in `...` must be unnamed symbols
 #'   with no values supplied, and they must be the names of targets.
-#' @param .x The target to split or combine in dynamic branching.
-#'   For `combine()`, `.x` must be dynamic.
 #' @param .data A data frame of new grouping variables with
 #'   grouping variable names as column names and values as elements.
 #' @param .id Symbol or vector of symbols naming grouping variables

@@ -138,15 +138,15 @@ test_with_dir("parallelism can be a scheduler function", {
   build_ <- function(target, config) {
     tidy_expr <- eval(
       expr = config$layout[[target]]$command_build,
-      envir = config$eval
+      envir = config$envir_targets
     )
-    eval(expr = tidy_expr, envir = config$eval)
+    eval(expr = tidy_expr, envir = config$envir_targets)
   }
   loop_ <- function(config) {
     targets <- igraph::topo_sort(config$graph)$name
     for (target in targets) {
       config$logger$minor(target)
-      config$eval[[target]] <- build_(
+      config$envir_targets[[target]] <- build_(
         target = target,
         config = config
       )
@@ -169,20 +169,20 @@ test_with_dir("caching arg and column", {
     z = target(y, caching = "worker")
   )
   config <- drake_config(plan, caching = "master")
-  expect_equal(caching("x", config), "master")
-  expect_equal(caching("y", config), "master")
-  expect_equal(caching("z", config), "worker")
+  expect_equal(hpc_caching("x", config), "master")
+  expect_equal(hpc_caching("y", config), "master")
+  expect_equal(hpc_caching("z", config), "worker")
   config <- drake_config(plan, caching = "worker")
-  expect_equal(caching("x", config), "worker")
-  expect_equal(caching("y", config), "master")
-  expect_equal(caching("z", config), "worker")
+  expect_equal(hpc_caching("x", config), "worker")
+  expect_equal(hpc_caching("y", config), "master")
+  expect_equal(hpc_caching("z", config), "worker")
   p2 <- drake_plan(x = 1, y = 2)
   config <- drake_config(p2, caching = "master")
-  expect_equal(caching("x", config), "master")
-  expect_equal(caching("y", config), "master")
+  expect_equal(hpc_caching("x", config), "master")
+  expect_equal(hpc_caching("y", config), "master")
   config <- drake_config(p2, caching = "worker")
-  expect_equal(caching("x", config), "worker")
-  expect_equal(caching("y", config), "worker")
+  expect_equal(hpc_caching("x", config), "worker")
+  expect_equal(hpc_caching("y", config), "worker")
 })
 
 test_with_dir("custom caching column and clustermq", {

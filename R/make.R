@@ -108,6 +108,19 @@
 #' }
 #' clean() # Start from scratch next time around.
 #' }
+#' # Dynamic branching
+#' plan <- drake_plan(
+#'   w = c("a", "a", "b", "b"),
+#'   x = seq_len(4),
+#'   y = target(x + 1, dynamic = map(x)),
+#'   z = target(list(y = y, w = w), dynamic = combine(y, .by = w))
+#' )
+#' make(plan)
+#' subtargets(y)
+#' readd(subtargets(y)[1], character_only = TRUE)
+#' readd(subtargets(y)[2], character_only = TRUE)
+#' readd(subtargets(z)[1], character_only = TRUE)
+#' readd(subtargets(z)[2], character_only = TRUE)
 #' })
 #' }
 make <- function(
@@ -222,10 +235,11 @@ make <- function(
   config$logger$minor("begin make()")
   runtime_checks(config = config)
   config$running_make <- TRUE
+  config$ht_dynamic <- ht_new()
   config$cache$reset_memo_hash()
   on.exit(config$cache$reset_memo_hash())
+  config$envir_subtargets[[drake_envir_marker]] <- TRUE
   config$cache$set(key = "seed", value = config$seed, namespace = "session")
-  config$eval[[drake_envir_marker]] <- TRUE
   if (config$log_progress) {
     config$cache$clear(namespace = "progress")
   }
@@ -235,7 +249,8 @@ make <- function(
     process_imports(config)
   }
   if (is.character(config$parallelism)) {
-    config$graph <- outdated_subgraph(config)
+    config$envir_graph <- new.env(parent = emptyenv())
+    config$envir_graph$graph <- outdated_subgraph(config)
   }
   r_make_message(force = FALSE)
   if (!config$skip_targets) {
@@ -246,7 +261,8 @@ make <- function(
     cache = config$cache,
     jobs = config$jobs_preprocess
   )
-  for (key in c("eval", "envir_by")) {
+  envirs <- c("envir_graph", "envir_by", "envir_targets", "envir_subtargets")
+  for (key in envirs) {
     remove(list = names(config[[key]]), envir = config[[key]])
   }
   config$cache$flush_cache()
@@ -270,13 +286,13 @@ run_native_backend <- function(config) {
     config$parallelism,
     c("loop", "clustermq", "future")
   )
-  if (igraph::gorder(config$graph)) {
+  if (igraph::gorder(config$envir_graph$graph)) {
     get(
       paste0("backend_", parallelism),
       envir = getNamespace("drake")
     )(config)
   } else {
-    config$logger$major("All targets are already up to date.")
+    config$logger$major("All targets are already up to date.", color = NULL)
   }
 }
 
@@ -367,15 +383,15 @@ do_prework <- function(config, verbose_packages) {
     if (verbose_packages) {
       expr <- as.call(c(quote(suppressPackageStartupMessages), expr))
     }
-    eval(expr, envir = config$eval)
+    eval(expr, envir = config$envir_targets)
   }
   if (is.character(config$prework)) {
     config$prework <- parse(text = config$prework)
   }
   if (is.language(config$prework)) {
-    eval(config$prework, envir = config$eval)
+    eval(config$prework, envir = config$envir_targets)
   } else if (is.list(config$prework)) {
-    lapply(config$prework, eval, envir = config$eval)
+    lapply(config$prework, eval, envir = config$envir_targets)
   } else if (length(config$prework)) {
     stop(
       "prework must be an expression ",

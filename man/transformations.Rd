@@ -14,9 +14,6 @@ can be given as symbols without any values assigned.
 For dynamic branching, the entries in \code{...} must be unnamed symbols
 with no values supplied, and they must be the names of targets.}
 
-\item{.x}{The target to split or combine in dynamic branching.
-For \code{combine()}, \code{.x} must be dynamic.}
-
 \item{.data}{A data frame of new grouping variables with
 grouping variable names as column names and values as elements.}
 
@@ -93,8 +90,7 @@ but this is what it usage will look like.
 \itemize{
 \item \code{map(...)}
 \item \code{cross(...)}
-\item \code{split(.x, .by)}
-\item \code{combine(.x, .by)}
+\item \code{combine(..., .by)}
 }
 
 \code{map()} and \code{cross()} create dynamic sub-targets from the variables
@@ -112,7 +108,6 @@ Differences from static branching:
 \item \code{...} must contain \emph{unnamed} symbols with no values supplied,
 and they must be the names of targets.
 \item Arguments \code{.id}, \code{.tag_in}, and \code{.tag_out} no longer apply.
-\item \code{split()} has a \code{.by} argument
 }
 }
 

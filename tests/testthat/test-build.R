@@ -11,10 +11,12 @@ test_with_dir("drake_build() works as expected", {
     envir = e,
     lock_envir = TRUE
   )
-
   # can run before any make()
   o <- drake_build(
-    target = "a", character_only = TRUE, config = con)
+    target = "a",
+    character_only = TRUE,
+    config = con
+  )
   x <- cached()
   expect_equal(x, "a")
   make(pl, envir = e)
@@ -22,17 +24,17 @@ test_with_dir("drake_build() works as expected", {
   expect_equal(justbuilt(o), "b")
 
   # Replacing deps in environment
-  con$eval$a <- 2
+  con$envir_targets$a <- 2
   o <- drake_build(b, config = con)
   expect_equal(o, 2)
-  expect_equal(con$eval$a, 2)
+  expect_equal(con$envir_targets$a, 2)
   expect_equal(readd(a), 1)
   o <- drake_build(b, config = con, replace = FALSE)
-  expect_equal(con$eval$a, 2)
+  expect_equal(con$envir_targets$a, 2)
   expect_equal(readd(a), 1)
-  con$eval$a <- 3
+  con$envir_targets$a <- 3
   o <- drake_build(b, config = con, replace = TRUE)
-  expect_equal(con$eval$a, 1)
+  expect_equal(con$envir_targets$a, 1)
   expect_equal(o, 1)
 
   # `replace` in loadd()

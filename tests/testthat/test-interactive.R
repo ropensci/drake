@@ -142,7 +142,7 @@ test_with_dir("drake_debug()", {
     character_only = TRUE
   )
   expect_true(is.data.frame(out))
-  for (i in 1:2) {
+  for (i in seq_len(2)) {
     clean(destroy = TRUE)
     load_mtcars_example()
     make(my_plan)

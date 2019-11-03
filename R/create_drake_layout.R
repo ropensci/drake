@@ -37,7 +37,8 @@ create_drake_layout <- function(
     knitr_hash
   )
   cdl_set_knitr_files(config = config, layout = command_layout)
-  c(import_layout, command_layout)
+  out <- c(import_layout, command_layout)
+  list2env(out, parent = emptyenv())
 }
 
 # https://github.com/ropensci/drake/issues/887 # nolint
@@ -152,7 +153,7 @@ cdl_analyze_commands <- function(config) {
     config$plan$trigger <- lapply(
       config$plan$trigger,
       cdl_parse_trigger,
-      envir = config$eval
+      envir = config$envir_targets
     )
   }
   layout <- drake_pmap(.l = config$plan, .f = list, jobs = config$jobs)
@@ -178,6 +179,7 @@ cdl_analyze_commands <- function(config) {
 cdl_prepare_layout <- function(config, layout) {
   config$logger$minor("analyze", target = layout$target)
   layout$dynamic <- as_dynamic(layout$dynamic)
+  layout$subtarget <- FALSE
   layout$deps_build <- cdl_command_dependencies(
     command = layout$command,
     exclude = layout$target,
@@ -185,6 +187,13 @@ cdl_prepare_layout <- function(config, layout) {
   )
   layout$deps_dynamic <- cdl_dynamic_dependencies(layout$dynamic, config)
   layout$command_standardized <- cdl_standardize_command(layout$command)
+  if (inherits(layout$dynamic, "dynamic")) {
+    dynamic_command <- cdl_standardize_command(layout$dynamic)
+    layout$command_standardized <- paste(
+      layout$command_standardized,
+      dynamic_command
+    )
+  }
   layout$command_build <- cdl_preprocess_command(
     layout$command,
     config = config
@@ -205,6 +214,7 @@ cdl_prepare_layout <- function(config, layout) {
       allowed_globals = config$ht_globals
     )
   }
+  cdl_no_dynamic_triggers(layout)
   for (field in c("deps_build", "deps_condition", "deps_change")) {
     layout[[field]]$memory <- ht_filter(
       ht = config$ht_targets,
@@ -212,6 +222,32 @@ cdl_prepare_layout <- function(config, layout) {
     )
   }
   layout
+}
+
+cdl_no_dynamic_triggers <- function(layout) {
+  cdl_no_dynamic_triggers_impl(
+    layout$target,
+    layout$deps_dynamic,
+    unlist(layout$deps_condition)
+  )
+  cdl_no_dynamic_triggers_impl(
+    layout$target,
+    layout$deps_dynamic,
+    unlist(layout$deps_change)
+  )
+}
+
+cdl_no_dynamic_triggers_impl <- function(target, deps_dynamic, deps_trigger) {
+  common <- intersect(deps_dynamic, deps_trigger)
+  if (!length(common)) {
+    return()
+  }
+  stop(
+    "Dynamic grouping variables are forbidden in the condition ",
+    "and change triggers. For target ", target, ", found dynamic ",
+    "grouping variables:\n", multiline_message(common),
+    call. = FALSE
+  )
 }
 
 cdl_import_dependencies <- function(
@@ -252,7 +288,7 @@ cdl_dynamic_dependencies <- function(dynamic, config) {
 cdl_preprocess_command <- function(command, config) {
   command <- as.call(c(quote(local), command))
   # Here, we really do need expr() instead of quo().
-  # `!!` needs to unquote symbols using config$eval instead of
+  # `!!` needs to unquote symbols using config$envir_targets instead of
   # the environment where the original binding took place.
   # In other words, `drake` already supplies the correct
   # evaluation environment.

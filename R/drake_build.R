@@ -1,6 +1,6 @@
 #' @title Build/process a single target or import.
 #' \lifecycle{maturing}
-#' @description Also load the target's dependencies beforehand.
+#' @description Not valid for dynamic branching.
 #' @export
 #' @seealso [drake_debug()]
 #' @return The value of the target right after it is built.
@@ -65,25 +65,24 @@ drake_build <- function(
   if (!character_only) {
     target <- as.character(substitute(target))
   }
-  loadd(
-    list = target,
-    deps = TRUE,
-    envir = config$eval,
-    cache = config$cache,
-    jobs = jobs,
-    replace = replace,
-    tidyselect = FALSE,
-    config = config
-  )
+  deps <- deps_memory(targets = target, config = config)
+  for (dep in deps) {
+    if (replace || !exists(dep, envir = config$envir_targets)) {
+      value <- config$cache$get(dep)
+      assign(dep, value, envir = config$envir_targets, inherits = FALSE)
+    }
+  }
+  config$ht_dynamic <- ht_new()
   meta <- drake_meta_(target = target, config = config)
-  announce_build(target = target, meta = meta, config = config)
+  announce_build(target = target, config = config)
   build <- try_build(target = target, meta = meta, config = config)
   conclude_build(build = build, config = config)
 }
 
 #' @title Run a single target's command in debug mode.'
 #' \lifecycle{maturing}
-#' @description `drake_debug()` loads a target's dependencies
+#' @description Not valid for dynamic branching.
+#'   `drake_debug()` loads a target's dependencies
 #'   and then runs its command in debug mode (see `browser()`,
 #'   `debug()`, and `debugonce()`). This function does not
 #'   store the target's value in the cache
@@ -148,21 +147,19 @@ drake_debug <- function(
   if (verbose) {
     message("Building target `", target, "` in debug mode.")
   }
-  loadd(
-    list = target,
-    deps = TRUE,
-    envir = config$eval,
-    cache = config$cache,
-    jobs = jobs,
-    replace = replace,
-    tidyselect = FALSE,
-    config = config
-  )
+  deps <- deps_memory(targets = target, config = config)
+  for (dep in deps) {
+    if (replace || !exists(dep, envir = config$envir_targets)) {
+      value <- config$cache$get(dep)
+      assign(dep, value, envir = config$envir_targets, inherits = FALSE)
+    }
+  }
   config$layout[[target]]$command_build <- cdl_preprocess_command(
     debug_command(config$layout[[target]]$command)
   )
+  config$ht_dynamic <- ht_new()
   meta <- drake_meta_(target = target, config = config)
-  announce_build(target = target, meta = meta, config = config)
+  announce_build(target = target, config = config)
   build <- try_build(target = target, meta = meta, config = config)
   assert_output_files(target = target, meta = build$meta, config = config)
   handle_build_exceptions(target = target, meta = build$meta, config = config)

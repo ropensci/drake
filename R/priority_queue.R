@@ -1,30 +1,24 @@
 priority_queue <- function(config, jobs = config$jobs_preprocess) {
   config$logger$minor("construct priority queue")
-  targets <- igraph::V(config$graph)$name
+  targets <- igraph::V(config$envir_graph$graph)$name
   if (!length(targets)) {
-    return(
-      refclass_priority_queue$new(
-        data = data.frame(
-          target = character(0),
-          ndeps = integer(0),
-          priority = numeric(0),
-          stringsAsFactors = FALSE
-        )
-      )
-    )
+    return(empty_queue())
   }
-  ndeps <- igraph::degree(graph = config$graph, v = targets, mode = "in")
+  ndeps <- igraph::degree(
+    graph = config$envir_graph$graph,
+    v = targets,
+    mode = "in"
+  )
   ndeps <- unlist(ndeps)
   priority <- rep(Inf, length(targets)) # deprecated, 2019-04-16
   names(priority) <- targets
-  queue <- refclass_priority_queue$new(
-    data = data.frame(
-      target = as.character(targets),
-      ndeps = as.integer(ndeps),
-      priority = as.numeric(priority),
-      stringsAsFactors = FALSE
-    )
+  data <- data.frame(
+    target = as.character(targets),
+    ndeps = as.integer(ndeps),
+    priority = as.numeric(priority),
+    stringsAsFactors = FALSE
   )
+  queue <- refclass_priority_queue$new(data = data)
   queue$sort()
   queue
 }
@@ -72,28 +66,54 @@ refclass_priority_queue <- methods::setRefClass(
         .self$data$target[.self$data$ndeps < 1]
       }
     },
+    push = function(targets, ndeps) {
+      new_data <- data.frame(
+        target = targets,
+        ndeps = ndeps,
+        priority = Inf,
+        stringsAsFactors = FALSE
+      )
+      .self$data <- rbind(new_data, .self$data)
+      .self$sort()
+    },
     remove = function(targets) {
       .self$data <- .self$data[!(.self$data$target %in% targets), ]
       invisible()
     },
     # This is all wrong and inefficient.
     # Needs the actual decrease-key algorithm
-    decrease_key = function(targets) {
+    adjust_key = function(targets, by) {
       index <- .self$data$target %in% targets
-      .self$data$ndeps[index] <- .self$data$ndeps[index] - 1
+      .self$data$ndeps[index] <- .self$data$ndeps[index] + by
       .self$sort()
     }
   )
 )
 
-# Very specific to drake, does not belong inside
-# a generic priority queue.
+empty_queue <- function() {
+  data <- data.frame(
+    target = character(0),
+    ndeps = integer(0),
+    priority = numeric(0),
+    stringsAsFactors = FALSE
+  )
+  refclass_priority_queue$new(data = data)
+}
+
 decrease_revdep_keys <- function(queue, target, config) {
+  adjust_revdep_keys(queue, target, config, -1L)
+}
+
+increase_revdep_keys <- function(queue, target, config) {
+  adjust_revdep_keys(queue, target, config, 1L)
+}
+
+adjust_revdep_keys <- function(queue, target, config, by) {
   revdeps <- deps_graph(
     targets = target,
-    graph = config$graph,
+    graph = config$envir_graph$graph,
     reverse = TRUE
   )
   revdeps <- intersect(revdeps, queue$list())
-  queue$decrease_key(targets = revdeps)
+  queue$adjust_key(revdeps, by)
 }

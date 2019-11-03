@@ -58,7 +58,14 @@ reference:
   - '`knitr_in`'
   - '`ignore`'
   - '`no_deps`'
+  - '`id_chr`'
   - '`drake_envir`'
+- title: Dynamic branching
+  contents:
+  - '`map`'
+  - '`cross`'
+  - '`combine`'
+  - '`subtargets`'
 - title: Static branching
   contents:
   - '`map`'

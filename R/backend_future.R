@@ -1,102 +1,96 @@
 backend_future <- function(config) {
   assert_pkg("future")
-  queue <- priority_queue(config = config)
-  workers <- initialize_workers(config)
-  # While any targets are queued or running...
-  i <- 1
-  ft_config <- ft_config(config)
-  while (work_remains(queue = queue, workers = workers, config = config)) {
-    for (id in seq_along(workers)) {
-      if (is_idle(workers[[id]])) {
-        # Also calls decrease-key on the queue.
-        workers[[id]] <- conclude_worker(
-          worker = workers[[id]],
-          config = config,
-          queue = queue
-        )
-        # Pop the head target only if its priority is 0
-        next_target <- queue$pop0()
-        if (!length(next_target)) {
-          # It's hard to make this line run in a small test workflow
-          # suitable enough for unit testing, but
-          # I did artificially stall targets and verified that this line
-          # is reached in the future::multisession backend as expected.
-          # nocov start
-          Sys.sleep(config$sleep(max(0L, i)))
-          i <- i + 1
-          next
-          # nocov end
-        }
-        i <- 1
-        running <- running_targets(workers = workers, config = config)
-        protect <- c(running, queue$list())
-        if (identical(config$layout[[next_target]]$hpc, FALSE)) {
-          future_local_build(next_target, config, queue, protect)
-        } else {
-          workers[[id]] <- new_worker(
-            id,
-            next_target,
-            config,
-            ft_config,
-            protect
-          )
-        }
-      }
-    }
+  config$queue <- priority_queue(config)
+  config$workers <- initialize_workers(config)
+  config$sleeps <- new.env(parent = emptyenv())
+  config$sleeps$count <- 1L
+  config$ft_config <- hpc_config(config)
+  ids <- as.character(seq_along(config$workers))
+  while (work_remains(config)) {
+    ft_scan_workers(ids, config)
   }
 }
 
-future_local_build <- function(target, config, queue, protect) {
+ft_scan_workers <- function(ids, config) {
+  for (id in ids) {
+    ft_scan_worker(id, config)
+  }
+}
+
+ft_scan_worker <- function(id, config) {
+  if (is_idle(config$workers[[id]])) {
+    config$workers[[id]] <- conclude_worker(config$workers[[id]], config)
+    target <- config$queue$pop0()
+    ft_check_target(target, id, config)
+  }
+}
+
+ft_check_target <- function(target, id, config) {
+  if (length(target)) {
+    ft_do_target(target, id, config)
+  } else {
+    ft_skip_target(config) # nocov
+  }
+}
+
+ft_skip_target <- function(config) {
+  Sys.sleep(config$sleep(max(0L, config$sleeps$count)))
+  config$sleeps$count <- config$sleeps$count + 1L
+}
+
+ft_do_target <- function(target, id, config) {
+  config$sleeps$count <- 1L
+  running <- running_targets(config = config)
+  protect <- c(running, config$queue$list())
+  ft_build_target(target, id, running, protect, config)
+}
+
+ft_build_target <- function(target, id, running, protect, config) {
+  if (no_hpc(target, config)) {
+    future_local_build(target, protect, config)
+  } else {
+    config$workers[[id]] <- ft_decide_worker(target, protect, config)
+  }
+}
+
+future_local_build <- function(target, protect, config) {
   config$logger$minor("local target", target = target)
   local_build(target, config, downstream = protect)
-  decrease_revdep_keys(queue, target, config)
-}
-
-ft_config <- function(config) {
-  discard <- c(
-    "imports",
-    "layout",
-    "plan",
-    "graph",
-    "targets",
-    "trigger"
-  )
-  for (x in discard) {
-    config[[x]] <- NULL
-  }
-  config$cache$flush_cache()
-  config
+  decrease_revdep_keys(config$queue, target, config)
 }
 
 initialize_workers <- function(config) {
-  out <- list()
-  for (i in seq_len(config$jobs))
-    out[[i]] <- empty_worker(target = NA_character_)
+  out <- new.env(parent = emptyenv())
+  ids <- as.character(seq_len(config$jobs))
+  for (id in ids) {
+    out[[id]] <- empty_worker(target = NA_character_)
+  }
   out
 }
 
-new_worker <- function(id, target, config, ft_config, protect) {
-  meta <- drake_meta_(target = target, config = config)
+ft_decide_worker <- function(target, protect, config) {
+  meta <- drake_meta_(target, config)
   if (handle_triggers(target, meta, config)) {
-    return(empty_worker(target = target))
+    return(empty_worker(target))
   }
-  caching <- caching(target, config)
+  ft_launch_worker(target, meta, protect, config)
+}
+
+ft_launch_worker <- function(target, meta, protect, config) {
+  caching <- hpc_caching(target, config)
   if (identical(caching, "master")) {
     manage_memory(target = target, config = config, downstream = protect)
   }
-  DRAKE_GLOBALS__ <- NULL # Fixes warning about undefined globals.
-  # Avoid potential name conflicts with other globals.
-  # When we solve #296, need for such a clumsy workaround
-  # should go away.
-  layout <- config$layout[[target]]
+  DRAKE_GLOBALS__ <- NULL # Avoid name conflicts with other globals.
+  layout <- hpc_layout(target, config)
   globals <- future_globals(
     target = target,
     meta = meta,
-    config = ft_config,
+    config = config$ft_config,
     layout = layout,
     protect = protect
   )
-  announce_build(target = target, meta = meta, config = config)
+  announce_build(target = target, config = config)
   structure(
     future::future(
       expr = drake::future_build(
@@ -153,9 +147,8 @@ future_globals <- function(target, meta, config, layout, protect) {
 #' @param protect Names of targets that still need their
 #' dependencies available in memory.
 future_build <- function(target, meta, config, layout, protect) {
-  config$layout <- list()
-  config$layout[[target]] <- layout
-  caching <- caching(target, config)
+  config$layout <- layout
+  caching <- hpc_caching(target, config)
   if (identical(caching, "worker")) {
     manage_memory(target = target, config = config, downstream = protect)
   }
@@ -171,22 +164,16 @@ future_build <- function(target, meta, config, layout, protect) {
   list(target = target, checksum = get_checksum(target, config))
 }
 
-running_targets <- function(workers, config) {
-  out <- lapply(
-    X = workers,
-    FUN = function(worker) {
-      if (is_idle(worker)) {
-        NULL
-      } else {
-        # It's hard to make this line run in a small test workflow
-        # suitable enough for unit testing, but
-        # I did artificially stall targets and verified that this line
-        # is reached in the future::multisession backend as expected.
-        attr(worker, "target") # nocov
-      }
-    }
-  )
-  unlist(out)
+running_targets <- function(config) {
+  unlist(eapply(config$workers, running_worker))
+}
+
+running_worker <- function(worker) {
+  if (is_idle(worker)) {
+    NULL
+  } else {
+    attr(worker, "target") # nocov
+  }
 }
 
 # Need to check if the worker quit in error early somehow.
@@ -203,18 +190,14 @@ is_empty_worker <- function(worker) {
   !inherits(worker, "Future")
 }
 
-conclude_worker <- function(worker, config, queue) {
-  ft_decrease_revdep_keys(
-    worker = worker,
-    queue = queue,
-    config = config
-  )
+conclude_worker <- function(worker, config) {
+  ft_decrease_revdep_keys(worker, config)
   out <- concluded_worker()
   if (is_empty_worker(worker)) {
     return(out)
   }
-  build <- resolve_worker_value(worker = worker, config = config)
-  caching <- caching(build$target, config)
+  build <- resolve_worker_value(worker, config)
+  caching <- hpc_caching(build$target, config)
   if (identical(caching, "worker")) {
     wait_checksum(
       target = build$target,
@@ -242,12 +225,12 @@ empty_worker <- function(target) {
   structure(NA_character_, target = target)
 }
 
-ft_decrease_revdep_keys <- function(worker, config, queue) {
+ft_decrease_revdep_keys <- function(worker, config) {
   target <- attr(worker, "target")
   if (!length(target) || safe_is_na(target) || !is.character(target)) {
     return()
   }
-  decrease_revdep_keys(queue, target, config)
+  decrease_revdep_keys(config$queue, target, config)
 }
 
 # Also caches error information if available.
@@ -265,7 +248,7 @@ resolve_worker_value <- function(worker, config) {
       )
       meta <- list(error = e)
       target <- attr(worker, "target")
-      caching <- caching(target, config)
+      caching <- hpc_caching(target, config)
       if (caching == "worker") {
         # Need to store the error if the worker crashed.
         handle_build_exceptions(
@@ -285,14 +268,14 @@ resolve_worker_value <- function(worker, config) {
   )
 }
 
-work_remains <- function(queue, workers, config) {
-  !queue$empty() ||
-    !all_concluded(workers = workers, config = config)
+work_remains <- function(config) {
+  !config$queue$empty() ||
+    !all_concluded(config)
 }
 
-all_concluded <- function(workers, config) {
-  for (worker in workers) {
-    if (!is_concluded_worker(worker)) {
+all_concluded <- function(config) {
+  for (id in names(config$workers)) {
+    if (!is_concluded_worker(config$workers[[id]])) {
       return(FALSE)
     }
   }

@@ -3,7 +3,8 @@ drake_context("queue")
 test_with_dir("empty queue", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- drake_config(drake_plan(x = 1))
-  config$graph <- igraph::make_empty_graph()
+  config$envir_graph <- ht_new()
+  config$envir_graph$graph <- igraph::make_empty_graph()
   q <- priority_queue(config)
   expect_equal(sort(colnames(q$data)), sort(c("target", "ndeps", "priority")))
   expect_equal(nrow(q$data), 0)
@@ -37,10 +38,10 @@ test_with_dir("the priority queue works", {
   expect_null(x$pop0())
   expect_equivalent(x$data, y)
   for (i in 1:2) {
-    x$decrease_key(c("bar", "spren"))
+    x$adjust_key(c("bar", "spren"), -1L)
   }
   for (i in 1:3) {
-    x$decrease_key("spren")
+    x$adjust_key("spren", -1L)
   }
   y <- data.frame(
     target = c("spren", "bar", "Joe", "baz", "Amy", "soup", "Bob", "foo"),
@@ -60,7 +61,6 @@ test_with_dir("the priority queue works", {
   expect_null(x$peek0())
   expect_null(x$pop0())
   expect_equivalent(x$data, y[-1:-2, ])
-
   priorities[targets == "bar"] <- 1
   priorities[targets == "spren"] <- 2
   x <- refclass_priority_queue$new(
@@ -72,10 +72,10 @@ test_with_dir("the priority queue works", {
     )
   )
   for (i in 1:2) {
-    x$decrease_key(c("bar", "spren"))
+    x$adjust_key(c("bar", "spren"), -1L)
   }
   for (i in 1:3) {
-    x$decrease_key("spren")
+    x$adjust_key("spren", -1L)
   }
   y <- data.frame(
     target = c("bar", "spren", "Joe", "baz", "Amy", "soup", "Bob", "foo"),
@@ -94,7 +94,6 @@ test_with_dir("the priority queue works", {
   expect_null(x$peek0())
   expect_null(x$pop0())
   expect_equivalent(x$data, y[-1:-2, ])
-
   expect_null(x$list0())
   z <- y[-1:-2, ]
   expect_true(all(c("soup", "Bob") %in% x$data$target))
@@ -105,4 +104,13 @@ test_with_dir("the priority queue works", {
   expect_equivalent(x$data, z[-4:-5, ])
   x$remove(c("soup", "Bob"))
   expect_equivalent(x$data, z[-4:-5, ])
+  data <- x$data
+  x$push(c("a", "b"), 2)
+  exp <- data.frame(
+    target = c("Joe", "a", "b", "baz", "Amy", "foo"),
+    ndeps = c(1, 2, 2, 3, 4, 8),
+    priority = c(1, Inf, Inf, 2, 1, 2),
+    stringsAsFactors = FALSE
+  )
+  expect_equivalent(x$data, exp)
 })

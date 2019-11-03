@@ -26,7 +26,7 @@ Character vector of the names of outdated targets.
 }
 \description{
 Outdated targets will be rebuilt in the next
-\code{\link[=make]{make()}}.
+\code{\link[=make]{make()}}. \code{outdated()} does not show dynamic sub-targets.
 }
 \examples{
 \dontrun{

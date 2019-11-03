@@ -1,10 +1,33 @@
 drake_meta_ <- function(target, config) {
+  class <- ifelse(is_subtarget(target, config), "subtarget", "target")
+  class(target) <- class
+  drake_meta_impl(target, config)
+}
+
+drake_meta_impl <- function(target, config) {
+  UseMethod("drake_meta_impl")
+}
+
+drake_meta_impl.subtarget <- function(target, config) {
+  seed <- config$layout[[target]]$seed %||NA%
+    seed_from_basic_types(config$seed, target)
+  list(
+    name = target,
+    target = target,
+    imported = FALSE,
+    isfile = FALSE,
+    time_start = proc.time(),
+    seed = as.integer(seed)
+  )
+}
+
+drake_meta_impl.default <- function(target, config) {
   layout <- config$layout[[target]]
   meta <- list(
     name = target,
     target = target,
     imported = layout$imported %||% TRUE,
-    missing = !config$cache$exists(key = target),
+    missing = target_missing(target, config),
     seed = as.integer(
       layout$seed %||NA% seed_from_basic_types(config$seed, target)
     ),
@@ -37,9 +60,23 @@ drake_meta_ <- function(target, config) {
   }
   if (!is.null(meta$trigger$change)) {
     try_load(layout$deps_change$memory, config = config)
-    meta$trigger$value <- eval(meta$trigger$change, config$eval)
+    meta$trigger$value <- eval(meta$trigger$change, config$envir_targets)
+  }
+  if (is_dynamic(target, config)) {
+    meta$dynamic_dependency_hash <- dynamic_dependency_hash(target, config)
   }
   meta
+}
+
+target_missing <- function(target, config) {
+  !target_exists(target, config)
+}
+
+targets_missing <- Vectorize(target_missing, vectorize.args = "target")
+
+target_exists <- function(target, config) {
+  config$cache$exists(key = target) &&
+    config$cache$exists(key = target, namespace = "meta")
 }
 
 # A numeric hash that could be used as a
@@ -58,11 +95,22 @@ integer_hash <- function(x, mod = .Machine$integer.max) {
 }
 
 dependency_hash <- function(target, config) {
-  x <- config$layout[[target]]$deps_build
+  layout <- config$layout[[target]]
+  x <- layout$deps_build
   deps <- c(x$globals, x$namespaced, x$loadd, x$readd)
   if (is_imported(target, config)) {
     deps <- c(deps, x$file_in, x$knitr_in)
   }
+  deps <- setdiff(deps, layout$deps_dynamic)
+  dependency_hash_impl(deps, config)
+}
+
+dynamic_dependency_hash <- function(target, config) {
+  deps <- config$layout[[target]]$deps_dynamic
+  dependency_hash_impl(deps, config)
+}
+
+dependency_hash_impl <- function(deps, config) {
   if (!length(deps)) {
     return("")
   }

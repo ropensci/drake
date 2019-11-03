@@ -576,6 +576,7 @@ drake_config <- function(
     trigger = trigger,
     cache = cache
   )
+  ht_dynamic_deps <- new_ht_dynamic_deps(layout)
   graph <- create_drake_graph(
     plan = plan,
     layout = layout,
@@ -588,10 +589,13 @@ drake_config <- function(
   caching <- match.arg(caching)
   recover <- as.logical(recover)
   recoverable <- as.logical(recoverable)
+  envir_targets <- new.env(parent = envir)
   out <- list(
     envir = envir,
-    eval = new.env(parent = envir),
+    envir_graph = new.env(parent = emptyenv()),
+    envir_targets = envir_targets,
     envir_by = new.env(parent = emptyenv()),
+    envir_subtargets = new.env(parent = envir_targets),
     cache = cache,
     parallelism = parallelism,
     jobs = jobs,
@@ -628,11 +632,21 @@ drake_config <- function(
     recoverable = recoverable,
     curl_handles = curl_handles,
     ht_dynamic_size = ht_new(),
-    ht_dynamic_nby = ht_new()
+    ht_dynamic_deps = ht_dynamic_deps
   )
   config_checks(out)
   logger$minor("end drake_config()")
   out
+}
+
+new_ht_dynamic_deps <- function(layout) {
+  ht <- ht_new()
+  lapply(layout, log_ht_dynamic_deps, ht = ht)
+  ht
+}
+
+log_ht_dynamic_deps <- function(layout, ht) {
+  ht_set(ht, layout$deps_dynamic)
 }
 
 sanitize_targets <- function(targets, plan) {

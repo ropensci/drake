@@ -1,4 +1,4 @@
-# Version 7.7.0.9000
+# Version 7.7.0.9002
 
 ## Bug fixes
 
@@ -7,19 +7,22 @@
 
 ## New features
 
-- Begin to implement dynamic branching (#685).
+- Implement dynamic branching (#685).
+- Add a new `subtargets()` function to get the cached names of the sub-targets of a dynamic target.
+- Add new `subtargets` arguments to `loadd()` and `readd()` to retrieve specific sub-targets from a parent dynamic target.
+- Add a new `id_chr()` function to get the name of the target while `make()` is running.
 - Implement `plot(plan)` (#1036).
+- `vis_drake_graph()`, `drake_graph_info()`, and `render_drake_graph()` now 
+  take arguments that allow behavior to be defined upon selection of nodes. (#1031, @mstr3336).
 
 ## Enhancements
 
 - Document transformation functions in a way that avoids having to create true functions (#979).
 - Avoid always invalidating the memoized layout when we set the knitr hash.
-- Assert that `prework` is a language object, list of language objects, or character vector (#1 at pat-s/multicore-debugging on GitHub, @pat-s)
-
-## New features
-
-- `vis_drake_graph()`, `drake_graph_info()`, and `render_drake_graph()` now 
-  take arguments that allow behavior to be defined upon selection of nodes. (#1031, @mstr3336).
+- Change the names of environments in `drake_config()` objects.
+- Assert that `prework` is a language object, list of language objects, or character vector (#1 at pat-s/multicore-debugging on GitHub, @pat-s).
+- Use an environment instead of a list for `config$layout`. Supports internal modifications by reference. Required for #685.
+- Clean up the code of the parallel backends.
 
 
 # Version 7.7.0

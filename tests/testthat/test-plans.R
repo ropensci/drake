@@ -627,3 +627,11 @@ test_with_dir("warning when file_out() files not produced", {
     regexp = "Missing files for target"
   )
 })
+
+test_with_dir("id_chr()", {
+  skip_on_cran()
+  expect_error(id_chr(), regexp = "drake plan")
+  plan <- drake_plan(x = id_chr())
+  make(plan)
+  expect_equal(readd(x), "x")
+})

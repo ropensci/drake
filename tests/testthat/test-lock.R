@@ -8,7 +8,7 @@ test_with_dir("lock_environment()", {
   caching <- scenario$caching
   plan <- drake_plan(
     x = try(
-      assign("a", 1L, envir = parent.env(drake_envir())),
+      assign("a", 1L, envir = paren.env(parent.env(drake_envir()))),
       silent = TRUE
     )
   )
@@ -26,7 +26,7 @@ test_with_dir("lock_environment()", {
   e$a <- 123
   e$plan$four <- "five"
   plan <- drake_plan(
-    x = assign("a", 1, envir = parent.env(drake_envir()))
+    x = assign("a", 1, envir = parent.env(parent.env(drake_envir())))
   )
   make(
     plan,

@@ -42,9 +42,9 @@ test_with_dir("lazy loading is actually lazy", {
   eagerly_loaded <- "combined"
   config <- dbug()
   unload_these <- c(lazily_loaded, eagerly_loaded)
-  unload_these <- intersect(unload_these, ls(envir = config$eval))
-  remove(list = unload_these, envir = config$eval)
-  eval <- config$eval
+  unload_these <- intersect(unload_these, ls(envir = config$envir_targets))
+  remove(list = unload_these, envir = config$envir_targets)
+  eval <- config$envir_targets
   config <- drake_config(
     lazy_load = TRUE,
     plan = config$plan,
@@ -53,10 +53,15 @@ test_with_dir("lazy loading is actually lazy", {
     verbose = 0L,
     session_info = FALSE
   )
-  config$eval <- eval
+  for (x in names(eval)) {
+    config$envir_targets[[x]] <- eval[[x]]
+  }
   config$graph <- subset_graph(config$graph, all_targets(config))
+  config$ht_dynamic <- ht_new()
+  config$envir_graph <- ht_new()
+  config$envir_graph$graph <- config$graph
   backend_loop(config)
-  loaded <- ls(envir = config$eval)
+  loaded <- ls(envir = config$envir_targets)
   expect_true(all(lazily_loaded %in% loaded))
   expect_false(any(eagerly_loaded %in% loaded))
 })

@@ -4,13 +4,15 @@ backend_loop <- function(config) {
     on.exit(unlock_environment(config$envir))
   }
   config$lock_envir <- FALSE
-  targets <- igraph::topo_sort(config$graph)$name
-  for (i in seq_along(targets)) {
-    local_build(
-      target = targets[i],
-      config = config,
-      downstream = targets[-seq_len(i)]
-    )
+  config$envir_loop <- new.env(parent = emptyenv())
+  config$envir_loop$targets <- igraph::topo_sort(config$envir_graph$graph)$name
+  while (length(config$envir_loop$targets)) {
+    loop_check(config)
   }
-  invisible()
+}
+
+loop_check <- function(config) {
+  targets <- config$envir_loop$targets
+  local_build(target = targets[1], config = config, downstream = targets[-1])
+  config$envir_loop$targets <- config$envir_loop$targets[-1]
 }

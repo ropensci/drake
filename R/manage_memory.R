@@ -20,6 +20,10 @@ manage_memory <- function(target, config, downstream = NULL, jobs = 1) {
     downstream = downstream,
     jobs = jobs
   )
+  if (identical(config$garbage_collection, TRUE)) {
+    gc()
+  }
+  invisible()
 }
 
 manage_deps <- function(target, config, downstream, jobs) {
@@ -27,69 +31,67 @@ manage_deps <- function(target, config, downstream, jobs) {
 }
 
 manage_deps.speed <- function(target, config, downstream, jobs) {
-  if (identical(config$garbage_collection, TRUE)) {
-    gc()
-  }
-  already_loaded <- setdiff(names(config$eval), drake_markers)
+  already_loaded <- setdiff(names(config$envir_targets), drake_markers)
   target_deps <- deps_memory(targets = target, config = config)
   target_deps <- setdiff(target_deps, target)
   target_deps <- setdiff(target_deps, already_loaded)
   try_load(targets = target_deps, config = config, jobs = jobs)
+  load_subtarget_subdeps(target, config)
 }
 
 manage_deps.autoclean <- function(target, config, downstream, jobs) {
-  already_loaded <- setdiff(names(config$eval), drake_markers)
+  already_loaded <- setdiff(names(config$envir_targets), drake_markers)
   target_deps <- deps_memory(targets = target, config = config)
   discard_these <- setdiff(x = already_loaded, y = target_deps)
   if (length(discard_these)) {
     config$logger$minor("unload", discard_these, target = target)
-    rm(list = discard_these, envir = config$eval)
+    rm(list = discard_these, envir = config$envir_targets)
   }
-  if (identical(config$garbage_collection, TRUE)) {
-    gc()
-  }
+  clear_envir(target = target, envir = config$envir_subtargets, config = config)
   target_deps <- setdiff(target_deps, target)
   target_deps <- setdiff(target_deps, already_loaded)
   try_load(targets = target_deps, config = config, jobs = jobs)
+  load_subtarget_subdeps(target, config)
 }
 
 manage_deps.preclean <- manage_deps.autoclean
 
 manage_deps.lookahead <- function(target, config, downstream, jobs) {
-  downstream <- downstream %||% downstream_nodes(config$graph, target)
+  downstream <- downstream %||% downstream_nodes(
+    config$envir_graph$graph,
+    target
+  )
   downstream_deps <- deps_memory(targets = downstream, config = config)
-  already_loaded <- setdiff(names(config$eval), drake_markers)
+  already_loaded <- setdiff(names(config$envir_targets), drake_markers)
   target_deps <- deps_memory(targets = target, config = config)
   keep_these <- c(target_deps, downstream_deps)
   discard_these <- setdiff(x = already_loaded, y = keep_these)
   if (length(discard_these)) {
     config$logger$minor("unload", discard_these, target = target)
-    rm(list = discard_these, envir = config$eval)
-  }
-  if (identical(config$garbage_collection, TRUE)) {
-    gc()
+    rm(list = discard_these, envir = config$envir_targets)
   }
   target_deps <- setdiff(target_deps, target)
   target_deps <- setdiff(target_deps, already_loaded)
   try_load(targets = target_deps, config = config, jobs = jobs)
+  load_subtarget_subdeps(target, config)
 }
 
 manage_deps.unload <- function(target, config, downstream, jobs) {
-  discard_these <- setdiff(names(config$eval), drake_markers)
-  if (length(discard_these)) {
-    config$logger$minor("unload", discard_these, target = target)
-    rm(list = discard_these, envir = config$eval)
-  }
-  if (identical(config$garbage_collection, TRUE)) {
-    gc()
+  for (name in c("envir_targets", "envir_subtargets")) {
+    clear_envir(target = target, envir = config[[name]], config = config)
   }
 }
 
 manage_deps.none <- function(target, config, downstream, jobs) {
-  if (identical(config$garbage_collection, TRUE)) {
-    gc()
-  }
   return()
+}
+
+clear_envir <- function(target, envir, config) {
+  discard_these <- setdiff(names(envir), drake_markers)
+  if (length(discard_these)) {
+    config$logger$minor("unload", discard_these, target = target)
+    rm(list = discard_these, envir = envir)
+  }
 }
 
 deps_memory <- function(targets, config) {
@@ -121,10 +123,102 @@ try_load_target <- function(target, config) {
     load_target(
       target = target,
       namespace = config$cache$default_namespace,
-      envir = config$eval,
+      envir = config$envir_targets,
       cache = config$cache,
       verbose = FALSE,
       lazy = config$lazy_load
     )
+  )
+}
+
+load_subtarget_subdeps <- function(subtarget, config) {
+  if (!is_subtarget(subtarget, config)) {
+    return()
+  }
+  parent <- config$layout[[subtarget]]$subtarget_parent
+  index <- config$layout[[subtarget]]$subtarget_index
+  deps <- subtarget_deps(parent, index, config)
+  lapply(
+    names(deps),
+    load_subtarget_subdep,
+    subtarget = subtarget,
+    deps = deps,
+    config = config
+  )
+}
+
+load_subtarget_subdep <- function(subtarget, dep, deps, config) {
+  index <- unlist(deps[[dep]])
+  if (is_dynamic(dep, config)) {
+    load_dynamic_subdep(subtarget, dep, index, config)
+  } else {
+    load_static_subdep(dep, index, config)
+  }
+}
+
+load_dynamic_subdep <- function(subtarget, dep, index, config) {
+  parent <- config$layout[[subtarget]]$subtarget_parent
+  dynamic <- config$layout[[parent]]$dynamic
+  load_dynamic_subdep_impl(dynamic, parent, dep, index, config)
+}
+
+load_dynamic_subdep_impl <- function(dynamic, parent, dep, index, config) {
+  UseMethod("load_dynamic_subdep_impl")
+}
+
+load_dynamic_subdep_impl.combine <- function( # nolint
+  dynamic,
+  parent,
+  dep,
+  index,
+  config
+) {
+  subdeps <- config$cache$get(dep, namespace = "meta")$subtargets[index]
+  value <- config$cache$mget(subdeps, use_cache = FALSE)
+  assign(
+    x = dep,
+    value = value,
+    envir = config$envir_subtargets,
+    inherits = FALSE
+  )
+  if (no_by(dynamic)) {
+    return()
+  }
+  by_key <- which_by(dynamic)
+  by_value <- get_dynamic_by(by_key, config)
+  by_value <- unique(by_value[index])
+  assign(
+    x = by_key,
+    value = by_value,
+    envir = config$envir_subtargets,
+    inherits = FALSE
+  )
+}
+
+load_dynamic_subdep_impl.default <- function( # nolint
+  dynamic,
+  parent,
+  dep,
+  index,
+  config
+) {
+  subdep <- config$cache$get(dep, namespace = "meta")$subtargets[[index]]
+  value <- config$cache$get(subdep, use_cache = FALSE)
+  assign(
+    x = dep,
+    value = value,
+    envir = config$envir_subtargets,
+    inherits = FALSE
+  )
+}
+
+load_static_subdep <- function(dep, index, config) {
+  value <- get(dep, envir = config$envir_targets, inherits = FALSE)
+  value <- dynamic_subvalue(value, index)
+  assign(
+    x = dep,
+    value = value,
+    envir = config$envir_subtargets,
+    inherits = FALSE
   )
 }

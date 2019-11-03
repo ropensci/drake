@@ -220,6 +220,13 @@ drake_graph_info <- function(
 get_raw_node_category_data <- function(config) {
   all_labels <- V(config$graph)$name
   config$targets <- all_targets(config)
+  is_dynamic <- vapply(
+    config$targets,
+    is_dynamic,
+    FUN.VALUE = logical(1),
+    config = config
+  )
+  config$dynamic <- config$targets[is_dynamic]
   config$outdated <- resolve_graph_outdated(config = config)
   config$running <- running(cache = config$cache)
   config$failed <- failed(cache = config$cache)
@@ -383,6 +390,7 @@ legend_nodes <- function(font_size = 20) {
       "Imported",
       "Missing",
       "Object",
+      "Dynamic",
       "Function",
       "File",
       "Cluster"
@@ -394,10 +402,11 @@ legend_nodes <- function(font_size = 20) {
       "failed",
       "import",
       "missing",
-      rep("generic", 4)
+      rep("generic", 5)
     )),
     shape = node_shape(c(
       rep("object", 7),
+      "dynamic",
       "funct",
       "file",
       "cluster"
@@ -484,6 +493,7 @@ categorize_nodes <- function(config) {
     nodes[running, "status"] <- "running"
     nodes[failed, "status"] <- "failed"
     nodes$type <- "object"
+    nodes[dynamic, "type"] <- "dynamic"
     nodes[is_encoded_path(nodes$id), "type"] <- "file"
     nodes[functions, "type"] <- "function"
     nodes
@@ -519,6 +529,7 @@ style_nodes <- function(config) {
     nodes[nodes$status == "outdated", "color"] <- node_color("outdated")
     nodes[nodes$status == "up to date", "color"] <- node_color("up_to_date")
     nodes[nodes$type == "object", "shape"] <- node_shape("object")
+    nodes[nodes$type == "dynamic", "shape"] <- node_shape("dynamic")
     nodes[nodes$type == "file", "shape"] <- node_shape("file")
     nodes[nodes$type == "function", "shape"] <- node_shape("funct")
     nodes[nodes$type == "cluster", "shape"] <- node_shape("cluster")
@@ -547,6 +558,7 @@ node_shape <- Vectorize(function(x) {
   switch(
     x,
     object = "dot",
+    dynamic = "star",
     file = "square",
     funct = "triangle",
     cluster = "diamond",

@@ -199,6 +199,10 @@ worker_prediction_info <- function(
       order = igraph::gorder(config$graph)
     )
   }
+  config <- register_subtargets_predict(config)
+  config$envir_graph <- new.env(parent = emptyenv())
+  config$envir_graph$graph <- config$graph
+  on.exit(config$envir_graph <- NULL)
   queue <- priority_queue(config, jobs = 1)
   running <- data.frame(
     target = character(0),
@@ -239,6 +243,35 @@ worker_prediction_info <- function(
   list(time = lubridate::dseconds(time), workers = workers)
 }
 
+register_subtargets_predict <- function(config) {
+  vertices <- igraph::V(config$graph)$name
+  for (target in vertices) {
+    should_register <- is_dynamic(target, config) &&
+      !is_subtarget(target, config) &&
+      config$cache$exists(target, namespace = "meta")
+    if (should_register) {
+      sub <- subtargets(target, character_only = TRUE, cache = config$cache)
+      config <- register_subtargets_graph2(target, sub, config)
+    }
+  }
+  config
+}
+
+register_subtargets_graph2 <- function(target, subtargets, config) {
+  edgelist <- do.call(rbind, lapply(subtargets, c, target))
+  deps <- drake_adjacent_vertices(config$graph, target, mode = "in")
+  edgelist_deps <- expand.grid(deps, subtargets, stringsAsFactors = FALSE)
+  edgelist <- rbind(edgelist, as.matrix(edgelist_deps))
+  subgraph <- igraph::graph_from_edgelist(edgelist)
+  subgraph <- igraph::set_vertex_attr(
+    subgraph,
+    name = "imported",
+    value = FALSE
+  )
+  config$graph <- igraph::graph.union(config$graph, subgraph)
+  config
+}
+
 timing_assumptions <- function(
   config,
   targets,
@@ -254,6 +287,15 @@ timing_assumptions <- function(
   }
   times <- build_times(cache = config$cache)
   vertices <- all_targets(config)
+  for (target in vertices) {
+    append_subtargets <- is_dynamic(target, config) &&
+      !is_subtarget(target, config) &&
+      config$cache$exists(target, "meta")
+    if (append_subtargets) {
+      sub <- subtargets(target, character_only = TRUE, cache = config$cache)
+      vertices <- c(vertices, sub)
+    }
+  }
   times <- times[times$target %in% vertices, ]
   untimed <- setdiff(vertices, times$target)
   untimed <- setdiff(untimed, names(known_times))

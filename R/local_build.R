@@ -1,38 +1,57 @@
 local_build <- function(target, config, downstream) {
-  meta <- drake_meta_(target = target, config = config)
+  meta <- drake_meta_(target, config)
   if (handle_triggers(target, meta, config)) {
     return()
   }
-  announce_build(target, meta, config)
+  announce_build(target, config)
   manage_memory(
     target,
     config,
     downstream = downstream,
     jobs = config$jobs_preprocess
   )
-  build <- try_build(target = target, meta = meta, config = config)
-  conclude_build(build = build, config = config)
-  invisible()
+  build <- try_build(target, meta, config)
+  conclude_build(build, config)
 }
 
-announce_build <- function(target, meta, config) {
+announce_build <- function(target, config) {
+  if (is_dynamic(target, config)) {
+    announce_dynamic(target, config)
+    return()
+  }
   set_progress(
     target = target,
-    meta = meta,
     value = "running",
     config = config
   )
+  color <- ifelse(is_subtarget(target, config), "subtarget", "target")
   config$logger$major(
-    "target",
+    color,
     target,
     target = target,
-    color = "target"
+    color = color
+  )
+}
+
+announce_dynamic <- function(target, config) {
+  msg <- ifelse(
+    is_registered_dynamic(target, config),
+    "gather",
+    "dynamic"
+  )
+  config$logger$minor(
+    msg,
+    target,
+    target = target
   )
 }
 
 try_build <- function(target, meta, config) {
   if (identical(config$garbage_collection, TRUE)) {
     on.exit(gc())
+  }
+  if (is_dynamic(target, config)) {
+    return(dynamic_build(target, meta, config))
   }
   retries <- 0L
   layout <- config$layout[[target]] %||% list()
@@ -230,11 +249,17 @@ with_call_stack <- function(target, config) {
     lock_environment(config$envir)
     on.exit(unlock_environment(config$envir))
   }
-  config$eval[[drake_target_marker]] <- target
-  tidy_expr <- eval(expr = expr, envir = config$eval) # tidy eval prep
+  config$envir_subtargets[[drake_target_marker]] <- target
+  tidy_expr <- eval(
+    expr = expr,
+    envir = config$envir_subtargets
+  ) # tidy eval prep
   tryCatch(
     withCallingHandlers(
-      eval(expr = tidy_expr, envir <- config$eval), # pure eval
+      eval(
+        expr = tidy_expr,
+        envir = config$envir_subtargets
+      ), # pure eval
       error = capture_calls
     ),
     error = identity
@@ -302,7 +327,11 @@ conclude_build <- function(build, config) {
 }
 
 assign_format <- function(target, value, format, config) {
-  if (is.null(format) || is.na(format) || is.null(value)) {
+  drop_format <- is.null(format) ||
+    is.na(format) ||
+    is.null(value) ||
+    (is_dynamic(target, config) && !is_subtarget(target, config))
+  if (drop_format) {
     return(value)
   }
   config$logger$minor("format", format, target = target)
@@ -383,7 +412,11 @@ assign_to_envir <- function(target, value, config) {
     !is_encoded_path(target) &&
     !is_imported(target, config)
   ) {
-    assign(x = target, value = value_format(value), envir = config$eval)
+    assign(
+      x = target,
+      value = value_format(value),
+      envir = config$envir_targets
+    )
   }
   invisible()
 }
@@ -469,7 +502,6 @@ set_options <- function(new_options) {
 store_failure <- function(target, meta, config) {
   set_progress(
     target = target,
-    meta = meta,
     value = "failed",
     config = config
   )
@@ -483,10 +515,10 @@ store_failure <- function(target, meta, config) {
   )
 }
 
-set_progress <- function(target, meta, value, config) {
+set_progress <- function(target, value, config) {
   skip_progress <- !identical(config$running_make, TRUE) ||
     !config$log_progress ||
-    (meta$imported %||% FALSE)
+    (config$layout[[target]]$imported %||% FALSE)
   if (skip_progress) {
     return()
   }

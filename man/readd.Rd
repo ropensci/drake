@@ -14,7 +14,8 @@ readd(
   cache = drake::drake_cache(path = path),
   namespace = NULL,
   verbose = 1L,
-  show_source = FALSE
+  show_source = FALSE,
+  subtargets = NULL
 )
 
 loadd(
@@ -34,7 +35,8 @@ loadd(
   replace = TRUE,
   show_source = FALSE,
   tidyselect = !deps,
-  config = NULL
+  config = NULL,
+  subtargets = NULL
 )
 }
 \arguments{
@@ -63,6 +65,13 @@ name of the \code{storr} namespace to read from.}
 \item{show_source}{Logical, option to show the command
 that produced the target or indicate that the object
 was imported (using \code{\link[=show_source]{show_source()}}).}
+
+\item{subtargets}{A numeric vector of indices.
+If \code{target} is dynamic, \code{\link[=loadd]{loadd()}} and \code{\link[=readd]{readd()}} retrieve
+a list of sub-targets. You can restrict which sub-targets
+to retrieve with the \code{subtargets} argument. For example,
+\code{readd(x, subtargets = seq_len(3))} only retrieves the
+first 3 sub-targets of dynamic target \code{x}.}
 
 \item{...}{Targets to load from the cache: as names (symbols) or
 character strings. If the \code{tidyselect} package is installed,
@@ -128,10 +137,13 @@ The cached value of the \code{target}.
 \code{\link[=readd]{readd()}} returns an object from the cache,
 and \code{\link[=loadd]{loadd()}} loads one or more objects from the cache
 into your environment or session. These objects are usually
-targets built by \code{\link[=make]{make()}}.
+targets built by \code{\link[=make]{make()}}. If \code{target} is dynamic,
+\code{\link[=readd]{readd()}} and \code{\link[=loadd]{loadd()}} retrieve a list of sub-target values.
+You can restrict which sub-targets to include using the \code{subtargets}
+argument.
 }
 \details{
-There are two uses for the
+There are three uses for the
 \code{\link[=loadd]{loadd()}} and \code{\link[=readd]{readd()}} functions:
 \enumerate{
 \item Exploring the results outside the \code{drake}/\code{make()} pipeline.

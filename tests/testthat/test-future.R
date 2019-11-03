@@ -103,19 +103,15 @@ test_with_dir("can gracefully conclude a crashed worker", {
   skip_if_not_installed("future")
   for (caching in c("master", "worker")) {
     con <- dbug()
+    con$envir_graph$graph <- con$graph
     con$caching <- caching
     worker <- structure(list(), target = "myinput")
     class(worker) <- "Future"
     expect_false(is_empty_worker(worker))
     expect_error(future::value(worker))
+    con$queue <- priority_queue(con)
     expect_error(
-      suppressWarnings(
-        conclude_worker(
-          worker = worker,
-          config = con,
-          queue = priority_queue(config = con)
-        )
-      ),
+      suppressWarnings(conclude_worker(worker, con)),
       regexp = "failed"
     )
     meta <- diagnose(myinput)
@@ -128,4 +124,13 @@ test_with_dir("can gracefully conclude a crashed worker", {
     )
     clean(destroy = TRUE)
   }
+})
+
+test_with_dir("ft_skip_target()", {
+  skip_on_cran()
+  con <- dbug()
+  con$sleeps <- new.env(parent = emptyenv())
+  con$sleeps$count <- 1L
+  ft_skip_target(con)
+  expect_equal(con$sleeps$count, 2L)
 })

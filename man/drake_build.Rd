@@ -43,7 +43,7 @@ will not be replaced.}
 The value of the target right after it is built.
 }
 \description{
-Also load the target's dependencies beforehand.
+Not valid for dynamic branching.
 }
 \examples{
 \dontrun{

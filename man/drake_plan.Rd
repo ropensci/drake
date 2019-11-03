@@ -189,6 +189,7 @@ R Markdown (\verb{*.Rmd}) or R LaTeX (\verb{*.Rnw}) file.
 do not track it for changes and do not analyze it for dependencies.
 \item \code{\link[=no_deps]{no_deps()}}: tell \code{drake} to not track the dependencies
 of a piece of code. \code{drake} still tracks the code itself for changes.
+\item \code{\link[=id_chr]{id_chr()}}: Get the name of the current target.
 \item \code{\link[=drake_envir]{drake_envir()}}: get the environment where drake builds targets.
 Intended for advanced custom memory management.
 }
@@ -232,8 +233,7 @@ but this is what it usage will look like.
 \itemize{
 \item \code{map(...)}
 \item \code{cross(...)}
-\item \code{split(.x, .by)}
-\item \code{combine(.x, .by)}
+\item \code{combine(..., .by)}
 }
 
 \code{map()} and \code{cross()} create dynamic sub-targets from the variables
@@ -251,7 +251,6 @@ Differences from static branching:
 \item \code{...} must contain \emph{unnamed} symbols with no values supplied,
 and they must be the names of targets.
 \item Arguments \code{.id}, \code{.tag_in}, and \code{.tag_out} no longer apply.
-\item \code{split()} has a \code{.by} argument
 }
 }
 
@@ -367,6 +366,20 @@ drake_plan(
 # Tidy evaluation can help generate super large plans.
 sms <- rlang::syms(letters) # To sub in character args, skip this.
 drake_plan(x = target(f(char), transform = map(char = !!sms)))
+
+# Dynamic branching
+plan <- drake_plan(
+  w = c("a", "a", "b", "b"),
+  x = seq_len(4),
+  y = target(x + 1, dynamic = map(x)),
+  z = target(list(y = y, w = w), dynamic = combine(y, .by = w))
+)
+make(plan)
+subtargets(y)
+readd(subtargets(y)[1], character_only = TRUE)
+readd(subtargets(y)[2], character_only = TRUE)
+readd(subtargets(z)[1], character_only = TRUE)
+readd(subtargets(z)[2], character_only = TRUE)
 })
 }
 }

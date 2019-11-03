@@ -492,6 +492,54 @@ no_deps <- function(x = NULL) {
   x
 }
 
+#' @title Name of the current target \lifecycle{maturing}
+#' @export
+#' @description `id_chr()` gives you the name of the current target
+#'   while [make()] is running. For static branching in [drake_plan()],
+#'   use the `.id_chr` symbol instead. See the examples for details.
+#' @inheritSection drake_plan Keywords
+#' @return The name of the current target.
+#' @examples
+#' try(id_chr()) # Do not use outside the plan.
+#' \dontrun{
+#' isolate_example("id_chr()", {
+#' plan <- drake_plan(x = id_chr())
+#' make(plan)
+#' readd(x)
+#' # Dynamic branching
+#' plan <- drake_plan(
+#'   x = seq_len(4),
+#'   y = target(id_chr(), dynamic = map(x))
+#' )
+#' make(plan)
+#' ys <- subtargets(y)
+#' ys
+#' readd(ys[1], character_only = TRUE)
+#' # Static branching
+#' plan <- drake_plan(
+#'   y = target(c(x, .id_chr), transform = map(x = !!seq_len(4)))
+#' )
+#' plan
+#' })
+#' }
+id_chr <- function() {
+  envir <- environment()
+  for (i in seq_len(getOption("expressions"))) {
+    if (exists(drake_target_marker, envir = envir, inherits = FALSE)) {
+      return(envir[[drake_target_marker]])
+    }
+    if (identical(envir, globalenv())) {
+      break # nocov
+    }
+    envir <- parent.frame(n = i)
+  }
+  stop(
+    "Could not find the name of the current target. ",
+    "You should only use id_chr() in your drake plan.",
+    call. = FALSE
+  )
+}
+
 #' @title Get the environment where drake builds targets
 #' \lifecycle{questioning}
 #' @description Call this function inside the commands in your plan
@@ -499,6 +547,9 @@ no_deps <- function(x = NULL) {
 #'   That way, you can strategically remove targets from memory
 #'   while [make()] is running. That way, you can limit the
 #'   amount of computer memory you use.
+#' @details `drake_envir()` is where `drake` puts the dependencies
+#'   of *dynamic sub-targets*. To manage ordinary dependencies,
+#'   you need `parent.env(drake_envir())`.
 #' @export
 #' @inheritSection drake_plan Keywords
 #' @seealso [from_plan()]
@@ -511,10 +562,10 @@ no_deps <- function(x = NULL) {
 #'   large_data_2 = sample.int(1e4),
 #'   subset = c(large_data_1[seq_len(10)], large_data_2[seq_len(10)]),
 #'   summary = {
-#'     print(ls(envir = drake_envir()))
+#'     print(ls(envir = parent.env(drake_envir())))
 #'     # We don't need the large_data_* targets in memory anymore.
-#'     rm(large_data_1, large_data_2, envir = drake_envir())
-#'     print(ls(envir = drake_envir()))
+#'     rm(large_data_1, large_data_2, envir = parent.env(drake_envir()))
+#'     print(ls(envir = parent.env(drake_envir())))
 #'     mean(subset)
 #'   }
 #' )
@@ -534,14 +585,13 @@ drake_envir <- function() {
   }
   stop(
     "Could not find the environment where drake builds targets. ",
-    "drake_envir() should only be called inside commands ",
-    "in your workflow plan data frame.",
+    "You should only use drake_envir() in your drake plan.",
     call. = FALSE
   )
 }
 
 drake_envir_marker <- "._drake_envir"
-drake_target_marker <- "._drake_target"
+drake_target_marker <- ".id_chr"
 drake_markers <- c(
   drake_envir_marker,
   drake_target_marker
