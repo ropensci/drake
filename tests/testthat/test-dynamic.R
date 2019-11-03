@@ -889,12 +889,19 @@ test_with_dir("dynamic combine over unequal vars", {
   expect_error(make(plan), "all grouping variables")
 })
 
-test_with_dir("dynamic combine vars must be dynamic", {
+test_with_dir("combine static targets", {
   plan <- drake_plan(
-    x = seq_len(4),
+    x = c("a", "a", "b", "b"),
     y = target(x, dynamic = combine(x))
   )
-  expect_error(make(plan), "must be dynamic")
+  make(plan)
+  expect_equal(readd(y), list(c("a", "a", "b", "b")))
+  plan <- drake_plan(
+    x = c("a", "a", "b", "b"),
+    y = target(x, dynamic = combine(x, .by = x))
+  )
+  make(plan)
+  expect_equal(readd(y), list(c("a", "a"), c("b", "b")))
 })
 
 test_with_dir("formats applied to subtargets but not their parents", {

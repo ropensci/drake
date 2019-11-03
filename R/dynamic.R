@@ -50,7 +50,6 @@ dynamic_build <- function(target, meta, config) {
 register_subtargets <- function(target, static_ok, subdeps_ok, config) {
   on.exit(register_dynamic(target, config))
   announce_dynamic(target, config)
-  check_dynamic(target, config)
   subtargets_build <- subtargets_all <- subtarget_names(target, config)
   if (static_ok) {
     subtargets_build <- filter_subtargets(subtargets_all, config)
@@ -162,32 +161,6 @@ dynamic_pad_revdep_keys <- function(target, config) {
     return()
   }
   increase_revdep_keys(config$queue, target, config)
-}
-
-check_dynamic <- function(target, config) {
-  dynamic <- config$layout[[target]]$dynamic
-  check_dynamic_impl(dynamic, target, config)
-}
-
-check_dynamic_impl <- function(dynamic, target, config) {
-  UseMethod("check_dynamic_impl")
-}
-
-check_dynamic_impl.combine <- function(dynamic, target, config) {
-  vars <- which_vars(dynamic)
-  good <- vapply(vars, is_dynamic, config = config, FUN.VALUE = logical(1))
-  if (any(!good)) {
-    stop(
-      "all non-.by grouping variables of dynamic combine() ",
-      "must be dynamic. Offending variables: ",
-      paste(vars[!good], collapse = ", "),
-      call. = FALSE
-    )
-  }
-}
-
-check_dynamic_impl.default <- function(dynamic, target, config) {
-  return()
 }
 
 register_dynamic_subdeps <- function(layout, index, parent, config) {
