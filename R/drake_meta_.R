@@ -207,9 +207,7 @@ storage_hash <- function(
   if (!file.exists(file)) {
     return(NA_character_)
   }
-  not_cached <- !config$cache$exists(key = target) ||
-    !config$cache$exists(key = target, namespace = "meta")
-  if (not_cached) {
+  if (target_missing(target, config)) {
     return(rehash_storage(target = target, file = file, config = config))
   }
   meta <- config$cache$get(key = target, namespace = "meta")
