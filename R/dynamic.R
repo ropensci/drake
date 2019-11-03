@@ -47,12 +47,12 @@ dynamic_build <- function(target, meta, config) {
   list(target = target, meta = meta, value = value)
 }
 
-register_subtargets <- function(target, parent_ok, subdeps_ok, config) {
+register_subtargets <- function(target, static_ok, subdeps_ok, config) {
   on.exit(register_dynamic(target, config))
   announce_dynamic(target, config)
   check_dynamic(target, config)
   subtargets_build <- subtargets_all <- subtarget_names(target, config)
-  if (parent_ok) {
+  if (static_ok) {
     subtargets_build <- filter_subtargets(subtargets_all, config)
   }
   if (length(subtargets_all)) {
@@ -65,7 +65,7 @@ register_subtargets <- function(target, parent_ok, subdeps_ok, config) {
     register_in_queue(subtargets_build, 0, config)
     register_in_counter(subtargets_build, config)
   }
-  if (!parent_ok || !subdeps_ok || ndeps) {
+  if (!static_ok || !subdeps_ok || ndeps) {
     register_in_loop(target, config)
     register_in_queue(target, ndeps, config)
     register_in_counter(target, config)

@@ -6,13 +6,13 @@ handle_triggers <- function(target, meta, config) {
     return(FALSE)
   }
   meta_old <- old_meta(key = target, cache = config$cache)
-  parent_ok <- !any_triggers(target, meta, meta_old, config) ||
+  static_ok <- !any_static_triggers(target, meta, meta_old, config) ||
     recover_target(target, meta, config)
   if (!is_dynamic(target, config)) {
-    return(parent_ok)
+    return(static_ok)
   }
   subdeps_ok <- !check_trigger_dynamic(target, meta, meta_old, config)
-  register_subtargets(target, parent_ok, subdeps_ok, config)
+  register_subtargets(target, static_ok, subdeps_ok, config)
   TRUE
 }
 
@@ -118,7 +118,7 @@ recovery_key_impl.subtarget <- function(target, meta, config) {
   unclass(target)
 }
 
-any_triggers <- function(target, meta, meta_old, config) {
+any_static_triggers <- function(target, meta, meta_old, config) {
   if (check_triggers_stage1(target, meta, config)) {
     return(TRUE)
   }
