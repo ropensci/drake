@@ -51,8 +51,10 @@ register_subtargets <- function(target, parent_ok, subdeps_ok, config) {
   on.exit(register_dynamic(target, config))
   announce_dynamic(target, config)
   check_dynamic(target, config)
-  subtargets_all <- subtarget_names(target, config)
-  subtargets_build <- filter_subtargets(subtargets_all, parent_ok, config)
+  subtargets_build <- subtargets_all <- subtarget_names(target, config)
+  if (parent_ok) {
+    subtargets_build <- filter_subtargets(subtargets_all, config)
+  }
   if (length(subtargets_all)) {
     register_in_graph(target, subtargets_all, config)
     register_in_layout(target, subtargets_all, config)
@@ -71,21 +73,20 @@ register_subtargets <- function(target, parent_ok, subdeps_ok, config) {
   }
 }
 
-filter_subtargets <- function(subtargets, parent_ok, config) {
+filter_subtargets <- function(subtargets, config) {
   parallel_filter(
     subtargets,
     should_build_subtarget,
     jobs = config$jobs_preprocess,
-    parent_ok = parent_ok,
     config = config
   )
 }
 
-should_build_subtarget <- function(subtarget, parent_ok, config) {
+should_build_subtarget <- function(subtarget, config) {
   if (target_exists(subtarget, config)) {
-    return(!parent_ok)
+    return(FALSE)
   }
-  !recover_subtarget(subtarget, config) || !parent_ok
+  !recover_subtarget(subtarget, config)
 }
 
 register_dynamic <- function(target, config) {
