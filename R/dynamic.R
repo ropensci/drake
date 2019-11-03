@@ -74,19 +74,17 @@ register_subtargets <- function(target, static_ok, subdeps_ok, config) {
 }
 
 filter_subtargets <- function(subtargets, config) {
-  parallel_filter(
+  subtargets <- subtargets[target_missing(subtargets, config)]
+  if (!config$recover || !length(subtargets)) {
+    return(subtargets)
+  }
+  recovered <- lightly_parallelize(
     subtargets,
-    should_build_subtarget,
+    recover_subtarget,
     jobs = config$jobs_preprocess,
     config = config
   )
-}
-
-should_build_subtarget <- function(subtarget, config) {
-  if (target_exists(subtarget, config)) {
-    return(FALSE)
-  }
-  !recover_subtarget(subtarget, config)
+  subtargets[!unlist(recovered)]
 }
 
 register_dynamic <- function(target, config) {

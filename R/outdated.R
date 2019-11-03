@@ -195,7 +195,7 @@ missing_subtargets <- function(target, meta, config) {
   if (!is_dynamic(target, config)) {
     return(FALSE)
   }
-  any(targets_missing(meta$subtargets, config))
+  any(target_missing(meta$subtargets, config))
 }
 
 #' @title Report any import objects required by your drake_plan

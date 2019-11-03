@@ -322,7 +322,9 @@ conclude_build <- function(build, config) {
     config = config
   )
   store_outputs(target = target, value = value, meta = meta, config = config)
-  assign_to_envir(target = target, value = value, config = config)
+  if (!is_subtarget(target, config)) {
+    assign_to_envir(target = target, value = value, config = config)
+  }
   invisible(value)
 }
 
