@@ -161,16 +161,7 @@ first_outdated <- function(config) {
     new_leaves <- setdiff(leaf_nodes(config$graph), out)
     do_build <- lightly_parallelize(
       X = new_leaves,
-      FUN = function(target, config) {
-        if (target_missing(target, config)) {
-          return(TRUE)
-        }
-        meta <- drake_meta_(target, config)
-        meta_old <- old_meta(key = target, cache = config$cache)
-        any_triggers(target, meta, meta_old, config) ||
-          check_trigger_dynamic(target, meta, meta_old, config) ||
-          missing_subtargets(target, meta_old, config)
-      },
+      FUN = is_outdated,
       jobs = config$jobs_preprocess,
       config = config
     )
@@ -184,6 +175,17 @@ first_outdated <- function(config) {
     old_leaves <- new_leaves
   }
   out
+}
+
+is_outdated <- function(target, config) {
+  if (target_missing(target, config)) {
+    return(TRUE)
+  }
+  meta <- drake_meta_(target, config)
+  meta_old <- old_meta(key = target, cache = config$cache)
+  any_triggers(target, meta, meta_old, config) ||
+    check_trigger_dynamic(target, meta, meta_old, config) ||
+    missing_subtargets(target, meta_old, config)
 }
 
 missing_subtargets <- function(target, meta, config) {

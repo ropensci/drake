@@ -84,7 +84,7 @@ test_with_dir("future package functionality", {
         Sys.sleep(2); simulate(48)
       }))
     )
-    future::plan(future::multicore)
+    future::plan(future::multisession)
     make(
       e$my_plan,
       envir = e,
