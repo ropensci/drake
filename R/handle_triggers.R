@@ -64,6 +64,9 @@ recover_target <- function(target, meta, config) {
 }
 
 recover_subtarget <- function(subtarget, config) {
+  if (!config$recover) {
+    return(FALSE)
+  }
   meta <- drake_meta_(subtarget, config)
   class(subtarget) <- "subtarget"
   recover_target(subtarget, meta, config)
