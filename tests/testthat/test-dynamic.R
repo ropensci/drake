@@ -68,6 +68,7 @@ test_with_dir("dynamic sub-target indices", {
   }
   for (i in seq_len(4)) {
     ez <- list(y = seq(from = 4 * (i - 1) + 1, 4 * i))
+    ez$z_by <- ez$y[1]
     expect_equal(subtarget_deps("z", i, config), ez)
   }
 })
@@ -898,10 +899,29 @@ test_with_dir("combine static targets", {
   expect_equal(readd(y), list(c("a", "a", "b", "b")))
   plan <- drake_plan(
     x = c("a", "a", "b", "b"),
-    y = target(x, dynamic = combine(x, .by = x))
+    y = seq_len(4),
+    z = target(y, dynamic = combine(y, .by = x))
   )
   make(plan)
-  expect_equal(readd(y), list(c("a", "a"), c("b", "b")))
+  expect_equal(readd(z), list(c(1, 2), c(3, 4)))
+  plan <- drake_plan(
+    x = c("a", "a", "b", "b"),
+    y = target(x, dynamic = combine(x, .by = x))
+  )
+  expect_error(make(plan), regexp = "needs to be different")
+})
+
+test_with_dir("combine multiple targets", {
+  plan <- drake_plan(
+    w = c("a", "a", "b", "b"),
+    x = c(1, 2, 3, 4),
+    y = c(11, 12, 13, 14),
+    z = target(list(x, y), dynamic = combine(x, y, .by = w))
+  )
+  make(plan)
+  out <- readd(z)
+  exp <- list(list(c(1, 2), c(11, 12)), list(c(3, 4), c(13, 14)))
+  expect_equal(out, exp)
 })
 
 test_with_dir("formats applied to subtargets but not their parents", {

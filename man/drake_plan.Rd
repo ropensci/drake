@@ -243,8 +243,7 @@ supplied to \code{map()} must all have equal length.
 pieces of \code{data} for each unique element of \code{x}. Here,
 \code{data} must not be dynamic.
 \code{combine(f(data), .by = x)} makes new dynamic
-sub-targets from \code{data}. For \code{combine()}, \code{data} must already
-be a dynamic target.
+sub-targets from \code{data}.
 
 Differences from static branching:
 \itemize{

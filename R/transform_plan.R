@@ -41,8 +41,7 @@
 #'   pieces of `data` for each unique element of `x`. Here,
 #'   `data` must not be dynamic.
 #'   `combine(f(data), .by = x)` makes new dynamic
-#'   sub-targets from `data`. For `combine()`, `data` must already
-#'   be a dynamic target.
+#'   sub-targets from `data`.
 #'
 #'  Differences from static branching:
 #'  - `...` must contain *unnamed* symbols with no values supplied,
