@@ -161,8 +161,8 @@ first_outdated <- function(config) {
     new_leaves <- setdiff(leaf_nodes(config$graph), out)
     do_build <- lightly_parallelize(
       X = new_leaves,
-      FUN = function(target) {
-        if (!config$cache$exists(key = target)) {
+      FUN = function(target, config) {
+        if (target_missing(target, config)) {
           return(TRUE)
         }
         meta <- drake_meta_(target, config)
@@ -171,7 +171,8 @@ first_outdated <- function(config) {
           check_trigger_dynamic(target, meta, meta_old, config) ||
           missing_subtargets(target, meta_old, config)
       },
-      jobs = config$jobs_preprocess
+      jobs = config$jobs_preprocess,
+      config = config
     )
     do_build <- unlist(do_build)
     out <- c(out, new_leaves[do_build])
