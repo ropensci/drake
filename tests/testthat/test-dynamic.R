@@ -290,6 +290,36 @@ test_with_dir("change 2 sub-deps (sub-target filtering)", {
   expect_equal(sort(out), sort(exp))
 })
 
+
+test_with_dir("identical sub-dep hashes", {
+  plan <- drake_plan(
+    x = rep("x", 4),
+    y = target(x, dynamic = map(x))
+  )
+  make(plan)
+  expect_equal(unlist(readd(y)), rep("x", 4))
+  plan <- drake_plan(
+    x = rep("x", 5),
+    y = target(x, dynamic = map(x))
+  )
+  config <- drake_config(plan)
+  make(plan)
+  expect_equal(unlist(readd(y)), rep("x", 5))
+  out <- justbuilt(config)
+  exp <- c("x", "y", subtargets(y)[5])
+  expect_equal(sort(out), sort(exp))
+  plan <- drake_plan(
+    x = rep("x", 3),
+    y = target(x, dynamic = map(x))
+  )
+  config <- drake_config(plan)
+  make(plan)
+  expect_equal(unlist(readd(y)), rep("x", 3))
+  out <- justbuilt(config)
+  exp <- c("x", "y")
+  expect_equal(sort(out), sort(exp))
+})
+
 test_with_dir("dynamic cross values", {
   plan <- drake_plan(
     x1 = letters[seq_len(2)],
