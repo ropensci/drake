@@ -287,13 +287,15 @@ run_native_backend <- function(config) {
     c("loop", "clustermq", "future")
   )
   if (igraph::gorder(config$envir_graph$graph)) {
-    get(
-      paste0("backend_", parallelism),
-      envir = getNamespace("drake")
-    )(config)
+    class(config) <- c(class(config), parallelism)
+    drake_backend(config)
   } else {
     config$logger$major("All targets are already up to date.", color = NULL)
   }
+}
+
+drake_backend <- function(config) {
+  UseMethod("drake_backend")
 }
 
 run_external_backend <- function(config) {

@@ -1,4 +1,4 @@
-backend_clustermq <- function(config) {
+drake_backend.clustermq <- function(config) {
   assert_pkg("clustermq", version = "0.8.8")
   config$queue <- priority_queue(
     config = config,

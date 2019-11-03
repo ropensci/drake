@@ -1,4 +1,4 @@
-backend_loop <- function(config) {
+drake_backend.loop <- function(config) {
   if (config$lock_envir) {
     lock_environment(config$envir)
     on.exit(unlock_environment(config$envir))
