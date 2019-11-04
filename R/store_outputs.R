@@ -206,7 +206,9 @@ dynamic_hashes <- function(value, size, config) {
 dynamic_hashes.drake_dynamic <- function(value, size, config) {
   vapply(
     seq_len(size),
-    dynamic_subvalue,
+    function(value, index) {
+      dynamic_subvalue(value = value, index = index)
+    },
     FUN.VALUE = character(1),
     value = value
   )
