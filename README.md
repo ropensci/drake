@@ -109,7 +109,7 @@ Too many data science projects follow a [Sisyphean loop](https://en.wikipedia.or
 3.  Discover an issue.
 4.  Rerun from scratch.
 
-Ordinarily, it is hard to avoid rerunning the code from scratch. <br>
+For projects with long runtimes, people tend to get stuck.<br>
 
 <center>
 <img src="https://docs.ropensci.org/drake/reference/figures/tweet.png" alt="tweet" align="center" style = "border: none; float: center;">
