@@ -100,6 +100,21 @@ test_with_dir("invalidating a subtarget invalidates the parent", {
   expect_equal(sort(c(justbuilt(config))), exp)
 })
 
+test_with_dir("lots of maps", {
+  scenario <- get_testing_scenario()
+  envir <- eval(parse(text = scenario$envir))
+  suppressWarnings(rm(x1, x2, x3, x4, x5, envir = envir))
+  plan <- drake_plan(
+    x1 = seq_len(4),
+    x2 = target(x1, dynamic = map(x1)),
+    x3 = target(x2, dynamic = map(x2)),
+    x4 = target(x3, dynamic = map(x3)),
+    x5 = target(x4, dynamic = map(x4))
+  )
+  make(plan)
+  expect_equal(unlist(readd(x5)), seq_len(4))
+})
+
 test_with_dir("dynamic map flow", {
   scenario <- get_testing_scenario()
   envir <- eval(parse(text = scenario$envir))

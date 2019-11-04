@@ -203,6 +203,10 @@ dynamic_subvalue.data.frame <- function(value, index) {
   value[index,, drop = FALSE] # nolint
 }
 
+dynamic_subvalue.drake_dynamic <- function(value, index) {
+  dynamic_subvalue_vector(value, index)
+}
+
 dynamic_subvalue.default <- function(value, index) {
   if (is.null(dim(value))) {
     dynamic_subvalue_vector(value, index)
@@ -314,7 +318,7 @@ read_dynamic_hashes <- function(target, config) {
   meta <- config$cache$get(target, namespace = "meta")
   if (is.null(meta$dynamic_hashes)) {
     value <- config$cache$get(target)
-    meta$dynamic_hashes <- dynamic_hashes(meta$size, value, config)
+    meta$dynamic_hashes <- dynamic_hashes(value, meta$size, config)
   }
   meta$dynamic_hashes
 }

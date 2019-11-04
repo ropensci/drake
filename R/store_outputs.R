@@ -171,7 +171,7 @@ finalize_meta <- function(target, value, meta, hash, config) {
     meta$subtargets <- config$layout[[target]]$subtargets
   }
   if (is_dynamic_dep(target, config)) {
-    meta$dynamic_hashes <- dynamic_hashes(meta$size, value, config)
+    meta$dynamic_hashes <- dynamic_hashes(value, meta$size, config)
   }
   meta
 }
@@ -199,7 +199,20 @@ finalize_triggers <- function(target, meta, config) {
   meta
 }
 
-dynamic_hashes <- function(size, value, config) {
+dynamic_hashes <- function(value, size, config) {
+  UseMethod("dynamic_hashes")
+}
+
+dynamic_hashes.drake_dynamic <- function(value, size, config) {
+  vapply(
+    seq_len(size),
+    dynamic_subvalue,
+    FUN.VALUE = character(1),
+    value = value
+  )
+}
+
+dynamic_hashes.default <- function(value, size, config) {
   vapply(
     seq_len(size),
     dynamic_hash,
