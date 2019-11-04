@@ -261,7 +261,7 @@ make <- function(
     cache = config$cache,
     jobs = config$jobs_preprocess
   )
-  envirs <- c("envir_graph", "envir_by", "envir_targets", "envir_subtargets")
+  envirs <- c("envir_graph", "envir_targets", "envir_subtargets")
   for (key in envirs) {
     remove(list = names(config[[key]]), envir = config[[key]])
   }

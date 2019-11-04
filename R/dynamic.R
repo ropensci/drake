@@ -401,15 +401,15 @@ get_dynamic_by <- function(target, config) {
     return(get(target, envir = config$envir, inherits = FALSE))
   }
   load_by(target, config)
-  get(target, envir = config$envir_by, inherits = FALSE)
+  get(target, envir = config$envir_targets, inherits = FALSE)
 }
 
 load_by <- function(target, config) {
-  if (exists(target, envir = config$envir_by, inherits = FALSE)) {
+  if (exists(target, envir = config$envir_targets, inherits = FALSE)) {
     return()
   }
   value <- config$cache$get(target, use_cache = FALSE)
-  assign(target, value, envir = config$envir_by)
+  assign(target, value, envir = config$envir_targets)
   invisible()
 }
 

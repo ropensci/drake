@@ -594,7 +594,6 @@ drake_config <- function(
     envir = envir,
     envir_graph = new.env(parent = emptyenv()),
     envir_targets = envir_targets,
-    envir_by = new.env(parent = emptyenv()),
     envir_subtargets = new.env(parent = envir_targets),
     cache = cache,
     parallelism = parallelism,
