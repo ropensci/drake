@@ -34,15 +34,28 @@ announce_build <- function(target, config) {
 }
 
 announce_dynamic <- function(target, config) {
-  msg <- ifelse(
+  class(target) <- ifelse(
     is_registered_dynamic(target, config),
     "gather",
     "dynamic"
   )
-  config$logger$minor(
-    msg,
+  announce_dynamic_impl(target, config)
+}
+
+announce_dynamic_impl <- function(target, config) {
+  UseMethod("announce_dynamic_impl")
+}
+
+announce_dynamic_impl.gather <- function(target, config) {
+  config$logger$minor(class(target), target, target = target)
+}
+
+announce_dynamic_impl.dynamic <- function(target, config) {
+  config$logger$major(
+    class(target),
     target,
-    target = target
+    target = target,
+    color = "dynamic"
   )
 }
 

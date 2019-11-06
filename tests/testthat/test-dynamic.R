@@ -1262,6 +1262,7 @@ test_with_dir("dynamic hpc", {
 test_with_dir("dynamic max_expand", {
   scenario <- get_testing_scenario()
   envir <- eval(parse(text = scenario$envir))
+  suppressWarnings(rm(dyn1, dyn2, dyn3, dyn4, dyn5, envir = envir))
   parallelism <- scenario$parallelism
   jobs <- scenario$jobs
   caching <- scenario$caching
@@ -1306,4 +1307,5 @@ test_with_dir("dynamic max_expand", {
   expect_equal(readd(dyn3), list(1L, 2L, 3L))
   expect_equal(readd(dyn4), list(c(1L, 1L), c(1L, 2L), c(1L, 3L)))
   expect_equal(readd(dyn5), list(1L, 2L, 3L))
+  suppressWarnings(rm(dyn1, dyn2, dyn3, dyn4, dyn5, envir = envir))
 })

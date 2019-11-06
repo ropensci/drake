@@ -93,7 +93,8 @@ text_color <- Vectorize(function(x) {
   color <- switch(
     x,
     default = "lightGray",
-    subtarget = "dodgerblue3",
+    dynamic = "dodgerblue3",
+    subtarget = "dodgerblue4",
     target = "green3",
     recover = "#ffd700",
     retry = "#9400d3",
