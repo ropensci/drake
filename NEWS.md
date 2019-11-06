@@ -14,6 +14,7 @@
 - Implement `plot(plan)` (#1036).
 - `vis_drake_graph()`, `drake_graph_info()`, and `render_drake_graph()` now 
   take arguments that allow behavior to be defined upon selection of nodes. (#1031, @mstr3336).
+- Add a new `max_expand` argument to `make()` and `drake_config()` to scale down dynamic branching (#1050, @hansvancalster).
 
 ## Enhancements
 
