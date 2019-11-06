@@ -572,7 +572,6 @@ plot.drake_plan <- function(x, ...) {
     targets_only = TRUE,
     main = "",
     hover = FALSE,
-    ncol_legend = 0,
     make_imports = FALSE,
     from_scratch = TRUE
   )
