@@ -155,14 +155,15 @@ NULL
 #' @param trace Logical, whether to add columns to show
 #'   what happens during target transformations.
 #' @param max_expand Positive integer, optional.
-#'   Maximum number of targets to generate in each
+#'   `max_expand` is the maximum number of targets to generate in each
 #'   `map()`, `split()`, or `cross()` transform.
-#'   If massive number of targets, consider setting `max_expand`
-#'   to a small number. That way, you can test and visualize
-#'   your workflow before scaling up to production.
-#'   Note: `max_expand` is not for production workflows.
-#'   When it comes time to generate the end product,
-#'   either unset `max_expand` or manually set it to `NULL`.
+#'   Useful if you have a massive plan and you want to
+#'   test and visualize a strategic subset of targets
+#'   before scaling up.
+#'   Note: the `max_expand` argument of `drake_plan()` and
+#'   `transform_plan()` is for static branching only.
+#'   The dynamic branching `max_expand`
+#'   is an argument of `make()` and `drake_config()`.
 #' @param tidy_eval Logical, whether to use tidy evaluation
 #'   (e.g. unquoting/`!!`) when resolving commands.
 #'   Tidy evaluation in transformations is always turned on

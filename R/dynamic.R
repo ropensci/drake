@@ -395,6 +395,9 @@ get_dynamic_size <- function(target, config) {
     return(ht_get(config$ht_dynamic_size, target))
   }
   size <- config$cache$get(target, namespace = "meta")$size
+  if (!is.null(config$max_expand)) {
+    size <- min(size, max_expand)
+  }
   stopifnot(size > 0L)
   ht_set(config$ht_dynamic_size, x = target, value = size)
   size

@@ -56,7 +56,8 @@ make(
   history = TRUE,
   recover = FALSE,
   recoverable = TRUE,
-  curl_handles = list()
+  curl_handles = list(),
+  max_expand = NULL
 )
 }
 \arguments{
@@ -527,6 +528,16 @@ could be the complete URL (\code{"http://httpbin.org/basic-auth/user/passwd"})
 or a part of the URL (e.g. \code{"http://httpbin.org/"} or
 \code{"http://httpbin.org/basic-auth/"}). If you have multiple handles
 whose names match your URL, \code{drake} will choose the closest match.}
+
+\item{max_expand}{Positive integer, optional.
+\code{max_expand} is the maximum number of targets to generate in each
+\code{map()}, \code{cross()}, or \code{combine()} dynamic transform.
+Useful if you have a massive number of dynamic sub-targets and you want to
+work with only the first few sub-targets before scaling up.
+Note: the \code{max_expand} argument of \code{make()} and
+\code{drake_config()} is for dynamic branching only.
+The static branching \code{max_expand}
+is an argument of \code{drake_plan()} and \code{transform_plan()}.}
 }
 \value{
 nothing

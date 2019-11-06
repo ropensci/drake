@@ -174,7 +174,8 @@ make <- function(
   history = TRUE,
   recover = FALSE,
   recoverable = TRUE,
-  curl_handles = list()
+  curl_handles = list(),
+  max_expand = NULL
 ) {
   check_make_call(match.call())
   force(envir)
@@ -229,13 +230,15 @@ make <- function(
       history = history,
       recover = recover,
       recoverable = recoverable,
-      curl_handles = curl_handles
+      curl_handles = curl_handles,
+      max_expand = max_expand
     )
   }
   config$logger$minor("begin make()")
   runtime_checks(config = config)
   config$running_make <- TRUE
   config$ht_dynamic <- ht_new()
+  config$ht_dynamic_size <- ht_new()
   config$cache$reset_memo_hash()
   on.exit(config$cache$reset_memo_hash())
   config$envir_subtargets[[drake_envir_marker]] <- TRUE
@@ -261,7 +264,13 @@ make <- function(
     cache = config$cache,
     jobs = config$jobs_preprocess
   )
-  envirs <- c("envir_graph", "envir_targets", "envir_subtargets")
+  envirs <- c(
+    "envir_graph",
+    "envir_targets",
+    "envir_subtargets",
+    "ht_dynamic",
+    "ht_dynamic_size"
+  )
   for (key in envirs) {
     remove(list = names(config[[key]]), envir = config[[key]])
   }

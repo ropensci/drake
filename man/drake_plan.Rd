@@ -47,14 +47,15 @@ Tidy evaluation in transformations is always turned on
 regardless of the value you supply to this argument.}
 
 \item{max_expand}{Positive integer, optional.
-Maximum number of targets to generate in each
+\code{max_expand} is the maximum number of targets to generate in each
 \code{map()}, \code{split()}, or \code{cross()} transform.
-If massive number of targets, consider setting \code{max_expand}
-to a small number. That way, you can test and visualize
-your workflow before scaling up to production.
-Note: \code{max_expand} is not for production workflows.
-When it comes time to generate the end product,
-either unset \code{max_expand} or manually set it to \code{NULL}.}
+Useful if you have a massive plan and you want to
+test and visualize a strategic subset of targets
+before scaling up.
+Note: the \code{max_expand} argument of \code{drake_plan()} and
+\code{transform_plan()} is for static branching only.
+The dynamic branching \code{max_expand}
+is an argument of \code{make()} and \code{drake_config()}.}
 }
 \value{
 A data frame of targets, commands, and optional

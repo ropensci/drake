@@ -455,6 +455,16 @@
 #'   `"http://httpbin.org/basic-auth/"`). If you have multiple handles
 #'   whose names match your URL, `drake` will choose the closest match.
 #'
+#' @param max_expand Positive integer, optional.
+#'   `max_expand` is the maximum number of targets to generate in each
+#'   `map()`, `cross()`, or `combine()` dynamic transform.
+#'   Useful if you have a massive number of dynamic sub-targets and you want to
+#'   work with only the first few sub-targets before scaling up.
+#'   Note: the `max_expand` argument of `make()` and
+#'   `drake_config()` is for dynamic branching only.
+#'   The static branching `max_expand`
+#'   is an argument of `drake_plan()` and `transform_plan()`.
+#'
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {
@@ -523,7 +533,8 @@ drake_config <- function(
   history = TRUE,
   recover = FALSE,
   recoverable = TRUE,
-  curl_handles = list()
+  curl_handles = list(),
+  max_expand = NULL
 ) {
   logger <- logger(verbose = verbose, file = console_log_file)
   logger$minor("begin drake_config()")
@@ -630,8 +641,8 @@ drake_config <- function(
     recover = recover,
     recoverable = recoverable,
     curl_handles = curl_handles,
-    ht_dynamic_size = ht_new(),
-    ht_dynamic_deps = ht_dynamic_deps
+    ht_dynamic_deps = ht_dynamic_deps,
+    max_expand = max_expand
   )
   config_checks(out)
   logger$minor("end drake_config()")
