@@ -353,5 +353,11 @@ trigger_dynamic <- function(target, meta, meta_old, config) {
     return(FALSE)
   }
   old_hash <- meta_elt(field = "dynamic_dependency_hash", meta = meta_old)
-  !identical(meta$dynamic_dependency_hash, old_hash)
+  if (!identical(meta$dynamic_dependency_hash, old_hash)) {
+    return(TRUE)
+  }
+  if (!identical(meta$max_expand, meta_old$max_expand)) {
+    return(TRUE)
+  }
+  FALSE
 }

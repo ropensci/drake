@@ -263,7 +263,16 @@ subtarget_names <- function(target, config) {
   hashes <- subtarget_hashes(dynamic, target, hashes, config)
   hashes <- vapply(hashes, shorten_dynamic_hash, FUN.VALUE = character(1))
   out <- paste(target, hashes, sep = "_")
-  make_unique(out)
+  out <- make_unique(out)
+  max_expand_dynamic(out, config)
+}
+
+max_expand_dynamic <- function(targets, config) {
+  if (is.null(config$max_expand)) {
+    return(targets)
+  }
+  size <- min(length(targets), config$max_expand)
+  targets[seq_len(size)]
 }
 
 shorten_dynamic_hash <- function(hash) {
@@ -395,9 +404,6 @@ get_dynamic_size <- function(target, config) {
     return(ht_get(config$ht_dynamic_size, target))
   }
   size <- config$cache$get(target, namespace = "meta")$size
-  if (!is.null(config$max_expand)) {
-    size <- min(size, max_expand)
-  }
   stopifnot(size > 0L)
   ht_set(config$ht_dynamic_size, x = target, value = size)
   size

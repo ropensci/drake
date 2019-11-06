@@ -1258,3 +1258,52 @@ test_with_dir("dynamic hpc", {
     detach("package:clustermq", unload = TRUE) # nolint
   }
 })
+
+test_with_dir("dynamic max_expand", {
+  scenario <- get_testing_scenario()
+  envir <- eval(parse(text = scenario$envir))
+  parallelism <- scenario$parallelism
+  jobs <- scenario$jobs
+  caching <- scenario$caching
+  plan <- drake_plan(
+    dyn1 = seq_len(10),
+    dyn2 = seq_len(10),
+    dyn3 = target(dyn1, dynamic = map(dyn1)),
+    dyn4 = target(c(dyn1, dyn2), dynamic = cross(dyn1, dyn2)),
+    dyn5 = target(unlist(dyn1), dynamic = combine(dyn1, .by = dyn2))
+  )
+  make(
+    plan,
+    envir = envir,
+    parallelism = parallelism,
+    jobs = jobs,
+    caching = caching,
+    max_expand = 2
+  )
+  expect_equal(readd(dyn1), seq_len(10))
+  expect_equal(readd(dyn2), seq_len(10))
+  expect_equal(readd(dyn3), list(1L, 2L))
+  expect_equal(readd(dyn4), list(c(1L, 1L), c(1L, 2L)))
+  expect_equal(readd(dyn5), list(1L, 2L))
+  config <- drake_config(plan)
+  make(plan, max_expand = 4)
+  out <- justbuilt(config)
+  exp <- c(
+    "dyn3",
+    "dyn4",
+    "dyn5",
+    subtargets(dyn3)[c(3, 4)],
+    subtargets(dyn4)[c(3, 4)],
+    subtargets(dyn5)[c(3, 4)]
+  )
+  expect_equal(sort(out), sort(exp))
+  expect_equal(readd(dyn3), list(1L, 2L, 3L, 4L))
+  expect_equal(readd(dyn4), list(c(1L, 1L), c(1L, 2L), c(1L, 3L), c(1L, 4L)))
+  expect_equal(readd(dyn5), list(1L, 2L, 3L, 4L))
+  make(plan, max_expand = 3)
+  expect_equal(sort(justbuilt(config)), sort(c("dyn3", "dyn4", "dyn5")))
+  expect_equal(sort(out), sort(exp))
+  expect_equal(readd(dyn3), list(1L, 2L, 3L))
+  expect_equal(readd(dyn4), list(c(1L, 1L), c(1L, 2L), c(1L, 3L)))
+  expect_equal(readd(dyn5), list(1L, 2L, 3L))
+})

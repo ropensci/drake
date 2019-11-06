@@ -64,6 +64,7 @@ drake_meta_impl.default <- function(target, config) {
   }
   if (is_dynamic(target, config)) {
     meta$dynamic_dependency_hash <- dynamic_dependency_hash(target, config)
+    meta$max_expand <- config$max_expand
   }
   meta
 }
