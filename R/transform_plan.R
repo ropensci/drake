@@ -77,6 +77,8 @@
 #' @param .trace Symbol or vector of symbols for the dynamic trace.
 #'   The dynamic trace allows you to keep track of the values of
 #'   dynamic dependencies are associated with individual sub-targets.
+#'   For `combine()`, `.trace` must either be empty or the same as the
+#'   variable given for `.by`.
 #'   See [dynamic_trace()] for details.
 #' @examples
 #' # Static branching

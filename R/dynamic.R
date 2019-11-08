@@ -43,8 +43,48 @@ dynamic_build <- function(target, meta, config) {
   subtargets <- config$layout[[target]]$subtargets
   meta$time_command <- proc.time() - meta$time_start
   value <- config$cache$mget_hash(subtargets)
+  value <- append_trace(target, value, config)
   class(value) <- "drake_dynamic"
   list(target = target, meta = meta, value = value)
+}
+
+append_trace <- function(target, value, config) {
+  layout <- config$layout[[target]]
+  dynamic <- layout$dynamic
+  vars <- lapply(layout$deps_dynamic_trace, get, envir = config$envir$targets)
+  vars <- lapply(vars, atomicize_dynamic)
+  append_trace_impl(dynamic, value, vars)
+}
+
+append_trace_impl <- function(dynamic, value, vars) {
+  UseMethod("append_trace_impl")
+}
+
+append_trace_impl.map <- function(dynamic, value, vars) {
+  attr(value, "dynamic_trace") <- vars
+  value
+}
+
+append_trace_impl.cross <- function(dynamic, value, vars) {
+  # Need to expand the grid
+
+}
+
+append_trace_impl.combine <- function(dynamic, value, vars) {
+  # Need to use .by
+}
+
+atomicize_dynamic <- function(x) {
+  UseMethod("atomicize_dynamic")
+}
+
+atomicize_dynamic.drake_dynamic <- function(x) {
+  attributes(x) <- NULL
+  x
+}
+
+atomicize_dynamic.default <- function(x) {
+  x
 }
 
 register_subtargets <- function(target, static_ok, subdeps_ok, config) {
