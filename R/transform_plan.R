@@ -30,9 +30,9 @@
 #' @section Dynamic branching:
 #'   Dynamic branching is not yet implemented,
 #'   but this is what it usage will look like.
-#'   - `map(...)`
-#'   - `cross(...)`
-#'   - `combine(..., .by)`
+#'   - `map(..., .trace)`
+#'   - `cross(..., .trace)`
+#'   - `combine(..., .by, .trace)`
 #'
 #'  `map()` and `cross()` create dynamic sub-targets from the variables
 #'  supplied to the dots. As with static branching, the variables
@@ -74,6 +74,10 @@
 #'   For dynamic branching, `.by` can only take one variable at a time,
 #'   and that variable must be a vector. Ideally, it should take
 #'   little space in memory.
+#' @param .trace Symbol or vector of symbols for the dynamic trace.
+#'   The dynamic trace allows you to keep track of the values of
+#'   dynamic dependencies are associated with individual sub-targets.
+#'   See [dynamic_trace()] for details.
 #' @examples
 #' # Static branching
 #' models <- c("glm", "hierarchical")

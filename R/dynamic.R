@@ -240,7 +240,7 @@ match_call_impl <- function(dynamic) {
 }
 
 match_call_impl.map <- match_call_impl.cross <- function(dynamic) {
-  unname(match.call(definition = def_map, call = dynamic))
+  match.call(definition = def_map, call = dynamic)
 }
 
 match_call_impl.combine <- function(dynamic) {
@@ -248,11 +248,11 @@ match_call_impl.combine <- function(dynamic) {
 }
 
 # nocov start
-def_map <- function(...) {
+def_map <- function(..., .trace = NULL) {
   NULL
 }
 
-def_combine <- function(..., .by = NULL) {
+def_combine <- function(..., .by = NULL, .trace = NULL) {
   NULL
 }
 # nocov end

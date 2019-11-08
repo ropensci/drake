@@ -187,6 +187,8 @@ cdl_prepare_layout <- function(config, layout) {
     allowed_globals = config$ht_globals
   )
   layout$deps_dynamic <- cdl_dynamic_dependencies(layout$dynamic, config)
+  layout$deps_dynamic_trace <- cdl_dynamic_trace(layout$dynamic, config)
+  cdl_assert_trace(layout)
   layout$command_standardized <- cdl_standardize_command(layout$command)
   if (inherits(layout$dynamic, "dynamic")) {
     dynamic_command <- cdl_standardize_command(layout$dynamic)
@@ -281,7 +283,32 @@ cdl_command_dependencies <- function(
 }
 
 cdl_dynamic_dependencies <- function(dynamic, config) {
+  if (length(dynamic) == 1L && is.na(dynamic)) {
+    return(character(0))
+  }
+  dynamic$.trace <- NULL
   ht_filter(config$ht_globals, all.vars(dynamic))
+}
+
+cdl_dynamic_trace <- function(dynamic, config) {
+  if (length(dynamic) == 1L && is.na(dynamic)) {
+    return(character(0))
+  }
+  ht_filter(config$ht_globals, all.vars(dynamic$.trace))
+}
+
+cdl_assert_trace <- function(layout) {
+  bad <- setdiff(layout$deps_dynamic_trace, layout$deps_dynamic)
+  if (!length(bad)) {
+    return()
+  }
+  stop(
+    "illegal dynamic trace variables for target ",
+    layout$target,
+    ":\n",
+    multiline_message(bad),
+    call. = FALSE
+  )
 }
 
 # Get the command ready for tidy eval prep
