@@ -51,27 +51,26 @@ dynamic_build <- function(target, meta, config) {
 append_trace <- function(target, value, config) {
   layout <- config$layout[[target]]
   dynamic <- layout$dynamic
-  vars <- lapply(layout$deps_dynamic_trace, get, envir = config$envir$targets)
-  vars <- lapply(vars, atomicize_dynamic)
-  append_trace_impl(dynamic, value, vars)
+  trace <- lapply(layout$deps_dynamic_trace, get, envir = config$envir$targets)
+  trace <- lapply(trace, atomicize_dynamic)
+  append_trace_impl(dynamic, value, trace)
 }
 
-append_trace_impl <- function(dynamic, value, vars) {
+append_trace_impl <- function(dynamic, value, trace) {
   UseMethod("append_trace_impl")
 }
 
-append_trace_impl.map <- function(dynamic, value, vars) {
-  attr(value, "dynamic_trace") <- vars
+append_trace_impl.map <- function(dynamic, value, trace) {
+  attr(value, "dynamic_trace") <- trace
   value
 }
 
-append_trace_impl.cross <- function(dynamic, value, vars) {
-  # Need to expand the grid
-
+append_trace_impl.cross <- function(dynamic, value, trace) {
+  value
 }
 
-append_trace_impl.combine <- function(dynamic, value, vars) {
-  # Need to use .by
+append_trace_impl.combine <- function(dynamic, value, trace) {
+  value
 }
 
 atomicize_dynamic <- function(x) {

@@ -307,7 +307,6 @@ test_with_dir("change 2 sub-deps (sub-target filtering)", {
   expect_equal(sort(out), sort(exp))
 })
 
-
 test_with_dir("identical sub-dep hashes", {
   plan <- drake_plan(
     x = rep("x", 4),

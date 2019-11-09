@@ -186,9 +186,9 @@ cdl_prepare_layout <- function(config, layout) {
     exclude = layout$target,
     allowed_globals = config$ht_globals
   )
-  layout$deps_dynamic <- cdl_dynamic_dependencies(layout$dynamic, config)
+  layout$deps_dynamic <- cdl_dynamic_deps(layout$dynamic, config)
   layout$deps_dynamic_trace <- cdl_dynamic_trace(layout$dynamic, config)
-  cdl_assert_trace(layout)
+  cdl_assert_trace(layout$dynamic, layout)
   layout$command_standardized <- cdl_standardize_command(layout$command)
   if (inherits(layout$dynamic, "dynamic")) {
     dynamic_command <- cdl_standardize_command(layout$dynamic)
@@ -282,33 +282,63 @@ cdl_command_dependencies <- function(
   select_nonempty(deps)
 }
 
-cdl_dynamic_dependencies <- function(dynamic, config) {
-  if (length(dynamic) == 1L && is.na(dynamic)) {
-    return(character(0))
-  }
+cdl_dynamic_deps <- function(dynamic, config) {
+  UseMethod("cdl_dynamic_deps")
+}
+
+cdl_dynamic_deps.dynamic <- function(dynamic, config) {
   dynamic$.trace <- NULL
   ht_filter(config$ht_globals, all.vars(dynamic))
 }
 
+cdl_dynamic_deps.default <- function(dynamic, config) {
+  character(0)
+}
+
 cdl_dynamic_trace <- function(dynamic, config) {
-  if (length(dynamic) == 1L && is.na(dynamic)) {
-    return(character(0))
-  }
+  UseMethod("cdl_dynamic_trace")
+}
+
+cdl_dynamic_trace.dynamic <- function(dynamic, config) {
   ht_filter(config$ht_globals, all.vars(dynamic$.trace))
 }
 
-cdl_assert_trace <- function(layout) {
+cdl_dynamic_trace.default <- function(dynamic, config) {
+  character(0)
+}
+
+cdl_assert_trace <- function(dynamic, layout) {
+  UseMethod("cdl_assert_trace")
+}
+
+cdl_assert_trace.combine <- function(dynamic, layout) {
+  bad <- setdiff(layout$deps_dynamic_trace, layout$deps_dynamic)
+  if (!length(bad)) {
+    return()
+  }
+    browser()
+}
+
+cdl_assert_trace.dynamic <- function(dynamic, layout) {
   bad <- setdiff(layout$deps_dynamic_trace, layout$deps_dynamic)
   if (!length(bad)) {
     return()
   }
   stop(
+    "in map() and cross(), ",
+    "all dynamic trace variables must be ",
+    "existing grouping variables, e.g. map(x, .trace = x) ",
+    "and not map(x, .trace = y). ",
     "illegal dynamic trace variables for target ",
     layout$target,
     ":\n",
     multiline_message(bad),
     call. = FALSE
   )
+}
+
+cdl_assert_trace.default <- function(dynamic, layout) {
+  character(0)
 }
 
 # Get the command ready for tidy eval prep

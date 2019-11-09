@@ -46,6 +46,8 @@ little space in memory.}
 \item{.trace}{Symbol or vector of symbols for the dynamic trace.
 The dynamic trace allows you to keep track of the values of
 dynamic dependencies are associated with individual sub-targets.
+For \code{combine()}, \code{.trace} must either be empty or the same as the
+variable given for \code{.by}.
 See \code{\link[=dynamic_trace]{dynamic_trace()}} for details.}
 }
 \description{
