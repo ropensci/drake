@@ -1309,7 +1309,7 @@ test_with_dir("dynamic max_expand", {
   suppressWarnings(rm(dyn1, dyn2, dyn3, dyn4, dyn5, envir = envir))
 })
 
-test_with_dir("bad trace (#1052)", {
+test_with_dir("bad cross trace (#1052)", {
   plan <- drake_plan(
     a = letters[seq_len(2)],
     b = seq_len(2),
@@ -1318,4 +1318,18 @@ test_with_dir("bad trace (#1052)", {
     d = target(unlist(c), dynamic = combine(c, .by = a_crossed))
   )
   expect_error(drake_config(plan), regexp = "illegal dynamic trace variables")
+})
+
+test_with_dir("bad combine trace (#1052)", {
+  plan <- drake_plan(
+    a = letters[seq_len(2)],
+    b = seq_len(2),
+    c = target(paste(a, b), dynamic = cross(a, b, .trace = c(a, b))),
+    a_crossed = dynamic_trace(c, "a"),
+    d = target(unlist(c), dynamic = combine(c, .by = a_crossed, .trace = a))
+  )
+  expect_error(
+    drake_config(plan),
+    regexp = "the only legal dynamic trace variable"
+  )
 })

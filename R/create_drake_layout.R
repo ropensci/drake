@@ -316,7 +316,16 @@ cdl_assert_trace.combine <- function(dynamic, layout) {
   if (!length(bad)) {
     return()
   }
-    browser()
+  stop(
+    "in combine(), ",
+    "the only legal dynamic trace variable ",
+    "is the one you select with `.by`. ",
+    "illegal dynamic trace variables for target ",
+    layout$target,
+    ":\n",
+    multiline_message(bad),
+    call. = FALSE
+  )
 }
 
 cdl_assert_trace.dynamic <- function(dynamic, layout) {
