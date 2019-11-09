@@ -1340,7 +1340,7 @@ test_with_dir("bad combine trace (#1052)", {
     a = letters[seq_len(2)],
     b = seq_len(2),
     c = target(paste(a, b), dynamic = cross(a, b, .trace = c(a, b))),
-    a_crossed = dynamic_trace(c, "a"),
+    a_crossed = get_trace(c, "a"),
     d = target(unlist(c), dynamic = combine(c, .by = a_crossed, .trace = a))
   )
   expect_error(
@@ -1357,12 +1357,14 @@ test_with_dir("dynamic map trace (#1052)", {
   )
   make(plan)
   value <- drake_cache()$get("c")
-  expect_equal(dynamic_trace("a", value), readd(a))
+  expect_equal(get_trace("a", value), readd(a))
+  expect_equal(read_trace("a", "c"), readd(a))
   exp <- as.character(drake_cache()$get("b"))
-  expect_equal(dynamic_trace("b", value), exp)
+  expect_equal(read_trace("b", "c"), exp)
 })
 
 test_with_dir("dynamic cross trace (#1052)", {
+  expect_error(read_trace("a", "b"))
   plan <- drake_plan(
     w = LETTERS[seq_len(3)],
     x = letters[seq_len(2)],
@@ -1371,11 +1373,15 @@ test_with_dir("dynamic cross trace (#1052)", {
   )
   make(plan)
   value <- drake_cache()$get("z")
-  out <- dynamic_trace("w", value)
+  out <- get_trace("w", value)
   exp <- rep(LETTERS[seq_len(3)], each = 4)
   expect_equal(out, exp)
-  out <- dynamic_trace("x", value)
+  out <- read_trace("w", "z")
+  expect_equal(out, exp)
+  out <- get_trace("x", value)
   exp <- rep(letters[c(1, 1, 2, 2)], times = 3)
+  expect_equal(out, exp)
+  out <- read_trace("x", "z")
   expect_equal(out, exp)
 })
 
@@ -1384,10 +1390,11 @@ test_with_dir("dynamic combine trace (#1052)", {
     w = LETTERS[seq_len(3)],
     x = letters[seq_len(2)],
     y = target(c(w, x), dynamic = cross(w, x, .trace = w)),
-    w_tr = dynamic_trace("w", y),
+    w_tr = get_trace("w", y),
     z = target(y, dynamic = combine(y, .by = w_tr, .trace = w_tr))
   )
   make(plan)
   value <- drake_cache()$get("z")
-  expect_equal(dynamic_trace("w_tr", value), LETTERS[seq_len(3)])
+  expect_equal(get_trace("w_tr", value), LETTERS[seq_len(3)])
+  expect_equal(read_trace("w_tr", "z"), LETTERS[seq_len(3)])
 })
