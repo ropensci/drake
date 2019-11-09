@@ -103,7 +103,7 @@ read_trace <- function(
     stop("cannot find drake cache.")
   }
   cache <- decorate_storr(cache)
-  value <- cache$get(standardize_key(target),use_cache = FALSE)
+  value <- cache$get(standardize_key(target), use_cache = FALSE)
   get_trace(trace, value)
 }
 
@@ -183,7 +183,7 @@ get_trace_impl.map <- function(dynamic, value, layout, config) {
     envir = config$envir_targets,
     inherits = FALSE
   )
-  vars <- lapply(vars, atomicize_dynamic)
+  vars <- lapply(vars, chr_dynamic)
   names(vars) <- layout$deps_dynamic_trace
   vars
 }
@@ -195,7 +195,7 @@ get_trace_impl.cross <- function(dynamic, value, layout, config) {
     envir = config$envir_targets,
     inherits = FALSE
   )
-  vars <- lapply(vars, atomicize_dynamic)
+  vars <- lapply(vars, chr_dynamic)
   names(vars) <- layout$deps_dynamic
   index <- lapply(vars, seq_along)
   index <- rev(expand.grid(rev(index)))
@@ -217,15 +217,15 @@ get_trace_impl.combine <- function(dynamic, value, layout, config) {
   out
 }
 
-atomicize_dynamic <- function(x) {
-  UseMethod("atomicize_dynamic")
+chr_dynamic <- function(x) {
+  UseMethod("chr_dynamic")
 }
 
-atomicize_dynamic.drake_dynamic <- function(x) {
+chr_dynamic.drake_dynamic <- function(x) {
   as.character(x)
 }
 
-atomicize_dynamic.default <- function(x) {
+chr_dynamic.default <- function(x) {
   x
 }
 

@@ -79,7 +79,7 @@
 #'   dynamic dependencies are associated with individual sub-targets.
 #'   For `combine()`, `.trace` must either be empty or the same as the
 #'   variable given for `.by`.
-#'   See [dynamic_trace()] for details.
+#'   See [get_trace()] and [read_trace()] for examples and other details.
 #' @examples
 #' # Static branching
 #' models <- c("glm", "hierarchical")

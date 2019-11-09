@@ -48,7 +48,7 @@ The dynamic trace allows you to keep track of the values of
 dynamic dependencies are associated with individual sub-targets.
 For \code{combine()}, \code{.trace} must either be empty or the same as the
 variable given for \code{.by}.
-See \code{\link[=dynamic_trace]{dynamic_trace()}} for details.}
+See \code{\link[=get_trace]{get_trace()}} and \code{\link[=read_trace]{read_trace()}} for examples and other details.}
 }
 \description{
 In \code{\link[=drake_plan]{drake_plan()}}, you can define whole batches
