@@ -186,7 +186,11 @@ cdl_prepare_layout <- function(config, layout) {
     exclude = layout$target,
     allowed_globals = config$ht_globals
   )
-  layout$deps_dynamic <- cdl_dynamic_deps(layout$dynamic, config)
+  layout$deps_dynamic <- cdl_dynamic_deps(
+    layout$dynamic,
+    layout$target,
+    config
+  )
   layout$deps_dynamic_trace <- cdl_dynamic_trace(layout$dynamic, config)
   cdl_assert_trace(layout$dynamic, layout)
   layout$command_standardized <- cdl_standardize_command(layout$command)
@@ -286,16 +290,20 @@ cdl_command_dependencies <- function(
   select_nonempty(deps)
 }
 
-cdl_dynamic_deps <- function(dynamic, config) {
+cdl_dynamic_deps <- function(dynamic, target, config) {
   UseMethod("cdl_dynamic_deps")
 }
 
-cdl_dynamic_deps.dynamic <- function(dynamic, config) {
+cdl_dynamic_deps.dynamic <- function(dynamic, target, config) {
   dynamic$.trace <- NULL
-  ht_filter(config$ht_globals, all.vars(dynamic))
+  out <- ht_filter(config$ht_globals, all.vars(dynamic))
+  if (!length(out)) {
+    stop("no grouping variables for dynamic target ", target, call. = FALSE)
+  }
+  out
 }
 
-cdl_dynamic_deps.default <- function(dynamic, config) {
+cdl_dynamic_deps.default <- function(dynamic, target, config) {
   character(0)
 }
 

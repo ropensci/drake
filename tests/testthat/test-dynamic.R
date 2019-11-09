@@ -88,6 +88,11 @@ test_with_dir("dynamic subvalues", {
   expect_equivalent(dynamic_subvalue(m, c(1, 2)), m[c(1, 2),,,,]) # nolint
 })
 
+test_with_dir("empty dynamic transform", {
+  plan <- drake_plan(x = target("x", dynamic = map()))
+  expect_error(make(plan), regexp = "no grouping variables")
+})
+
 test_with_dir("invalidating a subtarget invalidates the parent", {
   plan <- drake_plan(
     x = seq_len(2),

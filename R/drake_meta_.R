@@ -114,9 +114,6 @@ dependency_hash <- function(target, config) {
 dynamic_dependency_hash <- function(target, config) {
   layout <- config$layout[[target]]
   deps_dynamic <- layout$deps_dynamic
-  if (!length(deps_dynamic)) {
-    return("")
-  }
   deps_trace <- sort(unique(layout$deps_dynamic_trace))
   deps <- c(deps_dynamic, deps_trace)
   dependency_hash_impl(deps, config)
