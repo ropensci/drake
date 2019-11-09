@@ -542,6 +542,23 @@ test_with_dir("dynamic cross flow", {
   assert_vals(vals)
 })
 
+test_with_dir("switch the order of cross sub-targets", {
+  plan <- drake_plan(
+    x = LETTERS[seq_len(2)],
+    y = letters[seq_len(2)],
+    z = target(c(x, y), dynamic = cross(x, y))
+  )
+  make(plan)
+  plan <- drake_plan(
+    x = LETTERS[seq_len(2)],
+    y = letters[seq_len(2)],
+    z = target(c(x, y), dynamic = cross(y, x))
+  )
+  make(plan)
+  config <- drake_config(plan)
+  expect_equal(justbuilt(config), "z")
+})
+
 test_with_dir("dynamic combine flow without by", {
   scenario <- get_testing_scenario()
   envir <- eval(parse(text = scenario$envir))

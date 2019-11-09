@@ -379,19 +379,20 @@ dynamic_hash_list <- function(dynamic, target, config) {
 }
 
 dynamic_hash_list.map <- function(dynamic, target, config) {
-  deps <- config$layout[[target]]$deps_dynamic
+  deps <- sort(config$layout[[target]]$deps_dynamic)
   hashes <- lapply(deps, read_dynamic_hashes, config = config)
   assert_equal_branches(target, deps, hashes)
   hashes
 }
 
 dynamic_hash_list.cross <- function(dynamic, target, config) {
-  deps <- config$layout[[target]]$deps_dynamic
+  deps <- sort(config$layout[[target]]$deps_dynamic)
   lapply(deps, read_dynamic_hashes, config = config)
 }
 
 dynamic_hash_list.combine <- function(dynamic, target, config) {
-  out <- lapply(which_vars(dynamic), read_dynamic_hashes, config = config)
+  deps <- sort(which_vars(dynamic))
+  out <- lapply(deps, read_dynamic_hashes, config = config)
   if (!is.null(dynamic$.by)) {
     out[["_by"]] <- read_dynamic_hashes(deparse(dynamic$.by), config)
   }
