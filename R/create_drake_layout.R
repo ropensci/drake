@@ -224,6 +224,10 @@ cdl_prepare_layout <- function(config, layout) {
       x = layout[[field]]$globals
     )
   }
+  layout$deps_build$memory <- base::union(
+    layout$deps_build$memory,
+    layout$deps_dynamic_trace
+  )
   layout
 }
 
@@ -378,7 +382,6 @@ cdl_std_dyn_cmd <- function(x) {
   transform <- class(x)
   vars <- sort(all.vars(x))
   by <- as.character(x$.by)
-  trace <- sort(as.character(x$.trace))
   paste(c(transform, vars, by, trace), collapse = " ")
 }
 

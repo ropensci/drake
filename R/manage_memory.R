@@ -131,6 +131,71 @@ try_load_target <- function(target, config) {
   )
 }
 
+load_target <- function(target, cache, namespace, envir, verbose, lazy) {
+  class(target) <- lazy
+  load_target_impl(target, cache, namespace, envir, verbose)
+}
+
+load_target_impl <- function(target, cache, namespace, envir, verbose) {
+  UseMethod("load_target_impl")
+}
+
+load_target_impl.eager <- function(target, cache, namespace, envir, verbose) {
+  value <- cache$get(
+    key = target,
+    namespace = namespace,
+    use_cache = FALSE
+  )
+  assign(x = target, value = value, envir = envir)
+  local <- environment()
+  rm(value, envir = local)
+  invisible()
+}
+
+load_target_impl.promise <- function(target, cache, namespace, envir, verbose) {
+  eval_env <- environment()
+  delayedAssign(
+    x = target,
+    value = cache$get(
+      key = target,
+      namespace = namespace,
+      use_cache = FALSE
+    ),
+    eval.env = eval_env,
+    assign.env = envir
+  )
+}
+
+load_target_impl.bind <- function(target, cache, namespace, envir, verbose) {
+  assert_pkg("bindr")
+  # Allow active bindings to overwrite existing variables.
+  if (exists(x = target, envir = envir, inherits = FALSE)) {
+    message(
+      "Replacing already-loaded variable ", target,
+      " with an active binding."
+    )
+    remove(list = target, envir = envir)
+  }
+  bindr::populate_env(
+    env = envir,
+    names = as.character(target),
+    fun = function(key, cache, namespace) {
+      if (!length(namespace)) {
+        # Now impractical to cover because loadd() checks the namespace,
+        # but good to have around anyway.
+        namespace <- cache$default_namespace # nocov
+      }
+      cache$get(
+        key = as.character(key),
+        namespace = as.character(namespace),
+        use_cache = FALSE
+      )
+    },
+    cache = cache,
+    namespace = namespace
+  )
+}
+
 load_subtarget_subdeps <- function(subtarget, config) {
   if (!is_subtarget(subtarget, config)) {
     return()
@@ -163,7 +228,6 @@ load_by_as_subdep <- function(parent, index, config) {
     inherits = FALSE
   )
 }
-
 
 load_subtarget_subdep <- function(subtarget, dep, deps, config) {
   index <- unlist(deps[[dep]])

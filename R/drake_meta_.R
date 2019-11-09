@@ -101,24 +101,28 @@ dependency_hash <- function(target, config) {
     deps <- c(deps, x$file_in, x$knitr_in)
   }
   deps <- setdiff(deps, layout$deps_dynamic)
-  dependency_hash_impl(deps, config, sort = TRUE)
-}
-
-dynamic_dependency_hash <- function(target, config) {
-  deps <- config$layout[[target]]$deps_dynamic
-  dependency_hash_impl(deps, config, sort = FALSE)
-}
-
-dependency_hash_impl <- function(deps, config, sort) {
   if (!length(deps)) {
     return("")
   }
   deps <- unlist(deps)
   deps <- as.character(deps)
   deps <- unique(deps)
-  if (sort) {
-    deps <- sort(deps)
+  deps <- sort(deps)
+  dependency_hash_impl(deps, config)
+}
+
+dynamic_dependency_hash <- function(target, config) {
+  layout <- config$layout[[target]]
+  deps_dynamic <- layout$deps_dynamic
+  if (!length(deps_dynamic)) {
+    return("")
   }
+  deps_trace <- sort(unique(layout$deps_dynamic_trace))
+  deps <- c(deps_dynamic, deps_trace)
+  dependency_hash_impl(deps, config)
+}
+
+dependency_hash_impl <- function(deps, config) {
   out <- config$cache$memo_hash(
     x = deps,
     fun = self_hash,

@@ -177,41 +177,47 @@ get_trace_impl <- function(dynamic, value, layout, config) {
 }
 
 get_trace_impl.map <- function(dynamic, value, layout, config) {
-  vars <- lapply(
+  trace <- lapply(
     layout$deps_dynamic_trace,
     get,
     envir = config$envir_targets,
     inherits = FALSE
   )
-  vars <- lapply(vars, chr_dynamic)
-  names(vars) <- layout$deps_dynamic_trace
-  vars
+  trace <- lapply(trace, chr_dynamic)
+  names(trace) <- layout$deps_dynamic_trace
+  trace
 }
 
 get_trace_impl.cross <- function(dynamic, value, layout, config) {
-  vars <- lapply(
+  size <- lapply(
     layout$deps_dynamic,
+    get_dynamic_size,
+    config = config
+  )
+  index <- lapply(size, seq_len)
+  names(index) <- layout$deps_dynamic
+  index <- rev(expand.grid(rev(index)))
+  trace <- lapply(
+    layout$deps_dynamic_trace,
     get,
     envir = config$envir_targets,
     inherits = FALSE
   )
-  vars <- lapply(vars, chr_dynamic)
-  names(vars) <- layout$deps_dynamic
-  index <- lapply(vars, seq_along)
-  index <- rev(expand.grid(rev(index)))
-  vars <- lapply(layout$deps_dynamic_trace, function(key) {
-    vars[[key]][index[[key]]]
+  trace <- lapply(trace, chr_dynamic)
+  names(trace) <- layout$deps_dynamic_trace
+  trace <- lapply(layout$deps_dynamic_trace, function(key) {
+    trace[[key]][index[[key]]]
   })
-  names(vars) <- layout$deps_dynamic_trace
-  vars
+  names(trace) <- layout$deps_dynamic_trace
+  trace
 }
 
 get_trace_impl.combine <- function(dynamic, value, layout, config) {
   by_key <- which_by(dynamic)
   by_value <- get(by_key, envir = config$envir_targets, inherits = FALSE)
-  out <- list(unique(by_value))
-  names(out) <- by_key
-  out
+  trace <- list(unique(by_value))
+  names(trace) <- by_key
+  trace
 }
 
 chr_dynamic <- function(x) {
@@ -230,7 +236,7 @@ chr_dynamic_impl.default <- function(x) {
   x
 }
 
-register_subtargets <- function(target, static_ok, subdeps_ok, config) {
+register_subtargets <- function(target, static_ok, dynamic_ok, config) {
   on.exit(register_dynamic(target, config))
   announce_dynamic(target, config)
   subtargets_build <- subtargets_all <- subtarget_names(target, config)
@@ -247,7 +253,7 @@ register_subtargets <- function(target, static_ok, subdeps_ok, config) {
     register_in_queue(subtargets_build, 0, config)
     register_in_counter(subtargets_build, config)
   }
-  if (!static_ok || !subdeps_ok || ndeps) {
+  if (!static_ok || !dynamic_ok || ndeps) {
     register_in_loop(target, config)
     register_in_queue(target, ndeps, config)
     register_in_counter(target, config)

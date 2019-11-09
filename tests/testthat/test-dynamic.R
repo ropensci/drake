@@ -1201,7 +1201,7 @@ test_with_dir("dynamic hpc", {
   if ("package:clustermq" %in% search()) {
     detach("package:clustermq", unload = TRUE) # nolint
   }
-  future::plan(future::multisession, workers = 2L)
+  future::plan(future::multicore, workers = 2L)
   scenario <- get_testing_scenario()
   envir <- eval(parse(text = scenario$envir))
   suppressWarnings(rm(
@@ -1361,6 +1361,17 @@ test_with_dir("dynamic map trace (#1052)", {
   expect_equal(read_trace("a", "c"), readd(a))
   exp <- as.character(drake_cache()$get("b"))
   expect_equal(read_trace("b", "c"), exp)
+  config <- drake_config(plan)
+  make(plan)
+  expect_equal(justbuilt(config), character(0))
+  plan <- drake_plan(
+    a = letters[seq_len(4)],
+    b = target(a, dynamic = map(a, .trace = a)),
+    # Changing the trace should only trigger the parent target.
+    c = target(b, dynamic = map(a, b, .trace = a))
+  )
+  make(plan)
+  expect_equal(justbuilt(config), "c")
 })
 
 test_with_dir("dynamic cross trace (#1052)", {
