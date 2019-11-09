@@ -1336,9 +1336,13 @@ test_with_dir("dynamic map trace (#1052)", {
   plan <- drake_plan(
     a = letters[seq_len(4)],
     b = target(a, dynamic = map(a, .trace = a)),
-    c = target(b, dynamic = map(a, .trace = c(a, b)))
+    c = target(b, dynamic = map(a, b, .trace = c(a, b)))
   )
   make(plan)
+  value <- drake_cache()$get("c")
+  expect_equal(dynamic_trace("a", value), readd(a))
+  exp <- as.character(drake_cache()$get("b"))
+  expect_equal(dynamic_trace("b", value), exp)
 })
 
 test_with_dir("dynamic cross trace (#1052)", {
@@ -1346,7 +1350,14 @@ test_with_dir("dynamic cross trace (#1052)", {
     w = LETTERS[seq_len(3)],
     x = letters[seq_len(2)],
     y = target(x, dynamic = map(x)),
-    z = target(c(w, x, y), dynamic = cross(w, x, y, .trace = c(y, w, x)))
+    z = target(c(w, x, y), dynamic = cross(w, x, y, .trace = c(x, w)))
   )
   make(plan)
+  value <- drake_cache()$get("z")
+  out <- dynamic_trace("w", value)
+  exp <- rep(LETTERS[seq_len(3)], each = 4)
+  expect_equal(out, exp)
+  out <- dynamic_trace("x", value)
+  exp <- rep(letters[c(1, 1, 2, 2)], times = 3)
+  expect_equal(out, exp)
 })

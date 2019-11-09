@@ -65,7 +65,7 @@ subtargets <- function(
 #'   x = target(w, dynamic = map(w)),
 #'   # We use the trace to remember where the sub-targets
 #'   # of y came from.
-#'   y = target(c(v, w, x), dynamic = cross(v, w, x, .trace = c(x, v, w))),
+#'   y = target(c(v, w, x), dynamic = cross(v, w, x, .trace = c(w, v))),
 #'   # The trace is super helpful when we want to get grouping variables
 #'   # for combine() etc.
 #'   v_groups = dynamic_trace(y),
@@ -95,31 +95,36 @@ append_trace <- function(target, value, config) {
     return(value)
   }
   dynamic <- layout$dynamic
-  vars <- lapply(layout$deps_dynamic_trace, get, envir = config$envir_targets)
-  vars <- lapply(vars, atomicize_dynamic)
-  names(vars) <- layout$deps_dynamic_trace
-  trace <- get_trace_impl(dynamic, value, vars)
+  trace <- get_trace_impl(dynamic, value, layout, config)
   attr(value, "dynamic_trace") <- trace
   value
 }
 
-get_trace_impl <- function(dynamic, value, vars) {
+get_trace_impl <- function(dynamic, value, layout, config) {
   UseMethod("get_trace_impl")
 }
 
-get_trace_impl.map <- function(dynamic, value, vars) {
+get_trace_impl.map <- function(dynamic, value, layout, config) {
+  vars <- lapply(layout$deps_dynamic_trace, get, envir = config$envir_targets)
+  vars <- lapply(vars, atomicize_dynamic)
+  names(vars) <- layout$deps_dynamic_trace
   vars
 }
 
-get_trace_impl.cross <- function(dynamic, value, vars) {
+get_trace_impl.cross <- function(dynamic, value, layout, config) {
+  vars <- lapply(layout$deps_dynamic, get, envir = config$envir_targets)
+  vars <- lapply(vars, atomicize_dynamic)
+  names(vars) <- layout$deps_dynamic
   index <- lapply(vars, seq_along)
   index <- rev(expand.grid(rev(index)))
-  lapply(names(vars), function(key) {
+  vars <- lapply(layout$deps_dynamic_trace, function(key) {
     vars[[key]][index[[key]]]
   })
+  names(vars) <- layout$deps_dynamic_trace
+  vars
 }
 
-get_trace_impl.combine <- function(dynamic, value, vars) {
+get_trace_impl.combine <- function(dynamic, value, layout, config) {
   browser()
 
   vars
@@ -130,8 +135,7 @@ atomicize_dynamic <- function(x) {
 }
 
 atomicize_dynamic.drake_dynamic <- function(x) {
-  attributes(x) <- NULL
-  x
+  as.character(x)
 }
 
 atomicize_dynamic.default <- function(x) {
