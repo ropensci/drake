@@ -298,7 +298,11 @@ cdl_dynamic_deps.dynamic <- function(dynamic, target, config) {
   dynamic$.trace <- NULL
   out <- ht_filter(config$ht_globals, all.vars(dynamic))
   if (!length(out)) {
-    stop("no grouping variables for dynamic target ", target, call. = FALSE)
+    stop(
+      "no admissible grouping variables for dynamic target ",
+      target,
+      call. = FALSE
+    )
   }
   out
 }

@@ -90,7 +90,7 @@ test_with_dir("dynamic subvalues", {
 
 test_with_dir("empty dynamic transform", {
   plan <- drake_plan(x = target("x", dynamic = map()))
-  expect_error(make(plan), regexp = "no grouping variables")
+  expect_error(make(plan), regexp = "no admissible grouping variables")
 })
 
 test_with_dir("invalidating a subtarget invalidates the parent", {
