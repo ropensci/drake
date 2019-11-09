@@ -425,8 +425,11 @@ test_with_dir("master caching, environment caches and parallelism", {
   skip_on_cran()
   skip_if_not_installed("knitr")
   skip_if_not_installed("future")
+  if (!grepl("loop", get_testing_scenario_name())) {
+    skip("avoid conflicts with other hpc scenarios")
+  }
   load_mtcars_example()
-  future::plan(future::multiprocess)
+  future::plan(future::multisession)
   cache <- storr::storr_environment() # not thread-safe
   make(
     my_plan,
