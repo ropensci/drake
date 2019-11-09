@@ -218,14 +218,18 @@ get_trace_impl.combine <- function(dynamic, value, layout, config) {
 }
 
 chr_dynamic <- function(x) {
-  UseMethod("chr_dynamic")
+  chr_dynamic_impl(x)
 }
 
-chr_dynamic.drake_dynamic <- function(x) {
+chr_dynamic_impl <- function(x) {
+  UseMethod("chr_dynamic_impl")
+}
+
+chr_dynamic_impl.drake_dynamic <- function(x) {
   as.character(x)
 }
 
-chr_dynamic.default <- function(x) {
+chr_dynamic_impl.default <- function(x) {
   x
 }
 
