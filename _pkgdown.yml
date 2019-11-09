@@ -66,6 +66,8 @@ reference:
   - '`cross`'
   - '`combine`'
   - '`subtargets`'
+  - '`get_trace()`'
+  - '`read_trace()`'
 - title: Static branching
   contents:
   - '`map`'
