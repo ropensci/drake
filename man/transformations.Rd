@@ -42,6 +42,13 @@ Same meaning as \code{mtcars[, 1L, drop = TRUE]} versus
 For dynamic branching, \code{.by} can only take one variable at a time,
 and that variable must be a vector. Ideally, it should take
 little space in memory.}
+
+\item{.trace}{Symbol or vector of symbols for the dynamic trace.
+The dynamic trace allows you to keep track of the values of
+dynamic dependencies are associated with individual sub-targets.
+For \code{combine()}, \code{.trace} must either be empty or the same as the
+variable given for \code{.by}.
+See \code{\link[=get_trace]{get_trace()}} and \code{\link[=read_trace]{read_trace()}} for examples and other details.}
 }
 \description{
 In \code{\link[=drake_plan]{drake_plan()}}, you can define whole batches
@@ -88,9 +95,9 @@ Transformation function usage:
 Dynamic branching is not yet implemented,
 but this is what it usage will look like.
 \itemize{
-\item \code{map(...)}
-\item \code{cross(...)}
-\item \code{combine(..., .by)}
+\item \code{map(..., .trace)}
+\item \code{cross(..., .trace)}
+\item \code{combine(..., .by, .trace)}
 }
 
 \code{map()} and \code{cross()} create dynamic sub-targets from the variables

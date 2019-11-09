@@ -49,3 +49,6 @@ readd(subtargets(z)[2], character_only = TRUE)
 })
 }
 }
+\seealso{
+\code{\link[=get_trace]{get_trace()}}, \code{\link[=read_trace]{read_trace()}}
+}

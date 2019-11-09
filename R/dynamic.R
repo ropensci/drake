@@ -1,6 +1,7 @@
 #' @title List sub-targets \lifecycle{experimental}
 #' @description List the sub-targets of a dynamic target.
 #' @export
+#' @seealso [get_trace()], [read_trace()]
 #' @return Character vector of sub-target names
 #' @inheritParams diagnose
 #' @param target Character string or symbol, depending on `character_only`.
@@ -39,12 +40,194 @@ subtargets <- function(
   )$subtargets
 }
 
+#' @title Read a trace of a dynamic target.
+#' @export
+#' @seealso [get_trace()], [subtargets()]
+#' @description Read a target's dynamic trace from the cache.
+#'   Best used on its own outside a `drake` plan.
+#' @details In dynamic branching, the trace keeps track
+#'   of how the sub-targets were generated.
+#'   It reminds us the values of grouping variables
+#'   that go with individual sub-targets.
+#' @return The dynamic trace of one target in another:
+#'   a vector of values from a grouping variable.
+#' @inheritParams readd
+#' @param trace Character, name of the trace
+#'   you want to extract. Such trace names are declared
+#'   in the `.trace` argument of `map()`, `cross()` or `combine()`.
+#' @param trace Character, name of a target from which to extract
+#'   a trace.
+#' @param target The name of a dynamic target with one or more traces
+#'   defined using the `.trace` argument of dynamic `map()`, `cross()`,
+#'   or `combine()`.
+#' @examples
+#' \dontrun{
+#' isolate_example("demonstrate dynamic trace", {
+#' plan <- drake_plan(
+#'   w = LETTERS[seq_len(3)],
+#'   x = letters[seq_len(2)],
+#'
+#'   # The first trace lets us see the values of w
+#'   # that go with the sub-targets of y.
+#'   y = target(c(w, x), dynamic = cross(w, x, .trace = w)),
+#'
+#'   # We can use the trace as a grouping variable for the next
+#'   # combine().
+#'   w_tr = get_trace("w", y),
+#'
+#'   # Now, we use the trace again to keep track of the
+#'   # values of w corresponding to the sub-targets of z.
+#'   z = target(y, dynamic = combine(y, .by = w_tr, .trace = w_tr))
+#' )
+#' make(plan)
+#'
+#' # We can read the trace outside make().
+#' # That way, we know which values of `w` correspond
+#' # to the sub-targets of `y`.
+#' readd(y)
+#' read_trace("w", "y")
+#'
+#' # And we know which values of `w_tr` (and thus `w`)
+#' # match up with the sub-targets of `z`.
+#' readd(z)
+#' read_trace("w_tr", "z")
+#' })
+#' }
+read_trace <- function(
+  trace,
+  target,
+  cache = drake::drake_cache(path = path),
+  path = NULL
+) {
+  if (is.null(cache)) {
+    stop("cannot find drake cache.")
+  }
+  cache <- decorate_storr(cache)
+  value <- cache$get(standardize_key(target), use_cache = FALSE)
+  get_trace(trace, value)
+}
+
+#' @title Get a trace of a dynamic target's value.
+#' @export
+#' @seealso [read_trace()], [subtargets()]
+#' @description Get the dynamic trace of a target's value.
+#'   Best used inside a `drake` plan.
+#' @details In dynamic branching, the trace keeps track
+#'   of how the sub-targets were generated.
+#'   It reminds us the values of grouping variables
+#'   that go with individual sub-targets.
+#' @return The dynamic trace of one target in another:
+#'   a vector of values from a grouping variable.
+#' @param trace Character, name of the trace
+#'   you want to extract. Such trace names are declared
+#'   in the `.trace` argument of `map()`, `cross()` or `combine()`.
+#' @param value The return value of the target with the trace.
+#' @examples
+#' \dontrun{
+#' isolate_example("demonstrate dynamic trace", {
+#' plan <- drake_plan(
+#'   w = LETTERS[seq_len(3)],
+#'   x = letters[seq_len(2)],
+#'
+#'   # The first trace lets us see the values of w
+#'   # that go with the sub-targets of y.
+#'   y = target(c(w, x), dynamic = cross(w, x, .trace = w)),
+#'
+#'   # We can use the trace as a grouping variable for the next
+#'   # combine().
+#'   w_tr = get_trace("w", y),
+#'
+#'   # Now, we use the trace again to keep track of the
+#'   # values of w corresponding to the sub-targets of z.
+#'   z = target(y, dynamic = combine(y, .by = w_tr, .trace = w_tr))
+#' )
+#' make(plan)
+#'
+#' # We can read the trace outside make().
+#' read_trace("w", "y")
+#' read_trace("w_tr", "z")
+#' })
+#' }
+get_trace <- function(trace, value) {
+  attr(value, "dynamic_trace")[[trace]]
+}
+
 dynamic_build <- function(target, meta, config) {
   subtargets <- config$layout[[target]]$subtargets
   meta$time_command <- proc.time() - meta$time_start
   value <- config$cache$mget_hash(subtargets)
+  value <- append_trace(target, value, config)
   class(value) <- "drake_dynamic"
   list(target = target, meta = meta, value = value)
+}
+
+append_trace <- function(target, value, config) {
+  layout <- config$layout[[target]]
+  if (!length(layout$deps_dynamic_trace)) {
+    return(value)
+  }
+  dynamic <- layout$dynamic
+  trace <- get_trace_impl(dynamic, value, layout, config)
+  attr(value, "dynamic_trace") <- trace
+  value
+}
+
+get_trace_impl <- function(dynamic, value, layout, config) {
+  UseMethod("get_trace_impl")
+}
+
+get_trace_impl.map <- function(dynamic, value, layout, config) {
+  vars <- lapply(
+    layout$deps_dynamic_trace,
+    get,
+    envir = config$envir_targets,
+    inherits = FALSE
+  )
+  vars <- lapply(vars, chr_dynamic)
+  names(vars) <- layout$deps_dynamic_trace
+  vars
+}
+
+get_trace_impl.cross <- function(dynamic, value, layout, config) {
+  vars <- lapply(
+    layout$deps_dynamic,
+    get,
+    envir = config$envir_targets,
+    inherits = FALSE
+  )
+  vars <- lapply(vars, chr_dynamic)
+  names(vars) <- layout$deps_dynamic
+  index <- lapply(vars, seq_along)
+  index <- rev(expand.grid(rev(index)))
+  vars <- lapply(layout$deps_dynamic_trace, function(key) {
+    vars[[key]][index[[key]]]
+  })
+  names(vars) <- layout$deps_dynamic_trace
+  vars
+}
+
+get_trace_impl.combine <- function(dynamic, value, layout, config) {
+  by_key <- which_by(dynamic)
+  by_value <- get(by_key, envir = config$envir_targets, inherits = FALSE)
+  out <- list(unique(by_value))
+  names(out) <- by_key
+  out
+}
+
+chr_dynamic <- function(x) {
+  chr_dynamic_impl(x)
+}
+
+chr_dynamic_impl <- function(x) {
+  UseMethod("chr_dynamic_impl")
+}
+
+chr_dynamic_impl.drake_dynamic <- function(x) {
+  as.character(x)
+}
+
+chr_dynamic_impl.default <- function(x) {
+  x
 }
 
 register_subtargets <- function(target, static_ok, subdeps_ok, config) {
@@ -240,7 +423,7 @@ match_call_impl <- function(dynamic) {
 }
 
 match_call_impl.map <- match_call_impl.cross <- function(dynamic) {
-  unname(match.call(definition = def_map, call = dynamic))
+  match.call(definition = def_map, call = dynamic)
 }
 
 match_call_impl.combine <- function(dynamic) {
@@ -248,11 +431,11 @@ match_call_impl.combine <- function(dynamic) {
 }
 
 # nocov start
-def_map <- function(...) {
+def_map <- function(..., .trace = NULL) {
   NULL
 }
 
-def_combine <- function(..., .by = NULL) {
+def_combine <- function(..., .by = NULL, .trace = NULL) {
   NULL
 }
 # nocov end
@@ -284,19 +467,20 @@ dynamic_hash_list <- function(dynamic, target, config) {
 }
 
 dynamic_hash_list.map <- function(dynamic, target, config) {
-  deps <- config$layout[[target]]$deps_dynamic
+  deps <- sort(config$layout[[target]]$deps_dynamic)
   hashes <- lapply(deps, read_dynamic_hashes, config = config)
   assert_equal_branches(target, deps, hashes)
   hashes
 }
 
 dynamic_hash_list.cross <- function(dynamic, target, config) {
-  deps <- config$layout[[target]]$deps_dynamic
+  deps <- sort(config$layout[[target]]$deps_dynamic)
   lapply(deps, read_dynamic_hashes, config = config)
 }
 
 dynamic_hash_list.combine <- function(dynamic, target, config) {
-  out <- lapply(which_vars(dynamic), read_dynamic_hashes, config = config)
+  deps <- sort(which_vars(dynamic))
+  out <- lapply(deps, read_dynamic_hashes, config = config)
   if (!is.null(dynamic$.by)) {
     out[["_by"]] <- read_dynamic_hashes(deparse(dynamic$.by), config)
   }

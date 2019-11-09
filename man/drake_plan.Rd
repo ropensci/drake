@@ -232,9 +232,9 @@ Transformation function usage:
 Dynamic branching is not yet implemented,
 but this is what it usage will look like.
 \itemize{
-\item \code{map(...)}
-\item \code{cross(...)}
-\item \code{combine(..., .by)}
+\item \code{map(..., .trace)}
+\item \code{cross(..., .trace)}
+\item \code{combine(..., .by, .trace)}
 }
 
 \code{map()} and \code{cross()} create dynamic sub-targets from the variables

@@ -307,7 +307,6 @@ test_with_dir("change 2 sub-deps (sub-target filtering)", {
   expect_equal(sort(out), sort(exp))
 })
 
-
 test_with_dir("identical sub-dep hashes", {
   plan <- drake_plan(
     x = rep("x", 4),
@@ -541,6 +540,23 @@ test_with_dir("dynamic cross flow", {
   vals <- c("a B", "a D", "e B", "e D", "b B", "b D")
   vals <- c(vals, paste0("=", vals))
   assert_vals(vals)
+})
+
+test_with_dir("switch the order of cross sub-targets", {
+  plan <- drake_plan(
+    x = LETTERS[seq_len(2)],
+    y = letters[seq_len(2)],
+    z = target(c(x, y), dynamic = cross(x, y))
+  )
+  make(plan)
+  plan <- drake_plan(
+    x = LETTERS[seq_len(2)],
+    y = letters[seq_len(2)],
+    z = target(c(x, y), dynamic = cross(y, x))
+  )
+  make(plan)
+  config <- drake_config(plan)
+  expect_equal(justbuilt(config), "z")
 })
 
 test_with_dir("dynamic combine flow without by", {
@@ -1308,4 +1324,77 @@ test_with_dir("dynamic max_expand", {
   expect_equal(readd(dyn4), list(c(1L, 1L), c(1L, 2L), c(1L, 3L)))
   expect_equal(readd(dyn5), list(1L, 2L, 3L))
   suppressWarnings(rm(dyn1, dyn2, dyn3, dyn4, dyn5, envir = envir))
+})
+
+test_with_dir("bad cross trace (#1052)", {
+  plan <- drake_plan(
+    a = letters[seq_len(2)],
+    b = seq_len(2),
+    c = target(paste(a, b), dynamic = cross(a, b, .trace = c(a, b, x)))
+  )
+  expect_error(drake_config(plan), regexp = "illegal dynamic trace variables")
+})
+
+test_with_dir("bad combine trace (#1052)", {
+  plan <- drake_plan(
+    a = letters[seq_len(2)],
+    b = seq_len(2),
+    c = target(paste(a, b), dynamic = cross(a, b, .trace = c(a, b))),
+    a_crossed = get_trace(c, "a"),
+    d = target(unlist(c), dynamic = combine(c, .by = a_crossed, .trace = a))
+  )
+  expect_error(
+    drake_config(plan),
+    regexp = "the only legal dynamic trace variable"
+  )
+})
+
+test_with_dir("dynamic map trace (#1052)", {
+  plan <- drake_plan(
+    a = letters[seq_len(4)],
+    b = target(a, dynamic = map(a, .trace = a)),
+    c = target(b, dynamic = map(a, b, .trace = c(a, b)))
+  )
+  make(plan)
+  value <- drake_cache()$get("c")
+  expect_equal(get_trace("a", value), readd(a))
+  expect_equal(read_trace("a", "c"), readd(a))
+  exp <- as.character(drake_cache()$get("b"))
+  expect_equal(read_trace("b", "c"), exp)
+})
+
+test_with_dir("dynamic cross trace (#1052)", {
+  expect_error(read_trace("a", "b"))
+  plan <- drake_plan(
+    w = LETTERS[seq_len(3)],
+    x = letters[seq_len(2)],
+    y = target(x, dynamic = map(x)),
+    z = target(c(w, x, y), dynamic = cross(w, x, y, .trace = c(x, w)))
+  )
+  make(plan)
+  value <- drake_cache()$get("z")
+  out <- get_trace("w", value)
+  exp <- rep(LETTERS[seq_len(3)], each = 4)
+  expect_equal(out, exp)
+  out <- read_trace("w", "z")
+  expect_equal(out, exp)
+  out <- get_trace("x", value)
+  exp <- rep(letters[c(1, 1, 2, 2)], times = 3)
+  expect_equal(out, exp)
+  out <- read_trace("x", "z")
+  expect_equal(out, exp)
+})
+
+test_with_dir("dynamic combine trace (#1052)", {
+  plan <- drake_plan(
+    w = LETTERS[seq_len(3)],
+    x = letters[seq_len(2)],
+    y = target(c(w, x), dynamic = cross(w, x, .trace = w)),
+    w_tr = get_trace("w", y),
+    z = target(y, dynamic = combine(y, .by = w_tr, .trace = w_tr))
+  )
+  make(plan)
+  value <- drake_cache()$get("z")
+  expect_equal(get_trace("w_tr", value), LETTERS[seq_len(3)])
+  expect_equal(read_trace("w_tr", "z"), LETTERS[seq_len(3)])
 })
