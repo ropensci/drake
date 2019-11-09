@@ -207,9 +207,6 @@ get_trace_impl.cross <- function(dynamic, value, layout, config) {
 }
 
 get_trace_impl.combine <- function(dynamic, value, layout, config) {
-  if (no_by(dynamic)) {
-    return(list())
-  }
   by_key <- which_by(dynamic)
   by_value <- get(by_key, envir = config$envir_targets, inherits = FALSE)
   out <- list(unique(by_value))
