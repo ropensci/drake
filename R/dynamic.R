@@ -105,14 +105,24 @@ get_trace_impl <- function(dynamic, value, layout, config) {
 }
 
 get_trace_impl.map <- function(dynamic, value, layout, config) {
-  vars <- lapply(layout$deps_dynamic_trace, get, envir = config$envir_targets)
+  vars <- lapply(
+    layout$deps_dynamic_trace,
+    get,
+    envir = config$envir_targets,
+    inherits = FALSE
+  )
   vars <- lapply(vars, atomicize_dynamic)
   names(vars) <- layout$deps_dynamic_trace
   vars
 }
 
 get_trace_impl.cross <- function(dynamic, value, layout, config) {
-  vars <- lapply(layout$deps_dynamic, get, envir = config$envir_targets)
+  vars <- lapply(
+    layout$deps_dynamic,
+    get,
+    envir = config$envir_targets,
+    inherits = FALSE
+  )
   vars <- lapply(vars, atomicize_dynamic)
   names(vars) <- layout$deps_dynamic
   index <- lapply(vars, seq_along)
@@ -125,9 +135,14 @@ get_trace_impl.cross <- function(dynamic, value, layout, config) {
 }
 
 get_trace_impl.combine <- function(dynamic, value, layout, config) {
-  browser()
-
-  vars
+  if (no_by(dynamic)) {
+    return(list())
+  }
+  by_key <- which_by(dynamic)
+  by_value <- get(by_key, envir = config$envir_targets, inherits = FALSE)
+  out <- list(unique(by_value))
+  names(out) <- by_key
+  out
 }
 
 atomicize_dynamic <- function(x) {

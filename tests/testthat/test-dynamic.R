@@ -1378,3 +1378,16 @@ test_with_dir("dynamic cross trace (#1052)", {
   exp <- rep(letters[c(1, 1, 2, 2)], times = 3)
   expect_equal(out, exp)
 })
+
+test_with_dir("dynamic combine trace (#1052)", {
+  plan <- drake_plan(
+    w = LETTERS[seq_len(3)],
+    x = letters[seq_len(2)],
+    y = target(c(w, x), dynamic = cross(w, x, .trace = w)),
+    w_tr = dynamic_trace("w", y),
+    z = target(y, dynamic = combine(y, .by = w_tr, .trace = w_tr))
+  )
+  make(plan)
+  value <- drake_cache()$get("z")
+  expect_equal(dynamic_trace("w_tr", value), LETTERS[seq_len(3)])
+})
