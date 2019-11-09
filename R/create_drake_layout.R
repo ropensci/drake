@@ -300,7 +300,7 @@ cdl_dynamic_trace <- function(dynamic, config) {
 }
 
 cdl_dynamic_trace.dynamic <- function(dynamic, config) {
-  ht_filter(config$ht_globals, all.vars(dynamic$.trace))
+  all.vars(dynamic$.trace)
 }
 
 cdl_dynamic_trace.default <- function(dynamic, config) {

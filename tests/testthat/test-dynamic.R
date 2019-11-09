@@ -1313,9 +1313,7 @@ test_with_dir("bad cross trace (#1052)", {
   plan <- drake_plan(
     a = letters[seq_len(2)],
     b = seq_len(2),
-    c = target(paste(a, b), dynamic = cross(a, b, .trace = c(a, b, d))),
-    a_crossed = dynamic_trace(c, "a"),
-    d = target(unlist(c), dynamic = combine(c, .by = a_crossed))
+    c = target(paste(a, b), dynamic = cross(a, b, .trace = c(a, b, x)))
   )
   expect_error(drake_config(plan), regexp = "illegal dynamic trace variables")
 })
@@ -1332,4 +1330,23 @@ test_with_dir("bad combine trace (#1052)", {
     drake_config(plan),
     regexp = "the only legal dynamic trace variable"
   )
+})
+
+test_with_dir("dynamic map trace (#1052)", {
+  plan <- drake_plan(
+    a = letters[seq_len(4)],
+    b = target(a, dynamic = map(a, .trace = a)),
+    c = target(b, dynamic = map(a, .trace = c(a, b)))
+  )
+  make(plan)
+})
+
+test_with_dir("dynamic cross trace (#1052)", {
+  plan <- drake_plan(
+    w = LETTERS[seq_len(3)],
+    x = letters[seq_len(2)],
+    y = target(x, dynamic = map(x)),
+    z = target(c(w, x, y), dynamic = cross(w, x, y, .trace = c(y, w, x)))
+  )
+  make(plan)
 })

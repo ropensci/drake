@@ -39,6 +39,47 @@ subtargets <- function(
   )$subtargets
 }
 
+#' @title Get the dynamic trace
+#' @export
+#' @seealso [subtargets()]
+#' @description Get the dynamic trace of a target's value.
+#'   If the abstract details seem confusing, jump to the
+#'   example below.
+#' @details In dynamic branching the trace keeps track
+#'   of the values of grouping variables that correspond
+#'   to individual sub-targets. It helps label where the
+#'   sub-targets come from.
+#' @return The dynamic trace of one target in another:
+#'   i.e. a vector of values corresponding to individual sub-targets.
+#' @param target Character, name of the part of the trace
+#'   you want to extract. This target should have been mentioned
+#'   in the `.trace` argument of `map()`, `cross()` or `combine()`
+#'   when the value was created.
+#' @param value The return value of the target containing the trace.
+#' @examples
+#' \dontrun{
+#' isolate_example("demonstrate dynamic trace", {
+#' plan <- drake_plan(
+#'   v = LETTERS[seq_len(3)],
+#'   w = letters[seq_len(2)],
+#'   x = target(w, dynamic = map(w)),
+#'   # We use the trace to remember where the sub-targets
+#'   # of y came from.
+#'   y = target(c(v, w, x), dynamic = cross(v, w, x, .trace = c(x, v, w))),
+#'   # The trace is super helpful when we want to get grouping variables
+#'   # for combine() etc.
+#'   v_groups = dynamic_trace(y),
+#'   z = target(
+#'     unlist(y),
+#'     dynamic = combine(y, .by = v_groups, .trace = v_groups)
+#'   )
+#' )
+#' })
+#' }
+dynamic_trace <- function(target, value) {
+  attr(value, "dynamic_trace")[[target]]
+}
+
 dynamic_build <- function(target, meta, config) {
   subtargets <- config$layout[[target]]$subtargets
   meta$time_command <- proc.time() - meta$time_start
@@ -50,27 +91,38 @@ dynamic_build <- function(target, meta, config) {
 
 append_trace <- function(target, value, config) {
   layout <- config$layout[[target]]
+  if (!length(layout$deps_dynamic_trace)) {
+    return(value)
+  }
   dynamic <- layout$dynamic
-  trace <- lapply(layout$deps_dynamic_trace, get, envir = config$envir$targets)
-  trace <- lapply(trace, atomicize_dynamic)
-  append_trace_impl(dynamic, value, trace)
-}
-
-append_trace_impl <- function(dynamic, value, trace) {
-  UseMethod("append_trace_impl")
-}
-
-append_trace_impl.map <- function(dynamic, value, trace) {
+  vars <- lapply(layout$deps_dynamic_trace, get, envir = config$envir_targets)
+  vars <- lapply(vars, atomicize_dynamic)
+  names(vars) <- layout$deps_dynamic_trace
+  trace <- get_trace_impl(dynamic, value, vars)
   attr(value, "dynamic_trace") <- trace
   value
 }
 
-append_trace_impl.cross <- function(dynamic, value, trace) {
-  value
+get_trace_impl <- function(dynamic, value, vars) {
+  UseMethod("get_trace_impl")
 }
 
-append_trace_impl.combine <- function(dynamic, value, trace) {
-  value
+get_trace_impl.map <- function(dynamic, value, vars) {
+  vars
+}
+
+get_trace_impl.cross <- function(dynamic, value, vars) {
+  index <- lapply(vars, seq_along)
+  index <- rev(expand.grid(rev(index)))
+  lapply(names(vars), function(key) {
+    vars[[key]][index[[key]]]
+  })
+}
+
+get_trace_impl.combine <- function(dynamic, value, vars) {
+  browser()
+
+  vars
 }
 
 atomicize_dynamic <- function(x) {
