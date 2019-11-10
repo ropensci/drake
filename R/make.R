@@ -499,8 +499,8 @@ subdirectory_warning <- function(config) {
   if (identical(Sys.getenv("drake_warn_subdir"), "false")) {
     return()
   }
-  dir <- dirname(config$cache$path)
-  wd <- getwd()
+  dir <- normalizePath(dirname(config$cache$path), mustWork = FALSE)
+  wd <- normalizePath(getwd(), mustWork = FALSE)
   if (!length(dir) || wd == dir || is.na(pmatch(dir, wd))) {
     return()
   }
