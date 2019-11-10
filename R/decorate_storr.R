@@ -169,7 +169,7 @@ refclass_decorated_storr <- methods::setRefClass(
         targets <- drake_tidyselect_cache(
           ...,
           list = list,
-          cache = from,
+          cache = .self,
           namespaces = "meta"
         )
       }
