@@ -4,13 +4,11 @@
 \alias{read_trace}
 \title{Read a trace of a dynamic target.}
 \usage{
-read_trace(trace, target, cache = drake::drake_cache(path = path),
-  path = NULL)
+read_trace(trace, target, cache = drake::drake_cache(path = path), path = NULL)
 }
 \arguments{
-\item{trace}{Character, name of the trace
-you want to extract. Such trace names are declared
-in the \code{.trace} argument of \code{map()}, \code{cross()} or \code{combine()}.}
+\item{trace}{Character, name of a target from which to extract
+a trace.}
 
 \item{target}{The name of a dynamic target with one or more traces
 defined using the \code{.trace} argument of dynamic \code{map()}, \code{cross()},
@@ -20,10 +18,7 @@ or \code{combine()}.}
 If supplied, \code{path} is ignored.}
 
 \item{path}{Path to a \code{drake} cache
-(usually a hidden \code{.drake/} folder) or \code{NULL}.}
-
-\item{trace}{Character, name of a target from which to extract
-a trace.}
+(usually a hidden \verb{.drake/} folder) or \code{NULL}.}
 }
 \value{
 The dynamic trace of one target in another:

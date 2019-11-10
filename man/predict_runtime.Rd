@@ -6,9 +6,16 @@
 for non-staged parallel backends.
 \lifecycle{maturing}}
 \usage{
-predict_runtime(config, targets = NULL, from_scratch = FALSE,
-  targets_only = NULL, jobs = 1, known_times = numeric(0),
-  default_time = 0, warn = TRUE)
+predict_runtime(
+  config,
+  targets = NULL,
+  from_scratch = FALSE,
+  targets_only = NULL,
+  jobs = 1,
+  known_times = numeric(0),
+  default_time = 0,
+  warn = TRUE
+)
 }
 \arguments{
 \item{config}{Optional internal runtime parameter list of

@@ -16,7 +16,7 @@ A function to be input into the drake plan
 \description{
 \code{code_to_function()} is a quick (and very dirty) way to
 retrofit drake to an existing script-based project. It parses
-individual \code{\*.R/\*.RMD} files into functions so they can be added
+individual \verb{\\*.R/\\*.RMD} files into functions so they can be added
 into the drake workflow.
 }
 \details{
@@ -45,32 +45,32 @@ script4 <- tempfile()
 writeLines(c(
   "data <- mtcars",
   "data$make <- do.call('c',",
-  "lapply(strsplit(rownames(data), split=\\" \\"), `[`, 1))",
-  "saveRDS(data, \\"mtcars_alt.RDS\\")"
+  "lapply(strsplit(rownames(data), split=\" \"), `[`, 1))",
+  "saveRDS(data, \"mtcars_alt.RDS\")"
  ),
   script1
 )
 
 writeLines(c(
-  "data <- readRDS(\\"mtcars_alt.RDS\\")",
+  "data <- readRDS(\"mtcars_alt.RDS\")",
   "mtcars_lm <- lm(mpg~cyl+disp+vs+gear+make,data=data)",
-  "saveRDS(mtcars_lm, \\"mtcars_lm.RDS\\")"
+  "saveRDS(mtcars_lm, \"mtcars_lm.RDS\")"
   ),
   script2
 )
 writeLines(c(
-  "mtcars_lm <- readRDS(\\"mtcars_lm.RDS\\")",
+  "mtcars_lm <- readRDS(\"mtcars_lm.RDS\")",
   "lm_summary <- summary(mtcars_lm)",
-  "saveRDS(lm_summary, \\"mtcars_lm_summary.RDS\\")"
+  "saveRDS(lm_summary, \"mtcars_lm_summary.RDS\")"
   ),
   script3
 )
 writeLines(c(
-  "data<-readRDS(\\"mtcars_alt.RDS\\")",
+  "data<-readRDS(\"mtcars_alt.RDS\")",
   "gg <- ggplot2::ggplot(data)+",
   "ggplot2::geom_point(ggplot2::aes(",
   "x=disp, y=mpg, shape=as.factor(vs), color=make))",
-  "ggplot2::ggsave(\\"mtcars_plot.png\\", gg)"
+  "ggplot2::ggsave(\"mtcars_plot.png\", gg)"
  ),
   script4
 )

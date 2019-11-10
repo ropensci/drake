@@ -5,8 +5,7 @@
 \title{Storr namespaces for targets
 \lifecycle{deprecated}}
 \usage{
-
-  target_namespaces(default = storr::storr_environment()$default_namespace)
+target_namespaces(default = storr::storr_environment()$default_namespace)
 }
 \arguments{
 \item{default}{Name of the default \code{storr} namespace.}

@@ -5,8 +5,7 @@
 \title{Deprecated: create replicates of targets.
 \lifecycle{deprecated}}
 \usage{
-expand_plan(plan, values = NULL, rename = TRUE, sep = "_",
-  sanitize = TRUE)
+expand_plan(plan, values = NULL, rename = TRUE, sep = "_", sanitize = TRUE)
 }
 \arguments{
 \item{plan}{Workflow plan data frame.}

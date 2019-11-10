@@ -4,8 +4,12 @@
 \alias{subtargets}
 \title{List sub-targets \lifecycle{experimental}}
 \usage{
-subtargets(target = NULL, character_only = FALSE,
-  cache = drake::drake_cache(path = path), path = NULL)
+subtargets(
+  target = NULL,
+  character_only = FALSE,
+  cache = drake::drake_cache(path = path),
+  path = NULL
+)
 }
 \arguments{
 \item{target}{Character string or symbol, depending on \code{character_only}.
@@ -19,7 +23,7 @@ Just like \code{character.only} in \code{\link[=library]{library()}}.}
 If supplied, \code{path} is ignored.}
 
 \item{path}{Path to a \code{drake} cache
-(usually a hidden \code{.drake/} folder) or \code{NULL}.}
+(usually a hidden \verb{.drake/} folder) or \code{NULL}.}
 }
 \value{
 Character vector of sub-target names

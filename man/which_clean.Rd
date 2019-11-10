@@ -5,8 +5,12 @@
 \title{Which targets will \code{clean()} invalidate?
 \lifecycle{maturing}}
 \usage{
-which_clean(..., list = character(0), path = NULL,
-  cache = drake::drake_cache(path = path))
+which_clean(
+  ...,
+  list = character(0),
+  path = NULL,
+  cache = drake::drake_cache(path = path)
+)
 }
 \arguments{
 \item{...}{Targets to remove from the cache: as names (symbols) or
@@ -18,7 +22,7 @@ commands such as \code{starts_with()}, \code{ends_with()}, and \code{one_of()}.}
 cache. Similar to the \code{list} argument of \code{\link[=remove]{remove()}}.}
 
 \item{path}{Path to a \code{drake} cache
-(usually a hidden \code{.drake/} folder) or \code{NULL}.}
+(usually a hidden \verb{.drake/} folder) or \code{NULL}.}
 
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} is ignored.}

@@ -5,8 +5,13 @@
 \title{Transform a plan
 \lifecycle{maturing}}
 \usage{
-transform_plan(plan, envir = parent.frame(), trace = FALSE,
-  max_expand = NULL, tidy_eval = TRUE)
+transform_plan(
+  plan,
+  envir = parent.frame(),
+  trace = FALSE,
+  max_expand = NULL,
+  tidy_eval = TRUE
+)
 }
 \arguments{
 \item{plan}{A \code{drake} plan with a \code{transform} column}
@@ -28,7 +33,7 @@ The dynamic branching \code{max_expand}
 is an argument of \code{make()} and \code{drake_config()}.}
 
 \item{tidy_eval}{Logical, whether to use tidy evaluation
-(e.g. unquoting/\code{!!}) when resolving commands.
+(e.g. unquoting/\verb{!!}) when resolving commands.
 Tidy evaluation in transformations is always turned on
 regardless of the value you supply to this argument.}
 }

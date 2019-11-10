@@ -6,8 +6,11 @@
 work to a cluster / job scheduler.
 \lifecycle{stable}}
 \usage{
-drake_hpc_template_file(file = drake::drake_hpc_template_files(),
-  to = getwd(), overwrite = FALSE)
+drake_hpc_template_file(
+  file = drake::drake_hpc_template_files(),
+  to = getwd(),
+  overwrite = FALSE
+)
 }
 \arguments{
 \item{file}{Name of the template file, including the "tmpl" extension.}

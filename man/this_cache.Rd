@@ -5,8 +5,13 @@
 \title{Get the cache at the exact file path specified.
 \lifecycle{deprecated}}
 \usage{
-this_cache(path = NULL, force = FALSE, verbose = 1L,
-  fetch_cache = NULL, console_log_file = NULL)
+this_cache(
+  path = NULL,
+  force = FALSE,
+  verbose = 1L,
+  fetch_cache = NULL,
+  console_log_file = NULL
+)
 }
 \arguments{
 \item{path}{File path of the cache.}
@@ -29,7 +34,7 @@ Fields in each row the log file, from left to right:
 computer (from \code{Sys.info()["nodename"]}).
 - The process ID (from \code{Sys.getpid()}).
 - A timestamp with the date and time (in microseconds).
-- A brief description of what \code{drake} was doing.\code{ The fields are separated by pipe symbols (}"|"`).}
+- A brief description of what \code{drake} was doing.\verb{ The fields are separated by pipe symbols (}"|"`).}
 }
 \value{
 A drake/storr cache at the specified path, if it exists.

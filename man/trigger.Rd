@@ -5,9 +5,15 @@
 \title{Customize the decision rules for rebuilding targets
 \lifecycle{stable}}
 \usage{
-trigger(command = TRUE, depend = TRUE, file = TRUE, seed = TRUE,
-  condition = FALSE, change = NULL, mode = c("whitelist",
-  "blacklist", "condition"))
+trigger(
+  command = TRUE,
+  depend = TRUE,
+  file = TRUE,
+  seed = TRUE,
+  condition = FALSE,
+  change = NULL,
+  mode = c("whitelist", "blacklist", "condition")
+)
 }
 \arguments{
 \item{command}{Logical, whether to rebuild the target if the

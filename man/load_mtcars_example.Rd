@@ -5,8 +5,12 @@
 \title{Load the mtcars example.
 \lifecycle{maturing}}
 \usage{
-load_mtcars_example(envir = parent.frame(), report_file = NULL,
-  overwrite = FALSE, force = FALSE)
+load_mtcars_example(
+  envir = parent.frame(),
+  report_file = NULL,
+  overwrite = FALSE,
+  force = FALSE
+)
 }
 \arguments{
 \item{envir}{The environment to load the example into.

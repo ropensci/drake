@@ -5,8 +5,13 @@
 \title{Download the files of an example \code{drake} project.
 \lifecycle{maturing}}
 \usage{
-drake_example(example = "main", to = getwd(), destination = NULL,
-  overwrite = FALSE, quiet = TRUE)
+drake_example(
+  example = "main",
+  to = getwd(),
+  destination = NULL,
+  overwrite = FALSE,
+  quiet = TRUE
+)
 }
 \arguments{
 \item{example}{Name of the example.

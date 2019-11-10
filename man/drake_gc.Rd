@@ -5,12 +5,17 @@
 \title{Do garbage collection on the drake cache.
 \lifecycle{maturing}}
 \usage{
-drake_gc(path = NULL, search = NULL, verbose = NULL,
-  cache = drake::drake_cache(path = path), force = FALSE)
+drake_gc(
+  path = NULL,
+  search = NULL,
+  verbose = NULL,
+  cache = drake::drake_cache(path = path),
+  force = FALSE
+)
 }
 \arguments{
 \item{path}{Path to a \code{drake} cache
-(usually a hidden \code{.drake/} folder) or \code{NULL}.}
+(usually a hidden \verb{.drake/} folder) or \code{NULL}.}
 
 \item{search}{Deprecated.}
 
