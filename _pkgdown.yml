@@ -60,20 +60,17 @@ reference:
   - '`no_deps`'
   - '`id_chr`'
   - '`drake_envir`'
-- title: Dynamic branching
-  contents:
-  - '`map`'
-  - '`cross`'
-  - '`combine`'
-  - '`subtargets`'
-  - '`get_trace`'
-  - '`read_trace`'
-- title: Static branching
+- title: Transformations
   contents:
   - '`map`'
   - '`split`'
   - '`cross`'
   - '`combine`'
+- title: Dynamic branching
+  contents:
+  - '`subtargets`'
+  - '`get_trace`'
+  - '`read_trace`'
 - title: Reproducible R session management
   contents:
   - '`r_make`'
