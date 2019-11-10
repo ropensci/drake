@@ -5,7 +5,8 @@
 \title{Combine targets
 \lifecycle{deprecated}}
 \usage{
-gather_plan(plan = NULL, target = "target", gather = "list", append = FALSE)
+gather_plan(plan = NULL, target = "target", gather = "list",
+  append = FALSE)
 }
 \arguments{
 \item{plan}{Workflow plan data frame of prespecified targets.}

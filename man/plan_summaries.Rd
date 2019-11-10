@@ -5,13 +5,8 @@
 \title{Specialized wildcard for summaries
 \lifecycle{deprecated}}
 \usage{
-plan_summaries(
-  plan,
-  analyses,
-  datasets,
-  gather = rep("list", nrow(plan)),
-  sep = "_"
-)
+plan_summaries(plan, analyses, datasets, gather = rep("list",
+  nrow(plan)), sep = "_")
 }
 \arguments{
 \item{plan}{Workflow plan data frame with commands for the summaries.

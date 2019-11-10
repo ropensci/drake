@@ -6,18 +6,10 @@
 for the \code{plan} argument of \code{\link[=make]{make()}}.
 \lifecycle{maturing}}
 \usage{
-drake_plan(
-  ...,
-  list = NULL,
-  file_targets = NULL,
-  strings_in_dots = NULL,
-  tidy_evaluation = NULL,
-  transform = TRUE,
-  trace = FALSE,
-  envir = parent.frame(),
-  tidy_eval = TRUE,
-  max_expand = NULL
-)
+drake_plan(..., list = NULL, file_targets = NULL,
+  strings_in_dots = NULL, tidy_evaluation = NULL, transform = TRUE,
+  trace = FALSE, envir = parent.frame(), tidy_eval = TRUE,
+  max_expand = NULL)
 }
 \arguments{
 \item{...}{A collection of symbols/targets
@@ -42,7 +34,7 @@ what happens during target transformations.}
 \item{envir}{Environment for tidy evaluation.}
 
 \item{tidy_eval}{Logical, whether to use tidy evaluation
-(e.g. unquoting/\verb{!!}) when resolving commands.
+(e.g. unquoting/\code{!!}) when resolving commands.
 Tidy evaluation in transformations is always turned on
 regardless of the value you supply to this argument.}
 
@@ -157,7 +149,7 @@ when \code{drake} saves the target.
 Store larger-than-memory data as a \code{disk.frame} object.
 Uses the \code{fst} backend. Requires the \code{disk.frame} and \code{fst} packages.
 Note: \code{disk.frame}s get moved to the \code{drake} cache
-(a subfolder of \verb{.drake/} for most workflows). It is best to
+(a subfolder of \code{.drake/} for most workflows). It is best to
 create \code{disk.frame} objects that initially reside on the same storage
 drive as the cache. \code{\link[=drake_tempfile]{drake_tempfile()}} can help with this,
 e.g. \code{as.disk.frame(your_dataset, outdir = drake_tempfile())}.
@@ -185,7 +177,7 @@ or set any number of custom columns.
 \item \code{\link[=file_out]{file_out()}}: declare an output file to be produced
 when the target is built.
 \item \code{\link[=knitr_in]{knitr_in()}}: declare a \code{knitr} file dependency such as an
-R Markdown (\verb{*.Rmd}) or R LaTeX (\verb{*.Rnw}) file.
+R Markdown (\code{*.Rmd}) or R LaTeX (\code{*.Rnw}) file.
 \item \code{\link[=ignore]{ignore()}}: force \code{drake} to entirely ignore a piece of code:
 do not track it for changes and do not analyze it for dependencies.
 \item \code{\link[=no_deps]{no_deps()}}: tell \code{drake} to not track the dependencies
@@ -200,7 +192,7 @@ Intended for advanced custom memory management.
 
 \code{drake} has special syntax for generating large plans.
 Your code will look something like
-\verb{drake_plan(y = target(f(x), transform = map(x = c(1, 2, 3)))}
+\code{drake_plan(y = target(f(x), transform = map(x = c(1, 2, 3)))}
 You can read about this interface at
 \url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}. # nolint
 }
@@ -210,12 +202,12 @@ You can read about this interface at
 In static branching, you define batches of targets
 based on information you know in advance.
 Overall usage looks like
-\verb{drake_plan(<x> = target(<...>, transform = <call>)},
+\code{drake_plan(<x> = target(<...>, transform = <call>)},
 where
 \itemize{
-\item \verb{<x>} is the name of the target or group of targets.
-\item \verb{<...>} is optional arguments to \code{\link[=target]{target()}}.
-\item \verb{<call>} is a call to one of the transformation functions.
+\item \code{<x>} is the name of the target or group of targets.
+\item \code{<...>} is optional arguments to \code{\link[=target]{target()}}.
+\item \code{<call>} is a call to one of the transformation functions.
 }
 
 Transformation function usage:
@@ -265,7 +257,9 @@ mtcars_plan <- drake_plan(
   write.csv(mtcars[, c("mpg", "cyl")], file_out("mtcars.csv")),
   value = read.csv(file_in("mtcars.csv"))
 )
-plot(mtcars_plan) # fast simplified call to vis_drake_graph()
+if (requireNamespace("visNetwork", quietly = TRUE)) {
+  plot(mtcars_plan) # fast simplified call to vis_drake_graph()
+}
 mtcars_plan
 make(mtcars_plan) # Makes `mtcars.csv` and then `value`
 head(readd(value))
@@ -273,8 +267,9 @@ head(readd(value))
 
 load_mtcars_example()
 head(my_plan)
-plot(my_plan)
-
+if (requireNamespace("knitr", quietly = TRUE)) {
+  plot(my_plan)
+}
 # The `knitr_in("report.Rmd")` tells `drake` to dive into the active
 # code chunks to find dependencies.
 # There, `drake` sees that `small`, `large`, and `coef_regression2_small`

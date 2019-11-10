@@ -5,7 +5,8 @@
 \title{History and provenance
 \lifecycle{experimental}}
 \usage{
-drake_history(cache = NULL, history = NULL, analyze = TRUE, verbose = NULL)
+drake_history(cache = NULL, history = NULL, analyze = TRUE,
+  verbose = NULL)
 }
 \arguments{
 \item{cache}{drake cache as created by \code{\link[=new_cache]{new_cache()}}.
@@ -13,7 +14,7 @@ See also \code{\link[=drake_cache]{drake_cache()}}.}
 
 \item{history}{Logical, whether to record the build history
 of your targets. You can also supply a
-\href{https://github.com/wlandau/txtq}{\code{txtq}}, which is
+\href{https://github.com/wlandau/txtq}{txtq}, which is
 how \code{drake} records history.
 Must be \code{TRUE} for \code{\link[=drake_history]{drake_history()}} to work later.}
 
@@ -84,6 +85,7 @@ NB: in \code{process_data(filename = file_in("a", "b"))}
 \examples{
 \dontrun{
 isolate_example("contain side-effects", {
+if (requireNamespace("knitr", quietly = TRUE)) {
 # First, let's iterate on a drake workflow.
 load_mtcars_example()
 make(my_plan, history = TRUE, verbose = 0L)
@@ -111,6 +113,7 @@ drake_history()
 clean(large, garbage_collection = TRUE)
 drake_history()
 invisible()
+}
 })
 }
 }

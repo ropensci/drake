@@ -997,6 +997,7 @@ test_with_dir("formats applied to subtargets but not their parents", {
 
 test_with_dir("runtime predictions for dynamic targets", {
   skip_on_cran()
+  skip_if_not_installed("lubridate")
   f <- function(x) {
     x
   }

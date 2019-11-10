@@ -5,16 +5,9 @@
 \title{Function \code{build_drake_graph}
 \lifecycle{deprecated}}
 \usage{
-build_drake_graph(
-  plan,
-  targets = plan$target,
-  envir = parent.frame(),
-  verbose = 1L,
-  jobs = 1,
-  console_log_file = NULL,
-  trigger = drake::trigger(),
-  cache = NULL
-)
+build_drake_graph(plan, targets = plan$target, envir = parent.frame(),
+  verbose = 1L, jobs = 1, console_log_file = NULL,
+  trigger = drake::trigger(), cache = NULL)
 }
 \arguments{
 \item{plan}{Workflow plan data frame.
@@ -69,7 +62,7 @@ Fields in each row the log file, from left to right:
 computer (from \code{Sys.info()["nodename"]}).
 - The process ID (from \code{Sys.getpid()}).
 - A timestamp with the date and time (in microseconds).
-- A brief description of what \code{drake} was doing.\verb{ The fields are separated by pipe symbols (}"|"`).}
+- A brief description of what \code{drake} was doing.\code{ The fields are separated by pipe symbols (}"|"`).}
 
 \item{trigger}{Name of the trigger to apply to all targets.
 Ignored if \code{plan} has a \code{trigger} column.

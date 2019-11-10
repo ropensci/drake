@@ -71,6 +71,7 @@ test_with_dir("Returned fns include only *active* scripts lines", {
 })
 
 test_with_dir("Returned fns include only *active* Rmd code lines", {
+  skip_if_not_installed("knitr")
   rmd <- tempfile()
 
   writeLines(
@@ -197,6 +198,8 @@ test_with_dir("drake tracks and updates for scripted functions", {
 })
 
 test_with_dir("drake tracks/updates for Rmd files that act like scripts", {
+  skip_if_not_installed("knitr")
+
   #Setup scripts
   rmd_list <- setup_rmd()
   rmd1_function <- code_to_function(rmd_list$rmd1)

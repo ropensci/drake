@@ -5,15 +5,8 @@
 \title{Run a single target's command in debug mode.'
 \lifecycle{maturing}}
 \usage{
-drake_debug(
-  target = NULL,
-  config = NULL,
-  character_only = FALSE,
-  envir = NULL,
-  jobs = 1,
-  replace = FALSE,
-  verbose = TRUE
-)
+drake_debug(target = NULL, config = NULL, character_only = FALSE,
+  envir = NULL, jobs = 1, replace = FALSE, verbose = TRUE)
 }
 \arguments{
 \item{target}{Name of the target.}

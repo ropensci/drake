@@ -137,9 +137,17 @@ refclass_decorated_storr <- methods::setRefClass(
       gc = TRUE
     ) {
       stopifnot(inherits(from, "refclass_decorated_storr"))
+      targets <- c(as.character(match.call(expand.dots = FALSE)$...), list)
+      if (requireNamespace("tidyselect", quietly = TRUE)) {
+        targets <- drake_tidyselect_cache(
+          ...,
+          list = list,
+          cache = from,
+          namespaces = "meta"
+        )
+      }
       import_targets(
-        ...,
-        list = list,
+        targets = targets,
         from = from,
         to = .self,
         jobs = jobs,
@@ -156,9 +164,17 @@ refclass_decorated_storr <- methods::setRefClass(
       gc = TRUE
     ) {
       stopifnot(inherits(to, "refclass_decorated_storr"))
+      targets <- c(as.character(match.call(expand.dots = FALSE)$...), list)
+      if (requireNamespace("tidyselect", quietly = TRUE)) {
+        targets <- drake_tidyselect_cache(
+          ...,
+          list = list,
+          cache = from,
+          namespaces = "meta"
+        )
+      }
       import_targets(
-        ...,
-        list = list,
+        targets = targets,
         from = .self,
         to = to,
         jobs = jobs,
@@ -600,16 +616,7 @@ is_history <- function(history) {
   inherits(history, "R6_txtq")
 }
 
-import_targets <- function(..., list = character(0), from, to, jobs, gc) {
-  targets <- c(as.character(match.call(expand.dots = FALSE)$...), list)
-  if (requireNamespace("tidyselect", quietly = TRUE)) {
-    targets <- drake_tidyselect_cache(
-      ...,
-      list = list,
-      cache = from,
-      namespaces = "meta"
-    )
-  }
+import_targets <- function(targets, from, to, jobs, gc) {
   if (!length(targets)) {
     targets <- from$list()
   }
@@ -641,7 +648,7 @@ import_target_storr <- function(target, from, to, gc) {
 }
 
 import_target_formatted <- function(target, from, to) {
-  if (file.exists(from$file_return_key(target))) {
+  if (from$exists(target) && file.exists(from$file_return_key(target))) {
     file_move(
       from = from$file_return_key(target),
       to = to$file_return_key(target)

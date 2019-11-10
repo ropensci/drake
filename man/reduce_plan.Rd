@@ -5,16 +5,8 @@
 \title{Write commands to reduce several targets down to one.
 \lifecycle{deprecated}}
 \usage{
-reduce_plan(
-  plan = NULL,
-  target = "target",
-  begin = "",
-  op = " + ",
-  end = "",
-  pairwise = TRUE,
-  append = FALSE,
-  sep = "_"
-)
+reduce_plan(plan = NULL, target = "target", begin = "", op = " + ",
+  end = "", pairwise = TRUE, append = FALSE, sep = "_")
 }
 \arguments{
 \item{plan}{Workflow plan data frame of prespecified targets.}

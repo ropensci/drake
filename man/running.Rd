@@ -5,16 +5,12 @@
 \title{List running targets.
 \lifecycle{maturing}}
 \usage{
-running(
-  path = NULL,
-  search = NULL,
-  cache = drake::drake_cache(path = path),
-  verbose = 1L
-)
+running(path = NULL, search = NULL, cache = drake::drake_cache(path =
+  path), verbose = 1L)
 }
 \arguments{
 \item{path}{Path to a \code{drake} cache
-(usually a hidden \verb{.drake/} folder) or \code{NULL}.}
+(usually a hidden \code{.drake/} folder) or \code{NULL}.}
 
 \item{search}{Deprecated.}
 

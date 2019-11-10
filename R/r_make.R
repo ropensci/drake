@@ -39,6 +39,7 @@
 #' @examples
 #' \dontrun{
 #' isolate_example("quarantine side effects", {
+#' if (requireNamespace("knitr", quietly = TRUE)) {
 #' writeLines(
 #'   c(
 #'     "library(drake)",
@@ -51,6 +52,7 @@
 #' r_outdated()
 #' r_make()
 #' r_outdated()
+#' }
 #' })
 #' }
 r_make <- function(source = NULL, r_fn = NULL, r_args = list()) {

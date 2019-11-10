@@ -58,6 +58,7 @@
 #' @examples
 #' \dontrun{
 #' isolate_example("contain side-effects", {
+#' if (requireNamespace("knitr", quietly = TRUE)) {
 #' # First, let's iterate on a drake workflow.
 #' load_mtcars_example()
 #' make(my_plan, history = TRUE, verbose = 0L)
@@ -85,6 +86,7 @@
 #' clean(large, garbage_collection = TRUE)
 #' drake_history()
 #' invisible()
+#' }
 #' })
 #' }
 drake_history <- function(

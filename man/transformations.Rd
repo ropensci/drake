@@ -63,7 +63,7 @@ For details, see
 
 \code{drake} has special syntax for generating large plans.
 Your code will look something like
-\verb{drake_plan(y = target(f(x), transform = map(x = c(1, 2, 3)))}
+\code{drake_plan(y = target(f(x), transform = map(x = c(1, 2, 3)))}
 You can read about this interface at
 \url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}. # nolint
 }
@@ -73,12 +73,12 @@ You can read about this interface at
 In static branching, you define batches of targets
 based on information you know in advance.
 Overall usage looks like
-\verb{drake_plan(<x> = target(<...>, transform = <call>)},
+\code{drake_plan(<x> = target(<...>, transform = <call>)},
 where
 \itemize{
-\item \verb{<x>} is the name of the target or group of targets.
-\item \verb{<...>} is optional arguments to \code{\link[=target]{target()}}.
-\item \verb{<call>} is a call to one of the transformation functions.
+\item \code{<x>} is the name of the target or group of targets.
+\item \code{<...>} is optional arguments to \code{\link[=target]{target()}}.
+\item \code{<call>} is a call to one of the transformation functions.
 }
 
 Transformation function usage:

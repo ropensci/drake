@@ -42,7 +42,7 @@ or set any number of custom columns.
 \item \code{\link[=file_out]{file_out()}}: declare an output file to be produced
 when the target is built.
 \item \code{\link[=knitr_in]{knitr_in()}}: declare a \code{knitr} file dependency such as an
-R Markdown (\verb{*.Rmd}) or R LaTeX (\verb{*.Rnw}) file.
+R Markdown (\code{*.Rmd}) or R LaTeX (\code{*.Rnw}) file.
 \item \code{\link[=ignore]{ignore()}}: force \code{drake} to entirely ignore a piece of code:
 do not track it for changes and do not analyze it for dependencies.
 \item \code{\link[=no_deps]{no_deps()}}: tell \code{drake} to not track the dependencies
@@ -56,6 +56,7 @@ Intended for advanced custom memory management.
 \examples{
 \dontrun{
 isolate_example("contain side effects", {
+if (requireNamespace("knitr", quietly = TRUE)) {
 # `knitr_in()` is like `file_in()`
 # except that it analyzes active code chunks in your `knitr`
 # source file and detects non-file dependencies.
@@ -75,6 +76,7 @@ make(my_plan)
 # to analyze the active code chunks. There, it spotted
 # where `small`, `large`, and `coef_regression2_small`
 # were read from the cache using calls to `loadd()` and `readd()`.
+}
 })
 }
 }
