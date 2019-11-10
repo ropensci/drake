@@ -344,7 +344,7 @@ test_with_dir("cache functions work from various working directories", {
       dir.create(file.path("searchfrom", "here"))
     }
   })
-  s <- normalizePath(file.path(scratch, "searchfrom", "here"))
+  s <- file.path(scratch, "searchfrom", "here")
   with_dir(s, {
     # progress, session
     expect_true(is.list(drake_get_session_info()))
