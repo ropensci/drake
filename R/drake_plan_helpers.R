@@ -9,11 +9,12 @@
 #' @return A one-row workflow plan data frame with the named
 #' arguments as columns.
 #' @param command The command to build the target.
-#' @param transform A call to [map()], [split()],
-#'   [cross()], or [combine()] to create or aggregate
-#'   multiple targets at once.
-#'   Details:
-#'   <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>
+#' @param transform A call to [map()], [split()], [cross()], or [combine()]
+#'   to apply a *static* transformation. Details:
+#'   <https://ropenscilabs.github.io/drake-manual/static.html>
+#' @param dynamic A call to [map()], [cross()], or [combine()]
+#'   to apply a *dynamic* transformation. Details:
+#'   <https://ropenscilabs.github.io/drake-manual/dynamic.html>
 #' @param ... Optional columns of the plan for a given target.
 #'   See the Columns section of this help file for a selection
 #'   of special columns that `drake` understands.
@@ -54,6 +55,7 @@
 target <- function(
   command = NULL,
   transform = NULL,
+  dynamic = NULL,
   ...
 ) {
   if (!nzchar(Sys.getenv("drake_target_silent"))) {
@@ -68,6 +70,7 @@ target <- function(
   lst <- c(
     command = call$command,
     transform = call$transform,
+    dynamic = call$dynamic,
     call$...
   )
   lst <- select_nonempty(lst)

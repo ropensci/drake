@@ -1136,7 +1136,7 @@ test_with_dir("trace has correct provenance", {
     a = target(x, transform = map(x = c(1, 1), y = c(3, 3))),
     b = target(a, transform = map(a)),
     c = target(b, transform = map(b)),
-    d = target(b, transform = cross(b, c)),
+    d0 = target(b, transform = cross(b, c)),
     e = target(c, transform = map(c)),
     f = target(c, transform = map(c)),
     g = target(b, transform = map(b)),
@@ -1187,41 +1187,41 @@ test_with_dir("trace has correct provenance", {
       b = "b_a_1_3_2",
       c = "c_b_a_1_3_2"
     ),
-    d_b_a_1_3_c_b_a_1_3 = target(
+    d0_b_a_1_3_c_b_a_1_3 = target(
       command = b_a_1_3,
       x = "1",
       y = "3",
       a = "a_1_3",
       b = "b_a_1_3",
       c = "c_b_a_1_3",
-      d = "d_b_a_1_3_c_b_a_1_3"
+      d0 = "d0_b_a_1_3_c_b_a_1_3"
     ),
-    d_b_a_1_3_c_b_a_1_3_2 = target(
+    d0_b_a_1_3_c_b_a_1_3_2 = target(
       command = b_a_1_3,
       x = "1",
       y = "3",
       a = "a_1_3",
       b = "b_a_1_3",
       c = "c_b_a_1_3_2",
-      d = "d_b_a_1_3_c_b_a_1_3_2"
+      d0 = "d0_b_a_1_3_c_b_a_1_3_2"
     ),
-    d_b_a_1_3_2_c_b_a_1_3 = target(
+    d0_b_a_1_3_2_c_b_a_1_3 = target(
       command = b_a_1_3_2,
       x = "1",
       y = "3",
       a = "a_1_3_2",
       b = "b_a_1_3_2",
       c = "c_b_a_1_3",
-      d = "d_b_a_1_3_2_c_b_a_1_3"
+      d0 = "d0_b_a_1_3_2_c_b_a_1_3"
     ),
-    d_b_a_1_3_2_c_b_a_1_3_2 = target(
+    d0_b_a_1_3_2_c_b_a_1_3_2 = target(
       command = b_a_1_3_2,
       x = "1",
       y = "3",
       a = "a_1_3_2",
       b = "b_a_1_3_2",
       c = "c_b_a_1_3_2",
-      d = "d_b_a_1_3_2_c_b_a_1_3_2"
+      d0 = "d0_b_a_1_3_2_c_b_a_1_3_2"
     ),
     e_c_b_a_1_3 = target(
       command = c_b_a_1_3,
@@ -2679,7 +2679,7 @@ test_with_dir("side-by-side cross of nested vars (#983)", {
     a = target(x, transform = map(x = c(1, 1), y = c(3, 3))),
     b = target(a, transform = map(a)),
     c = target(b, transform = map(b)),
-    d = target(list(b, c), transform = cross(b, c)),
+    d = target(list(b, c), transform = cross(b, c))
   )
   exp <- drake_plan(
     a_1_3 = 1,
@@ -2859,7 +2859,7 @@ test_with_dir("keep nested grouping vars in combine() (#1008)", {
     i = target(p, transform = map(p = !!(1:2))),
     a = target(x * i, transform = cross(i, x = !!(1:2))),
     b = target(a * y, transform = cross(a, y = !!(1:2), .id = c(p, x))),
-    d = target(c(b), transform = combine(b, .by = c(a))),
+    d0 = target(c(b), transform = combine(b, .by = c(a))),
     trace = TRUE
   )
   exp <- drake_plan(
@@ -2973,37 +2973,37 @@ test_with_dir("keep nested grouping vars in combine() (#1008)", {
       y = "2L",
       b = "b_2L_2L_2"
     ),
-    d_a_1L_i_1L = target(
+    d0_a_1L_i_1L = target(
       command = c(b_1L_1L, b_1L_1L_2),
       p = "1L",
       i = "i_1L",
       x = "1L",
       a = "a_1L_i_1L",
-      d = "d_a_1L_i_1L"
+      d0 = "d0_a_1L_i_1L"
     ),
-    d_a_1L_i_2L = target(
+    d0_a_1L_i_2L = target(
       command = c(b_2L_1L, b_2L_1L_2),
       p = "2L",
       i = "i_2L",
       x = "1L",
       a = "a_1L_i_2L",
-      d = "d_a_1L_i_2L"
+      d0 = "d0_a_1L_i_2L"
     ),
-    d_a_2L_i_1L = target(
+    d0_a_2L_i_1L = target(
       command = c(b_1L_2L, b_1L_2L_2),
       p = "1L",
       i = "i_1L",
       x = "2L",
       a = "a_2L_i_1L",
-      d = "d_a_2L_i_1L"
+      d0 = "d0_a_2L_i_1L"
     ),
-    d_a_2L_i_2L = target(
+    d0_a_2L_i_2L = target(
       command = c(b_2L_2L, b_2L_2L_2),
       p = "2L",
       i = "i_2L",
       x = "2L",
       a = "a_2L_i_2L",
-      d = "d_a_2L_i_2L"
+      d0 = "d0_a_2L_i_2L"
     )
   )
   equivalent_plans(out, exp)
