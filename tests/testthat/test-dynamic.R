@@ -995,6 +995,26 @@ test_with_dir("formats applied to subtargets but not their parents", {
   expect_equal(length(special_files), 4L)
 })
 
+test_with_dir("non-rds formats and dynamic branching (#1059)", {
+  plan <- drake_plan(
+    x = data.frame(x = seq_len(2), y = seq_len(2)),
+    y = target(x, dynamic = map(x), format = "fst")
+  )
+  make(plan, session_info = FALSE)
+  exp <- readd(x)
+  out <- do.call(rbind, readd(y))
+  expect_equal(out, exp)
+  cache <- drake_cache()
+  ref <- cache$storr$get("y")
+  expect_false(inherits(ref, "drake_format_fst"))
+  for (i in seq_len(2)) {
+    y <- subtargets(y)[i]
+    ref <- cache$storr$get(y)
+    expect_true(inherits(ref, "drake_format_fst"))
+    expect_false(is.data.frame(ref))
+  }
+})
+
 test_with_dir("runtime predictions for dynamic targets", {
   skip_on_cran()
   skip_if_not_installed("lubridate")
