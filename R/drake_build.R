@@ -51,7 +51,7 @@ drake_build <- function(
   if (!is.null(meta)) {
     warning(
       "drake_build() is exclusively user-side now, ",
-      "so we can affort to compute `meta` on the fly. ",
+      "so we can afford to compute `meta` on the fly. ",
       "Thus, the `meta` argument is deprecated."
     )
   }
