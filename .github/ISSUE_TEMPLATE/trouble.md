@@ -1,9 +1,8 @@
 ---
-name: Bug
-about: Something is wrong with drake.
+name: Trouble
+about: Something is not working, and you want help.
 title: ''
-labels: 'type: bug'
-assignees: wlandau
+labels: 'type: trouble'
 ---
 
 ## Prework
@@ -14,15 +13,15 @@ assignees: wlandau
 
 ## Description
 
-Describe the bug clearly and concisely. 
+Describe the trouble clearly and concisely. 
 
 ## Reproducible example
 
-Provide a minimal reproducible example with code and output that demonstrates the bug. The [`reprex`](https://github.com/tidyverse/reprex) package is extremely helpful for this.
+Provide a minimal reproducible example with code and output that demonstrates the problem. The [`reprex`](https://github.com/tidyverse/reprex) package is extremely helpful for this.
 
-## Expected result
+## Desired result
 
-What should have happened? Please be as specific as possible.
+What output or behavior do you want to see? Please be as specific as you can.
 
 ## Session info
 
