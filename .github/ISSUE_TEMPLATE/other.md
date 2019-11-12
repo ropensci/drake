@@ -1,6 +1,6 @@
 ---
-name: Miscellaneous
-about: Suggest an idea or raise a concern.
+name: Other
+about: Something else.
 title: ''
 labels: ''
 assignees: ''
@@ -13,4 +13,4 @@ assignees: ''
 
 ## Description
 
-Describe the issue clearly and concisely. If applicable, write a minimal example in R code or pseudo-code to show input, usage, and desired output.
+Please explain your thoughts clearly and concisely. If applicable, write a minimal example in R code or pseudo-code to show input, usage, and desired output.
