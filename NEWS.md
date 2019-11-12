@@ -26,7 +26,7 @@
 - Use an environment instead of a list for `config$layout`. Supports internal modifications by reference. Required for #685.
 - Clean up the code of the parallel backends.
 - Make `dynamic` a formal argument of `target()`.
-
+- Always lock/unlock the environment target by target, allowing informative error messages to appear more readily (#1062, @PedramNavid)
 
 # Version 7.7.0
 

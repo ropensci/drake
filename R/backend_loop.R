@@ -1,9 +1,4 @@
 drake_backend.loop <- function(config) {
-  if (config$lock_envir) {
-    lock_environment(config$envir)
-    on.exit(unlock_environment(config$envir))
-  }
-  config$lock_envir <- FALSE
   config$envir_loop <- new.env(parent = emptyenv())
   config$envir_loop$targets <- igraph::topo_sort(config$envir_graph$graph)$name
   while (length(config$envir_loop$targets)) {
