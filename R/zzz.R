@@ -11,8 +11,9 @@ drake_tip_message <- function() {
 
 drake_tip_ <- function() {
   tips <- c(
-    "A new and improved way to create large drake plans:
-     https://ropenscilabs.github.io/drake-manual/plans.html#large-plans",
+    "Interfaces to create large drake plans:
+     https://books.ropensci.org/drake/dynamic.html and
+     https://books.ropensci.org/drake/static.html",
 
     "Use diagnose() to retrieve
      errors, warnings, messages, commands, runtimes, etc.",
@@ -20,7 +21,7 @@ drake_tip_ <- function() {
     "Use drake_example() to download code for a small drake workflow.",
 
     "Check out the reference website https://docs.ropensci.org/drake
-     and user manual https://ropenscilabs.github.io/drake-manual.",
+     and user manual https://books.ropensci.org/drake",
 
     "drake quickstart:
      load_mtcars_example();

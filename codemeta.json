@@ -1,23 +1,21 @@
 {
-  "@context": [
-    "https://doi.org/10.5063/schema/codemeta-2.0",
-    "http://schema.org"
-  ],
+  "@context": ["https://doi.org/10.5063/schema/codemeta-2.0", "http://schema.org"],
   "@type": "SoftwareSourceCode",
   "identifier": "drake",
-  "description": "A general-purpose computational engine for data\n  analysis, drake rebuilds intermediate data objects when their\n  dependencies change, and it skips work when the results are already up\n  to date.  Not every execution starts from scratch, there is native\n  support for parallel and distributed computing, and completed projects\n  have tangible evidence that they are reproducible.  Extensive\n  documentation, from beginner-friendly tutorials to practical examples\n  and more, is available at the reference website\n  <https://docs.ropensci.org/drake/> and the online manual\n  <https://ropenscilabs.github.io/drake-manual/>.",
+  "description": "A general-purpose computational engine for data\n  analysis, drake rebuilds intermediate data objects when their\n  dependencies change, and it skips work when the results are already up\n  to date.  Not every execution starts from scratch, there is native\n  support for parallel and distributed computing, and completed projects\n  have tangible evidence that they are reproducible.  Extensive\n  documentation, from beginner-friendly tutorials to practical examples\n  and more, is available at the reference website\n  <https://docs.ropensci.org/drake/> and the online manual\n  <https://books.ropensci.org/drake/>.",
   "name": "drake: A Pipeline Toolkit for Reproducible Computation at Scale",
   "codeRepository": "https://github.com/ropensci/drake",
+  "relatedLink": ["https://docs.ropensci.org/drake", "https://books.ropensci.org/drake/", "https://CRAN.R-project.org/package=drake"],
   "issueTracker": "https://github.com/ropensci/drake/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "7.6.2.9000",
+  "version": "7.7.0.9002",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
-    "version": "3.6.0",
+    "version": "3.6.1",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 3.6.0 (2019-04-26)",
+  "runtimePlatform": "R version 3.6.1 (2019-07-05)",
   "provider": {
     "@id": "https://cran.r-project.org",
     "@type": "Organization",
@@ -85,6 +83,12 @@
       "givenName": "Ellis",
       "familyName": "Hughes",
       "email": "ellishughes@live.com"
+    },
+    {
+      "@type": "Person",
+      "givenName": ["Matthew", "Mark"],
+      "familyName": "Strasiotto",
+      "email": ["matthew.strasiotto@gmail.com", "mstr3336@uni.sydney.edu.au"]
     }
   ],
   "copyrightHolder": [
@@ -93,6 +97,7 @@
       "name": "Eli Lilly and Company"
     }
   ],
+  "funder": {},
   "maintainer": [
     {
       "@type": "Person",
@@ -394,6 +399,7 @@
       "@type": "SoftwareApplication",
       "identifier": "styler",
       "name": "styler",
+      "version": ">= 1.2.0",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
@@ -584,39 +590,15 @@
   ],
   "releaseNotes": "https://github.com/ropensci/drake/blob/master/NEWS.md",
   "readme": "https://github.com/ropensci/drake/blob/master/README.md",
-  "fileSize": "1072.234KB",
-  "contIntegration": [
-    "https://ci.appveyor.com/project/ropensci/drake",
-    "https://travis-ci.org/ropensci/drake",
-    "https://codecov.io/github/ropensci/drake?branch=master"
-  ],
-  "developmentStatus": "http://www.repostatus.org/#active",
+  "fileSize": "1092.201KB",
+  "contIntegration": ["https://travis-ci.org/ropensci/drake", "https://ci.appveyor.com/project/ropensci/drake", "https://codecov.io/github/ropensci/drake?branch=master"],
+  "developmentStatus": "https://www.repostatus.org/#active",
   "review": {
     "@type": "Review",
     "url": "https://github.com/ropensci/onboarding/issues/156",
     "provider": "http://ropensci.org"
   },
-  "keywords": [
-    "reproducibility",
-    "high-performance-computing",
-    "r",
-    "data-science",
-    "drake",
-    "makefile",
-    "pipeline",
-    "workflow",
-    "reproducible-research",
-    "rstats",
-    "r-package",
-    "ropensci",
-    "peer-reviewed"
-  ],
-  "relatedLink": [
-    "https://CRAN.R-project.org/package=drake",
-    "https://docs.ropensci.org/drake",
-    "https://github.com/ropenscilabs/drake-manual"
-  ],
-  "funder": {},
+  "keywords": ["reproducibility", "high-performance-computing", "r", "data-science", "drake", "makefile", "pipeline", "workflow", "reproducible-research", "rstats", "r-package", "ropensci", "peer-reviewed"],
   "citation": [
     {
       "@type": "ScholarlyArticle",

@@ -11,10 +11,10 @@
 #' @param command The command to build the target.
 #' @param transform A call to [map()], [split()], [cross()], or [combine()]
 #'   to apply a *static* transformation. Details:
-#'   <https://ropenscilabs.github.io/drake-manual/static.html>
+#'   <https://books.ropensci.org/drake/static.html>
 #' @param dynamic A call to [map()], [cross()], or [combine()]
 #'   to apply a *dynamic* transformation. Details:
-#'   <https://ropenscilabs.github.io/drake-manual/dynamic.html>
+#'   <https://books.ropensci.org/drake/dynamic.html>
 #' @param ... Optional columns of the plan for a given target.
 #'   See the Columns section of this help file for a selection
 #'   of special columns that `drake` understands.
@@ -62,7 +62,7 @@ target <- function(
     warning(
       "target() in drake is not a standalone user-side function. ",
       "It must be called from inside drake_plan(). Details: ",
-      "https://ropenscilabs.github.io/drake-manual/plans.html#large-plans",
+      "https://books.ropensci.org/drake/static.html",
       call. = FALSE
     )
   }
@@ -93,7 +93,7 @@ target <- function(
 #'   [make()] or [drake_config()].
 #'   For details, see the chapter on triggers
 #'   in the user manual:
-#'   <https://ropenscilabs.github.io/drake-manual>
+#'   <https://books.ropensci.org/drake/triggers.html>
 #' @details
 #'   A target always builds if it has not been built before.
 #'   Triggers allow you to customize the conditions

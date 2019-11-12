@@ -55,7 +55,7 @@ then reproducibly tracked as dependencies.}
 You can experiment with \code{\link[=predict_runtime]{predict_runtime()}}
 to help decide on an appropriate number of jobs.
 For details, visit
-\url{https://ropenscilabs.github.io/drake-manual/time.html}.}
+\url{https://books.ropensci.org/drake/time.html}.}
 
 \item{console_log_file}{Optional character scalar of a file name or
 connection object (such as \code{stdout()}) to dump maximally verbose

@@ -54,7 +54,7 @@
 #' to suppress environment-locking for all targets.
 #' However, this is not usually recommended.
 #' There are legitimate use cases for `lock_envir = FALSE`
-#' (example: <https://ropenscilabs.github.io/drake-manual/hpc.html#parallel-computing-within-targets>) # nolint
+#' (example: <https://books.ropensci.org/drake/hpc.html#parallel-computing-within-targets>) # nolint
 #' but most workflows should stick with the default `lock_envir = TRUE`.
 #'
 #' @seealso

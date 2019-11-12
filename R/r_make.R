@@ -241,7 +241,7 @@ r_assert_source <- function(source) {
     "  2. The file you supply via options(drake_source = \"file.R\"), or\n",
     "  3. A file called ", shQuote("_drake.R"), " (default).\n",
     "Read more: \n",
-    "https://ropenscilabs.github.io/drake-manual/projects.html#safer-interactivity", # nolint
+    "https://books.ropensci.org/drake/projects.html#safer-interactivity", # nolint
     call. = FALSE
   )
 }

@@ -814,7 +814,7 @@ new_cache <- function(
     warning(
       "The 'type' argument of new_cache() is deprecated. ",
       "Please see the storage guide in the manual for the new cache API:",
-      "https://ropenscilabs.github.io/drake-manual/store.html"
+      "https://books.ropensci.org/drake/storage.html"
     )
   }
   deprecate_hash_algo_args(short_hash_algo, long_hash_algo)

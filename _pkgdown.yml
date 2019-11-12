@@ -10,9 +10,9 @@ navbar:
   - text: Functions
     href: reference/index.html
   - text: Full manual
-    href: https://ropenscilabs.github.io/drake-manual
+    href: https://books.ropensci.org/drake/
   - text: FAQ
-    href: https://ropenscilabs.github.io/drake-manual/faq.html
+    href: https://books.ropensci.org/drake/faq.html
   - text: News
     href: news/index.html
   right:

@@ -27,8 +27,8 @@ with its own help file.
 \itemize{
 \item \code{\link[=target]{target()}}: give the target more than just a command.
 Using \code{\link[=target]{target()}}, you can apply a transformation
-(examples: \url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}), # nolint
-supply a trigger (\url{https://ropenscilabs.github.io/drake-manual/triggers.html}), # nolint
+(examples: \url{https://books.ropensci.org/drake/plans.html#large-plans}), # nolint
+supply a trigger (\url{https://books.ropensci.org/drake/triggers.html}), # nolint
 or set any number of custom columns.
 \item \code{\link[=file_in]{file_in()}}: declare an input file dependency.
 \item \code{\link[=file_out]{file_out()}}: declare an output file to be produced

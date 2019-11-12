@@ -57,7 +57,7 @@
 #'
 #' @param parallelism Character scalar, type of parallelism to use.
 #'   For detailed explanations, see the
-#'   [high-performance computing chapter](https://ropenscilabs.github.io/drake-manual/hpc.html) # nolint
+#'   [high-performance computing chapter](https://books.ropensci.org/drake/hpc.html) # nolint
 #'   of the user manual.
 #'
 #'   You could also supply your own scheduler function
@@ -77,7 +77,7 @@
 #'   You can experiment with [predict_runtime()]
 #'   to help decide on an appropriate number of jobs.
 #'   For details, visit
-#'   <https://ropenscilabs.github.io/drake-manual/time.html>.
+#'   <https://books.ropensci.org/drake/time.html>.
 #'
 #' @param jobs_preprocess Number of parallel jobs for processing the imports
 #'   and doing other preprocessing tasks.

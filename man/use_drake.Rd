@@ -13,7 +13,7 @@ use_drake(open = interactive())
 \description{
 Add top-level R script files to use \code{drake}
 in your data analysis project. For details, read
-\url{https://ropenscilabs.github.io/drake-manual/projects.html}
+\url{https://books.ropensci.org/drake/projects.html}
 }
 \details{
 Files written:
@@ -21,7 +21,7 @@ Files written:
 \item \code{make.R}: a suggested master R script for batch mode.
 \item \verb{_drake.R}: a configuration R script for
 the \href{https://docs.ropensci.org/drake/reference/r_make.html}{\verb{r_*()}} functions documented at # nolint
-\url{https://ropenscilabs.github.io/drake-manual/projects.html#safer-interactivity}. # nolint
+\url{https://books.ropensci.org/drake/projects.html#safer-interactivity}. # nolint
 Remarks:
 }
 \itemize{

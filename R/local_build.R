@@ -228,7 +228,7 @@ prepend_fork_advice <- function(msg) {
     "\n Having problems with parallel::mclapply(),",
     "future::future(), or furrr::future_map() in drake?",
     "Try one of the workarounds at",
-    "https://ropenscilabs.github.io/drake-manual/hpc.html#parallel-computing-within-targets", # nolint
+    "https://books.ropensci.org/drake/hpc.html#parallel-computing-within-targets", # nolint
     "or https://github.com/ropensci/drake/issues/675. \n\n"
   )
   c(out, msg)

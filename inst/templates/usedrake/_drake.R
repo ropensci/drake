@@ -1,5 +1,5 @@
 # This file serves the r_*() functions (e.g. r_make()) documented at
-# https://ropenscilabs.github.io/drake-manual/projects.html#safer-interactivity # nolint
+# https://books.ropensci.org/drake/projects.html#safer-interactivity # nolint
 # and
 # https://docs.ropensci.org/drake/reference/r_make.html
 

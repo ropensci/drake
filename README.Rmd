@@ -108,14 +108,14 @@ Development
 
 Data analysis can be slow. A round of scientific computation can take several minutes, hours, or even days to complete. After it finishes, if you update your code or data, your hard-earned results may no longer be valid. How much of that valuable output can you keep, and how much do you need to update? How much runtime must you endure all over again?
 
-For projects in R, the `drake` package can help. It [analyzes your workflow](https://ropenscilabs.github.io/drake-manual/plans.html), skips steps with up-to-date results, and orchestrates the rest with [optional distributed computing](https://ropenscilabs.github.io/drake-manual/hpc.html). At the end, `drake` provides evidence that your results match the underlying code and data, which increases your ability to trust your research.
+For projects in R, the `drake` package can help. It [analyzes your workflow](https://books.ropensci.org/drake/plans.html), skips steps with up-to-date results, and orchestrates the rest with [optional distributed computing](https://books.ropensci.org/drake/hpc.html). At the end, `drake` provides evidence that your results match the underlying code and data, which increases your ability to trust your research.
 
 # Videos
 
-Visit the [first page of the manual](https://ropenscilabs.github.io/drake-manual/) to watch a 6-minute introduction.
+Visit the [first page of the manual](https://books.ropensci.org/drake/) to watch a 6-minute introduction.
 
 <center>
-<a href="https://ropenscilabs.github.io/drake-manual">
+<a href="https://books.ropensci.org/drake/">
 <img src="https://docs.ropensci.org/drake/reference/figures/video.png" alt="video" align="center" style = "border: none; float: center;">
 </a>
 </center>
@@ -248,7 +248,7 @@ hist
 
 # Reproducibility with confidence
 
-The R community emphasizes reproducibility. Traditional themes include [scientific replicability](https://en.wikipedia.org/wiki/Replication_crisis), literate programming with [knitr](https://yihui.name/knitr/), and version control with [git](https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control). But internal consistency is important too. Reproducibility carries the promise that your output matches the code and data you say you used. With the exception of [non-default triggers](https://ropenscilabs.github.io/drake-manual/triggers.html) and [hasty mode](https://ropenscilabs.github.io/drake-manual/hpc.html#hasty-mode), `drake` strives to keep this promise.
+The R community emphasizes reproducibility. Traditional themes include [scientific replicability](https://en.wikipedia.org/wiki/Replication_crisis), literate programming with [knitr](https://yihui.name/knitr/), and version control with [git](https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control). But internal consistency is important too. Reproducibility carries the promise that your output matches the code and data you say you used. With the exception of [non-default triggers](https://books.ropensci.org/drake/triggers.html) and [hasty mode](https://books.ropensci.org/drake/hpc.html#hasty-mode), `drake` strives to keep this promise.
 
 ## Evidence
 
@@ -274,7 +274,7 @@ make(plan) # Independently re-create the results from the code and input data.
 
 ## Big data efficiency
 
-Select specialized data formats to increase speed and reduce memory consumption. In version 7.5.2.9000 and above, the available formats are ["fst"](https://github.com/fstpackage/fst) for data frames (example below) and "keras" for [Keras](https://keras.rstudio.com/) models ([example here](https://ropenscilabs.github.io/drake-manual/churn.html#plan)).
+Select specialized data formats to increase speed and reduce memory consumption. In version 7.5.2.9000 and above, the available formats are ["fst"](https://github.com/fstpackage/fst) for data frames (example below) and "keras" for [Keras](https://keras.rstudio.com/) models ([example here](https://books.ropensci.org/drake/churn.html#plan)).
 
 ```{r, eval = FALSE}
 library(drake)
@@ -411,11 +411,11 @@ Ideally, independent observers should be able to read your code and understand i
 
 - The [drake plan](https://docs.ropensci.org/drake/reference/drake_plan.html) explicitly outlines the steps of the analysis, and [`vis_drake_graph()`](https://docs.ropensci.org/drake/reference/vis_drake_graph.html) visualizes how those steps depend on each other.
 - `drake` takes care of the parallel scheduling and high-performance computing (HPC) for you. That means the HPC code is no longer tangled up with the code that actually expresses your ideas.
-- You can [generate large collections of targets](https://ropenscilabs.github.io/drake-manual/gsp.html) without necessarily changing your code base of imported functions, another nice separation between the concepts and the execution of your workflow
+- You can [generate large collections of targets](https://books.ropensci.org/drake/gsp.html) without necessarily changing your code base of imported functions, another nice separation between the concepts and the execution of your workflow
 
 # Scale up and out.
 
-Not every project can complete in a single R session on your laptop. Some projects need more speed or computing power. Some require a few local processor cores, and some need large high-performance computing systems. But parallel computing is hard. Your tables and figures depend on your analysis results, and your analyses depend on your datasets, so some tasks must finish before others even begin. `drake` knows what to do. Parallelism is implicit and automatic. See the [high-performance computing guide](https://ropenscilabs.github.io/drake-manual/hpc.html) for all the details.
+Not every project can complete in a single R session on your laptop. Some projects need more speed or computing power. Some require a few local processor cores, and some need large high-performance computing systems. But parallel computing is hard. Your tables and figures depend on your analysis results, and your analyses depend on your datasets, so some tasks must finish before others even begin. `drake` knows what to do. Parallelism is implicit and automatic. See the [high-performance computing guide](https://books.ropensci.org/drake/hpc.html) for all the details.
 
 ```{r, eval = FALSE}
 # Use the spare cores on your local machine.
@@ -441,7 +441,7 @@ Alternatively, it is possible to run `drake` outside Docker and use the [`future
 
 # Installation
 
-You can choose among different versions of `drake`. The CRAN release often lags behind the [online manual](https://ropenscilabs.github.io/drake-manual/) but may have fewer bugs.
+You can choose among different versions of `drake`. The CRAN release often lags behind the [online manual](https://books.ropensci.org/drake/) but may have fewer bugs.
 
 ```{r, eval = FALSE}
 # Install the latest stable release from CRAN.
@@ -473,13 +473,13 @@ The [reference section](https://docs.ropensci.org/drake/reference/index.html) li
 
 # Documentation
 
-- The [user manual](https://ropenscilabs.github.io/drake-manual/)
+- The [user manual](https://books.ropensci.org/drake/)
 - The [reference website](https://docs.ropensci.org/drake/).
 - The [official repository of example code](https://github.com/wlandau/drake-examples). Download an example workflow from here with `drake_example()`.
 - [`drakeplanner`](https://github.com/wlandau/drakeplanner), an R/Shiny app to help learn `drake` and create new projects. Run locally with `drakeplanner::drakeplanner()` or access it at <https://wlandau.shinyapps.io/drakeplanner>.
 - [`learndrake`](https://github.com/wlandau/learndrake), an R package for teaching an extended `drake` workshop. It contains notebooks, slides, Shiny apps, the latter two of which are publicly deployed. See the [README](https://github.com/wlandau/learndrake/blob/master/README.md) for instructions and links.
-- Presentations and workshops by [Will Landau](https://github.com/wlandau), [Kirill Müller](https://github.com/krlmlr), [Amanda Dobbyn](https://github.com/aedobbyn), [Karthik Ram](http://github.com/karthik), [Sina Rüeger](https://github.com/sinarueeger), [Christine Stawitz](https://github.com/cstawitz), and others. See specific links at <https://ropenscilabs.github.io/drake-manual/index.html#presentations>
-- The [FAQ page](https://ropenscilabs.github.io/drake-manual/faq.html), which links to [appropriately-labeled issues on GitHub](https://github.com/ropensci/drake/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22frequently+asked+question%22+).
+- Presentations and workshops by [Will Landau](https://github.com/wlandau), [Kirill Müller](https://github.com/krlmlr), [Amanda Dobbyn](https://github.com/aedobbyn), [Karthik Ram](http://github.com/karthik), [Sina Rüeger](https://github.com/sinarueeger), [Christine Stawitz](https://github.com/cstawitz), and others. See specific links at <https://books.ropensci.org/drake/index.html#presentations>
+- The [FAQ page](https://books.ropensci.org/drake/faq.html), which links to [appropriately-labeled issues on GitHub](https://github.com/ropensci/drake/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22frequently+asked+question%22+).
 
 ## Use cases
 
@@ -499,8 +499,8 @@ The official [rOpenSci use cases](https://ropensci.org/usecases/) and [associate
 The following resources document many known issues and challenges.
 
 - [Frequently-asked questions](https://github.com/ropensci/drake/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22frequently+asked+question%22+).
-- [Cautionary notes and edge cases](https://ropenscilabs.github.io/drake-manual/caution.html)
-- [Debugging and testing drake projects](https://ropenscilabs.github.io/drake-manual/debugging.html)
+- [Cautionary notes and edge cases](https://books.ropensci.org/drake/caution.html)
+- [Debugging and testing drake projects](https://books.ropensci.org/drake/debugging.html)
 - [Other known issues](https://github.com/ropensci/drake/issues) (please search both open and closed ones).
 
 If you are still having trouble, please submit a [new issue](https://github.com/ropensci/drake/issues/new) with a bug report or feature request, along with a minimal reproducible example where appropriate.
@@ -528,7 +528,7 @@ The original idea of a time-saving reproducible build system extends back at lea
 
 Whereas [GNU Make](https://www.gnu.org/software/make/) is language-agnostic, `drake` is fundamentally designed for R.
 
-- Instead of a [Makefile](https://github.com/kbroman/preCCProbPaper/blob/master/Makefile), `drake` supports an R-friendly [domain-specific language](https://ropenscilabs.github.io/drake-manual/plans.html#large-plans) for declaring targets.
+- Instead of a [Makefile](https://github.com/kbroman/preCCProbPaper/blob/master/Makefile), `drake` supports an R-friendly [domain-specific language](https://books.ropensci.org/drake/plans.html#large-plans) for declaring targets.
 - Targets in [GNU Make](https://www.gnu.org/software/make/) are files, whereas targets in `drake` are arbitrary variables in memory. (`drake` does have opt-in support for files via `file_out()`, `file_in()`, and `knitr_in()`.) `drake` caches these objects in its own [storage system](https://github.com/richfitz/storr) so R users rarely have to think about output files.
 
 ### Remake
@@ -541,7 +541,7 @@ Whereas [GNU Make](https://www.gnu.org/software/make/) is language-agnostic, `dr
 
 ### Other pipeline tools
 
-There are [countless other successful pipeline toolkits](https://github.com/pditommaso/awesome-pipeline). The `drake` package distinguishes itself with its R-focused approach, Tidyverse-friendly interface, and a [thorough selection of parallel computing technologies and scheduling algorithms](https://ropenscilabs.github.io/drake-manual/hpc.html).
+There are [countless other successful pipeline toolkits](https://github.com/pditommaso/awesome-pipeline). The `drake` package distinguishes itself with its R-focused approach, Tidyverse-friendly interface, and a [thorough selection of parallel computing technologies and scheduling algorithms](https://books.ropensci.org/drake/hpc.html).
 
 ## Memoization
 
@@ -557,7 +557,7 @@ Memoization saves time for small projects, but it arguably does not go far enoug
 
 `drake` and [knitr](https://yihui.name/knitr/) are symbiotic. `drake`'s job is to manage large computation and orchestrate the demanding tasks of a complex data analysis pipeline. [knitr](https://yihui.name/knitr/)'s job is to communicate those expensive results after `drake` computes them. [knitr](https://yihui.name/knitr/) / [R Markdown](https://rmarkdown.rstudio.com/) reports are small pieces of an overarching `drake` pipeline. They should focus on communication, and they should do as little computation as possible. 
 
-To insert a [knitr](https://yihui.name/knitr/) report in a `drake` pipeline, use the `knitr_in()` function inside your [`drake` plan](https://ropenscilabs.github.io/drake-manual/plans.html), and use `loadd()` and `readd()` to refer to targets in the report itself. See an [example here](https://github.com/wlandau/drake-examples/tree/master/main).
+To insert a [knitr](https://yihui.name/knitr/) report in a `drake` pipeline, use the `knitr_in()` function inside your [`drake` plan](https://books.ropensci.org/drake/plans.html), and use `loadd()` and `readd()` to refer to targets in the report itself. See an [example here](https://github.com/wlandau/drake-examples/tree/master/main).
 
 ### Version control
 

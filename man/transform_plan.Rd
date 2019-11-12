@@ -43,7 +43,7 @@ Evaluate the \code{map()}, \code{cross()}, \code{split()} and
 \code{drake} plan.
 }
 \details{
-\url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans} # nolint
+\url{https://books.ropensci.org/drake/plans.html#large-plans} # nolint
 }
 \examples{
 plan1 <- drake_plan(

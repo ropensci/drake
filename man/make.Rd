@@ -104,7 +104,7 @@ See also \code{\link[=drake_cache]{drake_cache()}}.}
 
 \item{parallelism}{Character scalar, type of parallelism to use.
 For detailed explanations, see the
-\href{https://ropenscilabs.github.io/drake-manual/hpc.html}{high-performance computing chapter} # nolint
+\href{https://books.ropensci.org/drake/hpc.html}{high-performance computing chapter} # nolint
 of the user manual.
 
 You could also supply your own scheduler function
@@ -126,7 +126,7 @@ whenever \code{drake}'s unexported core functions are updated.
 You can experiment with \code{\link[=predict_runtime]{predict_runtime()}}
 to help decide on an appropriate number of jobs.
 For details, visit
-\url{https://ropenscilabs.github.io/drake-manual/time.html}.}
+\url{https://books.ropensci.org/drake/time.html}.}
 
 \item{jobs_preprocess}{Number of parallel jobs for processing the imports
 and doing other preprocessing tasks.}
@@ -600,7 +600,7 @@ If that fails, you can run \code{make(plan, lock_envir = FALSE)}
 to suppress environment-locking for all targets.
 However, this is not usually recommended.
 There are legitimate use cases for \code{lock_envir = FALSE}
-(example: \url{https://ropenscilabs.github.io/drake-manual/hpc.html#parallel-computing-within-targets}) # nolint
+(example: \url{https://books.ropensci.org/drake/hpc.html#parallel-computing-within-targets}) # nolint
 but most workflows should stick with the default \code{lock_envir = TRUE}.
 }
 

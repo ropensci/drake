@@ -38,7 +38,7 @@ analyses of multiple datasets in multiple ways.
 }
 \description{
 Use \code{\link[=drake_plan]{drake_plan()}} with transformations instead. See
-\url{https://ropenscilabs.github.io/drake-manual/plans.html#large-plans}
+\url{https://books.ropensci.org/drake/plans.html#large-plans}
 for details.
 }
 \details{

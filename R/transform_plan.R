@@ -5,13 +5,13 @@
 #'   of targets with transformations such as
 #'   `map()`, `split()`, `cross()`, and `combine()`.
 #' @details For details, see
-#'   <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>.
+#'   <https://books.ropensci.org/drake/plans.html#large-plans>.
 #' @section Transformations:
 #'  `drake` has special syntax for generating large plans.
 #'  Your code will look something like
 #'  `drake_plan(y = target(f(x), transform = map(x = c(1, 2, 3)))`
 #'  You can read about this interface at
-#'  <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans>. # nolint
+#'  <https://books.ropensci.org/drake/plans.html#large-plans>. # nolint
 #' @section Static branching:
 #'   In static branching, you define batches of targets
 #'   based on information you know in advance.
@@ -153,7 +153,7 @@ NULL
 #' @description Evaluate the `map()`, `cross()`, `split()` and
 #'   `combine()` operations in the `transform` column of a
 #'   `drake` plan.
-#' @details <https://ropenscilabs.github.io/drake-manual/plans.html#large-plans> # nolint
+#' @details <https://books.ropensci.org/drake/plans.html#large-plans> # nolint
 #' @export
 #' @seealso drake_plan, map, split, cross, combine
 #' @param plan A `drake` plan with a `transform` column
