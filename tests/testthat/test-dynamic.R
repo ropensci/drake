@@ -996,6 +996,7 @@ test_with_dir("formats applied to subtargets but not their parents", {
 })
 
 test_with_dir("non-rds formats and dynamic branching (#1059)", {
+  skip_if_not_installed("fst")
   plan <- drake_plan(
     x = data.frame(x = seq_len(2), y = seq_len(2)),
     y = target(x, dynamic = map(x), format = "fst")
