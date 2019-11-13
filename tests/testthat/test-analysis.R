@@ -1007,20 +1007,24 @@ test_with_dir("namespaced drake_plan works", {
   )
 })
 
-test_with_dir("standardizing Rcpp functions", {
+test_with_dir("standardizing Rcpp functions (#806)", {
   skip_on_cran()
-  skip_if_not_installed("Rcpp")
-  f <- Rcpp::cppFunction(
-    "int add(int x, int y, int z) {
-      int sum = x + y + z;
-      return sum;
-    }"
-  )
-  x <- standardize_imported_function(f)
+  if (FALSE) {
+    # Takes too long.
+    skip_if_not_installed("Rcpp")
+    f <- Rcpp::cppFunction(
+      "int add(int x, int y, int z) {
+        int sum = x + y + z;
+        return sum;
+      }"
+    )
+  }
+  str <- "function (x, y, z) \n.Call(<pointer: 0x116937930>, x, y, z)"
+  x <- standardize_deparsed_function(str)
   expect_true(grepl("function", x))
   expect_true(grepl("Call", x))
   expect_false(grepl("pointer: 0x", x))
-  expect_true(grepl("pointer: 0x", safe_deparse(f)))
+  expect_true(grepl("pointer: 0x", str))
 })
 
 test_with_dir("utils for code analysis fns", {

@@ -103,6 +103,10 @@ standardize_imported_function <- function(fun) {
     fun <- ignore_ignore(fun)
     str <- safe_deparse(fun) # Worth it: ignore_ignore is slow.
   }
+  standardize_deparsed_function(str)
+}
+
+standardize_deparsed_function <- function(str) {
   gsub("<pointer: 0x[0-9a-zA-Z]*>", "", str)
 }
 
