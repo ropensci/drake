@@ -175,13 +175,14 @@ test_with_dir("forks + lock_envir = informative error msg", {
   # Don't run this test for real because (1) we would have to add
   # furrr to "Suggests" and (2) at some point, base R may be patched
   # so forking in the parallel package does not give this warning anyway.
+  # Also, it needs to run outside the RStudio IDE so we can fork processes.
   regexp <- "workaround"
   plan <- drake_plan(x = parallel::mclapply(1:2, identity, mc.cores = 2))
   expect_warning(
     make(plan, envir = globalenv(), lock_envir = TRUE),
     regexp = regexp
   )
-  future::plan(future::multicore)
+  future::plan(future::multicore, workers = 2)
   plan <- drake_plan(
     # install.packages("furrr") # nolint
     # Not in "Suggests"
