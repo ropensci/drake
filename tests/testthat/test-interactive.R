@@ -280,6 +280,7 @@ test_with_dir("r_make() + clustermq", {
   expect_equal(r_outdated(), character(0))
 })
 
+# Needs to run outside the RStudio IDE to fork processes.
 test_with_dir("r_make() + multicore future", {
   skip_on_cran()
   skip_on_os("windows")
@@ -291,7 +292,7 @@ test_with_dir("r_make() + multicore future", {
     c(
       "library(drake)",
       "load_mtcars_example()",
-      "future::plan(future::multicore)",
+      "future::plan(future::multicore, workers = 2)",
       "drake_config(my_plan, parallelism = \"future\", jobs = 2)"
     ),
     "_drake.R"
