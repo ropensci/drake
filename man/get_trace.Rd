@@ -9,7 +9,7 @@ get_trace(trace, value)
 \arguments{
 \item{trace}{Character, name of the trace
 you want to extract. Such trace names are declared
-in the \code{.trace} argument of \code{map()}, \code{cross()} or \code{combine()}.}
+in the \code{.trace} argument of \code{map()}, \code{cross()} or \code{group()}.}
 
 \item{value}{The return value of the target with the trace.}
 }
@@ -39,12 +39,12 @@ plan <- drake_plan(
   y = target(c(w, x), dynamic = cross(w, x, .trace = w)),
 
   # We can use the trace as a grouping variable for the next
-  # combine().
+  # group().
   w_tr = get_trace("w", y),
 
   # Now, we use the trace again to keep track of the
   # values of w corresponding to the sub-targets of z.
-  z = target(y, dynamic = combine(y, .by = w_tr, .trace = w_tr))
+  z = target(y, dynamic = group(y, .by = w_tr, .trace = w_tr))
 )
 make(plan)
 

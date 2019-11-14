@@ -6,6 +6,7 @@
 \alias{split}
 \alias{cross}
 \alias{combine}
+\alias{group}
 \title{Transformations in \code{drake_plan()}. \lifecycle{maturing}}
 \arguments{
 \item{...}{Grouping variables. New grouping variables must be
@@ -97,17 +98,17 @@ but this is what it usage will look like.
 \itemize{
 \item \code{map(..., .trace)}
 \item \code{cross(..., .trace)}
-\item \code{combine(..., .by, .trace)}
+\item \code{group(..., .by, .trace)}
 }
 
 \code{map()} and \code{cross()} create dynamic sub-targets from the variables
 supplied to the dots. As with static branching, the variables
 supplied to \code{map()} must all have equal length.
-\code{split(f(data), .by = x)} makes a new dynamic sub-targets from
-pieces of \code{data} for each unique element of \code{x}. Here,
-\code{data} must not be dynamic.
-\code{combine(f(data), .by = x)} makes new dynamic
-sub-targets from \code{data}.
+\code{group(f(data), .by = x)} makes new dynamic
+sub-targets from \code{data}. Here, \code{data} can be either static or dynamic.
+If \code{data} is dynamic, \code{group()} aggregates existing sub-targets.
+If \code{data} is static, \code{group()} splits \code{data} into multiple
+subsets based on the groupings from \code{.by}.
 
 Differences from static branching:
 \itemize{

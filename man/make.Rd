@@ -240,12 +240,6 @@ with \code{\link[=assign]{assign()}}.
 \item \code{FALSE}: same as \code{"eager"}.
 }
 
-\code{lazy_load} should not be \code{"promise"}
-for \code{"parLapply"} parallelism combined with \code{jobs} greater than 1.
-For local multi-session parallelism and lazy loading, try
-\verb{library(future); future::plan(multisession)} and then
-\code{make(..., parallelism = "future_lapply", lazy_load = "bind")}.
-
 If \code{lazy_load} is \code{"eager"},
 drake prunes the execution environment before each target/stage,
 removing all superfluous targets
@@ -531,7 +525,7 @@ whose names match your URL, \code{drake} will choose the closest match.}
 
 \item{max_expand}{Positive integer, optional.
 \code{max_expand} is the maximum number of targets to generate in each
-\code{map()}, \code{cross()}, or \code{combine()} dynamic transform.
+\code{map()}, \code{cross()}, or \code{group()} dynamic transform.
 Useful if you have a massive number of dynamic sub-targets and you want to
 work with only the first few sub-targets before scaling up.
 Note: the \code{max_expand} argument of \code{make()} and
@@ -636,7 +630,7 @@ plan <- drake_plan(
   w = c("a", "a", "b", "b"),
   x = seq_len(4),
   y = target(x + 1, dynamic = map(x)),
-  z = target(list(y = y, w = w), dynamic = combine(y, .by = w))
+  z = target(list(y = y, w = w), dynamic = group(y, .by = w))
 )
 make(plan)
 subtargets(y)

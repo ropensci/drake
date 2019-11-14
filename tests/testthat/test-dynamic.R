@@ -8,7 +8,7 @@ test_with_dir("dynamic dependency detection", {
     w = seq_len(4),
     x = target(f(v), dynamic = map(v, indices)),
     y = target(x, dynamic = cross(x, c(v, y, nope))),
-    z = target(w, dynamic = combine(x, y, .by = c(w, nope)))
+    z = target(w, dynamic = group(x, y, .by = c(w, nope)))
   )
   config <- drake_config(plan)
   layout <- config$layout
@@ -50,8 +50,8 @@ test_with_dir("dynamic sub-target indices", {
     v = letters[u],
     w = target(f(v), dynamic = map(u, v)),
     y = target(seq_len(prod(length(u), length(v))), dynamic = cross(u, v)),
-    z = target({z_by; f(y)}, dynamic = combine(y, .by = z_by)), # nolint
-    z2 = target(f(y), dynamic = combine(y))
+    z = target({z_by; f(y)}, dynamic = group(y, .by = z_by)), # nolint
+    z2 = target(f(y), dynamic = group(y))
   )
   make(plan[, c("target", "command")])
   config <- drake_config(plan)
@@ -564,7 +564,7 @@ test_with_dir("switch the order of cross sub-targets", {
   expect_equal(justbuilt(config), "z")
 })
 
-test_with_dir("dynamic combine flow without by", {
+test_with_dir("dynamic group flow without by", {
   scenario <- get_testing_scenario()
   envir <- eval(parse(text = scenario$envir))
   parallelism <- scenario$parallelism
@@ -573,7 +573,7 @@ test_with_dir("dynamic combine flow without by", {
   plan <- drake_plan(
     x = seq_len(4),
     y = target(x + 1, dynamic = map(x)),
-    z = target(unlist(y), dynamic = combine(y))
+    z = target(unlist(y), dynamic = group(y))
   )
   make(
     plan,
@@ -599,7 +599,7 @@ test_with_dir("dynamic combine flow without by", {
   plan <- drake_plan(
     x = seq_len(4),
     y = target(x + 2, dynamic = map(x)),
-    z = target(unlist(y), dynamic = combine(y))
+    z = target(unlist(y), dynamic = group(y))
   )
   make(
     plan,
@@ -626,7 +626,7 @@ test_with_dir("dynamic combine flow without by", {
   plan <- drake_plan(
     x = c(1, 2, 10, 4),
     y = target(x + 2, dynamic = map(x)),
-    z = target(unlist(y), dynamic = combine(y))
+    z = target(unlist(y), dynamic = group(y))
   )
   make(
     plan,
@@ -642,7 +642,7 @@ test_with_dir("dynamic combine flow without by", {
   expect_equal(sort(justbuilt(config)), sort(exp))
 })
 
-test_with_dir("dynamic combine with by", {
+test_with_dir("dynamic group with by", {
   plan <- drake_plan(
     u = seq_len(4),
     v = seq_len(4) + 1,
@@ -651,7 +651,7 @@ test_with_dir("dynamic combine with by", {
     y = target(v, dynamic = map(v)),
     z = target(
       list(x = do.call("c", x), y = do.call("c", y), my_by = w),
-      dynamic = combine(x, y, .by = w)
+      dynamic = group(x, y, .by = w)
     )
   )
   make(plan)
@@ -669,7 +669,7 @@ test_with_dir("dynamic combine with by", {
     y = target(v, dynamic = map(v)),
     z = target(
       list(x = sum(do.call("c", x)), y = do.call("c", y)),
-      dynamic = combine(x, y, .by = w)
+      dynamic = group(x, y, .by = w)
     )
   )
   make(plan)
@@ -695,7 +695,7 @@ test_with_dir("insert .by piece by piece", {
     y = target(x + 1, dynamic = map(x)),
     z = target(
       list(y = unlist(y), w = w),
-      dynamic = combine(y, .by = w)
+      dynamic = group(y, .by = w)
     )
   )
   make(
@@ -714,7 +714,7 @@ test_with_dir("insert .by piece by piece", {
   expect_equal(out, exp)
 })
 
-test_with_dir("dynamic combine flow with by", {
+test_with_dir("dynamic group flow with by", {
   scenario <- get_testing_scenario()
   envir <- eval(parse(text = scenario$envir))
   suppressWarnings(rm(
@@ -729,7 +729,7 @@ test_with_dir("dynamic combine flow with by", {
     w = c("a", "b", "c", "c"),
     x = seq_len(4),
     y = target(x + 101, dynamic = map(x)),
-    z = target(unlist(y), dynamic = combine(y, .by = w))
+    z = target(unlist(y), dynamic = group(y, .by = w))
   )
   make(
     plan,
@@ -750,7 +750,7 @@ test_with_dir("dynamic combine flow with by", {
     w = c("a", "b", "c", "c"),
     x = seq_len(4),
     y = target(x + 2, dynamic = map(x)),
-    z = target(unlist(y), dynamic = combine(y, .by = w))
+    z = target(unlist(y), dynamic = group(y, .by = w))
   )
   make(
     plan,
@@ -770,7 +770,7 @@ test_with_dir("dynamic combine flow with by", {
     w = c("a", "b", "c", "c"),
     x = as.integer(c(1, 2, 3, 10)),
     y = target(x + 2, dynamic = map(x)),
-    z = target(unlist(y), dynamic = combine(y, .by = w))
+    z = target(unlist(y), dynamic = group(y, .by = w))
   )
   make(
     plan,
@@ -799,7 +799,7 @@ test_with_dir("dynamic combine flow with by", {
     w = c("a", "a", "b", "c", "c"),
     x = as.integer(c(1, 0, 2, 3, 10)),
     y = target(x + 2, dynamic = map(x)),
-    z = target(unlist(y), dynamic = combine(y, .by = w))
+    z = target(unlist(y), dynamic = group(y, .by = w))
   )
   make(
     plan,
@@ -818,7 +818,7 @@ test_with_dir("dynamic combine flow with by", {
     w = c("a", "b", "b", "c", "c"),
     x = as.integer(c(1, 0, 2, 3, 10)),
     y = target(x + 2, dynamic = map(x)),
-    z = target(unlist(y), dynamic = combine(y, .by = w))
+    z = target(unlist(y), dynamic = group(y, .by = w))
   )
   make(
     plan,
@@ -839,7 +839,7 @@ test_with_dir("dynamic combine flow with by", {
     w = c("X", "Y", "Y", "Z", "Z"),
     x = as.integer(c(1, 0, 2, 3, 10)),
     y = target(x + 2, dynamic = map(x)),
-    z = target(unlist(y), dynamic = combine(y, .by = w))
+    z = target(unlist(y), dynamic = group(y, .by = w))
   )
   make(
     plan,
@@ -905,63 +905,63 @@ test_with_dir("dynamic map over unequal vars", {
   expect_error(make(plan), "all grouping variables")
 })
 
-test_with_dir("dynamic combine over unequal vars", {
+test_with_dir("dynamic group over unequal vars", {
   plan <- drake_plan(
     x = seq_len(4),
     y = seq_len(5),
     x2 = target(x, dynamic = map(x)),
     y2 = target(y, dynamic = map(y)),
-    z = target(c(x2, y2), dynamic = combine(x2, y2))
+    z = target(c(x2, y2), dynamic = group(x2, y2))
   )
   expect_error(make(plan), "all grouping variables")
 })
 
-test_with_dir("dynamic combine over unequal vars", {
+test_with_dir("dynamic group over unequal vars", {
   plan <- drake_plan(
     x = seq_len(4),
     y = seq_len(5),
     x2 = target(x, dynamic = map(x)),
     y2 = target(y, dynamic = map(y)),
-    z = target(x2, dynamic = combine(x2, .by = y))
+    z = target(x2, dynamic = group(x2, .by = y))
   )
   expect_error(make(plan), "all grouping variables")
 })
 
-test_with_dir("combine: static targets and .by precedence", {
+test_with_dir("group: static targets and .by precedence", {
   plan <- drake_plan(
     x = c("a", "a", "b", "b"),
-    y = target(x, dynamic = combine(x))
+    y = target(x, dynamic = group(x))
   )
   make(plan)
   expect_equal(readd(y), list(c("a", "a", "b", "b")))
   plan <- drake_plan(
     x = c("a", "a", "b", "b"),
     y = seq_len(4),
-    z = target(y, dynamic = combine(y, .by = x))
+    z = target(y, dynamic = group(y, .by = x))
   )
   make(plan)
   expect_equal(readd(z), list(c(1, 2), c(3, 4)))
   plan <- drake_plan(
     x = c("a", "a", "b", "b"),
     y = as.character(seq_len(4)),
-    z = target(c(x, y), dynamic = combine(y, .by = x))
+    z = target(c(x, y), dynamic = group(y, .by = x))
   )
   make(plan)
   expect_equal(readd(z), list(c("a", "1", "2"), c("b", "3", "4")))
   plan <- drake_plan(
     x = c("a", "a", "b", "b"),
-    y = target(x, dynamic = combine(x, .by = x))
+    y = target(x, dynamic = group(x, .by = x))
   )
   make(plan)
   expect_equal(readd(y), list(c("a", "a"), c("b", "b")))
 })
 
-test_with_dir("combine multiple targets", {
+test_with_dir("group multiple targets", {
   plan <- drake_plan(
     w = c("a", "a", "b", "b"),
     x = c(1, 2, 3, 4),
     y = c(11, 12, 13, 14),
-    z = target(list(x, y), dynamic = combine(x, y, .by = w))
+    z = target(list(x, y), dynamic = group(x, y, .by = w))
   )
   make(plan)
   out <- readd(z)
@@ -1244,7 +1244,7 @@ test_with_dir("dynamic hpc", {
       index = target(substr(combos, 0L, 1L), dynamic = map(combos)),
       groups = target(
         unlist(combos),
-        dynamic = combine(combos, .by = index)
+        dynamic = group(combos, .by = index)
       )
     )
     make(
@@ -1274,7 +1274,7 @@ test_with_dir("dynamic hpc", {
       index = target(substr(combos, 0L, 1L), dynamic = map(combos)),
       groups = target(
         paste0(unlist(combos), "+"),
-        dynamic = combine(combos, .by = index)
+        dynamic = group(combos, .by = index)
       )
     )
     make(
@@ -1314,7 +1314,7 @@ test_with_dir("dynamic max_expand", {
     dyn2 = seq_len(10),
     dyn3 = target(dyn1, dynamic = map(dyn1)),
     dyn4 = target(c(dyn1, dyn2), dynamic = cross(dyn1, dyn2)),
-    dyn5 = target(unlist(dyn1), dynamic = combine(dyn1, .by = dyn2))
+    dyn5 = target(unlist(dyn1), dynamic = group(dyn1, .by = dyn2))
   )
   make(
     plan,
@@ -1362,13 +1362,13 @@ test_with_dir("bad cross trace (#1052)", {
   expect_error(drake_config(plan), regexp = "illegal dynamic trace variables")
 })
 
-test_with_dir("bad combine trace (#1052)", {
+test_with_dir("bad group trace (#1052)", {
   plan <- drake_plan(
     a = letters[seq_len(2)],
     b = seq_len(2),
     c = target(paste(a, b), dynamic = cross(a, b, .trace = c(a, b))),
     a_crossed = get_trace(c, "a"),
-    d = target(unlist(c), dynamic = combine(c, .by = a_crossed, .trace = a))
+    d = target(unlist(c), dynamic = group(c, .by = a_crossed, .trace = a))
   )
   expect_error(
     drake_config(plan),
@@ -1423,13 +1423,13 @@ test_with_dir("dynamic cross trace (#1052)", {
   expect_equal(out, exp)
 })
 
-test_with_dir("dynamic combine trace (#1052)", {
+test_with_dir("dynamic group trace (#1052)", {
   plan <- drake_plan(
     w = LETTERS[seq_len(3)],
     x = letters[seq_len(2)],
     y = target(c(w, x), dynamic = cross(w, x, .trace = w)),
     w_tr = get_trace("w", y),
-    z = target(y, dynamic = combine(y, .by = w_tr, .trace = w_tr))
+    z = target(y, dynamic = group(y, .by = w_tr, .trace = w_tr))
   )
   make(plan)
   value <- drake_cache()$get("z")

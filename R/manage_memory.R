@@ -248,7 +248,7 @@ load_dynamic_subdep_impl <- function(dynamic, parent, dep, index, config) {
   UseMethod("load_dynamic_subdep_impl")
 }
 
-load_dynamic_subdep_impl.combine <- function( # nolint
+load_dynamic_subdep_impl.group <- function( # nolint
   dynamic,
   parent,
   dep,

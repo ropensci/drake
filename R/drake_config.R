@@ -171,12 +171,6 @@
 #'   - `TRUE`: same as `"promise"`.
 #'   - `FALSE`: same as `"eager"`.
 #'
-#'   `lazy_load` should not be `"promise"`
-#'   for `"parLapply"` parallelism combined with `jobs` greater than 1.
-#'   For local multi-session parallelism and lazy loading, try
-#'   `library(future); future::plan(multisession)` and then
-#'   `make(..., parallelism = "future_lapply", lazy_load = "bind")`.
-#'
 #'   If `lazy_load` is `"eager"`,
 #'   drake prunes the execution environment before each target/stage,
 #'   removing all superfluous targets
@@ -457,7 +451,7 @@
 #'
 #' @param max_expand Positive integer, optional.
 #'   `max_expand` is the maximum number of targets to generate in each
-#'   `map()`, `cross()`, or `combine()` dynamic transform.
+#'   `map()`, `cross()`, or `group()` dynamic transform.
 #'   Useful if you have a massive number of dynamic sub-targets and you want to
 #'   work with only the first few sub-targets before scaling up.
 #'   Note: the `max_expand` argument of `make()` and

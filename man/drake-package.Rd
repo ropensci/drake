@@ -37,7 +37,7 @@ plan <- drake_plan(
   w = c("a", "a", "b", "b"),
   x = seq_len(4),
   y = target(x + 1, dynamic = map(x)),
-  z = target(list(y = y, w = w), dynamic = combine(y, .by = w))
+  z = target(list(y = y, w = w), dynamic = group(y, .by = w))
 )
 make(plan)
 subtargets(y)

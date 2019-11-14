@@ -1,6 +1,6 @@
 #' @title Transformations in `drake_plan()`. \lifecycle{maturing}
 #' @name transformations
-#' @aliases map split cross combine
+#' @aliases map split cross combine group
 #' @description In [drake_plan()], you can define whole batches
 #'   of targets with transformations such as
 #'   `map()`, `split()`, `cross()`, and `combine()`.
@@ -32,16 +32,16 @@
 #'   but this is what it usage will look like.
 #'   - `map(..., .trace)`
 #'   - `cross(..., .trace)`
-#'   - `combine(..., .by, .trace)`
+#'   - `group(..., .by, .trace)`
 #'
 #'  `map()` and `cross()` create dynamic sub-targets from the variables
 #'  supplied to the dots. As with static branching, the variables
 #'  supplied to `map()` must all have equal length.
-#'  `split(f(data), .by = x)` makes a new dynamic sub-targets from
-#'   pieces of `data` for each unique element of `x`. Here,
-#'   `data` must not be dynamic.
-#'   `combine(f(data), .by = x)` makes new dynamic
-#'   sub-targets from `data`.
+#'   `group(f(data), .by = x)` makes new dynamic
+#'   sub-targets from `data`. Here, `data` can be either static or dynamic.
+#'   If `data` is dynamic, `group()` aggregates existing sub-targets.
+#'   If `data` is static, `group()` splits `data` into multiple
+#'   subsets based on the groupings from `.by`.
 #'
 #'  Differences from static branching:
 #'  - `...` must contain *unnamed* symbols with no values supplied,
