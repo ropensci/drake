@@ -1436,3 +1436,12 @@ test_with_dir("dynamic group trace (#1052)", {
   expect_equal(get_trace("w_tr", value), LETTERS[seq_len(3)])
   expect_equal(read_trace("w_tr", "z"), LETTERS[seq_len(3)])
 })
+
+
+test_with_dir("dynamic combine() does not exist", {
+  plan <- drake_plan(
+    x = seq_len(8),
+    y = target(x, dynamic = combine(x, .by = x))
+  )
+  expect_error(make(plan), regexp = "does not exist")
+})

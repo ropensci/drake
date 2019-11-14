@@ -381,7 +381,7 @@ as_dynamic <- function(x) {
     return(x)
   }
   class(x) <- c(x[[1]], "dynamic", class(x))
-  match_call(x)
+  match_dynamic_call(x)
 }
 
 dynamic_subvalue <- function(value, index) {
@@ -417,22 +417,31 @@ dynamic_subvalue_vector <- function(value, index) {
   value[index]
 }
 
-match_call <- function(dynamic) {
+match_dynamic_call <- function(dynamic) {
   class <- class(dynamic)
-  out <- match_call_impl(dynamic)
+  out <- match_dynamic_call_impl(dynamic)
   class(out) <- class
   out
 }
 
-match_call_impl <- function(dynamic) {
-  UseMethod("match_call_impl")
+match_dynamic_call_impl <- function(dynamic) {
+  UseMethod("match_dynamic_call_impl")
 }
 
-match_call_impl.map <- match_call_impl.cross <- function(dynamic) {
+match_dynamic_call_impl.map <- match_dynamic_call_impl.cross <- function(dynamic) {
   match.call(definition = def_map, call = dynamic)
 }
 
-match_call_impl.group <- function(dynamic) {
+match_dynamic_call_impl.combine <- function(dynamic) {
+  stop(
+    "Dynamic combine() does not exist. ",
+    "use group() instead. ",
+    "Ref: https://github.com/ropensci/drake/issues/1065",
+    call. = FALSE
+  )
+}
+
+match_dynamic_call_impl.group <- function(dynamic) {
   match.call(definition = def_group, call = dynamic)
 }
 
