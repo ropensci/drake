@@ -100,7 +100,7 @@ graph <- drake_graph_info(config)
 # You can pass the data frames right to render_drake_graph()
 # (as in vis_drake_graph()) or you can create
 # your own custom visNewtork graph.
-render_drake_graph(graph, width = '100\%') # Width is passed to visNetwork.
+render_drake_graph(graph, width = '100%') # Width is passed to visNetwork.
 }
 }
 })

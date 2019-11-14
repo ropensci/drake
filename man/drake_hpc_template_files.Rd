@@ -25,7 +25,7 @@ drake_hpc_template_files()
 # Write a SLURM template file.
 out <- file.path(tempdir(), "slurm_batchtools.tmpl")
 drake_hpc_template_file("slurm_batchtools.tmpl", to = tempdir())
-cat(readLines(out), sep = "\\n")
+cat(readLines(out), sep = "\n")
 # library(future.batchtools) # nolint
 # future::plan(batchtools_slurm, template = out) # nolint
 # make(plan, parallelism = "future", jobs = 2) # nolint

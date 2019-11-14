@@ -182,7 +182,7 @@ load_mtcars_example() # Get the code with drake_example("mtcars").
 config <- drake_config(my_plan)
 # Plot the network graph representation of the workflow.
 if (requireNamespace("visNetwork", quietly = TRUE)) {
-vis_drake_graph(config, width = '100\%') # The width is passed to visNetwork
+vis_drake_graph(config, width = '100%') # The width is passed to visNetwork
 make(my_plan) # Run the project, build the targets.
 vis_drake_graph(config) # The red nodes from before are now green.
 # Plot a subgraph of the workflow.

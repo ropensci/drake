@@ -323,7 +323,7 @@ drake_plan(
 drake_plan(
   large_data = get_data(),
   slice_analysis = target(
-    large_data \%>\%
+    large_data %>%
       analyze(),
     transform = split(large_data, slices = 4)
   ),

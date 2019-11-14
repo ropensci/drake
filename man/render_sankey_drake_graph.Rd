@@ -67,7 +67,7 @@ graph <- drake_graph_info(config)
 # You can pass the data frames right to render_sankey_drake_graph()
 # (as in sankey_drake_graph()) or you can create
 # your own custom visNewtork graph.
-render_sankey_drake_graph(graph, width = '100\%')
+render_sankey_drake_graph(graph, width = '100%')
 }
 }
 }

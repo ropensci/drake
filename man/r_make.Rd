@@ -153,7 +153,7 @@ writeLines(
   ),
   "_drake.R" # default value of the `source` argument
 )
-cat(readLines("_drake.R"), sep = "\\n")
+cat(readLines("_drake.R"), sep = "\n")
 r_outdated()
 r_make()
 r_outdated()
