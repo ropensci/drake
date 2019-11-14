@@ -428,11 +428,13 @@ match_dynamic_call_impl <- function(dynamic) {
   UseMethod("match_dynamic_call_impl")
 }
 
-match_dynamic_call_impl.map <- match_dynamic_call_impl.cross <- function(dynamic) {
+match_dynamic_call_impl.map <- function(dynamic) {
   match.call(definition = def_map, call = dynamic)
 }
 
-match_dynamic_call_impl.combine <- function(dynamic) {
+match_dynamic_call_impl.cross <- match_dynamic_call_impl.map
+
+match_dynamic_call_impl.combine <- function(dynamic) { # nolint
   stop(
     "Dynamic combine() does not exist. ",
     "use group() instead. ",
