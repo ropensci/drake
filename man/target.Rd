@@ -14,7 +14,7 @@ target(command = NULL, transform = NULL, dynamic = NULL, ...)
 to apply a \emph{static} transformation. Details:
 \url{https://books.ropensci.org/drake/static.html}}
 
-\item{dynamic}{A call to \code{\link[=map]{map()}}, \code{\link[=cross]{cross()}}, or \code{\link[=combine]{combine()}}
+\item{dynamic}{A call to \code{\link[=map]{map()}}, \code{\link[=cross]{cross()}}, or \code{\link[=group]{group()}}
 to apply a \emph{dynamic} transformation. Details:
 \url{https://books.ropensci.org/drake/dynamic.html}}
 

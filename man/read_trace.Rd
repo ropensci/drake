@@ -12,7 +12,7 @@ a trace.}
 
 \item{target}{The name of a dynamic target with one or more traces
 defined using the \code{.trace} argument of dynamic \code{map()}, \code{cross()},
-or \code{combine()}.}
+or \code{group()}.}
 
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} is ignored.}
@@ -46,12 +46,12 @@ plan <- drake_plan(
   y = target(c(w, x), dynamic = cross(w, x, .trace = w)),
 
   # We can use the trace as a grouping variable for the next
-  # combine().
+  # group().
   w_tr = get_trace("w", y),
 
   # Now, we use the trace again to keep track of the
   # values of w corresponding to the sub-targets of z.
-  z = target(y, dynamic = combine(y, .by = w_tr, .trace = w_tr))
+  z = target(y, dynamic = group(y, .by = w_tr, .trace = w_tr))
 )
 make(plan)
 

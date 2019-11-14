@@ -79,8 +79,8 @@ make(plan)
 file.exists("mtcars.csv")
 
 # You may use `.id_chr` inside `file_out()` and `file_in()`
-# to refer  to the current target. This works inside `map()`,
-# `combine()`, `split()`, and `cross()`.
+# to refer  to the current target. This works inside
+# static `map()`, `combine()`, `split()`, and `cross()`.
 
 plan <- drake::drake_plan(
   data = target(

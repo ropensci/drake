@@ -327,13 +327,13 @@ cdl_assert_trace <- function(dynamic, layout) {
   UseMethod("cdl_assert_trace")
 }
 
-cdl_assert_trace.combine <- function(dynamic, layout) {
+cdl_assert_trace.group <- function(dynamic, layout) {
   bad <- setdiff(layout$deps_dynamic_trace, layout$deps_dynamic)
   if (!length(bad)) {
     return()
   }
   stop(
-    "in combine(), ",
+    "in dynamic group(), ",
     "the only legal dynamic trace variable ",
     "is the one you select with `.by`. ",
     "illegal dynamic trace variables for target ",

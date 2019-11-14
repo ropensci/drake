@@ -12,7 +12,7 @@
 #' @param transform A call to [map()], [split()], [cross()], or [combine()]
 #'   to apply a *static* transformation. Details:
 #'   <https://books.ropensci.org/drake/static.html>
-#' @param dynamic A call to [map()], [cross()], or [combine()]
+#' @param dynamic A call to [map()], [cross()], or [group()]
 #'   to apply a *dynamic* transformation. Details:
 #'   <https://books.ropensci.org/drake/dynamic.html>
 #' @param ... Optional columns of the plan for a given target.
@@ -244,8 +244,8 @@ trigger <- function(
 #' file.exists("mtcars.csv")
 #'
 #' # You may use `.id_chr` inside `file_out()` and `file_in()`
-#' # to refer  to the current target. This works inside `map()`,
-#' # `combine()`, `split()`, and `cross()`.
+#' # to refer  to the current target. This works inside
+#' # static `map()`, `combine()`, `split()`, and `cross()`.
 #'
 #' plan <- drake::drake_plan(
 #'   data = target(

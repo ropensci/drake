@@ -13,7 +13,7 @@
 #'   w = c("a", "a", "b", "b"),
 #'   x = seq_len(4),
 #'   y = target(x + 1, dynamic = map(x)),
-#'   z = target(list(y = y, w = w), dynamic = combine(y, .by = w))
+#'   z = target(list(y = y, w = w), dynamic = group(y, .by = w))
 #' )
 #' make(plan)
 #' subtargets(y)
@@ -54,12 +54,12 @@ subtargets <- function(
 #' @inheritParams readd
 #' @param trace Character, name of the trace
 #'   you want to extract. Such trace names are declared
-#'   in the `.trace` argument of `map()`, `cross()` or `combine()`.
+#'   in the `.trace` argument of `map()`, `cross()` or `group()`.
 #' @param trace Character, name of a target from which to extract
 #'   a trace.
 #' @param target The name of a dynamic target with one or more traces
 #'   defined using the `.trace` argument of dynamic `map()`, `cross()`,
-#'   or `combine()`.
+#'   or `group()`.
 #' @examples
 #' \dontrun{
 #' isolate_example("demonstrate dynamic trace", {
@@ -72,12 +72,12 @@ subtargets <- function(
 #'   y = target(c(w, x), dynamic = cross(w, x, .trace = w)),
 #'
 #'   # We can use the trace as a grouping variable for the next
-#'   # combine().
+#'   # group().
 #'   w_tr = get_trace("w", y),
 #'
 #'   # Now, we use the trace again to keep track of the
 #'   # values of w corresponding to the sub-targets of z.
-#'   z = target(y, dynamic = combine(y, .by = w_tr, .trace = w_tr))
+#'   z = target(y, dynamic = group(y, .by = w_tr, .trace = w_tr))
 #' )
 #' make(plan)
 #'
@@ -120,7 +120,7 @@ read_trace <- function(
 #'   a vector of values from a grouping variable.
 #' @param trace Character, name of the trace
 #'   you want to extract. Such trace names are declared
-#'   in the `.trace` argument of `map()`, `cross()` or `combine()`.
+#'   in the `.trace` argument of `map()`, `cross()` or `group()`.
 #' @param value The return value of the target with the trace.
 #' @examples
 #' \dontrun{
@@ -134,12 +134,12 @@ read_trace <- function(
 #'   y = target(c(w, x), dynamic = cross(w, x, .trace = w)),
 #'
 #'   # We can use the trace as a grouping variable for the next
-#'   # combine().
+#'   # group().
 #'   w_tr = get_trace("w", y),
 #'
 #'   # Now, we use the trace again to keep track of the
 #'   # values of w corresponding to the sub-targets of z.
-#'   z = target(y, dynamic = combine(y, .by = w_tr, .trace = w_tr))
+#'   z = target(y, dynamic = group(y, .by = w_tr, .trace = w_tr))
 #' )
 #' make(plan)
 #'
@@ -212,7 +212,7 @@ get_trace_impl.cross <- function(dynamic, value, layout, config) {
   trace
 }
 
-get_trace_impl.combine <- function(dynamic, value, layout, config) {
+get_trace_impl.group <- function(dynamic, value, layout, config) {
   by_key <- which_by(dynamic)
   by_value <- get(by_key, envir = config$envir_targets, inherits = FALSE)
   trace <- list(unique(by_value))
@@ -381,7 +381,7 @@ as_dynamic <- function(x) {
     return(x)
   }
   class(x) <- c(x[[1]], "dynamic", class(x))
-  match_call(x)
+  match_dynamic_call(x)
 }
 
 dynamic_subvalue <- function(value, index) {
@@ -417,23 +417,32 @@ dynamic_subvalue_vector <- function(value, index) {
   value[index]
 }
 
-match_call <- function(dynamic) {
+match_dynamic_call <- function(dynamic) {
   class <- class(dynamic)
-  out <- match_call_impl(dynamic)
+  out <- match_dynamic_call_impl(dynamic)
   class(out) <- class
   out
 }
 
-match_call_impl <- function(dynamic) {
-  UseMethod("match_call_impl")
+match_dynamic_call_impl <- function(dynamic) {
+  UseMethod("match_dynamic_call_impl")
 }
 
-match_call_impl.map <- match_call_impl.cross <- function(dynamic) {
+match_dynamic_call_impl.map <- match_dynamic_call_impl.cross <- function(dynamic) {
   match.call(definition = def_map, call = dynamic)
 }
 
-match_call_impl.combine <- function(dynamic) {
-  match.call(definition = def_combine, call = dynamic)
+match_dynamic_call_impl.combine <- function(dynamic) {
+  stop(
+    "Dynamic combine() does not exist. ",
+    "use group() instead. ",
+    "Ref: https://github.com/ropensci/drake/issues/1065",
+    call. = FALSE
+  )
+}
+
+match_dynamic_call_impl.group <- function(dynamic) {
+  match.call(definition = def_group, call = dynamic)
 }
 
 # nocov start
@@ -441,7 +450,7 @@ def_map <- function(..., .trace = NULL) {
   NULL
 }
 
-def_combine <- function(..., .by = NULL, .trace = NULL) {
+def_group <- function(..., .by = NULL, .trace = NULL) {
   NULL
 }
 # nocov end
@@ -484,7 +493,7 @@ dynamic_hash_list.cross <- function(dynamic, target, config) {
   lapply(deps, read_dynamic_hashes, config = config)
 }
 
-dynamic_hash_list.combine <- function(dynamic, target, config) {
+dynamic_hash_list.group <- function(dynamic, target, config) {
   deps <- sort(which_vars(dynamic))
   out <- lapply(deps, read_dynamic_hashes, config = config)
   if (!is.null(dynamic$.by)) {
@@ -504,7 +513,7 @@ assert_equal_branches <- function(target, deps, hashes) {
   lengths <- lengths[keep]
   deps[is.na(deps)] <- ".by"
   stop(
-    "for dynamic map() and combine(), all grouping variables ",
+    "for dynamic map() and group(), all grouping variables ",
     "must have equal lengths. For target ", target,
     ", the lengths of ", paste(deps, collapse = ", "),
     " were ", paste0(lengths, collapse = ", "),
@@ -535,7 +544,7 @@ subtarget_hashes.cross <- function(dynamic, target, hashes, config) {
   apply(hashes, 1, paste, collapse = " ")
 }
 
-subtarget_hashes.combine <- function(dynamic, target, hashes, config) {
+subtarget_hashes.group <- function(dynamic, target, hashes, config) {
   if (is.null(hashes[["_by"]])) {
     return(lapply(hashes, paste, collapse = " "))
   }
@@ -571,7 +580,7 @@ subtarget_deps_impl.cross <- function(dynamic, target, index, config) {
   out
 }
 
-subtarget_deps_impl.combine <- function(
+subtarget_deps_impl.group <- function(
   dynamic,
   target,
   index,
