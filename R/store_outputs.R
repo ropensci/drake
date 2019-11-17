@@ -67,7 +67,15 @@ output_type <- function(value, meta) {
   if (is.function(value)) {
     return("function")
   }
+  if (is_storr(value)) {
+    return("storr")
+  }
   "object"
+}
+
+is_storr <- function(value) {
+  inherits(value, "refclass_decorated_storr") ||
+    inherits(value, "storr")
 }
 
 store_item_impl <- function(target, value, meta, config) {
@@ -108,6 +116,10 @@ standardize_imported_function <- function(fun) {
 
 standardize_deparsed_function <- function(str) {
   gsub("<pointer: 0x[0-9a-zA-Z]*>", "", str)
+}
+
+store_item_impl.storr <- function(target, value, meta, config) {
+  store_object(target, value = "storr", meta, config)
 }
 
 store_item_impl.object <- function(target, value, meta, config) {

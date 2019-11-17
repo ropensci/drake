@@ -863,3 +863,13 @@ test_with_dir("which_clean() (#1014)", {
   clean(x, y, cache = cache)       # Invalidates targets x and y.
   expect_equal(cached(cache = cache), "z")
 })
+
+test_with_dir("ignore storrs (#1071)", {
+  cache <- new_cache(tempfile())
+  cache$set("x", "val")
+  plan <- drake_plan(x = c(cache$get("x"), "target"))
+  make(plan)
+  expect_equal(readd(x), c("val", "target"))
+  expect_equal(cache$get("x"), "val")
+  expect_equal(readd(cache), "storr")
+})

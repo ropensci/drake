@@ -9,7 +9,7 @@ labels: 'type: trouble'
 
 - [ ] Read and abide by `drake`'s [code of conduct](https://github.com/ropensci/drake/blob/master/CODE_OF_CONDUCT.md).
 - [ ] Search for duplicates among the [existing issues](https://github.com/ropensci/drake/issues), both open and closed.
-- [ ] Advanced users: verify that the bug still persists in the current development version (i.e. `remotes::install_github("ropensci/drake")`) and mention the [SHA-1 hash](https://git-scm.com/book/en/v1/Getting-Started-Git-Basics#Git-Has-Integrity) of the [Git commit you install](https://github.com/ropensci/drake/commits/master).
+- [ ] If you think your issue has a quick and definite solution, consider posting to [Stack Overflow](https://stackoverflow.com) under the [`drake-r-package` tag](https://stackoverflow.com/tags/drake-r-package). (If you anticipate extended follow-up and discussion, you are already in the right place!)
 
 ## Description
 
@@ -17,7 +17,9 @@ Describe the trouble clearly and concisely.
 
 ## Reproducible example
 
-Provide a minimal reproducible example with code and output that demonstrates the problem. The [`reprex`](https://github.com/tidyverse/reprex) package is extremely helpful for this.
+Provide a minimal reproducible example with code and output that demonstrates the problem. The `reprex()` function from the [`reprex`](https://github.com/tidyverse/reprex) package is extremely helpful for this.
+
+To help us read your code, please try to follow the [tidyverse style guide](https://style.tidyverse.org/). The `style_text()` and `style_file()` functions from the [`styler`](https://github.com/r-lib/styler) package make it easier.
 
 ## Desired result
 

@@ -28,6 +28,8 @@
 - Clean up the code of the parallel backends.
 - Make `dynamic` a formal argument of `target()`.
 - Always lock/unlock the environment target by target, allowing informative error messages to appear more readily (#1062, @PedramNavid)
+- Automatically ignore `storr`s and decorated `storr`s (#1071).
+
 
 # Version 7.7.0
 
