@@ -177,7 +177,9 @@ subset_trace <- function(trace, config) {
   if (is.null(config$max_expand)) {
     return(trace)
   }
-  lapply(trace, `[`, i = seq_len(config$max_expand))
+  lapply(trace, function(x) {
+    dynamic_subvalue(x, index = seq_len(config$max_expand))
+  })
 }
 
 get_trace_impl <- function(dynamic, value, layout, config) {

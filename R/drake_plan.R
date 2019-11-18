@@ -206,8 +206,7 @@
 #' drake_plan(
 #'   large_data = get_data(),
 #'   slice_analysis = target(
-#'     large_data %>%
-#'       analyze(),
+#'     analyze(large_data),
 #'     transform = split(large_data, slices = 4)
 #'   ),
 #'   results = target(
@@ -258,7 +257,7 @@
 #'   w = c("a", "a", "b", "b"),
 #'   x = seq_len(4),
 #'   y = target(x + 1, dynamic = map(x)),
-#'   z = target(list(y = y, w = w), dynamic = combine(y, .by = w))
+#'   z = target(list(y = y, w = w), dynamic = group(y, .by = w))
 #' )
 #' make(plan)
 #' subtargets(y)

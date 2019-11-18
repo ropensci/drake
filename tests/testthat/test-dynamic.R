@@ -1439,6 +1439,7 @@ test_with_dir("dynamic group trace (#1052)", {
 
 
 test_with_dir("dynamic combine() does not exist", {
+  skip_on_cran()
   plan <- drake_plan(
     x = seq_len(8),
     y = target(x, dynamic = combine(x, .by = x))
@@ -1447,6 +1448,7 @@ test_with_dir("dynamic combine() does not exist", {
 })
 
 test_with_dir("trace responds to dynamic max_expand (#1073)", {
+  skip_on_cran()
   x <- rep(seq_len(10), 2)
   plan <- drake_plan(
     y = target(
@@ -1462,4 +1464,22 @@ test_with_dir("trace responds to dynamic max_expand (#1073)", {
   make(plan, max_expand = 2)
   expect_equal(read_trace("x", "y"), seq_len(2))
   expect_equal(readd(z), list(1, 2))
+})
+
+test_with_dir("data frame trace (#1074)", {
+  skip_on_cran()
+  x <- data.frame(
+    a = rep(seq_len(10), 2),
+    b = letters[seq_len(20)],
+    stringsAsFactors = FALSE
+  )
+  plan <- drake_plan(
+    y = target(
+      x,
+      dynamic = map(x, .trace = x)
+    )
+  )
+  make(plan, max_expand = 3)
+  expect_equal(readd(y), unname(split(x[seq_len(3), ], f = seq_len(3))))
+  expect_equal(read_trace("x", "y"), x[seq_len(3), ])
 })
