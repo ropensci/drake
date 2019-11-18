@@ -18,7 +18,7 @@
 #' config <- drake_config(my_plan)
 #' # Plot the network graph representation of the workflow.
 #' if (requireNamespace("visNetwork", quietly = TRUE)) {
-#' vis_drake_graph(config, width = '100%') # The width is passed to visNetwork
+#' vis_drake_graph(config)
 #' make(my_plan) # Run the project, build the targets.
 #' vis_drake_graph(config) # The red nodes from before are now green.
 #' # Plot a subgraph of the workflow.
@@ -180,7 +180,7 @@ vis_drake_graph <- function(
 #' # You can pass the data frames right to render_drake_graph()
 #' # (as in vis_drake_graph()) or you can create
 #' # your own custom visNewtork graph.
-#' render_drake_graph(graph, width = '100%') # Width is passed to visNetwork.
+#' render_drake_graph(graph)
 #' }
 #' }
 #' })
