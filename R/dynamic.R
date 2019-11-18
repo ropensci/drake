@@ -168,8 +168,16 @@ append_trace <- function(target, value, config) {
   }
   dynamic <- layout$dynamic
   trace <- get_trace_impl(dynamic, value, layout, config)
+  trace <- subset_trace(trace, config)
   attr(value, "dynamic_trace") <- trace
   value
+}
+
+subset_trace <- function(trace, config) {
+  if (is.null(config$max_expand)) {
+    return(trace)
+  }
+  lapply(trace, `[`, i = seq_len(config$max_expand))
 }
 
 get_trace_impl <- function(dynamic, value, layout, config) {

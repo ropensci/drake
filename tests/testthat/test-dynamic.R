@@ -1445,3 +1445,21 @@ test_with_dir("dynamic combine() does not exist", {
   )
   expect_error(make(plan), regexp = "does not exist")
 })
+
+test_with_dir("trace responds to dynamic max_expand (#1073)", {
+  x <- rep(seq_len(10), 2)
+  plan <- drake_plan(
+    y = target(
+      x,
+      dynamic = map(x, .trace = x)
+    ),
+    y_trace = get_trace("x", y),
+    z = target(
+      sum(unlist(y)),
+      dynamic = group(y, .by = y_trace)
+    )
+  )
+  make(plan, max_expand = 2)
+  expect_equal(read_trace("x", "y"), seq_len(2))
+  expect_equal(readd(z), list(1, 2))
+})
