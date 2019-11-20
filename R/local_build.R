@@ -323,9 +323,7 @@ conclude_build <- function(build, config) {
     config = config
   )
   store_outputs(target = target, value = value, meta = meta, config = config)
-  if (!is_subtarget(target, config)) {
-    assign_to_envir(target = target, value = value, config = config)
-  }
+  assign_to_envir(target = target, value = value, config = config)
   invisible(value)
 }
 
@@ -339,7 +337,7 @@ assign_format <- function(target, value, format, config) {
   }
   config$logger$minor("format", format, target = target)
   out <- list(value = value)
-  class(out) <- paste0("drake_format_", format)
+  class(out) <- c(paste0("drake_format_", format), "drake_format")
   sanitize_format(x = out, target = target, config = config)
 }
 
@@ -405,31 +403,42 @@ sanitize_format.drake_format_diskframe <- function(x, target, config) { # nolint
 }
 
 assign_to_envir <- function(target, value, config) {
-  memory_strategy <- config$layout[[target]]$memory_strategy %||NA%
-    config$memory_strategy
-  if (memory_strategy %in% c("autoclean", "unload", "none")) {
+  if (is_subtarget(target, config)) {
     return()
   }
-  if (
-    identical(config$lazy_load, "eager") &&
+  memory_strategy <- config$layout[[target]]$memory_strategy %||NA%
+    config$memory_strategy
+  skip_memory <- memory_strategy %in% c("autoclean", "unload", "none")
+  if (skip_memory) {
+    return()
+  }
+  do_assign <- identical(config$lazy_load, "eager") &&
     !is_encoded_path(target) &&
     !is_imported(target, config)
-  ) {
+  if (do_assign) {
     assign(
       x = target,
-      value = value_format(value),
+      value = value_format(value, target, config),
       envir = config$envir_targets
     )
   }
   invisible()
 }
 
-value_format <- function(x) {
-  if (any(grepl("^drake_format_", class(x)))) {
-    x$value
-  } else {
-    x
-  }
+value_format <- function(value, target, config) {
+  UseMethod("value_format")
+}
+
+value_format.drake_format_diskframe <- function(value, target, config) { # nolint
+  config$cache$get(target)
+}
+
+value_format.drake_format <- function(value, target, config) {
+  value$value
+}
+
+value_format.default <- function(value, target, config) {
+  value
 }
 
 assert_output_files <- function(target, meta, config) {

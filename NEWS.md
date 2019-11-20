@@ -5,6 +5,7 @@
 - Prevent `drake::drake_plan(x = target(...))` from throwing an error if `drake` is not loaded (#1039, @mstr3336).
 - Move the `transformations` lifecycle badge to the proper location in the docstring (#1040, @jeroen).
 - Prevent `readd()` / `loadd()` from turning an imported function into a target (#1067).
+- Align in-memory `disk.frame` targets with their stored values (#1077, @brendanf).
 
 ## New features
 

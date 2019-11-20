@@ -184,6 +184,7 @@ test_with_dir("no special format", {
   cache <- drake_cache()
   ref2 <- cache$storr$get("y")
   expect_identical(ref2, "normal format")
+  expect_false(inherits(ref2, "drake_format"))
   expect_false(inherits(ref2, "drake_format_rds"))
 })
 
@@ -208,12 +209,14 @@ test_with_dir("rds format", {
   cache <- drake_cache()
   expect_equal(cache$get_value(cache$get_hash("x")), exp)
   ref <- cache$storr$get("x")
+  expect_true(inherits(ref, "drake_format"))
   expect_true(inherits(ref, "drake_format_rds"))
   expect_equal(length(ref), 1L)
   expect_true(nchar(ref) < 100)
   expect_false(is.list(ref))
   ref2 <- cache$storr$get("y")
   expect_identical(ref2, "normal format")
+  expect_false(inherits(ref2, "drake_format"))
   expect_false(inherits(ref2, "drake_format_rds"))
 })
 
@@ -232,12 +235,14 @@ test_with_dir("rds format with hpc checksum", {
   cache <- drake_cache()
   expect_equal(cache$get_value(cache$get_hash("x")), exp)
   ref <- cache$storr$get("x")
+  expect_true(inherits(ref, "drake_format"))
   expect_true(inherits(ref, "drake_format_rds"))
   expect_equal(length(ref), 1L)
   expect_true(nchar(ref) < 100)
   expect_false(is.list(ref))
   ref2 <- cache$storr$get("y")
   expect_identical(ref2, "normal format")
+  expect_false(inherits(ref2, "drake_format"))
   expect_false(inherits(ref2, "drake_format_rds"))
 })
 
@@ -251,6 +256,7 @@ test_with_dir("flow with rds format", {
   make(plan)
   for (target in c("x", "y")) {
     ref <- config$cache$storr$get("x")
+    expect_true(inherits(ref, "drake_format"))
     expect_true(inherits(ref, "drake_format_rds"))
   }
   expect_equal(sort(justbuilt(config)), sort(c("x", "y")))
@@ -281,6 +287,7 @@ test_with_dir("rds format with environment storr", {
   expect_equal(out, exp)
   expect_equal(cache$get_value(cache$get_hash("x")), exp)
   ref <- cache$storr$get("x")
+  expect_true(inherits(ref, "drake_format"))
   expect_true(inherits(ref, "drake_format_rds"))
   expect_equal(length(ref), 1L)
   expect_true(nchar(ref) < 100)
@@ -347,6 +354,7 @@ test_with_dir("Can save fst data frames", {
   cache <- drake_cache()
   expect_equal(cache$get_value(cache$get_hash("x")), exp)
   ref <- cache$storr$get("x")
+  expect_true(inherits(ref, "drake_format"))
   expect_true(inherits(ref, "drake_format_fst"))
   expect_equal(length(ref), 1L)
   expect_true(nchar(ref) < 100)
@@ -403,6 +411,7 @@ test_with_dir("fst_dt", {
   cache <- drake_cache()
   expect_equal(cache$get_value(cache$get_hash("x")), exp)
   ref <- cache$storr$get("x")
+  expect_true(inherits(ref, "drake_format"))
   expect_true(inherits(ref, "drake_format_fst_dt"))
   expect_equal(length(ref), 1L)
   expect_true(nchar(ref) < 100)
@@ -451,6 +460,7 @@ test_with_dir("disk.frame (#1004)", {
     exp
   )
   ref <- cache$storr$get("x")
+  expect_true(inherits(ref, "drake_format"))
   expect_true(inherits(ref, "drake_format_diskframe"))
   expect_equal(length(ref), 1L)
   expect_true(nchar(ref) < 100)
@@ -590,4 +600,23 @@ test_with_dir("safe_get*() methods", {
     expect_equal(cache$safe_get("a", namespace = ns), "b")
     expect_false(is.na(cache$safe_get_hash("a", namespace = ns)))
   }
+})
+
+test_with_dir("in-memory representation of disk.frame targets (#1077)", {
+  n <- 200
+  observations <- data.frame(
+    type = sample(letters[seq_len(3)], n, replace = TRUE),
+    size = runif(n),
+    stringsAsFactors = FALSE
+  )
+  plan <- drake_plan(
+    all_data = target(
+      observations,
+      format = "fst"
+    ),
+    result = as.data.frame(head(all_data))
+  )
+  make(plan)
+  out <- readd(result)
+  expect_equal(dim(out), c(6L, 2L))
 })
