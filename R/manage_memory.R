@@ -31,7 +31,7 @@ manage_deps <- function(target, config, downstream, jobs) {
 }
 
 manage_deps.speed <- function(target, config, downstream, jobs) {
-  already_loaded <- setdiff(names(config$envir_targets), drake_markers)
+  already_loaded <- names(config$envir_targets)
   target_deps <- deps_memory(targets = target, config = config)
   target_deps <- setdiff(target_deps, target)
   target_deps <- setdiff(target_deps, already_loaded)
@@ -40,14 +40,14 @@ manage_deps.speed <- function(target, config, downstream, jobs) {
 }
 
 manage_deps.autoclean <- function(target, config, downstream, jobs) {
-  already_loaded <- setdiff(names(config$envir_targets), drake_markers)
+  already_loaded <- names(config$envir_targets)
   target_deps <- deps_memory(targets = target, config = config)
   discard_these <- setdiff(x = already_loaded, y = target_deps)
   if (length(discard_these)) {
     config$logger$minor("unload", discard_these, target = target)
     rm(list = discard_these, envir = config$envir_targets)
   }
-  clear_envir(target = target, envir = config$envir_subtargets, config = config)
+  clear_envir_subtargets(target = target, config = config)
   target_deps <- setdiff(target_deps, target)
   target_deps <- setdiff(target_deps, already_loaded)
   try_load(targets = target_deps, config = config, jobs = jobs)
@@ -62,7 +62,7 @@ manage_deps.lookahead <- function(target, config, downstream, jobs) {
     target
   )
   downstream_deps <- deps_memory(targets = downstream, config = config)
-  already_loaded <- setdiff(names(config$envir_targets), drake_markers)
+  already_loaded <- names(config$envir_targets)
   target_deps <- deps_memory(targets = target, config = config)
   keep_these <- c(target_deps, downstream_deps)
   discard_these <- setdiff(x = already_loaded, y = keep_these)
@@ -77,21 +77,23 @@ manage_deps.lookahead <- function(target, config, downstream, jobs) {
 }
 
 manage_deps.unload <- function(target, config, downstream, jobs) {
-  for (name in c("envir_targets", "envir_subtargets")) {
-    clear_envir(target = target, envir = config[[name]], config = config)
-  }
+  clear_envir_subtargets(target = target, config = config)
+  clear_envir_targets(target = target, config = config)
 }
 
 manage_deps.none <- function(target, config, downstream, jobs) {
   return()
 }
 
-clear_envir <- function(target, envir, config) {
-  discard_these <- setdiff(names(envir), drake_markers)
-  if (length(discard_these)) {
-    config$logger$minor("unload", discard_these, target = target)
-    rm(list = discard_these, envir = envir)
-  }
+clear_envir_subtargets <- function(target, config) {
+  config$logger$minor("clear subtarget envir", target = target)
+  rm(list = names(config$envir_subtargets), envir = config$envir_subtargets)
+  config$envir_subtargets[[drake_envir_marker]] <- TRUE
+}
+
+clear_envir_targets <- function(target, config) {
+  config$logger$minor("clear target envir", target = target)
+  rm(list = names(config$envir_targets), envir = config$envir_targets)
 }
 
 deps_memory <- function(targets, config) {
