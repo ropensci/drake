@@ -18,6 +18,12 @@ test_with_dir("manage_memory() warns if loading missing deps", {
   expect_false(exists("b", envir = con$envir_targets, inherits = FALSE))
 })
 
+test_with_dir("garbage collection", {
+  plan <- drake_plan(x = "x", y = "y")
+  make(plan, garbage_collection = TRUE)
+  expect_equal(readd(y), "y")
+})
+
 test_with_dir("a close look at the memory strategies", {
   plan <- drake_plan(
     x = 1,
@@ -71,10 +77,10 @@ test_with_dir("a close look at the memory strategies", {
     envir = envir,
     cache = storr::storr_environment(),
     session_info = FALSE,
-    memory_strategy = "lookahead",
-    garbage_collection = TRUE
+    memory_strategy = "lookahead"
   )
   config$envir_graph$graph <- config$graph
+  config$envir_loaded <- ht_new()
 
   # actually run
   config$plan <- plan
@@ -82,7 +88,7 @@ test_with_dir("a close look at the memory strategies", {
   expect_true(all(plan$target %in% cached(cache = config$cache)))
 
   # lookahead
-  remove(list = ls(config$envir_targets), envir = config$envir_targets)
+  clear_envir_targets("", config)
   expect_equal(ls(config$envir_targets), character(0))
   lapply(c("x", "y", "z"), function(x) {
     manage_memory(x, config)
@@ -103,6 +109,7 @@ test_with_dir("a close look at the memory strategies", {
   )
   expect_equal(sort(deps), sort(ls(config$envir_targets)))
   config$envir_targets$y <- 1
+  config$envir_loaded$targets <- c(config$envir_loaded$targets, "y")
   manage_memory("waitforme", config)
   deps <- c("y", "a_x", "c_y", "t_a_z", "s_b_x")
   expect_equal(sort(deps), sort(ls(config$envir_targets)))
@@ -112,7 +119,7 @@ test_with_dir("a close look at the memory strategies", {
 
   # speed
   config$memory_strategy <- "speed"
-  remove(list = ls(config$envir_targets), envir = config$envir_targets)
+  clear_envir_targets("", config)
   expect_equal(ls(config$envir_targets), character(0))
   lapply(c("x", "y", "z"), function(x) {
     manage_memory(x, config)
@@ -134,6 +141,7 @@ test_with_dir("a close look at the memory strategies", {
   deps <- c(deps, c("x", "y"))
   expect_equal(sort(deps), sort(ls(config$envir_targets)))
   config$envir_targets$y <- 1
+  config$envir_loaded$targets <- c(config$envir_loaded$targets, "y")
   manage_memory("waitforme", config)
   deps <- unique(c(deps, "a_x", "c_y", "t_a_z", "s_b_x"))
   expect_equal(sort(deps), sort(ls(config$envir_targets)))
@@ -141,7 +149,8 @@ test_with_dir("a close look at the memory strategies", {
   # autoclean and preclean
   for (strategy in c("preclean", "autoclean")) {
     config$memory_strategy <- strategy
-    remove(list = ls(config$envir_targets), envir = config$envir_targets)
+    rm(list = names(config$envir_targets), envir = config$envir_targets)
+    config$envir_loaded$targets <- character(0)
 
     # initial discard and load
     expect_equal(ls(config$envir_targets), character(0))
@@ -164,6 +173,7 @@ test_with_dir("a close look at the memory strategies", {
     )
     expect_equal(sort(deps), sort(ls(config$envir_targets)))
     config$envir_targets$y <- 1
+    config$envir_loaded$targets <- c(config$envir_loaded$targets, "y")
     manage_memory("waitforme", config)
     deps <- c("a_x", "c_y", "t_a_z", "s_b_x")
     expect_equal(sort(deps), sort(ls(config$envir_targets)))
@@ -172,11 +182,15 @@ test_with_dir("a close look at the memory strategies", {
     if (exists("x", envir = config$envir_targets, inherits = FALSE)) {
       rm(list = "x", envir = config$envir_targets)
     }
+    config$envir_loaded$targets <- setdiff(config$envir_loaded$targets, "x")
     assign_to_envir("x", "value", config)
     e <- exists("x", envir = config$envir_targets, inherits = FALSE)
+    e2 <- "x" %in% config$envir_loaded$targets
     expect_equal(e, config$memory_strategy == "preclean")
+    expect_equal(e, e2)
     if (e) {
       rm(list = "x", envir = config$envir_targets)
+      config$envir_loaded$targets <- setdiff(config$envir_loaded$targets, "x")
     }
   }
 
@@ -198,8 +212,13 @@ test_with_dir("primary memory strategies actually build everything", {
     envir <- new.env(parent = globalenv())
     cache <- storr::storr_environment()
     load_mtcars_example(envir = envir)
-    make(envir$my_plan, envir = envir, cache = cache,
-         session_info = FALSE, memory_strategy = memory_strategy)
+    make(
+      envir$my_plan,
+      envir = envir,
+      cache = cache,
+      session_info = FALSE,
+      memory_strategy = memory_strategy
+    )
     expect_true(file_store("report.md") %in% cache$list())
   }
 })

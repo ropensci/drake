@@ -1483,3 +1483,17 @@ test_with_dir("data frame trace (#1074)", {
   expect_equal(readd(y), unname(split(x[seq_len(3), ], f = seq_len(3))))
   expect_equal(read_trace("x", "y"), x[seq_len(3), ])
 })
+
+test_with_dir("dynamic branching and memory strategies", {
+  skip_on_cran()
+  plan <- drake_plan(
+    v = "-",
+    w = letters[seq_len(2)],
+    x = LETTERS[seq_len(3)],
+    y = target(paste0(w, x), dynamic = cross(w, x)),
+    z = target(paste0(v, y), dynamic = cross(v, y))
+  )
+  # Should clear config$envir_subtargets without a fuss.
+  make(plan, memory_strategy = "autoclean")
+  expect_true(is.list(readd(z)))
+})

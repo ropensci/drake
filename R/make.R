@@ -239,6 +239,7 @@ make <- function(
   config$running_make <- TRUE
   config$ht_dynamic <- ht_new()
   config$ht_dynamic_size <- ht_new()
+  config$envir_loaded <- new.env(hash = FALSE, parent = emptyenv())
   config$cache$reset_memo_hash()
   on.exit(config$cache$reset_memo_hash())
   config$envir_subtargets[[drake_envir_marker]] <- TRUE
@@ -268,6 +269,7 @@ make <- function(
     "envir_graph",
     "envir_targets",
     "envir_subtargets",
+    "envir_loaded",
     "ht_dynamic",
     "ht_dynamic_size"
   )

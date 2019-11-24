@@ -421,6 +421,7 @@ assign_to_envir <- function(target, value, config) {
       value = value_format(value, target, config),
       envir = config$envir_targets
     )
+    config$envir_loaded$targets <- c(config$envir_loaded$targets, target)
   }
   invisible()
 }

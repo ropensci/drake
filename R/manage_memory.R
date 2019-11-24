@@ -31,7 +31,7 @@ manage_deps <- function(target, config, downstream, jobs) {
 }
 
 manage_deps.speed <- function(target, config, downstream, jobs) {
-  already_loaded <- names(config$envir_targets)
+  already_loaded <- config$envir_loaded$targets
   target_deps <- deps_memory(targets = target, config = config)
   target_deps <- setdiff(target_deps, target)
   target_deps <- setdiff(target_deps, already_loaded)
@@ -40,13 +40,10 @@ manage_deps.speed <- function(target, config, downstream, jobs) {
 }
 
 manage_deps.autoclean <- function(target, config, downstream, jobs) {
-  already_loaded <- names(config$envir_targets)
+  already_loaded <- config$envir_loaded$targets
   target_deps <- deps_memory(targets = target, config = config)
   discard_these <- setdiff(x = already_loaded, y = target_deps)
-  if (length(discard_these)) {
-    config$logger$minor("unload", discard_these, target = target)
-    rm(list = discard_these, envir = config$envir_targets)
-  }
+  discard_targets(discard_these, target, config)
   clear_envir_subtargets(target = target, config = config)
   target_deps <- setdiff(target_deps, target)
   target_deps <- setdiff(target_deps, already_loaded)
@@ -62,18 +59,27 @@ manage_deps.lookahead <- function(target, config, downstream, jobs) {
     target
   )
   downstream_deps <- deps_memory(targets = downstream, config = config)
-  already_loaded <- names(config$envir_targets)
+  already_loaded <- config$envir_loaded$targets
   target_deps <- deps_memory(targets = target, config = config)
   keep_these <- c(target_deps, downstream_deps)
   discard_these <- setdiff(x = already_loaded, y = keep_these)
-  if (length(discard_these)) {
-    config$logger$minor("unload", discard_these, target = target)
-    rm(list = discard_these, envir = config$envir_targets)
-  }
+  discard_targets(discard_these, target, config)
   target_deps <- setdiff(target_deps, target)
   target_deps <- setdiff(target_deps, already_loaded)
   try_load(targets = target_deps, config = config, jobs = jobs)
   load_subtarget_subdeps(target, config)
+}
+
+discard_targets <- function(discard_these, target, config) {
+  if (!length(discard_these)) {
+    return()
+  }
+  config$logger$minor("unload", discard_these, target = target)
+  rm(list = discard_these, envir = config$envir_targets)
+  config$envir_loaded$targets <- setdiff(
+    config$envir_loaded$targets,
+    discard_these
+  )
 }
 
 manage_deps.unload <- function(target, config, downstream, jobs) {
@@ -87,13 +93,15 @@ manage_deps.none <- function(target, config, downstream, jobs) {
 
 clear_envir_subtargets <- function(target, config) {
   config$logger$minor("clear subtarget envir", target = target)
-  rm(list = names(config$envir_subtargets), envir = config$envir_subtargets)
+  rm(list = config$envir_loaded$subtargets, envir = config$envir_subtargets)
+  config$envir_loaded$subtargets <- character(0)
   config$envir_subtargets[[drake_envir_marker]] <- TRUE
 }
 
 clear_envir_targets <- function(target, config) {
   config$logger$minor("clear target envir", target = target)
-  rm(list = names(config$envir_targets), envir = config$envir_targets)
+  rm(list = config$envir_loaded$targets, envir = config$envir_targets)
+  config$envir_loaded$targets <- character(0)
 }
 
 deps_memory <- function(targets, config) {
@@ -121,7 +129,7 @@ try_load <- function(targets, config, jobs = 1) {
 }
 
 try_load_target <- function(target, config) {
-  try(
+  try({
     load_target(
       target = target,
       namespace = config$cache$default_namespace,
@@ -130,7 +138,8 @@ try_load_target <- function(target, config) {
       verbose = FALSE,
       lazy = config$lazy_load
     )
-  )
+    config$envir_loaded$targets <- c(config$envir_loaded$targets, target)
+  })
 }
 
 load_target <- function(target, cache, namespace, envir, verbose, lazy) {
@@ -206,12 +215,16 @@ load_subtarget_subdeps <- function(subtarget, config) {
   index <- config$layout[[subtarget]]$subtarget_index
   deps <- subtarget_deps(parent, index, config)
   load_by_as_subdep(parent, index, config)
+  dep_names <- names(deps)
   lapply(
-    names(deps),
+    dep_names,
     load_subtarget_subdep,
     subtarget = subtarget,
     deps = deps,
     config = config
+  )
+  config$envir_loaded$subtargets <- unique(
+    c(config$envir_loaded$subtargets, dep_names)
   )
 }
 
@@ -228,6 +241,9 @@ load_by_as_subdep <- function(parent, index, config) {
     value = by_value,
     envir = config$envir_subtargets,
     inherits = FALSE
+  )
+  config$envir_loaded$subtargets <- unique(
+    c(config$envir_loaded$subtargets, by_key)
   )
 }
 
