@@ -25,9 +25,17 @@ To help us read your code, please try to follow the [tidyverse style guide](http
 
 ## Benchmarks
 
-How poorly does `drake` perform? Please share benchmarks: runtimes, memory consumption, [flame graphs](https://github.com/ropensci/drake/issues/647#issuecomment-451760866), etc. Tools to consider:
+How poorly does `drake` perform? Here is the easiest way to share results about slowness. 
 
-- In development `drake`, `make(console_log_file = "log.txt")` now prepends sub-second time stamps to each line of `log.txt`. It is a super convenient way to see how fast things are going.
--  [`Rprof()`](https://stat.ethz.ch/R-manual/R-devel/library/utils/html/Rprof.html), [`jointprof`](https://github.com/r-prof/jointprof), [`profile`](https://github.com/r-prof/profile), and [`pprof`](https://github.com/google/pprof). [Example here](https://github.com/wlandau/drake-examples/tree/master/overhead).
-- [`profvis`](https://github.com/rstudio/profvis), though beware https://github.com/rstudio/profvis/issues/104.
-- [`microbenchmark`](https://github.com/joshuaulrich/microbenchmark) and [`bench`](https://github.com/r-lib/bench).
+1. Use `Rprof()`: 
+
+```r
+Rprof(filename = "my_profiling.rprof")
+# Slow code goes here...
+Rprof(NULL)
+```
+
+2. Create a zip archive of the `my_profiling.rprof` file.
+3. Upload the zip file by dragging and dropping it into this issue thread. If the file is too big, please let us know and we can figure out another way to transfer the file.
+
+For more sophisticated profiling workflows, see <https://github.com/wlandau/drake-examples/tree/master/overhead>.
