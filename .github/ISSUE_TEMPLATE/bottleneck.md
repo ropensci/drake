@@ -25,13 +25,13 @@ To help us read your code, please try to follow the [tidyverse style guide](http
 
 ## Benchmarks
 
-How poorly does `drake` perform? Here is the easiest way to share results about slowness. 
+How poorly does `drake` perform? Here is the easiest way to share diagnostic information.
 
 1. Use `Rprof()`: 
 
 ```r
 Rprof(filename = "my_profiling.rprof")
-# Slow code goes here...
+# Slow code goes here.
 Rprof(NULL)
 ```
 
