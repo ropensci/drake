@@ -4,7 +4,7 @@ daysUntilClose: 7
 onlyLabels:
   - "type: question"
   - "type: trouble"
-markComment: >
+closeComment: >
   This issue has been closed due to inactivity.
   Inactive questions and complaints are unlikely to influence
   the development of drake, so an automatic process closes them.
