@@ -1,6 +1,6 @@
 Package: drake
 Title: A Pipeline Toolkit for Reproducible Computation at Scale
-Version: 7.8.0
+Version: 7.8.0.9000
 Authors@R: c(
   person(
     given = c("William", "Michael"),
