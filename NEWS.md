@@ -1,4 +1,4 @@
-# Version 7.7.0.9002
+# Version 7.8.0
 
 ## Bug fixes
 
