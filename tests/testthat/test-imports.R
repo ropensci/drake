@@ -132,7 +132,7 @@ test_with_dir("target conflicts with current import or another target", {
                                                command = "1+1"))
   expect_message(drake_config(plan = config$plan,
                             envir = config$envir),
-                 regexp = "targets from environment")
+                 regexp = "unload")
   config$plan$target <- "repeated"
   expect_error(drake_config(plan = config$plan))
 })
