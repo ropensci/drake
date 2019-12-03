@@ -247,7 +247,7 @@ storage_mtime <- function(x) {
   if (dir.exists(x)) {
     dir_mtime(x)
   } else {
-    file.mtime(x)
+    file_mtime(x)
   }
 }
 
@@ -259,8 +259,12 @@ dir_mtime <- function(x) {
     recursive = TRUE,
     include.dirs = FALSE
   )
-  times <- vapply(files, file.mtime, FUN.VALUE = numeric(1))
+  times <- vapply(files, file_mtime, FUN.VALUE = numeric(1))
   max(times %||% Inf)
+}
+
+file_mtime <- function(x) {
+  as.numeric(file.mtime(x))
 }
 
 storage_size <- function(x) {
