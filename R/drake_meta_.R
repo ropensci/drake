@@ -216,7 +216,7 @@ storage_hash <- function(
   should_rehash <- should_rehash_storage(
     size_threshold = size_threshold,
     new_mtime = storage_mtime(file),
-    old_mtime = meta$mtime %||% -Inf,
+    old_mtime = as.numeric(meta$mtime %||% -Inf),
     new_size = storage_size(file),
     old_size = meta$size
   )
