@@ -203,6 +203,9 @@ deps_profile <- function(
   if (!length(meta$command)) {
     meta$command <- NA_character_
   }
+  if (!length(meta$seed)) {
+    meta$seed <- NA_integer_
+  }
   old_values <- meta[c(
     "command",
     "dependency_hash",

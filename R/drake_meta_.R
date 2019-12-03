@@ -28,9 +28,6 @@ drake_meta_impl.default <- function(target, config) {
     target = target,
     imported = layout$imported %||% TRUE,
     missing = target_missing(target, config),
-    seed = as.integer(
-      layout$seed %||NA% seed_from_basic_types(config$seed, target)
-    ),
     time_start = proc.time(),
     file_out = layout$deps_build$file_out,
     dynamic = is.call(layout$dynamic)
@@ -41,6 +38,9 @@ drake_meta_impl.default <- function(target, config) {
   } else {
     meta$isfile <- FALSE
     meta$trigger <- as.list(layout$trigger)
+    meta$seed <- as.integer(
+      layout$seed %||NA% seed_from_basic_types(config$seed, target)
+    )
   }
   # For imported files.
   if (meta$isfile) {
