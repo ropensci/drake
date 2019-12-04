@@ -1,10 +1,10 @@
 # https://github.com/probot/stale
-daysUntilStale: 1
-daysUntilClose: 1
+daysUntilStale: 7
+daysUntilClose: 7
 onlyLabels:
   - "type: question"
   - "type: trouble"
-staleLabel: "status: stale"
+staleLabels: "status: stale"
 closeComment: >
   This issue has been closed due to inactivity.
   Inactive questions and complaints are unlikely to influence
