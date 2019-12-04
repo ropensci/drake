@@ -1,5 +1,9 @@
 drake_meta_ <- function(target, config) {
-  class <- ifelse(is_subtarget(target, config), "subtarget", "target")
+  is_subtarget <- is_subtarget(target, config)
+  if (is.null(is_subtarget)) {
+    is_subtarget <- FALSE
+  }
+  class <- ifelse(is_subtarget, "subtarget", "target")
   class(target) <- class
   drake_meta_impl(target, config)
 }
@@ -33,6 +37,8 @@ drake_meta_impl.default <- function(target, config) {
   if (meta$imported) {
     meta$isfile <- is_encoded_path(target)
     meta$trigger <- trigger(condition = TRUE)
+    config$layout[[target]]$is_dynamic <- FALSE
+    config$layout[[target]]$is_subtarget <- FALSE
   } else {
     meta$isfile <- FALSE
     meta$trigger <- as.list(layout$trigger)

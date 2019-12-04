@@ -39,6 +39,8 @@ store_output_files <- function(files, meta, config) {
     meta$name <- file
     meta$mtime <- storage_mtime(config$cache$decode_path(file))
     meta$isfile <- TRUE
+    config$layout[[file]]$is_dynamic <- FALSE
+    config$layout[[file]]$is_subtarget <- FALSE
     store_item(
       target = file,
       value = NULL,
@@ -146,7 +148,7 @@ store_meta <- function(target, value, meta, hash, config) {
     namespace = "meta",
     use_cache = FALSE
   )
-  is_target <- !meta$imported && !is_encoded_path(target)
+  is_target <- !meta$imported && !meta$isfile
   if (is_target && is_history(config$cache$history)) {
     config$cache$history$push(title = target, message = meta_hash)
   }

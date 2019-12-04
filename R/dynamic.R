@@ -375,7 +375,7 @@ register_dynamic_subdeps <- function(layout, index, parent, config) {
 }
 
 is_dynamic <- function(target, config) {
-  config$layout[[target]]$is_dynamic %|||% FALSE
+  config$layout[[target]]$is_dynamic
 }
 
 is_dynamic_dep <- function(target, config) {
@@ -383,7 +383,7 @@ is_dynamic_dep <- function(target, config) {
 }
 
 is_subtarget <- function(target, config) {
-  config$layout[[target]]$is_subtarget %|||% FALSE
+  config$layout[[target]]$is_subtarget
 }
 
 as_dynamic <- function(x) {
