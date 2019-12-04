@@ -230,9 +230,7 @@ deps_profile <- function(
     dependency_hash(target, config),
     input_file_hash(target, config),
     output_file_hash(target, config),
-    as.integer(
-      layout$seed %||NA% seed_from_basic_types(config$seed, target)
-    )
+    resolve_target_seed(target, config)
   )
   weak_tibble(
     name = c("command", "depend", "file_in", "file_out", "seed"),

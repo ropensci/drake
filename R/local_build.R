@@ -56,7 +56,11 @@ try_build <- function(target, meta, config) {
   }
   retries <- 0L
   layout <- config$layout[[target]] %|||% list()
-  max_retries <- as.numeric(layout$retries %||NA% config$retries)
+  max_retries <- layout$retries
+  if (is.null(max_retries) || is.na(max_retries)) {
+    max_retries <- config$retries
+  }
+  max_retries <- as.integer(max_retries)
   while (retries <= max_retries) {
     if (retries > 0L) {
       config$logger$major(
@@ -103,7 +107,11 @@ resolve_timeouts <- function(target, config) {
   vapply(
     X = c("cpu", "elapsed"),
     FUN = function(key) {
-      layout[[key]] %||NA% config[[key]]
+      out <- layout[[key]]
+      if (is.null(out) || is.na(out)) {
+        out <- config[[key]]
+      }
+      out
     },
     FUN.VALUE = numeric(1)
   )
@@ -406,8 +414,10 @@ assign_to_envir <- function(target, value, config) {
   if (is_subtarget(target, config)) {
     return()
   }
-  memory_strategy <- config$layout[[target]]$memory_strategy %||NA%
-    config$memory_strategy
+  memory_strategy <- config$layout[[target]]$memory_strategy
+  if (is.null(memory_strategy) || is.na(memory_strategy)) {
+    memory_strategy <- config$memory_strategy
+  }
   skip_memory <- memory_strategy %in% c("autoclean", "unload", "none")
   if (skip_memory) {
     return()

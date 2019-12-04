@@ -9,15 +9,13 @@ drake_meta_impl <- function(target, config) {
 }
 
 drake_meta_impl.subtarget <- function(target, config) {
-  seed <- config$layout[[target]]$seed %||NA%
-    seed_from_basic_types(config$seed, target)
   list(
     name = target,
     target = target,
     imported = FALSE,
     isfile = FALSE,
     time_start = proc.time(),
-    seed = as.integer(seed)
+    seed = resolve_target_seed(target, config)
   )
 }
 
@@ -38,9 +36,7 @@ drake_meta_impl.default <- function(target, config) {
   } else {
     meta$isfile <- FALSE
     meta$trigger <- as.list(layout$trigger)
-    meta$seed <- as.integer(
-      layout$seed %||NA% seed_from_basic_types(config$seed, target)
-    )
+    meta$seed <- resolve_target_seed(target, config)
   }
   # For imported files.
   if (meta$isfile) {
@@ -76,6 +72,14 @@ target_missing <- function(target, config) {
 target_exists <- function(target, config) {
   config$cache$exists(key = target) &
     config$cache$exists(key = target, namespace = "meta")
+}
+
+resolve_target_seed <- function(target, config) {
+  seed <- config$layout[[target]]$seed
+  if (is.null(seed) || is.na(seed)) {
+    seed <- seed_from_basic_types(config$seed, target)
+  }
+  as.integer(seed)
 }
 
 # A numeric hash that could be used as a
@@ -234,9 +238,9 @@ should_rehash_storage <- function(
   new_size,
   old_size
 ) {
-  small <- (new_size < size_threshold) %||NA% TRUE
-  touched <- (new_mtime > old_mtime) %||NA% TRUE
-  resized <- (abs(new_size - old_size) > rehash_storage_size_tol) %||NA% TRUE
+  small <- (new_size < size_threshold) %|||NA% TRUE
+  touched <- (new_mtime > old_mtime) %|||NA% TRUE
+  resized <- (abs(new_size - old_size) > rehash_storage_size_tol) %|||NA% TRUE
   small || touched || resized
 }
 

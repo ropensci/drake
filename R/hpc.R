@@ -88,7 +88,10 @@ no_hpc <- function(target, config) {
 }
 
 hpc_caching <- function(target, config) {
-  out <- config$layout[[target]]$caching %||NA% config$caching
+  out <- config$layout[[target]]$caching
+  if (is.null(out) || is.na(out)) {
+    out <- config$caching
+  }
   match.arg(out, choices = c("master", "worker"))
 }
 

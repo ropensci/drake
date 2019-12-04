@@ -22,10 +22,9 @@ test_with_dir("operators", {
   expect_equal(NULL %||% "b", "b")
   expect_true(is.numeric(Inf %||% "b"))
   expect_true(is.na(NA %||% "b"))
-  expect_equal("a" %||NA% "b", "a")
-  expect_equal(NULL %||NA% "b", "b")
-  expect_true(is.numeric(Inf %||NA% "b"))
-  expect_false(is.na(NA %||NA% "b"))
+  expect_equal("a" %|||NA% "b", "a")
+  expect_true(is.numeric(Inf %|||NA% "b"))
+  expect_false(is.na(NA %|||NA% "b"))
 })
 
 test_with_dir("weak_tibble", {

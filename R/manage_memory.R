@@ -12,8 +12,11 @@
 #' @param jobs Number of jobs for local parallel computing
 manage_memory <- function(target, config, downstream = NULL, jobs = 1) {
   stopifnot(length(target) == 1L)
-  class(target) <- config$layout[[target]]$memory_strategy %||NA%
-    config$memory_strategy
+  memory_strategy <- config$layout[[target]]$memory_strategy
+  if (is.null(memory_strategy) || is.na(memory_strategy)) {
+    memory_strategy <- config$memory_strategy
+  }
+  class(target) <- memory_strategy
   manage_deps(
     target = target,
     config = config,

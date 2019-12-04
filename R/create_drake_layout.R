@@ -177,7 +177,8 @@ cdl_analyze_commands <- function(config) {
 }
 
 cdl_prepare_layout <- function(config, layout) {
-  config$logger$minor("analyze", target = layout$target)
+  target <- layout$target
+  config$logger$minor("analyze", target = target)
   layout$dynamic <- as_dynamic(layout$dynamic)
   layout$is_dynamic <- inherits(layout$dynamic, "dynamic")
   layout$is_subtarget <- FALSE
