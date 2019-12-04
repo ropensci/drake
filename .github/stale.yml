@@ -1,6 +1,6 @@
 # https://github.com/probot/stale
-daysUntilStale: 7
-daysUntilClose: 7
+daysUntilStale: 0
+daysUntilClose: 0
 onlyLabels:
   - "type: question"
   - "type: trouble"
