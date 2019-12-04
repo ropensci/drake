@@ -27,15 +27,15 @@ To help us read your code, please try to follow the [tidyverse style guide](http
 
 How poorly does `drake` perform? Here is the easiest way to share diagnostic information.
 
-1. Use `Rprof()`: 
+1. Use `Rprof()` to create a zip archive of profiling data.
 
 ```r
-Rprof(filename = "my_profiling.rprof")
+Rprof(filename = "samples.rprof")
 # Slow code goes here.
 Rprof(NULL)
+zip(zipfile = "samples.zip", files = "samples.rprof")
 ```
 
-2. Create a zip archive of the `my_profiling.rprof` file.
-3. Upload the zip file by dragging and dropping it into this issue thread. If the file is too big, please let us know and we can figure out another way to transfer the file.
+2. Upload "samples.zip" to this issue thread (drag and drop). If the file is too big, please let us know and we can figure out another way to transfer the file.
 
 For more sophisticated profiling workflows, see <https://github.com/wlandau/drake-examples/tree/master/overhead>.
