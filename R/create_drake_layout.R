@@ -38,7 +38,7 @@ create_drake_layout <- function(
   )
   cdl_set_knitr_files(config = config, layout = command_layout)
   out <- c(import_layout, command_layout)
-  list2env(out, parent = emptyenv())
+  list2env(out, parent = emptyenv(), hash = TRUE)
 }
 
 # https://github.com/ropensci/drake/issues/887 # nolint

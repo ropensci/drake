@@ -98,7 +98,7 @@ seed_from_basic_types <- function(...) {
 integer_hash <- function(x, mod = .Machine$integer.max) {
   hash <- digest(x, algo = "murmur32", serialize = FALSE)
   hexval <- paste0("0x", hash)
-  as.integer(utils::type.convert(hexval) %% mod)
+  as.integer(type.convert(hexval) %% mod)
 }
 
 dependency_hash <- function(target, config) {

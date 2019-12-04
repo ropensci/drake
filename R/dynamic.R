@@ -340,7 +340,12 @@ register_subtarget_layout <- function(
   layout$deps_build$memory <- unique(c(layout$deps_build$memory, mem_deps))
   layout$seed <- seed_from_basic_types(config$seed, layout$seed, subtarget)
   layout <- register_dynamic_subdeps(dynamic, layout, index, parent, config)
-  config$layout[[subtarget]] <- layout
+  assign(
+    x = subtarget,
+    value = layout,
+    envir = config$layout,
+    inherits = FALSE
+  )
 }
 
 register_in_loop <- function(targets, config) {
@@ -495,7 +500,7 @@ max_expand_dynamic <- function(targets, config) {
 }
 
 shorten_dynamic_hash <- function(hash) {
-  digest::digest(hash, algo = "murmur32", serialize = FALSE)
+  digest(hash, algo = "murmur32", serialize = FALSE)
 }
 
 dynamic_hash_list <- function(dynamic, target, config) {
