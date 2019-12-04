@@ -141,15 +141,23 @@ cmq_send_target <- function(target, config) {
     deps <- cmq_deps_list(target, config)
   }
   layout <- hpc_layout(target, config)
+  ht_is_subtarget <- config$ht_is_subtarget
   config$workers$send_call(
     expr = drake::cmq_build(
       target = target,
       meta = meta,
       deps = deps,
       layout = layout,
+      ht_is_subtarget = ht_is_subtarget,
       config = config
     ),
-    env = list(target = target, meta = meta, deps = deps, layout = layout)
+    env = list(
+      target = target,
+      meta = meta,
+      deps = deps,
+      layout = layout,
+      ht_is_subtarget = ht_is_subtarget
+    )
   )
 }
 
@@ -175,7 +183,7 @@ cmq_deps_list <- function(target, config) {
 }
 
 #' @title Build a target using the clustermq backend
-#' \lifecycle{stable}
+#' \lifecycle{maturing}
 #' @description For internal use only
 #' @export
 #' @keywords internal
@@ -183,10 +191,12 @@ cmq_deps_list <- function(target, config) {
 #' @param meta List of metadata.
 #' @param deps Named list of target dependencies.
 #' @param layout Internal, part of the full `config$layout`.
+#' @param ht_is_subtarget Internal, part of `config`
 #' @param config A [drake_config()] list.
-cmq_build <- function(target, meta, deps, layout, config) {
+cmq_build <- function(target, meta, deps, layout, ht_is_subtarget, config) {
   config$logger$minor("build on an hpc worker", target = target)
   config$layout <- layout
+  config$ht_is_subtarget <- ht_is_subtarget
   do_prework(config = config, verbose_packages = FALSE)
   caching <- hpc_caching(target, config)
   if (identical(caching, "master")) {

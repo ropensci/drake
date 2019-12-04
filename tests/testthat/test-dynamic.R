@@ -12,6 +12,7 @@ test_with_dir("dynamic dependency detection", {
   )
   config <- drake_config(plan)
   layout <- config$layout
+  config$ht_is_subtarget <- ht_new()
   expect_equal(layout[["v"]]$deps_dynamic, character(0))
   expect_equal(layout[["w"]]$deps_dynamic, character(0))
   expect_equal(sort(layout[["x"]]$deps_dynamic), sort(c("indices", "v")))
@@ -20,6 +21,7 @@ test_with_dir("dynamic dependency detection", {
   meta1 <- drake_meta_("v", config)
   meta2 <- drake_meta_("x", config)
   con2 <- drake_config(drake_plan(x = 1))
+  con2$ht_is_subtarget <- ht_new()
   meta3 <- drake_meta_("x", con2)
   expect_false(meta1$dynamic)
   expect_true(meta2$dynamic)
@@ -55,22 +57,23 @@ test_with_dir("dynamic sub-target indices", {
   )
   make(plan[, c("target", "command")])
   config <- drake_config(plan)
+  config$ht_is_subtarget <- ht_new()
   config$ht_dynamic <- ht_new()
   config$ht_dynamic_size <- ht_new()
   for (i in seq_len(4)) {
     ew <- list(u = i, v = i)
-    expect_equal(subtarget_deps("w", i, config), ew)
+    expect_equal(subtarget_deps(config$layout$w$dynamic, "w", i, config), ew)
   }
   for (i in seq_len(4)) {
     for (j in seq_len(4)) {
       ey <- list(u = i, v = j)
       k <- 4 * (i - 1) + j
-      expect_equal(subtarget_deps("y", k, config), ey)
+      expect_equal(subtarget_deps(config$layout$y$dynamic, "y", k, config), ey)
     }
   }
   for (i in seq_len(4)) {
     ez <- list(y = seq(from = 4 * (i - 1) + 1, 4 * i))
-    expect_equal(subtarget_deps("z", i, config), ez)
+    expect_equal(subtarget_deps(config$layout$z$dynamic, "z", i, config), ez)
   }
 })
 
@@ -99,6 +102,7 @@ test_with_dir("invalidating a subtarget invalidates the parent", {
     y = target(x, dynamic = map(x))
   )
   config <- drake_config(plan)
+  config$ht_is_subtarget <- ht_new()
   make(plan)
   clean(list = subtargets(y)[1])
   expect_equal(outdated(config), "y")
@@ -1028,6 +1032,7 @@ test_with_dir("runtime predictions for dynamic targets", {
     z = target(y, dynamic = map(y))
   )
   config <- drake_config(plan)
+  config$ht_is_subtarget <- ht_new()
   suppressWarnings(predict_runtime(config))
   make(plan)
   predict_runtime(config)
@@ -1122,6 +1127,7 @@ test_with_dir("dynamic parent recovery", {
     y = target(file.create(x), dynamic = map(x))
   )
   config <- drake_config(plan)
+  config$ht_is_subtarget <- ht_new()
   make(plan)
   files <- letters[seq_len(4)]
   expect_true(all(file.exists(files)))

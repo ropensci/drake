@@ -136,6 +136,7 @@ outdated <-  function(
 ) {
   config$logger$minor("begin outdated()")
   on.exit(config$logger$minor("end outdated()"), add = TRUE)
+  config$ht_is_subtarget <- ht_new()
   assert_config_not_plan(config)
   if (do_prework) {
     do_prework(config = config, verbose_packages = config$logger$verbose)

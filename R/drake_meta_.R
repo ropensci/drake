@@ -96,7 +96,7 @@ seed_from_basic_types <- function(...) {
 }
 
 integer_hash <- function(x, mod = .Machine$integer.max) {
-  hash <- digest::digest(x, algo = "murmur32", serialize = FALSE)
+  hash <- digest(x, algo = "murmur32", serialize = FALSE)
   hexval <- paste0("0x", hash)
   as.integer(utils::type.convert(hexval) %% mod)
 }
@@ -134,7 +134,7 @@ dependency_hash_impl <- function(deps, config) {
     config = config
   )
   out <- paste(out, collapse = "")
-  digest::digest(
+  digest(
     out,
     algo = config$cache$hash_algorithm,
     serialize = FALSE
@@ -170,7 +170,7 @@ input_file_hash <- function(
     size_threshold = size_threshold
   )
   out <- paste(out, collapse = "")
-  digest::digest(
+  digest(
     out,
     algo = config$cache$hash_algorithm,
     serialize = FALSE
@@ -195,7 +195,7 @@ output_file_hash <- function(
     size_threshold = size_threshold
   )
   out <- paste(out, collapse = "")
-  digest::digest(
+  digest(
     out,
     algo = config$cache$hash_algorithm,
     serialize = FALSE
@@ -342,7 +342,7 @@ rehash_dir <- function(dir, hash_algorithm) {
     hash_algorithm = hash_algorithm
   )
   out <- paste(out, collapse = "")
-  digest::digest(
+  digest(
     out,
     algo = hash_algorithm,
     serialize = FALSE
@@ -350,7 +350,7 @@ rehash_dir <- function(dir, hash_algorithm) {
 }
 
 rehash_file <- function(file, hash_algorithm) {
-  digest::digest(
+  digest(
     object = file,
     algo = hash_algorithm,
     file = TRUE,

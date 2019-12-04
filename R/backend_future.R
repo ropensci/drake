@@ -88,6 +88,7 @@ ft_launch_worker <- function(target, meta, protect, config) {
     meta = meta,
     config = config$ft_config,
     layout = layout,
+    ht_is_subtarget = config$ht_is_subtarget,
     protect = protect
   )
   announce_build(target = target, config = config)
@@ -98,6 +99,7 @@ ft_launch_worker <- function(target, meta, protect, config) {
         meta = DRAKE_GLOBALS__$meta,
         config = DRAKE_GLOBALS__$config,
         layout = DRAKE_GLOBALS__$layout,
+        ht_is_subtarget = DRAKE_GLOBALS__$ht_is_subtarget,
         protect = DRAKE_GLOBALS__$protect
       ),
       globals = globals,
@@ -108,13 +110,21 @@ ft_launch_worker <- function(target, meta, protect, config) {
   )
 }
 
-future_globals <- function(target, meta, config, layout, protect) {
+future_globals <- function(
+  target,
+  meta,
+  config,
+  layout,
+  ht_is_subtarget,
+  protect
+) {
   globals <- list(
     DRAKE_GLOBALS__ = list(
       target = target,
       meta = meta,
       config = config,
       layout = layout,
+      ht_is_subtarget = ht_is_subtarget,
       protect = protect
     )
   )
@@ -144,10 +154,19 @@ future_globals <- function(target, meta, config, layout, protect) {
 #' @param target Name of the target.
 #' @param meta A list of metadata.
 #' @param config A [drake_config()] list.
+#' @param ht_is_subtarget Internal, part of `config`.
 #' @param protect Names of targets that still need their
 #' dependencies available in memory.
-future_build <- function(target, meta, config, layout, protect) {
+future_build <- function(
+  target,
+  meta,
+  config,
+  layout,
+  ht_is_subtarget,
+  protect
+) {
   config$layout <- layout
+  config$ht_is_subtarget <- ht_is_subtarget
   caching <- hpc_caching(target, config)
   if (identical(caching, "worker")) {
     manage_memory(target = target, config = config, downstream = protect)

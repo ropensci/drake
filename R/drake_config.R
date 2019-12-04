@@ -583,6 +583,7 @@ drake_config <- function(
   )
   ht_dynamic_deps <- new_ht_dynamic_deps(layout)
   ht_is_dynamic <- new_ht_is_dynamic(layout)
+  ht_is_subtarget <- ht_new()
   graph <- create_drake_graph(
     plan = plan,
     layout = layout,
@@ -638,6 +639,7 @@ drake_config <- function(
     curl_handles = curl_handles,
     ht_dynamic_deps = ht_dynamic_deps,
     ht_is_dynamic = ht_is_dynamic,
+    ht_is_subtarget = ht_is_subtarget, # stays empty except for make()
     max_expand = max_expand
   )
   config_checks(out)
