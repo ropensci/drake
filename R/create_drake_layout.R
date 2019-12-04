@@ -180,8 +180,6 @@ cdl_prepare_layout <- function(config, layout) {
   target <- layout$target
   config$logger$minor("analyze", target = target)
   layout$dynamic <- as_dynamic(layout$dynamic)
-  layout$is_dynamic <- inherits(layout$dynamic, "dynamic")
-  layout$is_subtarget <- FALSE
   layout$deps_build <- cdl_command_dependencies(
     command = layout$command,
     exclude = layout$target,

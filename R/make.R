@@ -239,6 +239,7 @@ make <- function(
   config$running_make <- TRUE
   config$ht_dynamic <- ht_new()
   config$ht_dynamic_size <- ht_new()
+  config$ht_is_subtarget <- ht_new()
   config$envir_loaded <- new.env(hash = FALSE, parent = emptyenv())
   config$cache$reset_memo_hash()
   on.exit(config$cache$reset_memo_hash())
@@ -271,7 +272,8 @@ make <- function(
     "envir_subtargets",
     "envir_loaded",
     "ht_dynamic",
-    "ht_dynamic_size"
+    "ht_dynamic_size",
+    "ht_is_subtarget"
   )
   for (key in envirs) {
     remove(list = names(config[[key]]), envir = config[[key]])

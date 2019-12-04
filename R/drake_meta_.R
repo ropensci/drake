@@ -37,8 +37,6 @@ drake_meta_impl.default <- function(target, config) {
   if (meta$imported) {
     meta$isfile <- is_encoded_path(target)
     meta$trigger <- trigger(condition = TRUE)
-    config$layout[[target]]$is_dynamic <- FALSE
-    config$layout[[target]]$is_subtarget <- FALSE
   } else {
     meta$isfile <- FALSE
     meta$trigger <- as.list(layout$trigger)

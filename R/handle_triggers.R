@@ -64,8 +64,6 @@ recover_target <- function(target, meta, config) {
 }
 
 recover_subtarget <- function(subtarget, config) {
-  config$layout[[subtarget]]$is_dynamic <- FALSE
-  config$layout[[subtarget]]$is_subtarget <- TRUE
   meta <- drake_meta_(subtarget, config)
   class(subtarget) <- "subtarget"
   recover_target(subtarget, meta, config)

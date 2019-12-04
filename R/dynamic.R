@@ -259,6 +259,7 @@ register_subtargets <- function(target, static_ok, dynamic_ok, config) {
   }
   ndeps <- length(subtargets_build)
   if (ndeps) {
+    ht_set(config$ht_is_subtarget, subtargets_build)
     register_in_loop(subtargets_build, config)
     register_in_queue(subtargets_build, 0, config)
     register_in_counter(subtargets_build, config)
@@ -334,8 +335,6 @@ register_subtarget_layout <- function(
   layout$target <- subtarget
   layout$subtarget_index <- index
   layout$subtarget_parent <- parent
-  layout$is_dynamic <- FALSE
-  layout$is_subtarget <- TRUE
   mem_deps <- all.vars(layout$dynamic)
   layout$dynamic <- NULL
   layout$deps_build$memory <- unique(c(layout$deps_build$memory, mem_deps))
@@ -385,7 +384,7 @@ register_dynamic_subdeps <- function(dynamic, layout, index, parent, config) {
 }
 
 is_dynamic <- function(target, config) {
-  config$layout[[target]]$is_dynamic
+  ht_exists(config$ht_is_dynamic, target)
 }
 
 is_dynamic_dep <- function(target, config) {
@@ -393,7 +392,7 @@ is_dynamic_dep <- function(target, config) {
 }
 
 is_subtarget <- function(target, config) {
-  config$layout[[target]]$is_subtarget
+  ht_exists(config$ht_is_subtarget, target)
 }
 
 as_dynamic <- function(x) {

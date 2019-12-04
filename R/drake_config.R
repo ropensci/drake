@@ -582,6 +582,7 @@ drake_config <- function(
     cache = cache
   )
   ht_dynamic_deps <- new_ht_dynamic_deps(layout)
+  ht_is_dynamic <- new_ht_is_dynamic(layout)
   graph <- create_drake_graph(
     plan = plan,
     layout = layout,
@@ -636,6 +637,7 @@ drake_config <- function(
     recoverable = recoverable,
     curl_handles = curl_handles,
     ht_dynamic_deps = ht_dynamic_deps,
+    ht_is_dynamic = ht_is_dynamic,
     max_expand = max_expand
   )
   config_checks(out)
@@ -651,6 +653,18 @@ new_ht_dynamic_deps <- function(layout) {
 
 log_ht_dynamic_deps <- function(layout, ht) {
   ht_set(ht, layout$deps_dynamic)
+}
+
+new_ht_is_dynamic <- function(layout) {
+  ht <- ht_new()
+  lapply(layout, log_ht_is_dynamic, ht = ht)
+  ht
+}
+
+log_ht_is_dynamic <- function(layout, ht) {
+  if (inherits(layout$dynamic, "dynamic")) {
+    ht_set(ht, layout$target)
+  }
 }
 
 sanitize_targets <- function(targets, plan) {

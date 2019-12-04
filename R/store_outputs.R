@@ -39,8 +39,6 @@ store_output_files <- function(files, meta, config) {
     meta$name <- file
     meta$mtime <- storage_mtime(config$cache$decode_path(file))
     meta$isfile <- TRUE
-    config$layout[[file]]$is_dynamic <- FALSE
-    config$layout[[file]]$is_subtarget <- FALSE
     store_item(
       target = file,
       value = NULL,
