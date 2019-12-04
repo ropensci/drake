@@ -231,7 +231,7 @@ analyze_function <- function(expr, results, locals, allowed_globals) {
 }
 
 analyze_usemethod <- function(expr, results, locals, allowed_globals) {
-  generic <- expr[["generic"]] %||% expr[[2]]
+  generic <- expr[["generic"]] %|||% expr[[2]]
   if (!is.character(generic) || length(generic) != 1L) {
     return()
   }

@@ -26,7 +26,7 @@ drake_meta_impl.default <- function(target, config) {
   meta <- list(
     name = target,
     target = target,
-    imported = layout$imported %||% TRUE,
+    imported = layout$imported %|||% TRUE,
     missing = target_missing(target, config),
     time_start = proc.time(),
     file_out = layout$deps_build$file_out,
@@ -142,7 +142,7 @@ self_hash <- function(target, config) {
 }
 
 is_imported <- function(target, config) {
-  config$layout[[target]]$imported %||% TRUE
+  config$layout[[target]]$imported %|||% TRUE
 }
 
 input_file_hash <- function(
@@ -216,7 +216,7 @@ storage_hash <- function(
   should_rehash <- should_rehash_storage(
     size_threshold = size_threshold,
     new_mtime = storage_mtime(file),
-    old_mtime = as.numeric(meta$mtime %||% -Inf),
+    old_mtime = as.numeric(meta$mtime %|||% -Inf),
     new_size = storage_size(file),
     old_size = meta$size
   )
@@ -360,7 +360,7 @@ rehash_url <- function(url, config) {
   # Find the longest name of the handle that matches the url.
   choices <- names(config$curl_handles)
   name <- longest_match(choices = choices, against = url) %||% NA_character_
-  handle <- config$curl_handles[[name]] %||% curl::new_handle()
+  handle <- config$curl_handles[[name]] %|||% curl::new_handle()
   # Do not download the whole URL.
   handle <- curl::handle_setopt(handle, nobody = TRUE)
   req <- curl::curl_fetch_memory(url, handle = handle)

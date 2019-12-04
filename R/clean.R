@@ -227,8 +227,8 @@ target_namespaces_ <- function(
 }
 
 clean_recovery_msg <- function() {
-  msg_enabled <- .pkg_envir[["drake_clean_recovery_msg"]] %||%
-    getOption("drake_clean_recovery_msg") %||%
+  msg_enabled <- .pkg_envir[["drake_clean_recovery_msg"]] %|||%
+    getOption("drake_clean_recovery_msg") %|||%
     TRUE
   if (!(interactive() && msg_enabled)) {
     return(FALSE)
@@ -246,8 +246,8 @@ clean_recovery_msg <- function() {
 }
 
 abort_gc <- function(path) {
-  menu_enabled <- .pkg_envir[["drake_clean_menu"]] %||%
-    getOption("drake_clean_menu") %||%
+  menu_enabled <- .pkg_envir[["drake_clean_menu"]] %|||%
+    getOption("drake_clean_menu") %|||%
     TRUE
   if (!(interactive() && menu_enabled)) {
     return(FALSE)

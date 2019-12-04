@@ -703,7 +703,7 @@ get_previous_seed <- function(cache) {
 # or create a new one otherwise.
 # TO DO: remove all the arguments when we make recover_cache() defunct.
 recover_cache_ <- function(path = NULL, hash_algorithm = NULL) {
-  path <- path %||% default_cache_path()
+  path <- path %|||% default_cache_path()
   hash_algorithm <- sanitize_hash_algorithm(hash_algorithm)
   cache <- this_cache_(path = path)
   if (is.null(cache)) {

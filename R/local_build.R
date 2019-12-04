@@ -55,7 +55,7 @@ try_build <- function(target, meta, config) {
     return(dynamic_build(target, meta, config))
   }
   retries <- 0L
-  layout <- config$layout[[target]] %||% list()
+  layout <- config$layout[[target]] %|||% list()
   max_retries <- as.numeric(layout$retries %||NA% config$retries)
   while (retries <= max_retries) {
     if (retries > 0L) {
@@ -99,7 +99,7 @@ with_seed_timeout <- function(target, meta, config) {
 }
 
 resolve_timeouts <- function(target, config) {
-  layout <- config$layout[[target]] %||% list()
+  layout <- config$layout[[target]] %|||% list()
   vapply(
     X = c("cpu", "elapsed"),
     FUN = function(key) {

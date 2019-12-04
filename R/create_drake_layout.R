@@ -97,7 +97,7 @@ cdl_imports_kernel <- function(config, imports) {
     jobs = config$jobs
   )
   names(out) <- names(imports)
-  out[sort(names(out) %||% logical(0))]
+  out[sort(as.character(names(out)))]
 }
 
 cdl_prepare_imports <- function(config) {

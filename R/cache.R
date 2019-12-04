@@ -234,7 +234,7 @@ loadd <- function(
   lazy <- parse_lazy_arg(lazy)
   assert_cache(cache)
   cache <- decorate_storr(cache)
-  namespace <- namespace %||% cache$default_namespace
+  namespace <- namespace %|||% cache$default_namespace
   tidyselect <- loadd_use_tidyselect(tidyselect, deps)
   if (tidyselect && requireNamespace("tidyselect", quietly = TRUE)) {
     targets <- drake_tidyselect_cache(
@@ -621,7 +621,7 @@ is_imported_cache <- Vectorize(function(target, cache) {
       target = target,
       character_only = TRUE,
       cache = cache
-    )$imported %||%
+    )$imported %|||%
       FALSE
   )
 },
@@ -755,7 +755,7 @@ find_cache <- function(
       call. = FALSE
     )
   }
-  dir <- dir %||% basename(default_cache_path())
+  dir <- dir %|||% basename(default_cache_path())
   while (!(dir %in% list.files(path = path, all.files = TRUE))) {
     path <- dirname(path)
     # If we can search no higher...
@@ -808,7 +808,7 @@ new_cache <- function(
 ) {
   deprecate_verbose(verbose)
   deprecate_console_log_file(console_log_file)
-  path <- path %||% default_cache_path()
+  path <- path %|||% default_cache_path()
   hash_algorithm <- sanitize_hash_algorithm(hash_algorithm)
   if (!is.null(type)) {
     warning(
@@ -840,7 +840,7 @@ sanitize_hash_algorithm <- function(hash_algorithm) {
 }
 
 this_cache_ <- function(path = NULL) {
-  path <- path %||% default_cache_path()
+  path <- path %|||% default_cache_path()
   usual_path_missing <- is.null(path) || !file.exists(path)
   if (usual_path_missing) {
     return(NULL)

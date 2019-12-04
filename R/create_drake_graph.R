@@ -62,7 +62,7 @@ cdg_node_to_edges <- function(node, config) {
     )
   }
   if (is.null(out)) {
-    out <- list(from = node$target %||% character(0))
+    out <- list(from = as.character(node$target))
     out$to <- out$from
   }
   out

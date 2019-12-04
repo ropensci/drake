@@ -540,7 +540,7 @@ assert_outside_cache <- function(config) {
 }
 
 r_make_message <- function(force) {
-  r_make_message <- .pkg_envir[["r_make_message"]] %||% TRUE
+  r_make_message <- .pkg_envir[["r_make_message"]] %|||% TRUE
   on.exit(
     assign(
       x = "r_make_message",

@@ -174,7 +174,7 @@ r_text_drake_graph <- function(
 ) {
   assert_pkg("txtplot")
   args <- list(...)
-  args$crayon <- getOption("crayon.enabled") %||% TRUE
+  args$crayon <- getOption("crayon.enabled") %|||% TRUE
   out <- r_drake(
     source,
     function(..., crayon) {
@@ -216,12 +216,12 @@ r_drake <- function(source, d_fn, d_args, r_fn, r_args) {
     d_args$config <- source(source)$value
     do.call(d_fn, d_args)
   }
-  source <- source %||% getOption("drake_source") %||% default_drake_source
+  source <- source %|||% getOption("drake_source") %|||% default_drake_source
   r_assert_source(source)
   r_args$args <- list(source = source, d_fn = d_fn, d_args = d_args)
-  r_fn <- r_fn %||% callr::r
+  r_fn <- r_fn %|||% callr::r
   if ("show" %in% names(formals(r_fn))) {
-    r_args$show <- r_args$show %||% TRUE
+    r_args$show <- r_args$show %|||% TRUE
   }
   do.call(r_fn, r_args)
 }

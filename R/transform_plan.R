@@ -423,7 +423,7 @@ convert_split_to_map <- function(target, command, transform) {
 drake_slice <- function(data, slices, index, margin = 1L, drop = FALSE) {
   check_drake_slice_args(margin, slices, index)
   args <- list(data)
-  dim <- dim(data) %||% length(data)
+  dim <- dim(data) %|||% length(data)
   margin <- ifelse(is.null(dim(data)), 1L, margin)
   for (m in seq_along(dim)) {
     if (m == margin) {
@@ -1222,14 +1222,14 @@ dsl_id.transform <- function(transform) {
 tag_in <- function(...) UseMethod("tag_in")
 
 tag_in.transform <- function(transform) {
-  attr(transform, "tag_in") %||%
+  attr(transform, "tag_in") %|||%
     all.vars(lang(transform)[[".tag_in"]], functions = FALSE)
 }
 
 tag_out <- function(...) UseMethod("tag_out")
 
 tag_out.transform <- function(transform) {
-  attr(transform, "tag_out") %||%
+  attr(transform, "tag_out") %|||%
     all.vars(lang(transform)[[".tag_out"]], functions = FALSE)
 }
 

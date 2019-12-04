@@ -61,7 +61,7 @@ rs_addin_r_vis_drake_graph <- function(r_args = list(), .print = TRUE) {
 #' @export
 rs_addin_loadd <- function(context = NULL) {
   assert_pkg("rstudioapi")
-  context <- context %||% rstudioapi::getActiveDocumentContext()
+  context <- context %|||% rstudioapi::getActiveDocumentContext()
   target <- rs_get_symbol_at_cursor(context)
   if (is.null(target)) {
     return()
