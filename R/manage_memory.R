@@ -214,9 +214,11 @@ load_subtarget_subdeps <- function(subtarget, config) {
   if (!is_subtarget(subtarget, config)) {
     return()
   }
-  parent <- config$layout[[subtarget]]$subtarget_parent
-  index <- config$layout[[subtarget]]$subtarget_index
-  deps <- subtarget_deps(parent, index, config)
+  layout <- config$layout[[subtarget]]
+  parent <- layout$subtarget_parent
+  index <- layout$subtarget_index
+  dynamic <- config$layout[[parent]]$dynamic
+  deps <- subtarget_deps(dynamic, parent, index, config)
   load_by_as_subdep(parent, index, config)
   dep_names <- names(deps)
   lapply(

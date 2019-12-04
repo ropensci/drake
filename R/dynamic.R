@@ -308,19 +308,29 @@ register_in_graph <- function(target, subtargets, config) {
 }
 
 register_in_layout <- function(target, subtargets, config) {
+  layout <- config$layout[[target]]
+  dynamic <- layout$dynamic
   lapply(
     seq_along(subtargets),
     register_subtarget_layout,
     parent = target,
     subtargets = subtargets,
+    layout = layout,
+    dynamic = dynamic,
     config = config
   )
   config$layout[[target]]$subtargets <- subtargets
 }
 
-register_subtarget_layout <- function(index, parent, subtargets, config) {
+register_subtarget_layout <- function(
+  index,
+  parent,
+  subtargets,
+  dynamic,
+  layout,
+  config
+) {
   subtarget <- subtargets[index]
-  layout <- config$layout[[parent]]
   layout$target <- subtarget
   layout$subtarget_index <- index
   layout$subtarget_parent <- parent
@@ -330,7 +340,7 @@ register_subtarget_layout <- function(index, parent, subtargets, config) {
   layout$dynamic <- NULL
   layout$deps_build$memory <- unique(c(layout$deps_build$memory, mem_deps))
   layout$seed <- seed_from_basic_types(config$seed, layout$seed, subtarget)
-  layout <- register_dynamic_subdeps(layout, index, parent, config)
+  layout <- register_dynamic_subdeps(dynamic, layout, index, parent, config)
   config$layout[[subtarget]] <- layout
 }
 
@@ -362,8 +372,8 @@ dynamic_pad_revdep_keys <- function(target, config) {
   increase_revdep_keys(config$queue, target, config)
 }
 
-register_dynamic_subdeps <- function(layout, index, parent, config) {
-  index_deps <- subtarget_deps(parent, index, config)
+register_dynamic_subdeps <- function(dynamic, layout, index, parent, config) {
+  index_deps <- subtarget_deps(dynamic, parent, index, config)
   for (dep in layout$deps_dynamic) {
     if (is_dynamic(dep, config)) {
       subdeps <- config$layout[[dep]]$subtargets[index_deps[[dep]]]
@@ -567,23 +577,18 @@ subtarget_hashes.group <- function(dynamic, target, hashes, config) {
   unname(tapply(hashes, INDEX = by, FUN = paste, collapse = " "))
 }
 
-subtarget_deps <- function(target, index, config) {
-  dynamic <- config$layout[[target]]$dynamic
-  subtarget_deps_impl(dynamic, target, index, config)
+subtarget_deps <- function(dynamic, target, index, config) {
+  UseMethod("subtarget_deps")
 }
 
-subtarget_deps_impl <- function(dynamic, target, index, config) {
-  UseMethod("subtarget_deps_impl")
-}
-
-subtarget_deps_impl.map <- function(dynamic, target, index, config) {
+subtarget_deps.map <- function(dynamic, target, index, config) {
   vars <- all.vars(dynamic)
   out <- as.list(rep(as.integer(index), length(vars)))
   names(out) <- vars
   out
 }
 
-subtarget_deps_impl.cross <- function(dynamic, target, index, config) {
+subtarget_deps.cross <- function(dynamic, target, index, config) {
   vars <- all.vars(dynamic)
   size <- unlist(lapply(vars, get_dynamic_size, config = config))
   out <- grid_index(index, size)
@@ -592,7 +597,7 @@ subtarget_deps_impl.cross <- function(dynamic, target, index, config) {
   out
 }
 
-subtarget_deps_impl.group <- function(
+subtarget_deps.group <- function(
   dynamic,
   target,
   index,
