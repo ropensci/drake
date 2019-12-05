@@ -507,13 +507,15 @@ safe_all_vars <- function(expr) {
   as.character(unlist(out))
 }
 
+direct_deparse <- function(...) {
+  make_direct_deparse()(...)
+}
+
 make_direct_deparse <- function() {
   .deparseOpts <- identity
   environment(deparse) <- environment()
   deparse
 }
-
-direct_deparse <- make_direct_deparse()
 
 deparse_control_custom <- .deparseOpts(c("keepNA", "keepInteger"))
 deparse_control_default <- .deparseOpts(eval(formals(deparse)$control))
