@@ -59,7 +59,8 @@ target <- function(
   ...
 ) {
   if (!nzchar(Sys.getenv("drake_target_silent"))) {
-    warning(
+    # 2019-12-05
+    stop(
       "target() in drake is not a standalone user-side function. ",
       "It must be called from inside drake_plan(). Details: ",
       "https://books.ropensci.org/drake/static.html",
