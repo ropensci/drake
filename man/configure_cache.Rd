@@ -22,7 +22,7 @@ configure_cache(
 \item{short_hash_algo}{Short hash algorithm for drake.
 The short algorithm must be among \code{\link[=available_hash_algos]{available_hash_algos()}},
 which is just the collection of algorithms available to the \code{algo}
-argument in \code{\link[digest:digest]{digest::digest()}}.
+argument in \code{digest::digest()}.
 See \code{\link[=default_short_hash_algo]{default_short_hash_algo()}} for more.}
 
 \item{long_hash_algo}{Long hash algorithm for drake.

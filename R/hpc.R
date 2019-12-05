@@ -237,11 +237,7 @@ get_outfile_checksum <- function(target, config) {
     config = config
   )
   out <- paste(out, collapse = "")
-  digest::digest(
-    out,
-    algo = config$cache$hash_algorithm,
-    serialize = FALSE
-  )
+  config$cache$digest(out, serialize = FALSE)
 }
 
 warn_no_checksum <- function(target, config) {

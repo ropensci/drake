@@ -215,16 +215,12 @@ deps_profile <- function(
   )]
   old_values <- unlist(old_values)
   old_values <- unname(old_values)
-  old_values[1] <- digest::digest(
-    paste(old_values[1], collapse = ""),
-    algo = config$cache$hash_algorithm,
-    serialize = FALSE
-  )
+  elt <- paste(old_values[1], collapse = "")
+  old_values[1] <- config$cache$digest(elt, serialize = FALSE)
   layout <- config$layout[[target]]
   new_values <- c(
-    digest::digest(
+    config$cache$digest(
       paste(layout$command_standardized, collapse = ""),
-      algo = config$cache$hash_algorithm,
       serialize = FALSE
     ),
     dependency_hash(target, config),

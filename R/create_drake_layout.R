@@ -62,11 +62,7 @@ cdl_set_knitr_files <- function(config, layout) {
 cdl_get_knitr_hash <- function(config, layout) {
   config$logger$minor("get knitr hash")
   if (!config$cache$exists(key = "knitr", namespace = "memoize")) {
-    out <- digest::digest(
-      "",
-      algo = config$cache$hash_algorithm,
-      serialize = FALSE
-    )
+    out <- config$cache$digest("", serialize = FALSE)
     return(out)
   }
   knitr_files <- config$cache$safe_get(key = "knitr", namespace = "memoize")
@@ -78,11 +74,7 @@ cdl_get_knitr_hash <- function(config, layout) {
   )
   knitr_hashes <- as.character(unlist(knitr_hashes))
   knitr_hashes <- paste0(knitr_hashes, collapse = "")
-  digest::digest(
-    knitr_hashes,
-    algo = config$cache$hash_algorithm,
-    serialize = FALSE
-  )
+  config$cache$digest(knitr_hashes, serialize = FALSE)
 }
 
 cdl_imports_kernel <- function(config, imports) {

@@ -69,7 +69,7 @@ build_drake_graph <- function(
 #' @param short_hash_algo Short hash algorithm for drake.
 #'   The short algorithm must be among [available_hash_algos()],
 #'   which is just the collection of algorithms available to the `algo`
-#'   argument in [digest::digest()].
+#'   argument in `digest::digest()`.
 #'   See [default_short_hash_algo()] for more.
 #'
 #' @param long_hash_algo Long hash algorithm for drake.
@@ -2128,7 +2128,7 @@ map_plan <- function(
   } else {
     target <- paste0(
       fun, "_",
-      apply(X = args, MARGIN = 1, FUN = digest::digest, algo = "murmur32")
+      apply(X = args, MARGIN = 1, FUN = digest_murmur32)
     )
   }
   command <- as.character(unlist(drake_pmap(

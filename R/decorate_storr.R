@@ -6,6 +6,7 @@ decorate_storr <- function(storr) {
     stop("not a storr", call. = FALSE)
   }
   hash_algorithm <- storr$driver$hash_algorithm %||% "xxhash64"
+  digest <- new_digest_function(hash_algorithm)
   path <- storr$driver$path %||% default_cache_path()
   refclass_decorated_storr$new(
     storr = storr,
@@ -13,18 +14,32 @@ decorate_storr <- function(storr) {
     default_namespace = storr$default_namespace,
     envir = storr$envir,
     hash_algorithm = hash_algorithm,
+    digest = digest,
     history = recover_default_history(path),
     ht_encode_path = ht_new(),
     ht_decode_path = ht_new(),
     ht_encode_namespaced = ht_new(),
     ht_decode_namespaced = ht_new(),
     ht_hash = ht_new(),
-    ht_progress = ht_progress(hash_algorithm),
+    ht_progress = ht_progress(digest),
     path = path,
     path_return = file.path(path, "drake", "return"),
     path_tmp = file.path(path, "drake", "tmp")
   )
 }
+
+new_digest_function <- function(hash_algorithm) {
+  inner_digest <- digest::getVDigest(algo = hash_algorithm)
+  digest <- function(object, serialize = TRUE, ...) {
+    if (serialize) {
+      inner_digest(list(object), serialize = TRUE, ...)
+    } else {
+      inner_digest(object, serialize = FALSE, ...)
+    }
+  }
+}
+
+digest_murmur32 <- new_digest_function("murmur32")
 
 refclass_decorated_storr <- methods::setRefClass(
   Class = "refclass_decorated_storr",
@@ -34,6 +49,7 @@ refclass_decorated_storr <- methods::setRefClass(
     "default_namespace",
     "envir",
     "hash_algorithm",
+    "digest",
     "history",
     "ht_encode_path",
     "ht_decode_path",
@@ -368,7 +384,7 @@ dcst_set.drake_format_rds <- function(value, key, ..., .self) {
 }
 
 dcst_set_move_tmp <- function(key, value, tmp, .self) {
-  hash_tmp <- rehash_local(tmp, .self$hash_algorithm)
+  hash_tmp <- rehash_local(tmp, config = list(cache = .self))
   class(hash_tmp) <- class(value)
   hash <- .self$storr$set(key = key, value = hash_tmp)
   file <- .self$file_return_hash(hash)
@@ -539,20 +555,16 @@ standardize_key <- function(text) {
   text
 }
 
-ht_progress <- function(hash_algorithm) {
+ht_progress <- function(digest_fn) {
   keys <- c("running", "done", "failed")
-  out <- lapply(keys, progress_hash, hash_algorithm = hash_algorithm)
+  out <- lapply(keys, progress_hash, digest_fn = digest_fn)
   names(out) <- keys
   out
 }
 
-progress_hash <- function(key, hash_algorithm) {
-  out <- digest::digest(
-    key,
-    algo = hash_algorithm,
-    serialize = FALSE
-  )
-  gsub("^.", substr(key, 1, 1), out)
+progress_hash <- function(key, digest_fn) {
+  out <- digest_fn(key, serialize = FALSE)
+  gsub("^.", substr(key, 1L, 1L), out)
 }
 
 retrieve_progress <- function(target, cache) {

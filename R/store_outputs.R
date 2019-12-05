@@ -242,7 +242,7 @@ dynamic_hashes.default <- function(value, size, config) {
 
 dynamic_hash <- function(index, value, config) {
   subvalue <- dynamic_subvalue(value, index)
-  digest(subvalue, algo = config$cache$hash_algorithm)
+  config$cache$digest(subvalue)
 }
 
 log_time <- function(target, meta, config) {

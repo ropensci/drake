@@ -96,7 +96,7 @@ seed_from_basic_types <- function(...) {
 }
 
 integer_hash <- function(x, mod = .Machine$integer.max) {
-  hash <- digest(x, algo = "murmur32", serialize = FALSE)
+  hash <- digest_murmur32(x, serialize = FALSE)
   hexval <- paste0("0x", hash)
   as.integer(type.convert(hexval) %% mod)
 }
@@ -134,11 +134,7 @@ dependency_hash_impl <- function(deps, config) {
     config = config
   )
   out <- paste(out, collapse = "")
-  digest(
-    out,
-    algo = config$cache$hash_algorithm,
-    serialize = FALSE
-  )
+  config$cache$digest(out, serialize = FALSE)
 }
 
 self_hash <- function(target, config) {
@@ -170,11 +166,7 @@ input_file_hash <- function(
     size_threshold = size_threshold
   )
   out <- paste(out, collapse = "")
-  digest(
-    out,
-    algo = config$cache$hash_algorithm,
-    serialize = FALSE
-  )
+  config$cache$digest(out, serialize = FALSE)
 }
 
 output_file_hash <- function(
@@ -195,11 +187,7 @@ output_file_hash <- function(
     size_threshold = size_threshold
   )
   out <- paste(out, collapse = "")
-  digest(
-    out,
-    algo = config$cache$hash_algorithm,
-    serialize = FALSE
-  )
+  config$cache$digest(out, serialize = FALSE)
 }
 
 storage_hash <- function(
@@ -316,18 +304,18 @@ rehash_storage <- function(target, file = NULL, config) {
   if (!file.exists(file)) {
     return(NA_character_)
   }
-  rehash_local(file, hash_algorithm = config$cache$hash_algorithm)
+  rehash_local(file, config)
 }
 
-rehash_local <- function(file, hash_algorithm) {
+rehash_local <- function(file, config) {
   if (dir.exists(file)) {
-    rehash_dir(file, hash_algorithm)
+    rehash_dir(file, config)
   } else {
-    rehash_file(file, hash_algorithm)
+    rehash_file(file, config)
   }
 }
 
-rehash_dir <- function(dir, hash_algorithm) {
+rehash_dir <- function(dir, config) {
   files <- list.files(
     path = dir,
     all.files = TRUE,
@@ -339,23 +327,14 @@ rehash_dir <- function(dir, hash_algorithm) {
     files,
     rehash_file,
     FUN.VALUE = character(1),
-    hash_algorithm = hash_algorithm
+    config = config
   )
   out <- paste(out, collapse = "")
-  digest(
-    out,
-    algo = hash_algorithm,
-    serialize = FALSE
-  )
+  config$cache$digest(out, serialize = FALSE)
 }
 
-rehash_file <- function(file, hash_algorithm) {
-  digest(
-    object = file,
-    algo = hash_algorithm,
-    file = TRUE,
-    serialize = FALSE
-  )
+rehash_file <- function(file, config) {
+  config$cache$digest(object = file, file = TRUE, serialize = FALSE)
 }
 
 rehash_url <- function(url, config) {

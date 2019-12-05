@@ -88,10 +88,7 @@ recovery_key_impl.default <- function(target, meta, config) {
   if (is.null(meta$trigger$value)) {
     change_hash <- NA_character_
   } else {
-    change_hash <- digest::digest(
-      meta$trigger$value,
-      algo = config$cache$hash_algorithm
-    )
+    change_hash <- config$cache$digest(meta$trigger$value)
   }
   x <- c(
     meta$command,
@@ -104,11 +101,7 @@ recovery_key_impl.default <- function(target, meta, config) {
     change_hash
   )
   x <- paste(x, collapse = "|")
-  digest::digest(
-    x,
-    algo = config$cache$hash_algorithm,
-    serialize = FALSE
-  )
+  config$cache$digest(x, serialize = FALSE)
 }
 
 recovery_key_impl.subtarget <- function(target, meta, config) {

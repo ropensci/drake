@@ -500,7 +500,7 @@ max_expand_dynamic <- function(targets, config) {
 }
 
 shorten_dynamic_hash <- function(hash) {
-  digest(hash, algo = "murmur32", serialize = FALSE)
+  digest_murmur32(hash, serialize = FALSE)
 }
 
 dynamic_hash_list <- function(dynamic, target, config) {
