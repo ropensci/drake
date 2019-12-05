@@ -2,8 +2,7 @@
 % Please edit documentation in R/expose_imports.R
 \name{expose_imports}
 \alias{expose_imports}
-\title{Expose all the objects in a package so \code{make()} can detect
-them as imported dependencies.
+\title{Expose package functions and objects for analysis with drake
 \lifecycle{stable}}
 \usage{
 expose_imports(
@@ -31,82 +30,40 @@ The environment that the exposed imports are loaded into.
 Defaults to your R workspace.
 }
 \description{
-When \code{drake} analyzes the functions in your environment,
-it understands that some of your functions
-are nested inside other functions.
-It dives into nested function after nested function in your environment
-so that if an inner function changes, targets produced by the outer
-functions will become out of date. However, \code{drake} stops searching
-as soon as it sees a function from a package. This keeps projects
-from being too brittle, but it is sometimes problematic.
-You may want to strongly depend on a package's internals.
-In fact, you may want to wrap your data analysis project itself
-in a formal R package,
-so you want all your functions to be reproducibly tracked.
-
-To make all a package's functions available to be tracked
-as dependencies, use the \code{expose_imports()} function.
-See the examples in this help file for a demonstration.
+\code{drake} usually ignores the functions and objects
+from packages. Use \code{expose_imports()} to bring the functions and
+objects from a package into your environment. That way,
+\code{drake} scans them for dependencies and watches for when
+they change.
 }
 \details{
 Thanks to \href{https://github.com/dapperjapper}{Jasper Clarkberg}
 for the idea that makes this function work.
 }
 \examples{
+# nolint start
 \dontrun{
 isolate_example("contain side effects", {
-# Suppose you have a workflow that uses the `digest()` function,
-# which computes the hash of an object.
-
-library(digest) # Has the digest() function.
-g <- function(x) {
-  digest(x)
-}
-f <- function(x) {
-  g(x)
-}
-plan <- drake_plan(x = f(1))
-cache <- storr::storr_environment() # optional
-
-# Here are the reproducibly tracked objects in the workflow.
-config <- drake_config(plan, cache = cache, history = FALSE)
-tracked(config)
-
-# But the digest() function has dependencies too.
-head(deps_code(digest))
-
-# Why doesn't `drake` import them? Because it knows `digest()`
-# is from a package, and it doesn't usually dive into functions
-# from packages. We need to call expose_imports() to expose
-# a package's inner functions.
-
-expose_imports(digest)
-config <- drake_config(plan, cache = cache, history = FALSE)
-new_objects <- tracked(config)
-head(new_objects, 10)
-length(new_objects)
-
-# Now when you call `make()`, `drake` will dive into `digest`
-# to import dependencies.
-
-make(plan, cache = cache, history = FALSE)
-head(cached(cache = cache), 10)
-length(cached(cache = cache))
-
-# Why would you want to expose a whole package like this?
-# Because you may want to wrap up your data science project
-# as a formal R package. In that case, `expose_imports()`
-# tells `drake` to reproducibly track all of your code,
-# not just the exported API functions you mention in
-# workflow plan commands.
-
-# Note: if you use `digest::digest()`` instead of just `digest()`,
-# `drake` does not dive into the function body anymore.
-g <- function(x) {
-  digest::digest(x) # Was previously just digest()
-}
-config <- drake_config(plan, cache = cache, history = FALSE)
-tracked(config)
+# Consider a simple plan that depends on the biglm package.
+# library(biglm)
+plan <- drake_plan(model = biglm(y ~ x, data = huge_dataset))
+# Even if you load the biglm package, drake still ignores
+# the biglm() function as a dependency. The function is missing
+# from the graph:
+# config <- drake_config(plan)
+# vis_drake_graph(config)
+# And if you install an updated version of biglm with a revised
+# biglm() function, this will not cause drake::make(plan)
+# to rerun the model.
+# To depend on biglm(), use expose_imports(biglm)
+# expose_imports(biglm)
+# Now, the biglm() function should be in your environment.
+# ls()
+# biglm() now appears in the graph.
+# vis_drake_graph(config)
+# And subsequent make()s respond to changes to biglm()
+# and its dependencies.
 })
 }
+# nolint end
 }
