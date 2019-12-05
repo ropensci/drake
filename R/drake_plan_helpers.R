@@ -681,8 +681,8 @@ code_to_plan <- function(path) {
 
 node_plan <- function(node) {
   weak_tibble(
-    target = safe_deparse(node[[2]]),
-    command = safe_deparse(node[[3]])
+    target = safe_deparse(node[[2]], backtick = FALSE),
+    command = safe_deparse(node[[3]], backtick = TRUE)
   )
 }
 
@@ -784,9 +784,12 @@ plan_to_text <- function(plan) {
   order <- match(order, table = plan$target)
   plan <- plan[order, ]
   if (!is.character(plan$command)) {
-    plan$command <- vapply(plan$command,
-                           safe_deparse,
-                           FUN.VALUE = character(1))
+    plan$command <- vapply(
+      plan$command,
+      safe_deparse,
+      FUN.VALUE = character(1),
+      backtick = TRUE
+    )
   }
   text <- paste(plan$target, "<-", plan$command)
   if (requireNamespace("styler")) {
@@ -884,7 +887,7 @@ style_recursive <- function(expr, name, append_comma) {
   if (nzchar(name)) {
     head <- paste(name, "= ")
   }
-  head <- paste0(head, safe_deparse(expr[[1]]), "(")
+  head <- paste0(head, safe_deparse(expr[[1]], backtick = FALSE), "(")
   out <- c(head, paste0("  ", text), ")")
   if (append_comma) {
     out[length(out)] <- paste0(out[length(out)], ",")
@@ -921,7 +924,7 @@ style_recursive_loop <- function(expr) {
 }
 
 style_leaf <- function(name, expr, append_comma) {
-  text <- safe_deparse(expr)
+  text <- safe_deparse(expr, backtick = TRUE)
   try(text <- styler::style_text(text), silent = TRUE)
   text[1] <- paste(name, "=", text[1])
   if (append_comma) {
@@ -932,7 +935,7 @@ style_leaf <- function(name, expr, append_comma) {
 
 is_trigger_call <- function(expr) {
   tryCatch(
-    safe_deparse(expr[[1]]) %in% trigger_fns,
+    safe_deparse(expr[[1]], backtick = FALSE) %in% trigger_fns,
     error = error_false
   )
 }

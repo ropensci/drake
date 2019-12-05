@@ -316,7 +316,7 @@ get_cluster_grouping <- function(config, group) {
     FUN = function(x) {
       out <- config$layout[[x]][[group]]
       if (!is.character(out)) {
-        out <- safe_deparse(out)
+        out <- safe_deparse(out, backtick = TRUE)
       }
       out %||% NA_character_
     },
@@ -655,7 +655,7 @@ target_hover_text <- function(targets, config) {
 # for large functions.
 style_hover_text <- function(x) {
   if (!is.character(x)) {
-    x <- safe_deparse(x)
+    x <- safe_deparse(x, backtick = TRUE)
   }
   x <- crop_lines(x, n = hover_lines)
   x <- crop_text(x, width = hover_width)

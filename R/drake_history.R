@@ -209,7 +209,7 @@ history_walk_args <- function(expr, ht) {
 
 history_analyze_value <- function(name, value, ht) {
   if (is.call(value)) {
-    fn <- safe_deparse(value[[1]])
+    fn <- safe_deparse(value[[1]], backtick = FALSE)
     if (fn %in% c(file_fns, no_deps_fns)) {
       value <- eval(value)
     }

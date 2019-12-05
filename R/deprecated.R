@@ -2136,7 +2136,7 @@ map_plan <- function(
     .f = function(...) {
       out <- list(as.name(fun), ...)
       out <- as.call(out)
-      safe_deparse(out)
+      safe_deparse(out, backtick = TRUE)
     }
   )))
   out <- weak_tibble(target = target, command = command)

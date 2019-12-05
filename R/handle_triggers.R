@@ -96,7 +96,7 @@ recovery_key_impl.default <- function(target, meta, config) {
     meta$input_file_hash,
     meta$output_file_hash,
     as.character(meta$seed),
-    safe_deparse(meta$trigger$condition),
+    safe_deparse(meta$trigger$condition, backtick = TRUE),
     meta$trigger$mode,
     change_hash
   )

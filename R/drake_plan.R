@@ -336,7 +336,7 @@ namespaced_target <- parse(text = ("drake:::target"))[[1]]
 
 is_target_call <- function(expr) {
   tryCatch(
-    safe_deparse(expr[[1]]) %in% target_fns,
+    safe_deparse(expr[[1]], backtick = FALSE) %in% target_fns,
     error = error_false
   )
 }
@@ -468,8 +468,10 @@ warn_arrows <- function(dots) {
 }
 
 detect_arrow <- function(command) {
-  if (length(command) > 2 && safe_deparse(command[[1]]) %in% c("<-", "->")) {
-    safe_deparse(command)
+  has_arrow <- length(command) > 2 &&
+    safe_deparse(command[[1]], backtick = FALSE) %in% c("<-", "->")
+  if (has_arrow) {
+    safe_deparse(command, backtick = TRUE)
   } else {
     NULL
   }
@@ -624,7 +626,7 @@ deparse_lang_col <- function(x) {
   if (!length(x) || !is.list(x)) {
     return(x)
   }
-  out <- unlist(lapply(x, safe_deparse, collapse = " "))
+  out <- unlist(lapply(x, safe_deparse, collapse = " ", backtick = TRUE))
   as_expr_list(out)
 }
 

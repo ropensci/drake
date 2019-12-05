@@ -1347,7 +1347,7 @@ memo_expr <- function(expr, cache, ...) {
     return(force(expr))
   }
   lang <- match.call(expand.dots = FALSE)$expr
-  lang <- safe_deparse(lang)
+  lang <- safe_deparse(lang, backtick = TRUE)
   key <- cache$digest(list(lang, ...))
   if (cache$exists(key = key, namespace = "memoize")) {
     return(cache$get(key = key, namespace = "memoize", use_cache = TRUE))

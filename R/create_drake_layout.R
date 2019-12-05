@@ -82,7 +82,7 @@ cdl_imports_kernel <- function(config, imports) {
     X = imports,
     FUN = function(x) {
       if (is.function(x)) {
-        x <- safe_deparse(x)
+        x <- safe_deparse(x, backtick = TRUE)
       }
       x
     },
@@ -378,7 +378,7 @@ cdl_standardize_command <- function(x) {
     x <- ignore_ignore(x)
   }
   attributes(x) <- NULL
-  safe_deparse(x)
+  safe_deparse(x, backtick = TRUE)
 }
 
 cdl_std_dyn_cmd <- function(x) {
@@ -390,7 +390,7 @@ cdl_std_dyn_cmd <- function(x) {
 
 cdl_parse_trigger <- function(trigger, envir) {
   if (is.symbol(trigger)) {
-    trigger <- safe_deparse(trigger)
+    trigger <- safe_deparse(trigger, backtick = FALSE)
   }
   if (is.character(trigger)) {
     trigger <- convert_old_trigger(trigger)

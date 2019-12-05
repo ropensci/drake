@@ -106,10 +106,12 @@ store_item_impl.function <- function(target, value, meta, config) {
 
 standardize_imported_function <- function(fun) {
   fun <- unwrap_function(fun)
-  str <- safe_deparse(fun) # Because the function body still has attributes.
+  # Because the function body still has attributes.
+  str <- safe_deparse(fun, backtick = TRUE)
   if (any(grepl("ignore", str, fixed = TRUE))) {
     fun <- ignore_ignore(fun)
-    str <- safe_deparse(fun) # Worth it: ignore_ignore is slow.
+    # Worth it. ignore_ignore is slow.
+    str <- safe_deparse(fun, backtick = TRUE)
   }
   standardize_deparsed_function(str)
 }

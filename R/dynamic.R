@@ -523,7 +523,12 @@ dynamic_hash_list.group <- function(dynamic, target, config) {
   deps <- sort(which_vars(dynamic))
   out <- lapply(deps, read_dynamic_hashes, config = config)
   if (!is.null(dynamic$.by)) {
-    out[["_by"]] <- read_dynamic_hashes(deparse(dynamic$.by), config)
+    key <- direct_deparse(
+      dynamic$.by,
+      control = deparse_control_default,
+      backtick = FALSE
+    )
+    out[["_by"]] <- read_dynamic_hashes(key, config)
   }
   assert_equal_branches(target, which_vars(dynamic), out)
   out
@@ -656,5 +661,9 @@ which_vars <- function(dynamic) {
 }
 
 which_by <- function(dynamic) {
-  deparse(dynamic$.by)
+  direct_deparse(
+    dynamic$.by,
+    control = deparse_control_default,
+    backtick = FALSE
+  )
 }

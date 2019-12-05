@@ -357,7 +357,7 @@ convert_split_to_map <- function(target, command, transform) {
   arglist <- as.list(transform)[args]
   slice <- match.call(drake_slice, slice)
   sub <- list(slice = slice)
-  names(sub) <- safe_deparse(slice$data)
+  names(sub) <- safe_deparse(slice$data, backtick = TRUE)
   command <- eval(call("substitute", command, sub), envir = baseenv())
   transform <- as.call(c(quote(map), slice$data))
   transform[[index]] <- as.numeric(seq_len(slice$slices))
@@ -537,9 +537,14 @@ parse_transform <- function(transform, target) {
   if (safe_is_na(transform)) {
     return(NA)
   }
+  text <- direct_deparse(
+    transform[[1]],
+    control = deparse_control_default,
+    backtick = TRUE
+  )
   transform <- structure(
     as.expression(transform),
-    class = unique(c(deparse(transform[[1]]), "transform", class(transform)))
+    class = unique(c(text, "transform", class(transform)))
   )
   assert_good_transform(transform)
   transform <- structure(
@@ -966,7 +971,7 @@ args_combine_entry <- function(name, transform, plan) {
 splice_args <- function(x, replacements) {
   out <- splice_inner(x, replacements)
   # Avoid edge cases like #715
-  out <- parse(text = safe_deparse(out)) # safe_deparse() is internal to drake.
+  out <- parse(text = safe_deparse(out, backtick = TRUE))
   if (length(out)) {
     out <- out[[1]]
   }
@@ -984,7 +989,11 @@ splice_inner <- function(x, replacements) {
       )
     )
   } else if (is.name(x)) {
-    nm <- deparse(x)
+    nm <- direct_deparse(
+      x,
+      control = deparse_control_default,
+      backtick = FALSE
+    )
     if (nm %in% names(replacements)) {
       return(replacements[[nm]])
     } else {
@@ -1170,7 +1179,7 @@ data_arg_groupings <- function(data_arg) {
   }
   lapply(data_arg, function(x) {
     x <- factor_to_character(x)
-    vapply(x, safe_deparse, FUN.VALUE = character(1))
+    vapply(x, safe_deparse, FUN.VALUE = character(1), backtick = TRUE)
   })
 }
 
@@ -1189,7 +1198,11 @@ explicit_new_groupings <- function(code, exclude = character(0)) {
 }
 
 long_deparse <- function(x, collapse = "\n") {
-  paste(deparse(x), collapse = collapse)
+  out <- direct_deparse(x, control = deparse_control_default, backtick = TRUE)
+  if (length(out) > 1L) {
+    out <- paste(out, collapse = collapse)
+  }
+  out
 }
 
 dsl_combine <- function(...) UseMethod("dsl_combine")
@@ -1239,7 +1252,7 @@ lang.command <- lang.transform <- function(x) x[[1]]
 
 char <- function(...) UseMethod("char")
 
-char.transform <- function(x) safe_deparse(lang(x))
+char.transform <- function(x) safe_deparse(lang(x), backtick = TRUE)
 
 named <- function(x, exclude = character(0)) {
   if (is.null(names(x))) return(NULL)

@@ -362,7 +362,7 @@ sanitize_format.drake_format_fst <- function(x, target, config) { # nolint
     msg <- paste0(
       "You selected fst format for target ", target,
       ", so drake will convert it from class ",
-      safe_deparse(class(x$value)),
+      safe_deparse(class(x$value), backtick = TRUE),
       " to a plain data frame."
     )
     warning(msg, call. = FALSE)
@@ -378,7 +378,7 @@ sanitize_format.drake_format_fst_dt <- function(x, target, config) { # nolint
     msg <- paste0(
       "You selected fst_dt format for target ", target,
       ", so drake will convert it from class ",
-      safe_deparse(class(x$value)),
+      safe_deparse(class(x$value), backtick = TRUE),
       " to a data.table object."
     )
     warning(msg, call. = FALSE)
@@ -394,7 +394,7 @@ sanitize_format.drake_format_diskframe <- function(x, target, config) { # nolint
     msg <- paste0(
       "You selected disk.frame format for target ", target,
       ", so drake will try to convert it from class ",
-      safe_deparse(class(x$value)),
+      safe_deparse(class(x$value), backtick = TRUE),
       " to a disk.frame object. For optimal performance ",
       "please create disk.frame objects yourself using an outdir ",
       "on the same drive as drake's cache ",

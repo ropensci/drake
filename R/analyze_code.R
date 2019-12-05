@@ -39,7 +39,7 @@ walk_code <- function(expr, results, locals, allowed_globals) {
 }
 
 walk_call <- function(expr, results, locals, allowed_globals) { # nolint
-  name <- safe_deparse(expr[[1]])
+  name <- safe_deparse(expr[[1]], backtick = FALSE)
   if (name == "local") {
     locals <- ht_clone(locals)
   }
@@ -149,7 +149,7 @@ analyze_knitr_file <- function(file, results, allowed_globals) {
 }
 
 analyze_namespaced <- function(expr, results, locals, allowed_globals) {
-  x <- safe_deparse(expr)
+  x <- safe_deparse(expr, backtick = TRUE)
   if (!ht_exists(locals, x)) {
     ht_set(results$namespaced, reencode_namespaced(x))
   }
@@ -306,7 +306,7 @@ ignore_ignore <- function(x) {
   if (is.function(x) && !is.primitive(x) && !is.null(body(x))) {
     body(x) <- ignore_ignore(body(x))
   } else if (is_callish(x)) {
-    if (safe_deparse(x[[1]]) %in% ignore_fns) {
+    if (safe_deparse(x[[1]], backtick = FALSE) %in% ignore_fns) {
       x <- quote(ignore())
     } else {
       x[] <- lapply(as.list(x), ignore_ignore)
@@ -438,7 +438,7 @@ make_assignment_fn_impl <- function(fun) {
 }
 
 dsq <- function(e) {
-  sQuote(safe_deparse(e))
+  sQuote(safe_deparse(e, backtick = TRUE))
 }
 
 evalseq <- function(e) {
@@ -507,11 +507,27 @@ safe_all_vars <- function(expr) {
   as.character(unlist(out))
 }
 
-safe_deparse <- function(x, collapse = "\n") {
-  paste(
-    deparse(x, control = c("keepInteger", "keepNA")),
-    collapse = collapse
+make_direct_deparse <- function() {
+  .deparseOpts <- identity
+  environment(deparse) <- environment()
+  deparse
+}
+
+direct_deparse <- make_direct_deparse()
+
+deparse_control_custom <- .deparseOpts(c("keepNA", "keepInteger"))
+deparse_control_default <- .deparseOpts(eval(formals(deparse)$control))
+
+safe_deparse <- function(x, collapse = "\n", backtick = TRUE) {
+  out <- direct_deparse(
+    x,
+    control = deparse_control_custom,
+    backtick = backtick
   )
+  if (length(out) > 1L) {
+    out <- paste(out, collapse = collapse)
+  }
+  out
 }
 
 pair_text <- function(x, y) {
