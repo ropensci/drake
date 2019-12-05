@@ -55,7 +55,14 @@ plan <- drake_plan(model = biglm(y ~ x, data = huge_dataset))
 # And if you install an updated version of biglm with a revised
 # biglm() function, this will not cause drake::make(plan)
 # to rerun the model.
+# This is because biglm() is not in your environment.
+# ls()
+# biglm() exists in its own special package environment,
+# which drake does not scan.
+# ls("package:biglm")
 # To depend on biglm(), use expose_imports(biglm)
+# to bring the objects and functions in biglm into
+# your own (non-package) environment.
 # expose_imports(biglm)
 # Now, the biglm() function should be in your environment.
 # ls()
