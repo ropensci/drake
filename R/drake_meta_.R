@@ -1,8 +1,5 @@
 drake_meta_ <- function(target, config) {
-  is_subtarget <- is_subtarget(target, config)
-  if (is.null(is_subtarget)) {
-    is_subtarget <- FALSE
-  }
+  is_subtarget <- is_subtarget(target, config) %|||% FALSE
   class <- ifelse(is_subtarget, "subtarget", "target")
   class(target) <- class
   drake_meta_impl(target, config)

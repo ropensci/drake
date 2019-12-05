@@ -1065,9 +1065,8 @@ single_cache_log <- function(key, cache) {
     field = "imported",
     cache = cache
   )
-  if (is.null(imported) || anyNA(imported)) {
-    imported <- TRUE
-  }
+  imported <- imported %|||% TRUE
+  imported <- imported %|||NA% TRUE
   type <- ifelse(imported, "import", "target")
   weak_tibble(hash = hash, type = type, name = key)
 }
