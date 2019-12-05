@@ -1,5 +1,13 @@
 # Version 7.8.0.9000
 
+## Speedups
+
+- Avoid setting seeds for imports (#1086, @adamkski).
+- Avoid working directly with POSIXct times (#1086, @adamkski)
+- Avoid excessive calls to `%||%` (`%|||%` is faster). (#1089, @billdenney)
+- Remove `%||NA` due to slowness (#1089, @billdenney).
+- Use hash tables to speed up `is_dynamic()` and `is_subtarget()` (#1089, @billdenney).
+- Use `getVDigest()` instead of `digest()` (#1089, #1092, https://github.com/eddelbuettel/digest/issues/139#issuecomment-561870289, @eddelbuettel, @billdenney).
 
 
 # Version 7.8.0
@@ -19,8 +27,7 @@
 - Add new `get_trace()` and `read_trace()` functions to help track which values of grouping variables go into the making of dynamic sub-targets.
 - Add a new `id_chr()` function to get the name of the target while `make()` is running.
 - Implement `plot(plan)` (#1036).
-- `vis_drake_graph()`, `drake_graph_info()`, and `render_drake_graph()` now 
-  take arguments that allow behavior to be defined upon selection of nodes. (#1031, @mstr3336).
+- `vis_drake_graph()`, `drake_graph_info()`, and `render_drake_graph()` now take arguments that allow behavior to be defined upon selection of nodes. (#1031,@mstr3336).
 - Add a new `max_expand` argument to `make()` and `drake_config()` to scale down dynamic branching (#1050, @hansvancalster).
 
 ## Enhancements

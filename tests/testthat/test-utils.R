@@ -123,7 +123,7 @@ test_with_dir("grid_index()", {
   }
 })
 
-test_with_dir("custom digest functions give same hashes ()", {
+test_with_dir("custom digest functions give same hashes", {
   out <- digest_murmur32(mtcars, serialize = TRUE)
   exp <- digest::digest(mtcars, algo = "murmur32", serialize = TRUE)
   expect_equal(out, exp)
