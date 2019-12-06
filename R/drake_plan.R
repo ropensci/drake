@@ -294,6 +294,7 @@ drake_plan <- function(
   }
   commands <- complete_target_names(commands)
   targets <- names(commands)
+  commands <- unname(commands)
   plan <- weak_tibble(target = targets)
   plan$command <- commands
   plan <- parse_custom_plan_columns(plan, envir = envir)
