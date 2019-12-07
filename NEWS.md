@@ -14,7 +14,7 @@
 - Use hash tables to speed up `is_dynamic()` and `is_subtarget()` (#1089, @billdenney).
 - Use `getVDigest()` instead of `digest()` (#1089, #1092, https://github.com/eddelbuettel/digest/issues/139#issuecomment-561870289, @eddelbuettel, @billdenney).
 - Pre-compute `backtick` and `.deparseOpts()` to speed up `deparse()` (#1086, `https://stackoverflow.com/users/516548/g-grothendieck`, @adamkski).
-
+- Pre-compute which targets exist in advance (#1095).
 
 # Version 7.8.0
 
