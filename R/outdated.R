@@ -70,6 +70,8 @@ recoverable <-  function(
     config$cache$lock()
     on.exit(config$cache$unlock(), add = TRUE)
   }
+  config$ht_is_subtarget <- ht_new()
+  config$ht_target_exists <- ht_target_exists(config)
   if (do_prework) {
     do_prework(config = config, verbose_packages = config$logger$verbose)
   }
@@ -146,6 +148,7 @@ outdated <-  function(
     on.exit(config$cache$unlock(), add = TRUE)
   }
   config$ht_is_subtarget <- ht_new()
+  config$ht_target_exists <- ht_target_exists(config)
   if (do_prework) {
     do_prework(config = config, verbose_packages = config$logger$verbose)
   }
@@ -254,4 +257,11 @@ missing_import <- function(x, config) {
     return(!file_dep_exists(config$cache$decode_path(x)))
   }
   identical(get_import_from_memory(x, config = config), NA_character_)
+}
+
+ht_target_exists <- function(config) {
+  keys_data <- config$cache$list()
+  keys_meta <- config$cache$list(namespace = "meta")
+  keys <- intersect(keys_data, keys_meta)
+  ht_new(keys, hash = TRUE)
 }

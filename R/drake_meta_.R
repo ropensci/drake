@@ -75,10 +75,15 @@ target_missing <- function(target, config) {
   !target_exists(target, config)
 }
 
-target_exists <- function(target, config) {
-  config$cache$exists(key = target) &
-    config$cache$exists(key = target, namespace = "meta")
+target_exists_single <- function(target, config) {
+  ht_exists(ht = config$ht_target_exists, x = target)
 }
+
+target_exists <- Vectorize(
+  target_exists_single,
+  vectorize.args = "target",
+  USE.NAMES = FALSE
+)
 
 resolve_target_seed <- function(target, config) {
   seed <- config$layout[[target]]$seed

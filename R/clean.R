@@ -91,6 +91,8 @@ clean <- function(
     return(invisible())
   }
   cache <- decorate_storr(cache)
+  cache$lock()
+  on.exit(cache$unlock(), add = TRUE)
   if (garbage_collection && abort_gc(cache$path)) {
     return(invisible()) # tested manually in test-always-skipped.R # nocov
   }
@@ -309,11 +311,14 @@ drake_gc <- function(
 ) {
   deprecate_search(search)
   deprecate_verbose(verbose)
-  if (!is.null(cache)) {
-    cache <- decorate_storr(cache)
-    cache$gc()
-    rm_bad_cache_filenames(cache)
+  if (is.null(cache)) {
+    return()
   }
+  cache <- decorate_storr(cache)
+  cache$lock()
+  on.exit(cache$unlock(), add = TRUE)
+  cache$gc()
+  rm_bad_cache_filenames(cache)
   invisible()
 }
 
@@ -387,6 +392,8 @@ rescue_cache <- function(
     return(invisible())
   }
   cache <- decorate_storr(cache)
+  cache$lock()
+  on.exit(cache$unlock(), add = TRUE)
   for (namespace in cache$list_namespaces()) {
     X <- cache$list(namespace = namespace)
     if (!is.null(targets)) {
