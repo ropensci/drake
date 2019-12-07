@@ -216,7 +216,7 @@ refclass_decorated_storr <- methods::setRefClass(
       stop(
         "drake's cache is locked because another process is building ",
         "targets or imports right now, ",
-        "e.g. make() or outdated(make_imports = TRUE) ",
+        "e.g. make() or clean() or outdated(make_imports = TRUE) ",
         "or recoverable(make_imports = TRUE) or ",
         "vis_drake_graph(make_imports = TRUE) etc. ",
         "If the process other process crashed before it could clean up, ",

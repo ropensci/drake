@@ -245,6 +245,7 @@ make <- function(
   config$ht_dynamic <- ht_new()
   config$ht_dynamic_size <- ht_new()
   config$ht_is_subtarget <- ht_new()
+  config$ht_target_exists <- ht_target_exists(config)
   config$envir_loaded <- new.env(hash = FALSE, parent = emptyenv())
   config$cache$reset_memo_hash()
   on.exit(config$cache$reset_memo_hash(), add = TRUE)
@@ -271,22 +272,7 @@ make <- function(
     cache = config$cache,
     jobs = config$jobs_preprocess
   )
-  envirs <- c(
-    "envir_graph",
-    "envir_targets",
-    "envir_subtargets",
-    "envir_loaded",
-    "ht_dynamic",
-    "ht_dynamic_size",
-    "ht_is_subtarget"
-  )
-  for (key in envirs) {
-    remove(list = names(config[[key]]), envir = config[[key]])
-  }
-  config$cache$flush_cache()
-  if (config$garbage_collection) {
-    gc()
-  }
+  clear_make_memory(config)
   invisible()
 }
 
@@ -419,6 +405,26 @@ do_prework <- function(config, verbose_packages) {
     )
   }
   invisible()
+}
+
+clear_make_memory <- function(config) {
+  envirs <- c(
+    "envir_graph",
+    "envir_targets",
+    "envir_subtargets",
+    "envir_loaded",
+    "ht_dynamic",
+    "ht_dynamic_size",
+    "ht_is_subtarget",
+    "ht_target_exists"
+  )
+  for (key in envirs) {
+    remove(list = names(config[[key]]), envir = config[[key]])
+  }
+  config$cache$flush_cache()
+  if (config$garbage_collection) {
+    gc()
+  }
 }
 
 # Generate a flat csv log file to represent the state of the cache.

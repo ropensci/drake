@@ -76,9 +76,27 @@ target_missing <- function(target, config) {
 }
 
 target_exists <- function(target, config) {
+  if (is.null(config$ht_target_exists)) {
+    target_exists_slow(target, config)
+  } else {
+    target_exists_fast(target, config)
+  }
+}
+
+target_exists_slow <- function(target, config) {
   config$cache$exists(key = target) &
     config$cache$exists(key = target, namespace = "meta")
 }
+
+target_exists_single <- function(target, config) {
+  ht_exists(ht = config$ht_target_exists, x = target)
+}
+
+target_exists_fast <- Vectorize(
+  target_exists_single,
+  vectorize.args = "target",
+  USE.NAMES = FALSE
+)
 
 resolve_target_seed <- function(target, config) {
   seed <- config$layout[[target]]$seed
