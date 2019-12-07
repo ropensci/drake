@@ -1,5 +1,9 @@
 # Version 7.8.0.9000
 
+## New features
+
+- Add a new `log_build_times` argument to `make()` and `drake_config()`. Allows users to disable the recording of build times. Produces a speedup of up to 20% on Macs (#1078).
+
 ## Speedups
 
 - Avoid setting seeds for imports (#1086, @adamkski).

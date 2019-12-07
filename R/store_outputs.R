@@ -170,14 +170,7 @@ store_recovery <- function(target, meta, meta_hash, config) {
 
 finalize_meta <- function(target, value, meta, hash, config) {
   meta <- finalize_triggers(target, meta, config)
-  meta$time_command <- runtime_entry(
-    runtime = meta$time_command,
-    target = target
-  )
-  meta$time_build <- runtime_entry(
-    runtime = proc.time() - meta$time_start,
-    target = target
-  )
+  meta <- finalize_times(target, meta, config)
   meta$time_start <- NULL
   meta$date <- microtime()
   if (!meta$imported && !is_encoded_path(target)) {
@@ -190,6 +183,16 @@ finalize_meta <- function(target, value, meta, hash, config) {
   }
   if (is_dynamic_dep(target, config)) {
     meta$dynamic_hashes <- dynamic_hashes(value, meta$size, config)
+  }
+  meta
+}
+
+finalize_times <- function(target, meta, config) {
+  if (config$log_build_times) {
+    meta$time_command <- runtime_entry(meta$time_command, target)
+    meta$time_build <- runtime_entry(proc_time() - meta$time_start, target)
+  } else {
+    meta$time_command <- meta$time_build <- empty_times()
   }
   meta
 }
@@ -264,12 +267,16 @@ log_time <- function(target, meta, config) {
 runtime_entry <- function(runtime, target) {
   list(
     target = target,
-    elapsed = runtime[["elapsed"]],
-    user = runtime[["user.self"]],
-    system = runtime[["sys.self"]]
+    elapsed = runtime["elapsed"],
+    user = runtime["user.self"],
+    system = runtime["sys.self"]
   )
 }
 
 microtime <- function() {
   format(Sys.time(), "%Y-%m-%d %H:%M:%OS9 %z GMT")
+}
+
+proc_time <- function() {
+  unclass(proc.time())
 }

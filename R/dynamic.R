@@ -154,7 +154,9 @@ get_trace <- function(trace, value) {
 
 dynamic_build <- function(target, meta, config) {
   subtargets <- config$layout[[target]]$subtargets
-  meta$time_command <- proc.time() - meta$time_start
+  if (config$log_build_times) {
+    meta$time_command <- proc_time() - meta$time_start
+  }
   value <- config$cache$mget_hash(subtargets)
   value <- append_trace(target, value, config)
   class(value) <- "drake_dynamic"

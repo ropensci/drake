@@ -10,14 +10,17 @@ drake_meta_impl <- function(target, config) {
 }
 
 drake_meta_impl.subtarget <- function(target, config) {
-  list(
+  out <- list(
     name = target,
     target = target,
     imported = FALSE,
     isfile = FALSE,
-    time_start = proc.time(),
     seed = resolve_target_seed(target, config)
   )
+  if (config$log_build_times) {
+    out$time_start <- proc_time()
+  }
+  out
 }
 
 drake_meta_impl.default <- function(target, config) {
@@ -27,10 +30,12 @@ drake_meta_impl.default <- function(target, config) {
     target = target,
     imported = layout$imported %|||% TRUE,
     missing = target_missing(target, config),
-    time_start = proc.time(),
     file_out = layout$deps_build$file_out,
     dynamic = is.call(layout$dynamic)
   )
+  if (config$log_build_times) {
+    meta$time_start <- proc_time()
+  }
   if (meta$imported) {
     meta$isfile <- is_encoded_path(target)
     meta$trigger <- trigger(condition = TRUE)

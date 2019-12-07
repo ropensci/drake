@@ -177,7 +177,9 @@ get_seed <- function() {
 # https://github.com/arendsee/rmonad/blob/14bf2ef95c81be5307e295e8458ef8fb2b074dee/R/to-monad.R#L68 # nolint
 with_handling <- function(target, meta, config) {
   warnings <- messages <- NULL
-  start <- proc.time()
+  if (config$log_build_times) {
+    start <- proc_time()
+  }
   withCallingHandlers(
     value <- with_call_stack(target = target, config = config),
     warning = function(w) {
@@ -192,7 +194,9 @@ with_handling <- function(target, meta, config) {
       invokeRestart("muffleMessage")
     }
   )
-  meta$time_command <- proc.time() - start
+  if (config$log_build_times) {
+    meta$time_command <- proc_time() - start
+  }
   meta$warnings <- prepend_fork_advice(warnings)
   meta$messages <- messages
   if (inherits(value, "error")) {

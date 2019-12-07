@@ -459,6 +459,10 @@
 #'   The static branching `max_expand`
 #'   is an argument of `drake_plan()` and `transform_plan()`.
 #'
+#' @param log_build_times Logical, whether to record build_times for targets.
+#'   Mac users may notice a 20% speedup in `make()`
+#'   with `build_times = FALSE`.
+#'
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {
@@ -528,7 +532,8 @@ drake_config <- function(
   recover = FALSE,
   recoverable = TRUE,
   curl_handles = list(),
-  max_expand = NULL
+  max_expand = NULL,
+  log_build_times = TRUE
 ) {
   logger <- logger(verbose = verbose, file = console_log_file)
   logger$minor("begin drake_config()")
@@ -640,7 +645,8 @@ drake_config <- function(
     ht_dynamic_deps = ht_dynamic_deps,
     ht_is_dynamic = ht_is_dynamic,
     ht_is_subtarget = ht_is_subtarget, # stays empty except for make()
-    max_expand = max_expand
+    max_expand = max_expand,
+    log_build_times = log_build_times
   )
   config_checks(out)
   logger$minor("end drake_config()")

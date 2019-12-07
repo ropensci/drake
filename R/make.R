@@ -175,7 +175,8 @@ make <- function(
   recover = FALSE,
   recoverable = TRUE,
   curl_handles = list(),
-  max_expand = NULL
+  max_expand = NULL,
+  log_build_times = TRUE
 ) {
   check_make_call(match.call())
   force(envir)
@@ -231,7 +232,8 @@ make <- function(
       recover = recover,
       recoverable = recoverable,
       curl_handles = curl_handles,
-      max_expand = max_expand
+      max_expand = max_expand,
+      log_build_times = log_build_times
     )
   }
   config$logger$minor("begin make()")

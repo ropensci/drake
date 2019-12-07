@@ -57,7 +57,8 @@ make(
   recover = FALSE,
   recoverable = TRUE,
   curl_handles = list(),
-  max_expand = NULL
+  max_expand = NULL,
+  log_build_times = TRUE
 )
 }
 \arguments{
@@ -532,6 +533,10 @@ Note: the \code{max_expand} argument of \code{make()} and
 \code{drake_config()} is for dynamic branching only.
 The static branching \code{max_expand}
 is an argument of \code{drake_plan()} and \code{transform_plan()}.}
+
+\item{log_build_times}{Logical, whether to record build_times for targets.
+Mac users may notice a 20\% speedup in \code{make()}
+with \code{build_times = FALSE}.}
 }
 \value{
 nothing

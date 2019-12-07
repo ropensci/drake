@@ -147,3 +147,11 @@ test_with_dir("predict_workers()", {
   expect_equal(dim(out), dim(my_plan))
   expect_equal(sort(colnames(out)), sort(c("target", "worker")))
 })
+
+test_with_dir("can disable build times (#1078)", {
+  skip_on_cran()
+  plan <- drake_plan(x = 1)
+  make(plan, log_build_times = FALSE)
+  expect_equal(nrow(build_times(type = "build")), 0L)
+  expect_equal(nrow(build_times(type = "command")), 0L)
+})
