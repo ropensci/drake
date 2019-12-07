@@ -92,7 +92,9 @@ clean <- function(
   }
   cache <- decorate_storr(cache)
   cache$lock()
-  on.exit(cache$unlock(), add = TRUE)
+  if (!destroy) {
+    on.exit(cache$unlock(), add = TRUE)
+  }
   if (garbage_collection && abort_gc(cache$path)) {
     return(invisible()) # tested manually in test-always-skipped.R # nocov
   }
