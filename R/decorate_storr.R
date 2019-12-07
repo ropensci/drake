@@ -21,7 +21,7 @@ decorate_storr <- function(storr) {
     ht_encode_namespaced = ht_new(),
     ht_decode_namespaced = ht_new(),
     ht_hash = ht_new(),
-    ht_progress = ht_progress(digest),
+    ht_keys = ht_keys(digest),
     path = path,
     path_return = file.path(path, "drake", "return"),
     path_tmp = file.path(path, "drake", "tmp")
@@ -56,7 +56,7 @@ refclass_decorated_storr <- methods::setRefClass(
     "ht_encode_namespaced",
     "ht_decode_namespaced",
     "ht_hash",
-    "ht_progress",
+    "ht_keys",
     "path",
     "path_return",
     "path_tmp"
@@ -136,7 +136,7 @@ refclass_decorated_storr <- methods::setRefClass(
       .self$driver$set_hash(
         key = target,
         namespace = "progress",
-        hash = .self$ht_progress[[value]]
+        hash = .self$ht_keys[[value]]
       )
     },
     get_progress = function(target) {
@@ -197,6 +197,36 @@ refclass_decorated_storr <- methods::setRefClass(
         gc = gc
       )
       invisible()
+    },
+    lock = function() {
+      .self$assert_unlocked()
+      .self$driver$set_hash(
+        key = "lock",
+        namespace = "session",
+        hash = .self$ht_keys[["lock"]]
+      )
+    },
+    unlock = function() {
+      .self$del(key = "lock", namespace = "session")
+    },
+    assert_unlocked = function() {
+      if (!.self$exists(key = "lock", namespace = "session")) {
+        return()
+      }
+      stop(
+        "drake's cache is locked because another process is building ",
+        "targets or imports right now, ",
+        "e.g. make() or outdated(make_imports = TRUE) ",
+        "or recoverable(make_imports = TRUE) or ",
+        "vis_drake_graph(make_imports = TRUE) etc. ",
+        "If the process other process crashed before it could clean up, ",
+        "unlock the cache with drake_cache(\"", .self$path, "\")$unlock(). ",
+        "Or, if you are using outdated() or recoverable() ",
+        "or vis_drake_graph() etc. then set make_imports = FALSE. ",
+        "See https://books.ropensci.org/drake/hpc.html to learn how to ",
+        "use parallel computing in drake.",
+        call. = FALSE
+      )
     },
     # Delegate to storr:
     archive_export = function(...) .self$storr$archive_export(...),
@@ -555,14 +585,14 @@ standardize_key <- function(text) {
   text
 }
 
-ht_progress <- function(digest_fn) {
-  keys <- c("running", "done", "failed")
-  out <- lapply(keys, progress_hash, digest_fn = digest_fn)
+ht_keys <- function(digest_fn) {
+  keys <- c("running", "done", "failed", "lock")
+  out <- lapply(keys, precomputed_key_hash, digest_fn = digest_fn)
   names(out) <- keys
   out
 }
 
-progress_hash <- function(key, digest_fn) {
+precomputed_key_hash <- function(key, digest_fn) {
   out <- digest_fn(key, serialize = FALSE)
   gsub("^.", substr(key, 1L, 1L), out)
 }

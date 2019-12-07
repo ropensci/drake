@@ -66,6 +66,10 @@ recoverable <-  function(
   config$logger$minor("begin recoverable()")
   on.exit(config$logger$minor("end recoverable()"), add = TRUE)
   assert_config_not_plan(config)
+  if (make_imports) {
+    config$cache$lock()
+    on.exit(config$cache$unlock(), add = TRUE)
+  }
   if (do_prework) {
     do_prework(config = config, verbose_packages = config$logger$verbose)
   }
@@ -136,8 +140,12 @@ outdated <-  function(
 ) {
   config$logger$minor("begin outdated()")
   on.exit(config$logger$minor("end outdated()"), add = TRUE)
-  config$ht_is_subtarget <- ht_new()
   assert_config_not_plan(config)
+  if (make_imports) {
+    config$cache$lock()
+    on.exit(config$cache$unlock(), add = TRUE)
+  }
+  config$ht_is_subtarget <- ht_new()
   if (do_prework) {
     do_prework(config = config, verbose_packages = config$logger$verbose)
   }

@@ -237,14 +237,17 @@ make <- function(
     )
   }
   config$logger$minor("begin make()")
+  on.exit(config$logger$minor("end make()"), add = TRUE)
   runtime_checks(config = config)
+  config$cache$lock()
+  on.exit(config$cache$unlock(), add = TRUE)
   config$running_make <- TRUE
   config$ht_dynamic <- ht_new()
   config$ht_dynamic_size <- ht_new()
   config$ht_is_subtarget <- ht_new()
   config$envir_loaded <- new.env(hash = FALSE, parent = emptyenv())
   config$cache$reset_memo_hash()
-  on.exit(config$cache$reset_memo_hash())
+  on.exit(config$cache$reset_memo_hash(), add = TRUE)
   config$envir_subtargets[[drake_envir_marker]] <- TRUE
   config$cache$set(key = "seed", value = config$seed, namespace = "session")
   if (config$log_progress) {
@@ -284,7 +287,6 @@ make <- function(
   if (config$garbage_collection) {
     gc()
   }
-  config$logger$minor("end make()")
   invisible()
 }
 

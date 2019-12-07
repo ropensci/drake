@@ -3,6 +3,7 @@
 ## New features
 
 - Add a new `log_build_times` argument to `make()` and `drake_config()`. Allows users to disable the recording of build times. Produces a speedup of up to 20% on Macs (#1078).
+- Implement cache locking to prohibit concurrent calls to `make()`, `outdated(make_imports = TRUE)`, `recoverable(make_imports = TRUE)`, `vis_drake_graph(make_imports = TRUE)` etc. on the same cache.
 
 ## Speedups
 
