@@ -197,7 +197,7 @@ is_outdated <- function(target, config) {
     return(TRUE)
   }
   meta <- drake_meta_(target, config)
-  meta_old <- old_meta(key = target, cache = config$cache)
+  meta_old <- config$cache$get(key = target, namespace = "meta")
   any_static_triggers(target, meta, meta_old, config) ||
     check_trigger_dynamic(target, meta, meta_old, config) ||
     missing_subtargets(target, meta_old, config)
