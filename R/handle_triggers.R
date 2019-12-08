@@ -5,7 +5,10 @@ handle_triggers <- function(target, meta, config) {
   if (is_registered_dynamic(target, config)) {
     return(FALSE)
   }
-  meta_old <- old_meta(key = target, cache = config$cache)
+  meta_old <- NULL
+  if (target_exists(target, config)) {
+    meta_old <- config$cache$get(key = target, namespace = "meta")
+  }
   static_ok <- !any_static_triggers(target, meta, meta_old, config) ||
     recover_target(target, meta, config)
   if (!is_dynamic(target, config)) {

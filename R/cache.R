@@ -1393,9 +1393,5 @@ old_meta <- function(key, cache) {
 }
 
 meta_elt <- function(field, meta) {
-  if (field %in% names(meta)) {
-    meta[[field]]
-  } else {
-    NA_character_
-  }
+  meta[[field]] %|||% NA_character_
 }
