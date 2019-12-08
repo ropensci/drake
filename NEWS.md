@@ -18,6 +18,7 @@
 - Avoid gratuitous cache interactions and data frame operations in `build_times()` (#1098).
 - Use `mget_hash()` in `progress()` (#1098).
 - Get target progress info only once in `drake_graph_info()` (#1098).
+- Speed up the retrieval of old metadata in `outdated()` (#1098).
 
 
 # Version 7.8.0
