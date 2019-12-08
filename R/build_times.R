@@ -45,6 +45,7 @@ build_times <- function(
   deprecate_verbose(verbose)
   deprecate_search(search)
   deprecate_targets_only(targets_only) # 2019-01-03 # nolint
+  assert_pkg("lubridate")
   if (is.null(cache)) {
     return(weak_as_tibble(empty_times()))
   }
@@ -60,36 +61,32 @@ build_times <- function(
     )
   }
   if (!length(targets)) {
-    targets <- parallel_filter(
-      x = cache$list(namespace = "meta"),
-      f = function(target) {
-        !is_imported_cache(target = target, cache = cache) &&
-        !is_encoded_path(target)
-      },
-      jobs = jobs
-    )
+    targets <- cache$list(namespace = "meta")
   }
   if (!length(targets)) {
     return(weak_as_tibble(empty_times()))
   }
   type <- match.arg(type)
-  out <- lightly_parallelize(
-    X = targets,
-    FUN = fetch_runtime,
-    jobs = 1,
-    cache = cache,
-    type = type
-  )
-  out <- parallel_filter(out, f = is.data.frame, jobs = jobs)
-  out <- do.call(drake_bind_rows, out)
-  out <- drake_bind_rows(out, empty_times())
-  out <- round_times(out, digits = digits)
-  out <- to_build_duration_df(out)
-  out <- out[order(out$target), ]
-  tryCatch(
-    weak_as_tibble(out),
-    error = error_tibble_times
-  )
+  type <- paste0("time_", type)
+  meta <- cache$mget(key = targets, namespace = "meta")
+  keep <- vapply(meta, keep_build_time, FUN.VALUE = logical(1))
+  meta <- meta[keep]
+  times <- lapply(meta, extract_runtime, type = type)
+  out <- list()
+  out$target <- as.character(unlist(lapply(times, `[[`, x = "target")))
+  dseconds <- lubridate::dseconds
+  for (time in c("elapsed", "user", "system")) {
+    x <- as.numeric(unlist(lapply(times, `[[`, x = time)))
+    x <- round(x, digits = 3)
+    out[[time]] <- to_build_duration(x, dseconds = dseconds)
+  }
+  weak_as_tibble(out)
+}
+
+keep_build_time <- function(meta) {
+  !(meta$imported %|||% FALSE) &&
+    !(meta$isfile %|||% FALSE) &&
+    !is.null(meta$time_build)
 }
 
 error_tibble_times <- function(e) {
@@ -109,44 +106,27 @@ round_times <- function(times, digits) {
   times
 }
 
-to_build_duration_df <- function(times) {
-  eval(parse(text = "require(methods, quietly = TRUE)")) # needed for lubridate
-  for (col in time_columns) {
-    if (length(times[[col]])) {
-      times[[col]] <- to_build_duration(times[[col]])
-    }
-  }
-  times
-}
-
-time_columns <- c("elapsed", "user", "system")
-
 # From lubridate issue 472,
 # we need to round to the nearest second
 # for times longer than a minute.
-to_build_duration <- function(x) {
-  assert_pkg("lubridate")
+to_build_duration <- function(x, dseconds) {
   round_these <- x >= 60
   x[round_these] <- round(x[round_these], digits = 0)
-  lubridate::dseconds(x)
+  dseconds(x)
 }
 
-fetch_runtime <- function(key, cache, type) {
-  x <- read_from_meta(
-    key = key,
-    field = paste0("time_", type),
-    cache = cache
-  )
+extract_runtime <- function(meta, type) {
+  x <- meta[[type]]
   if (is_bad_time(x)) {
     x <- empty_times()
   } else if (inherits(x, "proc_time")) {
-    x <- runtime_entry(runtime = x, target = key)
+    x <- runtime_entry(runtime = x, target = meta$target)
   }
-  weak_as_tibble(x)
+  x
 }
 
 is_bad_time <- function(x) {
-  !length(x) || is.na(x[1])
+  is.null(x) || is.na(x[1])
 }
 
 empty_times <- function() {

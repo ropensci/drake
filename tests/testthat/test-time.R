@@ -22,8 +22,9 @@ test_with_dir("proc_time runtimes can be fetched", {
   })
   meta <- list(time_build = t)
   cache$set(key = "x", value = meta, namespace = "meta")
-  y <- fetch_runtime(key = "x", cache = cache, type = "build")
-  expect_true(nrow(y) > 0)
+  y <- extract_runtime(meta, type = "time_build")
+  expect_true(is.list(y))
+  expect_equal(sort(names(y)), sort(c("target", "elapsed", "user", "system")))
 })
 
 test_with_dir("build times works if no targets are built", {

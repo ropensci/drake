@@ -266,10 +266,10 @@ log_time <- function(target, meta, config) {
 
 runtime_entry <- function(runtime, target) {
   list(
-    target = target,
-    elapsed = runtime["elapsed"],
-    user = runtime["user.self"],
-    system = runtime["sys.self"]
+    target = as.character(target),
+    elapsed = as.numeric(runtime["elapsed"]),
+    user = as.numeric(runtime["user.self"]),
+    system = as.numeric(runtime["sys.self"])
   )
 }
 
