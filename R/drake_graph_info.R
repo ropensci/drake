@@ -228,8 +228,9 @@ get_raw_node_category_data <- function(config) {
   )
   config$dynamic <- config$targets[is_dynamic]
   config$outdated <- resolve_graph_outdated(config = config)
-  config$running <- running(cache = config$cache)
-  config$failed <- failed(cache = config$cache)
+  prog <- config$cache$get_progress(config$targets)
+  config$running <- config$targets[prog == "running"]
+  config$failed <- config$targets[prog == "failed"]
   config$files <- parallel_filter(
     x = all_labels,
     f = is_encoded_path,

@@ -16,6 +16,9 @@
 - Pre-compute `backtick` and `.deparseOpts()` to speed up `deparse()` (#1086, `https://stackoverflow.com/users/516548/g-grothendieck`, @adamkski).
 - Pre-compute which targets exist in advance (#1095).
 - Avoid gratuitous cache interactions and data frame operations in `build_times()` (#1098).
+- Use `mget_hash()` in `progress()` (#1098).
+- Get target progress info only once in `drake_graph_info()` (#1098).
+
 
 # Version 7.8.0
 
