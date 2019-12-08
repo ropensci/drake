@@ -97,15 +97,6 @@ error_tibble_times <- function(e) {
   )
 }
 
-round_times <- function(times, digits) {
-  for (col in time_columns) {
-    if (length(times[[col]])) {
-      times[[col]] <- round(times[[col]], digits = digits)
-    }
-  }
-  times
-}
-
 # From lubridate issue 472,
 # we need to round to the nearest second
 # for times longer than a minute.

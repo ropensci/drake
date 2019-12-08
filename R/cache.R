@@ -1317,12 +1317,7 @@ progress <- function(
   if (!length(targets)) {
     targets <- cache$list(namespace = "progress")
   }
-  progress_results <- vapply(
-    targets,
-    get_progress_single,
-    cache = cache,
-    FUN.VALUE = character(1)
-  )
+  progress_results <- cache$get_progress(targets)
   out <- weak_tibble(target = targets, progress = progress_results)
   rownames(out) <- NULL
   if (is.null(progress)) {
@@ -1335,10 +1330,6 @@ progress <- function(
     several.ok = TRUE
   )
   out[out$progress %in% progress,, drop = FALSE] # nolint
-}
-
-get_progress_single <- function(target, cache) {
-  cache$get_progress(target = target)
 }
 
 memo_expr <- function(expr, cache, ...) {

@@ -139,8 +139,8 @@ refclass_decorated_storr <- methods::setRefClass(
         hash = .self$ht_keys[[value]]
       )
     },
-    get_progress = function(target) {
-      retrieve_progress(target = target, cache = .self)
+    get_progress = function(targets) {
+      retrieve_progress(targets = targets, cache = .self)
     },
     set_history = function(history = NULL) {
       .self$history <- manage_history(history, cache_path = .self$path)
@@ -597,20 +597,21 @@ precomputed_key_hash <- function(key, digest_fn) {
   gsub("^.", substr(key, 1L, 1L), out)
 }
 
-retrieve_progress <- function(target, cache) {
-  if (cache$exists(key = target, namespace = "progress")) {
-    hash <- cache$get_hash(key = target, namespace = "progress")
-    switch(
-      substr(hash, 1, 1),
-      r = "running",
-      d = "done",
-      f = "failed",
-      NA_character_
-    )
-  } else{
-    "none"
-  }
+retrieve_progress <- function(targets, cache) {
+  hash <- cache$mget_hash(key = targets, namespace = "progress")
+  substr <- substr(hash, 1, 1)
+  deduce_progress(substr)
 }
+
+deduce_progress <- Vectorize(function(substr) {
+  switch(
+    substr,
+    r = "running",
+    d = "done",
+    f = "failed",
+    "none"
+  )
+}, vectorize.args = "substr", USE.NAMES = FALSE)
 
 manage_history <- function(history, cache_path) {
   if (!is_history(history)) {

@@ -516,7 +516,7 @@ test_with_dir("selection and filtering in progress", {
   skip_if_not_installed("tidyselect")
   expect_equivalent(progress(tidyselect::starts_with("x_")), exp4)
   cache <- drake_cache()
-  expect_equal(get_progress_single("12345", cache), "none")
+  expect_equal(cache$get_progress("12345"), "none")
 })
 
 test_with_dir("make() writes a cache log file", {

@@ -181,7 +181,7 @@ is_good_checksum <- function(target, checksum, config) {
     warn_no_checksum(target = target, config = config)
     return(TRUE)
   }
-  if (identical("failed", get_progress_single(target, cache = config$cache))) {
+  if (identical("failed", config$cache$get_progress(target))) {
     return(TRUE) # covered with parallel processes # nocov
   }
   # nocov end
@@ -209,7 +209,7 @@ is_good_outfile_checksum <- function(target, checksum, config) {
     warn_no_checksum(target = target, config = config)
     return(TRUE)
   }
-  if (identical("failed", get_progress_single(target, cache = config$cache))) {
+  if (identical("failed", config$cache$get_progress(target))) {
     return(TRUE) # covered with parallel processes # nocov
   }
   identical(checksum, get_outfile_checksum(target = target, config = config))
