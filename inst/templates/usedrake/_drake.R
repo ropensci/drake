@@ -3,10 +3,6 @@
 # and
 # https://docs.ropensci.org/drake/reference/r_make.html
 
-# Load your packages and supporting functions into your session.
-# If you use supporting scripts like the ones below,
-# you will need to supply them yourself. Examples:
-# https://github.com/wlandau/drake-examples/tree/master/main/R
 source("R/packages.R")  # Load your packages, e.g. library(drake).
 source("R/functions.R") # Define your custom code as a bunch of functions.
 source("R/plan.R")      # Create your drake plan.

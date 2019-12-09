@@ -28,18 +28,22 @@ use_drake <- function(open = interactive()) {
   # Reason: https://github.com/r-lib/usethis/issues/347
   # nocov start
   assert_pkg("usethis")
-  usethis::use_template(
-    file.path("usedrake", "_drake.R"),
-    save_as = "_drake.R",
-    package = "drake",
-    open = FALSE
+  usethis::use_directory("R")
+  scripts <- c(
+    "make.R",
+    "_drake.R",
+    file.path("R", "packages.R"),
+    file.path("R", "functions.R"),
+    file.path("R", "plan.R")
   )
-  usethis::use_template(
-    file.path("usedrake", "make.R"),
-    save_as = "make.R",
-    package = "drake",
-    open = open
-  )
+  for (script in scripts) {
+    usethis::use_template(
+      file.path("usedrake", script),
+      save_as = script,
+      package = "drake",
+      open = open
+    )
+  }
   invisible()
   # nocov end
 }

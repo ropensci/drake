@@ -1,15 +1,17 @@
-# Walkthrough: https://books.ropensci.org/drake/walkthrough.html
-# Download the code: drake_example("main") # nolint
+# This minimal drake workflow demonstrates the file structure from
+# https://books.ropensci.org/drake/projects.html#code-files.
+# It is not the only way to organize R scripts for drake,
+# but this pattern is helpful.
 
-# Load your packages and supporting functions into your session.
-# If you use supporting scripts like the ones below,
-# you will need to supply them yourself. Examples:
-# https://github.com/wlandau/drake-examples/tree/master/main/R
 source("R/packages.R")  # Load your packages, e.g. library(drake).
 source("R/functions.R") # Define your custom code as a bunch of functions.
 source("R/plan.R")      # Create your drake plan.
 
 # Call make() to run your work.
 # Your targets will be stored in a hidden .drake/ cache,
-# and you can read them back into memory with loadd() and readd().
 make(plan)
+
+# If you do not change any code or data,
+# subsequent make()'s do not build targets.
+
+# Load your targets back into your session with loadd() and readd().

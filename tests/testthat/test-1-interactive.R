@@ -98,7 +98,8 @@ test_with_dir("use_drake()", {
   # to tests/testthat/test-examples.R.
   skip_if_not_installed("usethis")
   usethis::create_project(".", open = FALSE, rstudio = FALSE)
-  files <- c("make.R", "_drake.R")
+  files <- c("make", "_drake", "R/packages", "R/functions", "R/plan")
+  files <- paste0(files, ".R")
   for (file in files) {
     expect_false(file.exists(file))
   }
@@ -106,6 +107,9 @@ test_with_dir("use_drake()", {
   for (file in files) {
     expect_true(file.exists(file))
   }
+  drake::r_make()
+  model <- readd(model)
+  expect_true(inherits(model, "summary.lm"))
 })
 
 test_with_dir("can keep going in parallel", {

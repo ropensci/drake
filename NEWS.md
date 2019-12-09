@@ -21,6 +21,10 @@
 - Speed up the retrieval of old metadata in `outdated()` (#1098).
 - In `make()`, avoid checking for nonexistent metadata for missing targets.
 
+## Enhancements
+
+- Write a complete project structure in `use_drake()` (#1097, @lorenzwalthert, @tjmahr).
+
 
 # Version 7.8.0
 
