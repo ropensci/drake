@@ -35,6 +35,7 @@ drake_tip_ <- function() {
 .onLoad <- function(libname, pkgname) {
   warn_rdata()
   invisible()
+  .pkg_envir[["on_windows"]] <- this_os() == "windows"
 }
 
 warn_rdata <- function() {

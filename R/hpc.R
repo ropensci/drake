@@ -309,7 +309,7 @@ safe_jobs <- function(jobs) {
 }
 
 on_windows <- function() {
-  this_os() == "windows"
+  .pkg_envir[["on_windows"]]
 }
 
 this_os <- function() {

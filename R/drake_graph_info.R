@@ -231,11 +231,7 @@ get_raw_node_category_data <- function(config) {
   prog <- config$cache$get_progress(config$targets)
   config$running <- config$targets[prog == "running"]
   config$failed <- config$targets[prog == "failed"]
-  config$files <- parallel_filter(
-    x = all_labels,
-    f = is_encoded_path,
-    jobs = config$jobs_preprocess
-  )
+  config$files <- all_labels[is_encoded_path(all_labels)]
   config$functions <- parallel_filter(
     x = config$import_names,
     f = function(x) {
