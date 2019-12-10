@@ -164,7 +164,7 @@ cmq_send_target <- function(target, config) {
 cmq_deps_list <- function(target, config) {
   layout <- config$layout[[target]]
   keys_static <- layout$deps_build$memory
-  keys_dynamic <- layout$deps_dynamic
+  keys_dynamic <- c(layout$deps_dynamic, layout$deps_dynamic_implicit)
   vals_static <- lapply(
     keys_static,
     get,

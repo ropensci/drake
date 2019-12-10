@@ -324,5 +324,56 @@ load_static_subdep <- function(dep, index, config) {
 }
 
 sync_implicit_dynamic <- function(target, config) {
+  implicit <- config$layout[[target]]$deps_dynamic_implicit
+  if (!length(implicit)) {
+    return()
+  }
+  in_subtargets <- vlapply(
+    implicit,
+    exists,
+    envir = config$envir_subtargets,
+    inherits = FALSE
+  )
+  in_targets <- vlapply(
+    implicit,
+    exists,
+    envir = config$envir_targets,
+    inherits = FALSE
+  )
+  should_unload <- in_subtargets & !in_targets
+  should_load <- !in_subtargets & in_targets
+  unload <- implicit[should_unload]
+  load <- implicit[should_load]
+  if (length(unload)) {
+    unload_implicit_dynamic(unload, config)
+  }
+  if (length(load)) {
+    load_implicit_dynamic(load, config)
+  }
+}
 
+unload_implicit_dynamic <- function(unload, config) {
+  rm(list = unload, envir = config$envir_subtargets, inherits = FALSE)
+  config$envir_loaded$subtargets <- setdiff(
+    config$envir_loaded$subtargets,
+    unload
+  )
+}
+
+load_implicit_dynamic <- function(load, config) {
+  lapply(load, load_implicit_dynamic1, config = config)
+}
+
+load_implicit_dynamic1 <- function(load, config) {
+  hashes <- config$envir_targets[[load]]
+  value <- get_subtargets(hashes, config$cache, NULL)
+  assign(load, value, envir = config$envir_subtargets, inherits = FALSE)
+  config$envir_loaded$subtargets <- c(
+    config$envir_loaded$subtargets,
+    load
+  )
+}
+
+vlapply <- function(X, FUN, ...) {
+  vapply(X, FUN, FUN.VALUE = logical(1), ...)
 }

@@ -695,7 +695,8 @@ set_ht_implicit_dynamic1 <- function(target, layout, ht_is_dynamic) {
   }
   deps <- this_layout$deps_build$memory
   index <- vapply(deps, ht_exists, ht = ht_is_dynamic, FUN.VALUE = logical(1))
-  layout[[target]]$deps_dynamic_implicit <- deps[index]
+  implicit <- setdiff(deps[index], this_layout$deps_dynamic)
+  layout[[target]]$deps_dynamic_implicit <- implicit
 }
 
 sanitize_targets <- function(targets, plan) {
