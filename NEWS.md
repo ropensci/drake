@@ -3,6 +3,7 @@
 ## Breaking changes
 
 - Embrace the `vctrs` paradigm and its type stability for dynamic branching (#1105, #1106).
+- Accept `target` as a symbol by default in `read_trace()`. Required for the trace to make sense in #1107.
 
 ## New features
 
@@ -30,6 +31,7 @@
 
 - Write a complete project structure in `use_drake()` (#1097, @lorenzwalthert, @tjmahr).
 - Add a minor logger note to say how many dynamic sub-targets are registered at a time (#1102, @kendonB).
+- Handle dependencies that are dynamic targets but not declared as such for the current target (#1107).
 
 
 # Version 7.8.0
