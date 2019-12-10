@@ -26,6 +26,7 @@ manage_memory <- function(target, config, downstream = NULL, jobs = 1) {
     downstream = downstream,
     jobs = jobs
   )
+  sync_implicit_dynamic(target, config)
   if (identical(config$garbage_collection, TRUE)) {
     gc()
   }
@@ -38,7 +39,8 @@ manage_deps <- function(target, config, downstream, jobs) {
 
 manage_deps.speed <- function(target, config, downstream, jobs) {
   already_loaded <- config$envir_loaded$targets
-  target_deps <- deps_memory(targets = target, config = config)
+  memory_deps <- deps_memory(targets = target, config = config)
+  target_deps <- memory_deps
   target_deps <- setdiff(target_deps, target)
   target_deps <- setdiff(target_deps, already_loaded)
   try_load_deps(targets = target_deps, config = config, jobs = jobs)
@@ -47,7 +49,8 @@ manage_deps.speed <- function(target, config, downstream, jobs) {
 
 manage_deps.autoclean <- function(target, config, downstream, jobs) {
   already_loaded <- config$envir_loaded$targets
-  target_deps <- deps_memory(targets = target, config = config)
+  memory_deps <- deps_memory(targets = target, config = config)
+  target_deps <- memory_deps
   discard_these <- setdiff(x = already_loaded, y = target_deps)
   discard_targets(discard_these, target, config)
   target_deps <- setdiff(target_deps, target)
@@ -65,7 +68,8 @@ manage_deps.lookahead <- function(target, config, downstream, jobs) {
   )
   downstream_deps <- deps_memory(targets = downstream, config = config)
   already_loaded <- config$envir_loaded$targets
-  target_deps <- deps_memory(targets = target, config = config)
+  memory_deps <- deps_memory(targets = target, config = config)
+  target_deps <- memory_deps
   keep_these <- c(target_deps, downstream_deps)
   discard_these <- setdiff(x = already_loaded, y = keep_these)
   discard_targets(discard_these, target, config)
@@ -317,4 +321,8 @@ load_static_subdep <- function(dep, index, config) {
     envir = config$envir_subtargets,
     inherits = FALSE
   )
+}
+
+sync_implicit_dynamic <- function(target, config) {
+
 }
