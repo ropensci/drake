@@ -151,6 +151,9 @@ check_triggers_stage2 <- function(target, meta, meta_old, config) {
   if (check_trigger_seed(target, meta, meta_old, config)) {
     return(TRUE)
   }
+  if (check_trigger_format(target, meta, meta_old, config)) {
+    return(TRUE)
+  }
   if (check_trigger_change(target, meta, config)) {
     return(TRUE)
   }
@@ -232,6 +235,16 @@ check_trigger_change <- function(target, meta, config) {
   FALSE
 }
 
+check_trigger_format <- function(target, meta, meta_old, config) {
+  if (identical(meta$trigger$format, TRUE)) {
+    if (trigger_format(target, meta, meta_old, config)) {
+      config$logger$minor("trigger format", target = target)
+      return(TRUE)
+    }
+  }
+  FALSE
+}
+
 check_trigger_dynamic <- function(target, meta, meta_old, config) {
   trigger_dynamic(target, meta, meta_old, config)
 }
@@ -288,6 +301,15 @@ trigger_file_hash <- function(target, meta, meta_old, config) {
 trigger_seed <- function(target, meta, meta_old, config) {
   seed <- meta_elt(field = "seed", meta = meta_old)
   !identical(as.integer(seed), as.integer(meta$seed))
+}
+
+trigger_format <- function(target, meta, meta_old, config) {
+  format_new <- meta$format
+  format_old <- meta_old$format
+  if (is.null(format_new) || is.null(format_old)) {
+    return(FALSE)
+  }
+  !identical(format_new, format_old)
 }
 
 trigger_condition <- function(target, meta, config) {

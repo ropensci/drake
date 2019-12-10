@@ -291,6 +291,14 @@ dir_create <- function(x) {
   }
 }
 
+`%||NA%` <- function(x, y) {
+  if (is.null(x) || is.na(x)) {
+    y
+  } else {
+    x
+  }
+}
+
 `%|||NA%` <- function(x, y) {
   if (is.na(x)) {
     y

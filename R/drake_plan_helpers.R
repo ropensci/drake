@@ -126,6 +126,10 @@ target <- function(
 #'   if the seed changes. Only makes a difference if you set
 #'   a custom `seed` column in your [drake_plan()] at some point
 #'   in your workflow.
+#' @param format Logical, whether to rebuild the target if the
+#'   specialized data format changes. See
+#'   <https://books.ropensci.org/drake/plans.html#special-data-formats-for-targets> # nolint
+#'   for details on formats.
 #' @param condition R code (expression or language object)
 #'   that returns a logical. The target will rebuild
 #'   if the code evaluates to `TRUE`.
@@ -183,18 +187,21 @@ trigger <- function(
   depend = TRUE,
   file = TRUE,
   seed = TRUE,
+  format = TRUE,
   condition = FALSE,
   change = NULL,
   mode = c("whitelist", "blacklist", "condition")
 ) {
-  stopifnot(is.logical(command))
-  stopifnot(is.logical(depend))
-  stopifnot(is.logical(file))
+  command <- as.logical(command)
+  depend <- as.logical(depend)
+  file <- as.logical(file)
+  format <- as.logical(format)
   list(
     command = command,
     depend = depend,
     file = file,
     seed = seed,
+    format = format,
     condition = rlang::quo_squash(rlang::enquo(condition)),
     change = rlang::quo_squash(rlang::enquo(change)),
     mode = match.arg(mode)

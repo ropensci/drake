@@ -17,12 +17,32 @@ test_with_dir("assert_pkg", {
   )
 })
 
-test_with_dir("operators", {
+test_with_dir("%||%", {
   expect_equal("a" %||% "b", "a")
   expect_equal(NULL %||% "b", "b")
+  expect_equal(character(0) %||% "b", "b")
   expect_true(is.numeric(Inf %||% "b"))
   expect_true(is.na(NA %||% "b"))
+})
+
+test_with_dir("%|||%", {
+  expect_equal("a" %|||% "b", "a")
+  expect_equal(NULL %|||% "b", "b")
+  expect_equal(character(0) %|||% "b", character(0))
+  expect_true(is.numeric(Inf %|||% "b"))
+  expect_true(is.na(NA %|||% "b"))
+})
+
+test_with_dir("%||NA%", {
   expect_equal("a" %|||NA% "b", "a")
+  expect_error(NULL %|||NA% "b")
+  expect_true(is.numeric(Inf %|||NA% "b"))
+  expect_false(is.na(NA %|||NA% "b"))
+})
+
+test_with_dir("%|||NA%", {
+  expect_equal("a" %|||NA% "b", "a")
+  expect_error(NULL %|||NA% "b")
   expect_true(is.numeric(Inf %|||NA% "b"))
   expect_false(is.na(NA %|||NA% "b"))
 })

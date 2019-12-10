@@ -5,6 +5,7 @@ test_with_dir("empty triggers return logical", {
   expect_identical(trigger_depend("x", list(), list()), FALSE)
   expect_identical(trigger_command("x", list(), list()), FALSE)
   expect_identical(trigger_file("x", list(), list(), list()), FALSE)
+  expect_identical(trigger_format("x", NULL, NULL, list()), FALSE)
   expect_identical(trigger_condition("x", list(), list()), FALSE)
   expect_identical(trigger_change("x", list(), list()), FALSE)
 })
@@ -97,6 +98,7 @@ test_with_dir("trigger() function works", {
     command = TRUE,
     depend = FALSE,
     file = FALSE,
+    format = FALSE,
     condition = 1 + 1,
     change = sqrt(!!x)
   )
@@ -105,6 +107,7 @@ test_with_dir("trigger() function works", {
     depend = FALSE,
     file = FALSE,
     seed = TRUE,
+    format = FALSE,
     condition = quote(1 + 1),
     change = quote(sqrt(1)),
     mode = "whitelist"

@@ -10,6 +10,7 @@ trigger(
   depend = TRUE,
   file = TRUE,
   seed = TRUE,
+  format = TRUE,
   condition = FALSE,
   change = NULL,
   mode = c("whitelist", "blacklist", "condition")
@@ -29,6 +30,11 @@ if a \code{\link[=file_in]{file_in()}}/\code{\link[=file_out]{file_out()}}/\code
 if the seed changes. Only makes a difference if you set
 a custom \code{seed} column in your \code{\link[=drake_plan]{drake_plan()}} at some point
 in your workflow.}
+
+\item{format}{Logical, whether to rebuild the target if the
+specialized data format changes. See
+\url{https://books.ropensci.org/drake/plans.html#special-data-formats-for-targets} # nolint
+for details on formats.}
 
 \item{condition}{R code (expression or language object)
 that returns a logical. The target will rebuild

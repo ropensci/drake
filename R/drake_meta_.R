@@ -31,6 +31,7 @@ drake_meta_impl.default <- function(target, config) {
     imported = layout$imported %|||% TRUE,
     missing = target_missing(target, config),
     file_out = layout$deps_build$file_out,
+    format = layout$format %||NA% "none",
     dynamic = is.call(layout$dynamic)
   )
   if (config$log_build_times) {
