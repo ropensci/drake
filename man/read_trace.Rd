@@ -2,15 +2,24 @@
 % Please edit documentation in R/dynamic.R
 \name{read_trace}
 \alias{read_trace}
-\title{Read a trace of a dynamic target.}
+\title{Read a trace of a dynamic target.
+\lifecycle{experimental}}
 \usage{
-read_trace(trace, target, cache = drake::drake_cache(path = path), path = NULL)
+read_trace(
+  trace,
+  target,
+  cache = drake::drake_cache(path = path),
+  path = NULL,
+  character_only = FALSE
+)
 }
 \arguments{
-\item{trace}{Character, name of a target from which to extract
-a trace.}
+\item{trace}{Character, name of the trace
+you want to extract. Such trace names are declared
+in the \code{.trace} argument of \code{map()}, \code{cross()} or \code{group()}.}
 
-\item{target}{The name of a dynamic target with one or more traces
+\item{target}{Symbol or character, depending on the value of \code{character_only}.
+\code{target} is T=the name of a dynamic target with one or more traces
 defined using the \code{.trace} argument of dynamic \code{map()}, \code{cross()},
 or \code{group()}.}
 
@@ -19,6 +28,10 @@ If supplied, \code{path} is ignored.}
 
 \item{path}{Path to a \code{drake} cache
 (usually a hidden \verb{.drake/} folder) or \code{NULL}.}
+
+\item{character_only}{Logical, whether \code{name} should be treated
+as a character or a symbol
+(just like \code{character.only} in \code{\link[=library]{library()}}).}
 }
 \value{
 The dynamic trace of one target in another:
@@ -47,7 +60,7 @@ plan <- drake_plan(
 
   # We can use the trace as a grouping variable for the next
   # group().
-  w_tr = get_trace("w", y),
+  w_tr = read_trace("w", y),
 
   # Now, we use the trace again to keep track of the
   # values of w corresponding to the sub-targets of z.
@@ -62,12 +75,12 @@ make(plan)
 # That way, we know which values of `w` correspond
 # to the sub-targets of `y`.
 readd(y)
-read_trace("w", "y")
+read_trace("w", y)
 
 # And we know which values of `w_tr` (and thus `w`)
 # match up with the sub-targets of `y`.
 readd(z)
-read_trace("w_tr", "z")
+read_trace("w_tr", z)
 })
 }
 }

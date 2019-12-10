@@ -2538,3 +2538,25 @@ deprecate_arg <- function(value, name, alt = NULL) {
   }
   warning(msg, call. = FALSE)
 }
+
+#' @title Deprecated, get a trace of a dynamic target's value.
+#' \lifecycle{deprecated}
+#' @export
+#' @keywords internal
+#' @description Deprecated on 2019-12-10. Use [read_trace()] instead.
+#' @return The dynamic trace of one target in another:
+#'   a vector of values from a grouping variable.
+#' @param trace Character, name of the trace
+#'   you want to extract. Such trace names are declared
+#'   in the `.trace` argument of `map()`, `cross()` or `group()`..
+#' @param value Value of the dynamic target
+get_trace <- function(trace, value) {
+  .Deprecated(
+    new = "read_trace",
+    package = "drake",
+    msg = paste(
+      "get_trace() is deprecated. Use read_trace() instead."
+    )
+  )
+  attr(value, "dynamic_trace")[[trace]]
+}

@@ -586,8 +586,9 @@ drake_config <- function(
     trigger = trigger,
     cache = cache
   )
-  ht_dynamic_deps <- new_ht_dynamic_deps(layout)
   ht_is_dynamic <- new_ht_is_dynamic(layout)
+  set_ht_implicit_dynamic(layout, ht_is_dynamic)
+  ht_dynamic_deps <- new_ht_dynamic_deps(layout)
   ht_is_subtarget <- ht_new() # Gets replaced in make().
   graph <- create_drake_graph(
     plan = plan,
@@ -673,6 +674,29 @@ log_ht_is_dynamic <- function(layout, ht) {
   if (inherits(layout$dynamic, "dynamic")) {
     ht_set(ht, layout$target)
   }
+}
+
+set_ht_implicit_dynamic <- function(layout, ht_is_dynamic) {
+  if (!length(ht_list(ht_is_dynamic))) {
+    return()
+  }
+  lapply(
+    names(layout),
+    set_ht_implicit_dynamic1,
+    layout = layout,
+    ht_is_dynamic = ht_is_dynamic
+  )
+}
+
+set_ht_implicit_dynamic1 <- function(target, layout, ht_is_dynamic) {
+  this_layout <- layout[[target]]
+  if (this_layout$imported) {
+    return()
+  }
+  deps <- this_layout$deps_build$memory
+  index <- vapply(deps, ht_exists, ht = ht_is_dynamic, FUN.VALUE = logical(1))
+  implicit <- setdiff(deps[index], this_layout$deps_dynamic)
+  layout[[target]]$deps_dynamic_implicit <- implicit
 }
 
 sanitize_targets <- function(targets, plan) {
