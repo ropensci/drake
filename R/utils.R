@@ -111,14 +111,6 @@ error_na <- function(e) {
   NA_character_
 }
 
-all_is_na <- function(x) {
-  all(is.na(x))
-}
-
-safe_is_na <- function(x) {
-  tryCatch(is.na(x), error = error_false, warning = error_false)
-}
-
 complete_cases <- function(x) {
   !as.logical(Reduce(`|`, lapply(x, is.na)))
 }
@@ -274,6 +266,14 @@ dir_create <- function(x) {
   invisible()
 }
 
+all_is_na <- function(x) {
+  all(is.na(x))
+}
+
+safe_is_na <- function(x) {
+  tryCatch(is.na(x), error = error_false, warning = error_false)
+}
+
 # From lintr
 `%||%` <- function(x, y) {
   if (is.null(x) || length(x) <= 0) {
@@ -300,7 +300,7 @@ dir_create <- function(x) {
 }
 
 `%|||NA%` <- function(x, y) {
-  if (is.na(x)) {
+  if (anyNA(x)) {
     y
   } else {
     x

@@ -25,9 +25,17 @@ To help us read your code, please try to follow the [tidyverse style guide](http
 
 ## Benchmarks
 
-How poorly does `drake` perform? Here is the easiest way to share diagnostic information.
+How poorly does `drake` perform? To find out, we recommend the [`proffer`](https://github.com/wlandau/proffer) package and take screenshots of the results displayed in your browser.
 
-1. Use `Rprof()` to create a zip archive of profiling data.
+```r
+library(drake)
+library(proffer)
+px <- pprof({
+  # All your drake code goes here.
+})
+```
+
+Alternatively, if installing [`proffer`](https://github.com/wlandau/proffer) is too cumbersome, create a zip archive of profiling data (e.g. `samples.zip` below) and upload it to this issue thread.
 
 ```r
 Rprof(filename = "samples.rprof")
@@ -35,7 +43,3 @@ Rprof(filename = "samples.rprof")
 Rprof(NULL)
 zip(zipfile = "samples.zip", files = "samples.rprof")
 ```
-
-2. Upload "samples.zip" to this issue thread (drag and drop). If the file is too big, please let us know and we can figure out another way to transfer the file.
-
-For more sophisticated profiling workflows, see <https://github.com/wlandau/drake-examples/tree/master/overhead>.

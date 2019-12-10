@@ -25,6 +25,7 @@
 ## Enhancements
 
 - Write a complete project structure in `use_drake()` (#1097, @lorenzwalthert, @tjmahr).
+- Add a minor logger note to say how many dynamic sub-targets are registered at a time (#1102, @kendonB).
 
 
 # Version 7.8.0
