@@ -525,9 +525,7 @@ no_deps <- function(x = NULL) {
 #'   y = target(id_chr(), dynamic = map(x))
 #' )
 #' make(plan)
-#' ys <- subtargets(y)
-#' ys
-#' readd(ys[1], character_only = TRUE)
+#' readd(y, subtargets = 1)
 #' # Static branching
 #' plan <- drake_plan(
 #'   y = target(c(x, .id_chr), transform = map(x = !!seq_len(4)))

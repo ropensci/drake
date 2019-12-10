@@ -111,7 +111,8 @@ Imports:
   rlang (>= 0.2.0),
   storr (>= 1.1.0),
   txtq (>= 0.1.3),
-  utils
+  utils,
+  vctrs (>= 0.2.0)
 Suggests:
   abind,
   bindr,

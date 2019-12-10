@@ -17,6 +17,9 @@ manage_memory <- function(target, config, downstream = NULL, jobs = 1) {
     memory_strategy <- config$memory_strategy
   }
   class(target) <- memory_strategy
+  if (!is_subtarget(target, config)) {
+    clear_envir_subtargets(target = target, config = config)
+  }
   manage_deps(
     target = target,
     config = config,
@@ -47,7 +50,6 @@ manage_deps.autoclean <- function(target, config, downstream, jobs) {
   target_deps <- deps_memory(targets = target, config = config)
   discard_these <- setdiff(x = already_loaded, y = target_deps)
   discard_targets(discard_these, target, config)
-  clear_envir_subtargets(target = target, config = config)
   target_deps <- setdiff(target_deps, target)
   target_deps <- setdiff(target_deps, already_loaded)
   try_load(targets = target_deps, config = config, jobs = jobs)
@@ -86,7 +88,6 @@ discard_targets <- function(discard_these, target, config) {
 }
 
 manage_deps.unload <- function(target, config, downstream, jobs) {
-  clear_envir_subtargets(target = target, config = config)
   clear_envir_targets(target = target, config = config)
 }
 
@@ -95,7 +96,6 @@ manage_deps.none <- function(target, config, downstream, jobs) {
 }
 
 clear_envir_subtargets <- function(target, config) {
-  config$logger$minor("clear subtarget envir", target = target)
   rm(list = config$envir_loaded$subtargets, envir = config$envir_subtargets)
   config$envir_loaded$subtargets <- character(0)
   config$envir_subtargets[[drake_envir_marker]] <- TRUE
@@ -280,6 +280,7 @@ load_dynamic_subdep_impl.group <- function( # nolint
 ) {
   subdeps <- config$cache$get(dep, namespace = "meta")$subtargets[index]
   value <- config$cache$mget(subdeps, use_cache = FALSE)
+  value <- do.call(vec_c, value)
   assign(
     x = dep,
     value = value,
