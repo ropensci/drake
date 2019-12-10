@@ -645,7 +645,7 @@ test_with_dir("changes to formats invalidate targets (#1104)", {
   expect_equal(justbuilt(config), "x")
 })
 
-test_with_dir("same, with 2 targets (format is NA for x) (#1104)", {
+test_with_dir("same with 2 targets (format is NA for x) (#1104)", {
   skip_if_not_installed("fst")
   df <- data.frame(x = letters, y = letters, stringsAsFactors = FALSE)
   plan <- drake_plan(x = df, y = x)

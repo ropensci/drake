@@ -1503,3 +1503,21 @@ test_with_dir("dynamic branching and memory strategies", {
   make(plan, memory_strategy = "autoclean")
   expect_true(is.list(readd(z)))
 })
+
+test_with_dir("format trigger for dynamic targets (#1104)", {
+  skip_if(getRversion() < "3.5.0")
+  plan <- drake_plan(
+    x = 1:4,
+    y = target(x, dynamic = map(x))
+  )
+  make(plan)
+  plan <- drake_plan(
+    x = 1:4,
+    y = target(x, dynamic = map(x), format = "rds")
+  )
+  make(plan)
+  config <- drake_config(plan)
+  out <- sort(justbuilt(config))
+  exp <- sort(c("y", subtargets(y)))
+  expect_equal(out, exp)
+})

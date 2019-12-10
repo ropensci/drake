@@ -35,27 +35,25 @@ test_with_dir("%|||%", {
 
 test_with_dir("%||NA%", {
   expect_equal("a" %|||NA% "b", "a")
-  expect_error(NULL %|||NA% "b")
+  expect_equal(NULL %|||NA% "b", NULL)
   expect_true(is.numeric(Inf %|||NA% "b"))
   expect_false(is.na(NA %|||NA% "b"))
 })
 
 test_with_dir("%|||NA%", {
   expect_equal("a" %|||NA% "b", "a")
-  expect_error(NULL %|||NA% "b")
+  expect_equal(NULL %|||NA% "b", NULL)
   expect_true(is.numeric(Inf %|||NA% "b"))
   expect_false(is.na(NA %|||NA% "b"))
 })
 
 test_with_dir("weak_tibble", {
   skip_on_cran()
-
   for (fdf in c(FALSE, TRUE)) {
     out <- weak_tibble(.force_df = fdf)
     expect_equivalent(out, data.frame())
     expect_equivalent(weak_as_tibble(list(), .force_df = fdf), data.frame())
   }
-
   # No factors
   out <- weak_tibble(a = 1:2, b = c("x", "y"), .force_df = TRUE)
   exp <- data.frame(a = 1:2, b = c("x", "y"), stringsAsFactors = FALSE)
