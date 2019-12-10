@@ -1365,7 +1365,7 @@ test_with_dir("bad group trace (#1052)", {
     a = letters[seq_len(2)],
     b = seq_len(2),
     c = target(paste(a, b), dynamic = cross(a, b, .trace = c(a, b))),
-    a_crossed = get_trace(c, "a"),
+    a_crossed = read_trace(c, a),
     d = target(unlist(c), dynamic = group(c, .by = a_crossed, .trace = a))
   )
   expect_error(
@@ -1381,11 +1381,9 @@ test_with_dir("dynamic map trace (#1052)", {
     c = target(b, dynamic = map(a, b, .trace = c(a, b)))
   )
   make(plan)
-  value <- drake_cache()$get("c")
-  expect_equal(get_trace("a", value), readd(a))
-  expect_equal(read_trace("a", "c"), readd(a))
+  expect_equal(read_trace("a", c), readd(a))
   exp <- as.character(drake_cache()$get("b"))
-  expect_equal(read_trace("b", "c"), exp)
+  expect_equal(read_trace("b", c), exp)
   config <- drake_config(plan)
   make(plan)
   expect_equal(justbuilt(config), character(0))
@@ -1409,15 +1407,15 @@ test_with_dir("dynamic cross trace (#1052)", {
   )
   make(plan)
   value <- drake_cache()$get("z")
-  out <- get_trace("w", value)
+  out <- suppressWarnings(get_trace("w", value))
   exp <- rep(LETTERS[seq_len(3)], each = 4)
   expect_equal(out, exp)
-  out <- read_trace("w", "z")
+  out <- read_trace("w", z)
   expect_equal(out, exp)
-  out <- get_trace("x", value)
+  out <- read_trace("x", z)
   exp <- rep(letters[c(1, 1, 2, 2)], times = 3)
   expect_equal(out, exp)
-  out <- read_trace("x", "z")
+  out <- read_trace("x", "z", character_only = FALSE)
   expect_equal(out, exp)
 })
 
@@ -1426,13 +1424,11 @@ test_with_dir("dynamic group trace (#1052)", {
     w = LETTERS[seq_len(3)],
     x = letters[seq_len(2)],
     y = target(c(w, x), dynamic = cross(w, x, .trace = w)),
-    w_tr = get_trace("w", y),
+    w_tr = read_trace("w", y),
     z = target(y, dynamic = group(y, .by = w_tr, .trace = w_tr))
   )
   make(plan)
-  value <- drake_cache()$get("z")
-  expect_equal(get_trace("w_tr", value), LETTERS[seq_len(3)])
-  expect_equal(read_trace("w_tr", "z"), LETTERS[seq_len(3)])
+  expect_equal(read_trace("w_tr", z), LETTERS[seq_len(3)])
 })
 
 test_with_dir("dynamic combine() does not exist", {
@@ -1452,7 +1448,7 @@ test_with_dir("trace responds to dynamic max_expand (#1073)", {
       x,
       dynamic = map(x, .trace = x)
     ),
-    y_trace = get_trace("x", y),
+    y_trace = read_trace("x", y),
     z = target(
       sum(unlist(y)),
       dynamic = group(y, .by = y_trace)

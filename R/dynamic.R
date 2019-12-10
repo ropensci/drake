@@ -41,6 +41,7 @@ subtargets <- function(
 }
 
 #' @title Read a trace of a dynamic target.
+#' \lifecycle{experimental}
 #' @export
 #' @seealso [get_trace()], [subtargets()]
 #' @description Read a target's dynamic trace from the cache.
@@ -55,9 +56,8 @@ subtargets <- function(
 #' @param trace Character, name of the trace
 #'   you want to extract. Such trace names are declared
 #'   in the `.trace` argument of `map()`, `cross()` or `group()`.
-#' @param trace Character, name of a target from which to extract
-#'   a trace.
-#' @param target The name of a dynamic target with one or more traces
+#' @param target Symbol or character, depending on the value of `character_only`.
+#'   `target` is T=the name of a dynamic target with one or more traces
 #'   defined using the `.trace` argument of dynamic `map()`, `cross()`,
 #'   or `group()`.
 #' @examples
@@ -73,7 +73,7 @@ subtargets <- function(
 #'
 #'   # We can use the trace as a grouping variable for the next
 #'   # group().
-#'   w_tr = get_trace("w", y),
+#'   w_tr = read_trace("w", y),
 #'
 #'   # Now, we use the trace again to keep track of the
 #'   # values of w corresponding to the sub-targets of z.
@@ -88,80 +88,29 @@ subtargets <- function(
 #' # That way, we know which values of `w` correspond
 #' # to the sub-targets of `y`.
 #' readd(y)
-#' read_trace("w", "y")
+#' read_trace("w", y)
 #'
 #' # And we know which values of `w_tr` (and thus `w`)
 #' # match up with the sub-targets of `y`.
 #' readd(z)
-#' read_trace("w_tr", "z")
+#' read_trace("w_tr", z)
 #' })
 #' }
 read_trace <- function(
   trace,
   target,
   cache = drake::drake_cache(path = path),
-  path = NULL
+  path = NULL,
+  character_only = FALSE
 ) {
   if (is.null(cache)) {
     stop("cannot find drake cache.")
   }
   cache <- decorate_storr(cache)
+  if (!character_only) {
+    target <- as.character(substitute(target))
+  }
   value <- cache$get(standardize_key(target), use_cache = FALSE)
-  get_trace(trace, value)
-}
-
-#' @title Get a trace of a dynamic target's value.
-#' @export
-#' @seealso [read_trace()], [subtargets()]
-#' @description Get the dynamic trace of a target's value.
-#'   Best used inside a `drake` plan.
-#' @details In dynamic branching, the trace keeps track
-#'   of how the sub-targets were generated.
-#'   It reminds us the values of grouping variables
-#'   that go with individual sub-targets.
-#' @return The dynamic trace of one target in another:
-#'   a vector of values from a grouping variable.
-#' @param trace Character, name of the trace
-#'   you want to extract. Such trace names are declared
-#'   in the `.trace` argument of `map()`, `cross()` or `group()`.
-#' @param value The return value of the target with the trace.
-#' @examples
-#' \dontrun{
-#' isolate_example("demonstrate dynamic trace", {
-#' plan <- drake_plan(
-#'   w = LETTERS[seq_len(3)],
-#'   x = letters[seq_len(2)],
-#'
-#'   # The first trace lets us see the values of w
-#'   # that go with the sub-targets of y.
-#'   y = target(paste0(w, x), dynamic = cross(w, x, .trace = w)),
-#'
-#'   # We can use the trace as a grouping variable for the next
-#'   # group().
-#'   w_tr = get_trace("w", y),
-#'
-#'   # Now, we use the trace again to keep track of the
-#'   # values of w corresponding to the sub-targets of z.
-#'   z = target(
-#'     paste0(y, collapse = "-"),
-#'     dynamic = group(y, .by = w_tr, .trace = w_tr)
-#'   )
-#' )
-#' make(plan)
-#'
-#' # We can read the trace outside make().
-#' # That way, we know which values of `w` correspond
-#' # to the sub-targets of `y`.
-#' readd(y)
-#' read_trace("w", "y")
-#'
-#' # And we know which values of `w_tr` (and thus `w`)
-#' # match up with the sub-targets of `y`.
-#' readd(z)
-#' read_trace("w_tr", "z")
-#' })
-#' }
-get_trace <- function(trace, value) {
   attr(value, "dynamic_trace")[[trace]]
 }
 

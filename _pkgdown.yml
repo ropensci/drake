@@ -69,7 +69,6 @@ reference:
 - title: Dynamic branching
   contents:
   - '`subtargets`'
-  - '`get_trace`'
   - '`read_trace`'
 - title: Reproducible R session management
   contents:

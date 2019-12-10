@@ -362,18 +362,14 @@ unload_implicit_dynamic <- function(unload, config) {
 
 load_implicit_dynamic <- function(load, config) {
   lapply(load, load_implicit_dynamic1, config = config)
-}
-
-load_implicit_dynamic1 <- function(load, config) {
-  hashes <- config$envir_targets[[load]]
-  value <- get_subtargets(hashes, config$cache, NULL)
-  assign(load, value, envir = config$envir_subtargets, inherits = FALSE)
   config$envir_loaded$subtargets <- c(
     config$envir_loaded$subtargets,
     load
   )
 }
 
-vlapply <- function(X, FUN, ...) {
-  vapply(X, FUN, FUN.VALUE = logical(1), ...)
+load_implicit_dynamic1 <- function(load, config) {
+  hashes <- config$envir_targets[[load]]
+  value <- get_subtargets(hashes, config$cache, NULL)
+  assign(load, value, envir = config$envir_subtargets, inherits = FALSE)
 }
