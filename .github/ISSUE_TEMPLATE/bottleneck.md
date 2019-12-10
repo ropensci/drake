@@ -25,7 +25,7 @@ To help us read your code, please try to follow the [tidyverse style guide](http
 
 ## Benchmarks
 
-How poorly does `drake` perform? To find out, we recommend the [`proffer`](https://github.com/wlandau/proffer) package and take screenshots of the results displayed in your browser..
+How poorly does `drake` perform? To find out, we recommend the [`proffer`](https://github.com/wlandau/proffer) package and take screenshots of the results displayed in your browser.
 
 ```r
 library(drake)
