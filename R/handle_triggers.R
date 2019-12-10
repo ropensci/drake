@@ -317,7 +317,10 @@ trigger_condition <- function(target, meta, config) {
     return(FALSE)
   }
   if (is.language(meta$trigger$condition)) {
-    try_load(config$layout[[target]]$deps_condition$memory, config = config)
+    try_load_deps(
+      config$layout[[target]]$deps_condition$memory,
+      config = config
+    )
     value <- eval(meta$trigger$condition, envir = config$envir_targets)
   } else {
     value <- meta$trigger$condition

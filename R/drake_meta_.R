@@ -62,7 +62,7 @@ drake_meta_impl.default <- function(target, config) {
     meta$output_file_hash <- output_file_hash(target = target, config = config)
   }
   if (!is.null(meta$trigger$change)) {
-    try_load(layout$deps_change$memory, config = config)
+    try_load_deps(layout$deps_change$memory, config = config)
     meta$trigger$value <- eval(meta$trigger$change, config$envir_targets)
   }
   if (is_dynamic(target, config)) {

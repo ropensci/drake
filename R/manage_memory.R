@@ -41,7 +41,7 @@ manage_deps.speed <- function(target, config, downstream, jobs) {
   target_deps <- deps_memory(targets = target, config = config)
   target_deps <- setdiff(target_deps, target)
   target_deps <- setdiff(target_deps, already_loaded)
-  try_load(targets = target_deps, config = config, jobs = jobs)
+  try_load_deps(targets = target_deps, config = config, jobs = jobs)
   load_subtarget_subdeps(target, config)
 }
 
@@ -52,7 +52,7 @@ manage_deps.autoclean <- function(target, config, downstream, jobs) {
   discard_targets(discard_these, target, config)
   target_deps <- setdiff(target_deps, target)
   target_deps <- setdiff(target_deps, already_loaded)
-  try_load(targets = target_deps, config = config, jobs = jobs)
+  try_load_deps(targets = target_deps, config = config, jobs = jobs)
   load_subtarget_subdeps(target, config)
 }
 
@@ -71,7 +71,7 @@ manage_deps.lookahead <- function(target, config, downstream, jobs) {
   discard_targets(discard_these, target, config)
   target_deps <- setdiff(target_deps, target)
   target_deps <- setdiff(target_deps, already_loaded)
-  try_load(targets = target_deps, config = config, jobs = jobs)
+  try_load_deps(targets = target_deps, config = config, jobs = jobs)
   load_subtarget_subdeps(target, config)
 }
 
@@ -117,32 +117,34 @@ deps_memory <- function(targets, config) {
   as.character(unlist(out))
 }
 
-try_load <- function(targets, config, jobs = 1) {
+try_load_deps <- function(targets, config, jobs = 1) {
   if (length(targets)) {
     if (config$lazy_load == "eager") {
       config$logger$minor("load", targets)
     }
     lapply(
       X = targets,
-      FUN = try_load_target,
+      FUN = try_load_dep,
       config = config
     )
   }
   invisible()
 }
 
-try_load_target <- function(target, config) {
-  try({
-    load_target(
-      target = target,
-      namespace = config$cache$default_namespace,
-      envir = config$envir_targets,
-      cache = config$cache,
-      verbose = FALSE,
-      lazy = config$lazy_load
-    )
-    config$envir_loaded$targets <- c(config$envir_loaded$targets, target)
-  })
+try_load_dep <- function(target, config) {
+  try(try_load_dep_impl(target, config))
+}
+
+try_load_dep_impl <- function(target, config) {
+  load_target(
+    target = target,
+    namespace = config$cache$default_namespace,
+    envir = config$envir_targets,
+    cache = config$cache,
+    verbose = FALSE,
+    lazy = config$lazy_load
+  )
+  config$envir_loaded$targets <- c(config$envir_loaded$targets, target)
 }
 
 load_target <- function(target, cache, namespace, envir, verbose, lazy) {
