@@ -304,8 +304,7 @@ weak_mclapply <- function(X, FUN, mc.cores, ...) {
 }
 
 safe_jobs <- function(jobs) {
-  stopifnot(length(jobs) == 1)
-  ifelse(on_windows(), 1, jobs)
+  ifelse(on_windows(), 1, jobs[1])
 }
 
 on_windows <- function() {

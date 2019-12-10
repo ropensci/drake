@@ -10,7 +10,7 @@ test_with_dir("example template files", {
 
 test_with_dir("safe_jobs()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_error(safe_jobs(1:3))
+  expect_equal(safe_jobs(1:3), 1)
   expect_true(is.numeric(safe_jobs(1)))
 })
 
