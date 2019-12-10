@@ -13,14 +13,14 @@
 #'   w = c("a", "a", "b", "b"),
 #'   x = seq_len(4),
 #'   y = target(x + 1, dynamic = map(x)),
-#'   z = target(list(y = y, w = w), dynamic = group(y, .by = w))
+#'   z = target(sum(x) + sum(y), dynamic = group(x, y, .by = w))
 #' )
 #' make(plan)
 #' subtargets(y)
-#' readd(subtargets(y)[1], character_only = TRUE)
-#' readd(subtargets(y)[2], character_only = TRUE)
-#' readd(subtargets(z)[1], character_only = TRUE)
-#' readd(subtargets(z)[2], character_only = TRUE)
+#' subtargets(z)
+#' readd(x)
+#' readd(y)
+#' readd(z)
 #' })
 #' }
 subtargets <- function(
@@ -69,7 +69,7 @@ subtargets <- function(
 #'
 #'   # The first trace lets us see the values of w
 #'   # that go with the sub-targets of y.
-#'   y = target(c(w, x), dynamic = cross(w, x, .trace = w)),
+#'   y = target(paste0(w, x), dynamic = cross(w, x, .trace = w)),
 #'
 #'   # We can use the trace as a grouping variable for the next
 #'   # group().
@@ -77,7 +77,10 @@ subtargets <- function(
 #'
 #'   # Now, we use the trace again to keep track of the
 #'   # values of w corresponding to the sub-targets of z.
-#'   z = target(y, dynamic = group(y, .by = w_tr, .trace = w_tr))
+#'   z = target(
+#'     paste0(y, collapse = "-"),
+#'     dynamic = group(y, .by = w_tr, .trace = w_tr)
+#'   )
 #' )
 #' make(plan)
 #'
@@ -88,7 +91,7 @@ subtargets <- function(
 #' read_trace("w", "y")
 #'
 #' # And we know which values of `w_tr` (and thus `w`)
-#' # match up with the sub-targets of `z`.
+#' # match up with the sub-targets of `y`.
 #' readd(z)
 #' read_trace("w_tr", "z")
 #' })
@@ -131,7 +134,7 @@ read_trace <- function(
 #'
 #'   # The first trace lets us see the values of w
 #'   # that go with the sub-targets of y.
-#'   y = target(c(w, x), dynamic = cross(w, x, .trace = w)),
+#'   y = target(paste0(w, x), dynamic = cross(w, x, .trace = w)),
 #'
 #'   # We can use the trace as a grouping variable for the next
 #'   # group().
@@ -139,12 +142,22 @@ read_trace <- function(
 #'
 #'   # Now, we use the trace again to keep track of the
 #'   # values of w corresponding to the sub-targets of z.
-#'   z = target(y, dynamic = group(y, .by = w_tr, .trace = w_tr))
+#'   z = target(
+#'     paste0(y, collapse = "-"),
+#'     dynamic = group(y, .by = w_tr, .trace = w_tr)
+#'   )
 #' )
 #' make(plan)
 #'
 #' # We can read the trace outside make().
+#' # That way, we know which values of `w` correspond
+#' # to the sub-targets of `y`.
+#' readd(y)
 #' read_trace("w", "y")
+#'
+#' # And we know which values of `w_tr` (and thus `w`)
+#' # match up with the sub-targets of `y`.
+#' readd(z)
 #' read_trace("w_tr", "z")
 #' })
 #' }

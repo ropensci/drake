@@ -323,7 +323,8 @@ get_subtargets.drake_dynamic <- function(hashes, cache, subtargets) {
   if (!is.null(subtargets)) {
     hashes <- hashes[subtargets]
   }
-  lapply(hashes, cache$get_value, use_cache = FALSE)
+  out <- lapply(hashes, cache$get_value, use_cache = FALSE)
+  do.call(vec_c, out)
 }
 
 get_subtargets.default <- function(hashes, cache, subtargets) {

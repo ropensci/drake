@@ -43,7 +43,7 @@ plan <- drake_plan(
 
   # The first trace lets us see the values of w
   # that go with the sub-targets of y.
-  y = target(c(w, x), dynamic = cross(w, x, .trace = w)),
+  y = target(paste0(w, x), dynamic = cross(w, x, .trace = w)),
 
   # We can use the trace as a grouping variable for the next
   # group().
@@ -51,7 +51,10 @@ plan <- drake_plan(
 
   # Now, we use the trace again to keep track of the
   # values of w corresponding to the sub-targets of z.
-  z = target(y, dynamic = group(y, .by = w_tr, .trace = w_tr))
+  z = target(
+    paste0(y, collapse = "-"),
+    dynamic = group(y, .by = w_tr, .trace = w_tr)
+  )
 )
 make(plan)
 
@@ -62,7 +65,7 @@ readd(y)
 read_trace("w", "y")
 
 # And we know which values of `w_tr` (and thus `w`)
-# match up with the sub-targets of `z`.
+# match up with the sub-targets of `y`.
 readd(z)
 read_trace("w_tr", "z")
 })

@@ -280,6 +280,7 @@ load_dynamic_subdep_impl.group <- function( # nolint
 ) {
   subdeps <- config$cache$get(dep, namespace = "meta")$subtargets[index]
   value <- config$cache$mget(subdeps, use_cache = FALSE)
+  value <- do.call(vec_c, value)
   assign(
     x = dep,
     value = value,

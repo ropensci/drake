@@ -113,14 +113,14 @@
 #'   w = c("a", "a", "b", "b"),
 #'   x = seq_len(4),
 #'   y = target(x + 1, dynamic = map(x)),
-#'   z = target(list(y = y, w = w), dynamic = group(y, .by = w))
+#'   z = target(sum(x) + sum(y), dynamic = group(x, y, .by = w))
 #' )
 #' make(plan)
 #' subtargets(y)
-#' readd(subtargets(y)[1], character_only = TRUE)
-#' readd(subtargets(y)[2], character_only = TRUE)
-#' readd(subtargets(z)[1], character_only = TRUE)
-#' readd(subtargets(z)[2], character_only = TRUE)
+#' subtargets(z)
+#' readd(x)
+#' readd(y)
+#' readd(z)
 #' })
 #' }
 make <- function(
