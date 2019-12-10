@@ -57,4 +57,5 @@
 #' @importFrom txtq txtq
 #' @importFrom utils compareVersion flush.console head menu packageVersion
 #'   read.csv sessionInfo stack type.convert unzip write.table
+#' @importFrom vctrs vec_c vec_slice
 NULL

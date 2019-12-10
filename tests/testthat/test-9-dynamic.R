@@ -1486,7 +1486,13 @@ test_with_dir("data frame trace (#1074)", {
     )
   )
   make(plan, max_expand = 3)
-  expect_equal(readd(y), unname(split(x[seq_len(3), ], f = seq_len(3))))
+  out <- readd(y)
+  exp <- unname(split(x[seq_len(3), ], f = seq_len(3)))
+  for (i in seq_len(3)) {
+    rownames(out[[i]]) <- NULL
+    rownames(exp[[i]]) <- NULL
+  }
+  expect_equal(out, exp)
   expect_equal(read_trace("x", "y"), x[seq_len(3), ])
 })
 

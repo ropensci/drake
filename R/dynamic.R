@@ -412,36 +412,7 @@ as_dynamic <- function(x) {
 }
 
 dynamic_subvalue <- function(value, index) {
-  UseMethod("dynamic_subvalue")
-}
-
-dynamic_subvalue.data.frame <- function(value, index) {
-  value[index,, drop = FALSE] # nolint
-}
-
-dynamic_subvalue.drake_dynamic <- function(value, index) {
-  dynamic_subvalue_vector(value, index)
-}
-
-dynamic_subvalue.default <- function(value, index) {
-  if (is.null(dim(value))) {
-    dynamic_subvalue_vector(value, index)
-  } else {
-    dynamic_subvalue_array(value, index)
-  }
-}
-
-dynamic_subvalue_array <- function(value, index) {
-  ref <- slice.index(value, 1L)
-  out <- value[ref %in% index]
-  dim <- dim(value)
-  dim[1] <- length(index)
-  dim(out) <- dim
-  out
-}
-
-dynamic_subvalue_vector <- function(value, index) {
-  value[index]
+  vec_slice(x = value, i = index)
 }
 
 match_dynamic_call <- function(dynamic) {
