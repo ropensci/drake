@@ -654,7 +654,7 @@ test_with_dir("dynamic group with by", {
     x = target(u, dynamic = map(u)),
     y = target(v, dynamic = map(v)),
     z = target(
-      list(x = do.call("c", x), y = do.call("c", y), my_by = w),
+      list(x = x, y = y, my_by = w),
       dynamic = group(x, y, .by = w)
     )
   )
@@ -672,7 +672,7 @@ test_with_dir("dynamic group with by", {
     x = target(u, dynamic = map(u)),
     y = target(v, dynamic = map(v)),
     z = target(
-      list(x = sum(do.call("c", x)), y = do.call("c", y)),
+      sum(c(x, y)),
       dynamic = group(x, y, .by = w)
     )
   )
@@ -681,10 +681,8 @@ test_with_dir("dynamic group with by", {
   expect_true(all(grepl("^z", justbuilt(config))))
   out1 <- readd(subtargets(z)[1], character_only = TRUE)
   out2 <- readd(subtargets(z)[2], character_only = TRUE)
-  exp1 <- list(x = 6, y = seq_len(3) + 1)
-  exp2 <- list(x = 4, y = 5)
-  expect_equal(out1, exp1)
-  expect_equal(out2, exp2)
+  expect_equal(out1, 15)
+  expect_equal(out2, 9)
 })
 
 test_with_dir("insert .by piece by piece", {
@@ -1524,4 +1522,20 @@ test_with_dir("dynamic targets are vectors (#1105)", {
   )
   make(plan)
   expect_equal(readd(z), c(8, 16))
+})
+
+test_with_dir("clear the subtarget envir for non-sub-targets",  {
+  # Dynamic branching
+  # Get the mean mpg for each cyl in the mtcars dataset.
+  plan <- drake_plan(
+    raw = mtcars,
+    group_index = raw$cyl,
+    munged = target(raw[, c("mpg", "cyl")], dynamic = map(raw)),
+    mean_mpg_by_cyl = target(
+      data.frame(mpg = mean(munged$mpg), cyl = munged$cyl[1]),
+      dynamic = group(munged, .by = group_index)
+    )
+  )
+  make(plan)
+  expect_equal(nrow(readd(mean_mpg_by_cyl)), 3L)
 })
