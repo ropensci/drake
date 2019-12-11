@@ -1587,6 +1587,8 @@ test_with_dir("dynamic targets get unloaded from memory (#1107)", {
   config <- drake_config(plan, memory_strategy = "autoclean")
   make(plan)
   expect_equal(ls(config$envir_dynamic), character(0))
+  manage_memory("rows", config)
+  expect_equal(ls(config$envir_dynamic), character(0))
   manage_memory("means", config)
   expect_equal(ls(config$envir_dynamic), "rows")
   manage_memory("results", config)
