@@ -164,7 +164,8 @@ cmq_send_target <- function(target, config) {
 cmq_deps_list <- function(target, config) {
   layout <- config$layout[[target]]
   keys_static <- layout$deps_build$memory
-  keys_dynamic <- c(layout$deps_dynamic, layout$deps_dynamic_implicit)
+  keys_dynamic <- layout$deps_dynamic_whole
+  keys_subtargets <- layout$deps_dynamic
   vals_static <- lapply(
     keys_static,
     get,
@@ -174,12 +175,23 @@ cmq_deps_list <- function(target, config) {
   vals_dynamic <- lapply(
     keys_dynamic,
     get,
+    envir = config$envir_dynamic,
+    inherits = FALSE
+  )
+  vals_subtargets <- lapply(
+    keys_subtargets,
+    get,
     envir = config$envir_subtargets,
     inherits = FALSE
   )
   names(vals_static) <- keys_static
   names(vals_dynamic) <- keys_dynamic
-  list(static = vals_static, dynamic = vals_dynamic)
+  names(vals_subtargets) <- keys_subtargets
+  list(
+    static = vals_static,
+    dynamic = vals_dynamic,
+    subtargets = vals_subtargets
+  )
 }
 
 #' @title Build a target using the clustermq backend
@@ -228,6 +240,14 @@ cmq_assign_deps <- function(deps, config) {
     assign(
       x = key,
       value = deps$dynamic[[key]],
+      envir = config$envir_dynamic,
+      inherits = FALSE
+    )
+  }
+  for (key in names(deps$subtargets)) {
+    assign(
+      x = key,
+      value = deps$subtargets[[key]],
       envir = config$envir_subtargets,
       inherits = FALSE
     )

@@ -1540,20 +1540,38 @@ test_with_dir("clear the subtarget envir for non-sub-targets",  {
   expect_equal(nrow(readd(mean_mpg_by_cyl)), 3L)
 })
 
-test_with_dir("implicit dynamic variables (#1107)", {
-  plan <- drake_plan(
-    raw = mtcars[seq_len(4), ],
-    rows = target(raw[, c("mpg", "cyl")], dynamic = map(raw)),
-    means = colMeans(rows) # no readd()
-  )
-  config <- drake_config(plan)
-  expect_equal(config$layout[["raw"]]$deps_dynamic_implicit, character(0))
-  expect_equal(config$layout[["rows"]]$deps_dynamic_implicit, character(0))
-  expect_equal(config$layout[["means"]]$deps_dynamic_implicit, "rows")
-  make(plan)
-  cache <- drake_cache()
-  out <- cache$get("means")
-  expect_true(is.numeric(out))
-  expect_equal(length(out), 2)
-  expect_equal(sort(names(out)), sort(c("cyl", "mpg")))
+test_with_dir("whole dynamic targets (#1107)", {
+  scenario <- get_testing_scenario()
+  envir <- eval(parse(text = scenario$envir))
+  parallelism <- scenario$parallelism
+  jobs <- scenario$jobs
+  caching <- scenario$caching
+  for (memory_strategy in c("speed", "autoclean", "preclean")) {
+    plan <- drake_plan(
+      raw = mtcars[seq_len(4), ],
+      rows = target(raw[, c("mpg", "cyl")], dynamic = map(raw)),
+      means = colMeans(rows),
+      sds = apply(rows, 1, sd),
+      results = list(means, sds)
+    )
+    config <- drake_config(plan, memory_strategy = memory_strategy)
+    expect_equal(config$layout[["raw"]]$deps_dynamic_whole, character(0))
+    expect_equal(config$layout[["rows"]]$deps_dynamic_whole, character(0))
+    expect_equal(config$layout[["means"]]$deps_dynamic_whole, "rows")
+    make(
+      plan,
+      memory_strategy = memory_strategy,
+      envir = envir,
+      parallelism = parallelism,
+      jobs = jobs,
+      caching = caching
+    )
+    cache <- drake_cache()
+    out <- cache$get("means")
+    expect_true(is.numeric(out))
+    expect_equal(length(out), 2)
+    expect_equal(sort(names(out)), sort(c("cyl", "mpg")))
+    expect_true(is.list(readd(results)))
+    clean(destroy = TRUE)
+  }
 })

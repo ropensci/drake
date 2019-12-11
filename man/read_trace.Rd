@@ -18,7 +18,8 @@ read_trace(
 you want to extract. Such trace names are declared
 in the \code{.trace} argument of \code{map()}, \code{cross()} or \code{group()}.}
 
-\item{target}{Symbol or character, depending on the value of \code{character_only}.
+\item{target}{Symbol or character,
+depending on the value of \code{character_only}.
 \code{target} is T=the name of a dynamic target with one or more traces
 defined using the \code{.trace} argument of dynamic \code{map()}, \code{cross()},
 or \code{group()}.}

@@ -56,7 +56,8 @@ subtargets <- function(
 #' @param trace Character, name of the trace
 #'   you want to extract. Such trace names are declared
 #'   in the `.trace` argument of `map()`, `cross()` or `group()`.
-#' @param target Symbol or character, depending on the value of `character_only`.
+#' @param target Symbol or character,
+#'   depending on the value of `character_only`.
 #'   `target` is T=the name of a dynamic target with one or more traces
 #'   defined using the `.trace` argument of dynamic `map()`, `cross()`,
 #'   or `group()`.

@@ -26,7 +26,7 @@ manage_memory <- function(target, config, downstream = NULL, jobs = 1) {
     downstream = downstream,
     jobs = jobs
   )
-  sync_implicit_dynamic(target, config)
+  sync_envir_dynamic(target, config)
   if (identical(config$garbage_collection, TRUE)) {
     gc()
   }
@@ -84,10 +84,22 @@ discard_targets <- function(discard_these, target, config) {
     return()
   }
   config$logger$minor("unload", discard_these, target = target)
-  rm(list = discard_these, envir = config$envir_targets)
+  rm(list = discard_these, envir = config$envir_targets, inherits = FALSE)
+  index <- vlapply(
+    discard_these,
+    exists,
+    envir = config$envir_dynamic,
+    inherits = FALSE
+  )
+  whole_dynamic <- discard_these[index]
+  rm(list = whole_dynamic, envir = config$envir_dynamic, inherits = FALSE)
   config$envir_loaded$targets <- setdiff(
     config$envir_loaded$targets,
     discard_these
+  )
+  config$envir_loaded$dynamic <- setdiff(
+    config$envir_loaded$dynamic,
+    whole_dynamic
   )
 }
 
@@ -108,7 +120,9 @@ clear_envir_subtargets <- function(target, config) {
 clear_envir_targets <- function(target, config) {
   config$logger$minor("clear target envir", target = target)
   rm(list = config$envir_loaded$targets, envir = config$envir_targets)
+  rm(list = config$envir_loaded$dynamic, envir = config$envir_dynamic)
   config$envir_loaded$targets <- character(0)
+  config$envir_loaded$dynamic <- character(0)
 }
 
 deps_memory <- function(targets, config) {
@@ -122,16 +136,18 @@ deps_memory <- function(targets, config) {
 }
 
 try_load_deps <- function(targets, config, jobs = 1) {
-  if (length(targets)) {
-    if (config$lazy_load == "eager") {
-      config$logger$minor("load", targets)
-    }
-    lapply(
-      X = targets,
-      FUN = try_load_dep,
-      config = config
-    )
+  if (!length(targets)) {
+    return()
   }
+  if (config$lazy_load == "eager") {
+    config$logger$minor("load", targets)
+  }
+  lapply(
+    X = targets,
+    FUN = try_load_dep,
+    config = config
+  )
+  config$envir_loaded$targets <- c(config$envir_loaded$targets, targets)
   invisible()
 }
 
@@ -148,7 +164,6 @@ try_load_dep_impl <- function(target, config) {
     verbose = FALSE,
     lazy = config$lazy_load
   )
-  config$envir_loaded$targets <- c(config$envir_loaded$targets, target)
 }
 
 load_target <- function(target, cache, namespace, envir, verbose, lazy) {
@@ -323,53 +338,19 @@ load_static_subdep <- function(dep, index, config) {
   )
 }
 
-sync_implicit_dynamic <- function(target, config) {
-  implicit <- config$layout[[target]]$deps_dynamic_implicit
-  if (!length(implicit)) {
-    return()
-  }
-  in_subtargets <- vlapply(
-    implicit,
+sync_envir_dynamic <- function(target, config) {
+  dynamic_whole <- config$layout[[target]]$deps_dynamic_whole
+  index <- !vlapply(
+    dynamic_whole,
     exists,
-    envir = config$envir_subtargets,
+    config$envir_dynamic,
     inherits = FALSE
   )
-  in_targets <- vlapply(
-    implicit,
-    exists,
-    envir = config$envir_targets,
-    inherits = FALSE
-  )
-  should_unload <- in_subtargets & !in_targets
-  should_load <- !in_subtargets & in_targets
-  unload <- implicit[should_unload]
-  load <- implicit[should_load]
-  if (length(unload)) {
-    unload_implicit_dynamic(unload, config)
-  }
-  if (length(load)) {
-    load_implicit_dynamic(load, config)
-  }
+  lapply(dynamic_whole[index], sync_dynamic_whole, config = config)
 }
 
-unload_implicit_dynamic <- function(unload, config) {
-  rm(list = unload, envir = config$envir_subtargets, inherits = FALSE)
-  config$envir_loaded$subtargets <- setdiff(
-    config$envir_loaded$subtargets,
-    unload
-  )
-}
-
-load_implicit_dynamic <- function(load, config) {
-  lapply(load, load_implicit_dynamic1, config = config)
-  config$envir_loaded$subtargets <- c(
-    config$envir_loaded$subtargets,
-    load
-  )
-}
-
-load_implicit_dynamic1 <- function(load, config) {
-  hashes <- config$envir_targets[[load]]
+sync_dynamic_whole <- function(target, config) {
+  hashes <- get(target, envir = config$envir_targets, inherits = FALSE)
   value <- get_subtargets(hashes, config$cache, NULL)
-  assign(load, value, envir = config$envir_subtargets, inherits = FALSE)
+  assign(target, value, envir = config$envir_dynamic, inherits = FALSE)
 }

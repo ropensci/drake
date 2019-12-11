@@ -262,7 +262,10 @@ test_with_dir("drake_envir() and memory strategies", {
     },
     targety167ff309 = targety84d2fe31,
     targety523e1fba = {
-      saveRDS(ls(envir = parent.env(drake_envir())), "ls.rds")
+      saveRDS(
+        ls(envir = parent.env(parent.env(drake_envir()))),
+        "ls.rds"
+      )
       targety167ff309
     }
   )
@@ -300,11 +303,17 @@ test_with_dir("drake_envir() and memory strategies", {
     },
     targety167ff309 = {
       out <- targety84d2fe31
-      rm(targety84d2fe31, envir = parent.env(drake_envir()))
+      rm(
+        targety84d2fe31,
+        envir = parent.env(parent.env(drake_envir()))
+      )
       out
     },
     c = {
-      saveRDS(ls(envir = parent.env(drake_envir())), "ls.rds")
+      saveRDS(
+        ls(envir = parent.env(parent.env(drake_envir()))),
+        "ls.rds"
+      )
       targety167ff309
     }
   )
@@ -328,16 +337,22 @@ test_with_dir("drake_envir() depth", {
     summary = {
       targs <- c("large_data_1", "large_data_2")
       expect_true(all(targs %in% ls(
-        envir = parent.env(drake_envir())
+        envir = parent.env(parent.env(drake_envir()))
       )))
       identity(
         invisible(
           invisible(
-            rm(large_data_1, large_data_2, envir = parent.env(drake_envir()))
+            rm(
+              large_data_1,
+              large_data_2,
+              envir = parent.env(parent.env(drake_envir()))
+            )
           )
         )
       )
-      expect_false(any(targs %in% ls(envir = parent.env(drake_envir()))))
+      expect_false(
+        any(targs %in% ls(envir = parent.env(parent.env(drake_envir()))))
+      )
       mean(subset)
     }
   )

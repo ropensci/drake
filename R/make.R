@@ -411,6 +411,7 @@ clear_make_memory <- function(config) {
   envirs <- c(
     "envir_graph",
     "envir_targets",
+    "envir_dynamic",
     "envir_subtargets",
     "envir_loaded",
     "ht_dynamic",

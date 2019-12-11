@@ -587,7 +587,7 @@ drake_config <- function(
     cache = cache
   )
   ht_is_dynamic <- new_ht_is_dynamic(layout)
-  set_ht_implicit_dynamic(layout, ht_is_dynamic)
+  set_deps_dynamic_whole(layout, ht_is_dynamic)
   ht_dynamic_deps <- new_ht_dynamic_deps(layout)
   ht_is_subtarget <- ht_new() # Gets replaced in make().
   graph <- create_drake_graph(
@@ -603,11 +603,15 @@ drake_config <- function(
   recover <- as.logical(recover)
   recoverable <- as.logical(recoverable)
   envir_targets <- new.env(parent = envir)
+  envir_dynamic <- new.env(parent = envir_targets)
+  envir_subtargets <- new.env(parent = envir_dynamic)
+  envir_graph <- new.env(parent = emptyenv())
   out <- list(
     envir = envir,
-    envir_graph = new.env(parent = emptyenv()),
+    envir_graph = envir_graph,
     envir_targets = envir_targets,
-    envir_subtargets = new.env(parent = envir_targets),
+    envir_dynamic = envir_dynamic,
+    envir_subtargets = envir_subtargets,
     cache = cache,
     parallelism = parallelism,
     jobs = jobs,
@@ -676,27 +680,27 @@ log_ht_is_dynamic <- function(layout, ht) {
   }
 }
 
-set_ht_implicit_dynamic <- function(layout, ht_is_dynamic) {
+set_deps_dynamic_whole <- function(layout, ht_is_dynamic) {
   if (!length(ht_list(ht_is_dynamic))) {
     return()
   }
   lapply(
     names(layout),
-    set_ht_implicit_dynamic1,
+    set_deps_dynamic_whole1,
     layout = layout,
     ht_is_dynamic = ht_is_dynamic
   )
 }
 
-set_ht_implicit_dynamic1 <- function(target, layout, ht_is_dynamic) {
+set_deps_dynamic_whole1 <- function(target, layout, ht_is_dynamic) {
   this_layout <- layout[[target]]
   if (this_layout$imported) {
     return()
   }
   deps <- this_layout$deps_build$memory
   index <- vapply(deps, ht_exists, ht = ht_is_dynamic, FUN.VALUE = logical(1))
-  implicit <- setdiff(deps[index], this_layout$deps_dynamic)
-  layout[[target]]$deps_dynamic_implicit <- implicit
+  whole <- setdiff(deps[index], this_layout$deps_dynamic)
+  layout[[target]]$deps_dynamic_whole <- whole
 }
 
 sanitize_targets <- function(targets, plan) {
