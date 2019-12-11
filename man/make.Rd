@@ -230,7 +230,13 @@ Utility functions such as \code{\link[=outdated]{outdated()}},
 require output from
 \code{\link[=drake_config]{drake_config()}} for the \code{config} argument.}
 
-\item{lazy_load}{Either a character vector or a logical. Choices:
+\item{lazy_load}{An old feature. For the current recommendations on
+memory management, see
+\url{https://books.ropensci.org/drake/memory.html#memory-strategies}.
+The \code{lazy_load} argument is either a character vector or a logical.
+For dynamic targets, the behavior is always \code{"eager"} (see below).
+So the \code{lazy_load} argument is for static targets only.
+Choices for \code{lazy_load}:
 \itemize{
 \item \code{"eager"}: no lazy loading. The target is loaded right away
 with \code{\link[=assign]{assign()}}.
