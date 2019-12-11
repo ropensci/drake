@@ -15,7 +15,7 @@
   ],
   "issueTracker": "https://github.com/ropensci/drake/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "7.8.0",
+  "version": "7.8.0.9000",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -593,11 +593,24 @@
       "@type": "SoftwareApplication",
       "identifier": "utils",
       "name": "utils"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "vctrs",
+      "name": "vctrs",
+      "version": ">= 0.2.0",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=vctrs"
     }
   ],
   "releaseNotes": "https://github.com/ropensci/drake/blob/master/NEWS.md",
   "readme": "https://github.com/ropensci/drake/blob/master/README.md",
-  "fileSize": "1093.384KB",
+  "fileSize": "1103.088KB",
   "contIntegration": [
     "https://travis-ci.org/ropensci/drake",
     "https://ci.appveyor.com/project/ropensci/drake",

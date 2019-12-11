@@ -39,7 +39,7 @@ file <- tempfile()
 # Turn the plan into an R script a the given file path.
 plan_to_code(plan, file)
 # Here is what the script looks like.
-cat(readLines(file), sep = "\\n")
+cat(readLines(file), sep = "\n")
 # Convert back to a drake plan.
 code_to_plan(file)
 }
