@@ -79,6 +79,14 @@ manage_deps.lookahead <- function(target, config, downstream, jobs) {
   load_subtarget_subdeps(target, config)
 }
 
+manage_deps.unload <- function(target, config, downstream, jobs) {
+  clear_envir_targets(target = target, config = config)
+}
+
+manage_deps.none <- function(target, config, downstream, jobs) {
+  return()
+}
+
 discard_targets <- function(discard_these, target, config) {
   if (!length(discard_these)) {
     return()
@@ -105,14 +113,6 @@ discard_dynamic <- function(discard_these, config) {
     config$envir_loaded$dynamic,
     whole_dynamic
   )
-}
-
-manage_deps.unload <- function(target, config, downstream, jobs) {
-  clear_envir_targets(target = target, config = config)
-}
-
-manage_deps.none <- function(target, config, downstream, jobs) {
-  return()
 }
 
 clear_envir_subtargets <- function(target, config) {
