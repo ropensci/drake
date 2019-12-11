@@ -93,6 +93,10 @@ discard_targets <- function(discard_these, target, config) {
   }
   config$logger$minor("unload", discard_these, target = target)
   rm(list = discard_these, envir = config$envir_targets, inherits = FALSE)
+  config$envir_loaded$targets <- setdiff(
+    config$envir_loaded$targets,
+    discard_these
+  )
   discard_dynamic(discard_these, config)
 }
 
@@ -105,10 +109,6 @@ discard_dynamic <- function(discard_these, config) {
   )
   whole_dynamic <- discard_these[index]
   rm(list = whole_dynamic, envir = config$envir_dynamic, inherits = FALSE)
-  config$envir_loaded$targets <- setdiff(
-    config$envir_loaded$targets,
-    discard_these
-  )
   config$envir_loaded$dynamic <- setdiff(
     config$envir_loaded$dynamic,
     whole_dynamic
