@@ -1575,3 +1575,20 @@ test_with_dir("whole dynamic targets (#1107)", {
     clean(destroy = TRUE)
   }
 })
+
+test_with_dir("dynamic targets get unloaded from memory (#1107)", {
+  plan <- drake_plan(
+    raw = mtcars[seq_len(4), ],
+    rows = target(raw[, c("mpg", "cyl")], dynamic = map(raw)),
+    means = colMeans(rows),
+    sds = apply(rows, 1, sd),
+    results = list(means, sds)
+  )
+  config <- drake_config(plan, memory_strategy = "autoclean")
+  make(plan)
+  expect_equal(ls(config$envir_dynamic), character(0))
+  manage_memory("means", config)
+  expect_equal(ls(config$envir_dynamic), "rows")
+  manage_memory("results", config)
+  expect_equal(ls(config$envir_dynamic), character(0))
+})

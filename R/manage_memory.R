@@ -85,6 +85,10 @@ discard_targets <- function(discard_these, target, config) {
   }
   config$logger$minor("unload", discard_these, target = target)
   rm(list = discard_these, envir = config$envir_targets, inherits = FALSE)
+  discard_dynamic(discard_these, config)
+}
+
+discard_dynamic <- function(discard_these, config) {
   index <- vlapply(
     discard_these,
     exists,

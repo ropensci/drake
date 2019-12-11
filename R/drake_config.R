@@ -605,12 +605,14 @@ drake_config <- function(
   envir_targets <- new.env(parent = envir)
   envir_dynamic <- new.env(parent = envir_targets)
   envir_subtargets <- new.env(parent = envir_dynamic)
+  envir_loaded <- new.env(hash = FALSE, parent = emptyenv())
   envir_graph <- new.env(parent = emptyenv())
   out <- list(
     envir = envir,
     envir_graph = envir_graph,
     envir_targets = envir_targets,
     envir_dynamic = envir_dynamic,
+    envir_loaded = envir_loaded,
     envir_subtargets = envir_subtargets,
     cache = cache,
     parallelism = parallelism,
