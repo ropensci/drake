@@ -73,6 +73,7 @@ cached(targets_only = FALSE)
 }
 }
 \seealso{
+\code{\link[=cached_planned]{cached_planned()}}, \code{\link[=cached_unplanned]{cached_unplanned()}},
 \code{\link[=readd]{readd()}}, \code{\link[=loadd]{loadd()}},
 \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
 }

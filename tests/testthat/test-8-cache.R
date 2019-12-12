@@ -116,6 +116,8 @@ test_with_dir("Missing cache", {
   s <- storr::storr_rds("s")
   unlink(s$path, recursive = TRUE)
   expect_equal(cached(), character(0))
+  expect_equal(cached_planned(), character(0))
+  expect_equal(cached_unplanned(), character(0))
 })
 
 test_with_dir("Cache namespaces", {

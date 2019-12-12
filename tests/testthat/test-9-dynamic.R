@@ -1594,3 +1594,24 @@ test_with_dir("dynamic targets get unloaded from memory (#1107)", {
   manage_memory("results", config)
   expect_equal(ls(config$envir_dynamic), character(0))
 })
+
+test_with_dir("cache_planned() and cache_unplanned() (#)", {
+  plan <- drake_plan(w = 1)
+  make(plan)
+  expect_equal(cached_planned(plan), "w")
+  expect_equal(cached_unplanned(plan), character(0))
+  plan <- drake_plan(
+    x = seq_len(2),
+    y = target(x, dynamic = map(x))
+  )
+  expect_equal(cached_planned(plan), character(0))
+  expect_equal(cached_unplanned(plan), "w")
+  make(plan)
+  out <- cached_planned(plan)
+  exp <- c("x", "y", subtargets(y))
+  expect_equal(sort(out), sort(exp))
+  expect_equal(cached_unplanned(plan), "w")
+  expect_equal(sort(cached()), sort(c(exp, "w")))
+  clean(list = cached_unplanned(plan))
+  expect_equal(sort(cached()), sort(exp))
+})

@@ -131,6 +131,8 @@ reference:
   - '`loadd`'
   - '`readd`'
   - '`cached`'
+  - '`cached_planned`'
+  - '`cached_unplanned`'
   - '`drake_cache_log`'
   - '`drake_get_session_info`'
   - '`read_drake_seed`'

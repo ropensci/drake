@@ -518,7 +518,8 @@ read_drake_seed <- function(
 #' \lifecycle{maturing}
 #' @description Tip: read/load a cached item with [readd()]
 #'   or [loadd()].
-#' @seealso [readd()], [loadd()],
+#' @seealso [cached_planned()], [cached_unplanned()],
+#'   [readd()], [loadd()],
 #'   [drake_plan()], [make()]
 #' @export
 #' @return Either a named logical indicating whether the given
@@ -603,6 +604,97 @@ cached <- function(
     targets <- targets_only(targets, cache, jobs)
   }
   redisplay_keys(targets)
+}
+
+#' @title List targets in both the plan and the cache.
+#' \lifecycle{maturing}
+#' @description Includes dynamic sub-targets as well.
+#'   See examples for details.
+#' @seealso [cached()], [cache_unplanned]
+#' @export
+#' @return A character vector of target and sub-target names.
+#' @inheritParams cached
+#' @param plan A drake plan.
+#' @examples
+#' \dontrun{
+#' plan <- drake_plan(w = 1)
+#' make(plan)
+#' cached_planned(plan)
+#' plan <- drake_plan(
+#'   x = seq_len(2),
+#'   y = target(x, dynamic = map(x))
+#' )
+#' cached_planned(plan)
+#' make(plan)
+#' cached_planned(plan)
+#' cached()
+#' }
+#' })
+#' }
+cached_planned <- function(
+  plan,
+  path = NULL,
+  cache = drake::drake_cache(path = path),
+  namespace = NULL,
+  jobs = 1
+) {
+  if (is.null(cache)) {
+    return(character(0))
+  }
+  cache <- decorate_storr(cache)
+  namespace <- namespace %|||% cache$default_namespace
+  cached <- cache$list(namespace = namespace)
+  targets <- intersect(plan$target, cached)
+  subtargets <- unlist(lapply(targets, subtargets, character_only = TRUE))
+  planned <- c(targets, subtargets)
+  intersect(cached, planned)
+}
+
+#' @title List targets in the cache but not the plan.
+#' \lifecycle{maturing}
+#' @description Includes dynamic sub-targets as well.
+#'   See examples for details.
+#' @seealso [cached()], [cache_planned]
+#' @export
+#' @return A character vector of target and sub-target names.
+#' @inheritParams cached
+#' @param plan A drake plan.
+#' @examples
+#' \dontrun{
+#' plan <- drake_plan(w = 1)
+#' make(plan)
+#' cached_unplanned(plan)
+#' plan <- drake_plan(
+#'   x = seq_len(2),
+#'   y = target(x, dynamic = map(x))
+#' )
+#' cached_unplanned(plan)
+#' make(plan)
+#' cached_unplanned(plan)
+#' # cached_unplanned() helps clean superfluous targets.
+#' cached()
+#' clean(list = cached_unplanned(plan))
+#' cached()
+#' }
+#' })
+#' }
+cached_unplanned <- function(
+  plan,
+  path = NULL,
+  cache = drake::drake_cache(path = path),
+  namespace = NULL,
+  jobs = 1
+) {
+  if (is.null(cache)) {
+    return(character(0))
+  }
+  cache <- decorate_storr(cache)
+  namespace <- namespace %|||% cache$default_namespace
+  cached <- cache$list(namespace = namespace)
+  targets <- intersect(plan$target, cached)
+  subtargets <- unlist(lapply(targets, subtargets, character_only = TRUE))
+  planned <- c(targets, subtargets)
+  setdiff(cached, planned)
 }
 
 targets_only <- function(targets, cache, jobs) {

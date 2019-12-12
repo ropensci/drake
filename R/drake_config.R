@@ -162,8 +162,8 @@
 #' @param skip_safety_checks Logical, whether to skip the safety checks
 #'   on your workflow. Use at your own peril.
 #'
-#' @param lazy_load An old feature. For the current recommendations on
-#'   memory management, see
+#' @param lazy_load An old feature, currently being questioned.
+#'   For the current recommendations on memory management, see
 #'   <https://books.ropensci.org/drake/memory.html#memory-strategies>.
 #'   The `lazy_load` argument is either a character vector or a logical.
 #'   For dynamic targets, the behavior is always `"eager"` (see below).
