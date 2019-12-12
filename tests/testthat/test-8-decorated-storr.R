@@ -443,7 +443,8 @@ test_with_dir("disk.frame (#1004)", {
       format = "diskframe"
     )
   )
-  suppressWarnings(make(plan)) # https://github.com/xiaodaigh/disk.frame/issues/227
+  # https://github.com/xiaodaigh/disk.frame/issues/227
+  suppressWarnings(make(plan))
   out <- readd(x)
   expect_true(inherits(out, "disk.frame"))
   exp <- data.table::as.data.table(
