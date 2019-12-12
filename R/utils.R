@@ -254,6 +254,12 @@ dir_move <- function(
   invisible()
 }
 
+file_remove <- function(file) {
+  if (file.exists(file)) {
+    unlink(file, recursive = TRUE)
+  }
+}
+
 file_move <- function(from, to) {
   dir_create(dirname(to))
   file.rename(from = from, to = to)

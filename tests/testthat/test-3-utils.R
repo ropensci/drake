@@ -1,5 +1,13 @@
 drake_context("utils")
 
+test_with_dir("file_remove()", {
+  expect_silent(file_remove("abc"))
+  file.create("abc")
+  expect_true(file.exists("abc"))
+  expect_silent(file_remove("abc"))
+  expect_false(file.exists("abc"))
+})
+
 test_with_dir("assert_pkg", {
   skip_on_cran()
   expect_error(assert_pkg("_$$$blabla"), regexp = "not installed")

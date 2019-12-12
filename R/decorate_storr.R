@@ -366,6 +366,7 @@ dcst_set.drake_format_fst <- function(value, key, ..., .self) {
   assert_pkg("fst")
   .self$assert_dirs()
   tmp <- .self$file_tmp()
+  on.exit(file_remove(tmp), add = TRUE)
   fst::write_fst(x = value$value, path = tmp)
   dcst_set_move_tmp(key = key, value = value, tmp = tmp, .self = .self)
 }
@@ -375,6 +376,7 @@ dcst_set.drake_format_fst_dt <- function(value, key, ..., .self) {
   assert_pkg("fst")
   .self$assert_dirs()
   tmp <- .self$file_tmp()
+  on.exit(file_remove(tmp), add = TRUE)
   fst::write_fst(x = value$value, path = tmp)
   dcst_set_move_tmp(key = key, value = value, tmp = tmp, .self = .self)
 }
@@ -384,6 +386,7 @@ dcst_set.drake_format_diskframe <- function(value, key, ..., .self) { # nolint
   assert_pkg("fst")
   .self$assert_dirs()
   tmp <- attr(value$value, "path")
+  on.exit(file_remove(tmp), add = TRUE)
   dcst_set_move_tmp(key = key, value = value, tmp = tmp, .self = .self)
 }
 
@@ -393,6 +396,7 @@ dcst_set.drake_format_keras <- function(value, key, ..., .self) {
   assert_pkg("keras")
   .self$assert_dirs()
   tmp <- .self$file_tmp()
+  on.exit(file_remove(tmp), add = TRUE)
   keras::save_model_hdf5(object = value$value, filepath = tmp)
   dcst_set_move_tmp(key = key, value = value, tmp = tmp, .self = .self)
 }
