@@ -35,5 +35,5 @@ Includes dynamic sub-targets as well.
 See examples for details.
 }
 \seealso{
-\code{\link[=cached]{cached()}}, \link{cache_unplanned}
+\code{\link[=cached]{cached()}}, \link{cached_unplanned}
 }

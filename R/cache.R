@@ -610,7 +610,7 @@ cached <- function(
 #' \lifecycle{maturing}
 #' @description Includes dynamic sub-targets as well.
 #'   See examples for details.
-#' @seealso [cached()], [cache_unplanned]
+#' @seealso [cached()], [cached_unplanned]
 #' @export
 #' @return A character vector of target and sub-target names.
 #' @inheritParams cached
@@ -654,7 +654,7 @@ cached_planned <- function(
 #' \lifecycle{maturing}
 #' @description Includes dynamic sub-targets as well.
 #'   See examples for details.
-#' @seealso [cached()], [cache_planned]
+#' @seealso [cached()], [cached_planned]
 #' @export
 #' @return A character vector of target and sub-target names.
 #' @inheritParams cached
