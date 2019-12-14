@@ -240,7 +240,8 @@ clean_recovery_msg <- function() {
   # invoked manually in test-always-skipped.R
   # nocov start
   message(
-    "Undo clean(garbage_collection = FALSE) with make(recovery = TRUE). ",
+    "Undo clean(garbage_collection = FALSE) with ",
+    "make(your_plan, recover = TRUE). ",
     "Also builds unrecoverable targets. Message shown once per session ",
     "if options(drake_clean_recovery_msg) is not FALSE."
   )
