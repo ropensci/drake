@@ -83,12 +83,12 @@ drake_hpc_template_files <- function() {
 }
 
 no_hpc <- function(target, config) {
-  identical(config$layout[[target]]$hpc, FALSE) ||
+  identical(config$spec[[target]]$hpc, FALSE) ||
     is_dynamic(target, config)
 }
 
 hpc_caching <- function(target, config) {
-  out <- config$layout[[target]]$caching
+  out <- config$spec[[target]]$caching
   if (is.null(out) || is.na(out)) {
     out <- config$caching
   }
@@ -98,7 +98,7 @@ hpc_caching <- function(target, config) {
 hpc_config <- function(config) {
   discard <- c(
     "imports",
-    "layout",
+    "spec",
     "plan",
     "targets",
     "trigger"
@@ -110,30 +110,30 @@ hpc_config <- function(config) {
   config
 }
 
-hpc_layout <- function(target, config) {
+hpc_spec <- function(target, config) {
   class(target) <- ifelse(is_subtarget(target, config), "subtarget", "target")
-  hpc_layout_impl(target, config)
+  hpc_spec_impl(target, config)
 }
 
-hpc_layout_impl <- function(target, config) {
-  UseMethod("hpc_layout_impl")
+hpc_spec_impl <- function(target, config) {
+  UseMethod("hpc_spec_impl")
 }
 
-hpc_layout_impl.subtarget <- function(target, config) {
-  layout <- new.env(parent = emptyenv())
-  parent <- config$layout[[target]]$subtarget_parent
-  dynamic_deps <- config$layout[[target]]$deps_dynamic
+hpc_spec_impl.subtarget <- function(target, config) {
+  spec <- new.env(parent = emptyenv())
+  parent <- config$spec[[target]]$subtarget_parent
+  dynamic_deps <- config$spec[[target]]$deps_dynamic
   keys <- c(target, parent, dynamic_deps)
   for (key in keys) {
-    assign(key, config$layout[[key]], envir = layout, inherits = FALSE)
+    assign(key, config$spec[[key]], envir = spec, inherits = FALSE)
   }
-  layout
+  spec
 }
 
-hpc_layout_impl.default <- function(target, config) {
-  layout <- new.env(parent = emptyenv())
-  assign(target, config$layout[[target]], envir = layout, inherits = FALSE)
-  layout
+hpc_spec_impl.default <- function(target, config) {
+  spec <- new.env(parent = emptyenv())
+  assign(target, config$spec[[target]], envir = spec, inherits = FALSE)
+  spec
 }
 
 wait_outfile_checksum <- function(target, checksum, config, timeout = 300) {
@@ -196,7 +196,7 @@ is_good_checksum <- function(target, checksum, config) {
       FUN.VALUE = logical(1)
     )
   )
-  format <- config$layout[[target]]$format
+  format <- config$spec[[target]]$format
   if (!is.null(format) && !is.na(format)) {
     format_file <- config$cache$file_return_key(target)
     out <- out && file.exists(format_file)
@@ -228,7 +228,7 @@ get_checksum <- function(target, config) {
 }
 
 get_outfile_checksum <- function(target, config) {
-  deps <- config$layout[[target]]$deps_build
+  deps <- config$spec[[target]]$deps_build
   files <- sort(unique(as.character(deps$file_out)))
   out <- vapply(
     X = files,
@@ -316,7 +316,7 @@ this_os <- function() {
 }
 
 classify_build <- function(build, config) {
-  class <- paste0("drake_build_", config$layout[[build$target]]$format)
+  class <- paste0("drake_build_", config$spec[[build$target]]$format)
   class(build) <- class
   build
 }

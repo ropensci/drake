@@ -12,7 +12,7 @@
 #' @param jobs Number of jobs for local parallel computing
 manage_memory <- function(target, config, downstream = NULL, jobs = 1) {
   stopifnot(length(target) == 1L)
-  memory_strategy <- config$layout[[target]]$memory_strategy
+  memory_strategy <- config$spec[[target]]$memory_strategy
   if (is.null(memory_strategy) || is.na(memory_strategy)) {
     memory_strategy <- config$memory_strategy
   }
@@ -133,7 +133,7 @@ deps_memory <- function(targets, config) {
   out <- lapply(
     X = targets,
     FUN = function(target) {
-      config$layout[[target]]$deps_build$memory
+      config$spec[[target]]$deps_build$memory
     }
   )
   as.character(unlist(out))
@@ -239,10 +239,10 @@ load_subtarget_subdeps <- function(subtarget, config) {
   if (!is_subtarget(subtarget, config)) {
     return()
   }
-  layout <- config$layout[[subtarget]]
-  parent <- layout$subtarget_parent
-  index <- layout$subtarget_index
-  dynamic <- config$layout[[parent]]$dynamic
+  spec <- config$spec[[subtarget]]
+  parent <- spec$subtarget_parent
+  index <- spec$subtarget_index
+  dynamic <- config$spec[[parent]]$dynamic
   deps <- subtarget_deps(dynamic, parent, index, config)
   load_by_as_subdep(parent, index, config)
   dep_names <- names(deps)
@@ -259,7 +259,7 @@ load_subtarget_subdeps <- function(subtarget, config) {
 }
 
 load_by_as_subdep <- function(parent, index, config) {
-  dynamic <- config$layout[[parent]]$dynamic
+  dynamic <- config$spec[[parent]]$dynamic
   if (no_by(dynamic)) {
     return()
   }
@@ -287,8 +287,8 @@ load_subtarget_subdep <- function(subtarget, dep, deps, config) {
 }
 
 load_dynamic_subdep <- function(subtarget, dep, index, config) {
-  parent <- config$layout[[subtarget]]$subtarget_parent
-  dynamic <- config$layout[[parent]]$dynamic
+  parent <- config$spec[[subtarget]]$subtarget_parent
+  dynamic <- config$spec[[parent]]$dynamic
   load_dynamic_subdep_impl(dynamic, parent, dep, index, config)
 }
 
@@ -343,7 +343,7 @@ load_static_subdep <- function(dep, index, config) {
 }
 
 sync_envir_dynamic <- function(target, config) {
-  dynamic_whole <- config$layout[[target]]$deps_dynamic_whole
+  dynamic_whole <- config$spec[[target]]$deps_dynamic_whole
   index <- !vlapply(
     dynamic_whole,
     exists,

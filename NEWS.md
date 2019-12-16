@@ -33,6 +33,7 @@
 - Write a complete project structure in `use_drake()` (#1097, @lorenzwalthert, @tjmahr).
 - Add a minor logger note to say how many dynamic sub-targets are registered at a time (#1102, @kendonB).
 - Handle dependencies that are dynamic targets but not declared as such for the current target (#1107).
+- Internally, the "layout" data structure is now called the "workflow specification", or "spec" for short. The spec is `drake`'s interpretation of the plan. In the plan, all the dependency relationships among targets and files are *implicit*. In the spec, they are all *explicit*. We get from the plan to the spec using static code analysis, e.g. `analyze_code()`.
 
 
 # Version 7.8.0

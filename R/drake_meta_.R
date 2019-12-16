@@ -24,15 +24,15 @@ drake_meta_impl.subtarget <- function(target, config) {
 }
 
 drake_meta_impl.default <- function(target, config) {
-  layout <- config$layout[[target]]
+  spec <- config$spec[[target]]
   meta <- list(
     name = target,
     target = target,
-    imported = layout$imported %|||% TRUE,
+    imported = spec$imported %|||% TRUE,
     missing = target_missing(target, config),
-    file_out = layout$deps_build$file_out,
-    format = layout$format %||NA% "none",
-    dynamic = is.call(layout$dynamic)
+    file_out = spec$deps_build$file_out,
+    format = spec$format %||NA% "none",
+    dynamic = is.call(spec$dynamic)
   )
   if (config$log_build_times) {
     meta$time_start <- proc_time()
@@ -42,7 +42,7 @@ drake_meta_impl.default <- function(target, config) {
     meta$trigger <- trigger(condition = TRUE)
   } else {
     meta$isfile <- FALSE
-    meta$trigger <- as.list(layout$trigger)
+    meta$trigger <- as.list(spec$trigger)
     meta$seed <- resolve_target_seed(target, config)
   }
   # For imported files.
@@ -52,7 +52,7 @@ drake_meta_impl.default <- function(target, config) {
     meta$size <- storage_size(path)
   }
   if (meta$trigger$command) {
-    meta$command <- layout$command_standardized
+    meta$command <- spec$command_standardized
   }
   if (meta$trigger$depend) {
     meta$dependency_hash <- dependency_hash(target = target, config = config)
@@ -62,7 +62,7 @@ drake_meta_impl.default <- function(target, config) {
     meta$output_file_hash <- output_file_hash(target = target, config = config)
   }
   if (!is.null(meta$trigger$change)) {
-    try_load_deps(layout$deps_change$memory, config = config)
+    try_load_deps(spec$deps_change$memory, config = config)
     meta$trigger$value <- eval(meta$trigger$change, config$envir_targets)
   }
   if (is_dynamic(target, config)) {
@@ -100,7 +100,7 @@ target_exists_fast <- Vectorize(
 )
 
 resolve_target_seed <- function(target, config) {
-  seed <- config$layout[[target]]$seed
+  seed <- config$spec[[target]]$seed
   if (is.null(seed) || is.na(seed)) {
     seed <- seed_from_basic_types(config$seed, target)
   }
@@ -123,13 +123,13 @@ integer_hash <- function(x, mod = .Machine$integer.max) {
 }
 
 dependency_hash <- function(target, config) {
-  layout <- config$layout[[target]]
-  x <- layout$deps_build
+  spec <- config$spec[[target]]
+  x <- spec$deps_build
   deps <- c(x$globals, x$namespaced, x$loadd, x$readd)
   if (is_imported(target, config)) {
     deps <- c(deps, x$file_in, x$knitr_in)
   }
-  deps <- setdiff(deps, layout$deps_dynamic)
+  deps <- setdiff(deps, spec$deps_dynamic)
   if (!length(deps)) {
     return("")
   }
@@ -141,9 +141,9 @@ dependency_hash <- function(target, config) {
 }
 
 dynamic_dependency_hash <- function(target, config) {
-  layout <- config$layout[[target]]
-  deps_dynamic <- layout$deps_dynamic
-  deps_trace <- sort(unique(layout$deps_dynamic_trace))
+  spec <- config$spec[[target]]
+  deps_dynamic <- spec$deps_dynamic
+  deps_trace <- sort(unique(spec$deps_dynamic_trace))
   deps <- c(deps_dynamic, deps_trace)
   dependency_hash_impl(deps, config)
 }
@@ -167,7 +167,7 @@ self_hash <- function(target, config) {
 }
 
 is_imported <- function(target, config) {
-  config$layout[[target]]$imported %|||% TRUE
+  config$spec[[target]]$imported %|||% TRUE
 }
 
 input_file_hash <- function(
@@ -175,7 +175,7 @@ input_file_hash <- function(
   config,
   size_threshold = rehash_storage_size_threshold
 ) {
-  deps <- config$layout[[target]]$deps_build
+  deps <- config$spec[[target]]$deps_build
   files <- sort(unique(as.character(c(deps$file_in, deps$knitr_in))))
   if (!length(files)) {
     return("")
@@ -195,7 +195,7 @@ output_file_hash <- function(
   config,
   size_threshold = rehash_storage_size_threshold
 ) {
-  deps <- config$layout[[target]]$deps_build
+  deps <- config$spec[[target]]$deps_build
   files <- sort(unique(as.character(deps$file_out)))
   if (!length(files)) {
     return("")

@@ -5,7 +5,7 @@
 \title{Build a target using the clustermq backend
 \lifecycle{maturing}}
 \usage{
-cmq_build(target, meta, deps, layout, ht_is_subtarget, config)
+cmq_build(target, meta, deps, spec, ht_is_subtarget, config)
 }
 \arguments{
 \item{target}{Target name.}
@@ -14,7 +14,7 @@ cmq_build(target, meta, deps, layout, ht_is_subtarget, config)
 
 \item{deps}{Named list of target dependencies.}
 
-\item{layout}{Internal, part of the full \code{config$layout}.}
+\item{spec}{Internal, part of the full \code{config$spec}.}
 
 \item{ht_is_subtarget}{Internal, part of \code{config}}
 

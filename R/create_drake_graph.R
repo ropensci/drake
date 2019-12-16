@@ -1,6 +1,6 @@
 create_drake_graph <- function(
   plan,
-  layout,
+  spec,
   targets,
   cache,
   jobs,
@@ -8,10 +8,10 @@ create_drake_graph <- function(
 ) {
   config <- list(plan = plan, jobs = jobs, logger = logger, cache = cache)
   edges <- memo_expr(
-    cdg_create_edges(config, layout),
+    cdg_create_edges(config, spec),
     cache,
     plan,
-    layout
+    spec
   )
   memo_expr(
     cdg_finalize_graph(edges, targets, config),
@@ -21,9 +21,9 @@ create_drake_graph <- function(
   )
 }
 
-cdg_create_edges <- function(config, layout) {
+cdg_create_edges <- function(config, spec) {
   edges <- lightly_parallelize(
-    X = layout,
+    X = spec,
     FUN = cdg_node_to_edges,
     jobs = config$jobs,
     config = config

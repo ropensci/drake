@@ -1,4 +1,4 @@
-create_drake_layout <- function(
+create_drake_spec <- function(
   plan,
   envir = parent.frame(),
   logger,
@@ -21,31 +21,31 @@ create_drake_layout <- function(
   )
   imports <- cdl_prepare_imports(config)
   imports_kernel <- cdl_imports_kernel(config, imports)
-  import_layout <- memo_expr(
+  import_spec <- memo_expr(
     cdl_analyze_imports(config, imports),
     config$cache,
     imports_kernel
   )
   knitr_hash <- cdl_get_knitr_hash(config)
-  command_layout <- memo_expr(
+  command_spec <- memo_expr(
     cdl_analyze_commands(config),
     config$cache,
     config$plan,
     config$trigger,
-    import_layout,
+    import_spec,
     imports_kernel,
     knitr_hash
   )
-  cdl_set_knitr_files(config = config, layout = command_layout)
-  out <- c(import_layout, command_layout)
+  cdl_set_knitr_files(config = config, spec = command_spec)
+  out <- c(import_spec, command_spec)
   list2env(out, parent = emptyenv(), hash = TRUE)
 }
 
 # https://github.com/ropensci/drake/issues/887 # nolint
-cdl_set_knitr_files <- function(config, layout) {
+cdl_set_knitr_files <- function(config, spec) {
   config$logger$minor("set knitr files")
   knitr_files <- lightly_parallelize(
-    X = layout,
+    X = spec,
     FUN = function(x) {
       x$deps_build$knitr_in
     },
@@ -59,7 +59,7 @@ cdl_set_knitr_files <- function(config, layout) {
   )
 }
 
-cdl_get_knitr_hash <- function(config, layout) {
+cdl_get_knitr_hash <- function(config, spec) {
   config$logger$minor("get knitr hash")
   if (!config$cache$exists(key = "knitr", namespace = "memoize")) {
     out <- config$cache$digest("", serialize = FALSE)
@@ -148,8 +148,8 @@ cdl_analyze_commands <- function(config) {
       envir = config$envir_targets
     )
   }
-  layout <- drake_pmap(.l = config$plan, .f = list, jobs = config$jobs)
-  names(layout) <- config$plan$target
+  spec <- drake_pmap(.l = config$plan, .f = list, jobs = config$jobs)
+  names(spec) <- config$plan$target
   config$default_condition_deps <- cdl_import_dependencies(
     config$trigger$condition,
     allowed_globals = config$ht_globals
@@ -159,8 +159,8 @@ cdl_analyze_commands <- function(config) {
     allowed_globals = config$ht_globals
   )
   out <- lightly_parallelize(
-    X = layout,
-    FUN = cdl_prepare_layout,
+    X = spec,
+    FUN = cdl_prepare_spec,
     jobs = config$jobs,
     config = config
   )
@@ -168,74 +168,74 @@ cdl_analyze_commands <- function(config) {
   out
 }
 
-cdl_prepare_layout <- function(config, layout) {
-  target <- layout$target
+cdl_prepare_spec <- function(config, spec) {
+  target <- spec$target
   config$logger$minor("analyze", target = target)
-  layout$dynamic <- as_dynamic(layout$dynamic)
-  layout$deps_build <- cdl_command_dependencies(
-    command = layout$command,
-    exclude = layout$target,
+  spec$dynamic <- as_dynamic(spec$dynamic)
+  spec$deps_build <- cdl_command_dependencies(
+    command = spec$command,
+    exclude = spec$target,
     allowed_globals = config$ht_globals
   )
-  layout$deps_dynamic <- cdl_dynamic_deps(
-    layout$dynamic,
-    layout$target,
+  spec$deps_dynamic <- cdl_dynamic_deps(
+    spec$dynamic,
+    spec$target,
     config
   )
-  layout$deps_dynamic_trace <- cdl_dynamic_trace(layout$dynamic, config)
-  cdl_assert_trace(layout$dynamic, layout)
-  layout$command_standardized <- cdl_standardize_command(layout$command)
-  if (inherits(layout$dynamic, "dynamic")) {
-    dynamic_command <- cdl_std_dyn_cmd(layout$dynamic)
-    layout$command_standardized <- paste(
-      layout$command_standardized,
+  spec$deps_dynamic_trace <- cdl_dynamic_trace(spec$dynamic, config)
+  cdl_assert_trace(spec$dynamic, spec)
+  spec$command_standardized <- cdl_standardize_command(spec$command)
+  if (inherits(spec$dynamic, "dynamic")) {
+    dynamic_command <- cdl_std_dyn_cmd(spec$dynamic)
+    spec$command_standardized <- paste(
+      spec$command_standardized,
       dynamic_command
     )
   }
-  layout$command_build <- cdl_preprocess_command(
-    layout$command,
+  spec$command_build <- cdl_preprocess_command(
+    spec$command,
     config = config
   )
-  if (is.null(layout$trigger) || all(is.na(layout$trigger))) {
-    layout$trigger <- config$trigger
-    layout$deps_condition <- config$default_condition_deps
-    layout$deps_change <- config$default_change_deps
+  if (is.null(spec$trigger) || all(is.na(spec$trigger))) {
+    spec$trigger <- config$trigger
+    spec$deps_condition <- config$default_condition_deps
+    spec$deps_change <- config$default_change_deps
   } else {
-    layout$deps_condition <- cdl_import_dependencies(
-      layout$trigger$condition,
-      exclude = layout$target,
+    spec$deps_condition <- cdl_import_dependencies(
+      spec$trigger$condition,
+      exclude = spec$target,
       allowed_globals = config$ht_globals
     )
-    layout$deps_change <- cdl_import_dependencies(
-      layout$trigger$change,
-      exclude = layout$target,
+    spec$deps_change <- cdl_import_dependencies(
+      spec$trigger$change,
+      exclude = spec$target,
       allowed_globals = config$ht_globals
     )
   }
-  cdl_no_dynamic_triggers(layout)
+  cdl_no_dynamic_triggers(spec)
   for (field in c("deps_build", "deps_condition", "deps_change")) {
-    layout[[field]]$memory <- ht_filter(
+    spec[[field]]$memory <- ht_filter(
       ht = config$ht_targets,
-      x = layout[[field]]$globals
+      x = spec[[field]]$globals
     )
   }
-  layout$deps_build$memory <- base::union(
-    layout$deps_build$memory,
-    layout$deps_dynamic_trace
+  spec$deps_build$memory <- base::union(
+    spec$deps_build$memory,
+    spec$deps_dynamic_trace
   )
-  layout
+  spec
 }
 
-cdl_no_dynamic_triggers <- function(layout) {
+cdl_no_dynamic_triggers <- function(spec) {
   cdl_no_dynamic_triggers_impl(
-    layout$target,
-    layout$deps_dynamic,
-    unlist(layout$deps_condition)
+    spec$target,
+    spec$deps_dynamic,
+    unlist(spec$deps_condition)
   )
   cdl_no_dynamic_triggers_impl(
-    layout$target,
-    layout$deps_dynamic,
-    unlist(layout$deps_change)
+    spec$target,
+    spec$deps_dynamic,
+    unlist(spec$deps_change)
   )
 }
 
@@ -314,12 +314,12 @@ cdl_dynamic_trace.default <- function(dynamic, config) {
   character(0)
 }
 
-cdl_assert_trace <- function(dynamic, layout) {
+cdl_assert_trace <- function(dynamic, spec) {
   UseMethod("cdl_assert_trace")
 }
 
-cdl_assert_trace.group <- function(dynamic, layout) {
-  bad <- setdiff(layout$deps_dynamic_trace, layout$deps_dynamic)
+cdl_assert_trace.group <- function(dynamic, spec) {
+  bad <- setdiff(spec$deps_dynamic_trace, spec$deps_dynamic)
   if (!length(bad)) {
     return()
   }
@@ -328,15 +328,15 @@ cdl_assert_trace.group <- function(dynamic, layout) {
     "the only legal dynamic trace variable ",
     "is the one you select with `.by`. ",
     "illegal dynamic trace variables for target ",
-    layout$target,
+    spec$target,
     ":\n",
     multiline_message(bad),
     call. = FALSE
   )
 }
 
-cdl_assert_trace.dynamic <- function(dynamic, layout) {
-  bad <- setdiff(layout$deps_dynamic_trace, layout$deps_dynamic)
+cdl_assert_trace.dynamic <- function(dynamic, spec) {
+  bad <- setdiff(spec$deps_dynamic_trace, spec$deps_dynamic)
   if (!length(bad)) {
     return()
   }
@@ -346,14 +346,14 @@ cdl_assert_trace.dynamic <- function(dynamic, layout) {
     "existing grouping variables, e.g. map(x, .trace = x) ",
     "and not map(x, .trace = y). ",
     "illegal dynamic trace variables for target ",
-    layout$target,
+    spec$target,
     ":\n",
     multiline_message(bad),
     call. = FALSE
   )
 }
 
-cdl_assert_trace.default <- function(dynamic, layout) {
+cdl_assert_trace.default <- function(dynamic, spec) {
   character(0)
 }
 

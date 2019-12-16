@@ -154,7 +154,7 @@ drake_graph_info <- function(
   config$hover <- hover
   config$on_select_col <- on_select_col
   config$file_out <- lapply(all_targets(config), function(target) {
-    config$layout[[target]]$deps_build$file_out
+    config$spec[[target]]$deps_build$file_out
   })
   names(config$file_out) <- all_targets(config)
   if (!show_output_files) {
@@ -311,7 +311,7 @@ get_cluster_grouping <- function(config, group) {
   vapply(
     X = config$nodes$id,
     FUN = function(x) {
-      out <- config$layout[[x]][[group]]
+      out <- config$spec[[x]][[group]]
       if (!is.character(out)) {
         out <- safe_deparse(out, backtick = TRUE)
       }
@@ -634,7 +634,7 @@ target_hover_text <- function(targets, config) {
   commands <- vapply(
     X = targets,
     FUN = function(target) {
-      config$layout[[target]]$command_standardized
+      config$spec[[target]]$command_standardized
     },
     FUN.VALUE = character(1),
     USE.NAMES = FALSE

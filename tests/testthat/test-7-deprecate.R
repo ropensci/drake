@@ -171,7 +171,7 @@ test_with_dir("deprecate misc utilities", {
     cache, log_progress = TRUE, init_common_values = TRUE
   ))
   load_mtcars_example()
-  expect_warning(config <- drake_config(my_plan, graph = 1, layout = 2))
+  expect_warning(config <- drake_config(my_plan, graph = 1, spec = 2))
   expect_warning(make_imports(config))
   expect_warning(make_targets(config))
   expect_warning(make_with_config(config))

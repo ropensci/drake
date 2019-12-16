@@ -11,13 +11,13 @@ test_with_dir("dynamic dependency detection", {
     z = target(w, dynamic = group(x, y, .by = c(w, nope)))
   )
   config <- drake_config(plan)
-  layout <- config$layout
+  spec <- config$spec
   config$ht_is_subtarget <- ht_new()
-  expect_equal(layout[["v"]]$deps_dynamic, character(0))
-  expect_equal(layout[["w"]]$deps_dynamic, character(0))
-  expect_equal(sort(layout[["x"]]$deps_dynamic), sort(c("indices", "v")))
-  expect_equal(sort(layout[["y"]]$deps_dynamic), sort(c("v", "x", "y")))
-  expect_equal(sort(layout[["z"]]$deps_dynamic), sort(c("w", "x", "y")))
+  expect_equal(spec[["v"]]$deps_dynamic, character(0))
+  expect_equal(spec[["w"]]$deps_dynamic, character(0))
+  expect_equal(sort(spec[["x"]]$deps_dynamic), sort(c("indices", "v")))
+  expect_equal(sort(spec[["y"]]$deps_dynamic), sort(c("v", "x", "y")))
+  expect_equal(sort(spec[["z"]]$deps_dynamic), sort(c("w", "x", "y")))
   meta1 <- drake_meta_("v", config)
   meta2 <- drake_meta_("x", config)
   con2 <- drake_config(drake_plan(x = 1))
@@ -62,18 +62,18 @@ test_with_dir("dynamic sub-target indices", {
   config$ht_dynamic_size <- ht_new()
   for (i in seq_len(4)) {
     ew <- list(u = i, v = i)
-    expect_equal(subtarget_deps(config$layout$w$dynamic, "w", i, config), ew)
+    expect_equal(subtarget_deps(config$spec$w$dynamic, "w", i, config), ew)
   }
   for (i in seq_len(4)) {
     for (j in seq_len(4)) {
       ey <- list(u = i, v = j)
       k <- 4 * (i - 1) + j
-      expect_equal(subtarget_deps(config$layout$y$dynamic, "y", k, config), ey)
+      expect_equal(subtarget_deps(config$spec$y$dynamic, "y", k, config), ey)
     }
   }
   for (i in seq_len(4)) {
     ez <- list(y = seq(from = 4 * (i - 1) + 1, 4 * i))
-    expect_equal(subtarget_deps(config$layout$z$dynamic, "z", i, config), ez)
+    expect_equal(subtarget_deps(config$spec$z$dynamic, "z", i, config), ez)
   }
 })
 
@@ -1555,9 +1555,9 @@ test_with_dir("whole dynamic targets (#1107)", {
       results = list(means, sds)
     )
     config <- drake_config(plan, memory_strategy = memory_strategy)
-    expect_equal(config$layout[["raw"]]$deps_dynamic_whole, character(0))
-    expect_equal(config$layout[["rows"]]$deps_dynamic_whole, character(0))
-    expect_equal(config$layout[["means"]]$deps_dynamic_whole, "rows")
+    expect_equal(config$spec[["raw"]]$deps_dynamic_whole, character(0))
+    expect_equal(config$spec[["rows"]]$deps_dynamic_whole, character(0))
+    expect_equal(config$spec[["means"]]$deps_dynamic_whole, "rows")
     make(
       plan,
       memory_strategy = memory_strategy,

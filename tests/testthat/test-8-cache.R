@@ -86,7 +86,7 @@ test_with_dir("dependency profile", {
   expect_true(as.logical(dp[dp$name == "depend", "changed"]))
   expect_equal(sum(dp$changed), 1)
   plan$command <- "b + c"
-  config$layout <- create_drake_layout(
+  config$spec <- create_drake_spec(
     plan = plan,
     envir = config$envir,
     cache = config$cache,

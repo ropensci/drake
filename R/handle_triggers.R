@@ -279,7 +279,7 @@ trigger_file <- function(target, meta, meta_old, config) {
 }
 
 trigger_file_missing <- function(target, meta, config) {
-  file_out <- config$layout[[target]]$deps_build$file_out
+  file_out <- config$spec[[target]]$deps_build$file_out
   for (file in file_out) {
     if (!file.exists(config$cache$decode_path(file))) {
       return(TRUE)
@@ -318,7 +318,7 @@ trigger_condition <- function(target, meta, config) {
   }
   if (is.language(meta$trigger$condition)) {
     try_load_deps(
-      config$layout[[target]]$deps_condition$memory,
+      config$spec[[target]]$deps_condition$memory,
       config = config
     )
     value <- eval(meta$trigger$condition, envir = config$envir_targets)

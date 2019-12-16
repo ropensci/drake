@@ -30,7 +30,7 @@ store_triggers <- function(target, meta, config) {
       use_cache = FALSE
     )
   }
-  store_output_files(config$layout[[target]]$deps_build$file_out, meta, config)
+  store_output_files(config$spec[[target]]$deps_build$file_out, meta, config)
 }
 
 store_output_files <- function(files, meta, config) {
@@ -179,7 +179,7 @@ finalize_meta <- function(target, value, meta, hash, config) {
   meta$hash <- hash
   meta$size <- NROW(value)
   if (is_dynamic(target, config)) {
-    meta$subtargets <- config$layout[[target]]$subtargets
+    meta$subtargets <- config$spec[[target]]$subtargets
   }
   if (is_dynamic_dep(target, config)) {
     meta$dynamic_hashes <- dynamic_hashes(value, meta$size, config)
@@ -201,9 +201,9 @@ finalize_triggers <- function(target, meta, config) {
   if (is_subtarget(target, config)) {
     return(meta)
   }
-  layout <- config$layout[[target]]
+  spec <- config$spec[[target]]
   if (is.null(meta$command)) {
-    meta$command <- layout$command_standardized
+    meta$command <- spec$command_standardized
   }
   if (is.null(meta$dependency_hash)) {
     meta$dependency_hash <- dependency_hash(target = target, config = config)

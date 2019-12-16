@@ -384,8 +384,8 @@ test_with_dir("deps load into memory for complex triggers", {
     expect_true(all(plan$target %in% cached()))
   }
   config <- drake_config(plan)
-  expect_equal(config$layout[["psi_2"]]$deps_condition$memory, "psi_1")
-  expect_equal(config$layout[["psi_3"]]$deps_change$memory, "psi_2")
+  expect_equal(config$spec[["psi_2"]]$deps_condition$memory, "psi_1")
+  expect_equal(config$spec[["psi_3"]]$deps_change$memory, "psi_2")
 })
 
 test_with_dir("trigger components react appropriately", {
@@ -870,10 +870,10 @@ test_with_dir("files are collected/encoded from all triggers", {
     )
   )
   config <- drake_config(plan)
-  deps_build <- redecode_path(unlist(config$layout[["x"]]$deps_build))
+  deps_build <- redecode_path(unlist(config$spec[["x"]]$deps_build))
   deps_condition <- redecode_path(
-    unlist(config$layout[["x"]]$deps_condition))
-  deps_change <- redecode_path(unlist(config$layout[["x"]]$deps_change))
+    unlist(config$spec[["x"]]$deps_condition))
+  deps_change <- redecode_path(unlist(config$spec[["x"]]$deps_change))
   expect_equal(
     sort(deps_build),
     sort(c("command_in", "command_out", "command_knitr_in"))

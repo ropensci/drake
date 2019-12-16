@@ -617,6 +617,7 @@ cached <- function(
 #' @param plan A drake plan.
 #' @examples
 #' \dontrun{
+#' isolate_example("cache_planned() example", {
 #' plan <- drake_plan(w = 1)
 #' make(plan)
 #' cached_planned(plan)
@@ -628,7 +629,6 @@ cached <- function(
 #' make(plan)
 #' cached_planned(plan)
 #' cached()
-#' }
 #' })
 #' }
 cached_planned <- function(
@@ -661,6 +661,7 @@ cached_planned <- function(
 #' @param plan A drake plan.
 #' @examples
 #' \dontrun{
+#' isolate_example("cache_unplanned() example", {
 #' plan <- drake_plan(w = 1)
 #' make(plan)
 #' cached_unplanned(plan)
@@ -675,7 +676,6 @@ cached_planned <- function(
 #' cached()
 #' clean(list = cached_unplanned(plan))
 #' cached()
-#' }
 #' })
 #' }
 cached_unplanned <- function(

@@ -5,7 +5,7 @@
 \title{Task passed to individual futures in the \code{"future"} backend
 \lifecycle{stable}}
 \usage{
-future_build(target, meta, config, layout, ht_is_subtarget, protect)
+future_build(target, meta, config, spec, ht_is_subtarget, protect)
 }
 \arguments{
 \item{target}{Name of the target.}

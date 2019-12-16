@@ -50,6 +50,7 @@ drake_config(
   sleep = function(i) 0.01,
   hasty_build = NULL,
   memory_strategy = "speed",
+  spec = NULL,
   layout = NULL,
   lock_envir = TRUE,
   history = TRUE,
@@ -193,7 +194,7 @@ and slows down \code{make()} a little.
 If you need to reduce or limit the number of files in the cache,
 call \code{make(log_progress = FALSE, recover = FALSE)}.}
 
-\item{graph}{An \code{igraph} object from the previous \code{make()}.
+\item{graph}{An \code{config$graph} object from an existing \code{drake_config()}.
 Supplying a pre-built graph could save time.}
 
 \item{trigger}{Name of the trigger to apply to all targets.
@@ -432,10 +433,11 @@ help file examples of \code{\link[=drake_envir]{drake_envir()}}.
 Also see the \code{garbage_collection} argument of \code{make()} and
 \code{drake_config()}.}
 
-\item{layout}{\code{config$layout}, where \code{config} is the return value
-from a prior call to \code{drake_config()}. If your plan or environment
-have changed since the last \code{make()}, do not supply a \code{layout} argument.
-Otherwise, supplying one could save time.}
+\item{spec}{\code{config$spec} from an existing \code{drake_config()}.
+Supplying a pre-built workflow specification to this argument
+could save time in some cases.}
+
+\item{layout}{Deprecated. Use \code{spec} instead.}
 
 \item{lock_envir}{Logical, whether to lock \code{config$envir} during \code{make()}.
 If \code{TRUE}, \code{make()} quits in error whenever a command in your

@@ -55,8 +55,8 @@ try_build <- function(target, meta, config) {
     return(dynamic_build(target, meta, config))
   }
   retries <- 0L
-  layout <- config$layout[[target]] %|||% list()
-  max_retries <- layout$retries
+  spec <- config$spec[[target]] %|||% list()
+  max_retries <- spec$retries
   if (is.null(max_retries) || is.na(max_retries)) {
     max_retries <- config$retries
   }
@@ -103,11 +103,11 @@ with_seed_timeout <- function(target, meta, config) {
 }
 
 resolve_timeouts <- function(target, config) {
-  layout <- config$layout[[target]] %|||% list()
+  spec <- config$spec[[target]] %|||% list()
   vapply(
     X = c("cpu", "elapsed"),
     FUN = function(key) {
-      out <- layout[[key]]
+      out <- spec[[key]]
       if (is.null(out) || is.na(out)) {
         out <- config[[key]]
       }
@@ -244,7 +244,7 @@ with_call_stack <- function(target, config) {
     e$calls <- head(sys.calls()[-seq_len(frame + 7)], -2)
     signalCondition(e)
   }
-  expr <- config$layout[[target]]$command_build
+  expr <- config$spec[[target]]$command_build
   # Need to make sure the environment is locked for running commands.
   # Why not just do this once at the beginning of `make()`?
   # Because do_prework() and future::value()
@@ -331,7 +331,7 @@ conclude_build <- function(build, config) {
   value <- assign_format(
     target = target,
     value = value,
-    format = config$layout[[target]]$format,
+    format = config$spec[[target]]$format,
     config = config
   )
   store_outputs(target = target, value = value, meta = meta, config = config)
@@ -418,7 +418,7 @@ assign_to_envir <- function(target, value, config) {
   if (is_subtarget(target, config)) {
     return()
   }
-  memory_strategy <- config$layout[[target]]$memory_strategy
+  memory_strategy <- config$spec[[target]]$memory_strategy
   if (is.null(memory_strategy) || is.na(memory_strategy)) {
     memory_strategy <- config$memory_strategy
   }
@@ -457,7 +457,7 @@ value_format.default <- function(value, target, config) {
 }
 
 assert_output_files <- function(target, meta, config) {
-  deps <- config$layout[[target]]$deps_build
+  deps <- config$spec[[target]]$deps_build
   if (!length(deps$file_out)) {
     return()
   }
@@ -545,7 +545,7 @@ store_failure <- function(target, meta, config) {
 set_progress <- function(target, value, config) {
   skip_progress <- !identical(config$running_make, TRUE) ||
     !config$log_progress ||
-    (config$layout[[target]]$imported %||% FALSE)
+    (config$spec[[target]]$imported %||% FALSE)
   if (skip_progress) {
     return()
   }

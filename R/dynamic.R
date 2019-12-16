@@ -116,7 +116,7 @@ read_trace <- function(
 }
 
 dynamic_build <- function(target, meta, config) {
-  subtargets <- config$layout[[target]]$subtargets
+  subtargets <- config$spec[[target]]$subtargets
   if (config$log_build_times) {
     meta$time_command <- proc_time() - meta$time_start
   }
@@ -127,12 +127,12 @@ dynamic_build <- function(target, meta, config) {
 }
 
 append_trace <- function(target, value, config) {
-  layout <- config$layout[[target]]
-  if (!length(layout$deps_dynamic_trace)) {
+  spec <- config$spec[[target]]
+  if (!length(spec$deps_dynamic_trace)) {
     return(value)
   }
-  dynamic <- layout$dynamic
-  trace <- get_trace_impl(dynamic, value, layout, config)
+  dynamic <- spec$dynamic
+  trace <- get_trace_impl(dynamic, value, spec, config)
   trace <- subset_trace(trace, config)
   attr(value, "dynamic_trace") <- trace
   value
@@ -147,47 +147,47 @@ subset_trace <- function(trace, config) {
   })
 }
 
-get_trace_impl <- function(dynamic, value, layout, config) {
+get_trace_impl <- function(dynamic, value, spec, config) {
   UseMethod("get_trace_impl")
 }
 
-get_trace_impl.map <- function(dynamic, value, layout, config) {
+get_trace_impl.map <- function(dynamic, value, spec, config) {
   trace <- lapply(
-    layout$deps_dynamic_trace,
+    spec$deps_dynamic_trace,
     get,
     envir = config$envir_targets,
     inherits = FALSE
   )
   trace <- lapply(trace, chr_dynamic)
-  names(trace) <- layout$deps_dynamic_trace
+  names(trace) <- spec$deps_dynamic_trace
   trace
 }
 
-get_trace_impl.cross <- function(dynamic, value, layout, config) {
+get_trace_impl.cross <- function(dynamic, value, spec, config) {
   size <- lapply(
-    layout$deps_dynamic,
+    spec$deps_dynamic,
     get_dynamic_size,
     config = config
   )
   index <- lapply(size, seq_len)
-  names(index) <- layout$deps_dynamic
+  names(index) <- spec$deps_dynamic
   index <- rev(expand.grid(rev(index)))
   trace <- lapply(
-    layout$deps_dynamic_trace,
+    spec$deps_dynamic_trace,
     get,
     envir = config$envir_targets,
     inherits = FALSE
   )
   trace <- lapply(trace, chr_dynamic)
-  names(trace) <- layout$deps_dynamic_trace
-  trace <- lapply(layout$deps_dynamic_trace, function(key) {
+  names(trace) <- spec$deps_dynamic_trace
+  trace <- lapply(spec$deps_dynamic_trace, function(key) {
     trace[[key]][index[[key]]]
   })
-  names(trace) <- layout$deps_dynamic_trace
+  names(trace) <- spec$deps_dynamic_trace
   trace
 }
 
-get_trace_impl.group <- function(dynamic, value, layout, config) {
+get_trace_impl.group <- function(dynamic, value, spec, config) {
   by_key <- which_by(dynamic)
   by_value <- get(by_key, envir = config$envir_targets, inherits = FALSE)
   trace <- list(unique(by_value))
@@ -220,7 +220,7 @@ register_subtargets <- function(target, static_ok, dynamic_ok, config) {
   }
   if (length(subtargets_all)) {
     register_in_graph(target, subtargets_all, config)
-    register_in_layout(target, subtargets_all, config)
+    register_in_spec(target, subtargets_all, config)
   }
   ndeps <- length(subtargets_build)
   if (ndeps) {
@@ -274,42 +274,42 @@ register_in_graph <- function(target, subtargets, config) {
   )
 }
 
-register_in_layout <- function(target, subtargets, config) {
-  layout <- config$layout[[target]]
-  dynamic <- layout$dynamic
+register_in_spec <- function(target, subtargets, config) {
+  spec <- config$spec[[target]]
+  dynamic <- spec$dynamic
   lapply(
     seq_along(subtargets),
-    register_subtarget_layout,
+    register_subtarget_spec,
     parent = target,
     subtargets = subtargets,
-    layout = layout,
+    spec = spec,
     dynamic = dynamic,
     config = config
   )
-  config$layout[[target]]$subtargets <- subtargets
+  config$spec[[target]]$subtargets <- subtargets
 }
 
-register_subtarget_layout <- function(
+register_subtarget_spec <- function(
   index,
   parent,
   subtargets,
   dynamic,
-  layout,
+  spec,
   config
 ) {
   subtarget <- subtargets[index]
-  layout$target <- subtarget
-  layout$subtarget_index <- index
-  layout$subtarget_parent <- parent
-  mem_deps <- all.vars(layout$dynamic)
-  layout$dynamic <- NULL
-  layout$deps_build$memory <- unique(c(layout$deps_build$memory, mem_deps))
-  layout$seed <- seed_from_basic_types(config$seed, layout$seed, subtarget)
-  layout <- register_dynamic_subdeps(dynamic, layout, index, parent, config)
+  spec$target <- subtarget
+  spec$subtarget_index <- index
+  spec$subtarget_parent <- parent
+  mem_deps <- all.vars(spec$dynamic)
+  spec$dynamic <- NULL
+  spec$deps_build$memory <- unique(c(spec$deps_build$memory, mem_deps))
+  spec$seed <- seed_from_basic_types(config$seed, spec$seed, subtarget)
+  spec <- register_dynamic_subdeps(dynamic, spec, index, parent, config)
   assign(
     x = subtarget,
-    value = layout,
-    envir = config$layout,
+    value = spec,
+    envir = config$spec,
     inherits = FALSE
   )
 }
@@ -342,16 +342,16 @@ dynamic_pad_revdep_keys <- function(target, config) {
   increase_revdep_keys(config$queue, target, config)
 }
 
-register_dynamic_subdeps <- function(dynamic, layout, index, parent, config) {
+register_dynamic_subdeps <- function(dynamic, spec, index, parent, config) {
   index_deps <- subtarget_deps(dynamic, parent, index, config)
-  for (dep in layout$deps_dynamic) {
+  for (dep in spec$deps_dynamic) {
     if (is_dynamic(dep, config)) {
-      subdeps <- config$layout[[dep]]$subtargets[index_deps[[dep]]]
-      layout$deps_build$memory <- c(layout$deps_build$memory, subdeps)
-      layout$deps_build$memory <- setdiff(layout$deps_build$memory, dep)
+      subdeps <- config$spec[[dep]]$subtargets[index_deps[[dep]]]
+      spec$deps_build$memory <- c(spec$deps_build$memory, subdeps)
+      spec$deps_build$memory <- setdiff(spec$deps_build$memory, dep)
     }
   }
-  layout
+  spec
 }
 
 is_dynamic <- function(target, config) {
@@ -419,7 +419,7 @@ def_group <- function(..., .by = NULL, .trace = NULL) {
 # nocov end
 
 subtarget_names <- function(target, config) {
-  dynamic <- config$layout[[target]]$dynamic
+  dynamic <- config$spec[[target]]$dynamic
   hashes <- dynamic_hash_list(dynamic, target, config)
   hashes <- subtarget_hashes(dynamic, target, hashes, config)
   hashes <- vapply(hashes, shorten_dynamic_hash, FUN.VALUE = character(1))
@@ -445,14 +445,14 @@ dynamic_hash_list <- function(dynamic, target, config) {
 }
 
 dynamic_hash_list.map <- function(dynamic, target, config) {
-  deps <- sort(config$layout[[target]]$deps_dynamic)
+  deps <- sort(config$spec[[target]]$deps_dynamic)
   hashes <- lapply(deps, read_dynamic_hashes, config = config)
   assert_equal_branches(target, deps, hashes)
   hashes
 }
 
 dynamic_hash_list.cross <- function(dynamic, target, config) {
-  deps <- sort(config$layout[[target]]$deps_dynamic)
+  deps <- sort(config$spec[[target]]$deps_dynamic)
   lapply(deps, read_dynamic_hashes, config = config)
 }
 

@@ -34,6 +34,23 @@ A character vector of target and sub-target names.
 Includes dynamic sub-targets as well.
 See examples for details.
 }
+\examples{
+\dontrun{
+isolate_example("cache_planned() example", {
+plan <- drake_plan(w = 1)
+make(plan)
+cached_planned(plan)
+plan <- drake_plan(
+  x = seq_len(2),
+  y = target(x, dynamic = map(x))
+)
+cached_planned(plan)
+make(plan)
+cached_planned(plan)
+cached()
+})
+}
+}
 \seealso{
 \code{\link[=cached]{cached()}}, \link{cached_unplanned}
 }

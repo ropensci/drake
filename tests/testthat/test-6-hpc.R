@@ -137,7 +137,7 @@ test_with_dir("parallelism can be a scheduler function", {
   plan <- drake_plan(x = file.create("x"))
   build_ <- function(target, config) {
     tidy_expr <- eval(
-      expr = config$layout[[target]]$command_build,
+      expr = config$spec[[target]]$command_build,
       envir = config$envir_targets
     )
     eval(expr = tidy_expr, envir = config$envir_targets)

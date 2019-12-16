@@ -78,7 +78,7 @@ deps_target <- function(
   if (!character_only) {
     target <- as.character(substitute(target))
   }
-  out <- config$layout[[target]]$deps_build
+  out <- config$spec[[target]]$deps_build
   out <- decode_deps_list(out)
   display_deps_list(select_nonempty(out))
 }
@@ -217,10 +217,10 @@ deps_profile <- function(
   old_values <- unname(old_values)
   elt <- paste(old_values[1], collapse = "")
   old_values[1] <- config$cache$digest(elt, serialize = FALSE)
-  layout <- config$layout[[target]]
+  spec <- config$spec[[target]]
   new_values <- c(
     config$cache$digest(
-      paste(layout$command_standardized, collapse = ""),
+      paste(spec$command_standardized, collapse = ""),
       serialize = FALSE
     ),
     dependency_hash(target, config),
@@ -238,7 +238,7 @@ deps_profile <- function(
 
 #' @title List the targets and imports that are reproducibly tracked.
 #' \lifecycle{stable}
-#' @description List all the layout
+#' @description List all the spec
 #' in your project's dependency network.
 #' @export
 #' @return A character vector with the names of reproducibly-tracked targets.
@@ -258,7 +258,7 @@ tracked <- function(config) {
   out <- lightly_parallelize(
     X = V(config$graph)$name,
     FUN = function(target) {
-      out <- config$layout[[target]]$deps_build
+      out <- config$spec[[target]]$deps_build
       out <- as.list(out)
       out <- unlist(out)
       c(out, target)
