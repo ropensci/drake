@@ -154,7 +154,7 @@ drake_debug <- function(
       assign(dep, value, envir = config$envir_targets, inherits = FALSE)
     }
   }
-  config$spec[[target]]$command_build <- cdl_preprocess_command(
+  config$spec[[target]]$command_build <- cds_preprocess_command(
     debug_command(config$spec[[target]]$command)
   )
   config$ht_dynamic <- ht_new()

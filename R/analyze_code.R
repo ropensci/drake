@@ -520,6 +520,13 @@ make_direct_deparse <- function() {
 deparse_control_custom <- .deparseOpts(c("keepNA", "keepInteger"))
 deparse_control_default <- .deparseOpts(eval(formals(deparse)$control))
 
+safe_deparse_function <- function(x) {
+  if (is.function(x)) {
+    x <- safe_deparse(x, backtick = TRUE)
+  }
+  x
+}
+
 safe_deparse <- function(x, collapse = "\n", backtick = TRUE) {
   out <- direct_deparse(
     x,

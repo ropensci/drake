@@ -33,12 +33,12 @@
 #' deps_code("x + y + 123")
 deps_code <- function(x) {
   if (is.function(x)) {
-    out <- cdl_import_dependencies(x)
+    out <- cds_import_dependencies(x)
   } else {
     if (is.character(x)) {
       x <- parse(text = x)
     }
-    out <- cdl_command_dependencies(x)
+    out <- cds_command_dependencies(x)
   }
   display_deps_list(decode_deps_list(out))
 }

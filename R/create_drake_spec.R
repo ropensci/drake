@@ -14,21 +14,21 @@ create_drake_spec <- function(
     logger = logger,
     jobs = jobs,
     cache = cache,
-    trigger = cdl_parse_trigger(trigger = trigger, envir = envir),
+    trigger = cds_parse_trigger(trigger = trigger, envir = envir),
     ht_targets = ht_new(plan$target),
     ht_imports = ht_new(import_names),
     ht_globals = ht_new(c(import_names, plan$target))
   )
-  imports <- cdl_prepare_imports(config)
-  imports_kernel <- cdl_imports_kernel(config, imports)
+  imports <- cds_prepare_imports(config)
+  imports_kernel <- cds_imports_kernel(config, imports)
   import_spec <- memo_expr(
-    cdl_analyze_imports(config, imports),
+    cds_analyze_imports(config, imports),
     config$cache,
     imports_kernel
   )
-  knitr_hash <- cdl_get_knitr_hash(config)
+  knitr_hash <- cds_get_knitr_hash(config)
   command_spec <- memo_expr(
-    cdl_analyze_commands(config),
+    cds_analyze_commands(config),
     config$cache,
     config$plan,
     config$trigger,
@@ -36,13 +36,13 @@ create_drake_spec <- function(
     imports_kernel,
     knitr_hash
   )
-  cdl_set_knitr_files(config = config, spec = command_spec)
+  cds_set_knitr_files(config = config, spec = command_spec)
   out <- c(import_spec, command_spec)
   list2env(out, parent = emptyenv(), hash = TRUE)
 }
 
 # https://github.com/ropensci/drake/issues/887 # nolint
-cdl_set_knitr_files <- function(config, spec) {
+cds_set_knitr_files <- function(config, spec) {
   config$logger$minor("set knitr files")
   knitr_files <- lightly_parallelize(
     X = spec,
@@ -59,7 +59,7 @@ cdl_set_knitr_files <- function(config, spec) {
   )
 }
 
-cdl_get_knitr_hash <- function(config, spec) {
+cds_get_knitr_hash <- function(config, spec) {
   config$logger$minor("get knitr hash")
   if (!config$cache$exists(key = "knitr", namespace = "memoize")) {
     out <- config$cache$digest("", serialize = FALSE)
@@ -77,25 +77,20 @@ cdl_get_knitr_hash <- function(config, spec) {
   config$cache$digest(knitr_hashes, serialize = FALSE)
 }
 
-cdl_imports_kernel <- function(config, imports) {
+cds_imports_kernel <- function(config, imports) {
   out <- lightly_parallelize(
     X = imports,
-    FUN = function(x) {
-      if (is.function(x)) {
-        x <- safe_deparse(x, backtick = TRUE)
-      }
-      x
-    },
+    FUN = safe_deparse_function,
     jobs = config$jobs
   )
   names(out) <- names(imports)
   out[sort(as.character(names(out)))]
 }
 
-cdl_prepare_imports <- function(config) {
+cds_prepare_imports <- function(config) {
   config$logger$minor("analyze environment")
   imports <- as.list(config$envir)
-  cdl_unload_conflicts(
+  cds_unload_conflicts(
     imports = names(imports),
     targets = config$plan$target,
     envir = config$envir,
@@ -105,62 +100,69 @@ cdl_prepare_imports <- function(config) {
   imports[import_names]
 }
 
-cdl_unload_conflicts <- function(imports, targets, envir, logger) {
+cds_unload_conflicts <- function(imports, targets, envir, logger) {
   common <- intersect(imports, targets)
   if (length(common)) {
     logger$major(
       "unload",
       "targets from environment:\n",
-      multiline_message(common), sep = ""
+      multiline_message(common),
+      sep = ""
     )
   }
   remove(list = common, envir = envir)
 }
 
-cdl_analyze_imports <- function(config, imports) {
+cds_analyze_imports <- function(config, imports) {
   names <-  names(imports)
   out <- lightly_parallelize(
     X = seq_along(imports),
-    FUN = function(i) {
-      config$logger$minor("analyze", target = names[i])
-      list(
-        target = names[i],
-        deps_build = cdl_import_dependencies(
-          expr = imports[[i]],
-          exclude = names(imports)[[i]],
-          allowed_globals = config$ht_imports
-        ),
-        imported = TRUE
-      )
-    },
-    jobs = config$jobs
+    FUN = cdl_analyze_import,
+    jobs = config$jobs,
+    imports = imports,
+    names = names,
+    config = config
   )
   names(out) <- names
   out
 }
 
-cdl_analyze_commands <- function(config) {
+cdl_analyze_import <- function(index, imports, names, config) {
+  name <- names[index]
+  config$logger$minor("analyze", target = name)
+  list(
+    target = name,
+    imported = TRUE,
+    deps_build = cds_import_dependencies(
+      expr = imports[[index]],
+      exclude = name,
+      allowed_globals = config$ht_imports
+    )
+  )
+}
+
+cds_analyze_commands <- function(config) {
   config$plan$imported <- FALSE
   if ("trigger" %in% colnames(config$plan)) {
     config$plan$trigger <- lapply(
       config$plan$trigger,
-      cdl_parse_trigger,
+      cds_parse_trigger,
       envir = config$envir_targets
     )
   }
   spec <- drake_pmap(.l = config$plan, .f = list, jobs = config$jobs)
   names(spec) <- config$plan$target
-  config$default_condition_deps <- cdl_import_dependencies(
+  config$default_condition_deps <- cds_import_dependencies(
     config$trigger$condition,
     allowed_globals = config$ht_globals
   )
-  config$default_change_deps <- cdl_import_dependencies(
+  config$default_change_deps <- cds_import_dependencies(
     config$trigger$change,
     allowed_globals = config$ht_globals
   )
   out <- lightly_parallelize(
     X = spec,
-    FUN = cdl_prepare_spec,
+    FUN = cds_prepare_spec,
     jobs = config$jobs,
     config = config
   )
@@ -168,31 +170,31 @@ cdl_analyze_commands <- function(config) {
   out
 }
 
-cdl_prepare_spec <- function(config, spec) {
+cds_prepare_spec <- function(config, spec) {
   target <- spec$target
   config$logger$minor("analyze", target = target)
   spec$dynamic <- as_dynamic(spec$dynamic)
-  spec$deps_build <- cdl_command_dependencies(
+  spec$deps_build <- cds_command_dependencies(
     command = spec$command,
     exclude = spec$target,
     allowed_globals = config$ht_globals
   )
-  spec$deps_dynamic <- cdl_dynamic_deps(
+  spec$deps_dynamic <- cds_dynamic_deps(
     spec$dynamic,
     spec$target,
     config
   )
-  spec$deps_dynamic_trace <- cdl_dynamic_trace(spec$dynamic, config)
-  cdl_assert_trace(spec$dynamic, spec)
-  spec$command_standardized <- cdl_standardize_command(spec$command)
+  spec$deps_dynamic_trace <- cds_dynamic_trace(spec$dynamic, config)
+  cds_assert_trace(spec$dynamic, spec)
+  spec$command_standardized <- cds_standardize_command(spec$command)
   if (inherits(spec$dynamic, "dynamic")) {
-    dynamic_command <- cdl_std_dyn_cmd(spec$dynamic)
+    dynamic_command <- cds_std_dyn_cmd(spec$dynamic)
     spec$command_standardized <- paste(
       spec$command_standardized,
       dynamic_command
     )
   }
-  spec$command_build <- cdl_preprocess_command(
+  spec$command_build <- cds_preprocess_command(
     spec$command,
     config = config
   )
@@ -201,18 +203,18 @@ cdl_prepare_spec <- function(config, spec) {
     spec$deps_condition <- config$default_condition_deps
     spec$deps_change <- config$default_change_deps
   } else {
-    spec$deps_condition <- cdl_import_dependencies(
+    spec$deps_condition <- cds_import_dependencies(
       spec$trigger$condition,
       exclude = spec$target,
       allowed_globals = config$ht_globals
     )
-    spec$deps_change <- cdl_import_dependencies(
+    spec$deps_change <- cds_import_dependencies(
       spec$trigger$change,
       exclude = spec$target,
       allowed_globals = config$ht_globals
     )
   }
-  cdl_no_dynamic_triggers(spec)
+  cds_no_dynamic_triggers(spec)
   for (field in c("deps_build", "deps_condition", "deps_change")) {
     spec[[field]]$memory <- ht_filter(
       ht = config$ht_targets,
@@ -226,20 +228,20 @@ cdl_prepare_spec <- function(config, spec) {
   spec
 }
 
-cdl_no_dynamic_triggers <- function(spec) {
-  cdl_no_dynamic_triggers_impl(
+cds_no_dynamic_triggers <- function(spec) {
+  cds_no_dynamic_triggers_impl(
     spec$target,
     spec$deps_dynamic,
     unlist(spec$deps_condition)
   )
-  cdl_no_dynamic_triggers_impl(
+  cds_no_dynamic_triggers_impl(
     spec$target,
     spec$deps_dynamic,
     unlist(spec$deps_change)
   )
 }
 
-cdl_no_dynamic_triggers_impl <- function(target, deps_dynamic, deps_trigger) {
+cds_no_dynamic_triggers_impl <- function(target, deps_dynamic, deps_trigger) {
   common <- intersect(deps_dynamic, deps_trigger)
   if (!length(common)) {
     return()
@@ -252,7 +254,7 @@ cdl_no_dynamic_triggers_impl <- function(target, deps_dynamic, deps_trigger) {
   )
 }
 
-cdl_import_dependencies <- function(
+cds_import_dependencies <- function(
   expr, exclude = character(0), allowed_globals = NULL
 ) {
   deps <- analyze_code(
@@ -264,7 +266,7 @@ cdl_import_dependencies <- function(
   select_nonempty(deps)
 }
 
-cdl_command_dependencies <- function(
+cds_command_dependencies <- function(
   command,
   exclude = character(0),
   allowed_globals = NULL
@@ -281,11 +283,11 @@ cdl_command_dependencies <- function(
   select_nonempty(deps)
 }
 
-cdl_dynamic_deps <- function(dynamic, target, config) {
-  UseMethod("cdl_dynamic_deps")
+cds_dynamic_deps <- function(dynamic, target, config) {
+  UseMethod("cds_dynamic_deps")
 }
 
-cdl_dynamic_deps.dynamic <- function(dynamic, target, config) {
+cds_dynamic_deps.dynamic <- function(dynamic, target, config) {
   dynamic$.trace <- NULL
   out <- ht_filter(config$ht_globals, all.vars(dynamic))
   if (!length(out)) {
@@ -298,27 +300,27 @@ cdl_dynamic_deps.dynamic <- function(dynamic, target, config) {
   out
 }
 
-cdl_dynamic_deps.default <- function(dynamic, target, config) {
+cds_dynamic_deps.default <- function(dynamic, target, config) {
   character(0)
 }
 
-cdl_dynamic_trace <- function(dynamic, config) {
-  UseMethod("cdl_dynamic_trace")
+cds_dynamic_trace <- function(dynamic, config) {
+  UseMethod("cds_dynamic_trace")
 }
 
-cdl_dynamic_trace.dynamic <- function(dynamic, config) {
+cds_dynamic_trace.dynamic <- function(dynamic, config) {
   all.vars(dynamic$.trace)
 }
 
-cdl_dynamic_trace.default <- function(dynamic, config) {
+cds_dynamic_trace.default <- function(dynamic, config) {
   character(0)
 }
 
-cdl_assert_trace <- function(dynamic, spec) {
-  UseMethod("cdl_assert_trace")
+cds_assert_trace <- function(dynamic, spec) {
+  UseMethod("cds_assert_trace")
 }
 
-cdl_assert_trace.group <- function(dynamic, spec) {
+cds_assert_trace.group <- function(dynamic, spec) {
   bad <- setdiff(spec$deps_dynamic_trace, spec$deps_dynamic)
   if (!length(bad)) {
     return()
@@ -335,7 +337,7 @@ cdl_assert_trace.group <- function(dynamic, spec) {
   )
 }
 
-cdl_assert_trace.dynamic <- function(dynamic, spec) {
+cds_assert_trace.dynamic <- function(dynamic, spec) {
   bad <- setdiff(spec$deps_dynamic_trace, spec$deps_dynamic)
   if (!length(bad)) {
     return()
@@ -353,13 +355,13 @@ cdl_assert_trace.dynamic <- function(dynamic, spec) {
   )
 }
 
-cdl_assert_trace.default <- function(dynamic, spec) {
+cds_assert_trace.default <- function(dynamic, spec) {
   character(0)
 }
 
 # Get the command ready for tidy eval prep
 # and then pure eval (no side effects).
-cdl_preprocess_command <- function(command, config) {
+cds_preprocess_command <- function(command, config) {
   command <- as.call(c(quote(local), command))
   # Here, we really do need expr() instead of quo().
   # `!!` needs to unquote symbols using config$envir_targets instead of
@@ -369,7 +371,7 @@ cdl_preprocess_command <- function(command, config) {
   as.call(c(quote(rlang::expr), command))
 }
 
-cdl_standardize_command <- function(x) {
+cds_standardize_command <- function(x) {
   if (is.expression(x) && length(x) == 1L) {
     x <- x[[1]]
   }
@@ -381,14 +383,14 @@ cdl_standardize_command <- function(x) {
   safe_deparse(x, backtick = TRUE)
 }
 
-cdl_std_dyn_cmd <- function(x) {
+cds_std_dyn_cmd <- function(x) {
   transform <- class(x)
   vars <- sort(all.vars(x))
   by <- as.character(x$.by)
   paste(c(transform, vars, by, trace), collapse = " ")
 }
 
-cdl_parse_trigger <- function(trigger, envir) {
+cds_parse_trigger <- function(trigger, envir) {
   if (is.symbol(trigger)) {
     trigger <- safe_deparse(trigger, backtick = FALSE)
   }
