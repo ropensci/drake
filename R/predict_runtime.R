@@ -179,7 +179,7 @@ worker_prediction_info <- function(
   default_time = 0,
   warn = TRUE
 ) {
-  assert_config_not_plan(config)
+  assert_config(config)
   deprecate_targets_only(targets_only) # 2019-01-03 # nolint
   assumptions <- timing_assumptions(
     config = config,

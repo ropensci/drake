@@ -481,7 +481,7 @@ check_make_call <- function(call) {
 }
 
 runtime_checks <- function(config) {
-  assert_config_not_plan(config)
+  assert_config(config)
   if (identical(config$skip_safety_checks, TRUE)) {
     return(invisible())
   }

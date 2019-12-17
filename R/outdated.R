@@ -65,7 +65,7 @@ recoverable <-  function(
 ) {
   config$logger$minor("begin recoverable()")
   on.exit(config$logger$minor("end recoverable()"), add = TRUE)
-  assert_config_not_plan(config)
+  assert_config(config)
   if (make_imports) {
     config$cache$lock()
     on.exit(config$cache$unlock(), add = TRUE)
@@ -142,7 +142,7 @@ outdated <-  function(
 ) {
   config$logger$minor("begin outdated()")
   on.exit(config$logger$minor("end outdated()"), add = TRUE)
-  assert_config_not_plan(config)
+  assert_config(config)
   if (make_imports) {
     config$cache$lock()
     on.exit(config$cache$unlock(), add = TRUE)
@@ -237,7 +237,7 @@ missing_subtargets <- function(target, meta, config) {
 missed <- function(config) {
   config$logger$minor("begin missed()")
   on.exit(config$logger$minor("end missed()"), add = TRUE)
-  assert_config_not_plan(config)
+  assert_config(config)
   imports <- all_imports(config)
   is_missing <- lightly_parallelize(
     X = imports,

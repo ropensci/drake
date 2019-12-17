@@ -27,18 +27,14 @@ all_imports <- function(config) {
   V(config$graph)$name[V(config$graph)$imported]
 }
 
-assert_config_not_plan <- function(config) {
-  if (!inherits(config, "drake_plan")) {
+assert_config <- function(config) {
+  if (inherits(config, "drake_config")) {
     return()
   }
   stop(
-    "You supplied a drake plan to the ",
+    "the ",
     shQuote("config"),
-    " argument of a function. Instead, please call ",
-    shQuote("drake_config()"),
-    " on the plan and then supply the return value to ",
-    shQuote("config"),
-    ".",
+    " argument must be a drake_config() object.",
     call. = FALSE
   )
 }

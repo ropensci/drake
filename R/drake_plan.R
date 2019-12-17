@@ -552,7 +552,7 @@ as_drake_plan <- function(plan, .force_df = FALSE) {
   if (.force_df || no_tibble) {
     structure(
       as.data.frame(plan, stringsAsFactors = FALSE),
-      class = c("drake_plan", "data.frame")
+      class = c("drake_plan", "drake", "data.frame")
     )
   } else {
     tibble::new_tibble(plan, nrow = nrow(plan), subclass = "drake_plan")

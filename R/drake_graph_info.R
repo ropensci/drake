@@ -138,7 +138,7 @@ drake_graph_info <- function(
   on_select_col = NULL
 ) {
   assert_pkg("visNetwork")
-  assert_config_not_plan(config)
+  assert_config(config)
   config$logger$minor("begin drake_graph_info()")
   on.exit(config$logger$minor("end drake_graph_info()"), add = TRUE)
   if (!length(V(config$graph)$name)) {

@@ -360,7 +360,7 @@ loadd_use_deps <- function(targets, config, deps) {
       call. = FALSE
     )
   }
-  assert_config_not_plan(config)
+  assert_config(config)
   targets <- deps_memory(targets = targets, config = config)
 }
 
