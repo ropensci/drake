@@ -1,8 +1,29 @@
 analyze_code <- function(
   expr,
   exclude = character(0),
-  allowed_globals = NULL,
-  as_list = TRUE
+  allowed_globals = NULL
+) {
+  results <- analyze_code_impl(
+    expr = expr,
+    exclude = exclude,
+    allowed_globals = allowed_globals
+  )
+  results <- list_code_analysis_results(results)
+  results <- select_nonempty(results)
+  class(results) <- "drake_code_analysis"
+  results
+}
+
+#' @export
+print.drake_code_analysis <- function(x, ...) {
+  cat("code analysis results list from drake:::analyze_code()\n")
+  str(x, no.list = TRUE)
+}
+
+analyze_code_impl <- function(
+  expr,
+  exclude = character(0),
+  allowed_globals = NULL
 ) {
   if (!is.function(expr) && !is.language(expr)) {
     return(list())
@@ -11,10 +32,6 @@ analyze_code <- function(
   locals <- ht_new_from_list(ignored_symbols_list)
   ht_set(locals, exclude)
   walk_code(expr, results, locals, allowed_globals)
-  if (as_list) {
-    results <- list_code_analysis_results(results)
-    results <- select_nonempty(results)
-  }
   results
 }
 
@@ -136,9 +153,8 @@ analyze_knitr_file <- function(file, results, allowed_globals) {
     return(list())
   }
   fragments <- get_tangled_frags(file)
-  out <- ignore(analyze_code)(
+  out <- ignore(analyze_code_impl)(
     fragments,
-    as_list = FALSE,
     allowed_globals = allowed_globals
   )
   if (length(out)) {
