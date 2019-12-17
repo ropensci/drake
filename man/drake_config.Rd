@@ -540,7 +540,10 @@ The \code{\link[=drake_config]{drake_config()}} function just does step (1).
 It returns a configured workflow that you can inspect
 with utility functions like
 \code{\link[=outdated]{outdated()}} and \code{\link[=vis_drake_graph]{vis_drake_graph()}}.
-Once you create a configured workflow with \code{\link[=drake_config]{drake_config()}},
+The configured workflow strongly depends on your environment
+and plan, so if you create new functions or change the plan,
+rerun \code{\link[=drake_config]{drake_config()}}.
+And once you create a configured workflow with \code{\link[=drake_config]{drake_config()}},
 do not modify it by hand.
 }
 }

@@ -7,7 +7,10 @@
 #'   It returns a configured workflow that you can inspect
 #'   with utility functions like
 #'   [outdated()] and [vis_drake_graph()].
-#'   Once you create a configured workflow with [drake_config()],
+#'   The configured workflow strongly depends on your environment
+#'   and plan, so if you create new functions or change the plan,
+#'   rerun [drake_config()].
+#'   And once you create a configured workflow with [drake_config()],
 #'   do not modify it by hand.
 #' @inheritSection recoverable Recovery
 #' @export
