@@ -130,7 +130,7 @@ cds_analyze_imports <- function(config, imports) {
 
 cdl_analyze_import <- function(index, imports, names, config) {
   name <- names[index]
-  list(
+  spec <- list(
     target = name,
     imported = TRUE,
     deps_build = cds_import_dependencies(
@@ -139,6 +139,7 @@ cdl_analyze_import <- function(index, imports, names, config) {
       allowed_globals = config$ht_imports
     )
   )
+  as_drake_spec(spec)
 }
 
 cds_analyze_commands <- function(config) {
@@ -225,7 +226,19 @@ cds_prepare_spec <- function(config, spec) {
     spec$deps_build$memory,
     spec$deps_dynamic_trace
   )
+  as_drake_spec(spec)
+}
+
+as_drake_spec <- function(spec) {
+  class(spec) <- c("drake_spec", "drake")
   spec
+}
+
+#' @export
+print.drake_spec <- function(x, ...) {
+  type <- ifelse(x$imported, "import", "target")
+  cat("drake workflow specification of", type, x$target, "\n")
+  str(x, no.list = TRUE)
 }
 
 cds_no_dynamic_triggers <- function(spec) {

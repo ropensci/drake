@@ -18,6 +18,18 @@ test_with_dir("trigger() print method", {
   expect_true(any(grepl("list of triggers", m)))
 })
 
+test_with_dir("drake spec print method", {
+  f <- identity
+  plan <- drake_plan(x = 1)
+  config <- drake_config(plan)
+  x1 <- config$spec$f # print by hand
+  x2 <- config$spec$x # print by hand
+  m1 <- utils::capture.output(print(x1))
+  m2 <- utils::capture.output(print(x2))
+  expect_true(any(grepl("specification of import f", m1)))
+  expect_true(any(grepl("specification of target x", m2)))
+})
+
 test_with_dir("logger", {
   # testthat suppresses messages,
   # so we need to inspect the console output manually.

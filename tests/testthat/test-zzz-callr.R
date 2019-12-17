@@ -177,6 +177,7 @@ test_with_dir("configuring a background callr process", {
   expect_true(file.exists("stdout.log"))
   expect_true(is.data.frame(readd(small)))
   expect_equal(r_outdated(r_args = list(show = FALSE)), character(0))
+  px$kill()
 })
 
 test_with_dir("callr RStudio addins", {
