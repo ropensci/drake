@@ -10,7 +10,7 @@ analyze_code <- function(
   )
   results <- list_code_analysis_results(results)
   results <- select_nonempty(results)
-  class(results) <- "drake_code_analysis"
+  class(results) <- c("drake_code_analysis", "drake")
   results
 }
 

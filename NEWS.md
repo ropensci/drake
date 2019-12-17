@@ -11,6 +11,7 @@
 - Implement cache locking to prohibit concurrent calls to `make()`, `outdated(make_imports = TRUE)`, `recoverable(make_imports = TRUE)`, `vis_drake_graph(make_imports = TRUE)`, `clean()`, etc. on the same cache.
 - Add a new `format` trigger to invalidate targets when the specialized data format changes (#1104, @kendonB).
 - Add new functions `cache_planned()` and `cache_unplanned()` to help selectively clean workflows with dynamic targets (#1110, @kendonB).
+- Add S3 classes and pretty print methods for `drake_config()` objects and `analyze_code()` objects.
 
 ## Speedups
 

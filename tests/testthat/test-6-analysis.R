@@ -1,11 +1,5 @@
 drake_context("analysis")
 
-test_with_dir("code analysis print method", {
-  x <- analyze_code(quote(x))
-  m <- utils::capture.output(print(x))
-  expect_true(any(grepl("code analysis results list", m)))
-})
-
 test_with_dir("busy function", {
   f <- function(a = 1, b = k(i), nineteen, string_args = c("sa1", "sa2")) {
     for (iter in 1:10) {

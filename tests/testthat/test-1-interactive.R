@@ -1,5 +1,17 @@
 drake_context("interactive")
 
+test_with_dir("code analysis print method", {
+  x <- analyze_code(quote(x)) # print by hand
+  m <- utils::capture.output(print(x))
+  expect_true(any(grepl("code analysis results list", m)))
+})
+
+test_with_dir("drake_config() print method", {
+  x <- drake_config(drake_plan(y = 1)) # print by hand
+  m <- utils::capture.output(print(x))
+  expect_true(any(grepl("drake_config", m)))
+})
+
 test_with_dir("logger", {
   # testthat suppresses messages,
   # so we need to inspect the console output manually.

@@ -665,9 +665,22 @@ drake_config <- function(
     max_expand = max_expand,
     log_build_times = log_build_times
   )
+  class(out) <- c("drake_config", "drake")
   config_checks(out)
   logger$minor("end drake_config()")
   out
+}
+
+#' @export
+print.drake_config <- function(x, ...) {
+  cat("a drake_config() object with", length(x), "list elements:\n")
+  n_spaces <- nchar(names(x))
+  n_spaces <- max(n_spaces) - n_spaces
+  for (index in seq_along(x)) {
+    name <- names(x)[index]
+    spaces <- paste(rep(" ", n_spaces[index]), collapse = "")
+    cat(" $", name, ":", spaces, class(x[[name]]), "\n")
+  }
 }
 
 new_ht_dynamic_deps <- function(spec) {
