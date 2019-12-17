@@ -112,6 +112,7 @@ test_with_dir("trigger() function works", {
     change = quote(sqrt(1)),
     mode = "whitelist"
   )
+  class(z) <- c("drake_triggers", "drake")
   expect_equal(y, z)
 })
 

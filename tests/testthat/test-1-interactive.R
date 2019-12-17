@@ -12,6 +12,12 @@ test_with_dir("drake_config() print method", {
   expect_true(any(grepl("drake_config", m)))
 })
 
+test_with_dir("trigger() print method", {
+  x <- trigger() # print by hand
+  m <- utils::capture.output(print(x))
+  expect_true(any(grepl("list of triggers", m)))
+})
+
 test_with_dir("logger", {
   # testthat suppresses messages,
   # so we need to inspect the console output manually.

@@ -10,12 +10,12 @@ analyze_code <- function(
   )
   results <- list_code_analysis_results(results)
   results <- select_nonempty(results)
-  class(results) <- c("drake_code_analysis", "drake")
+  class(results) <- c("drake_analyze_code", "drake")
   results
 }
 
 #' @export
-print.drake_code_analysis <- function(x, ...) {
+print.drake_analyze_code <- function(x, ...) {
   cat("code analysis results list from drake:::analyze_code()\n")
   str(x, no.list = TRUE)
 }

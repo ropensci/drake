@@ -196,7 +196,7 @@ trigger <- function(
   depend <- as.logical(depend)
   file <- as.logical(file)
   format <- as.logical(format)
-  list(
+  out <- list(
     command = command,
     depend = depend,
     file = file,
@@ -206,6 +206,14 @@ trigger <- function(
     change = rlang::quo_squash(rlang::enquo(change)),
     mode = match.arg(mode)
   )
+  class(out) <- c("drake_triggers", "drake")
+  out
+}
+
+#' @export
+print.drake_triggers <- function(x, ...) {
+  cat("a list of triggers for a drake target\n")
+  str(x, no.list = TRUE)
 }
 
 #' @title Declare input files and directories.
