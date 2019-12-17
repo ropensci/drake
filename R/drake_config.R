@@ -1,22 +1,17 @@
-#' @title Interpret the plan and prepare for [make()]
+#' @title Configure a drake workflow to your environment and plan.
 #' \lifecycle{maturing}
-#' @description [drake_config()] does all the preprocessing that
-#'   [make()] needs to build targets. This includes interpreting
-#'   the plan (from [drake_plan()]) and analyzing how all the
-#'   targets fit together. The result is a list of objects
-#'   that [make()] needs to keep track of everything during runtime.
-#' @details Once you create a list with [drake_config()],
+#' @description In `drake`, [make()] has two stages:
+#'   1. Configure a workflow to your environment and plan.
+#'   2. Build targets.
+#'   The [drake_config()] function just does step (1).
+#'   It returns a configured workflow that you can inspect
+#'   with utility functions like
+#'   [outdated()] and [vis_drake_graph()].
+#'   Once you create a configured workflow with [drake_config()],
 #'   do not modify it by hand.
-#'
-#'   Utility functions such as [outdated()],
-#'   [vis_drake_graph()], and [predict_runtime()] require output from
-#'   [drake_config()] for the `config` argument.
-#'   If you supply a [drake_config()] object to the `config`
-#'   argument of [make()], then `drake` will ignore all the other arguments
-#'   because it already has everything it needs in `config`.
 #' @inheritSection recoverable Recovery
 #' @export
-#' @return The master internal configuration list of a project.
+#' @return A configured `drake` workflow.
 #' @seealso [make()], [drake_plan()], [vis_drake_graph()]
 #' @param plan Workflow plan data frame.
 #'   A workflow plan data frame is a data frame
@@ -673,7 +668,7 @@ drake_config <- function(
 
 #' @export
 print.drake_config <- function(x, ...) {
-  cat("a drake_config() object with", length(x), "list elements:\n")
+  cat("a configured drake workflow\n")
   n_spaces <- nchar(names(x))
   n_spaces <- max(n_spaces) - n_spaces
   for (index in seq_along(x)) {

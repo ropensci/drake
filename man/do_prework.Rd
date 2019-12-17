@@ -9,7 +9,7 @@ argument to \code{\link[=make]{make()}}.
 do_prework(config, verbose_packages)
 }
 \arguments{
-\item{config}{internal configuration list}
+\item{config}{A configured workflow from \code{\link[=drake_config]{drake_config()}}.}
 
 \item{verbose_packages}{logical, whether to print
 package startup messages}

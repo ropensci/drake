@@ -213,7 +213,7 @@ trigger <- function(
 #' @export
 print.drake_triggers <- function(x, ...) {
   cat("a list of triggers for a drake target\n")
-  str(x, no.list = TRUE)
+  utils::str(x, no.list = TRUE)
 }
 
 #' @title Declare input files and directories.

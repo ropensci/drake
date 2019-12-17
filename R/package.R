@@ -57,6 +57,6 @@
 #' @importFrom storr storr_environment storr_rds
 #' @importFrom txtq txtq
 #' @importFrom utils compareVersion flush.console head menu packageVersion
-#'   read.csv sessionInfo stack type.convert unzip write.table
+#'   read.csv sessionInfo stack str type.convert unzip write.table
 #' @importFrom vctrs vec_c vec_slice
 NULL

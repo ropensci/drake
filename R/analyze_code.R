@@ -17,7 +17,7 @@ analyze_code <- function(
 #' @export
 print.drake_analyze_code <- function(x, ...) {
   cat("code analysis results list from drake:::analyze_code()\n")
-  str(x, no.list = TRUE)
+  utils::str(unclass(x), no.list = TRUE)
 }
 
 analyze_code_impl <- function(

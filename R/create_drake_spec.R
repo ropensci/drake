@@ -238,7 +238,7 @@ as_drake_spec <- function(spec) {
 print.drake_spec <- function(x, ...) {
   type <- ifelse(x$imported, "import", "target")
   cat("drake workflow specification of", type, x$target, "\n")
-  str(x, no.list = TRUE)
+  utils::str(x, no.list = TRUE)
 }
 
 cds_no_dynamic_triggers <- function(spec) {

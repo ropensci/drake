@@ -37,8 +37,7 @@ vis_drake_graph(
 )
 }
 \arguments{
-\item{config}{A \code{\link[=drake_config]{drake_config()}} configuration list.
-You can get one as a return value from \code{\link[=make]{make()}} as well.}
+\item{config}{A configured workflow from \code{\link[=drake_config]{drake_config()}}.}
 
 \item{file}{Name of a file to save the graph.
 If \code{NULL} or \code{character(0)}, no file is saved and

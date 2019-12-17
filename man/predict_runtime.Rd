@@ -18,9 +18,7 @@ predict_runtime(
 )
 }
 \arguments{
-\item{config}{Optional internal runtime parameter list of
-produced by both \code{\link[=make]{make()}} and
-\code{\link[=drake_config]{drake_config()}}.}
+\item{config}{A configured workflow from \code{\link[=drake_config]{drake_config()}}.}
 
 \item{targets}{Character vector, names of targets.
 Predict the runtime of building these targets

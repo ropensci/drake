@@ -9,8 +9,7 @@ plan but missing from your workspace or file system.
 missed(config)
 }
 \arguments{
-\item{config}{Internal runtime parameter list
-produced by both \code{\link[=drake_config]{drake_config()}} and \code{\link[=make]{make()}}.}
+\item{config}{A configured workflow from \code{\link[=drake_config]{drake_config()}}.}
 }
 \value{
 Character vector of names of missing objects and files.

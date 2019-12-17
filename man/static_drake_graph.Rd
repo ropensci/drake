@@ -24,8 +24,7 @@ static_drake_graph(
 )
 }
 \arguments{
-\item{config}{A \code{\link[=drake_config]{drake_config()}} configuration list.
-You can get one as a return value from \code{\link[=make]{make()}} as well.}
+\item{config}{A configured workflow from \code{\link[=drake_config]{drake_config()}}.}
 
 \item{build_times}{Character string or logical.
 If character, the choices are

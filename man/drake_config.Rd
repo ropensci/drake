@@ -2,7 +2,7 @@
 % Please edit documentation in R/drake_config.R
 \name{drake_config}
 \alias{drake_config}
-\title{Interpret the plan and prepare for \code{\link[=make]{make()}}
+\title{Configure a drake workflow to your environment and plan.
 \lifecycle{maturing}}
 \usage{
 drake_config(
@@ -529,25 +529,20 @@ Mac users may notice a 20\% speedup in \code{make()}
 with \code{build_times = FALSE}.}
 }
 \value{
-The master internal configuration list of a project.
+A configured \code{drake} workflow.
 }
 \description{
-\code{\link[=drake_config]{drake_config()}} does all the preprocessing that
-\code{\link[=make]{make()}} needs to build targets. This includes interpreting
-the plan (from \code{\link[=drake_plan]{drake_plan()}}) and analyzing how all the
-targets fit together. The result is a list of objects
-that \code{\link[=make]{make()}} needs to keep track of everything during runtime.
-}
-\details{
-Once you create a list with \code{\link[=drake_config]{drake_config()}},
+In \code{drake}, \code{\link[=make]{make()}} has two stages:
+\enumerate{
+\item Configure a workflow to your environment and plan.
+\item Build targets.
+The \code{\link[=drake_config]{drake_config()}} function just does step (1).
+It returns a configured workflow that you can inspect
+with utility functions like
+\code{\link[=outdated]{outdated()}} and \code{\link[=vis_drake_graph]{vis_drake_graph()}}.
+Once you create a configured workflow with \code{\link[=drake_config]{drake_config()}},
 do not modify it by hand.
-
-Utility functions such as \code{\link[=outdated]{outdated()}},
-\code{\link[=vis_drake_graph]{vis_drake_graph()}}, and \code{\link[=predict_runtime]{predict_runtime()}} require output from
-\code{\link[=drake_config]{drake_config()}} for the \code{config} argument.
-If you supply a \code{\link[=drake_config]{drake_config()}} object to the \code{config}
-argument of \code{\link[=make]{make()}}, then \code{drake} will ignore all the other arguments
-because it already has everything it needs in \code{config}.
+}
 }
 \section{Recovery}{
 

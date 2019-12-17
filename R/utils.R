@@ -112,6 +112,7 @@ complete_cases <- function(x) {
 }
 
 select_nonempty <- function(x) {
+  class <- class(x)
   keep <- vapply(
     X = x,
     FUN = function(y) {
@@ -119,7 +120,11 @@ select_nonempty <- function(x) {
     },
     FUN.VALUE = logical(1)
   )
-  x[keep]
+  out <- x[keep]
+  if (!is.null(out)) {
+    class(out) <- class
+  }
+  out
 }
 
 longest_match <- function(choices, against) {

@@ -8,8 +8,7 @@
 #'   the legend nodes. The list also contains the
 #'   default title of the graph.
 #' @seealso [vis_drake_graph()]
-#' @param config A [drake_config()] configuration list.
-#'   You can get one as a return value from [make()] as well.
+#' @param config A configured workflow from [drake_config()].
 #'
 #' @param from Optional collection of target/import names.
 #'   If `from` is nonempty,

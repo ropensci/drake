@@ -109,12 +109,7 @@ is_recoverable <- function(target, config) {
 #' @seealso [r_outdated()], [drake_config()], [missed()], [drake_plan()],
 #'   [make()]
 #' @return Character vector of the names of outdated targets.
-#' @param config Optional internal runtime parameter list
-#'   produced with [drake_config()].
-#'   You must use a fresh `config` argument with an up-to-date
-#'   dependency graph that was never modified by hand.
-#'   If needed, rerun [drake_config()] early and often.
-#'   See the details in the help file for [drake_config()].
+#' @param config A configured workflow from [drake_config()].
 #' @param make_imports Logical, whether to make the imports first.
 #'   Set to `FALSE` to save some time and risk obsolete output.
 #' @param do_prework Whether to do the `prework`
@@ -219,8 +214,7 @@ missing_subtargets <- function(target, meta, config) {
 #' @seealso [outdated()]
 #' @return Character vector of names of missing objects and files.
 #'
-#' @param config Internal runtime parameter list
-#'   produced by both [drake_config()] and [make()].
+#' @param config A configured workflow from [drake_config()].
 #'
 #' @examples
 #' \dontrun{

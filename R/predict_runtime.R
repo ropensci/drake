@@ -119,9 +119,7 @@ predict_runtime <- function(
 #' }
 #' @return A data frame showing one likely arrangement
 #'   of targets assigned to parallel workers.
-#' @param config Optional internal runtime parameter list of
-#'   produced by both [make()] and
-#'   [drake_config()].
+#' @param config A configured workflow from [drake_config()].
 #' @param targets Character vector, names of targets.
 #'   Predict the runtime of building these targets
 #'   plus dependencies.

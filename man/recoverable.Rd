@@ -8,12 +8,7 @@
 recoverable(config, make_imports = TRUE, do_prework = TRUE)
 }
 \arguments{
-\item{config}{Optional internal runtime parameter list
-produced with \code{\link[=drake_config]{drake_config()}}.
-You must use a fresh \code{config} argument with an up-to-date
-dependency graph that was never modified by hand.
-If needed, rerun \code{\link[=drake_config]{drake_config()}} early and often.
-See the details in the help file for \code{\link[=drake_config]{drake_config()}}.}
+\item{config}{A configured workflow from \code{\link[=drake_config]{drake_config()}}.}
 
 \item{make_imports}{Logical, whether to make the imports first.
 Set to \code{FALSE} to save some time and risk obsolete output.}
