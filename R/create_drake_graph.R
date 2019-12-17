@@ -22,6 +22,7 @@ create_drake_graph <- function(
 }
 
 cdg_create_edges <- function(config, spec) {
+  config$logger$minor("create graph edges")
   edges <- lightly_parallelize(
     X = spec,
     FUN = cdg_node_to_edges,
@@ -37,7 +38,6 @@ cdg_create_edges <- function(config, spec) {
 }
 
 cdg_node_to_edges <- function(node, config) {
-  config$logger$minor("connect", target = node$target)
   file_out <- node$deps_build$file_out
   node$deps_build$file_out <- NULL
   inputs <- clean_nested_char_list(

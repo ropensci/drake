@@ -114,6 +114,7 @@ cds_unload_conflicts <- function(imports, targets, envir, logger) {
 }
 
 cds_analyze_imports <- function(config, imports) {
+  config$logger$minor("analyze imports")
   names <-  names(imports)
   out <- lightly_parallelize(
     X = seq_along(imports),
@@ -129,7 +130,6 @@ cds_analyze_imports <- function(config, imports) {
 
 cdl_analyze_import <- function(index, imports, names, config) {
   name <- names[index]
-  config$logger$minor("analyze", target = name)
   list(
     target = name,
     imported = TRUE,
@@ -142,6 +142,7 @@ cdl_analyze_import <- function(index, imports, names, config) {
 }
 
 cds_analyze_commands <- function(config) {
+  config$logger$minor("analyze commands")
   config$plan$imported <- FALSE
   if ("trigger" %in% colnames(config$plan)) {
     config$plan$trigger <- lapply(
@@ -172,7 +173,6 @@ cds_analyze_commands <- function(config) {
 
 cds_prepare_spec <- function(config, spec) {
   target <- spec$target
-  config$logger$minor("analyze", target = target)
   spec$dynamic <- as_dynamic(spec$dynamic)
   spec$deps_build <- cds_command_dependencies(
     command = spec$command,

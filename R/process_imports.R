@@ -66,9 +66,6 @@ get_import_from_memory <- function(target, config) {
 }
 
 process_imports_mclapply <- function(config) {
-  if (config$jobs_preprocess > 1L) {
-    assert_pkg("parallel")
-  }
   imports_graph <- subset_graph(config$graph, all_imports(config))
   while (length(V(imports_graph)$name)) {
     imports <- leaf_nodes(imports_graph)
@@ -84,7 +81,6 @@ process_imports_mclapply <- function(config) {
 }
 
 process_imports_parLapply <- function(config) { # nolint
-  assert_pkg("parallel")
   config$logger$minor(
     "load parallel socket cluster with",
     config$jobs_preprocess,

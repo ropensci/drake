@@ -297,7 +297,7 @@ lightly_parallelize_atomic <- function(X, FUN, jobs = 1, ...) {
 # Could help avoid zeromq interrupted system call errors.
 weak_mclapply <- function(X, FUN, mc.cores, ...) {
   if (mc.cores > 1) {
-    parallel::mclapply(X = X, FUN = FUN, mc.cores = mc.cores, ...)
+    mclapply(X = X, FUN = FUN, mc.cores = mc.cores, ...)
   } else {
     lapply(X = X, FUN = FUN, ...)
   }

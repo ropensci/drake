@@ -27,6 +27,7 @@
 - Get target progress info only once in `drake_graph_info()` (#1098).
 - Speed up the retrieval of old metadata in `outdated()` (#1098).
 - In `make()`, avoid checking for nonexistent metadata for missing targets.
+- Reduce logging in `drake_config()`.
 
 ## Enhancements
 

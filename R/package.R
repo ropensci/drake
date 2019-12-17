@@ -52,6 +52,7 @@
 #'   induced_subgraph is_dag make_empty_graph make_ego_graph set_vertex_attr
 #'   simplify topo_sort V vertex_attr
 #' @importFrom methods new setRefClass
+#' @importFrom parallel mclapply
 #' @importFrom rlang dots_list enquo eval_tidy expr quo_squash quos
 #' @importFrom storr storr_environment storr_rds
 #' @importFrom txtq txtq
