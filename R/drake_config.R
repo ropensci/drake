@@ -12,6 +12,9 @@
 #'   rerun [drake_config()].
 #'   And once you create a configured workflow with [drake_config()],
 #'   do not modify it by hand.
+#' @details Almost all function arguments are exactly the same
+#'   between [make()] and `drake_config()`
+#'   (all except `config` in [make()]).
 #' @inheritSection recoverable Recovery
 #' @export
 #' @return A configured `drake` workflow.

@@ -547,6 +547,11 @@ And once you create a configured workflow with \code{\link[=drake_config]{drake_
 do not modify it by hand.
 }
 }
+\details{
+Almost all function arguments are exactly the same
+between \code{\link[=make]{make()}} and \code{drake_config()}
+(all except \code{config} in \code{\link[=make]{make()}}).
+}
 \section{Recovery}{
 
 \code{make(recover = TRUE, recoverable = TRUE)}
