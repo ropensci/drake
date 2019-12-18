@@ -5,6 +5,10 @@
 - Embrace the `vctrs` paradigm and its type stability for dynamic branching (#1105, #1106).
 - Accept `target` as a symbol by default in `read_trace()`. Required for the trace to make sense in #1107.
 
+## Bug fixes
+
+- Repair reference to custom HPC resources in the `"future"` backend (#1083, @jennysjaarda).
+
 ## New features
 
 - Add a new `log_build_times` argument to `make()` and `drake_config()`. Allows users to disable the recording of build times. Produces a speedup of up to 20% on Macs (#1078).

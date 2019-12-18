@@ -104,7 +104,7 @@ ft_launch_worker <- function(target, meta, protect, config) {
       ),
       globals = globals,
       label = target,
-      resources = as.list(spec$resources)
+      resources = as.list(spec[[target]]$resources)
     ),
     target = target
   )
