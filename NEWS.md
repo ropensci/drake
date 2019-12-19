@@ -8,6 +8,7 @@
 ## Bug fixes
 
 - Repair reference to custom HPC resources in the `"future"` backend (#1083, @jennysjaarda).
+- Properly copy data when importing targets from one cache into another (#1120, @brendanf).
 
 ## New features
 

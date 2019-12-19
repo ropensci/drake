@@ -698,7 +698,8 @@ import_target_formatted <- function(target, from, to) {
   if (from$exists(target) && file.exists(from$file_return_key(target))) {
     storage_copy(
       from = from$file_return_key(target),
-      to = to$file_return_key(target)
+      to = to$file_return_key(target),
+      warn = FALSE
     )
   }
 }

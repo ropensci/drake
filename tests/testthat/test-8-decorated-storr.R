@@ -711,7 +711,7 @@ test_with_dir("$import() copies (does not simply move) (#1120)", {
     ),
     data_disk = target(
       disk.frame::as.disk.frame(
-        data,
+        rlang::duplicate(data),
         outdir = drake_tempfile(cache = cache1)
       ),
       format = "diskframe"
