@@ -693,3 +693,45 @@ test_with_dir("can suppress the format trigger (#1104)", {
   make(plan)
   expect_equal(justbuilt(config), character(0))
 })
+
+test_with_dir("$import() copies (does not simply move) (#1120)", {
+  skip_on_cran()
+  skip_if_not_installed("fst")
+  skip_if_not_installed("disk.frame")
+  cache1 <- new_cache("cache1")
+  cache2 <- new_cache("cache2")
+  plan <- drake_plan(
+    data = data.frame(
+      x = runif(1000),
+      y = runif(1000)
+    ),
+    data_fst = target(
+      data,
+      format = "fst"
+    ),
+    data_disk = target(
+      disk.frame::as.disk.frame(
+        data,
+        outdir = drake_tempfile(cache = cache1)
+      ),
+      format = "diskframe"
+    )
+  )
+  make(plan, cache = cache1)
+  cache2$import(data, from = cache1)
+  expect_equal(
+    readd(data, cache = cache1),
+    readd(data, cache = cache2)
+  )
+  cache2$import(data_fst, from = cache1)
+  expect_equal(
+    readd(data_fst, cache = cache1),
+    readd(data_fst, cache = cache2)
+  )
+  cache2$import(data_disk, from = cache1)
+  x1 <- as.data.frame(readd(data_disk, cache = cache1))
+  x2 <- as.data.frame(readd(data_disk, cache = cache2))
+  x1 <- x1[order(x1$x), ]
+  x2 <- x2[order(x2$x), ]
+  expect_equal(x1, x2)
+})

@@ -696,7 +696,7 @@ import_target_storr <- function(target, from, to, gc) {
 
 import_target_formatted <- function(target, from, to) {
   if (from$exists(target) && file.exists(from$file_return_key(target))) {
-    file_move(
+    storage_copy(
       from = from$file_return_key(target),
       to = to$file_return_key(target)
     )

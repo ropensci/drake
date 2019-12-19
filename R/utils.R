@@ -255,16 +255,76 @@ dir_move <- function(
   invisible()
 }
 
-file_remove <- function(file) {
-  if (file.exists(file)) {
-    unlink(file, recursive = TRUE)
-  }
-}
-
 file_move <- function(from, to) {
   dir_create(dirname(to))
   file.rename(from = from, to = to)
   invisible()
+}
+
+storage_copy <- function(
+  from,
+  to,
+  overwrite = FALSE,
+  merge = FALSE,
+  warn = TRUE,
+  jobs = 1L
+) {
+  if (dir.exists(from)) {
+    dir_copy(
+      from = from,
+      to = to,
+      overwrite = overwrite,
+      merge = merge,
+      warn = warn,
+      jobs = jobs
+    )
+  } else {
+    file_copy(from = from, to = to, overwrite = overwrite)
+  }
+  invisible()
+}
+
+dir_copy <- function(
+  from,
+  to,
+  overwrite = FALSE,
+  merge = FALSE,
+  warn = TRUE,
+  jobs = 1L
+) {
+  if (!overwrite && file.exists(to)) {
+    if (warn) {
+      warning(
+        "cannot move ", from, " to ", to, ". ",
+        to, " already exists.",
+        call. = FALSE
+      )
+    }
+    return(invisible())
+  }
+  if (!merge) {
+    unlink(to, recursive = TRUE)
+  }
+  dir_create(to)
+  files <- list.files(from, all.files = TRUE, recursive = TRUE)
+  args <- list(
+    from = file.path(from, files),
+    to = file.path(to, files)
+  )
+  drake_pmap(.l = args, .f = file_copy, overwrite = overwrite, jobs = jobs)
+  invisible()
+}
+
+file_copy <- function(from, to, overwrite = FALSE) {
+  dir_create(dirname(to))
+  file.copy(from = from, to = to, overwrite = overwrite)
+  invisible()
+}
+
+file_remove <- function(file) {
+  if (file.exists(file)) {
+    unlink(file, recursive = TRUE)
+  }
 }
 
 dir_create <- function(x) {
