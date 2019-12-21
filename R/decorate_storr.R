@@ -300,6 +300,16 @@ dcst_get_.drake_format_diskframe <- function(value, key, .self) { # nolint
   disk.frame::disk.frame(.self$file_return_key(key), backend = "fst")
 }
 
+dcst_get_.drake_format_qs <- function(value, key, .self) { # nolint
+  assert_pkg("qs")
+  qs::qread(
+    file = .self$file_return_key(key),
+    use_alt_rep = FALSE,
+    strict = FALSE,
+    nthreads = 1L
+  )
+}
+
 # Requires Python Keras and TensorFlow to test. Tested in test-keras.R.
 # nocov start
 dcst_get_.drake_format_keras <- function(value, key, .self) {
@@ -340,6 +350,16 @@ dcst_get_value_.drake_format_diskframe <- function(value, hash, .self) { # nolin
   assert_pkg("disk.frame")
   assert_pkg("fst")
   disk.frame::disk.frame(.self$file_return_hash(hash), backend = "fst")
+}
+
+dcst_get_value_.drake_format_qs <- function(value, hash, .self) { # nolint
+  assert_pkg("qs")
+  qs::qread(
+    file = .self$file_return_hash(hash),
+    use_alt_rep = FALSE,
+    strict = FALSE,
+    nthreads = 1L
+  )
 }
 
 # Requires Python Keras and TensorFlow to test. Tested in test-keras.R.
@@ -387,6 +407,23 @@ dcst_set.drake_format_diskframe <- function(value, key, ..., .self) { # nolint
   .self$assert_dirs()
   tmp <- attr(value$value, "path")
   on.exit(file_remove(tmp), add = TRUE)
+  dcst_set_move_tmp(key = key, value = value, tmp = tmp, .self = .self)
+}
+
+dcst_set.drake_format_qs <- function(value, key, ..., .self) { # nolint
+  assert_pkg("qs")
+  .self$assert_dirs()
+  tmp <- attr(value$value, "path")
+  on.exit(file_remove(tmp), add = TRUE)
+  qs::qsave(
+    x = value,
+    file = tmp,
+    preset = "high",
+    algorithm = "zstd",
+    compress_level = 4L,
+    shuffle_control = 15L,
+    check_hash = TRUE
+  )
   dcst_set_move_tmp(key = key, value = value, tmp = tmp, .self = .self)
 }
 

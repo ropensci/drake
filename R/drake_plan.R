@@ -92,9 +92,11 @@
 #'     e.g. `as.disk.frame(your_dataset, outdir = drake_tempfile())`.
 #'   - `"keras"`: save Keras models as HDF5 files.
 #'     Requires the `keras` package.
-#'   - `"rds"`: save any object. This is similar to the default storage
-#'     except we avoid creating a serialized copy of
-#'     the entire target in memory.
+#'   - `"qs"`: save any object. Uses `qsave()` and `qread()` from the
+#'     `qs` package. Uses the default settings in `qs` version 0.20.2.
+#'     Could be fast and reduce file size in some general use cases.
+#'   - `"rds"`: save any object. Uses gzip compression, which is slow.
+#'     Not recommended in the general case. Consider `"qs"` instead.
 #'     Requires R >= 3.5.0 so drake can use ALTREP.
 #'
 #' @section Keywords:

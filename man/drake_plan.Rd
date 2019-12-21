@@ -163,9 +163,11 @@ drive as the cache. \code{\link[=drake_tempfile]{drake_tempfile()}} can help wit
 e.g. \code{as.disk.frame(your_dataset, outdir = drake_tempfile())}.
 \item \code{"keras"}: save Keras models as HDF5 files.
 Requires the \code{keras} package.
-\item \code{"rds"}: save any object. This is similar to the default storage
-except we avoid creating a serialized copy of
-the entire target in memory.
+\item \code{"qs"}: save any object. Uses \code{qsave()} and \code{qread()} from the
+\code{qs} package. Uses the default settings in \code{qs} version 0.20.2.
+Could be fast and reduce file size in some general use cases.
+\item \code{"rds"}: save any object. Uses gzip compression, which is slow.
+Not recommended in the general case. Consider \code{"qs"} instead.
 Requires R >= 3.5.0 so drake can use ALTREP.
 }
 }

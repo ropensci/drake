@@ -89,6 +89,7 @@ GitLab
 globals
 gridlines
 gsp
+gzip
 Halotype
 HDF
 HDF5

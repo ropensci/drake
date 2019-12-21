@@ -136,6 +136,7 @@ Suggests:
   lubridate,
   networkD3,
   prettycode,
+  qs (>= 0.20.2),
   Rcpp,
   rmarkdown,
   rstudioapi,

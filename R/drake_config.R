@@ -821,7 +821,7 @@ plan_check_format_col <- function(plan) {
   }
   format <- plan$format
   format <- format[!is.na(format)]
-  formats <- c("fst", "fst_dt", "diskframe", "keras", "rds")
+  formats <- c("fst", "fst_dt", "diskframe", "keras", "qs", "rds")
   illegal <- setdiff(unique(format), formats)
   if (!length(illegal)) {
     return()
