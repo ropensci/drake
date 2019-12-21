@@ -432,6 +432,7 @@ test_with_dir("fst_dt format forces data.tables", {
 })
 
 test_with_dir("disk.frame (#1004)", {
+  skip_on_cran()
   skip_if_not_installed("disk.frame")
   skip_if_not_installed("fst")
   plan <- drake_plan(
@@ -469,6 +470,7 @@ test_with_dir("disk.frame (#1004)", {
 })
 
 test_with_dir("diskframe format forces disk.frames", {
+  skip_on_cran()
   skip_if_not_installed("disk.frame")
   skip_if_not_installed("fst")
   plan <- drake_plan(
