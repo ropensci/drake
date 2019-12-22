@@ -606,6 +606,9 @@ test_with_dir("safe_get*() methods", {
 })
 
 test_with_dir("in-memory representation of disk.frame targets (#1077)", {
+  skip_on_cran()
+  skip_if_not_installed("fst")
+  skip_if_not_installed("disk.frame")
   n <- 200
   observations <- data.frame(
     type = sample(letters[seq_len(3)], n, replace = TRUE),

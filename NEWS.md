@@ -17,6 +17,7 @@
 
 - Repair reference to custom HPC resources in the `"future"` backend (#1083, @jennysjaarda).
 - Properly copy data when importing targets from one cache into another (#1120, @brendanf).
+- Prevent dynamic vector sizes from conflicting with file sizes in metadata.
 
 ## New features
 

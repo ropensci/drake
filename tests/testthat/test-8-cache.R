@@ -880,6 +880,7 @@ test_with_dir("ignore storrs (#1071)", {
 
 test_with_dir("cache locking (#1081)", {
   skip_on_cran()
+  skip_if_not_installed("visNetwork")
   plan <- drake_plan(x = 1)
   config <- drake_config(plan)
   config$cache$lock()

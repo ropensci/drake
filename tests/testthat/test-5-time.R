@@ -151,6 +151,7 @@ test_with_dir("predict_workers()", {
 
 test_with_dir("can disable build times (#1078)", {
   skip_on_cran()
+  skip_if_not_installed("lubridate")
   plan <- drake_plan(x = 1)
   make(plan, log_build_times = FALSE)
   expect_equal(nrow(build_times(type = "build")), 0L)
