@@ -1,14 +1,15 @@
 # Version 7.9.0.9000
 
-## New features
+## Enhancements
 
 - Smoothly deprecate the `config` argument in all user-side functions (#1118). Users can now supply the plan and other `make()` arguments directly, without bothering with `drake_config()`. Now, you only need to call `drake_config()` in the `_drake.R` file for `r_make()` and friends. Affected functions:
     - `make()`
     - `outdated()`
 
-# Version 7.8.0.9000
 
-## Breaking changes
+# Version 7.9.0
+
+## Breaking changes in dynamic branching
 
 - Embrace the `vctrs` paradigm and its type stability for dynamic branching (#1105, #1106).
 - Accept `target` as a symbol by default in `read_trace()`. Required for the trace to make sense in #1107.
