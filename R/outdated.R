@@ -143,6 +143,9 @@ outdated <-  function(
     call[[1]] <- quote(outdated_impl)
     return(eval(call))
   }
+  for (arg in list(...)) {
+    force(arg)
+  }
   config <- drake_config2(...)
   outdated_impl(
     config = config,
