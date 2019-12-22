@@ -10,7 +10,7 @@ test_with_dir("deprecate outdated(config) (#1118)", {
   a <- "x"
   plan <- drake_plan(x = a, y = a)
   make(plan)
-  # legacy outdated(config) syntax
+  # legacy fun(config) syntax
   config <- drake_config(plan)
   # with informal config arg
   expect_warning(tmp <- outdated(config), "deprecated")
@@ -31,7 +31,7 @@ test_with_dir("deprecate outdated(config) (#1118)", {
   tmp <- outdated(plan)
   expect_equal(tmp, character(0))
   a <- "z"
-  # with plan and formal outdated() args
+  # with plan and formal fun() args
   tmp <- outdated(plan, make_imports = FALSE)
   expect_equal(tmp, character(0))
   # with plan and informal make() args
