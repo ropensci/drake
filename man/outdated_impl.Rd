@@ -2,7 +2,7 @@
 % Please edit documentation in R/outdated.R
 \name{outdated_impl}
 \alias{outdated_impl}
-\title{outdated() with a drake_config() object}
+\title{Internal function with a drake_config() argument}
 \usage{
 outdated_impl(config, make_imports = TRUE, do_prework = TRUE)
 }

@@ -65,9 +65,7 @@
 #' @export
 #' @return nothing
 #' @inheritParams drake_config
-#' @param config An optional configured workflow from [drake_config()].
-#'   If you supply `config` to `make()`, you must not supply any
-#'   additional arguments.
+#' @param config Deprecated.
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {
@@ -166,65 +164,72 @@ make <- function(
   max_expand = NULL,
   log_build_times = TRUE
 ) {
-  check_make_call(match.call())
   force(envir)
-  if (is.null(config)) {
-    config <- drake_config(
-      plan = plan,
-      targets = targets,
-      envir = envir,
-      seed = seed,
-      verbose = verbose,
-      hook = hook,
-      parallelism = parallelism,
-      jobs = jobs,
-      jobs_preprocess = jobs_preprocess,
-      packages = packages,
-      lib_loc = lib_loc,
-      prework = prework,
-      prepend = prepend,
-      command = command,
-      args = args,
-      recipe_command = recipe_command,
-      log_progress = log_progress,
-      cache = cache,
-      fetch_cache = fetch_cache,
-      timeout = timeout,
-      cpu = cpu,
-      elapsed = elapsed,
-      retries = retries,
-      force = force,
-      graph = graph,
-      trigger = trigger,
-      skip_targets = skip_targets,
-      skip_imports = skip_imports,
-      skip_safety_checks = skip_safety_checks,
-      lazy_load = lazy_load,
-      session_info = session_info,
-      cache_log_file = cache_log_file,
-      caching = caching,
-      keep_going = keep_going,
-      session = session,
-      pruning_strategy = pruning_strategy,
-      makefile_path = makefile_path,
-      console_log_file = console_log_file,
-      ensure_workers = ensure_workers,
-      garbage_collection = garbage_collection,
-      template = template,
-      sleep = sleep,
-      hasty_build = hasty_build,
-      memory_strategy = memory_strategy,
-      layout = layout,
-      spec = spec,
-      lock_envir = lock_envir,
-      history = history,
-      recover = recover,
-      recoverable = recoverable,
-      curl_handles = curl_handles,
-      max_expand = max_expand,
-      log_build_times = log_build_times
-    )
-  }
+  deprecate_arg(config, "config")
+  config <- config %|||% drake_config(
+    plan = plan,
+    targets = targets,
+    envir = envir,
+    verbose = verbose,
+    hook = hook,
+    cache = cache,
+    fetch_cache = fetch_cache,
+    parallelism = parallelism,
+    jobs = jobs,
+    jobs_preprocess = jobs_preprocess,
+    packages = packages,
+    lib_loc = lib_loc,
+    prework = prework,
+    prepend = prepend,
+    command = command,
+    args = args,
+    recipe_command = recipe_command,
+    log_progress = log_progress,
+    skip_targets = skip_targets,
+    timeout = timeout,
+    cpu = cpu,
+    elapsed = elapsed,
+    retries = retries,
+    force = force,
+    graph = graph,
+    trigger = trigger,
+    skip_imports = skip_imports,
+    skip_safety_checks = skip_safety_checks,
+    lazy_load = lazy_load,
+    session_info = session_info,
+    cache_log_file = cache_log_file,
+    seed = seed,
+    caching = caching,
+    keep_going = keep_going,
+    session = session,
+    pruning_strategy = pruning_strategy,
+    makefile_path = makefile_path,
+    console_log_file = console_log_file,
+    ensure_workers = ensure_workers,
+    garbage_collection = garbage_collection,
+    template = template,
+    sleep = sleep,
+    hasty_build = hasty_build,
+    memory_strategy = memory_strategy,
+    layout = layout,
+    spec = spec,
+    lock_envir = lock_envir,
+    history = history,
+    recover = recover,
+    recoverable = recoverable,
+    curl_handles = curl_handles,
+    max_expand = max_expand,
+    log_build_times = log_build_times
+  )
+  make_impl(config)
+}
+
+#' @title Internal function with a drake_config() argument
+#' @export
+#' @keywords internal
+#' @description Not a user-side function.
+#' @param config a [drake_config()] object.
+make_impl <- function(config) {
   config$logger$minor("begin make()")
   on.exit(config$logger$minor("end make()"), add = TRUE)
   runtime_checks(config = config)
@@ -451,20 +456,6 @@ drake_cache_log_file_ <- function(
       sep = ","
     )
   )
-}
-
-check_make_call <- function(call) {
-  x <- names(call)
-  if ("config" %in% names(call) && sum(nzchar(x)) > 1L) {
-    warning(
-      "if you supply a ", shQuote("config"),
-      " argument to ", shQuote("make()"),
-      " then all additional arguments are ignored. ",
-      "For example, in ", shQuote("make(config = config, verbose = 0L)"),
-      "verbosity remains at ", shQuote("config$logger$verbose"), ".",
-      call. = FALSE
-    )
-  }
 }
 
 runtime_checks <- function(config) {

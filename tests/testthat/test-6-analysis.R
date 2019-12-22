@@ -327,15 +327,15 @@ test_with_dir("user-defined S3 (#959)", {
   )
   out <- sort(deps_target(dostuff, config)$name)
   exp <- sort(c("do.stuff.class1", "do.stuff.class3"))
-  make(config = config)
+  make_impl(config = config)
   expect_equal(justbuilt(config), "x")
-  make(config = config)
+  make_impl(config = config)
   expect_equal(justbuilt(config), character(0))
   do.stuff.class1 <- function(...) { # nolint
     message(123)
     invisible()
   }
-  make(config = config)
+  make_impl(config = config)
   expect_equal(justbuilt(config), "x")
   dostuff <- function(...) {
     do.stuff.class2 <- 40 # nolint
@@ -639,7 +639,7 @@ test_with_dir("ignore() suppresses updates", {
   )
   expect_equal(justbuilt(con), "x")
   con$envir$arg <- con$envir$arg + 1
-  make(config = con)
+  make_impl(config = con)
   expect_equal(justbuilt(con), "x")
 
   # With ignore()
@@ -656,13 +656,13 @@ test_with_dir("ignore() suppresses updates", {
   expect_equal(justbuilt(con), "x")
   con$envir$arg <- con$envir$arg + 1
   con$cache$clear(namespace = "progress")
-  make(config = con)
+  make_impl(config = con)
   expect_equal(justbuilt(con), character(0))
 
   con$envir$arg2 <- con$envir$arg + 1234
   con$plan <- drake_plan(x = sqrt( ignore  (arg2 ) + 123)) # nolint
   con$cache$clear(namespace = "progress")
-  make(config = con)
+  make_impl(config = con)
   expect_equal(justbuilt(con), character(0))
 })
 

@@ -111,6 +111,6 @@ test_with_dir("spinner (or lack thereof) does not break things", {
     cache = storr::storr_environment(),
     session_info = FALSE
   )
-  make(config = config)
+  make_impl(config = config)
   expect_equal(config$logger$verbose, 2L)
 })

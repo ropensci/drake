@@ -214,9 +214,7 @@ This argument is overridden if you supply your own \code{graph} argument.}
 \item{skip_safety_checks}{Logical, whether to skip the safety checks
 on your workflow. Use at your own peril.}
 
-\item{config}{An optional configured workflow from \code{\link[=drake_config]{drake_config()}}.
-If you supply \code{config} to \code{make()}, you must not supply any
-additional arguments.}
+\item{config}{Deprecated.}
 
 \item{lazy_load}{An old feature, currently being questioned.
 For the current recommendations on memory management, see

@@ -56,7 +56,7 @@
 #' })
 #' }
 r_make <- function(source = NULL, r_fn = NULL, r_args = list()) {
-  invisible(r_drake(source, drake::make, list(), r_fn, r_args))
+  invisible(r_drake(source, drake::make_impl, list(), r_fn, r_args))
 }
 
 #' @rdname r_make

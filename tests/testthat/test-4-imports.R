@@ -119,7 +119,7 @@ test_with_dir("expose_imports() works", {
   config <- drake_config(plan, envir = envir)
   n_nodes_new <- length(igraph::V(config$graph)$name)
   expect_true(n_nodes_new > n_nodes)
-  make(config = config)
+  make_impl(config = config)
   expect_is(readd(x), "character")
 })
 

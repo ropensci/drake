@@ -121,7 +121,7 @@ test_with_dir("drake_config() memoizes against knitr files (#887)", {
   expect_true("b" %in% deps$name)
 
   # make() first so file times and hashes are in the cache.
-  make(config = config)
+  make_impl(config = config)
   writeLines(lines_b, "report1.Rmd")
   config <- drake_config(
     plan,
@@ -159,14 +159,14 @@ test_with_dir("good URL with an ETag", {
     session_info = FALSE,
     log_progress = TRUE
   )
-  make(config = config)
+  make_impl(config = config)
   expect_equal(justbuilt(config), "x")
   etag <- config$cache$get(
     file_store("https://github.com/ropensci/drake/archive/v7.3.0.tar.gz")
   )
   expect_true(nzchar(etag))
   expect_equal(outdated_impl(config), character(0))
-  make(config = config)
+  make_impl(config = config)
   expect_equal(justbuilt(config), character(0))
 })
 
@@ -181,7 +181,7 @@ test_with_dir("good URL with a timestamp", {
     session_info = FALSE,
     log_progress = TRUE
   )
-  make(config = config)
+  make_impl(config = config)
   expect_equal(justbuilt(config), "x")
   mtime <- config$cache$get(file_store("https://nytimes.com"))
   expect_true(nzchar(mtime))
@@ -201,12 +201,12 @@ test_with_dir("bad URL", {
     log_progress = TRUE
   )
   expect_error(
-    make(config = config),
+    make_impl(config = config),
     "could not access url|resolve host"
   )
   expect_equal(justbuilt(config), character(0))
   expect_error(
-    make(config = config),
+    make_impl(config = config),
     "could not access url|resolve host"
   )
   expect_equal(justbuilt(config), character(0))

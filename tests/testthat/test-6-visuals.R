@@ -61,7 +61,7 @@ test_with_dir("ggraphs", {
   gg <- drake_ggraph(config, label_nodes = FALSE)
   gg <- drake_ggraph(config, label_nodes = TRUE)
   expect_true(inherits(gg, "ggplot"))
-  make(config = config)
+  make_impl(config = config)
   gg <- drake_ggraph(config)
   expect_true(inherits(gg, "ggplot"))
   if ("package:ggraph" %in% search()) {

@@ -146,16 +146,16 @@ test_with_dir("can detect trigger deps without reacting to them", {
   expect_true(all(deps %in% igraph::V(config$graph)$name))
   expect_equal(sort(deps_graph("x", config$graph)), sort(deps))
   expect_equal(outdated_impl(config), "x")
-  make(config = config)
+  make_impl(config = config)
   expect_equal(justbuilt(config), "x")
   expect_equal(outdated_impl(config), character(0))
-  make(config = config)
+  make_impl(config = config)
   nobuild(config)
   f <- function(x) {
     identity(x) || FALSE
   }
   expect_equal(outdated_impl(config), character(0))
-  make(config = config)
+  make_impl(config = config)
   nobuild(config)
 })
 
@@ -185,16 +185,16 @@ test_with_dir("same, but with global trigger", {
   expect_true(all(deps %in% igraph::V(config$graph)$name))
   expect_equal(sort(deps_graph("x", config$graph)), sort(deps))
   expect_equal(outdated_impl(config), "x")
-  make(config = config)
+  make_impl(config = config)
   expect_equal(justbuilt(config), "x")
   expect_equal(outdated_impl(config), character(0))
-  make(config = config)
+  make_impl(config = config)
   nobuild(config)
   f <- function(x) {
     identity(x) || FALSE
   }
   expect_equal(outdated_impl(config), character(0))
-  make(config = config)
+  make_impl(config = config)
   nobuild(config)
 })
 
@@ -239,21 +239,21 @@ test_with_dir("trigger does not block out command deps", {
   )
   expect_equal(justbuilt(config), "x")
   expect_equal(outdated_impl(config), character(0))
-  make(config = config)
+  make_impl(config = config)
   nobuild(config)
   f <- function(x) {
     identity(x) || FALSE
   }
   expect_equal(outdated_impl(config), "x")
-  make(config = config)
+  make_impl(config = config)
   expect_equal(justbuilt(config), "x")
   writeLines("456", "knitr.Rmd")
   expect_equal(outdated_impl(config), "x")
-  make(config = config)
+  make_impl(config = config)
   expect_equal(justbuilt(config), "x")
   saveRDS(2, "file.rds")
   expect_equal(outdated_impl(config), "x")
-  make(config = config)
+  make_impl(config = config)
   expect_equal(justbuilt(config), "x")
 })
 
@@ -327,15 +327,15 @@ test_with_dir("same, but with global change trigger", {
     identity(x) || FALSE
   }
   expect_equal(outdated_impl(config), "x")
-  make(config = config)
+  make_impl(config = config)
   expect_equal(justbuilt(config), "x")
   writeLines("456", "knitr.Rmd")
   expect_equal(outdated_impl(config), "x")
-  make(config = config)
+  make_impl(config = config)
   expect_equal(justbuilt(config), "x")
   saveRDS(2, "file.rds")
   expect_equal(outdated_impl(config), "x")
-  make(config = config)
+  make_impl(config = config)
   expect_equal(justbuilt(config), "x")
 })
 
@@ -473,14 +473,14 @@ test_with_dir("trigger components react appropriately", {
   # Condition trigger
   for (i in 1:2) {
     expect_equal(sort(outdated_impl(config)), "condition")
-    make(config = config)
+    make_impl(config = config)
     expect_equal(sort(justbuilt(config)), "condition")
   }
   saveRDS(FALSE, "condition.rds")
   expect_equal(outdated_impl(simple_config), character(0))
   expect_equal(outdated_impl(config), character(0))
   for (i in 1:2) {
-    make(config = config)
+    make_impl(config = config)
     nobuild(config)
   }
 
@@ -488,7 +488,7 @@ test_with_dir("trigger components react appropriately", {
   saveRDS(2, "change.rds")
   expect_equal(sort(outdated_impl(config)), "change")
   expect_equal(outdated_impl(simple_config), character(0))
-  make(config = config)
+  make_impl(config = config)
   expect_equal(sort(justbuilt(config)), "change")
   expect_equal(outdated_impl(config), character(0))
   expect_equal(outdated_impl(simple_config), character(0))
@@ -496,7 +496,7 @@ test_with_dir("trigger components react appropriately", {
   # File trigger: input files
   saveRDS(2, "file.rds")
   expect_equal(sort(outdated_impl(config)), "file")
-  make(config = config)
+  make_impl(config = config)
   expect_equal(sort(justbuilt(config)), "file")
   expect_equal(
     sort(outdated_impl(simple_config)),
@@ -507,7 +507,7 @@ test_with_dir("trigger components react appropriately", {
   # File trigger: knitr files
   writeLines("5678", "report.Rmd")
   expect_equal(sort(outdated_impl(config)), "file")
-  make(config = config)
+  make_impl(config = config)
   expect_equal(sort(justbuilt(config)), "file")
   expect_equal(
     sort(outdated_impl(simple_config)),
@@ -520,7 +520,7 @@ test_with_dir("trigger components react appropriately", {
     saveRDS("1234", paste0("out_", target, ".rds"))
   }
   expect_equal(sort(outdated_impl(config)), "file")
-  make(config = config)
+  make_impl(config = config)
   expect_equal(sort(justbuilt(config)), "file")
   expect_equal(
     sort(outdated_impl(simple_config)),
@@ -541,7 +541,7 @@ test_with_dir("trigger components react appropriately", {
     verbose = 0L, caching = caching, log_progress = TRUE,
     session_info = FALSE
   )
-  make(config = simple_config)
+  make_impl(config = simple_config)
 
   # Command trigger
   new_commands <- paste0("{
@@ -563,14 +563,14 @@ test_with_dir("trigger components react appropriately", {
     session_info = FALSE
   )
   expect_equal(sort(outdated_impl(config)), "command")
-  make(config = config)
+  make_impl(config = config)
   expect_equal(sort(justbuilt(config)), "command")
   expect_equal(
     sort(outdated_impl(simple_config)),
     sort(setdiff(plan$target, "command"))
   )
   expect_equal(outdated_impl(config), character(0))
-  make(config = simple_config)
+  make_impl(config = simple_config)
   expect_equal(outdated_impl(config), character(0))
 
   # Depend trigger
@@ -581,14 +581,14 @@ test_with_dir("trigger components react appropriately", {
     envir = e
   )
   expect_equal(sort(outdated_impl(config)), "depend")
-  make(config = config)
+  make_impl(config = config)
   expect_equal(sort(justbuilt(config)), "depend")
   expect_equal(
     sort(outdated_impl(simple_config)),
     sort(setdiff(plan$target, "depend"))
   )
   expect_equal(outdated_impl(config), character(0))
-  make(config = simple_config)
+  make_impl(config = simple_config)
   expect_equal(outdated_impl(config), character(0))
 })
 

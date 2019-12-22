@@ -208,7 +208,7 @@ test_with_dir("custom seeds (#947)", {
     cache = storr::storr_environment(),
     session_info = FALSE
   )
-  make(config = config)
+  make_impl(config = config)
   expect_equal(sort(justbuilt(config)), sort(plan$target))
   old_x <- readd(x, cache = config$cache)
   old_y <- readd(y, cache = config$cache)
@@ -239,7 +239,7 @@ test_with_dir("custom seeds (#947)", {
     cache = config$cache,
     session_info = FALSE
   )
-  make(config = config)
+  make_impl(config = config)
   expect_equal(justbuilt(config), character(0))
 
   plan <- drake_plan(
@@ -259,7 +259,7 @@ test_with_dir("custom seeds (#947)", {
     cache = config$cache,
     session_info = FALSE
   )
-  make(config = config)
+  make_impl(config = config)
   expect_equal(justbuilt(config), character(0))
 
   plan <- drake_plan(
@@ -278,7 +278,7 @@ test_with_dir("custom seeds (#947)", {
     cache = config$cache,
     session_info = FALSE
   )
-  make(config = config)
+  make_impl(config = config)
   expect_equal(sort(justbuilt(config)), sort(c("x", "mx")))
   new_x <- readd(x, cache = config$cache)
   new_mx <- readd(mx, cache = config$cache)
@@ -302,7 +302,7 @@ test_with_dir("revert the seed trigger and end up with a new seed (#947)", {
     cache = storr::storr_environment(),
     session_info = FALSE
   )
-  make(config = config)
+  make_impl(config = config)
   expect_equal(sort(justbuilt(config)), sort(plan$target))
 
   s <- diagnose(x, cache = config$cache)$seed
@@ -326,7 +326,7 @@ test_with_dir("revert the seed trigger and end up with a new seed (#947)", {
     cache = config$cache,
     session_info = FALSE
   )
-  make(config = config)
+  make_impl(config = config)
   expect_equal(sort(justbuilt(config)), sort(c("x", "mx")))
 
   plan <- drake_plan(
@@ -345,6 +345,6 @@ test_with_dir("revert the seed trigger and end up with a new seed (#947)", {
     cache = config$cache,
     session_info = FALSE
   )
-  make(config = config)
+  make_impl(config = config)
   expect_equal(sort(justbuilt(config)), sort(c("x", "mx")))
 })

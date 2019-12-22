@@ -36,7 +36,7 @@ test_with_dir("deprecation: deps_targets() and knitr_deps()", {
     session_info = FALSE
   )
   expect_warning(deps_targets("x", config), regexp = "deprecated")
-  make(config = config)
+  make_impl(config = config)
   expect_warning(
     dependency_profile(x, config, character_only = FALSE),
     regexp = "deprecated"
@@ -1518,4 +1518,17 @@ test_with_dir("deprecated decorated storr methods", {
   skip_on_cran()
   cache <- new_cache()
   expect_silent(cache$reset_ht_hash())
+})
+
+test_with_dir("config arg of make() (#1118)", {
+  plan <- drake_plan(x = 1)
+  config <- drake_config(
+    plan,
+    session_info = FALSE,
+    cache = storr::storr_environment()
+  )
+  expect_warning(
+    make(config = config),
+    regexp = "deprecated"
+  )
 })

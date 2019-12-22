@@ -81,7 +81,7 @@ test_with_dir("dependency profile", {
   b <- 2
   expect_false(any(deps_profile(target = a, config = config)$changed))
   config$skip_targets <- TRUE
-  make(config = config)
+  make_impl(config = config)
   dp <- deps_profile(target = a, config = config)
   expect_true(as.logical(dp[dp$name == "depend", "changed"]))
   expect_equal(sum(dp$changed), 1)
@@ -102,7 +102,7 @@ test_with_dir("dependency profile", {
     skip_targets = TRUE,
     session_info = FALSE
   )
-  make(config = config)
+  make_impl(config = config)
   out <- deps_profile(
     file_store("report.Rmd"),
     character_only = TRUE,

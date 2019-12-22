@@ -140,7 +140,7 @@ outdated <-  function(
 
 body(outdated) <- config_util_body(outdated_impl)
 
-#' @title outdated() with a drake_config() object
+#' @title Internal function with a drake_config() argument
 #' @export
 #' @keywords internal
 #' @description Not a user-side function.
