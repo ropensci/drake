@@ -105,7 +105,7 @@ test_with_dir("invalidating a subtarget invalidates the parent", {
   config$ht_is_subtarget <- ht_new()
   make(plan)
   clean(list = subtargets(y)[1])
-  expect_equal(outdated(config), "y")
+  expect_equal(outdated_impl(config), "y")
   make(plan)
   exp <- sort(c("y", subtargets(y)[1]))
   expect_equal(sort(c(justbuilt(config))), exp)
@@ -1132,7 +1132,7 @@ test_with_dir("dynamic parent recovery", {
   clean(list = c("y", subtargets(y)))
   make(plan, recover = TRUE)
   expect_false(any(file.exists(files)))
-  expect_equal(outdated(config), character(0))
+  expect_equal(outdated_impl(config), character(0))
   make(plan)
   expect_equal(justbuilt(config), character(0))
 })
@@ -1146,9 +1146,9 @@ test_with_dir("subtarget recovery", {
   make(plan)
   clean(list = subtargets(y)[1])
   unlink(readd(x))
-  expect_equal(outdated(config), "y")
+  expect_equal(outdated_impl(config), "y")
   make(plan, recover = TRUE)
-  expect_equal(outdated(config), character(0))
+  expect_equal(outdated_impl(config), character(0))
   expect_false(any(file.exists(c("a", "b"))))
   expect_equal(sort(justbuilt(config)), sort(c(subtargets(y)[1])))
 })
@@ -1255,7 +1255,7 @@ test_with_dir("dynamic hpc", {
     expect_equal(out, exp)
     expect_equal(val, exp)
     config <- drake_config(plan)
-    expect_equal(outdated(config), character(0))
+    expect_equal(outdated_impl(config), character(0))
     make(
       plan,
       envir = envir,

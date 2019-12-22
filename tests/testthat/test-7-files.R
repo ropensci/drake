@@ -165,7 +165,7 @@ test_with_dir("good URL with an ETag", {
     file_store("https://github.com/ropensci/drake/archive/v7.3.0.tar.gz")
   )
   expect_true(nzchar(etag))
-  expect_equal(outdated(config), character(0))
+  expect_equal(outdated_impl(config), character(0))
   make(config = config)
   expect_equal(justbuilt(config), character(0))
 })
@@ -278,7 +278,7 @@ test_with_dir("responses to intermediate file", {
     config$plan <- plan
     testrun(config)
     expect_equal(justbuilt(config), sort(config$plan$target))
-    expect_equal(outdated(config), character(0))
+    expect_equal(outdated_impl(config), character(0))
     final0 <- readd(final)
     val <- readRDS("intermediatefile.rds")
     val2 <- readRDS("out2.rds")
@@ -363,7 +363,7 @@ test_with_dir("same with a directory", {
   config$plan <- plan
   testrun(config)
   expect_equal(justbuilt(config), sort(config$plan$target))
-  expect_equal(outdated(config), character(0))
+  expect_equal(outdated_impl(config), character(0))
   final0 <- readd(final)
   val <- readRDS("scratch/intermediatefile.rds")
   val2 <- readRDS("scratch/out2.rds")

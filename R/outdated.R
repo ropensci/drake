@@ -42,7 +42,7 @@
 #' config <- drake_config(my_plan)
 #' make(my_plan)
 #' clean()
-#' outdated(config) # Which targets are outdated?
+#' outdated(my_plan) # Which targets are outdated?
 #' recoverable(config) # Which of these are recoverable and upstream?
 #' # The report still builds because clean() removes report.md,
 #' # but make() recovers the rest.
@@ -109,11 +109,13 @@ is_recoverable <- function(target, config) {
 #' @seealso [r_outdated()], [drake_config()], [missed()], [drake_plan()],
 #'   [make()]
 #' @return Character vector of the names of outdated targets.
-#' @param config A configured workflow from [drake_config()].
+#' @param Arguments to [make()], such as `plan` and `targets` and `envir`.
 #' @param make_imports Logical, whether to make the imports first.
 #'   Set to `FALSE` to save some time and risk obsolete output.
 #' @param do_prework Whether to do the `prework`
 #'   normally supplied to [make()].
+#' @param config Deprecated (2019-12-21).
+#'   A configured workflow from [drake_config()].
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {
@@ -121,16 +123,42 @@ is_recoverable <- function(target, config) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' # Recopute the config list early and often to have the
 #' # most current information. Do not modify the config list by hand.
-#' config <- drake_config(my_plan)
-#' outdated(config = config) # Which targets are out of date?
+#' outdated(my_plan) # Which targets are out of date?
 #' make(my_plan) # Run the projects, build the targets.
-#' config <- drake_config(my_plan)
 #' # Now, everything should be up to date (no targets listed).
-#' outdated(config = config)
+#' outdated(my_plan)
 #' }
 #' })
 #' }
 outdated <-  function(
+  ...,
+  make_imports = TRUE,
+  do_prework = TRUE,
+  config = NULL
+) {
+  force(list(...)$envir)
+  config <- config %|||% unnamed(list(...))[[1]]
+  if (inherits(config, "drake_config")) {
+    deprecate_arg(config, "config", "...")
+    call <- match.call(definition = outdated_impl, expand.dots = TRUE)
+    call[[1]] <- quote(outdated_impl)
+    return(eval(call))
+  }
+  config <- drake_config(...)
+  outdated_impl(
+    config = config,
+    make_imports = make_imports,
+    do_prework = do_prework
+  )
+}
+
+#' @title outdated() with a drake_config() object
+#' @export
+#' @keywords internal
+#' @description Not a user-side function.
+#' @inheritParams outdated
+#' @param config a [drake_config()] object.
+outdated_impl <- function(
   config,
   make_imports = TRUE,
   do_prework = TRUE

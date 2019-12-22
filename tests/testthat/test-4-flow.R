@@ -144,7 +144,7 @@ test_with_dir("make(..., skip_imports = TRUE) works", {
     envir = con$envir, jobs = con$jobs,
     skip_imports = TRUE, session_info = FALSE
   )
-  out <- outdated(con)
+  out <- outdated_impl(con)
   expect_equal(out, character(0))
 })
 
@@ -233,7 +233,7 @@ test_with_dir("failed targets do not become up to date", {
   meta <- diagnose(a)
   expect_true(grepl("my failure message", meta$error$message, fixed = TRUE))
   con <- drake_config(plan)
-  expect_equal(sort(outdated(con)), sort(c("a", "c")))
+  expect_equal(sort(outdated_impl(con)), sort(c("a", "c")))
 })
 
 test_with_dir("make() with config + non-config args", {

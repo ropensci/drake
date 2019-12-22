@@ -8,7 +8,8 @@
 recoverable(config, make_imports = TRUE, do_prework = TRUE)
 }
 \arguments{
-\item{config}{A configured workflow from \code{\link[=drake_config]{drake_config()}}.}
+\item{config}{Deprecated (2019-12-21).
+A configured workflow from \code{\link[=drake_config]{drake_config()}}.}
 
 \item{make_imports}{Logical, whether to make the imports first.
 Set to \code{FALSE} to save some time and risk obsolete output.}
@@ -64,7 +65,7 @@ load_mtcars_example() # Get the code with drake_example("mtcars").
 config <- drake_config(my_plan)
 make(my_plan)
 clean()
-outdated(config) # Which targets are outdated?
+outdated(my_plan) # Which targets are outdated?
 recoverable(config) # Which of these are recoverable and upstream?
 # The report still builds because clean() removes report.md,
 # but make() recovers the rest.

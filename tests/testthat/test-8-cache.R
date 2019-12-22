@@ -270,7 +270,7 @@ test_with_dir("cache functions work from various working directories", {
     drake_gc()
     y <- cached()
     expect_equal(sort(x), sort(y))
-    expect_equal(outdated(config), character(0))
+    expect_equal(outdated_impl(config), character(0))
 
     # targets and imports
     imports <- sort(
@@ -650,7 +650,7 @@ test_with_dir("use two differnt file system caches", {
     session_info = FALSE
   )
 
-  o1 <- outdated(con)
+  o1 <- outdated_impl(con)
 
   expect_equal(o1, character(0))
   expect_equal(
@@ -664,7 +664,7 @@ test_with_dir("use two differnt file system caches", {
   )
   con2 <- con
   con2$cache <- cache2
-  o2 <- outdated(con2)
+  o2 <- outdated_impl(con2)
   make(
     my_plan,
     cache = cache2,
@@ -683,7 +683,7 @@ test_with_dir("use two differnt file system caches", {
     jobs = jobs,
     session_info = FALSE
   )
-  o3 <- outdated(con2)
+  o3 <- outdated_impl(con2)
   expect_equal(o2, targ)
   expect_equal(o3, character(0))
   expect_equal(
@@ -710,7 +710,7 @@ test_with_dir("storr_environment is usable", {
   expect_equal(cached(cache = x), "y")
   cached_data <- file.path(default_cache_path(), "data")
   expect_false(file.exists(cached_data))
-  expect_equal(outdated(config), character(0))
+  expect_equal(outdated_impl(config), character(0))
   expect_false(file.exists(cached_data))
 })
 
@@ -767,7 +767,7 @@ test_with_dir("arbitrary storr in-memory cache", {
   expect_true(nrow(build_times(cache = cache)) > 0)
   expect_false(file.exists(cached_data))
 
-  o1 <- outdated(con)
+  o1 <- outdated_impl(con)
   expect_equal(length(o1), 6)
   expect_false(file.exists(cached_data))
 
@@ -883,17 +883,17 @@ test_with_dir("cache locking (#1081)", {
   config <- drake_config(plan)
   config$cache$lock()
   expect_error(make(plan), regexp = "locked")
-  expect_error(outdated(config), regexp = "locked")
+  expect_error(outdated_impl(config), regexp = "locked")
   expect_error(recoverable(config), regexp = "locked")
   expect_error(vis_drake_graph(config), regexp = "locked")
   expect_error(drake_gc(), regexp = "locked")
   expect_error(clean(), regexp = "locked")
   expect_error(rescue_cache(), regexp = "locked")
-  outdated(config, make_imports = FALSE)
+  outdated_impl(config, make_imports = FALSE)
   recoverable(config, make_imports = FALSE)
   g <- vis_drake_graph(config, make_imports = FALSE)
   config$cache$unlock()
-  outdated(config)
+  outdated_impl(config)
   recoverable(config)
   g <- vis_drake_graph(config)
   config$cache$lock()

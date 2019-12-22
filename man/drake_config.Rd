@@ -597,7 +597,7 @@ if (requireNamespace("visNetwork")) {
 }
 # These functions are faster than otherwise
 # because they use the configuration list.
-outdated(config) # Which targets are out of date?
+outdated(my_plan) # Which targets are out of date?
 missed(config) # Which imports are missing?
 })
 }

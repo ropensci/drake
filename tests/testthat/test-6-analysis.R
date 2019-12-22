@@ -560,14 +560,14 @@ test_with_dir("Vectorized nested functions work", {
   expect_equal(readd(a), 8:17)
   k <- readd(f)
   expect_true(is.character(k))
-  expect_equal(character(0), outdated(config))
+  expect_equal(character(0), outdated_impl(config))
   config$envir$y <- 8
-  expect_equal("a", outdated(config))
+  expect_equal("a", outdated_impl(config))
 
   # Target "a" should react.
   testrun(config)
   config <- testconfig(config)
-  expect_equal(character(0), outdated(config))
+  expect_equal(character(0), outdated_impl(config))
   expect_equal(readd(a), 9:18)
 
   # Change a vectorized function and see target "a" react.
@@ -1002,7 +1002,7 @@ test_with_dir("namespaced drake_plan works", {
   expect_true(all(ns %in% setdiff(cached(targets_only = FALSE),
                                   cached(targets_only = TRUE))))
   expect_equal(
-    outdated(config),
+    outdated_impl(config),
     character(0)
   )
 })

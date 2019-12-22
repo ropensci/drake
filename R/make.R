@@ -74,17 +74,17 @@
 #' if (suppressWarnings(require("knitr"))) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' config <- drake_config(my_plan)
-#' outdated(config) # Which targets need to be (re)built?
+#' outdated(my_plan) # Which targets need to be (re)built?
 #' make(my_plan) # Build what needs to be built.
-#' outdated(config) # Everything is up to date.
+#' outdated(my_plan) # Everything is up to date.
 #' # Change one of your imported function dependencies.
 #' reg2 = function(d) {
 #'   d$x3 = d$x^3
 #'   lm(y ~ x3, data = d)
 #' }
-#' outdated(config) # Some targets depend on reg2().
+#' outdated(my_plan) # Some targets depend on reg2().
 #' make(my_plan) # Rebuild just the outdated targets.
-#' outdated(config) # Everything is up to date again.
+#' outdated(my_plan) # Everything is up to date again.
 #' if (requireNamespace("visNetwork", quietly = TRUE)) {
 #' vis_drake_graph(config) # See how they fit in an interactive graph.
 #' make(my_plan, cache_log_file = TRUE) # Write a CSV log file this time.
@@ -304,7 +304,7 @@ run_external_backend <- function(config) {
 }
 
 outdated_subgraph <- function(config) {
-  outdated <- outdated(config, do_prework = FALSE, make_imports = FALSE)
+  outdated <- outdated_impl(config, do_prework = FALSE, make_imports = FALSE)
   config$logger$minor("isolate oudated targets")
   igraph::induced_subgraph(graph = config$graph, vids = outdated)
 }

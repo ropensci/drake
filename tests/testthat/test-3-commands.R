@@ -3,7 +3,7 @@ drake_context("commands")
 test_with_dir("changes to commands are handled well", {
   config <- dbug()
   expect_equal(
-    sort(outdated(config)),
+    sort(outdated_impl(config)),
     sort(c(
       "drake_target_1",
       "combined",
@@ -15,7 +15,7 @@ test_with_dir("changes to commands are handled well", {
   )
   testrun(config)
   expect_equal(
-    outdated(config),
+    outdated_impl(config),
     character(0)
   )
   config$plan$command[[2]] <- parse(text = "f(1+ 1) # nothing should rebuild")
@@ -36,7 +36,7 @@ test_with_dir("changes to commands are handled well", {
     logger = config$logger
   )
   expect_equal(
-    sort(outdated(config)),
+    sort(outdated_impl(config)),
     sort(c(
       "drake_target_1",
       "combined",

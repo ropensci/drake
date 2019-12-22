@@ -451,10 +451,10 @@ test_with_dir("commands and triggers can be character strings too", {
   }
   testrun(config)
   expect_equal(sort(config$plan$target), sort(justbuilt(config)))
-  expect_equal(outdated(config), character(0))
+  expect_equal(outdated_impl(config), character(0))
   testrun(config)
   expect_equal(character(0), sort(justbuilt(config)))
-  expect_equal(outdated(config), character(0))
+  expect_equal(outdated_impl(config), character(0))
   config$plan$trigger <- "trigger(condition = TRUE)"
   testrun(config)
   expect_equal(sort(config$plan$target), sort(justbuilt(config)))

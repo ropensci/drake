@@ -69,7 +69,7 @@ test_with_dir("mtcars example works", {
   config <- drake_config(
     my_plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = 1L)
-  expect_equal(outdated(config), character(0))
+  expect_equal(outdated_impl(config), character(0))
 
   # Change an imported function
   e$reg2 <- function(d) {
@@ -84,14 +84,14 @@ test_with_dir("mtcars example works", {
     "coef_regression2_small", "regression2_large", "regression2_small",
     "summ_regression2_large", "summ_regression2_small"
   ))
-  expect_equal(sort(outdated(config = config)), to_build)
+  expect_equal(sort(outdated_impl(config = config)), to_build)
   config$plan <- my_plan
   testrun(config)
   expect_equal(sort(justbuilt(config)), to_build)
   config <- drake_config(
     my_plan, envir = e, jobs = jobs, parallelism = parallelism,
     verbose = 1L)
-  expect_equal(sort(outdated(config = config)), character(0))
+  expect_equal(sort(outdated_impl(config = config)), character(0))
 
   # Take this opportunity to test tidyselect API. Saves test time that way.
   # loadd() # nolint

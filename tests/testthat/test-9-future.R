@@ -32,7 +32,7 @@ test_with_dir("future package functionality", {
       lock_envir = TRUE
     )
     expect_equal(
-      outdated(config),
+      outdated_impl(config),
       character(0)
     )
     e$my_plan$command[[2]] <- as.call(

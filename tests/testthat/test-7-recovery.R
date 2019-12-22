@@ -121,7 +121,7 @@ test_with_dir("rename a target", {
   make(plan, recover = TRUE, cache = cache, session_info = FALSE)
   expect_false(file.exists("x"))
   config <- drake_config(plan, cache = cache)
-  expect_equal(outdated(config), character(0))
+  expect_equal(outdated_impl(config), character(0))
 })
 
 test_with_dir("recovery with a non-standard trigger", {

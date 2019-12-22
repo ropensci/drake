@@ -281,7 +281,7 @@ timing_assumptions <- function(
 ) {
   assert_pkg("lubridate")
   if (!from_scratch) {
-    outdated <- outdated(config)
+    outdated <- outdated_impl(config)
   }
   times <- build_times(cache = config$cache)
   vertices <- all_targets(config)

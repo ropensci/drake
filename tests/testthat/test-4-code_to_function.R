@@ -132,7 +132,7 @@ test_with_dir("drake tracks and updates for scripted functions", {
     temp_dir = script_list$temp_dir
   )
   expect_equal(
-    length(outdated(config)),
+    length(outdated_impl(config)),
     0
   )
 
@@ -143,7 +143,7 @@ test_with_dir("drake tracks and updates for scripted functions", {
   )
 
   expect_equal(
-    outdated(config),
+    outdated_impl(config),
     c(
       "step2",
       "step3"
@@ -168,7 +168,7 @@ test_with_dir("drake tracks and updates for scripted functions", {
   )
 
   expect_equal(
-    outdated(config),
+    outdated_impl(config),
     c(
       "step2",
       "step3"
@@ -227,7 +227,7 @@ test_with_dir("drake tracks/updates for Rmd files that act like scripts", {
   )
 
   expect_equal(
-    length(outdated(config)),
+    length(outdated_impl(config)),
     0
   )
 
@@ -238,7 +238,7 @@ test_with_dir("drake tracks/updates for Rmd files that act like scripts", {
   )
 
   expect_equal(
-    outdated(config),
+    outdated_impl(config),
     c(
       "step2",
       "step3"
@@ -262,7 +262,7 @@ test_with_dir("drake tracks/updates for Rmd files that act like scripts", {
   )
 
   expect_equal(
-    outdated(config),
+    outdated_impl(config),
     c(
       "step2",
       "step3"

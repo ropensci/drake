@@ -122,7 +122,7 @@ test_with_dir("we can generate different visNetwork dependency graphs", {
   expect_false(identical(tmp$nodes, tmp6$nodes))
   expect_false(identical(tmp$nodes, tmp7$nodes))
   expect_true(is.data.frame(tmp$nodes))
-  expect_equal(sort(outdated(config = config)),
+  expect_equal(sort(outdated_impl(config = config)),
                sort(my_plan$target))
 })
 
@@ -292,7 +292,7 @@ test_with_dir("show_output_files", {
     session_info = FALSE
   )
   writeLines("abcdefg", "out3.txt")
-  expect_equal(outdated(config), "target2")
+  expect_equal(outdated_impl(config), "target2")
   skip_if_not_installed("lubridate")
   skip_if_not_installed("visNetwork")
   info <- drake_graph_info(
@@ -386,7 +386,7 @@ test_with_dir("same, but with an extra edge not due to files", {
     session_info = FALSE
   )
   writeLines("abcdefg", "out3.txt")
-  expect_equal(outdated(config), "target2")
+  expect_equal(outdated_impl(config), "target2")
   skip_if_not_installed("lubridate")
   skip_if_not_installed("visNetwork")
   info <- drake_graph_info(

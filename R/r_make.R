@@ -84,7 +84,7 @@ r_drake_build <- function(
 #' @export
 #' @inheritParams r_make
 r_outdated <- function(..., source = NULL, r_fn = NULL, r_args = list()) {
-  r_drake(source, drake::outdated, list(...), r_fn, r_args)
+  r_drake(source, drake::outdated_impl, list(...), r_fn, r_args)
 }
 
 #' @rdname r_make

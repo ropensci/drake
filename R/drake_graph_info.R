@@ -263,7 +263,7 @@ resolve_graph_outdated <- function(config) {
   if (config$from_scratch) {
     config$outdated <- all_targets(config)
   } else {
-    config$outdated <- outdated(
+    config$outdated <- outdated_impl(
       config = config,
       make_imports = config$make_imports
     )

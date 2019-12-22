@@ -8,12 +8,12 @@ test_with_dir("no overt errors lazy load for the debug example", {
   if ("parLapply" %in% tail(config$parallelism, 1)) {
     config$jobs <- 1
   }
-  expect_equal(sort(outdated(config)), sort(config$plan$target))
+  expect_equal(sort(outdated_impl(config)), sort(config$plan$target))
 
   testrun(config)
   config <- testconfig(config)
   expect_equal(sort(justbuilt(config)), sort(config$plan$target))
-  expect_equal(outdated(config), character(0))
+  expect_equal(outdated_impl(config), character(0))
 
   unload_these <- intersect(config$plan$target, ls(envir = config$envir))
   remove(list = unload_these, envir = config$envir)
@@ -21,7 +21,7 @@ test_with_dir("no overt errors lazy load for the debug example", {
   testrun(config)
   config <- testconfig(config)
   expect_equal(sort(justbuilt(config)), character(0))
-  expect_equal(outdated(config), character(0))
+  expect_equal(outdated_impl(config), character(0))
 
   unload_these <- intersect(config$plan$target, ls(envir = config$envir))
   remove(list = unload_these, envir = config$envir)
@@ -33,7 +33,7 @@ test_with_dir("no overt errors lazy load for the debug example", {
   expect_equal(sort(justbuilt(config)), sort(c(
     "combined", "final", "drake_target_1"
   )))
-  expect_equal(outdated(config), character(0))
+  expect_equal(outdated_impl(config), character(0))
 })
 
 test_with_dir("lazy loading is actually lazy", {
