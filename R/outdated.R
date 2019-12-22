@@ -136,15 +136,14 @@ outdated <-  function(
   do_prework = TRUE,
   config = NULL
 ) {
-  force(list(...)$envir)
   config <- config %|||% unnamed(list(...))[[1]]
   if (inherits(config, "drake_config")) {
-    deprecate_arg(config, "config", "...")
+    deprecate_arg(config, "config", "... to supply the plan etc.")
     call <- match.call(definition = outdated_impl, expand.dots = TRUE)
     call[[1]] <- quote(outdated_impl)
     return(eval(call))
   }
-  config <- drake_config(...)
+  config <- drake_config2(...)
   outdated_impl(
     config = config,
     make_imports = make_imports,

@@ -672,6 +672,16 @@ drake_config <- function(
   out
 }
 
+drake_config_parent <- function(n = 1) {
+  fun <- drake_config
+  args <- formals(fun)
+  args$envir <- substitute(parent.frame(n = n_), env = list(n_ = n))
+  formals(fun) <- args
+  fun
+}
+
+drake_config2 <- drake_config_parent(n = 2)
+
 #' @export
 print.drake_config <- function(x, ...) {
   cat("a configured drake workflow\n")

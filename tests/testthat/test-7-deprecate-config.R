@@ -1,5 +1,34 @@
 drake_context("deprecate config")
 
 test_with_dir("deprecate outdated(config) (#1118)", {
-
+  skip_on_cran()
+  a <- "x"
+  plan <- drake_plan(x = a, y = a)
+  make(plan)
+  config <- drake_config(plan)
+  expect_warning(tmp <- outdated(config), "deprecated")
+  expect_warning(tmp <- outdated(config = config), "deprecated")
+  expect_equal(tmp, character(0))
+  a <- "y"
+  expect_warning(tmp <- outdated(config, FALSE), "deprecated")
+  expect_equal(tmp, character(0))
+  expect_warning(tmp <- outdated(config, make_imports = FALSE), "deprecated")
+  expect_equal(tmp, character(0))
+  expect_warning(tmp <- outdated(config), "deprecated")
+  expect_equal(sort(tmp), sort(plan$target))
+  make(plan)
+  tmp <- outdated(plan)
+  expect_equal(tmp, character(0))
+  a <- "z"
+  tmp <- outdated(plan, make_imports = FALSE)
+  expect_equal(tmp, character(0))
+  tmp <- outdated(plan, "x")
+  expect_equal(tmp, "x")
+  expect_equal(sort(outdated(plan)), sort(plan$target))
+  make(plan)
+  expect_equal(outdated(plan), character(0))
+  tmp <- outdated(plan, "x", new.env())
+  expect_equal(tmp, "x")
+  tmp <- outdated(plan = plan, targets = "x", new.env())
+  expect_equal(tmp, "x")
 })
