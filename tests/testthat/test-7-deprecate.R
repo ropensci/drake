@@ -1,4 +1,4 @@
-drake_context("deprecation")
+drake_context("deprecate")
 
 test_with_dir("defunct functions", {
   skip_on_cran()
