@@ -190,7 +190,8 @@
 #'   it may duplicate the loading of dependencies, costing time.
 #'
 #' @param session_info Logical, whether to save the `sessionInfo()`
-#'   to the cache. This behavior is recommended for serious [make()]s
+#'   to the cache. Defaults to `TRUE`.
+#'   This behavior is recommended for serious [make()]s
 #'   for the sake of reproducibility. This argument only exists to
 #'   speed up tests. Apparently, `sessionInfo()` is a bottleneck
 #'   for small [make()]s.
@@ -519,7 +520,7 @@ drake_config <- function(
   skip_imports = FALSE,
   skip_safety_checks = FALSE,
   lazy_load = "eager",
-  session_info = TRUE,
+  session_info = NULL,
   cache_log_file = NULL,
   seed = NULL,
   caching = c("master", "worker"),
@@ -563,6 +564,7 @@ drake_config <- function(
   deprecate_arg(makefile_path, "makefile_path")
   deprecate_arg(layout, "layout", "spec") # 2019-12-15
   spec <- layout %|||% spec
+  session_info <- resolve_session_info(session_info)
   memory_strategy <- match.arg(memory_strategy, choices = memory_strategies())
   if (memory_strategy == "memory") {
     memory_strategy <- "preclean"
@@ -692,6 +694,11 @@ print.drake_config <- function(x, ...) {
     spaces <- paste(rep(" ", n_spaces[index]), collapse = "")
     cat(" $", name, ":", spaces, class(x[[name]]), "\n")
   }
+}
+
+resolve_session_info <- function(x) {
+  out <- x %|||% Sys.getenv("drake_session_info")
+  is.logical(out) || out %in% c("true", "")
 }
 
 new_ht_dynamic_deps <- function(spec) {
