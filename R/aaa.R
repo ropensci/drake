@@ -1,5 +1,6 @@
 config_util_body <- function(impl_fun) {
   substitute({
+    # nocov start
     config <- config %|||% unnamed(list(...))[[1]]
     if (inherits(config, "drake_config")) {
       # 2019-12-21 # nolint
@@ -18,5 +19,6 @@ config_util_body <- function(impl_fun) {
     call$... <- quote(config)
     names(call)[names(call) == "..."] <- "config"
     eval(call)
+    # nocov end
   }, env = list(impl_fun = substitute(impl_fun)))
 }
