@@ -124,7 +124,7 @@ test_with_dir("drake version checks in previous caches", {
   # We need to be able to set the drake version
   # to check back compatibility.
   plan <- drake_plan(x = 1)
-  expect_silent(make(plan, verbose = 0L))
+  expect_silent(make(plan, verbose = 0L, session_info = TRUE))
   x <- drake_cache()
   suppressWarnings(expect_error(drake_session(cache = NULL), regexp = "make"))
   expect_warning(drake_session(cache = x), regexp = "deprecated")

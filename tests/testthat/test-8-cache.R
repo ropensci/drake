@@ -739,7 +739,8 @@ test_with_dir("arbitrary storr in-memory cache", {
     cache = cache,
     parallelism = parallelism,
     jobs = jobs,
-    verbose = 0L
+    verbose = 0L,
+    session_info = TRUE
   )
   envir$reg2 <- function(d) {
     d$x3 <- d$x ^ 3

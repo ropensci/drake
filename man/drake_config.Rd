@@ -35,7 +35,7 @@ drake_config(
   skip_imports = FALSE,
   skip_safety_checks = FALSE,
   lazy_load = "eager",
-  session_info = TRUE,
+  session_info = NULL,
   cache_log_file = NULL,
   seed = NULL,
   caching = c("master", "worker"),
@@ -242,7 +242,8 @@ Lazy loading may be more memory efficient in some use cases, but
 it may duplicate the loading of dependencies, costing time.}
 
 \item{session_info}{Logical, whether to save the \code{sessionInfo()}
-to the cache. This behavior is recommended for serious \code{\link[=make]{make()}}s
+to the cache. Defaults to \code{TRUE}.
+This behavior is recommended for serious \code{\link[=make]{make()}}s
 for the sake of reproducibility. This argument only exists to
 speed up tests. Apparently, \code{sessionInfo()} is a bottleneck
 for small \code{\link[=make]{make()}}s.}
