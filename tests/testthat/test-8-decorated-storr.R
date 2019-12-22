@@ -737,3 +737,28 @@ test_with_dir("$import() copies (does not simply move) (#1120)", {
   x2 <- x2[order(x2$x), ]
   expect_equal(x1, x2)
 })
+
+test_with_dir("qs format (#1121)", {
+  skip_on_cran()
+  skip_if_not_installed("qs")
+  plan <- drake_plan(
+    x = target(list(x = letters, y = letters), format = "qs"),
+    y = "normal format"
+  )
+  make(plan)
+  out <- readd(x)
+  exp <- list(x = letters, y = letters)
+  expect_equal(out, exp)
+  cache <- drake_cache()
+  expect_equal(cache$get_value(cache$get_hash("x")), exp)
+  ref <- cache$storr$get("x")
+  expect_true(inherits(ref, "drake_format"))
+  expect_true(inherits(ref, "drake_format_qs"))
+  expect_equal(length(ref), 1L)
+  expect_true(nchar(ref) < 100)
+  expect_false(is.list(ref))
+  ref2 <- cache$storr$get("y")
+  expect_identical(ref2, "normal format")
+  expect_false(inherits(ref2, "drake_format"))
+  expect_false(inherits(ref2, "drake_format_qs"))
+})

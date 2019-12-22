@@ -413,10 +413,10 @@ dcst_set.drake_format_diskframe <- function(value, key, ..., .self) { # nolint
 dcst_set.drake_format_qs <- function(value, key, ..., .self) { # nolint
   assert_pkg("qs")
   .self$assert_dirs()
-  tmp <- attr(value$value, "path")
+  tmp <- .self$file_tmp()
   on.exit(file_remove(tmp), add = TRUE)
   qs::qsave(
-    x = value,
+    x = value$value,
     file = tmp,
     preset = "high",
     algorithm = "zstd",
