@@ -49,7 +49,7 @@ drake_meta_impl.default <- function(target, config) {
   if (meta$isfile) {
     path <- config$cache$decode_path(target)
     meta$mtime <- storage_mtime(path)
-    meta$size <- storage_size(path)
+    meta$size_storage <- storage_size(path)
   }
   if (meta$trigger$command) {
     meta$command <- spec$command_standardized
@@ -235,7 +235,7 @@ storage_hash <- function(
     new_mtime = storage_mtime(file),
     old_mtime = as.numeric(meta$mtime %|||% -Inf),
     new_size = storage_size(file),
-    old_size = meta$size
+    old_size = meta$size_storage %|||% -1L
   )
   ifelse(
     should_rehash,

@@ -494,7 +494,7 @@ read_dynamic_hashes <- function(target, config) {
   meta <- config$cache$get(target, namespace = "meta")
   if (is.null(meta$dynamic_hashes)) {
     value <- config$cache$get(target)
-    meta$dynamic_hashes <- dynamic_hashes(value, meta$size, config)
+    meta$dynamic_hashes <- dynamic_hashes(value, meta$size_vec, config)
   }
   meta$dynamic_hashes
 }
@@ -565,7 +565,7 @@ get_dynamic_size <- function(target, config) {
   if (ht_exists(config$ht_dynamic_size, target)) {
     return(ht_get(config$ht_dynamic_size, target))
   }
-  size <- config$cache$get(target, namespace = "meta")$size
+  size <- config$cache$get(target, namespace = "meta")$size_vec
   stopifnot(size > 0L)
   ht_set(config$ht_dynamic_size, x = target, value = size)
   size

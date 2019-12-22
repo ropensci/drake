@@ -177,12 +177,12 @@ finalize_meta <- function(target, value, meta, hash, config) {
     log_time(target, meta, config)
   }
   meta$hash <- hash
-  meta$size <- NROW(value)
+  meta$size_vec <- NROW(value)
   if (is_dynamic(target, config)) {
     meta$subtargets <- config$spec[[target]]$subtargets
   }
   if (is_dynamic_dep(target, config)) {
-    meta$dynamic_hashes <- dynamic_hashes(value, meta$size, config)
+    meta$dynamic_hashes <- dynamic_hashes(value, meta$size_vec, config)
   }
   meta
 }
