@@ -725,10 +725,9 @@ import_target_storr <- function(target, from, to, gc) {
       value <- from$get(key = target, namespace = ns)
       to$set(key = target, value = value, namespace = ns)
     }
-    if (gc) {
-      gc()
-    }
+    ifelse(gc, gc(), TRUE)
   }
+  invisible()
 }
 
 import_target_formatted <- function(target, from, to) {

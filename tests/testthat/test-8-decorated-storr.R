@@ -512,7 +512,7 @@ test_with_dir("decorated storr import (#1015)", {
   cache2 <- new_cache("cache2")
   make(plan1, cache = cache1)
   make(plan2, cache = cache2)
-  cache1$import(cache2)
+  cache1$import(cache2, gc = FALSE)
   expect_equal(cache1$get("a"), "a")
   expect_true(is.list(cache1$get("a", namespace = "meta")))
   expect_equal(cache1$get("b"), "b")
@@ -562,7 +562,7 @@ test_with_dir("decorated storr import specific targets (#1015)", {
   cache2 <- new_cache("cache2")
   make(plan1, cache = cache1)
   make(plan2, cache = cache2)
-  cache1$import(cache2, a)
+  cache1$import(cache2, a, gc = FALSE)
   expect_equal(cache1$get("a"), "a")
   expect_true(is.list(cache1$get("a", namespace = "meta")))
   expect_false(cache1$exists("b"))
@@ -587,7 +587,7 @@ test_with_dir("decorated storr import specific targets (#1015)", {
   cache2 <- new_cache("cache2")
   make(plan1, cache = cache1)
   make(plan2, cache = cache2)
-  cache2$export(cache1, a)
+  cache2$export(cache1, a, gc = FALSE)
   expect_equal(cache1$get("a"), "a")
   expect_true(is.list(cache1$get("a", namespace = "meta")))
   expect_false(cache1$exists("b"))
@@ -720,17 +720,17 @@ test_with_dir("$import() copies (does not simply move) (#1120)", {
     )
   )
   make(plan, cache = cache1)
-  cache2$import(data, from = cache1)
+  cache2$import(data, from = cache1, gc = FALSE)
   expect_equal(
     readd(data, cache = cache1),
     readd(data, cache = cache2)
   )
-  cache2$import(data_fst, from = cache1)
+  cache2$import(data_fst, from = cache1, gc = FALSE)
   expect_equal(
     readd(data_fst, cache = cache1),
     readd(data_fst, cache = cache2)
   )
-  cache2$import(data_disk, from = cache1)
+  cache2$import(data_disk, from = cache1, gc = FALSE)
   x1 <- as.data.frame(readd(data_disk, cache = cache1))
   x2 <- as.data.frame(readd(data_disk, cache = cache2))
   x1 <- x1[order(x1$x), ]
