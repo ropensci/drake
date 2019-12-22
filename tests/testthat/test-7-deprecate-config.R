@@ -1,5 +1,10 @@
 drake_context("deprecate config")
 
+test_with_dir("drake_config_parent() (#1118)", {
+  fun <- drake_config_parent(n = 17L)
+  expect_equal(formals(fun)$envir$n, 17L)
+})
+
 test_with_dir("deprecate outdated(config) (#1118)", {
   skip_on_cran()
   a <- "x"

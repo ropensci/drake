@@ -672,7 +672,7 @@ drake_config <- function(
   out
 }
 
-drake_config_parent <- function(n = 1) {
+drake_config_parent <- function(n = 1L) {
   fun <- drake_config
   args <- formals(fun)
   args$envir <- substitute(parent.frame(n = n_), env = list(n_ = n))
@@ -680,7 +680,7 @@ drake_config_parent <- function(n = 1) {
   fun
 }
 
-drake_config2 <- drake_config_parent(n = 2)
+drake_config2 <- drake_config_parent(n = 2L)
 
 #' @export
 print.drake_config <- function(x, ...) {
