@@ -144,7 +144,7 @@ outdated <-  function(
     return(eval(call))
   }
   for (arg in list(...)) {
-    force(arg)
+    force(arg) # could be a custom envir
   }
   config <- drake_config2(...)
   outdated_impl(
