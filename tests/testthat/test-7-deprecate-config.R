@@ -39,7 +39,14 @@ test_with_dir("deprecate outdated(config) (#1118)", {
   expect_equal(tmp, "x")
   expect_equal(sort(outdated(plan)), sort(plan$target))
   make(plan)
-  expect_equal(outdated(plan), character(0))
+  tmp <- outdated(plan)
+  expect_equal(tmp, character(0))
+  # envir is forced at the proper time
+  tmp <- outdated(plan, envir = environment())
+  expect_equal(tmp, character(0))
+  # envir is used, formally and informally
   tmp <- outdated(plan, "x", new.env())
+  expect_equal(tmp, "x")
+  tmp <- outdated(plan, "x", envir = new.env())
   expect_equal(tmp, "x")
 })
