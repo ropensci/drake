@@ -138,6 +138,7 @@ outdated <-  function(
 ) {
   config <- config %|||% unnamed(list(...))[[1]]
   if (inherits(config, "drake_config")) {
+    # 2019-12-21 # nolint
     deprecate_arg(config, "config", "... to supply the plan etc.")
     call <- match.call(definition = outdated_impl, expand.dots = TRUE)
     call[[1]] <- quote(outdated_impl)
