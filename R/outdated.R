@@ -136,24 +136,9 @@ outdated <-  function(
   do_prework = TRUE,
   config = NULL
 ) {
-  config <- config %|||% unnamed(list(...))[[1]]
-  if (inherits(config, "drake_config")) {
-    # 2019-12-21 # nolint
-    deprecate_arg(config, "config", "... to supply the plan etc.")
-    call <- match.call(definition = outdated_impl, expand.dots = TRUE)
-    call[[1]] <- quote(outdated_impl)
-    return(eval(call))
-  }
-  for (arg in list(...)) {
-    force(arg) # could be a custom envir
-  }
-  config <- drake_config2(...)
-  call <- match.call(expand.dots = FALSE)
-  call[[1]] <- quote(outdated_impl)
-  call$... <- quote(config)
-  names(call)[names(call) == "..."] <- "config"
-  eval(call)
 }
+
+body(outdated) <- config_util_body(outdated_impl)
 
 #' @title outdated() with a drake_config() object
 #' @export

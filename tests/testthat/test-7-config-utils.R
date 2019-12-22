@@ -1,11 +1,19 @@
-drake_context("deprecate config")
+drake_context("config utils")
+
+
+test_with_dir("config_util_body() (#1118)", {
+  body <- config_util_body(outdated_impl)
+  vars <- all.vars(body)
+  expect_true("outdated_impl" %in% vars)
+  expect_false("impl_fun" %in% vars)
+})
 
 test_with_dir("drake_config_parent() (#1118)", {
   fun <- drake_config_parent(n = 17L)
   expect_equal(formals(fun)$envir$n, 17L)
 })
 
-test_with_dir("deprecate outdated(config) (#1118)", {
+test_with_dir("outdated(plan) (#1118)", {
   skip_on_cran()
   a <- "x"
   plan <- drake_plan(x = a, y = a)
