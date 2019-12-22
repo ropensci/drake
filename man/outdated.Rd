@@ -8,6 +8,8 @@
 outdated(..., make_imports = TRUE, do_prework = TRUE, config = NULL)
 }
 \arguments{
+\item{...}{Arguments to \code{\link[=make]{make()}}, such as \code{plan} and \code{targets} and \code{envir}.}
+
 \item{make_imports}{Logical, whether to make the imports first.
 Set to \code{FALSE} to save some time and risk obsolete output.}
 
@@ -16,8 +18,6 @@ normally supplied to \code{\link[=make]{make()}}.}
 
 \item{config}{Deprecated (2019-12-21).
 A configured workflow from \code{\link[=drake_config]{drake_config()}}.}
-
-\item{Arguments}{to \code{\link[=make]{make()}}, such as \code{plan} and \code{targets} and \code{envir}.}
 }
 \value{
 Character vector of the names of outdated targets.

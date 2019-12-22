@@ -109,7 +109,7 @@ is_recoverable <- function(target, config) {
 #' @seealso [r_outdated()], [drake_config()], [missed()], [drake_plan()],
 #'   [make()]
 #' @return Character vector of the names of outdated targets.
-#' @param Arguments to [make()], such as `plan` and `targets` and `envir`.
+#' @param ... Arguments to [make()], such as `plan` and `targets` and `envir`.
 #' @param make_imports Logical, whether to make the imports first.
 #'   Set to `FALSE` to save some time and risk obsolete output.
 #' @param do_prework Whether to do the `prework`
