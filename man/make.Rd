@@ -198,8 +198,7 @@ give you an opportunity to
 downgrade \code{drake} to a compatible version
 rather than rerun all your targets from scratch.}
 
-\item{graph}{An \code{config$graph} object from an existing \code{drake_config()}.
-Supplying a pre-built graph could save time.}
+\item{graph}{Deprecated.}
 
 \item{trigger}{Name of the trigger to apply to all targets.
 Ignored if \code{plan} has a \code{trigger} column.
@@ -437,11 +436,9 @@ help file examples of \code{\link[=drake_envir]{drake_envir()}}.
 Also see the \code{garbage_collection} argument of \code{make()} and
 \code{drake_config()}.}
 
-\item{layout}{Deprecated. Use \code{spec} instead.}
+\item{layout}{Deprecated.}
 
-\item{spec}{\code{config$spec} from an existing \code{drake_config()}.
-Supplying a pre-built workflow specification to this argument
-could save time in some cases.}
+\item{spec}{Deprecated.}
 
 \item{lock_envir}{Logical, whether to lock \code{config$envir} during \code{make()}.
 If \code{TRUE}, \code{make()} quits in error whenever a command in your
