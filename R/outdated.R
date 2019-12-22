@@ -148,11 +148,11 @@ outdated <-  function(
     force(arg) # could be a custom envir
   }
   config <- drake_config2(...)
-  outdated_impl(
-    config = config,
-    make_imports = make_imports,
-    do_prework = do_prework
-  )
+  call <- match.call(expand.dots = FALSE)
+  call[[1]] <- quote(outdated_impl)
+  call$... <- quote(config)
+  names(call)[names(call) == "..."] <- "config"
+  eval(call)
 }
 
 #' @title outdated() with a drake_config() object
