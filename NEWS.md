@@ -1,6 +1,6 @@
 # Version 7.9.0
 
-## Breaking changes
+## Breaking changes in dynamic branching
 
 - Embrace the `vctrs` paradigm and its type stability for dynamic branching (#1105, #1106).
 - Accept `target` as a symbol by default in `read_trace()`. Required for the trace to make sense in #1107.
