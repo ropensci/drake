@@ -2,7 +2,7 @@
 
 ## New features
 
-- Smoothly deprecate the `config` argument in various utility functions. Users can now supply the plan and other `make()` arguments directly, without bothering with `drake_config()`. Now, you only need to call `drake_config()` in the `_drake.R` file for `r_make()` and friends. Affected functions:
+- Smoothly deprecate the `config` argument in various utility functions (#1118). Users can now supply the plan and other `make()` arguments directly, without bothering with `drake_config()`. Now, you only need to call `drake_config()` in the `_drake.R` file for `r_make()` and friends. Affected functions:
     - `outdated()`
 
 # Version 7.8.0.9000
