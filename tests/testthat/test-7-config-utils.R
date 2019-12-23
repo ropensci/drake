@@ -58,3 +58,36 @@ test_with_dir("outdated(plan) (#1118)", {
   tmp <- outdated(plan, "x", envir = new.env())
   expect_equal(tmp, "x")
 })
+
+test_with_dir("drake_build(plan) (#1118)", {
+  skip_on_cran()
+  a <- "x"
+  plan <- drake_plan(x = a, y = a)
+  make(plan)
+  # legacy fun(config) syntax
+  config <- drake_config(plan)
+  # with informal config arg
+  expect_warning(tmp <- drake_build(x, config), "deprecated")
+  expect_equal(tmp, "x")
+  expect_warning(tmp <- drake_build(target = x, config), "deprecated")
+  expect_equal(tmp, "x")
+  expect_warning(
+    tmp <- drake_build("x", config, character_only = TRUE),
+    "deprecated"
+  )
+  expect_equal(tmp, "x")
+  # with formal config arg
+  expect_warning(tmp <- drake_build(x, config = config), "deprecated")
+  expect_equal(tmp, "x")
+  expect_warning(
+    tmp <- drake_build("x", config = config, character_only = TRUE),
+    "deprecated"
+  )
+  expect_equal(tmp, "x")
+  a <- "y"
+  # with plan
+  tmp <- drake_build(x, plan)
+  expect_equal(tmp, "y")
+  tmp <- drake_build("x", plan, character_only = TRUE)
+  expect_equal(tmp, "y")
+})

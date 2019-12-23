@@ -1,11 +1,11 @@
-config_util_body <- function(impl_fun, config_pos = 1L) {
+config_util_body <- function(impl_fun) {
   env <- list(
     impl_fun = substitute(impl_fun),
     config_pos = substitute(config_pos)
   )
   substitute({
     # nocov start
-    config <- config %|||% unnamed(list(...))[config_pos][[1L]]
+    config <- config %|||% first_config(unnamed(list(...)))
     if (inherits(config, "drake_config")) {
       # 2019-12-21 # nolint
       deprecate_arg(config, "config", "... to supply the plan etc.")
@@ -25,4 +25,13 @@ config_util_body <- function(impl_fun, config_pos = 1L) {
     eval(call)
     # nocov end
   }, env = env)
+}
+
+first_config <- function(args) {
+  for (arg in args) {
+    if (inherits(arg, "drake_config")) {
+      return(arg)
+    }
+  }
+  NULL
 }

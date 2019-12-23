@@ -36,7 +36,7 @@ drake_build <- function(
 ) {
 }
 
-body(drake_build) <- config_util_body(drake_build_impl, config_pos = 2L)
+body(drake_build) <- config_util_body(drake_build_impl)
 
 #' @title Internal function with a drake_config() argument
 #' @export
@@ -112,7 +112,7 @@ drake_debug <- function(
 ) {
 }
 
-body(drake_debug) <- config_util_body(drake_debug_impl, config_pos = 2L)
+body(drake_debug) <- config_util_body(drake_debug_impl)
 
 drake_debug_impl <- function(
   target = NULL,
