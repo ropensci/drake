@@ -7,6 +7,7 @@
     - `outdated()`
     - `drake_build()`
     - `drake_debug()`
+    - `recoverable()`
 
 # Version 7.9.0
 

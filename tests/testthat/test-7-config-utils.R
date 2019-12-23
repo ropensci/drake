@@ -91,3 +91,49 @@ test_with_dir("drake_build(plan) (#1118)", {
   tmp <- drake_build("x", plan, character_only = TRUE)
   expect_equal(tmp, "y")
 })
+
+test_with_dir("recoverable(plan) (#1118)", {
+  skip_on_cran()
+  plan <- drake_plan(x = "x", y = x)
+  make(plan)
+  clean()
+  # legacy fun(config) syntax
+  config <- drake_config(plan)
+  # with informal config arg
+  expect_warning(tmp <- recoverable(config), "deprecated")
+  expect_equal(tmp, "x")
+  # with formal config arg
+  expect_warning(tmp <- recoverable(config = config), "deprecated")
+  expect_equal(tmp, "x")
+  # informal secondary arg
+  expect_warning(tmp <- recoverable(config, FALSE), "deprecated")
+  expect_equal(tmp, "x")
+  # formal secondary arg
+  expect_warning(
+    tmp <- recoverable(config, make_imports = FALSE),
+    "deprecated"
+  )
+  expect_equal(tmp, "x")
+  expect_warning(tmp <- recoverable(config), "deprecated")
+  expect_equal(tmp, "x")
+  # with plan
+  tmp <- recoverable(plan)
+  expect_equal(tmp, "x")
+  # with plan and formal fun() args
+  tmp <- recoverable(plan, make_imports = FALSE)
+  expect_equal(tmp, "x")
+  # with plan and informal make() args
+  tmp <- recoverable(plan, "x")
+  expect_equal(tmp, "x")
+  expect_equal(recoverable(plan), "x")
+  tmp <- recoverable(plan)
+  expect_equal(tmp, "x")
+  # envir is forced at the proper time
+  tmp <- recoverable(plan, envir = environment())
+  expect_equal(tmp, "x")
+  # envir is used, formally and informally
+  tmp <- recoverable(plan, "x", new.env())
+  expect_equal(tmp, "x")
+  tmp <- recoverable(plan, "x", envir = new.env())
+  expect_equal(tmp, "x")
+})

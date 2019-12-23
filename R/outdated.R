@@ -39,14 +39,14 @@
 #' isolate_example("Quarantine side effects.", {
 #' if (suppressWarnings(require("knitr"))) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' config <- drake_config(my_plan)
 #' make(my_plan)
 #' clean()
 #' outdated(my_plan) # Which targets are outdated?
-#' recoverable(config) # Which of these are recoverable and upstream?
+#' recoverable(my_plan) # Which of these are recoverable and upstream?
 #' # The report still builds because clean() removes report.md,
 #' # but make() recovers the rest.
 #' make(my_plan, recover = TRUE)
+#' outdated(my_plan)
 #' # When was the *recovered* small data actually built (first stored)?
 #' # (Was I using a different version of R back then?)
 #' diagnose(small)$date
@@ -58,8 +58,18 @@
 #' }
 #' })
 #' }
-recoverable <-  function(
-  config,
+recoverable <- function(
+  ...,
+  make_imports = TRUE,
+  do_prework = TRUE,
+  config = NULL
+) {
+}
+
+body(recoverable) <- config_util_body(recoverable_impl)
+
+recoverable_impl <- function(
+  config = NULL,
   make_imports = TRUE,
   do_prework = TRUE
 ) {
