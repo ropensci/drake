@@ -77,7 +77,7 @@ r_drake_build <- function(
   }
   d_args$target <- target
   d_args$character_only <- TRUE
-  r_drake(source, drake::drake_build, d_args, r_fn, r_args)
+  r_drake(source, drake::drake_build_impl, d_args, r_fn, r_args)
 }
 
 #' @rdname r_make

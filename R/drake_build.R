@@ -5,8 +5,8 @@
 #' @seealso [drake_debug()]
 #' @return The value of the target right after it is built.
 #' @param target Name of the target.
-#' @param meta Deprecated.
-#' @param config Internal configuration list.
+#' @param config Deprecated 2019-12-22.
+#' @param ... Arguments to [make()], such as the plan and environment.
 #' @inheritParams loadd
 #' @inheritParams readd
 #' @examples
@@ -17,30 +17,38 @@
 #' # It just walks through a dive into the internals.
 #' # Populate your workspace and write 'report.Rmd'.
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' # Create the master internal configuration list.
-#' config <- drake_config(my_plan)
-#' out <- drake_build(small, config = config)
+#' out <- drake_build(small, my_plan)
 #' # Now includes `small`.
 #' cached()
 #' head(readd(small))
 #' # `small` was invisibly returned.
 #' head(out)
-#' # If you previously called make(),
-#' # `config` is just read from the cache.
-#' make(my_plan, verbose = FALSE)
-#' config <- drake_config(my_plan)
-#' result <- drake_build(small, config = config)
-#' head(result)
 #' }
 #' })
 #' }
 drake_build <- function(
   target,
+  ...,
+  meta = NULL,
+  character_only = FALSE,
+  replace = FALSE,
+  config = NULL
+) {
+}
+
+body(drake_build) <- config_util_body(drake_build_impl, config_pos = 2L)
+
+#' @title Internal function with a drake_config() argument
+#' @export
+#' @keywords internal
+#' @description Not a user-side function.
+#' @inheritParams outdated
+#' @param config A [drake_config()] object.
+drake_build_impl <- function(
+  target,
   config = NULL,
   meta = NULL,
   character_only = FALSE,
-  envir = NULL,
-  jobs = 1,
   replace = FALSE
 ) {
   config$logger$minor("begin drake_build()", target = target)
@@ -48,20 +56,7 @@ drake_build <- function(
     config$logger$minor("end drake_build()", target = target),
     add = TRUE
   )
-  if (!is.null(meta)) {
-    warning(
-      "drake_build() is exclusively user-side now, ",
-      "so we can afford to compute `meta` on the fly. ",
-      "Thus, the `meta` argument is deprecated."
-    )
-  }
-  if (!is.null(envir)) {
-    warning(
-      "The envir argument of drake_build() is deprecated ",
-      "Create a `drake_config()` object and use the `config` ",
-      "argument of drake_build() instead."
-    )
-  }
+  deprecate_arg(meta)
   if (!character_only) {
     target <- as.character(substitute(target))
   }
@@ -101,28 +96,28 @@ drake_build <- function(
 #' # It just walks through a dive into the internals.
 #' # Populate your workspace and write 'report.Rmd'.
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' # Create the master internal configuration list.
-#' config <- drake_config(my_plan)
-#' out <- drake_build(small, config = config)
-#' # Now includes `small`.
-#' cached()
-#' head(readd(small))
+#' # out <- drake_debug(small, my_plan)
 #' # `small` was invisibly returned.
-#' head(out)
-#' # If you previously called make(),
-#' # `config` is just read from the cache.
-#' make(my_plan, verbose = FALSE)
-#' result <- drake_build(small, config = config)
-#' head(result)
+#' # head(out)
 #' }
 #' })
 #' }
 drake_debug <- function(
   target = NULL,
+  ...,
+  character_only = FALSE,
+  replace = FALSE,
+  verbose = TRUE,
+  config = NULL
+) {
+}
+
+body(drake_debug) <- config_util_body(drake_debug_impl, config_pos = 2L)
+
+drake_debug_impl <- function(
+  target = NULL,
   config = NULL,
   character_only = FALSE,
-  envir = NULL,
-  jobs = 1,
   replace = FALSE,
   verbose = TRUE
 ) {
@@ -134,9 +129,6 @@ drake_debug <- function(
       "object to the `config` argument.",
       call. = FALSE
     )
-  }
-  if (!is.null(envir)) {
-    warning("the `envir` argument of drake_debug() is deprecated")
   }
   if (!character_only) {
     target <- as.character(substitute(target))

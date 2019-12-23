@@ -757,8 +757,10 @@ test_with_dir("arbitrary storr in-memory cache", {
   expect_true(is.list(drake_get_session_info(cache = cache)))
   expect_false(file.exists(cached_data))
 
-  imp <- setdiff(cached(cache = cache, targets_only = FALSE),
-                 cached(cache = cache, targets_only = TRUE))
+  imp <- setdiff(
+    cached(cache = cache, targets_only = FALSE),
+    cached(cache = cache, targets_only = TRUE)
+  )
   expect_true(length(imp) > 0)
   expect_false(file.exists(cached_data))
 
@@ -824,7 +826,7 @@ test_with_dir("try_build() does not need to access cache", {
   config$cache <- config$cache_log_file <- NULL
   build <- try_build(target = "x", meta = meta, config = config)
   expect_equal(1, build$value)
-  expect_error(drake_build(target = "x", config = config))
+  expect_error(drake_build_impl(target = "x", config = config))
 })
 
 test_with_dir("running()", {

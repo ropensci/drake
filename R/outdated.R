@@ -145,7 +145,7 @@ body(outdated) <- config_util_body(outdated_impl)
 #' @keywords internal
 #' @description Not a user-side function.
 #' @inheritParams outdated
-#' @param config a [drake_config()] object.
+#' @param config A [drake_config()] object.
 outdated_impl <- function(
   config,
   make_imports = TRUE,

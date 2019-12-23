@@ -7,7 +7,7 @@
 outdated_impl(config, make_imports = TRUE, do_prework = TRUE)
 }
 \arguments{
-\item{config}{a \code{\link[=drake_config]{drake_config()}} object.}
+\item{config}{A \code{\link[=drake_config]{drake_config()}} object.}
 
 \item{make_imports}{Logical, whether to make the imports first.
 Set to \code{FALSE} to save some time and risk obsolete output.}
