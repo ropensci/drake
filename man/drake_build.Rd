@@ -19,6 +19,8 @@ drake_build(
 
 \item{...}{Arguments to \code{\link[=make]{make()}}, such as the plan and environment.}
 
+\item{meta}{Deprecated.}
+
 \item{character_only}{Logical, whether \code{name} should be treated
 as a character or a symbol
 (just like \code{character.only} in \code{\link[=library]{library()}}).}

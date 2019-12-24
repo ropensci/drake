@@ -7,6 +7,7 @@
 #' @param target Name of the target.
 #' @param config Deprecated 2019-12-22.
 #' @param ... Arguments to [make()], such as the plan and environment.
+#' @param meta Deprecated.
 #' @inheritParams loadd
 #' @inheritParams readd
 #' @examples
