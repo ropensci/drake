@@ -60,35 +60,35 @@ test_with_dir("runtime predictions", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("lubridate")
   con <- dbug()
-  expect_warning(p0 <- as.numeric(predict_runtime(con)))
+  expect_warning(p0 <- as.numeric(predict_runtime_impl(con)))
   expect_true(p0 < 1e4)
-  expect_warning(p0 <- as.numeric(predict_runtime(con, targets_only = TRUE)))
+  expect_warning(p0 <- as.numeric(predict_runtime_impl(con, targets_only = TRUE)))
   expect_equal(p0, 0, tolerance = 1e-2)
-  expect_warning(p0 <- as.numeric(predict_runtime(con, default_time = 1e4)))
+  expect_warning(p0 <- as.numeric(predict_runtime_impl(con, default_time = 1e4)))
   expect_true(p0 > 6e4 - 10 && p0 < 7e4)
   expect_warning(
     p0 <- as.numeric(
-      predict_runtime(con, default_time = 1e4, jobs = 2)
+      predict_runtime_impl(con, default_time = 1e4, jobs = 2)
     )
   )
   expect_true(p0 > 4e4 - 10 && p0 < 6e4 + 10)
   testrun(con)
-  p1 <- as.numeric(predict_runtime(config = con, jobs = 1))
-  p2 <- predict_runtime(
+  p1 <- as.numeric(predict_runtime_impl(config = con, jobs = 1))
+  p2 <- predict_runtime_impl(
     config = con,
     jobs = 1,
     default_time = Inf,
     from_scratch = FALSE
   )
   p2 <- as.numeric(p2)
-  p3 <- predict_runtime(
+  p3 <- predict_runtime_impl(
     config = con,
     jobs = 1,
     default_time = Inf,
     from_scratch = TRUE
   )
   p3 <- as.numeric(p3)
-  p4 <- predict_runtime(
+  p4 <- predict_runtime_impl(
     config = con,
     jobs = 2,
     default_time = Inf,
@@ -102,7 +102,7 @@ test_with_dir("runtime predictions", {
     final = Inf
   )
   targets <- c("nextone", "yourinput")
-  p5 <- predict_runtime(
+  p5 <- predict_runtime_impl(
     config = con,
     jobs = 1,
     default_time = Inf,
@@ -111,7 +111,7 @@ test_with_dir("runtime predictions", {
     targets = targets
   )
   p5 <- as.numeric(p5)
-  p6 <- predict_runtime(
+  p6 <- predict_runtime_impl(
     config = con,
     jobs = 1,
     default_time = Inf,
@@ -120,7 +120,7 @@ test_with_dir("runtime predictions", {
     targets = targets
   )
   p6 <- as.numeric(p6)
-  p7 <- predict_runtime(
+  p7 <- predict_runtime_impl(
     config = con,
     jobs = 2,
     default_time = Inf,
@@ -135,7 +135,7 @@ test_with_dir("runtime predictions", {
   expect_equal(p7, 43, tolerance = 1e-6)
 })
 
-test_with_dir("predict_workers()", {
+test_with_dir("predict_workers_impl()", {
   skip_on_cran()
   skip_if_not_installed("knitr")
   skip_if_not_installed("lubridate")
@@ -143,7 +143,7 @@ test_with_dir("predict_workers()", {
   cache <- storr::storr_environment()
   config <- drake_config(my_plan, cache = cache, session_info = FALSE)
   make(my_plan, cache = config$cache)
-  out <- predict_workers(config, jobs = 4)
+  out <- predict_workers_impl(config, jobs = 4)
   expect_equal(sort(unique(out$worker)), sort(as.integer(1:4)))
   expect_equal(dim(out), dim(my_plan))
   expect_equal(sort(colnames(out)), sort(c("target", "worker")))

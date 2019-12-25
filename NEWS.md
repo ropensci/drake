@@ -11,6 +11,8 @@
     - `missed()`
     - `deps_target()`
     - `drake_graph_info()`
+    - `predict_runtime()`
+    - `predict_workers()`
 
 # Version 7.9.0
 

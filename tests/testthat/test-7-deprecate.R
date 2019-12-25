@@ -132,7 +132,7 @@ test_with_dir("drake version checks in previous caches", {
   expect_warning(build_times(targets_only = TRUE), regexp = "deprecated")
   config <- drake_config(plan)
   expect_warning(
-    predict_runtime(config, targets_only = TRUE),
+    predict_runtime_impl(config, targets_only = TRUE),
     regexp = "deprecated"
   )
 })

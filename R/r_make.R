@@ -198,7 +198,7 @@ r_predict_runtime <- function(
 ) {
   assert_pkg("lubridate")
   requireNamespace("lubridate")
-  r_drake(source, drake::predict_runtime, list(...), r_fn, r_args)
+  r_drake(source, drake::predict_runtime_impl, list(...), r_fn, r_args)
 }
 
 #' @rdname r_make
@@ -207,7 +207,7 @@ r_predict_runtime <- function(
 r_predict_workers <- function(
   ..., source = NULL, r_fn = NULL, r_args = list()
 ) {
-  r_drake(source, drake::predict_workers, list(...), r_fn, r_args)
+  r_drake(source, drake::predict_workers_impl, list(...), r_fn, r_args)
 }
 
 r_drake <- function(source, d_fn, d_args, r_fn, r_args) {

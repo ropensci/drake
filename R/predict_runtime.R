@@ -18,26 +18,25 @@
 #' if (suppressWarnings(require("knitr"))) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Run the project, build the targets.
-#' config <- drake_config(my_plan)
 #' known_times <- rep(7200, nrow(my_plan))
 #' names(known_times) <- my_plan$target
 #' known_times
 #' # Predict the runtime
 #' if (requireNamespace("lubridate", quietly = TRUE)) {
 #' predict_runtime(
-#'   config,
+#'   my_plan,
 #'   jobs = 7,
 #'   from_scratch = TRUE,
 #'   known_times = known_times
 #' )
 #' predict_runtime(
-#'   config,
+#'   my_plan,
 #'   jobs = 8,
 #'   from_scratch = TRUE,
 #'   known_times = known_times
 #' )
 #' balance <- predict_workers(
-#'   config,
+#'   my_plan,
 #'   jobs = 7,
 #'   from_scratch = TRUE,
 #'   known_times = known_times
@@ -48,6 +47,26 @@
 #' })
 #' }
 predict_runtime <- function(
+  ...,
+  targets = NULL,
+  from_scratch = FALSE,
+  targets_only = NULL,
+  jobs = 1,
+  known_times = numeric(0),
+  default_time = 0,
+  warn = TRUE,
+  config = NULL
+) {
+}
+
+body(predict_runtime) <- config_util_body(predict_runtime_impl)
+
+#' @title Internal function with a drake_config() argument
+#' @export
+#' @keywords internal
+#' @description Not a user-side function.
+#' @param config A [drake_config()] object.
+predict_runtime_impl <- function(
   config,
   targets = NULL,
   from_scratch = FALSE,
@@ -88,26 +107,25 @@ predict_runtime <- function(
 #' if (suppressWarnings(require("knitr"))) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Run the project, build the targets.
-#' config <- drake_config(my_plan)
 #' known_times <- rep(7200, nrow(my_plan))
 #' names(known_times) <- my_plan$target
 #' known_times
 #' # Predict the runtime
 #' if (requireNamespace("lubridate", quietly = TRUE)) {
 #' predict_runtime(
-#'   config = config,
+#'   my_plan,
 #'   jobs = 7,
 #'   from_scratch = TRUE,
 #'   known_times = known_times
 #' )
 #' predict_runtime(
-#'   config,
+#'   my_plan,
 #'   jobs = 8,
 #'   from_scratch = TRUE,
 #'   known_times = known_times
 #' )
 #' balance <- predict_workers(
-#'   config,
+#'   my_plan,
 #'   jobs = 7,
 #'   from_scratch = TRUE,
 #'   known_times = known_times
@@ -119,7 +137,8 @@ predict_runtime <- function(
 #' }
 #' @return A data frame showing one likely arrangement
 #'   of targets assigned to parallel workers.
-#' @param config A configured workflow from [drake_config()].
+#' @param ... Arguments to [make()], such as `plan` and `targets`.
+#' @param config Deprecated.
 #' @param targets Character vector, names of targets.
 #'   Predict the runtime of building these targets
 #'   plus dependencies.
@@ -144,6 +163,26 @@ predict_runtime <- function(
 #'   `known_times` or [build_times()]. The times for these
 #'   targets default to `default_time`.
 predict_workers <- function(
+  ...,
+  targets = NULL,
+  from_scratch = FALSE,
+  targets_only = NULL,
+  jobs = 1,
+  known_times = numeric(0),
+  default_time = 0,
+  warn = TRUE,
+  config = NULL
+) {
+}
+
+body(predict_workers) <- config_util_body(predict_workers_impl)
+
+#' @title Internal function with a drake_config() argument
+#' @export
+#' @keywords internal
+#' @description Not a user-side function.
+#' @param config A [drake_config()] object.
+predict_workers_impl <- function(
   config,
   targets = NULL,
   from_scratch = FALSE,
