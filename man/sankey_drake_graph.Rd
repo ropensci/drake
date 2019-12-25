@@ -25,7 +25,7 @@ sankey_drake_graph(
 )
 }
 \arguments{
-\item{config}{A configured workflow from \code{\link[=drake_config]{drake_config()}}.}
+\item{config}{Deprecated.}
 
 \item{file}{Name of a file to save the graph.
 If \code{NULL} or \code{character(0)}, no file is saved and
@@ -112,7 +112,7 @@ that you specify in the \code{group} argument to \code{drake_graph_info()}.}
 \item{show_output_files}{Logical, whether to include
 \code{\link[=file_out]{file_out()}} files in the graph.}
 
-\item{...}{Arguments passed to \code{networkD3::sankeyNetwork()}.}
+\item{...}{Arguments to \code{\link[=make]{make()}}, such as \code{plan} and \code{targets}.}
 }
 \value{
 A \code{visNetwork} graph.

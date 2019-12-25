@@ -47,7 +47,7 @@ if (requireNamespace("ggraph", quietly = TRUE)) {
   config <- drake_config(my_plan) # Internal configuration list
   drake_ggraph(config) # Jump straight to the static graph.
   # Get the node and edge info that vis_drake_graph() just plotted:
-  graph <- drake_graph_info(config)
+  graph <- drake_graph_info(my_plan)
   render_drake_ggraph(graph)
 }
 })

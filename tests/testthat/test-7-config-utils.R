@@ -157,3 +157,12 @@ test_with_dir("deps_target(plan) (#1118)", {
   expect_warning(tmp <- deps_target(y, config)$name)
   expect_equal(tmp, "x")
 })
+
+test_with_dir("drake_graph_info(plan) (#1118)", {
+  plan <- drake_plan(x = 1, y = x)
+  tmp <- drake_graph_info(plan, targets = "x")
+  expect_equal(nrow(tmp$nodes), 1L)
+  config <- drake_config(plan)
+  expect_warning(tmp <- drake_graph_info(config))
+  expect_equal(nrow(tmp$nodes), 2L)
+})

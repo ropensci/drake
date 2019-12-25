@@ -129,7 +129,7 @@ r_deps_target <- function(
 r_drake_graph_info <- function(
   ..., source = NULL, r_fn = NULL, r_args = list()
 ) {
-  r_drake(source, drake::drake_graph_info, list(...), r_fn, r_args)
+  r_drake(source, drake::drake_graph_info_impl, list(...), r_fn, r_args)
 }
 
 #' @rdname r_make

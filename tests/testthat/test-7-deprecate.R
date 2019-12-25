@@ -149,7 +149,7 @@ test_with_dir("deprecated graphing functions", {
   expect_warning(out <- vis_drake_graph(config = con, layout = "sugiyama"))
   expect_warning(out <- static_drake_graph(config = con))
   expect_true(inherits(out, "gg"))
-  df <- drake_graph_info(config = con)
+  df <- drake_graph_info_impl(config = con)
   expect_warning(out <- render_static_drake_graph(df))
   expect_true(inherits(out, "gg"))
   expect_warning(find_cache(directory = "x"), regexp = "deprecated")

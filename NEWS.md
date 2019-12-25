@@ -9,6 +9,8 @@
     - `drake_debug()`
     - `recoverable()`
     - `missed()`
+    - `deps_target()`
+    - `drake_graph_info()`
 
 # Version 7.9.0
 

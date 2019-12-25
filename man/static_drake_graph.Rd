@@ -24,7 +24,7 @@ static_drake_graph(
 )
 }
 \arguments{
-\item{config}{A configured workflow from \code{\link[=drake_config]{drake_config()}}.}
+\item{config}{Deprecated.}
 
 \item{build_times}{Character string or logical.
 If character, the choices are

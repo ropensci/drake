@@ -37,7 +37,7 @@ vis_drake_graph(
 )
 }
 \arguments{
-\item{config}{A configured workflow from \code{\link[=drake_config]{drake_config()}}.}
+\item{config}{Deprecated.}
 
 \item{file}{Name of a file to save the graph.
 If \code{NULL} or \code{character(0)}, no file is saved and
@@ -163,7 +163,7 @@ Either a string of valid JavaScript that may be passed to
 opening the link specified by the \code{on_select_col} given to
 \code{drake_graph_info()}. \code{NULL}/\code{FALSE} disables the behavior.}
 
-\item{...}{Arguments passed to \code{visNetwork()}.}
+\item{...}{Arguments to \code{\link[=make]{make()}}, such as \code{plan} and \code{targets}.}
 }
 \value{
 A \code{visNetwork} graph.

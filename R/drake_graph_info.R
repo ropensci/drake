@@ -8,7 +8,9 @@
 #'   the legend nodes. The list also contains the
 #'   default title of the graph.
 #' @seealso [vis_drake_graph()]
-#' @param config A configured workflow from [drake_config()].
+#' @param ... Arguments to [make()], such as `plan` and `targets`.
+#'
+#' @param config Deprecated.
 #'
 #' @param from Optional collection of target/import names.
 #'   If `from` is nonempty,
@@ -98,10 +100,10 @@
 #' vis_drake_graph(config) # Jump straight to the interactive graph.
 #' # Get a list of data frames representing the nodes, edges,
 #' # and legend nodes of the visNetwork graph from vis_drake_graph().
-#' raw_graph <- drake_graph_info(config = config)
+#' raw_graph <- drake_graph_info(my_plan)
 #' # Choose a subset of the graph.
 #' smaller_raw_graph <- drake_graph_info(
-#'   config = config,
+#'   my_plan,
 #'   from = c("small", "reg2"),
 #'   mode = "in"
 #' )
@@ -118,6 +120,35 @@
 #' })
 #' }
 drake_graph_info <- function(
+  ...,
+  from = NULL,
+  mode = c("out", "in", "all"),
+  order = NULL,
+  subset = NULL,
+  build_times = "build",
+  digits = 3,
+  targets_only = FALSE,
+  font_size = 20,
+  from_scratch = FALSE,
+  make_imports = TRUE,
+  full_legend = FALSE,
+  group = NULL,
+  clusters = NULL,
+  show_output_files = TRUE,
+  hover = FALSE,
+  on_select_col = NULL,
+  config = NULL
+) {
+}
+
+body(drake_graph_info) <- config_util_body(drake_graph_info_impl)
+
+#' @title Internal function
+#' @export
+#' @keywords internal
+#' @description Not a user-side function.
+#' @param config A [drake_config()] object.
+drake_graph_info_impl <- function(
   config,
   from = NULL,
   mode = c("out", "in", "all"),

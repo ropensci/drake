@@ -44,7 +44,7 @@ text_drake_graph <- function(
   print = TRUE
 ) {
   assert_pkg("visNetwork")
-  graph_info <- drake_graph_info(
+  graph_info <- drake_graph_info_impl(
     config = config,
     from = from,
     mode = mode,
@@ -111,7 +111,7 @@ text_drake_graph <- function(
 #' config <- drake_config(my_plan) # Internal configuration list
 #' text_drake_graph(config) # Jump straight to the interactive graph.
 #' # Get the node and edge info that vis_drake_graph() just plotted:
-#' graph <- drake_graph_info(config)
+#' graph <- drake_graph_info(my_plan)
 #' # You can pass the data frames right to render_text_drake_graph().
 #' render_text_drake_graph(graph)
 #' }

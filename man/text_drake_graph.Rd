@@ -22,7 +22,7 @@ text_drake_graph(
 )
 }
 \arguments{
-\item{config}{A configured workflow from \code{\link[=drake_config]{drake_config()}}.}
+\item{config}{Deprecated.}
 
 \item{from}{Optional collection of target/import names.
 If \code{from} is nonempty,

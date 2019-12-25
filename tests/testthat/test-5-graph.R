@@ -25,7 +25,7 @@ test_with_dir("null graph", {
   skip_if_not_installed("visNetwork")
   config <- drake_config(drake_plan(x = 1))
   config$graph <- igraph::make_empty_graph()
-  x <- drake_graph_info(config)
+  x <- drake_graph_info_impl(config)
   expect_equal(x, null_graph())
 })
 
@@ -35,7 +35,7 @@ test_with_dir("lang cluster cols", {
   skip_if_not_installed("visNetwork")
   plan <- drake_plan(x = target(1, transform = g(f(x))), transform = FALSE)
   config <- drake_config(plan)
-  x <- drake_graph_info(config = config, group = "transform")
+  x <- drake_graph_info_impl(config = config, group = "transform")
   expect_equal(x$nodes$transform, "g(f(x))")
 })
 
@@ -80,35 +80,35 @@ test_with_dir("we can generate different visNetwork dependency graphs", {
 
   # Different graph configurations should be checked visually.
   expect_warning(
-    tmp <- drake_graph_info(
+    tmp <- drake_graph_info_impl(
       config = config, build_times = FALSE, from_scratch = TRUE))
   expect_warning(
-    tmp <- drake_graph_info(
+    tmp <- drake_graph_info_impl(
       config = config, build_times = FALSE, full_legend = TRUE))
   expect_warning(
-    tmp <- drake_graph_info(config = config, build_times = TRUE))
+    tmp <- drake_graph_info_impl(config = config, build_times = TRUE))
   expect_warning(
-    tmp <- drake_graph_info(config = config, build_times = FALSE))
-  tmpcopy <- drake_graph_info(config = config,
+    tmp <- drake_graph_info_impl(config = config, build_times = FALSE))
+  tmpcopy <- drake_graph_info_impl(config = config,
     make_imports = FALSE, build_times = "none")
-  tmp0 <- drake_graph_info(config = config, build_times = "none",
+  tmp0 <- drake_graph_info_impl(config = config, build_times = "none",
     subset = c("small", "regression2_large"))
-  tmp1 <- drake_graph_info(config = config, build_times = "none",
+  tmp1 <- drake_graph_info_impl(config = config, build_times = "none",
     from = "small")
-  tmp2 <- drake_graph_info(config = config, build_times = "none",
+  tmp2 <- drake_graph_info_impl(config = config, build_times = "none",
     from = "small", targets_only = TRUE)
-  tmp3 <- drake_graph_info(config = config, build_times = "none",
+  tmp3 <- drake_graph_info_impl(config = config, build_times = "none",
     targets_only = TRUE)
-  tmp4 <- drake_graph_info(config = config, build_times = "none",
+  tmp4 <- drake_graph_info_impl(config = config, build_times = "none",
     targets_only = TRUE)
-  tmp5 <- drake_graph_info(config = config, build_times = "build",
+  tmp5 <- drake_graph_info_impl(config = config, build_times = "build",
     targets_only = TRUE)
-  tmp6 <- drake_graph_info(config = config, build_times = "build",
+  tmp6 <- drake_graph_info_impl(config = config, build_times = "build",
     targets_only = TRUE, from_scratch = FALSE)
-  tmp7 <- drake_graph_info(config = config, build_times = "build",
+  tmp7 <- drake_graph_info_impl(config = config, build_times = "build",
     targets_only = TRUE, from_scratch = FALSE, hover = TRUE)
   expect_error(
-    tmp8 <- drake_graph_info(config = config, build_times = "none",
+    tmp8 <- drake_graph_info_impl(config = config, build_times = "none",
                              from = "not_found")
   )
   expect_equal(nrow(tmp0$nodes), 2)
@@ -138,11 +138,11 @@ test_with_dir("clusters", {
   config <- drake_config(plan, cache = cache)
   skip_if_not_installed("lubridate")
   skip_if_not_installed("visNetwork")
-  o1 <- drake_graph_info(config)
+  o1 <- drake_graph_info_impl(config)
   o1$nodes$level <- as.integer(o1$nodes$level)
-  o2 <- drake_graph_info(config, group = "n__", clusters = "asdfae")
-  o3 <- drake_graph_info(config, group = "n__")
-  o4 <- drake_graph_info(config, group = "adfe")
+  o2 <- drake_graph_info_impl(config, group = "n__", clusters = "asdfae")
+  o3 <- drake_graph_info_impl(config, group = "n__")
+  o4 <- drake_graph_info_impl(config, group = "adfe")
   for (col in c("label", "deps", "trigger", "n__")) {
     o1$nodes[[col]] <-
       o2$nodes[[col]] <-
@@ -154,7 +154,7 @@ test_with_dir("clusters", {
   expect_equivalent(o1$nodes[, nms], o2$nodes[, nms])
   expect_equivalent(o1$nodes[, nms], o3$nodes[, nms])
   expect_equivalent(o1$nodes[, nms], o4$nodes[, nms])
-  o <- drake_graph_info(config, group = "n__", clusters = "1")
+  o <- drake_graph_info_impl(config, group = "n__", clusters = "1")
   expect_equal(nrow(o$nodes), 3)
   expect_equal(
     sort(o$nodes$id),
@@ -164,7 +164,7 @@ test_with_dir("clusters", {
   expect_equal(node$id, "n__: 1")
   expect_equal(node$type, "cluster")
   expect_equal(node$shape, unname(node_shape("cluster")))
-  o <- drake_graph_info(config, group = "n__", clusters = c("1", "2", "bla"))
+  o <- drake_graph_info_impl(config, group = "n__", clusters = c("1", "2", "bla"))
   expect_equal(nrow(o$nodes), 2)
   expect_equal(
     sort(o$nodes$id),
@@ -177,7 +177,7 @@ test_with_dir("clusters", {
     expect_equal(node$shape, unname(node_shape("cluster")))
   }
   make(plan, targets = c("x_1", "y_2"), cache = cache, session_info = FALSE)
-  o <- drake_graph_info(config, group = "status", clusters = "up to date")
+  o <- drake_graph_info_impl(config, group = "status", clusters = "up to date")
   expect_equal(nrow(o$nodes), 3)
   expect_equal(
     sort(o$nodes$id),
@@ -203,7 +203,7 @@ test_with_dir("can get the graph info when a file is missing", {
   )
   skip_if_not_installed("lubridate")
   skip_if_not_installed("visNetwork")
-  suppressWarnings(o <- drake_graph_info(config))
+  suppressWarnings(o <- drake_graph_info_impl(config))
   expect_true("missing" %in% o$nodes$status)
 })
 
@@ -295,7 +295,7 @@ test_with_dir("show_output_files", {
   expect_equal(outdated_impl(config), "target2")
   skip_if_not_installed("lubridate")
   skip_if_not_installed("visNetwork")
-  info <- drake_graph_info(
+  info <- drake_graph_info_impl(
     config,
     show_output_files = TRUE,
     targets_only = TRUE
@@ -332,7 +332,7 @@ test_with_dir("show_output_files", {
       file_store(paste0("out", 1:4, ".txt"))
     ))
   )
-  info <- drake_graph_info(
+  info <- drake_graph_info_impl(
     config,
     show_output_files = FALSE,
     targets_only = TRUE
@@ -340,7 +340,7 @@ test_with_dir("show_output_files", {
   expect_equal(sort(info$nodes$id), sort(paste0("target", 1:2)))
   expect_equal(info$edges$from, "target1")
   expect_equal(info$edges$to, "target2")
-  info <- drake_graph_info(
+  info <- drake_graph_info_impl(
     config,
     show_output_files = TRUE,
     targets_only = TRUE,
@@ -389,7 +389,7 @@ test_with_dir("same, but with an extra edge not due to files", {
   expect_equal(outdated_impl(config), "target2")
   skip_if_not_installed("lubridate")
   skip_if_not_installed("visNetwork")
-  info <- drake_graph_info(
+  info <- drake_graph_info_impl(
     config,
     show_output_files = TRUE,
     targets_only = TRUE
@@ -427,7 +427,7 @@ test_with_dir("same, but with an extra edge not due to files", {
       file_store(paste0("out", 3:4, ".txt"))
     ))
   )
-  info <- drake_graph_info(
+  info <- drake_graph_info_impl(
     config,
     show_output_files = FALSE,
     targets_only = TRUE
@@ -435,7 +435,7 @@ test_with_dir("same, but with an extra edge not due to files", {
   expect_equal(sort(info$nodes$id), sort(paste0("target", 1:2)))
   expect_equal(info$edges$from, "target1")
   expect_equal(info$edges$to, "target2")
-    info <- drake_graph_info(
+    info <- drake_graph_info_impl(
     config,
     show_output_files = TRUE,
     targets_only = TRUE,
@@ -505,7 +505,7 @@ test_with_dir("on_select behaviour works", {
   )
   config <- drake_config(plan)
 
-  info <- drake_graph_info(
+  info <- drake_graph_info_impl(
     config = config,
     on_select_col = "link"
   )
@@ -524,7 +524,7 @@ test_with_dir("on_select behaviour works", {
   expect_equal(as.character(action), exp)
 
   clusters <- unique(plan$cluster_id)
-  info <- drake_graph_info(
+  info <- drake_graph_info_impl(
     config,
     on_select_col = "link",
     group = "cluster_id", clusters = clusters
