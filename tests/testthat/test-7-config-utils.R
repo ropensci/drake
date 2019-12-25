@@ -138,7 +138,7 @@ test_with_dir("recoverable(plan) (#1118)", {
   expect_equal(tmp, "x")
 })
 
-test_with_dir("missed_impl(plan) (#1118)", {
+test_with_dir("missed(plan) (#1118)", {
   plan <- drake_plan(x = missing::fun(arg), y = mis2::fun2(x))
   expect_equal(missed(plan, targets = "x"), "missing::fun")
   config <- drake_config(plan, targets = "x")
@@ -146,3 +146,14 @@ test_with_dir("missed_impl(plan) (#1118)", {
   expect_equal(tmp, "missing::fun")
 })
 
+test_with_dir("deps_target(plan) (#1118)", {
+  plan <- drake_plan(x = 1, y = x)
+  expect_equal(nrow(deps_target(x, plan)), 0L)
+  expect_equal(deps_target(y, plan)$name, "x")
+  config <- drake_config(plan, targets = "x")
+  expect_warning(tmp <- deps_target(x, config))
+  expect_warning(tmp <- nrow(deps_target(x, config)))
+  expect_equal(tmp, 0L)
+  expect_warning(tmp <- deps_target(y, config)$name)
+  expect_equal(tmp, "x")
+})
