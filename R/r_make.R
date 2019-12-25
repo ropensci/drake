@@ -14,7 +14,9 @@
 #'   1. Launch a new `callr::r()` session.
 #'   2. In that fresh session, run the R script from the `source` argument.
 #'     This script loads packages, functions, global options, etc.
-#'     and returns a [drake_config()] object.
+#'     and calls [drake_config()] at the very end. [drake_config()]
+#'     is the preprocessing step of [make()], and it accepts
+#'     all the same arguments as [make()] (e.g. `plan` and `targets`).
 #'   3. In that same session, run [outdated()]
 #'     with the `config` argument from step 2.
 #'   4. Return the result back to master process

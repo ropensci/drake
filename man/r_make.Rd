@@ -103,7 +103,9 @@ is old and stale.
 \item Launch a new \code{callr::r()} session.
 \item In that fresh session, run the R script from the \code{source} argument.
 This script loads packages, functions, global options, etc.
-and returns a \code{\link[=drake_config]{drake_config()}} object.
+and calls \code{\link[=drake_config]{drake_config()}} at the very end. \code{\link[=drake_config]{drake_config()}}
+is the preprocessing step of \code{\link[=make]{make()}}, and it accepts
+all the same arguments as \code{\link[=make]{make()}} (e.g. \code{plan} and \code{targets}).
 \item In that same session, run \code{\link[=outdated]{outdated()}}
 with the \code{config} argument from step 2.
 \item Return the result back to master process
