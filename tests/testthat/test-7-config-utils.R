@@ -137,3 +137,11 @@ test_with_dir("recoverable(plan) (#1118)", {
   tmp <- recoverable(plan, "x", envir = new.env())
   expect_equal(tmp, "x")
 })
+
+test_with_dir("missed_impl(plan) (#1118)", {
+  plan <- drake_plan(x = missing::fun(arg), y = mis2::fun2(x))
+  expect_equal(missed(plan, targets = "x"), "missing::fun")
+  config <- drake_config(plan, targets = "x")
+  expect_equal(missed(config), "missing::fun")
+})
+

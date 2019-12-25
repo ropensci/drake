@@ -484,7 +484,6 @@
 #' # These functions are faster than otherwise
 #' # because they use the configuration list.
 #' outdated(my_plan) # Which targets are out of date?
-#' missed(config) # Which imports are missing?
 #' })
 #' }
 drake_config <- function(

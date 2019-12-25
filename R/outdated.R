@@ -240,21 +240,23 @@ missing_subtargets <- function(target, meta, config) {
 #' @seealso [outdated()]
 #' @return Character vector of names of missing objects and files.
 #'
-#' @param config A configured workflow from [drake_config()].
+#' @param config Deprecated.
 #'
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {
 #' if (suppressWarnings(require("knitr"))) {
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' config <- drake_config(my_plan)
-#' missed(config) # All the imported files and objects should be present.
-#' rm(reg1) # Remove an import dependency from you workspace.
-#' missed(config) # Should report that reg1 is missing.
+#' plan <- drake_plan(x = missing::fun(arg))
+#' missed(plan)
 #' }
 #' })
 #' }
-missed <- function(config) {
+missed <- function(..., config = NULL) {
+}
+
+body(missed) <- config_util_body(missed_impl)
+
+missed_impl <- function(config) {
   config$logger$minor("begin missed()")
   on.exit(config$logger$minor("end missed()"), add = TRUE)
   assert_config(config)

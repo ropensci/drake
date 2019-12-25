@@ -8,6 +8,7 @@
     - `drake_build()`
     - `drake_debug()`
     - `recoverable()`
+    - `missed()`
 
 # Version 7.9.0
 
