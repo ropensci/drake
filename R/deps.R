@@ -75,6 +75,12 @@ deps_target <- function(
 
 body(deps_target) <- config_util_body(deps_target_impl)
 
+#' @title Internal function with a drake_config() argument
+#' @export
+#' @keywords internal
+#' @description Not a user-side function.
+#' @inheritParams outdated
+#' @param config A [drake_config()] object.
 deps_target_impl <- function(
   target,
   config,

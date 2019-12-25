@@ -259,7 +259,6 @@ body(missed) <- config_util_body(missed_impl)
 #' @export
 #' @keywords internal
 #' @description Not a user-side function.
-#' @inheritParams outdated
 #' @param config A [drake_config()] object.
 missed_impl <- function(config) {
   config$logger$minor("begin missed()")
