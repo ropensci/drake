@@ -13,17 +13,17 @@ test_with_dir("visNetwork graph runs", {
   pdf(NULL)
   graph <- plot(dbug_plan())
   expect_true(inherits(graph, "visNetwork"))
-  tmp <- vis_drake_graph(config)
+  tmp <- vis_drake_graph_impl(config)
   dev.off()
   for (hover in c(TRUE, FALSE)) {
     pdf(NULL)
-    tmp <- vis_drake_graph(config, full_legend = FALSE, hover = hover)
+    tmp <- vis_drake_graph_impl(config, full_legend = FALSE, hover = hover)
     dev.off()
   }
   unlink("Rplots.pdf", force = TRUE)
   file <- "graph.html"
   expect_false(file.exists(file))
-  vis_drake_graph(config = config, file = file, selfcontained = FALSE)
+  vis_drake_graph_impl(config = config, file = file, selfcontained = FALSE)
   expect_true(file.exists(file))
   unlink(file, force = TRUE, recursive = TRUE)
   unlink("*_files", force = TRUE, recursive = TRUE)
@@ -31,7 +31,7 @@ test_with_dir("visNetwork graph runs", {
   skip_if_not_installed("webshot")
   file <- "graph.png"
   expect_false(file.exists(file))
-  vis_drake_graph(config = config, file = file, selfcontained = FALSE)
+  vis_drake_graph_impl(config = config, file = file, selfcontained = FALSE)
   expect_true(file.exists(file))
   expect_false(any(grepl("*.html", list.files())))
   expect_false(any(grepl("*_files", list.files())))
@@ -45,7 +45,7 @@ test_with_dir("visNetwork dep graph does not fail if input file is binary", {
   x <- drake_plan(y = readRDS(file_in("input.rds")))
   saveRDS(as.list(datasets::mtcars), "input.rds")
   con <- drake_config(x, verbose = 0L)
-  expect_silent(out <- vis_drake_graph(con))
+  expect_silent(out <- vis_drake_graph_impl(con))
   unlink("input.rds", force = TRUE)
 })
 

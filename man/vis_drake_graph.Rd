@@ -7,7 +7,7 @@ of your drake project.
 \lifecycle{maturing}}
 \usage{
 vis_drake_graph(
-  config,
+  ...,
   file = character(0),
   selfcontained = FALSE,
   build_times = "build",
@@ -33,11 +33,11 @@ vis_drake_graph(
   collapse = TRUE,
   on_select_col = NULL,
   on_select = NULL,
-  ...
+  config = NULL
 )
 }
 \arguments{
-\item{config}{Deprecated.}
+\item{...}{Arguments to \code{\link[=make]{make()}}, such as \code{plan} and \code{targets}.}
 
 \item{file}{Name of a file to save the graph.
 If \code{NULL} or \code{character(0)}, no file is saved and
@@ -163,7 +163,7 @@ Either a string of valid JavaScript that may be passed to
 opening the link specified by the \code{on_select_col} given to
 \code{drake_graph_info()}. \code{NULL}/\code{FALSE} disables the behavior.}
 
-\item{...}{Arguments to \code{\link[=make]{make()}}, such as \code{plan} and \code{targets}.}
+\item{config}{Deprecated.}
 }
 \value{
 A \code{visNetwork} graph.

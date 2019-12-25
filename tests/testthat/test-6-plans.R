@@ -611,7 +611,7 @@ test_with_dir("Trailing slashes in file paths on Windows", {
 test_with_dir("supplied a plan instead of a config", {
   skip_if_not_installed("visNetwork")
   plan <- drake_plan(x = 1)
-  expect_error(vis_drake_graph(plan), regexp = "must be a drake_config")
+  expect_error(vis_drake_graph_impl(plan), regexp = "must be a drake_config")
 })
 
 test_with_dir("warning when file_out() files not produced", {

@@ -180,3 +180,11 @@ test_with_dir("predict_runtime(plan) etc. (#1118)", {
   expect_warning(tmp <- predict_workers(config))
   expect_equal(nrow(tmp), 2L)
 })
+
+test_with_dir("vis_drake_graph(plan) etc. (#1118)", {
+  plan <- drake_plan(x = 1, y = x)
+  make(plan)
+  config <- drake_config(plan)
+  tmp <- vis_drake_graph(plan, targets = "x")
+  expect_warning(tmp <- vis_drake_graph(config))
+})

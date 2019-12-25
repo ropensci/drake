@@ -514,7 +514,7 @@ test_with_dir("on_select behaviour works", {
   expect_equal(!!sort(c(info$nodes$on_select_col)),
                !! exp)
 
-  graph <- vis_drake_graph(
+  graph <- vis_drake_graph_impl(
     config = config,
     on_select = TRUE,
     on_select_col = "link")
@@ -534,7 +534,7 @@ test_with_dir("on_select behaviour works", {
   expect_equal(!!sort(c(info$nodes$on_select_col)),
                !!exp)
 
-  graph <- vis_drake_graph(
+  graph <- vis_drake_graph_impl(
     config = config,
     on_select = FALSE,
     on_select_col = "link"
@@ -542,7 +542,7 @@ test_with_dir("on_select behaviour works", {
 
   expect_null(graph$x$events$selectNode)
 
-  graph <- vis_drake_graph(
+  graph <- vis_drake_graph_impl(
     config = config,
     on_select = TRUE,
     on_select_col = NULL

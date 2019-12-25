@@ -353,7 +353,7 @@ test_with_dir("Output from the callr RStudio addins", {
   rs_addin_r_make(r_args)
   expect_equal(rs_addin_r_outdated(r_args), character(0)) # Should print.
   skip_if_not_installed("visNetwork")
-  graph <- rs_addin_r_vis_drake_graph(r_args) # Should show a graph.
+  graph <- rs_addin_r_vis_drake_graph_impl(r_args) # Should show a graph.
   expect_true(inherits(graph, "visNetwork"))
 })
 

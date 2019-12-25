@@ -10,6 +10,7 @@
 #' @return A `visNetwork` graph.
 #' @inheritParams drake_graph_info
 #' @inheritParams render_drake_graph
+#' @param ... Arguments to [make()], such as `plan` and `targets`.
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {
@@ -32,7 +33,7 @@
 #' })
 #' }
 vis_drake_graph <- function(
-  config,
+  ...,
   file = character(0),
   selfcontained = FALSE,
   build_times = "build",
@@ -57,7 +58,43 @@ vis_drake_graph <- function(
   collapse = TRUE,
   on_select_col = NULL,
   on_select = NULL,
-  ...
+  config = NULL
+) {
+}
+
+body(vis_drake_graph) <- config_util_body(vis_drake_graph_impl)
+
+#' @title Internal function with a drake_config() argument
+#' @export
+#' @keywords internal
+#' @description Not a user-side function.
+#' @param config A [drake_config()] object.
+vis_drake_graph_impl <- function(
+  config,
+  file = character(0),
+  selfcontained = FALSE,
+  build_times = "build",
+  digits = 3,
+  targets_only = FALSE,
+  font_size = 20,
+  layout = NULL,
+  main = NULL,
+  direction = NULL,
+  hover = FALSE,
+  navigationButtons = TRUE, # nolint
+  from = NULL, mode = c("out", "in", "all"),
+  order = NULL,
+  subset = NULL,
+  ncol_legend = 1,
+  full_legend = FALSE,
+  make_imports = TRUE,
+  from_scratch = FALSE,
+  group = NULL,
+  clusters = NULL,
+  show_output_files = TRUE,
+  collapse = TRUE,
+  on_select_col = NULL,
+  on_select = NULL
 ) {
   assert_pkg("visNetwork")
   graph_info <- drake_graph_info_impl(
@@ -96,8 +133,7 @@ vis_drake_graph <- function(
     ncol_legend = ncol_legend,
     full_legend = full_legend,
     collapse = collapse,
-    on_select = on_select,
-    ...
+    on_select = on_select
   )
 }
 
