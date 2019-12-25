@@ -166,3 +166,17 @@ test_with_dir("drake_graph_info(plan) (#1118)", {
   expect_warning(tmp <- drake_graph_info(config))
   expect_equal(nrow(tmp$nodes), 2L)
 })
+
+test_with_dir("predict_runtime(plan) etc. (#1118)", {
+  plan <- drake_plan(x = 1, y = x)
+  make(plan)
+  tmp <- predict_runtime(plan, targets = "x")
+  expect_equal(length(tmp), 1L)
+  tmp <- predict_workers(plan, targets = "x")
+  expect_equal(nrow(tmp), 1L)
+  config <- drake_config(plan)
+  expect_warning(tmp <- predict_runtime(config))
+  expect_equal(length(tmp), 1L)
+  expect_warning(tmp <- predict_workers(config))
+  expect_equal(nrow(tmp), 2L)
+})
