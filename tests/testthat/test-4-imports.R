@@ -170,6 +170,6 @@ test_with_dir("imported functions cannot depend on targets", {
     cache = storr::storr_environment(),
     session_info = FALSE
   )
-  deps <- deps_target("my_fun", config)
+  deps <- deps_target_impl("my_fun", config)
   expect_equal(deps$name, "global_import")
 })

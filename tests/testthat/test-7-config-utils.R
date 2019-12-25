@@ -142,6 +142,7 @@ test_with_dir("missed_impl(plan) (#1118)", {
   plan <- drake_plan(x = missing::fun(arg), y = mis2::fun2(x))
   expect_equal(missed(plan, targets = "x"), "missing::fun")
   config <- drake_config(plan, targets = "x")
-  expect_equal(missed(config), "missing::fun")
+  expect_warning(tmp <- missed(config))
+  expect_equal(tmp, "missing::fun")
 })
 

@@ -116,7 +116,7 @@ test_with_dir("drake_config() memoizes against knitr files (#887)", {
     cache = cache,
     session_info = FALSE
   )
-  deps <- deps_target(report_step, config)
+  deps <- deps_target_impl(report_step, config)
   expect_true("a" %in% deps$name)
   expect_true("b" %in% deps$name)
 
@@ -129,7 +129,7 @@ test_with_dir("drake_config() memoizes against knitr files (#887)", {
     cache = cache,
     session_info = FALSE
   )
-  deps <- deps_target(report_step, config)
+  deps <- deps_target_impl(report_step, config)
   expect_false("a" %in% deps$name)
   expect_true("b" %in% deps$name)
 

@@ -239,9 +239,8 @@ missing_subtargets <- function(target, meta, config) {
 #' @export
 #' @seealso [outdated()]
 #' @return Character vector of names of missing objects and files.
-#'
+#' @param ... Arguments to [make()], such as `plan` and `targets`.
 #' @param config Deprecated.
-#'
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {

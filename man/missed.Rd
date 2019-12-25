@@ -9,6 +9,8 @@ plan but missing from your workspace or file system.
 missed(..., config = NULL)
 }
 \arguments{
+\item{...}{Arguments to \code{\link[=make]{make()}}, such as \code{plan} and \code{targets}.}
+
 \item{config}{Deprecated.}
 }
 \value{

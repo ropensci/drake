@@ -309,7 +309,7 @@ test_with_dir("user-defined S3 (#959)", {
     history = FALSE,
     cache = storr::storr_environment()
   )
-  out <- sort(deps_target(dostuff, config)$name)
+  out <- sort(deps_target_impl(dostuff, config)$name)
   exp <- sort(c("do.stuff.class1", "do.stuff.class3"))
   expect_equal(out, exp)
     dostuff <- function(x) {
@@ -325,7 +325,7 @@ test_with_dir("user-defined S3 (#959)", {
     history = FALSE,
     cache = storr::storr_environment()
   )
-  out <- sort(deps_target(dostuff, config)$name)
+  out <- sort(deps_target_impl(dostuff, config)$name)
   exp <- sort(c("do.stuff.class1", "do.stuff.class3"))
   make_impl(config = config)
   expect_equal(justbuilt(config), "x")
@@ -350,7 +350,7 @@ test_with_dir("user-defined S3 (#959)", {
     history = FALSE,
     cache = storr::storr_environment()
   )
-  expect_equal(deps_target(dostuff, config)$name, character(0))
+  expect_equal(deps_target_impl(dostuff, config)$name, character(0))
   dostuff <- function(x) {
     UseMethod(paste0("do", ".", "stuff"))
   }
@@ -359,7 +359,7 @@ test_with_dir("user-defined S3 (#959)", {
     history = FALSE,
     cache = storr::storr_environment()
   )
-  expect_equal(deps_target(dostuff, config)$name, character(0))
+  expect_equal(deps_target_impl(dostuff, config)$name, character(0))
 })
 
 test_with_dir("unparsable commands are handled correctly", {
@@ -450,7 +450,7 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
   )
 })
 
-test_with_dir("deps_code() and deps_target()", {
+test_with_dir("deps_code() and deps_target_impl()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(nrow(deps_code("")), 0)
   expect_equal(length(cds_command_dependencies(NA)), 0)
@@ -496,20 +496,20 @@ test_with_dir("deps_code() and deps_target()", {
     sort(deps_code(my_plan$command[[5]])$name),
     sort(c("read.table", "file_in"))
   )
-  expect_true(!nrow(deps_target(x, config)))
+  expect_true(!nrow(deps_target_impl(x, config)))
   expect_equal(
-    sort(deps_target(my_target, config)$name),
+    sort(deps_target_impl(my_target, config)$name),
     sort(c("tracked_input_file.rds", "x")))
   expect_equal(
-    sort(deps_target(return_value, config)$name),
+    sort(deps_target_impl(return_value, config)$name),
     sort(c("f", "x"))
   )
   expect_equal(
-    sort(deps_target(botched, config)$name),
+    sort(deps_target_impl(botched, config)$name),
     character(0)
   )
   expect_equal(
-    sort(deps_target(meta, config)$name),
+    sort(deps_target_impl(meta, config)$name),
     sort("file_in"))
 })
 
@@ -581,12 +581,12 @@ test_with_dir("Vectorized nested functions work", {
   expect_equal(readd(a), 12:21)
 })
 
-test_with_dir("deps_target()", {
+test_with_dir("deps_target_impl()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("knitr")
   load_mtcars_example()
   config <- drake_config(my_plan, cache = storr::storr_environment())
-  d1 <- deps_target(report, config = config)
+  d1 <- deps_target_impl(report, config = config)
   d1 <- as.data.frame(d1[order(d1$name), ])
   d2 <- data.frame(
     name = c(
@@ -597,7 +597,7 @@ test_with_dir("deps_target()", {
   )
   d2 <- d2[order(d2$name), ]
   expect_equivalent(d1, d2)
-  d <- deps_target(regression1_small, config = config)
+  d <- deps_target_impl(regression1_small, config = config)
   expect_equal(sort(d$name), sort(c("reg1", "small")))
   expect_equal(d$type, rep("globals", 2))
 })
@@ -868,7 +868,7 @@ test_with_dir("ignore() inside special functions", {
   for (x in letters[2:6]) {
     for (y in 1:5) {
       target <- paste0(x, y)
-      deps <- deps_target(target, config, character_only = TRUE)$name
+      deps <- deps_target_impl(target, config, character_only = TRUE)$name
       if (y < 3) {
         expect_equal(deps, "a")
       } else {

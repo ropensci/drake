@@ -120,7 +120,7 @@ r_deps_target <- function(
   }
   d_args$target <- target
   d_args$character_only <- TRUE
-  r_drake(source, drake::deps_target, d_args, r_fn, r_args)
+  r_drake(source, drake::deps_target_impl, d_args, r_fn, r_args)
 }
 
 #' @rdname r_make

@@ -52,20 +52,30 @@ deps_code <- function(x) {
 #' @export
 #' @param target A symbol denoting a target name, or if `character_only`
 #'   is TRUE, a character scalar denoting a target name.
-#' @param config An output list from [drake_config()].
+#' @param ... Arguments to [make()], such as `plan` and `targets`.
 #' @param character_only Logical, whether to assume target is a character
 #'   string rather than a symbol.
+#' @param config Deprecated.
 #' @return A data frame with the dependencies listed by type
 #'   (globals, files, etc).
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' config <- drake_config(my_plan)
-#' deps_target("regression1_small", config = config)
+#' deps_target(regression1_small, plan)
 #' })
 #' }
 deps_target <- function(
+  target,
+  ...,
+  character_only = FALSE,
+  config = NULL
+) {
+}
+
+body(deps_target) <- config_util_body(deps_target_impl)
+
+deps_target_impl <- function(
   target,
   config,
   character_only = FALSE
