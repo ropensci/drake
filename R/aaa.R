@@ -8,7 +8,11 @@ config_util_body <- function(impl_fun) {
     config <- config %|||% first_config(unnamed(list(...)))
     if (inherits(config, "drake_config")) {
       # 2019-12-21 # nolint
-      deprecate_arg(config, "config", "... to supply the plan etc.")
+      deprecate_arg(
+        config,
+        "config",
+        "... to supply make() arguments such as the plan"
+      )
       call <- match.call(definition = impl_fun, expand.dots = TRUE)
       call[[1]] <- quote(impl_fun)
       return(eval(call))
