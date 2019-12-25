@@ -62,9 +62,13 @@ test_with_dir("runtime predictions", {
   con <- dbug()
   expect_warning(p0 <- as.numeric(predict_runtime_impl(con)))
   expect_true(p0 < 1e4)
-  expect_warning(p0 <- as.numeric(predict_runtime_impl(con, targets_only = TRUE)))
+  expect_warning(
+    p0 <- as.numeric(predict_runtime_impl(con, targets_only = TRUE))
+  )
   expect_equal(p0, 0, tolerance = 1e-2)
-  expect_warning(p0 <- as.numeric(predict_runtime_impl(con, default_time = 1e4)))
+  expect_warning(
+    p0 <- as.numeric(predict_runtime_impl(con, default_time = 1e4))
+  )
   expect_true(p0 > 6e4 - 10 && p0 < 7e4)
   expect_warning(
     p0 <- as.numeric(

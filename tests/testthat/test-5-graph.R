@@ -164,7 +164,9 @@ test_with_dir("clusters", {
   expect_equal(node$id, "n__: 1")
   expect_equal(node$type, "cluster")
   expect_equal(node$shape, unname(node_shape("cluster")))
-  o <- drake_graph_info_impl(config, group = "n__", clusters = c("1", "2", "bla"))
+  o <- drake_graph_info_impl(
+    config, group = "n__", clusters = c("1", "2", "bla")
+  )
   expect_equal(nrow(o$nodes), 2)
   expect_equal(
     sort(o$nodes$id),
@@ -177,7 +179,9 @@ test_with_dir("clusters", {
     expect_equal(node$shape, unname(node_shape("cluster")))
   }
   make(plan, targets = c("x_1", "y_2"), cache = cache, session_info = FALSE)
-  o <- drake_graph_info_impl(config, group = "status", clusters = "up to date")
+  o <- drake_graph_info_impl(
+    config, group = "status", clusters = "up to date"
+  )
   expect_equal(nrow(o$nodes), 3)
   expect_equal(
     sort(o$nodes$id),
@@ -251,13 +255,17 @@ test_with_dir("file_out()/file_in() connections", {
     sort(c("out1", "reader1", "reader2", "reader3",
            reencode_path("a"), reencode_path("b"), reencode_path("c")))
   )
-  expect_equal(dependencies("reader3", config, reverse = TRUE), character(0))
+  expect_equal(
+    dependencies("reader3", config, reverse = TRUE), character(0)
+  )
   expect_equal(
     sort(dependencies("saver2", config, reverse = TRUE)),
     sort(c("reader1", "reader3", reencode_path("d")))
   )
   expect_equal(dependencies("out2", config, reverse = TRUE), character(0))
-  expect_equal(dependencies("reader1", config, reverse = TRUE), character(0))
+  expect_equal(
+    dependencies("reader1", config, reverse = TRUE), character(0)
+  )
   expect_equal(dependencies("reader2", config, reverse = TRUE), "out2")
 })
 

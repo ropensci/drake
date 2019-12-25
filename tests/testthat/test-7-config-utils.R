@@ -186,5 +186,7 @@ test_with_dir("vis_drake_graph(plan) etc. (#1118)", {
   make(plan)
   config <- drake_config(plan)
   tmp <- vis_drake_graph(plan, targets = "x")
+  tmp <- sankey_drake_graph(plan)
   expect_warning(tmp <- vis_drake_graph(config))
+  expect_warning(tmp <- sankey_drake_graph(config))
 })

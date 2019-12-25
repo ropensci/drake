@@ -84,9 +84,9 @@
 #' make(my_plan) # Rebuild just the outdated targets.
 #' outdated(my_plan) # Everything is up to date again.
 #' if (requireNamespace("visNetwork", quietly = TRUE)) {
-#' vis_drake_graph(config) # See how they fit in an interactive graph.
+#' vis_drake_graph(my_plan) # See how they fit in an interactive graph.
 #' make(my_plan, cache_log_file = TRUE) # Write a CSV log file this time.
-#' vis_drake_graph(config) # The colors changed in the graph.
+#' vis_drake_graph(my_plan) # The colors changed in the graph.
 #' # Run targets in parallel:
 #' # options(clustermq.scheduler = "multicore") # nolint
 #' # make(my_plan, parallelism = "clustermq", jobs = 2) # nolint

@@ -16,15 +16,14 @@
 #' isolate_example("Quarantine side effects.", {
 #' if (suppressWarnings(require("knitr"))) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' config <- drake_config(my_plan)
 #' # Plot the network graph representation of the workflow.
 #' if (requireNamespace("visNetwork", quietly = TRUE)) {
-#' vis_drake_graph(config)
+#' vis_drake_graph(my_plan)
 #' make(my_plan) # Run the project, build the targets.
-#' vis_drake_graph(config) # The red nodes from before are now green.
+#' vis_drake_graph(my_plan) # The red nodes from before are now green.
 #' # Plot a subgraph of the workflow.
 #' vis_drake_graph(
-#'   config,
+#'   my_plan,
 #'   from = c("small", "reg2"),
 #'   to = "summ_regression2_small"
 #' )
@@ -209,8 +208,7 @@ vis_drake_graph_impl <- function(
 #' if (requireNamespace("visNetwork", quietly = TRUE)) {
 #' # Instead of jumpting right to vis_drake_graph(), get the data frames
 #' # of nodes, edges, and legend nodes.
-#' config <- drake_config(my_plan) # Internal configuration list
-#' vis_drake_graph(config) # Jump straight to the interactive graph.
+#' vis_drake_graph(my_plan) # Jump straight to the interactive graph.
 #' # Get the node and edge info that vis_drake_graph() just plotted:
 #' graph <- drake_graph_info(my_plan)
 #' # You can pass the data frames right to render_drake_graph()

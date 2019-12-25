@@ -178,15 +178,14 @@ this function is divided into
 isolate_example("Quarantine side effects.", {
 if (suppressWarnings(require("knitr"))) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
-config <- drake_config(my_plan)
 # Plot the network graph representation of the workflow.
 if (requireNamespace("visNetwork", quietly = TRUE)) {
-vis_drake_graph(config)
+vis_drake_graph(my_plan)
 make(my_plan) # Run the project, build the targets.
-vis_drake_graph(config) # The red nodes from before are now green.
+vis_drake_graph(my_plan) # The red nodes from before are now green.
 # Plot a subgraph of the workflow.
 vis_drake_graph(
-  config,
+  my_plan,
   from = c("small", "reg2"),
   to = "summ_regression2_small"
 )

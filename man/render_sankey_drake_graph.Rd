@@ -58,8 +58,7 @@ if (requireNamespace("networkD3", quietly = TRUE)) {
 if (requireNamespace("visNetwork", quietly = TRUE)) {
 # Instead of jumpting right to sankey_drake_graph(), get the data frames
 # of nodes, edges, and legend nodes.
-config <- drake_config(my_plan) # Internal configuration list
-sankey_drake_graph(config) # Jump straight to the interactive graph.
+sankey_drake_graph(my_plan) # Jump straight to the interactive graph.
 # Show the legend separately.
 visNetwork::visNetwork(nodes = drake::legend_nodes())
 # Get the node and edge info that sankey_drake_graph() just plotted:

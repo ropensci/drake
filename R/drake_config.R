@@ -473,16 +473,12 @@
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' # Construct the master internal configuration list.
-#' config <- drake_config(my_plan)
 #' if (requireNamespace("visNetwork")) {
-#'   vis_drake_graph(config) # See the dependency graph.
+#'   vis_drake_graph(my_plan) # See the dependency graph.
 #'   if (requireNamespace("networkD3")) {
-#'     sankey_drake_graph(config) # See the dependency graph.
+#'     sankey_drake_graph(my_plan) # See the dependency graph.
 #'   }
 #' }
-#' # These functions are faster than otherwise
-#' # because they use the configuration list.
 #' outdated(my_plan) # Which targets are out of date?
 #' })
 #' }

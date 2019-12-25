@@ -76,12 +76,12 @@ test_with_dir("Sankey diagram runs", {
   skip_if_not_installed("visNetwork")
   config <- dbug()
   pdf(NULL)
-  tmp <- sankey_drake_graph(config)
+  tmp <- sankey_drake_graph_impl(config)
   dev.off()
   unlink("Rplots.pdf", force = TRUE)
   file <- "graph.html"
   expect_false(file.exists(file))
-  sankey_drake_graph(config = config, file = file, selfcontained = FALSE)
+  sankey_drake_graph_impl(config = config, file = file, selfcontained = FALSE)
   expect_true(file.exists(file))
   skip_on_appveyor()
   skip_if_not_installed("webshot")
@@ -89,7 +89,7 @@ test_with_dir("Sankey diagram runs", {
   unlink("*_files", force = TRUE, recursive = TRUE)
   file <- "graph.png"
   expect_false(file.exists(file))
-  sankey_drake_graph(config = config, file = file, selfcontained = FALSE)
+  sankey_drake_graph_impl(config = config, file = file, selfcontained = FALSE)
   expect_true(file.exists(file))
   expect_false(any(grepl("*.html", list.files())))
   expect_false(any(grepl("*_files", list.files())))

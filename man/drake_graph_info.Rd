@@ -127,8 +127,7 @@ isolate_example("Quarantine side effects.", {
 if (requireNamespace("visNetwork", quietly = TRUE)) {
 if (suppressWarnings(require("knitr"))) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
-config <- drake_config(my_plan) # my_plan loaded with load_mtcars_example()
-vis_drake_graph(config) # Jump straight to the interactive graph.
+vis_drake_graph(my_plan)
 # Get a list of data frames representing the nodes, edges,
 # and legend nodes of the visNetwork graph from vis_drake_graph().
 raw_graph <- drake_graph_info(my_plan)

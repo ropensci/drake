@@ -289,9 +289,8 @@ print.drake_triggers <- function(x, ...) {
 #' file.exists("dir/mtcars.csv")
 #'
 #' # See the connections that the file relationships create:
-#' config <- drake_config(plan)
 #' if (requireNamespace("visNetwork", quietly = TRUE)) {
-#'   vis_drake_graph(config)
+#'   vis_drake_graph(plan)
 #' }
 #' })
 #' }
@@ -359,9 +358,8 @@ file_in <- function(...) {
 #' file.exists("dir/mtcars.csv")
 #'
 #' # See the connections that the file relationships create:
-#' config <- drake_config(plan)
 #' if (requireNamespace("visNetwork", quietly = TRUE)) {
-#'   vis_drake_graph(config)
+#'   vis_drake_graph(plan)
 #' }
 #' })
 #' }
@@ -1043,9 +1041,8 @@ is_trigger_call <- function(expr) {
 #' make(plan)
 #'
 #' # See the connections that the sourced scripts create:
-#' config <- drake_config(plan)
 #' if (requireNamespace("visNetwork", quietly = TRUE)) {
-#'   vis_drake_graph(config)
+#'   vis_drake_graph(plan)
 #' }
 #' }
 #' })

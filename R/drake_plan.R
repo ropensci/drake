@@ -573,7 +573,7 @@ plot.drake_plan <- function(x, ...) {
     recoverable = FALSE,
     session_info = FALSE
   )
-  vis_drake_graph(
+  vis_drake_graph_impl(
     config,
     build_times = "none",
     targets_only = TRUE,
