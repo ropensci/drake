@@ -17,6 +17,7 @@
     - `text_drake_graph()`
     - `predict_runtime()` 
     - `predict_workers()`
+- Because of #1118, the only remaining user-side purpose of `drake_config()` is to serve functions `r_make()` and friends.
 
 # Version 7.9.0
 
