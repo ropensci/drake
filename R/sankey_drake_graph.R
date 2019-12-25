@@ -55,8 +55,6 @@ sankey_drake_graph <- function(
 ) {
 }
 
-body(sankey_drake_graph) <- config_util_body(sankey_drake_graph_impl)
-
 #' @title Internal function with a drake_config() argument
 #' @export
 #' @keywords internal
@@ -103,6 +101,8 @@ sankey_drake_graph_impl <- function(
     selfcontained = selfcontained
   )
 }
+
+body(sankey_drake_graph) <- config_util_body(sankey_drake_graph_impl)
 
 #' @title Render a Sankey diagram from [drake_graph_info()].
 #' \lifecycle{stable}

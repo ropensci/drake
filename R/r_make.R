@@ -92,7 +92,7 @@ r_outdated <- function(..., source = NULL, r_fn = NULL, r_args = list()) {
 #' @inheritParams r_make
 #' @inheritSection recoverable Recovery
 r_recoverable <- function(..., source = NULL, r_fn = NULL, r_args = list()) {
-  r_drake(source, drake::recoverable, list(...), r_fn, r_args)
+  r_drake(source, drake::recoverable_impl, list(...), r_fn, r_args)
 }
 
 #' @rdname r_make
@@ -140,7 +140,7 @@ r_vis_drake_graph <- function(
 ) {
   assert_pkg("visNetwork")
   requireNamespace("visNetwork")
-  r_drake(source, drake::vis_drake_graph, list(...), r_fn, r_args)
+  r_drake(source, drake::vis_drake_graph_impl, list(...), r_fn, r_args)
 }
 
 #' @rdname r_make
@@ -151,7 +151,7 @@ r_sankey_drake_graph <- function(
 ) {
   assert_pkg("networkD3")
   requireNamespace("networkD3")
-  r_drake(source, drake::sankey_drake_graph, list(...), r_fn, r_args)
+  r_drake(source, drake::sankey_drake_graph_impl, list(...), r_fn, r_args)
 }
 
 #' @rdname r_make
@@ -160,7 +160,7 @@ r_sankey_drake_graph <- function(
 r_drake_ggraph <- function(..., source = NULL, r_fn = NULL, r_args = list()) {
   assert_pkg("ggraph")
   requireNamespace("ggraph")
-  r_drake(source, drake::drake_ggraph, list(...), r_fn, r_args)
+  r_drake(source, drake::drake_ggraph_impl, list(...), r_fn, r_args)
 }
 
 #' @rdname r_make
@@ -180,7 +180,7 @@ r_text_drake_graph <- function(
     function(..., crayon) {
       with_options(
         list(crayon.enabled = crayon),
-        drake::text_drake_graph(...)
+        drake::text_drake_graph_impl(...)
       )
     },
     args,

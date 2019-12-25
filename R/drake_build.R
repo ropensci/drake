@@ -37,8 +37,6 @@ drake_build <- function(
 ) {
 }
 
-body(drake_build) <- config_util_body(drake_build_impl)
-
 #' @title Internal function with a drake_config() argument
 #' @export
 #' @keywords internal
@@ -74,6 +72,8 @@ drake_build_impl <- function(
   build <- try_build(target = target, meta = meta, config = config)
   conclude_build(build = build, config = config)
 }
+
+body(drake_build) <- config_util_body(drake_build_impl)
 
 #' @title Run a single target's command in debug mode.'
 #' \lifecycle{maturing}
@@ -112,8 +112,6 @@ drake_debug <- function(
   config = NULL
 ) {
 }
-
-body(drake_debug) <- config_util_body(drake_debug_impl)
 
 drake_debug_impl <- function(
   target = NULL,
@@ -159,6 +157,8 @@ drake_debug_impl <- function(
   invisible(build$value)
   # nocov end
 }
+
+body(drake_debug) <- config_util_body(drake_debug_impl)
 
 debug_command <- function(command) {
   if (is.character(command)) {

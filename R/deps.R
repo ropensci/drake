@@ -73,8 +73,6 @@ deps_target <- function(
 ) {
 }
 
-body(deps_target) <- config_util_body(deps_target_impl)
-
 #' @title Internal function with a drake_config() argument
 #' @export
 #' @keywords internal
@@ -98,6 +96,8 @@ deps_target_impl <- function(
   out <- decode_deps_list(out)
   display_deps_list(select_nonempty(out))
 }
+
+body(deps_target) <- config_util_body(deps_target_impl)
 
 #' @title Find the drake dependencies of a dynamic knitr report target.
 #' \lifecycle{stable}

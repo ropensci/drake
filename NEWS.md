@@ -12,6 +12,9 @@
     - `deps_target()`
     - `drake_graph_info()`
     - `vis_drake_graph()`
+    - `sankey_drake_graph()`
+    - `drake_graph()`
+    - `text_drake_graph()`
     - `predict_runtime()` 
     - `predict_workers()`
 

@@ -140,8 +140,6 @@ drake_graph_info <- function(
 ) {
 }
 
-body(drake_graph_info) <- config_util_body(drake_graph_info_impl)
-
 #' @title Internal function
 #' @export
 #' @keywords internal
@@ -245,6 +243,8 @@ drake_graph_info_impl <- function(
     default_title = default_graph_title()
   )
 }
+
+body(drake_graph_info) <- config_util_body(drake_graph_info_impl)
 
 get_raw_node_category_data <- function(config) {
   all_labels <- V(config$graph)$name

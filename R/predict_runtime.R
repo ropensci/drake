@@ -59,8 +59,6 @@ predict_runtime <- function(
 ) {
 }
 
-body(predict_runtime) <- config_util_body(predict_runtime_impl)
-
 #' @title Internal function with a drake_config() argument
 #' @export
 #' @keywords internal
@@ -89,6 +87,8 @@ predict_runtime_impl <- function(
     warn = warn
   )$time
 }
+
+body(predict_runtime) <- config_util_body(predict_runtime_impl)
 
 #' @title Predict the load balancing of the next call to `make()`
 #'   for non-staged parallel backends.
@@ -175,8 +175,6 @@ predict_workers <- function(
 ) {
 }
 
-body(predict_workers) <- config_util_body(predict_workers_impl)
-
 #' @title Internal function with a drake_config() argument
 #' @export
 #' @keywords internal
@@ -205,6 +203,8 @@ predict_workers_impl <- function(
     warn = warn
   )$workers
 }
+
+body(predict_workers) <- config_util_body(predict_workers_impl)
 
 worker_prediction_info <- function(
   config,

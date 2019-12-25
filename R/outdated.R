@@ -66,8 +66,6 @@ recoverable <- function(
 ) {
 }
 
-body(recoverable) <- config_util_body(recoverable_impl)
-
 recoverable_impl <- function(
   config = NULL,
   make_imports = TRUE,
@@ -97,6 +95,8 @@ recoverable_impl <- function(
   )
   out[index]
 }
+
+body(recoverable) <- config_util_body(recoverable_impl)
 
 is_recoverable <- function(target, config) {
   meta <- drake_meta_(target = target, config = config)
@@ -147,9 +147,6 @@ outdated <-  function(
   config = NULL
 ) {
 }
-
-body(outdated) <- config_util_body(outdated_impl)
-
 #' @title Internal function with a drake_config() argument
 #' @export
 #' @keywords internal
@@ -182,6 +179,8 @@ outdated_impl <- function(
   out <- sort(unique(as.character(c(from, to))))
   out[!is_encoded_path(out)]
 }
+
+body(outdated) <- config_util_body(outdated_impl)
 
 first_outdated <- function(config) {
   config$cache$reset_memo_hash()
@@ -253,8 +252,6 @@ missing_subtargets <- function(target, meta, config) {
 missed <- function(..., config = NULL) {
 }
 
-body(missed) <- config_util_body(missed_impl)
-
 #' @title Internal function with a drake_config() argument
 #' @export
 #' @keywords internal
@@ -277,6 +274,8 @@ missed_impl <- function(config) {
   }
   config$cache$display_keys(imports[is_missing])
 }
+
+body(missed) <- config_util_body(missed_impl)
 
 missing_import <- function(x, config) {
   if (is_encoded_path(x)) {

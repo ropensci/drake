@@ -16,19 +16,36 @@
 #' isolate_example("Quarantine side effects.", {
 #' if (suppressWarnings(require("knitr"))) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' config <- drake_config(my_plan)
 #' # Plot the network graph representation of the workflow.
 #' pkg <- requireNamespace("txtplot", quietly = TRUE) &&
 #'   requireNamespace("visNetwork", quietly = TRUE)
 #' if (pkg) {
-#' text_drake_graph(config)
+#' text_drake_graph(my_plan)
 #' make(my_plan) # Run the project, build the targets.
-#' text_drake_graph(config) # The black nodes from before are now green.
+#' text_drake_graph(my_plan) # The black nodes from before are now green.
 #' }
 #' }
 #' })
 #' }
 text_drake_graph <- function(
+  ...,
+  from = NULL,
+  mode = c("out", "in", "all"),
+  order = NULL,
+  subset = NULL,
+  targets_only = FALSE,
+  make_imports = TRUE,
+  from_scratch = FALSE,
+  group = NULL,
+  clusters = NULL,
+  show_output_files = TRUE,
+  nchar = 1L,
+  print = TRUE,
+  config = NULL
+) {
+}
+
+text_drake_graph_impl <- function(
   config,
   from = NULL,
   mode = c("out", "in", "all"),
@@ -70,6 +87,8 @@ text_drake_graph <- function(
     print = print
   )
 }
+
+body(text_drake_graph) <- config_util_body(text_drake_graph_impl)
 
 #' @title Show a workflow graph as text in your terminal window
 #'   using [drake_graph_info()] output.

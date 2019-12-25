@@ -58,11 +58,11 @@ test_with_dir("ggraphs", {
   load_mtcars_example()
   config <- drake_config(
     my_plan, cache = storr::storr_environment(), session_info = FALSE)
-  gg <- drake_ggraph(config, label_nodes = FALSE)
-  gg <- drake_ggraph(config, label_nodes = TRUE)
+  gg <- drake_ggraph_impl(config, label_nodes = FALSE)
+  gg <- drake_ggraph_impl(config, label_nodes = TRUE)
   expect_true(inherits(gg, "ggplot"))
   make_impl(config = config)
-  gg <- drake_ggraph(config)
+  gg <- drake_ggraph_impl(config)
   expect_true(inherits(gg, "ggplot"))
   if ("package:ggraph" %in% search()) {
     suppressWarnings(detach("package:ggraph", unload = TRUE)) # nolint
@@ -121,4 +121,20 @@ test_with_dir("shapes", {
   expect_is(node_color("file"), "character")
   expect_is(node_color("not found"), "character")
   expect_equal(node_color("bluhlaksjdf"), node_color("other"))
+})
+
+test_with_dir("text graph", {
+  skip_on_cran()
+  skip_if_not_installed("crayon")
+  skip_if_not_installed("txtplot")
+  skip_if_not_installed("visNetwork")
+  load_mtcars_example()
+  config <- drake_config(
+    my_plan,
+    session_info = FALSE,
+    cache = storr::storr_environment()
+  )
+  expect_message(text_drake_graph_impl(config))
+  expect_message(text_drake_graph_impl(config, nchar = 0L))
+  expect_message(text_drake_graph_impl(config, nchar = 5L))
 })
