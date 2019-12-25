@@ -1,20 +1,18 @@
 #' @title Configure a drake workflow to your environment and plan.
 #' \lifecycle{maturing}
-#' @description In `drake`, [make()] has two stages:
+#' @description Call this function inside the `_drake.R`
+#'   script for [r_make()] and friends.
+#'   All non-deprecated function arguments are the same
+#'   between [make()] and [drake_config()].
+#' @details In `drake`, [make()] has two stages:
 #'   1. Configure a workflow to your environment and plan.
 #'   2. Build targets.
-#'   The [drake_config()] function just does step (1).
-#'   It returns a configured workflow that you can inspect
-#'   with utility functions like
-#'   [outdated()] and [vis_drake_graph()].
-#'   The configured workflow strongly depends on your environment
-#'   and plan, so if you create new functions or change the plan,
-#'   rerun [drake_config()].
-#'   And once you create a configured workflow with [drake_config()],
-#'   do not modify it by hand.
-#' @details Almost all function arguments are exactly the same
-#'   between [make()] and `drake_config()`
-#'   (all except `config` in [make()]).
+#'   The [drake_config()] function just does step (1),
+#'   which is a common requirement for not only [make()],
+#'   but also utility functions like [vis_drake_graph()]
+#'   and [outdated()]. That is why [drake_config()]
+#'   is a requirement for the `_drake.R` script, which
+#'   powers [r_make()], [r_outdated()], [r_vis_drake_graph()], etc.
 #' @inheritSection recoverable Recovery
 #' @export
 #' @return A configured `drake` workflow.
@@ -471,15 +469,21 @@
 #'
 #' @examples
 #' \dontrun{
-#' isolate_example("Quarantine side effects.", {
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' if (requireNamespace("visNetwork")) {
-#'   vis_drake_graph(my_plan) # See the dependency graph.
-#'   if (requireNamespace("networkD3")) {
-#'     sankey_drake_graph(my_plan) # See the dependency graph.
-#'   }
+#' isolate_example("quarantine side effects", {
+#' if (requireNamespace("knitr", quietly = TRUE)) {
+#' writeLines(
+#'   c(
+#'     "library(drake)",
+#'     "load_mtcars_example()",
+#'     "drake_config(my_plan, targets = c(\"small\", \"large\"))"
+#'   ),
+#'   "_drake.R" # default value of the `source` argument
+#' )
+#' cat(readLines("_drake.R"), sep = "\n")
+#' r_outdated()
+#' r_make()
+#' r_outdated()
 #' }
-#' outdated(my_plan) # Which targets are out of date?
 #' })
 #' }
 drake_config <- function(

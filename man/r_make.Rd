@@ -149,7 +149,7 @@ writeLines(
   c(
     "library(drake)",
     "load_mtcars_example()",
-    "drake_config(my_plan)"
+    "drake_config(my_plan, targets = c(\"small\", \"large\"))"
   ),
   "_drake.R" # default value of the `source` argument
 )
