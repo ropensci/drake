@@ -42,6 +42,12 @@ drake_ggraph <- function(
 ) {
 }
 
+#' @title Internal function with a drake_config() argument
+#' @export
+#' @keywords internal
+#' @description Not a user-side function.
+#' @inheritParams outdated
+#' @param config A [drake_config()] object.
 drake_ggraph_impl <- function(
   config,
   build_times = "build",

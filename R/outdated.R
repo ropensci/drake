@@ -66,6 +66,12 @@ recoverable <- function(
 ) {
 }
 
+#' @title Internal function with a drake_config() argument
+#' @export
+#' @keywords internal
+#' @description Not a user-side function.
+#' @inheritParams outdated
+#' @param config A [drake_config()] object.
 recoverable_impl <- function(
   config = NULL,
   make_imports = TRUE,
@@ -147,6 +153,7 @@ outdated <-  function(
   config = NULL
 ) {
 }
+
 #' @title Internal function with a drake_config() argument
 #' @export
 #' @keywords internal

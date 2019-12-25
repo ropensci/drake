@@ -45,6 +45,12 @@ text_drake_graph <- function(
 ) {
 }
 
+#' @title Internal function with a drake_config() argument
+#' @export
+#' @keywords internal
+#' @description Not a user-side function.
+#' @inheritParams outdated
+#' @param config A [drake_config()] object.
 text_drake_graph_impl <- function(
   config,
   from = NULL,
