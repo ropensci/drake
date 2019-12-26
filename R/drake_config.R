@@ -1,4 +1,4 @@
-#' @title Configure a drake workflow to your environment and plan.
+#' @title Ending of _drake.R for r_make() and friends
 #' \lifecycle{maturing}
 #' @description Call this function inside the `_drake.R`
 #'   script for [r_make()] and friends.

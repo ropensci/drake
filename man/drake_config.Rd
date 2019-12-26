@@ -2,7 +2,7 @@
 % Please edit documentation in R/drake_config.R
 \name{drake_config}
 \alias{drake_config}
-\title{Configure a drake workflow to your environment and plan.
+\title{Ending of _drake.R for r_make() and friends
 \lifecycle{maturing}}
 \usage{
 drake_config(
