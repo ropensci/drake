@@ -56,7 +56,7 @@
 #' @importFrom rlang dots_list enquo eval_tidy expr quo_squash quos
 #' @importFrom storr storr_environment storr_rds
 #' @importFrom txtq txtq
-#' @importFrom utils compareVersion flush.console head menu packageVersion
-#'   read.csv sessionInfo stack str type.convert unzip write.table
+#' @importFrom utils compareVersion head menu packageVersion
+#'   read.csv sessionInfo str type.convert unzip write.table
 #' @importFrom vctrs vec_c vec_slice
 NULL

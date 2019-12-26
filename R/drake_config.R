@@ -682,13 +682,7 @@ drake_config2 <- drake_config_parent(n = 2L)
 #' @export
 print.drake_config <- function(x, ...) {
   cat("a configured drake workflow\n")
-  n_spaces <- nchar(names(x))
-  n_spaces <- max(n_spaces) - n_spaces
-  for (index in seq_along(x)) {
-    name <- names(x)[index]
-    spaces <- paste(rep(" ", n_spaces[index]), collapse = "")
-    cat(" $", name, ":", spaces, class(x[[name]]), "\n")
-  }
+  min_str(x)
 }
 
 resolve_session_info <- function(x) {

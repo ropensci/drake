@@ -232,7 +232,7 @@ drake_graph_info_impl <- function(
   if (length(config$group)) {
     config <- cluster_nodes(config)
   }
-  list(
+  out <- list(
     nodes = weak_as_tibble(config$nodes),
     edges = weak_as_tibble(config$edges),
     legend_nodes = filtered_legend_nodes(
@@ -242,6 +242,20 @@ drake_graph_info_impl <- function(
     ),
     default_title = default_graph_title()
   )
+  class(out) <- "drake_graph_info"
+  out
+}
+
+#' @export
+print.drake_graph_info <- function(x, ...) {
+  cat(
+    "drake graph visual info:",
+    nrow(x$nodes),
+    "nodes and",
+    nrow(x$edges),
+    "edges:\n"
+  )
+  min_str(x)
 }
 
 body(drake_graph_info) <- config_util_body(drake_graph_info_impl)

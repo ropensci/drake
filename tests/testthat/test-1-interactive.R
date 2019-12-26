@@ -30,6 +30,12 @@ test_with_dir("drake spec print method", {
   expect_true(any(grepl("specification of target x", m2)))
 })
 
+test_with_dir("drake_graph_info() print method", {
+  x <- drake_graph_info(drake_plan(y = 1)) # print by hand
+  m <- utils::capture.output(print(x))
+  expect_true(any(grepl("drake graph", m)))
+})
+
 test_with_dir("logger", {
   # testthat suppresses messages,
   # so we need to inspect the console output manually.
