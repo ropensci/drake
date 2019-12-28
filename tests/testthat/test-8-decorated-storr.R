@@ -765,3 +765,54 @@ test_with_dir("qs format (#1121)", {
   expect_false(inherits(ref2, "drake_format"))
   expect_false(inherits(ref2, "drake_format_qs"))
 })
+
+test_with_dir("global rds format (#1124)", {
+  skip_if(getRversion() < "3.5.0")
+  plan <- drake_plan(
+    x = list(x = letters, y = letters),
+    y = "rds format"
+  )
+  make(plan, format = "rds")
+  out <- readd(x)
+  exp <- list(x = letters, y = letters)
+  expect_equal(out, exp)
+  expect_equal(readd(y), "rds format")
+  cache <- drake_cache()
+  expect_equal(cache$get_value(cache$get_hash("x")), exp)
+  for (key in c("x", "y")) {
+    ref <- cache$storr$get(key)
+    expect_true(inherits(ref, "drake_format"))
+    expect_true(inherits(ref, "drake_format_rds"))
+    expect_equal(length(ref), 1L)
+    expect_true(nchar(ref) < 100)
+    expect_false(is.list(ref))
+  }
+})
+
+test_with_dir("global rds format + target qs (#1124)", {
+  skip_if_not_installed("qs")
+  skip_if(getRversion() < "3.5.0")
+  plan <- drake_plan(
+    x = list(x = letters, y = letters),
+    y = target("qs format", format = "qs")
+  )
+  make(plan, format = "rds")
+  out <- readd(x)
+  exp <- list(x = letters, y = letters)
+  expect_equal(out, exp)
+  expect_equal(readd(y), "qs format")
+  cache <- drake_cache()
+  expect_equal(cache$get_value(cache$get_hash("x")), exp)
+  ref <- cache$storr$get("x")
+  expect_true(inherits(ref, "drake_format"))
+  expect_true(inherits(ref, "drake_format_rds"))
+  expect_equal(length(ref), 1L)
+  expect_true(nchar(ref) < 100)
+  expect_false(is.list(ref))
+  ref <- cache$storr$get("y")
+  expect_true(inherits(ref, "drake_format"))
+  expect_true(inherits(ref, "drake_format_qs"))
+  expect_equal(length(ref), 1L)
+  expect_true(nchar(ref) < 100)
+  expect_false(is.list(ref))
+})
