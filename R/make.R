@@ -162,7 +162,8 @@ make <- function(
   recoverable = TRUE,
   curl_handles = list(),
   max_expand = NULL,
-  log_build_times = TRUE
+  log_build_times = TRUE,
+  format = NULL
 ) {
   force(envir)
   deprecate_arg(config, "config")
@@ -219,7 +220,8 @@ make <- function(
     recoverable = recoverable,
     curl_handles = curl_handles,
     max_expand = max_expand,
-    log_build_times = log_build_times
+    log_build_times = log_build_times,
+    format = format
   )
   make_impl(config)
 }
