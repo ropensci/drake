@@ -30,10 +30,14 @@ store_triggers <- function(target, meta, config) {
       use_cache = FALSE
     )
   }
-  store_output_files(config$spec[[target]]$deps_build$file_out, meta, config)
+  store_file_out_files(
+    config$spec[[target]]$deps_build$file_out,
+    meta,
+    config
+  )
 }
 
-store_output_files <- function(files, meta, config) {
+store_file_out_files <- function(files, meta, config) {
   meta$isfile <- TRUE
   for (file in files) {
     meta$name <- file
