@@ -345,7 +345,11 @@ assign_format <- function(target, value, config) {
   }
   config$logger$minor("format", format, target = target)
   out <- list(value = value)
-  class(out) <- c(paste0("drake_format_", format), "drake_format")
+  class(out) <- c(
+    paste0("drake_format_", format),
+    "drake_format",
+    "drake"
+  )
   sanitize_format(x = out, target = target, config = config)
 }
 
@@ -410,6 +414,38 @@ sanitize_format.drake_format_diskframe <- function(x, target, config) { # nolint
   x
 }
 
+sanitize_format.drake_format_path <- function(x, target, config) { # nolint
+  if (!file.exists(x$value) && !is_url(x$value)) {
+    msg <- paste0(
+      "You selected \"path\" format for target ", target,
+      ", so the return value must be the path to an existing file ",
+      "or directory. But ", shQuote(x$value), "does not exist."
+    )
+    warning(msg, call. = FALSE)
+    config$logger$minor(msg, target = target)
+  }
+  new_format_path(x$value, config)
+}
+
+new_format_path <- function(path, config) {
+  path <- as.character(path)
+  class(path) <- c("drake_format_path", "drake_format", "drake")
+  attr(path, "hash") <- rehash_storage_impl(path, config)
+  attr(path, "size") <- storage_size(path)
+  attr(path, "time") <- storage_mtime(path)
+  path
+}
+
+#' @export
+print.drake_format_path <- function(x, ...) {
+  cat(as.character(x), "\n", sep = "")
+  at <- attributes(x)
+  at$class <- NULL
+  cat("storage attributes:\n")
+  cat(str(at, no.list = TRUE))
+  invisible()
+}
+
 assign_to_envir <- function(target, value, config) {
   if (is_subtarget(target, config)) {
     return()
@@ -446,6 +482,10 @@ value_format.drake_format_diskframe <- function(value, target, config) { # nolin
 
 value_format.drake_format <- function(value, target, config) {
   value$value
+}
+
+value_format.drake_format_path <- function(value, target, config) {
+  value
 }
 
 value_format.default <- function(value, target, config) {

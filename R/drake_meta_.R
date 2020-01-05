@@ -319,6 +319,10 @@ rehash_storage <- function(target, file = NULL, config) {
   if (is.null(file)) {
     file <- config$cache$decode_path(target)
   }
+  rehash_storage_impl(file, config)
+}
+
+rehash_storage_impl <- function(file, config) {
   if (is_url(file)) {
     return(rehash_url(url = file, config = config))
   }
