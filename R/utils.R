@@ -138,8 +138,16 @@ longest_match <- function(choices, against) {
   matches[which.max(nchar(matches))]
 }
 
+vcapply <- function(X, FUN, ...) {
+  vapply(X, FUN, FUN.VALUE = character(1), ...)
+}
+
 vlapply <- function(X, FUN, ...) {
   vapply(X, FUN, FUN.VALUE = logical(1), ...)
+}
+
+vnapply <- function(X, FUN, ...) {
+  vapply(X, FUN, FUN.VALUE = numeric(1), ...)
 }
 
 num_unique <- function(x) {

@@ -415,11 +415,13 @@ sanitize_format.drake_format_diskframe <- function(x, target, config) { # nolint
 }
 
 sanitize_format.drake_format_path <- function(x, target, config) { # nolint
-  if (!file.exists(x$value) && !is_url(x$value)) {
+  invalid <- x$value[!file.exists(x$value) & !is_url(x$value)]
+  if (length(invalid)) {
     msg <- paste0(
       "You selected \"path\" format for target ", target,
-      ", so the return value must be the path to an existing file ",
-      "or directory. But ", shQuote(x$value), "does not exist."
+      ", so the return value must have paths to existing files ",
+      "or directories. But these files does not exist:\n",
+      multiline_message(invalid)
     )
     warning(msg, call. = FALSE)
     config$logger$minor(msg, target = target)
@@ -430,18 +432,19 @@ sanitize_format.drake_format_path <- function(x, target, config) { # nolint
 new_format_path <- function(path, config) {
   path <- as.character(path)
   class(path) <- c("drake_format_path", "drake_format", "drake")
-  attr(path, "hash") <- rehash_storage_impl(path, config)
-  attr(path, "size") <- storage_size(path)
-  attr(path, "time") <- storage_mtime(path)
+  attr(path, "hash") <- vcapply(path, rehash_storage_impl, config = config)
+  attr(path, "size") <- vnapply(path, storage_size)
+  attr(path, "time") <- vnapply(path, storage_mtime)
   path
 }
 
 #' @export
 print.drake_format_path <- function(x, ...) {
-  cat(as.character(x), "\n", sep = "")
+  cat("files and directories created by a drake target:\n")
+  print(as.character(x), sep = "\n")
   at <- attributes(x)
   at$class <- NULL
-  cat("storage attributes:\n")
+  cat("storage metadata:\n")
   cat(str(at, no.list = TRUE))
   invisible()
 }
