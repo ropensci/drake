@@ -819,25 +819,33 @@ test_with_dir("global rds format + target qs (#1124)", {
 
 test_with_dir("dynamic file targets (#1127)", {
   plan <- drake_plan(
-    x = target({
-      writeLines("123", "abc")
-      writeLines("7890", "xyz")
-      c("abc", "xyz")
-    },
-    format = "file"
+    x = c("a", "b"),
+    y = target(
+      writeLines(x, x),
+      dynamic = map(x),
+      format = "file"
     ),
-    y = x
+    z = target(y, format = "file")
   )
   config <- drake_config(plan)
-  expect_equal(sort(outdated_impl(config)), sort(c("x", "y")))
+  expect_equal(sort(outdated_impl(config)), sort(c("x", "y", "z")))
   make_impl(config)
-  expect_equal(sort(justbuilt(config)), sort(c("x", "y")))
+  expect_equal(
+    sort(justbuilt(config)),
+    sort(c("x", "y", "z", subtargets(y), subtargets(z)))
+  )
   expect_equal(outdated_impl(config), character(0))
   make_impl(config)
   expect_equal(justbuilt(config), character(0))
-  writeLines("78901", "xyz")
-  expect_equal(sort(outdated_impl(config)), sort(c("x", "y")))
+  writeLines("123", "b")
+  expect_equal(
+    sort(outdated_impl(config)),
+    sort(c("x", "y", subtargets(x)[2], subtargets(y)[2]))
+  )
   make_impl(config)
-  expect_equal(sort(justbuilt(config)), sort(c("x", "y")))
-  expect_equal(readLines("xyz"), "7890")
+  expect_equal(
+    sort(justbuilt(config)),
+    sort(c("x", "y", subtargets(x)[2], subtargets(y)[2]))
+  )
+  expect_equal(readLines("b"), "123")
 })
