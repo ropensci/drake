@@ -414,11 +414,11 @@ sanitize_format.drake_format_diskframe <- function(x, target, config) { # nolint
   x
 }
 
-sanitize_format.drake_format_path <- function(x, target, config) { # nolint
+sanitize_format.drake_format_file <- function(x, target, config) { # nolint
   invalid <- x$value[!file.exists(x$value) & !is_url(x$value)]
   if (length(invalid)) {
     msg <- paste0(
-      "You selected \"path\" format for target ", target,
+      "You selected \"file\" format for target ", target,
       ", so the return value must have paths to existing files ",
       "or directories. But these files does not exist:\n",
       multiline_message(invalid)
@@ -426,20 +426,20 @@ sanitize_format.drake_format_path <- function(x, target, config) { # nolint
     warning(msg, call. = FALSE)
     config$logger$minor(msg, target = target)
   }
-  new_format_path(x$value, config)
+  new_format_file(x$value, config)
 }
 
-new_format_path <- function(path, config) {
-  path <- as.character(path)
-  class(path) <- c("drake_format_path", "drake_format", "drake")
-  attr(path, "hash") <- vcapply(path, rehash_storage_impl, config = config)
-  attr(path, "size") <- vnapply(path, storage_size)
-  attr(path, "time") <- vnapply(path, storage_mtime)
-  path
+new_format_file <- function(file, config) {
+  file <- as.character(file)
+  class(file) <- c("drake_format_file", "drake_format", "drake")
+  attr(file, "hash") <- vcapply(file, rehash_storage_impl, config = config)
+  attr(file, "size") <- vnapply(file, storage_size)
+  attr(file, "time") <- vnapply(file, storage_mtime)
+  file
 }
 
 #' @export
-print.drake_format_path <- function(x, ...) {
+print.drake_format_file <- function(x, ...) {
   cat("files and directories created by a drake target:\n")
   print(as.character(x), sep = "\n")
   at <- attributes(x)
@@ -487,7 +487,7 @@ value_format.drake_format <- function(value, target, config) {
   value$value
 }
 
-value_format.drake_format_path <- function(value, target, config) {
+value_format.drake_format_file <- function(value, target, config) {
   value
 }
 

@@ -841,7 +841,7 @@ plan_check_format_col <- function(plan) {
     "keras",
     "qs",
     "rds",
-    "path"
+    "file"
   )
   illegal <- setdiff(unique(format), formats)
   if (!length(illegal)) {

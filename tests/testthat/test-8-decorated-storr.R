@@ -816,28 +816,3 @@ test_with_dir("global rds format + target qs (#1124)", {
   expect_true(nchar(ref) < 100)
   expect_false(is.list(ref))
 })
-
-test_with_dir("path format flow (#1127)", {
-  plan <- drake_plan(
-    x = target({
-      writeLines("123", "abc")
-      writeLines("7890", "xyz")
-      c("abc", "xyz")
-    },
-    format = "path"
-    ),
-    y = x
-  )
-  config <- drake_config(plan)
-  expect_equal(sort(outdated_impl(config)), sort(c("x", "y")))
-  make_impl(config)
-  expect_equal(sort(justbuilt(config)), sort(c("x", "y")))
-  expect_equal(outdated_impl(config), character(0))
-  make_impl(config)
-  expect_equal(justbuilt(config), character(0))
-  writeLines("78901", "xyz")
-  expect_equal(sort(outdated_impl(config)), sort(c("x", "y")))
-  make_impl(config)
-  expect_equal(sort(justbuilt(config)), sort(c("x", "y")))
-  expect_equal(readLines("xyz"), "7890")
-})

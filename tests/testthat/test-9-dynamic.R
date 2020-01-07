@@ -1615,3 +1615,28 @@ test_with_dir("cache_planned() and cache_unplanned() (#)", {
   clean(list = cached_unplanned(plan))
   expect_equal(sort(cached()), sort(exp))
 })
+
+test_with_dir("dynamic file targets (#1127)", {
+  plan <- drake_plan(
+    x = target({
+      writeLines("123", "abc")
+      writeLines("7890", "xyz")
+      c("abc", "xyz")
+    },
+    format = "file"
+    ),
+    y = x
+  )
+  config <- drake_config(plan)
+  expect_equal(sort(outdated_impl(config)), sort(c("x", "y")))
+  make_impl(config)
+  expect_equal(sort(justbuilt(config)), sort(c("x", "y")))
+  expect_equal(outdated_impl(config), character(0))
+  make_impl(config)
+  expect_equal(justbuilt(config), character(0))
+  writeLines("78901", "xyz")
+  expect_equal(sort(outdated_impl(config)), sort(c("x", "y")))
+  make_impl(config)
+  expect_equal(sort(justbuilt(config)), sort(c("x", "y")))
+  expect_equal(readLines("xyz"), "7890")
+})

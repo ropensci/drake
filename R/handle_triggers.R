@@ -148,7 +148,7 @@ check_triggers_stage2 <- function(target, meta, meta_old, config) {
   if (check_trigger_file(target, meta, meta_old, config)) {
     return(TRUE)
   }
-  if (check_trigger_path_format(target, meta, config)) {
+  if (check_trigger_file_format(target, meta, config)) {
     return(TRUE)
   }
   if (check_trigger_seed(target, meta, meta_old, config)) {
@@ -217,9 +217,9 @@ check_trigger_file <- function(target, meta, meta_old, config) {
   FALSE
 }
 
-check_trigger_path_format <- function(target, meta, config) {
+check_trigger_file_format <- function(target, meta, config) {
   if (identical(meta$trigger$file, TRUE)) {
-    if (trigger_path_format(target, meta, config)) {
+    if (trigger_file_format(target, meta, config)) {
       config$logger$minor("trigger path format", target = target)
       return(TRUE)
     }
@@ -311,17 +311,17 @@ trigger_file_hash <- function(target, meta, meta_old, config) {
   FALSE
 }
 
-trigger_path_format <- function(target, meta, config) {
-  if (is_dynamic(target, config) || meta$format != "path") {
+trigger_file_format <- function(target, meta, config) {
+  if (is_dynamic(target, config) || meta$format != "file") {
     return(FALSE)
   }
-  path <- config$cache$get(target)
-  hash <- attr(path, "hash")
-  size <- attr(path, "size")
-  time <- attr(path, "time")
-  for (i in seq_along(path)) {
-    result <- trigger_path_format_impl(
-      path = path[i],
+  file <- config$cache$get(target)
+  hash <- attr(file, "hash")
+  size <- attr(file, "size")
+  time <- attr(file, "time")
+  for (i in seq_along(file)) {
+    result <- trigger_file_format_impl(
+      file = file[i],
       hash = hash[i],
       size = size[i],
       time = time[i],
@@ -334,21 +334,21 @@ trigger_path_format <- function(target, meta, config) {
   FALSE
 }
 
-trigger_path_format_impl <- function(path, hash, size, time, config) {
-  if (!file.exists(path) && !is_url(path)) {
+trigger_file_format_impl <- function(file, hash, size, time, config) {
+  if (!file.exists(file) && !is_url(file)) {
     return(TRUE)
   }
   need_rehash <- should_rehash_storage(
     size_threshold = rehash_storage_size_threshold,
-    new_mtime = storage_mtime(path),
+    new_mtime = storage_mtime(file),
     old_mtime = as.numeric(time %|||% -Inf),
-    new_size = storage_size(path),
+    new_size = storage_size(file),
     old_size = size %|||% -1L
   )
   if (!need_rehash) {
     return(FALSE)
   }
-  hash != rehash_storage_impl(path, config)
+  hash != rehash_storage_impl(file, config)
 }
 
 trigger_seed <- function(target, meta, meta_old, config) {
