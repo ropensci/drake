@@ -475,7 +475,8 @@
 #' @param lock_cache Logical, whether to lock the cache before running `make()`
 #'   etc. It is usually recommended to keep cache locking on.
 #'   However, if you interrupt `make()` before it can clean itself up,
-#'   then the cache will stay locked, and you will need to manually unlock it with
+#'   then the cache will stay locked,
+#'   and you will need to manually unlock it with
 #'   `drake::drake_cache("xyz")$unlock()`. Repeatedly unlocking the cache
 #'   by hand is annoying, and `lock_cache = FALSE` prevents the cache
 #'   from locking in the first place.
