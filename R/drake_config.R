@@ -467,6 +467,11 @@
 #'   Mac users may notice a 20% speedup in `make()`
 #'   with `build_times = FALSE`.
 #'
+#' @param format Character, an optional custom storage format for targets
+#'   without an explicit `target(format = ...)` in the plan. Details
+#'   about formats:
+#'   <https://books.ropensci.org/drake/plans.html#special-data-formats-for-targets> # nolint
+#'
 #' @examples
 #' \dontrun{
 #' isolate_example("quarantine side effects", {
@@ -539,7 +544,8 @@ drake_config <- function(
   recoverable = TRUE,
   curl_handles = list(),
   max_expand = NULL,
-  log_build_times = TRUE
+  log_build_times = TRUE,
+  format = NULL
 ) {
   logger <- logger(verbose = verbose, file = console_log_file)
   logger$minor("begin drake_config()")
@@ -661,7 +667,8 @@ drake_config <- function(
     ht_is_dynamic = ht_is_dynamic,
     ht_is_subtarget = ht_is_subtarget, # Gets replaced in make()
     max_expand = max_expand,
-    log_build_times = log_build_times
+    log_build_times = log_build_times,
+    format = format
   )
   class(out) <- c("drake_config", "drake")
   config_checks(out)

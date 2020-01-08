@@ -59,7 +59,8 @@ make(
   recoverable = TRUE,
   curl_handles = list(),
   max_expand = NULL,
-  log_build_times = TRUE
+  log_build_times = TRUE,
+  format = NULL
 )
 }
 \arguments{
@@ -528,6 +529,11 @@ is an argument of \code{drake_plan()} and \code{transform_plan()}.}
 \item{log_build_times}{Logical, whether to record build_times for targets.
 Mac users may notice a 20\% speedup in \code{make()}
 with \code{build_times = FALSE}.}
+
+\item{format}{Character, an optional custom storage format for targets
+without an explicit \code{target(format = ...)} in the plan. Details
+about formats:
+\url{https://books.ropensci.org/drake/plans.html#special-data-formats-for-targets} # nolint}
 }
 \value{
 nothing

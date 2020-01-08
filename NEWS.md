@@ -1,5 +1,9 @@
 # Version 7.9.0.9000
 
+## New features
+
+- Add a new `format` argument to `make()`, an optional custom storage format for targets without an explicit `target(format = ...)` in the plan (#1124).
+
 ## Enhancements
 
 - Smoothly deprecate the `config` argument in all user-side functions (#1118, @vkehayas). Users can now supply the plan and other `make()` arguments directly, without bothering with `drake_config()`. Now, you only need to call `drake_config()` in the `_drake.R` file for `r_make()` and friends. Old code with `config` objects should still work. Affected functions:

@@ -328,18 +328,14 @@ conclude_build <- function(build, config) {
   meta <- build$meta
   assert_output_files(target = target, meta = meta, config = config)
   handle_build_exceptions(target = target, meta = meta, config = config)
-  value <- assign_format(
-    target = target,
-    value = value,
-    format = config$spec[[target]]$format,
-    config = config
-  )
+  value <- assign_format(target = target, value = value, config = config)
   store_outputs(target = target, value = value, meta = meta, config = config)
   assign_to_envir(target = target, value = value, config = config)
   invisible(value)
 }
 
-assign_format <- function(target, value, format, config) {
+assign_format <- function(target, value, config) {
+  format <- config$spec[[target]]$format %||NA% config$format
   drop_format <- is.null(format) ||
     is.na(format) ||
     is.null(value) ||
