@@ -39,14 +39,14 @@
 #' isolate_example("Quarantine side effects.", {
 #' if (suppressWarnings(require("knitr"))) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' config <- drake_config(my_plan)
 #' make(my_plan)
 #' clean()
-#' outdated(config) # Which targets are outdated?
-#' recoverable(config) # Which of these are recoverable and upstream?
+#' outdated(my_plan) # Which targets are outdated?
+#' recoverable(my_plan) # Which of these are recoverable and upstream?
 #' # The report still builds because clean() removes report.md,
 #' # but make() recovers the rest.
 #' make(my_plan, recover = TRUE)
+#' outdated(my_plan)
 #' # When was the *recovered* small data actually built (first stored)?
 #' # (Was I using a different version of R back then?)
 #' diagnose(small)$date
@@ -58,8 +58,22 @@
 #' }
 #' })
 #' }
-recoverable <-  function(
-  config,
+recoverable <- function(
+  ...,
+  make_imports = TRUE,
+  do_prework = TRUE,
+  config = NULL
+) {
+}
+
+#' @title Internal function with a drake_config() argument
+#' @export
+#' @keywords internal
+#' @description Not a user-side function.
+#' @inheritParams outdated
+#' @param config A [drake_config()] object.
+recoverable_impl <- function(
+  config = NULL,
   make_imports = TRUE,
   do_prework = TRUE
 ) {
@@ -88,6 +102,8 @@ recoverable <-  function(
   out[index]
 }
 
+body(recoverable) <- config_util_body(recoverable_impl)
+
 is_recoverable <- function(target, config) {
   meta <- drake_meta_(target = target, config = config)
   key <- recovery_key(target = target, meta = meta, config = config)
@@ -109,11 +125,13 @@ is_recoverable <- function(target, config) {
 #' @seealso [r_outdated()], [drake_config()], [missed()], [drake_plan()],
 #'   [make()]
 #' @return Character vector of the names of outdated targets.
-#' @param config A configured workflow from [drake_config()].
+#' @param ... Arguments to [make()], such as `plan` and `targets` and `envir`.
 #' @param make_imports Logical, whether to make the imports first.
 #'   Set to `FALSE` to save some time and risk obsolete output.
 #' @param do_prework Whether to do the `prework`
 #'   normally supplied to [make()].
+#' @param config Deprecated (2019-12-21).
+#'   A configured workflow from [drake_config()].
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {
@@ -121,16 +139,28 @@ is_recoverable <- function(target, config) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' # Recopute the config list early and often to have the
 #' # most current information. Do not modify the config list by hand.
-#' config <- drake_config(my_plan)
-#' outdated(config = config) # Which targets are out of date?
+#' outdated(my_plan) # Which targets are out of date?
 #' make(my_plan) # Run the projects, build the targets.
-#' config <- drake_config(my_plan)
 #' # Now, everything should be up to date (no targets listed).
-#' outdated(config = config)
+#' outdated(my_plan)
 #' }
 #' })
 #' }
 outdated <-  function(
+  ...,
+  make_imports = TRUE,
+  do_prework = TRUE,
+  config = NULL
+) {
+}
+
+#' @title Internal function with a drake_config() argument
+#' @export
+#' @keywords internal
+#' @description Not a user-side function.
+#' @inheritParams outdated
+#' @param config A [drake_config()] object.
+outdated_impl <- function(
   config,
   make_imports = TRUE,
   do_prework = TRUE
@@ -156,6 +186,8 @@ outdated <-  function(
   out <- sort(unique(as.character(c(from, to))))
   out[!is_encoded_path(out)]
 }
+
+body(outdated) <- config_util_body(outdated_impl)
 
 first_outdated <- function(config) {
   config$cache$reset_memo_hash()
@@ -213,22 +245,26 @@ missing_subtargets <- function(target, meta, config) {
 #' @export
 #' @seealso [outdated()]
 #' @return Character vector of names of missing objects and files.
-#'
-#' @param config A configured workflow from [drake_config()].
-#'
+#' @param ... Arguments to [make()], such as `plan` and `targets`.
+#' @param config Deprecated.
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {
 #' if (suppressWarnings(require("knitr"))) {
-#' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' config <- drake_config(my_plan)
-#' missed(config) # All the imported files and objects should be present.
-#' rm(reg1) # Remove an import dependency from you workspace.
-#' missed(config) # Should report that reg1 is missing.
+#' plan <- drake_plan(x = missing::fun(arg))
+#' missed(plan)
 #' }
 #' })
 #' }
-missed <- function(config) {
+missed <- function(..., config = NULL) {
+}
+
+#' @title Internal function with a drake_config() argument
+#' @export
+#' @keywords internal
+#' @description Not a user-side function.
+#' @param config A [drake_config()] object.
+missed_impl <- function(config) {
   config$logger$minor("begin missed()")
   on.exit(config$logger$minor("end missed()"), add = TRUE)
   assert_config(config)
@@ -245,6 +281,8 @@ missed <- function(config) {
   }
   config$cache$display_keys(imports[is_missing])
 }
+
+body(missed) <- config_util_body(missed_impl)
 
 missing_import <- function(x, config) {
   if (is_encoded_path(x)) {

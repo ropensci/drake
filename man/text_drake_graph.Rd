@@ -6,7 +6,7 @@
 \lifecycle{stable}}
 \usage{
 text_drake_graph(
-  config,
+  ...,
   from = NULL,
   mode = c("out", "in", "all"),
   order = NULL,
@@ -18,11 +18,12 @@ text_drake_graph(
   clusters = NULL,
   show_output_files = TRUE,
   nchar = 1L,
-  print = TRUE
+  print = TRUE,
+  config = NULL
 )
 }
 \arguments{
-\item{config}{A configured workflow from \code{\link[=drake_config]{drake_config()}}.}
+\item{...}{Arguments to \code{\link[=make]{make()}}, such as \code{plan} and \code{targets}.}
 
 \item{from}{Optional collection of target/import names.
 If \code{from} is nonempty,
@@ -90,6 +91,8 @@ via \code{message()}. If \code{FALSE}, nothing is printed. However, you still
 have the visualization because \code{text_drake_graph()} and
 \code{render_text_drake_graph()} still invisibly return a character string
 that you can print yourself with \code{message()}.}
+
+\item{config}{Deprecated.}
 }
 \value{
 A \code{visNetwork} graph.
@@ -106,14 +109,13 @@ with SSH and you do not have access to X Window support.
 isolate_example("Quarantine side effects.", {
 if (suppressWarnings(require("knitr"))) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
-config <- drake_config(my_plan)
 # Plot the network graph representation of the workflow.
 pkg <- requireNamespace("txtplot", quietly = TRUE) &&
   requireNamespace("visNetwork", quietly = TRUE)
 if (pkg) {
-text_drake_graph(config)
+text_drake_graph(my_plan)
 make(my_plan) # Run the project, build the targets.
-text_drake_graph(config) # The black nodes from before are now green.
+text_drake_graph(my_plan) # The black nodes from before are now green.
 }
 }
 })

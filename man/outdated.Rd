@@ -5,16 +5,19 @@
 \title{List the targets that are out of date.
 \lifecycle{stable}}
 \usage{
-outdated(config, make_imports = TRUE, do_prework = TRUE)
+outdated(..., make_imports = TRUE, do_prework = TRUE, config = NULL)
 }
 \arguments{
-\item{config}{A configured workflow from \code{\link[=drake_config]{drake_config()}}.}
+\item{...}{Arguments to \code{\link[=make]{make()}}, such as \code{plan} and \code{targets} and \code{envir}.}
 
 \item{make_imports}{Logical, whether to make the imports first.
 Set to \code{FALSE} to save some time and risk obsolete output.}
 
 \item{do_prework}{Whether to do the \code{prework}
 normally supplied to \code{\link[=make]{make()}}.}
+
+\item{config}{Deprecated (2019-12-21).
+A configured workflow from \code{\link[=drake_config]{drake_config()}}.}
 }
 \value{
 Character vector of the names of outdated targets.
@@ -30,12 +33,10 @@ if (suppressWarnings(require("knitr"))) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 # Recopute the config list early and often to have the
 # most current information. Do not modify the config list by hand.
-config <- drake_config(my_plan)
-outdated(config = config) # Which targets are out of date?
+outdated(my_plan) # Which targets are out of date?
 make(my_plan) # Run the projects, build the targets.
-config <- drake_config(my_plan)
 # Now, everything should be up to date (no targets listed).
-outdated(config = config)
+outdated(my_plan)
 }
 })
 }

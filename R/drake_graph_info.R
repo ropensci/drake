@@ -8,7 +8,9 @@
 #'   the legend nodes. The list also contains the
 #'   default title of the graph.
 #' @seealso [vis_drake_graph()]
-#' @param config A configured workflow from [drake_config()].
+#' @param ... Arguments to [make()], such as `plan` and `targets`.
+#'
+#' @param config Deprecated.
 #'
 #' @param from Optional collection of target/import names.
 #'   If `from` is nonempty,
@@ -94,14 +96,13 @@
 #' if (requireNamespace("visNetwork", quietly = TRUE)) {
 #' if (suppressWarnings(require("knitr"))) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' config <- drake_config(my_plan) # my_plan loaded with load_mtcars_example()
-#' vis_drake_graph(config) # Jump straight to the interactive graph.
+#' vis_drake_graph(my_plan)
 #' # Get a list of data frames representing the nodes, edges,
 #' # and legend nodes of the visNetwork graph from vis_drake_graph().
-#' raw_graph <- drake_graph_info(config = config)
+#' raw_graph <- drake_graph_info(my_plan)
 #' # Choose a subset of the graph.
 #' smaller_raw_graph <- drake_graph_info(
-#'   config = config,
+#'   my_plan,
 #'   from = c("small", "reg2"),
 #'   mode = "in"
 #' )
@@ -118,6 +119,33 @@
 #' })
 #' }
 drake_graph_info <- function(
+  ...,
+  from = NULL,
+  mode = c("out", "in", "all"),
+  order = NULL,
+  subset = NULL,
+  build_times = "build",
+  digits = 3,
+  targets_only = FALSE,
+  font_size = 20,
+  from_scratch = FALSE,
+  make_imports = TRUE,
+  full_legend = FALSE,
+  group = NULL,
+  clusters = NULL,
+  show_output_files = TRUE,
+  hover = FALSE,
+  on_select_col = NULL,
+  config = NULL
+) {
+}
+
+#' @title Internal function
+#' @export
+#' @keywords internal
+#' @description Not a user-side function.
+#' @param config A [drake_config()] object.
+drake_graph_info_impl <- function(
   config,
   from = NULL,
   mode = c("out", "in", "all"),
@@ -204,7 +232,7 @@ drake_graph_info <- function(
   if (length(config$group)) {
     config <- cluster_nodes(config)
   }
-  list(
+  out <- list(
     nodes = weak_as_tibble(config$nodes),
     edges = weak_as_tibble(config$edges),
     legend_nodes = filtered_legend_nodes(
@@ -214,7 +242,23 @@ drake_graph_info <- function(
     ),
     default_title = default_graph_title()
   )
+  class(out) <- "drake_graph_info"
+  out
 }
+
+#' @export
+print.drake_graph_info <- function(x, ...) {
+  cat(
+    "drake graph visual info:",
+    nrow(x$nodes),
+    "nodes and",
+    nrow(x$edges),
+    "edges:\n"
+  )
+  min_str(x)
+}
+
+body(drake_graph_info) <- config_util_body(drake_graph_info_impl)
 
 get_raw_node_category_data <- function(config) {
   all_labels <- V(config$graph)$name
@@ -263,7 +307,7 @@ resolve_graph_outdated <- function(config) {
   if (config$from_scratch) {
     config$outdated <- all_targets(config)
   } else {
-    config$outdated <- outdated(
+    config$outdated <- outdated_impl(
       config = config,
       make_imports = config$make_imports
     )

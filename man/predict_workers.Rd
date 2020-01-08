@@ -7,18 +7,19 @@ for non-staged parallel backends.
 \lifecycle{maturing}}
 \usage{
 predict_workers(
-  config,
+  ...,
   targets = NULL,
   from_scratch = FALSE,
   targets_only = NULL,
   jobs = 1,
   known_times = numeric(0),
   default_time = 0,
-  warn = TRUE
+  warn = TRUE,
+  config = NULL
 )
 }
 \arguments{
-\item{config}{A configured workflow from \code{\link[=drake_config]{drake_config()}}.}
+\item{...}{Arguments to \code{\link[=make]{make()}}, such as \code{plan} and \code{targets}.}
 
 \item{targets}{Character vector, names of targets.
 Predict the runtime of building these targets
@@ -49,6 +50,8 @@ or anything in \code{known_times}.}
 any targets with no available runtime, either in
 \code{known_times} or \code{\link[=build_times]{build_times()}}. The times for these
 targets default to \code{default_time}.}
+
+\item{config}{Deprecated.}
 }
 \value{
 A data frame showing one likely arrangement
@@ -68,26 +71,25 @@ isolate_example("Quarantine side effects.", {
 if (suppressWarnings(require("knitr"))) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 make(my_plan) # Run the project, build the targets.
-config <- drake_config(my_plan)
 known_times <- rep(7200, nrow(my_plan))
 names(known_times) <- my_plan$target
 known_times
 # Predict the runtime
 if (requireNamespace("lubridate", quietly = TRUE)) {
 predict_runtime(
-  config = config,
+  my_plan,
   jobs = 7,
   from_scratch = TRUE,
   known_times = known_times
 )
 predict_runtime(
-  config,
+  my_plan,
   jobs = 8,
   from_scratch = TRUE,
   known_times = known_times
 )
 balance <- predict_workers(
-  config,
+  my_plan,
   jobs = 7,
   from_scratch = TRUE,
   known_times = known_times

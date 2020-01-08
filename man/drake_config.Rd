@@ -2,7 +2,7 @@
 % Please edit documentation in R/drake_config.R
 \name{drake_config}
 \alias{drake_config}
-\title{Configure a drake workflow to your environment and plan.
+\title{Ending of _drake.R for r_make() and friends
 \lifecycle{maturing}}
 \usage{
 drake_config(
@@ -194,8 +194,7 @@ and slows down \code{make()} a little.
 If you need to reduce or limit the number of files in the cache,
 call \code{make(log_progress = FALSE, recover = FALSE)}.}
 
-\item{graph}{An \code{config$graph} object from an existing \code{drake_config()}.
-Supplying a pre-built graph could save time.}
+\item{graph}{Deprecated.}
 
 \item{trigger}{Name of the trigger to apply to all targets.
 Ignored if \code{plan} has a \code{trigger} column.
@@ -434,11 +433,9 @@ help file examples of \code{\link[=drake_envir]{drake_envir()}}.
 Also see the \code{garbage_collection} argument of \code{make()} and
 \code{drake_config()}.}
 
-\item{spec}{\code{config$spec} from an existing \code{drake_config()}.
-Supplying a pre-built workflow specification to this argument
-could save time in some cases.}
+\item{spec}{Deprecated.}
 
-\item{layout}{Deprecated. Use \code{spec} instead.}
+\item{layout}{Deprecated.}
 
 \item{lock_envir}{Logical, whether to lock \code{config$envir} during \code{make()}.
 If \code{TRUE}, \code{make()} quits in error whenever a command in your
@@ -533,25 +530,23 @@ with \code{build_times = FALSE}.}
 A configured \code{drake} workflow.
 }
 \description{
+Call this function inside the \verb{_drake.R}
+script for \code{\link[=r_make]{r_make()}} and friends.
+All non-deprecated function arguments are the same
+between \code{\link[=make]{make()}} and \code{\link[=drake_config]{drake_config()}}.
+}
+\details{
 In \code{drake}, \code{\link[=make]{make()}} has two stages:
 \enumerate{
 \item Configure a workflow to your environment and plan.
 \item Build targets.
-The \code{\link[=drake_config]{drake_config()}} function just does step (1).
-It returns a configured workflow that you can inspect
-with utility functions like
-\code{\link[=outdated]{outdated()}} and \code{\link[=vis_drake_graph]{vis_drake_graph()}}.
-The configured workflow strongly depends on your environment
-and plan, so if you create new functions or change the plan,
-rerun \code{\link[=drake_config]{drake_config()}}.
-And once you create a configured workflow with \code{\link[=drake_config]{drake_config()}},
-do not modify it by hand.
+The \code{\link[=drake_config]{drake_config()}} function just does step (1),
+which is a common requirement for not only \code{\link[=make]{make()}},
+but also utility functions like \code{\link[=vis_drake_graph]{vis_drake_graph()}}
+and \code{\link[=outdated]{outdated()}}. That is why \code{\link[=drake_config]{drake_config()}}
+is a requirement for the \verb{_drake.R} script, which
+powers \code{\link[=r_make]{r_make()}}, \code{\link[=r_outdated]{r_outdated()}}, \code{\link[=r_vis_drake_graph]{r_vis_drake_graph()}}, etc.
 }
-}
-\details{
-Almost all function arguments are exactly the same
-between \code{\link[=make]{make()}} and \code{drake_config()}
-(all except \code{config} in \code{\link[=make]{make()}}).
 }
 \section{Recovery}{
 
@@ -586,20 +581,21 @@ If both conditions are met, \code{drake} will
 
 \examples{
 \dontrun{
-isolate_example("Quarantine side effects.", {
-load_mtcars_example() # Get the code with drake_example("mtcars").
-# Construct the master internal configuration list.
-config <- drake_config(my_plan)
-if (requireNamespace("visNetwork")) {
-  vis_drake_graph(config) # See the dependency graph.
-  if (requireNamespace("networkD3")) {
-    sankey_drake_graph(config) # See the dependency graph.
-  }
+isolate_example("quarantine side effects", {
+if (requireNamespace("knitr", quietly = TRUE)) {
+writeLines(
+  c(
+    "library(drake)",
+    "load_mtcars_example()",
+    "drake_config(my_plan, targets = c(\"small\", \"large\"))"
+  ),
+  "_drake.R" # default value of the `source` argument
+)
+cat(readLines("_drake.R"), sep = "\n")
+r_outdated()
+r_make()
+r_outdated()
 }
-# These functions are faster than otherwise
-# because they use the configuration list.
-outdated(config) # Which targets are out of date?
-missed(config) # Which imports are missing?
 })
 }
 }

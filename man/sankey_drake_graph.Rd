@@ -6,7 +6,7 @@
 \lifecycle{stable}}
 \usage{
 sankey_drake_graph(
-  config,
+  ...,
   file = character(0),
   selfcontained = FALSE,
   build_times = "build",
@@ -21,11 +21,11 @@ sankey_drake_graph(
   group = NULL,
   clusters = NULL,
   show_output_files = TRUE,
-  ...
+  config = NULL
 )
 }
 \arguments{
-\item{config}{A configured workflow from \code{\link[=drake_config]{drake_config()}}.}
+\item{...}{Arguments to \code{\link[=make]{make()}}, such as \code{plan} and \code{targets}.}
 
 \item{file}{Name of a file to save the graph.
 If \code{NULL} or \code{character(0)}, no file is saved and
@@ -112,7 +112,7 @@ that you specify in the \code{group} argument to \code{drake_graph_info()}.}
 \item{show_output_files}{Logical, whether to include
 \code{\link[=file_out]{file_out()}} files in the graph.}
 
-\item{...}{Arguments passed to \code{networkD3::sankeyNetwork()}.}
+\item{config}{Deprecated.}
 }
 \value{
 A \code{visNetwork} graph.
@@ -132,17 +132,16 @@ but you can see what all the colors mean with
 isolate_example("Quarantine side effects.", {
 if (suppressWarnings(require("knitr"))) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
-config <- drake_config(my_plan)
 if (requireNamespace("networkD3", quietly = TRUE)) {
 if (requireNamespace("visNetwork", quietly = TRUE)) {
 # Plot the network graph representation of the workflow.
-sankey_drake_graph(config)
+sankey_drake_graph(my_plan)
 # Show the legend separately.
 visNetwork::visNetwork(nodes = drake::legend_nodes())
 make(my_plan) # Run the project, build the targets.
-sankey_drake_graph(config) # The black nodes from before are now green.
+sankey_drake_graph(my_plan) # The black nodes from before are now green.
 # Plot a subgraph of the workflow.
-sankey_drake_graph(config, from = c("small", "reg2"))
+sankey_drake_graph(my_plan, from = c("small", "reg2"))
 }
 }
 }

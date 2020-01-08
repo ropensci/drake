@@ -451,10 +451,10 @@ test_with_dir("commands and triggers can be character strings too", {
   }
   testrun(config)
   expect_equal(sort(config$plan$target), sort(justbuilt(config)))
-  expect_equal(outdated(config), character(0))
+  expect_equal(outdated_impl(config), character(0))
   testrun(config)
   expect_equal(character(0), sort(justbuilt(config)))
-  expect_equal(outdated(config), character(0))
+  expect_equal(outdated_impl(config), character(0))
   config$plan$trigger <- "trigger(condition = TRUE)"
   testrun(config)
   expect_equal(sort(config$plan$target), sort(justbuilt(config)))
@@ -611,7 +611,7 @@ test_with_dir("Trailing slashes in file paths on Windows", {
 test_with_dir("supplied a plan instead of a config", {
   skip_if_not_installed("visNetwork")
   plan <- drake_plan(x = 1)
-  expect_error(vis_drake_graph(plan), regexp = "must be a drake_config")
+  expect_error(vis_drake_graph_impl(plan), regexp = "must be a drake_config")
 })
 
 test_with_dir("warning when file_out() files not produced", {

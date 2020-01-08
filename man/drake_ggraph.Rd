@@ -6,7 +6,7 @@
 \lifecycle{stable}}
 \usage{
 drake_ggraph(
-  config,
+  ...,
   build_times = "build",
   digits = 3,
   targets_only = FALSE,
@@ -22,11 +22,12 @@ drake_ggraph(
   clusters = NULL,
   show_output_files = TRUE,
   label_nodes = FALSE,
-  transparency = TRUE
+  transparency = TRUE,
+  config = NULL
 )
 }
 \arguments{
-\item{config}{A configured workflow from \code{\link[=drake_config]{drake_config()}}.}
+\item{...}{Arguments to \code{\link[=make]{make()}}, such as \code{plan} and \code{targets}.}
 
 \item{build_times}{Character string or logical.
 If character, the choices are
@@ -109,6 +110,8 @@ which is recommended for large graphs with lots of targets.}
 \item{transparency}{Logical, whether to allow transparency in
 the rendered graph. Set to \code{FALSE} if you get warnings
 like "semi-transparency is not supported on this device".}
+
+\item{config}{Deprecated.}
 }
 \value{
 A \code{ggplot2} object, which you can modify with more layers,
@@ -122,10 +125,9 @@ Install them with \code{install.packages(c("ggplot2", "ggraph"))}.
 \dontrun{
 isolate_example("Quarantine side effects.", {
 load_mtcars_example() # Get the code with drake_example("mtcars").
-config <- drake_config(my_plan)
 # Plot the network graph representation of the workflow.
 if (requireNamespace("ggraph", quietly = TRUE)) {
-  drake_ggraph(config) # Save to a file with `ggplot2::ggsave()`.
+  drake_ggraph(my_plan) # Save to a file with `ggplot2::ggsave()`.
 }
 })
 }

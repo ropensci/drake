@@ -5,16 +5,19 @@
 \title{List the most upstream \emph{recoverable} outdated targets.
 \lifecycle{experimental}}
 \usage{
-recoverable(config, make_imports = TRUE, do_prework = TRUE)
+recoverable(..., make_imports = TRUE, do_prework = TRUE, config = NULL)
 }
 \arguments{
-\item{config}{A configured workflow from \code{\link[=drake_config]{drake_config()}}.}
+\item{...}{Arguments to \code{\link[=make]{make()}}, such as \code{plan} and \code{targets} and \code{envir}.}
 
 \item{make_imports}{Logical, whether to make the imports first.
 Set to \code{FALSE} to save some time and risk obsolete output.}
 
 \item{do_prework}{Whether to do the \code{prework}
 normally supplied to \code{\link[=make]{make()}}.}
+
+\item{config}{Deprecated (2019-12-21).
+A configured workflow from \code{\link[=drake_config]{drake_config()}}.}
 }
 \value{
 Character vector of the names of recoverable targets.
@@ -61,14 +64,14 @@ If both conditions are met, \code{drake} will
 isolate_example("Quarantine side effects.", {
 if (suppressWarnings(require("knitr"))) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
-config <- drake_config(my_plan)
 make(my_plan)
 clean()
-outdated(config) # Which targets are outdated?
-recoverable(config) # Which of these are recoverable and upstream?
+outdated(my_plan) # Which targets are outdated?
+recoverable(my_plan) # Which of these are recoverable and upstream?
 # The report still builds because clean() removes report.md,
 # but make() recovers the rest.
 make(my_plan, recover = TRUE)
+outdated(my_plan)
 # When was the *recovered* small data actually built (first stored)?
 # (Was I using a different version of R back then?)
 diagnose(small)$date

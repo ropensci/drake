@@ -119,7 +119,7 @@ test_with_dir("expose_imports() works", {
   config <- drake_config(plan, envir = envir)
   n_nodes_new <- length(igraph::V(config$graph)$name)
   expect_true(n_nodes_new > n_nodes)
-  make(config = config)
+  make_impl(config = config)
   expect_is(readd(x), "character")
 })
 
@@ -170,6 +170,6 @@ test_with_dir("imported functions cannot depend on targets", {
     cache = storr::storr_environment(),
     session_info = FALSE
   )
-  deps <- deps_target("my_fun", config)
+  deps <- deps_target_impl("my_fun", config)
   expect_equal(deps$name, "global_import")
 })

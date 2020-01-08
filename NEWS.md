@@ -1,5 +1,23 @@
 # Version 7.9.0.9000
 
+## Enhancements
+
+- Smoothly deprecate the `config` argument in all user-side functions (#1118, @vkehayas). Users can now supply the plan and other `make()` arguments directly, without bothering with `drake_config()`. Now, you only need to call `drake_config()` in the `_drake.R` file for `r_make()` and friends. Old code with `config` objects should still work. Affected functions:
+    - `make()`
+    - `outdated()`
+    - `drake_build()`
+    - `drake_debug()`
+    - `recoverable()`
+    - `missed()`
+    - `deps_target()`
+    - `drake_graph_info()`
+    - `vis_drake_graph()`
+    - `sankey_drake_graph()`
+    - `drake_graph()`
+    - `text_drake_graph()`
+    - `predict_runtime()` 
+    - `predict_workers()`
+- Because of #1118, the only remaining user-side purpose of `drake_config()` is to serve functions `r_make()` and friends.
 
 # Version 7.9.0
 

@@ -1,4 +1,4 @@
-drake_context("deprecation")
+drake_context("deprecate")
 
 test_with_dir("defunct functions", {
   skip_on_cran()
@@ -36,7 +36,7 @@ test_with_dir("deprecation: deps_targets() and knitr_deps()", {
     session_info = FALSE
   )
   expect_warning(deps_targets("x", config), regexp = "deprecated")
-  make(config = config)
+  make_impl(config = config)
   expect_warning(
     dependency_profile(x, config, character_only = FALSE),
     regexp = "deprecated"
@@ -132,7 +132,7 @@ test_with_dir("drake version checks in previous caches", {
   expect_warning(build_times(targets_only = TRUE), regexp = "deprecated")
   config <- drake_config(plan)
   expect_warning(
-    predict_runtime(config, targets_only = TRUE),
+    predict_runtime_impl(config, targets_only = TRUE),
     regexp = "deprecated"
   )
 })
@@ -145,11 +145,11 @@ test_with_dir("deprecated graphing functions", {
   skip_if_not_installed("lubridate")
   skip_if_not_installed("visNetwork")
   skip_if_not_installed("ggraph")
-  expect_warning(out <- vis_drake_graph(config = con, direction = "LR"))
-  expect_warning(out <- vis_drake_graph(config = con, layout = "sugiyama"))
+  expect_warning(out <- vis_drake_graph_impl(config = con, direction = "LR"))
+  expect_warning(out <- vis_drake_graph_impl(config = con, layout = "sugiyama"))
   expect_warning(out <- static_drake_graph(config = con))
   expect_true(inherits(out, "gg"))
-  df <- drake_graph_info(config = con)
+  df <- drake_graph_info_impl(config = con)
   expect_warning(out <- render_static_drake_graph(df))
   expect_true(inherits(out, "gg"))
   expect_warning(find_cache(directory = "x"), regexp = "deprecated")
@@ -205,11 +205,9 @@ test_with_dir("deprecated arguments", {
   con <- drake_config(plan = pl)
   expect_warning(drake::drake_plan(x = y, file_targets = TRUE))
   expect_warning(drake_plan(list = c(a = "1")), regexp = "deprecated")
-  expect_warning(drake_build(a, config = con, meta = list()))
   expect_warning(make(drake_plan(x = 1), recipe_command = "123"))
   expect_warning(make(drake_plan(x = 1), hasty_build = "123"))
   expect_warning(loadd(x, graph = 123))
-  expect_warning(drake_build("a", config = con, envir = 123))
   expect_warning(failed(upstream_only = TRUE))
   expect_error(expect_warning(loadd(list = "a", deps = TRUE)))
   expect_warning(loadd(imported_only = TRUE), regexp = "deprecated")
@@ -1518,4 +1516,17 @@ test_with_dir("deprecated decorated storr methods", {
   skip_on_cran()
   cache <- new_cache()
   expect_silent(cache$reset_ht_hash())
+})
+
+test_with_dir("config arg of make() (#1118)", {
+  plan <- drake_plan(x = 1)
+  config <- drake_config(
+    plan,
+    session_info = FALSE,
+    cache = storr::storr_environment()
+  )
+  expect_warning(
+    make(config = config),
+    regexp = "deprecated"
+  )
 })

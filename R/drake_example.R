@@ -137,11 +137,10 @@ drake_examples <- function(quiet = TRUE) {
 #' deps_code(my_plan$command[1])
 #' deps_code(my_plan$command[4])
 #' # Plot the interactive network visualization of the workflow.
-#' config <- drake_config(my_plan)
-#' outdated(config) # Which targets are out of date?
+#' outdated(my_plan) # Which targets are out of date?
 #' # Run the workflow to build all the targets in the plan.
 #' make(my_plan)
-#' outdated(config) # Everything should be up to date.
+#' outdated(my_plan) # Everything should be up to date.
 #' # For the reg2() model on the small dataset,
 #' # the p-value is so small that there may be an association
 #' # between weight and fuel efficiency after all.
@@ -267,11 +266,10 @@ mtcars_plan <- function() {
 #' deps_code(my_plan$command[1])
 #' deps_code(my_plan$command[4])
 #' # Plot the interactive network visualization of the workflow.
-#' config <- drake_config(my_plan)
-#' outdated(config) # Which targets are out of date?
+#' outdated(my_plan) # Which targets are out of date?
 #' # Run the workflow to build all the targets in the plan.
 #' make(my_plan)
-#' outdated(config) # Everything should be up to date.
+#' outdated(my_plan) # Everything should be up to date.
 #' # For the reg2() model on the small dataset,
 #' # the p-value is so small that there may be an association
 #' # between weight and fuel efficiency after all.

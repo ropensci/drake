@@ -8,7 +8,7 @@ test_with_dir("stress test storage hash", {
     my_plan, verbose = 0L, session_info = FALSE,
     cache = storr::storr_environment()
   )
-  make(config = con)
+  make_impl(config = con)
   # Can debug storage_hash() to make sure hashing is skipped
   # at the appropriate times.
   for (file in file_store(c("report.Rmd"))) {
@@ -27,7 +27,7 @@ test_with_dir("same with a directory", {
     plan, verbose = 0L, session_info = FALSE,
     cache = storr::storr_environment()
   )
-  make(config = con)
+  make_impl(config = con)
   # Can debug storage_hash() to make sure hashing is skipped
   # at the appropriate times.
   for (file in file_store("dir")) {

@@ -14,7 +14,9 @@
 #'   1. Launch a new `callr::r()` session.
 #'   2. In that fresh session, run the R script from the `source` argument.
 #'     This script loads packages, functions, global options, etc.
-#'     and returns a [drake_config()] object.
+#'     and calls [drake_config()] at the very end. [drake_config()]
+#'     is the preprocessing step of [make()], and it accepts
+#'     all the same arguments as [make()] (e.g. `plan` and `targets`).
 #'   3. In that same session, run [outdated()]
 #'     with the `config` argument from step 2.
 #'   4. Return the result back to master process
@@ -44,7 +46,7 @@
 #'   c(
 #'     "library(drake)",
 #'     "load_mtcars_example()",
-#'     "drake_config(my_plan)"
+#'     "drake_config(my_plan, targets = c(\"small\", \"large\"))"
 #'   ),
 #'   "_drake.R" # default value of the `source` argument
 #' )
@@ -56,7 +58,7 @@
 #' })
 #' }
 r_make <- function(source = NULL, r_fn = NULL, r_args = list()) {
-  invisible(r_drake(source, drake::make, list(), r_fn, r_args))
+  invisible(r_drake(source, drake::make_impl, list(), r_fn, r_args))
 }
 
 #' @rdname r_make
@@ -77,14 +79,14 @@ r_drake_build <- function(
   }
   d_args$target <- target
   d_args$character_only <- TRUE
-  r_drake(source, drake::drake_build, d_args, r_fn, r_args)
+  r_drake(source, drake::drake_build_impl, d_args, r_fn, r_args)
 }
 
 #' @rdname r_make
 #' @export
 #' @inheritParams r_make
 r_outdated <- function(..., source = NULL, r_fn = NULL, r_args = list()) {
-  r_drake(source, drake::outdated, list(...), r_fn, r_args)
+  r_drake(source, drake::outdated_impl, list(...), r_fn, r_args)
 }
 
 #' @rdname r_make
@@ -92,14 +94,14 @@ r_outdated <- function(..., source = NULL, r_fn = NULL, r_args = list()) {
 #' @inheritParams r_make
 #' @inheritSection recoverable Recovery
 r_recoverable <- function(..., source = NULL, r_fn = NULL, r_args = list()) {
-  r_drake(source, drake::recoverable, list(...), r_fn, r_args)
+  r_drake(source, drake::recoverable_impl, list(...), r_fn, r_args)
 }
 
 #' @rdname r_make
 #' @export
 #' @inheritParams r_make
 r_missed <- function(..., source = NULL, r_fn = NULL, r_args = list()) {
-  r_drake(source, drake::missed, list(...), r_fn, r_args)
+  r_drake(source, drake::missed_impl, list(...), r_fn, r_args)
 }
 
 #' @rdname r_make
@@ -120,7 +122,7 @@ r_deps_target <- function(
   }
   d_args$target <- target
   d_args$character_only <- TRUE
-  r_drake(source, drake::deps_target, d_args, r_fn, r_args)
+  r_drake(source, drake::deps_target_impl, d_args, r_fn, r_args)
 }
 
 #' @rdname r_make
@@ -129,7 +131,7 @@ r_deps_target <- function(
 r_drake_graph_info <- function(
   ..., source = NULL, r_fn = NULL, r_args = list()
 ) {
-  r_drake(source, drake::drake_graph_info, list(...), r_fn, r_args)
+  r_drake(source, drake::drake_graph_info_impl, list(...), r_fn, r_args)
 }
 
 #' @rdname r_make
@@ -140,7 +142,7 @@ r_vis_drake_graph <- function(
 ) {
   assert_pkg("visNetwork")
   requireNamespace("visNetwork")
-  r_drake(source, drake::vis_drake_graph, list(...), r_fn, r_args)
+  r_drake(source, drake::vis_drake_graph_impl, list(...), r_fn, r_args)
 }
 
 #' @rdname r_make
@@ -151,7 +153,7 @@ r_sankey_drake_graph <- function(
 ) {
   assert_pkg("networkD3")
   requireNamespace("networkD3")
-  r_drake(source, drake::sankey_drake_graph, list(...), r_fn, r_args)
+  r_drake(source, drake::sankey_drake_graph_impl, list(...), r_fn, r_args)
 }
 
 #' @rdname r_make
@@ -160,7 +162,7 @@ r_sankey_drake_graph <- function(
 r_drake_ggraph <- function(..., source = NULL, r_fn = NULL, r_args = list()) {
   assert_pkg("ggraph")
   requireNamespace("ggraph")
-  r_drake(source, drake::drake_ggraph, list(...), r_fn, r_args)
+  r_drake(source, drake::drake_ggraph_impl, list(...), r_fn, r_args)
 }
 
 #' @rdname r_make
@@ -180,7 +182,7 @@ r_text_drake_graph <- function(
     function(..., crayon) {
       with_options(
         list(crayon.enabled = crayon),
-        drake::text_drake_graph(...)
+        drake::text_drake_graph_impl(...)
       )
     },
     args,
@@ -198,7 +200,7 @@ r_predict_runtime <- function(
 ) {
   assert_pkg("lubridate")
   requireNamespace("lubridate")
-  r_drake(source, drake::predict_runtime, list(...), r_fn, r_args)
+  r_drake(source, drake::predict_runtime_impl, list(...), r_fn, r_args)
 }
 
 #' @rdname r_make
@@ -207,7 +209,7 @@ r_predict_runtime <- function(
 r_predict_workers <- function(
   ..., source = NULL, r_fn = NULL, r_args = list()
 ) {
-  r_drake(source, drake::predict_workers, list(...), r_fn, r_args)
+  r_drake(source, drake::predict_workers_impl, list(...), r_fn, r_args)
 }
 
 r_drake <- function(source, d_fn, d_args, r_fn, r_args) {

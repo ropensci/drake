@@ -89,7 +89,7 @@ test_with_dir("scratch build with custom filesystem cache.", {
 test_with_dir("clean in full build.", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
-  make(config$plan, envir = config$envir, verbose = 0L)
+  make_impl(config)
   expect_true("final" %in% config$cache$list())
   clean(final)
   expect_false("final" %in% config$cache$list())
@@ -144,7 +144,7 @@ test_with_dir("make(..., skip_imports = TRUE) works", {
     envir = con$envir, jobs = con$jobs,
     skip_imports = TRUE, session_info = FALSE
   )
-  out <- outdated(con)
+  out <- outdated_impl(con)
   expect_equal(out, character(0))
 })
 
@@ -233,23 +233,8 @@ test_with_dir("failed targets do not become up to date", {
   meta <- diagnose(a)
   expect_true(grepl("my failure message", meta$error$message, fixed = TRUE))
   con <- drake_config(plan)
-  expect_equal(sort(outdated(con)), sort(c("a", "c")))
+  expect_equal(sort(outdated_impl(con)), sort(c("a", "c")))
 })
-
-test_with_dir("make() with config + non-config args", {
-  plan <- drake_plan(x = 1)
-  config <- drake_config(
-    plan,
-    session_info = FALSE,
-    cache = storr::storr_environment()
-  )
-  expect_warning(
-    make(plan = plan, config = config),
-    regexp = "additional arguments are ignored"
-  )
-})
-
-
 
 test_with_dir("true targets can be functions", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).

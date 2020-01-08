@@ -6,10 +6,12 @@
 plan but missing from your workspace or file system.
 \lifecycle{stable}}
 \usage{
-missed(config)
+missed(..., config = NULL)
 }
 \arguments{
-\item{config}{A configured workflow from \code{\link[=drake_config]{drake_config()}}.}
+\item{...}{Arguments to \code{\link[=make]{make()}}, such as \code{plan} and \code{targets}.}
+
+\item{config}{Deprecated.}
 }
 \value{
 Character vector of names of missing objects and files.
@@ -22,11 +24,8 @@ file system.
 \dontrun{
 isolate_example("Quarantine side effects.", {
 if (suppressWarnings(require("knitr"))) {
-load_mtcars_example() # Get the code with drake_example("mtcars").
-config <- drake_config(my_plan)
-missed(config) # All the imported files and objects should be present.
-rm(reg1) # Remove an import dependency from you workspace.
-missed(config) # Should report that reg1 is missing.
+plan <- drake_plan(x = missing::fun(arg))
+missed(plan)
 }
 })
 }

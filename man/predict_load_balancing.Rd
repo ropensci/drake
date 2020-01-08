@@ -17,7 +17,7 @@ predict_load_balancing(
 )
 }
 \arguments{
-\item{config}{A configured workflow from \code{\link[=drake_config]{drake_config()}}.}
+\item{config}{Deprecated.}
 
 \item{targets}{Character vector, names of targets.
 Predict the runtime of building these targets

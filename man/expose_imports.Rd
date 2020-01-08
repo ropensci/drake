@@ -50,8 +50,7 @@ plan <- drake_plan(model = biglm(y ~ x, data = huge_dataset))
 # Even if you load the biglm package, drake still ignores
 # the biglm() function as a dependency. The function is missing
 # from the graph:
-# config <- drake_config(plan)
-# vis_drake_graph(config)
+# vis_drake_graph(plan)
 # And if you install an updated version of biglm with a revised
 # biglm() function, this will not cause drake::make(plan)
 # to rerun the model.
@@ -67,7 +66,7 @@ plan <- drake_plan(model = biglm(y ~ x, data = huge_dataset))
 # Now, the biglm() function should be in your environment.
 # ls()
 # biglm() now appears in the graph.
-# vis_drake_graph(config)
+# vis_drake_graph(plan)
 # And subsequent make()s respond to changes to biglm()
 # and its dependencies.
 })

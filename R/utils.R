@@ -345,6 +345,16 @@ safe_is_na <- function(x) {
   tryCatch(is.na(x), error = error_false, warning = error_false)
 }
 
+min_str <- function(x) {
+  n_spaces <- nchar(names(x))
+  n_spaces <- max(n_spaces) - n_spaces
+  for (index in seq_along(x)) {
+    name <- names(x)[index]
+    spaces <- paste(rep(" ", n_spaces[index]), collapse = "")
+    cat(" $", name, ":", spaces, class(x[[name]]), "\n")
+  }
+}
+
 # From lintr
 `%||%` <- function(x, y) {
   if (is.null(x) || length(x) <= 0) {

@@ -9,18 +9,46 @@
 #'   show with `plot()`, or save as a file with `ggsave()`.
 #' @inheritParams drake_graph_info
 #' @inheritParams render_drake_ggraph
+#' @param ... Arguments to [make()], such as `plan` and `targets`.
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' config <- drake_config(my_plan)
 #' # Plot the network graph representation of the workflow.
 #' if (requireNamespace("ggraph", quietly = TRUE)) {
-#'   drake_ggraph(config) # Save to a file with `ggplot2::ggsave()`.
+#'   drake_ggraph(my_plan) # Save to a file with `ggplot2::ggsave()`.
 #' }
 #' })
 #' }
 drake_ggraph <- function(
+  ...,
+  build_times = "build",
+  digits = 3,
+  targets_only = FALSE,
+  main = NULL,
+  from = NULL,
+  mode = c("out", "in", "all"),
+  order = NULL,
+  subset = NULL,
+  make_imports = TRUE,
+  from_scratch = FALSE,
+  full_legend = FALSE,
+  group = NULL,
+  clusters = NULL,
+  show_output_files = TRUE,
+  label_nodes = FALSE,
+  transparency = TRUE,
+  config = NULL
+) {
+}
+
+#' @title Internal function with a drake_config() argument
+#' @export
+#' @keywords internal
+#' @description Not a user-side function.
+#' @inheritParams outdated
+#' @param config A [drake_config()] object.
+drake_ggraph_impl <- function(
   config,
   build_times = "build",
   digits = 3,
@@ -41,7 +69,7 @@ drake_ggraph <- function(
 ) {
   assert_pkg("ggplot2")
   assert_pkg("ggraph")
-  graph_info <- drake_graph_info(
+  graph_info <- drake_graph_info_impl(
     config = config,
     from = from,
     mode = mode,
@@ -70,6 +98,8 @@ drake_ggraph <- function(
   )
 }
 
+body(drake_ggraph) <- config_util_body(drake_ggraph_impl)
+
 #' @title Visualize the workflow with `ggplot2`/`ggraph` using
 #'   [drake_graph_info()] output.
 #' \lifecycle{stable}
@@ -97,10 +127,9 @@ drake_ggraph <- function(
 #' if (requireNamespace("ggraph", quietly = TRUE)) {
 #'   # Instead of jumpting right to vis_drake_graph(), get the data frames
 #'   # of nodes, edges, and legend nodes.
-#'   config <- drake_config(my_plan) # Internal configuration list
-#'   drake_ggraph(config) # Jump straight to the static graph.
+#'   drake_ggraph(my_plan) # Jump straight to the static graph.
 #'   # Get the node and edge info that vis_drake_graph() just plotted:
-#'   graph <- drake_graph_info(config)
+#'   graph <- drake_graph_info(my_plan)
 #'   render_drake_ggraph(graph)
 #' }
 #' })

@@ -14,29 +14,29 @@
 #' @return A `visNetwork` graph.
 #' @inheritParams drake_graph_info
 #' @inheritParams render_sankey_drake_graph
+#' @param ... Arguments to [make()], such as `plan` and `targets`.
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {
 #' if (suppressWarnings(require("knitr"))) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' config <- drake_config(my_plan)
 #' if (requireNamespace("networkD3", quietly = TRUE)) {
 #' if (requireNamespace("visNetwork", quietly = TRUE)) {
 #' # Plot the network graph representation of the workflow.
-#' sankey_drake_graph(config)
+#' sankey_drake_graph(my_plan)
 #' # Show the legend separately.
 #' visNetwork::visNetwork(nodes = drake::legend_nodes())
 #' make(my_plan) # Run the project, build the targets.
-#' sankey_drake_graph(config) # The black nodes from before are now green.
+#' sankey_drake_graph(my_plan) # The black nodes from before are now green.
 #' # Plot a subgraph of the workflow.
-#' sankey_drake_graph(config, from = c("small", "reg2"))
+#' sankey_drake_graph(my_plan, from = c("small", "reg2"))
 #' }
 #' }
 #' }
 #' })
 #' }
 sankey_drake_graph <- function(
-  config,
+  ...,
   file = character(0),
   selfcontained = FALSE,
   build_times = "build",
@@ -51,10 +51,34 @@ sankey_drake_graph <- function(
   group = NULL,
   clusters = NULL,
   show_output_files = TRUE,
-  ...
+  config = NULL
+) {
+}
+
+#' @title Internal function with a drake_config() argument
+#' @export
+#' @keywords internal
+#' @description Not a user-side function.
+#' @param config A [drake_config()] object.
+sankey_drake_graph_impl <- function(
+  config,
+  file = character(0),
+  selfcontained = FALSE,
+  build_times = "build",
+  digits = 3,
+  targets_only = FALSE,
+  from = NULL,
+  mode = c("out", "in", "all"),
+  order = NULL,
+  subset = NULL,
+  make_imports = TRUE,
+  from_scratch = FALSE,
+  group = NULL,
+  clusters = NULL,
+  show_output_files = TRUE
 ) {
   assert_pkg("networkD3")
-  graph_info <- drake_graph_info(
+  graph_info <- drake_graph_info_impl(
     config = config,
     from = from,
     mode = mode,
@@ -74,10 +98,11 @@ sankey_drake_graph <- function(
   render_sankey_drake_graph(
     graph_info,
     file = file,
-    selfcontained = selfcontained,
-    ... = ...
+    selfcontained = selfcontained
   )
 }
+
+body(sankey_drake_graph) <- config_util_body(sankey_drake_graph_impl)
 
 #' @title Render a Sankey diagram from [drake_graph_info()].
 #' \lifecycle{stable}
@@ -126,12 +151,11 @@ sankey_drake_graph <- function(
 #' if (requireNamespace("visNetwork", quietly = TRUE)) {
 #' # Instead of jumpting right to sankey_drake_graph(), get the data frames
 #' # of nodes, edges, and legend nodes.
-#' config <- drake_config(my_plan) # Internal configuration list
-#' sankey_drake_graph(config) # Jump straight to the interactive graph.
+#' sankey_drake_graph(my_plan) # Jump straight to the interactive graph.
 #' # Show the legend separately.
 #' visNetwork::visNetwork(nodes = drake::legend_nodes())
 #' # Get the node and edge info that sankey_drake_graph() just plotted:
-#' graph <- drake_graph_info(config)
+#' graph <- drake_graph_info(my_plan)
 #' # You can pass the data frames right to render_sankey_drake_graph()
 #' # (as in sankey_drake_graph()) or you can create
 #' # your own custom visNewtork graph.

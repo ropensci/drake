@@ -7,18 +7,17 @@
 \usage{
 drake_build(
   target,
-  config = NULL,
+  ...,
   meta = NULL,
   character_only = FALSE,
-  envir = NULL,
-  jobs = 1,
-  replace = FALSE
+  replace = FALSE,
+  config = NULL
 )
 }
 \arguments{
 \item{target}{Name of the target.}
 
-\item{config}{Internal configuration list.}
+\item{...}{Arguments to \code{\link[=make]{make()}}, such as the plan and environment.}
 
 \item{meta}{Deprecated.}
 
@@ -26,18 +25,11 @@ drake_build(
 as a character or a symbol
 (just like \code{character.only} in \code{\link[=library]{library()}}).}
 
-\item{envir}{Environment to load objects into. Defaults to the
-calling environment (current workspace).}
-
-\item{jobs}{Number of parallel jobs for loading objects. On
-non-Windows systems, the loading process for multiple objects
-can be lightly parallelized via \code{parallel::mclapply()}.
-just set jobs to be an integer greater than 1. On Windows,
-\code{jobs} is automatically demoted to 1.}
-
 \item{replace}{Logical. If \code{FALSE},
 items already in your environment
 will not be replaced.}
+
+\item{config}{Deprecated 2019-12-22.}
 }
 \value{
 The value of the target right after it is built.
@@ -53,20 +45,12 @@ if (suppressWarnings(require("knitr"))) {
 # It just walks through a dive into the internals.
 # Populate your workspace and write 'report.Rmd'.
 load_mtcars_example() # Get the code with drake_example("mtcars").
-# Create the master internal configuration list.
-config <- drake_config(my_plan)
-out <- drake_build(small, config = config)
+out <- drake_build(small, my_plan)
 # Now includes `small`.
 cached()
 head(readd(small))
 # `small` was invisibly returned.
 head(out)
-# If you previously called make(),
-# `config` is just read from the cache.
-make(my_plan, verbose = FALSE)
-config <- drake_config(my_plan)
-result <- drake_build(small, config = config)
-head(result)
 }
 })
 }

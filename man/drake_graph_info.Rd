@@ -6,7 +6,7 @@
 \lifecycle{stable}}
 \usage{
 drake_graph_info(
-  config,
+  ...,
   from = NULL,
   mode = c("out", "in", "all"),
   order = NULL,
@@ -22,11 +22,12 @@ drake_graph_info(
   clusters = NULL,
   show_output_files = TRUE,
   hover = FALSE,
-  on_select_col = NULL
+  on_select_col = NULL,
+  config = NULL
 )
 }
 \arguments{
-\item{config}{A configured workflow from \code{\link[=drake_config]{drake_config()}}.}
+\item{...}{Arguments to \code{\link[=make]{make()}}, such as \code{plan} and \code{targets}.}
 
 \item{from}{Optional collection of target/import names.
 If \code{from} is nonempty,
@@ -107,6 +108,8 @@ commands, etc.) when you hover your cursor over a node.}
 
 \item{on_select_col}{Optional string corresponding to the column name
 in the plan that should provide data for the \code{on_select} event.}
+
+\item{config}{Deprecated.}
 }
 \value{
 A list of three data frames: one for nodes,
@@ -124,14 +127,13 @@ isolate_example("Quarantine side effects.", {
 if (requireNamespace("visNetwork", quietly = TRUE)) {
 if (suppressWarnings(require("knitr"))) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
-config <- drake_config(my_plan) # my_plan loaded with load_mtcars_example()
-vis_drake_graph(config) # Jump straight to the interactive graph.
+vis_drake_graph(my_plan)
 # Get a list of data frames representing the nodes, edges,
 # and legend nodes of the visNetwork graph from vis_drake_graph().
-raw_graph <- drake_graph_info(config = config)
+raw_graph <- drake_graph_info(my_plan)
 # Choose a subset of the graph.
 smaller_raw_graph <- drake_graph_info(
-  config = config,
+  my_plan,
   from = c("small", "reg2"),
   mode = "in"
 )

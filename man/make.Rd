@@ -198,8 +198,7 @@ give you an opportunity to
 downgrade \code{drake} to a compatible version
 rather than rerun all your targets from scratch.}
 
-\item{graph}{An \code{config$graph} object from an existing \code{drake_config()}.
-Supplying a pre-built graph could save time.}
+\item{graph}{Deprecated.}
 
 \item{trigger}{Name of the trigger to apply to all targets.
 Ignored if \code{plan} has a \code{trigger} column.
@@ -214,9 +213,7 @@ This argument is overridden if you supply your own \code{graph} argument.}
 \item{skip_safety_checks}{Logical, whether to skip the safety checks
 on your workflow. Use at your own peril.}
 
-\item{config}{An optional configured workflow from \code{\link[=drake_config]{drake_config()}}.
-If you supply \code{config} to \code{make()}, you must not supply any
-additional arguments.}
+\item{config}{Deprecated.}
 
 \item{lazy_load}{An old feature, currently being questioned.
 For the current recommendations on memory management, see
@@ -439,11 +436,9 @@ help file examples of \code{\link[=drake_envir]{drake_envir()}}.
 Also see the \code{garbage_collection} argument of \code{make()} and
 \code{drake_config()}.}
 
-\item{layout}{Deprecated. Use \code{spec} instead.}
+\item{layout}{Deprecated.}
 
-\item{spec}{\code{config$spec} from an existing \code{drake_config()}.
-Supplying a pre-built workflow specification to this argument
-could save time in some cases.}
+\item{spec}{Deprecated.}
 
 \item{lock_envir}{Logical, whether to lock \code{config$envir} during \code{make()}.
 If \code{TRUE}, \code{make()} quits in error whenever a command in your
@@ -605,21 +600,21 @@ isolate_example("Quarantine side effects.", {
 if (suppressWarnings(require("knitr"))) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 config <- drake_config(my_plan)
-outdated(config) # Which targets need to be (re)built?
+outdated(my_plan) # Which targets need to be (re)built?
 make(my_plan) # Build what needs to be built.
-outdated(config) # Everything is up to date.
+outdated(my_plan) # Everything is up to date.
 # Change one of your imported function dependencies.
 reg2 = function(d) {
   d$x3 = d$x^3
   lm(y ~ x3, data = d)
 }
-outdated(config) # Some targets depend on reg2().
+outdated(my_plan) # Some targets depend on reg2().
 make(my_plan) # Rebuild just the outdated targets.
-outdated(config) # Everything is up to date again.
+outdated(my_plan) # Everything is up to date again.
 if (requireNamespace("visNetwork", quietly = TRUE)) {
-vis_drake_graph(config) # See how they fit in an interactive graph.
+vis_drake_graph(my_plan) # See how they fit in an interactive graph.
 make(my_plan, cache_log_file = TRUE) # Write a CSV log file this time.
-vis_drake_graph(config) # The colors changed in the graph.
+vis_drake_graph(my_plan) # The colors changed in the graph.
 # Run targets in parallel:
 # options(clustermq.scheduler = "multicore") # nolint
 # make(my_plan, parallelism = "clustermq", jobs = 2) # nolint

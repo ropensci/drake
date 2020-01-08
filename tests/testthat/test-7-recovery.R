@@ -37,7 +37,7 @@ test_with_dir("recovery (#945)", {
       "w2"
     })
     config <- drake_config(plan)
-    expect_equal(recoverable(config), character(0))
+    expect_equal(recoverable_impl(config), character(0))
     make(plan, recover = TRUE, parallelism = parallelism, caching = caching)
     expect_equal(sort(justbuilt(config)), sort(c("w", "x")))
     expect_true(file.exists("w2"))
@@ -50,7 +50,7 @@ test_with_dir("recovery (#945)", {
       "w"
     })
     config <- drake_config(plan)
-    expect_equal(recoverable(config), "w")
+    expect_equal(recoverable_impl(config), "w")
     make(plan, recover = TRUE, parallelism = parallelism, caching = caching)
     expect_equal(readd(w, cache = config$cache), "w")
     expect_equal(readd(x, cache = config$cache), "x")
@@ -72,7 +72,7 @@ test_with_dir("recovery (#945)", {
       "w2"
     })
     config <- drake_config(plan)
-    expect_equal(recoverable(config), character(0))
+    expect_equal(recoverable_impl(config), character(0))
   }
 
   skip_if_not_installed("clustermq")
@@ -121,7 +121,7 @@ test_with_dir("rename a target", {
   make(plan, recover = TRUE, cache = cache, session_info = FALSE)
   expect_false(file.exists("x"))
   config <- drake_config(plan, cache = cache)
-  expect_equal(outdated(config), character(0))
+  expect_equal(outdated_impl(config), character(0))
 })
 
 test_with_dir("recovery with a non-standard trigger", {

@@ -946,7 +946,7 @@ make_imports <- function(config) {
   )
   config$skip_imports <- FALSE
   config$skip_targets <- TRUE
-  make(config = config)
+  make_impl(config = config)
 }
 
 #' @title Just make the targets
@@ -967,7 +967,7 @@ make_targets <- function(config) {
   )
   config$skip_imports <- TRUE
   config$skip_targets <- FALSE
-  make(config = config)
+  make_impl(config = config)
 }
 
 #' @title Apply make() with a pre-computed config object
@@ -986,7 +986,7 @@ make_with_config <- function(config) {
       "make_with_config() in drake is deprecated. Use make()."
     )
   )
-  make(config = config)
+  make_impl(config = config)
 }
 
 #' @title Read a config object from the cache

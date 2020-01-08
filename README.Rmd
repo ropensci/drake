@@ -21,7 +21,6 @@ knitr::opts_chunk$set(
 suppressMessages(suppressWarnings(library(drake)))
 suppressMessages(suppressWarnings(library(dplyr)))
 clean(destroy = TRUE, verbose = FALSE)
-pkgconfig::set_config("drake::strings_in_dots" = "literals")
 invisible(drake_example("main", overwrite = TRUE))
 invisible(file.copy("main/raw_data.xlsx", ".", overwrite = TRUE))
 invisible(file.copy("main/report.Rmd", ".", overwrite = TRUE))
@@ -229,8 +228,7 @@ create_plot <- function(data) {
 `drake` knows which results are affected.
 
 ```{r, eval = FALSE}
-config <- drake_config(plan)
-vis_drake_graph(config) # Interactive graph: zoom, drag, etc.
+vis_drake_graph(plan) # Interactive graph: zoom, drag, etc.
 ```
 
 <img src="https://docs.ropensci.org/drake/reference/figures/graph.png" alt="hist1" align="center" style = "border: none; float: center;" width = "600px">
@@ -257,8 +255,7 @@ Suppose you are reviewing someone else's data analysis project for reproducibili
 ```{r}
 make(plan)
 
-config <- drake_config(plan)
-outdated(config)
+outdated(plan)
 ```
 
 With everything already up to date, you have **tangible evidence** of reproducibility. Even though you did not re-create the results, you know the results are re-creatable. They **faithfully show** what the code is producing. Given the right [package environment](https://rstudio.github.io/packrat/) and [system configuration](https://stat.ethz.ch/R-manual/R-devel/library/utils/html/sessionInfo.html), you have everything you need to reproduce all the output by yourself.
@@ -463,7 +460,6 @@ The [reference section](https://docs.ropensci.org/drake/reference/index.html) li
 - `r_make()`: launch a fresh [`callr::r()`](https://github.com/r-lib/callr) process to build your project. Called from an interactive R session, `r_make()` is more reproducible than `make()`.
 - `loadd()`: load one or more built targets into your R session.
 - `readd()`: read and return a built target.
-- `drake_config()`: create a master configuration list for other user-side functions.
 - `vis_drake_graph()`: show an interactive visual network representation of your workflow.
 - `recoverable()`: Which targets can we salvage using `make(recover = TRUE)` (experimental).
 - `outdated()`: see which targets will be built in the next `make()`.

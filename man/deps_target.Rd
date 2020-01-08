@@ -5,16 +5,18 @@
 \title{List the dependencies of a target
 \lifecycle{stable}}
 \usage{
-deps_target(target, config, character_only = FALSE)
+deps_target(target, ..., character_only = FALSE, config = NULL)
 }
 \arguments{
 \item{target}{A symbol denoting a target name, or if \code{character_only}
 is TRUE, a character scalar denoting a target name.}
 
-\item{config}{An output list from \code{\link[=drake_config]{drake_config()}}.}
+\item{...}{Arguments to \code{\link[=make]{make()}}, such as \code{plan} and \code{targets}.}
 
 \item{character_only}{Logical, whether to assume target is a character
 string rather than a symbol.}
+
+\item{config}{Deprecated.}
 }
 \value{
 A data frame with the dependencies listed by type
@@ -29,8 +31,7 @@ decides which targets are built and when.
 \dontrun{
 isolate_example("Quarantine side effects.", {
 load_mtcars_example() # Get the code with drake_example("mtcars").
-config <- drake_config(my_plan)
-deps_target("regression1_small", config = config)
+deps_target(regression1_small, plan)
 })
 }
 }

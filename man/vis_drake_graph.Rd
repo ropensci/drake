@@ -7,7 +7,7 @@ of your drake project.
 \lifecycle{maturing}}
 \usage{
 vis_drake_graph(
-  config,
+  ...,
   file = character(0),
   selfcontained = FALSE,
   build_times = "build",
@@ -33,11 +33,11 @@ vis_drake_graph(
   collapse = TRUE,
   on_select_col = NULL,
   on_select = NULL,
-  ...
+  config = NULL
 )
 }
 \arguments{
-\item{config}{A configured workflow from \code{\link[=drake_config]{drake_config()}}.}
+\item{...}{Arguments to \code{\link[=make]{make()}}, such as \code{plan} and \code{targets}.}
 
 \item{file}{Name of a file to save the graph.
 If \code{NULL} or \code{character(0)}, no file is saved and
@@ -163,7 +163,7 @@ Either a string of valid JavaScript that may be passed to
 opening the link specified by the \code{on_select_col} given to
 \code{drake_graph_info()}. \code{NULL}/\code{FALSE} disables the behavior.}
 
-\item{...}{Arguments passed to \code{visNetwork()}.}
+\item{config}{Deprecated.}
 }
 \value{
 A \code{visNetwork} graph.
@@ -178,15 +178,14 @@ this function is divided into
 isolate_example("Quarantine side effects.", {
 if (suppressWarnings(require("knitr"))) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
-config <- drake_config(my_plan)
 # Plot the network graph representation of the workflow.
 if (requireNamespace("visNetwork", quietly = TRUE)) {
-vis_drake_graph(config)
+vis_drake_graph(my_plan)
 make(my_plan) # Run the project, build the targets.
-vis_drake_graph(config) # The red nodes from before are now green.
+vis_drake_graph(my_plan) # The red nodes from before are now green.
 # Plot a subgraph of the workflow.
 vis_drake_graph(
-  config,
+  my_plan,
   from = c("small", "reg2"),
   to = "summ_regression2_small"
 )

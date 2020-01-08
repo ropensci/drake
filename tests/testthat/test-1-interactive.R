@@ -30,6 +30,12 @@ test_with_dir("drake spec print method", {
   expect_true(any(grepl("specification of target x", m2)))
 })
 
+test_with_dir("drake_graph_info() print method", {
+  x <- drake_graph_info(drake_plan(y = 1)) # print by hand
+  m <- utils::capture.output(print(x))
+  expect_true(any(grepl("drake graph", m)))
+})
+
 test_with_dir("logger", {
   # testthat suppresses messages,
   # so we need to inspect the console output manually.
@@ -163,12 +169,11 @@ test_with_dir("drake_debug()", {
     simulate(48)
     stop(1234)
   })
-  config <- drake_config(my_plan, lock_envir = TRUE)
   expect_error(make(my_plan), regexp = "1234")
-  out <- drake_debug(large, config = config)
+  out <- drake_debug(large, my_plan)
   out <- drake_debug(
     "large",
-    config = config,
+    plan = my_plan,
     verbose = 0L,
     character_only = TRUE
   )
@@ -181,7 +186,7 @@ test_with_dir("drake_debug()", {
     expect_true(config$cache$exists("small"))
     clean(small)
     expect_false(config$cache$exists("small"))
-    out <- drake_debug(small, config = config)
+    out <- drake_debug(small, plan = my_plan)
     expect_false(config$cache$exists("small"))
     expect_true(is.data.frame(out))
   }
@@ -354,7 +359,7 @@ test_with_dir("Output from the callr RStudio addins", {
   rs_addin_r_make(r_args)
   expect_equal(rs_addin_r_outdated(r_args), character(0)) # Should print.
   skip_if_not_installed("visNetwork")
-  graph <- rs_addin_r_vis_drake_graph(r_args) # Should show a graph.
+  graph <- rs_addin_r_vis_drake_graph_impl(r_args) # Should show a graph.
   expect_true(inherits(graph, "visNetwork"))
 })
 

@@ -96,9 +96,8 @@ plan
 make(plan)
 
 # See the connections that the sourced scripts create:
-config <- drake_config(plan)
 if (requireNamespace("visNetwork", quietly = TRUE)) {
-  vis_drake_graph(config)
+  vis_drake_graph(plan)
 }
 }
 })
