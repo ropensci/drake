@@ -13,20 +13,20 @@ test_with_dir("empty transforms", {
       b = target(y, transform = combine()),
       c = target(z, transform = map())
     ),
-    regexp = "grouping or splitting variable"
+    regexp = "grouping variable"
   )
   equivalent_plans(out, drake_plan())
   expect_warning(
     out <- drake_plan(a = target(x, transform = cross())),
-    regexp = "grouping or splitting variable"
+    regexp = "grouping variable"
   )
   expect_warning(
     out <- drake_plan(b = target(y, transform = combine())),
-    regexp = "grouping or splitting variable"
+    regexp = "grouping variable"
   )
   expect_warning(
     out <- drake_plan(c = target(z, transform = map())),
-    regexp = "grouping or splitting variable"
+    regexp = "grouping variable"
   )
 })
 
@@ -34,7 +34,7 @@ test_with_dir("more empty transforms", {
   x_vals <- NULL
   expect_warning(
     out <- drake_plan(a = target(x, transform = map(x = !!x_vals))),
-    regexp = "grouping or splitting variable"
+    regexp = "grouping variable"
   )
   equivalent_plans(out, drake_plan())
 })
@@ -290,7 +290,7 @@ test_with_dir("groups and command symbols are undefined", {
       mots = target(everyone(out), transform = map(c, d)),
       winners = target(min(nobodyhome), transform = combine(data))
     ),
-    regexp = "grouping or splitting variable"
+    regexp = "grouping variable"
   )
   exp <- drake_plan(
     small = simulate(48),
@@ -1909,7 +1909,7 @@ test_with_dir("empty grids", {
         )
       )
     ),
-    regexp = "grouping or splitting variable"
+    regexp = "grouping variable"
   )
   equivalent_plans(out, drake_plan())
 })
@@ -2032,7 +2032,7 @@ test_with_dir("invalid splitting var", {
         transform = combine(data, .by = nothing)
       )
     ),
-    regexp = "grouping or splitting variable"
+    regexp = "grouping variable"
   )
   out <- out[, c("target", "command")]
   exp <- drake_plan(

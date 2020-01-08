@@ -804,9 +804,11 @@ dsl_commands_combine <- function(transform, row, plan) {
 
 warn_empty_transform <- function(target) {
   warning(
-    "A grouping or splitting variable for target ", shQuote(target),
-    " is missing or undefined. Transformation skipped ",
-    "and target deleted.",
+    "A grouping variable for target ", shQuote(target),
+    " is either undefined or improperly invoked. Transformation skipped ",
+    "and target deleted. To read about grouping variables and ",
+    "their limitations, please visit ",
+    "https://books.ropensci.org/drake/static.html#grouping-variables",
     call. = FALSE
   )
 }

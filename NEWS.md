@@ -23,6 +23,7 @@
     - `predict_runtime()` 
     - `predict_workers()`
 - Because of #1118, the only remaining user-side purpose of `drake_config()` is to serve functions `r_make()` and friends.
+- Document the limitations of grouping variables (#1128).
 
 # Version 7.9.0
 
