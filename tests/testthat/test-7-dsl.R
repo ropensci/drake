@@ -490,6 +490,7 @@ test_with_dir("dsl with a version of the mtcars plan", {
 })
 
 test_with_dir("more map", {
+  skip_on_cran()
   out <- drake_plan(
     small = simulate(48),
     large = simulate(64),
@@ -640,6 +641,7 @@ test_with_dir("map with an indicator column", {
 })
 
 test_with_dir("dsl and custom columns", {
+  skip_on_cran()
   e <- quote(
     drake_plan(
       small = simulate(48),
@@ -694,6 +696,7 @@ test_with_dir("dsl and custom columns", {
 })
 
 test_with_dir("dsl trace", {
+  skip_on_cran()
   plan <- drake_plan(
     small = simulate(48),
     large = simulate(64),
@@ -767,6 +770,7 @@ test_with_dir("running a dsl-generated mtcars-like plan", {
 })
 
 test_with_dir("dsl .tag_out groupings", {
+  skip_on_cran()
   out <- drake_plan(
     small = simulate(48),
     large = simulate(64),
@@ -825,6 +829,7 @@ test_with_dir("dsl .tag_out groupings", {
 })
 
 test_with_dir("combine() and tags", {
+  skip_on_cran()
   i <- as.numeric(1:3)
   out <- drake_plan(
     x = target(1, transform = map(f = !!i, .tag_in = grp, .tag_out = targs)),
@@ -1026,6 +1031,7 @@ test_with_dir("tidy eval in the DSL", {
 })
 
 test_with_dir("resource column is not a language object (#942)", {
+  skip_on_cran()
   mem <- 1024
   x <- "b"
   out <- drake_plan(
@@ -1355,6 +1361,7 @@ test_with_dir("row order does not matter", {
 })
 
 test_with_dir("same test (row order) different plan", {
+  skip_on_cran()
   plan1 <- drake_plan(
     small = simulate(48),
     large = simulate(64),
@@ -1416,6 +1423,7 @@ test_with_dir("same test (row order) different plan", {
 })
 
 test_with_dir("gh #696", {
+  skip_on_cran()
   my_split <- function(from, stem, n) {
     suffixes <- with(
       expand.grid(y = letters, x = letters),
@@ -1454,6 +1462,7 @@ test_with_dir("gh #696", {
 })
 
 test_with_dir("transformations in triggers", {
+  skip_on_cran()
   out <- drake_plan(
     small = simulate(48),
     large = simulate(64),
@@ -1681,6 +1690,7 @@ test_with_dir("transformations in triggers", {
 })
 
 test_with_dir(".id = FALSE", {
+  skip_on_cran()
   x_ <- letters[1:2]
   y_ <- letters[3:4]
   z_ <- letters[11:14]
@@ -1705,6 +1715,7 @@ test_with_dir(".id = FALSE", {
 })
 
 test_with_dir("(1) .id = syms. (2) map() finds the correct cross() syms", {
+  skip_on_cran()
   x_ <- letters[1:2]
   y_ <- letters[3:4]
   z_ <- letters[11:12]
@@ -1744,6 +1755,7 @@ test_with_dir("(1) .id = syms. (2) map() finds the correct cross() syms", {
 })
 
 test_with_dir("upstream .id columns are available", {
+  skip_on_cran()
   factor_a_ <- as.character(c(4, 5, 6, 7, 8))
   factor_b_ <- "2"
   out <- drake_plan(
@@ -1784,6 +1796,7 @@ test_with_dir("upstream .id columns are available", {
 })
 
 test_with_dir("repeated maps do not duplicate targets", {
+  skip_on_cran()
   x_ <- rep("a", 2)
   y_ <- rep("b", 2)
   out <- drake_plan(
@@ -1806,6 +1819,7 @@ test_with_dir("repeated maps do not duplicate targets", {
 })
 
 test_with_dir("unequal trace vars are not duplicated in map()", {
+  skip_on_cran()
   inputs <- lapply(LETTERS[1:4], as.symbol)
   types <- rep(c(1, 2), each = 2)
   out <- drake_plan(
@@ -1901,6 +1915,7 @@ test_with_dir("empty grids", {
 })
 
 test_with_dir("grid for GitHub issue 697", {
+  skip_on_cran()
   grid <- expand.grid(
     group = c("G1", "G2"),
     rep = c("R1", "R2", "R3", "R4", "R5", "R6"),
@@ -1926,6 +1941,7 @@ test_with_dir("grid for GitHub issue 697", {
 })
 
 test_with_dir("grid for GitHub issue 710", {
+  skip_on_cran()
   inputs <- lapply(LETTERS[1:5], as.symbol)
   types <- rep(c(1, 2), length.out = 5)
   df <- data.frame(
@@ -2257,6 +2273,7 @@ test_with_dir("basic splitting", {
 })
 
 test_with_dir("splitting with all args", {
+  skip_on_cran()
   out <- drake_plan(
     large_data = get_data(),
     slice_analysis = target(
@@ -2296,6 +2313,7 @@ test_with_dir("splitting with all args", {
 })
 
 test_with_dir("splitting with tidy eval", {
+  skip_on_cran()
   s <- 4
   out <- drake_plan(
     large_data = get_data(),
@@ -2328,6 +2346,7 @@ test_with_dir("splitting with tidy eval", {
 })
 
 test_with_dir("parse long tidyeval inputs", {
+  skip_on_cran()
   l <- lapply(100, function(x) rep("a", x))
   out <- drake_plan(
     a = target(
@@ -2354,6 +2373,7 @@ test_with_dir("parse long tidyeval inputs", {
 })
 
 test_with_dir("transform_plan() on its own", {
+  skip_on_cran()
   i <- 0L
   out1 <- drake_plan(
     y = target(
@@ -2453,6 +2473,7 @@ test_with_dir("slice_indices", {
 })
 
 test_with_dir("slice_indices edge cases", {
+  skip_on_cran()
   expect_equal(slice_indices(100, slices = 1, index = 1), seq_len(100))
   expect_equal(slice_indices(100, slices = 1, index = 2), integer(0))
   expect_equal(slice_indices(100, slices = 2, index = 3), integer(0))
@@ -2532,6 +2553,7 @@ test_with_dir("drake_slice and drop", {
 })
 
 test_with_dir("slice(), grouping vars, and .id (#963)", {
+  skip_on_cran()
   x <- data.frame(
     var = letters[5:8],
     id = letters[1:4],
@@ -2553,6 +2575,7 @@ test_with_dir("slice(), grouping vars, and .id (#963)", {
 })
 
 test_with_dir("complete_cases()", {
+  skip_on_cran()
   for (empty in list(data.frame(), mtcars[NULL, ], mtcars[, NULL])) {
     expect_equivalent(complete_cases(empty), logical(0))
   }
@@ -2563,6 +2586,7 @@ test_with_dir("complete_cases()", {
 })
 
 test_with_dir("side-by-side map keeps grouping vars (#983)", {
+  skip_on_cran()
   out <- drake_plan(
     trace = TRUE,
     data = target(simulate(nrow), transform = map(nrow = c(5, 10))),
@@ -2611,6 +2635,7 @@ test_with_dir("side-by-side map keeps grouping vars (#983)", {
 })
 
 test_with_dir("side-by-side cross keeps grouping vars (#983)", {
+  skip_on_cran()
   out <- drake_plan(
     trace = TRUE,
     data = target(simulate(nrow), transform = map(nrow = c(5, 10))),
@@ -2675,6 +2700,7 @@ test_with_dir("side-by-side cross keeps grouping vars (#983)", {
 })
 
 test_with_dir("side-by-side cross of nested vars (#983)", {
+  skip_on_cran()
   out <- drake_plan(
     a = target(x, transform = map(x = c(1, 1), y = c(3, 3))),
     b = target(a, transform = map(a)),
@@ -2731,6 +2757,7 @@ test_with_dir("cross finds the correct combinations (#986)", {
 })
 
 test_with_dir("transform is a formal arg of target() (#993)", {
+  skip_on_cran()
   out <- drake_plan(
     radar = target(
       get_radar_info(radar),
@@ -2763,6 +2790,7 @@ test_with_dir("transform is a formal arg of target() (#993)", {
 })
 
 test_with_dir("max_expand thins consistently (#1002)", {
+  skip_on_cran()
   fns <- letters[seq_len(6)]
   plan <- drake_plan(
     print_fn = target(
@@ -2790,6 +2818,7 @@ test_with_dir("max_expand thins consistently (#1002)", {
 })
 
 test_with_dir("max_expand works on split()", {
+  skip_on_cran()
   out <- drake_plan(
     analysis = target(
       analyze(data),
@@ -2811,6 +2840,7 @@ test_with_dir("max_expand works on split()", {
 })
 
 test_with_dir("eliminate partial tagalong grouping vars (#1009)", {
+  skip_on_cran()
   m <- c(8L, 9L)
   radars <- c("a", "b")
   out <- drake_plan(
@@ -2855,6 +2885,7 @@ test_with_dir("eliminate partial tagalong grouping vars (#1009)", {
 })
 
 test_with_dir("keep nested grouping vars in combine() (#1008)", {
+  skip_on_cran()
   out <- drake_plan(
     i = target(p, transform = map(p = !!(1:2))),
     a = target(x * i, transform = cross(i, x = !!(1:2))),
@@ -3010,6 +3041,7 @@ test_with_dir("keep nested grouping vars in combine() (#1008)", {
 })
 
 test_with_dir("NAs removed from old grouping vars grid (#1010)", {
+  skip_on_cran()
   cvo <- c("a3", "7")
   out <- drake_plan(
     data = target(

@@ -57,6 +57,7 @@ test_with_dir("packages are loaded and prework is run", {
 })
 
 test_with_dir("prework can be an expression", {
+  skip_on_cran()
   on.exit(options(test_drake_option_12345 = NULL))
   options(test_drake_option_12345 = "unset")
   expect_equal(getOption("test_drake_option_12345"), "unset")
@@ -69,6 +70,7 @@ test_with_dir("prework can be an expression", {
 })
 
 test_with_dir("prework can be an expression", {
+  skip_on_cran()
   on.exit(
     options(test_drake_option_12345 = NULL, test_drake_option_6789 = NULL)
   )

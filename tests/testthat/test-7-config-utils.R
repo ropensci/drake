@@ -1,6 +1,5 @@
 drake_context("config utils")
 
-
 test_with_dir("config_util_body() (#1118)", {
   body <- config_util_body(outdated_impl)
   vars <- all.vars(body)
@@ -14,7 +13,6 @@ test_with_dir("drake_config_parent() (#1118)", {
 })
 
 test_with_dir("outdated(plan) (#1118)", {
-  skip_on_cran()
   a <- "x"
   plan <- drake_plan(x = a, y = a)
   make(plan)
@@ -139,6 +137,7 @@ test_with_dir("recoverable(plan) (#1118)", {
 })
 
 test_with_dir("missed(plan) (#1118)", {
+  skip_on_cran()
   plan <- drake_plan(x = missing::fun(arg), y = mis2::fun2(x))
   expect_equal(missed(plan, targets = "x"), "missing::fun")
   config <- drake_config(plan, targets = "x")
@@ -147,6 +146,7 @@ test_with_dir("missed(plan) (#1118)", {
 })
 
 test_with_dir("deps_target(plan) (#1118)", {
+  skip_on_cran()
   plan <- drake_plan(x = 1, y = x)
   expect_equal(nrow(deps_target(x, plan)), 0L)
   expect_equal(deps_target(y, plan)$name, "x")
@@ -159,6 +159,7 @@ test_with_dir("deps_target(plan) (#1118)", {
 })
 
 test_with_dir("drake_graph_info(plan) (#1118)", {
+  skip_on_cran()
   plan <- drake_plan(x = 1, y = x)
   tmp <- drake_graph_info(plan, targets = "x")
   expect_equal(nrow(tmp$nodes), 1L)
@@ -168,6 +169,7 @@ test_with_dir("drake_graph_info(plan) (#1118)", {
 })
 
 test_with_dir("predict_runtime(plan) etc. (#1118)", {
+  skip_on_cran()
   plan <- drake_plan(x = 1, y = x)
   make(plan)
   tmp <- predict_runtime(plan, targets = "x")
@@ -182,6 +184,7 @@ test_with_dir("predict_runtime(plan) etc. (#1118)", {
 })
 
 test_with_dir("vis_drake_graph(plan) etc. (#1118)", {
+  skip_on_cran()
   plan <- drake_plan(x = 1, y = x)
   make(plan)
   config <- drake_config(plan)

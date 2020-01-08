@@ -157,6 +157,7 @@ test_with_dir("run through non-encoder decorated storr methods", {
 })
 
 test_with_dir("garbage collection", {
+  skip_on_cran()
   skip_if(getRversion() < "3.5.0")
   plan <- drake_plan(
     x = target(
@@ -178,6 +179,7 @@ test_with_dir("garbage collection", {
 })
 
 test_with_dir("no special format", {
+  skip_on_cran()
   plan <- drake_plan(y = "normal format")
   make(plan)
   expect_identical(readd(y), "normal format")
@@ -189,6 +191,7 @@ test_with_dir("no special format", {
 })
 
 test_with_dir("illegal format", {
+  skip_on_cran()
   plan <- drake_plan(y = target("bad format", format = "bad format"))
   expect_error(
     drake_config(plan),
@@ -221,6 +224,7 @@ test_with_dir("rds format", {
 })
 
 test_with_dir("rds format with hpc checksum", {
+  skip_on_cran()
   skip_if(getRversion() < "3.5.0")
   skip_if_not_installed("future")
   future::plan(future::sequential)
@@ -277,6 +281,7 @@ test_with_dir("flow with rds format", {
 })
 
 test_with_dir("rds format with environment storr", {
+  skip_on_cran()
   skip_if(getRversion() < "3.5.0")
   plan <- drake_plan(x = target(list(x = letters, y = letters), format = "rds"))
   cache <- storr::storr_environment()
@@ -299,6 +304,7 @@ test_with_dir("rds format with environment storr", {
 })
 
 test_with_dir("rds format and recovery", {
+  skip_on_cran()
   skip_if(getRversion() < "3.5.0")
   plan <- drake_plan(
     x = target({
@@ -362,6 +368,7 @@ test_with_dir("Can save fst data frames", {
 })
 
 test_with_dir("fst format forces data frames", {
+  skip_on_cran()
   skip_if_not_installed("fst")
   plan <- drake_plan(
     x = target(
@@ -374,6 +381,7 @@ test_with_dir("fst format forces data frames", {
 })
 
 test_with_dir("fst format and tibbles", {
+  skip_on_cran()
   skip_if_not_installed("fst")
   skip_if_not_installed("tibble")
   plan <- drake_plan(
@@ -419,6 +427,7 @@ test_with_dir("fst_dt", {
 })
 
 test_with_dir("fst_dt format forces data.tables", {
+  skip_on_cran()
   skip_if_not_installed("data.table")
   skip_if_not_installed("fst")
   plan <- drake_plan(
@@ -484,6 +493,7 @@ test_with_dir("diskframe format forces disk.frames", {
 })
 
 test_with_dir("drop format for NULL values (#998)", {
+  skip_on_cran()
   skip_if(getRversion() < "3.5.0")
   f <- function() {
     NULL
@@ -495,6 +505,7 @@ test_with_dir("drop format for NULL values (#998)", {
 })
 
 test_with_dir("decorated storr import (#1015)", {
+  skip_on_cran()
   skip_if(getRversion() < "3.5.0")
   plan1 <- drake_plan(
     w = "w",
@@ -520,6 +531,7 @@ test_with_dir("decorated storr import (#1015)", {
 })
 
 test_with_dir("decorated storr export (#1015)", {
+  skip_on_cran()
   skip_if(getRversion() < "3.5.0")
   plan1 <- drake_plan(
     w = "w",
@@ -545,6 +557,7 @@ test_with_dir("decorated storr export (#1015)", {
 })
 
 test_with_dir("decorated storr import specific targets (#1015)", {
+  skip_on_cran()
   skip_if(getRversion() < "3.5.0")
   plan1 <- drake_plan(
     w = "w",
@@ -570,6 +583,7 @@ test_with_dir("decorated storr import specific targets (#1015)", {
 })
 
 test_with_dir("decorated storr import specific targets (#1015)", {
+  skip_on_cran()
   skip_if(getRversion() < "3.5.0")
   plan1 <- drake_plan(
     w = "w",
@@ -595,6 +609,7 @@ test_with_dir("decorated storr import specific targets (#1015)", {
 })
 
 test_with_dir("safe_get*() methods", {
+  skip_on_cran()
   cache <- new_cache(tempfile())
   for (ns in c(cache$default_namespace, "meta")) {
     expect_equal(cache$safe_get("x", namespace = ns), NA_character_)
@@ -628,6 +643,7 @@ test_with_dir("in-memory representation of disk.frame targets (#1077)", {
 })
 
 test_with_dir("changes to formats invalidate targets (#1104)", {
+  skip_on_cran()
   skip_if_not_installed("fst")
   df <- data.frame(x = letters, y = letters, stringsAsFactors = FALSE)
   plan <- drake_plan(x = df)
@@ -652,6 +668,7 @@ test_with_dir("changes to formats invalidate targets (#1104)", {
 })
 
 test_with_dir("same with 2 targets (format is NA for x) (#1104)", {
+  skip_on_cran()
   skip_if_not_installed("fst")
   df <- data.frame(x = letters, y = letters, stringsAsFactors = FALSE)
   plan <- drake_plan(x = df, y = x)
@@ -676,6 +693,7 @@ test_with_dir("same with 2 targets (format is NA for x) (#1104)", {
 })
 
 test_with_dir("can suppress the format trigger (#1104)", {
+  skip_on_cran()
   skip_if_not_installed("fst")
   df <- data.frame(x = letters, y = letters, stringsAsFactors = FALSE)
   plan <- drake_plan(x = target(df))
@@ -700,6 +718,7 @@ test_with_dir("can suppress the format trigger (#1104)", {
 })
 
 test_with_dir("$import() copies (does not simply move) (#1120)", {
+  skip_on_cran()
   skip_on_cran()
   skip_if_not_installed("fst")
   skip_if_not_installed("disk.frame")
@@ -767,6 +786,7 @@ test_with_dir("qs format (#1121)", {
 })
 
 test_with_dir("global rds format (#1124)", {
+  skip_on_cran()
   skip_if(getRversion() < "3.5.0")
   plan <- drake_plan(
     x = list(x = letters, y = letters),
@@ -790,6 +810,7 @@ test_with_dir("global rds format (#1124)", {
 })
 
 test_with_dir("global rds format + target qs (#1124)", {
+  skip_on_cran()
   skip_if_not_installed("qs")
   skip_if(getRversion() < "3.5.0")
   plan <- drake_plan(

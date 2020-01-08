@@ -34,6 +34,7 @@ test_with_dir("check_parallelism()", {
 })
 
 test_with_dir("parallel imports", {
+  skip_on_cran()
   config <- dbug()
   config$jobs_preprocess <- 2
   process_imports(config)
@@ -107,6 +108,7 @@ test_with_dir("direct users to GitHub issue #675", {
 })
 
 test_with_dir("drake_pmap", {
+  skip_on_cran()
   # Basic functionality: example from purrr::pmap
   x <- list(1, 10, 100)
   y <- list(1, 2, 3)
@@ -134,6 +136,7 @@ test_with_dir("drake_pmap", {
 })
 
 test_with_dir("parallelism can be a scheduler function", {
+  skip_on_cran()
   plan <- drake_plan(x = file.create("x"))
   build_ <- function(target, config) {
     tidy_expr <- eval(
@@ -163,6 +166,7 @@ test_with_dir("parallelism can be a scheduler function", {
 })
 
 test_with_dir("caching arg and column", {
+  skip_on_cran()
   plan <- drake_plan(
     x = 1,
     y = target(x, caching = "master"),
@@ -186,6 +190,7 @@ test_with_dir("caching arg and column", {
 })
 
 test_with_dir("custom caching column and clustermq", {
+  skip_on_cran()
   skip_if_not_installed("clustermq")
   skip_on_os("windows")
   if ("package:clustermq" %in% search()) {
@@ -205,6 +210,7 @@ test_with_dir("custom caching column and clustermq", {
 })
 
 test_with_dir("custom caching column and future", {
+  skip_on_cran()
   skip_if_not_installed("future")
   skip_on_os("windows")
   future::plan(future::multicore)

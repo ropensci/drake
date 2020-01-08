@@ -169,8 +169,7 @@ test_with_dir("drake_plan() trims outer whitespace in target names", {
   }
 })
 
-test_with_dir(
-  "make() trims outer whitespace in target names", {
+test_with_dir("make() trims outer whitespace in target names", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   x <- weak_tibble(target = c("a\n", "  b", "c ", "\t  d   "),
                   command = 1)
@@ -444,6 +443,7 @@ test_with_dir("plan_to_notebook()", {
 })
 
 test_with_dir("commands and triggers can be character strings too", {
+  skip_on_cran()
   config <- dbug()
   config$plan <- deparse_lang_cols(config$plan)
   for (col in colnames(config$plan)) {
@@ -463,6 +463,7 @@ test_with_dir("commands and triggers can be character strings too", {
 })
 
 test_with_dir("printing large plans", {
+  skip_on_cran()
   skip_if_not_installed("tibble")
   tmp <- capture.output({
     z <- seq_len(1e3)
@@ -475,6 +476,7 @@ test_with_dir("printing large plans", {
 })
 
 test_with_dir("drake_plan_source() with character columns", {
+  skip_on_cran()
   skip_if_not_installed("styler")
   skip_if_not_installed("tibble")
   exp <- dbug_plan()

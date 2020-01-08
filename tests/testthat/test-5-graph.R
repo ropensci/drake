@@ -458,6 +458,7 @@ test_with_dir("same, but with an extra edge not due to files", {
 })
 
 test_with_dir("GitHub issue 460", {
+  skip_on_cran()
   plan <- drake_plan(a = base::sqrt(1), b = a, c = b)
   config <- drake_config(
     plan,

@@ -603,6 +603,7 @@ test_with_dir("deps_target_impl()", {
 })
 
 test_with_dir("self-referential commands and imports", {
+  skip_on_cran()
   f <- function(x, ...) {
     x <- f
   }
@@ -879,6 +880,7 @@ test_with_dir("ignore() inside special functions", {
 })
 
 test_with_dir("no_deps() in a command", {
+  skip_on_cran()
   plan <- drake_plan(y = sqrt(no_deps(x)))
   cache <- storr::storr_environment()
   config <- drake_config(plan, cache = cache)
@@ -894,6 +896,7 @@ test_with_dir("no_deps() in a command", {
 })
 
 test_with_dir("no_deps() in a function", {
+  skip_on_cran()
   y <- 1
   f <- function(x) {
     no_deps({

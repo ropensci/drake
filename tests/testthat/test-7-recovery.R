@@ -92,6 +92,7 @@ test_with_dir("recovery (#945)", {
 })
 
 test_with_dir("rename a target", {
+  skip_on_cran()
   plan <- drake_plan(
     raw_data = iris,
     data = {

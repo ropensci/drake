@@ -1519,6 +1519,7 @@ test_with_dir("deprecated decorated storr methods", {
 })
 
 test_with_dir("config arg of make() (#1118)", {
+  skip_on_cran()
   plan <- drake_plan(x = 1)
   config <- drake_config(
     plan,

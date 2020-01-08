@@ -69,6 +69,7 @@ test_with_dir("same with an imported directory", {
 })
 
 test_with_dir("drake_config() memoizes against knitr files (#887)", {
+  skip_on_cran()
   skip_if_not_installed("knitr")
 
   # Setup
@@ -241,6 +242,7 @@ test_with_dir("authentication", {
 })
 
 test_with_dir("assert_useful_headers()", {
+  skip_on_cran()
   expect_error(
     assert_useful_headers(list(), "xyz"),
     regexp = "no ETag or Last-Modified for url"
@@ -333,6 +335,7 @@ test_with_dir("responses to intermediate file", {
 })
 
 test_with_dir("same with a directory", {
+  skip_on_cran()
   scenario <- get_testing_scenario()
   envir <- eval(parse(text = scenario$envir))
   envir <- dbug_envir(envir)

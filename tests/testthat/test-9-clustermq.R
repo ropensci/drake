@@ -1,6 +1,23 @@
 drake_context("clustermq")
 
+test_with_dir("clustermq parallelism for CRAN", {
+  skip_if_not_installed("clustermq")
+  skip_on_os("windows")
+  options(clustermq.scheduler = "multicore")
+  plan <- drake_plan(x = 1)
+  for (caching in c("master", "worker")) {
+    clean()
+    make(plan, parallelism = "clustermq", caching = caching)
+    config <- drake_config(plan)
+    expect_equal(justbuilt(config), "x")
+  }
+  if ("package:clustermq" %in% search()) {
+    detach("package:clustermq", unload = TRUE) # nolint
+  }
+})
+
 test_with_dir("clustermq parallelism", {
+  skip_on_cran()
   skip_if_not_installed("clustermq")
   skip_on_os("windows")
   if ("package:clustermq" %in% search()) {

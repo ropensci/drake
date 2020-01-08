@@ -1,6 +1,7 @@
 drake_context("dynamic")
 
 test_with_dir("dynamic dependency detection", {
+  skip_on_cran()
   indices <- seq_len(4)
   f <- identity
   plan <- drake_plan(
@@ -29,6 +30,7 @@ test_with_dir("dynamic dependency detection", {
 })
 
 test_with_dir("dynamic dependencies in the graph", {
+  skip_on_cran()
   imported <- 1
   plan <- drake_plan(
     x = 1,
@@ -42,6 +44,7 @@ test_with_dir("dynamic dependencies in the graph", {
 })
 
 test_with_dir("dynamic sub-target indices", {
+  skip_on_cran()
   f <- identity
   z_by <- rep(letters[seq_len(4)], each = 4)
   plan <- drake_plan(
@@ -97,6 +100,7 @@ test_with_dir("empty dynamic transform", {
 })
 
 test_with_dir("invalidating a subtarget invalidates the parent", {
+  skip_on_cran()
   plan <- drake_plan(
     x = seq_len(2),
     y = target(x, dynamic = map(x))
@@ -112,6 +116,7 @@ test_with_dir("invalidating a subtarget invalidates the parent", {
 })
 
 test_with_dir("lots of maps", {
+  skip_on_cran()
   scenario <- get_testing_scenario()
   envir <- eval(parse(text = scenario$envir))
   suppressWarnings(rm(x1, x2, x3, x4, x5, envir = envir))
@@ -298,6 +303,7 @@ test_with_dir("dynamic map flow", {
 })
 
 test_with_dir("change 2 sub-deps (sub-target filtering)", {
+  skip_on_cran()
   plan <- drake_plan(
     x = c("a", "b", "c", "d"),
     y = target(x, dynamic = map(x))
@@ -317,6 +323,7 @@ test_with_dir("change 2 sub-deps (sub-target filtering)", {
 })
 
 test_with_dir("identical sub-dep hashes", {
+  skip_on_cran()
   plan <- drake_plan(
     x = rep("x", 4),
     y = target(sample.int(n = 1e9, size = 1), dynamic = map(x))
@@ -354,6 +361,7 @@ test_with_dir("identical sub-dep hashes", {
 })
 
 test_with_dir("dynamic cross values", {
+  skip_on_cran()
   plan <- drake_plan(
     x1 = letters[seq_len(2)],
     x2 = LETTERS[seq_len(2)],
@@ -552,6 +560,7 @@ test_with_dir("dynamic cross flow", {
 })
 
 test_with_dir("switch the order of cross sub-targets", {
+  skip_on_cran()
   plan <- drake_plan(
     x = LETTERS[seq_len(2)],
     y = letters[seq_len(2)],
@@ -569,6 +578,7 @@ test_with_dir("switch the order of cross sub-targets", {
 })
 
 test_with_dir("dynamic group flow without by", {
+  skip_on_cran()
   scenario <- get_testing_scenario()
   envir <- eval(parse(text = scenario$envir))
   parallelism <- scenario$parallelism
@@ -686,6 +696,7 @@ test_with_dir("dynamic group with by", {
 })
 
 test_with_dir("insert .by piece by piece", {
+  skip_on_cran()
   scenario <- get_testing_scenario()
   envir <- eval(parse(text = scenario$envir))
   parallelism <- scenario$parallelism
@@ -857,6 +868,7 @@ test_with_dir("dynamic group flow with by", {
 })
 
 test_with_dir("make a dep dynamic later on", {
+  skip_on_cran()
   plan <- drake_plan(
     x = seq_len(4),
     y = target(x + 1, dynamic = map(x)),
@@ -870,6 +882,7 @@ test_with_dir("make a dep dynamic later on", {
 })
 
 test_with_dir("subtarget name invalidation", {
+  skip_on_cran()
   plan <- drake_plan(
     x = seq_len(4),
     y = target(x + 1, dynamic = map(x))
@@ -898,6 +911,7 @@ test_with_dir("subtarget name invalidation", {
 })
 
 test_with_dir("dynamic map over unequal vars", {
+  skip_on_cran()
   plan <- drake_plan(
     x = seq_len(4),
     y = seq_len(5),
@@ -908,6 +922,7 @@ test_with_dir("dynamic map over unequal vars", {
 })
 
 test_with_dir("dynamic group over unequal vars", {
+  skip_on_cran()
   plan <- drake_plan(
     x = seq_len(4),
     y = seq_len(5),
@@ -919,6 +934,7 @@ test_with_dir("dynamic group over unequal vars", {
 })
 
 test_with_dir("dynamic group over unequal vars", {
+  skip_on_cran()
   plan <- drake_plan(
     x = seq_len(4),
     y = seq_len(5),
@@ -930,6 +946,7 @@ test_with_dir("dynamic group over unequal vars", {
 })
 
 test_with_dir("group: static targets and .by precedence", {
+  skip_on_cran()
   plan <- drake_plan(
     x = c("a", "a", "b", "b"),
     y = target(x, dynamic = group(x))
@@ -959,6 +976,7 @@ test_with_dir("group: static targets and .by precedence", {
 })
 
 test_with_dir("group multiple targets", {
+  skip_on_cran()
   plan <- drake_plan(
     w = c("a", "a", "b", "b"),
     x = c(1, 2, 3, 4),
@@ -972,6 +990,7 @@ test_with_dir("group multiple targets", {
 })
 
 test_with_dir("formats applied to subtargets but not their parents", {
+  skip_on_cran()
   skip_if(getRversion() < "3.5.0")
   plan <- drake_plan(
     x = seq_len(4),
@@ -998,6 +1017,7 @@ test_with_dir("formats applied to subtargets but not their parents", {
 })
 
 test_with_dir("non-rds formats and dynamic branching (#1059)", {
+  skip_on_cran()
   skip_if_not_installed("fst")
   plan <- drake_plan(
     x = data.frame(x = seq_len(2), y = seq_len(2)),
@@ -1047,6 +1067,7 @@ test_with_dir("runtime predictions for dynamic targets", {
 })
 
 test_with_dir("dynamic subtargets and RNGs", {
+  skip_on_cran()
   plan <- drake_plan(
     x = seq_len(4),
     y = target(rnorm(1), dynamic = map(x))
@@ -1101,6 +1122,7 @@ test_with_dir("dynamic subtargets and RNGs", {
 })
 
 test_with_dir("dynamic condition triggers are not allowed", {
+  skip_on_cran()
   plan <- drake_plan(
     x = seq_len(4),
     y = target(x, trigger = trigger(condition = x > 2), dynamic = map(x))
@@ -1109,6 +1131,7 @@ test_with_dir("dynamic condition triggers are not allowed", {
 })
 
 test_with_dir("dynamic change triggers are not allowed", {
+  skip_on_cran()
   plan <- drake_plan(
     x = seq_len(4),
     y = target(x, trigger = trigger(change = x), dynamic = map(x))
@@ -1138,6 +1161,7 @@ test_with_dir("dynamic parent recovery", {
 })
 
 test_with_dir("subtarget recovery", {
+  skip_on_cran()
   plan <- drake_plan(
     x = letters[seq_len(2)],
     y = target(file.create(x), dynamic = map(x))
@@ -1188,6 +1212,7 @@ test_with_dir("row-wise dynamic map()", {
 })
 
 test_with_dir("dynamic loadd() and readd()", {
+  skip_on_cran()
   plan <- drake_plan(
     x = mtcars[seq_len(4), ],
     y = target(x, dynamic = map(x))
@@ -1301,6 +1326,7 @@ test_with_dir("dynamic hpc", {
 })
 
 test_with_dir("dynamic max_expand", {
+  skip_on_cran()
   scenario <- get_testing_scenario()
   envir <- eval(parse(text = scenario$envir))
   suppressWarnings(rm(dyn1, dyn2, dyn3, dyn4, dyn5, envir = envir))
@@ -1352,6 +1378,7 @@ test_with_dir("dynamic max_expand", {
 })
 
 test_with_dir("bad cross trace (#1052)", {
+  skip_on_cran()
   plan <- drake_plan(
     a = letters[seq_len(2)],
     b = seq_len(2),
@@ -1361,6 +1388,7 @@ test_with_dir("bad cross trace (#1052)", {
 })
 
 test_with_dir("bad group trace (#1052)", {
+  skip_on_cran()
   plan <- drake_plan(
     a = letters[seq_len(2)],
     b = seq_len(2),
@@ -1375,6 +1403,7 @@ test_with_dir("bad group trace (#1052)", {
 })
 
 test_with_dir("dynamic map trace (#1052)", {
+  skip_on_cran()
   plan <- drake_plan(
     a = letters[seq_len(4)],
     b = target(a, dynamic = map(a, .trace = a)),
@@ -1398,6 +1427,7 @@ test_with_dir("dynamic map trace (#1052)", {
 })
 
 test_with_dir("dynamic cross trace (#1052)", {
+  skip_on_cran()
   expect_error(read_trace("a", "b"))
   plan <- drake_plan(
     w = LETTERS[seq_len(3)],
@@ -1496,6 +1526,7 @@ test_with_dir("dynamic branching and memory strategies", {
 })
 
 test_with_dir("format trigger for dynamic targets (#1104)", {
+  skip_on_cran()
   skip_if(getRversion() < "3.5.0")
   plan <- drake_plan(
     x = 1:4,
@@ -1514,6 +1545,7 @@ test_with_dir("format trigger for dynamic targets (#1104)", {
 })
 
 test_with_dir("dynamic targets are vectors (#1105)", {
+  skip_on_cran()
   plan <- drake_plan(
     w = c("a", "a", "b", "b"),
     x = seq_len(4),
@@ -1525,6 +1557,7 @@ test_with_dir("dynamic targets are vectors (#1105)", {
 })
 
 test_with_dir("clear the subtarget envir for non-sub-targets",  {
+  skip_on_cran()
   # Dynamic branching
   # Get the mean mpg for each cyl in the mtcars dataset.
   plan <- drake_plan(
@@ -1541,6 +1574,7 @@ test_with_dir("clear the subtarget envir for non-sub-targets",  {
 })
 
 test_with_dir("whole dynamic targets (#1107)", {
+  skip_on_cran()
   scenario <- get_testing_scenario()
   envir <- eval(parse(text = scenario$envir))
   parallelism <- scenario$parallelism
@@ -1577,6 +1611,7 @@ test_with_dir("whole dynamic targets (#1107)", {
 })
 
 test_with_dir("dynamic targets get unloaded from memory (#1107)", {
+  skip_on_cran()
   plan <- drake_plan(
     raw = mtcars[seq_len(4), ],
     rows = target(raw[, c("mpg", "cyl")], dynamic = map(raw)),
@@ -1596,6 +1631,7 @@ test_with_dir("dynamic targets get unloaded from memory (#1107)", {
 })
 
 test_with_dir("cache_planned() and cache_unplanned() (#)", {
+  skip_on_cran()
   plan <- drake_plan(w = 1)
   make(plan)
   expect_equal(cached_planned(plan), "w")

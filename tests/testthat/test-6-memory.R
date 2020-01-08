@@ -329,6 +329,7 @@ test_with_dir("drake_envir() and memory strategies", {
 })
 
 test_with_dir("drake_envir() depth", {
+  skip_on_cran()
   e <- new.env(parent = globalenv())
   plan <- drake_plan(
     large_data_1 = sample.int(1e4),
@@ -365,6 +366,7 @@ test_with_dir("drake_envir() depth", {
 })
 
 test_with_dir("drake_envir() in wrong context", {
+  skip_on_cran()
   expect_error(
     drake_envir(),
     regexp = "in your drake plan"

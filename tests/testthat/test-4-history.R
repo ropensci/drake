@@ -1,6 +1,7 @@
 drake_context("history")
 
 test_with_dir("history can be disabled", {
+  skip_on_cran()
   plan <- drake_plan(x = 1)
   cache <- storr::storr_environment()
   make(plan, cache = cache, history = FALSE)
@@ -9,6 +10,7 @@ test_with_dir("history can be disabled", {
 })
 
 test_with_dir("history works with environment storrs", {
+  skip_on_cran()
   plan <- drake_plan(x = 1)
   cache <- storr::storr_environment()
   make(plan, cache = cache, history = TRUE)
@@ -18,6 +20,7 @@ test_with_dir("history works with environment storrs", {
 })
 
 test_with_dir("edge_cases", {
+  skip_on_cran()
   skip_if_not_installed("txtq")
   expect_error(drake_history(), regexp = "cannot find drake cache")
   expect_null(history_walk_args(NULL, NULL))
@@ -103,6 +106,7 @@ test_with_dir("basic history", {
 
 test_with_dir("complicated history commands", {
   skip_on_cran()
+  skip_on_cran()
   skip_if_not_installed("txtq")
   plan <- drake_plan(
     a = identity(
@@ -122,6 +126,7 @@ test_with_dir("complicated history commands", {
 })
 
 test_with_dir("file history", {
+  skip_on_cran()
   skip_on_cran()
   skip_if_not_installed("knitr")
   skip_if_not_installed("txtq")
@@ -143,6 +148,7 @@ test_with_dir("file history", {
 })
 
 test_with_dir("history migration", {
+  skip_on_cran()
   plan <- drake_plan(x = 1)
   history <- txtq::txtq(".drake_history")
   make(plan, history = history)
@@ -156,6 +162,7 @@ test_with_dir("history migration", {
 })
 
 test_with_dir("migrate history with drake_history()", {
+  skip_on_cran()
   plan <- drake_plan(x = 1)
   history <- txtq::txtq(".drake_history")
   make(plan, history = history)
@@ -168,6 +175,7 @@ test_with_dir("migrate history with drake_history()", {
 })
 
 test_with_dir("custom history txtq", {
+  skip_on_cran()
   plan <- drake_plan(x = 1)
   q <- txtq::txtq("hist")
   make(plan, history = q)
@@ -177,6 +185,7 @@ test_with_dir("custom history txtq", {
 })
 
 test_with_dir("txtq present but emtpy", {
+  skip_on_cran()
   q <- txtq::txtq(tempfile())
   expect_equal(nrow(q$list()), 0L)
   cache <- new_cache()

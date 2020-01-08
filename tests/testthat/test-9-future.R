@@ -1,6 +1,18 @@
 drake_context("future")
 
+test_with_dir("future parallelism for CRAN", {
+  skip_if_not_installed("future")
+  plan <- drake_plan(x = 1)
+  for (caching in c("master", "worker")) {
+    clean()
+    make(plan, parallelism = "future", caching = caching)
+    config <- drake_config(plan)
+    expect_equal(justbuilt(config), "x")
+  }
+})
+
 test_with_dir("future package functionality", {
+  skip_on_cran()
   skip_if_not_installed("future")
   future::plan(future::sequential)
   scenario <- get_testing_scenario()

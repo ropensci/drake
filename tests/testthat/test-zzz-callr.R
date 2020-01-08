@@ -1,6 +1,7 @@
 drake_context("callr")
 
 test_with_dir("r_make_message", {
+  skip_on_cran()
   expect_message(r_make_message(force = TRUE))
 })
 
@@ -206,6 +207,7 @@ test_with_dir("callr RStudio addins", {
 })
 
 test_with_dir("errors keep their informative messages (#969)", {
+  skip_on_cran()
   skip_if_not_installed("callr")
   code <- c(
     "library(drake)",

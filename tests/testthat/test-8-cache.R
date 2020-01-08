@@ -47,6 +47,7 @@ test_with_dir("clean() removes the correct files", {
 })
 
 test_with_dir("drake_version", {
+  skip_on_cran()
   cache <- storr::storr_environment()
   expect_equal(
     drake_cache_version(cache),
@@ -177,6 +178,7 @@ test_with_dir("non-existent caches", {
 })
 
 test_with_dir("drake_gc() and mangled keys", {
+  skip_on_cran()
   cache <- storr::storr_rds(tempfile(), mangle_key = TRUE)
   cache$set("a", 1)
   expect_silent(tmp <- drake_gc(cache = cache))
@@ -190,6 +192,7 @@ test_with_dir("try to rescue non-existent stuff", {
 })
 
 test_with_dir("drake_cache() can search", {
+  skip_on_cran()
   dir.create(file.path("w"))
   dir.create(file.path("w", "x"))
   dir.create(file.path("w", "x", "y"))
@@ -215,6 +218,7 @@ test_with_dir("drake_cache() can search", {
 })
 
 test_with_dir("neighboring caches", {
+  skip_on_cran()
   cache <- new_cache(".test")
   test_plan <- drake_plan(
     dot_test = 1L
@@ -452,6 +456,7 @@ test_with_dir("master caching, environment caches and parallelism", {
 })
 
 test_with_dir("run make() from subdir", {
+  skip_on_cran()
   old <- Sys.getenv("drake_warn_subdir")
   Sys.setenv(drake_warn_subdir = "")
   on.exit(Sys.setenv(drake_warn_subdir = old))
@@ -470,6 +475,7 @@ test_with_dir("run make() from subdir", {
 })
 
 test_with_dir("loadd() does not load imports", {
+  skip_on_cran()
   f <- function(x) {
     x + 1
   }
@@ -546,6 +552,7 @@ test_with_dir("make() writes a cache log file", {
 })
 
 test_with_dir("loadd(x, deps = TRUE) when x is not cached", {
+  skip_on_cran()
   plan <- drake_plan(x = "abc", y = x + 1)
   expect_error(make(plan, session_info = FALSE))
   config <- drake_config(plan, session_info = FALSE)
@@ -798,6 +805,7 @@ test_with_dir("clean a nonexistent cache", {
 })
 
 test_with_dir("make() from inside the cache", {
+  skip_on_cran()
   cache <- storr::storr_rds(getwd())
   plan <- drake_plan(x = 1)
   expect_error(
@@ -850,6 +858,7 @@ test_with_dir("need a storr for a decorated storr", {
 })
 
 test_with_dir("dir_create()", {
+  skip_on_cran()
   x <- tempfile()
   dir_create(x)
   expect_true(dir.exists(x))
@@ -859,6 +868,7 @@ test_with_dir("dir_create()", {
 })
 
 test_with_dir("which_clean() (#1014)", {
+  skip_on_cran()
   cache <- storr::storr_environment()
   expect_equal(which_clean(cache = cache), character(0))
   plan <- drake_plan(x = 1, y = 2, z = 3)
@@ -871,6 +881,7 @@ test_with_dir("which_clean() (#1014)", {
 })
 
 test_with_dir("ignore storrs (#1071)", {
+  skip_on_cran()
   cache <- new_cache(tempfile())
   cache$set("x", "val")
   plan <- drake_plan(x = c(cache$get("x"), "target"))

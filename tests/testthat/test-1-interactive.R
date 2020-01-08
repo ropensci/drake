@@ -1,24 +1,28 @@
 drake_context("interactive")
 
 test_with_dir("code analysis print method", {
+  skip_on_cran()
   x <- analyze_code(quote(x)) # print by hand
   m <- utils::capture.output(print(x))
   expect_true(any(grepl("code analysis results list", m)))
 })
 
 test_with_dir("drake_config() print method", {
+  skip_on_cran()
   x <- drake_config(drake_plan(y = 1)) # print by hand
   m <- utils::capture.output(print(x))
   expect_true(any(grepl("configured drake workflow", m)))
 })
 
 test_with_dir("trigger() print method", {
+  skip_on_cran()
   x <- trigger() # print by hand
   m <- utils::capture.output(print(x))
   expect_true(any(grepl("list of triggers", m)))
 })
 
 test_with_dir("drake spec print method", {
+  skip_on_cran()
   f <- identity
   plan <- drake_plan(x = 1)
   config <- drake_config(plan)
@@ -31,12 +35,14 @@ test_with_dir("drake spec print method", {
 })
 
 test_with_dir("drake_graph_info() print method", {
+  skip_on_cran()
   x <- drake_graph_info(drake_plan(y = 1)) # print by hand
   m <- utils::capture.output(print(x))
   expect_true(any(grepl("drake graph", m)))
 })
 
 test_with_dir("logger", {
+  skip_on_cran()
   # testthat suppresses messages,
   # so we need to inspect the console output manually.
   files <- list.files()
@@ -73,6 +79,7 @@ test_with_dir("imported online file with no internet", {
 })
 
 test_with_dir("time stamps and large files", {
+  skip_on_cran()
   # Reconnect to the internet.
   skip_if_not_installed("downloader")
   dir_csv <- tempfile()
@@ -124,6 +131,7 @@ test_with_dir("time stamps and large files", {
 })
 
 test_with_dir("use_drake()", {
+  skip_on_cran()
   # Load drake with library(drake)
   # and not with devtools::load_all().
   # Reason: https://github.com/r-lib/usethis/issues/347
@@ -193,6 +201,7 @@ test_with_dir("drake_debug()", {
 })
 
 test_with_dir("clustermq error messages get back to master", {
+  skip_on_cran()
   plan <- drake_plan(a = stop(123))
   options(clustermq.scheduler = "multicore")
   for (caching in c("worker", "master")) {
@@ -208,6 +217,7 @@ test_with_dir("clustermq error messages get back to master", {
 })
 
 test_with_dir("forks + lock_envir = informative error msg", {
+  skip_on_cran()
   # Don't run this test for real because (1) we would have to add
   # furrr to "Suggests" and (2) at some point, base R may be patched
   # so forking in the parallel package does not give this warning anyway.
@@ -231,6 +241,7 @@ test_with_dir("forks + lock_envir = informative error msg", {
 })
 
 test_with_dir("clean() in interactive mode", {
+  skip_on_cran()
   # Must run this test in a fresh new interactive session.
   # Cannot be fully automated like the other tests.
   .pkg_envir$drake_clean_menu <- NULL
@@ -259,6 +270,7 @@ test_with_dir("clean() in interactive mode", {
 })
 
 test_with_dir("rescue_cache() in interactive mode", {
+  skip_on_cran()
   # Must run this test in a fresh new interactive session.
   # Cannot be fully automated like the other tests.
   .pkg_envir$drake_clean_menu <- NULL
@@ -277,6 +289,7 @@ test_with_dir("rescue_cache() in interactive mode", {
 })
 
 test_with_dir("recovery ad in clean()", {
+  skip_on_cran()
   # Must run this test in a fresh new interactive session.
   # Cannot be fully automated like the other tests.
   .pkg_envir$drake_clean_menu <- NULL
