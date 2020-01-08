@@ -472,6 +472,14 @@
 #'   about formats:
 #'   <https://books.ropensci.org/drake/plans.html#special-data-formats-for-targets> # nolint
 #'
+#' @param lock_cache Logical, whether to lock the cache before running `make()`
+#'   etc. It is usually recommended to keep cache locking on.
+#'   However, if you interrupt `make()` before it can clean itself up,
+#'   then the cache will stay locked, and you will need to manually unlock it with
+#'   `drake::drake_cache("xyz")$unlock()`. Repeatedly unlocking the cache
+#'   by hand is annoying, and `lock_cache = FALSE` prevents the cache
+#'   from locking in the first place.
+#'
 #' @examples
 #' \dontrun{
 #' isolate_example("quarantine side effects", {
@@ -545,7 +553,8 @@ drake_config <- function(
   curl_handles = list(),
   max_expand = NULL,
   log_build_times = TRUE,
-  format = NULL
+  format = NULL,
+  lock_cache = TRUE
 ) {
   logger <- logger(verbose = verbose, file = console_log_file)
   logger$minor("begin drake_config()")
@@ -668,7 +677,8 @@ drake_config <- function(
     ht_is_subtarget = ht_is_subtarget, # Gets replaced in make()
     max_expand = max_expand,
     log_build_times = log_build_times,
-    format = format
+    format = format,
+    lock_cache = lock_cache
   )
   class(out) <- c("drake_config", "drake")
   config_checks(out)

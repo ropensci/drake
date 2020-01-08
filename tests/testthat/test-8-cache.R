@@ -918,3 +918,15 @@ test_with_dir("cache locking (#1081)", {
   drake_gc()
   clean()
 })
+
+test_with_dir("suppress cache locking (#1081)", {
+  skip_on_cran()
+  skip_if_not_installed("visNetwork")
+  plan <- drake_plan(x = 1)
+  config <- drake_config(plan, lock_cache = FALSE)
+  config$cache$lock()
+  make(plan, lock_cache = FALSE)
+  expect_equal(justbuilt(config), "x")
+  expect_equal(outdated_impl(config), character(0))
+  expect_equal(recoverable_impl(config), character(0))
+})

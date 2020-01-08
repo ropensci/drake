@@ -214,17 +214,15 @@ refclass_decorated_storr <- methods::setRefClass(
         return()
       }
       stop(
-        "drake's cache is locked because another process is building ",
-        "targets or imports right now, ",
-        "e.g. make() or clean() or outdated(make_imports = TRUE) ",
-        "or recoverable(make_imports = TRUE) or ",
-        "vis_drake_graph(make_imports = TRUE) etc. ",
-        "If the process other process crashed before it could clean up, ",
-        "unlock the cache with drake_cache(\"", .self$path, "\")$unlock(). ",
-        "Or, if you are using outdated() or recoverable() ",
-        "or vis_drake_graph() etc. then set make_imports = FALSE. ",
-        "See https://books.ropensci.org/drake/hpc.html to learn how to ",
-        "use parallel computing in drake.",
+        "drake's cache is locked. ",
+        "Either another process is storing targets/imports right now ",
+        "(e.g. make()) or the process was interrupted before cleanup. ",
+        "In the latter case, unlock the cache with:\n\n",
+        "  drake::drake_cache(\"", .self$path, "\")$unlock()\n\n",
+        "To invoke a function like outdated() or vis_drake_graph() ",
+        "while make() is running, set make_imports = FALSE instead.\n\n",
+        "To read about parallel comptuing in drake, visit ",
+        "https://books.ropensci.org/drake/hpc.html.",
         call. = FALSE
       )
     },

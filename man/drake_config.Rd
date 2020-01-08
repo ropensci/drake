@@ -59,7 +59,8 @@ drake_config(
   curl_handles = list(),
   max_expand = NULL,
   log_build_times = TRUE,
-  format = NULL
+  format = NULL,
+  lock_cache = TRUE
 )
 }
 \arguments{
@@ -531,6 +532,14 @@ with \code{build_times = FALSE}.}
 without an explicit \code{target(format = ...)} in the plan. Details
 about formats:
 \url{https://books.ropensci.org/drake/plans.html#special-data-formats-for-targets} # nolint}
+
+\item{lock_cache}{Logical, whether to lock the cache before running \code{make()}
+etc. It is usually recommended to keep cache locking on.
+However, if you interrupt \code{make()} before it can clean itself up,
+then the cache will stay locked, and you will need to manually unlock it with
+\code{drake::drake_cache("xyz")$unlock()}. Repeatedly unlocking the cache
+by hand is annoying, and \code{lock_cache = FALSE} prevents the cache
+from locking in the first place.}
 }
 \value{
 A configured \code{drake} workflow.

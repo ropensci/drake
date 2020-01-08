@@ -80,7 +80,7 @@ recoverable_impl <- function(
   config$logger$minor("begin recoverable()")
   on.exit(config$logger$minor("end recoverable()"), add = TRUE)
   assert_config(config)
-  if (make_imports) {
+  if (make_imports && config$lock_cache) {
     config$cache$lock()
     on.exit(config$cache$unlock(), add = TRUE)
   }
@@ -168,7 +168,7 @@ outdated_impl <- function(
   config$logger$minor("begin outdated()")
   on.exit(config$logger$minor("end outdated()"), add = TRUE)
   assert_config(config)
-  if (make_imports) {
+  if (make_imports && config$lock_cache) {
     config$cache$lock()
     on.exit(config$cache$unlock(), add = TRUE)
   }

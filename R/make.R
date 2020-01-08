@@ -163,7 +163,8 @@ make <- function(
   curl_handles = list(),
   max_expand = NULL,
   log_build_times = TRUE,
-  format = NULL
+  format = NULL,
+  lock_cache = TRUE
 ) {
   force(envir)
   deprecate_arg(config, "config")
@@ -221,7 +222,8 @@ make <- function(
     curl_handles = curl_handles,
     max_expand = max_expand,
     log_build_times = log_build_times,
-    format = format
+    format = format,
+    lock_cache = lock_cache
   )
   make_impl(config)
 }
@@ -235,8 +237,10 @@ make_impl <- function(config) {
   config$logger$minor("begin make()")
   on.exit(config$logger$minor("end make()"), add = TRUE)
   runtime_checks(config = config)
-  config$cache$lock()
-  on.exit(config$cache$unlock(), add = TRUE)
+  if (config$lock_cache) {
+    config$cache$lock()
+    on.exit(config$cache$unlock(), add = TRUE)
+  }
   config$running_make <- TRUE
   config$ht_dynamic <- ht_new()
   config$ht_dynamic_size <- ht_new()
