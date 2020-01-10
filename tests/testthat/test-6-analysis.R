@@ -1033,3 +1033,7 @@ test_with_dir("standardizing Rcpp functions (#806)", {
 test_with_dir("utils for code analysis fns", {
   expect_equal(pair_text("x", c("y", "z")), c("xy", "xz"))
 })
+
+test_with_dir("handle @ (#1130)", {
+  expect_equal(deps_code(quote(x@y))$name, "x")
+})

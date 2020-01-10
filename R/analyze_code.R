@@ -60,7 +60,7 @@ walk_call <- function(expr, results, locals, allowed_globals) { # nolint
   if (name == "local") {
     locals <- ht_clone(locals)
   }
-  if (name == "$") {
+  if (name %in% c("$", "@")) {
     expr[[3]] <- substitute()
   }
   if (walk_base(expr, results, locals, allowed_globals, name)) {
