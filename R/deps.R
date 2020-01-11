@@ -78,6 +78,9 @@ deps_target <- function(
 #' @keywords internal
 #' @description Not a user-side function.
 #' @inheritParams outdated
+#' @param target Name of a target.
+#' @param character_only Logical, whether to interpret
+#'   `target` as a character (`TRUE`) or a symbol (`FALSE`).
 #' @param config A [drake_config()] object.
 deps_target_impl <- function(
   target,
@@ -211,6 +214,15 @@ deps_profile <- function(
 ) {
 }
 
+#' @title Internal function with a drake_config() argument
+#' @export
+#' @keywords internal
+#' @description Not a user-side function.
+#' @inheritParams outdated
+#' @param target Name of a target.
+#' @param character_only Logical, whether to interpret
+#'   `target` as a character (`TRUE`) or a symbol (`FALSE`).
+#' @param config A [drake_config()] object.
 deps_profile_impl <- function(
   target,
   config,
