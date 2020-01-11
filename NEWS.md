@@ -29,6 +29,7 @@
 - Remove superfluous/incorrect information about imports from the output of `deps_profile()` (#1134, @kendonB).
 - Append hashes to `deps_target()` output (#1134, @kendonB).
 - Add S3 class and pretty print method for `drake_meta_()` objects objects.
+- Use call stacks instead of environment inheritance to power `drake_envir()` and `id_chr()` (#1132).
 
 
 # Version 7.9.0
