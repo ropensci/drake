@@ -183,8 +183,8 @@ display_deps_list <- function(x) {
 #'   [deps_code()], [make()],
 #'   [drake_config()]
 #' @param target Name of the target.
-#' @param config Configuration list output by
-#'   [drake_config()] or [make()].
+#' @param ... Arguments to [make()], such as `plan` and `targets`.
+#' @param config Deprecated.
 #' @param character_only Logical, whether to assume `target`
 #'   is a character string rather than a symbol.
 #' @examples

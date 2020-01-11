@@ -10,8 +10,7 @@ dependency_profile(target, config, character_only = FALSE)
 \arguments{
 \item{target}{Name of the target.}
 
-\item{config}{Configuration list output by
-\code{\link[=drake_config]{drake_config()}} or \code{\link[=make]{make()}}.}
+\item{config}{Deprecated.}
 
 \item{character_only}{Logical, whether to assume \code{target}
 is a character string rather than a symbol.}

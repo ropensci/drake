@@ -10,11 +10,12 @@ deps_profile(target, ..., character_only = FALSE, config = NULL)
 \arguments{
 \item{target}{Name of the target.}
 
+\item{...}{Arguments to \code{\link[=make]{make()}}, such as \code{plan} and \code{targets}.}
+
 \item{character_only}{Logical, whether to assume \code{target}
 is a character string rather than a symbol.}
 
-\item{config}{Configuration list output by
-\code{\link[=drake_config]{drake_config()}} or \code{\link[=make]{make()}}.}
+\item{config}{Deprecated.}
 }
 \value{
 A data frame of old and new values for each
