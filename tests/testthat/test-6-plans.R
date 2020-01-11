@@ -632,7 +632,7 @@ test_with_dir("warning when file_out() files not produced", {
 
 test_with_dir("id_chr()", {
   skip_on_cran()
-  expect_error(id_chr(), regexp = "drake plan")
+  expect_error(id_chr(), regexp = "environment where drake builds targets")
   plan <- drake_plan(x = id_chr())
   make(plan)
   expect_equal(readd(x), "x")
