@@ -28,6 +28,7 @@
 - Handle the `@` operator. For example, in the static code analysis of `x@y`, do not register `y` as a dependency (#1130, @famuvie).
 - Remove superfluous/incorrect information about imports from the output of `deps_profile()` (#1134, @kendonB).
 - Append hashes to `deps_target()` output (#1134, @kendonB).
+- Add S3 class and pretty print method for `drake_meta_()` objects objects.
 
 
 # Version 7.9.0

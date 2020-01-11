@@ -41,6 +41,15 @@ test_with_dir("drake_graph_info() print method", {
   expect_true(any(grepl("drake graph", m)))
 })
 
+test_with_dir("drake_meta_() print method", {
+  skip_on_cran()
+  plan <- drake_plan(x = 1)
+  make(plan)
+  x <- diagnose(x) # print by hand
+  m <- utils::capture.output(print(x))
+  expect_true(any(grepl("drake metadata", m)))
+})
+
 test_with_dir("logger", {
   skip_on_cran()
   # testthat suppresses messages,

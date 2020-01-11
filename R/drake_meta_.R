@@ -2,7 +2,24 @@ drake_meta_ <- function(target, config) {
   is_subtarget <- is_subtarget(target, config) %|||% FALSE
   class <- ifelse(is_subtarget, "subtarget", "target")
   class(target) <- class
-  drake_meta_impl(target, config)
+  out <- drake_meta_impl(target, config)
+  class(out) <- c("drake_meta", "drake")
+  out
+}
+
+#' @export
+print.drake_meta <- function(x, ...) {
+  cat("drake metadata for ", display_key(x$name), ":\n", sep = "")
+  elts <- names(x)
+  long <- c("command", "date")
+  lsts <- c("trigger", "time_start", "time_build", "time_command")
+  list1 <- x[setdiff(elts, c(long, lsts))]
+  list2 <- x[intersect(elts, long)]
+  list2 <- lapply(list2, crop_text, width = getOption("width") - 18L)
+  list3 <- x[intersect(elts, lsts)]
+  str(list1, no.list = TRUE)
+  str(list2, no.list = TRUE)
+  min_str(list3)
 }
 
 drake_meta_impl <- function(target, config) {
