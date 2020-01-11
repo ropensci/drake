@@ -5,7 +5,7 @@
 \title{Get the environment where drake builds targets
 \lifecycle{questioning}}
 \usage{
-drake_envir(which = c("subtargets", "dynamic", "targets"))
+drake_envir(which = c("targets", "dynamic", "subtargets"))
 }
 \arguments{
 \item{which}{Character of length 1, which environment
@@ -22,8 +22,8 @@ while \code{\link[=make]{make()}} is running.
 }
 \details{
 \code{drake} manages in-memory targets in 3 environments:
-one of subtargets, one for whole dynamic targets, and one for
-statict targets. Select the appropriate environment for your
+one with sub-targets, one with whole dynamic targets, and one with
+static targets. Select the appropriate environment for your
 use case with the \code{which} argument of \code{drake_envir()}.
 }
 \section{Keywords}{

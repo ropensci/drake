@@ -550,8 +550,8 @@ id_chr <- function() {
 #'   Advanced users can use it to strategically remove targets from memory
 #'   while [make()] is running.
 #' @details `drake` manages in-memory targets in 3 environments:
-#'   one of subtargets, one for whole dynamic targets, and one for
-#'   statict targets. Select the appropriate environment for your
+#'   one with sub-targets, one with whole dynamic targets, and one with
+#'   static targets. Select the appropriate environment for your
 #'   use case with the `which` argument of `drake_envir()`.
 #' @export
 #' @inheritSection drake_plan Keywords
@@ -577,7 +577,7 @@ id_chr <- function() {
 #' make(plan, cache = storr::storr_environment(), session_info = FALSE)
 #' })
 #' }
-drake_envir <- function(which = c("subtargets", "dynamic", "targets")) {
+drake_envir <- function(which = c("targets", "dynamic", "subtargets")) {
   config <- envir_call()$config
   which <- match.arg(which)
   config[[paste0("envir_", which)]]
