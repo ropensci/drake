@@ -112,6 +112,17 @@ test_with_dir("dependency profile", {
   expect_equal(nrow(out), 5L)
 })
 
+test_with_dir("deps_profile() on imports (#1134)", {
+  f <- function(x) {
+    x
+  }
+  plan <- drake_plan(y = f(1))
+  make(plan)
+  config <- drake_config(plan)
+  out <- deps_profile(target = f, config = config)
+  expect_equal(sort(out$name), sort(c("depend", "file_in")))
+})
+
 test_with_dir("Missing cache", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   s <- storr::storr_rds("s")

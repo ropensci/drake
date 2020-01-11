@@ -244,12 +244,16 @@ deps_profile <- function(
     output_file_hash(target, config),
     resolve_target_seed(target, config)
   )
-  weak_tibble(
+  out <- weak_tibble(
     name = c("command", "depend", "file_in", "file_out", "seed"),
     changed = old_values != new_values,
     old = old_values,
     new = new_values
   )
+  if (identical(spec$imported, TRUE)) {
+    out <- out[out$name %in% c("depend", "file_in"), ]
+  }
+  out
 }
 
 #' @title List the targets and imports that are reproducibly tracked.
