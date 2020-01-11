@@ -245,13 +245,20 @@ drake_with_call_stack_8a6af5 <- function(target, config) {
     signalCondition(e)
   }
   expr <- config$spec[[target]]$command_build
-  # Need to make sure the environment is locked for running commands.
-  # Why not just do this once at the beginning of `make()`?
-  # Because do_prework() and future::value()
-  # may need to modify the global state.
-  # Unfortunately, we have to repeatedly lock and unlock the envir.
-  # Unfortunately, the safe way to do this adds overhead and
-  # makes future::multicore parallelism serial.
+  block_envir_lock(config)
+  lock_environment(config$envir)
+  on.exit(unlock_environment(config$envir))
+  tidy_expr <- eval(expr = expr, envir = config$envir_subtargets)
+  tryCatch(
+    withCallingHandlers(
+      eval(expr = tidy_expr, envir = config$envir_subtargets),
+      error = capture_calls
+    ),
+    error = identity
+  )
+}
+
+block_envir_lock <- function(config) {
   if (config$lock_envir) {
     i <- 1
     # Lock the environment only while running the command.
@@ -259,24 +266,7 @@ drake_with_call_stack_8a6af5 <- function(target, config) {
       Sys.sleep(config$sleep(max(0L, i))) # nocov
       i <- i + 1 # nocov
     }
-    lock_environment(config$envir)
-    on.exit(unlock_environment(config$envir))
   }
-  config$envir_subtargets[[drake_target_marker]] <- target
-  tidy_expr <- eval(
-    expr = expr,
-    envir = config$envir_subtargets
-  ) # tidy eval prep
-  tryCatch(
-    withCallingHandlers(
-      eval(
-        expr = tidy_expr,
-        envir = config$envir_subtargets
-      ), # pure eval
-      error = capture_calls
-    ),
-    error = identity
-  )
 }
 
 lock_environment <- function(envir) {

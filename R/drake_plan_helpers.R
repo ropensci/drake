@@ -540,21 +540,7 @@ no_deps <- function(x = NULL) {
 #' })
 #' }
 id_chr <- function() {
-  envir <- environment()
-  for (i in seq_len(getOption("expressions"))) {
-    if (exists(drake_target_marker, envir = envir, inherits = FALSE)) {
-      return(envir[[drake_target_marker]])
-    }
-    if (identical(envir, globalenv())) {
-      break # nocov
-    }
-    envir <- parent.frame(n = i)
-  }
-  stop(
-    "Could not find the name of the current target. ",
-    "You should only use id_chr() in your drake plan.",
-    call. = FALSE
-  )
+  config <- envir_call()$target
 }
 
 #' @title Get the environment where drake builds targets
@@ -615,9 +601,6 @@ envir_call_error <- function() {
     call. = FALSE
   )
 }
-
-drake_target_marker <- ".id_chr"
-drake_markers <- drake_target_marker
 
 #' @title Row-bind together drake plans
 #' \lifecycle{stable}
