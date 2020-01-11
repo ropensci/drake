@@ -596,6 +596,7 @@ test_with_dir("deps_target_impl()", {
     stringsAsFactors = FALSE
   )
   d2 <- d2[order(d2$name), ]
+  d1$hash <- NULL
   expect_equivalent(d1, d2)
   d <- deps_target_impl(regression1_small, config = config)
   expect_equal(sort(d$name), sort(c("reg1", "small")))

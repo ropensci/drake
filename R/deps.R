@@ -97,7 +97,9 @@ deps_target_impl <- function(
   }
   out <- config$spec[[target]]$deps_build
   out <- decode_deps_list(out)
-  display_deps_list(select_nonempty(out))
+  out <- display_deps_list(select_nonempty(out))
+  out$hash <- config$cache$mget_hash(out$name)
+  out
 }
 
 body(deps_target) <- config_util_body(deps_target_impl)
