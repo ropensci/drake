@@ -77,7 +77,6 @@ deps_target <- function(
 #' @export
 #' @keywords internal
 #' @description Not a user-side function.
-#' @inheritParams outdated
 #' @param target Name of a target.
 #' @param character_only Logical, whether to interpret
 #'   `target` as a character (`TRUE`) or a symbol (`FALSE`).
@@ -220,7 +219,6 @@ deps_profile <- function(
 #' @export
 #' @keywords internal
 #' @description Not a user-side function.
-#' @inheritParams outdated
 #' @param target Name of a target.
 #' @param character_only Logical, whether to interpret
 #'   `target` as a character (`TRUE`) or a symbol (`FALSE`).
