@@ -5,7 +5,11 @@
 \title{Get the environment where drake builds targets
 \lifecycle{questioning}}
 \usage{
-drake_envir()
+drake_envir(which = c("subtargets", "dynamic", "targets"))
+}
+\arguments{
+\item{which}{Character of length 1, which environment
+to select. See the details of this help file.}
 }
 \value{
 The environment where \code{drake} builds targets.
@@ -13,14 +17,14 @@ The environment where \code{drake} builds targets.
 \description{
 Call this function inside the commands in your plan
 to get the environment where \code{drake} builds targets.
-That way, you can strategically remove targets from memory
-while \code{\link[=make]{make()}} is running. That way, you can limit the
-amount of computer memory you use.
+Advanced users can use it to strategically remove targets from memory
+while \code{\link[=make]{make()}} is running.
 }
 \details{
-\code{drake_envir()} is where \code{drake} puts the dependencies
-of \emph{dynamic sub-targets}. To manage ordinary dependencies,
-you need \code{parent.env(drake_envir())}.
+\code{drake} manages in-memory targets in 3 environments:
+one of subtargets, one for whole dynamic targets, and one for
+statict targets. Select the appropriate environment for your
+use case with the \code{which} argument of \code{drake_envir()}.
 }
 \section{Keywords}{
 
@@ -58,8 +62,8 @@ plan <- drake_plan(
   summary = {
     print(ls(envir = parent.env(drake_envir())))
     # We don't need the large_data_* targets in memory anymore.
-    rm(large_data_1, large_data_2, envir = parent.env(drake_envir()))
-    print(ls(envir = parent.env(drake_envir())))
+    rm(large_data_1, large_data_2, envir = drake_envir("targets"))
+    print(ls(envir = drake_envir("targets")))
     mean(subset)
   }
 )

@@ -181,7 +181,7 @@ with_handling <- function(target, meta, config) {
     start <- proc_time()
   }
   withCallingHandlers(
-    value <- with_call_stack(target = target, config = config),
+    value <- drake_with_call_stack_8a6af5(target = target, config = config),
     warning = function(w) {
       config$logger$minor(paste("Warning:", w$message), target = target)
       warnings <<- c(warnings, w$message)
@@ -237,7 +237,7 @@ prepend_fork_advice <- function(msg) {
 # Taken directly from the `evaluate::try_capture_stack()`.
 # https://github.com/r-lib/evaluate/blob/b43d54f1ea2fe4296f53316754a28246903cd703/R/traceback.r#L20-L47 # nolint
 # Copyright Hadley Wickham and Yihui Xie, 2008 - 2018. MIT license.
-with_call_stack <- function(target, config) {
+drake_with_call_stack_8a6af5 <- function(target, config) {
   frame <- sys.nframe()
   capture_calls <- function(e) {
     e <- mention_pure_functions(e)

@@ -249,7 +249,6 @@ make_impl <- function(config) {
   config$envir_loaded <- new.env(hash = FALSE, parent = emptyenv())
   config$cache$reset_memo_hash()
   on.exit(config$cache$reset_memo_hash(), add = TRUE)
-  config$envir_subtargets[[drake_envir_marker]] <- TRUE
   config$cache$set(key = "seed", value = config$seed, namespace = "session")
   if (config$log_progress) {
     config$cache$clear(namespace = "progress")

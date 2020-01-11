@@ -561,16 +561,18 @@ id_chr <- function() {
 #' \lifecycle{questioning}
 #' @description Call this function inside the commands in your plan
 #'   to get the environment where `drake` builds targets.
-#'   That way, you can strategically remove targets from memory
-#'   while [make()] is running. That way, you can limit the
-#'   amount of computer memory you use.
-#' @details `drake_envir()` is where `drake` puts the dependencies
-#'   of *dynamic sub-targets*. To manage ordinary dependencies,
-#'   you need `parent.env(drake_envir())`.
+#'   Advanced users can use it to strategically remove targets from memory
+#'   while [make()] is running.
+#' @details `drake` manages in-memory targets in 3 environments:
+#'   one of subtargets, one for whole dynamic targets, and one for
+#'   statict targets. Select the appropriate environment for your
+#'   use case with the `which` argument of `drake_envir()`.
 #' @export
 #' @inheritSection drake_plan Keywords
 #' @seealso [from_plan()]
 #' @return The environment where `drake` builds targets.
+#' @param which Character of length 1, which environment
+#'   to select. See the details of this help file.
 #' @examples
 #' \dontrun{
 #' isolate_example("contain side effects", {
@@ -581,38 +583,41 @@ id_chr <- function() {
 #'   summary = {
 #'     print(ls(envir = parent.env(drake_envir())))
 #'     # We don't need the large_data_* targets in memory anymore.
-#'     rm(large_data_1, large_data_2, envir = parent.env(drake_envir()))
-#'     print(ls(envir = parent.env(drake_envir())))
+#'     rm(large_data_1, large_data_2, envir = drake_envir("targets"))
+#'     print(ls(envir = drake_envir("targets")))
 #'     mean(subset)
 #'   }
 #' )
 #' make(plan, cache = storr::storr_environment(), session_info = FALSE)
 #' })
 #' }
-drake_envir <- function() {
-  envir <- environment()
-  for (i in seq_len(getOption("expressions"))) {
-    if (exists(drake_envir_marker, envir = envir, inherits = FALSE)) {
-      return(envir)
-    }
-    if (identical(envir, globalenv())) {
-      break # nocov
-    }
-    envir <- parent.frame(n = i)
+drake_envir <- function(which = c("subtargets", "dynamic", "targets")) {
+  config <- envir_call()$config
+  which <- match.arg(which)
+  config[[paste0("envir_", which)]]
+}
+
+envir_call <- function() {
+  calls <- vcapply(sys.calls(), safe_deparse)
+  matching_calls <- grepl("drake_with_call_stack_8a6af5", calls)
+  if (!any(matching_calls)) {
+    envir_call_error()
   }
+  pos <- max(which(matching_calls))
+  sys.frame(pos)
+}
+
+envir_call_error <- function() {
   stop(
     "Could not find the environment where drake builds targets. ",
-    "You should only use drake_envir() in your drake plan.",
+    "Functions drake_envir(), id_chr(), and cancel_if() ",
+    "must only be invoked though make().",
     call. = FALSE
   )
 }
 
-drake_envir_marker <- "._drake_envir"
 drake_target_marker <- ".id_chr"
-drake_markers <- c(
-  drake_envir_marker,
-  drake_target_marker
-)
+drake_markers <- drake_target_marker
 
 #' @title Row-bind together drake plans
 #' \lifecycle{stable}

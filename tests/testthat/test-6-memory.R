@@ -263,7 +263,7 @@ test_with_dir("drake_envir() and memory strategies", {
     targety167ff309 = targety84d2fe31,
     targety523e1fba = {
       saveRDS(
-        ls(envir = parent.env(parent.env(drake_envir()))),
+        ls(envir = drake_envir("targets")),
         "ls.rds"
       )
       targety167ff309
@@ -305,13 +305,13 @@ test_with_dir("drake_envir() and memory strategies", {
       out <- targety84d2fe31
       rm(
         targety84d2fe31,
-        envir = parent.env(parent.env(drake_envir()))
+        envir = drake_envir("targets")
       )
       out
     },
     c = {
       saveRDS(
-        ls(envir = parent.env(parent.env(drake_envir()))),
+        ls(envir = drake_envir("targets")),
         "ls.rds"
       )
       targety167ff309
@@ -338,7 +338,7 @@ test_with_dir("drake_envir() depth", {
     summary = {
       targs <- c("large_data_1", "large_data_2")
       expect_true(all(targs %in% ls(
-        envir = parent.env(parent.env(drake_envir()))
+        envir = drake_envir("targets")
       )))
       identity(
         invisible(
@@ -346,13 +346,13 @@ test_with_dir("drake_envir() depth", {
             rm(
               large_data_1,
               large_data_2,
-              envir = parent.env(parent.env(drake_envir()))
+              envir = drake_envir("targets")
             )
           )
         )
       )
       expect_false(
-        any(targs %in% ls(envir = parent.env(parent.env(drake_envir()))))
+        any(targs %in% ls(envir = drake_envir("targets")))
       )
       mean(subset)
     }
@@ -369,6 +369,6 @@ test_with_dir("drake_envir() in wrong context", {
   skip_on_cran()
   expect_error(
     drake_envir(),
-    regexp = "in your drake plan"
+    regexp = "the environment where drake builds targets"
   )
 })

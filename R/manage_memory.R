@@ -118,7 +118,6 @@ discard_dynamic <- function(discard_these, config) {
 clear_envir_subtargets <- function(target, config) {
   rm(list = config$envir_loaded$subtargets, envir = config$envir_subtargets)
   config$envir_loaded$subtargets <- character(0)
-  config$envir_subtargets[[drake_envir_marker]] <- TRUE
 }
 
 clear_envir_targets <- function(target, config) {
