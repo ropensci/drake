@@ -637,3 +637,29 @@ test_with_dir("id_chr()", {
   make(plan)
   expect_equal(readd(x), "x")
 })
+
+test_with_dir("cancel_if(TRUE) (#1131)", {
+  f <- function(x) {
+    cancel_if()
+    Sys.sleep(2) # should not run
+  }
+  g <- function(x) f(x)
+  plan <- drake_plan(y = g(1))
+  make(plan)
+  expect_error(readd(y))
+})
+
+test_with_dir("cancel_if(FALSE) (#1131)", {
+  f <- function(x) {
+    cancel_if(FALSE)
+    "x"
+  }
+  g <- function(x) f(x)
+  plan <- drake_plan(y = g(1))
+  make(plan)
+  expect_equal(readd(y), "x")
+})
+
+test_with_dir("cancel_if() in incorrect context (#1131)", {
+  expect_error(cancel_if(TRUE))
+})

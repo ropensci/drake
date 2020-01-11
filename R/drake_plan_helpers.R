@@ -511,6 +511,43 @@ no_deps <- function(x = NULL) {
   x
 }
 
+#' @title Cancel a target mid-build \lifecycle{experimental}
+#' @description Cancel a target mid-build if some logical condition is met.
+#'   Upon cancellation, `drake` halts the current target and moves to the
+#'   next one. The target's previous value and metadata are still
+#'   in the cache.
+#' @export
+#' @return Nothing.
+#' @param condition Logical, whether to cancel the target.
+#' @examples
+#' \dontrun{
+#' isolate_example("cancel_if()", {
+#' f <- function(x) {
+#'   cancel_if()
+#'   Sys.sleep(2) # does not run
+#' }
+#' g <- function(x) f(x)
+#' plan <- drake_plan(y = g(1))
+#' make(plan)
+#' # does not exist
+#' # readd(y)
+#' })
+#' }
+cancel_if <- function(condition = TRUE) {
+  if (!condition) {
+    return(invisible())
+  }
+  calls <- vcapply(sys.calls(), safe_deparse)
+  matching_calls <- grepl("^drake_with_call_stack_8a6af5\\(", calls)
+  if (!any(matching_calls)) {
+    stop("not running make()", call. = FALSE)
+  }
+  matching_calls <- grepl("^try_build\\(", calls)
+  pos <- max(which(matching_calls))
+  envir <- sys.frame(pos)
+  evalq(return(structure(NA, class = "drake_cancel")), envir = envir)
+}
+
 #' @title Name of the current target \lifecycle{maturing}
 #' @export
 #' @description `id_chr()` gives you the name of the current target
@@ -585,7 +622,7 @@ drake_envir <- function(which = c("targets", "dynamic", "subtargets")) {
 
 envir_call <- function() {
   calls <- vcapply(sys.calls(), safe_deparse)
-  matching_calls <- grepl("drake_with_call_stack_8a6af5", calls)
+  matching_calls <- grepl("^drake_with_call_stack_8a6af5\\(", calls)
   if (!any(matching_calls)) {
     envir_call_error()
   }
