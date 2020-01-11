@@ -15,6 +15,7 @@
     - `recoverable()`
     - `missed()`
     - `deps_target()`
+    - `deps_profile()`
     - `drake_graph_info()`
     - `vis_drake_graph()`
     - `sankey_drake_graph()`
@@ -25,6 +26,7 @@
 - Because of #1118, the only remaining user-side purpose of `drake_config()` is to serve functions `r_make()` and friends.
 - Document the limitations of grouping variables (#1128).
 - Handle the `@` operator. For example, in the static code analysis of `x@y`, do not register `y` as a dependency (#1130, @famuvie).
+- Remove superfluous/incorrect information about imports from the output of `deps_profile()` (#1134, @kendonB).
 
 # Version 7.9.0
 

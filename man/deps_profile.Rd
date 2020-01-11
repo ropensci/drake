@@ -5,16 +5,16 @@
 \title{Find out why a target is out of date.
 \lifecycle{stable}}
 \usage{
-deps_profile(target, config, character_only = FALSE)
+deps_profile(target, ..., character_only = FALSE, config = NULL)
 }
 \arguments{
 \item{target}{Name of the target.}
 
-\item{config}{Configuration list output by
-\code{\link[=drake_config]{drake_config()}} or \code{\link[=make]{make()}}.}
-
 \item{character_only}{Logical, whether to assume \code{target}
 is a character string rather than a symbol.}
+
+\item{config}{Configuration list output by
+\code{\link[=drake_config]{drake_config()}} or \code{\link[=make]{make()}}.}
 }
 \value{
 A data frame of old and new values for each
@@ -47,9 +47,8 @@ isolate_example("Quarantine side effects.", {
 if (suppressWarnings(require("knitr"))) {
 load_mtcars_example() # Load drake's canonical example.
 make(my_plan) # Run the project, build the targets.
-config <- drake_config(my_plan)
 # Get some example dependency profiles of targets.
-deps_profile(small, config = config)
+deps_profile(small, my_plan)
 # Change a dependency.
 simulate <- function(x) {}
 # Update the in-memory imports in the cache
@@ -57,7 +56,7 @@ simulate <- function(x) {}
 # Changes to targets are already cached.
 make(my_plan, skip_targets = TRUE)
 # The dependency hash changed.
-deps_profile(small, config = config)
+deps_profile(small, my_plan)
 }
 })
 }

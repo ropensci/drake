@@ -75,15 +75,15 @@ test_with_dir("dependency profile", {
   make(plan, session_info = FALSE)
   config <- drake_config(plan, session_info = FALSE)
   expect_error(
-    deps_profile(target = missing, config = config),
+    deps_profile_impl(target = missing, config = config),
     regexp = "no recorded metadata"
   )
-  expect_false(any(deps_profile(target = a, config = config)$changed))
+  expect_false(any(deps_profile_impl(target = a, config = config)$changed))
   b <- 2
-  expect_false(any(deps_profile(target = a, config = config)$changed))
+  expect_false(any(deps_profile_impl(target = a, config = config)$changed))
   config$skip_targets <- TRUE
   make_impl(config = config)
-  dp <- deps_profile(target = a, config = config)
+  dp <- deps_profile_impl(target = a, config = config)
   expect_true(as.logical(dp[dp$name == "depend", "changed"]))
   expect_equal(sum(dp$changed), 1)
   plan$command <- "b + c"
@@ -93,7 +93,7 @@ test_with_dir("dependency profile", {
     cache = config$cache,
     logger = config$logger
   )
-  dp <- deps_profile(target = a, config = config)
+  dp <- deps_profile_impl(target = a, config = config)
   expect_true(as.logical(dp[dp$name == "command", "changed"]))
   expect_equal(sum(dp$changed), 2)
   load_mtcars_example()
@@ -104,7 +104,7 @@ test_with_dir("dependency profile", {
     session_info = FALSE
   )
   make_impl(config = config)
-  out <- deps_profile(
+  out <- deps_profile_impl(
     file_store("report.Rmd"),
     character_only = TRUE,
     config
@@ -112,14 +112,14 @@ test_with_dir("dependency profile", {
   expect_equal(nrow(out), 5L)
 })
 
-test_with_dir("deps_profile() on imports (#1134)", {
+test_with_dir("deps_profile_impl() on imports (#1134)", {
   f <- function(x) {
     x
   }
   plan <- drake_plan(y = f(1))
   make(plan)
   config <- drake_config(plan)
-  out <- deps_profile(target = f, config = config)
+  out <- deps_profile_impl(target = f, config = config)
   expect_equal(sort(out$name), sort(c("depend", "file_in")))
 })
 

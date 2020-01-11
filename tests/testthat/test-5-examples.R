@@ -47,7 +47,7 @@ test_with_dir("mtcars example works", {
   testrun(config)
   con <- testconfig(config)
 
-  expect_true(is.list(deps_profile(
+  expect_true(is.list(deps_profile_impl(
     target = "small", config = con)))
 
   expect_equal(sort(justbuilt(con)), sort(dats))

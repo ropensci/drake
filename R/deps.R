@@ -190,9 +190,8 @@ display_deps_list <- function(x) {
 #' if (suppressWarnings(require("knitr"))) {
 #' load_mtcars_example() # Load drake's canonical example.
 #' make(my_plan) # Run the project, build the targets.
-#' config <- drake_config(my_plan)
 #' # Get some example dependency profiles of targets.
-#' deps_profile(small, config = config)
+#' deps_profile(small, my_plan)
 #' # Change a dependency.
 #' simulate <- function(x) {}
 #' # Update the in-memory imports in the cache
@@ -200,11 +199,19 @@ display_deps_list <- function(x) {
 #' # Changes to targets are already cached.
 #' make(my_plan, skip_targets = TRUE)
 #' # The dependency hash changed.
-#' deps_profile(small, config = config)
+#' deps_profile(small, my_plan)
 #' }
 #' })
 #' }
 deps_profile <- function(
+  target,
+  ...,
+  character_only = FALSE,
+  config = NULL
+) {
+}
+
+deps_profile_impl <- function(
   target,
   config,
   character_only = FALSE
@@ -255,6 +262,8 @@ deps_profile <- function(
   }
   out
 }
+
+body(deps_profile) <- config_util_body(deps_profile_impl)
 
 #' @title List the targets and imports that are reproducibly tracked.
 #' \lifecycle{stable}
