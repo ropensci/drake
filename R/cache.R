@@ -1419,7 +1419,7 @@ progress <- function(
   }
   progress <- match.arg(
     progress,
-    choices = c("done", "running", "failed"),
+    choices = c("done", "running", "cancelled", "failed"),
     several.ok = TRUE
   )
   out[out$progress %in% progress,, drop = FALSE] # nolint

@@ -625,7 +625,7 @@ standardize_key <- function(text) {
 }
 
 ht_keys <- function(digest_fn) {
-  keys <- c("running", "done", "failed", "lock")
+  keys <- c("running", "done", "cancelled", "failed", "lock")
   out <- lapply(keys, precomputed_key_hash, digest_fn = digest_fn)
   names(out) <- keys
   out
@@ -647,6 +647,7 @@ deduce_progress <- Vectorize(function(substr) {
     substr,
     r = "running",
     d = "done",
+    c = "cancelled",
     f = "failed",
     "none"
   )

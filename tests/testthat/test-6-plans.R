@@ -638,28 +638,79 @@ test_with_dir("id_chr()", {
   expect_equal(readd(x), "x")
 })
 
-test_with_dir("cancel_if(TRUE) (#1131)", {
+test_with_dir("cancel() (#1131)", {
   f <- function(x) {
-    cancel_if()
-    Sys.sleep(2) # should not run
-  }
-  g <- function(x) f(x)
-  plan <- drake_plan(y = g(1))
-  make(plan)
-  expect_error(readd(y))
-})
-
-test_with_dir("cancel_if(FALSE) (#1131)", {
-  f <- function(x) {
-    cancel_if(FALSE)
+    cancel()
     "x"
   }
   g <- function(x) f(x)
   plan <- drake_plan(y = g(1))
   make(plan)
+  expect_equal(progress()$progress, "cancelled")
+  expect_error(suppressWarnings(readd(y)))
+  config <- drake_config(plan)
+  expect_equal(justbuilt(config), character(0))
+  f <- function(x) {
+    cancel(allow_missing = FALSE)
+    "x"
+  }
+  make(plan)
+  expect_equal(justbuilt(config), "y")
+  f <- function(x) {
+    cancel(allow_missing = FALSE)
+    "y"
+  }
+  plan <- drake_plan(y = g(1), z = y)
+  make(plan)
+  expect_equal(justbuilt(config), "z")
   expect_equal(readd(y), "x")
+  expect_equal(readd(z), "x")
 })
 
-test_with_dir("cancel_if() in incorrect context (#1131)", {
-  expect_error(cancel_if(TRUE))
+test_with_dir("cancel_if(TRUE) (#1131)", {
+  f <- function(x) {
+    cancel_if(TRUE)
+    "x"
+  }
+  g <- function(x) f(x)
+  plan <- drake_plan(y = g(1))
+  make(plan)
+  expect_error(suppressWarnings(readd(y)))
+  config <- drake_config(plan)
+  expect_equal(justbuilt(config), character(0))
+  f <- function(x) {
+    cancel_if(TRUE, allow_missing = FALSE)
+    "x"
+  }
+  make(plan)
+  expect_equal(justbuilt(config), "y")
+  f <- function(x) {
+    cancel_if(TRUE, allow_missing = FALSE)
+    "y"
+  }
+  plan <- drake_plan(y = g(1), z = y)
+  make(plan)
+  expect_equal(justbuilt(config), "z")
+  expect_equal(readd(y), "x")
+  expect_equal(readd(z), "x")
+})
+
+test_with_dir("cancel_if(condition) (#1131)", {
+  f <- function(x) {
+    cancel_if(x > 1)
+    "x"
+  }
+  plan <- drake_plan(x = f(0), y = f(2))
+  make(plan)
+  expect_equal(cached(), "x")
+})
+
+test_with_dir("cancel_if(bad condition) (#1131)", {
+  plan <- drake_plan(x = cancel_if(1:2))
+  expect_error(make(plan), regexp = "length 1 in cancel_if")
+})
+
+test_with_dir("cancel in incorrect context (#1131)", {
+  expect_error(cancel(), regexp = "where drake builds targets")
+  expect_error(cancel_if(TRUE), regexp = "where drake builds targets")
 })

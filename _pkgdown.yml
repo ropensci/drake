@@ -56,6 +56,8 @@ reference:
   - '`file_in`'
   - '`file_out`'
   - '`knitr_in`'
+  - '`cancel`'
+  - '`cancel_if`'
   - '`ignore`'
   - '`no_deps`'
   - '`id_chr`'
