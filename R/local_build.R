@@ -323,7 +323,7 @@ conclude_build_impl <- function(value, target, meta, config) {
   UseMethod("conclude_build_impl")
 }
 
-conclude_build_impl.drake_cancel <- function(value, target, meta, config) {
+conclude_build_impl.drake_cancel <- function(value, target, meta, config) { # nolint
   config$cache$set_progress(target = target, value = "cancelled")
   config$logger$major("cancel", target, target = target, color = "cancel")
 }
