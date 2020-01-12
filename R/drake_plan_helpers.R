@@ -511,6 +511,84 @@ no_deps <- function(x = NULL) {
   x
 }
 
+#' @title Cancel a target mid-build under some condition
+#'   \lifecycle{experimental}
+#' @description Cancel a target mid-build if some logical condition is met.
+#'   Upon cancellation, `drake` halts the current target and moves to the
+#'   next one. The target's previous value and metadata, if they exist,
+#'   remain in the cache.
+#' @export
+#' @seealso cancel
+#' @return Nothing.
+#' @inheritParams cancel
+#' @param condition Logical, whether to cancel the target.
+#' @examples
+#' \dontrun{
+#' isolate_example("cancel_if()", {
+#' f <- function(x) {
+#'   cancel_if(x > 1)
+#'   Sys.sleep(2) # Does not run if x > 1.
+#' }
+#' g <- function(x) f(x)
+#' plan <- drake_plan(y = g(2))
+#' make(plan)
+#' # Does not exist.
+#' # readd(y)
+#' })
+#' }
+cancel_if <- function(condition, allow_missing = TRUE) {
+  envir_call()
+  if (length(condition) != 1L) {
+    stop("condition must be length 1 in cancel_if()")
+  }
+  if (!condition) {
+    return(invisible())
+  }
+  cancel(allow_missing = allow_missing)
+}
+
+#' @title Cancel a target mid-build \lifecycle{experimental}
+#' @description Cancel a target mid-build.
+#'   Upon cancellation, `drake` halts the current target and moves to the
+#'   next one. The target's previous value and metadata, if they exist,
+#'   remain in the cache.
+#' @export
+#' @seealso cancel_if
+#' @return Nothing.
+#' @param allow_missing Logical. If `FALSE`, `drake` will not cancel
+#'   the target if it is missing from the cache (or if you removed the
+#'   key with `clean()`).
+#' @examples
+#' \dontrun{
+#' isolate_example("cancel()", {
+#' f <- function(x) {
+#'   cancel()
+#'   Sys.sleep(2) # Does not run.
+#' }
+#' g <- function(x) f(x)
+#' plan <- drake_plan(y = g(1))
+#' make(plan)
+#' # Does not exist.
+#' # readd(y)
+#' })
+#' }
+cancel <- function(allow_missing = TRUE) {
+  envir <- envir_call()
+  if (!allow_missing) {
+    if (target_missing(envir$target, envir$config)) {
+      return(invisible())
+    }
+  }
+  stop(cancellation(allow_missing = allow_missing))
+}
+
+cancellation <- function(...) {
+  structure(
+    list(message = "cancel", call = NULL),
+    class = c("drake_cancel", "error", "condition")
+  )
+}
+
 #' @title Name of the current target \lifecycle{maturing}
 #' @export
 #' @description `id_chr()` gives you the name of the current target
@@ -540,7 +618,7 @@ no_deps <- function(x = NULL) {
 #' })
 #' }
 id_chr <- function() {
-  config <- envir_call()$target
+  envir_call()$target
 }
 
 #' @title Get the environment where drake builds targets
@@ -585,7 +663,7 @@ drake_envir <- function(which = c("targets", "dynamic", "subtargets")) {
 
 envir_call <- function() {
   calls <- vcapply(sys.calls(), safe_deparse)
-  matching_calls <- grepl("drake_with_call_stack_8a6af5", calls)
+  matching_calls <- grepl("^drake_with_call_stack_8a6af5\\(", calls)
   if (!any(matching_calls)) {
     envir_call_error()
   }
@@ -596,8 +674,8 @@ envir_call <- function() {
 envir_call_error <- function() {
   stop(
     "Could not find the environment where drake builds targets. ",
-    "Functions drake_envir(), id_chr(), and cancel_if() ",
-    "must only be invoked though make().",
+    "Functions drake_envir(), id_chr(), cancel(), and cancel_if() ",
+    "can only be invoked through make().",
     call. = FALSE
   )
 }

@@ -4,6 +4,7 @@
 
 - Add a new `format` argument to `make()`, an optional custom storage format for targets without an explicit `target(format = ...)` in the plan (#1124).
 - Add a new `lock_cache` argument to `make()` to optionally suppress cache locking (#1129). (It can be annoying to interrupt `make()` repeatedly and unlock the cache manually every time.)
+- Add new functions `cancel()` and `cancel_if()` function to cancel targets mid-build (#1131).
 
 ## Enhancements
 

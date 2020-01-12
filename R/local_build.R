@@ -202,7 +202,6 @@ with_handling <- function(target, meta, config) {
   if (inherits(value, "error")) {
     value$message <- prepend_fork_advice(value$message)
     meta$error <- value
-    value <- NULL
   }
   list(
     target = target,
@@ -254,7 +253,8 @@ drake_with_call_stack_8a6af5 <- function(target, config) {
       eval(expr = tidy_expr, envir = config$envir_subtargets),
       error = capture_calls
     ),
-    error = identity
+    error = identity,
+    drake_cancel = cancellation
   )
 }
 
@@ -316,12 +316,24 @@ conclude_build <- function(build, config) {
   target <- build$target
   value <- build$value
   meta <- build$meta
+  conclude_build_impl(value, target, meta, config)
+}
+
+conclude_build_impl <- function(value, target, meta, config) {
+  UseMethod("conclude_build_impl")
+}
+
+conclude_build_impl.drake_cancel <- function(value, target, meta, config) { # nolint
+  config$cache$set_progress(target = target, value = "cancelled")
+  config$logger$major("cancel", target, target = target, color = "cancel")
+}
+
+conclude_build_impl.default <- function(value, target, meta, config) {
   assert_output_files(target = target, meta = meta, config = config)
   handle_build_exceptions(target = target, meta = meta, config = config)
   value <- assign_format(target = target, value = value, config = config)
   store_outputs(target = target, value = value, meta = meta, config = config)
   assign_to_envir(target = target, value = value, config = config)
-  invisible(value)
 }
 
 assign_format <- function(target, value, config) {

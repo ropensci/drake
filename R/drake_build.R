@@ -71,6 +71,7 @@ drake_build_impl <- function(
   announce_build(target = target, config = config)
   build <- try_build(target = target, meta = meta, config = config)
   conclude_build(build = build, config = config)
+  invisible(build$value)
 }
 
 body(drake_build) <- config_util_body(drake_build_impl)

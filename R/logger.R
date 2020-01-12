@@ -98,7 +98,8 @@ text_color <- Vectorize(function(x) {
     target = "green3",
     recover = "#ffd700",
     retry = "#9400d3",
-    missing = "#9400d3",
+    missing = "red",
+    cancel = "#ffa500",
     fail = "red",
     "#888888"
   )

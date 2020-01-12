@@ -273,6 +273,7 @@ get_raw_node_category_data <- function(config) {
   config$outdated <- resolve_graph_outdated(config = config)
   prog <- config$cache$get_progress(config$targets)
   config$running <- config$targets[prog == "running"]
+  config$cancelled <- config$targets[prog == "cancelled"]
   config$failed <- config$targets[prog == "failed"]
   config$files <- all_labels[is_encoded_path(all_labels)]
   config$functions <- parallel_filter(
@@ -294,7 +295,7 @@ get_raw_node_category_data <- function(config) {
 
 trim_node_categories <- function(config) {
   elts <- c(
-    "failed", "files", "functions", "running", "missing",
+    "cancelled", "failed", "files", "functions", "running", "missing",
     "outdated", "targets"
   )
   for (elt in elts) {
@@ -426,6 +427,7 @@ legend_nodes <- function(font_size = 20) {
       "Up to date",
       "Outdated",
       "Running",
+      "Cancelled",
       "Failed",
       "Imported",
       "Missing",
@@ -439,13 +441,14 @@ legend_nodes <- function(font_size = 20) {
       "up_to_date",
       "outdated",
       "running",
+      "cancelled",
       "failed",
       "import",
       "missing",
       rep("generic", 5)
     )),
     shape = node_shape(c(
-      rep("object", 7),
+      rep("object", 8),
       "dynamic",
       "funct",
       "file",
@@ -531,6 +534,7 @@ categorize_nodes <- function(config) {
     nodes[missing, "status"] <- "missing"
     nodes[outdated, "status"] <- "outdated"
     nodes[running, "status"] <- "running"
+    nodes[cancelled, "status"] <- "cancelled"
     nodes[failed, "status"] <- "failed"
     nodes$type <- "object"
     nodes[dynamic, "type"] <- "dynamic"
@@ -564,6 +568,7 @@ style_nodes <- function(config) {
     nodes$font.size <- font_size # nolint
     nodes[nodes$status == "imported", "color"] <- node_color("import")
     nodes[nodes$status == "running", "color"] <- node_color("running")
+    nodes[nodes$status == "cancelled", "color"] <- node_color("cancelled")
     nodes[nodes$status == "failed", "color"] <- node_color("failed")
     nodes[nodes$status == "missing", "color"] <- node_color("missing")
     nodes[nodes$status == "outdated", "color"] <- node_color("outdated")
@@ -584,6 +589,7 @@ node_color <- Vectorize(function(x) {
     fail = "red",
     up_to_date = "forestgreen",
     outdated = "#000000",
+    cancelled = "#ecb753",
     failed = "#aa0000",
     import = "dodgerblue3",
     missing = "darkorchid3",
