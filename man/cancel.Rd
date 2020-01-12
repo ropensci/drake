@@ -10,8 +10,6 @@ cancel(allow_missing = TRUE)
 \item{allow_missing}{Logical. If \code{FALSE}, \code{drake} will not cancel
 the target if it is missing from the cache (or if you removed the
 key with \code{clean()}).}
-
-\item{condition}{Logical, whether to cancel the target.}
 }
 \value{
 Nothing.

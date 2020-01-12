@@ -555,7 +555,6 @@ cancel_if <- function(condition, allow_missing = TRUE) {
 #' @export
 #' @seealso cancel_if
 #' @return Nothing.
-#' @param condition Logical, whether to cancel the target.
 #' @param allow_missing Logical. If `FALSE`, `drake` will not cancel
 #'   the target if it is missing from the cache (or if you removed the
 #'   key with `clean()`).
