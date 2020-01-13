@@ -336,6 +336,27 @@ test_with_dir("bind_plans()", {
   )
 })
 
+test_with_dir("bind_plans() with unequal list columns (#1136)", {
+  plan1 <- drake_plan(
+    data_raw = read_data()
+  )
+  plan2 <- drake_plan(
+    data = target(
+      download_data(),
+      resources = list(ncpus = 1, partition = "cluster")
+    )
+  )
+  out <- bind_plans(plan1, plan2)
+  exp <- drake_plan(
+    data_raw = read_data(),
+    data = target(
+      download_data(),
+      resources = list(ncpus = 1, partition = "cluster")
+    )
+  )
+  equivalent_plans(out, exp)
+})
+
 test_with_dir("spaces in target names are replaced only when appropriate", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   pl <- drake_plan(

@@ -510,10 +510,10 @@ eval_non_lang_cols <- function(plan, envir) {
 }
 
 eval_non_lang_col <- function(x, envir) {
-  if (is.language(x[[1]])) {
+  if (any(vlapply(x, is.language))) {
     x <- lapply(x, eval, envir = envir)
   }
-  if (is.atomic(x[[1]])) {
+  if (all(vlapply(x, is.atomic))) {
     x <- unlist(x)
   }
   x

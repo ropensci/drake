@@ -1,5 +1,9 @@
 # Version 7.9.0.9000
 
+## Bug fixes
+
+- Handle unequal list columns in `bind_plans()` (#1136, @jennysjaarda).
+
 ## New features
 
 - Add a new `format` argument to `make()`, an optional custom storage format for targets without an explicit `target(format = ...)` in the plan (#1124).
