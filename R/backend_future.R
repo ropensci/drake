@@ -165,6 +165,7 @@ future_build <- function(
   ht_is_subtarget,
   protect
 ) {
+  config$logger$minor("build on an hpc worker", target = target)
   config$spec <- spec
   config$ht_is_subtarget <- ht_is_subtarget
   caching <- hpc_caching(target, config)
