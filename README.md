@@ -1,8 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-    #> Warning: Argument `verbose` is deprecated some minor drake utility functions.
-
 <center>
 <img src="https://docs.ropensci.org/drake/reference/figures/infographic.svg" alt="infographic" align="center" style = "border: none; float: center;">
 </center>

@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 ```{r, echo = FALSE}
 suppressMessages(suppressWarnings(library(drake)))
 suppressMessages(suppressWarnings(library(dplyr)))
-clean(destroy = TRUE, verbose = FALSE)
+clean(destroy = TRUE)
 invisible(drake_example("main", overwrite = TRUE))
 invisible(file.copy("main/raw_data.xlsx", ".", overwrite = TRUE))
 invisible(file.copy("main/report.Rmd", ".", overwrite = TRUE))
