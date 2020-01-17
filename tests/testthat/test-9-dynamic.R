@@ -1660,8 +1660,10 @@ test_with_dir("visualization labels for dynamic targets", {
   )
   make(plan)
   x <- drake_graph_info(plan)
-  config <- drake_config(plan)
-  x <- drake_graph_info(plan)
   label <- x$nodes$label[x$nodes$id == "y"]
   expect_true(grepl("sub-targets", label, fixed = TRUE))
+  clean()
+  x <- drake_graph_info(plan)
+  label <- x$nodes$label[x$nodes$id == "y"]
+  expect_false(grepl("sub-targets", label, fixed = TRUE))
 })

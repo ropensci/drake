@@ -477,11 +477,9 @@ cluster_nodes <- function(config) {
       config = list(nodes = new_node, font_size = config$font_size))
     new_node$label <- new_node$id <-
       paste0(config$group, ": ", cluster)
-
     if (!is.null(config$on_select_col)) {
       new_node$on_select_col <- config$nodes[index, "on_select_col"][[1]]
     }
-
     matching <- config$nodes$id[index]
     new_node$title <- paste(matching, collapse = ", ")
     new_node$title <- crop_text(new_node$title, width = hover_width)
@@ -650,9 +648,6 @@ aggregate_dynamic_times <- function(time_data, config) {
   dynamic <- which(time_data$dynamic)
   for (i in dynamic) {
     target <- time_data$target[i]
-    if (!config$cache$exists(target)) {
-      next
-    }
     meta <- config$cache$get(target, namespace = "meta")
     subtargets <- intersect(meta$subtargets, time_data$target)
     subtime <- sum(time_data$elapsed[time_data$target %in% subtargets]) %||% 0
