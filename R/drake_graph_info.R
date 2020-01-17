@@ -614,23 +614,53 @@ node_shape <- Vectorize(function(x) {
 "x", USE.NAMES = FALSE)
 
 append_build_times <- function(config) {
-  with(config, {
-    time_data <- build_times(
-      digits = digits,
-      cache = cache,
-      type = build_times
+  time_data <- build_times(
+    digits = config$digits,
+    cache = config$cache,
+    type = config$build_times
+  )
+  nodes <- config$nodes
+  timed <- intersect(time_data$target, nodes$id)
+  if (!length(timed)) {
+    return(nodes)
+  }
+  time_data <- aggregate_dynamic_times(time_data, config)
+  time_labels <- as.character(time_data$elapsed)
+  if (any(time_data$dynamic)) {
+    time_labels[time_data$dynamic] <- paste0(
+      time_labels[time_data$dynamic],
+      " total\n(",
+      time_data$subtargets[time_data$dynamic],
+      " sub-targets)"
     )
-    timed <- intersect(time_data$target, nodes$id)
-    if (!length(timed)) {
-      return(nodes)
+  }
+  names(time_labels) <- time_data$target
+  time_labels <- time_labels[timed]
+  nodes[timed, "label"] <- paste(
+    nodes[timed, "label"],
+    time_labels,
+    sep = "\n"
+  )
+  nodes
+}
+
+aggregate_dynamic_times <- function(time_data, config) {
+  time_data$dynamic <- vlapply(time_data$target, is_dynamic, config = config)
+  time_data$subtargets <- 0L
+  dynamic <- which(time_data$dynamic)
+  for (i in dynamic) {
+    target <- time_data$target[i]
+    if (!config$cache$exists(target)) {
+      next
     }
-    time_labels <- as.character(time_data$elapsed)
-    names(time_labels) <- time_data$target
-    time_labels <- time_labels[timed]
-    nodes[timed, "label"] <-
-      paste(nodes[timed, "label"], time_labels, sep = "\n")
-    nodes
-  })
+    meta <- config$cache$get(target, namespace = "meta")
+    subtargets <- intersect(meta$subtargets, time_data$target)
+    subtime <- sum(time_data$elapsed[time_data$target %in% subtargets]) %||% 0
+    dyntime <- time_data$elapsed[i] %||% 0L
+    time_data$elapsed[i] <- lubridate::dseconds(dyntime + subtime)
+    time_data$subtargets[i] <- time_data$subtargets[i] + length(subtargets)
+  }
+  time_data
 }
 
 hover_text <- function(config) {

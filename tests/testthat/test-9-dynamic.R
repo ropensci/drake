@@ -1630,7 +1630,7 @@ test_with_dir("dynamic targets get unloaded from memory (#1107)", {
   expect_equal(ls(config$envir_dynamic), character(0))
 })
 
-test_with_dir("cache_planned() and cache_unplanned() (#)", {
+test_with_dir("cache_planned() and cache_unplanned() (#1110)", {
   skip_on_cran()
   plan <- drake_plan(w = 1)
   make(plan)
@@ -1650,4 +1650,18 @@ test_with_dir("cache_planned() and cache_unplanned() (#)", {
   expect_equal(sort(cached()), sort(c(exp, "w")))
   clean(list = cached_unplanned(plan))
   expect_equal(sort(cached()), sort(exp))
+})
+
+test_with_dir("visualization labels for dynamic targets", {
+  skip_on_cran()
+  plan <- drake_plan(
+    x = seq_len(2),
+    y = target(x, dynamic = map(x))
+  )
+  make(plan)
+  x <- drake_graph_info(plan)
+  config <- drake_config(plan)
+  x <- drake_graph_info(plan)
+  label <- x$nodes$label[x$nodes$id == "y"]
+  expect_true(grepl("sub-targets", label, fixed = TRUE))
 })
