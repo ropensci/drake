@@ -1,6 +1,12 @@
 #' @title See the time it took to build each target.
 #' \lifecycle{maturing}
 #' @description Applies to targets in your plan, not imports or files.
+#' @details Times for dynamic targets
+#'   (<https://books.ropensci.org/drake/dynamic.html>)
+#'   only reflect the time it takes
+#'   to post-process the sub-targets (typically very fast)
+#'   and exclude the time it takes to build the sub-targets themselves.
+#'   Sub-targets build times are listed individually.
 #' @seealso [predict_runtime()]
 #' @export
 #' @return A data frame of times, each from [system.time()].

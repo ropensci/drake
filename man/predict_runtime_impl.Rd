@@ -6,10 +6,10 @@
 \usage{
 predict_runtime_impl(
   config,
-  targets = NULL,
+  targets_predict = NULL,
   from_scratch = FALSE,
   targets_only = NULL,
-  jobs = 1,
+  jobs_predict = 1L,
   known_times = numeric(0),
   default_time = 0,
   warn = TRUE

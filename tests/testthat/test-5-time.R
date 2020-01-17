@@ -80,7 +80,7 @@ test_with_dir("runtime predictions", {
   p1 <- as.numeric(predict_runtime_impl(config = con, jobs = 1))
   p2 <- predict_runtime_impl(
     config = con,
-    jobs = 1,
+    jobs_predict = 1,
     default_time = Inf,
     from_scratch = FALSE
   )
@@ -94,7 +94,7 @@ test_with_dir("runtime predictions", {
   p3 <- as.numeric(p3)
   p4 <- predict_runtime_impl(
     config = con,
-    jobs = 2,
+    jobs_predict = 2,
     default_time = Inf,
     from_scratch = TRUE
   )
@@ -108,29 +108,29 @@ test_with_dir("runtime predictions", {
   targets <- c("nextone", "yourinput")
   p5 <- predict_runtime_impl(
     config = con,
-    jobs = 1,
+    jobs_predict = 1,
     default_time = Inf,
     from_scratch = FALSE,
     known_times = known_times,
-    targets = targets
+    targets_predict = targets
   )
   p5 <- as.numeric(p5)
   p6 <- predict_runtime_impl(
     config = con,
-    jobs = 1,
+    jobs_predict = 1,
     default_time = Inf,
     from_scratch = TRUE,
     known_times = known_times,
-    targets = targets
+    targets_predict = targets
   )
   p6 <- as.numeric(p6)
   p7 <- predict_runtime_impl(
     config = con,
-    jobs = 2,
+    jobs_predict = 2,
     default_time = Inf,
     from_scratch = TRUE,
     known_times = known_times,
-    targets = targets
+    targets_predict = targets
   )
   p7 <- as.numeric(p7)
   expect_true(all(is.finite(c(p1, p2, p3, p4))))

@@ -26,8 +26,8 @@
     - `sankey_drake_graph()`
     - `drake_graph()`
     - `text_drake_graph()`
-    - `predict_runtime()` 
-    - `predict_workers()`
+    - `predict_runtime()`. Needed to rename the `targets` argument to `targets_predict` and `jobs` to `jobs_predict`.
+    - `predict_workers()`. Same argument name changes as `predict_runtime()`.
 - Because of #1118, the only remaining user-side purpose of `drake_config()` is to serve functions `r_make()` and friends.
 - Document the limitations of grouping variables (#1128).
 - Handle the `@` operator. For example, in the static code analysis of `x@y`, do not register `y` as a dependency (#1130, @famuvie).

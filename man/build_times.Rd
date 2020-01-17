@@ -53,6 +53,14 @@ A data frame of times, each from \code{\link[=system.time]{system.time()}}.
 \description{
 Applies to targets in your plan, not imports or files.
 }
+\details{
+Times for dynamic targets
+(\url{https://books.ropensci.org/drake/dynamic.html})
+only reflect the time it takes
+to post-process the sub-targets (typically very fast)
+and exclude the time it takes to build the sub-targets themselves.
+Sub-targets build times are listed individually.
+}
 \examples{
 \dontrun{
 isolate_example("Quarantine side effects.", {

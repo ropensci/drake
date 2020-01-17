@@ -19,21 +19,12 @@ predict_load_balancing(
 \arguments{
 \item{config}{Deprecated.}
 
-\item{targets}{Character vector, names of targets.
-Predict the runtime of building these targets
-plus dependencies.
-Defaults to all targets.}
-
 \item{from_scratch}{Logical, whether to predict a
 \code{\link[=make]{make()}} build from scratch or to
 take into account the fact that some targets may be
 already up to date and therefore skipped.}
 
 \item{targets_only}{Deprecated.}
-
-\item{jobs}{The \code{jobs} argument of your next planned
-\code{make()}. How many targets to do you plan
-to have running simultaneously?}
 
 \item{known_times}{A named numeric vector with targets/imports
 as names and values as hypothetical runtimes in seconds.

@@ -25,19 +25,19 @@
 #' if (requireNamespace("lubridate", quietly = TRUE)) {
 #' predict_runtime(
 #'   my_plan,
-#'   jobs = 7,
+#'   jobs_predict = 7L,
 #'   from_scratch = TRUE,
 #'   known_times = known_times
 #' )
 #' predict_runtime(
 #'   my_plan,
-#'   jobs = 8,
+#'   jobs_predict = 8L,
 #'   from_scratch = TRUE,
 #'   known_times = known_times
 #' )
 #' balance <- predict_workers(
 #'   my_plan,
-#'   jobs = 7,
+#'   jobs_predict = 7L,
 #'   from_scratch = TRUE,
 #'   known_times = known_times
 #' )
@@ -48,10 +48,10 @@
 #' }
 predict_runtime <- function(
   ...,
-  targets = NULL,
+  targets_predict = NULL,
   from_scratch = FALSE,
   targets_only = NULL,
-  jobs = 1,
+  jobs_predict = 1L,
   known_times = numeric(0),
   default_time = 0,
   warn = TRUE,
@@ -66,10 +66,10 @@ predict_runtime <- function(
 #' @param config A [drake_config()] object.
 predict_runtime_impl <- function(
   config,
-  targets = NULL,
+  targets_predict = NULL,
   from_scratch = FALSE,
   targets_only = NULL,
-  jobs = 1,
+  jobs_predict = 1L,
   known_times = numeric(0),
   default_time = 0,
   warn = TRUE
@@ -78,10 +78,10 @@ predict_runtime_impl <- function(
   on.exit(config$logger$minor("end predict_runtime()"), add = TRUE)
   worker_prediction_info(
     config = config,
-    targets = targets,
+    targets = targets_predict,
     from_scratch = from_scratch,
     targets_only = targets_only,
-    jobs = jobs,
+    jobs = jobs_predict,
     known_times = known_times,
     default_time = default_time,
     warn = warn
@@ -114,19 +114,19 @@ body(predict_runtime) <- config_util_body(predict_runtime_impl)
 #' if (requireNamespace("lubridate", quietly = TRUE)) {
 #' predict_runtime(
 #'   my_plan,
-#'   jobs = 7,
+#'   jobs_predict = 7L,
 #'   from_scratch = TRUE,
 #'   known_times = known_times
 #' )
 #' predict_runtime(
 #'   my_plan,
-#'   jobs = 8,
+#'   jobs_predict = 8L,
 #'   from_scratch = TRUE,
 #'   known_times = known_times
 #' )
 #' balance <- predict_workers(
 #'   my_plan,
-#'   jobs = 7,
+#'   jobs_predict = 7L,
 #'   from_scratch = TRUE,
 #'   known_times = known_times
 #' )
@@ -139,18 +139,15 @@ body(predict_runtime) <- config_util_body(predict_runtime_impl)
 #'   of targets assigned to parallel workers.
 #' @param ... Arguments to [make()], such as `plan` and `targets`.
 #' @param config Deprecated.
-#' @param targets Character vector, names of targets.
-#'   Predict the runtime of building these targets
-#'   plus dependencies.
-#'   Defaults to all targets.
+#' @param targets_predict Character vector, names of targets
+#'   to include in the total runtime and worker predictions.
 #' @param from_scratch Logical, whether to predict a
 #'   [make()] build from scratch or to
 #'   take into account the fact that some targets may be
 #'   already up to date and therefore skipped.
 #' @param targets_only Deprecated.
-#' @param jobs The `jobs` argument of your next planned
-#'   `make()`. How many targets to do you plan
-#'   to have running simultaneously?
+#' @param jobs_predict The `jobs` argument of your next planned
+#'   `make()`.
 #' @param known_times A named numeric vector with targets/imports
 #'   as names and values as hypothetical runtimes in seconds.
 #'   Use this argument to overwrite any of the existing build times
@@ -164,10 +161,10 @@ body(predict_runtime) <- config_util_body(predict_runtime_impl)
 #'   targets default to `default_time`.
 predict_workers <- function(
   ...,
-  targets = NULL,
+  targets_predict = NULL,
   from_scratch = FALSE,
   targets_only = NULL,
-  jobs = 1,
+  jobs_predict = 1L,
   known_times = numeric(0),
   default_time = 0,
   warn = TRUE,
@@ -182,10 +179,10 @@ predict_workers <- function(
 #' @param config A [drake_config()] object.
 predict_workers_impl <- function(
   config,
-  targets = NULL,
+  targets_predict = NULL,
   from_scratch = FALSE,
   targets_only = NULL,
-  jobs = 1,
+  jobs_predict = 1,
   known_times = numeric(0),
   default_time = 0,
   warn = TRUE
@@ -194,10 +191,10 @@ predict_workers_impl <- function(
   on.exit(config$logger$minor("end predict_workers()"), add = TRUE)
   worker_prediction_info(
     config,
-    targets = targets,
+    targets = targets_predict,
     from_scratch = from_scratch,
     targets_only = targets_only,
-    jobs = jobs,
+    jobs = jobs_predict,
     known_times = known_times,
     default_time = default_time,
     warn = warn

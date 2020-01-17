@@ -8,10 +8,10 @@ for non-staged parallel backends.
 \usage{
 predict_workers(
   ...,
-  targets = NULL,
+  targets_predict = NULL,
   from_scratch = FALSE,
   targets_only = NULL,
-  jobs = 1,
+  jobs_predict = 1L,
   known_times = numeric(0),
   default_time = 0,
   warn = TRUE,
@@ -21,10 +21,8 @@ predict_workers(
 \arguments{
 \item{...}{Arguments to \code{\link[=make]{make()}}, such as \code{plan} and \code{targets}.}
 
-\item{targets}{Character vector, names of targets.
-Predict the runtime of building these targets
-plus dependencies.
-Defaults to all targets.}
+\item{targets_predict}{Character vector, names of targets
+to include in the total runtime and worker predictions.}
 
 \item{from_scratch}{Logical, whether to predict a
 \code{\link[=make]{make()}} build from scratch or to
@@ -33,9 +31,8 @@ already up to date and therefore skipped.}
 
 \item{targets_only}{Deprecated.}
 
-\item{jobs}{The \code{jobs} argument of your next planned
-\code{make()}. How many targets to do you plan
-to have running simultaneously?}
+\item{jobs_predict}{The \code{jobs} argument of your next planned
+\code{make()}.}
 
 \item{known_times}{A named numeric vector with targets/imports
 as names and values as hypothetical runtimes in seconds.
@@ -78,19 +75,19 @@ known_times
 if (requireNamespace("lubridate", quietly = TRUE)) {
 predict_runtime(
   my_plan,
-  jobs = 7,
+  jobs_predict = 7L,
   from_scratch = TRUE,
   known_times = known_times
 )
 predict_runtime(
   my_plan,
-  jobs = 8,
+  jobs_predict = 8L,
   from_scratch = TRUE,
   known_times = known_times
 )
 balance <- predict_workers(
   my_plan,
-  jobs = 7,
+  jobs_predict = 7L,
   from_scratch = TRUE,
   known_times = known_times
 )
