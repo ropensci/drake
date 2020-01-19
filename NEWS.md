@@ -3,6 +3,7 @@
 ## Bug fixes
 
 - Handle unequal list columns in `bind_plans()` (#1136, @jennysjaarda).
+- Handle non-vector sub-targets in dynamic branching (#1138).
 
 ## New features
 

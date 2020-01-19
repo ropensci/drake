@@ -146,6 +146,18 @@ vlapply <- function(X, FUN, ...) {
   vapply(X, FUN, FUN.VALUE = logical(1), ...)
 }
 
+safe_vec_c <- function(...) {
+  tryCatch(
+    vctrs::vec_c(...),
+    vctrs_error_scalar_type = function(e) {
+      list(...)
+    },
+    error = function(e) {
+      stop(e)
+    }
+  )
+}
+
 num_unique <- function(x) {
   length(unique(x))
 }

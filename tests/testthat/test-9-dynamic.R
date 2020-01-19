@@ -1667,3 +1667,20 @@ test_with_dir("visualization labels for dynamic targets", {
   label <- x$nodes$label[x$nodes$id == "y"]
   expect_false(grepl("sub-targets", label, fixed = TRUE))
 })
+
+test_with_dir("non-vector sub-targets (#1138)", {
+  f <- function(...) {
+    lm(cyl ~ mpg, data = mtcars)
+  }
+  plan <- drake_plan(
+    index = seq_len(4),
+    model = target(f(index), dynamic = map(index)),
+    result = model
+  )
+  make(plan)
+  models <- readd(result)
+  expect_equal(length(models), 4L)
+  for (model in models) {
+    expect_true(inherits(model, "lm"))
+  }
+})

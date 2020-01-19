@@ -190,3 +190,12 @@ test_with_dir("storage_copy() (#1120)", {
   storage_copy(d1, d2, merge = TRUE, overwrite = TRUE)
   expect_true(file.exists(x))
 })
+
+test_with_dir("safe_vec_c() (#1138)", {
+  expect_equal(safe_vec_c(letters, letters), c(letters, letters))
+  x <- lm(mpg ~ cyl, data = mtcars)
+  y <- lm(mpg ~ wt, data = mtcars)
+  expect_equal(safe_vec_c(x, y), list(x, y))
+  expect_equal(safe_vec_c(x, letters[1]), list(x, letters[1]))
+  expect_error(safe_vec_c(stop("sdklfjiole")), regexp = "sdklfjiole")
+})
