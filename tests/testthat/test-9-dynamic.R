@@ -1239,6 +1239,34 @@ test_with_dir("dynamic loadd() and readd()", {
   }
 })
 
+test_with_dir("dyn loadd/readd with NULL subtargets (#1139)", {
+  skip_on_cran()
+  f <- function(x) {
+    if (x > 2L) {
+      x
+    } else {
+      NULL
+    }
+  }
+  plan <- drake_plan(
+    x = seq_len(4L),
+    y = target(f(x), dynamic = map(x))
+  )
+  make(plan)
+  keys <- subtargets(y)
+  out <- readd(y, subtarget_list = TRUE)
+  exp <- list(NULL, NULL, 3L, 4L)
+  names(exp) <- keys
+  expect_equal(out, exp)
+  out <- readd(y, subtarget_list = TRUE, subtargets = c(2L, 3L))
+  expect_equal(out, exp[c(2L, 3L)])
+  e <- new.env(parent = emptyenv())
+  loadd(y, envir = e, subtarget_list = TRUE)
+  expect_equal(e$y, exp)
+  loadd(y, envir = e, subtarget_list = TRUE, subtargets = c(2L, 3L))
+  expect_equal(e$y, exp[c(2L, 3L)])
+})
+
 test_with_dir("dynamic hpc", {
   skip_on_cran()
   skip_on_os("windows")

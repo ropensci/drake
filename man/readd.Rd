@@ -15,7 +15,8 @@ readd(
   namespace = NULL,
   verbose = 1L,
   show_source = FALSE,
-  subtargets = NULL
+  subtargets = NULL,
+  subtarget_list = FALSE
 )
 
 loadd(
@@ -36,7 +37,8 @@ loadd(
   show_source = FALSE,
   tidyselect = !deps,
   config = NULL,
-  subtargets = NULL
+  subtargets = NULL,
+  subtarget_list = FALSE
 )
 }
 \arguments{
@@ -72,6 +74,12 @@ a list of sub-targets. You can restrict which sub-targets
 to retrieve with the \code{subtargets} argument. For example,
 \code{readd(x, subtargets = seq_len(3))} only retrieves the
 first 3 sub-targets of dynamic target \code{x}.}
+
+\item{subtarget_list}{Logical, for dynamic targets only.
+If \code{TRUE}, the dynamic target is loaded as a named
+list of sub-target values. If \code{FALSE}, \code{drake}
+attempts to concatenate the sub-targets with \code{vctrs::vec_c()}
+(and returns an unnamed list if such concatenation is not possible).}
 
 \item{...}{Targets to load from the cache: as names (symbols) or
 character strings. If the \code{tidyselect} package is installed,

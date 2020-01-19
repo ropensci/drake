@@ -354,6 +354,6 @@ sync_envir_dynamic <- function(target, config) {
 
 sync_dynamic_whole <- function(target, config) {
   hashes <- get(target, envir = config$envir_targets, inherits = FALSE)
-  value <- get_subtargets(hashes, config$cache, NULL)
+  value <- get_subtargets(hashes, target, config$cache, NULL, FALSE)
   assign(target, value, envir = config$envir_dynamic, inherits = FALSE)
 }

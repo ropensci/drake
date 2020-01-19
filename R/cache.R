@@ -66,6 +66,11 @@
 #'   to retrieve with the `subtargets` argument. For example,
 #'   `readd(x, subtargets = seq_len(3))` only retrieves the
 #'   first 3 sub-targets of dynamic target `x`.
+#' @param subtarget_list Logical, for dynamic targets only.
+#'   If `TRUE`, the dynamic target is loaded as a named
+#'   list of sub-target values. If `FALSE`, `drake`
+#'   attempts to concatenate the sub-targets with `vctrs::vec_c()`
+#'   (and returns an unnamed list if such concatenation is not possible).
 #' @examples
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {
@@ -89,7 +94,8 @@ readd <- function(
   namespace = NULL,
   verbose = 1L,
   show_source = FALSE,
-  subtargets = NULL
+  subtargets = NULL,
+  subtarget_list = FALSE
 ) {
   deprecate_search(search)
   # if the cache is null after trying drake_cache:
@@ -115,7 +121,7 @@ readd <- function(
     namespace = namespace,
     use_cache = FALSE
   )
-  get_subtargets(value, cache, subtargets)
+  get_subtargets(value, target, cache, subtargets, subtarget_list)
 }
 
 #' @title Load one or more targets or imports from the drake cache.
@@ -225,7 +231,8 @@ loadd <- function(
   show_source = FALSE,
   tidyselect = !deps,
   config = NULL,
-  subtargets = NULL
+  subtargets = NULL,
+  subtarget_list = FALSE
 ) {
   deprecate_search(search)
   deprecate_arg(graph, "graph") # 2019-01-04 # nolint
@@ -279,17 +286,25 @@ loadd <- function(
     load_subtargets,
     cache = cache,
     envir = envir,
-    subtargets = subtargets
+    subtargets = subtargets,
+    subtarget_list = subtarget_list
   )
   invisible()
 }
 
-load_subtargets <- function(target, cache, envir, subtargets) {
+load_subtargets <- function(target, cache, envir, subtargets, subtarget_list) {
   hashes <- get(target, envir = envir, inherits = FALSE)
-  load_targets_impl(hashes, target, cache, envir, subtargets)
+  load_targets_impl(hashes, target, cache, envir, subtargets, subtarget_list)
 }
 
-load_targets_impl <- function(hashes, target, cache, envir, subtargets) {
+load_targets_impl <- function(
+  hashes,
+  target,
+  cache,
+  envir,
+  subtargets,
+  subtarget_list
+) {
   UseMethod("load_targets_impl")
 }
 
@@ -298,9 +313,10 @@ load_targets_impl.drake_dynamic <- function( # nolint
   target,
   cache,
   envir,
-  subtargets
+  subtargets,
+  subtarget_list
 ) {
-  value <- get_subtargets(hashes, cache, subtargets)
+  value <- get_subtargets(hashes, target, cache, subtargets, subtarget_list)
   rm(list = target, envir = envir, inherits = FALSE)
   assign(target, value, envir = envir, inherits = FALSE)
 }
@@ -310,24 +326,46 @@ load_targets_impl.default <- function(
   target,
   cache,
   envir,
-  subtargets
+  subtargets,
+  subtarget_list
 ) {
   NULL
 }
 
-get_subtargets <- function(hashes, cache, subtargets) {
+get_subtargets <- function(hashes, target, cache, subtargets, subtarget_list) {
   UseMethod("get_subtargets")
 }
 
-get_subtargets.drake_dynamic <- function(hashes, cache, subtargets) {
+get_subtargets.drake_dynamic <- function(
+  hashes,
+  target,
+  cache,
+  subtargets,
+  subtarget_list
+) {
   if (!is.null(subtargets)) {
     hashes <- hashes[subtargets]
   }
   out <- lapply(hashes, cache$get_value, use_cache = FALSE)
-  do.call(safe_vec_c, out)
+  if (subtarget_list) {
+    keys <- cache$get(target, namespace = "meta")$subtargets
+    if (!is.null(subtargets)) {
+      keys <- keys[subtargets]
+    }
+    names(out) <- keys
+  } else {
+    out <- do.call(safe_vec_c, out)
+  }
+  out
 }
 
-get_subtargets.default <- function(hashes, cache, subtargets) {
+get_subtargets.default <- function(
+  hashes,
+  target,
+  cache,
+  subtargets,
+  subtarget_list
+) {
   hashes
 }
 
