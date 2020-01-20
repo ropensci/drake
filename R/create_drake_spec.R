@@ -8,7 +8,7 @@ create_drake_spec <- function(
 ) {
   force(envir)
   import_names <- names(envir)
-  config <- list(
+  args <- list(
     plan = plan,
     envir = envir,
     logger = logger,
@@ -19,84 +19,84 @@ create_drake_spec <- function(
     ht_imports = ht_new(import_names),
     ht_globals = ht_new(c(import_names, plan$target))
   )
-  imports <- cds_prepare_imports(config)
-  imports_kernel <- cds_imports_kernel(config, imports)
+  imports <- cds_prepare_imports(args)
+  imports_kernel <- cds_imports_kernel(args, imports)
   import_spec <- memo_expr(
-    cds_analyze_imports(config, imports),
-    config$cache,
+    cds_analyze_imports(args, imports),
+    args$cache,
     imports_kernel
   )
-  knitr_hash <- cds_get_knitr_hash(config)
+  knitr_hash <- cds_get_knitr_hash(args)
   command_spec <- memo_expr(
-    cds_analyze_commands(config),
-    config$cache,
-    config$plan,
-    config$trigger,
+    cds_analyze_commands(args),
+    args$cache,
+    args$plan,
+    args$trigger,
     import_spec,
     imports_kernel,
     knitr_hash
   )
-  cds_set_knitr_files(config = config, spec = command_spec)
+  cds_set_knitr_files(args = args, spec = command_spec)
   out <- c(import_spec, command_spec)
   list2env(out, parent = emptyenv(), hash = TRUE)
 }
 
 # https://github.com/ropensci/drake/issues/887 # nolint
-cds_set_knitr_files <- function(config, spec) {
-  config$logger$minor("set knitr files")
+cds_set_knitr_files <- function(args, spec) {
+  args$logger$minor("set knitr files")
   knitr_files <- lightly_parallelize(
     X = spec,
     FUN = function(x) {
       x$deps_build$knitr_in
     },
-    jobs = config$jobs
+    jobs = args$jobs
   )
   knitr_files <- sort(unique(as.character(unlist(knitr_files))))
-  config$cache$set(
+  args$cache$set(
     key = "knitr",
     value = knitr_files,
     namespace = "memoize"
   )
 }
 
-cds_get_knitr_hash <- function(config, spec) {
-  config$logger$minor("get knitr hash")
-  if (!config$cache$exists(key = "knitr", namespace = "memoize")) {
-    out <- config$cache$digest("", serialize = FALSE)
+cds_get_knitr_hash <- function(args, spec) {
+  args$logger$minor("get knitr hash")
+  if (!args$cache$exists(key = "knitr", namespace = "memoize")) {
+    out <- args$cache$digest("", serialize = FALSE)
     return(out)
   }
-  knitr_files <- config$cache$safe_get(key = "knitr", namespace = "memoize")
+  knitr_files <- args$cache$safe_get(key = "knitr", namespace = "memoize")
   knitr_hashes <- lightly_parallelize(
     X = knitr_files,
     FUN = storage_hash,
-    jobs = config$jobs,
-    config = config
+    jobs = args$jobs,
+    config = args
   )
   knitr_hashes <- as.character(unlist(knitr_hashes))
   knitr_hashes <- paste0(knitr_hashes, collapse = "")
-  config$cache$digest(knitr_hashes, serialize = FALSE)
+  args$cache$digest(knitr_hashes, serialize = FALSE)
 }
 
-cds_imports_kernel <- function(config, imports) {
+cds_imports_kernel <- function(args, imports) {
   out <- lightly_parallelize(
     X = imports,
     FUN = safe_deparse_function,
-    jobs = config$jobs
+    jobs = args$jobs
   )
   names(out) <- names(imports)
   out[sort(as.character(names(out)))]
 }
 
-cds_prepare_imports <- function(config) {
-  config$logger$minor("analyze environment")
-  imports <- as.list(config$envir)
+cds_prepare_imports <- function(args) {
+  args$logger$minor("analyze environment")
+  imports <- as.list(args$envir)
   cds_unload_conflicts(
     imports = names(imports),
-    targets = config$plan$target,
-    envir = config$envir,
-    logger = config$logger
+    targets = args$plan$target,
+    envir = args$envir,
+    logger = args$logger
   )
-  import_names <- setdiff(names(imports), config$plan$target)
+  import_names <- setdiff(names(imports), args$plan$target)
   imports[import_names]
 }
 
@@ -113,22 +113,22 @@ cds_unload_conflicts <- function(imports, targets, envir, logger) {
   remove(list = common, envir = envir)
 }
 
-cds_analyze_imports <- function(config, imports) {
-  config$logger$minor("analyze imports")
+cds_analyze_imports <- function(args, imports) {
+  args$logger$minor("analyze imports")
   names <-  names(imports)
   out <- lightly_parallelize(
     X = seq_along(imports),
     FUN = cdl_analyze_import,
-    jobs = config$jobs,
+    jobs = args$jobs,
     imports = imports,
     names = names,
-    config = config
+    args = args
   )
   names(out) <- names
   out
 }
 
-cdl_analyze_import <- function(index, imports, names, config) {
+cdl_analyze_import <- function(index, imports, names, args) {
   name <- names[index]
   spec <- list(
     target = name,
@@ -136,56 +136,56 @@ cdl_analyze_import <- function(index, imports, names, config) {
     deps_build = cds_import_dependencies(
       expr = imports[[index]],
       exclude = name,
-      allowed_globals = config$ht_imports
+      allowed_globals = args$ht_imports
     )
   )
   as_drake_spec(spec)
 }
 
-cds_analyze_commands <- function(config) {
-  config$logger$minor("analyze commands")
-  config$plan$imported <- FALSE
-  if ("trigger" %in% colnames(config$plan)) {
-    config$plan$trigger <- lapply(
-      config$plan$trigger,
+cds_analyze_commands <- function(args) {
+  args$logger$minor("analyze commands")
+  args$plan$imported <- FALSE
+  if ("trigger" %in% colnames(args$plan)) {
+    args$plan$trigger <- lapply(
+      args$plan$trigger,
       cds_parse_trigger,
-      envir = config$envir_targets
+      envir = args$envir_targets
     )
   }
-  spec <- drake_pmap(.l = config$plan, .f = list, jobs = config$jobs)
-  names(spec) <- config$plan$target
-  config$default_condition_deps <- cds_import_dependencies(
-    config$trigger$condition,
-    allowed_globals = config$ht_globals
+  spec <- drake_pmap(.l = args$plan, .f = list, jobs = args$jobs)
+  names(spec) <- args$plan$target
+  args$default_condition_deps <- cds_import_dependencies(
+    args$trigger$condition,
+    allowed_globals = args$ht_globals
   )
-  config$default_change_deps <- cds_import_dependencies(
-    config$trigger$change,
-    allowed_globals = config$ht_globals
+  args$default_change_deps <- cds_import_dependencies(
+    args$trigger$change,
+    allowed_globals = args$ht_globals
   )
   out <- lightly_parallelize(
     X = spec,
     FUN = cds_prepare_spec,
-    jobs = config$jobs,
-    config = config
+    jobs = args$jobs,
+    args = args
   )
-  names(out) <- config$plan$target
+  names(out) <- args$plan$target
   out
 }
 
-cds_prepare_spec <- function(config, spec) {
+cds_prepare_spec <- function(args, spec) {
   target <- spec$target
   spec$dynamic <- as_dynamic(spec$dynamic)
   spec$deps_build <- cds_command_dependencies(
     command = spec$command,
     exclude = spec$target,
-    allowed_globals = config$ht_globals
+    allowed_globals = args$ht_globals
   )
   spec$deps_dynamic <- cds_dynamic_deps(
     spec$dynamic,
     spec$target,
-    config
+    args
   )
-  spec$deps_dynamic_trace <- cds_dynamic_trace(spec$dynamic, config)
+  spec$deps_dynamic_trace <- cds_dynamic_trace(spec$dynamic, args)
   cds_assert_trace(spec$dynamic, spec)
   spec$command_standardized <- cds_standardize_command(spec$command)
   if (inherits(spec$dynamic, "dynamic")) {
@@ -198,28 +198,28 @@ cds_prepare_spec <- function(config, spec) {
   }
   spec$command_build <- cds_preprocess_command(
     spec$command,
-    config = config
+    args = args
   )
   if (is.null(spec$trigger) || all(is.na(spec$trigger))) {
-    spec$trigger <- config$trigger
-    spec$deps_condition <- config$default_condition_deps
-    spec$deps_change <- config$default_change_deps
+    spec$trigger <- args$trigger
+    spec$deps_condition <- args$default_condition_deps
+    spec$deps_change <- args$default_change_deps
   } else {
     spec$deps_condition <- cds_import_dependencies(
       spec$trigger$condition,
       exclude = spec$target,
-      allowed_globals = config$ht_globals
+      allowed_globals = args$ht_globals
     )
     spec$deps_change <- cds_import_dependencies(
       spec$trigger$change,
       exclude = spec$target,
-      allowed_globals = config$ht_globals
+      allowed_globals = args$ht_globals
     )
   }
   cds_no_dynamic_triggers(spec)
   for (field in c("deps_build", "deps_condition", "deps_change")) {
     spec[[field]]$memory <- ht_filter(
-      ht = config$ht_targets,
+      ht = args$ht_targets,
       x = spec[[field]]$globals
     )
   }
@@ -307,13 +307,13 @@ cds_command_dependencies <- function(
   select_nonempty(deps)
 }
 
-cds_dynamic_deps <- function(dynamic, target, config) {
+cds_dynamic_deps <- function(dynamic, target, args) {
   UseMethod("cds_dynamic_deps")
 }
 
-cds_dynamic_deps.dynamic <- function(dynamic, target, config) {
+cds_dynamic_deps.dynamic <- function(dynamic, target, args) {
   dynamic$.trace <- NULL
-  out <- ht_filter(config$ht_globals, all.vars(dynamic))
+  out <- ht_filter(args$ht_globals, all.vars(dynamic))
   if (!length(out)) {
     stop(
       "no admissible grouping variables for dynamic target ",
@@ -324,19 +324,19 @@ cds_dynamic_deps.dynamic <- function(dynamic, target, config) {
   out
 }
 
-cds_dynamic_deps.default <- function(dynamic, target, config) {
+cds_dynamic_deps.default <- function(dynamic, target, args) {
   character(0)
 }
 
-cds_dynamic_trace <- function(dynamic, config) {
+cds_dynamic_trace <- function(dynamic, args) {
   UseMethod("cds_dynamic_trace")
 }
 
-cds_dynamic_trace.dynamic <- function(dynamic, config) {
+cds_dynamic_trace.dynamic <- function(dynamic, args) {
   all.vars(dynamic$.trace)
 }
 
-cds_dynamic_trace.default <- function(dynamic, config) {
+cds_dynamic_trace.default <- function(dynamic, args) {
   character(0)
 }
 
@@ -385,10 +385,10 @@ cds_assert_trace.default <- function(dynamic, spec) {
 
 # Get the command ready for tidy eval prep
 # and then pure eval (no side effects).
-cds_preprocess_command <- function(command, config) {
+cds_preprocess_command <- function(command, args) {
   command <- as.call(c(quote(local), command))
   # Here, we really do need expr() instead of quo().
-  # `!!` needs to unquote symbols using config$envir_targets instead of
+  # `!!` needs to unquote symbols using args$envir_targets instead of
   # the environment where the original binding took place.
   # In other words, `drake` already supplies the correct
   # evaluation environment.
