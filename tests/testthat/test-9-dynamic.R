@@ -1712,3 +1712,19 @@ test_with_dir("non-vector sub-targets (#1138)", {
     expect_true(inherits(model, "lm"))
   }
 })
+
+test_with_dir("no dynamic file_out() (#1141)", {
+  write_file <- function(x, dir) {
+    dir <- file.path(dir, x)
+    writeLines("lines", dir)
+  }
+  dir.create("all_figures")
+  plan <- drake_plan(
+    file_names = c(1L, 2L, 3L, 4L),
+    write_files = target(
+      write_file(file_names, dir = file_out("all_figures")),
+      dynamic = map(file_names)
+    )
+  )
+  expect_error(make(plan), regexp = "file_out")
+})

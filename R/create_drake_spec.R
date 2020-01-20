@@ -194,6 +194,7 @@ cds_prepare_spec <- function(config, spec) {
       spec$command_standardized,
       dynamic_command
     )
+    cds_exclude_dynamic_file_out(spec)
   }
   spec$command_build <- cds_preprocess_command(
     spec$command,
@@ -227,6 +228,16 @@ cds_prepare_spec <- function(config, spec) {
     spec$deps_dynamic_trace
   )
   as_drake_spec(spec)
+}
+
+cds_exclude_dynamic_file_out <- function(spec) {
+  if (length(spec$deps_build$file_out)) {
+    stop(
+      "file_out() in dynamic targets is illegal. Target: ",
+      spec$target,
+      call. = FALSE
+    )
+  }
 }
 
 as_drake_spec <- function(spec) {
