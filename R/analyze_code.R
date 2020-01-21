@@ -213,7 +213,7 @@ analyze_assign <- function(expr, results, locals, allowed_globals) {
       ht_set(locals, expr$x)
     }
   } else {
-    analyze_global(expr$x, results, locals, allowed_globals)
+    walk_code(expr$x, results, locals, allowed_globals)
   }
   expr$x <- NULL
   walk_recursive(expr, results, locals, allowed_globals)

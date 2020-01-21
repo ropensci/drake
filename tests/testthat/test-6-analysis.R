@@ -1038,3 +1038,12 @@ test_with_dir("utils for code analysis fns", {
 test_with_dir("handle @ (#1130)", {
   expect_equal(deps_code(quote(x@y))$name, "x")
 })
+
+test_with_dir("handle calls in analyze_assign() (#1119)", {
+  test <- function(input) {
+    assign(paste0(input, x, "var"), 1)
+  }
+  expect_silent(out <- deps_code(test))
+  expect_equal(nrow(out), 3)
+  expect_equal(sort(out$name), sort(c("assign", "paste0", "x")))
+})
