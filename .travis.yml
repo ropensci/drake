@@ -19,6 +19,7 @@ addons:
 r_packages:
   - clustermq
   - covr
+  - devtools
   - downloader
   - forcats
   - ggplot2
