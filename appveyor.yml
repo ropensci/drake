@@ -49,6 +49,7 @@ artifacts:
 
 environment:
   NOT_CRAN: true
+  _R_CHECK_FORCE_SUGGESTS_: false
   global:
     PKGTYPE: binary
     R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
