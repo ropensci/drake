@@ -17,9 +17,9 @@ addons:
       - libzmq3-dev
 
 r_packages:
+  - benchmarkme
   - clustermq
   - covr
-  - devtools
   - downloader
   - forcats
   - ggplot2
@@ -36,8 +36,7 @@ script:
   - |
     R CMD build .
     R CMD INSTALL drake*tar.gz
-    R -q -e 'devtools::test()'
-    travis_wait 20 R CMD check drake*tar.gz # --no-tests
+    travis_wait 20 R CMD check drake*tar.gz --no-tests
     travis_wait 20 R -q -e 'cov <- covr::package_coverage(clean = FALSE)' -e 'print(cov)' -e 'covr::codecov(coverage = cov)'
 
 after_success:
