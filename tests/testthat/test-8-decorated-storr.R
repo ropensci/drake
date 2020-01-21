@@ -622,8 +622,8 @@ test_with_dir("safe_get*() methods", {
 
 test_with_dir("in-memory representation of disk.frame targets (#1077)", {
   skip_on_cran()
-  skip_if_not_installed("fst")
   skip_if_not_installed("disk.frame")
+  skip_if_not_installed("fst")
   n <- 200
   observations <- data.frame(
     type = sample(letters[seq_len(3)], n, replace = TRUE),
@@ -632,8 +632,8 @@ test_with_dir("in-memory representation of disk.frame targets (#1077)", {
   )
   plan <- drake_plan(
     all_data = target(
-      observations,
-      format = "fst"
+      disk.frame::as.disk.frame(observations, drake_tempfile()),
+      format = "diskframe"
     ),
     result = as.data.frame(head(all_data))
   )
@@ -718,7 +718,6 @@ test_with_dir("can suppress the format trigger (#1104)", {
 })
 
 test_with_dir("$import() copies (does not simply move) (#1120)", {
-  skip_on_cran()
   skip_on_cran()
   skip_if_not_installed("fst")
   skip_if_not_installed("disk.frame")
