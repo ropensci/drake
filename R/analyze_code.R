@@ -213,7 +213,7 @@ analyze_assign <- function(expr, results, locals, allowed_globals) {
       ht_set(locals, expr$x)
     }
   } else {
-    walk_code(expr$x, results, locals, allowed_globals)
+    ignore(walk_code)(expr$x, results, locals, allowed_globals)
   }
   expr$x <- NULL
   walk_recursive(expr, results, locals, allowed_globals)
@@ -380,12 +380,14 @@ get_tangled_text <- function(doc) {
 # of the R language definition manual:
 # https://cran.r-project.org/doc/manuals/R-lang.html#Subset-assignment
 flatten_assignment <- function(e) {
-  if (typeof(e) == "language") {
-    c(evalseq(e[[2]]), apdef(e))
-  } else {
-    # Was list(NULL, NULL), but that seems unnecessary here. # nolint
-    NULL
+  analyze_rep_fn <- typeof(e) == "language" &&
+    e[[1]] != quote(`$`) &&
+    e[[1]] != quote(`@`)
+  if (analyze_rep_fn) {
+    return(c(evalseq(e[[2]]), apdef(e)))
   }
+  # Was list(NULL, NULL), but that seems unnecessary here. # nolint
+  NULL
 }
 
 apdef <- function(e) {

@@ -312,7 +312,7 @@ test_with_dir("user-defined S3 (#959)", {
   out <- sort(deps_target_impl(dostuff, config)$name)
   exp <- sort(c("do.stuff.class1", "do.stuff.class3"))
   expect_equal(out, exp)
-    dostuff <- function(x) {
+  dostuff <- function(x) {
     do.stuff.class2 <- 40 # nolint
     if (1 == 1) {
       UseMethod(object = x, generic = "do.stuff")
@@ -1046,4 +1046,12 @@ test_with_dir("handle calls in analyze_assign() (#1119)", {
   expect_silent(out <- deps_code(test))
   expect_equal(nrow(out), 3)
   expect_equal(sort(out$name), sort(c("assign", "paste0", "x")))
+})
+
+test_with_dir("$<-() and @<-() (#1144)", {
+  f <- function(x) {
+    x$y <- 1
+    x@y <- 1
+  }
+  expect_equal(nrow(deps_code(f)), 0L)
 })
