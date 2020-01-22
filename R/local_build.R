@@ -244,9 +244,11 @@ drake_with_call_stack_8a6af5 <- function(target, config) {
     signalCondition(e)
   }
   expr <- config$spec[[target]]$command_build
-  block_envir_lock(config)
-  lock_environment(config$envir)
-  on.exit(unlock_environment(config$envir))
+  if (config$lock_envir) {
+    on.exit(unlock_environment(config$envir))
+    block_envir_lock(config)
+    lock_environment(config$envir)
+  }
   tidy_expr <- eval(expr = expr, envir = config$envir_subtargets)
   tryCatch(
     withCallingHandlers(
@@ -259,13 +261,11 @@ drake_with_call_stack_8a6af5 <- function(target, config) {
 }
 
 block_envir_lock <- function(config) {
-  if (config$lock_envir) {
-    i <- 1
-    # Lock the environment only while running the command.
-    while (environmentIsLocked(config$envir)) {
-      Sys.sleep(config$sleep(max(0L, i))) # nocov
-      i <- i + 1 # nocov
-    }
+  i <- 1
+  # Lock the environment only while running the command.
+  while (environmentIsLocked(config$envir)) {
+    Sys.sleep(config$sleep(max(0L, i))) # nocov
+    i <- i + 1 # nocov
   }
 }
 

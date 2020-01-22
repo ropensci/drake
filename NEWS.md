@@ -6,6 +6,7 @@
 - Handle non-vector sub-targets in dynamic branching (#1138).
 - Handle calls in `analyze_assign()` (#1119, @jennysjaarda).
 - Remove spurious local variables detected in `$<-()` and `@<-()` (#1144).
+- Restore correct environment locking (#1143, @kuriwaki).
 
 ## New features
 
