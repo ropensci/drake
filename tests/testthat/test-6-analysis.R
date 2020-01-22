@@ -1049,9 +1049,13 @@ test_with_dir("handle calls in analyze_assign() (#1119)", {
 })
 
 test_with_dir("$<-() and @<-() (#1144)", {
-  f <- function(x) {
+  f <- function() {
     x$y <- 1
     x@y <- 1
   }
-  expect_equal(nrow(deps_code(f)), 0L)
+  expect_equal(deps_code(f)$name, "x")
+  f <- function() {
+    g(x)$y <- 1
+  }
+  expect_equal(sort(deps_code(f)$name), sort(c("g", "x")))
 })

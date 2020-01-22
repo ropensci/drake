@@ -380,14 +380,13 @@ get_tangled_text <- function(doc) {
 # of the R language definition manual:
 # https://cran.r-project.org/doc/manuals/R-lang.html#Subset-assignment
 flatten_assignment <- function(e) {
-  analyze_rep_fn <- typeof(e) == "language" &&
-    e[[1]] != quote(`$`) &&
-    e[[1]] != quote(`@`)
-  if (analyze_rep_fn) {
-    return(c(evalseq(e[[2]]), apdef(e)))
+  if (typeof(e) != "language") {
+    return()
   }
-  # Was list(NULL, NULL), but that seems unnecessary here. # nolint
-  NULL
+  if (e[[1]] == quote(`$`) || e[[1]] == quote(`@`)) {
+    return(evalseq(e[[2]]))
+  }
+  c(evalseq(e[[2]]), apdef(e))
 }
 
 apdef <- function(e) {
