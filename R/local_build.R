@@ -15,15 +15,19 @@ local_build <- function(target, config, downstream) {
 }
 
 announce_build <- function(target, config) {
+  if (is_dynamic(target, config)) {
+    announce_dynamic(target, config)
+    return()
+  }
+  announce_static(target, config)
+}
+
+announce_static <- function(target, config) {
   set_progress(
     target = target,
     value = "running",
     config = config
   )
-  if (is_dynamic(target, config)) {
-    announce_dynamic(target, config)
-    return()
-  }
   color <- ifelse(is_subtarget(target, config), "subtarget", "target")
   config$logger$major(
     color,
@@ -34,6 +38,11 @@ announce_build <- function(target, config) {
 }
 
 announce_dynamic <- function(target, config) {
+  set_progress(
+    target = target,
+    value = "running",
+    config = config
+  )
   msg <- ifelse(
     is_registered_dynamic(target, config),
     "aggregate",

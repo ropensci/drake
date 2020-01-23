@@ -213,7 +213,7 @@ chr_dynamic_impl.default <- function(x) {
 
 register_subtargets <- function(target, static_ok, dynamic_ok, config) {
   on.exit(register_dynamic(target, config))
-  announce_dynamic(target, config)
+  announce_build(target, config)
   subtargets_build <- subtargets_all <- subtarget_names(target, config)
   if (static_ok) {
     subtargets_build <- filter_subtargets(subtargets_all, config)
