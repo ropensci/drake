@@ -7,6 +7,7 @@
 - Handle calls in `analyze_assign()` (#1119, @jennysjaarda).
 - Remove spurious local variables detected in `$<-()` and `@<-()` (#1144).
 - Restore correct environment locking (#1143, @kuriwaki).
+- Log `"running"` progress of dynamic targets.
 
 ## New features
 
