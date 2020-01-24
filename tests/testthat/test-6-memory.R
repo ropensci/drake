@@ -372,3 +372,10 @@ test_with_dir("drake_envir() in wrong context", {
     regexp = "the environment where drake builds targets"
   )
 })
+
+test_with_dir("drake_envir(\"imports\") (#882)", {
+  a <- 1
+  plan <- drake_plan(x = ls(drake_envir("imports")))
+  make(plan)
+  expect_true("a" %in% readd(x))
+})

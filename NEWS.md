@@ -42,6 +42,7 @@
 - Append hashes to `deps_target()` output (#1134, @kendonB).
 - Add S3 class and pretty print method for `drake_meta_()` objects objects.
 - Use call stacks instead of environment inheritance to power `drake_envir()` and `id_chr()` (#1132).
+- Allow `drake_envir()` to select the environment with imports (#882).
 - Improve visualization labels for dynamic targets: clarify that the listed runtime is a total runtime over all sub-targets and list the number of sub-targets.
 
 
