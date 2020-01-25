@@ -735,3 +735,32 @@ test_with_dir("cancel in incorrect context (#1131)", {
   expect_error(cancel(), regexp = "where drake builds targets")
   expect_error(cancel_if(TRUE), regexp = "where drake builds targets")
 })
+
+test_with_dir("convert_trailing_dot() (#1147)", {
+  expect_equal(
+    convert_trailing_dot(c("numeric_ids_.1.", "numeric_ids_.2.")),
+    c("numeric_ids_.1_", "numeric_ids_.2_")
+  )
+  expect_equal(
+    convert_trailing_dot(c("numeric_ids_.1._", "numeric_ids_.2.")),
+    c("numeric_ids_.1._", "numeric_ids_.2_")
+  )
+  expect_equal(convert_trailing_dot(letters), letters)
+})
+
+test_with_dir("convert_trailing_dot() in plans (#1147)", {
+  plan <- drake_plan(
+    numeric_ids = target(
+      rnorm(n),
+      transform = map(
+        n = !!n,
+        ids = !!ids,
+        .id = ids
+      )
+    )
+  )
+  expect_equal(
+    plan$target,
+    c("numeric_ids_.1_", "numeric_ids_.2_")
+  )
+})

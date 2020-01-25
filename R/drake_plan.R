@@ -389,6 +389,7 @@ sanitize_plan <- function(
     }
   }
   plan$target <- make.names(plan$target, unique = FALSE, allow_ = TRUE)
+  plan$target <- convert_trailing_dot(plan$target)
   plan <- plan[nzchar(plan$target), ]
   first <- c("target", "command")
   cols <- c(first, setdiff(colnames(plan), first))
@@ -399,6 +400,13 @@ sanitize_plan <- function(
   plan <- eval_non_lang_cols(plan, envir = envir)
   plan <- parse_lang_cols(plan)
   as_drake_plan(plan)
+}
+
+# https://github.com/ropensci/drake/issues/1147
+convert_trailing_dot <- function(x) {
+  index <- grepl("\\.$", x)
+  x[index] <- gsub("\\.$", "_", x[index])
+  x
 }
 
 assert_unique_targets <- function(plan) {

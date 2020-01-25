@@ -1,49 +1,55 @@
 # Version 7.9.0.9000
 
+## Unavoidable but minor breaking changes
+
+These changes will invalidate some targets in some workflows, but they were necessary to fix bugs.
+
+* Remove spurious local variables detected in `$<-()` and `@<-()` (#1144).
+* Avoid target names with trailing dots (#1147, @Plebejer).
+
 ## Bug fixes
 
-- Handle unequal list columns in `bind_plans()` (#1136, @jennysjaarda).
-- Handle non-vector sub-targets in dynamic branching (#1138).
-- Handle calls in `analyze_assign()` (#1119, @jennysjaarda).
-- Remove spurious local variables detected in `$<-()` and `@<-()` (#1144).
-- Restore correct environment locking (#1143, @kuriwaki).
-- Log `"running"` progress of dynamic targets.
+* Handle unequal list columns in `bind_plans()` (#1136, @jennysjaarda).
+* Handle non-vector sub-targets in dynamic branching (#1138).
+* Handle calls in `analyze_assign()` (#1119, @jennysjaarda).
+* Restore correct environment locking (#1143, @kuriwaki).
+* Log `"running"` progress of dynamic targets.
 
 ## New features
 
-- Add a new `format` argument to `make()`, an optional custom storage format for targets without an explicit `target(format = ...)` in the plan (#1124).
-- Add a new `lock_cache` argument to `make()` to optionally suppress cache locking (#1129). (It can be annoying to interrupt `make()` repeatedly and unlock the cache manually every time.)
-- Add new functions `cancel()` and `cancel_if()` function to cancel targets mid-build (#1131).
-- Add a new `subtarget_list` argument to `loadd()` and `readd()` to optionally load a dynamic target as a list of sub-targets (#1139, @MilesMcBain).
-- Prohibit dynamic `file_out()` (#1141).
+* Add a new `format` argument to `make()`, an optional custom storage format for targets without an explicit `target(format = ...)` in the plan (#1124).
+* Add a new `lock_cache` argument to `make()` to optionally suppress cache locking (#1129). (It can be annoying to interrupt `make()` repeatedly and unlock the cache manually every time.)
+* Add new functions `cancel()` and `cancel_if()` function to cancel targets mid-build (#1131).
+* Add a new `subtarget_list` argument to `loadd()` and `readd()` to optionally load a dynamic target as a list of sub-targets (#1139, @MilesMcBain).
+* Prohibit dynamic `file_out()` (#1141).
 
 ## Enhancements
 
-- Smoothly deprecate the `config` argument in all user-side functions (#1118, @vkehayas). Users can now supply the plan and other `make()` arguments directly, without bothering with `drake_config()`. Now, you only need to call `drake_config()` in the `_drake.R` file for `r_make()` and friends. Old code with `config` objects should still work. Affected functions:
-    - `make()`
-    - `outdated()`
-    - `drake_build()`
-    - `drake_debug()`
-    - `recoverable()`
-    - `missed()`
-    - `deps_target()`
-    - `deps_profile()`
-    - `drake_graph_info()`
-    - `vis_drake_graph()`
-    - `sankey_drake_graph()`
-    - `drake_graph()`
-    - `text_drake_graph()`
-    - `predict_runtime()`. Needed to rename the `targets` argument to `targets_predict` and `jobs` to `jobs_predict`.
-    - `predict_workers()`. Same argument name changes as `predict_runtime()`.
-- Because of #1118, the only remaining user-side purpose of `drake_config()` is to serve functions `r_make()` and friends.
-- Document the limitations of grouping variables (#1128).
-- Handle the `@` operator. For example, in the static code analysis of `x@y`, do not register `y` as a dependency (#1130, @famuvie).
-- Remove superfluous/incorrect information about imports from the output of `deps_profile()` (#1134, @kendonB).
-- Append hashes to `deps_target()` output (#1134, @kendonB).
-- Add S3 class and pretty print method for `drake_meta_()` objects objects.
-- Use call stacks instead of environment inheritance to power `drake_envir()` and `id_chr()` (#1132).
-- Allow `drake_envir()` to select the environment with imports (#882).
-- Improve visualization labels for dynamic targets: clarify that the listed runtime is a total runtime over all sub-targets and list the number of sub-targets.
+* Smoothly deprecate the `config` argument in all user-side functions (#1118, @vkehayas). Users can now supply the plan and other `make()` arguments directly, without bothering with `drake_config()`. Now, you only need to call `drake_config()` in the `_drake.R` file for `r_make()` and friends. Old code with `config` objects should still work. Affected functions:
+    * `make()`
+    * `outdated()`
+    * `drake_build()`
+    * `drake_debug()`
+    * `recoverable()`
+    * `missed()`
+    * `deps_target()`
+    * `deps_profile()`
+    * `drake_graph_info()`
+    * `vis_drake_graph()`
+    * `sankey_drake_graph()`
+    * `drake_graph()`
+    * `text_drake_graph()`
+    * `predict_runtime()`. Needed to rename the `targets` argument to `targets_predict` and `jobs` to `jobs_predict`.
+    * `predict_workers()`. Same argument name changes as `predict_runtime()`.
+* Because of #1118, the only remaining user-side purpose of `drake_config()` is to serve functions `r_make()` and friends.
+* Document the limitations of grouping variables (#1128).
+* Handle the `@` operator. For example, in the static code analysis of `x@y`, do not register `y` as a dependency (#1130, @famuvie).
+* Remove superfluous/incorrect information about imports from the output of `deps_profile()` (#1134, @kendonB).
+* Append hashes to `deps_target()` output (#1134, @kendonB).
+* Add S3 class and pretty print method for `drake_meta_()` objects objects.
+* Use call stacks instead of environment inheritance to power `drake_envir()` and `id_chr()` (#1132).
+* Allow `drake_envir()` to select the environment with imports (#882).
+* Improve visualization labels for dynamic targets: clarify that the listed runtime is a total runtime over all sub-targets and list the number of sub-targets.
 
 
 # Version 7.9.0
