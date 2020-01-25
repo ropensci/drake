@@ -2,7 +2,7 @@
 
 ## Unavoidable but minor breaking changes
 
-These changes will invalidate some targets in some workflows, but they were necessary to fix bugs.
+These changes invalidate some targets in some workflows, but they are necessary bug fixes.
 
 * Remove spurious local variables detected in `$<-()` and `@<-()` (#1144).
 * Avoid target names with trailing dots (#1147, @Plebejer).
