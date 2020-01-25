@@ -202,7 +202,7 @@ test_with_dir("plans can start with bad symbols", {
     target = c("a'x'", "b'x'", "_a", "a^-.*"),
     command = 1)
   y <- drake_config(x)
-  out <- sort(c("a.x.", "b.x.", "X_a", "a...."))
+  out <- sort(c("a.x_", "b.x_", "X_a", "a..._"))
   expect_true(all(out %in% names(y$spec)))
 })
 
@@ -375,10 +375,10 @@ test_with_dir("spaces in target names are replaced only when appropriate", {
   expect_equal(
     sort(pl$target),
     sort(c(
-      "a_.b.....x..y.",
-      "a_.a..x.",
-      "drake_target_1_.b.....x..y.",
-      "drake_target_1_.a..x."
+      "a_.b.....x..y_",
+      "a_.a..x_",
+      "drake_target_1_.b.....x..y_",
+      "drake_target_1_.a..x_"
     ))
   )
 })
@@ -749,6 +749,8 @@ test_with_dir("convert_trailing_dot() (#1147)", {
 })
 
 test_with_dir("convert_trailing_dot() in plans (#1147)", {
+  n <- seq_len(2)
+  ids <- rlang::syms(as.character(n))
   plan <- drake_plan(
     numeric_ids = target(
       rnorm(n),

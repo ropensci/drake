@@ -368,7 +368,7 @@ test_with_dir("unparsable commands are handled correctly", {
   expect_error(deps_code(x))
 })
 
-test_with_dir("dot symbol is illegal", {
+test_with_dir("bad target names", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(
     sort(deps_code("sqrt(x + y + .)")$name),
@@ -388,10 +388,10 @@ test_with_dir("dot symbol is illegal", {
   expect_false(exists(".", envir = e))
   config <- drake_config(plan)
   plan <- drake_plan(
-    . = 1,
+    .gitignore = 1,
     y = 2,
     a = sqrt(x + y),
-    b = subset(complete.cases(.))
+    b = subset(complete.cases(.gitignore))
   )
   expect_error(drake_config(plan), "cannot be target names")
 })
