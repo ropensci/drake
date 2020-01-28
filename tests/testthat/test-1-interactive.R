@@ -187,9 +187,9 @@ test_with_dir("drake_debug()", {
     stop(1234)
   })
   expect_error(make(my_plan), regexp = "1234")
-  out <- drake_debug(large, my_plan)
+  out <- drake_debug(regression1_large, my_plan)
   out <- drake_debug(
-    "large",
+    "regression1_large",
     plan = my_plan,
     verbose = 0L,
     character_only = TRUE
@@ -200,11 +200,11 @@ test_with_dir("drake_debug()", {
     load_mtcars_example()
     make(my_plan)
     config <- drake_config(my_plan)
-    expect_true(config$cache$exists("small"))
-    clean(small)
-    expect_false(config$cache$exists("small"))
-    out <- drake_debug(small, plan = my_plan)
-    expect_false(config$cache$exists("small"))
+    expect_true(config$cache$exists("regression1_small"))
+    clean(regression1_small)
+    expect_false(config$cache$exists("regression1_small"))
+    out <- drake_debug(regression1_small, plan = my_plan)
+    expect_false(config$cache$exists("regression1_small"))
     expect_true(is.data.frame(out))
   }
 })
