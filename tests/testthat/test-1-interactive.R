@@ -194,7 +194,7 @@ test_with_dir("drake_debug()", {
     verbose = 0L,
     character_only = TRUE
   )
-  expect_true(is.data.frame(out))
+  expect_true(inherits(out, "lm"))
   for (i in seq_len(2)) {
     clean(destroy = TRUE)
     load_mtcars_example()
@@ -205,7 +205,7 @@ test_with_dir("drake_debug()", {
     expect_false(config$cache$exists("regression1_small"))
     out <- drake_debug(regression1_small, plan = my_plan)
     expect_false(config$cache$exists("regression1_small"))
-    expect_true(is.data.frame(out))
+    expect_true(inherits(out, "lm"))
   }
 })
 
