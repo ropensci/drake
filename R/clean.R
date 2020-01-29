@@ -22,7 +22,10 @@
 #' @seealso [which_clean()], [drake_gc()]
 #' @export
 #' @return Invisibly return `NULL`.
-#' @inheritParams cached
+#' @param ... Symbols, individual targets to remove.
+#' @param list Character vector of individual targets to remove.
+#' @param search Deprecated
+#' @param verbose Deprecated
 #' @inheritParams which_clean
 #' @param destroy Logical, whether to totally remove the drake cache.
 #'   If `destroy` is `FALSE`, only the targets

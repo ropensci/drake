@@ -20,14 +20,9 @@ clean(
 )
 }
 \arguments{
-\item{...}{Deprecated. Do not use.
-Objects to load from the cache, as names (unquoted)
-or character strings (quoted). Similar to \code{...} in
-\code{remove()}.}
+\item{...}{Symbols, individual targets to remove.}
 
-\item{list}{Deprecated. Do not use.
-Character vector naming objects to be loaded from the
-cache. Similar to the \code{list} argument of \code{\link[=remove]{remove()}}.}
+\item{list}{Character vector of individual targets to remove.}
 
 \item{destroy}{Logical, whether to totally remove the drake cache.
 If \code{destroy} is \code{FALSE}, only the targets
@@ -38,12 +33,12 @@ session metadata, etc.}
 \item{path}{Path to a \code{drake} cache
 (usually a hidden \verb{.drake/} folder) or \code{NULL}.}
 
-\item{search}{Deprecated.}
+\item{search}{Deprecated}
 
 \item{cache}{drake cache. See \code{\link[=new_cache]{new_cache()}}.
 If supplied, \code{path} is ignored.}
 
-\item{verbose}{Deprecated on 2019-09-11.}
+\item{verbose}{Deprecated}
 
 \item{jobs}{Number of jobs for light parallelism
 (disabled on Windows).}
