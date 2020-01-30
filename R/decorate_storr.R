@@ -221,7 +221,7 @@ refclass_decorated_storr <- methods::setRefClass(
         "  drake::drake_cache(\"", .self$path, "\")$unlock()\n\n",
         "To invoke a function like outdated() or vis_drake_graph() ",
         "while make() is running, set make_imports = FALSE instead.\n\n",
-        "To read about parallel comptuing in drake, visit ",
+        "To read about parallel computing in drake, visit ",
         "https://books.ropensci.org/drake/hpc.html.",
         call. = FALSE
       )
