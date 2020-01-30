@@ -136,12 +136,16 @@ Available formats:
 \enumerate{
 \item The \code{fst} package must be installed.
 \item The target's value must be a plain data frame. If it is not a
-plain data frame (for example, a tibble or data.table)
+plain data frame (for example, a \code{tibble} or \code{data.table})
 then drake will coerce it to a plain data frame with
 \code{as.data.frame()}.
 All non-data-frame-specific attributes are lost
 when \code{drake} saves the target.
 }
+\item \code{"fst_tbl"}: Like \code{"fst"}, but for \code{tibble}s. The \code{tibble} package
+must be installed, and the target's value should be a \code{tibble} object.
+As with the \code{"fst"} format, all non-data-data-frame non-\code{tibble}
+attributes are lost.
 \item \code{"fst_dt"}: Like \code{"fst"} format, but for \code{data.table} objects.
 Requirements:
 \enumerate{

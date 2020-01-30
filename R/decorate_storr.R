@@ -286,6 +286,13 @@ dcst_get_.drake_format_fst <- function(value, key, .self) {
   fst::read_fst(.self$file_return_key(key))
 }
 
+dcst_get_.drake_format_fst_tbl <- function(value, key, .self) {
+  assert_pkg("fst")
+  assert_pkg("tibble")
+  out <- fst::read_fst(.self$file_return_key(key))
+  tibble::as_tibble(out)
+}
+
 dcst_get_.drake_format_fst_dt <- function(value, key, .self) { # nolint
   assert_pkg("data.table")
   assert_pkg("fst")
@@ -338,6 +345,13 @@ dcst_get_value_.drake_format_fst <- function(value, hash, .self) { # nolint
   fst::read_fst(.self$file_return_hash(hash))
 }
 
+dcst_get_value_.drake_format_fst_tbl <- function(value, hash, .self) { # nolint
+  assert_pkg("fst")
+  assert_pkg("tibble")
+  out <- fst::read_fst(.self$file_return_hash(hash))
+  tibble::as_tibble(out)
+}
+
 dcst_get_value_.drake_format_fst_dt <- function(value, hash, .self) { # nolint
   assert_pkg("data.table")
   assert_pkg("fst")
@@ -388,6 +402,8 @@ dcst_set.drake_format_fst <- function(value, key, ..., .self) {
   fst::write_fst(x = value$value, path = tmp)
   dcst_set_move_tmp(key = key, value = value, tmp = tmp, .self = .self)
 }
+
+dcst_set.drake_format_fst_tbl <- dcst_set.drake_format_fst
 
 dcst_set.drake_format_fst_dt <- function(value, key, ..., .self) {
   assert_pkg("data.table")

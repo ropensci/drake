@@ -68,11 +68,15 @@
 #'   - `"fst"`: save big data frames fast. Requirements:
 #'       1. The `fst` package must be installed.
 #'       2. The target's value must be a plain data frame. If it is not a
-#'         plain data frame (for example, a tibble or data.table)
+#'         plain data frame (for example, a `tibble` or `data.table`)
 #'         then drake will coerce it to a plain data frame with
 #'         `as.data.frame()`.
 #'         All non-data-frame-specific attributes are lost
 #'         when `drake` saves the target.
+#'   - `"fst_tbl"`: Like `"fst"`, but for `tibble`s. The `tibble` package
+#'     must be installed, and the target's value should be a `tibble` object.
+#'     As with the `"fst"` format, all non-data-data-frame non-`tibble`
+#'     attributes are lost.
 #'   - `"fst_dt"`: Like `"fst"` format, but for `data.table` objects.
 #'      Requirements:
 #'       1. The `data.table` and `fst` packages must be installed.

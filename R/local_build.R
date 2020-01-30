@@ -383,6 +383,22 @@ sanitize_format.drake_format_fst <- function(x, target, config) { # nolint
   x
 }
 
+sanitize_format.drake_format_fst_tbl <- function(x, target, config) { # nolint
+  assert_pkg("tibble")
+  if (!inherits(x$value, "tbl_df")) {
+    msg <- paste0(
+      "You selected fst_tbl format for target ", target,
+      ", so drake will convert it from class ",
+      safe_deparse(class(x$value), backtick = TRUE),
+      " to a tibble."
+    )
+    warning(msg, call. = FALSE)
+    config$logger$minor(msg, target = target)
+  }
+  x$value <- tibble::as_tibble(x$value)
+  x
+}
+
 sanitize_format.drake_format_fst_dt <- function(x, target, config) { # nolint
   assert_pkg("data.table")
   if (!inherits(x$value, "data.table")) {
