@@ -367,6 +367,29 @@ test_with_dir("Can save fst data frames", {
   expect_false(is.list(ref))
 })
 
+test_with_dir("Can save fst_tbl tibbles (#1154)", {
+  skip_if_not_installed("fst")
+  skip_if_not_installed("tibble")
+  plan <- drake_plan(
+    x = target(
+      tibble::tibble(x = letters, y = letters),
+      format = "fst_tbl"
+    )
+  )
+  make(plan)
+  out <- readd(x)
+  exp <- data.frame(x = letters, y = letters, stringsAsFactors = FALSE)
+  expect_equal(out, exp)
+  cache <- drake_cache()
+  expect_equal(cache$get_value(cache$get_hash("x")), exp)
+  ref <- cache$storr$get("x")
+  expect_true(inherits(ref, "drake_format"))
+  expect_true(inherits(ref, "drake_format_fst_tbl"))
+  expect_equal(length(ref), 1L)
+  expect_true(nchar(ref) < 100)
+  expect_false(is.list(ref))
+})
+
 test_with_dir("fst format forces data frames", {
   skip_on_cran()
   skip_if_not_installed("fst")
@@ -378,9 +401,10 @@ test_with_dir("fst format forces data frames", {
   )
   expect_warning(make(plan), regexp = "plain data frame")
   expect_true(inherits(readd(x), "data.frame"))
+  expect_false(inherits(readd(x), "tbl_df"))
 })
 
-test_with_dir("fst format and tibbles", {
+test_with_dir("regular fst format and tibbles", {
   skip_on_cran()
   skip_if_not_installed("fst")
   skip_if_not_installed("tibble")
@@ -397,6 +421,20 @@ test_with_dir("fst format and tibbles", {
   )
   expect_equal(readd(y), "data.frame")
   expect_false(inherits(readd(x), "tibble"))
+})
+
+test_with_dir("fst_tbl format forces tibbles (#1154)", {
+  skip_on_cran()
+  skip_if_not_installed("fst")
+  skip_if_not_installed("tibble")
+  plan <- drake_plan(
+    x = target(
+      list(x = letters, y = letters),
+      format = "fst_tbl"
+    )
+  )
+  expect_warning(make(plan), regexp = "tibble")
+  expect_true(inherits(readd(x), "tbl_df"))
 })
 
 test_with_dir("fst_dt", {
