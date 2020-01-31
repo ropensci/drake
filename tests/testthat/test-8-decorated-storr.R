@@ -195,7 +195,7 @@ test_with_dir("illegal format", {
   plan <- drake_plan(y = target("bad format", format = "bad format"))
   expect_error(
     drake_config(plan),
-    regexp = "format column of your drake plan can only have values"
+    regexp = "illegal format"
   )
 })
 

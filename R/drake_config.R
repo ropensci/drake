@@ -587,6 +587,7 @@ drake_config <- function(
     )
   }
   force(envir)
+  check_formats(format)
   plan <- sanitize_plan(plan, envir = envir)
   plan_checks(plan)
   targets <- sanitize_targets(targets, plan)
@@ -844,27 +845,61 @@ plan_check_format_col <- function(plan) {
     return()
   }
   format <- plan$format
-  format <- format[!is.na(format)]
-  formats <- c(
-    "fst",
-    "fst_tbl",
-    "fst_dt",
-    "diskframe",
-    "keras",
-    "qs",
-    "rds"
-  )
-  illegal <- setdiff(unique(format), formats)
-  if (!length(illegal)) {
+  check_formats(format)
+}
+
+check_formats <- function(formats) {
+  formats <- unique(formats[!is.na(formats)])
+  lapply(formats, assert_format)
+}
+
+assert_format <- function(format) {
+  if (!length(format)) {
     return()
   }
-  formats_str <- paste0("\"", formats, "\"")
-  formats_str <- paste(formats_str, collapse = ", ")
+  class(format) <- format
+  assert_format_impl(format)
+}
+
+assert_format_impl <- function(format) {
+  UseMethod("assert_format_impl")
+}
+
+assert_format_impl.fst <- function(format) {
+  assert_pkg("fst")
+}
+
+assert_format_impl.fst_tbl <- function(format) {
+  assert_pkg("fst")
+  assert_pkg("tibble")
+}
+
+assert_format_impl.fst_dt <- function(format) {
+  assert_pkg("fst")
+  assert_pkg("data.table")
+}
+
+assert_format_impl.diskframe <- function(format) {
+  assert_pkg("disk.frame")
+}
+
+assert_format_impl.keras <- function(format) {
+  assert_pkg("keras")
+}
+
+assert_format_impl.qs <- function(format) {
+  assert_pkg("qs")
+}
+
+assert_format_impl.rds <- function(format) {
+  stopifnot(getRversion() >= "3.5.0")
+}
+
+assert_format_impl.default <- function(format) {
   stop(
-    "the format column of your drake plan can only have values ",
-    formats_str,
-    ", or NA. Illegal values found:\n",
-    multiline_message(illegal),
+    "illegal format ", format, ". Read ",
+    "https://docs.ropensci.org/drake/reference/drake_plan.html#formats",
+    " for legal formats and their system requirements.",
     call. = FALSE
   )
 }

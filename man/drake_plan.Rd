@@ -123,56 +123,45 @@ and the target names, but you can overwrite these automatic seeds.
 
 \section{Formats}{
 
-drake supports specialized data formats. Purpose:
-\itemize{
-\item Save targets that cannot be saved in RDS format (like Keras models).
-\item Reduce the time, memory, and storage required to save targets.
-"format" is one of the custom columns supported in plans.
-To use it, just specify a format to \code{target()}, e.g.
-\code{drake_plan(x = target(big_data_frame, format = "fst"))}.
-You can also append a \code{format} column to your plan post-hoc.
+Specialized target formats increase efficiency and flexibility.
+Some allow you to save specialized objects like \code{keras} models,
+while others increase the speed while conserving storage and memory.
+You can declare target-specific formats in the plan
+(e.g. \code{drake_plan(x = target(big_data_frame, format = "fst"))})
+or supply a global default \code{format} for all targets in \code{make()}.
+Either way, most formats have specialized installation requirements
+(e.g. R packages) that are not installed with \code{drake} by default.
+You will need to install them separately yourself.
 Available formats:
-\item \code{"fst"}: save big data frames fast. Requirements:
-\enumerate{
-\item The \code{fst} package must be installed.
-\item The target's value must be a plain data frame. If it is not a
-plain data frame (for example, a \code{tibble} or \code{data.table})
-then drake will coerce it to a plain data frame with
-\code{as.data.frame()}.
-All non-data-frame-specific attributes are lost
-when \code{drake} saves the target.
-}
-\item \code{"fst_tbl"}: Like \code{"fst"}, but for \code{tibble}s. The \code{tibble} package
-must be installed, and the target's value should be a \code{tibble} object.
-As with the \code{"fst"} format, all non-data-data-frame non-\code{tibble}
-attributes are lost.
+\itemize{
+\item \code{"fst"}: save big data frames fast. Requires the \code{fst} package.
+Note: this format strips non-data-frame attributes such as the
+\item \code{"fst_tbl"}: Like \code{"fst"}, but for \code{tibble} objects.
+Requires the \code{fst} and \code{tibble} packages.
+Strips away non-data-frame non-tibble attributes.
 \item \code{"fst_dt"}: Like \code{"fst"} format, but for \code{data.table} objects.
-Requirements:
-\enumerate{
-\item The \code{data.table} and \code{fst} packages must be installed.
-\item The target's value must be a data.table object. If it is not a
-data.table object (for example, a data frame or tibble)
-then drake will coerce it to a data.table object using
-\code{data.table::as.data.table()}.
-All non-data-table-specific attributes are lost
-when \code{drake} saves the target.
-}
-\item \code{"diskframe"}: Experimental.
-Store larger-than-memory data as a \code{disk.frame} object.
-Uses the \code{fst} backend. Requires the \code{disk.frame} and \code{fst} packages.
-Note: \code{disk.frame}s get moved to the \code{drake} cache
-(a subfolder of \verb{.drake/} for most workflows). It is best to
-create \code{disk.frame} objects that initially reside on the same storage
-drive as the cache. \code{\link[=drake_tempfile]{drake_tempfile()}} can help with this,
-e.g. \code{as.disk.frame(your_dataset, outdir = drake_tempfile())}.
+Requires the \code{fst} and \code{data.table} packages.
+Strips away non-data-frame non-data-table attributes.
+\item \code{"diskframe"}:
+Stores \code{disk.frame} objects, which could potentially be
+larger than memory. Requires the \code{fst} and \code{disk.frame} packages.
+Coerces objects to \code{disk.frame}s.
+Note: \code{disk.frame} objects get moved to the \code{drake} cache
+(a subfolder of \verb{.drake/} for most workflows).
+To ensure this data transfer is fast, it is best to
+save your \code{disk.frame} objects to the same physical storage
+drive as the \code{drake} cache,
+\code{as.disk.frame(your_dataset, outdir = drake_tempfile())}.
 \item \code{"keras"}: save Keras models as HDF5 files.
 Requires the \code{keras} package.
-\item \code{"qs"}: save any object. Uses \code{qsave()} and \code{qread()} from the
-\code{qs} package. Uses the default settings in \code{qs} version 0.20.2.
-Could be fast and reduce file size in some general use cases.
-\item \code{"rds"}: save any object. Uses gzip compression, which is slow.
-Not recommended in the general case. Consider \code{"qs"} instead.
-Requires R >= 3.5.0 so drake can use ALTREP.
+\item \code{"qs"}: save any R object that can be properly serialized
+with the \code{qs} package. Requires the \code{qs} package.
+Uses \code{qsave()} and \code{qread()}.
+Uses the default settings in \code{qs} version 0.20.2.
+\item \code{"rds"}: save any R object that can be properly serialized.
+Requires R version >= 3.5.0 due to ALTREP.
+Note: the \code{"rds"} format uses gzip compression, which is slow.
+\code{"qs"} is a superior format.
 }
 }
 
