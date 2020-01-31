@@ -524,9 +524,14 @@ handle_build_exceptions <- function(target, meta, config) {
       color = "fail"
     )
     store_failure(target = target, meta = meta, config = config)
+    if (is_subtarget(target, config)) {
+      parent <- config$spec[[target]]$subtarget_parent
+      meta$subtarget <- target
+      store_failure(target = parent, meta = meta, config = config)
+    }
     if (!config$keep_going) {
       msg <- paste0(
-        "Target `", target, "` failed. Call `diagnose(", target,
+        "target `", target, "` failed. Call `drake::diagnose(", target,
         ")` for details. Error message:\n  ",
         meta$error$message
       )
@@ -555,7 +560,8 @@ store_failure <- function(target, meta, config) {
     value = "failed",
     config = config
   )
-  fields <- intersect(c("messages", "warnings", "error"), names(meta))
+  fields <- c("messages", "warnings", "error", "subtarget")
+  fields <- intersect(fields, names(meta))
   meta <- meta[fields]
   config$cache$set(
     key = target,

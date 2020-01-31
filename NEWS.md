@@ -14,6 +14,7 @@ These changes invalidate some targets in some workflows, but they are necessary 
 * Handle calls in `analyze_assign()` (#1119, @jennysjaarda).
 * Restore correct environment locking (#1143, @kuriwaki).
 * Log `"running"` progress of dynamic targets.
+* Log dynamic targets as failed if a sub-target fails (#1158).
 
 ## New features
 

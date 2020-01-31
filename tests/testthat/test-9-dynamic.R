@@ -1728,3 +1728,12 @@ test_with_dir("no dynamic file_out() (#1141)", {
   )
   expect_error(make(plan), regexp = "file_out")
 })
+
+test_with_dir("log dynamic target as failed if a sub-target fails (#1158)", {
+  plan <- drake_plan(
+    x = seq_len(2),
+    y = target(stop(x), dynamic = map(x))
+  )
+  expect_error(make(plan))
+  expect_true("y" %in% failed())
+})
