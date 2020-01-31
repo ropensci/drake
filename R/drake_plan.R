@@ -57,51 +57,44 @@
 #'   `NA` entries default back to `drake`'s automatic seeds.
 #'
 #' @section Formats:
-#'   drake supports specialized data formats. Purpose:
-#'   - Save targets that cannot be saved in RDS format (like Keras models).
-#'   - Reduce the time, memory, and storage required to save targets.
-#'   "format" is one of the custom columns supported in plans.
-#'   To use it, just specify a format to `target()`, e.g.
-#'   `drake_plan(x = target(big_data_frame, format = "fst"))`.
-#'   You can also append a `format` column to your plan post-hoc.
+#'   Specialized target formats increase efficiency and flexibility.
+#'   Some allow you to save specialized objects like `keras` models,
+#'   while others increase the speed while conserving storage and memory.
+#'   You can declare target-specific formats in the plan
+#'   (e.g. `drake_plan(x = target(big_data_frame, format = "fst"))`)
+#'   or supply a global default `format` for all targets in `make()`.
+#'   Either way, most formats have specialized installation requirements
+#'   (e.g. R packages) that are not installed with `drake` by default.
+#'   You will need to install them separately yourself.
 #'   Available formats:
-#'   - `"fst"`: save big data frames fast. Requirements:
-#'       1. The `fst` package must be installed.
-#'       2. The target's value must be a plain data frame. If it is not a
-#'         plain data frame (for example, a `tibble` or `data.table`)
-#'         then drake will coerce it to a plain data frame with
-#'         `as.data.frame()`.
-#'         All non-data-frame-specific attributes are lost
-#'         when `drake` saves the target.
-#'   - `"fst_tbl"`: Like `"fst"`, but for `tibble`s. The `tibble` package
-#'     must be installed, and the target's value should be a `tibble` object.
-#'     As with the `"fst"` format, all non-data-data-frame non-`tibble`
-#'     attributes are lost.
+#'   - `"fst"`: save big data frames fast. Requires the `fst` package.
+#'     Note: this format strips non-data-frame attributes such as the
+#'   - `"fst_tbl"`: Like `"fst"`, but for `tibble` objects.
+#'     Requires the `fst` and `tibble` packages.
+#'     Strips away non-data-frame non-tibble attributes.
 #'   - `"fst_dt"`: Like `"fst"` format, but for `data.table` objects.
-#'      Requirements:
-#'       1. The `data.table` and `fst` packages must be installed.
-#'       2. The target's value must be a data.table object. If it is not a
-#'         data.table object (for example, a data frame or tibble)
-#'         then drake will coerce it to a data.table object using
-#'         `data.table::as.data.table()`.
-#'         All non-data-table-specific attributes are lost
-#'         when `drake` saves the target.
-#'   - `"diskframe"`: Experimental.
-#'     Store larger-than-memory data as a `disk.frame` object.
-#'     Uses the `fst` backend. Requires the `disk.frame` and `fst` packages.
-#'     Note: `disk.frame`s get moved to the `drake` cache
-#'     (a subfolder of `.drake/` for most workflows). It is best to
-#'     create `disk.frame` objects that initially reside on the same storage
-#'     drive as the cache. [drake_tempfile()] can help with this,
-#'     e.g. `as.disk.frame(your_dataset, outdir = drake_tempfile())`.
+#'     Requires the `fst` and `data.table` packages.
+#'     Strips away non-data-frame non-data-table attributes.
+#'   - `"diskframe"`:
+#'     Stores `disk.frame` objects, which could potentially be
+#'     larger than memory. Requires the `fst` and `disk.frame` packages.
+#'     Coerces objects to `disk.frame`s.
+#'     Note: `disk.frame` objects get moved to the `drake` cache
+#'     (a subfolder of `.drake/` for most workflows).
+#'     To ensure this data transfer is fast, it is best to
+#'     save your `disk.frame` objects to the same physical storage
+#'     drive as the `drake` cache,
+#'     `as.disk.frame(your_dataset, outdir = drake_tempfile())`.
 #'   - `"keras"`: save Keras models as HDF5 files.
 #'     Requires the `keras` package.
-#'   - `"qs"`: save any object. Uses `qsave()` and `qread()` from the
-#'     `qs` package. Uses the default settings in `qs` version 0.20.2.
-#'     Could be fast and reduce file size in some general use cases.
-#'   - `"rds"`: save any object. Uses gzip compression, which is slow.
-#'     Not recommended in the general case. Consider `"qs"` instead.
-#'     Requires R >= 3.5.0 so drake can use ALTREP.
+#'   - `"qs"`: save any R object that can be properly serialized
+#'     with the `qs` package. Requires the `qs` package.
+#'     Uses `qsave()` and `qread()`.
+#'     Uses the default settings in `qs` version 0.20.2.
+#'   - `"rds"`: save any R object that can be properly serialized.
+#'     Requires R version >= 3.5.0 due to ALTREP.
+#'     Note: the `"rds"` format uses gzip compression, which is slow.
+#'     `"qs"` is a superior format.
 #'
 #' @section Keywords:
 #' [drake_plan()] understands special keyword functions for your commands.
