@@ -854,9 +854,6 @@ check_formats <- function(formats) {
 }
 
 assert_format <- function(format) {
-  if (!length(format)) {
-    return()
-  }
   class(format) <- format
   assert_format_impl(format)
 }
@@ -884,7 +881,7 @@ assert_format_impl.diskframe <- function(format) {
 }
 
 assert_format_impl.keras <- function(format) {
-  assert_pkg("keras")
+  assert_pkg("keras") # nocov
 }
 
 assert_format_impl.qs <- function(format) {
