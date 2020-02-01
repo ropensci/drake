@@ -379,7 +379,7 @@ test_with_dir("Can save fst_tbl tibbles (#1154)", {
   )
   make(plan)
   out <- readd(x)
-  exp <- data.frame(x = letters, y = letters, stringsAsFactors = FALSE)
+  exp <- tibble::tibble(x = letters, y = letters)
   expect_equal(out, exp)
   cache <- drake_cache()
   expect_equal(cache$get_value(cache$get_hash("x")), exp)
