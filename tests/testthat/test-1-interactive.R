@@ -173,10 +173,10 @@ test_with_dir("can keep going in parallel", {
     jobs = 2,
     session_info = FALSE,
     keep_going = TRUE,
-    verbose = 0L
+    verbose = 1
   )
   expect_error(readd(a))
-  expect_equal(readd(b), numeric(0))
+  expect_error(readd(b))
 })
 
 test_with_dir("drake_debug()", {
