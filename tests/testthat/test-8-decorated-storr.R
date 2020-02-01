@@ -368,6 +368,7 @@ test_with_dir("Can save fst data frames", {
 })
 
 test_with_dir("Can save fst_tbl tibbles (#1154)", {
+  skip_on_cran()
   skip_if_not_installed("fst")
   skip_if_not_installed("tibble")
   plan <- drake_plan(
