@@ -62,7 +62,7 @@ deps_code <- function(x) {
 #' \dontrun{
 #' isolate_example("Quarantine side effects.", {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' deps_target(regression1_small, plan)
+#' deps_target(regression1_small, my_plan)
 #' })
 #' }
 deps_target <- function(

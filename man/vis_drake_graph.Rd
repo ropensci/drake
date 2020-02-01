@@ -186,8 +186,7 @@ vis_drake_graph(my_plan) # The red nodes from before are now green.
 # Plot a subgraph of the workflow.
 vis_drake_graph(
   my_plan,
-  from = c("small", "reg2"),
-  to = "summ_regression2_small"
+  from = c("small", "reg2")
 )
 }
 }

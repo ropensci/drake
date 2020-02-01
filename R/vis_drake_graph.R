@@ -24,8 +24,7 @@
 #' # Plot a subgraph of the workflow.
 #' vis_drake_graph(
 #'   my_plan,
-#'   from = c("small", "reg2"),
-#'   to = "summ_regression2_small"
+#'   from = c("small", "reg2")
 #' )
 #' }
 #' }
@@ -44,7 +43,8 @@ vis_drake_graph <- function(
   direction = NULL,
   hover = FALSE,
   navigationButtons = TRUE, # nolint
-  from = NULL, mode = c("out", "in", "all"),
+  from = NULL,
+  mode = c("out", "in", "all"),
   order = NULL,
   subset = NULL,
   ncol_legend = 1,
