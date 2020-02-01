@@ -596,6 +596,9 @@ print.drake_plan <- function(x, ...) {
   NextMethod(object = x)
 }
 
+# for installation on R 3.3.0
+type_sum <- NULL
+
 #' @title Type summary printing
 #' \lifecycle{stable}
 #' @description Ensures `<expr>` is printed at the top
