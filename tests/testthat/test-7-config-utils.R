@@ -169,6 +169,7 @@ test_with_dir("deps_profile(plan) (#1118)", {
 
 test_with_dir("drake_graph_info(plan) (#1118)", {
   skip_on_cran()
+  skip_if_not_installed("visNetwork")
   plan <- drake_plan(x = 1, y = x)
   tmp <- drake_graph_info(plan, targets = "x")
   expect_equal(nrow(tmp$nodes), 1L)
@@ -179,6 +180,7 @@ test_with_dir("drake_graph_info(plan) (#1118)", {
 
 test_with_dir("predict_runtime(plan) etc. (#1118)", {
   skip_on_cran()
+  skip_if_not_installed("lubridate")
   plan <- drake_plan(x = 1, y = x)
   make(plan)
   tmp <- predict_runtime(plan, targets_predict = "x")
@@ -194,6 +196,10 @@ test_with_dir("predict_runtime(plan) etc. (#1118)", {
 
 test_with_dir("vis_drake_graph(plan) etc. (#1118)", {
   skip_on_cran()
+  skip_if_not_installed("ggraph")
+  skip_if_not_installed("networkD3")
+  skip_if_not_installed("txtplot")
+  skip_if_not_installed("visNetwork")
   plan <- drake_plan(x = 1, y = x)
   make(plan)
   config <- drake_config(plan)
