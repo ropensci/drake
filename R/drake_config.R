@@ -849,7 +849,9 @@ plan_check_format_col <- function(plan) {
 }
 
 check_formats <- function(formats) {
-  formats <- unique(formats[!is.na(formats)])
+  if (length(formats)) {
+    formats <- unique(formats[!is.na(formats)])
+  }
   lapply(formats, assert_format)
 }
 

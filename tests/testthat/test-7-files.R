@@ -151,8 +151,18 @@ test_with_dir("good URL with an ETag", {
   skip_on_cran()
   skip_if_offline()
   skip_if_not_installed("curl")
+  url <- "https://raw.githubusercontent.com/ropensci/drake/932afcb4050f18351e1e25be3644d7ddb5c903a8/DESCRIPTION" # nolint
+  tryCatch(
+    mem <- curl::curl_fetch_memory(url),
+    error = function(e) {
+      skip("test URL unreachable")
+    }
+  )
+  if (mem$status_code != 200) {
+    skip("test URL unreachable")
+  }
   plan <- drake_plan(
-    x = file_in("https://github.com/ropensci/drake/archive/v7.3.0.tar.gz")
+    x = file_in("https://raw.githubusercontent.com/ropensci/drake/932afcb4050f18351e1e25be3644d7ddb5c903a8/DESCRIPTION") # nolint
   )
   config <- drake_config(
     plan,
@@ -163,7 +173,7 @@ test_with_dir("good URL with an ETag", {
   make_impl(config = config)
   expect_equal(justbuilt(config), "x")
   etag <- config$cache$get(
-    file_store("https://github.com/ropensci/drake/archive/v7.3.0.tar.gz")
+    file_store("https://raw.githubusercontent.com/ropensci/drake/932afcb4050f18351e1e25be3644d7ddb5c903a8/DESCRIPTION") # nolint
   )
   expect_true(nzchar(etag))
   expect_equal(outdated_impl(config), character(0))
@@ -175,6 +185,16 @@ test_with_dir("good URL with a timestamp", {
   skip_on_cran()
   skip_if_offline()
   skip_if_not_installed("curl")
+  url <- "https://nytimes.com"
+  tryCatch(
+    mem <- curl::curl_fetch_memory(url),
+    error = function(e) {
+      skip("test URL unreachable")
+    }
+  )
+  if (mem$status_code != 200) {
+    skip("test URL unreachable")
+  }
   plan <- drake_plan(x = file_in("https://nytimes.com"))
   config <- drake_config(
     plan,
