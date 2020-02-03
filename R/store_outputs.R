@@ -62,15 +62,15 @@ store_item <- function(target, value, meta, config) {
 
 output_type <- function(value, meta) {
   if (meta$isfile) {
-    return("file")
+    return("drake_file")
   }
   if (is.function(value)) {
-    return("function")
+    return("drake_function")
   }
   if (is_storr(value)) {
-    return("storr")
+    return("drake_storr")
   }
-  "object"
+  "drake_object"
 }
 
 is_storr <- function(value) {
@@ -82,7 +82,7 @@ store_item_impl <- function(target, value, meta, config) {
   UseMethod("store_item_impl")
 }
 
-store_item_impl.file <- function(target, value = NULL, meta, config) {
+store_item_impl.drake_file <- function(target, value = NULL, meta, config) {
   if (meta$imported) {
     value <- storage_hash(target = target, config = config)
   } else {
@@ -96,7 +96,7 @@ store_item_impl.file <- function(target, value = NULL, meta, config) {
   )
 }
 
-store_item_impl.function <- function(target, value, meta, config) {
+store_item_impl.drake_function <- function(target, value, meta, config) { # nolint
   if (meta$imported) {
     value <- standardize_imported_function(value)
     value <- c(value, meta$dependency_hash)
@@ -120,11 +120,11 @@ standardize_deparsed_function <- function(str) {
   gsub("<pointer: 0x[0-9a-zA-Z]*>", "", str)
 }
 
-store_item_impl.storr <- function(target, value, meta, config) {
+store_item_impl.drake_storr <- function(target, value, meta, config) {
   store_object(target, value = "storr", meta, config)
 }
 
-store_item_impl.object <- function(target, value, meta, config) {
+store_item_impl.drake_object <- function(target, value, meta, config) {
   store_object(target, value, meta, config)
 }
 

@@ -1,3 +1,10 @@
+# Version 7.10.0.9000
+
+## Bug fixes
+
+* Sanitize internal S3 classes for target storage (#1159, @rsangole).
+
+
 # Version 7.10.0
 
 ## Unavoidable but minor breaking changes
