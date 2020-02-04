@@ -471,6 +471,62 @@ runtime_checks <- function(config) {
   missing_input_files(config = config)
   subdirectory_warning(config = config)
   assert_outside_cache(config = config)
+  check_formats(config$formats)
+}
+
+check_formats <- function(formats) {
+  if (length(formats)) {
+    formats <- unique(formats[!is.na(formats)])
+  }
+  lapply(formats, assert_format)
+}
+
+assert_format <- function(format) {
+  class(format) <- format
+  assert_format_impl(format)
+}
+
+assert_format_impl <- function(format) {
+  UseMethod("assert_format_impl")
+}
+
+assert_format_impl.fst <- function(format) {
+  assert_pkg("fst")
+}
+
+assert_format_impl.fst_tbl <- function(format) {
+  assert_pkg("fst")
+  assert_pkg("tibble")
+}
+
+assert_format_impl.fst_dt <- function(format) {
+  assert_pkg("fst")
+  assert_pkg("data.table")
+}
+
+assert_format_impl.diskframe <- function(format) {
+  assert_pkg("disk.frame")
+}
+
+assert_format_impl.keras <- function(format) {
+  assert_pkg("keras") # nocov
+}
+
+assert_format_impl.qs <- function(format) {
+  assert_pkg("qs")
+}
+
+assert_format_impl.rds <- function(format) {
+  stopifnot(getRversion() >= "3.5.0")
+}
+
+assert_format_impl.default <- function(format) {
+  stop(
+    "illegal format ", format, ". Read ",
+    "https://docs.ropensci.org/drake/reference/drake_plan.html#formats",
+    " for legal formats and their system requirements.",
+    call. = FALSE
+  )
 }
 
 missing_input_files <- function(config) {

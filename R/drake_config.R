@@ -587,11 +587,17 @@ drake_config <- function(
     )
   }
   force(envir)
-  check_formats(format)
   plan <- sanitize_plan(plan, envir = envir)
   plan_checks(plan)
   targets <- sanitize_targets(targets, plan)
   trigger <- convert_old_trigger(trigger)
+  formats <- format
+  if ("format" %in% colnames(plan)) {
+    formats <- unique(c(formats, plan$format))
+  }
+  if (length(formats)) {
+    formats <- na_omit(formats)
+  }
   sleep <- `environment<-`(sleep, new.env(parent = globalenv()))
   if (is.null(cache)) {
     cache <- new_cache()
@@ -680,6 +686,7 @@ drake_config <- function(
     max_expand = max_expand,
     log_build_times = log_build_times,
     format = format,
+    formats = formats,
     lock_cache = lock_cache
   )
   class(out) <- c("drake_config", "drake")
@@ -817,7 +824,6 @@ plan_checks <- function(plan) {
   stopifnot(is.data.frame(plan))
   plan_check_required_cols(plan)
   plan_check_bad_symbols(plan)
-  plan_check_format_col(plan)
 }
 
 plan_check_required_cols <- function(plan) {
@@ -838,69 +844,6 @@ plan_check_bad_symbols <- function(plan) {
       call. = FALSE
     )
   }
-}
-
-plan_check_format_col <- function(plan) {
-  if (!("format" %in% colnames(plan))) {
-    return()
-  }
-  format <- plan$format
-  check_formats(format)
-}
-
-check_formats <- function(formats) {
-  if (length(formats)) {
-    formats <- unique(formats[!is.na(formats)])
-  }
-  lapply(formats, assert_format)
-}
-
-assert_format <- function(format) {
-  class(format) <- format
-  assert_format_impl(format)
-}
-
-assert_format_impl <- function(format) {
-  UseMethod("assert_format_impl")
-}
-
-assert_format_impl.fst <- function(format) {
-  assert_pkg("fst")
-}
-
-assert_format_impl.fst_tbl <- function(format) {
-  assert_pkg("fst")
-  assert_pkg("tibble")
-}
-
-assert_format_impl.fst_dt <- function(format) {
-  assert_pkg("fst")
-  assert_pkg("data.table")
-}
-
-assert_format_impl.diskframe <- function(format) {
-  assert_pkg("disk.frame")
-}
-
-assert_format_impl.keras <- function(format) {
-  assert_pkg("keras") # nocov
-}
-
-assert_format_impl.qs <- function(format) {
-  assert_pkg("qs")
-}
-
-assert_format_impl.rds <- function(format) {
-  stopifnot(getRversion() >= "3.5.0")
-}
-
-assert_format_impl.default <- function(format) {
-  stop(
-    "illegal format ", format, ". Read ",
-    "https://docs.ropensci.org/drake/reference/drake_plan.html#formats",
-    " for legal formats and their system requirements.",
-    call. = FALSE
-  )
 }
 
 config_checks <- function(config) {

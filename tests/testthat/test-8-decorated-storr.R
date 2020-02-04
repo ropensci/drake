@@ -194,7 +194,7 @@ test_with_dir("illegal format", {
   skip_on_cran()
   plan <- drake_plan(y = target("bad format", format = "bad format"))
   expect_error(
-    drake_config(plan),
+    make(plan),
     regexp = "illegal format"
   )
 })

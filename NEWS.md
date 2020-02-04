@@ -4,6 +4,9 @@
 
 * Sanitize internal S3 classes for target storage (#1159, @rsangole).
 
+## Enhancements
+
+* Assert dependencies of formats at the very beginning of `make()`, not in `drake_config()` (#1156). 
 
 # Version 7.10.0
 
