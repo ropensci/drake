@@ -225,6 +225,10 @@ r_drake <- function(source, d_fn, d_args, r_fn, r_args) {
   if ("show" %in% names(formals(r_fn))) {
     r_args$show <- r_args$show %|||% TRUE
   }
+  if ("env" %in% names(formals(r_fn))) {
+    r_args$env <- r_args$env %|||% callr::rcmd_safe_env()
+    r_args$env <- c(r_args$env, PROCESSX_NOTIFY_OLD_SIGCHLD = "true")
+  }
   do.call(r_fn, r_args)
 }
 
