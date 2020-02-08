@@ -31,7 +31,7 @@ refclass_logger <- methods::setRefClass(
   Class = "refclass_logger",
   fields = c("verbose", "file", "spinner"),
   methods = list(
-    minor = function(..., target = character(0)) {
+    log = function(..., target = character(0)) {
       drake_log_file(..., target = target, file = .self$file)
       drake_log_spin(spinner = .self$spinner, verbose = .self$verbose)
       invisible()

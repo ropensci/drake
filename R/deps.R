@@ -86,9 +86,9 @@ deps_target_impl <- function(
   config,
   character_only = FALSE
 ) {
-  config$logger$minor("begin deps_target()", target = target)
+  config$logger$log("begin deps_target()", target = target)
   on.exit(
-    config$logger$minor("end deps_target()", target = target),
+    config$logger$log("end deps_target()", target = target),
     add = TRUE
   )
   if (!character_only) {

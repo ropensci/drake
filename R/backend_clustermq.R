@@ -12,7 +12,7 @@ drake_backend.clustermq <- function(config) {
     n_jobs = config$jobs,
     template = config$template
   )
-  config$logger$minor("set common data")
+  config$logger$log("set common data")
   cmq_set_common_data(config)
   config$counter <- new.env(parent = emptyenv())
   config$counter$remaining <- config$queue$size()
@@ -61,7 +61,7 @@ cmq_set_common_data <- function(config) {
 
 cmq_master <- function(config) {
   on.exit(config$workers$finalize())
-  config$logger$minor("begin scheduling targets")
+  config$logger$log("begin scheduling targets")
   while (config$counter$remaining > 0) {
     cmq_master_iter(config)
   }
@@ -74,7 +74,7 @@ cmq_master_iter <- function(config) {
   msg <- config$workers$receive_data()
   cmq_conclude_build(msg = msg, config = config)
   if (!identical(msg$token, "set_common_data_token")) {
-    config$logger$minor("sending common data")
+    config$logger$log("sending common data")
     config$workers$send_common_data()
   } else if (!config$queue$empty()) {
     cmq_next_target(config)
@@ -206,7 +206,7 @@ cmq_deps_list <- function(target, config) {
 #' @param ht_is_subtarget Internal, part of `config`
 #' @param config A [drake_config()] list.
 cmq_build <- function(target, meta, deps, spec, ht_is_subtarget, config) {
-  config$logger$minor("build on an hpc worker", target = target)
+  config$logger$log("build on an hpc worker", target = target)
   config$spec <- spec
   config$ht_is_subtarget <- ht_is_subtarget
   do_prework(config = config, verbose_packages = FALSE)
@@ -255,7 +255,7 @@ cmq_assign_deps <- function(deps, config) {
 }
 
 cmq_local_build <- function(target, config) {
-  config$logger$minor("build locally", target = target)
+  config$logger$log("build locally", target = target)
   local_build(target, config, downstream = NULL)
   cmq_conclude_target(target = target, config = config)
 }

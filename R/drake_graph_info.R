@@ -166,8 +166,8 @@ drake_graph_info_impl <- function(
 ) {
   assert_pkg("visNetwork")
   assert_config(config)
-  config$logger$minor("begin drake_graph_info()")
-  on.exit(config$logger$minor("end drake_graph_info()"), add = TRUE)
+  config$logger$log("begin drake_graph_info()")
+  on.exit(config$logger$log("end drake_graph_info()"), add = TRUE)
   if (!length(V(config$graph)$name)) {
     return(null_graph())
   }

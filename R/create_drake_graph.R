@@ -22,7 +22,7 @@ create_drake_graph <- function(
 }
 
 cdg_create_edges <- function(args, spec) {
-  args$logger$minor("create graph edges")
+  args$logger$log("create graph edges")
   edges <- lightly_parallelize(
     X = spec,
     FUN = cdg_node_to_edges,
@@ -69,7 +69,7 @@ cdg_node_to_edges <- function(node, args) {
 }
 
 cdg_edges_thru_file_out <- function(edges, args) {
-  args$logger$minor("connect output files")
+  args$logger$log("connect output files")
   file_out <- edges$to[is_encoded_path(edges$to)]
   file_out_edges <- lapply(
     X = file_out,
@@ -83,26 +83,26 @@ cdg_edges_thru_file_out <- function(edges, args) {
 }
 
 cdg_transitive_edges <- function(vertex, edges, args) {
-  args$logger$minor("file_out", target = args$cache$display_keys(vertex))
+  args$logger$log("file_out", target = args$cache$display_keys(vertex))
   from <- unique(edges$from[edges$to == vertex])
   to <- unique(edges$to[edges$from == vertex])
   expand.grid(from = from, to = to, stringsAsFactors = FALSE)
 }
 
 cdg_finalize_graph <- function(edges, targets, args) {
-  args$logger$minor("finalize graph edges")
+  args$logger$log("finalize graph edges")
   file_out <- edges$to[edges$from %in% targets & is_encoded_path(edges$to)]
   to <- union(targets, file_out)
-  args$logger$minor("create igraph")
+  args$logger$log("create igraph")
   graph <- igraph::graph_from_data_frame(edges)
-  args$logger$minor("trim neighborhoods")
+  args$logger$log("trim neighborhoods")
   graph <- nbhd_graph(
     graph = graph,
     vertices = to,
     mode = "in",
     order = igraph::gorder(graph)
   )
-  args$logger$minor("add igraph attributes")
+  args$logger$log("add igraph attributes")
   graph <- igraph::set_vertex_attr(graph, "imported", value = TRUE)
   index <- c(args$plan$target, file_out)
   index <- intersect(index, igraph::V(graph)$name)
@@ -112,7 +112,7 @@ cdg_finalize_graph <- function(edges, targets, args) {
     index = index,
     value = FALSE
   )
-  args$logger$minor("finalize igraph")
+  args$logger$log("finalize igraph")
   igraph::simplify(
     graph,
     remove.loops = TRUE,

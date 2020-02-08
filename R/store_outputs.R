@@ -2,7 +2,7 @@ store_outputs <- function(target, value, meta, config) {
   if (inherits(meta$error, "error")) {
     return()
   }
-  config$logger$minor("store", target = target)
+  config$logger$log("store", target = target)
   store_triggers(target, meta, config)
   meta$name <- target
   store_item(
@@ -261,7 +261,7 @@ log_time <- function(target, meta, config) {
   } else {
     tail <- " (install lubridate to print runtimes in the log)" # nocov
   }
-  config$logger$minor("time", tail, target = target)
+  config$logger$log("time", tail, target = target)
 }
 
 runtime_entry <- function(runtime, target) {

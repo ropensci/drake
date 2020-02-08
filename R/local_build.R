@@ -192,13 +192,13 @@ with_handling <- function(target, meta, config) {
   withCallingHandlers(
     value <- drake_with_call_stack_8a6af5(target = target, config = config),
     warning = function(w) {
-      config$logger$minor(paste("Warning:", w$message), target = target)
+      config$logger$log(paste("Warning:", w$message), target = target)
       warnings <<- c(warnings, w$message)
       invokeRestart("muffleWarning")
     },
     message = function(m) {
       msg <- gsub(pattern = "\n$", replacement = "", x = m$message)
-      config$logger$minor(msg, target = target)
+      config$logger$log(msg, target = target)
       messages <<- c(messages, msg)
       invokeRestart("muffleMessage")
     }
@@ -354,7 +354,7 @@ assign_format <- function(target, value, config) {
   if (drop_format) {
     return(value)
   }
-  config$logger$minor("format", format, target = target)
+  config$logger$log("format", format, target = target)
   out <- list(value = value)
   class(out) <- c(paste0("drake_format_", format), "drake_format")
   sanitize_format(x = out, target = target, config = config)
@@ -377,7 +377,7 @@ sanitize_format.drake_format_fst <- function(x, target, config) { # nolint
       " to a plain data frame."
     )
     warning(msg, call. = FALSE)
-    config$logger$minor(msg, target = target)
+    config$logger$log(msg, target = target)
   }
   x$value <- as.data.frame(x$value)
   x
@@ -393,7 +393,7 @@ sanitize_format.drake_format_fst_tbl <- function(x, target, config) { # nolint
       " to a tibble."
     )
     warning(msg, call. = FALSE)
-    config$logger$minor(msg, target = target)
+    config$logger$log(msg, target = target)
   }
   x$value <- tibble::as_tibble(x$value)
   x
@@ -409,7 +409,7 @@ sanitize_format.drake_format_fst_dt <- function(x, target, config) { # nolint
       " to a data.table object."
     )
     warning(msg, call. = FALSE)
-    config$logger$minor(msg, target = target)
+    config$logger$log(msg, target = target)
   }
   x$value <- data.table::as.data.table(x$value)
   x
@@ -428,7 +428,7 @@ sanitize_format.drake_format_diskframe <- function(x, target, config) { # nolint
       "(say, with as.disk.frame(outdir = drake_tempfile()))."
     )
     warning(msg, call. = FALSE)
-    config$logger$minor(msg, target = target)
+    config$logger$log(msg, target = target)
     x$value <- disk.frame::as.disk.frame(
       df = x$value,
       outdir = config$cache$file_tmp()
@@ -493,7 +493,7 @@ assert_output_files <- function(target, meta, config) {
       target, ":\n",
       multiline_message(missing_files)
     )
-    config$logger$minor(paste("Warning:", msg))
+    config$logger$log(paste("Warning:", msg))
     warning(msg, call. = FALSE)
   }
 }
@@ -535,7 +535,7 @@ handle_build_exceptions <- function(target, meta, config) {
         ")` for details. Error message:\n  ",
         meta$error$message
       )
-      config$logger$minor(msg)
+      config$logger$log(msg)
       unlock_environment(config$envir)
       stop(msg, call. = FALSE)
     }

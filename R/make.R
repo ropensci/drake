@@ -234,8 +234,8 @@ make <- function(
 #' @description Not a user-side function.
 #' @param config a [drake_config()] object.
 make_impl <- function(config) {
-  config$logger$minor("begin make()")
-  on.exit(config$logger$minor("end make()"), add = TRUE)
+  config$logger$log("begin make()")
+  on.exit(config$logger$log("end make()"), add = TRUE)
   runtime_checks(config = config)
   if (config$lock_cache) {
     config$cache$lock()
@@ -315,7 +315,7 @@ run_external_backend <- function(config) {
 
 outdated_subgraph <- function(config) {
   outdated <- outdated_impl(config, do_prework = FALSE, make_imports = FALSE)
-  config$logger$minor("isolate oudated targets")
+  config$logger$log("isolate oudated targets")
   igraph::induced_subgraph(graph = config$graph, vids = outdated)
 }
 
