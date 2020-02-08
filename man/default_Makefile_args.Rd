@@ -13,8 +13,9 @@ default_Makefile_args(jobs, verbose)
 \item{verbose}{Integer, control printing to the console/terminal.
 \itemize{
 \item \code{0}: print nothing.
-\item \code{1}: print targets, retries, and failures.
-\item \code{2}: also show a spinner when preprocessing tasks are underway.
+\item \code{1}: print target-by-target messages as \code{\link[=make]{make()}} progresses.
+\item \code{2}: show a progress bar to track how many targets are
+done so far.
 }}
 }
 \value{

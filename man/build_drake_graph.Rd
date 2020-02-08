@@ -47,8 +47,9 @@ then reproducibly tracked as dependencies.}
 \item{verbose}{Integer, control printing to the console/terminal.
 \itemize{
 \item \code{0}: print nothing.
-\item \code{1}: print targets, retries, and failures.
-\item \code{2}: also show a spinner when preprocessing tasks are underway.
+\item \code{1}: print target-by-target messages as \code{\link[=make]{make()}} progresses.
+\item \code{2}: show a progress bar to track how many targets are
+done so far.
 }}
 
 \item{jobs}{Maximum number of parallel workers for processing the targets.
@@ -57,19 +58,7 @@ to help decide on an appropriate number of jobs.
 For details, visit
 \url{https://books.ropensci.org/drake/time.html}.}
 
-\item{console_log_file}{Optional character scalar of a file name or
-connection object (such as \code{stdout()}) to dump maximally verbose
-log information for \code{\link[=make]{make()}} and other functions (all functions that
-accept a \code{config} argument, plus \code{drake_config()}).
-If you choose to use a text file as the console log,
-it will persist over multiple function calls
-until you delete it manually.
-Fields in each row the log file, from left to right:
-- The node name (short host name) of the
-computer (from \code{Sys.info()["nodename"]}).
-- The process ID (from \code{Sys.getpid()}).
-- A timestamp with the date and time (in microseconds).
-- A brief description of what \code{drake} was doing.\verb{ The fields are separated by pipe symbols (}"|"`).}
+\item{console_log_file}{Deprecated in favor of \code{log_make}.}
 
 \item{trigger}{Name of the trigger to apply to all targets.
 Ignored if \code{plan} has a \code{trigger} column.

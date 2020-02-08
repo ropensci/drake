@@ -43,7 +43,7 @@ create_drake_spec <- function(
 
 # https://github.com/ropensci/drake/issues/887 # nolint
 cds_set_knitr_files <- function(args, spec) {
-  args$logger$minor("set knitr files")
+  args$logger$disk("set knitr files")
   knitr_files <- lightly_parallelize(
     X = spec,
     FUN = function(x) {
@@ -60,7 +60,7 @@ cds_set_knitr_files <- function(args, spec) {
 }
 
 cds_get_knitr_hash <- function(args, spec) {
-  args$logger$minor("get knitr hash")
+  args$logger$disk("get knitr hash")
   if (!args$cache$exists(key = "knitr", namespace = "memoize")) {
     out <- args$cache$digest("", serialize = FALSE)
     return(out)
@@ -88,7 +88,7 @@ cds_imports_kernel <- function(args, imports) {
 }
 
 cds_prepare_imports <- function(args) {
-  args$logger$minor("analyze environment")
+  args$logger$disk("analyze environment")
   imports <- as.list(args$envir)
   cds_unload_conflicts(
     imports = names(imports),
@@ -103,18 +103,13 @@ cds_prepare_imports <- function(args) {
 cds_unload_conflicts <- function(imports, targets, envir, logger) {
   common <- intersect(imports, targets)
   if (length(common)) {
-    logger$major(
-      "unload",
-      "targets from environment:\n",
-      multiline_message(common),
-      sep = ""
-    )
+    logger$term("unload", length(common), "targets from environment")
   }
   remove(list = common, envir = envir)
 }
 
 cds_analyze_imports <- function(args, imports) {
-  args$logger$minor("analyze imports")
+  args$logger$disk("analyze imports")
   names <-  names(imports)
   out <- lightly_parallelize(
     X = seq_along(imports),
@@ -143,7 +138,7 @@ cdl_analyze_import <- function(index, imports, names, args) {
 }
 
 cds_analyze_commands <- function(args) {
-  args$logger$minor("analyze commands")
+  args$logger$disk("analyze commands")
   args$plan$imported <- FALSE
   if ("trigger" %in% colnames(args$plan)) {
     args$plan$trigger <- lapply(

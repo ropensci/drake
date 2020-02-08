@@ -111,7 +111,7 @@ test_with_dir("supply the source explicitly", {
     c(
       "library(drake)",
       "load_mtcars_example()",
-      "drake_config(my_plan, console_log_file = \"log.txt\")"
+      "drake_config(my_plan, log_make = \"log.txt\")"
     ),
     "my_script.R"
   )
@@ -144,7 +144,7 @@ test_with_dir("r_make() loads packages and sets options", {
       "library(abind)",
       "options(drake_abind_opt = 2L)",
       "plan <- drake_plan(x = abind(1L, getOption(\"drake_abind_opt\")))",
-      "drake_config(plan, console_log_file = \"log.txt\")"
+      "drake_config(plan, log_make = \"log.txt\")"
     ),
     default_drake_source
   )

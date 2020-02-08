@@ -35,6 +35,8 @@ drake_tip_ <- function() {
 .onLoad <- function(libname, pkgname) {
   warn_rdata()
   invisible()
+  .pkg_envir[["has_cli"]] <- requireNamespace("cli", quietly = TRUE)
+  .pkg_envir[["has_progress"]] <- requireNamespace("progress", quietly = TRUE)
   .pkg_envir[["on_windows"]] <- this_os() == "windows"
 }
 

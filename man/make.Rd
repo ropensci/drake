@@ -61,7 +61,8 @@ make(
   max_expand = NULL,
   log_build_times = TRUE,
   format = NULL,
-  lock_cache = TRUE
+  lock_cache = TRUE,
+  log_make = NULL
 )
 }
 \arguments{
@@ -95,8 +96,9 @@ then reproducibly tracked as dependencies.}
 \item{verbose}{Integer, control printing to the console/terminal.
 \itemize{
 \item \code{0}: print nothing.
-\item \code{1}: print targets, retries, and failures.
-\item \code{2}: also show a spinner when preprocessing tasks are underway.
+\item \code{1}: print target-by-target messages as \code{\link[=make]{make()}} progresses.
+\item \code{2}: show a progress bar to track how many targets are
+done so far.
 }}
 
 \item{hook}{Deprecated.}
@@ -315,19 +317,7 @@ if targets fail.}
 
 \item{makefile_path}{Deprecated.}
 
-\item{console_log_file}{Optional character scalar of a file name or
-connection object (such as \code{stdout()}) to dump maximally verbose
-log information for \code{\link[=make]{make()}} and other functions (all functions that
-accept a \code{config} argument, plus \code{drake_config()}).
-If you choose to use a text file as the console log,
-it will persist over multiple function calls
-until you delete it manually.
-Fields in each row the log file, from left to right:
-- The node name (short host name) of the
-computer (from \code{Sys.info()["nodename"]}).
-- The process ID (from \code{Sys.getpid()}).
-- A timestamp with the date and time (in microseconds).
-- A brief description of what \code{drake} was doing.\verb{ The fields are separated by pipe symbols (}"|"`).}
+\item{console_log_file}{Deprecated in favor of \code{log_make}.}
 
 \item{ensure_workers}{Deprecated.}
 
@@ -544,6 +534,20 @@ and you will need to manually unlock it with
 \code{drake::drake_cache("xyz")$unlock()}. Repeatedly unlocking the cache
 by hand is annoying, and \code{lock_cache = FALSE} prevents the cache
 from locking in the first place.}
+
+\item{log_make}{Optional character scalar of a file name or
+connection object (such as \code{stdout()}) to dump maximally verbose
+log information for \code{\link[=make]{make()}} and other functions (all functions that
+accept a \code{config} argument, plus \code{drake_config()}).
+If you choose to use a text file as the console log,
+it will persist over multiple function calls
+until you delete it manually.
+Fields in each row the log file, from left to right:
+- The node name (short host name) of the
+computer (from \code{Sys.info()["nodename"]}).
+- The process ID (from \code{Sys.getpid()}).
+- A timestamp with the date and time (in microseconds).
+- A brief description of what \code{drake} was doing.\verb{ The fields are separated by pipe symbols (}"|"`).}
 }
 \value{
 nothing

@@ -164,7 +164,8 @@ make <- function(
   max_expand = NULL,
   log_build_times = TRUE,
   format = NULL,
-  lock_cache = TRUE
+  lock_cache = TRUE,
+  log_make = NULL
 ) {
   force(envir)
   deprecate_arg(config, "config")
@@ -223,7 +224,8 @@ make <- function(
     max_expand = max_expand,
     log_build_times = log_build_times,
     format = format,
-    lock_cache = lock_cache
+    lock_cache = lock_cache,
+    log_make = log_make
   )
   make_impl(config)
 }
@@ -234,8 +236,8 @@ make <- function(
 #' @description Not a user-side function.
 #' @param config a [drake_config()] object.
 make_impl <- function(config) {
-  config$logger$minor("begin make()")
-  on.exit(config$logger$minor("end make()"), add = TRUE)
+  config$logger$disk("begin make()")
+  on.exit(config$logger$disk("end make()"), add = TRUE)
   runtime_checks(config = config)
   if (config$lock_cache) {
     config$cache$lock()
@@ -281,6 +283,8 @@ process_targets <- function(config) {
   } else {
     run_external_backend(config)
   }
+  config$logger$terminate_progress()
+  invisible()
 }
 
 run_native_backend <- function(config) {
@@ -288,11 +292,13 @@ run_native_backend <- function(config) {
     config$parallelism,
     c("loop", "clustermq", "future")
   )
-  if (igraph::gorder(config$envir_graph$graph)) {
+  order <- igraph::gorder(config$envir_graph$graph)
+  if (order) {
+    config$logger$set_progress_total(order)
     class(config) <- c(class(config), parallelism)
     drake_backend(config)
   } else {
-    config$logger$major("All targets are already up to date.", color = NULL)
+    config$logger$up_to_date()
   }
 }
 
@@ -315,7 +321,7 @@ run_external_backend <- function(config) {
 
 outdated_subgraph <- function(config) {
   outdated <- outdated_impl(config, do_prework = FALSE, make_imports = FALSE)
-  config$logger$minor("isolate oudated targets")
+  config$logger$disk("isolate oudated targets")
   igraph::induced_subgraph(graph = config$graph, vids = outdated)
 }
 
@@ -604,10 +610,6 @@ r_make_message <- function(force) {
     )
   )
   if (force || (r_make_message && sample.int(n = 10, size = 1) < 1.5)) {
-    message(
-      "In drake, consider r_make() instead of make(). ",
-      "r_make() runs make() in a fresh R session ",
-      "for enhanced robustness and reproducibility."
-    )
+    cli_msg("Consider drake::r_make() to improve robustness.")
   }
 }

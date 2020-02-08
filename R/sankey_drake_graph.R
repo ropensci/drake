@@ -93,8 +93,6 @@ sankey_drake_graph_impl <- function(
     clusters = clusters,
     show_output_files = show_output_files
   )
-  config$logger$minor("begin sankey_drake_graph()")
-  on.exit(config$logger$minor("end sankey_drake_graph()"), add = TRUE)
   render_sankey_drake_graph(
     graph_info,
     file = file,

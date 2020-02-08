@@ -91,7 +91,7 @@ discard_targets <- function(discard_these, target, config) {
   if (!length(discard_these)) {
     return()
   }
-  config$logger$minor("unload", discard_these, target = target)
+  config$logger$disk("unload", discard_these, target = target)
   rm(list = discard_these, envir = config$envir_targets, inherits = FALSE)
   config$envir_loaded$targets <- setdiff(
     config$envir_loaded$targets,
@@ -121,7 +121,7 @@ clear_envir_subtargets <- function(target, config) {
 }
 
 clear_envir_targets <- function(target, config) {
-  config$logger$minor("clear target envir", target = target)
+  config$logger$disk("clear target envir", target = target)
   rm(list = config$envir_loaded$targets, envir = config$envir_targets)
   rm(list = config$envir_loaded$dynamic, envir = config$envir_dynamic)
   config$envir_loaded$targets <- character(0)
@@ -143,7 +143,7 @@ try_load_deps <- function(targets, config, jobs = 1) {
     return()
   }
   if (config$lazy_load == "eager") {
-    config$logger$minor("load", targets)
+    config$logger$disk("load", targets)
   }
   lapply(
     X = targets,

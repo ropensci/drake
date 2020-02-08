@@ -2,7 +2,7 @@ store_outputs <- function(target, value, meta, config) {
   if (inherits(meta$error, "error")) {
     return()
   }
-  config$logger$minor("store", target = target)
+  config$logger$disk("store", target = target)
   store_triggers(target, meta, config)
   meta$name <- target
   store_item(
@@ -257,11 +257,11 @@ log_time <- function(target, meta, config) {
   if (requireNamespace("lubridate", quietly = TRUE)) {
     exec <- round(lubridate::dseconds(meta$time_command$elapsed), 3)
     total <- round(lubridate::dseconds(meta$time_build$elapsed), 3)
-    tail <- paste("", exec, "|", total, " (exec | total)")
+    tail <- paste("", exec, ":", total, " (exec : total)")
   } else {
     tail <- " (install lubridate to print runtimes in the log)" # nocov
   }
-  config$logger$minor("time", tail, target = target)
+  config$logger$disk("time", tail, target = target)
 }
 
 runtime_entry <- function(runtime, target) {

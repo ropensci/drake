@@ -74,8 +74,6 @@ predict_runtime_impl <- function(
   default_time = 0,
   warn = TRUE
 ) {
-  config$logger$minor("begin predict_runtime()")
-  on.exit(config$logger$minor("end predict_runtime()"), add = TRUE)
   worker_prediction_info(
     config = config,
     targets = targets_predict,
@@ -187,8 +185,6 @@ predict_workers_impl <- function(
   default_time = 0,
   warn = TRUE
 ) {
-  config$logger$minor("begin predict_workers()")
-  on.exit(config$logger$minor("end predict_workers()"), add = TRUE)
   worker_prediction_info(
     config,
     targets = targets_predict,
@@ -214,6 +210,7 @@ worker_prediction_info <- function(
   warn = TRUE
 ) {
   assert_config(config)
+  config$logger$file <- NULL
   deprecate_targets_only(targets_only) # 2019-01-03 # nolint
   assumptions <- timing_assumptions(
     config = config,

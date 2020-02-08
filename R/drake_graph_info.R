@@ -166,8 +166,6 @@ drake_graph_info_impl <- function(
 ) {
   assert_pkg("visNetwork")
   assert_config(config)
-  config$logger$minor("begin drake_graph_info()")
-  on.exit(config$logger$minor("end drake_graph_info()"), add = TRUE)
   if (!length(V(config$graph)$name)) {
     return(null_graph())
   }
@@ -598,6 +596,16 @@ node_color <- Vectorize(function(x) {
 },
 "x", USE.NAMES = FALSE)
 
+col2hex <- function(cname) {
+  assert_pkg("grDevices")
+  col_mat <- grDevices::col2rgb(cname)
+  grDevices::rgb(
+    red = col_mat[1, ] / 255,
+    green = col_mat[2, ] / 255,
+    blue = col_mat[3, ] / 255
+  )
+}
+
 node_shape <- Vectorize(function(x) {
   switch(
     x,
@@ -734,6 +742,14 @@ style_hover_text <- function(x) {
   x <- gsub(pattern = "\n", replacement = "<br>", x = x)
   paste0(x, collapse = "<br>")
 }
+
+crop_text <- Vectorize(function(x, width = getOption("width")) {
+  if (nchar(x) > width) {
+    x <- paste0(substr(x, 1, width - 3), "...")
+  }
+  x
+},
+"x", USE.NAMES = FALSE)
 
 hover_lines <- 10
 hover_width <- 49

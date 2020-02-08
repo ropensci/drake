@@ -55,26 +55,28 @@ test_with_dir("logger", {
   # testthat suppresses messages,
   # so we need to inspect the console output manually.
   files <- list.files()
-  x <- logger(verbose = 0L, file = NULL)
-  x$major("abc") # Should be empty.
-  x$minor("abc") # Should be empty.
-  x <- logger(verbose = 1L, file = NULL)
-  x$major("abc") # Should show "abc".
-  x$minor("abc") # Should be empty.
-  x <- logger(verbose = 2L, file = NULL)
-  x$major("abc") # Should show "abc".
-  x$minor("abc") # Should show the spinner.
+  x <- refclass_logger$new(verbose = 0L, file = NULL)
+  x$disk("abc") # Should be empty.
+  x <- refclass_logger$new(verbose = 1L, file = NULL)
+  x$disk("abc") # Should be empty.
+  x <- refclass_logger$new(verbose = 2L, file = NULL)
+  x$disk("abc") # Should be empty.
   expect_equal(files, list.files())
+  x$term("abc", "def") # Should say "abc def"
   for (verbose in c(0L, 1L, 2L)) {
     tmp <- tempfile()
-    x <- logger(verbose = 0L, file = tmp)
+    x <- refclass_logger$new(verbose = verbose, file = tmp)
     expect_equal(x$file, tmp)
     expect_false(file.exists(tmp))
-    x$major("abc")
+    x$disk("abc")
     expect_equal(length(readLines(tmp)), 1L)
-    x$minor("abc")
+    x$target("abc", "target") # Should say "target abc"
     expect_equal(length(readLines(tmp)), 2L)
   }
+  # Retries need a special test since the logger is muted
+  # in those tests.
+  plan <- drake_plan(x = target(stop(1), retries = 3))
+  expect_error(make(plan, verbose = 1L))
 })
 
 if (FALSE) {
@@ -114,15 +116,15 @@ test_with_dir("time stamps and large files", {
   plan <- drake_plan(x = file_in(!!file_large))
   cache <- storr::storr_rds(tempfile())
   config <- drake_config(plan, cache = cache)
-  make(plan, cache = cache, console_log_file = log1) # should be a little slow
+  make(plan, cache = cache, log_make = log1) # should be a little slow
   expect_equal(justbuilt(config), "x")
-  make(plan, cache = cache, console_log_file = log2) # should be quick
+  make(plan, cache = cache, log_make = log2) # should be quick
   expect_equal(justbuilt(config), character(0))
   tmp <- file.append(file_large, file_csv)
-  make(plan, cache = cache, console_log_file = log3) # should be a little slow
+  make(plan, cache = cache, log_make = log3) # should be a little slow
   expect_equal(justbuilt(config), "x")
   system2("touch", file_large)
-  make(plan, cache = cache, console_log_file = log4) # should be a little slow
+  make(plan, cache = cache, log_make = log4) # should be a little slow
   expect_equal(justbuilt(config), character(0))
   # Now, compare the times stamps on the logs.
   # Make sure the imported file takes a long time to process the first time
@@ -383,6 +385,36 @@ test_with_dir("Output from the callr RStudio addins", {
   skip_if_not_installed("visNetwork")
   graph <- rs_addin_r_vis_drake_graph(r_args) # Should show a graph.
   expect_true(inherits(graph, "visNetwork"))
+})
+
+test_with_dir("progress bars", {
+  skip_on_cran()
+  # Needs visual inspection at every step
+  plan <- drake_plan(
+    x = target(
+      Sys.sleep(.1),
+      transform = map(y = !!seq_len(40))
+    )
+  )
+  make(plan, verbose = 2)
+  plan <- drake_plan(
+    x = target(
+      Sys.sleep(.1),
+      transform = map(y = !!seq_len(40))
+    ),
+    w = seq_len(40),
+    z = target(
+      Sys.sleep(.1),
+      dynamic = map(y = w)
+    )
+  )
+  make(plan, verbose = 2)
+  clean()
+  make(plan, verbose = 2, parallelism = "future")
+  skip_on_os("windows")
+  clean()
+  options(clustermq.scheduler = "multicore")
+  make(plan, verbose = 2, parallelism = "clustermq")
 })
 
 }

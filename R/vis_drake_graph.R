@@ -113,8 +113,6 @@ vis_drake_graph_impl <- function(
     hover = hover,
     on_select_col = on_select_col
   )
-  config$logger$minor("begin vis_drake_graph()")
-  on.exit(config$logger$minor("end vis_drake_graph()"), add = TRUE)
   if (is.null(main)) {
     main <- graph_info$default_title
   }

@@ -77,8 +77,6 @@ recoverable_impl <- function(
   make_imports = TRUE,
   do_prework = TRUE
 ) {
-  config$logger$minor("begin recoverable()")
-  on.exit(config$logger$minor("end recoverable()"), add = TRUE)
   assert_config(config)
   if (make_imports && config$lock_cache) {
     config$cache$lock()
@@ -165,9 +163,10 @@ outdated_impl <- function(
   make_imports = TRUE,
   do_prework = TRUE
 ) {
-  config$logger$minor("begin outdated()")
-  on.exit(config$logger$minor("end outdated()"), add = TRUE)
   assert_config(config)
+  if (!identical(config$running_make, TRUE)) {
+    config$logger$file <- NULL
+  }
   if (make_imports && config$lock_cache) {
     config$cache$lock()
     on.exit(config$cache$unlock(), add = TRUE)
@@ -181,7 +180,6 @@ outdated_impl <- function(
     process_imports(config = config)
   }
   from <- first_outdated(config = config)
-  config$logger$minor("find downstream outdated targets")
   to <- downstream_nodes(config$graph, from)
   out <- sort(unique(as.character(c(from, to))))
   out[!is_encoded_path(out)]
@@ -202,7 +200,6 @@ first_outdated <- function(config) {
 }
 
 stage_outdated <- function(envir, config) {
-  config$logger$minor("find more outdated targets")
   new_leaves <- setdiff(leaf_nodes(envir$graph), envir$outdated)
   do_build <- lightly_parallelize(
     X = new_leaves,
@@ -265,8 +262,6 @@ missed <- function(..., config = NULL) {
 #' @description Not a user-side function.
 #' @param config A [drake_config()] object.
 missed_impl <- function(config) {
-  config$logger$minor("begin missed()")
-  on.exit(config$logger$minor("end missed()"), add = TRUE)
   assert_config(config)
   imports <- all_imports(config)
   is_missing <- lightly_parallelize(

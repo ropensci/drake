@@ -50,11 +50,6 @@ drake_build_impl <- function(
   character_only = FALSE,
   replace = FALSE
 ) {
-  config$logger$minor("begin drake_build()", target = target)
-  on.exit(
-    config$logger$minor("end drake_build()", target = target),
-    add = TRUE
-  )
   deprecate_arg(meta)
   if (!character_only) {
     target <- as.character(substitute(target))

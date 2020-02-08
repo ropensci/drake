@@ -138,11 +138,11 @@ test_with_dir("can gracefully conclude a crashed worker", {
   }
 })
 
-test_with_dir("ft_skip_target()", {
+test_with_dir("ft_no_target()", {
   skip_on_cran()
   con <- dbug()
   con$sleeps <- new.env(parent = emptyenv())
   con$sleeps$count <- 1L
-  ft_skip_target(con)
+  ft_no_target(con)
   expect_equal(con$sleeps$count, 2L)
 })

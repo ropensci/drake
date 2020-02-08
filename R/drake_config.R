@@ -46,8 +46,9 @@
 #'
 #' @param verbose Integer, control printing to the console/terminal.
 #'   - `0`: print nothing.
-#'   - `1`: print targets, retries, and failures.
-#'   - `2`: also show a spinner when preprocessing tasks are underway.
+#'   - `1`: print target-by-target messages as [make()] progresses.
+#'   - `2`: show a progress bar to track how many targets are
+#'     done so far.
 #'
 #' @param hook Deprecated.
 #'
@@ -305,7 +306,9 @@
 #'
 #' @param makefile_path Deprecated.
 #'
-#' @param console_log_file Optional character scalar of a file name or
+#' @param console_log_file Deprecated in favor of `log_make`.
+#'
+#' @param log_make Optional character scalar of a file name or
 #'   connection object (such as `stdout()`) to dump maximally verbose
 #'   log information for [make()] and other functions (all functions that
 #'   accept a `config` argument, plus `drake_config()`).
@@ -555,10 +558,11 @@ drake_config <- function(
   max_expand = NULL,
   log_build_times = TRUE,
   format = NULL,
-  lock_cache = TRUE
+  lock_cache = TRUE,
+  log_make = NULL
 ) {
-  logger <- logger(verbose = verbose, file = console_log_file)
-  logger$minor("begin drake_config()")
+  logger <- logger(verbose = verbose, file = log_make)
+  logger$disk("begin drake_config()")
   deprecate_fetch_cache(fetch_cache)
   deprecate_arg(hook, "hook") # 2018-10-25 # nolint
   # 2018-11-01 # nolint
@@ -575,6 +579,7 @@ drake_config <- function(
   deprecate_arg(prepend, "prepend")
   deprecate_arg(makefile_path, "makefile_path")
   deprecate_arg(layout, "layout", "spec") # 2019-12-15
+  deprecate_arg(console_log_file, "console_log_file", "log_make") # 2020-02-08
   session_info <- resolve_session_info(session_info)
   memory_strategy <- match.arg(memory_strategy, choices = memory_strategies())
   if (memory_strategy == "memory") {
@@ -604,7 +609,7 @@ drake_config <- function(
   }
   cache <- decorate_storr(cache)
   cache$set_history(history)
-  logger$minor("cache", cache$path)
+  logger$disk("cache", cache$path)
   seed <- choose_seed(supplied = seed, cache = cache)
   if (identical(force, TRUE)) {
     drake_set_session_info(cache = cache, full = session_info)
@@ -691,7 +696,7 @@ drake_config <- function(
   )
   class(out) <- c("drake_config", "drake")
   config_checks(out)
-  logger$minor("end drake_config()")
+  logger$disk("end drake_config()")
   out
 }
 
