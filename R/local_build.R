@@ -493,8 +493,8 @@ handle_build_exceptions <- function(target, meta, config) {
     )
   }
   if (length(meta$messages) && config$logger$verbose) {
-    message(
-      "Target ", target, " messages:\n",
+    cli_msg(
+      "target ", target, " messages:\n",
       multiline_message(meta$messages)
     )
   }

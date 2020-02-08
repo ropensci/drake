@@ -44,7 +44,7 @@ refclass_logger <- methods::setRefClass(
       msg <- "All targets are already up to date."
       drake_log_file(file = .self$file, msg)
       if (.self$verbose >= 1L) {
-        cli_msg(msg, cli_fun = cli::cli_alert_success)
+        cli_msg(msg, cli_sym = cli::col_green(cli::symbol$tick))
       }
     },
     progress = function() {
@@ -90,9 +90,9 @@ drake_log_file <- function(..., target = character(0), file) {
   invisible()
 }
 
-cli_msg <- function(..., cli_fun = cli::cli_alert_info) {
+cli_msg <- function(..., cli_sym = cli::symbol$info) {
   if (.pkg_envir$has_cli) {
-    cli_fun(crop_text(paste(...), width = getOption("width") - 2L))
+    message(crop_text(paste(cli_sym, ...), width = getOption("width") - 2L))
   } else {
     message(crop_text(paste(...))) # nocov
   }
