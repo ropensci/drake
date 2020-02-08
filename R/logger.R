@@ -90,7 +90,7 @@ drake_log_file <- function(..., target = character(0), file) {
   invisible()
 }
 
-cli_msg <- function(..., cli_sym = cli::symbol$info) {
+cli_msg <- function(..., cli_sym = cli::col_blue(cli::symbol$info)) {
   if (.pkg_envir$has_cli) {
     message(crop_text(paste(cli_sym, ...), width = getOption("width") - 2L))
   } else {

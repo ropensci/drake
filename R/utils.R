@@ -183,12 +183,12 @@ random_tempdir <- function() {
   dir
 }
 
-multiline_message <- function(x) {
+multiline_message <- function(x, indent = "  ") {
   n <- 30
   if (length(x) > n) {
     x <- c(x[1:(n - 1)], "...")
   }
-  x <- paste0("  ", x)
+  x <- paste0(indent, x)
   paste(x, collapse = "\n")
 }
 
