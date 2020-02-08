@@ -103,7 +103,7 @@ cds_prepare_imports <- function(args) {
 cds_unload_conflicts <- function(imports, targets, envir, logger) {
   common <- intersect(imports, targets)
   if (length(common)) {
-    logger$major(
+    message(
       "unload",
       "targets from environment:\n",
       multiline_message(common),
