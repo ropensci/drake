@@ -50,7 +50,7 @@ refclass_logger <- methods::setRefClass(
     progress = function() {
       pb <- .self$progress_bar
       .self$progress_index <- .self$progress_index + 1L
-      if (!is.null(pb)) {
+      if (!is.null(pb) && .self$verbose == 2L) {
         ratio <- min(1, .self$progress_index / .self$progress_total)
         pb$finished <- FALSE
         pb$update(ratio = ratio)

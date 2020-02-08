@@ -6,7 +6,10 @@
 
 ## Enhancements
 
-* Assert dependencies of formats at the very beginning of `make()`, not in `drake_config()` (#1156). 
+* Assert dependencies of formats at the very beginning of `make()`, not in `drake_config()` (#1156).
+* In `make(verbose = 2)`, remove the spinner and use a progress bar to track how many targets are done so far.
+* Reduce logging of utility functions.
+* Improve the aesthetics of console messages using `cli` (optional package).
 
 # Version 7.10.0
 
