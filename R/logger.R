@@ -144,7 +144,7 @@ target_msg.retry <- function(target) {
 
 target_msg.subtarget <- function(target) {
   symbol <- cli::col_green(cli::symbol$pointer)
-  msg <- paste(symbol, "target", target)
+  msg <- paste(symbol, "subtarget", target)
   message(msg)
 }
 

@@ -73,6 +73,10 @@ test_with_dir("logger", {
     x$target("abc", "target") # Should say "target abc"
     expect_equal(length(readLines(tmp)), 2L)
   }
+  # Retries need a special test since the logger is muted
+  # in those tests.
+  plan <- drake_plan(x = target(stop(1), retries = 3))
+  expect_error(make(plan, verbose = 1L))
 })
 
 if (FALSE) {
