@@ -26,15 +26,15 @@ test_with_dir("console to file", {
   tmp <- capture.output({
       make(
         my_plan, cache = cache, verbose = 1L, session_info = FALSE,
-        console_log_file = "log.txt"
+        log_make = "log.txt"
       )
       make(
         my_plan, cache = cache, verbose = 1L, session_info = FALSE,
-        console_log_file = "log.txt"
+        log_make = "log.txt"
       )
       make(
         my_plan, cache = cache, verbose = 1L, session_info = FALSE,
-        trigger = trigger(condition = TRUE), console_log_file = "log.txt"
+        trigger = trigger(condition = TRUE), log_make = "log.txt"
       )
     },
     type = "message"
@@ -71,7 +71,7 @@ test_with_dir("drake_warning() and drake_error()", {
   expect_true(any(grepl("some_error", as.character(unlist(o$error$calls)))))
   expect_false(file.exists("log.txt"))
   expect_error(expect_warning(make(
-    plan, console_log_file = "log.txt",
+    plan, log_make = "log.txt",
     cache = storr::storr_environment(),
     session_info = FALSE
   )))

@@ -112,15 +112,15 @@ test_with_dir("time stamps and large files", {
   plan <- drake_plan(x = file_in(!!file_large))
   cache <- storr::storr_rds(tempfile())
   config <- drake_config(plan, cache = cache)
-  make(plan, cache = cache, console_log_file = log1) # should be a little slow
+  make(plan, cache = cache, log_make = log1) # should be a little slow
   expect_equal(justbuilt(config), "x")
-  make(plan, cache = cache, console_log_file = log2) # should be quick
+  make(plan, cache = cache, log_make = log2) # should be quick
   expect_equal(justbuilt(config), character(0))
   tmp <- file.append(file_large, file_csv)
-  make(plan, cache = cache, console_log_file = log3) # should be a little slow
+  make(plan, cache = cache, log_make = log3) # should be a little slow
   expect_equal(justbuilt(config), "x")
   system2("touch", file_large)
-  make(plan, cache = cache, console_log_file = log4) # should be a little slow
+  make(plan, cache = cache, log_make = log4) # should be a little slow
   expect_equal(justbuilt(config), character(0))
   # Now, compare the times stamps on the logs.
   # Make sure the imported file takes a long time to process the first time

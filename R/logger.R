@@ -92,9 +92,9 @@ drake_log_file <- function(..., target = character(0), file) {
 
 cli_msg <- function(..., cli_sym = cli::col_blue(cli::symbol$info)) {
   if (.pkg_envir$has_cli) {
-    message(crop_text(paste(cli_sym, ...), width = getOption("width") - 2L))
+    message(paste(cli_sym, ...))
   } else {
-    message(crop_text(paste(...))) # nocov
+    message(paste(...)) # nocov
   }
 }
 
@@ -105,15 +105,6 @@ target_msg <- function(target) {
     message(paste(class(target), target)) # nocov
   }
 }
-
-crop_text <- Vectorize(function(x, width = getOption("width")) {
-  if (nchar(x) > width) {
-    x <- paste0(substr(x, 1, width - 3), "...")
-  }
-  x
-},
-"x", USE.NAMES = FALSE)
-
 
 target_msg.aggregate <- function(target) {
   symbol <- cli::col_green(cli::symbol$stop)

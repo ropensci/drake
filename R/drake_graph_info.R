@@ -743,6 +743,14 @@ style_hover_text <- function(x) {
   paste0(x, collapse = "<br>")
 }
 
+crop_text <- Vectorize(function(x, width = getOption("width")) {
+  if (nchar(x) > width) {
+    x <- paste0(substr(x, 1, width - 3), "...")
+  }
+  x
+},
+"x", USE.NAMES = FALSE)
+
 hover_lines <- 10
 hover_width <- 49
 

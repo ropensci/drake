@@ -164,7 +164,8 @@ make <- function(
   max_expand = NULL,
   log_build_times = TRUE,
   format = NULL,
-  lock_cache = TRUE
+  lock_cache = TRUE,
+  log_make = NULL
 ) {
   force(envir)
   deprecate_arg(config, "config")
@@ -223,7 +224,8 @@ make <- function(
     max_expand = max_expand,
     log_build_times = log_build_times,
     format = format,
-    lock_cache = lock_cache
+    lock_cache = lock_cache,
+    log_make = log_make
   )
   make_impl(config)
 }

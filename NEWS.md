@@ -10,6 +10,7 @@
 * In `make(verbose = 2)`, remove the spinner and use a progress bar to track how many targets are done so far.
 * Reduce logging of utility functions.
 * Improve the aesthetics of console messages using `cli` (optional package).
+* Deprecate `console_log_file` in favor of `log_make` as an argument to `make()` and `drake_config()`.
 
 # Version 7.10.0
 
