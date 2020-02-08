@@ -558,7 +558,7 @@ drake_config <- function(
   lock_cache = TRUE
 ) {
   logger <- logger(verbose = verbose, file = console_log_file)
-  logger$log("begin drake_config()")
+  logger$disk("begin drake_config()")
   deprecate_fetch_cache(fetch_cache)
   deprecate_arg(hook, "hook") # 2018-10-25 # nolint
   # 2018-11-01 # nolint
@@ -604,7 +604,7 @@ drake_config <- function(
   }
   cache <- decorate_storr(cache)
   cache$set_history(history)
-  logger$log("cache", cache$path)
+  logger$disk("cache", cache$path)
   seed <- choose_seed(supplied = seed, cache = cache)
   if (identical(force, TRUE)) {
     drake_set_session_info(cache = cache, full = session_info)
@@ -691,7 +691,7 @@ drake_config <- function(
   )
   class(out) <- c("drake_config", "drake")
   config_checks(out)
-  logger$log("end drake_config()")
+  logger$disk("end drake_config()")
   out
 }
 

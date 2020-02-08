@@ -54,7 +54,7 @@ ft_build_target <- function(target, id, running, protect, config) {
 }
 
 future_local_build <- function(target, protect, config) {
-  config$logger$log("local target", target = target)
+  config$logger$disk("local target", target = target)
   local_build(target, config, downstream = protect)
   decrease_revdep_keys(config$queue, target, config)
 }
@@ -165,7 +165,7 @@ future_build <- function(
   ht_is_subtarget,
   protect
 ) {
-  config$logger$log("build on an hpc worker", target = target)
+  config$logger$disk("build on an hpc worker", target = target)
   config$spec <- spec
   config$ht_is_subtarget <- ht_is_subtarget
   caching <- hpc_caching(target, config)

@@ -97,10 +97,6 @@ test_with_dir("Sankey diagram runs", {
 
 test_with_dir("colors and shapes", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_is(text_color("target"), "character")
-  expect_is(text_color("import"), "character")
-  expect_is(text_color("not found"), "character")
-  expect_is(text_color("not found"), "character")
   expect_is(node_color("target"), "character")
   expect_is(node_color("import"), "character")
   expect_is(node_color("not found"), "character")

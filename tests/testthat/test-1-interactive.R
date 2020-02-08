@@ -55,24 +55,22 @@ test_with_dir("logger", {
   # testthat suppresses messages,
   # so we need to inspect the console output manually.
   files <- list.files()
-  x <- logger(verbose = 0L, file = NULL)
-  x$major("abc") # Should be empty.
-  x$log("abc") # Should be empty.
-  x <- logger(verbose = 1L, file = NULL)
-  x$major("abc") # Should show "abc".
-  x$log("abc") # Should be empty.
-  x <- logger(verbose = 2L, file = NULL)
-  x$major("abc") # Should show "abc".
-  x$log("abc") # Should show the spinner.
+  x <- refclass_logger$new(verbose = 0L, file = NULL)
+  x$disk("abc") # Should be empty.
+  x <- refclass_logger$new(verbose = 1L, file = NULL)
+  x$disk("abc") # Should be empty.
+  x <- refclass_logger$new(verbose = 2L, file = NULL)
+  x$disk("abc") # Should be empty.
   expect_equal(files, list.files())
+  x$term("abc", "def") # Should say "abc def"
   for (verbose in c(0L, 1L, 2L)) {
     tmp <- tempfile()
-    x <- logger(verbose = 0L, file = tmp)
+    x <- refclass_logger$new(verbose = verbose, file = tmp)
     expect_equal(x$file, tmp)
     expect_false(file.exists(tmp))
-    x$major("abc")
+    x$disk("abc")
     expect_equal(length(readLines(tmp)), 1L)
-    x$log("abc")
+    x$target("abc", "target") # Should say "target abc"
     expect_equal(length(readLines(tmp)), 2L)
   }
 })

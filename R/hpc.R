@@ -170,7 +170,7 @@ wait_checksum <- function(
     "network file system. Checksum verification timed out after about ",
     timeout, " seconds."
   )
-  config$logger$log(paste("Error:", msg))
+  config$logger$disk(paste("Error:", msg))
   stop(msg, call. = FALSE)
 }
 
@@ -242,7 +242,7 @@ get_outfile_checksum <- function(target, config) {
 
 warn_no_checksum <- function(target, config) {
   msg <- paste0("No checksum available for target ", target, ".")
-  config$logger$log(paste("Warning:", msg))
+  config$logger$disk(paste("Warning:", msg))
   warning(msg, call. = FALSE)
 }
 

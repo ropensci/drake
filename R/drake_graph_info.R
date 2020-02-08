@@ -596,6 +596,16 @@ node_color <- Vectorize(function(x) {
 },
 "x", USE.NAMES = FALSE)
 
+col2hex <- function(cname) {
+  assert_pkg("grDevices")
+  col_mat <- grDevices::col2rgb(cname)
+  grDevices::rgb(
+    red = col_mat[1, ] / 255,
+    green = col_mat[2, ] / 255,
+    blue = col_mat[3, ] / 255
+  )
+}
+
 node_shape <- Vectorize(function(x) {
   switch(
     x,

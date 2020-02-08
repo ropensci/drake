@@ -234,8 +234,8 @@ make <- function(
 #' @description Not a user-side function.
 #' @param config a [drake_config()] object.
 make_impl <- function(config) {
-  config$logger$log("begin make()")
-  on.exit(config$logger$log("end make()"), add = TRUE)
+  config$logger$disk("begin make()")
+  on.exit(config$logger$disk("end make()"), add = TRUE)
   runtime_checks(config = config)
   if (config$lock_cache) {
     config$cache$lock()
@@ -292,7 +292,7 @@ run_native_backend <- function(config) {
     class(config) <- c(class(config), parallelism)
     drake_backend(config)
   } else {
-    config$logger$major("All targets are already up to date.", color = NULL)
+    config$logger$up_to_date()
   }
 }
 
@@ -315,7 +315,7 @@ run_external_backend <- function(config) {
 
 outdated_subgraph <- function(config) {
   outdated <- outdated_impl(config, do_prework = FALSE, make_imports = FALSE)
-  config$logger$log("isolate oudated targets")
+  config$logger$disk("isolate oudated targets")
   igraph::induced_subgraph(graph = config$graph, vids = outdated)
 }
 
@@ -604,10 +604,6 @@ r_make_message <- function(force) {
     )
   )
   if (force || (r_make_message && sample.int(n = 10, size = 1) < 1.5)) {
-    message(
-      "In drake, consider r_make() instead of make(). ",
-      "r_make() runs make() in a fresh R session ",
-      "for enhanced robustness and reproducibility."
-    )
+    cli_msg("Consider drake::r_make() to improve robustness.")
   }
 }

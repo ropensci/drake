@@ -36,14 +36,9 @@ recover_target <- function(target, meta, config) {
     return(FALSE) # nocov # Should not happen, just to be safe...
   }
   if (!is_dynamic(target, config)) {
-    config$logger$major(
-      "recover",
-      target,
-      target = target,
-      color = "recover"
-    )
+    config$logger$target(target, "recover")
   }
-  config$logger$log(
+  config$logger$disk(
     "recovered target originally stored on",
     recovery_meta$date,
     target = target
@@ -169,7 +164,7 @@ check_trigger_imported <- function(target, meta, config) {
 
 check_trigger_missing <- function(target, meta, config) {
   if (meta$missing) {
-    config$logger$log("trigger missing", target = target)
+    config$logger$disk("trigger missing", target = target)
     return(TRUE)
   }
   FALSE
@@ -179,7 +174,7 @@ check_trigger_condition <- function(target, meta, config) {
   condition <- trigger_condition(target = target, meta = meta, config = config)
   stopifnot(is.logical(condition))
   if (condition) {
-    config$logger$log("trigger condition", target = target)
+    config$logger$disk("trigger condition", target = target)
   }
   return(condition)
 }
@@ -187,7 +182,7 @@ check_trigger_condition <- function(target, meta, config) {
 check_trigger_command <- function(target, meta, meta_old, config) {
   if (identical(meta$trigger$command, TRUE)) {
     if (trigger_command(target, meta, meta_old, config)) {
-      config$logger$log("trigger command", target = target)
+      config$logger$disk("trigger command", target = target)
       return(TRUE)
     }
   }
@@ -197,7 +192,7 @@ check_trigger_command <- function(target, meta, meta_old, config) {
 check_trigger_depend <- function(target, meta, meta_old, config) {
   if (identical(meta$trigger$depend, TRUE)) {
     if (trigger_depend(target, meta, meta_old, config)) {
-      config$logger$log("trigger depend", target = target)
+      config$logger$disk("trigger depend", target = target)
       return(TRUE)
     }
   }
@@ -207,7 +202,7 @@ check_trigger_depend <- function(target, meta, meta_old, config) {
 check_trigger_file <- function(target, meta, meta_old, config) {
   if (identical(meta$trigger$file, TRUE)) {
     if (trigger_file(target, meta, meta_old, config)) {
-      config$logger$log("trigger file", target = target)
+      config$logger$disk("trigger file", target = target)
       return(TRUE)
     }
   }
@@ -217,7 +212,7 @@ check_trigger_file <- function(target, meta, meta_old, config) {
 check_trigger_seed <- function(target, meta, meta_old, config) {
   if (identical(meta$trigger$seed, TRUE)) {
     if (trigger_seed(target, meta, meta_old, config)) {
-      config$logger$log("trigger seed", target = target)
+      config$logger$disk("trigger seed", target = target)
       return(TRUE)
     }
   }
@@ -227,18 +222,18 @@ check_trigger_seed <- function(target, meta, meta_old, config) {
 check_trigger_change <- function(target, meta, config) {
   if (!is.null(meta$trigger$change)) {
     if (trigger_change(target = target, meta = meta, config = config)) {
-      config$logger$log("trigger change", target = target)
+      config$logger$disk("trigger change", target = target)
       return(TRUE)
     }
   }
-  config$logger$log("skip", target = target)
+  config$logger$disk("skip", target = target)
   FALSE
 }
 
 check_trigger_format <- function(target, meta, meta_old, config) {
   if (identical(meta$trigger$format, TRUE)) {
     if (trigger_format(target, meta, meta_old, config)) {
-      config$logger$log("trigger format", target = target)
+      config$logger$disk("trigger format", target = target)
       return(TRUE)
     }
   }
@@ -331,7 +326,7 @@ trigger_condition <- function(target, meta, config) {
       "The `condition` trigger must evaluate to a logical of length 1. ",
       "got `", value, "` for target ", target, "."
     )
-    config$logger$log(paste("Error:", msg))
+    config$logger$disk(paste("Error:", msg))
     stop(msg, call. = FALSE)
   }
   condition_decision(value = value, mode = meta$trigger$mode)
