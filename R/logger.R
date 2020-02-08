@@ -1,11 +1,29 @@
 logger <- function(verbose, file = NULL) {
   verbose <- as.integer(verbose)
-  refclass_logger$new(verbose = verbose, file = file)
+  progress <- NULL
+  if (.pkg_envir$has_progress) {
+    progress_bar <- progress::progress_bar$new(
+      format = "targets [:bar] :percent"
+    )
+  }
+  out <- refclass_logger$new(
+    verbose = verbose,
+    file = file,
+    progress_bar = progress_bar
+  )
+  out$progress_index <- 0L
+  out
 }
 
 refclass_logger <- methods::setRefClass(
   Class = "refclass_logger",
-  fields = c("verbose", "file"),
+  fields = c(
+    "verbose",
+    "file",
+    "progress_bar",
+    "progress_index",
+    "progress_total"
+  ),
   methods = list(
     disk = function(...) {
       drake_log_file(..., file = .self$file)
@@ -28,6 +46,27 @@ refclass_logger <- methods::setRefClass(
       if (.self$verbose >= 1L) {
         cli_msg(msg, cli_fun = cli::cli_alert_success)
       }
+    },
+    progress = function() {
+      pb <- .self$progress_bar
+      .self$progress_index <- .self$progress_index + 1L
+      if (!is.null(pb)) {
+        ratio <- min(1, .self$progress_index / .self$progress_total)
+        pb$finished <- FALSE
+        pb$update(ratio = ratio)
+      }
+    },
+    terminate_progress = function() {
+      pb <- .self$progress_bar
+      if (!is.null(pb)) {
+        pb$terminate()
+      }
+    },
+    set_progress_total = function(n) {
+      .self$progress_total <- n
+    },
+    inc_progress_total = function(n = 1) {
+      .self$progress_total <- .self$progress_total + n
     }
   )
 )

@@ -60,6 +60,7 @@ test_with_dir("lazy loading is actually lazy", {
   config$ht_dynamic <- ht_new()
   config$envir_graph <- ht_new()
   config$envir_graph$graph <- config$graph
+  config$logger$set_progress_total(igraph::gorder(config$graph))
   drake_backend.loop(config)
   loaded <- ls(envir = config$envir_targets)
   expect_true(all(lazily_loaded %in% loaded))

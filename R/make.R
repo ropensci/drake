@@ -281,6 +281,8 @@ process_targets <- function(config) {
   } else {
     run_external_backend(config)
   }
+  config$logger$terminate_progress()
+  invisible()
 }
 
 run_native_backend <- function(config) {
@@ -288,7 +290,9 @@ run_native_backend <- function(config) {
     config$parallelism,
     c("loop", "clustermq", "future")
   )
-  if (igraph::gorder(config$envir_graph$graph)) {
+  order <- igraph::gorder(config$envir_graph$graph)
+  if (order) {
+    config$logger$set_progress_total(order)
     class(config) <- c(class(config), parallelism)
     drake_backend(config)
   } else {

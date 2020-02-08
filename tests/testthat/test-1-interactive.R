@@ -383,4 +383,34 @@ test_with_dir("Output from the callr RStudio addins", {
   expect_true(inherits(graph, "visNetwork"))
 })
 
+test_with_dir("progress bars", {
+  skip_on_cran()
+  # Needs visual inspection at every step
+  plan <- drake_plan(
+    x = target(
+      Sys.sleep(.1),
+      transform = map(y = !!seq_len(40))
+    )
+  )
+  make(plan, verbose = 2)
+  plan <- drake_plan(
+    x = target(
+      Sys.sleep(.1),
+      transform = map(y = !!seq_len(40))
+    ),
+    w = seq_len(40),
+    z = target(
+      Sys.sleep(.1),
+      dynamic = map(y = w)
+    )
+  )
+  make(plan, verbose = 2)
+  clean()
+  make(plan, verbose = 2, parallelism = "future")
+  skip_on_os("windows")
+  clean()
+  options(clustermq.scheduler = "multicore")
+  make(plan, verbose = 2, parallelism = "clustermq")
+})
+
 }

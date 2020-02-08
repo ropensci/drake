@@ -91,7 +91,6 @@ cmq_conclude_build <- function(msg, config) {
   if (inherits(build, "try-error")) {
     stop(attr(build, "condition")$message, call. = FALSE) # nocov
   }
-  cmq_conclude_target(target = build$target, config = config)
   caching <- hpc_caching(build$target, config)
   if (identical(caching, "worker")) {
     wait_checksum(
@@ -99,16 +98,16 @@ cmq_conclude_build <- function(msg, config) {
       checksum = build$checksum,
       config = config
     )
-    return()
   } else {
     build <- unserialize_build(build)
+    wait_outfile_checksum(
+      target = build$target,
+      checksum = build$checksum,
+      config = config
+    )
+    conclude_build(build = build, config = config)
   }
-  wait_outfile_checksum(
-    target = build$target,
-    checksum = build$checksum,
-    config = config
-  )
-  conclude_build(build = build, config = config)
+  cmq_conclude_target(target = build$target, config = config)
 }
 
 cmq_next_target <- function(config) {
@@ -263,4 +262,5 @@ cmq_local_build <- function(target, config) {
 cmq_conclude_target <- function(target, config) {
   decrease_revdep_keys(queue = config$queue, target = target, config = config)
   config$counter$remaining <- config$counter$remaining - 1L
+  config$logger$progress()
 }

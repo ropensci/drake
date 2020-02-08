@@ -10,4 +10,5 @@ loop_check <- function(config) {
   targets <- config$envir_loop$targets
   local_build(target = targets[1], config = config, downstream = targets[-1])
   config$envir_loop$targets <- config$envir_loop$targets[-1]
+  config$logger$progress()
 }

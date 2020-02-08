@@ -225,6 +225,7 @@ register_subtargets <- function(target, static_ok, dynamic_ok, config) {
   ndeps <- length(subtargets_build)
   if (ndeps) {
     config$logger$disk("register", ndeps, "subtargets", target = target)
+    config$logger$inc_progress_total(ndeps)
     ht_set(config$ht_is_subtarget, subtargets_build)
     register_in_loop(subtargets_build, config)
     register_in_queue(subtargets_build, 0, config)

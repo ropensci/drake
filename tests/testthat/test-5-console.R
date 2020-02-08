@@ -103,14 +103,34 @@ test_with_dir("show_source()", {
   expect_true(is.numeric(y))
 })
 
-test_with_dir("spinner (or lack thereof) does not break things", {
+test_with_dir("progress bar does not break things", {
   skip_on_cran()
-  config <- drake_config(
-    drake_plan(a = 1, b = a),
-    verbose = 2L,
-    cache = storr::storr_environment(),
-    session_info = FALSE
+  plan <- drake_plan(
+    x = target(
+      1,
+      transform = map(y = !!seq_len(2))
+    )
   )
-  make_impl(config = config)
-  expect_equal(config$logger$verbose, 2L)
+  make(plan, verbose = 2)
+  plan <- drake_plan(
+    x = target(
+      1,
+      transform = map(y = !!seq_len(2))
+    ),
+    w = seq_len(2),
+    z = target(
+      1,
+      dynamic = map(y = w)
+    )
+  )
+  make(plan, verbose = 2)
+  clean()
+  make(plan, verbose = 2, parallelism = "future")
+  skip_on_os("windows")
+  clean()
+  options(clustermq.scheduler = "multicore")
+  make(plan, verbose = 2, parallelism = "clustermq")
+  if ("package:clustermq" %in% search()) {
+    detach("package:clustermq", unload = TRUE) # nolint
+  }
 })

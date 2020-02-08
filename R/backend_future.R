@@ -29,11 +29,11 @@ ft_check_target <- function(target, id, config) {
   if (length(target)) {
     ft_do_target(target, id, config)
   } else {
-    ft_skip_target(config) # nocov
+    ft_no_target(config) # nocov
   }
 }
 
-ft_skip_target <- function(config) {
+ft_no_target <- function(config) {
   Sys.sleep(config$sleep(max(0L, config$sleeps$count)))
   config$sleeps$count <- config$sleeps$count + 1L
 }
@@ -57,6 +57,7 @@ future_local_build <- function(target, protect, config) {
   config$logger$disk("local target", target = target)
   local_build(target, config, downstream = protect)
   decrease_revdep_keys(config$queue, target, config)
+  config$logger$progress()
 }
 
 initialize_workers <- function(config) {
@@ -71,6 +72,7 @@ initialize_workers <- function(config) {
 ft_decide_worker <- function(target, protect, config) {
   meta <- drake_meta_(target, config)
   if (handle_triggers(target, meta, config)) {
+    config$logger$progress()
     return(empty_worker(target))
   }
   ft_launch_worker(target, meta, protect, config)
@@ -234,6 +236,7 @@ conclude_worker <- function(worker, config) {
     config = config
   )
   conclude_build(build = build, config = config)
+  config$logger$progress()
   out
 }
 
