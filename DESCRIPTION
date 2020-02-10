@@ -105,7 +105,7 @@ Depends:
   R (>= 3.3.0)
 Imports:
   base64url,
-  digest,
+  digest (>= 0.6.21),
   igraph,
   methods,
   parallel,
