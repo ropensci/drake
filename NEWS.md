@@ -3,6 +3,7 @@
 ## Bug fixes
 
 * Sanitize internal S3 classes for target storage (#1159, @rsangole).
+* Bump `digest` version to require 0.6.21 (#1166, @boshek)
 
 ## Enhancements
 
