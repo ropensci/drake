@@ -176,52 +176,64 @@ with_handling <- function(target, meta, config) {
     warning = function(w) {
       config$logger$disk(paste("Warning:", w$message), target = target)
       warnings <<- c(warnings, w$message)
-      invokeRestart("muffleWarning")
+      ifelse(delayed_relay(config), invokeRestart("muffleWarning"), TRUE)
     },
     message = function(m) {
       msg <- gsub(pattern = "\n$", replacement = "", x = m$message)
       config$logger$disk(msg, target = target)
       messages <<- c(messages, msg)
-      invokeRestart("muffleMessage")
+      ifelse(delayed_relay(config), invokeRestart("muffleMessage"), TRUE)
     }
   )
   if (config$log_build_times) {
     meta$time_command <- proc_time() - start
   }
-  meta$warnings <- prepend_fork_advice(warnings)
+  meta$warnings <- warnings
   meta$messages <- messages
   if (inherits(value, "error")) {
-    value$message <- prepend_fork_advice(value$message)
     meta$error <- value
   }
-  list(
-    target = target,
-    meta = meta,
-    value = value
-  )
+  if (failed_fork(warnings)) {
+    throw_fork_warning(config)
+    meta <- prepend_fork_advice(meta)
+  }
+  list(target = target, meta = meta, value = value)
 }
 
-prepend_fork_advice <- function(msg) {
+throw_fork_warning <- function(config) {
+  if (!delayed_relay(config)) {
+    warning(fork_advice(), call. = FALSE)
+  }
+}
+
+prepend_fork_advice <- function(meta) {
+  meta$warnings <- c(meta$warnings, fork_advice())
+  if (inherits(meta$error, "error")) {
+    meta$error$message <- c(meta$error$message, fork_advice())
+  }
+  meta
+}
+
+failed_fork <- function(msg) {
   if (!length(msg)) {
-    return(msg)
+    return(FALSE)
   }
   # Loop so we can use fixed = TRUE, which is fast. # nolint
-  fork_error <- sum(vapply(
+  sum(vapply(
     c("parallel", "core"),
     function(pattern) any(grepl(pattern, msg, fixed = TRUE)),
     FUN.VALUE = logical(1)
   ))
-  if (!fork_error) {
-    return(msg)
-  }
-  out <- paste(
+}
+
+fork_advice <- function(msg) {
+  paste(
     "\n Having problems with parallel::mclapply(),",
     "future::future(), or furrr::future_map() in drake?",
     "Try one of the workarounds at",
     "https://books.ropensci.org/drake/hpc.html#parallel-computing-within-targets", # nolint
     "or https://github.com/ropensci/drake/issues/675. \n\n"
   )
-  c(out, msg)
 }
 
 # Taken directly from the `evaluate::try_capture_stack()`.
@@ -481,42 +493,58 @@ assert_output_files <- function(target, meta, config) {
 }
 
 handle_build_exceptions <- function(target, meta, config) {
-  if (length(meta$warnings) && config$logger$verbose) {
-    warn_opt <- max(1, getOption("warn"))
-    with_options(
-      new = list(warn = warn_opt),
-      warning(
-        "target ", target, " warnings:\n",
-        multiline_message(meta$warnings),
-        call. = FALSE
-      )
-    )
+  relay <- delayed_relay(config)
+  if (length(meta$warnings) && config$logger$verbose && relay) {
+    handle_build_warnings(target, meta, config)
   }
-  if (length(meta$messages) && config$logger$verbose) {
-    cli_msg(
-      "target", target, "messages:\n",
-      multiline_message(meta$messages, indent = " ")
-    )
+  if (length(meta$messages) && config$logger$verbose && relay) {
+    handle_build_messages(target, meta, config)
   }
   if (inherits(meta$error, "error")) {
-    config$logger$target(target, "fail")
-    store_failure(target = target, meta = meta, config = config)
-    if (is_subtarget(target, config)) {
-      parent <- config$spec[[target]]$subtarget_parent
-      meta$subtarget <- target
-      store_failure(target = parent, meta = meta, config = config)
-    }
-    if (!config$keep_going) {
-      msg <- paste0(
-        "target `", target, "` failed. Call `drake::diagnose(", target,
-        ")` for details. Error message:\n  ",
-        meta$error$message
-      )
-      config$logger$disk(msg)
-      unlock_environment(config$envir)
-      stop(msg, call. = FALSE)
-    }
+    handle_build_error(target, meta, config)
   }
+}
+
+handle_build_warnings <- function(target, meta, config) {
+  warn_opt <- max(1, getOption("warn"))
+  with_options(
+    new = list(warn = warn_opt),
+    warning(
+      "target ", target, " warnings:\n",
+      multiline_message(meta$warnings),
+      call. = FALSE
+    )
+  )
+}
+
+handle_build_messages <- function(target, meta, config) {
+  cli_msg(
+    "target", target, "messages:\n",
+    multiline_message(meta$messages, indent = " ")
+  )
+}
+
+handle_build_error <- function(target, meta, config) {
+  config$logger$target(target, "fail")
+  store_failure(target = target, meta = meta, config = config)
+  if (is_subtarget(target, config)) {
+    parent <- config$spec[[target]]$subtarget_parent
+    meta$subtarget <- target
+    store_failure(target = parent, meta = meta, config = config)
+  }
+  if (!config$keep_going) {
+    msg <- paste0(
+      "target ", target, " failed. Call drake::diagnose(", target,
+      ") for details. Error message: ", meta$error$message
+    )
+    config$logger$disk(msg)
+    unlock_environment(config$envir)
+    stop(msg, call. = FALSE)
+  }
+}
+
+delayed_relay <- function(config) {
+  !(config$parallelism %in% "loop")
 }
 
 # From withr https://github.com/r-lib/withr, copyright RStudio, GPL (>=2)

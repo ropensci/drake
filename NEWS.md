@@ -12,6 +12,7 @@
 * Reduce logging of utility functions.
 * Improve the aesthetics of console messages using `cli` (optional package).
 * Deprecate `console_log_file` in favor of `log_make` as an argument to `make()` and `drake_config()`.
+* Print messages immediately to the console if `parallelism = "loop"`. Otherwise, use delayed relay to send messages (#400).
 
 # Version 7.10.0
 

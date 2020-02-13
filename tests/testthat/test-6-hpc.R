@@ -105,6 +105,17 @@ test_with_dir("direct users to GitHub issue #675", {
     make(plan, envir = globalenv(), session_info = FALSE, cache = cache),
     regexp = regexp
   )
+  clean(cache = cache)
+  expect_warning(
+    make(
+      plan,
+      parallelism = "future",
+      envir = globalenv(),
+      session_info = FALSE,
+      cache = cache
+    ),
+    regexp = regexp
+  )
 })
 
 test_with_dir("drake_pmap", {
