@@ -118,6 +118,24 @@ test_with_dir("direct users to GitHub issue #675", {
   )
 })
 
+test_with_dir("same, but with error (#675)", {
+  skip_on_cran()
+  plan <- drake_plan(
+    # If base R is patched, mclapply may not always give this warning.
+    x = {
+      warning("all scheduled cores encountered errors in user code")
+      stop()
+    }
+  )
+  cache <- storr::storr_environment()
+  regexp <- "workaround"
+  expect_error(
+    expect_warning(
+      make(plan, envir = globalenv(), session_info = FALSE, cache = cache)
+    )
+  )
+})
+
 test_with_dir("drake_pmap", {
   skip_on_cran()
   # Basic functionality: example from purrr::pmap
