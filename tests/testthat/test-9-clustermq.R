@@ -11,7 +11,7 @@ test_with_dir("clustermq parallelism for CRAN", {
   })
   for (caching in c("master", "worker")) {
     clean()
-    expect_warning(make(plan, parallelism = "clustermq", caching = caching))
+    suppressWarnings(make(plan, parallelism = "clustermq", caching = caching))
     config <- drake_config(plan)
     expect_equal(justbuilt(config), "x")
   }
