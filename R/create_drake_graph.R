@@ -113,10 +113,29 @@ cdg_finalize_graph <- function(edges, targets, args) {
     value = FALSE
   )
   args$logger$disk("finalize igraph")
-  igraph::simplify(
+  graph <- igraph::simplify(
     graph,
     remove.loops = TRUE,
     remove.multiple = TRUE,
     edge.attr.comb = "min"
   )
+  assert_good_vertex_names(graph)
+  graph
+}
+
+assert_good_vertex_names <- function(graph) {
+  names <- igraph::V(graph)$name
+  assert_no_trailing_dot(names)
+}
+
+# https://github.com/ropensci/drake/issues/1147
+assert_no_trailing_dot <- function(names) {
+  illegal <- grep("\\.$", names, value = TRUE)
+  if (length(illegal)) {
+    stop(
+      "drake targets and imports must not have trailing dots. Illegal:\n",
+      multiline_message(illegal),
+      call. = FALSE
+    )
+  }
 }

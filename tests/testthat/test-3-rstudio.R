@@ -28,7 +28,7 @@ test_with_dir("loading targets at cursor works under a real conditions", {
   target_list <- list(
     target1 = "value",
     zarget_2_ = "value",
-    .target.3. = "value",
+    .target.3_ = "value",
     TARGET = "value"
   )
   target_names <- names(target_list)

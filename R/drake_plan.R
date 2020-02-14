@@ -402,6 +402,9 @@ sanitize_plan <- function(
 # https://github.com/ropensci/drake/issues/1147
 convert_trailing_dot <- function(x) {
   index <- grepl("\\.$", x)
+  if (any(index)) {
+    warning("removed trailing dot from some target names.", call. = FALSE)
+  }
   x[index] <- gsub("\\.$", "_", x[index])
   x
 }
