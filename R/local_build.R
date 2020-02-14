@@ -176,13 +176,15 @@ with_handling <- function(target, meta, config) {
     warning = function(w) {
       config$logger$disk(paste("Warning:", w$message), target = target)
       warnings <<- c(warnings, w$message)
-      ifelse(delayed_relay(config), invokeRestart("muffleWarning"), TRUE)
+      warning(as_immediate_condition(w))
+      invokeRestart("muffleWarning")
     },
     message = function(m) {
       msg <- gsub(pattern = "\n$", replacement = "", x = m$message)
       config$logger$disk(msg, target = target)
       messages <<- c(messages, msg)
-      ifelse(delayed_relay(config), invokeRestart("muffleMessage"), TRUE)
+      message(as_immediate_condition(m))
+      invokeRestart("muffleMessage")
     }
   )
   if (config$log_build_times) {
@@ -198,6 +200,11 @@ with_handling <- function(target, meta, config) {
     meta <- prepend_fork_advice(meta)
   }
   list(target = target, meta = meta, value = value)
+}
+
+as_immediate_condition <- function(x) {
+  class(x) <- c(class(x), "immediateCondition")
+  x
 }
 
 throw_fork_warning <- function(config) {
@@ -544,7 +551,7 @@ handle_build_error <- function(target, meta, config) {
 }
 
 delayed_relay <- function(config) {
-  !(config$parallelism %in% "loop")
+  config$parallelism == "clustermq"
 }
 
 # From withr https://github.com/r-lib/withr, copyright RStudio, GPL (>=2)
