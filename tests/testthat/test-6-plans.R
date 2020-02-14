@@ -776,3 +776,10 @@ test_with_dir("convert_trailing_dot() in plans (#1147)", {
     c("numeric_ids_.1_", "numeric_ids_.2_")
   )
 })
+
+test_with_dir("trailing dots in imports (#1147)", {
+  expect_warning(
+    assert_no_trailing_dot("x.", force = TRUE),
+    regexp = "cannot cache properly on Windows"
+  )
+})

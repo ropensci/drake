@@ -14,6 +14,7 @@
 * Deprecate `console_log_file` in favor of `log_make` as an argument to `make()` and `drake_config()`.
 * Immediately relay warnings and messages in `"loop"` and `"future"` parallel backends (#400).
 * Warn when converting trailing dots (#1147).
+* Warn about imports with trailing dots on Windows (#1147).
 * Allow user-defined caches for the `loadd()` RStudio addin through the new `rstudio_drake_cache` global option (#1169, @joelnitta).
 
 # Version 7.10.0

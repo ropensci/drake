@@ -129,11 +129,11 @@ assert_good_vertex_names <- function(graph) {
 }
 
 # https://github.com/ropensci/drake/issues/1147
-assert_no_trailing_dot <- function(names) {
+assert_no_trailing_dot <- function(names, force = FALSE) {
   illegal <- grep("\\.$", names, value = TRUE)
-  if (length(illegal)) {
-    stop(
-      "drake targets and imports must not have trailing dots. Illegal:\n",
+  if ((length(illegal) && on_windows()) || force) {
+    warning(
+      "drake imports with trailing dots cannot cache properly on Windows:\n",
       multiline_message(illegal),
       call. = FALSE
     )
