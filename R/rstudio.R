@@ -53,6 +53,9 @@ rs_addin_r_vis_drake_graph <- function(r_args = list(), .print = TRUE) {
 #' current cursor location from the cache into the global environment.
 #' This is convenient during pipeline development when building off
 #' established targets.
+#' @details If you are using a non-standard `drake` cache,
+#'   you must supply it to the `"rstudio_drake_cache"` global option,
+#'   e.g. `options(rstudio_drake_cache = storr::storr_rds("my_cache"))`.
 #' @param context an RStudio document context.
 #'   Read from the active document if not supplied.
 #'   This is used for testing purposes.
@@ -66,7 +69,8 @@ rs_addin_loadd <- function(context = NULL) {
   if (is.null(target)) {
     return()
   }
-  cache <- drake_cache()
+  cache <- getOption("rstudio_drake_cache") %||% drake_cache()
+  cache <- decorate_storr(cache)
   message(
     "Loading target ",
     shQuote(target),
