@@ -238,13 +238,13 @@ static_storage_hash <- function(
   }
   file <- config$cache$decode_path(target)
   if (is_url(file)) {
-    return(rehash_storage(target = target, file = file, config = config))
+    return(rehash_static_storage(target, file, config))
   }
   if (!file.exists(file)) {
     return(NA_character_)
   }
   if (target_missing(target, config)) {
-    return(rehash_storage(target = target, file = file, config = config))
+    return(rehash_static_storage(target, file, config))
   }
   meta <- config$cache$get(key = target, namespace = "meta")
   should_rehash <- should_rehash_storage(
@@ -256,7 +256,7 @@ static_storage_hash <- function(
   )
   ifelse(
     should_rehash,
-    rehash_storage(target = target, config = config),
+    rehash_static_storage(target = target, config = config),
     config$cache$get(key = target)
   )
 }
@@ -329,7 +329,7 @@ file_size <- function(x) {
   }
 }
 
-rehash_storage <- function(target, file = NULL, config) {
+rehash_static_storage <- function(target, file = NULL, config) {
   if (!is_encoded_path(target)) {
     return(NA_character_)
   }

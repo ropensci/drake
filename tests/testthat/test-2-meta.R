@@ -102,9 +102,11 @@ test_with_dir("storage hash of a non-existent path", {
   expect_false(file.exists("asdf"))
   config <- drake_config(drake_plan(x = 1))
   expect_true(is.na(static_storage_hash("asdf", config = config)))
-  expect_true(is.na(rehash_storage("asdf", config = config)))
+  expect_true(is.na(rehash_static_storage("asdf", config = config)))
   expect_true(
     is.na(static_storage_hash(reencode_path("asdf"), config = config))
   )
-  expect_true(is.na(rehash_storage(reencode_path("asdf"), config = config)))
+  expect_true(
+    is.na(rehash_static_storage(reencode_path("asdf"), config = config))
+  )
 })
