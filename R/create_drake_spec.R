@@ -68,7 +68,7 @@ cds_get_knitr_hash <- function(args, spec) {
   knitr_files <- args$cache$safe_get(key = "knitr", namespace = "memoize")
   knitr_hashes <- lightly_parallelize(
     X = knitr_files,
-    FUN = storage_hash,
+    FUN = static_storage_hash,
     jobs = args$jobs,
     config = args
   )

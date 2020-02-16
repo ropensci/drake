@@ -60,8 +60,8 @@ test_with_dir("mtcars example works", {
   expect_false(any(dats %in% jb))
 
   # Check that file is not rehashed.
-  # Code coverage should cover every line of storage_hash().
-  expect_true(is.character(storage_hash(
+  # Code coverage should cover every line of static_storage_hash().
+  expect_true(is.character(static_storage_hash(
     target = reencode_path("report.Rmd"),
     config = con,
     size_threshold = -1

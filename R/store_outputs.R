@@ -84,7 +84,7 @@ store_item_impl <- function(target, value, meta, config) {
 
 store_item_impl.drake_file <- function(target, value = NULL, meta, config) {
   if (meta$imported) {
-    value <- storage_hash(target = target, config = config)
+    value <- static_storage_hash(target = target, config = config)
   } else {
     value <- rehash_storage(target = target, config = config)
   }

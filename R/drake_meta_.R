@@ -199,7 +199,7 @@ input_file_hash <- function(
   }
   out <- config$cache$memo_hash(
     x = files,
-    fun = storage_hash,
+    fun = static_storage_hash,
     config = config,
     size_threshold = size_threshold
   )
@@ -219,7 +219,7 @@ output_file_hash <- function(
   }
   out <- vapply(
     X = files,
-    FUN = storage_hash,
+    FUN = static_storage_hash,
     FUN.VALUE = character(1),
     config = config,
     size_threshold = size_threshold
@@ -228,7 +228,7 @@ output_file_hash <- function(
   config$cache$digest(out, serialize = FALSE)
 }
 
-storage_hash <- function(
+static_storage_hash <- function(
   target,
   config,
   size_threshold = rehash_storage_size_threshold
