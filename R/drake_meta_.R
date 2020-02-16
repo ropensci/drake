@@ -247,7 +247,7 @@ static_storage_hash <- function(
     return(rehash_static_storage(target, file, config))
   }
   meta <- config$cache$get(key = target, namespace = "meta")
-  should_rehash <- should_rehash_storage(
+  should_rehash <- should_rehash_local(
     size_threshold = size_threshold,
     new_mtime = storage_mtime(file),
     old_mtime = as.numeric(meta$mtime %|||% -Inf),
@@ -261,7 +261,7 @@ static_storage_hash <- function(
   )
 }
 
-should_rehash_storage <- function(
+should_rehash_local <- function(
   size_threshold,
   new_mtime,
   old_mtime,

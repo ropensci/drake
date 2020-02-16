@@ -39,7 +39,7 @@ test_with_dir("same with a directory", {
 test_with_dir("hashing decisions", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_true(
-    should_rehash_storage(
+    should_rehash_local(
       new_mtime = 0,
       old_mtime = 0,
       old_size = 0,
@@ -49,7 +49,7 @@ test_with_dir("hashing decisions", {
   )
   for (i in c(0, 1)) {
     expect_false(
-      should_rehash_storage(
+      should_rehash_local(
         new_mtime = 0,
         old_mtime = i,
         old_size = 0,
@@ -58,7 +58,7 @@ test_with_dir("hashing decisions", {
       )
     )
     expect_true(
-      should_rehash_storage(
+      should_rehash_local(
         new_mtime = 0,
         old_mtime = i,
         old_size = 0,
@@ -69,7 +69,7 @@ test_with_dir("hashing decisions", {
   }
   for (s in c(-Inf, Inf)) {
     expect_true(
-      should_rehash_storage(
+      should_rehash_local(
         new_mtime = 1,
         old_mtime = 0,
         old_size = 0,
@@ -78,7 +78,7 @@ test_with_dir("hashing decisions", {
       )
     )
     expect_true(
-      should_rehash_storage(
+      should_rehash_local(
         new_mtime = 0,
         old_mtime = 0,
         old_size = 1,
@@ -87,7 +87,7 @@ test_with_dir("hashing decisions", {
       )
     )
     expect_true(
-      should_rehash_storage(
+      should_rehash_local(
         new_mtime = 0,
         old_mtime = 0,
         old_size = 0,
