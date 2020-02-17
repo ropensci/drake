@@ -1,22 +1,54 @@
 handle_triggers <- function(target, meta, config) {
+  class(target) <- handle_triggers_class(target, config)
+  handle_triggers_impl(target, meta, config)
+}
+
+handle_triggers_class <- function(target, config) {
   if (is_subtarget(target, config)) {
-    return(FALSE)
+    return("subtarget")
   }
   if (is_registered_dynamic(target, config)) {
-    return(FALSE)
+    return("dynamic_registered")
   }
+  if (is_dynamic(target, config)) {
+    return("dynamic_unregistered")
+  }
+  "static"
+}
+
+handle_triggers_impl <- function(target, meta, config) {
+  UseMethod("handle_triggers_impl")
+}
+
+handle_triggers_impl.subtarget <- function(target, meta, config) { # nolint
+  FALSE
+}
+
+handle_triggers_impl.dynamic_registered <- function(target, meta, config) { # nolint
+  FALSE
+}
+
+handle_triggers_impl.dynamic_unregistered <- function(target, meta, config) { # nolint
+  target <- unclass(target)
   meta_old <- NULL
   if (target_exists(target, config)) {
     meta_old <- config$cache$get(key = target, namespace = "meta")
   }
   static_ok <- !any_static_triggers(target, meta, meta_old, config) ||
     recover_target(target, meta, config)
-  if (!is_dynamic(target, config)) {
-    return(static_ok)
-  }
   dynamic_ok <- !check_trigger_dynamic(target, meta, meta_old, config)
   register_subtargets(target, static_ok, dynamic_ok, config)
   TRUE
+}
+
+handle_triggers_impl.static <- function(target, meta, config) { # nolint
+  target <- unclass(target)
+  meta_old <- NULL
+  if (target_exists(target, config)) {
+    meta_old <- config$cache$get(key = target, namespace = "meta")
+  }
+  !any_static_triggers(target, meta, meta_old, config) ||
+    recover_target(target, meta, config)
 }
 
 recover_target <- function(target, meta, config) {

@@ -62,7 +62,7 @@ store_item <- function(target, value, meta, config) {
 
 output_type <- function(value, meta) {
   if (meta$isfile) {
-    return("drake_file")
+    return("drake_static_storage")
   }
   if (is.function(value)) {
     return("drake_function")
@@ -82,11 +82,16 @@ store_item_impl <- function(target, value, meta, config) {
   UseMethod("store_item_impl")
 }
 
-store_item_impl.drake_file <- function(target, value = NULL, meta, config) {
+store_item_impl.drake_static_storage <- function( # nolint
+  target,
+  value = NULL,
+  meta,
+  config
+) {
   if (meta$imported) {
-    value <- storage_hash(target = target, config = config)
+    value <- static_storage_hash(target = target, config = config)
   } else {
-    value <- rehash_storage(target = target, config = config)
+    value <- rehash_static_storage(target = target, config = config)
   }
   store_object(
     target = target,

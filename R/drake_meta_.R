@@ -199,7 +199,7 @@ input_file_hash <- function(
   }
   out <- config$cache$memo_hash(
     x = files,
-    fun = storage_hash,
+    fun = static_storage_hash,
     config = config,
     size_threshold = size_threshold
   )
@@ -219,7 +219,7 @@ output_file_hash <- function(
   }
   out <- vapply(
     X = files,
-    FUN = storage_hash,
+    FUN = static_storage_hash,
     FUN.VALUE = character(1),
     config = config,
     size_threshold = size_threshold
@@ -228,7 +228,7 @@ output_file_hash <- function(
   config$cache$digest(out, serialize = FALSE)
 }
 
-storage_hash <- function(
+static_storage_hash <- function(
   target,
   config,
   size_threshold = rehash_storage_size_threshold
@@ -238,16 +238,16 @@ storage_hash <- function(
   }
   file <- config$cache$decode_path(target)
   if (is_url(file)) {
-    return(rehash_storage(target = target, file = file, config = config))
+    return(rehash_static_storage(target, file, config))
   }
   if (!file.exists(file)) {
     return(NA_character_)
   }
   if (target_missing(target, config)) {
-    return(rehash_storage(target = target, file = file, config = config))
+    return(rehash_static_storage(target, file, config))
   }
   meta <- config$cache$get(key = target, namespace = "meta")
-  should_rehash <- should_rehash_storage(
+  should_rehash <- should_rehash_local(
     size_threshold = size_threshold,
     new_mtime = storage_mtime(file),
     old_mtime = as.numeric(meta$mtime %|||% -Inf),
@@ -256,12 +256,12 @@ storage_hash <- function(
   )
   ifelse(
     should_rehash,
-    rehash_storage(target = target, config = config),
+    rehash_static_storage(target = target, config = config),
     config$cache$get(key = target)
   )
 }
 
-should_rehash_storage <- function(
+should_rehash_local <- function(
   size_threshold,
   new_mtime,
   old_mtime,
@@ -329,7 +329,7 @@ file_size <- function(x) {
   }
 }
 
-rehash_storage <- function(target, file = NULL, config) {
+rehash_static_storage <- function(target, file = NULL, config) {
   if (!is_encoded_path(target)) {
     return(NA_character_)
   }
