@@ -211,7 +211,7 @@ finalize_triggers <- function(target, meta, config) {
     meta$command <- spec$command_standardized
   }
   if (is.null(meta$dependency_hash)) {
-    meta$dependency_hash <- dependency_hash(target = target, config = config)
+    meta$dependency_hash <- static_dependency_hash(target, config)
   }
   if (is.null(meta$input_file_hash)) {
     meta$input_file_hash <- input_file_hash(target = target, config = config)

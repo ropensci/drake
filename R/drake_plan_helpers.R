@@ -122,12 +122,16 @@ target <- function(
 #'   non-file dependency changes.
 #' @param file Logical, whether to rebuild the target
 #'   if a [file_in()]/[file_out()]/[knitr_in()] file changes.
+#'   Also applies to dynamic external data such as
+#'   dynamic files, e.g. `target(format = "file")`.
 #' @param seed Logical, whether to rebuild the target
 #'   if the seed changes. Only makes a difference if you set
 #'   a custom `seed` column in your [drake_plan()] at some point
 #'   in your workflow.
 #' @param format Logical, whether to rebuild the target if the
-#'   specialized data format changes. See
+#'   choice of specialized data format changes: for example,
+#'   if you use `target(format = "qs")` one instance and
+#'   `target(format = "fst")` the next. See
 #'   <https://books.ropensci.org/drake/plans.html#special-data-formats-for-targets> # nolint
 #'   for details on formats.
 #' @param condition R code (expression or language object)
