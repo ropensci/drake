@@ -1,7 +1,5 @@
 drake_meta_ <- function(target, config) {
-  is_subtarget <- is_subtarget(target, config) %|||% FALSE
-  class <- ifelse(is_subtarget, "subtarget", "target")
-  class(target) <- class
+  class(target) <- drake_meta_class(target, config)
   out <- drake_meta_impl(target, config)
   class(out) <- c("drake_meta", "drake")
   out
@@ -22,57 +20,119 @@ print.drake_meta <- function(x, ...) {
   min_str(list3)
 }
 
+drake_meta_class <- function(target, config) {
+  spec <- config$spec[[target]]
+  if (is_encoded_path(target)) {
+    return("imported_file")
+  }
+  is_imported <- is_encoded_namespaced(target) || (spec$imported %|||% TRUE)
+  if (is_imported) {
+    return("imported_object")
+  }
+  if (is_subtarget(target, config)) {
+    return("subtarget")
+  }
+  if (is_dynamic(target, config)) {
+    return("dynamic")
+  }
+  "static"
+}
+
 drake_meta_impl <- function(target, config) {
   UseMethod("drake_meta_impl")
 }
 
-drake_meta_impl.subtarget <- function(target, config) {
-  out <- list(
-    name = target,
-    target = target,
-    imported = FALSE,
-    isfile = FALSE,
-    seed = resolve_target_seed(target, config)
-  )
-  if (config$log_build_times) {
-    out$time_start <- proc_time()
-  }
-  out
-}
-
-drake_meta_impl.default <- function(target, config) {
+drake_meta_impl.imported_file <- function(target, config) { # nolint
   spec <- config$spec[[target]]
   meta <- list(
     name = target,
     target = target,
-    imported = spec$imported %|||% TRUE,
+    imported = TRUE,
+    isfile = TRUE,
+    format = "none",
+    dynamic = FALSE,
+    missing = target_missing(target, config)
+  )
+  path <- config$cache$decode_path(target)
+  meta$mtime <- storage_mtime(path)
+  meta$size_storage <- storage_size(path)
+  spec$trigger <- trigger(condition = TRUE)
+  meta <- drake_meta_static_triggers(target, meta, spec, config)
+  meta
+}
+
+drake_meta_impl.imported_object <- function(target, config) { # nolint
+  spec <- config$spec[[target]]
+  meta <- list(
+    name = target,
+    target = target,
+    imported = TRUE,
+    isfile = FALSE,
+    dynamic = FALSE,
+    format = "none",
+    missing = target_missing(target, config),
+    file_out = spec$deps_build$file_out
+  )
+  spec$trigger <- trigger(condition = TRUE)
+  meta <- drake_meta_static_triggers(target, meta, spec, config)
+  meta
+}
+
+drake_meta_impl.subtarget <- function(target, config) {
+  list(
+    name = target,
+    target = target,
+    imported = FALSE,
+    isfile = FALSE,
+    seed = resolve_target_seed(target, config),
+    time_start = drake_meta_start(config)
+  )
+}
+
+drake_meta_impl.dynamic <- function(target, config) {
+  spec <- config$spec[[target]]
+  meta <- list(
+    name = target,
+    target = target,
+    imported = FALSE,
+    isfile = FALSE,
+    dynamic = TRUE,
+    format = spec$format %||NA% "none",
+    missing = target_missing(target, config),
+    seed = resolve_target_seed(target, config),
+    time_start = drake_meta_start(config)
+  )
+  meta <- drake_meta_static_triggers(target, meta, spec, config)
+  meta$dynamic_dependency_hash <- dynamic_dependency_hash(target, config)
+  meta$max_expand <- config$max_expand
+  meta
+}
+
+drake_meta_impl.static <- function(target, config) {
+  spec <- config$spec[[target]]
+  meta <- list(
+    name = target,
+    target = target,
+    imported = FALSE,
+    isfile = FALSE,
+    dynamic = FALSE,
+    format = spec$format %||NA% "none",
     missing = target_missing(target, config),
     file_out = spec$deps_build$file_out,
-    format = spec$format %||NA% "none",
-    dynamic = is.call(spec$dynamic)
+    seed = resolve_target_seed(target, config),
+    time_start = drake_meta_start(config)
   )
-  if (config$log_build_times) {
-    meta$time_start <- proc_time()
-  }
-  if (meta$imported) {
-    meta$isfile <- is_encoded_path(target)
-    meta$trigger <- trigger(condition = TRUE)
-  } else {
-    meta$isfile <- FALSE
-    meta$trigger <- as.list(spec$trigger)
-    meta$seed <- resolve_target_seed(target, config)
-  }
-  # For imported files.
-  if (meta$isfile) {
-    path <- config$cache$decode_path(target)
-    meta$mtime <- storage_mtime(path)
-    meta$size_storage <- storage_size(path)
-  }
+  meta <- drake_meta_static_triggers(target, meta, spec, config)
+  meta
+}
+
+drake_meta_static_triggers <- function(target, meta, spec, config) {
+  meta$trigger <- as.list(spec$trigger)
   if (meta$trigger$command) {
     meta$command <- spec$command_standardized
   }
   if (meta$trigger$depend) {
-    meta$dependency_hash <- dependency_hash(target = target, config = config)
+    meta$dependency_hash <- static_dependency_hash(target, config)
   }
   if (meta$trigger$file) {
     meta$input_file_hash <- input_file_hash(target = target, config = config)
@@ -82,11 +142,13 @@ drake_meta_impl.default <- function(target, config) {
     try_load_deps(spec$deps_change$memory, config = config)
     meta$trigger$value <- eval(meta$trigger$change, config$envir_targets)
   }
-  if (is_dynamic(target, config)) {
-    meta$dynamic_dependency_hash <- dynamic_dependency_hash(target, config)
-    meta$max_expand <- config$max_expand
-  }
   meta
+}
+
+drake_meta_start <- function(config) {
+  if (config$log_build_times) {
+    proc_time()
+  }
 }
 
 target_missing <- function(target, config) {
@@ -139,7 +201,7 @@ integer_hash <- function(x, mod = .Machine$integer.max) {
   as.integer(type.convert(hexval) %% mod)
 }
 
-dependency_hash <- function(target, config) {
+static_dependency_hash <- function(target, config) {
   spec <- config$spec[[target]]
   x <- spec$deps_build
   deps <- c(x$globals, x$namespaced, x$loadd, x$readd)

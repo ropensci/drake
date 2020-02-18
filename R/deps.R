@@ -253,7 +253,7 @@ deps_profile_impl <- function(
       paste(spec$command_standardized, collapse = ""),
       serialize = FALSE
     ),
-    dependency_hash(target, config),
+    static_dependency_hash(target, config),
     input_file_hash(target, config),
     output_file_hash(target, config),
     resolve_target_seed(target, config)
