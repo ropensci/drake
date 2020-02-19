@@ -366,7 +366,24 @@ sanitize_format <- function(x, target, config) {
 }
 
 sanitize_format.default <- function(x, target, config) {
+  assert_no_reference_format(x$value, target)
   x
+}
+
+assert_no_reference_format <- function(x, target) {
+  UseMethod("assert_no_reference_format")
+}
+
+assert_no_reference_format.drake_reference <- function(x, target) {
+  stop(
+    "to use format = \"reference\" in drake, the target's return value ",
+    "must be an object returned by ref_file() or similar. This was not ",
+    "the case for target ", target, ".",
+    call. = FALSE
+  )
+}
+
+assert_no_reference_format.default <- function(x, target) {
 }
 
 sanitize_format.drake_format_fst <- function(x, target, config) { # nolint
@@ -439,26 +456,17 @@ sanitize_format.drake_format_diskframe <- function(x, target, config) { # nolint
 }
 
 
-sanitize_format.drake_format_file <- function(x, target, config) { # nolint
-  invalid <- x$value[!file.exists(x$value)]
-  if (length(invalid)) {
+sanitize_format.drake_format_reference <- function(x, target, config) { # nolint
+  if (!inherits(x$value, "drake_reference")) {
     msg <- paste0(
-      "You selected \"file\" format for target ", target,
-      ", so the return value must have paths to existing files ",
-      "or directories. But these files does not exist:\n",
-      multiline_message(invalid)
+      "You selected the \"reference\" format for target ", target,
+      ", so the return value must be an object returned by ",
+      "ref_file() or similar."
     )
-    warning(msg, call. = FALSE)
-    config$logger$minor(msg, target = target)
+    config$logger$minor("Error:", msg, target = target)
+    stop(msg, call. = FALSE)
   }
-  new_format_file(x$value, config)
-}
-
-new_format_file <- function(files, config) {
-  files <- as.character(files)
-  class(files) <- c("drake_format_file", "drake_format")
-  attr(files, "hash") <- rehash_local(files, config)
-  files
+  x
 }
 
 assign_to_envir <- function(target, value, config) {

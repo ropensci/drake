@@ -468,6 +468,10 @@ dcst_set.drake_format_rds <- function(value, key, ..., .self) {
   dcst_set_move_tmp(key = key, value = value, tmp = tmp, .self = .self)
 }
 
+dcst_set.drake_format_reference <- function(value, key, ..., .self) {
+  .self$storr$set(key = key, value = value$value, ...)
+}
+
 dcst_set_move_tmp <- function(key, value, tmp, .self) {
   hash_tmp <- rehash_local(tmp, config = list(cache = .self))
   class(hash_tmp) <- class(value)

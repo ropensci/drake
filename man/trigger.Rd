@@ -24,9 +24,7 @@ trigger(
 non-file dependency changes.}
 
 \item{file}{Logical, whether to rebuild the target
-if a \code{\link[=file_in]{file_in()}}/\code{\link[=file_out]{file_out()}}/\code{\link[=knitr_in]{knitr_in()}} file changes.
-Also applies to dynamic external data such as
-dynamic files, e.g. \code{target(format = "file")}.}
+if a \code{\link[=file_in]{file_in()}}/\code{\link[=file_out]{file_out()}}/\code{\link[=knitr_in]{knitr_in()}} file changes.}
 
 \item{seed}{Logical, whether to rebuild the target
 if the seed changes. Only makes a difference if you set

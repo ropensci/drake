@@ -191,24 +191,24 @@ finalize_meta <- function(target, value, meta, hash, config) {
   if (is_dynamic_dep(target, config)) {
     meta$dynamic_hashes <- dynamic_hashes(value, meta$size_vec, config)
   }
-  meta <- finalize_format_meta(value, target, meta, config)
+  meta <- finalize_reference_meta(value, target, meta, config)
   meta
 }
 
-finalize_format_meta <- function(value, target, meta, config) {
+finalize_reference_meta <- function(value, target, meta, config) {
   UseMethod("finalize_format_meta")
 }
 
-finalize_format_meta.drake_format_file <- function( # nolint
+finalize_reference_meta.drake_reference_file <- function( # nolint
   value,
   target,
   meta,
   config
 ) {
-  path <- as.character(value)
-  meta$format_hash <- attr(value, "hash")
-  meta$format_mtime <- storage_mtime(path)
-  meta$format_size_storage <- storage_size(path)
+  path <- vctrs::field(value, "path")
+  meta$reference_hash <- vctrs::field(value, "hash")
+  meta$reference_time <- storage_mtime(path)
+  meta$reference_size <- storage_size(path)
   meta
 }
 

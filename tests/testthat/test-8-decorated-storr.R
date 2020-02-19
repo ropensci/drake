@@ -876,40 +876,34 @@ test_with_dir("global rds format + target qs (#1124)", {
   expect_false(is.list(ref))
 })
 
-test_with_dir("dynamic files (#1168)", {
-  skip("not ready yet")
-  write_lines <- function(lines, file) {
-    writeLines(lines, file)
-    file
+test_with_dir("file references (#1168)", {
+  write_lines <- function(files) {
+    for (file in files) {
+      writeLines(c(file, "stuff"), file)
+    }
+    ref_file(files)
   }
   plan <- drake_plan(
     x = c("a", "b"),
     y = target(
-      write_lines(x, x),
-      dynamic = map(x),
-      format = "file"
-    ),
-    z = target(y, format = "file")
+      write_lines(x),
+      format = "reference"
+    )
   )
   config <- drake_config(plan)
-  expect_equal(sort(outdated_impl(config)), sort(c("x", "y", "z")))
+  expect_equal(sort(outdated_impl(config)), sort(c("x", "y")))
   make_impl(config)
-  expect_equal(
-    sort(justbuilt(config)),
-    sort(c("x", "y", "z", subtargets(y), subtargets(z)))
-  )
+  expect_equal(sort(justbuilt(config)), sort(c("x", "y")))
+  expect_true(inherits(readd(y), "drake_reference_file"))
   expect_equal(outdated_impl(config), character(0))
   make_impl(config)
   expect_equal(justbuilt(config), character(0))
+
+  skip("not ready yet")
+
   writeLines("123", "b")
-  expect_equal(
-    sort(outdated_impl(config)),
-    sort(c("x", "y", subtargets(x)[2], subtargets(y)[2]))
-  )
+  expect_equal(sort(outdated_impl(config)),sort(c("x", "y")))
   make_impl(config)
-  expect_equal(
-    sort(justbuilt(config)),
-    sort(c("x", "y", subtargets(x)[2], subtargets(y)[2]))
-  )
+  expect_equal(sort(justbuilt(config)), sort(c("x", "y")))
   expect_equal(readLines("b"), "123")
 })
