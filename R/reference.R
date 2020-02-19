@@ -12,14 +12,6 @@ format.drake_reference_file <- function(x, ...) {
   vctrs::field(x, "path")
 }
 
-#' @export
-path <- function(x) {
-  UseMethod("path")
-}
-
-#' @export
-path.drake_reference_file <- function(x) {
-  vctrs::field(x, "path")
-}
+# Coercion and casting methods go here
 
 digest_config <- list(cache = list(digest = new_digest_function("xxhash64")))
