@@ -32,11 +32,9 @@ vec_ptype2.drake_reference_file.default <- function(x, y, ..., x_arg = "x", y_ar
 vec_ptype2.drake_reference_file.drake_reference_file <- function(x, y, ...) new_ref_file()
 vec_ptype2.drake_reference_file.character <- function(x, y, ...) new_ref_file()
 vec_ptype2.character.drake_reference_file <- function(x, y, ...) new_ref_file()
-
 vec_cast.drake_reference_file <- function(x, to, ...) UseMethod("vec_cast.drake_reference_file")
 vec_cast.drake_reference_file.default <- function(x, to, ...) vec_default_cast(x, to)
 vec_cast.drake_reference_file.drake_reference_file <- function(x, to, ...) x
-
 vec_cast.character.drake_reference_file <- function(x, to, ...) field(x, "path")
 vec_cast.drake_reference_file.character <- function(x, to, ...) ref_file(x)
 
