@@ -58,5 +58,5 @@
 #' @importFrom txtq txtq
 #' @importFrom utils compareVersion head menu packageVersion
 #'   read.csv sessionInfo str type.convert unzip write.table
-#' @importFrom vctrs field new_rcrd vec_c vec_slice
+#' @importFrom vctrs field new_rcrd vec_assert vec_c vec_slice
 NULL
