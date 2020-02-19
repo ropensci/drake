@@ -366,24 +366,7 @@ sanitize_format <- function(x, target, config) {
 }
 
 sanitize_format.default <- function(x, target, config) {
-  assert_no_reference_format(x$value, target)
   x
-}
-
-assert_no_reference_format <- function(x, target) {
-  UseMethod("assert_no_reference_format")
-}
-
-assert_no_reference_format.drake_reference <- function(x, target) {
-  stop(
-    "to use format = \"reference\" in drake, the target's return value ",
-    "must be an object returned by ref_file() or similar. This was not ",
-    "the case for target ", target, ".",
-    call. = FALSE
-  )
-}
-
-assert_no_reference_format.default <- function(x, target) {
 }
 
 sanitize_format.drake_format_fst <- function(x, target, config) { # nolint
@@ -456,15 +439,16 @@ sanitize_format.drake_format_diskframe <- function(x, target, config) { # nolint
 }
 
 
-sanitize_format.drake_format_reference <- function(x, target, config) { # nolint
-  if (!inherits(x$value, "drake_reference")) {
+sanitize_format.drake_format_file <- function(x, target, config) { # nolint
+  if (!is.character(x$value)) {
     msg <- paste0(
-      "You selected the \"reference\" format for target ", target,
-      ", so the return value must be an object returned by ",
-      "ref_file() or similar."
+      "You selected the \"file\" format for target ", target,
+      ", so the return value must be a character vector. ",
+      "coercing to character."
     )
     config$logger$minor("Error:", msg, target = target)
-    stop(msg, call. = FALSE)
+    warning(msg, call. = FALSE)
+    x$value <- as.character(x$value)
   }
   x
 }

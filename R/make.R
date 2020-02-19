@@ -526,7 +526,7 @@ assert_format_impl.rds <- function(format) {
   stopifnot(getRversion() >= "3.5.0")
 }
 
-assert_format_impl.reference <- function(format) {
+assert_format_impl.file <- function(format) {
 }
 
 assert_format_impl.default <- function(format) {

@@ -876,25 +876,37 @@ test_with_dir("global rds format + target qs (#1124)", {
   expect_false(is.list(ref))
 })
 
-test_with_dir("file references (#1168)", {
+test_with_dir("file format (#1168)", {
   write_lines <- function(files) {
     for (file in files) {
       writeLines(c(file, "stuff"), file)
     }
-    ref_file(files)
+    files
   }
   plan <- drake_plan(
     x = c("a", "b"),
     y = target(
       write_lines(x),
-      format = "reference"
+      format = "file"
     )
   )
-  config <- drake_config(plan)
+  config <- drake_config(plan, history = FALSE)
   expect_equal(sort(outdated_impl(config)), sort(c("x", "y")))
   make_impl(config)
   expect_equal(sort(justbuilt(config)), sort(c("x", "y")))
-  expect_true(inherits(readd(y), "drake_reference_file"))
+  expect_identical(readd(y), c("a", "b"))
+  expect_identical(config$cache$get("y"), c("a", "b"))
+  hash <- config$cache$get_hash("y")
+  expect_identical(config$cache$get_value(hash), c("a", "b"))
+  expect_false("history" %in% list.files(".drake/drake"))
+  val <- config$cache$storr$get("y")
+  val2 <- config$cache$storr$get_value(hash)
+  expect_identical(val, val2)
+  expect_equal(val$value, c("a", "b"))
+  expect_true(is.character(val$hash))
+  expect_equal(length(val$hash), 2)
+  expect_true(inherits(val, "drake_format_file"))
+  expect_true(inherits(val, "drake_format"))
   expect_equal(outdated_impl(config), character(0))
   make_impl(config)
   expect_equal(justbuilt(config), character(0))

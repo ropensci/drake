@@ -327,6 +327,10 @@ dcst_get_.drake_format_rds <- function(value, key, .self) {
   readRDS(.self$file_return_key(key))
 }
 
+dcst_get_.drake_format_file <- function(value, key, .self) {
+  value$value
+}
+
 dcst_get_value <- function(hash, ..., .self) {
   value <- .self$storr$get_value(hash = hash, ...)
   dcst_get_value_(value = value, hash = hash, .self = .self)
@@ -384,6 +388,10 @@ dcst_get_value_.drake_format_keras <- function(value, hash, .self) { # nolint
 
 dcst_get_value_.drake_format_rds <- function(value, hash, .self) { # nolint
   readRDS(.self$file_return_hash(hash))
+}
+
+dcst_get_value_.drake_format_file <- function(value, hash, .self) {
+  value$value
 }
 
 dcst_set <- function(value, key, ..., .self) {
@@ -466,10 +474,6 @@ dcst_set.drake_format_rds <- function(value, key, ..., .self) {
     refhook = NULL
   )
   dcst_set_move_tmp(key = key, value = value, tmp = tmp, .self = .self)
-}
-
-dcst_set.drake_format_reference <- function(value, key, ..., .self) {
-  .self$storr$set(key = key, value = value$value, ...)
 }
 
 dcst_set_move_tmp <- function(key, value, tmp, .self) {

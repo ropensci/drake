@@ -5,6 +5,7 @@ store_outputs <- function(target, value, meta, config) {
   config$logger$disk("store", target = target)
   store_triggers(target, meta, config)
   meta$name <- target
+  value <- decorate_format_value(value, config)
   store_item(
     target = target,
     value = value,
@@ -16,6 +17,19 @@ store_outputs <- function(target, value, meta, config) {
     value = "done",
     config = config
   )
+}
+
+decorate_format_value <- function(value, config) {
+  UseMethod("decorate_format_value")
+}
+
+decorate_format_value.default <- function(value, config) {
+  value
+}
+
+decorate_format_value.drake_format_file <- function(value, config) {
+  value$hash <- rehash_local(value$value, config)
+  value
 }
 
 store_triggers <- function(target, meta, config) {
@@ -191,28 +205,29 @@ finalize_meta <- function(target, value, meta, hash, config) {
   if (is_dynamic_dep(target, config)) {
     meta$dynamic_hashes <- dynamic_hashes(value, meta$size_vec, config)
   }
-  meta <- finalize_reference_meta(value, target, meta, config)
+  meta <- decorate_format_meta(value, target, meta, config)
   meta
 }
 
-finalize_reference_meta <- function(value, target, meta, config) {
-  UseMethod("finalize_format_meta")
+decorate_format_meta <- function(value, target, meta, config) {
+  UseMethod("decorate_format_meta")
 }
 
-finalize_reference_meta.drake_reference_file <- function( # nolint
+decorate_format_meta.drake_format_file <- function( # nolint
   value,
   target,
   meta,
   config
 ) {
-  path <- vctrs::field(value, "path")
-  meta$reference_hash <- vctrs::field(value, "hash")
-  meta$reference_time <- storage_mtime(path)
-  meta$reference_size <- storage_size(path)
+  path <- value$value
+  meta$format_file_path <- path
+  meta$format_file_hash <- value$hash
+  meta$format_file_time <- storage_mtime(path)
+  meta$format_file_size <- storage_size(path)
   meta
 }
 
-finalize_format_meta.default <- function(value, target, meta, config) {
+decorate_format_meta.default <- function(value, target, meta, config) {
   meta
 }
 
