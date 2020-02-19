@@ -457,7 +457,7 @@ sanitize_format.drake_format_file <- function(x, target, config) { # nolint
 new_format_file <- function(files, config) {
   files <- as.character(files)
   class(files) <- c("drake_format_file", "drake_format")
-  attr(files, "hash") <- rehash_local_vec(files, config)
+  attr(files, "hash") <- rehash_local(files, config)
   files
 }
 

@@ -878,10 +878,14 @@ test_with_dir("global rds format + target qs (#1124)", {
 
 test_with_dir("dynamic files (#1168)", {
   skip("not ready yet")
+  write_lines <- function(lines, file) {
+    writeLines(lines, file)
+    file
+  }
   plan <- drake_plan(
     x = c("a", "b"),
     y = target(
-      writeLines(x, x),
+      write_lines(x, x),
       dynamic = map(x),
       format = "file"
     ),
