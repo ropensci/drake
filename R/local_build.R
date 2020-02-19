@@ -438,6 +438,29 @@ sanitize_format.drake_format_diskframe <- function(x, target, config) { # nolint
   x
 }
 
+
+sanitize_format.drake_format_file <- function(x, target, config) { # nolint
+  invalid <- x$value[!file.exists(x$value)]
+  if (length(invalid)) {
+    msg <- paste0(
+      "You selected \"file\" format for target ", target,
+      ", so the return value must have paths to existing files ",
+      "or directories. But these files does not exist:\n",
+      multiline_message(invalid)
+    )
+    warning(msg, call. = FALSE)
+    config$logger$minor(msg, target = target)
+  }
+  new_format_file(x$value, config)
+}
+
+new_format_file <- function(files, config) {
+  files <- as.character(files)
+  class(files) <- c("drake_format_file", "drake_format")
+  attr(files, "hash") <- rehash_local_vec(files, config)
+  files
+}
+
 assign_to_envir <- function(target, value, config) {
   if (is_subtarget(target, config)) {
     return()

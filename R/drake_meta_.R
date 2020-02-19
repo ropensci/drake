@@ -339,13 +339,15 @@ should_rehash_local <- function(
 rehash_storage_size_threshold <- 1e5
 rehash_storage_size_tol <- .Machine$double.eps ^ 0.5
 
-storage_mtime <- function(x) {
-  if (dir.exists(x)) {
-    dir_mtime(x)
-  } else {
-    file_mtime(x)
-  }
+storage_mtime_impl <- function(x) {
+  ifelse(dir.exists(x), dir_mtime(x), file_mtime(x))
 }
+
+storage_mtime <- Vectorize(
+  storage_mtime_impl,
+  vectorize.args = "x",
+  USE.NAMES = FALSE
+)
 
 dir_mtime <- function(x) {
   files <- list.files(
@@ -363,13 +365,15 @@ file_mtime <- function(x) {
   as.numeric(file.mtime(x))
 }
 
-storage_size <- function(x) {
-  if (dir.exists(x)) {
-    dir_size(x)
-  } else {
-    file_size(x)
-  }
+storage_size_impl <- function(x) {
+  ifelse(dir.exists(x), dir_size(x), file_size(x))
 }
+
+storage_size <- Vectorize(
+  storage_size_impl,
+  vectorize.args = "x",
+  USE.NAMES = FALSE
+)
 
 dir_size <- function(x) {
   files <- list.files(
@@ -407,13 +411,15 @@ rehash_static_storage <- function(target, file = NULL, config) {
   rehash_local(file, config)
 }
 
-rehash_local <- function(file, config) {
-  if (dir.exists(file)) {
-    rehash_dir(file, config)
-  } else {
-    rehash_file(file, config)
-  }
+rehash_local_impl <- function(file, config) {
+  ifelse(dir.exists(file), rehash_dir(file, config), rehash_file(file, config))
 }
+
+rehash_local <- Vectorize(
+  rehash_local_impl,
+  vectorize.args = "file",
+  USE.NAMES = FALSE
+)
 
 rehash_dir <- function(dir, config) {
   files <- list.files(
