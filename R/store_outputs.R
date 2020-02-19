@@ -37,7 +37,9 @@ store_file_out_files <- function(files, meta, config) {
   meta$isfile <- TRUE
   for (file in files) {
     meta$name <- file
-    meta$mtime <- storage_mtime(config$cache$decode_path(file))
+    path <- config$cache$decode_path(file)
+    meta$mtime <- storage_mtime(path)
+    meta$size_storage <- storage_size(path)
     meta$isfile <- TRUE
     store_item(
       target = file,
@@ -189,6 +191,24 @@ finalize_meta <- function(target, value, meta, hash, config) {
   if (is_dynamic_dep(target, config)) {
     meta$dynamic_hashes <- dynamic_hashes(value, meta$size_vec, config)
   }
+  meta <- special_format_meta(value, target, meta, config)
+  meta
+}
+
+special_format_meta <- function(value, target, meta, config) {
+  UseMethod("special_format_meta")
+}
+
+special_format_meta.drake_format_file <- function( # nolint
+  value,
+  target,
+  meta,
+  config
+) {
+  meta
+}
+
+special_format_meta.default <- function(value, target, meta, config) {
   meta
 }
 
