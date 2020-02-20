@@ -884,14 +884,13 @@ test_with_dir("file format (#1168)", {
     files
   }
   plan <- drake_plan(
-    x = c("a", "b"),
-    y = target(
-      write_lines(x),
+    x = target(
+      write_lines(c("a", "b")),
       format = "file"
     )
   )
   config <- drake_config(plan, history = FALSE)
-  expect_equal(sort(outdated_impl(config)), sort(c("x", "y")))
+  expect_equal(outdated_impl(config), "x")
   make_impl(config)
   expect_equal(sort(justbuilt(config)), sort(c("x", "y")))
   expect_identical(readd(y), c("a", "b"))

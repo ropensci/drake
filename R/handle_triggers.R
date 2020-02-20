@@ -47,8 +47,9 @@ handle_triggers_impl.static <- function(target, meta, config) { # nolint
   if (target_exists(target, config)) {
     meta_old <- config$cache$get(key = target, namespace = "meta")
   }
-  !any_static_triggers(target, meta, meta_old, config) ||
-    recover_target(target, meta, config)
+  any_triggers <- any_static_triggers(target, meta, meta_old, config) ||
+    any_external_triggers(target, meta, meta_old, config)
+  !any_triggers || recover_target(target, meta, config)
 }
 
 recover_target <- function(target, meta, config) {
@@ -150,6 +151,13 @@ any_static_triggers <- function(target, meta, meta_old, config) {
     return(TRUE)
   }
   if (check_triggers_stage2(target, meta, meta_old, config)) {
+    return(TRUE)
+  }
+  FALSE
+}
+
+any_external_triggers <- function(target, meta, meta_old, config) {
+  if (check_trigger_format_file(target, meta, meta_old, config)) {
     return(TRUE)
   }
   FALSE
@@ -273,7 +281,23 @@ check_trigger_format <- function(target, meta, meta_old, config) {
 }
 
 check_trigger_dynamic <- function(target, meta, meta_old, config) {
-  trigger_dynamic(target, meta, meta_old, config)
+  if (identical(meta$trigger$depend, TRUE)) {
+    if (trigger_dynamic(target, meta, meta_old, config)) {
+      config$logger$disk("trigger depend (dynamic)", target = target)
+      return(TRUE)
+    }
+  }
+  FALSE
+}
+
+check_trigger_format_file <- function(target, meta, meta_old, config) {
+  if (identical(meta$trigger$file, TRUE) && meta$format == "file") {
+    if (trigger_format_file(target, meta_old, config)) {
+      config$logger$disk("trigger file (format file)", target = target)
+      return(TRUE)
+    }
+  }
+  FALSE
 }
 
 trigger_command <- function(target, meta, meta_old, config) {
@@ -407,5 +431,9 @@ trigger_dynamic <- function(target, meta, meta_old, config) {
   if (!identical(meta$max_expand, meta_old$max_expand)) {
     return(TRUE)
   }
+  FALSE
+}
+
+trigger_format_file <- function(target, meta_old, config) {
   FALSE
 }
