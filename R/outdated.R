@@ -242,7 +242,7 @@ is_outdated_impl.dynamic <- function(target, config) {
   meta_old <- config$cache$get(key = target, namespace = "meta")
   any_static_triggers(target, meta, meta_old, config) ||
     check_trigger_dynamic(target, meta, meta_old, config) ||
-    any(target_missing(meta$subtargets, config))
+    any(target_missing(meta_old$subtargets, config))
   # check external triggers for sub-targets
 }
 
