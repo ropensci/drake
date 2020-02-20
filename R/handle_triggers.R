@@ -421,9 +421,6 @@ trigger_change <- function(target, meta, config) {
 }
 
 trigger_dynamic <- function(target, meta, meta_old, config) {
-  if (!is_dynamic(target, config)) {
-    return(FALSE)
-  }
   old_hash <- meta_elt(field = "dynamic_dependency_hash", meta = meta_old)
   if (!identical(meta$dynamic_dependency_hash, old_hash)) {
     return(TRUE)

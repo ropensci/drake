@@ -438,7 +438,6 @@ sanitize_format.drake_format_diskframe <- function(x, target, config) { # nolint
   x
 }
 
-
 sanitize_format.drake_format_file <- function(x, target, config) { # nolint
   if (!is.character(x$value)) {
     msg <- paste0(
@@ -446,7 +445,7 @@ sanitize_format.drake_format_file <- function(x, target, config) { # nolint
       ", so the return value must be a character vector. ",
       "coercing to character."
     )
-    config$logger$minor("Error:", msg, target = target)
+    config$logger$disk("Error:", msg, target = target)
     warning(msg, call. = FALSE)
     x$value <- as.character(x$value)
   }

@@ -930,6 +930,13 @@ test_with_dir("file format with flat files and static targets (#1168)", {
   make_impl(config)
   expect_equal(justbuilt(config), "x")
   expect_equal(readLines("b"), c("b", "stuff"))
+  # remove an x file
+  unlink("b")
+  expect_false(file.exists("b"))
+  expect_equal(sort(outdated_impl(config)), sort(c("x", "y", "z")))
+  make_impl(config)
+  expect_equal(justbuilt(config), "x")
+  expect_equal(readLines("b"), c("b", "stuff"))
   # corrupt x and y files
   writeLines("123", "b")
   writeLines("123", "c")
@@ -1036,4 +1043,13 @@ test_with_dir("file format with directories and static targets (#1168)", {
   make_impl(config)
   expect_equal(justbuilt(config), c("x", "y", "z"))
   expect_equal(readLines(file.path("b", "y")), c("b", "new stuff"))
+})
+
+test_with_dir("bad file format value", {
+  f <- function() {
+    writeLines("1", "1")
+    1
+  }
+  plan <- drake_plan(x = target(f(), format = "file"))
+  expect_warning(make(plan), regexp = "character")
 })
