@@ -940,4 +940,15 @@ test_with_dir("file format with flat files and static targets (#1168)", {
   expect_equal(justbuilt(config), c("x", "y"))
   expect_equal(readLines("b"), c("b", "stuff"))
   expect_equal(readLines("c"), c("c", "stuff"))
+  # change the expected file content
+  write_lines <- function(files, ...) {
+    for (file in files) {
+      writeLines(c(file, "new stuff"), file)
+    }
+    files
+  }
+  expect_equal(sort(outdated_impl(config)), sort(c("x", "y", "z")))
+  make_impl(config)
+  expect_equal(justbuilt(config), c("x", "y", "z"))
+  expect_equal(readLines("b"), c("b", "new stuff"))
 })
