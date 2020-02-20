@@ -877,23 +877,30 @@ test_with_dir("global rds format + target qs (#1124)", {
 })
 
 test_with_dir("file format with flat files and static targets (#1168)", {
-  write_lines <- function(files) {
+  write_lines <- function(files, ...) {
     for (file in files) {
       writeLines(c(file, "stuff"), file)
     }
     files
   }
   plan <- drake_plan(
+    w = 1,
     x = target(
       write_lines(c("a", "b")),
       format = "file"
     ),
-    y = x
+    y = target(
+      write_lines(c("c", "d"), x),
+      format = "file"
+    ),
+    z = y
   )
+  # initial state
   config <- drake_config(plan, history = FALSE)
-  expect_equal(sort(outdated_impl(config)), sort(c("x", "y")))
+  expect_equal(sort(outdated_impl(config)), sort(c("w", "x", "y", "z")))
   make_impl(config)
-  expect_equal(sort(justbuilt(config)), sort(c("x", "y")))
+  expect_equal(sort(justbuilt(config)), sort(c("w", "x", "y", "z")))
+  # file format internals
   expect_identical(readd(x), c("a", "b"))
   expect_identical(config$cache$get("x"), c("a", "b"))
   hash <- config$cache$get_hash("x")
@@ -907,13 +914,25 @@ test_with_dir("file format with flat files and static targets (#1168)", {
   expect_equal(length(val$hash), 2)
   expect_true(inherits(val, "drake_format_file"))
   expect_true(inherits(val, "drake_format"))
+  # validated state
   expect_equal(outdated_impl(config), character(0))
   make_impl(config)
   expect_equal(justbuilt(config), character(0))
+  # corrupt an x file
   writeLines("123", "b")
   expect_equal(readLines("b"), "123")
-  expect_equal(sort(outdated_impl(config)), sort(c("x", "y")))
+  expect_equal(sort(outdated_impl(config)), sort(c("x", "y", "z")))
   make_impl(config)
   expect_equal(justbuilt(config), "x")
   expect_equal(readLines("b"), c("b", "stuff"))
+  # corrupt x and y files
+  writeLines("123", "b")
+  writeLines("123", "c")
+  expect_equal(readLines("b"), "123")
+  expect_equal(readLines("c"), "123")
+  expect_equal(sort(outdated_impl(config)), sort(c("x", "y", "z")))
+  make_impl(config)
+  expect_equal(justbuilt(config), c("x", "y"))
+  expect_equal(readLines("b"), c("b", "stuff"))
+  expect_equal(readLines("c"), c("c", "stuff"))
 })
