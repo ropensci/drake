@@ -918,6 +918,11 @@ test_with_dir("file format with flat files and static targets (#1168)", {
   expect_equal(outdated_impl(config), character(0))
   make_impl(config)
   expect_equal(justbuilt(config), character(0))
+  # write the same content to an x file
+  write_lines("b")
+  expect_equal(outdated_impl(config), character(0))
+  make_impl(config)
+  expect_equal(justbuilt(config), character(0))
   # corrupt an x file
   writeLines("123", "b")
   expect_equal(readLines("b"), "123")
