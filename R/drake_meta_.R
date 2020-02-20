@@ -172,11 +172,16 @@ target_exists_single <- function(target, config) {
   ht_exists(ht = config$ht_target_exists, x = target)
 }
 
-target_exists_fast <- Vectorize(
+target_exists_fast_list <- Vectorize(
   target_exists_single,
   vectorize.args = "target",
   USE.NAMES = FALSE
 )
+
+target_exists_fast <- function(target, config) {
+  out <- target_exists_fast_list(target, config)
+  as.logical(out)
+}
 
 resolve_target_seed <- function(target, config) {
   seed <- config$spec[[target]]$seed
@@ -323,7 +328,7 @@ static_storage_hash <- function(
   )
 }
 
-should_rehash_local <- function(
+should_rehash_local_impl <- function(
   size_threshold,
   new_mtime,
   old_mtime,
@@ -336,6 +341,29 @@ should_rehash_local <- function(
   small || touched || resized
 }
 
+should_rehash_local_list <- Vectorize(
+  should_rehash_local_impl,
+  vectorize.args = c("new_mtime", "old_mtime", "new_size", "old_size"),
+  USE.NAMES = FALSE
+)
+
+should_rehash_local <- function(
+  size_threshold,
+  new_mtime,
+  old_mtime,
+  new_size,
+  old_size
+) {
+  out <- should_rehash_local_list(
+    size_threshold = size_threshold,
+    new_mtime = new_mtime,
+    old_mtime = old_mtime,
+    new_size = new_size,
+    old_size = old_size
+  )
+  as.logical(out)
+}
+
 rehash_storage_size_threshold <- 1e5
 rehash_storage_size_tol <- .Machine$double.eps ^ 0.5
 
@@ -343,11 +371,15 @@ storage_mtime_impl <- function(x) {
   ifelse(dir.exists(x), dir_mtime(x), file_mtime(x))
 }
 
-storage_mtime <- Vectorize(
+storage_mtime_list <- Vectorize(
   storage_mtime_impl,
   vectorize.args = "x",
   USE.NAMES = FALSE
 )
+
+storage_mtime <- function(x) {
+  as.numeric(storage_mtime_list(x))
+}
 
 dir_mtime <- function(x) {
   files <- list.files(
@@ -369,11 +401,15 @@ storage_size_impl <- function(x) {
   ifelse(dir.exists(x), dir_size(x), file_size(x))
 }
 
-storage_size <- Vectorize(
+storage_size_list <- Vectorize(
   storage_size_impl,
   vectorize.args = "x",
   USE.NAMES = FALSE
 )
+
+storage_size <- function(x) {
+  as.numeric(storage_size_list(x))
+}
 
 dir_size <- function(x) {
   files <- list.files(
@@ -415,11 +451,15 @@ rehash_local_impl <- function(file, config) {
   ifelse(dir.exists(file), rehash_dir(file, config), rehash_file(file, config))
 }
 
-rehash_local <- Vectorize(
+rehash_local_list <- Vectorize(
   rehash_local_impl,
   vectorize.args = "file",
   USE.NAMES = FALSE
 )
+
+rehash_local <- function(file, config) {
+  as.character(rehash_local_list(file, config))
+}
 
 rehash_dir <- function(dir, config) {
   files <- list.files(

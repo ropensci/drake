@@ -876,7 +876,7 @@ test_with_dir("global rds format + target qs (#1124)", {
   expect_false(is.list(ref))
 })
 
-test_with_dir("file format (#1168)", {
+test_with_dir("file format with flat files and static targets (#1168)", {
   write_lines <- function(files) {
     for (file in files) {
       writeLines(c(file, "stuff"), file)
@@ -887,18 +887,19 @@ test_with_dir("file format (#1168)", {
     x = target(
       write_lines(c("a", "b")),
       format = "file"
-    )
+    ),
+    y = x
   )
   config <- drake_config(plan, history = FALSE)
-  expect_equal(outdated_impl(config), "x")
+  expect_equal(sort(outdated_impl(config)), sort(c("x", "y")))
   make_impl(config)
   expect_equal(sort(justbuilt(config)), sort(c("x", "y")))
-  expect_identical(readd(y), c("a", "b"))
-  expect_identical(config$cache$get("y"), c("a", "b"))
-  hash <- config$cache$get_hash("y")
+  expect_identical(readd(x), c("a", "b"))
+  expect_identical(config$cache$get("x"), c("a", "b"))
+  hash <- config$cache$get_hash("x")
   expect_identical(config$cache$get_value(hash), c("a", "b"))
   expect_false("history" %in% list.files(".drake/drake"))
-  val <- config$cache$storr$get("y")
+  val <- config$cache$storr$get("x")
   val2 <- config$cache$storr$get_value(hash)
   expect_identical(val, val2)
   expect_equal(val$value, c("a", "b"))
@@ -909,12 +910,10 @@ test_with_dir("file format (#1168)", {
   expect_equal(outdated_impl(config), character(0))
   make_impl(config)
   expect_equal(justbuilt(config), character(0))
-
-  skip("not ready yet")
-
   writeLines("123", "b")
-  expect_equal(sort(outdated_impl(config)),sort(c("x", "y")))
-  make_impl(config)
-  expect_equal(sort(justbuilt(config)), sort(c("x", "y")))
   expect_equal(readLines("b"), "123")
+  expect_equal(sort(outdated_impl(config)), sort(c("x", "y")))
+  make_impl(config)
+  expect_equal(justbuilt(config), "x")
+  expect_equal(readLines("b"), c("b", "stuff"))
 })

@@ -435,5 +435,19 @@ trigger_dynamic <- function(target, meta, meta_old, config) {
 }
 
 trigger_format_file <- function(target, meta_old, config) {
-  FALSE
+  path <- meta_old$format_file_path
+  if (any(!file.exists(path))) {
+    return(TRUE)
+  }
+  should_rehash <- should_rehash_local(
+    size_threshold = rehash_storage_size_threshold,
+    new_mtime = storage_mtime(path),
+    old_mtime = meta_old$format_file_time,
+    new_size = storage_size(path),
+    old_size = meta_old$format_file_size
+  )
+  hash_old <- meta_old$format_file_hash
+  hash_new <- hash_old
+  hash_new[should_rehash] <- rehash_local(path[should_rehash], config)
+  any(hash_new != hash_old)
 }

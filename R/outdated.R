@@ -220,18 +220,30 @@ is_outdated <- function(target, config) {
   if (target_missing(target, config)) {
     return(TRUE)
   }
+  class(target) <- ifelse(is_dynamic(target, config), "dynamic", "static")
+  is_outdated_impl(target, config)
+}
+
+is_outdated_impl <- function(target, config) {
+  UseMethod("is_outdated_impl")
+}
+
+is_outdated_impl.static <- function(target, config) {
+  target <- unclass(target)
+  meta <- drake_meta_(target, config)
+  meta_old <- config$cache$get(key = target, namespace = "meta")
+  any_static_triggers(target, meta, meta_old, config) ||
+    any_external_triggers(target, meta, meta_old, config)
+}
+
+is_outdated_impl.dynamic <- function(target, config) {
+  target <- unclass(target)
   meta <- drake_meta_(target, config)
   meta_old <- config$cache$get(key = target, namespace = "meta")
   any_static_triggers(target, meta, meta_old, config) ||
     check_trigger_dynamic(target, meta, meta_old, config) ||
-    missing_subtargets(target, meta_old, config)
-}
-
-missing_subtargets <- function(target, meta, config) {
-  if (!is_dynamic(target, config)) {
-    return(FALSE)
-  }
-  any(target_missing(meta$subtargets, config))
+    any(target_missing(meta$subtargets, config))
+  # check external triggers for sub-targets
 }
 
 #' @title Report any import objects required by your drake_plan

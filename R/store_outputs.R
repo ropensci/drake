@@ -27,7 +27,7 @@ decorate_format_value.default <- function(value, config) {
   value
 }
 
-decorate_format_value.drake_format_file <- function(value, config) {
+decorate_format_value.drake_format_file <- function(value, config) { # nolint
   value$hash <- rehash_local(value$value, config)
   value
 }

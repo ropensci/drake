@@ -390,7 +390,7 @@ dcst_get_value_.drake_format_rds <- function(value, hash, .self) { # nolint
   readRDS(.self$file_return_hash(hash))
 }
 
-dcst_get_value_.drake_format_file <- function(value, hash, .self) {
+dcst_get_value_.drake_format_file <- function(value, hash, .self) { # nolint
   value$value
 }
 
