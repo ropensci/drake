@@ -233,7 +233,7 @@ is_outdated_impl.static <- function(target, config) {
   meta <- drake_meta_(target, config)
   meta_old <- config$cache$get(key = target, namespace = "meta")
   any_static_triggers(target, meta, meta_old, config) ||
-    any_external_triggers(target, meta, meta_old, config)
+    any_subtarget_triggers(target, meta, meta_old, config)
 }
 
 is_outdated_impl.dynamic <- function(target, config) {
