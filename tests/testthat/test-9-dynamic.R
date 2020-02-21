@@ -1769,10 +1769,13 @@ test_with_dir("target-specific max_expand (#1175)", {
   clean()
   plan <- drake_plan(
     x = seq_len(4),
-    y = target(x, dynamic = map(x))
+    y = target(x, dynamic = map(x)),
+    z = target(y, dynamic = map(y), max_expand = 2)
   )
   config <- drake_config(plan)
   make_impl(config)
   expect_equal(length(subtargets(y)), 4)
-  expect_equal(sort(justbuilt(config)), sort(c("x", "y", subtargets(y))))
+  expect_equal(length(subtargets(z)), 2)
+  exp <- sort(c("x", "y", "z", subtargets(y), subtargets(z)))
+  expect_equal(sort(justbuilt(config)), exp)
 })
