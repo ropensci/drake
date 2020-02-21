@@ -5,6 +5,10 @@
 * Sanitize internal S3 classes for target storage (#1159, @rsangole).
 * Bump `digest` version to require 0.6.21 (#1166, @boshek)
 
+## New features
+
+* Implement dynamic `max_expand` on a target-by-target basis via `target()` (#1175, @kendonB).
+
 ## Enhancements
 
 * Assert dependencies of formats at the very beginning of `make()`, not in `drake_config()` (#1156).

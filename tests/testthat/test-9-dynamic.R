@@ -1737,3 +1737,42 @@ test_with_dir("log dynamic target as failed if a sub-target fails (#1158)", {
   expect_error(make(plan))
   expect_true("y" %in% failed())
 })
+
+test_with_dir("target-specific max_expand (#1175)", {
+  x <- seq_len(4)
+  plan <- drake_plan(
+    y = target(x, dynamic = map(x), max_expand = 2)
+  )
+  config <- drake_config(plan)
+  make_impl(config)
+  old_sub <- subtargets(y)
+  expect_equal(length(subtargets(y)), 2)
+  expect_equal(sort(justbuilt(config)), c("y", subtargets(y)))
+  # change max_expand
+  plan <- drake_plan(
+    y = target(x, dynamic = map(x), max_expand = 1)
+  )
+  config <- drake_config(plan)
+  make_impl(config)
+  expect_equal(length(subtargets(y)), 1)
+  expect_equal(justbuilt(config), "y")
+  # remove max_expand
+  plan <- drake_plan(
+    y = target(x, dynamic = map(x))
+  )
+  config <- drake_config(plan)
+  make_impl(config)
+  expect_equal(length(subtargets(y)), 4)
+  new_sub <- setdiff(subtargets(y), old_sub)
+  expect_equal(sort(justbuilt(config)), c("y", new_sub))
+  # max_expand is NA for a target
+  clean()
+  plan <- drake_plan(
+    x = seq_len(4),
+    y = target(x, dynamic = map(x))
+  )
+  config <- drake_config(plan)
+  make_impl(config)
+  expect_equal(length(subtargets(y)), 4)
+  expect_equal(sort(justbuilt(config)), sort(c("x", "y", subtargets(y))))
+})

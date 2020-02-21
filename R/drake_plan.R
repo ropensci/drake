@@ -55,7 +55,9 @@
 #'   (the `seed` argument to [make()] and [drake_config()])
 #'   and the target names, but you can overwrite these automatic seeds.
 #'   `NA` entries default back to `drake`'s automatic seeds.
-#'
+#' - `max_expand`: for dynamic branching only. Same as the `max_expand`
+#'   argument of [make()], but on a target-by-target basis.
+#'   Limits the number of sub-targets created for a given target.
 #' @section Formats:
 #'   Specialized target formats increase efficiency and flexibility.
 #'   Some allow you to save specialized objects like `keras` models,
