@@ -86,8 +86,9 @@ recover_target <- function(target, meta, config) {
   TRUE
 }
 
-recover_subtarget <- function(subtarget, config) {
+recover_subtarget <- function(subtarget, parent, config) {
   meta <- drake_meta_(subtarget, config)
+  meta <- semiregistered_subtarget_meta(subtarget, parent, meta, config)
   class(subtarget) <- "subtarget"
   recover_target(subtarget, meta, config)
 }
@@ -344,6 +345,9 @@ check_sub_trigger_format_file_impl <- function(subtarget, parent, config) { # no
 
 semiregistered_subtarget_meta <- function(subtarget, parent, meta, config) {
   meta$format <- config$spec[[parent]]$format
+  if (meta$format == "none") {
+    return(meta)
+  }
   meta <- subsume_old_meta(subtarget, meta, meta$meta_old, config)
   meta
 }

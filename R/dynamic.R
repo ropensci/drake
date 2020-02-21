@@ -251,6 +251,7 @@ filter_subtargets <- function(target, subtargets, config) {
     subtargets,
     recover_subtarget,
     jobs = config$jobs_preprocess,
+    parent = target,
     config = config
   )
   subtargets[!unlist(recovered)]
