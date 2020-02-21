@@ -1739,6 +1739,7 @@ test_with_dir("log dynamic target as failed if a sub-target fails (#1158)", {
 })
 
 test_with_dir("target-specific max_expand (#1175)", {
+  skip_on_cran()
   x <- seq_len(4)
   plan <- drake_plan(
     y = target(x, dynamic = map(x), max_expand = 2)
