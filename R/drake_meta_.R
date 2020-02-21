@@ -1,12 +1,13 @@
 drake_meta_ <- function(target, config) {
   class(target) <- drake_meta_class(target, config)
+  meta <- drake_meta_impl(target, config)
   meta_old <- NULL
   if (target_exists(target, config)) {
     meta_old <- config$cache$get(key = target, namespace = "meta")
   }
-  out <- drake_meta_impl(target, meta_old, config)
-  class(out) <- c("drake_meta", "drake")
-  out
+  meta <- subsume_old_meta(target, meta, meta_old, config)
+  class(meta) <- c("drake_meta", "drake")
+  meta
 }
 
 #' @export
@@ -42,16 +43,15 @@ drake_meta_class <- function(target, config) {
   "static"
 }
 
-drake_meta_impl <- function(target, meta_old, config) {
+drake_meta_impl <- function(target, config) {
   UseMethod("drake_meta_impl")
 }
 
-drake_meta_impl.imported_file <- function(target, meta_old, config) { # nolint
+drake_meta_impl.imported_file <- function(target, config) { # nolint
   spec <- config$spec[[target]]
   meta <- list(
     name = target,
     target = target,
-    meta_old = meta_old,
     imported = TRUE,
     isfile = TRUE,
     format = "none",
@@ -66,12 +66,11 @@ drake_meta_impl.imported_file <- function(target, meta_old, config) { # nolint
   meta
 }
 
-drake_meta_impl.imported_object <- function(target, meta_old, config) { # nolint
+drake_meta_impl.imported_object <- function(target, config) { # nolint
   spec <- config$spec[[target]]
   meta <- list(
     name = target,
     target = target,
-    meta_old = meta_old,
     imported = TRUE,
     isfile = FALSE,
     dynamic = FALSE,
@@ -84,11 +83,10 @@ drake_meta_impl.imported_object <- function(target, meta_old, config) { # nolint
   meta
 }
 
-drake_meta_impl.subtarget <- function(target, meta_old, config) {
+drake_meta_impl.subtarget <- function(target, config) {
   list(
     name = target,
     target = target,
-    meta_old = meta_old,
     imported = FALSE,
     isfile = FALSE,
     seed = resolve_target_seed(target, config),
@@ -96,12 +94,11 @@ drake_meta_impl.subtarget <- function(target, meta_old, config) {
   )
 }
 
-drake_meta_impl.dynamic <- function(target, meta_old, config) {
+drake_meta_impl.dynamic <- function(target, config) {
   spec <- config$spec[[target]]
   meta <- list(
     name = target,
     target = target,
-    meta_old = meta_old,
     imported = FALSE,
     isfile = FALSE,
     dynamic = TRUE,
@@ -115,12 +112,11 @@ drake_meta_impl.dynamic <- function(target, meta_old, config) {
   decorate_trigger_meta(target, meta, spec, config)
 }
 
-drake_meta_impl.static <- function(target, meta_old, config) {
+drake_meta_impl.static <- function(target, config) {
   spec <- config$spec[[target]]
   meta <- list(
     name = target,
     target = target,
-    meta_old = meta_old,
     imported = FALSE,
     isfile = FALSE,
     dynamic = FALSE,
@@ -150,9 +146,13 @@ decorate_trigger_meta <- function(target, meta, spec, config) {
     try_load_deps(spec$deps_change$memory, config = config)
     meta$trigger$value <- eval(meta$trigger$change, config$envir_targets)
   }
+  meta
+}
+
+subsume_old_meta <- function(target, meta, meta_old, config) {
+  meta$meta_old <- meta_old
   class(target) <- meta$format
   meta <- decorate_trigger_format_meta(target, meta, config)
-  meta
 }
 
 decorate_trigger_format_meta <- function(target, meta, config) {
@@ -167,16 +167,18 @@ decorate_trigger_format_meta.file <- function(target, meta, config) {
   if (is.null(meta$meta_old) || !meta$trigger$file) {
     return(meta)
   }
-  path <- meta$meta_old$format_file_path
+  path <- as.character(meta$meta_old$format_file_path)
   new_mtime <- storage_mtime(path)
   new_size <- storage_size(path)
-  hash <- meta$meta_old$format_file_hash
-  should_rehash <- file.exists(path) & should_rehash_local(
+  hash <- as.character(meta$meta_old$format_file_hash)
+  exists <- file.exists(path)
+  hash[!exists] <- ""
+  should_rehash <- exists & should_rehash_local(
     size_threshold = rehash_storage_size_threshold,
     new_mtime = new_mtime,
-    old_mtime = meta$meta_old$format_file_time,
+    old_mtime = as.numeric(meta$meta_old$format_file_time),
     new_size = new_size,
-    old_size = meta$meta_old$format_file_size
+    old_size = as.numeric(meta$meta_old$format_file_size)
   )
   hash[should_rehash] <- rehash_local(path[should_rehash], config)
   meta$format_file_path <- path

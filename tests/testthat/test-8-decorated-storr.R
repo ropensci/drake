@@ -877,7 +877,6 @@ test_with_dir("global rds format + target qs (#1124)", {
 })
 
 test_with_dir("file format with flat files and static targets (#1168)", {
-  skip("not ready yet")
   skip_on_cran()
   write_lines <- function(files, ...) {
     for (file in files) {
@@ -963,7 +962,7 @@ test_with_dir("file format with flat files and static targets (#1168)", {
 })
 
 test_with_dir("file format with directories and static targets (#1168)", {
-  skip("not ready yet")
+  skip_on_cran()
   write_lines <- function(files, ...) {
     for (file in files) {
       if (!dir.exists(file)) {
@@ -1058,7 +1057,6 @@ test_with_dir("bad file format value", {
 })
 
 test_with_dir("file trigger and dynamic files (#1168)", {
-  skip("not ready yet")
   skip_on_cran()
   write_lines <- function(files, ...) {
     for (file in files) {
@@ -1080,7 +1078,6 @@ test_with_dir("file trigger and dynamic files (#1168)", {
 })
 
 test_with_dir("data recovery and dynamic files (#1168)", {
-  skip("not ready yet")
   skip_on_cran()
   write_lines <- function(files, ...) {
     for (file in files) {
@@ -1098,12 +1095,6 @@ test_with_dir("data recovery and dynamic files (#1168)", {
   make(plan)
   unlink("no_recover")
   config <- drake_config(plan)
-  # Clean and recover.
-  clean()
-  make(plan, recover = TRUE)
-  expect_equal(justbuilt(config), "x")
-  expect_false(file.exists("no_recover"))
-  expect_true(file.exists("b"))
   # Clean, remove output file, and fail to recover.
   clean()
   unlink(c("no_recover", "b"))

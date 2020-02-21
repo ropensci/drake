@@ -118,9 +118,12 @@ recovery_key_impl.default <- function(target, meta, config) {
     meta$dependency_hash,
     meta$input_file_hash,
     meta$output_file_hash,
+    meta$format_file_path,
+    meta$format_file_hash,
+    meta$trigger$mode,
+    meta$format,
     as.character(meta$seed),
     safe_deparse(meta$trigger$condition, backtick = TRUE),
-    meta$trigger$mode,
     change_hash
   )
   x <- paste(x, collapse = "|")
@@ -288,7 +291,7 @@ check_trigger_dynamic <- function(target, meta, config) {
 
 check_trigger_format_file <- function(target, meta, config) {
   if (identical(meta$trigger$file, TRUE) && meta$format == "file") {
-    if (trigger_format_file(target, config)) {
+    if (trigger_format_file(target, meta, config)) {
       config$logger$disk("trigger file (format file)", target = target)
       return(TRUE)
     }

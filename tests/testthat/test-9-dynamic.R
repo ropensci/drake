@@ -1782,7 +1782,6 @@ test_with_dir("target-specific max_expand (#1175)", {
 })
 
 test_with_dir("dynamic files + dynamic branching (#1168)", {
-  skip("not ready yet")
   skip_on_cran()
   write_lines <- function(files, ...) {
     for (file in files) {
