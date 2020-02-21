@@ -1115,6 +1115,8 @@ test_with_dir("data recovery and dynamic files (#1168)", {
   expect_true(file.exists("no_recover"))
   expect_true(file.exists("b"))
   expect_equal(outdated_impl(config), character(0))
+  make(plan)
+  expect_equal(justbuilt(config), character(0))
   # Restore file and recover old target.
   write_lines <- function(files, ...) {
     for (file in files) {

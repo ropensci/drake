@@ -1811,6 +1811,10 @@ test_with_dir("dynamic files + dynamic branching (#1168)", {
     sort(justbuilt(config)),
     sort(c("w", "x", "y", "z", subtargets(x), subtargets(y)))
   )
+  # Should be up to date.
+  expect_equal(outdated_impl(config), character(0))
+  make_impl(config)
+  expect_equal(justbuilt(config), character(0))
   # file format internals
   expect_identical(readd(x), c("a", "b"))
   key <- subtargets(x)[1]
@@ -1882,4 +1886,65 @@ test_with_dir("dynamic files + dynamic branching (#1168)", {
     sort(c("x", "y", "z", subtargets(x), subtargets(y)))
   )
   expect_equal(readLines("b"), c("b", "new stuff"))
+})
+
+test_with_dir("data recovery + dynamic files + dynamic files (#1168)", {
+  skip_on_cran()
+  write_lines <- function(files, ...) {
+    for (file in files) {
+      writeLines(c(file, "stuff"), file)
+    }
+    files
+  }
+  f <- function() {
+    write_lines("no_recover")
+    write_lines("b")
+  }
+  y <- 1
+  plan <- drake_plan(
+    x = target(f(), format = "file", dynamic = map(y))
+  )
+  make(plan)
+  # Should be up to date.
+  config <- drake_config(plan)
+  expect_equal(outdated_impl(config), character(0))
+  make_impl(config)
+  expect_equal(justbuilt(config), character(0))
+  # Clean, remove output file, and fail to recover.
+  unlink("no_recover")
+  clean()
+  unlink(c("no_recover", "b"))
+  make(plan, recover = TRUE)
+  expect_equal(sort(justbuilt(config)), sort(c("x", subtargets(x))))
+  expect_true(file.exists("no_recover"))
+  expect_true(file.exists("b"))
+  # Set up to restore file and recover old target.
+  write_lines <- function(files, ...) {
+    for (file in files) {
+      writeLines(c(file, "stuff2"), file)
+    }
+    files
+  }
+  unlink("no_recover")
+  make(plan)
+  expect_equal(sort(justbuilt(config)), sort(c("x", subtargets(x))))
+  expect_true(file.exists("no_recover"))
+  expect_true(file.exists("b"))
+  expect_equal(outdated_impl(config), character(0))
+  make(plan)
+  expect_equal(justbuilt(config), character(0))
+  # Restore file and recover old target.
+  write_lines <- function(files, ...) {
+    for (file in files) {
+      writeLines(c(file, "stuff"), file)
+    }
+    files
+  }
+  unlink("no_recover")
+  write_lines("b")
+  make(plan, recover = TRUE)
+  expect_equal(sort(justbuilt(config)), sort(c("x", subtargets(x))))
+  expect_false(file.exists("no_recover"))
+  expect_true(file.exists("b"))
+  expect_equal(outdated_impl(config), character(0))
 })

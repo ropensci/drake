@@ -1,6 +1,7 @@
 drake_meta_ <- function(target, config) {
   class(target) <- drake_meta_class(target, config)
-  meta <- drake_meta_impl(target, config)
+  spec <- config$spec[[target]]
+  meta <- drake_meta_impl(target, spec, config)
   meta_old <- NULL
   if (target_exists(target, config)) {
     meta_old <- config$cache$get(key = target, namespace = "meta")
@@ -27,6 +28,12 @@ print.drake_meta <- function(x, ...) {
 
 drake_meta_class <- function(target, config) {
   spec <- config$spec[[target]]
+  if (is_subtarget(target, config)) {
+    return("subtarget")
+  }
+  if (is_dynamic(target, config)) {
+    return("dynamic")
+  }
   if (is_encoded_path(target)) {
     return("imported_file")
   }
@@ -34,21 +41,14 @@ drake_meta_class <- function(target, config) {
   if (is_imported) {
     return("imported_object")
   }
-  if (is_subtarget(target, config)) {
-    return("subtarget")
-  }
-  if (is_dynamic(target, config)) {
-    return("dynamic")
-  }
   "static"
 }
 
-drake_meta_impl <- function(target, config) {
+drake_meta_impl <- function(target, spec, config) {
   UseMethod("drake_meta_impl")
 }
 
-drake_meta_impl.imported_file <- function(target, config) { # nolint
-  spec <- config$spec[[target]]
+drake_meta_impl.imported_file <- function(target, spec, config) { # nolint
   meta <- list(
     name = target,
     target = target,
@@ -66,8 +66,7 @@ drake_meta_impl.imported_file <- function(target, config) { # nolint
   meta
 }
 
-drake_meta_impl.imported_object <- function(target, config) { # nolint
-  spec <- config$spec[[target]]
+drake_meta_impl.imported_object <- function(target, spec, config) { # nolint
   meta <- list(
     name = target,
     target = target,
@@ -83,19 +82,21 @@ drake_meta_impl.imported_object <- function(target, config) { # nolint
   meta
 }
 
-drake_meta_impl.subtarget <- function(target, config) {
+drake_meta_impl.subtarget <- function(target, spec, config) {
   list(
     name = target,
     target = target,
     imported = FALSE,
     isfile = FALSE,
+    dynamic = FALSE,
+    format = spec$format %||NA% "none",
     seed = resolve_target_seed(target, config),
-    time_start = drake_meta_start(config)
+    time_start = drake_meta_start(config),
+    trigger = as.list(spec$trigger)
   )
 }
 
-drake_meta_impl.dynamic <- function(target, config) {
-  spec <- config$spec[[target]]
+drake_meta_impl.dynamic <- function(target, spec, config) {
   meta <- list(
     name = target,
     target = target,
@@ -112,8 +113,7 @@ drake_meta_impl.dynamic <- function(target, config) {
   decorate_trigger_meta(target, meta, spec, config)
 }
 
-drake_meta_impl.static <- function(target, config) {
-  spec <- config$spec[[target]]
+drake_meta_impl.static <- function(target, spec, config) {
   meta <- list(
     name = target,
     target = target,
@@ -153,6 +153,7 @@ subsume_old_meta <- function(target, meta, meta_old, config) {
   meta$meta_old <- meta_old
   class(target) <- meta$format
   meta <- decorate_trigger_format_meta(target, meta, config)
+  meta
 }
 
 decorate_trigger_format_meta <- function(target, meta, config) {

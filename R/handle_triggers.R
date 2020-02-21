@@ -104,7 +104,16 @@ recovery_key_impl <- function(target, meta, config) {
 }
 
 recovery_key_impl.subtarget <- function(target, meta, config) {
-  unclass(target)
+  x <- c(
+    unclass(target),
+    meta$format_file_path,
+    meta$format_file_hash
+  )
+  if (length(x) > 1L) { # to recover sub-targets built with drake <= 7.10.0
+    x <- paste(x, collapse = "|")
+    x <- config$cache$digest(x, serialize = FALSE)
+  }
+  x
 }
 
 recovery_key_impl.default <- function(target, meta, config) {
@@ -128,10 +137,6 @@ recovery_key_impl.default <- function(target, meta, config) {
   )
   x <- paste(x, collapse = "|")
   config$cache$digest(x, serialize = FALSE)
-}
-
-recovery_key_impl.subtarget <- function(target, meta, config) {
-  unclass(target)
 }
 
 any_static_triggers <- function(target, meta, config) {
@@ -305,7 +310,11 @@ check_subtarget_triggers <- function(target, subtargets, config) {
   format <- spec$format %||NA% "none"
   if (identical(spec$trigger$file, TRUE) && format == "file") {
     i <- !out
-    out[i] <- out[i] | check_sub_trigger_format_file(subtargets[i], config)
+    out[i] <- out[i] | check_sub_trigger_format_file(
+      subtargets[i],
+      target,
+      config
+    )
   }
   if (any(out)) {
     config$logger$disk("trigger subtarget (special)", target = target)
@@ -313,19 +322,30 @@ check_subtarget_triggers <- function(target, subtargets, config) {
   out
 }
 
-check_sub_trigger_format_file <- function(subtargets, config) {
+check_sub_trigger_format_file <- function(subtargets, parent, config) {
   out <- lightly_parallelize(
     X = subtargets,
     FUN = check_sub_trigger_format_file_impl,
     jobs = config$jobs_preprocess,
+    parent = parent,
     config = config
   )
   unlist(out)
 }
 
-check_sub_trigger_format_file_impl <- function(subtarget, config) { # nolint
+check_sub_trigger_format_file_impl <- function(subtarget, parent, config) { # nolint
   meta <- drake_meta_(subtarget, config)
-  trigger_format_file(target, meta, config)
+  # This is an unfortunate hack to deal with unregistered sub-targets
+  # we need to check.
+  meta <- semiregistered_subtarget_meta(subtarget, parent, meta, config)
+  # Now we proceed as if the sub-target were
+  trigger_format_file(subtarget, meta, config)
+}
+
+semiregistered_subtarget_meta <- function(subtarget, parent, meta, config) {
+  meta$format <- config$spec[[parent]]$format
+  meta <- subsume_old_meta(subtarget, meta, meta$meta_old, config)
+  meta
 }
 
 trigger_command <- function(target, meta, config) {

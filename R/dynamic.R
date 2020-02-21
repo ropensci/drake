@@ -213,7 +213,6 @@ chr_dynamic_impl.default <- function(x) {
 
 register_subtargets <- function(target, static_ok, dynamic_ok, config) {
   on.exit(register_dynamic(target, config))
-  announce_build(target, config)
   subtargets_build <- subtargets_all <- subtarget_names(target, config)
   if (static_ok) {
     subtargets_build <- filter_subtargets(target, subtargets_all, config)
@@ -223,6 +222,9 @@ register_subtargets <- function(target, static_ok, dynamic_ok, config) {
     register_in_spec(target, subtargets_all, config)
   }
   ndeps <- length(subtargets_build)
+  if (ndeps) {
+    announce_build(target, config)
+  }
   if (ndeps) {
     config$logger$disk("register", ndeps, "subtargets", target = target)
     config$logger$inc_progress_total(ndeps)
