@@ -221,6 +221,7 @@ is_outdated <- function(target, config) {
     return(TRUE)
   }
   class(target) <- ifelse(is_dynamic(target, config), "dynamic", "static")
+  config$jobs_preprocess <- 1
   is_outdated_impl(target, config)
 }
 
