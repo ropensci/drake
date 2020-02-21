@@ -216,7 +216,7 @@ register_subtargets <- function(target, static_ok, dynamic_ok, config) {
   announce_build(target, config)
   subtargets_build <- subtargets_all <- subtarget_names(target, config)
   if (static_ok) {
-    subtargets_build <- filter_subtargets(subtargets_all, config)
+    subtargets_build <- filter_subtargets(target, subtargets_all, config)
   }
   if (length(subtargets_all)) {
     register_in_graph(target, subtargets_all, config)
@@ -239,8 +239,9 @@ register_subtargets <- function(target, static_ok, dynamic_ok, config) {
   }
 }
 
-filter_subtargets <- function(subtargets, config) {
-  subtargets <- subtargets[target_missing(subtargets, config)]
+filter_subtargets <- function(target, subtargets, config) {
+  index <- check_subtarget_triggers(target, subtargets, config)
+  subtargets <- subtargets[index]
   if (!config$recover || !length(subtargets)) {
     return(subtargets)
   }

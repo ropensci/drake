@@ -163,6 +163,10 @@ any_subtargetlike_triggers <- function(target, meta, meta_old, config) {
   FALSE
 }
 
+any_subtarget_triggers <- function(target, subtargets, config) {
+  any(check_subtarget_triggers(target, subtargets, config))
+}
+
 check_triggers_stage1 <- function(target, meta, config) {
   if (check_trigger_imported(target, meta, config)) {
     return(TRUE)
@@ -300,6 +304,31 @@ check_trigger_format_file <- function(target, meta, meta_old, config) {
   FALSE
 }
 
+check_subtarget_triggers <- function(target, subtargets, config) {
+  out <- target_missing(subtargets, config)
+  spec <- config$spec[[target]]
+  format <- spec$format %||NA% "none"
+  if (identical(spec$trigger$file, TRUE) && format == "file") {
+    i <- !out
+    out[i] <- out[i] | check_sub_trigger_format_file(subtargets[i], config)
+  }
+  out
+}
+
+check_sub_trigger_format_file <- function(subtargets, config) {
+  lightly_parallelize_atomic(
+    X = subtargets,
+    FUN = check_sub_trigger_format_file_impl,
+    jobs = config$jobs_preprocess,
+    config = config
+  )
+}
+
+check_sub_trigger_format_file_impl <- function(subtarget, config) { # nolint
+  meta_old <- config$cache$get(key = target, namespace = "meta")
+  trigger_format_file(target, meta_old, config)
+}
+
 trigger_command <- function(target, meta, meta_old, config) {
   if (is.null(meta$command)) {
     return(FALSE)
@@ -433,7 +462,7 @@ trigger_dynamic <- function(target, meta, meta_old, config) {
 
 trigger_format_file <- function(target, meta_old, config) {
   path <- meta_old$format_file_path
-  if (any(!file.exists(path))) {
+  if (is.null(path) || any(!file.exists(path))) {
     return(TRUE)
   }
   should_rehash <- should_rehash_local(
