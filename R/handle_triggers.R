@@ -30,25 +30,17 @@ handle_triggers_impl.dynamic_registered <- function(target, meta, config) { # no
 
 handle_triggers_impl.dynamic_unregistered <- function(target, meta, config) { # nolint
   target <- unclass(target)
-  meta_old <- NULL
-  if (target_exists(target, config)) {
-    meta_old <- config$cache$get(key = target, namespace = "meta")
-  }
-  static_ok <- !any_static_triggers(target, meta, meta_old, config) ||
+  static_ok <- !any_static_triggers(target, meta, config) ||
     recover_target(target, meta, config)
-  dynamic_ok <- !check_trigger_dynamic(target, meta, meta_old, config)
+  dynamic_ok <- !check_trigger_dynamic(target, meta, config)
   register_subtargets(target, static_ok, dynamic_ok, config)
   TRUE
 }
 
 handle_triggers_impl.static <- function(target, meta, config) { # nolint
   target <- unclass(target)
-  meta_old <- NULL
-  if (target_exists(target, config)) {
-    meta_old <- config$cache$get(key = target, namespace = "meta")
-  }
-  any_triggers <- any_static_triggers(target, meta, meta_old, config) ||
-    any_subtargetlike_triggers(target, meta, meta_old, config)
+  any_triggers <- any_static_triggers(target, meta, config) ||
+    any_subtargetlike_triggers(target, meta, config)
   !any_triggers || recover_target(target, meta, config)
 }
 
@@ -126,18 +118,12 @@ recovery_key_impl.default <- function(target, meta, config) {
     meta$dependency_hash,
     meta$input_file_hash,
     meta$output_file_hash,
-    meta$format_file_path,
-    meta$format_file_hash,
     as.character(meta$seed),
     safe_deparse(meta$trigger$condition, backtick = TRUE),
     meta$trigger$mode,
     change_hash
   )
   x <- paste(x, collapse = "|")
-
-  print(target)
-  print(x)
-
   config$cache$digest(x, serialize = FALSE)
 }
 
@@ -145,7 +131,7 @@ recovery_key_impl.subtarget <- function(target, meta, config) {
   unclass(target)
 }
 
-any_static_triggers <- function(target, meta, meta_old, config) {
+any_static_triggers <- function(target, meta, config) {
   if (check_triggers_stage1(target, meta, config)) {
     return(TRUE)
   }
@@ -156,14 +142,14 @@ any_static_triggers <- function(target, meta, meta_old, config) {
   if (condition) {
     return(TRUE)
   }
-  if (check_triggers_stage2(target, meta, meta_old, config)) {
+  if (check_triggers_stage2(target, meta, config)) {
     return(TRUE)
   }
   FALSE
 }
 
-any_subtargetlike_triggers <- function(target, meta, meta_old, config) {
-  if (check_trigger_format_file(target, meta, meta_old, config)) {
+any_subtargetlike_triggers <- function(target, meta, config) {
+  if (check_trigger_format_file(target, meta, config)) {
     return(TRUE)
   }
   FALSE
@@ -183,20 +169,20 @@ check_triggers_stage1 <- function(target, meta, config) {
   FALSE
 }
 
-check_triggers_stage2 <- function(target, meta, meta_old, config) {
-  if (check_trigger_command(target, meta, meta_old, config)) {
+check_triggers_stage2 <- function(target, meta, config) {
+  if (check_trigger_command(target, meta, config)) {
     return(TRUE)
   }
-  if (check_trigger_depend(target, meta, meta_old, config)) {
+  if (check_trigger_depend(target, meta, config)) {
     return(TRUE)
   }
-  if (check_trigger_file(target, meta, meta_old, config)) {
+  if (check_trigger_file(target, meta, config)) {
     return(TRUE)
   }
-  if (check_trigger_seed(target, meta, meta_old, config)) {
+  if (check_trigger_seed(target, meta, config)) {
     return(TRUE)
   }
-  if (check_trigger_format(target, meta, meta_old, config)) {
+  if (check_trigger_format(target, meta, config)) {
     return(TRUE)
   }
   if (check_trigger_change(target, meta, config)) {
@@ -229,9 +215,9 @@ check_trigger_condition <- function(target, meta, config) {
   return(condition)
 }
 
-check_trigger_command <- function(target, meta, meta_old, config) {
+check_trigger_command <- function(target, meta, config) {
   if (identical(meta$trigger$command, TRUE)) {
-    if (trigger_command(target, meta, meta_old, config)) {
+    if (trigger_command(target, meta, config)) {
       config$logger$disk("trigger command", target = target)
       return(TRUE)
     }
@@ -239,9 +225,9 @@ check_trigger_command <- function(target, meta, meta_old, config) {
   FALSE
 }
 
-check_trigger_depend <- function(target, meta, meta_old, config) {
+check_trigger_depend <- function(target, meta, config) {
   if (identical(meta$trigger$depend, TRUE)) {
-    if (trigger_depend(target, meta, meta_old, config)) {
+    if (trigger_depend(target, meta, config)) {
       config$logger$disk("trigger depend", target = target)
       return(TRUE)
     }
@@ -249,9 +235,9 @@ check_trigger_depend <- function(target, meta, meta_old, config) {
   FALSE
 }
 
-check_trigger_file <- function(target, meta, meta_old, config) {
+check_trigger_file <- function(target, meta, config) {
   if (identical(meta$trigger$file, TRUE)) {
-    if (trigger_file(target, meta, meta_old, config)) {
+    if (trigger_file(target, meta, config)) {
       config$logger$disk("trigger file", target = target)
       return(TRUE)
     }
@@ -259,9 +245,9 @@ check_trigger_file <- function(target, meta, meta_old, config) {
   FALSE
 }
 
-check_trigger_seed <- function(target, meta, meta_old, config) {
+check_trigger_seed <- function(target, meta, config) {
   if (identical(meta$trigger$seed, TRUE)) {
-    if (trigger_seed(target, meta, meta_old, config)) {
+    if (trigger_seed(target, meta, config)) {
       config$logger$disk("trigger seed", target = target)
       return(TRUE)
     }
@@ -280,9 +266,9 @@ check_trigger_change <- function(target, meta, config) {
   FALSE
 }
 
-check_trigger_format <- function(target, meta, meta_old, config) {
+check_trigger_format <- function(target, meta, config) {
   if (identical(meta$trigger$format, TRUE)) {
-    if (trigger_format(target, meta, meta_old, config)) {
+    if (trigger_format(target, meta, config)) {
       config$logger$disk("trigger format", target = target)
       return(TRUE)
     }
@@ -290,9 +276,9 @@ check_trigger_format <- function(target, meta, meta_old, config) {
   FALSE
 }
 
-check_trigger_dynamic <- function(target, meta, meta_old, config) {
+check_trigger_dynamic <- function(target, meta, config) {
   if (identical(meta$trigger$depend, TRUE)) {
-    if (trigger_dynamic(target, meta, meta_old, config)) {
+    if (trigger_dynamic(target, meta, config)) {
       config$logger$disk("trigger depend (dynamic)", target = target)
       return(TRUE)
     }
@@ -300,9 +286,9 @@ check_trigger_dynamic <- function(target, meta, meta_old, config) {
   FALSE
 }
 
-check_trigger_format_file <- function(target, meta, meta_old, config) {
+check_trigger_format_file <- function(target, meta, config) {
   if (identical(meta$trigger$file, TRUE) && meta$format == "file") {
-    if (trigger_format_file(target, meta_old, config)) {
+    if (trigger_format_file(target, config)) {
       config$logger$disk("trigger file (format file)", target = target)
       return(TRUE)
     }
@@ -335,34 +321,34 @@ check_sub_trigger_format_file <- function(subtargets, config) {
 }
 
 check_sub_trigger_format_file_impl <- function(subtarget, config) { # nolint
-  meta_old <- config$cache$get(key = subtarget, namespace = "meta")
-  trigger_format_file(target, meta_old, config)
+  meta <- drake_meta_(subtarget, config)
+  trigger_format_file(target, meta, config)
 }
 
-trigger_command <- function(target, meta, meta_old, config) {
+trigger_command <- function(target, meta, config) {
   if (is.null(meta$command)) {
     return(FALSE)
   }
-  command <- meta_elt(field = "command", meta = meta_old)
+  command <- meta_elt(field = "command", meta = meta$meta_old)
   !identical(command, meta$command)
 }
 
-trigger_depend <- function(target, meta, meta_old, config) {
+trigger_depend <- function(target, meta, config) {
   if (is.null(meta$dependency_hash)) {
     return(FALSE)
   }
-  dependency_hash <- meta_elt(field = "dependency_hash", meta = meta_old)
+  dependency_hash <- meta_elt(field = "dependency_hash", meta = meta$meta_old)
   !identical(dependency_hash, meta$dependency_hash)
 }
 
-trigger_file <- function(target, meta, meta_old, config) {
+trigger_file <- function(target, meta, config) {
   if (!length(target) || !length(config) || !length(meta)) {
     return(FALSE)
   }
   if (trigger_file_missing(target, meta, config)) {
     return(TRUE)
   }
-  if (trigger_file_hash(target, meta, meta_old, config)) {
+  if (trigger_file_hash(target, meta, config)) {
     return(TRUE)
   }
   FALSE
@@ -378,9 +364,9 @@ trigger_file_missing <- function(target, meta, config) {
   FALSE
 }
 
-trigger_file_hash <- function(target, meta, meta_old, config) {
+trigger_file_hash <- function(target, meta, config) {
   for (hash_name in c("input_file_hash", "output_file_hash")) {
-    old_file_hash <- meta_elt(field = hash_name, meta = meta_old)
+    old_file_hash <- meta_elt(field = hash_name, meta = meta$meta_old)
     if (!identical(old_file_hash, meta[[hash_name]])) {
       return(TRUE)
     }
@@ -388,14 +374,14 @@ trigger_file_hash <- function(target, meta, meta_old, config) {
   FALSE
 }
 
-trigger_seed <- function(target, meta, meta_old, config) {
-  seed <- meta_elt(field = "seed", meta = meta_old)
+trigger_seed <- function(target, meta, config) {
+  seed <- meta_elt(field = "seed", meta = meta$meta_old)
   !identical(as.integer(seed), as.integer(meta$seed))
 }
 
-trigger_format <- function(target, meta, meta_old, config) {
+trigger_format <- function(target, meta, config) {
   format_new <- meta$format
-  format_old <- meta_old$format
+  format_old <- meta$meta_old$format
   if (is.null(format_new) || is.null(format_old)) {
     return(FALSE)
   }
@@ -459,18 +445,20 @@ trigger_change <- function(target, meta, config) {
   !identical(old_value, meta$trigger$value)
 }
 
-trigger_dynamic <- function(target, meta, meta_old, config) {
-  old_hash <- meta_elt(field = "dynamic_dependency_hash", meta = meta_old)
+trigger_dynamic <- function(target, meta, config) {
+  old_hash <- meta_elt(field = "dynamic_dependency_hash", meta = meta$meta_old)
   if (!identical(meta$dynamic_dependency_hash, old_hash)) {
     return(TRUE)
   }
-  if (!identical(meta$max_expand, meta_old$max_expand)) {
+  if (!identical(meta$max_expand, meta$meta_old$max_expand)) {
     return(TRUE)
   }
   FALSE
 }
 
-trigger_format_file <- function(target, meta_old, config) {
+trigger_format_file <- function(target, meta, config) {
+  stop("need to fix")
+
   path <- meta_old$format_file_path
   if (is.null(path) || any(!file.exists(path))) {
     return(TRUE)

@@ -232,18 +232,16 @@ is_outdated_impl <- function(target, config) {
 is_outdated_impl.static <- function(target, config) {
   target <- unclass(target)
   meta <- drake_meta_(target, config)
-  meta_old <- config$cache$get(key = target, namespace = "meta")
-  any_static_triggers(target, meta, meta_old, config) ||
-    any_subtargetlike_triggers(target, meta, meta_old, config)
+  any_static_triggers(target, meta, config) ||
+    any_subtargetlike_triggers(target, meta, config)
 }
 
 is_outdated_impl.dynamic <- function(target, config) {
   target <- unclass(target)
   meta <- drake_meta_(target, config)
-  meta_old <- config$cache$get(key = target, namespace = "meta")
-  any_static_triggers(target, meta, meta_old, config) ||
-    check_trigger_dynamic(target, meta, meta_old, config) ||
-    any_subtarget_triggers(target, meta_old$subtargets, config)
+  any_static_triggers(target, meta, config) ||
+    check_trigger_dynamic(target, meta, config) ||
+    any_subtarget_triggers(target, meta$meta_old$subtargets, config)
 }
 
 #' @title Report any import objects required by your drake_plan

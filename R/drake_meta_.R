@@ -1,6 +1,10 @@
 drake_meta_ <- function(target, config) {
   class(target) <- drake_meta_class(target, config)
-  out <- drake_meta_impl(target, config)
+  meta_old <- NULL
+  if (target_exists(target, config)) {
+    meta_old <- config$cache$get(key = target, namespace = "meta")
+  }
+  out <- drake_meta_impl(target, meta_old, config)
   class(out) <- c("drake_meta", "drake")
   out
 }
@@ -10,7 +14,7 @@ print.drake_meta <- function(x, ...) {
   cat("drake metadata for ", display_key(x$name), ":\n", sep = "")
   elts <- names(x)
   long <- c("command", "date")
-  lsts <- c("trigger", "time_start", "time_build", "time_command")
+  lsts <- c("trigger", "time_start", "time_build", "time_command", "meta_old")
   list1 <- x[setdiff(elts, c(long, lsts))]
   list2 <- x[intersect(elts, long)]
   list2 <- lapply(list2, crop_text, width = getOption("width") - 18L)
@@ -38,15 +42,16 @@ drake_meta_class <- function(target, config) {
   "static"
 }
 
-drake_meta_impl <- function(target, config) {
+drake_meta_impl <- function(target, meta_old, config) {
   UseMethod("drake_meta_impl")
 }
 
-drake_meta_impl.imported_file <- function(target, config) { # nolint
+drake_meta_impl.imported_file <- function(target, meta_old, config) { # nolint
   spec <- config$spec[[target]]
   meta <- list(
     name = target,
     target = target,
+    meta_old = meta_old,
     imported = TRUE,
     isfile = TRUE,
     format = "none",
@@ -57,15 +62,16 @@ drake_meta_impl.imported_file <- function(target, config) { # nolint
   meta$mtime <- storage_mtime(path)
   meta$size_storage <- storage_size(path)
   spec$trigger <- trigger(condition = TRUE)
-  meta <- drake_meta_static_triggers(target, meta, spec, config)
+  meta <- decorate_trigger_meta(target, meta, spec, config)
   meta
 }
 
-drake_meta_impl.imported_object <- function(target, config) { # nolint
+drake_meta_impl.imported_object <- function(target, meta_old, config) { # nolint
   spec <- config$spec[[target]]
   meta <- list(
     name = target,
     target = target,
+    meta_old = meta_old,
     imported = TRUE,
     isfile = FALSE,
     dynamic = FALSE,
@@ -74,14 +80,15 @@ drake_meta_impl.imported_object <- function(target, config) { # nolint
     file_out = spec$deps_build$file_out
   )
   spec$trigger <- trigger(condition = TRUE)
-  meta <- drake_meta_static_triggers(target, meta, spec, config)
+  meta <- decorate_trigger_meta(target, meta, spec, config)
   meta
 }
 
-drake_meta_impl.subtarget <- function(target, config) {
+drake_meta_impl.subtarget <- function(target, meta_old, config) {
   list(
     name = target,
     target = target,
+    meta_old = meta_old,
     imported = FALSE,
     isfile = FALSE,
     seed = resolve_target_seed(target, config),
@@ -89,11 +96,12 @@ drake_meta_impl.subtarget <- function(target, config) {
   )
 }
 
-drake_meta_impl.dynamic <- function(target, config) {
+drake_meta_impl.dynamic <- function(target, meta_old, config) {
   spec <- config$spec[[target]]
   meta <- list(
     name = target,
     target = target,
+    meta_old = meta_old,
     imported = FALSE,
     isfile = FALSE,
     dynamic = TRUE,
@@ -104,14 +112,15 @@ drake_meta_impl.dynamic <- function(target, config) {
     dynamic_dependency_hash = dynamic_dependency_hash(target, config),
     max_expand = spec$max_expand %||NA% config$max_expand
   )
-  drake_meta_static_triggers(target, meta, spec, config)
+  decorate_trigger_meta(target, meta, spec, config)
 }
 
-drake_meta_impl.static <- function(target, config) {
+drake_meta_impl.static <- function(target, meta_old, config) {
   spec <- config$spec[[target]]
   meta <- list(
     name = target,
     target = target,
+    meta_old = meta_old,
     imported = FALSE,
     isfile = FALSE,
     dynamic = FALSE,
@@ -121,11 +130,11 @@ drake_meta_impl.static <- function(target, config) {
     seed = resolve_target_seed(target, config),
     time_start = drake_meta_start(config)
   )
-  meta <- drake_meta_static_triggers(target, meta, spec, config)
+  meta <- decorate_trigger_meta(target, meta, spec, config)
   meta
 }
 
-drake_meta_static_triggers <- function(target, meta, spec, config) {
+decorate_trigger_meta <- function(target, meta, spec, config) {
   meta$trigger <- as.list(spec$trigger)
   if (meta$trigger$command) {
     meta$command <- spec$command_standardized

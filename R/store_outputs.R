@@ -193,6 +193,7 @@ finalize_meta <- function(target, value, meta, hash, config) {
   meta <- finalize_triggers(target, meta, config)
   meta <- finalize_times(target, meta, config)
   meta$time_start <- NULL
+  meta$meta_old <- NULL
   meta$date <- microtime()
   if (!meta$imported && !is_encoded_path(target)) {
     log_time(target, meta, config)

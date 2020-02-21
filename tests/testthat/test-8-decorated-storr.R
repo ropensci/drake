@@ -1056,6 +1056,7 @@ test_with_dir("bad file format value", {
 })
 
 test_with_dir("file trigger and dynamic files (#1168)", {
+  skip("not ready yet")
   skip_on_cran()
   write_lines <- function(files, ...) {
     for (file in files) {
