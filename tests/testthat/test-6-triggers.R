@@ -5,7 +5,7 @@ test_with_dir("empty triggers return logical", {
   expect_identical(trigger_depend("x", list(), list()), FALSE)
   expect_identical(trigger_command("x", list(), list()), FALSE)
   expect_identical(trigger_file("x", list(), list()), FALSE)
-  expect_identical(trigger_format("x", NULL, NULL, list()), FALSE)
+  expect_identical(trigger_format("x", NULL, NULL), FALSE)
   expect_identical(trigger_condition("x", list(), list()), FALSE)
   expect_identical(trigger_change("x", list(), list()), FALSE)
 })

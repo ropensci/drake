@@ -150,6 +150,39 @@ decorate_trigger_meta <- function(target, meta, spec, config) {
     try_load_deps(spec$deps_change$memory, config = config)
     meta$trigger$value <- eval(meta$trigger$change, config$envir_targets)
   }
+  class(target) <- meta$format
+  meta <- decorate_trigger_format_meta(target, meta, config)
+  meta
+}
+
+decorate_trigger_format_meta <- function(target, meta, config) {
+  UseMethod("decorate_trigger_format_meta")
+}
+
+decorate_trigger_format_meta.default <- function(target, meta, config) {
+  meta
+}
+
+decorate_trigger_format_meta.file <- function(target, meta, config) {
+  if (is.null(meta$meta_old) || !meta$trigger$file) {
+    return(meta)
+  }
+  path <- meta$meta_old$format_file_path
+  new_mtime <- storage_mtime(path)
+  new_size <- storage_size(path)
+  hash <- meta$meta_old$format_file_hash
+  should_rehash <- file.exists(path) & should_rehash_local(
+    size_threshold = rehash_storage_size_threshold,
+    new_mtime = new_mtime,
+    old_mtime = meta$meta_old$format_file_time,
+    new_size = new_size,
+    old_size = meta$meta_old$format_file_size
+  )
+  hash[should_rehash] <- rehash_local(path[should_rehash], config)
+  meta$format_file_path <- path
+  meta$format_file_hash <- hash
+  meta$format_file_time <- new_mtime
+  meta$format_file_size <- new_size
   meta
 }
 

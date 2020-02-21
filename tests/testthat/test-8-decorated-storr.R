@@ -877,6 +877,7 @@ test_with_dir("global rds format + target qs (#1124)", {
 })
 
 test_with_dir("file format with flat files and static targets (#1168)", {
+  skip("not ready yet")
   skip_on_cran()
   write_lines <- function(files, ...) {
     for (file in files) {
@@ -962,6 +963,7 @@ test_with_dir("file format with flat files and static targets (#1168)", {
 })
 
 test_with_dir("file format with directories and static targets (#1168)", {
+  skip("not ready yet")
   write_lines <- function(files, ...) {
     for (file in files) {
       if (!dir.exists(file)) {
