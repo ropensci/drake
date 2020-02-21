@@ -20,6 +20,7 @@
 * Warn when converting trailing dots (#1147).
 * Warn about imports with trailing dots on Windows (#1147).
 * Allow user-defined caches for the `loadd()` RStudio addin through the new `rstudio_drake_cache` global option (#1169, @joelnitta).
+* Change dynamic target finalization message to "finalize" instead of "aggregate" (#1176, @kendonB).
 
 # Version 7.10.0
 
