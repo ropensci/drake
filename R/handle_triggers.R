@@ -126,12 +126,18 @@ recovery_key_impl.default <- function(target, meta, config) {
     meta$dependency_hash,
     meta$input_file_hash,
     meta$output_file_hash,
+    meta$format_file_path,
+    meta$format_file_hash,
     as.character(meta$seed),
     safe_deparse(meta$trigger$condition, backtick = TRUE),
     meta$trigger$mode,
     change_hash
   )
   x <- paste(x, collapse = "|")
+
+  print(target)
+  print(x)
+
   config$cache$digest(x, serialize = FALSE)
 }
 

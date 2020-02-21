@@ -1075,3 +1075,64 @@ test_with_dir("file trigger and dynamic files (#1168)", {
   make(plan, trigger = trigger(file = FALSE))
   expect_equal(justbuilt(config), character(0))
 })
+
+test_with_dir("data recovery and dynamic files (#1168)", {
+  skip("not ready yet")
+  skip_on_cran()
+  write_lines <- function(files, ...) {
+    for (file in files) {
+      writeLines(c(file, "stuff"), file)
+    }
+    files
+  }
+  f <- function() {
+    write_lines("no_recover")
+    write_lines("b")
+  }
+  plan <- drake_plan(
+    x = target(f(), format = "file")
+  )
+  make(plan)
+  unlink("no_recover")
+  config <- drake_config(plan)
+  # Clean and recover.
+  clean()
+  make(plan, recover = TRUE)
+  expect_equal(justbuilt(config), "x")
+  expect_false(file.exists("no_recover"))
+  expect_true(file.exists("b"))
+  # Clean, remove output file, and fail to recover.
+  clean()
+  unlink(c("no_recover", "b"))
+  make(plan, recover = TRUE)
+  expect_equal(justbuilt(config), "x")
+  expect_true(file.exists("no_recover"))
+  expect_true(file.exists("b"))
+  # Set up to restore file and recover old target.
+  write_lines <- function(files, ...) {
+    for (file in files) {
+      writeLines(c(file, "stuff2"), file)
+    }
+    files
+  }
+  unlink("no_recover")
+  make(plan)
+  expect_equal(justbuilt(config), "x")
+  expect_true(file.exists("no_recover"))
+  expect_true(file.exists("b"))
+  expect_equal(outdated_impl(config), character(0))
+  # Restore file and recover old target.
+  write_lines <- function(files, ...) {
+    for (file in files) {
+      writeLines(c(file, "stuff"), file)
+    }
+    files
+  }
+  unlink("no_recover")
+  write_lines("b")
+  make(plan, recover = TRUE)
+  expect_equal(justbuilt(config), "x")
+  expect_false(file.exists("no_recover"))
+  expect_true(file.exists("b"))
+  expect_equal(outdated_impl(config), character(0))
+})
