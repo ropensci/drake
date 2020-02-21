@@ -100,12 +100,11 @@ drake_meta_impl.dynamic <- function(target, config) {
     format = spec$format %||NA% "none",
     missing = target_missing(target, config),
     seed = resolve_target_seed(target, config),
-    time_start = drake_meta_start(config)
+    time_start = drake_meta_start(config),
+    dynamic_dependency_hash = dynamic_dependency_hash(target, config),
+    max_expand = spec$max_expand %||NA% config$max_expand
   )
-  meta <- drake_meta_static_triggers(target, meta, spec, config)
-  meta$dynamic_dependency_hash <- dynamic_dependency_hash(target, config)
-  meta$max_expand <- config$max_expand
-  meta
+  drake_meta_static_triggers(target, meta, spec, config)
 }
 
 drake_meta_impl.static <- function(target, config) {

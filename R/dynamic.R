@@ -421,20 +421,22 @@ def_group <- function(..., .by = NULL, .trace = NULL) {
 # nocov end
 
 subtarget_names <- function(target, config) {
-  dynamic <- config$spec[[target]]$dynamic
+  spec <- config$spec[[target]]
+  dynamic <- spec$dynamic
   hashes <- dynamic_hash_list(dynamic, target, config)
   hashes <- subtarget_hashes(dynamic, target, hashes, config)
   hashes <- vapply(hashes, shorten_dynamic_hash, FUN.VALUE = character(1))
   out <- paste(target, hashes, sep = "_")
   out <- make_unique(out)
-  max_expand_dynamic(out, config)
+  max_expand_dynamic(out, spec, config)
 }
 
-max_expand_dynamic <- function(targets, config) {
-  if (is.null(config$max_expand)) {
+max_expand_dynamic <- function(targets, spec, config) {
+  max_expand <- spec$max_expand %||NA% config$max_expand
+  if (is.null(max_expand)) {
     return(targets)
   }
-  size <- min(length(targets), config$max_expand)
+  size <- min(length(targets), max_expand)
   targets[seq_len(size)]
 }
 

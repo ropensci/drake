@@ -7,6 +7,10 @@
 * Actually store output file sizes in metadata.
 * Use the `depend` trigger to toggle invalidation from dynamic-only dependencies, including the `max_expand` argument of `make()`.
 
+## New features
+
+* Implement dynamic `max_expand` on a target-by-target basis via `target()` (#1175, @kendonB).
+
 ## Enhancements
 
 * Assert dependencies of formats at the very beginning of `make()`, not in `drake_config()` (#1156).
@@ -18,6 +22,7 @@
 * Warn when converting trailing dots (#1147).
 * Warn about imports with trailing dots on Windows (#1147).
 * Allow user-defined caches for the `loadd()` RStudio addin through the new `rstudio_drake_cache` global option (#1169, @joelnitta).
+* Change dynamic target finalization message to "finalize" instead of "aggregate" (#1176, @kendonB).
 
 # Version 7.10.0
 

@@ -76,6 +76,9 @@ unique reproducible target-specific seeds using the global seed
 (the \code{seed} argument to \code{\link[=make]{make()}} and \code{\link[=drake_config]{drake_config()}})
 and the target names, but you can overwrite these automatic seeds.
 \code{NA} entries default back to \code{drake}'s automatic seeds.
+\item \code{max_expand}: for dynamic branching only. Same as the \code{max_expand}
+argument of \code{\link[=make]{make()}}, but on a target-by-target basis.
+Limits the number of sub-targets created for a given target.
 }
 }
 

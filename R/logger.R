@@ -106,9 +106,9 @@ target_msg <- function(target) {
   }
 }
 
-target_msg.aggregate <- function(target) {
+target_msg.finalize <- function(target) {
   symbol <- cli::col_green(cli::symbol$stop)
-  msg <- paste(symbol, "aggregate", target)
+  msg <- paste(symbol, "finalize", target)
   message(msg)
 }
 

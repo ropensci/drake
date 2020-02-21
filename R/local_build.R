@@ -40,7 +40,7 @@ announce_dynamic <- function(target, config) {
   )
   action <- ifelse(
     is_registered_dynamic(target, config),
-    "aggregate",
+    "finalize",
     "dynamic"
   )
   config$logger$target(target, action)
