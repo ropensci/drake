@@ -48,7 +48,7 @@ handle_triggers_impl.static <- function(target, meta, config) { # nolint
     meta_old <- config$cache$get(key = target, namespace = "meta")
   }
   any_triggers <- any_static_triggers(target, meta, meta_old, config) ||
-    any_subtarget_triggers(target, meta, meta_old, config)
+    any_subtargetlike_triggers(target, meta, meta_old, config)
   !any_triggers || recover_target(target, meta, config)
 }
 
@@ -156,7 +156,7 @@ any_static_triggers <- function(target, meta, meta_old, config) {
   FALSE
 }
 
-any_subtarget_triggers <- function(target, meta, meta_old, config) {
+any_subtargetlike_triggers <- function(target, meta, meta_old, config) {
   if (check_trigger_format_file(target, meta, meta_old, config)) {
     return(TRUE)
   }
