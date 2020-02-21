@@ -1780,3 +1780,106 @@ test_with_dir("target-specific max_expand (#1175)", {
   exp <- sort(c("x", "y", "z", subtargets(y), subtargets(z)))
   expect_equal(sort(justbuilt(config)), exp)
 })
+
+test_with_dir("dynamic files + dynamic branching (#1168)", {
+  skip_on_cran()
+  write_lines <- function(files, ...) {
+    for (file in files) {
+      writeLines(c(file, "stuff"), file)
+    }
+    files
+  }
+  plan <- drake_plan(
+    w = c("a", "b"),
+    x = target(
+      write_lines(w),
+      dynamic = map(w),
+      format = "file"
+    ),
+    y = target(
+      write_lines(paste0(x, x)),
+      dynamic = map(x),
+      format = "file"
+    ),
+    z = y
+  )
+  # initial state
+  config <- drake_config(plan, history = FALSE)
+  expect_equal(sort(outdated_impl(config)), sort(c("w", "x", "y", "z")))
+  make_impl(config)
+  expect_equal(
+    sort(justbuilt(config)),
+    sort(c("w", "x", "y", "z", subtargets(x), subtargets(y)))
+  )
+  # file format internals
+  expect_identical(readd(x), c("a", "b"))
+  key <- subtargets(x)[1]
+  expect_identical(config$cache$get(key), "a")
+  hash <- config$cache$get_hash(key)
+  expect_identical(config$cache$get_value(hash), "a")
+  expect_false("history" %in% list.files(".drake/drake"))
+  val <- config$cache$storr$get(key)
+  val2 <- config$cache$storr$get_value(hash)
+  expect_identical(val, val2)
+  expect_equal(val$value, "a")
+  expect_true(is.character(val$hash))
+  expect_equal(length(val$hash), 1)
+  expect_true(inherits(val, "drake_format_file"))
+  expect_true(inherits(val, "drake_format"))
+  # validated state
+  expect_equal(outdated_impl(config), character(0))
+  make_impl(config)
+  expect_equal(justbuilt(config), character(0))
+  # write the same content to an x file
+  write_lines("b")
+  expect_equal(outdated_impl(config), character(0))
+  make_impl(config)
+  expect_equal(justbuilt(config), character(0))
+  # corrupt an x file
+  writeLines("123", "b")
+  expect_equal(readLines("b"), "123")
+  expect_equal(sort(outdated_impl(config)), sort(c("x", "y", "z")))
+  make_impl(config)
+  expect_equal(
+    sort(justbuilt(config)),
+    sort(c("x", subtargets(x)[2]))
+  )
+  expect_equal(readLines("b"), c("b", "stuff"))
+  # remove an x file
+  unlink("b")
+  expect_false(file.exists("b"))
+  expect_equal(sort(outdated_impl(config)), sort(c("x", "y", "z")))
+  make_impl(config)
+  expect_equal(
+    sort(justbuilt(config)),
+    sort(c("x", subtargets(x)[2]))
+  )
+  expect_equal(readLines("b"), c("b", "stuff"))
+  # corrupt x and y files
+  writeLines("123", "b")
+  writeLines("123", "aa")
+  expect_equal(readLines("b"), "123")
+  expect_equal(readLines("aa"), "123")
+  expect_equal(sort(outdated_impl(config)), sort(c("x", "y", "z")))
+  make_impl(config)
+  expect_equal(
+    sort(justbuilt(config)),
+    sort(c("x", "y", subtargets(x)[2], subtargets(y)[1]))
+  )
+  expect_equal(readLines("b"), c("b", "stuff"))
+  expect_equal(readLines("bb"), c("bb", "stuff"))
+  # change the expected file content
+  write_lines <- function(files, ...) {
+    for (file in files) {
+      writeLines(c(file, "new stuff"), file)
+    }
+    files
+  }
+  expect_equal(sort(outdated_impl(config)), sort(c("x", "y", "z")))
+  make_impl(config)
+  expect_equal(
+    sort(justbuilt(config)),
+    sort(c("x", "y", "z", subtargets(x), subtargets(y)))
+  )
+  expect_equal(readLines("b"), c("b", "new stuff"))
+})

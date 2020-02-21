@@ -877,6 +877,7 @@ test_with_dir("global rds format + target qs (#1124)", {
 })
 
 test_with_dir("file format with flat files and static targets (#1168)", {
+  skip_on_cran()
   write_lines <- function(files, ...) {
     for (file in files) {
       writeLines(c(file, "stuff"), file)

@@ -312,20 +312,24 @@ check_subtarget_triggers <- function(target, subtargets, config) {
     i <- !out
     out[i] <- out[i] | check_sub_trigger_format_file(subtargets[i], config)
   }
+  if (any(out)) {
+    config$logger$disk("trigger subtarget (special)", target = target)
+  }
   out
 }
 
 check_sub_trigger_format_file <- function(subtargets, config) {
-  lightly_parallelize_atomic(
+  out <- lightly_parallelize(
     X = subtargets,
     FUN = check_sub_trigger_format_file_impl,
     jobs = config$jobs_preprocess,
     config = config
   )
+  unlist(out)
 }
 
 check_sub_trigger_format_file_impl <- function(subtarget, config) { # nolint
-  meta_old <- config$cache$get(key = target, namespace = "meta")
+  meta_old <- config$cache$get(key = subtarget, namespace = "meta")
   trigger_format_file(target, meta_old, config)
 }
 
