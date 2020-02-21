@@ -1054,3 +1054,24 @@ test_with_dir("bad file format value", {
   plan <- drake_plan(x = target(f(), format = "file"))
   expect_warning(make(plan), regexp = "character")
 })
+
+test_with_dir("file trigger and dynamic files (#1168)", {
+  skip_on_cran()
+  write_lines <- function(files, ...) {
+    for (file in files) {
+      writeLines(c(file, "stuff"), file)
+    }
+    files
+  }
+  plan <- drake_plan(
+    x = target(
+      write_lines(c("a", "b")),
+      format = "file"
+    )
+  )
+  make(plan)
+  unlink(c("a", "b"))
+  config <- drake_config(plan)
+  make(plan, trigger = trigger(file = FALSE))
+  expect_equal(justbuilt(config), character(0))
+})
