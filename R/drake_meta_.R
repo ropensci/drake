@@ -1,6 +1,6 @@
-drake_meta_ <- function(target, config) {
+drake_meta_ <- function(target, config, spec = NULL) {
   class(target) <- drake_meta_class(target, config)
-  spec <- config$spec[[target]]
+  spec <- spec %|||% config$spec[[target]]
   meta <- drake_meta_impl(target, spec, config)
   meta_old <- NULL
   if (target_exists(target, config)) {
