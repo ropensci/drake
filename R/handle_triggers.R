@@ -353,7 +353,8 @@ trigger_command <- function(target, meta, config) {
   if (is.null(meta$command)) {
     return(FALSE)
   }
-  command <- meta_elt(field = "command", meta = meta$meta_old)
+  meta_old <- drake_meta_old(target, config)
+  command <- meta_elt(field = "command", meta = meta_old)
   !identical(command, meta$command)
 }
 
@@ -361,7 +362,8 @@ trigger_depend <- function(target, meta, config) {
   if (is.null(meta$dependency_hash)) {
     return(FALSE)
   }
-  dependency_hash <- meta_elt(field = "dependency_hash", meta = meta$meta_old)
+  meta_old <- drake_meta_old(target, config)
+  dependency_hash <- meta_elt(field = "dependency_hash", meta = meta_old)
   !identical(dependency_hash, meta$dependency_hash)
 }
 
@@ -390,7 +392,8 @@ trigger_file_missing <- function(target, meta, config) {
 
 trigger_file_hash <- function(target, meta, config) {
   for (hash_name in c("input_file_hash", "output_file_hash")) {
-    old_file_hash <- meta_elt(field = hash_name, meta = meta$meta_old)
+    meta_old <- drake_meta_old(target, config)
+    old_file_hash <- meta_elt(field = hash_name, meta = meta_old)
     if (!identical(old_file_hash, meta[[hash_name]])) {
       return(TRUE)
     }
@@ -399,13 +402,15 @@ trigger_file_hash <- function(target, meta, config) {
 }
 
 trigger_seed <- function(target, meta, config) {
-  seed <- meta_elt(field = "seed", meta = meta$meta_old)
+  meta_old <- drake_meta_old(target, config)
+  seed <- meta_elt(field = "seed", meta = meta_old)
   !identical(as.integer(seed), as.integer(meta$seed))
 }
 
 trigger_format <- function(target, meta, config) {
+  meta_old <- drake_meta_old(target, config)
   format_new <- meta$format
-  format_old <- meta$meta_old$format
+  format_old <- meta_old$format
   if (is.null(format_new) || is.null(format_old)) {
     return(FALSE)
   }
@@ -470,19 +475,21 @@ trigger_change <- function(target, meta, config) {
 }
 
 trigger_dynamic <- function(target, meta, config) {
-  old_hash <- meta_elt(field = "dynamic_dependency_hash", meta = meta$meta_old)
+  meta_old <- drake_meta_old(target, config)
+  old_hash <- meta_elt(field = "dynamic_dependency_hash", meta = meta_old)
   if (!identical(meta$dynamic_dependency_hash, old_hash)) {
     return(TRUE)
   }
-  if (!identical(meta$max_expand, meta$meta_old$max_expand)) {
+  if (!identical(meta$max_expand, meta_old$max_expand)) {
     return(TRUE)
   }
   FALSE
 }
 
 trigger_format_file <- function(target, meta, config) {
+  meta_old <- drake_meta_old(target, config)
   hash_new <- meta$format_file_hash
-  hash_old <- meta$meta_old$format_file_hash
+  hash_old <- meta_old$format_file_hash
   length(hash_new) != length(hash_old) ||
     any(hash_new != hash_old)
 }

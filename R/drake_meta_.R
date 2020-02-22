@@ -1,14 +1,35 @@
 drake_meta_ <- function(target, config, spec = NULL) {
+  if (exists(target, envir = config$meta, inherits = FALSE)) {
+    return(config$meta[[target]])
+  }
+  set_drake_meta(target, config, spec)
+  config$meta[[target]]
+}
+
+drake_meta_old <- function(target, config) {
+  if (exists(target, envir = config$meta_old, inherits = FALSE)) {
+    return(config$meta_old[[target]])
+  }
+  set_drake_meta_old(target, config)
+  config$meta_old[[target]]
+}
+
+set_drake_meta <- function(target, config, spec = NULL) {
   class(target) <- drake_meta_class(target, config)
   spec <- spec %|||% config$spec[[target]]
   meta <- drake_meta_impl(target, spec, config)
-  meta_old <- NULL
+  set_drake_meta_old(target, config)
+  meta <- subsume_old_meta(target, meta, config)
+  class(meta) <- c("drake_meta", "drake")
+  config$meta[[target]] <- meta
+  NULL
+}
+
+set_drake_meta_old <- function(target, config) {
   if (target_exists(target, config)) {
     meta_old <- config$cache$get(key = target, namespace = "meta")
+    config$meta_old[[target]] <- meta_old
   }
-  meta <- subsume_old_meta(target, meta, meta_old, config)
-  class(meta) <- c("drake_meta", "drake")
-  meta
 }
 
 #' @export
@@ -16,7 +37,7 @@ print.drake_meta <- function(x, ...) {
   cat("drake metadata for ", display_key(x$name), ":\n", sep = "")
   elts <- names(x)
   long <- c("command", "date")
-  lsts <- c("trigger", "time_start", "time_build", "time_command", "meta_old")
+  lsts <- c("trigger", "time_start", "time_build", "time_command")
   list1 <- x[setdiff(elts, c(long, lsts))]
   list2 <- x[intersect(elts, long)]
   list2 <- lapply(list2, crop_text, width = getOption("width") - 18L)
@@ -149,8 +170,7 @@ decorate_trigger_meta <- function(target, meta, spec, config) {
   meta
 }
 
-subsume_old_meta <- function(target, meta, meta_old, config) {
-  meta$meta_old <- meta_old
+subsume_old_meta <- function(target, meta, config) {
   if (!is_dynamic(target, config)) {
     class(target) <- meta$format
     meta <- decorate_trigger_format_meta(target, meta, config)
@@ -167,21 +187,22 @@ decorate_trigger_format_meta.default <- function(target, meta, config) { # nolin
 }
 
 decorate_trigger_format_meta.file <- function(target, meta, config) { # nolint
-  if (is.null(meta$meta_old) || !meta$trigger$file) {
+  meta_old <- config$meta_old[[target]]
+  if (is.null(meta_old) || !meta$trigger$file) {
     return(meta)
   }
-  path <- as.character(meta$meta_old$format_file_path)
+  path <- as.character(meta_old$format_file_path)
   new_mtime <- storage_mtime(path)
   new_size <- storage_size(path)
-  hash <- as.character(meta$meta_old$format_file_hash)
+  hash <- as.character(meta_old$format_file_hash)
   exists <- file.exists(path)
   hash[!exists] <- ""
   should_rehash <- exists & should_rehash_local(
     size_threshold = rehash_storage_size_threshold,
     new_mtime = new_mtime,
-    old_mtime = as.numeric(meta$meta_old$format_file_time),
+    old_mtime = as.numeric(meta_old$format_file_time),
     new_size = new_size,
-    old_size = as.numeric(meta$meta_old$format_file_size)
+    old_size = as.numeric(meta_old$format_file_size)
   )
   hash[should_rehash] <- rehash_local(path[should_rehash], config)
   meta$format_file_path <- path

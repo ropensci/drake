@@ -243,16 +243,7 @@ make_impl <- function(config) {
     config$cache$lock()
     on.exit(config$cache$unlock(), add = TRUE)
   }
-  config$running_make <- TRUE
-  config$ht_dynamic <- ht_new()
-  config$ht_dynamic_size <- ht_new()
-  config$ht_is_subtarget <- ht_new()
-  config$ht_target_exists <- ht_target_exists(config)
-  config$envir_loaded <- new.env(hash = FALSE, parent = emptyenv())
-  config$cache$reset_memo_hash()
-  config$meta <- new.env(parent = emptyenv())
-  config$meta_old <- new.env(parent = emptyenv())
-  config$cache$set(key = "seed", value = config$seed, namespace = "session")
+  config <- prep_config_for_make(config)
   if (config$log_progress) {
     config$cache$clear(namespace = "progress")
   }
@@ -276,6 +267,20 @@ make_impl <- function(config) {
   )
   clear_make_memory(config)
   invisible()
+}
+
+prep_config_for_make <- function(config) {
+  config$running_make <- TRUE
+  config$ht_dynamic <- ht_new()
+  config$ht_dynamic_size <- ht_new()
+  config$ht_is_subtarget <- ht_new()
+  config$ht_target_exists <- ht_target_exists(config)
+  config$envir_loaded <- new.env(hash = FALSE, parent = emptyenv())
+  config$cache$reset_memo_hash()
+  config$meta <- new.env(hash = TRUE, parent = emptyenv())
+  config$meta_old <- new.env(hash = TRUE, parent = emptyenv())
+  config$cache$set(key = "seed", value = config$seed, namespace = "session")
+  config
 }
 
 process_targets <- function(config) {

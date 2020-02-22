@@ -86,8 +86,8 @@ recoverable_impl <- function(
   }
   config$ht_is_subtarget <- ht_new()
   config$ht_target_exists <- ht_target_exists(config)
-  config$meta <- new.env(parent = emptyenv())
-  config$meta_old <- new.env(parent = emptyenv())
+  config$meta <- new.env(hash = TRUE, parent = emptyenv())
+  config$meta_old <- new.env(hash = TRUE, parent = emptyenv())
   if (do_prework) {
     do_prework(config = config, verbose_packages = config$logger$verbose)
   }
@@ -245,9 +245,10 @@ is_outdated_impl.static <- function(target, config) {
 is_outdated_impl.dynamic <- function(target, config) {
   target <- unclass(target)
   meta <- drake_meta_(target, config)
+  meta_old <- drake_meta_old(target, config)
   any_static_triggers(target, meta, config) ||
     check_trigger_dynamic(target, meta, config) ||
-    any_subtarget_triggers(target, meta$meta_old$subtargets, config)
+    any_subtarget_triggers(target, meta_old$subtargets, config)
 }
 
 #' @title Report any import objects required by your drake_plan
