@@ -1153,6 +1153,8 @@ test_with_dir("data recovery and dynamic files (#1168)", {
 })
 
 test_with_dir("format file hpc checksums (#1168)", {
+  skip_on_cran()
+  skip_if_not_installed("future")
   write_lines <- function(files, ...) {
     for (file in files) {
       writeLines(c(file, "stuff"), file)
@@ -1170,9 +1172,24 @@ test_with_dir("format file hpc checksums (#1168)", {
   out <- format_file_checksum("x", readd(x), config)
   expect_equal(length(out), 2L)
   expect_equal(nchar(out), c(16L, 16L))
+  clean(destroy = TRUE)
+  make(plan, parallelism = "future", caching = "worker")
+  skip_if_not_installed("clustermq")
+  skip_on_os("windows")
+  options(clustermq.scheduler = "multicore")
+  for (caching in c("master", "worker")) {
+    clean(destroy = TRUE)
+    make(plan, parallelism = "clustermq", caching = caching)
+    config <- drake_config(plan)
+    expect_equal(justbuilt(config), "x")
+  }
+  if ("package:clustermq" %in% search()) {
+    detach("package:clustermq", unload = TRUE) # nolint
+  }
 })
 
 test_with_dir("missing format file (#1168)", {
+  skip_on_cran()
   plan <- drake_plan(x = target(c("a", "b"), format = "file"))
   expect_warning(make(plan), regexp = "missing dynamic files")
   out <- drake_cache()$storr$get("x")$hash
@@ -1181,6 +1198,7 @@ test_with_dir("missing format file (#1168)", {
 })
 
 test_with_dir("empty format file (#1168)", {
+  skip_on_cran()
   plan <- drake_plan(x = target(character(0), format = "file"))
   make(plan)
   out <- drake_cache()$storr$get("x")
@@ -1191,6 +1209,7 @@ test_with_dir("empty format file (#1168)", {
 })
 
 test_with_dir("non-character format file (#1168)", {
+  skip_on_cran()
   plan <- drake_plan(x = target(1, format = "file"))
   expect_warning(make(plan), regexp = "coercing")
 })

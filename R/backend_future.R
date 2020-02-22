@@ -183,7 +183,9 @@ future_build <- function(
     return(build)
   }
   conclude_build(build = build, config = config)
-  list(target = target, checksum = get_checksum(target, build$value, config))
+  checksum <- get_checksum(target, build$value, config)
+  value <- hpc_worker_build_value(target, build$value, config)
+  list(target = target, value = value, checksum = checksum)
 }
 
 running_targets <- function(config) {

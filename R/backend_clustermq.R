@@ -225,7 +225,9 @@ cmq_build <- function(target, meta, deps, spec, ht_is_subtarget, config) {
     return(build)
   }
   conclude_build(build = build, config = config)
-  list(target = target, checksum = get_checksum(target, build$value, config))
+  checksum <- get_checksum(target, build$value, config)
+  value <- hpc_worker_build_value(target, build$value, config)
+  list(target = target, value = value, checksum = checksum)
 }
 
 cmq_assign_deps <- function(deps, config) {

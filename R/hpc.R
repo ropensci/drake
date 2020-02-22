@@ -205,11 +205,17 @@ is_good_checksum <- function(target, value, checksum, config) {
     )
   )
   format <- config$spec[[target]]$format
-  if (!is.null(format) && !is.na(format)) {
+  if (!is.null(format) && !is.na(format) && !is_external_format(format)) {
     format_file <- config$cache$file_return_key(target)
     out <- out && file.exists(format_file)
   }
   out
+}
+
+is_external_format <- function(format) {
+  format %in% c(
+    "file"
+  )
 }
 
 is_good_outfile_checksum <- function(target, value, checksum, config) {
@@ -384,4 +390,11 @@ unserialize_build.drake_build_keras <- function(build) { # nolint
 
 unserialize_build.default <- function(build) {
   build
+}
+
+hpc_worker_build_value <- function(target, value, config) {
+  if (config$spec[[target]]$format == "file") {
+    return(value)
+  }
+  NULL
 }
