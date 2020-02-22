@@ -250,7 +250,8 @@ make_impl <- function(config) {
   config$ht_target_exists <- ht_target_exists(config)
   config$envir_loaded <- new.env(hash = FALSE, parent = emptyenv())
   config$cache$reset_memo_hash()
-  on.exit(config$cache$reset_memo_hash(), add = TRUE)
+  config$meta <- new.env(parent = emptyenv())
+  config$meta_old <- new.env(parent = emptyenv())
   config$cache$set(key = "seed", value = config$seed, namespace = "session")
   if (config$log_progress) {
     config$cache$clear(namespace = "progress")
@@ -413,6 +414,7 @@ do_prework <- function(config, verbose_packages) {
 }
 
 clear_make_memory <- function(config) {
+  config$cache$reset_memo_hash()
   envirs <- c(
     "envir_graph",
     "envir_targets",

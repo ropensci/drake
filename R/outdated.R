@@ -86,6 +86,8 @@ recoverable_impl <- function(
   }
   config$ht_is_subtarget <- ht_new()
   config$ht_target_exists <- ht_target_exists(config)
+  config$meta <- new.env(parent = emptyenv())
+  config$meta_old <- new.env(parent = emptyenv())
   if (do_prework) {
     do_prework(config = config, verbose_packages = config$logger$verbose)
   }
@@ -168,6 +170,8 @@ outdated_impl <- function(
   assert_config(config)
   if (!identical(config$running_make, TRUE)) {
     config$logger$file <- NULL
+    config$meta <- new.env(parent = emptyenv())
+    config$meta_old <- new.env(parent = emptyenv())
   }
   if (make_imports && config$lock_cache) {
     config$cache$lock()

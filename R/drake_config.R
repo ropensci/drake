@@ -651,6 +651,8 @@ drake_config <- function(
   envir_subtargets <- new.env(parent = envir_dynamic)
   envir_loaded <- new.env(hash = FALSE, parent = emptyenv())
   envir_graph <- new.env(parent = emptyenv())
+  meta <- new.env(parent = emptyenv())
+  meta_old <- new.env(parent = emptyenv())
   out <- list(
     envir = envir,
     envir_graph = envir_graph,
@@ -667,6 +669,8 @@ drake_config <- function(
     lib_loc = lib_loc,
     prework = prework,
     spec = spec,
+    meta = meta,
+    meta_old = meta_old,
     graph = graph,
     seed = seed,
     trigger = trigger,
