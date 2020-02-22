@@ -87,8 +87,8 @@ recover_target <- function(target, meta, config) {
 }
 
 recover_subtarget <- function(subtarget, parent, config) {
-  meta <- drake_meta_(subtarget, config)
-  meta <- semiregistered_subtarget_meta(subtarget, parent, meta, config)
+  spec <- config$spec[[parent]]
+  meta <- drake_meta_(subtarget, config, spec = spec)
   class(subtarget) <- "subtarget"
   recover_target(subtarget, meta, config)
 }
@@ -311,7 +311,7 @@ check_subtarget_triggers <- function(target, subtargets, config) {
   format <- spec$format %||NA% "none"
   if (identical(spec$trigger$file, TRUE) && format == "file") {
     i <- !out
-    out[i] <- out[i] | check_sub_trigger_format_file(
+    out[i] <- out[i] | check_trigger_subtarget_format_file(
       subtargets[i],
       target,
       config
@@ -323,10 +323,14 @@ check_subtarget_triggers <- function(target, subtargets, config) {
   out
 }
 
-check_sub_trigger_format_file <- function(subtargets, parent, config) {
+check_trigger_subtarget_format_file <- function( # nolint
+  subtargets,
+  parent,
+  config
+) {
   out <- lightly_parallelize(
     X = subtargets,
-    FUN = check_sub_trigger_format_file_impl,
+    FUN = check_trigger_subtarget_format_file_impl,
     jobs = config$jobs_preprocess,
     parent = parent,
     config = config
@@ -334,22 +338,10 @@ check_sub_trigger_format_file <- function(subtargets, parent, config) {
   unlist(out)
 }
 
-check_sub_trigger_format_file_impl <- function(subtarget, parent, config) { # nolint
-  meta <- drake_meta_(subtarget, config)
-  # This is an unfortunate hack to deal with unregistered sub-targets
-  # we need to check.
-  meta <- semiregistered_subtarget_meta(subtarget, parent, meta, config)
-  # Now we proceed as if the sub-target were
+check_trigger_subtarget_format_file_impl <- function(subtarget, parent, config) { # nolint
+  spec <- config$spec[[parent]]
+  meta <- drake_meta_(subtarget, config, spec = spec)
   trigger_format_file(subtarget, meta, config)
-}
-
-semiregistered_subtarget_meta <- function(subtarget, parent, meta, config) {
-  meta$format <- config$spec[[parent]]$format
-  if (meta$format == "none") {
-    return(meta)
-  }
-  meta <- subsume_old_meta(subtarget, meta, meta$meta_old, config)
-  meta
 }
 
 trigger_command <- function(target, meta, config) {
