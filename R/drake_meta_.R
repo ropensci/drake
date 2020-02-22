@@ -1,17 +1,3 @@
-subtarget_meta_list <- function(subtargets, parent, config) {
-  ht_set(config$ht_is_subtarget, subtargets)
-  spec <- config$spec[[parent]]
-  out <- lightly_parallelize(
-    X = subtargets,
-    FUN = drake_meta_,
-    jobs = config$jobs_preprocess,
-    config = config,
-    spec = spec
-  )
-  names(out) <- subtargets
-  out
-}
-
 drake_meta_ <- function(target, config, spec = NULL) {
   class(target) <- drake_meta_class(target, config)
   spec <- spec %|||% config$spec[[target]]
@@ -165,8 +151,10 @@ decorate_trigger_meta <- function(target, meta, spec, config) {
 
 subsume_old_meta <- function(target, meta, meta_old, config) {
   meta$meta_old <- meta_old
-  class(target) <- meta$format
-  meta <- decorate_trigger_format_meta(target, meta, config)
+  if (!is_dynamic(target, config)) {
+    class(target) <- meta$format
+    meta <- decorate_trigger_format_meta(target, meta, config)
+  }
   meta
 }
 
@@ -174,11 +162,11 @@ decorate_trigger_format_meta <- function(target, meta, config) {
   UseMethod("decorate_trigger_format_meta")
 }
 
-decorate_trigger_format_meta.default <- function(target, meta, config) {
+decorate_trigger_format_meta.default <- function(target, meta, config) { # nolint
   meta
 }
 
-decorate_trigger_format_meta.file <- function(target, meta, config) {
+decorate_trigger_format_meta.file <- function(target, meta, config) { # nolint
   if (is.null(meta$meta_old) || !meta$trigger$file) {
     return(meta)
   }

@@ -236,8 +236,30 @@ get_outfile_checksum <- function(target, config) {
     FUN.VALUE = character(1),
     config = config
   )
+  out <- c(out, external_format_checksum(target, config))
   out <- paste(out, collapse = "")
   config$cache$digest(out, serialize = FALSE)
+}
+
+external_format_checksum <- function(target, config) {
+  if (is_dynamic(target, config)) {
+    return(character(0))
+  }
+  class(target) <- config$spec[[target]]$format
+  external_format_checksum_impl(target, config)
+}
+
+external_format_checksum_impl <- function(target, config) { # nolint
+  UseMethod("external_format_checksum_impl")
+}
+
+external_format_checksum_impl.default <- function(target, config) { # nolint
+  character(0)
+}
+
+external_format_checksum_impl.file <- function(target, config) { # nolint
+  meta <- drake_meta_(target, config)
+  c(meta$format_file_path, meta$format_file_hash)
 }
 
 warn_no_checksum <- function(target, config) {
@@ -267,7 +289,8 @@ drake_pmap <- function(.l, .f, jobs = 1, ...) {
       listi <- lapply(.l, function(x) x[[i]])
       do.call(.f, args = c(listi, ...), quote = TRUE)
     },
-    jobs = jobs)
+    jobs = jobs
+  )
 }
 
 parallel_filter <- function(x, f, jobs = 1, ...) {
