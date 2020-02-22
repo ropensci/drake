@@ -393,7 +393,7 @@ unserialize_build.default <- function(build) {
 }
 
 hpc_worker_build_value <- function(target, value, config) {
-  format <- config$spec[[target]]$format %|||% "none"
+  format <- config$spec[[target]]$format %||NA% "none"
   if (format == "file") {
     return(value)
   }
