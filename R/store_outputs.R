@@ -5,7 +5,7 @@ store_outputs <- function(target, value, meta, config) {
   config$logger$disk("store", target = target)
   store_triggers(target, meta, config)
   meta$name <- target
-  value <- decorate_format_value(value, config)
+  value <- decorate_format_value(value, target, config)
   store_item(
     target = target,
     value = value,
@@ -19,16 +19,28 @@ store_outputs <- function(target, value, meta, config) {
   )
 }
 
-decorate_format_value <- function(value, config) {
+decorate_format_value <- function(value, target, config) {
   UseMethod("decorate_format_value")
 }
 
-decorate_format_value.default <- function(value, config) {
+decorate_format_value.default <- function(value, target, config) {
   value
 }
 
-decorate_format_value.drake_format_file <- function(value, config) { # nolint
-  value$hash <- rehash_local(value$value, config)
+decorate_format_value.drake_format_file <- function(value, target, config) { # nolint
+  path <- value$value
+  hash <- rep(NA_character_, length(path))
+  exists <- file.exists(path)
+  if (any(!exists)) {
+    msg <- paste0(
+      "missing dynamic files for target ",
+      target, ":\n", multiline_message(path[!exists])
+    )
+    warning(msg, call. = FALSE)
+    config$logger$disk(msg)
+  }
+  hash[exists] <- rehash_local(path[exists], config)
+  value$hash <- hash
   value
 }
 

@@ -1171,3 +1171,26 @@ test_with_dir("format file hpc checksums (#1168)", {
   expect_equal(length(out), 2L)
   expect_equal(nchar(out), c(16L, 16L))
 })
+
+test_with_dir("missing format file (#1168)", {
+  plan <- drake_plan(x = target(c("a", "b"), format = "file"))
+  expect_warning(make(plan), regexp = "missing dynamic files")
+  out <- drake_cache()$storr$get("x")$hash
+  exp <- rep(NA_character_, 2L)
+  expect_equal(out, exp)
+})
+
+test_with_dir("empty format file (#1168)", {
+  plan <- drake_plan(x = target(character(0), format = "file"))
+  make(plan)
+  out <- drake_cache()$storr$get("x")
+  expect_equal(out$value, character(0))
+  expect_equal(out$hash, character(0))
+  expect_true(inherits(out, "drake_format_file"))
+  expect_true(inherits(out, "drake_format"))
+})
+
+test_with_dir("non-character format file (#1168)", {
+  plan <- drake_plan(x = target(1, format = "file"))
+  expect_warning(make(plan), regexp = "coercing")
+})
