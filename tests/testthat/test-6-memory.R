@@ -379,3 +379,27 @@ test_with_dir("drake_envir(\"imports\") (#882)", {
   make(plan)
   expect_true("a" %in% readd(x))
 })
+
+test_with_dir("centralized metadata (#1177)", {
+  plan <- drake_plan(x = 1)
+  make(plan)
+  config <- drake_config(plan)
+  expect_error(drake_meta_("x", config, spec = NA))
+  expect_false(exists("x", envir = config$meta))
+  meta1 <- drake_meta_("x", config)
+  expect_true(exists("x", envir = config$meta))
+  meta2 <- drake_meta_("x", config)
+  expect_equal(meta1, meta2)
+})
+
+test_with_dir("centralized old metadata (#1177)", {
+  plan <- drake_plan(x = 1)
+  make(plan)
+  config <- drake_config(plan)
+  expect_error(drake_meta_old("x", config = NA))
+  expect_false(exists("x", envir = config$meta_old))
+  meta1 <- drake_meta_old("x", config)
+  expect_true(exists("x", envir = config$meta_old))
+  meta2 <- drake_meta_old("x", config)
+  expect_equal(meta1, meta2)
+})
