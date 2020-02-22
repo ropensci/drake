@@ -244,6 +244,7 @@ register_subtargets <- function(target, static_ok, dynamic_ok, config) {
 filter_subtargets <- function(target, subtargets, config) {
   index <- check_subtarget_triggers(target, subtargets, config)
   subtargets <- subtargets[index]
+  ht_set(config$ht_is_subtarget, subtargets)
   if (!config$recover || !length(subtargets)) {
     return(subtargets)
   }

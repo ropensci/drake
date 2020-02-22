@@ -328,6 +328,7 @@ check_trigger_subtarget_format_file <- function( # nolint
   parent,
   config
 ) {
+  ht_set(config$ht_is_subtarget, subtargets)
   out <- lightly_parallelize(
     X = subtargets,
     FUN = check_trigger_subtarget_format_file_impl,
