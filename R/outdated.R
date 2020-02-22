@@ -3,7 +3,9 @@
 #' @description Only shows the most upstream updated targets.
 #'   Whether downstream targets are recoverable depends on
 #'   the eventual values of the upstream targets in the next [make()].
-#'   Does not show dynamic sub-targets.
+#'   Not valid for dynamic branching combined with dynamic files
+#'   (e.g. `dynamic = map(stuff)` and `format = "file"` etc.)
+#'   since behavior is harder to predict in advance.
 #' @section Recovery:
 #'  `make(recover = TRUE, recoverable = TRUE)`
 #'   powers automated data recovery.
@@ -220,18 +222,28 @@ is_outdated <- function(target, config) {
   if (target_missing(target, config)) {
     return(TRUE)
   }
-  meta <- drake_meta_(target, config)
-  meta_old <- config$cache$get(key = target, namespace = "meta")
-  any_static_triggers(target, meta, meta_old, config) ||
-    check_trigger_dynamic(target, meta, meta_old, config) ||
-    missing_subtargets(target, meta_old, config)
+  class(target) <- ifelse(is_dynamic(target, config), "dynamic", "static")
+  config$jobs_preprocess <- 1
+  is_outdated_impl(target, config)
 }
 
-missing_subtargets <- function(target, meta, config) {
-  if (!is_dynamic(target, config)) {
-    return(FALSE)
-  }
-  any(target_missing(meta$subtargets, config))
+is_outdated_impl <- function(target, config) {
+  UseMethod("is_outdated_impl")
+}
+
+is_outdated_impl.static <- function(target, config) {
+  target <- unclass(target)
+  meta <- drake_meta_(target, config)
+  any_static_triggers(target, meta, config) ||
+    any_subtargetlike_triggers(target, meta, config)
+}
+
+is_outdated_impl.dynamic <- function(target, config) {
+  target <- unclass(target)
+  meta <- drake_meta_(target, config)
+  any_static_triggers(target, meta, config) ||
+    check_trigger_dynamic(target, meta, config) ||
+    any_subtarget_triggers(target, meta$meta_old$subtargets, config)
 }
 
 #' @title Report any import objects required by your drake_plan

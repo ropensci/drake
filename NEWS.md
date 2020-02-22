@@ -4,9 +4,12 @@
 
 * Sanitize internal S3 classes for target storage (#1159, @rsangole).
 * Bump `digest` version to require 0.6.21 (#1166, @boshek)
+* Actually store output file sizes in metadata.
+* Use the `depend` trigger to toggle invalidation from dynamic-only dependencies, including the `max_expand` argument of `make()`.
 
 ## New features
 
+* Allow dynamic files with `target(format = "file")` (#1168, #1127).
 * Implement dynamic `max_expand` on a target-by-target basis via `target()` (#1175, @kendonB).
 
 ## Enhancements
@@ -21,6 +24,7 @@
 * Warn about imports with trailing dots on Windows (#1147).
 * Allow user-defined caches for the `loadd()` RStudio addin through the new `rstudio_drake_cache` global option (#1169, @joelnitta).
 * Change dynamic target finalization message to "finalize" instead of "aggregate" (#1176, @kendonB).
+* Describe the limits of `recoverable()`, e.g. dynamic branching + dynamic files.
 
 # Version 7.10.0
 

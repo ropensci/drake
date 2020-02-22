@@ -114,8 +114,31 @@ test_with_dir("time stamps and large files", {
   )
   file.append(file_large, file_csv)
   plan <- drake_plan(x = file_in(!!file_large))
-  cache <- storr::storr_rds(tempfile())
+  cache <- storr::storr_rds(file.path(tempfile(), "cache"))
   config <- drake_config(plan, cache = cache)
+  make(plan, cache = cache, log_make = log1) # should be a little slow
+  expect_equal(justbuilt(config), "x")
+  make(plan, cache = cache, log_make = log2) # should be quick
+  expect_equal(justbuilt(config), character(0))
+  tmp <- file.append(file_large, file_csv)
+  make(plan, cache = cache, log_make = log3) # should be a little slow
+  expect_equal(justbuilt(config), "x")
+  system2("touch", file_large)
+  make(plan, cache = cache, log_make = log4) # should be a little slow
+  expect_equal(justbuilt(config), character(0))
+  # Now, compare the times stamps on the logs.
+  # Make sure the imported file takes a long time to process the first time
+  # but is instantaneous the second time.
+  # The third time, the file changed, so the processing time
+  # should be longer. Likewise for the fourth time because
+  # the file was touched.
+  message(paste(readLines(log1), collapse = "\n"))
+  message(paste(readLines(log2), collapse = "\n"))
+  message(paste(readLines(log3), collapse = "\n"))
+  message(paste(readLines(log4), collapse = "\n"))
+  # New plan: dynamic files.
+  plan <- drake_plan(x = target(file_large, format = "file"))
+  # Same as before.
   make(plan, cache = cache, log_make = log1) # should be a little slow
   expect_equal(justbuilt(config), "x")
   make(plan, cache = cache, log_make = log2) # should be quick
@@ -415,6 +438,28 @@ test_with_dir("progress bars", {
   clean()
   options(clustermq.scheduler = "multicore")
   make(plan, verbose = 2, parallelism = "clustermq")
+})
+
+test_with_dir("dynamic branching + format file checksums (#1168)", {
+  write_lines <- function(files, ...) {
+    for (file in files) {
+      writeLines(c(file, "stuff"), file)
+    }
+    files
+  }
+  plan <- drake_plan(
+    x = c("a", "b"),
+    y = target(
+      write_lines(x),
+      format = "file",
+      dynamic = map(x)
+    )
+  )
+  # Need to walk through this function manually.
+  debug(format_file_checksum_impl.file)
+  # Browse in a sub-target of y.
+  # Make sure nonempty hashes are returned from the function.
+  make(plan, parallelism = "future")
 })
 
 }

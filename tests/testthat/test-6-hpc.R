@@ -69,28 +69,56 @@ test_with_dir("checksum functionality", {
   config$jobs <- 1
   config$cache <- decorate_storr(storr::storr_environment())
   testrun(config)
-  checksum <- get_checksum(target = "combined", config = config)
+  checksum <- get_checksum(target = "combined", value = 1, config = config)
   bad <- "askldfklhjsdfkj"
   expect_false(grepl("NA", checksum))
   expect_true(
     is_good_checksum(
-      target = "combined", checksum = checksum, config = config))
+      target = "combined", value = 1, checksum = checksum, config = config))
   expect_false(
     is_good_checksum(
-      target = "combined", checksum = bad, config = config))
+      target = "combined", value = 1, checksum = bad, config = config))
   expect_silent(
     wait_checksum(
-      target = "combined", checksum = checksum, config = config, timeout = 0.1))
+      target = "combined",
+      value = 1,
+      checksum = checksum,
+      config = config,
+      timeout = 0.1
+    )
+  )
   expect_error(
     wait_checksum(
-      target = "combined", checksum = bad, config = config, timeout = 0.1))
-  checksum <- get_outfile_checksum(target = "combined", config = config)
+      target = "combined",
+      value = 1,
+      checksum = bad,
+      config = config,
+      timeout = 0.1
+    )
+  )
+  checksum <- get_outfile_checksum(
+    target = "combined",
+    value = 1,
+    config = config
+  )
   expect_silent(
     wait_outfile_checksum(
-      target = "combined", checksum = checksum, config = config, timeout = 0.1))
+      target = "combined",
+      value = 1,
+      checksum = checksum,
+      config = config,
+      timeout = 0.1
+    )
+  )
   expect_error(
     wait_outfile_checksum(
-      target = "combined", checksum = bad, config = config, timeout = 0.1))
+      target = "combined",
+      value = 1,
+      checksum = bad,
+      config = config,
+      timeout = 0.1
+    )
+  )
 })
 
 test_with_dir("direct users to GitHub issue #675", {

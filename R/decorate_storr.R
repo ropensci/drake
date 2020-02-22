@@ -327,6 +327,10 @@ dcst_get_.drake_format_rds <- function(value, key, .self) {
   readRDS(.self$file_return_key(key))
 }
 
+dcst_get_.drake_format_file <- function(value, key, .self) {
+  value$value
+}
+
 dcst_get_value <- function(hash, ..., .self) {
   value <- .self$storr$get_value(hash = hash, ...)
   dcst_get_value_(value = value, hash = hash, .self = .self)
@@ -384,6 +388,10 @@ dcst_get_value_.drake_format_keras <- function(value, hash, .self) { # nolint
 
 dcst_get_value_.drake_format_rds <- function(value, hash, .self) { # nolint
   readRDS(.self$file_return_hash(hash))
+}
+
+dcst_get_value_.drake_format_file <- function(value, hash, .self) { # nolint
+  value$value
 }
 
 dcst_set <- function(value, key, ..., .self) {

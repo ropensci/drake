@@ -438,6 +438,20 @@ sanitize_format.drake_format_diskframe <- function(x, target, config) { # nolint
   x
 }
 
+sanitize_format.drake_format_file <- function(x, target, config) { # nolint
+  if (!is.character(x$value)) {
+    msg <- paste0(
+      "You selected the \"file\" format for target ", target,
+      ", so the return value must be a character vector. ",
+      "coercing to character."
+    )
+    config$logger$disk("Error:", msg, target = target)
+    warning(msg, call. = FALSE)
+    x$value <- as.character(x$value)
+  }
+  x
+}
+
 assign_to_envir <- function(target, value, config) {
   if (is_subtarget(target, config)) {
     return()

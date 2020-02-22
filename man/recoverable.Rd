@@ -26,7 +26,9 @@ Character vector of the names of recoverable targets.
 Only shows the most upstream updated targets.
 Whether downstream targets are recoverable depends on
 the eventual values of the upstream targets in the next \code{\link[=make]{make()}}.
-Does not show dynamic sub-targets.
+Not valid for dynamic branching combined with dynamic files
+(e.g. \code{dynamic = map(stuff)} and \code{format = "file"} etc.)
+since behavior is harder to predict in advance.
 }
 \section{Recovery}{
 
