@@ -966,7 +966,7 @@ test_with_dir("file format with flat files and static targets (#1168)", {
       write_lines(c("a", "b")),
       format = "file"
     ),
-    y = x
+    y = readLines(x[1])
   )
   make(plan)
   write_lines <- function(files, ...) {
@@ -978,6 +978,7 @@ test_with_dir("file format with flat files and static targets (#1168)", {
   config <- drake_config(plan)
   make(plan)
   expect_equal(sort(justbuilt(config)), sort(c("x", "y")))
+  expect_equal(readd(y), c("a", "newer stuff"))
 })
 
 test_with_dir("file format with directories and static targets (#1168)", {
