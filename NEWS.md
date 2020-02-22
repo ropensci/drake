@@ -6,6 +6,7 @@
 * Bump `digest` version to require 0.6.21 (#1166, @boshek)
 * Actually store output file sizes in metadata.
 * Use the `depend` trigger to toggle invalidation from dynamic-only dependencies, including the `max_expand` argument of `make()`.
+* Repair `session_info` argument parsing (and reduce calls to `utils::sessionInfo()` in tests).
 
 ## New features
 

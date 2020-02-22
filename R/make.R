@@ -139,7 +139,7 @@ make <- function(
   skip_safety_checks = FALSE,
   config = NULL,
   lazy_load = "eager",
-  session_info = TRUE,
+  session_info = NULL,
   cache_log_file = NULL,
   seed = NULL,
   caching = "master",

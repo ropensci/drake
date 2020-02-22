@@ -726,7 +726,10 @@ print.drake_config <- function(x, ...) {
 
 resolve_session_info <- function(x) {
   out <- x %|||% Sys.getenv("drake_session_info")
-  is.logical(out) || out %in% c("true", "")
+  if (is.logical(out)) {
+    return(out)
+  }
+  out %in% c("true", "")
 }
 
 new_ht_dynamic_deps <- function(spec) {
