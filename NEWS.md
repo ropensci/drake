@@ -9,6 +9,7 @@
 
 ## New features
 
+* Allow dynamic files with `target(format = "file")` (#1168, #1127).
 * Implement dynamic `max_expand` on a target-by-target basis via `target()` (#1175, @kendonB).
 
 ## Enhancements
