@@ -69,6 +69,14 @@
 #'   (e.g. R packages) that are not installed with `drake` by default.
 #'   You will need to install them separately yourself.
 #'   Available formats:
+#'   - `"file"`: Dynamic files. To use this format, simply create
+#'     local files and directories yourself and then return
+#'     a character vector of paths as the target's value.
+#'     Then, `drake` will watch for changes to those files in
+#'     subsequent calls to `make()`. This is a more flexible
+#'     alternative to `file_in()` and `file_out()`, and it is
+#'     compatible with dynamic branching.
+#'     See <https://github.com/ropensci/drake/pull/1178> for an example.
 #'   - `"fst"`: save big data frames fast. Requires the `fst` package.
 #'     Note: this format strips non-data-frame attributes such as the
 #'   - `"fst_tbl"`: Like `"fst"`, but for `tibble` objects.

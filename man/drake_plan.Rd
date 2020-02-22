@@ -137,6 +137,14 @@ Either way, most formats have specialized installation requirements
 You will need to install them separately yourself.
 Available formats:
 \itemize{
+\item \code{"file"}: Dynamic files. To use this format, simply create
+local files and directories yourself and then return
+a character vector of paths as the target's value.
+Then, \code{drake} will watch for changes to those files in
+subsequent calls to \code{make()}. This is a more flexible
+alternative to \code{file_in()} and \code{file_out()}, and it is
+compatible with dynamic branching.
+See \url{https://github.com/ropensci/drake/pull/1178} for an example.
 \item \code{"fst"}: save big data frames fast. Requires the \code{fst} package.
 Note: this format strips non-data-frame attributes such as the
 \item \code{"fst_tbl"}: Like \code{"fst"}, but for \code{tibble} objects.
