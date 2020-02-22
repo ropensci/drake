@@ -1213,3 +1213,44 @@ test_with_dir("non-character format file (#1168)", {
   plan <- drake_plan(x = target(1, format = "file"))
   expect_warning(make(plan), regexp = "coercing")
 })
+
+test_with_dir("mix of dynamic files and dirs (#1168)", {
+  skip_on_cran()
+  write_file <- function() {
+    writeLines("stuff", "x")
+    "x"
+  }
+  write_dir <- function() {
+    if (!file.exists("y")) {
+      dir.create("y")
+    }
+    writeLines("stuff", file.path("y", "z"))
+    "y"
+  }
+  write_stuff <- function() {
+    c(write_file(), write_dir())
+  }
+  plan <- drake_plan(
+    x = target(write_stuff(), format = "file"),
+    y = x
+  )
+  make(plan)
+  config <- drake_config(plan)
+  make(plan)
+  expect_equal(justbuilt(config), character(0))
+  write_file <- function() {
+    writeLines("stuff2", "x")
+    "x"
+  }
+  make(plan)
+  expect_equal(sort(justbuilt(config)), sort(c("x", "y")))
+  write_dir <- function() {
+    if (!file.exists("y")) {
+      dir.create("y")
+    }
+    writeLines("stuff2", file.path("y", "z"))
+    "y"
+  }
+  make(plan)
+  expect_equal(sort(justbuilt(config)), sort(c("x", "y")))
+})
