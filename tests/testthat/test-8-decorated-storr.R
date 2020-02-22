@@ -959,6 +959,25 @@ test_with_dir("file format with flat files and static targets (#1168)", {
   make_impl(config)
   expect_equal(justbuilt(config), c("x", "y", "z"))
   expect_equal(readLines("b"), c("b", "new stuff"))
+  # same with a shorter plan
+  clean(destroy = TRUE)
+  plan <- drake_plan(
+    x = target(
+      write_lines(c("a", "b")),
+      format = "file"
+    ),
+    y = x
+  )
+  make(plan)
+  write_lines <- function(files, ...) {
+    for (file in files) {
+      writeLines(c(file, "newer stuff"), file)
+    }
+    files
+  }
+  config <- drake_config(plan)
+  make(plan)
+  expect_equal(sort(justbuilt(config)), sort(c("x", "y")))
 })
 
 test_with_dir("file format with directories and static targets (#1168)", {
