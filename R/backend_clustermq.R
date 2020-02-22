@@ -95,6 +95,7 @@ cmq_conclude_build <- function(msg, config) {
   if (identical(caching, "worker")) {
     wait_checksum(
       target = build$target,
+      value = build$value,
       checksum = build$checksum,
       config = config
     )
@@ -102,6 +103,7 @@ cmq_conclude_build <- function(msg, config) {
     build <- unserialize_build(build)
     wait_outfile_checksum(
       target = build$target,
+      value = build$value,
       checksum = build$checksum,
       config = config
     )
@@ -217,13 +219,13 @@ cmq_build <- function(target, meta, deps, spec, ht_is_subtarget, config) {
   }
   build <- try_build(target = target, meta = meta, config = config)
   if (identical(caching, "master")) {
-    build$checksum <- get_outfile_checksum(target, config)
+    build$checksum <- get_outfile_checksum(target, build$value, config)
     build <- classify_build(build, config)
     build <- serialize_build(build)
     return(build)
   }
   conclude_build(build = build, config = config)
-  list(target = target, checksum = get_checksum(target, config))
+  list(target = target, checksum = get_checksum(target, build$value, config))
 }
 
 cmq_assign_deps <- function(deps, config) {

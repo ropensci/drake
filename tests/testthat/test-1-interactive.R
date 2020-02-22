@@ -417,4 +417,26 @@ test_with_dir("progress bars", {
   make(plan, verbose = 2, parallelism = "clustermq")
 })
 
+test_with_dir("dynamic branching + format file checksums (#1168)", {
+  write_lines <- function(files, ...) {
+    for (file in files) {
+      writeLines(c(file, "stuff"), file)
+    }
+    files
+  }
+  plan <- drake_plan(
+    x = c("a", "b"),
+    y = target(
+      write_lines(x),
+      format = "file",
+      dynamic = map(x)
+    )
+  )
+  # Need to walk through this function manually.
+  debug(format_file_checksum_impl.file)
+  # Browse in a sub-target of y.
+  # Make sure nonempty hashes are returned from the function.
+  make(plan, parallelism = "future")
+})
+
 }

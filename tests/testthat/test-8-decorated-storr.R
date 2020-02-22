@@ -1134,7 +1134,6 @@ test_with_dir("data recovery and dynamic files (#1168)", {
 })
 
 test_with_dir("format file hpc checksums (#1168)", {
-  skip("not ready yet")
   write_lines <- function(files, ...) {
     for (file in files) {
       writeLines(c(file, "stuff"), file)
@@ -1149,7 +1148,7 @@ test_with_dir("format file hpc checksums (#1168)", {
   )
   make(plan, parallelism = "future")
   config <- drake_config(plan)
-  out <- format_file_checksum("x", config)
-  expect_equal(out[seq_len(2)], c("a", "b"))
-  expect_equal(length(out), 4L)
+  out <- format_file_checksum("x", readd(x), config)
+  expect_equal(length(out), 2L)
+  expect_equal(nchar(out), c(16L, 16L))
 })

@@ -136,9 +136,16 @@ hpc_spec_impl.default <- function(target, config) {
   spec
 }
 
-wait_outfile_checksum <- function(target, checksum, config, timeout = 300) {
+wait_outfile_checksum <- function(
+  target,
+  value,
+  checksum,
+  config,
+  timeout = 300
+) {
   wait_checksum(
     target = target,
+    value = value,
     checksum = checksum,
     config = config,
     timeout = timeout,
@@ -148,6 +155,7 @@ wait_outfile_checksum <- function(target, checksum, config, timeout = 300) {
 
 wait_checksum <- function(
   target,
+  value,
   checksum,
   config,
   timeout = 300,
@@ -156,7 +164,7 @@ wait_checksum <- function(
   i <- 0
   time_left <- timeout
   while (time_left > 0) {
-    if (criterion(target, checksum, config)) {
+    if (criterion(target, value, checksum, config)) {
       return()
     } else {
       sleep <- config$sleep(max(0L, i))
@@ -174,7 +182,7 @@ wait_checksum <- function(
   stop(msg, call. = FALSE)
 }
 
-is_good_checksum <- function(target, checksum, config) {
+is_good_checksum <- function(target, value, checksum, config) {
   # Not actually reached, but may come in handy later.
   # nocov start
   if (!length(checksum)) {
@@ -185,7 +193,7 @@ is_good_checksum <- function(target, checksum, config) {
     return(TRUE) # covered with parallel processes # nocov
   }
   # nocov end
-  local_checksum <- get_checksum(target = target, config = config)
+  local_checksum <- get_checksum(target, value, config)
   if (!identical(local_checksum, checksum)) {
     return(FALSE)
   }
@@ -204,7 +212,7 @@ is_good_checksum <- function(target, checksum, config) {
   out
 }
 
-is_good_outfile_checksum <- function(target, checksum, config) {
+is_good_outfile_checksum <- function(target, value, checksum, config) {
   if (!length(checksum)) {
     warn_no_checksum(target = target, config = config)
     return(TRUE)
@@ -212,22 +220,22 @@ is_good_outfile_checksum <- function(target, checksum, config) {
   if (identical("failed", config$cache$get_progress(target))) {
     return(TRUE) # covered with parallel processes # nocov
   }
-  identical(checksum, get_outfile_checksum(target = target, config = config))
+  identical(checksum, get_outfile_checksum(target, value, config))
 }
 
-get_checksum <- function(target, config) {
+get_checksum <- function(target, value, config) {
   paste(
     config$cache$safe_get_hash(
       key = target,
       namespace = config$cache$default_namespace
     ),
     config$cache$safe_get_hash(key = target, namespace = "meta"),
-    get_outfile_checksum(target, config),
+    get_outfile_checksum(target, value, config),
     sep = " "
   )
 }
 
-get_outfile_checksum <- function(target, config) {
+get_outfile_checksum <- function(target, value, config) {
   deps <- config$spec[[target]]$deps_build
   files <- sort(unique(as.character(deps$file_out)))
   out <- vapply(
@@ -236,18 +244,30 @@ get_outfile_checksum <- function(target, config) {
     FUN.VALUE = character(1),
     config = config
   )
-#  out <- c(out, format_file_checksum(target, config))
+  out <- c(out, format_file_checksum(target, value, config))
   out <- paste(out, collapse = "")
   config$cache$digest(out, serialize = FALSE)
 }
 
-format_file_checksum <- function(target, config) {
-  stop("not ready yet. needs centralized metadata")
-  meta <- drake_meta_(target, config)
-  if (meta$format == "file") {
-    out <- c(meta$format_file_path, meta$format_file_hash)
-  }
-  out
+format_file_checksum <- function(target, value, config) {
+  class(target) <- config$spec[[target]]$format
+  format_file_checksum_impl(target, value, config)
+}
+
+format_file_checksum_impl <- function(target, value, config) {
+  UseMethod("format_file_checksum_impl")
+}
+
+format_file_checksum_impl.default <- function(target, value, config) { # nolint
+  force(value)
+  character(0)
+}
+
+format_file_checksum_impl.file <- function(target, value, config) { # nolint
+  hash <- rep(NA_character_, length(value))
+  index <- file.exists(value)
+  hash[index] <- rehash_local(value[index], config)
+  hash
 }
 
 warn_no_checksum <- function(target, config) {
