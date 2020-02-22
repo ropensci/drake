@@ -429,7 +429,9 @@ clear_make_memory <- function(config) {
     "ht_dynamic",
     "ht_dynamic_size",
     "ht_is_subtarget",
-    "ht_target_exists"
+    "ht_target_exists",
+    "meta",
+    "meta_old"
   )
   for (key in envirs) {
     remove(list = names(config[[key]]), envir = config[[key]])
