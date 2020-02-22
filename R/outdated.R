@@ -3,7 +3,8 @@
 #' @description Only shows the most upstream updated targets.
 #'   Whether downstream targets are recoverable depends on
 #'   the eventual values of the upstream targets in the next [make()].
-#'   Does not show dynamic sub-targets.
+#'   Not valid for dynamic branching combined with dynamic files
+#'   since behavior is harder to predict in advance.
 #' @section Recovery:
 #'  `make(recover = TRUE, recoverable = TRUE)`
 #'   powers automated data recovery.
