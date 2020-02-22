@@ -236,17 +236,14 @@ get_outfile_checksum <- function(target, config) {
     FUN.VALUE = character(1),
     config = config
   )
-  out <- c(out, format_file_checksum(target, config))
+#  out <- c(out, format_file_checksum(target, config))
   out <- paste(out, collapse = "")
   config$cache$digest(out, serialize = FALSE)
 }
 
 format_file_checksum <- function(target, config) {
-  if (is_dynamic(target, config)) {
-    return(character(0))
-  }
+  stop("not ready yet. needs centralized metadata")
   meta <- drake_meta_(target, config)
-  out <- character(0)
   if (meta$format == "file") {
     out <- c(meta$format_file_path, meta$format_file_hash)
   }
