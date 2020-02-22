@@ -455,6 +455,10 @@ The default is \code{FALSE} because
 Targets recovered from the distant past may have been generated
 with earlier versions of R and earlier package environments
 that no longer exist.
+\item It is not always possible, especially when dynamic files
+are combined with dynamic branching
+(e.g. \code{dynamic = map(stuff)} and \code{format = "file"} etc.)
+since behavior is harder to predict in advance.
 }
 
 How it works: if \code{recover} is \code{TRUE},
@@ -484,7 +488,11 @@ This requires writing extra files to the cache,
 and it prevents old metadata from being removed with garbage collection
 (\code{clean(garbage_collection = TRUE)}, \code{gc()} in \code{storr}s).
 If you need to limit the cache size or the number of files in the cache,
-consider \code{make(recoverable = FALSE, progress = FALSE)}.}
+consider \code{make(recoverable = FALSE, progress = FALSE)}.
+Recovery is not always possible, especially when dynamic files
+are combined with dynamic branching
+(e.g. \code{dynamic = map(stuff)} and \code{format = "file"} etc.)
+since behavior is harder to predict in advance.}
 
 \item{curl_handles}{A named list of curl handles. Each value is an
 object from \code{curl::new_handle()}, and each name is a URL

@@ -4,6 +4,7 @@
 #'   Whether downstream targets are recoverable depends on
 #'   the eventual values of the upstream targets in the next [make()].
 #'   Not valid for dynamic branching combined with dynamic files
+#'   (e.g. `dynamic = map(stuff)` and `format = "file"` etc.)
 #'   since behavior is harder to predict in advance.
 #' @section Recovery:
 #'  `make(recover = TRUE, recoverable = TRUE)`

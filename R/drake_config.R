@@ -407,6 +407,10 @@
 #'   Targets recovered from the distant past may have been generated
 #'   with earlier versions of R and earlier package environments
 #'   that no longer exist.
+#'   3. It is not always possible, especially when dynamic files
+#'   are combined with dynamic branching
+#'   (e.g. `dynamic = map(stuff)` and `format = "file"` etc.)
+#'   since behavior is harder to predict in advance.
 #'
 #'   How it works: if `recover` is `TRUE`,
 #'   `drake` tries to salvage old target values from the cache
@@ -434,6 +438,10 @@
 #'   (`clean(garbage_collection = TRUE)`, `gc()` in `storr`s).
 #'   If you need to limit the cache size or the number of files in the cache,
 #'   consider `make(recoverable = FALSE, progress = FALSE)`.
+#'   Recovery is not always possible, especially when dynamic files
+#'   are combined with dynamic branching
+#'   (e.g. `dynamic = map(stuff)` and `format = "file"` etc.)
+#'   since behavior is harder to predict in advance.
 #'
 #' @param curl_handles A named list of curl handles. Each value is an
 #'   object from `curl::new_handle()`, and each name is a URL
