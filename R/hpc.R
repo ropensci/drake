@@ -242,13 +242,15 @@ get_outfile_checksum <- function(target, config) {
 }
 
 format_file_checksum <- function(target, config) {
-  skip <- is_dynamic(target, config) ||
-    config$spec[[target]]$format != "file"
-  if (skip) {
+  if (is_dynamic(target, config)) {
     return(character(0))
   }
   meta <- drake_meta_(target, config)
-  c(meta$format_file_path, meta$format_file_hash)
+  out <- character(0)
+  if (meta$format == "file") {
+    out <- c(meta$format_file_path, meta$format_file_hash)
+  }
+  out
 }
 
 warn_no_checksum <- function(target, config) {
