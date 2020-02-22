@@ -1,3 +1,17 @@
+subtarget_meta_list <- function(subtargets, parent, config) {
+  ht_set(config$ht_is_subtarget, subtargets)
+  spec <- config$spec[[parent]]
+  out <- lightly_parallelize(
+    X = subtargets,
+    FUN = drake_meta_,
+    jobs = config$jobs_preprocess,
+    config = config,
+    spec = spec
+  )
+  names(out) <- subtargets
+  out
+}
+
 drake_meta_ <- function(target, config, spec = NULL) {
   class(target) <- drake_meta_class(target, config)
   spec <- spec %|||% config$spec[[target]]

@@ -86,9 +86,8 @@ recover_target <- function(target, meta, config) {
   TRUE
 }
 
-recover_subtarget <- function(subtarget, parent, config) {
-  spec <- config$spec[[parent]]
-  meta <- drake_meta_(subtarget, config, spec = spec)
+recover_subtarget <- function(subtarget, meta_list, config) {
+  meta <- meta_list[[subtarget]]
   class(subtarget) <- "subtarget"
   recover_target(subtarget, meta, config)
 }
@@ -305,7 +304,12 @@ check_trigger_format_file <- function(target, meta, config) {
   FALSE
 }
 
-check_subtarget_triggers <- function(target, subtargets, config) {
+check_subtarget_triggers <- function(
+  target,
+  subtargets,
+  config,
+  meta_list = NULL
+) {
   out <- target_missing(subtargets, config)
   spec <- config$spec[[target]]
   format <- spec$format %||NA% "none"
@@ -314,7 +318,8 @@ check_subtarget_triggers <- function(target, subtargets, config) {
     out[i] <- out[i] | check_trigger_subtarget_format_file(
       subtargets[i],
       target,
-      config
+      config,
+      meta_list
     )
   }
   if (any(out)) {
@@ -326,7 +331,8 @@ check_subtarget_triggers <- function(target, subtargets, config) {
 check_trigger_subtarget_format_file <- function( # nolint
   subtargets,
   parent,
-  config
+  config,
+  meta_list = NULL
 ) {
   ht_set(config$ht_is_subtarget, subtargets)
   out <- lightly_parallelize(
@@ -334,14 +340,20 @@ check_trigger_subtarget_format_file <- function( # nolint
     FUN = check_trigger_subtarget_format_file_impl,
     jobs = config$jobs_preprocess,
     parent = parent,
-    config = config
+    config = config,
+    meta_list = meta_list
   )
   unlist(out)
 }
 
-check_trigger_subtarget_format_file_impl <- function(subtarget, parent, config) { # nolint
+check_trigger_subtarget_format_file_impl <- function( # nolint
+  subtarget,
+  parent,
+  config,
+  meta_list = NULL
+) {
   spec <- config$spec[[parent]]
-  meta <- drake_meta_(subtarget, config, spec = spec)
+  meta <- meta_list[[subtarget]] %|||% drake_meta_(subtarget, config, spec)
   trigger_format_file(subtarget, meta, config)
 }
 

@@ -242,9 +242,9 @@ register_subtargets <- function(target, static_ok, dynamic_ok, config) {
 }
 
 filter_subtargets <- function(target, subtargets, config) {
-  index <- check_subtarget_triggers(target, subtargets, config)
+  meta_list <- subtarget_meta_list(subtargets, target, config)
+  index <- check_subtarget_triggers(target, subtargets, config, meta_list)
   subtargets <- subtargets[index]
-  ht_set(config$ht_is_subtarget, subtargets)
   if (!config$recover || !length(subtargets)) {
     return(subtargets)
   }
@@ -252,8 +252,8 @@ filter_subtargets <- function(target, subtargets, config) {
     subtargets,
     recover_subtarget,
     jobs = config$jobs_preprocess,
-    parent = target,
-    config = config
+    config = config,
+    meta_list = meta_list
   )
   subtargets[!unlist(recovered)]
 }
