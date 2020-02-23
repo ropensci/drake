@@ -214,6 +214,7 @@ chr_dynamic_impl.default <- function(x) {
 register_subtargets <- function(target, static_ok, dynamic_ok, config) {
   on.exit(register_dynamic(target, config))
   subtargets_build <- subtargets_all <- subtarget_names(target, config)
+  preregister_subtargets(target, subtargets_all, config)
   if (static_ok) {
     subtargets_build <- filter_subtargets(target, subtargets_all, config)
   }
@@ -239,6 +240,18 @@ register_subtargets <- function(target, static_ok, dynamic_ok, config) {
     register_in_counter(target, config)
     dynamic_pad_revdep_keys(target, config)
   }
+}
+
+preregister_subtargets <- function(target, subtargets, config) {
+  register_subtarget_parents(target, subtargets, config)
+}
+
+register_subtarget_parents <- function(target, subtargets, config) {
+  ht_set(config$ht_subtarget_parents, x = subtargets, value = target)
+}
+
+subtarget_parent <- function(subtarget, config) {
+  ht_get(config$ht_subtarget_parents, subtarget)
 }
 
 filter_subtargets <- function(target, subtargets, config) {

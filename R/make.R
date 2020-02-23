@@ -278,6 +278,7 @@ init_config_tmp <- function(config) {
   config$ht_dynamic <- ht_new()
   config$ht_dynamic_size <- ht_new()
   config$ht_is_subtarget <- ht_new()
+  config$ht_subtarget_parents <- ht_new()
   config$ht_target_exists <- ht_target_exists(config)
   config$envir_loaded <- new.env(hash = FALSE, parent = emptyenv())
   config$cache$reset_memo_hash()
@@ -433,6 +434,7 @@ clear_make_memory <- function(config) {
     "ht_dynamic",
     "ht_dynamic_size",
     "ht_is_subtarget",
+    "ht_subtarget_parents",
     "ht_target_exists",
     "meta",
     "meta_old"

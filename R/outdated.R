@@ -129,6 +129,7 @@ is_recoverable <- function(target, config, spec = NULL) {
 
 all_subtargets_recoverable <- function(target, recovery_meta, config) {
   subtargets <- recovery_meta$subtargets
+  preregister_subtargets(target, subtargets = subtargets, config)
   ht_set(config$ht_is_subtarget, subtargets)
   is_outdated <- check_subtarget_triggers(target, subtargets, config)
   will_recover <- rep(FALSE, length(subtargets))
@@ -270,6 +271,7 @@ is_outdated_impl.static <- function(target, config) {
 
 is_outdated_impl.dynamic <- function(target, config) {
   target <- unclass(target)
+  preregister_subtargets(target, subtargets = meta_old$subtargets, config)
   meta <- drake_meta_(target, config)
   meta_old <- drake_meta_old(target, config)
   any_static_triggers(target, meta, config) ||
