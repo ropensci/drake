@@ -271,6 +271,10 @@ make_impl <- function(config) {
 
 prep_config_for_make <- function(config) {
   config$running_make <- TRUE
+  config <- init_config_tmp(config)
+}
+
+init_config_tmp <- function(config) {
   config$ht_dynamic <- ht_new()
   config$ht_dynamic_size <- ht_new()
   config$ht_is_subtarget <- ht_new()
