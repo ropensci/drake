@@ -5,7 +5,7 @@
 \title{Task passed to individual futures in the \code{"future"} backend
 \lifecycle{stable}}
 \usage{
-future_build(target, meta, config, spec, ht_is_subtarget, protect)
+future_build(target, meta, config, spec, config_tmp, protect)
 }
 \arguments{
 \item{target}{Name of the target.}
@@ -14,7 +14,7 @@ future_build(target, meta, config, spec, ht_is_subtarget, protect)
 
 \item{config}{A \code{\link[=drake_config]{drake_config()}} list.}
 
-\item{ht_is_subtarget}{Internal, part of \code{config}.}
+\item{config_tmp}{Internal, parts of \code{config} that the workers need.}
 
 \item{protect}{Names of targets that still need their
 dependencies available in memory.}

@@ -110,6 +110,19 @@ hpc_config <- function(config) {
   config
 }
 
+get_hpc_config_tmp <- function(config) {
+  list(
+    ht_is_subtarget = config$ht_is_subtarget,
+    ht_subtarget_parents = config$ht_subtarget_parents
+  )
+}
+
+restore_hpc_config_tmp <- function(tmp, config) {
+  config$ht_is_subtarget <- tmp$ht_is_subtarget
+  config$ht_subtarget_parents <- tmp$ht_subtarget_parents
+  config
+}
+
 hpc_spec <- function(target, config) {
   class(target) <- ifelse(is_subtarget(target, config), "subtarget", "target")
   hpc_spec_impl(target, config)

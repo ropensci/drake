@@ -142,14 +142,14 @@ cmq_send_target <- function(target, config) {
     deps <- cmq_deps_list(target, config)
   }
   spec <- hpc_spec(target, config)
-  ht_is_subtarget <- config$ht_is_subtarget
+  config_tmp <- get_hpc_config_tmp(config)
   config$workers$send_call(
     expr = drake::cmq_build(
       target = target,
       meta = meta,
       deps = deps,
       spec = spec,
-      ht_is_subtarget = ht_is_subtarget,
+      config_tmp = config_tmp,
       config = config
     ),
     env = list(
@@ -157,7 +157,7 @@ cmq_send_target <- function(target, config) {
       meta = meta,
       deps = deps,
       spec = spec,
-      ht_is_subtarget = ht_is_subtarget
+      config_tmp = config_tmp
     )
   )
 }
@@ -204,12 +204,12 @@ cmq_deps_list <- function(target, config) {
 #' @param meta List of metadata.
 #' @param deps Named list of target dependencies.
 #' @param spec Internal, part of the full `config$spec`.
-#' @param ht_is_subtarget Internal, part of `config`
+#' @param config_tmp Internal, extra parts of `config` that the workers need.
 #' @param config A [drake_config()] list.
-cmq_build <- function(target, meta, deps, spec, ht_is_subtarget, config) {
+cmq_build <- function(target, meta, deps, spec, config_tmp, config) {
   config$logger$disk("build on an hpc worker", target = target)
   config$spec <- spec
-  config$ht_is_subtarget <- ht_is_subtarget
+  config <- restore_hpc_config_tmp(config_tmp, config)
   do_prework(config = config, verbose_packages = FALSE)
   caching <- hpc_caching(target, config)
   if (identical(caching, "master")) {
