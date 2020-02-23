@@ -94,9 +94,7 @@ recover_target <- function(target, meta, config) {
 }
 
 recover_subtarget <- function(subtarget, parent, config) {
-  spec <- config$spec[[parent]]
-  meta <- drake_meta_(subtarget, config, spec = spec)
-  config$spec[[subtarget]]$subtarget_parent <- parent
+  meta <- drake_meta_(subtarget, config)
   class(subtarget) <- "subtarget"
   recover_target(subtarget, meta, config)
 }
@@ -113,7 +111,7 @@ recovery_key_impl <- function(target, meta, config) {
 }
 
 recovery_key_impl.subtarget <- function(target, meta, config) {
-  parent <- config$spec[[target]]$subtarget_parent
+  parent <- subtarget_parent(target, config)
   parent_meta <- drake_meta_(parent, config)
   parent_key <- recovery_key(parent, parent_meta, config)
   x <- c(unclass(target), parent_key)
@@ -346,8 +344,7 @@ check_trigger_subtarget_format_file_impl <- function( # nolint
   parent,
   config
 ) {
-  spec <- config$spec[[parent]]
-  meta <- drake_meta_(subtarget, config, spec)
+  meta <- drake_meta_(subtarget, config)
   trigger_format_file(subtarget, meta, config)
 }
 

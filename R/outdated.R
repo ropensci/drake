@@ -100,8 +100,8 @@ recoverable_impl <- function(
 
 body(recoverable) <- config_util_body(recoverable_impl)
 
-is_recoverable <- function(target, config, spec = NULL) {
-  meta <- drake_meta_(target = target, config = config, spec = spec)
+is_recoverable <- function(target, config) {
+  meta <- drake_meta_(target = target, config = config)
   key <- recovery_key(target = target, meta = meta, config = config)
   if (!config$cache$exists(key, namespace = "recover")) {
     return(FALSE)
@@ -135,18 +135,11 @@ all_subtargets_recoverable <- function(target, recovery_meta, config) {
   will_recover <- rep(FALSE, length(subtargets))
   will_recover[is_outdated] <- vapply(
     subtargets[is_outdated],
-    subtarget_is_recoverable,
+    is_recoverable,
     FUN.VALUE = logical(1),
-    parent = target,
     config = config
   )
   all(!is_outdated | will_recover)
-}
-
-subtarget_is_recoverable <- function(subtarget, parent, config) {
-  config$spec[[subtarget]]$subtarget_parent <- parent
-  spec <- config$spec[[parent]]
-  is_recoverable(subtarget, config, spec = spec)
 }
 
 #' @title List the targets that are out of date.
@@ -271,9 +264,9 @@ is_outdated_impl.static <- function(target, config) {
 
 is_outdated_impl.dynamic <- function(target, config) {
   target <- unclass(target)
-  preregister_subtargets(target, subtargets = meta_old$subtargets, config)
   meta <- drake_meta_(target, config)
   meta_old <- drake_meta_old(target, config)
+  preregister_subtargets(target, subtargets = meta_old$subtargets, config)
   any_static_triggers(target, meta, config) ||
     check_trigger_dynamic(target, meta, config) ||
     any_subtarget_triggers(target, meta_old$subtargets, config)

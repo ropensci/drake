@@ -1,8 +1,8 @@
-drake_meta_ <- function(target, config, spec = NULL) {
+drake_meta_ <- function(target, config) {
   if (exists(target, envir = config$meta, inherits = FALSE)) {
     return(config$meta[[target]])
   }
-  set_drake_meta(target, config, spec)
+  set_drake_meta(target, config)
   config$meta[[target]]
 }
 
@@ -14,10 +14,9 @@ drake_meta_old <- function(target, config) {
   config$meta_old[[target]]
 }
 
-set_drake_meta <- function(target, config, spec = NULL) {
+set_drake_meta <- function(target, config) {
   class(target) <- drake_meta_class(target, config)
-  spec <- spec %|||% config$spec[[target]]
-  meta <- drake_meta_impl(target, spec, config)
+  meta <- drake_meta_impl(target, config)
   set_drake_meta_old(target, config)
   meta <- subsume_old_meta(target, meta, config)
   class(meta) <- c("drake_meta", "drake")
@@ -65,11 +64,12 @@ drake_meta_class <- function(target, config) {
   "static"
 }
 
-drake_meta_impl <- function(target, spec, config) {
+drake_meta_impl <- function(target, config) {
   UseMethod("drake_meta_impl")
 }
 
-drake_meta_impl.imported_file <- function(target, spec, config) { # nolint
+drake_meta_impl.imported_file <- function(target, config) { # nolint
+  spec <- config$spec[[target]]
   meta <- list(
     name = target,
     target = target,
@@ -87,7 +87,8 @@ drake_meta_impl.imported_file <- function(target, spec, config) { # nolint
   meta
 }
 
-drake_meta_impl.imported_object <- function(target, spec, config) { # nolint
+drake_meta_impl.imported_object <- function(target, config) { # nolint
+  spec <- config$spec[[target]]
   meta <- list(
     name = target,
     target = target,
@@ -103,21 +104,23 @@ drake_meta_impl.imported_object <- function(target, spec, config) { # nolint
   meta
 }
 
-drake_meta_impl.subtarget <- function(target, spec, config) {
+drake_meta_impl.subtarget <- function(target, config) {
+  parent_spec <- config$spec[[subtarget_parent(target, config)]]
   list(
     name = target,
     target = target,
     imported = FALSE,
     isfile = FALSE,
     dynamic = FALSE,
-    format = spec$format %||NA% "none",
+    format = parent_spec$format %||NA% "none",
     seed = resolve_target_seed(target, config),
     time_start = drake_meta_start(config),
-    trigger = as.list(spec$trigger)
+    trigger = as.list(parent_spec$trigger)
   )
 }
 
-drake_meta_impl.dynamic <- function(target, spec, config) {
+drake_meta_impl.dynamic <- function(target, config) {
+  spec <- config$spec[[target]]
   meta <- list(
     name = target,
     target = target,
@@ -134,7 +137,8 @@ drake_meta_impl.dynamic <- function(target, spec, config) {
   decorate_trigger_meta(target, meta, spec, config)
 }
 
-drake_meta_impl.static <- function(target, spec, config) {
+drake_meta_impl.static <- function(target, config) {
+  spec <- config$spec[[target]]
   meta <- list(
     name = target,
     target = target,
