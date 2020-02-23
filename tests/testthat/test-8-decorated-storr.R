@@ -1118,6 +1118,8 @@ test_with_dir("data recovery and dynamic files (#1168)", {
   # Clean, remove output file, and fail to recover.
   clean()
   unlink(c("no_recover", "b"))
+  r <- recoverable(plan)
+  expect_equal(r, character(0))
   make(plan, recover = TRUE)
   expect_equal(justbuilt(config), "x")
   expect_true(file.exists("no_recover"))
@@ -1146,6 +1148,8 @@ test_with_dir("data recovery and dynamic files (#1168)", {
   }
   unlink("no_recover")
   write_lines("b")
+  r <- recoverable(plan)
+  expect_equal(r, "x")
   make(plan, recover = TRUE)
   expect_equal(justbuilt(config), "x")
   expect_false(file.exists("no_recover"))

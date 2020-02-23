@@ -3,9 +3,6 @@
 #' @description Only shows the most upstream updated targets.
 #'   Whether downstream targets are recoverable depends on
 #'   the eventual values of the upstream targets in the next [make()].
-#'   Not valid for dynamic branching combined with dynamic files
-#'   (e.g. `dynamic = map(stuff)` and `format = "file"` etc.)
-#'   since behavior is harder to predict in advance.
 #' @section Recovery:
 #'  `make(recover = TRUE, recoverable = TRUE)`
 #'   powers automated data recovery.
@@ -106,8 +103,8 @@ recoverable_impl <- function(
 
 body(recoverable) <- config_util_body(recoverable_impl)
 
-is_recoverable <- function(target, config) {
-  meta <- drake_meta_(target = target, config = config)
+is_recoverable <- function(target, config, spec = NULL) {
+  meta <- drake_meta_(target = target, config = config, spec = spec)
   key <- recovery_key(target = target, meta = meta, config = config)
   if (!config$cache$exists(key, namespace = "recover")) {
     return(FALSE)
@@ -115,8 +112,43 @@ is_recoverable <- function(target, config) {
   meta_hash <- config$cache$get_hash(key, namespace = "recover")
   recovery_meta <- config$cache$driver$get_object(meta_hash)
   value_hash <- recovery_meta$hash
-  config$cache$exists_object(meta_hash) &&
+  exists_data <- config$cache$exists_object(meta_hash) &&
     config$cache$exists_object(value_hash)
+  if (!exists_data) {
+    return(FALSE) # nocov # Should not happen, just to be safe...
+  }
+  meta_old <- drake_meta_old(target, config)
+  on.exit(config$meta_old[[target]] <- meta_old)
+  config$meta_old[[target]] <- recovery_meta
+  meta <- subsume_old_meta(target, meta, config)
+  if (any_subtargetlike_triggers(target, meta, config)) {
+    return(FALSE)
+  }
+  if (!is_dynamic(target, config)) {
+    return(TRUE)
+  }
+  all_subtargets_recoverable(target, recovery_meta, config)
+}
+
+all_subtargets_recoverable <- function(target, recovery_meta, config) {
+  subtargets <- recovery_meta$subtargets
+  ht_set(config$ht_is_subtarget, subtargets)
+  is_outdated <- check_subtarget_triggers(target, subtargets, config)
+  will_recover <- rep(FALSE, length(subtargets))
+  will_recover[is_outdated] <- vapply(
+    subtargets[is_outdated],
+    subtarget_is_recoverable,
+    FUN.VALUE = logical(1),
+    parent = target,
+    config = config
+  )
+  all(!is_outdated | will_recover)
+}
+
+subtarget_is_recoverable <- function(subtarget, parent, config) {
+  config$spec[[subtarget]]$subtarget_parent <- parent
+  spec <- config$spec[[parent]]
+  is_recoverable(subtarget, config, spec = spec)
 }
 
 #' @title List the targets that are out of date.
