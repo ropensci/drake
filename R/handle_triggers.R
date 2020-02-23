@@ -60,6 +60,13 @@ recover_target <- function(target, meta, config) {
   if (!exists_data) {
     return(FALSE) # nocov # Should not happen, just to be safe...
   }
+  meta_old <- drake_meta_old(target, config)
+  on.exit(config$meta_old[[target]] <- meta_old)
+  config$meta_old[[target]] <- recovery_meta
+  meta <- subsume_old_meta(target, meta, config)
+  if (any_subtargetlike_triggers(target, meta, config)) {
+    return(FALSE)
+  }
   if (!is_dynamic(target, config)) {
     config$logger$target(target, "recover")
   }
@@ -89,6 +96,7 @@ recover_target <- function(target, meta, config) {
 recover_subtarget <- function(subtarget, parent, config) {
   spec <- config$spec[[parent]]
   meta <- drake_meta_(subtarget, config, spec = spec)
+  config$spec[[subtarget]]$subtarget_parent <- parent
   class(subtarget) <- "subtarget"
   recover_target(subtarget, meta, config)
 }
@@ -105,19 +113,15 @@ recovery_key_impl <- function(target, meta, config) {
 }
 
 recovery_key_impl.subtarget <- function(target, meta, config) {
-  x <- c(
-    unclass(target),
-    meta$format_file_path,
-    meta$format_file_hash
-  )
-  if (length(x) > 1L) { # to recover sub-targets built with drake <= 7.10.0
-    x <- paste(x, collapse = "|")
-    x <- config$cache$digest(x, serialize = FALSE)
-  }
-  x
+  parent <- config$spec[[target]]$subtarget_parent
+  parent_meta <- drake_meta_(parent, config)
+  parent_key <- recovery_key(parent, parent_meta, config)
+  x <- c(unclass(target), parent_key)
+  x <- paste(x, collapse = "|")
+  config$cache$digest(x, serialize = FALSE)
 }
 
-recovery_key_impl.default <- function(target, meta, config) {
+recovery_key_impl.default <- function(target, meta, config, ...) {
   if (is.null(meta$trigger$value)) {
     change_hash <- NA_character_
   } else {
@@ -128,8 +132,6 @@ recovery_key_impl.default <- function(target, meta, config) {
     meta$dependency_hash,
     meta$input_file_hash,
     meta$output_file_hash,
-    meta$format_file_path,
-    meta$format_file_hash,
     meta$trigger$mode,
     meta$format,
     as.character(meta$seed),

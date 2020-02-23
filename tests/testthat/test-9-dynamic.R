@@ -1192,7 +1192,7 @@ test_with_dir("failed dynamic data recovery", {
   unlink(files)
   expect_false(any(file.exists(files)))
   config$cache$del(subtargets(y)[1])
-  config$cache$del(subtargets(y)[1], namespace = "recover")
+  config$cache$clear(namespace = "recover")
   make(plan, recover = TRUE)
   expect_true(file.exists("a"))
 })
