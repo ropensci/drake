@@ -26,6 +26,7 @@
 * Allow user-defined caches for the `loadd()` RStudio addin through the new `rstudio_drake_cache` global option (#1169, @joelnitta).
 * Change dynamic target finalization message to "finalize" instead of "aggregate" (#1176, @kendonB).
 * Describe the limits of `recoverable()`, e.g. dynamic branching + dynamic files.
+* Throw an error instead of a warning in `drake_plan()` if a grouping variable is undefined or invalid (#1182, @kendonB).
 
 # Version 7.10.0
 

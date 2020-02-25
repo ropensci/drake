@@ -7,7 +7,7 @@ test_with_dir("nothing to transform", {
 })
 
 test_with_dir("empty transforms", {
-  expect_warning(
+  expect_error(
     out <- drake_plan(
       a = target(x, transform = cross()),
       b = target(y, transform = combine()),
@@ -15,28 +15,23 @@ test_with_dir("empty transforms", {
     ),
     regexp = "grouping variable"
   )
-  equivalent_plans(out, drake_plan())
-  expect_warning(
+  expect_error(
     out <- drake_plan(a = target(x, transform = cross())),
     regexp = "grouping variable"
   )
-  expect_warning(
+  expect_error(
     out <- drake_plan(b = target(y, transform = combine())),
     regexp = "grouping variable"
   )
-  expect_warning(
+  expect_error(
     out <- drake_plan(c = target(z, transform = map())),
     regexp = "grouping variable"
   )
-})
-
-test_with_dir("more empty transforms", {
   x_vals <- NULL
-  expect_warning(
+  expect_error(
     out <- drake_plan(a = target(x, transform = map(x = !!x_vals))),
     regexp = "grouping variable"
   )
-  equivalent_plans(out, drake_plan())
 })
 
 test_with_dir("1 grouping level", {
@@ -282,7 +277,7 @@ test_with_dir("2 new maps", {
 })
 
 test_with_dir("groups and command symbols are undefined", {
-  expect_warning(
+  expect_error(
     out <- drake_plan(
       small = simulate(48),
       large = simulate(64),
@@ -292,11 +287,6 @@ test_with_dir("groups and command symbols are undefined", {
     ),
     regexp = "grouping variable"
   )
-  exp <- drake_plan(
-    small = simulate(48),
-    large = simulate(64)
-  )
-  equivalent_plans(out, exp)
 })
 
 test_with_dir("command symbols are for combine() but the plan has them", {
@@ -1898,7 +1888,7 @@ test_with_dir("empty grids", {
     stringsAsFactors = FALSE
   )
   grid$v <- rlang::syms(grid$v)
-  expect_warning(
+  expect_error(
     out <- drake_plan(
       a = target(
         1 + f(x, y, z, w, v),
@@ -1911,7 +1901,6 @@ test_with_dir("empty grids", {
     ),
     regexp = "grouping variable"
   )
-  equivalent_plans(out, drake_plan())
 })
 
 test_with_dir("grid for GitHub issue 697", {
@@ -2024,7 +2013,7 @@ test_with_dir("combine() with complicated calls", {
 })
 
 test_with_dir("invalid splitting var", {
-  expect_warning(
+  expect_error(
     out <- drake_plan(
       data = target(x, transform = map(x = c(1, 2)), nothing = NA),
       results = target(
@@ -2034,12 +2023,6 @@ test_with_dir("invalid splitting var", {
     ),
     regexp = "grouping variable"
   )
-  out <- out[, c("target", "command")]
-  exp <- drake_plan(
-    data_1 = 1,
-    data_2 = 2
-  )
-  equivalent_plans(out, exp)
 })
 
 test_with_dir("uneven combinations", {

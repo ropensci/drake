@@ -646,7 +646,7 @@ dsl_transform.map <- dsl_transform.cross <- function(
   groupings <- groupings(transform)
   grid <- dsl_grid(transform, groupings)
   if (any(dim(grid) < 1L)) {
-    warn_empty_transform(target)
+    assert_nonempty_transform(target)
     return(grid)
   }
   grid <- dsl_map_join_plan(
@@ -773,12 +773,12 @@ seq_max_expand <- function(n, max_expand) {
 dsl_transform.combine <- function(transform, target, row, plan, graph, ...) {
   plan <- valid_splitting_plan(plan, transform)
   if (!nrow(plan)) {
-    warn_empty_transform(target)
+    assert_nonempty_transform(target)
     return()
   }
   out <- dsl_commands_combine(transform = transform, row = row, plan = plan)
   if (!nrow(out)) {
-    warn_empty_transform(target)
+    assert_nonempty_transform(target)
     return()
   }
   out$target <- new_target_names(
@@ -802,8 +802,8 @@ dsl_commands_combine <- function(transform, row, plan) {
   )
 }
 
-warn_empty_transform <- function(target) {
-  warning(
+assert_nonempty_transform <- function(target) {
+  stop(
     "A grouping variable for target ", shQuote(target),
     " is either undefined or improperly invoked. Transformation skipped ",
     "and target deleted. To read about grouping variables and ",
