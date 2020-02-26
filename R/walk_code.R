@@ -129,6 +129,13 @@ analyze_knitr_file <- function(file, results, restrict) {
     restrict = restrict
   )
   if (length(out)) {
+    knitr_in_slots <- c(
+      "knitr_in",
+      "file_in",
+      "file_out",
+      "loadd",
+      "readd"
+    )
     for (slot in knitr_in_slots) {
       ht_merge(results[[slot]], out[[slot]])
     }
@@ -574,21 +581,3 @@ bad_symbols <- sort(
 ignored_symbols <- sort(c(drake_symbols, base_symbols, bad_symbols))
 ignored_symbols_list <- as.list(rep(TRUE, length(ignored_symbols)))
 names(ignored_symbols_list) <- ignored_symbols
-
-ht_slots_hash <- "globals"
-ht_slots_no_hash <- c(
-  "namespaced",
-  "strings",
-  "loadd",
-  "readd",
-  "file_in",
-  "file_out",
-  "knitr_in"
-)
-knitr_in_slots <- c(
-  "knitr_in",
-  "file_in",
-  "file_out",
-  "loadd",
-  "readd"
-)
