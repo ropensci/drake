@@ -4,6 +4,7 @@
 #' @return A `drake_deps_ht` object.
 #' @inheritParams drake_deps
 #' @examples
+#' if (FALSE) { # stronger than roxygen dontrun
 #' expr <- quote({
 #'   a <- base::list(1)
 #'   b <- seq_len(10)
@@ -14,6 +15,7 @@
 #'   readd(xyz)
 #' })
 #' drake_deps_ht(expr)
+#' }
 drake_deps_ht <- function(expr, exclude = character(0), restrict = NULL) {
   results <- new_drake_deps_ht()
   locals <- ht_new_from_list(ignored_symbols_list)
@@ -28,7 +30,9 @@ drake_deps_ht <- function(expr, exclude = character(0), restrict = NULL) {
 #' @return A `drake_deps_ht` object.
 #' @inheritParams drake_deps
 #' @examples
+#' if (FALSE) { # stronger than roxygen dontrun
 #' new_drake_deps_ht()
+#' }
 new_drake_deps_ht <- function(
   globals = ht_new(hash = TRUE),
   namespaced = ht_new(hash = FALSE),

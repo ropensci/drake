@@ -9,6 +9,7 @@
 #'   If `NULL`, all global symbols are detectable. If a character vector,
 #'   only the variables in `restrict` will count as global variables.
 #' @examples
+#' if (FALSE) { # stronger than roxygen dontrun
 #' expr <- quote({
 #'   a <- base::list(1)
 #'   b <- seq_len(10)
@@ -19,6 +20,7 @@
 #'   readd(xyz)
 #' })
 #' drake_deps(expr)
+#' }
 drake_deps <- function(expr, exclude = character(0), restrict = NULL) {
   if (!is.function(expr) && !is.language(expr)) {
     return(new_drake_deps())
@@ -43,7 +45,9 @@ drake_deps <- function(expr, exclude = character(0), restrict = NULL) {
 #'   If `NULL`, all global symbols are detactable. If a character vector,
 #'   only the variables in `restrict` will count as global variables.
 #' @examples
+#' if (FALSE) { # stronger than roxygen dontrun
 #' new_drake_deps()
+#' }
 new_drake_deps <- function(
   globals = character(0),
   namespaced = character(0),

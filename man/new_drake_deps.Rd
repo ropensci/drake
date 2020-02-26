@@ -43,6 +43,8 @@ A \code{drake_deps} object.
 List of class \code{drake_deps}.
 }
 \examples{
+if (FALSE) { # stronger than roxygen dontrun
 new_drake_deps()
+}
 }
 \keyword{internal}

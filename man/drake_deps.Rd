@@ -23,6 +23,7 @@ A \code{drake_deps} object.
 Static code analysis.
 }
 \examples{
+if (FALSE) { # stronger than roxygen dontrun
 expr <- quote({
   a <- base::list(1)
   b <- seq_len(10)
@@ -33,5 +34,6 @@ expr <- quote({
   readd(xyz)
 })
 drake_deps(expr)
+}
 }
 \keyword{internal}

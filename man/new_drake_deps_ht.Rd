@@ -22,6 +22,8 @@ A \code{drake_deps_ht} object.
 List of class \code{drake_deps_ht}.
 }
 \examples{
+if (FALSE) { # stronger than roxygen dontrun
 new_drake_deps_ht()
+}
 }
 \keyword{internal}
