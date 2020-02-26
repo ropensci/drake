@@ -28,8 +28,6 @@
 #'   - `cross(..., .data, .id, .tag_in, .tag_out)`
 #'   - `combine(..., .by, .id, .tag_in, .tag_out)`
 #' @section Dynamic branching:
-#'   Dynamic branching is not yet implemented,
-#'   but this is what it usage will look like.
 #'   - `map(..., .trace)`
 #'   - `cross(..., .trace)`
 #'   - `group(..., .by, .trace)`
