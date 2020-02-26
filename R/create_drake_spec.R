@@ -276,13 +276,9 @@ cds_no_dynamic_triggers_impl <- function(target, deps_dynamic, deps_trigger) {
 cds_import_dependencies <- function(
   expr, exclude = character(0), restrict = NULL
 ) {
-  deps <- drake_deps(
-    expr = expr,
-    exclude = exclude,
-    restrict = restrict
-  )
-  deps$file_out <- deps$strings <- NULL
-  select_nonempty(deps)
+  deps <- drake_deps(expr = expr, exclude = exclude, restrict = restrict)
+  deps$file_out <- deps$strings <- character(0)
+  deps
 }
 
 cds_command_dependencies <- function(
@@ -290,16 +286,9 @@ cds_command_dependencies <- function(
   exclude = character(0),
   restrict = NULL
 ) {
-  if (!length(command)) {
-    return()
-  }
-  deps <- drake_deps(
-    command,
-    exclude = exclude,
-    restrict = restrict
-  )
-  deps$strings <- NULL
-  select_nonempty(deps)
+  deps <- drake_deps(command, exclude = exclude, restrict = restrict)
+  deps$strings <- character(0)
+  deps
 }
 
 cds_dynamic_deps <- function(dynamic, target, args) {

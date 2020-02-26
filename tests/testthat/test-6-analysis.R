@@ -32,7 +32,7 @@ test_with_dir("busy function", {
     expression(quoted3)
   }
   out <- drake_deps(f)
-  out <- decode_deps_list(out)
+  out <- select_nonempty(decode_deps_list(out))
   expect_equal(sort(out$file_in), sort(c("x", "y")))
   expect_equal(sort(out$file_out), sort(c("w", "z")))
   str <- sort(
@@ -209,7 +209,7 @@ test_with_dir("replacement functions", {
 
   code <- quote(f(base::g(pkg:::h(x, w), y(a)), z(u, v)) <- 1)
   out <- drake_deps(code)
-  out <- decode_deps_list(out)
+  out <- select_nonempty(decode_deps_list(out))
   expect_equal(
     sort(out$globals),
     sort(c("f<-", "a", "u", "v", "x", "w", "y", "z"))
@@ -417,7 +417,7 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
   file.copy(
     from = path, to = file.path(getwd(), "report.Rmd"), overwrite = TRUE)
   x <- cds_command_dependencies(cmd)
-  x <- decode_deps_list(x)
+  x <- select_nonempty(decode_deps_list(x))
   x0 <- list(
     file_in = "x", file_out = "y", loadd = "large",
     readd = c("small", "coef_regression2_small"),
@@ -427,7 +427,7 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
     expect_equal(sort(x[[i]]), sort(x0[[i]]))
   }
   y <- cds_import_dependencies(f)
-  y <- decode_deps_list(y)
+  y <- select_nonempty(decode_deps_list(y))
   y0 <- list(
     file_in = "x",
     knitr_in = "report.Rmd",
@@ -453,9 +453,12 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
 test_with_dir("deps_code() and deps_target_impl()", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_equal(nrow(deps_code("")), 0)
-  expect_equal(length(cds_command_dependencies(NA)), 0)
-  expect_equal(length(cds_command_dependencies(NULL)), 0)
-  expect_equal(length(cds_command_dependencies(character(0))), 0)
+  expect_equal(length(select_nonempty(cds_command_dependencies(NA))), 0)
+  expect_equal(length(select_nonempty(cds_command_dependencies(NULL))), 0)
+  expect_equal(
+    length(select_nonempty(cds_command_dependencies(character(0)))),
+    0
+  )
   expect_equal(deps_code(base::c)$name, character(0))
   expect_equal(deps_code(base::list)$name, character(0))
   f <- function(x, y) {
@@ -949,10 +952,10 @@ test_with_dir("function_dependencies() works on :: and :::", {
     )
   )
   cd <- drake_deps(crazy)
-  cd <- decode_deps_list(cd)
+  cd <- select_nonempty(decode_deps_list(cd))
   expect_equal(sort(cd$namespaced), ns)
   cd <- drake_deps(crazy)
-  cd <- decode_deps_list(cd)
+  cd <- select_nonempty(decode_deps_list(cd))
   expect_equal(
     unname(sort(unlist(cd))),
     sort(c(ns, "g", "myfun1", "sqrt", "local"))
