@@ -7,6 +7,13 @@ test_with_dir("print.drake_deps()", {
   expect_true(any(grepl("drake_deps", m)))
 })
 
+test_with_dir("print.drake_deps_ht()", {
+  skip_on_cran()
+  x <- drake_deps_ht(quote(x)) # print by hand
+  m <- utils::capture.output(print(x))
+  expect_true(any(grepl("drake_deps_ht", m)))
+})
+
 test_with_dir("drake_config() print method", {
   skip_on_cran()
   x <- drake_config(drake_plan(y = 1)) # print by hand
