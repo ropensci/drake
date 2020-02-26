@@ -440,9 +440,6 @@ evalseq <- function(e) {
   }
 }
 
-
-
-
 list_code_analysis_results <- function(results) {
   nms <- names(results)
   x <- lapply(
