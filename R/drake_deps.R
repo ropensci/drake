@@ -6,7 +6,7 @@
 #' @param exclude Character vector of the names of symbols to exclude
 #'   from the code analysis.
 #' @param restrict Optional character vector of allowable names of globals.
-#'   If `NULL`, all global symbols are detactable. If a character vector,
+#'   If `NULL`, all global symbols are detectable. If a character vector,
 #'   only the variables in `restrict` will count as global variables.
 #' @examples
 #' expr <- quote({
