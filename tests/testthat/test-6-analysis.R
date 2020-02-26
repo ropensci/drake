@@ -1,5 +1,19 @@
 drake_context("analysis")
 
+test_with_dir("drake_validate.drake_deps() (#1183)", {
+  x <- new_drake_deps()
+  expect_silent(drake_validate(x))
+  x$globals <- NULL
+  expect_error(drake_validate(x))
+})
+
+test_with_dir("drake_validate.drake_deps_ht() (#1183)", {
+  x <- new_drake_deps_ht()
+  expect_silent(drake_validate(x))
+  x$globals <- NULL
+  expect_error(drake_validate(x))
+})
+
 test_with_dir("busy function", {
   f <- function(a = 1, b = k(i), nineteen, string_args = c("sa1", "sa2")) {
     for (iter in 1:10) {
