@@ -131,7 +131,7 @@ cdl_analyze_import <- function(index, imports, names, args) {
     deps_build = cds_import_dependencies(
       expr = imports[[index]],
       exclude = name,
-      allowed_globals = args$ht_imports
+      restrict = args$ht_imports
     )
   )
   as_drake_spec(spec)
@@ -151,11 +151,11 @@ cds_analyze_commands <- function(args) {
   names(spec) <- args$plan$target
   args$default_condition_deps <- cds_import_dependencies(
     args$trigger$condition,
-    allowed_globals = args$ht_globals
+    restrict = args$ht_globals
   )
   args$default_change_deps <- cds_import_dependencies(
     args$trigger$change,
-    allowed_globals = args$ht_globals
+    restrict = args$ht_globals
   )
   out <- lightly_parallelize(
     X = spec,
@@ -173,7 +173,7 @@ cds_prepare_spec <- function(args, spec) {
   spec$deps_build <- cds_command_dependencies(
     command = spec$command,
     exclude = spec$target,
-    allowed_globals = args$ht_globals
+    restrict = args$ht_globals
   )
   spec$deps_dynamic <- cds_dynamic_deps(
     spec$dynamic,
@@ -203,12 +203,12 @@ cds_prepare_spec <- function(args, spec) {
     spec$deps_condition <- cds_import_dependencies(
       spec$trigger$condition,
       exclude = spec$target,
-      allowed_globals = args$ht_globals
+      restrict = args$ht_globals
     )
     spec$deps_change <- cds_import_dependencies(
       spec$trigger$change,
       exclude = spec$target,
-      allowed_globals = args$ht_globals
+      restrict = args$ht_globals
     )
   }
   cds_no_dynamic_triggers(spec)
@@ -274,12 +274,12 @@ cds_no_dynamic_triggers_impl <- function(target, deps_dynamic, deps_trigger) {
 }
 
 cds_import_dependencies <- function(
-  expr, exclude = character(0), allowed_globals = NULL
+  expr, exclude = character(0), restrict = NULL
 ) {
-  deps <- analyze_code(
+  deps <- drake_deps(
     expr = expr,
     exclude = exclude,
-    allowed_globals = allowed_globals
+    restrict = restrict
   )
   deps$file_out <- deps$strings <- NULL
   select_nonempty(deps)
@@ -288,15 +288,15 @@ cds_import_dependencies <- function(
 cds_command_dependencies <- function(
   command,
   exclude = character(0),
-  allowed_globals = NULL
+  restrict = NULL
 ) {
   if (!length(command)) {
     return()
   }
-  deps <- analyze_code(
+  deps <- drake_deps(
     command,
     exclude = exclude,
-    allowed_globals = allowed_globals
+    restrict = restrict
   )
   deps$strings <- NULL
   select_nonempty(deps)

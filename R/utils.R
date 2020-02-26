@@ -69,6 +69,10 @@ assert_cache <- function(cache) {
   }
 }
 
+assert_character <- function(x) {
+  stopifnot(is.character(x))
+}
+
 # weak_as_tibble - use as_tibble() if available but fall back to
 # as.data.frame() if necessary
 weak_as_tibble <- function(..., .force_df = FALSE) {
@@ -369,6 +373,10 @@ min_str <- function(x) {
     spaces <- paste(rep(" ", n_spaces[index]), collapse = "")
     cat(" $", name, ":", spaces, class(x[[name]]), "\n")
   }
+}
+
+drake_validate <- function(x) {
+  UseMethod("drake_validate")
 }
 
 # From lintr

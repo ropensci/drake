@@ -31,7 +31,7 @@ test_with_dir("busy function", {
     Quote(quoted2)
     expression(quoted3)
   }
-  out <- analyze_code(f)
+  out <- drake_deps(f)
   out <- decode_deps_list(out)
   expect_equal(sort(out$file_in), sort(c("x", "y")))
   expect_equal(sort(out$file_out), sort(c("w", "z")))
@@ -54,7 +54,7 @@ test_with_dir("busy function", {
 test_with_dir("equals analysis", {
   for (text in c("z = g(a * b)", "function(x) {z = g(a * b)}")) {
     expr <- parse(text = text)
-    out <- analyze_code(expr)
+    out <- drake_deps(expr)
     expect_equal(sort(out$globals), sort(c("a", "b", "g")))
   }
 })
@@ -81,30 +81,30 @@ test_with_dir("local variable tests from the codetools package", {
 
 test_with_dir("same tests with global variables", {
   code <- quote(x <- 1)
-  expect_equal(as.character(analyze_code(code)$globals), character(0))
+  expect_equal(as.character(drake_deps(code)$globals), character(0))
   code <- quote(x <- y <- 1)
-  expect_equal(as.character(analyze_code(code)$globals), character(0))
+  expect_equal(as.character(drake_deps(code)$globals), character(0))
   code <- quote(local(x <- 1))
-  expect_equal(analyze_code(code)$globals, "local")
+  expect_equal(drake_deps(code)$globals, "local")
   code <- quote(assign(x, 3))
-  out <- sort(analyze_code(code)$globals)
+  out <- sort(drake_deps(code)$globals)
   expect_equal(out, sort(c("assign", "x")))
   code <- quote({
     assign(x, 3)
     x <- 1
   })
-  out <- sort(analyze_code(code)$globals)
+  out <- sort(drake_deps(code)$globals)
   expect_equal(out, sort(c("assign", "x")))
   code <- quote({
     x <- 1
     assign(x, 3)
   })
-  expect_equal(analyze_code(code)$globals, "assign")
+  expect_equal(drake_deps(code)$globals, "assign")
   code <- quote(assign("x", 3))
-  out <- sort(analyze_code(code)$globals)
+  out <- sort(drake_deps(code)$globals)
   expect_equal(out, "assign")
   code <- quote(assign("x", 3, 4))
-  out <- sort(analyze_code(code)$globals)
+  out <- sort(drake_deps(code)$globals)
   expect_equal(out, "assign")
 })
 
@@ -113,9 +113,9 @@ test_with_dir("solitary codetools globals tests", {
     local <- 1
     local(x <- 1)
   })
-  out <- as.character(analyze_code(code)$globals)
+  out <- as.character(drake_deps(code)$globals)
   expect_equal(out, character(0))
-  out <- analyze_code(quote(local(x <- 1, e)))$globals
+  out <- drake_deps(quote(local(x <- 1, e)))$globals
   expect_equal(sort(out), sort(c("local", "e")))
   f <- function() {
     if (is.R()) {
@@ -124,64 +124,64 @@ test_with_dir("solitary codetools globals tests", {
       y
     }
   }
-  out <- analyze_code(f)$globals
+  out <- drake_deps(f)$globals
   expect_equal(sort(out), sort(c("if", "is.R", "x", "y")))
   f <- function() {
     if (FALSE) {
       x
     }
   }
-  out <- analyze_code(f)$globals
+  out <- drake_deps(f)$globals
   expect_equal(sort(out), sort(c("if", "x")))
 
   f <- function(x) {z <- 1; x + y + z} # nolint
-  expect_equal(sort(analyze_code(f)$globals), "y")
-  expect_equal(analyze_code(function() Quote(x))$globals, "Quote")
+  expect_equal(sort(drake_deps(f)$globals), "y")
+  expect_equal(drake_deps(function() Quote(x))$globals, "Quote")
   f <- function(f, x, y) {
     local <- f
     local(x <- y)
     x
   }
-  expect_equivalent(analyze_code(f), list())
+  expect_equivalent(drake_deps(f), list())
   f <- function() {
     x <- 1; y <- 2
   }
-  out <- as.character(analyze_code(f)$globals)
+  out <- as.character(drake_deps(f)$globals)
   expect_equal(out, character(0))
   f <- function(u = x <- 1) {
     y <- 2
   }
-  expect_equal(as.character(analyze_code(f)$globals), character(0))
+  expect_equal(as.character(drake_deps(f)$globals), character(0))
 })
 
 # https://github.com/cran/codetools/blob/9bac1daaf19a36bd03a2cd7d67041893032e7a04/R/codetools.R#L302-L365 # nolint
 # https://cran.r-project.org/doc/manuals/R-lang.html#Subset-assignment
 test_with_dir("replacement functions", {
   code <- quote(f(x) <- 1)
-  out <- sort(analyze_code(code)$globals)
+  out <- sort(drake_deps(code)$globals)
   expect_equal(out, sort(c("f<-", "x")))
 
   code <- quote({
     f(x) <- 1
     x <- 5
   })
-  out <- sort(analyze_code(code)$globals)
+  out <- sort(drake_deps(code)$globals)
   expect_equal(out, sort(c("f<-", "x")))
 
   code <- quote({
     x <- 5
     f(x) <- 1
   })
-  out <- analyze_code(code)$globals
+  out <- drake_deps(code)$globals
   expect_equal(out, "f<-")
 
   code <- quote(f(g(h(k(x)))) <- seven)
-  out <- sort(as.character(analyze_code(code)$globals))
+  out <- sort(as.character(drake_deps(code)$globals))
   exp <- sort(c("f<-", "g", "g<-", "h", "h<-", "k", "k<-", "x", "seven"))
   expect_equal(out, exp)
 
   code <- quote(f(g(h(x, w), y(a)), z(u, v)) <- 1)
-  out <- sort(as.character(analyze_code(code)$globals))
+  out <- sort(as.character(drake_deps(code)$globals))
   exp <- sort(
     c("f<-", "g", "g<-", "h", "h<-", "a", "u", "v", "w", "x", "y", "z")
   )
@@ -191,7 +191,7 @@ test_with_dir("replacement functions", {
     x <- 5
     f(g(h(x, w), y(a)), z(u, v)) <- 1
   })
-  out <- sort(as.character(analyze_code(code)$globals))
+  out <- sort(as.character(drake_deps(code)$globals))
   exp <- sort(
     c("f<-", "g", "g<-", "h", "h<-", "a", "u", "v", "w", "y", "z")
   )
@@ -201,14 +201,14 @@ test_with_dir("replacement functions", {
     f(g(h(x, w), y(a)), z(u, v)) <- 1
     x <- 5
   })
-  out <- sort(as.character(analyze_code(code)$globals))
+  out <- sort(as.character(drake_deps(code)$globals))
   exp <- sort(
     c("f<-", "g", "g<-", "h", "h<-", "a", "u", "v", "w", "x", "y", "z")
   )
   expect_equal(out, exp)
 
   code <- quote(f(base::g(pkg:::h(x, w), y(a)), z(u, v)) <- 1)
-  out <- analyze_code(code)
+  out <- drake_deps(code)
   out <- decode_deps_list(out)
   expect_equal(
     sort(out$globals),
@@ -254,13 +254,13 @@ test_with_dir("character vectors inside language objects", {
     drake_config(plan, cache = storr::storr_environment(), session_info = FALSE)
   )
   expect_equal(
-    sort(analyze_code(plan$command[[1]])$strings),
+    sort(drake_deps(plan$command[[1]])$strings),
     sort(c("a", "b"))
   )
 })
 
 test_with_dir("dollar sign (#938)", {
-  expect_equal(analyze_code(quote(x$y))$globals, "x")
+  expect_equal(drake_deps(quote(x$y))$globals, "x")
   f <- function(target, cache) {
     exists <- cache$exists(key = target) && (
       imported <- diagnose(
@@ -271,7 +271,7 @@ test_with_dir("dollar sign (#938)", {
         FALSE
     )
   }
-  out <- sort(analyze_code(f)$globals)
+  out <- sort(drake_deps(f)$globals)
   exp <- sort(c("diagnose", "%||%"))
   expect_equal(out, exp)
 })
@@ -948,10 +948,10 @@ test_with_dir("function_dependencies() works on :: and :::", {
       "triple:::triple"
     )
   )
-  cd <- analyze_code(crazy)
+  cd <- drake_deps(crazy)
   cd <- decode_deps_list(cd)
   expect_equal(sort(cd$namespaced), ns)
-  cd <- analyze_code(crazy)
+  cd <- drake_deps(crazy)
   cd <- decode_deps_list(cd)
   expect_equal(
     unname(sort(unlist(cd))),

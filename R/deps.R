@@ -126,7 +126,7 @@ get_deps_knitr <- function(target) {
   if (is_encoded_path(target)) {
     target <- redecode_path(target)
   }
-  analyze_knitr_file(target, out, allowed_globals = NULL)
+  analyze_knitr_file(target, out, restrict = NULL)
   list_code_analysis_results(out)
 }
 
