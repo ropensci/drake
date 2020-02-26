@@ -122,7 +122,7 @@ get_deps_knitr <- function(target) {
   if (!length(target)) {
     return(list())
   }
-  out <- new_code_analysis_results()
+  out <- new_drake_deps_ht()
   if (is_encoded_path(target)) {
     target <- redecode_path(target)
   }

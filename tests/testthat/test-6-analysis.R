@@ -65,7 +65,7 @@ test_with_dir("local variable tests from the codetools package", {
     if (!is.function(expr) && !is.language(expr)) {
       return(list())
     }
-    results <- new_code_analysis_results()
+    results <- new_drake_deps_ht()
     locals <- ht_new()
     walk_code(expr, results, locals, NULL)
     ht_list(locals)
@@ -142,7 +142,7 @@ test_with_dir("solitary codetools globals tests", {
     local(x <- y)
     x
   }
-  expect_equivalent(drake_deps(f), list())
+  expect_equivalent(drake_deps(f), new_drake_deps())
   f <- function() {
     x <- 1; y <- 2
   }

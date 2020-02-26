@@ -73,6 +73,10 @@ assert_character <- function(x) {
   stopifnot(is.character(x))
 }
 
+assert_environment <- function(x) {
+  stopifnot(is.environment(x))
+}
+
 # weak_as_tibble - use as_tibble() if available but fall back to
 # as.data.frame() if necessary
 weak_as_tibble <- function(..., .force_df = FALSE) {
