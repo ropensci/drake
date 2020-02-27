@@ -309,9 +309,6 @@ clean_dependency_list <- function(x) {
 }
 
 clean_nested_char_list <- function(x) {
-  if (!length(x)) {
-    return(character(0))
-  }
   x <- unlist(x)
   x <- unname(x)
   x <- as.character(x)
