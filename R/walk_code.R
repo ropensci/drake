@@ -1,61 +1,32 @@
-analyze_code <- function(
-  expr,
-  exclude = character(0),
-  allowed_globals = NULL
-) {
-  results <- analyze_code_impl(
-    expr = expr,
-    exclude = exclude,
-    allowed_globals = allowed_globals
-  )
-  results <- list_code_analysis_results(results)
-  results <- select_nonempty(results)
-  class(results) <- c("drake_analyze_code", "drake")
-  results
-}
-
-#' @export
-print.drake_analyze_code <- function(x, ...) {
-  cat("code analysis results list from drake:::analyze_code()\n")
-  utils::str(unclass(x), no.list = TRUE)
-}
-
-analyze_code_impl <- function(
-  expr,
-  exclude = character(0),
-  allowed_globals = NULL
-) {
-  if (!is.function(expr) && !is.language(expr)) {
-    return(list())
-  }
-  results <- new_code_analysis_results()
-  locals <- ht_new_from_list(ignored_symbols_list)
-  ht_set(locals, exclude)
-  walk_code(expr, results, locals, allowed_globals)
-  results
-}
-
-walk_code <- function(expr, results, locals, allowed_globals) {
+#' @title Static code analysis
+#' @keywords internal
+#' @description Static code analysis.
+#' @param expr A function or expression.
+#' @param results A `drake_deps` object.
+#' @param locals An environment, a hash table of local variables.
+#' @param restrict An environment,
+#'   a hash table for whitelisting global symbols.
+walk_code <- function(expr, results, locals, restrict) {
   if (!length(expr)) {
     return()
   } else if (is.function(expr)) {
-    analyze_function(expr, results, locals, allowed_globals)
+    analyze_function(expr, results, locals, restrict)
   } else if (is.name(expr)) {
-    analyze_global(expr, results, locals, allowed_globals)
+    analyze_global(expr, results, locals, restrict)
   } else if (is.character(expr)) {
     str <- expr[nzchar(expr)]
     for (x in str) {
       ht_set(results$strings, x)
     }
   } else if (is.pairlist(expr)) {
-    walk_recursive(expr, results, locals, allowed_globals)
+    walk_recursive(expr, results, locals, restrict)
   } else if (is.call(expr) || is.recursive(expr)) {
-    walk_call(expr, results, locals, allowed_globals)
+    walk_call(expr, results, locals, restrict)
   }
   invisible()
 }
 
-walk_call <- function(expr, results, locals, allowed_globals) { # nolint
+walk_call <- function(expr, results, locals, restrict) { # nolint
   name <- safe_deparse(expr[[1]], backtick = FALSE)
   if (name == "local") {
     locals <- ht_clone(locals)
@@ -63,71 +34,71 @@ walk_call <- function(expr, results, locals, allowed_globals) { # nolint
   if (name %in% c("$", "@")) {
     expr[[3]] <- substitute()
   }
-  if (walk_base(expr, results, locals, allowed_globals, name)) {
+  if (walk_base(expr, results, locals, restrict, name)) {
     return()
   }
-  walk_drake(expr, results, locals, allowed_globals, name)
+  walk_drake(expr, results, locals, restrict, name)
 }
 
-walk_base <- function(expr, results, locals, allowed_globals, name) {
+walk_base <- function(expr, results, locals, restrict, name) {
   out <- TRUE
   if (name %in% c("expression", "quote", "Quote")) {
-    analyze_global(name, results, locals, allowed_globals)
+    analyze_global(name, results, locals, restrict)
   } else if (name %in% c("<-", "=")) {
-    analyze_arrow(expr, results, locals, allowed_globals)
+    analyze_arrow(expr, results, locals, restrict)
   } else if (name %in% c("::", ":::")) {
-    analyze_namespaced(expr, results, locals, allowed_globals)
+    analyze_namespaced(expr, results, locals, restrict)
   } else if (name == "for") {
-    analyze_for(expr, results, locals, allowed_globals)
+    analyze_for(expr, results, locals, restrict)
   } else if (name == "function") {
-    analyze_function(eval(expr), results, locals, allowed_globals)
+    analyze_function(eval(expr), results, locals, restrict)
   } else if (name == "assign") {
-    analyze_assign(expr, results, locals, allowed_globals)
+    analyze_assign(expr, results, locals, restrict)
   } else if (name == "delayedAssign") {
-    analyze_delayed_assign(expr, results, locals, allowed_globals)
+    analyze_delayed_assign(expr, results, locals, restrict)
   } else if (name == "UseMethod") {
-    analyze_usemethod(expr, results, locals, allowed_globals)
+    analyze_usemethod(expr, results, locals, restrict)
   } else {
     out <- FALSE
   }
   out
 }
 
-walk_drake <- function(expr, results, locals, allowed_globals, name) {
+walk_drake <- function(expr, results, locals, restrict, name) {
   if (name %in% loadd_fns) {
-    analyze_loadd(expr, results, allowed_globals)
+    analyze_loadd(expr, results, restrict)
   } else if (name %in% readd_fns) {
-    analyze_readd(expr, results, allowed_globals)
+    analyze_readd(expr, results, restrict)
   } else if (name %in% file_in_fns) {
     analyze_file_in(expr, results)
   } else if (name %in% file_out_fns) {
     analyze_file_out(expr, results)
   } else if (name %in% c(knitr_in_fns)) {
-    analyze_knitr_in(expr, results, allowed_globals)
+    analyze_knitr_in(expr, results, restrict)
   } else if (!(name %in% no_deps_fns)) {
-    walk_recursive(expr, results, locals, allowed_globals)
+    walk_recursive(expr, results, locals, restrict)
   }
 }
 
-analyze_arrow <- function(expr, results, locals, allowed_globals) {
+analyze_arrow <- function(expr, results, locals, restrict) {
   walk_recursive(
     flatten_assignment(expr[[2]]),
     results,
     locals,
-    allowed_globals
+    restrict
   )
-  ignore(walk_code)(expr[[3]], results, locals, allowed_globals)
+  ignore(walk_code)(expr[[3]], results, locals, restrict)
   ht_set(locals, get_assigned_var(expr))
 }
 
-analyze_knitr_in <- function(expr, results, allowed_globals) {
+analyze_knitr_in <- function(expr, results, restrict) {
   expr <- ignore_ignore(expr)
   files <- analyze_strings(expr[-1])
   lapply(
     files,
     analyze_knitr_file,
     results = results,
-    allowed_globals = NULL
+    restrict = NULL
   )
   ht_set(results$knitr_in, reencode_path(files))
 }
@@ -148,30 +119,37 @@ analyze_file_out <- function(expr, results) {
   ht_set(results$file_out, x)
 }
 
-analyze_knitr_file <- function(file, results, allowed_globals) {
+analyze_knitr_file <- function(file, results, restrict) {
   if (!length(file)) {
-    return(list())
+    return(new_drake_deps())
   }
   fragments <- get_tangled_frags(file)
-  out <- ignore(analyze_code_impl)(
+  out <- ignore(drake_deps_ht)(
     fragments,
-    allowed_globals = allowed_globals
+    restrict = restrict
   )
   if (length(out)) {
+    knitr_in_slots <- c(
+      "knitr_in",
+      "file_in",
+      "file_out",
+      "loadd",
+      "readd"
+    )
     for (slot in knitr_in_slots) {
       ht_merge(results[[slot]], out[[slot]])
     }
   }
 }
 
-analyze_namespaced <- function(expr, results, locals, allowed_globals) {
+analyze_namespaced <- function(expr, results, locals, restrict) {
   x <- safe_deparse(expr, backtick = TRUE)
   if (!ht_exists(locals, x)) {
     ht_set(results$namespaced, reencode_namespaced(x))
   }
 }
 
-analyze_loadd <- function(expr, results, allowed_globals) {
+analyze_loadd <- function(expr, results, restrict) {
   expr <- ignore_ignore(expr)
   expr <- match.call(drake::loadd, as.call(expr))
   expr <- expr[-1]
@@ -183,28 +161,28 @@ analyze_loadd <- function(expr, results, allowed_globals) {
   dots <- expr[index]
   strings <- analyze_strings(dots)
   symbols <- safe_all_vars(dots)
-  if (!is.null(allowed_globals)) {
-    strings <- ht_filter(allowed_globals, strings)
-    symbols <- ht_filter(allowed_globals, symbols)
+  if (!is.null(restrict)) {
+    strings <- ht_filter(restrict, strings)
+    symbols <- ht_filter(restrict, symbols)
   }
   ht_set(results$loadd, strings)
   ht_set(results$loadd, symbols)
 }
 
-analyze_readd <- function(expr, results, allowed_globals) {
+analyze_readd <- function(expr, results, restrict) {
   expr <- ignore_ignore(expr)
   expr <- match.call(drake::readd, as.call(expr))
   strings <- analyze_strings(expr["target"])
   symbols <- safe_all_vars(expr["target"])
-  if (!is.null(allowed_globals)) {
-    strings <- ht_filter(allowed_globals, strings)
-    symbols <- ht_filter(allowed_globals, symbols)
+  if (!is.null(restrict)) {
+    strings <- ht_filter(restrict, strings)
+    symbols <- ht_filter(restrict, symbols)
   }
   ht_set(results$readd, strings)
   ht_set(results$readd, symbols)
 }
 
-analyze_assign <- function(expr, results, locals, allowed_globals) {
+analyze_assign <- function(expr, results, locals, restrict) {
   expr <- match.call(definition = assign, call = expr)
   if (is.character(expr$x)) {
     ht_set(results$strings, expr$x)
@@ -213,13 +191,13 @@ analyze_assign <- function(expr, results, locals, allowed_globals) {
       ht_set(locals, expr$x)
     }
   } else {
-    ignore(walk_code)(expr$x, results, locals, allowed_globals)
+    ignore(walk_code)(expr$x, results, locals, restrict)
   }
   expr$x <- NULL
-  walk_recursive(expr, results, locals, allowed_globals)
+  walk_recursive(expr, results, locals, restrict)
 }
 
-analyze_delayed_assign <- function(expr, results, locals, allowed_globals) {
+analyze_delayed_assign <- function(expr, results, locals, restrict) {
   expr <- match.call(definition = delayedAssign, call = expr)
   if (is.character(expr$x)) {
     ht_set(results$strings, expr$x)
@@ -229,24 +207,24 @@ analyze_delayed_assign <- function(expr, results, locals, allowed_globals) {
       ht_set(locals, expr$x)
     }
   } else {
-    analyze_global(expr$x, results, locals, allowed_globals)
+    analyze_global(expr$x, results, locals, restrict)
   }
   expr$x <- NULL
-  walk_recursive(expr, results, locals, allowed_globals)
+  walk_recursive(expr, results, locals, restrict)
 }
 
-analyze_function <- function(expr, results, locals, allowed_globals) {
+analyze_function <- function(expr, results, locals, restrict) {
   expr <- unwrap_function(expr)
   if (typeof(expr) != "closure") {
     return()
   }
   locals <- ht_clone(locals)
   ht_set(locals, names(formals(expr)))
-  ignore(walk_code)(formals(expr), results, locals, allowed_globals)
-  ignore(walk_code)(body(expr), results, locals, allowed_globals)
+  ignore(walk_code)(formals(expr), results, locals, restrict)
+  ignore(walk_code)(body(expr), results, locals, restrict)
 }
 
-analyze_usemethod <- function(expr, results, locals, allowed_globals) {
+analyze_usemethod <- function(expr, results, locals, restrict) {
   generic <- expr[["generic"]] %|||% expr[[2]]
   if (!is.character(generic) || length(generic) != 1L) {
     return()
@@ -255,7 +233,7 @@ analyze_usemethod <- function(expr, results, locals, allowed_globals) {
   pattern <- sprintf("^%s\\.", pattern)
   methods <- grep(
     pattern = pattern,
-    x = ht_list(allowed_globals),
+    x = ht_list(restrict),
     value = TRUE
   )
   lapply(
@@ -263,7 +241,7 @@ analyze_usemethod <- function(expr, results, locals, allowed_globals) {
     FUN = analyze_global,
     results = results,
     locals = locals,
-    allowed_globals = allowed_globals
+    restrict = restrict
   )
   invisible()
 }
@@ -274,12 +252,12 @@ analyze_strings <- function(expr) {
   ht_list(ht)
 }
 
-analyze_for <- function(expr, results, locals, allowed_globals) {
+analyze_for <- function(expr, results, locals, restrict) {
   ht_set(locals, as.character(expr[[2]]))
-  walk_recursive(expr[-2], results, locals, allowed_globals)
+  walk_recursive(expr[-2], results, locals, restrict)
 }
 
-analyze_global <- function(expr, results, locals, allowed_globals) {
+analyze_global <- function(expr, results, locals, restrict) {
   x <- as.character(expr)
   if (!nzchar(x)) {
     return()
@@ -287,18 +265,18 @@ analyze_global <- function(expr, results, locals, allowed_globals) {
   if (ht_exists(locals, x)) {
     return()
   }
-  if (is.null(allowed_globals) || ht_exists(allowed_globals, x)) {
+  if (is.null(restrict) || ht_exists(restrict, x)) {
     ht_set(results$globals, x)
   }
 }
 
-walk_recursive <- function(expr, results, locals, allowed_globals) {
+walk_recursive <- function(expr, results, locals, restrict) {
   lapply(
     X = expr,
     FUN = ignore(walk_code),
     results = results,
     locals = locals,
-    allowed_globals = allowed_globals
+    restrict = restrict
   )
   invisible()
 }
@@ -469,14 +447,6 @@ evalseq <- function(e) {
   }
 }
 
-new_code_analysis_results <- function() {
-  ht_hash <- replicate(length(ht_slots_hash), ht_new(hash = TRUE))
-  names(ht_hash) <- ht_slots_hash
-  ht_no_hash <- replicate(length(ht_slots_no_hash), ht_new(hash = FALSE))
-  names(ht_no_hash) <- ht_slots_no_hash
-  c(ht_hash, ht_no_hash)
-}
-
 list_code_analysis_results <- function(results) {
   nms <- names(results)
   x <- lapply(
@@ -611,21 +581,3 @@ bad_symbols <- sort(
 ignored_symbols <- sort(c(drake_symbols, base_symbols, bad_symbols))
 ignored_symbols_list <- as.list(rep(TRUE, length(ignored_symbols)))
 names(ignored_symbols_list) <- ignored_symbols
-
-ht_slots_hash <- "globals"
-ht_slots_no_hash <- c(
-  "namespaced",
-  "strings",
-  "loadd",
-  "readd",
-  "file_in",
-  "file_out",
-  "knitr_in"
-)
-knitr_in_slots <- c(
-  "knitr_in",
-  "file_in",
-  "file_out",
-  "loadd",
-  "readd"
-)

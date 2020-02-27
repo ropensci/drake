@@ -1,10 +1,17 @@
 drake_context("interactive")
 
-test_with_dir("code analysis print method", {
+test_with_dir("print.drake_deps()", {
   skip_on_cran()
-  x <- analyze_code(quote(x)) # print by hand
+  x <- drake_deps(quote(x)) # print by hand
   m <- utils::capture.output(print(x))
-  expect_true(any(grepl("code analysis results list", m)))
+  expect_true(any(grepl("drake_deps", m)))
+})
+
+test_with_dir("print.drake_deps_ht()", {
+  skip_on_cran()
+  x <- drake_deps_ht(quote(x)) # print by hand
+  m <- utils::capture.output(print(x))
+  expect_true(any(grepl("drake_deps_ht", m)))
 })
 
 test_with_dir("drake_config() print method", {

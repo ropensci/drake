@@ -122,11 +122,11 @@ get_deps_knitr <- function(target) {
   if (!length(target)) {
     return(list())
   }
-  out <- new_code_analysis_results()
+  out <- new_drake_deps_ht()
   if (is_encoded_path(target)) {
     target <- redecode_path(target)
   }
-  analyze_knitr_file(target, out, allowed_globals = NULL)
+  analyze_knitr_file(target, out, restrict = NULL)
   list_code_analysis_results(out)
 }
 
@@ -309,9 +309,6 @@ clean_dependency_list <- function(x) {
 }
 
 clean_nested_char_list <- function(x) {
-  if (!length(x)) {
-    return(character(0))
-  }
   x <- unlist(x)
   x <- unname(x)
   x <- as.character(x)
