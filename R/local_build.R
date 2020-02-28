@@ -554,14 +554,23 @@ handle_build_error <- function(target, meta, config) {
     store_failure(target = parent, meta = meta, config = config)
   }
   if (!config$keep_going) {
-    msg <- paste0(
-      "target ", target, " failed. Call drake::diagnose(", target,
-      ")$error$calls for details.\nError message: ", meta$error$message
-    )
-    config$logger$disk(msg)
-    unlock_environment(config$envir)
-    stop(msg, call. = FALSE)
+    log_failure(target, meta, config)
   }
+}
+
+log_failure <- function(target, meta, config) {
+  msg1 <- paste0("target ", target, " failed.")
+  diag <- paste0("diagnose(", target, ")error")
+  message <- paste(meta$error$message, collapse = "\n")
+  trace <- utils::capture.output(print(meta$error$calls))[-1]
+  trace <- paste0(" ", trace)
+  trace <- paste(trace, collapse = "\n")
+  msg2 <- paste0(diag, "$message:\n  ", message)
+  msg3 <- paste0(diag, "$calls:\n", trace)
+  msg <- paste(c(msg1, msg2, msg3), collapse = "\n")
+  config$logger$disk(msg)
+  unlock_environment(config$envir)
+  stop(msg, call. = FALSE)
 }
 
 delayed_relay <- function(config) {
