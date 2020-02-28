@@ -249,17 +249,17 @@ fork_advice <- function(msg) {
 drake_with_call_stack_8a6af5 <- function(target, config) {
   frame <- sys.nframe()
   capture_calls <- function(e) {
-    e <- mention_pure_functions(e)
     calls <- sys.calls()
     index_top <- which(vlapply(calls, function(call) {
-      identical(call, tidy_expr[[2]])
-    }))[1L] - 1L
+      identical(safe_deparse(call[[1]]), "drake_with_call_stack_8a6af5")
+    }))[1] + 16 # Not ideal, but less prone to failure than a direct search.
     index_bottom <- which(vlapply(calls, function(call) {
       identical(call, e$call)
-    }))[1L]
+    }))[1] %||NA% length(calls) - 2
     top <- sys.frame(index_top)
     bottom <- sys.frame(index_bottom)
     e$calls <- rlang::trace_back(top = top, bottom = bottom)
+    e <- mention_pure_functions(e)
     signalCondition(e)
   }
   expr <- config$spec[[target]]$command_build
