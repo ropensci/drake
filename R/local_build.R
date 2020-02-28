@@ -250,7 +250,16 @@ drake_with_call_stack_8a6af5 <- function(target, config) {
   frame <- sys.nframe()
   capture_calls <- function(e) {
     e <- mention_pure_functions(e)
-    e$calls <- rlang::trace_back(top = sys.frame(34), bottom = sys.frame(42))
+    calls <- sys.calls()
+    index_top <- which(vlapply(calls, function(call) {
+      identical(call, tidy_expr[[2]])
+    }))[1L] - 1L
+    index_bottom <- which(vlapply(calls, function(call) {
+      identical(call, e$call)
+    }))[1L]
+    top <- sys.frame(index_top)
+    bottom <- sys.frame(index_bottom)
+    e$calls <- rlang::trace_back(top = top, bottom = bottom)
     signalCondition(e)
   }
   expr <- config$spec[[target]]$command_build
