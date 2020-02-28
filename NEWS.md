@@ -28,6 +28,7 @@
 * Describe the limits of `recoverable()`, e.g. dynamic branching + dynamic files.
 * Throw an error instead of a warning in `drake_plan()` if a grouping variable is undefined or invalid (#1182, @kendonB).
 * Rigorous S3 framework for static code analysis objects of type `drake_deps` and `drake_deps_ht` (#1183).
+* Use `rlang::trace_back()` to make `diagnose()$error$calls` nicer (#1198).
 
 # Version 7.10.0
 

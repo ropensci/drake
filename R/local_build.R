@@ -250,7 +250,7 @@ drake_with_call_stack_8a6af5 <- function(target, config) {
   frame <- sys.nframe()
   capture_calls <- function(e) {
     e <- mention_pure_functions(e)
-    e$calls <- head(sys.calls()[-seq_len(frame + 7)], -2)
+    e$calls <- rlang::trace_back(top = sys.frame(34), bottom = sys.frame(42))
     signalCondition(e)
   }
   expr <- config$spec[[target]]$command_build
@@ -556,7 +556,7 @@ handle_build_error <- function(target, meta, config) {
   if (!config$keep_going) {
     msg <- paste0(
       "target ", target, " failed. Call drake::diagnose(", target,
-      ") for details. Error message: ", meta$error$message
+      ")$error$calls for details.\nError message: ", meta$error$message
     )
     config$logger$disk(msg)
     unlock_environment(config$envir)
