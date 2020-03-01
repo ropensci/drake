@@ -375,8 +375,14 @@ min_str <- function(x) {
   for (index in seq_along(x)) {
     name <- names(x)[index]
     spaces <- paste(rep(" ", n_spaces[index]), collapse = "")
-    cat(" $", name, ":", spaces, class(x[[name]]), "\n")
+    message(" $", name, ":", spaces, class(x[[name]]))
   }
+}
+
+msg_str <- function(x) {
+  out <- utils::capture.output(utils::str(unclass(x), no.list = TRUE))
+  lapply(out, message)
+  invisible()
 }
 
 drake_validate <- function(x) {

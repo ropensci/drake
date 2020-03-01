@@ -90,8 +90,8 @@ drake_validate.drake_deps <- function(x) {
 
 #' @export
 print.drake_deps <- function(x, ...) {
-  cat("drake_deps\n")
-  utils::str(unclass(x), no.list = TRUE)
+  message("drake_deps")
+  msg_str(x)
 }
 
 drake_deps_impl <- function(expr, exclude = character(0), restrict = NULL) {

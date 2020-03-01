@@ -75,6 +75,6 @@ drake_validate.drake_deps_ht <- function(x) {
 
 #' @export
 print.drake_deps_ht <- function(x, ...) {
-  cat("drake_deps_ht\n")
-  utils::str(unclass(x), no.list = TRUE)
+  message("drake_deps_ht")
+  msg_str(x)
 }

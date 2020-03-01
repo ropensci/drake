@@ -2,16 +2,14 @@ drake_context("interactive")
 
 test_with_dir("print.drake_deps()", {
   skip_on_cran()
-  x <- drake_deps(quote(x)) # print by hand
-  m <- utils::capture.output(print(x))
-  expect_true(any(grepl("drake_deps", m)))
+  x <- drake_deps(quote(x))
+  print(x) # check by hand
 })
 
 test_with_dir("print.drake_deps_ht()", {
   skip_on_cran()
-  x <- drake_deps_ht(quote(x)) # print by hand
-  m <- utils::capture.output(print(x))
-  expect_true(any(grepl("drake_deps_ht", m)))
+  x <- drake_deps_ht(quote(x))
+  print(x) # check by hand
 })
 
 test_with_dir("drake_config() print method", {
