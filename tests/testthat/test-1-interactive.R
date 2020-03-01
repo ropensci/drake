@@ -43,6 +43,7 @@ test_with_dir("drake spec print method", {
 
 test_with_dir("drake_graph_info() print method", {
   skip_on_cran()
+  skip_if_not_installed("visNetwork")
   x <- drake_graph_info(drake_plan(y = 1)) # print by hand
   m <- utils::capture.output(print(x))
   expect_true(any(grepl("drake graph", m)))

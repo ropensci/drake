@@ -125,6 +125,7 @@ test_with_dir("progress bar does not break things", {
   )
   make(plan, verbose = 2)
   clean()
+  skip_if_not_installed("future")
   make(plan, verbose = 2, parallelism = "future")
   skip_on_os("windows")
   clean()

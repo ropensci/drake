@@ -309,7 +309,7 @@ check_subtarget_triggers <- function(target, subtargets, config) {
   out <- target_missing(subtargets, config)
   spec <- config$spec[[target]]
   format <- spec$format %||NA% "none"
-  if (identical(spec$trigger$file, TRUE) && format == "file") {
+  if (identical(spec$trigger$file, TRUE) && format == "file" && !all(out)) {
     i <- !out
     out[i] <- out[i] | check_trigger_subtarget_format_file(
       subtargets[i],

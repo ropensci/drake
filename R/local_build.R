@@ -249,15 +249,10 @@ fork_advice <- function(msg) {
 drake_with_call_stack_8a6af5 <- function(target, config) {
   frame <- sys.nframe()
   capture_calls <- function(e) {
-    calls <- sys.calls()
-    index_top <- which(vlapply(calls, function(call) {
-      identical(safe_deparse(call[[1]]), "drake_with_call_stack_8a6af5")
-    }))[1] + 16 # Not ideal, but less prone to failure than a direct search.
-    index_bottom <- which(vlapply(calls, function(call) {
-      identical(call, e$call)
-    }))[1] %||NA% length(calls) - 2
-    top <- sys.frame(index_top)
-    bottom <- sys.frame(index_bottom)
+    calls <- vcapply(sys.calls(), safe_deparse)
+    top_index <- min(which(grepl("^eval\\(expr = tidy_expr_8a6af5", calls)))
+    top <- sys.frame(top_index)
+    bottom <- sys.frame(sys.nframe() - 2)
     e$calls <- rlang::trace_back(top = top, bottom = bottom)
     e <- mention_pure_functions(e)
     signalCondition(e)
@@ -268,10 +263,10 @@ drake_with_call_stack_8a6af5 <- function(target, config) {
     block_envir_lock(config)
     lock_environment(config$envir)
   }
-  tidy_expr <- eval(expr = expr, envir = config$envir_subtargets)
+  tidy_expr_8a6af5 <- eval(expr = expr, envir = config$envir_subtargets)
   tryCatch(
     withCallingHandlers(
-      eval(expr = tidy_expr, envir = config$envir_subtargets),
+      eval(expr = tidy_expr_8a6af5, envir = config$envir_subtargets),
       error = capture_calls
     ),
     error = identity,

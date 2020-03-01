@@ -1686,6 +1686,7 @@ test_with_dir("cache_planned() and cache_unplanned() (#1110)", {
 
 test_with_dir("visualization labels for dynamic targets", {
   skip_on_cran()
+  skip_if_not_installed("visNetwork")
   plan <- drake_plan(
     x = seq_len(2),
     y = target(x, dynamic = map(x))
