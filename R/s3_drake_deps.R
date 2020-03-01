@@ -22,11 +22,11 @@
 #' drake_deps(expr)
 #' }
 drake_deps <- function(expr, exclude = character(0), restrict = NULL) {
-  if (!is.function(expr) && !is.language(expr)) {
-    return(new_drake_deps())
-  }
-  results <- drake_deps_impl(expr, exclude, restrict)
-  do.call(new_drake_deps, results)
+  ternary(
+    is.function(expr) || is.language(expr),
+    drake_deps_impl(expr, exclude, restrict),
+    new_drake_deps()
+  )
 }
 
 #' @title `drake_deps` constructor
@@ -68,8 +68,7 @@ new_drake_deps <- function(
     file_out = file_out,
     knitr_in = knitr_in
   )
-  class(out) <- c("drake_deps", "drake")
-  out
+  structure(out, class = c("drake_deps", "drake"))
 }
 
 drake_validate.drake_deps <- function(x) {
@@ -96,5 +95,6 @@ print.drake_deps <- function(x, ...) {
 
 drake_deps_impl <- function(expr, exclude = character(0), restrict = NULL) {
   results <- drake_deps_ht(expr, exclude, restrict)
-  lapply(results, ht_list)
+  results <- lapply(results, ht_list)
+  do.call(new_drake_deps, results)
 }

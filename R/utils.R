@@ -421,3 +421,11 @@ drake_validate <- function(x) {
     x
   }
 }
+
+ternary <- function(condition, value_true, value_false) {
+  if (any(condition)) {
+    value_true
+  } else {
+    value_false
+  }
+}
