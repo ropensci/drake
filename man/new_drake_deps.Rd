@@ -33,7 +33,7 @@ new_drake_deps(
 \item{knitr_in}{Literal static file paths enclosed in \code{\link[=knitr_in]{knitr_in()}}.}
 
 \item{restrict}{Optional character vector of allowable names of globals.
-If \code{NULL}, all global symbols are detactable. If a character vector,
+If \code{NULL}, all global symbols are detectable. If a character vector,
 only the variables in \code{restrict} will count as global variables.}
 }
 \value{
