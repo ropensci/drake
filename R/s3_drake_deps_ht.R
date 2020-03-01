@@ -53,8 +53,7 @@ new_drake_deps_ht <- function(
     file_out = file_out,
     knitr_in = knitr_in
   )
-  class(out) <- c("drake_deps_ht", "drake")
-  out
+  structure(out, class = c("drake_deps_ht", "drake"))
 }
 
 drake_validate.drake_deps_ht <- function(x) {
