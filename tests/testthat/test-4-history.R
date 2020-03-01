@@ -87,7 +87,10 @@ test_with_dir("basic history", {
   # Clean without garbage collection
   clean(small, cache = cache)
   out2 <- drake_history(cache = cache, analyze = TRUE)
-  expect_equal(out2$current[out2$target == "small"], FALSE)
+  expect_equal(
+    as.logical(out2$current[out2$target == "small"]),
+    FALSE
+  )
   out2$current[out2$target == "small"] <- TRUE
   expect_equal(out, out2)
 
@@ -96,7 +99,7 @@ test_with_dir("basic history", {
   out <- drake_history(cache = cache, analyze = TRUE)
   expect_equal(dim(out), c(22L, 9L))
   expect_equal(sort(colnames(out)), sort(cols))
-  expect_equal(is.na(out$hash), !out$current)
+  expect_equal(is.na(out$hash), as.logical(!out$current))
 
   # Clean everything.
   clean(cache = cache, garbage_collection = TRUE)
