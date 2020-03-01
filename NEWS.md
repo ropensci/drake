@@ -7,6 +7,7 @@
 * Actually store output file sizes in metadata.
 * Use the `depend` trigger to toggle invalidation from dynamic-only dependencies, including the `max_expand` argument of `make()`.
 * Repair `session_info` argument parsing (and reduce calls to `utils::sessionInfo()` in tests).
+* Ensure compatibility with `tibble` 3.0.0.
 
 ## New features
 
