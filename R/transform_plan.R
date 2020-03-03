@@ -277,17 +277,25 @@ transform_plan_ <- function(
   plan$transform <- lapply(plan$transform, parse_transform)
   graph <- dsl_graph(plan)
   order <- igraph::topo_sort(graph)$name
+  subplans <- split(plan, f = plan$target)
   for (target in order) {
-    index <- which(target == plan$target)
-    rows <- transform_row(index, plan, graph, max_expand)
-    plan <- sub_in_plan(plan, rows, index)
-    old_cols(plan) <- old_cols
+    upstream_plan <- dsl_upstream_plan(target, graph, subplans)
+    index <- which(target == upstream_plan$target)
+    old_cols(upstream_plan) <- old_cols
+    subplans[[target]] <- transform_row(index, upstream_plan, graph, max_expand)
   }
+  plan <- drake_bind_rows(subplans)
+  old_cols(plan) <- old_cols
   plan <- dsl_trace(plan = plan, trace = trace)
   old_cols(plan) <- plan$transform <- NULL
   plan <- dsl_tidy_eval(plan = plan, tidy_eval = tidy_eval, envir = envir)
   plan <- dsl_sanitize(plan = plan, sanitize = sanitize, envir = envir)
   plan
+}
+
+dsl_upstream_plan <- function(target, graph, subplans) {
+  upstream_targets <- upstream_nodes(graph, target)
+  drake_bind_rows(subplans[upstream_targets])
 }
 
 dsl_trace <- function(plan, trace) {

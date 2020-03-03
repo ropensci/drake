@@ -1,5 +1,8 @@
 # Version 7.11.0.9000
 
+## Bug fixes
+
+* Restrict static transforms so they only use the upstream part of the plan (#1199, #1200, @bart1).
 
 # Version 7.11.0
 

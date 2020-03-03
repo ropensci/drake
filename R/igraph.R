@@ -18,6 +18,15 @@ downstream_nodes <- function(graph, from) {
   )
 }
 
+upstream_nodes <- function(graph, from) {
+  nbhd_vertices(
+    graph = graph,
+    vertices = from,
+    mode = "in",
+    order = igraph::gorder(graph)
+  )
+}
+
 nbhd_graph <- function(graph, vertices, mode, order) {
   vertices <- nbhd_vertices(
     graph = graph,

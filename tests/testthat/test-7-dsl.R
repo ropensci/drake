@@ -3078,3 +3078,127 @@ test_with_dir("NAs removed from old grouping vars grid (#1010)", {
   )
   equivalent_plans(out, exp)
 })
+
+test_with_dir("static transforms use only upstream part of plan (#1199)", {
+  skip_on_cran()
+  radars <- c("radar1", "radar2")
+  seasons <- c("season1", "season2")
+  months <- c(1, 2)
+  radar_seasons <- expand.grid(
+    radar = radars,
+    season = seasons,
+    stringsAsFactors = FALSE
+  )
+  out <- drake_plan(
+    data = target(
+      get_data(radar, month),
+      transform = cross(radar = !!radars, month = !!months)
+    ),
+    to_cross = target(
+      list(data),
+      transform = combine(data, .by = radar)
+    ),
+    problem = target(
+      list(to_cross, season),
+      transform = cross(to_cross, season = !!seasons)
+    ),
+    separate = target(
+      list(radar, season),
+      transform = map(.data = !!radar_seasons)
+    ),
+    trace = TRUE
+  )
+  exp <- drake_plan(
+    data_radar1_1 = target(
+      command = get_data("radar1", 1),
+      radar = "\"radar1\"",
+      month = "1",
+      data = "data_radar1_1"
+    ),
+    data_radar2_1 = target(
+      command = get_data("radar2", 1),
+      radar = "\"radar2\"",
+      month = "1",
+      data = "data_radar2_1"
+    ),
+    data_radar1_2 = target(
+      command = get_data("radar1", 2),
+      radar = "\"radar1\"",
+      month = "2",
+      data = "data_radar1_2"
+    ),
+    data_radar2_2 = target(
+      command = get_data("radar2", 2),
+      radar = "\"radar2\"",
+      month = "2",
+      data = "data_radar2_2"
+    ),
+    problem_season1_to_cross_radar1 = target(
+      command = list(to_cross_radar1, "season1"),
+      radar = "\"radar1\"",
+      season = "\"season1\"",
+      separate = "separate_radar1_season1",
+      to_cross = "to_cross_radar1",
+      problem = "problem_season1_to_cross_radar1"
+    ),
+    problem_season2_to_cross_radar1 = target(
+      command = list(to_cross_radar1, "season2"),
+      radar = "\"radar1\"",
+      season = "\"season2\"",
+      separate = "separate_radar1_season2",
+      to_cross = "to_cross_radar1",
+      problem = "problem_season2_to_cross_radar1"
+    ),
+    problem_season1_to_cross_radar2 = target(
+      command = list(to_cross_radar2, "season1"),
+      radar = "\"radar1\"",
+      season = "\"season1\"",
+      separate = "separate_radar1_season1",
+      to_cross = "to_cross_radar2",
+      problem = "problem_season1_to_cross_radar2"
+    ),
+    problem_season2_to_cross_radar2 = target(
+      command = list(to_cross_radar2, "season2"),
+      radar = "\"radar1\"",
+      season = "\"season2\"",
+      separate = "separate_radar1_season2",
+      to_cross = "to_cross_radar2",
+      problem = "problem_season2_to_cross_radar2"
+    ),
+    separate_radar1_season1 = target(
+      command = list("radar1", "season1"),
+      radar = "\"radar1\"",
+      season = "\"season1\"",
+      separate = "separate_radar1_season1"
+    ),
+    separate_radar2_season1 = target(
+      command = list("radar2", "season1"),
+      radar = "\"radar2\"",
+      season = "\"season1\"",
+      separate = "separate_radar2_season1"
+    ),
+    separate_radar1_season2 = target(
+      command = list("radar1", "season2"),
+      radar = "\"radar1\"",
+      season = "\"season2\"",
+      separate = "separate_radar1_season2"
+    ),
+    separate_radar2_season2 = target(
+      command = list("radar2", "season2"),
+      radar = "\"radar2\"",
+      season = "\"season2\"",
+      separate = "separate_radar2_season2"
+    ),
+    to_cross_radar1 = target(
+      command = list(data_radar1_1, data_radar1_2),
+      radar = "\"radar1\"",
+      to_cross = "to_cross_radar1"
+    ),
+    to_cross_radar2 = target(
+      command = list(data_radar2_1, data_radar2_2),
+      radar = "\"radar2\"",
+      to_cross = "to_cross_radar2"
+    )
+  )
+  equivalent_plans(out, exp)
+})
