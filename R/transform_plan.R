@@ -322,15 +322,6 @@ dsl_sanitize <- function(plan, sanitize, envir) {
   plan
 }
 
-sub_in_plan <- function(plan, rows, index) {
-  plan <- drake_bind_rows(
-    plan[seq_len(index - 1), ],
-    rows,
-    plan[-seq_len(index), ]
-  )
-  plan
-}
-
 convert_splits_to_maps <- function(plan) {
   fields <- c("target", "command", "transform")
   for (i in seq_len(nrow(plan))) {
