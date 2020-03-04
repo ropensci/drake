@@ -599,7 +599,7 @@ store_failure <- function(target, meta, config) {
     value = "failed",
     config = config
   )
-  fields <- c("messages", "warnings", "error", "subtarget")
+  fields <- c("messages", "warnings", "error", "subtarget", "seed")
   fields <- intersect(fields, names(meta))
   meta <- meta[fields]
   config$cache$set(
