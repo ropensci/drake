@@ -4,6 +4,11 @@
 
 * Restrict static transforms so they only use the upstream part of the plan (#1199, #1200, @bart1).
 
+## Enhancements
+
+* Show an empty progress bar just before targets start to build when `verbose` is `2` (#1203, @kendonB).
+
+
 # Version 7.11.0
 
 ## Bug fixes

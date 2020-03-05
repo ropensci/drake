@@ -306,6 +306,7 @@ run_native_backend <- function(config) {
   order <- igraph::gorder(config$envir_graph$graph)
   if (order) {
     config$logger$set_progress_total(order)
+    config$logger$progress(0L)
     class(config) <- c(class(config), parallelism)
     drake_backend(config)
   } else {

@@ -3,7 +3,8 @@ logger <- function(verbose, file = NULL) {
   progress <- NULL
   if (.pkg_envir$has_progress) {
     progress_bar <- progress::progress_bar$new(
-      format = "targets [:bar] :percent"
+      format = "targets [:bar] :percent",
+      show_after = 0
     )
   }
   out <- refclass_logger$new(
@@ -47,9 +48,9 @@ refclass_logger <- methods::setRefClass(
         cli_msg(msg, cli_sym = cli::col_green(cli::symbol$tick))
       }
     },
-    progress = function() {
+    progress = function(increment = 1L) {
       pb <- .self$progress_bar
-      .self$progress_index <- .self$progress_index + 1L
+      .self$progress_index <- .self$progress_index + increment
       if (!is.null(pb) && .self$verbose == 2L) {
         ratio <- min(1, .self$progress_index / .self$progress_total)
         pb$finished <- FALSE
