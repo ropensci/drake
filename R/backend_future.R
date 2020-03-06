@@ -270,7 +270,7 @@ resolve_worker_value <- function(worker, config) {
     future::value(worker),
     error = function(e) {
       e$message <- paste0(
-        "Worker terminated unexpectedly before the target could complete. ",
+        "future worker terminated unexpectedly before the target could complete. ",
         "Is something wrong with your system or job scheduler?"
       )
       meta <- list(error = e)

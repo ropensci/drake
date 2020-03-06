@@ -269,7 +269,7 @@ test_with_dir("authentication", {
   )
   expect_error(
     make(plan, curl_handles = handles),
-    regexp = "no ETag or Last-Modified for url|HTTP code 407"
+    regexp = "no ETag or Last-Modified for url|code 407|could not access url"
   )
 })
 
