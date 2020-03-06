@@ -1259,3 +1259,15 @@ test_with_dir("mix of dynamic files and dirs (#1168)", {
   make(plan)
   expect_equal(sort(justbuilt(config)), sort(c("x", "y")))
 })
+
+test_with_dir("keep_going for formatted targets (#1206)", {
+  skip_if_not_installed("fst")
+  plan <- drake_plan(
+    x = target(stop(123), format = "fst"),
+    y = target(stop(123), format = "fst")
+  )
+  make(plan, keep_going = TRUE)
+  expect_equal(sort(failed()), sort(c("x", "y")))
+  expect_true(inherits(diagnose(x)$error, "simpleError"))
+  expect_true(inherits(diagnose(y)$error, "simpleError"))
+})

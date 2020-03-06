@@ -355,7 +355,8 @@ assign_format <- function(target, value, config) {
   drop_format <- is.null(format) ||
     is.na(format) ||
     is.null(value) ||
-    (is_dynamic(target, config) && !is_subtarget(target, config))
+    (is_dynamic(target, config) && !is_subtarget(target, config)) ||
+    inherits(value, "error")
   if (drop_format) {
     return(value)
   }
