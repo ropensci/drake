@@ -11,6 +11,10 @@
 
 * Add new functions `done()` and `cancelled()` (#1205).
 
+## Speedups
+
+* Avoid reading build times of dynamic sub-targets in `drake_graph_info()` (#1207).
+
 ## Enhancements
 
 * Show an empty progress bar just before targets start to build when `verbose` is `2` (#1203, @kendonB).
