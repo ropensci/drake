@@ -1286,19 +1286,15 @@ diagnose <- function(
   if (!cache$exists(key = target, namespace = "meta")) {
     stop("No metadata for target ", target, ".")
   }
-  cache$get(
-    key = target,
-    namespace = "meta"
-  )
+  cache$get(key = target, namespace = "meta")
 }
 
 #' @title List running targets.
 #' \lifecycle{maturing}
 #' @description List the targets that either
-#'   (1) are currently being built during a call to [make()], or
-#'   (2) if [make()] was interrupted, the targets that were running
-#'     at the time.
-#' @seealso [failed()], [make()]
+#'   1. Are currently being built during a call to [make()], or
+#'   2. Were in progress when [make()] was interrupted.
+#' @seealso [done()], [failed()], [cancelled()], [make()]
 #' @export
 #' @return A character vector of target names.
 #' @inheritParams cached
@@ -1332,10 +1328,8 @@ running <- function(
 
 #' @title List failed targets.
 #' \lifecycle{maturing}
-#' @description Together, functions `failed()` and
-#' [diagnose()] should eliminate the strict need
-#' for ordinary error messages printed to the console.
-#' @seealso [running()], [make()]
+#' @description List the targets that quit in error during [make()].
+#' @seealso [done()], [running()], [cancelled()], [make()]
 #' @export
 #' @return A character vector of target names.
 #' @inheritParams cached
@@ -1372,6 +1366,48 @@ failed <- function(
   }
   prog <- progress(path = path, search = search, cache = cache)
   prog$target[prog$progress == "failed"]
+}
+
+#' @title List done targets.
+#' \lifecycle{maturing}
+#' @description List the targets that completed in the current or
+#'   previous call to [make()].
+#' @seealso [running()], [failed()], [cancelled()], [make()]
+#' @export
+#' @return A character vector of target names.
+#' @inheritParams cached
+#' @examples
+#' \dontrun{
+#' isolate_example("contain side effects", {
+#' plan <- drake_plan(x = 1, y = x)
+#' make(plan)
+#' done()
+#' })
+#' }
+done <- function(cache = drake::drake_cache(path = path), path = NULL) {
+  prog <- progress(path = path, cache = cache)
+  prog$target[prog$progress == "done"]
+}
+
+#' @title List cancelled targets.
+#' \lifecycle{maturing}
+#' @description List the targets that were cancelled in the current or
+#'   previous call to [make()] using [cancel()] or [cancel_if()].
+#' @seealso [running()], [failed()], [done()], [make()]
+#' @export
+#' @return A character vector of target names.
+#' @inheritParams cached
+#' @examples
+#' \dontrun{
+#' isolate_example("contain side effects", {
+#' plan <- drake_plan(x = 1, y = cancel_if(x > 0))
+#' make(plan)
+#' cancelled()
+#' })
+#' }
+cancelled <- function(cache = drake::drake_cache(path = path), path = NULL) {
+  prog <- progress(path = path, cache = cache)
+  prog$target[prog$progress == "cancelled"]
 }
 
 #' @title Get the build progress of your targets

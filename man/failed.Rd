@@ -30,9 +30,7 @@ If supplied, \code{path} is ignored.}
 A character vector of target names.
 }
 \description{
-Together, functions \code{failed()} and
-\code{\link[=diagnose]{diagnose()}} should eliminate the strict need
-for ordinary error messages printed to the console.
+List the targets that quit in error during \code{\link[=make]{make()}}.
 }
 \examples{
 \dontrun{
@@ -55,5 +53,5 @@ names(e$error)
 }
 }
 \seealso{
-\code{\link[=running]{running()}}, \code{\link[=make]{make()}}
+\code{\link[=done]{done()}}, \code{\link[=running]{running()}}, \code{\link[=cancelled]{cancelled()}}, \code{\link[=make]{make()}}
 }

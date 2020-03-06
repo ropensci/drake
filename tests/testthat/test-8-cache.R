@@ -942,3 +942,17 @@ test_with_dir("suppress cache locking (#1081)", {
   expect_equal(outdated_impl(config), character(0))
   expect_equal(recoverable_impl(config), character(0))
 })
+
+test_with_dir("done() (#1205)", {
+  skip_on_cran()
+  plan <- drake_plan(x = 1, y = x)
+  make(plan)
+  expect_equal(sort(done()), sort(c("x", "y")))
+})
+
+test_with_dir("cancelled() (#1205)", {
+  skip_on_cran()
+  plan <- drake_plan(x = 1, y = cancel_if(x > 0))
+  make(plan)
+  expect_equal(cancelled(), "y")
+})
