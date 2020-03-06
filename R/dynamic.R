@@ -469,12 +469,15 @@ dynamic_hash_list.map <- function(dynamic, target, config) {
   deps <- sort(config$spec[[target]]$deps_dynamic)
   hashes <- lapply(deps, read_dynamic_hashes, config = config)
   assert_equal_branches(target, deps, hashes)
+  names(hashes) <- deps
   hashes
 }
 
 dynamic_hash_list.cross <- function(dynamic, target, config) {
-  deps <- sort(config$spec[[target]]$deps_dynamic)
-  lapply(deps, read_dynamic_hashes, config = config)
+  deps <- config$spec[[target]]$deps_dynamic
+  hashes <- lapply(deps, read_dynamic_hashes, config = config)
+  names(hashes) <- deps
+  hashes
 }
 
 dynamic_hash_list.group <- function(dynamic, target, config) {
@@ -529,7 +532,10 @@ subtarget_hashes.map <- function(dynamic, target, hashes, config) {
 }
 
 subtarget_hashes.cross <- function(dynamic, target, hashes, config) {
-  hashes <- rev(expand.grid(rev(hashes)))
+  deps <- all.vars(dynamic)
+  hashes <- hashes[deps]
+  hashes <- expand.grid(rev(hashes))
+  hashes <- hashes[, sort(colnames(hashes))]
   apply(hashes, 1, paste, collapse = " ")
 }
 

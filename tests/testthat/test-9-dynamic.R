@@ -1961,3 +1961,143 @@ test_with_dir("data recovery + dynamic files + dynamic files (#1168)", {
   expect_true(file.exists("b"))
   expect_equal(outdated_impl(config), character(0))
 })
+
+test_with_dir("names and values of cross() subtargets agree (#1204)", {
+  skip_on_cran()
+  plan <- drake_plan(
+    numbers = c(1, 2),
+    letters = c("a", "b"),
+    combo = target(
+      paste0(numbers, letters),
+      dynamic = cross(numbers, letters)
+    )
+  )
+  make(plan)
+  plan <- drake_plan(
+    numbers = c(1),
+    letters = c("a", "b"),
+    combo = target(
+      paste0(numbers, letters),
+      dynamic = cross(numbers, letters)
+    )
+  )
+  make(plan)
+  expect_equal(readd(combo), c("1a", "1b"))
+})
+
+test_with_dir("v2: names and values of cross() subtargets agree (#1204)", {
+  skip_on_cran()
+  plan <- drake_plan(
+    numbers = c(1, 2),
+    letters = c("a", "b"),
+    combo = target(
+      paste0(numbers, letters),
+      dynamic = cross(numbers, letters)
+    )
+  )
+  make(plan)
+  plan <- drake_plan(
+    numbers = c(2),
+    letters = c("a", "b"),
+    combo = target(
+      paste0(numbers, letters),
+      dynamic = cross(numbers, letters)
+    )
+  )
+  make(plan)
+  expect_equal(readd(combo), c("2a", "2b"))
+})
+
+test_with_dir("v3: names and values of cross() subtargets agree (#1204)", {
+  skip_on_cran()
+  plan <- drake_plan(
+    numbers = c(1, 2),
+    letters = c("a", "b"),
+    combo = target(
+      paste0(numbers, letters),
+      dynamic = cross(numbers, letters)
+    )
+  )
+  make(plan)
+  plan <- drake_plan(
+    numbers = c(1, 2),
+    letters = c("b"),
+    combo = target(
+      paste0(numbers, letters),
+      dynamic = cross(numbers, letters)
+    )
+  )
+  make(plan)
+  expect_equal(readd(combo), c("1b", "2b"))
+})
+
+test_with_dir("v4: names and values of cross() subtargets agree (#1204)", {
+  skip_on_cran()
+  plan <- drake_plan(
+    numbers = c(1, 2),
+    letters = c("a", "b"),
+    combo = target(
+      paste0(numbers, letters),
+      dynamic = cross(numbers, letters)
+    )
+  )
+  make(plan)
+  plan <- drake_plan(
+    numbers = c(1, 2),
+    letters = c("a"),
+    combo = target(
+      paste0(numbers, letters),
+      dynamic = cross(numbers, letters)
+    )
+  )
+  make(plan)
+  expect_equal(readd(combo), c("1a", "2a"))
+})
+
+test_with_dir("v5: names and values of cross() subtargets agree (#1204)", {
+  skip_on_cran()
+  plan <- drake_plan(
+    numbers = c(1, 2),
+    letters = c("a", "b"),
+    combo = target(
+      paste0(numbers, letters),
+      dynamic = cross(numbers, letters)
+    )
+  )
+  make(plan)
+  plan <- drake_plan(
+    numbers = c(1, 2),
+    letters = c("b", "a"),
+    combo = target(
+      paste0(numbers, letters),
+      dynamic = cross(numbers, letters)
+    )
+  )
+  make(plan)
+  expect_equal(readd(combo), c("1b", "1a", "2b", "2a"))
+})
+
+test_with_dir("v6: names and values of cross() subtargets agree (#1204)", {
+  skip_on_cran()
+  plan <- drake_plan(
+    numbers = c(1, 2),
+    letters = c("a", "b"),
+    combo = target(
+      paste0(numbers, letters),
+      dynamic = cross(numbers, letters)
+    )
+  )
+  make(plan)
+  plan <- drake_plan(
+    numbers = c(1, 2),
+    letters = c("b", "a"),
+    combo = target(
+      paste0(numbers, letters),
+      dynamic = cross(letters, numbers)
+    )
+  )
+  config <- drake_config(plan)
+  make(plan)
+  expect_equal(sort(justbuilt(config)), sort(c("combo", "letters")))
+  expect_equal(readd(combo), c("1b", "2b", "1a", "2a"))
+})

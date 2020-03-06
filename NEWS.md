@@ -1,8 +1,9 @@
-# Version 7.11.0.9000
+# Version 7.11.0.9001
 
 ## Bug fixes
 
 * Restrict static transforms so they only use the upstream part of the plan (#1199, #1200, @bart1).
+* Correctly match the names and values of dynamic `cross()` sub-targets (#1204, @psadil). Expansion order is the same, but names are correctly matched now.
 
 ## Enhancements
 
