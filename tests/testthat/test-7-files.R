@@ -229,12 +229,12 @@ test_with_dir("bad URL", {
   )
   expect_error(
     make_impl(config = config),
-    "could not access url|resolve host"
+    "could not access url|resolve host|HTTP code 407"
   )
   expect_equal(justbuilt(config), character(0))
   expect_error(
     make_impl(config = config),
-    "could not access url|resolve host"
+    "could not access url|resolve host|HTTP code 407"
   )
   expect_equal(justbuilt(config), character(0))
 })
@@ -269,7 +269,7 @@ test_with_dir("authentication", {
   )
   expect_error(
     make(plan, curl_handles = handles),
-    regexp = "no ETag or Last-Modified for url"
+    regexp = "no ETag or Last-Modified for url|HTTP code 407"
   )
 })
 

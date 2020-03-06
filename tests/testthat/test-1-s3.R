@@ -1,3 +1,5 @@
+drake_context("s3")
+
 test_with_dir("validate_drake_deps() (#1183)", {
   x <- new_drake_deps()
   expect_silent(validate_drake_deps(x))
