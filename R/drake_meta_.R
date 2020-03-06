@@ -559,7 +559,7 @@ rehash_url <- function(url, config) {
   headers <- NULL
   if (!curl::has_internet()) {
     # Tested in tests/testthat/test-always-skipped.R.
-    stop("no internet. Cannot check url: ", url, call. = FALSE) # nocov
+    stop0("no internet. Cannot check url: ", url) # nocov
   }
   # Find the longest name of the handle that matches the url.
   choices <- names(config$curl_handles)
@@ -583,12 +583,12 @@ is_url <- function(x) {
 
 assert_status_code <- function(req, url) {
   if (req$status_code != 200L) {
-    stop("could not access url: ", url, call. = FALSE)
+    stop0("could not access url: ", url)
   }
 }
 
 assert_useful_headers <- function(headers, url) {
   if (!any(c("etag", "last-modified") %in% names(headers))) {
-    stop("no ETag or Last-Modified for url: ", url, call. = FALSE)
+    stop0("no ETag or Last-Modified for url: ", url)
   }
 }

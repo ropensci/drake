@@ -71,11 +71,11 @@ rs_addin_loadd <- function(context = NULL) {
   }
   cache <- getOption("rstudio_drake_cache") %||% drake_cache()
   cache <- decorate_storr(cache)
-  message(
-    "Loading target ",
-    shQuote(target),
-    " into global evironment.\nCache: ",
-    shQuote(cache$path)
+  cli_msg(
+    "Loading target",
+    target,
+    "into global evironment from cache",
+    cache$path
   )
   loadd(
     list = target,
@@ -103,7 +103,10 @@ rs_get_symbol_at_cursor <- function(context) {
       cursor_column <= match_ends
   )
   if (length(match_index) == 0) {
-    message("Couldn't find an object name at cursor position.")
+    cli_msg(
+      "Could not find object name at cursor position.",
+      cli_sym = cli::col_red(cli::symbol$cross)
+    )
     return(NULL)
   }
   substr(

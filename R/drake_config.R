@@ -592,10 +592,9 @@ drake_config <- function(
   memory_strategy <- match.arg(memory_strategy, choices = memory_strategies())
   if (memory_strategy == "memory") {
     memory_strategy <- "preclean"
-    warning(
+    warn0(
       "make(memory_strategy = \"memory\") is deprecated. ",
-      "Use make(memory_strategy = \"preclean\") instead",
-      call. = FALSE
+      "Use make(memory_strategy = \"preclean\") instead"
       # 2019-06-22 # nolint
     )
   }
@@ -788,15 +787,14 @@ sanitize_targets <- function(targets, plan) {
   targets <- make.names(targets, unique = FALSE, allow_ = TRUE)
   not_found <- setdiff(targets, plan$target)
   if (length(not_found)) {
-    warning(
+    warn0(
       "ignoring targets not in the drake plan:\n",
-      multiline_message(not_found),
-      call. = FALSE
+      multiline_message(not_found)
     )
   }
   out <- unique(intersect(targets, plan$target))
   if (!length(out)) {
-    stop("no valid targets specified.", call. = FALSE)
+    stop0("no valid targets specified.")
   }
   out
 }
@@ -848,20 +846,18 @@ plan_checks <- function(plan) {
 
 plan_check_required_cols <- function(plan) {
   if (!all(c("target", "command") %in% colnames(plan))) {
-    stop(
+    stop0(
       "The columns of your workflow plan data frame ",
-      "must include 'target' and 'command'.",
-      call. = FALSE
+      "must include 'target' and 'command'."
     )
   }
 }
 
 plan_check_bad_symbols <- function(plan) {
   if (any(bad_symbols %in% plan$target)) {
-    stop(
+    stop0(
       "symbols that cannot be target names: \n",
-      multiline_message(shQuote(bad_symbols)),
-      call. = FALSE
+      multiline_message(shQuote(bad_symbols))
     )
   }
 }
@@ -886,16 +882,11 @@ check_case_sensitivity <- function(config) {
     return()
   }
   dups <- sort(x[which(lower %in% lower[i])])
-  warning(
-    "Duplicated target/import names when converting to lowercase:\n",
-    multiline_message(dups),
-    "\nDuplicates cause problems on Windows ",
-    "because the file system is case insensitive. Options:\n",
-    "  (1) Make your target/import names more unique.\n",
-    "  (2) Use a more portable custom cache, ",
-    "e.g. make(cache = storr::storr_rds(mangle_key = TRUE))\n",
-    "  (3) Avoid Windows.",
-    call. = FALSE
+  warn0(
+    "Duplicated target/import names when converting to lowercase. ",
+    "Either de-duplicate them or mangle keys: ",
+    "make(cache = storr::storr_rds(mangle_key = TRUE)). Duplicates found:\n",
+    multiline_message(dups)
   )
 }
 
@@ -910,17 +901,16 @@ check_drake_graph <- function(graph) {
     out <- paste(out, collapse = " ")
   })
   cycles <- unlist(cycles)
-  stop(
+  stop0(
     "Circular workflow:\n",
     "  at least one target in your drake plan\n",
     "  ultimately depends on itself.\n",
     "If you believe a dependency was detected in error\n",
     "  (example: https://github.com/ropensci/drake/issues/578)\n",
-    "  then consider using ignore() to mask sections \n",
+    "  then consider using ignore() or no_deps() to mask sections\n",
     "  of your commands or imported functions.\n",
     "Cycles:\n",
-    multiline_message(cycles),
-    call. = FALSE
+    multiline_message(cycles)
   )
 }
 
@@ -928,16 +918,10 @@ check_parallelism <- function(parallelism, jobs) {
   stopifnot(is.character(parallelism) || is.function(parallelism))
   stopifnot(length(parallelism) > 0)
   if (length(parallelism) > 1) {
-    stop(
-      "The `parallelism` argument of `make()` should be of length 1.",
-      call. = FALSE
-    )
+    stop0("The parallelism argument of make() should be of length 1.")
   }
   if (identical(parallelism, "loop") && jobs > 1L) {
-    warning(
-      "In make(), `parallelism` should not be \"loop\" if `jobs` > 1",
-      call. = FALSE
-    )
+    warn0("In make(), parallelism should not be \"loop\" if jobs > 1.")
   }
 }
 
@@ -946,11 +930,9 @@ check_jobs <- function(jobs) {
   stopifnot(is.numeric(jobs) || is.integer(jobs))
   stopifnot(all(jobs > 0))
   if (length(jobs) > 1) {
-    stop(
-      "The `jobs` argument of `make()` should be of length 1. ",
-      "Use the `jobs_preprocess` argument to parallelize the imports ",
-      "and other preprocessing tasks.",
-      call. = FALSE
+    stop0(
+      "The jobs argument of make() should be of length 1. ",
+      "Use the jobs_preprocess argument to parallelize the imports etc."
     )
   }
 }

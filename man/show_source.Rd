@@ -27,7 +27,7 @@ isolate_example("contain side effects", {
 plan <- drake_plan(x = sample.int(15))
 cache <- storr::storr_environment() # custom in-memory cache
 make(plan, cache = cache)
-config <- drake_config(plan, cache = cache)
+config <- drake_config(plan, cache = cache, history = FALSE)
 show_source(x, config)
 })
 }

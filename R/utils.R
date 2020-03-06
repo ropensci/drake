@@ -27,24 +27,30 @@ all_imports <- function(config) {
   V(config$graph)$name[V(config$graph)$imported]
 }
 
+stop0 <- function(...) {
+  stop(..., call. = FALSE)
+}
+
+warn0 <- function(...) {
+  warning(..., call. = FALSE)
+}
+
 assert_config <- function(config) {
   if (inherits(config, "drake_config")) {
     return()
   }
-  stop(
+  stop0(
     "the ",
     shQuote("config"),
-    " argument must be a drake_config() object.",
-    call. = FALSE
+    " argument must be a drake_config() object."
   )
 }
 
 assert_pkg <- function(pkg, version = NULL, install = "install.packages") {
   if (!requireNamespace(pkg, quietly = TRUE)) {
-    stop(
-      "package ", pkg, " not installed. ",
-      "Please install it with ", install, "(\"", pkg, "\").",
-      call. = FALSE
+    stop0(
+      "package ", pkg, " not installed. Install with ",
+      install, "(\"", pkg, "\")."
     )
   }
   if (is.null(version)) {
@@ -53,11 +59,10 @@ assert_pkg <- function(pkg, version = NULL, install = "install.packages") {
   installed_version <- as.character(utils::packageVersion(pkg))
   is_too_old <- utils::compareVersion(installed_version, version) < 0
   if (is_too_old) {
-    stop(
+    stop0(
       "package ", pkg, " must be version ", version, " or greater. ",
       "Found version ", version, " installed.",
-      "Please update it with ", install, "(\"", pkg, "\").",
-      call. = FALSE
+      "Update it with ", install, "(\"", pkg, "\")."
     )
   }
   invisible()
@@ -65,7 +70,7 @@ assert_pkg <- function(pkg, version = NULL, install = "install.packages") {
 
 assert_cache <- function(cache) {
   if (is.null(cache)) {
-    stop("cannot find drake cache.", call. = FALSE)
+    stop0("cannot find drake cache.")
   }
 }
 
@@ -257,10 +262,9 @@ dir_move <- function(
 ) {
   if (!overwrite && file.exists(to)) {
     if (warn) {
-      warning(
+      warn0(
         "cannot move ", from, " to ", to, ". ",
-        to, " already exists.",
-        call. = FALSE
+        to, " already exists."
       )
     }
     return(invisible())
@@ -318,10 +322,9 @@ dir_copy <- function(
 ) {
   if (!overwrite && file.exists(to)) {
     if (warn) {
-      warning(
+      warn0(
         "cannot move ", from, " to ", to, ". ",
-        to, " already exists.",
-        call. = FALSE
+        to, " already exists."
       )
     }
     return(invisible())
@@ -356,7 +359,7 @@ dir_create <- function(x) {
     dir.create(x, showWarnings = FALSE, recursive = TRUE)
   }
   if (!dir.exists(x)) {
-    stop("cannot create directory at ", shQuote(x), call. = FALSE)
+    stop0("cannot create directory at ", x)
   }
   invisible()
 }
@@ -385,7 +388,6 @@ msg_str <- function(x) {
   invisible()
 }
 
-# From lintr
 `%||%` <- function(x, y) {
   if (is.null(x) || length(x) <= 0) {
     y

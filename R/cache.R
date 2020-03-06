@@ -378,10 +378,7 @@ loadd_handle_empty_targets <- function(targets, cache, ...) {
 
 loadd_use_tidyselect <- function(tidyselect, deps) {
   if (tidyselect && deps) {
-    message(
-      "Disabling `tidyselect` in `loadd()` because `deps` is `TRUE`. ",
-      "For details, see the `deps` argument in the `loadd()` help file."
-    )
+    cli_msg("Disabled tidyselect in loadd() because deps is TRUE.")
     return(FALSE)
   }
   tidyselect
@@ -392,10 +389,8 @@ loadd_use_deps <- function(targets, config, deps) {
     return(targets)
   }
   if (is.null(config)) {
-    stop(
-      "In `loadd(deps = TRUE)`, you must supply a `drake_config()` ",
-      "object to the `config` argument.",
-      call. = FALSE
+    stop0(
+      "loadd(deps = TRUE) needs a drake_config() object in config."
     )
   }
   assert_config(config)
@@ -424,7 +419,7 @@ loadd_handle_replace <- function(targets, envir, replace) {
 loadd_any_targets <- function(targets, deps, verbose) {
   if (!length(targets) && !deps) {
     if (verbose) {
-      message("No targets to load in loadd().")
+      cli_msg("No targets to load in loadd().")
     }
     return(FALSE)
   }
@@ -458,7 +453,7 @@ parse_lazy_arg <- function(lazy) {
 #' plan <- drake_plan(x = sample.int(15))
 #' cache <- storr::storr_environment() # custom in-memory cache
 #' make(plan, cache = cache)
-#' config <- drake_config(plan, cache = cache)
+#' config <- drake_config(plan, cache = cache, history = FALSE)
 #' show_source(x, config)
 #' })
 #' }
@@ -468,14 +463,20 @@ show_source <- function(target, config, character_only = FALSE) {
   }
   cache <- config$cache
   meta <- diagnose(target = target, cache = cache, character_only = TRUE)
-  prefix <- ifelse(is_encoded_path(target), "File ", "Target ")
+  prefix <- ifelse(is_encoded_path(target), "File", "Target")
   if (meta$imported) {
-    message(prefix, target, " was imported.")
+    cli_msg(prefix, target, "was imported.")
   } else {
     command <- gsub("^\\{\n ", "", meta$command)
     command <- gsub(" \n\\}$", "", command)
-    message(
-      prefix, target, " was built from command:\n  ", target, " = ", command)
+    cli_msg(
+      prefix,
+      target,
+      "was built from command:\n  ",
+      target,
+      " = ",
+      command
+    )
   }
 }
 
@@ -630,11 +631,10 @@ cached <- function(
   }
   targets <- c(list, match.call(expand.dots = FALSE)$...)
   if (length(targets)) {
-    warning(
+    warn0(
       "The `...` and `list` arguments of `cached()` are deprecated.",
       "`cached()` no longer accepts target names. It just lists ",
-      "the targets in the cache.",
-      call. = FALSE
+      "the targets in the cache."
     )
   }
   targets <- cache$list(namespace = namespace)
@@ -880,10 +880,9 @@ find_cache <- function(
   directory = NULL
 ) {
   if (!is.null(directory)) {
-    warning(
+    warn0(
       "Argument `directory` of find_cache() is deprecated. ",
-      "use `dir` instead.",
-      call. = FALSE
+      "use `dir` instead."
     )
   }
   dir <- dir %|||% basename(default_cache_path())
@@ -995,14 +994,14 @@ drake_fetch_rds <- function(path) {
 cache_vers_stop <- function(cache) {
   msg <- cache_vers_check(cache)
   if (length(msg)) {
-    stop(msg, call. = FALSE)
+    stop0(msg)
   }
 }
 
 cache_vers_warn <- function(cache) {
   msg <- cache_vers_check(cache)
   if (length(msg)) {
-    warning(msg, call. = FALSE)
+    warn0(msg)
   }
 }
 
@@ -1430,10 +1429,9 @@ progress <- function(
   }
   cache <- decorate_storr(cache)
   if (!is.null(no_imported_objects)) {
-    warning(
-      "Argument `no_imported_objects` of progress() is deprecated. ",
-      "Only targets are returned now.",
-      call. = FALSE
+    warn0(
+      "Argument no_imported_objects of progress() is deprecated. ",
+      "Only targets are returned now."
     )
   }
   targets <- c(as.character(match.call(expand.dots = FALSE)$...), list)

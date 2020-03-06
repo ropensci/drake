@@ -574,7 +574,7 @@ test_with_dir("loadd(x, deps = TRUE) when x is not cached", {
   expect_equal(e$x, "abc")
   expect_message(
     loadd(y, envir = e, config = config, deps = TRUE, tidyselect = TRUE),
-    regexp = "Disabling"
+    regexp = "Disabled"
   )
 })
 

@@ -622,6 +622,16 @@ There are legitimate use cases for \code{lock_envir = FALSE}
 but most workflows should stick with the default \code{lock_envir = TRUE}.
 }
 
+\section{Cache locking}{
+
+When \code{make()} runs, it locks the cache so other processes cannot modify it.
+Same goes for \code{\link[=outdated]{outdated()}}, \code{\link[=vis_drake_graph]{vis_drake_graph()}}, and similar functions
+when \code{make_imports = TRUE}. This is a safety measure to prevent simulatenous
+processes from corrupting the cache. If you get an error saying that the
+cache is locked, either set \code{make_imports = FALSE} or manually force
+unlock it with \code{drake_cache()$unlock()}.
+}
+
 \examples{
 \dontrun{
 isolate_example("Quarantine side effects.", {

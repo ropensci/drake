@@ -10,24 +10,28 @@ drake_tip_message <- function() {
 }
 
 drake_tip_ <- function() {
-  tips <- c(
-    "Interfaces to create large drake plans:
-     https://books.ropensci.org/drake/dynamic.html and
-     https://books.ropensci.org/drake/static.html",
-
-    "Use diagnose() to retrieve
-     errors, warnings, messages, commands, runtimes, etc.",
-
-    "Use drake_example() to download code for a small drake workflow.",
-
-    "Check out the reference website https://docs.ropensci.org/drake
-     and user manual https://books.ropensci.org/drake",
-
-    "drake quickstart:
-     load_mtcars_example();
-     make(my_plan);
-     readd(small)"
+  tips <- list(
+    c(
+      "Interfaces to create large drake plans:",
+      "https://books.ropensci.org/drake/dynamic.html, ",
+      "https://books.ropensci.org/drake/static.html"
+    ),
+    c(
+      "Use diagnose() to retrieve",
+      "errors, warnings, messages, commands, runtimes, etc."
+    ),
+    "Use drake_example() to download a small drake example workflow.",
+    c(
+      "Reference website: https://docs.ropensci.org/drake",
+      "User manual: https://books.ropensci.org/drake"
+    ),
+    "drake quickstart: run load_mtcars_example() then make(my_plan)"
   )
+  if (requireNamespace("cli", quietly = TRUE)) {
+    tips <- lapply(tips, function(x) {
+      paste(cli::col_blue(cli::symbol$info), x)
+    })
+  }
   tips <- soft_wrap(tips)
   sample(tips, 1)
 }
@@ -44,15 +48,8 @@ warn_rdata <- function() {
   if (!file.exists(".RData")) {
     return()
   }
-  warning(
-    "Auto-saved workspace file '.RData' detected. ",
-    "This is bad for reproducible code. ",
-    "You can remove it with unlink(\".RData\"). ",
-    "To avoid generating '.RData' files, ",
-    "start your session with 'R --no-save'",
-    "or disable the saving of workspace images ",
-    "in the RStudio IDE settings.",
-    call. = FALSE
+  warn0(
+    "Auto-saved .RData file detected. Remove it to enhance reproducibility."
   )
 }
 

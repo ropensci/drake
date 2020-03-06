@@ -209,7 +209,7 @@ as_immediate_condition <- function(x) {
 
 throw_fork_warning <- function(config) {
   if (!delayed_relay(config)) {
-    warning(fork_advice(), call. = FALSE)
+    warn0(fork_advice())
   }
 }
 
@@ -291,10 +291,10 @@ lock_environment <- function(envir) {
 
 unlock_environment <- function(envir) {
   if (is.null(envir)) {
-    stop("use of NULL environment is defunct")
+    stop0("use of NULL environment is defunct")
   }
   if (!inherits(envir, "environment")) {
-    stop("not an environment")
+    stop0("not an environment")
   }
   .Call(Cunlock_environment, envir)
   lapply(
@@ -381,7 +381,7 @@ sanitize_format.drake_format_fst <- function(x, target, config) { # nolint
       safe_deparse(class(x$value), backtick = TRUE),
       " to a plain data frame."
     )
-    warning(msg, call. = FALSE)
+    warn0(msg)
     config$logger$disk(msg, target = target)
   }
   x$value <- as.data.frame(x$value)
@@ -397,7 +397,7 @@ sanitize_format.drake_format_fst_tbl <- function(x, target, config) { # nolint
       safe_deparse(class(x$value), backtick = TRUE),
       " to a tibble."
     )
-    warning(msg, call. = FALSE)
+    warn0(msg)
     config$logger$disk(msg, target = target)
   }
   x$value <- tibble::as_tibble(x$value)
@@ -413,7 +413,7 @@ sanitize_format.drake_format_fst_dt <- function(x, target, config) { # nolint
       safe_deparse(class(x$value), backtick = TRUE),
       " to a data.table object."
     )
-    warning(msg, call. = FALSE)
+    warn0(msg)
     config$logger$disk(msg, target = target)
   }
   x$value <- data.table::as.data.table(x$value)
@@ -432,7 +432,7 @@ sanitize_format.drake_format_diskframe <- function(x, target, config) { # nolint
       "on the same drive as drake's cache ",
       "(say, with as.disk.frame(outdir = drake_tempfile()))."
     )
-    warning(msg, call. = FALSE)
+    warn0(msg)
     config$logger$disk(msg, target = target)
     x$value <- disk.frame::as.disk.frame(
       df = x$value,
@@ -450,7 +450,7 @@ sanitize_format.drake_format_file <- function(x, target, config) { # nolint
       "coercing to character."
     )
     config$logger$disk("Error:", msg, target = target)
-    warning(msg, call. = FALSE)
+    warn0(msg)
     x$value <- as.character(x$value)
   }
   x
@@ -513,7 +513,7 @@ assert_output_files <- function(target, meta, config) {
       multiline_message(missing_files)
     )
     config$logger$disk(paste("Warning:", msg))
-    warning(msg, call. = FALSE)
+    warn0(msg)
   }
 }
 
@@ -534,10 +534,9 @@ handle_build_warnings <- function(target, meta, config) {
   warn_opt <- max(1, getOption("warn"))
   with_options(
     new = list(warn = warn_opt),
-    warning(
+    warn0(
       "target ", target, " warnings:\n",
-      multiline_message(meta$warnings),
-      call. = FALSE
+      multiline_message(meta$warnings)
     )
   )
 }
@@ -574,7 +573,7 @@ log_failure <- function(target, meta, config) {
   msg <- paste(c(msg1, msg2, msg3), collapse = "\n")
   config$logger$disk(msg)
   unlock_environment(config$envir)
-  stop(msg, call. = FALSE)
+  stop0(msg)
 }
 
 delayed_relay <- function(config) {

@@ -143,7 +143,7 @@ test_with_dir("drake_config() memoizes against knitr files (#887)", {
       cache = cache,
       session_info = FALSE
     ),
-    regexp = "does not exist"
+    regexp = "Could not open"
   )
 })
 
@@ -540,7 +540,7 @@ test_with_dir("bad knitr report", {
       cache = storr::storr_environment(),
       verbose = 0L
     ),
-    regexp = "dependencies could not be extracted"
+    regexp = "Could not parse"
   )
 })
 

@@ -119,11 +119,7 @@ drake_debug_impl <- function(
   # Tested in tests/testthat/test-always-skipped.R.
   # nocov start
   if (is.null(config)) {
-    stop(
-      "In `drake_debug()`, you must supply a `drake_config()` ",
-      "object to the `config` argument.",
-      call. = FALSE
-    )
+    stop0("drake_debug() needs a drake_config() in config.")
   }
   if (!character_only) {
     target <- as.character(substitute(target))
@@ -132,7 +128,7 @@ drake_debug_impl <- function(
     target <- utils::head(drake::failed(cache = config$cache), n = 1)
   }
   if (verbose) {
-    message("Building target `", target, "` in debug mode.")
+    cli_msg("Building target ", target, " in debug mode.")
   }
   deps <- deps_memory(targets = target, config = config)
   for (dep in deps) {

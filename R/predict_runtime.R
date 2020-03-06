@@ -331,13 +331,9 @@ timing_assumptions <- function(
   untimed <- setdiff(vertices, times$target)
   untimed <- setdiff(untimed, names(known_times))
   if (length(untimed)) {
-    warning(
-      "Some targets were never actually timed, ",
-      "And no hypothetical time was specified in `known_times`. ",
-      "Assuming a runtime of ",
-      default_time, " for these targets:\n",
-      multiline_message(untimed),
-      call. = FALSE
+    warn0(
+      "No known_times set. Assuming ", default_time, " runtime for:\n",
+      multiline_message(untimed)
     )
   }
   keep_known_times <- intersect(names(known_times), vertices)

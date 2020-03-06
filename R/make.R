@@ -57,6 +57,14 @@
 #' (example: <https://books.ropensci.org/drake/hpc.html#parallel-computing-within-targets>) # nolint
 #' but most workflows should stick with the default `lock_envir = TRUE`.
 #'
+#' @section Cache locking:
+#' When `make()` runs, it locks the cache so other processes cannot modify it.
+#' Same goes for [outdated()], [vis_drake_graph()], and similar functions
+#' when `make_imports = TRUE`. This is a safety measure to prevent simulatenous
+#' processes from corrupting the cache. If you get an error saying that the
+#' cache is locked, either set `make_imports = FALSE` or manually force
+#' unlock it with `drake_cache()$unlock()`.
+#'
 #' @seealso
 #'   [drake_plan()],
 #'   [drake_config()],
@@ -319,15 +327,7 @@ drake_backend <- function(config) {
 }
 
 run_external_backend <- function(config) {
-  warning(
-    "`drake` can indeed accept a custom scheduler function for the ",
-    "`parallelism` argument of `make()` ",
-    "but this is only for the sake of experimentation ",
-    "and graceful deprecation. ",
-    "Your own custom schedulers may cause surprising errors. ",
-    "Use at your own risk.",
-    call. = FALSE
-  )
+  warn0("Custom drake schedulers are experimental.")
   config$parallelism(config = config)
 }
 
@@ -415,11 +415,7 @@ do_prework <- function(config, verbose_packages) {
   } else if (is.list(config$prework)) {
     lapply(config$prework, eval, envir = config$envir_targets)
   } else if (length(config$prework)) {
-    stop(
-      "prework must be an expression ",
-      "or a list of expressions",
-      call. = FALSE
-    )
+    stop0("prework must be an expression or a list of expressions.")
   }
   invisible()
 }
@@ -546,11 +542,9 @@ assert_format_impl.file <- function(format) {
 }
 
 assert_format_impl.default <- function(format) {
-  stop(
+  stop0(
     "illegal format ", format, ". Read ",
-    "https://docs.ropensci.org/drake/reference/drake_plan.html#formats",
-    " for legal formats and their system requirements.",
-    call. = FALSE
+    "https://docs.ropensci.org/drake/reference/drake_plan.html#formats"
   )
 }
 
@@ -563,10 +557,9 @@ missing_input_files <- function(config) {
   files <- config$cache$decode_path(x = files)
   missing_files <- files[!file_dep_exists(files)]
   if (length(missing_files)) {
-    warning(
-      "missing input files:\n",
-      multiline_message(missing_files),
-      call. = FALSE
+    warn0(
+      "missing file_in() files:\n",
+      multiline_message(missing_files)
     )
   }
   invisible()
@@ -585,21 +578,11 @@ subdirectory_warning <- function(config) {
   if (!length(dir) || wd == dir || is.na(pmatch(dir, wd))) {
     return()
   }
-  warning(
-    "Running make() in a subdirectory of your project. \n",
-    "This could cause problems if your ",
-    "file_in()/file_out()/knitr_in() files ",
-    "are relative paths.\n",
-    "Please either\n",
-    "  (1) run make() from your drake project root, or\n",
-    "  (2) create a cache in your working ",
-    "directory with new_cache('path_name'), or\n",
-    "  (3) supply a cache of your own (e.g. make(cache = your_cache))\n",
-    "      whose folder name is not '.drake'.\n",
+  warn0(
+    "Do not run make() from a subdirectory of your project.\n",
     "  running make() from: ", wd, "\n",
     "  drake project root:  ", dir, "\n",
-    "  cache directory:     ", config$cache$path,
-    call. = FALSE
+    "  cache directory:     ", config$cache$path
   )
 }
 
@@ -607,13 +590,9 @@ assert_outside_cache <- function(config) {
   work_dir <- normalizePath(getwd(), mustWork = FALSE)
   cache_dir <- normalizePath(config$cache$path, mustWork = FALSE)
   if (identical(work_dir, cache_dir)) {
-    stop(
-      "cannot run make() from inside the cache: ", shQuote(cache_dir),
-      ". The cache path must be different from your working directory. ",
-      "If your drake project lives at ", shQuote("/your/project/root/"), # nolint
-      " then you should run ", shQuote("make()"), " from this directory, ",
-      "and your cache should be in a subfolder, e.g. ",
-      shQuote("/your/project/root/.drake/") # nolint
+    stop0(
+      "cannot run make() from inside the cache: ", cache_dir,
+      ". The cache path must be different from your working directory."
     )
   }
 }

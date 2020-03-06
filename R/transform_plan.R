@@ -438,10 +438,9 @@ check_drake_slice_args <- function(slices, index, margin) {
   if (sclr) {
     return()
   }
-  stop(
-    "In drake_slice, arguments margin, slices, ",
-    "and index must each have length 1.",
-    call. = FALSE
+  stop0(
+    "In drake_slice(), arguments margin, slices, ",
+    "and index must each have length 1."
   )
 }
 
@@ -565,10 +564,9 @@ assert_good_transform.map <-
   assert_good_transform.combine <- function(...) NULL
 
 assert_good_transform.default <- function(transform, target) {
-  stop(
+  stop0(
     "invalid transform: ", lang(transform),
-    ". Expected: one of map(), cross(), or combine()",
-    call. = FALSE
+    ". Expected: one of map(), cross(), or combine()."
   )
 }
 
@@ -616,11 +614,9 @@ transform_row <- function(index, plan, graph, max_expand) {
 check_group_names <- function(groups, protect) {
   groups <- intersect(groups, protect)
   if (length(groups)) {
-    stop(
-      "variables in `target(transform = ...)` ",
-      "cannot also be custom column names in the plan:\n",
-      multiline_message(groups),
-      call. = FALSE
+    stop0(
+      "grouping variables cannot also be custom column names in the plan:\n",
+      multiline_message(groups)
     )
   }
 }
@@ -794,13 +790,10 @@ dsl_commands_combine <- function(transform, row, plan) {
 }
 
 error_nonempty_transform <- function(target) {
-  stop(
-    "A grouping variable for target ", shQuote(target),
-    " is either undefined or improperly invoked. Transformation skipped ",
-    "and target deleted. To read about grouping variables and ",
-    "their limitations, please visit ",
-    "https://books.ropensci.org/drake/static.html#grouping-variables",
-    call. = FALSE
+  stop0(
+    "A grouping variable for target ", target,
+    " is either undefined or improperly invoked. Details: ",
+    "https://books.ropensci.org/drake/static.html#grouping-variables"
   )
 }
 
@@ -1058,13 +1051,12 @@ dsl_grid.map <- function(transform, groupings) {
 }
 
 map_grid_error <- function(transform, groupings) {
-  stop(
+  stop0(
     "Failed to make a grid of grouping variables for map().\n",
     "Grouping variables in map() must have suitable lengths ",
     "for coercion to a data frame.\n",
     "Possibly uneven groupings detected in ", char(transform), ":\n",
-    multiline_message(groupings),
-    call. = FALSE
+    multiline_message(groupings)
   )
 }
 

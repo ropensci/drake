@@ -36,7 +36,7 @@ decorate_format_value.drake_format_file <- function(value, target, config) { # n
       "missing dynamic files for target ",
       target, ":\n", multiline_message(path[!exists])
     )
-    warning(msg, call. = FALSE)
+    warn0(msg)
     config$logger$disk(msg)
   }
   hash[exists] <- rehash_local(path[exists], config)

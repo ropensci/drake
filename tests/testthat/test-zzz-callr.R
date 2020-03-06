@@ -8,7 +8,10 @@ test_with_dir("r_make_message", {
 test_with_dir("config file missing", {
   skip_on_cran()
   skip_if_not_installed("callr")
-  expect_error(r_make(r_args = list(show = FALSE)), "need an R script file")
+  expect_error(
+    r_make(r_args = list(show = FALSE)),
+    "file _drake.R does not exist"
+  )
 })
 
 test_with_dir("basic functions with default _drake.R file", {

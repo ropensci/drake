@@ -192,7 +192,7 @@ wait_checksum <- function(
     timeout, " seconds."
   )
   config$logger$disk(paste("Error:", msg))
-  stop(msg, call. = FALSE)
+  stop0(msg)
 }
 
 is_good_checksum <- function(target, value, checksum, config) {
@@ -292,7 +292,7 @@ format_file_checksum_impl.file <- function(target, value, config) { # nolint
 warn_no_checksum <- function(target, config) {
   msg <- paste0("No checksum available for target ", target, ".")
   config$logger$disk(paste("Warning:", msg))
-  warning(msg, call. = FALSE)
+  warn0(msg)
 }
 
 # Simple version of purrr::pmap for use in drake

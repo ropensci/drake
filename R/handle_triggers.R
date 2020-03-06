@@ -436,7 +436,7 @@ trigger_condition <- function(target, meta, config) {
       "got `", value, "` for target ", target, "."
     )
     config$logger$disk(paste("Error:", msg))
-    stop(msg, call. = FALSE)
+    stop0(msg)
   }
   condition_decision(value = value, mode = meta$trigger$mode)
 }

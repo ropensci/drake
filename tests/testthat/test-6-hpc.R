@@ -216,7 +216,7 @@ test_with_dir("parallelism can be a scheduler function", {
   config <- drake_config(plan, parallelism = loop_)
   expect_warning(
     make_impl(config = config),
-    regexp = "Use at your own risk"
+    regexp = "Custom drake schedulers are experimental"
   )
   expect_true(file.exists("x"))
   expect_false(config$cache$exists("x"))

@@ -105,13 +105,13 @@ drake_history <- function(
   cache <- decorate_storr(cache)
   cache$set_history(history)
   if (is.null(cache$history)) {
-    stop("no history. Call make(history = TRUE) next time.", call. = FALSE)
+    stop0("no history. Call make(history = TRUE) next time.")
   }
   from_txtq <- cache$history$list()
   from_cache <- lapply(from_txtq$message, history_from_cache, cache = cache)
   from_cache <- do.call(drake_bind_rows, from_cache)
   if (!nrow(from_txtq)) {
-    stop("no history. Call make(history = TRUE) next time.", call. = FALSE)
+    stop0("no history. Call make(history = TRUE) next time.")
   }
   out <- merge(
     x = from_txtq,

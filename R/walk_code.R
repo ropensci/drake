@@ -318,20 +318,17 @@ get_tangled_frags <- function(file) {
     return(character(0))
   }
   if (!file.exists(file)) {
-    warning(
-      "knitr/rmarkdown report '", file,
-      "' does not exist and cannot be inspected for dependencies.",
-      call. = FALSE
-    )
+    warn0("Could not open ", file, " to detect dependencies.")
     return(character(0))
   }
   fragments <- tryCatch({
     parse(text = get_tangled_text(file))
   },
   error = function(e) {
-    warning(
-      "Could not parse file '", file,
-      "'. drake dependencies could not be extracted from code chunks: ",
+    warn0(
+      "Could not parse ",
+      file,
+      " to detect dependencies: ",
       conditionMessage(e)
     )
     character(0)
@@ -385,21 +382,21 @@ apdef <- function(e) {
 get_assigned_var <- function(e) {
   v <- e[[2]]
   if (missing(v)) {
-    stop(paste("missing assignment variable in", dsq(e)), call. = FALSE)
+    stop0(paste("missing assignment variable in", dsq(e)))
   } else if (typeof(v) %in% c("symbol", "character")) {
     as.character(v)
   } else {
     while (typeof(v) == "language") {
       if (length(v) < 2) {
-        stop(paste("unfinished code:", dsq(e)), call. = FALSE)
+        stop0(paste("unfinished code:", dsq(e)))
       }
       v <- v[[2]]
       if (missing(v)) {
-        stop(paste("missing variable in", dsq(e)), call. = FALSE)
+        stop0(paste("missing variable in", dsq(e)))
       }
     }
     if (typeof(v) != "symbol") {
-      stop(paste("not a symbol:", dsq(e)), call. = FALSE)
+      stop0(paste("not a symbol:", dsq(e)))
     }
     as.character(v)
   }
@@ -428,7 +425,7 @@ make_assignment_fn_impl <- function(fun) {
     fun
   }
   else {
-    stop("bad function in complex assignments: ", dsq(fun), call. = FALSE)
+    stop0("bad function in complex assignments: ", dsq(fun))
   }
 }
 

@@ -415,11 +415,10 @@ match_dynamic_call_impl.map <- function(dynamic) {
 match_dynamic_call_impl.cross <- match_dynamic_call_impl.map
 
 match_dynamic_call_impl.combine <- function(dynamic) { # nolint
-  stop(
+  stop0(
     "Dynamic combine() does not exist. ",
     "use group() instead. ",
-    "Ref: https://github.com/ropensci/drake/issues/1065",
-    call. = FALSE
+    "Ref: https://github.com/ropensci/drake/issues/1065"
   )
 }
 
@@ -504,13 +503,12 @@ assert_equal_branches <- function(target, deps, hashes) {
   deps <- deps[keep]
   lengths <- lengths[keep]
   deps[is.na(deps)] <- ".by"
-  stop(
+  stop0(
     "for dynamic map() and group(), all grouping variables ",
     "must have equal lengths. For target ", target,
     ", the lengths of ", paste(deps, collapse = ", "),
     " were ", paste0(lengths, collapse = ", "),
-    ", respectively.",
-    call. = FALSE
+    ", respectively."
   )
 }
 

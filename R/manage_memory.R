@@ -208,10 +208,7 @@ load_target_impl.bind <- function(target, cache, namespace, envir, verbose) {
   assert_pkg("bindr")
   # Allow active bindings to overwrite existing variables.
   if (exists(x = target, envir = envir, inherits = FALSE)) {
-    message(
-      "Replacing already-loaded variable ", target,
-      " with an active binding."
-    )
+    cli_msg("Replacing", target, "with an active binding.")
     remove(list = target, envir = envir)
   }
   bindr::populate_env(

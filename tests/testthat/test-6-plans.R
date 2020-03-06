@@ -598,7 +598,7 @@ test_with_dir("case sensitivity", {
       cache = storr::storr_environment(),
       session_info = FALSE
     ),
-    regexp = "case insensitive"
+    regexp = "when converting to lowercase"
   )
 })
 
@@ -780,6 +780,6 @@ test_with_dir("convert_trailing_dot() in plans (#1147)", {
 test_with_dir("trailing dots in imports (#1147)", {
   expect_warning(
     assert_no_trailing_dot("x.", force = TRUE),
-    regexp = "cannot cache properly on Windows"
+    regexp = "imports must not end with dots on Windows"
   )
 })

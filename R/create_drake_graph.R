@@ -132,10 +132,9 @@ assert_good_vertex_names <- function(graph) {
 assert_no_trailing_dot <- function(names, force = FALSE) {
   illegal <- grep("\\.$", names, value = TRUE)
   if ((length(illegal) && on_windows()) || force) {
-    warning(
-      "drake imports with trailing dots cannot cache properly on Windows:\n",
-      multiline_message(illegal),
-      call. = FALSE
+    warn0(
+      "drake imports must not end with dots on Windows:\n",
+      multiline_message(illegal)
     )
   }
 }

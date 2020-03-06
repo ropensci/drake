@@ -413,7 +413,7 @@ sanitize_plan <- function(
 convert_trailing_dot <- function(x) {
   index <- grepl("\\.$", x)
   if (any(index)) {
-    warning("removed trailing dot from some target names.", call. = FALSE)
+    warn0("removed trailing dot from some target names.")
   }
   x[index] <- gsub("\\.$", "_", x[index])
   x
@@ -422,10 +422,9 @@ convert_trailing_dot <- function(x) {
 assert_unique_targets <- function(plan) {
   dups <- duplicated(plan$target)
   if (any(dups)) {
-    stop(
+    stop0(
       "duplicated target names:\n",
-      multiline_message(plan$target[dups]),
-      call. = FALSE
+      multiline_message(plan$target[dups])
     )
   }
   plan
@@ -477,13 +476,12 @@ warn_arrows <- function(dots) {
     }
   )
   if (length(offending_commands)) {
-    warning(
+    warn0(
       "Use `=` instead of `<-` or `->` ",
       "to assign targets to commands in `drake_plan()`. ",
       "For example, write `drake_plan(a = 1)` instead of ",
       "`drake_plan(a <- 1)`. Arrows were used to declare these commands:\n",
-      multiline_message(offending_commands),
-      call. = FALSE
+      multiline_message(offending_commands)
     )
   }
 }

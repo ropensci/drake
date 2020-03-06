@@ -89,7 +89,7 @@ cmq_conclude_build <- function(msg, config) {
     return()
   }
   if (inherits(build, "try-error")) {
-    stop(attr(build, "condition")$message, call. = FALSE) # nocov
+    stop0(attr(build, "condition")$message) # nocov
   }
   caching <- hpc_caching(build$target, config)
   if (identical(caching, "worker")) {

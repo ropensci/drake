@@ -134,10 +134,9 @@ future_globals <- function(
     # nocov start
     # Unit tests should not modify global env
     if (exists("DRAKE_GLOBALS__", config$envir)) {
-      warning(
+      warn0(
         "Do not define an object named `DRAKE_GLOBALS__` ",
-        "in the global environment",
-        call. = FALSE
+        "in the global environment"
       )
     }
     globals <- c(globals, as.list(config$envir, all.names = TRUE))
@@ -269,10 +268,7 @@ resolve_worker_value <- function(worker, config) {
     # Check if the worker crashed.
     future::value(worker),
     error = function(e) {
-      e$message <- paste0(
-        "future worker terminated unexpectedly before the target could complete. ",
-        "Is something wrong with your system or job scheduler?"
-      )
+      e$message <- "future worker terminated before target could complete."
       meta <- list(error = e)
       target <- attr(worker, "target")
       caching <- hpc_caching(target, config)
