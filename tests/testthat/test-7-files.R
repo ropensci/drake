@@ -221,6 +221,12 @@ test_with_dir("bad URL", {
     session_info = FALSE,
     log_progress = TRUE
   )
+  tryCatch(
+    mem <- curl::curl_fetch_memory("http://httpbin.org/basic-auth/user/passwd"),
+    error = function(e) {
+      skip("test URL unreachable")
+    }
+  )
   expect_error(
     make_impl(config = config),
     "could not access url|resolve host"
@@ -240,6 +246,12 @@ test_with_dir("authentication", {
   plan <- drake_plan(x = file_in("http://httpbin.org/basic-auth/user/passwd"))
   expect_error(make(plan), regexp = "could not access url")
   handles <- list(`http://httpbin.org/basic-auth` = curl::new_handle())
+  tryCatch(
+    mem <- curl::curl_fetch_memory("http://httpbin.org/basic-auth/user/passwd"),
+    error = function(e) {
+      skip("test URL unreachable")
+    }
+  )
   expect_error(
     make(plan, curl_handles = handles),
     regexp = "could not access url"

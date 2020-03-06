@@ -57,7 +57,9 @@ new_drake_deps_ht <- function(
   out
 }
 
-drake_validate.drake_deps_ht <- function(x) {
+validate_drake_deps_ht <- function(x) {
+  stopifnot(inherits(x, "drake_deps_ht"))
+  stopifnot(inherits(x, "drake"))
   lapply(x, assert_environment)
   out_fields <- names(x)
   exp_fields <- c(

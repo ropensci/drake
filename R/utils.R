@@ -385,10 +385,6 @@ msg_str <- function(x) {
   invisible()
 }
 
-drake_validate <- function(x) {
-  UseMethod("drake_validate")
-}
-
 # From lintr
 `%||%` <- function(x, y) {
   if (is.null(x) || length(x) <= 0) {

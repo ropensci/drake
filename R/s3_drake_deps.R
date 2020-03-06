@@ -29,6 +29,12 @@ drake_deps <- function(expr, exclude = character(0), restrict = NULL) {
   )
 }
 
+drake_deps_impl <- function(expr, exclude = character(0), restrict = NULL) {
+  results <- drake_deps_ht(expr, exclude, restrict)
+  results <- lapply(results, ht_list)
+  do.call(new_drake_deps, results)
+}
+
 #' @title `drake_deps` constructor
 #' @keywords internal
 #' @description List of class `drake_deps`.
@@ -72,7 +78,9 @@ new_drake_deps <- function(
   out
 }
 
-drake_validate.drake_deps <- function(x) {
+validate_drake_deps <- function(x) {
+  stopifnot(inherits(x, "drake_deps"))
+  stopifnot(inherits(x, "drake"))
   lapply(x, assert_character)
   out_fields <- names(x)
   exp_fields <- c(
@@ -92,10 +100,4 @@ drake_validate.drake_deps <- function(x) {
 print.drake_deps <- function(x, ...) {
   message("drake_deps")
   msg_str(x)
-}
-
-drake_deps_impl <- function(expr, exclude = character(0), restrict = NULL) {
-  results <- drake_deps_ht(expr, exclude, restrict)
-  results <- lapply(results, ht_list)
-  do.call(new_drake_deps, results)
 }
