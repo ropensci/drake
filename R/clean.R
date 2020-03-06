@@ -32,8 +32,7 @@
 #'   from `make()`
 #'   are removed. If `TRUE`, the whole cache is removed, including
 #'   session metadata, etc.
-#' @param jobs Number of jobs for light parallelism
-#'   (disabled on Windows).
+#' @param jobs Deprecated.
 #' @param force Logical, whether to try to clean the cache
 #'   even though the project may not be back compatible with the
 #'   current version of drake.
@@ -82,11 +81,12 @@ clean <- function(
   search = NULL,
   cache = drake::drake_cache(path = path),
   verbose = NULL,
-  jobs = 1,
+  jobs = NULL,
   force = FALSE,
   garbage_collection = FALSE,
   purge = FALSE
 ) {
+  deprecate_arg(jobs, "jobs") # 2020-03-06
   deprecate_force(force)
   deprecate_search(search)
   deprecate_verbose(verbose)
@@ -120,11 +120,15 @@ clean <- function(
   if (!length(targets) && is.null(c(...))) {
     targets <- cache$list()
   }
+  clean_impl(targets, namespaces, cache)
+  clean_cleanup(cache, garbage_collection)
+  invisible()
+}
+
+clean_impl <- function(target, namespaces, cache) {
   for (namespace in namespaces) {
     try(cache$del(key = targets, namespace = namespace))
   }
-  clean_cleanup(cache, garbage_collection)
-  invisible()
 }
 
 clean_select_namespaces <- function(cache, purge) {

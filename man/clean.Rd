@@ -13,7 +13,7 @@ clean(
   search = NULL,
   cache = drake::drake_cache(path = path),
   verbose = NULL,
-  jobs = 1,
+  jobs = NULL,
   force = FALSE,
   garbage_collection = FALSE,
   purge = FALSE
@@ -40,8 +40,7 @@ If supplied, \code{path} is ignored.}
 
 \item{verbose}{Deprecated}
 
-\item{jobs}{Number of jobs for light parallelism
-(disabled on Windows).}
+\item{jobs}{Deprecated.}
 
 \item{force}{Logical, whether to try to clean the cache
 even though the project may not be back compatible with the
