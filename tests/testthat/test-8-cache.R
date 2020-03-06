@@ -402,7 +402,7 @@ test_with_dir("cache functions work from various working directories", {
 
     # clean
     expect_true(all(config$plan$target %in% cached()))
-    clean(final, jobs = 2, garbage_collection = TRUE)
+    clean(final, garbage_collection = TRUE)
     targs <- setdiff(config$plan$target, "final")
     expect_true(all(targs %in% cached()))
     drake_gc()
@@ -411,7 +411,7 @@ test_with_dir("cache functions work from various working directories", {
     prog <- progress()
     expect_true("final" %in% prog$target)
 
-    clean(final, jobs = 2, garbage_collection = TRUE, purge = TRUE)
+    clean(final, garbage_collection = TRUE, purge = TRUE)
     prog <- progress()
     expect_false("final" %in% prog$target)
 
