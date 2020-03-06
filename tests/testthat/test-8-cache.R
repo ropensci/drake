@@ -39,11 +39,11 @@ test_with_dir("clean() removes the correct files", {
   clean(cache = cache, garbage_collection = TRUE)
   expect_true(file.exists("a.txt"))
   expect_true(file.exists("b.txt"))
-  expect_false(file.exists("d.rds"))
+  expect_true(file.exists("d.rds"))
   expect_true(dir.exists("abc"))
-  expect_false(dir.exists("xyz"))
+  expect_true(dir.exists("xyz"))
   expect_true(file.exists("abc/c.txt"))
-  expect_false(file.exists("xyz/e.txt"))
+  expect_true(file.exists("xyz/e.txt"))
 })
 
 test_with_dir("drake_version", {
@@ -586,7 +586,7 @@ test_with_dir("clean: garbage_collection and destroy", {
   expect_true(file.exists("abc"))
   clean(garbage_collection = TRUE, destroy = TRUE)
   expect_false(file.exists(".drake"))
-  expect_false(file.exists("abc"))
+  expect_true(file.exists("abc"))
 })
 
 test_with_dir("fancy cache features, bad paths", {

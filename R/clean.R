@@ -93,6 +93,10 @@ clean <- function(
   if (is.null(cache)) {
     return(invisible())
   }
+  if (destroy) {
+    cache$destroy()
+    return(invisible())
+  }
   cache <- decorate_storr(cache)
   cache$lock()
   if (!destroy) {
@@ -116,15 +120,10 @@ clean <- function(
   if (!length(targets) && is.null(c(...))) {
     targets <- cache$list()
   }
-  lightly_parallelize(
-    X = targets,
-    FUN = clean_single_target,
-    jobs = jobs,
-    cache = cache,
-    namespaces = namespaces,
-    garbage_collection = garbage_collection
-  )
-  clean_cleanup(cache, garbage_collection, destroy)
+  for (namespace in namespaces) {
+    try(cache$del(key = targets, namespace = namespace))
+  }
+  clean_cleanup(cache, garbage_collection)
   invisible()
 }
 
@@ -136,14 +135,11 @@ clean_select_namespaces <- function(cache, purge) {
   }
 }
 
-clean_cleanup <- function(cache, garbage_collection, destroy) {
+clean_cleanup <- function(cache, garbage_collection) {
   if (garbage_collection) {
     cache$gc()
-  } else if (!destroy) {
+  } else {
     clean_recovery_msg()
-  }
-  if (destroy) {
-    cache$destroy()
   }
 }
 
@@ -192,27 +188,6 @@ which_clean <- function(
     targets <- cache$list()
   }
   targets
-}
-
-clean_single_target <- function(
-  target,
-  cache,
-  namespaces,
-  graph,
-  garbage_collection
-) {
-  files <- character(0)
-  if (cache$exists(target, namespace = "meta")) {
-    files <- cache$get(key = target, namespace = "meta")$file_out
-  }
-  for (namespace in namespaces) {
-    for (key in c(target, files)) {
-      try(cache$del(key = key, namespace = namespace))
-    }
-  }
-  if (garbage_collection && length(files)) {
-    unlink(redecode_path(files), recursive = TRUE)
-  }
 }
 
 cleaned_namespaces_ <- function(
