@@ -125,7 +125,7 @@ clean <- function(
   invisible()
 }
 
-clean_impl <- function(target, namespaces, cache) {
+clean_impl <- function(targets, namespaces, cache) {
   for (namespace in namespaces) {
     try(cache$del(key = targets, namespace = namespace))
   }
