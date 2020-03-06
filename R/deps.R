@@ -91,7 +91,7 @@ deps_target_impl <- function(
   }
   out <- config$spec[[target]]$deps_build
   out <- decode_deps_list(out)
-  out <- display_deps_list(select_nonempty(out))
+  out <- display_deps_list(out)
   out$hash <- config$cache$mget_hash(out$name)
   out
 }
@@ -127,7 +127,8 @@ get_deps_knitr <- function(target) {
     target <- redecode_path(target)
   }
   analyze_knitr_file(target, out, restrict = NULL)
-  list_code_analysis_results(out)
+  out <- lapply(out, ht_list)
+  do.call(new_drake_deps, out)
 }
 
 decode_deps_list <- function(x) {

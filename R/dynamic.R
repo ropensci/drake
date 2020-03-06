@@ -568,6 +568,14 @@ subtarget_deps.cross <- function(dynamic, target, index, config) {
   out
 }
 
+# Get a row of expand_grid from tidyr
+# without actually expanding the grid.
+grid_index <- function(index, size) {
+  reps <- prod(size) / cumprod(size)
+  inc <- ceiling(index / reps) - 1L
+  (inc %% size) + 1L
+}
+
 subtarget_deps.group <- function(
   dynamic,
   target,

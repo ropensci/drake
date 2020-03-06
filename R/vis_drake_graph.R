@@ -328,7 +328,9 @@ vis_render_webshot <- function(graph, file, selfcontained) {
   file <- path.expand(file)
   if (is_image_filename(file)) {
     assert_pkg("webshot")
-    url <- file.path(random_tempdir(), "tmp.html")
+    dir <- tempfile()
+    dir.create(dir)
+    url <- file.path(dir, "tmp.html")
     visNetwork::visSave(graph = graph, file = url, selfcontained = FALSE)
     webshot::webshot(url = url, file = file)
   } else {

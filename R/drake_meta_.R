@@ -577,6 +577,17 @@ rehash_url <- function(url, config) {
   return(paste(etag, mtime))
 }
 
+longest_match <- function(choices, against) {
+  index <- vapply(
+    choices,
+    pmatch,
+    table = against,
+    FUN.VALUE = integer(1)
+  )
+  matches <- names(index[!is.na(index)])
+  matches[which.max(nchar(matches))]
+}
+
 is_url <- function(x) {
   grepl("^http://|^https://|^ftp://", x)
 }

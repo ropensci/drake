@@ -444,18 +444,6 @@ evalseq <- function(e) {
   }
 }
 
-list_code_analysis_results <- function(results) {
-  nms <- names(results)
-  x <- lapply(
-    X = nms,
-    FUN = function(slot) {
-      ht_list(results[[slot]])
-    }
-  )
-  names(x) <- nms
-  select_nonempty(x)
-}
-
 unwrap_function <- function(funct) {
   if (is_vectorized(funct)) {
     funct <- environment(funct)[["FUN"]]

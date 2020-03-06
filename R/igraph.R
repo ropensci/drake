@@ -1,3 +1,12 @@
+all_targets <- function(config) {
+  out <- V(config$graph)$name[!V(config$graph)$imported]
+  out[!is_encoded_path(out)]
+}
+
+all_imports <- function(config) {
+  V(config$graph)$name[V(config$graph)$imported]
+}
+
 deps_graph <- function(targets, graph, reverse = FALSE) {
   if (!length(targets)) {
     return(character(0))

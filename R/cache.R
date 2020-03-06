@@ -292,6 +292,13 @@ loadd <- function(
   invisible()
 }
 
+# TODO: should be a validate method.
+assert_cache <- function(cache) {
+  if (is.null(cache)) {
+    stop0("cannot find drake cache.")
+  }
+}
+
 load_subtargets <- function(target, cache, envir, subtargets, subtarget_list) {
   hashes <- get(target, envir = envir, inherits = FALSE)
   load_targets_impl(hashes, target, cache, envir, subtargets, subtarget_list)

@@ -1,30 +1,41 @@
-#' @title Isolate the side effects of an example.
-#' \lifecycle{stable}
-#' @description Runs code in a temporary directory
-#'   in a controlled environment with a controlled
-#'   set of options.
-#' @export
-#' @keywords internal
-#' @return Nothing.
-#' @param desc Character, description of the example.
-#' @param ... Code to run.
-isolate_example <- function(desc, code) {
-  new <- tempfile()
-  dir.create(new)
-  old <- setwd(new) # nolint
-  on.exit(setwd(old)) # nolint
-  opts <- list(drake_clean_menu = FALSE)
-  with_options(new = opts, code)
-  invisible()
+`%||%` <- function(x, y) {
+  if (is.null(x) || length(x) <= 0) {
+    y
+  } else {
+    x
+  }
 }
 
-all_targets <- function(config) {
-  out <- V(config$graph)$name[!V(config$graph)$imported]
-  out[!is_encoded_path(out)]
+`%|||%` <- function(x, y) {
+  if (is.null(x)) {
+    y
+  } else {
+    x
+  }
 }
 
-all_imports <- function(config) {
-  V(config$graph)$name[V(config$graph)$imported]
+`%||NA%` <- function(x, y) {
+  if (is.null(x) || is.na(x)) {
+    y
+  } else {
+    x
+  }
+}
+
+`%|||NA%` <- function(x, y) {
+  if (anyNA(x)) {
+    y
+  } else {
+    x
+  }
+}
+
+ternary <- function(condition, value_true, value_false) {
+  if (any(condition)) {
+    value_true
+  } else {
+    value_false
+  }
 }
 
 stop0 <- function(...) {
@@ -35,15 +46,20 @@ warn0 <- function(...) {
   warning(..., call. = FALSE)
 }
 
-assert_config <- function(config) {
-  if (inherits(config, "drake_config")) {
-    return()
-  }
-  stop0(
-    "the ",
-    shQuote("config"),
-    " argument must be a drake_config() object."
-  )
+error_false <- function(e) {
+  FALSE
+}
+
+error_na <- function(e) {
+  NA_character_
+}
+
+assert_character <- function(x) {
+  stopifnot(is.character(x))
+}
+
+assert_environment <- function(x) {
+  stopifnot(is.environment(x))
 }
 
 assert_pkg <- function(pkg, version = NULL, install = "install.packages") {
@@ -68,60 +84,36 @@ assert_pkg <- function(pkg, version = NULL, install = "install.packages") {
   invisible()
 }
 
-assert_cache <- function(cache) {
-  if (is.null(cache)) {
-    stop0("cannot find drake cache.")
-  }
+vcapply <- function(X, FUN, ...) {
+  vapply(X, FUN, FUN.VALUE = character(1), ...)
 }
 
-assert_character <- function(x) {
-  stopifnot(is.character(x))
+viapply <- function(X, FUN, ...) {
+  vapply(X, FUN, FUN.VALUE = integer(1), ...)
 }
 
-assert_environment <- function(x) {
-  stopifnot(is.environment(x))
-}
-
-# weak_as_tibble - use as_tibble() if available but fall back to
-# as.data.frame() if necessary
-weak_as_tibble <- function(..., .force_df = FALSE) {
-  no_tibble <- !suppressWarnings(requireNamespace("tibble", quietly = TRUE))
-  if (.force_df || no_tibble) {
-    as.data.frame(..., stringsAsFactors = FALSE)
-  } else {
-    tibble::as_tibble(...)
-  }
-}
-
-# weak_tibble - use tibble() if available but fall back to
-# data.frame() if necessary
-weak_tibble <- function(..., .force_df = FALSE) {
-  no_tibble <- !suppressWarnings(requireNamespace("tibble", quietly = TRUE))
-  if (.force_df || no_tibble) {
-    data.frame(..., stringsAsFactors = FALSE)
-  } else {
-    tibble::tibble(...)
-  }
-}
-
-# Get a row of expand_grid from tidyr
-# without actually expanding the grid.
-grid_index <- function(index, size) {
-  reps <- prod(size) / cumprod(size)
-  inc <- ceiling(index / reps) - 1L
-  (inc %% size) + 1L
-}
-
-error_false <- function(e) {
-  FALSE
-}
-
-error_na <- function(e) {
-  NA_character_
+vlapply <- function(X, FUN, ...) {
+  vapply(X, FUN, FUN.VALUE = logical(1), ...)
 }
 
 complete_cases <- function(x) {
   !as.logical(Reduce(`|`, lapply(x, is.na)))
+}
+
+safe_vec_c <- function(...) {
+  tryCatch(
+    vctrs::vec_c(...),
+    vctrs_error_scalar_type = function(e) {
+      list(...)
+    },
+    error = function(e) {
+      stop(e)
+    }
+  )
+}
+
+safe_is_na <- function(x) {
+  tryCatch(is.na(x), error = error_false, warning = error_false)
 }
 
 select_nonempty <- function(x) {
@@ -140,62 +132,6 @@ select_nonempty <- function(x) {
   out
 }
 
-longest_match <- function(choices, against) {
-  index <- vapply(
-    choices,
-    pmatch,
-    table = against,
-    FUN.VALUE = integer(1)
-  )
-  matches <- names(index[!is.na(index)])
-  matches[which.max(nchar(matches))]
-}
-
-vcapply <- function(X, FUN, ...) {
-  vapply(X, FUN, FUN.VALUE = character(1), ...)
-}
-
-vlapply <- function(X, FUN, ...) {
-  vapply(X, FUN, FUN.VALUE = logical(1), ...)
-}
-
-safe_vec_c <- function(...) {
-  tryCatch(
-    vctrs::vec_c(...),
-    vctrs_error_scalar_type = function(e) {
-      list(...)
-    },
-    error = function(e) {
-      stop(e)
-    }
-  )
-}
-
-num_unique <- function(x) {
-  length(unique(x))
-}
-
-set_names <- function(x, nms) {
-  names(x) <- nms
-  x
-}
-
-random_string <- function(exclude) {
-  key <- NULL
-  while (is.null(key) || (key %in% exclude)) {
-    key <- basename(tempfile())
-  }
-  key
-}
-
-random_tempdir <- function() {
-  while (file.exists(dir <- tempfile())) {
-    Sys.sleep(1e-6) # nocov
-  }
-  dir.create(dir)
-  dir
-}
-
 multiline_message <- function(x, indent = "  ") {
   n <- 30
   if (length(x) > n) {
@@ -203,6 +139,22 @@ multiline_message <- function(x, indent = "  ") {
   }
   x <- paste0(indent, x)
   paste(x, collapse = "\n")
+}
+
+min_str <- function(x) {
+  n_spaces <- nchar(names(x))
+  n_spaces <- max(n_spaces) - n_spaces
+  for (index in seq_along(x)) {
+    name <- names(x)[index]
+    spaces <- paste(rep(" ", n_spaces[index]), collapse = "")
+    message(" $", name, ":", spaces, class(x[[name]]))
+  }
+}
+
+msg_str <- function(x) {
+  out <- utils::capture.output(utils::str(unclass(x), no.list = TRUE))
+  lapply(out, message)
+  invisible()
 }
 
 hard_wrap <- Vectorize(
@@ -364,66 +316,40 @@ dir_create <- function(x) {
   invisible()
 }
 
-all_is_na <- function(x) {
-  all(is.na(x))
-}
-
-safe_is_na <- function(x) {
-  tryCatch(is.na(x), error = error_false, warning = error_false)
-}
-
-min_str <- function(x) {
-  n_spaces <- nchar(names(x))
-  n_spaces <- max(n_spaces) - n_spaces
-  for (index in seq_along(x)) {
-    name <- names(x)[index]
-    spaces <- paste(rep(" ", n_spaces[index]), collapse = "")
-    message(" $", name, ":", spaces, class(x[[name]]))
+weak_as_tibble <- function(..., .force_df = FALSE) {
+  no_tibble <- !suppressWarnings(requireNamespace("tibble", quietly = TRUE))
+  if (.force_df || no_tibble) {
+    as.data.frame(..., stringsAsFactors = FALSE)
+  } else {
+    tibble::as_tibble(...)
   }
 }
 
-msg_str <- function(x) {
-  out <- utils::capture.output(utils::str(unclass(x), no.list = TRUE))
-  lapply(out, message)
+weak_tibble <- function(..., .force_df = FALSE) {
+  no_tibble <- !suppressWarnings(requireNamespace("tibble", quietly = TRUE))
+  if (.force_df || no_tibble) {
+    data.frame(..., stringsAsFactors = FALSE)
+  } else {
+    tibble::tibble(...)
+  }
+}
+
+#' @title Isolate the side effects of an example.
+#' \lifecycle{stable}
+#' @description Runs code in a temporary directory
+#'   in a controlled environment with a controlled
+#'   set of options.
+#' @export
+#' @keywords internal
+#' @return Nothing.
+#' @param desc Character, description of the example.
+#' @param ... Code to run.
+isolate_example <- function(desc, code) {
+  new <- tempfile()
+  dir.create(new)
+  old <- setwd(new) # nolint
+  on.exit(setwd(old)) # nolint
+  opts <- list(drake_clean_menu = FALSE)
+  with_options(new = opts, code)
   invisible()
-}
-
-`%||%` <- function(x, y) {
-  if (is.null(x) || length(x) <= 0) {
-    y
-  } else {
-    x
-  }
-}
-
-`%|||%` <- function(x, y) {
-  if (is.null(x)) {
-    y
-  } else {
-    x
-  }
-}
-
-`%||NA%` <- function(x, y) {
-  if (is.null(x) || is.na(x)) {
-    y
-  } else {
-    x
-  }
-}
-
-`%|||NA%` <- function(x, y) {
-  if (anyNA(x)) {
-    y
-  } else {
-    x
-  }
-}
-
-ternary <- function(condition, value_true, value_false) {
-  if (any(condition)) {
-    value_true
-  } else {
-    value_false
-  }
 }

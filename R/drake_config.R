@@ -727,6 +727,18 @@ print.drake_config <- function(x, ...) {
   min_str(x)
 }
 
+# TODO: should be a validate method.
+assert_config <- function(config) {
+  if (inherits(config, "drake_config")) {
+    return()
+  }
+  stop0(
+    "the ",
+    shQuote("config"),
+    " argument must be a drake_config() object."
+  )
+}
+
 resolve_session_info <- function(x) {
   out <- x %|||% Sys.getenv("drake_session_info")
   if (is.logical(out)) {

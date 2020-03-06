@@ -717,19 +717,17 @@ dsl_left_outer_join <- function(x, y) {
   # Just a precaution. We should actually be okay by now.
   y <- y[!duplicated(y[, by, drop = FALSE]),, drop = FALSE] # nolint
   # Need to recover the original row order
-  key <- random_string(exclude = c(colnames(x), colnames(y)))
+  key <- basename(tempfile(fileext = "drake_transform_plan_col"))
   x[[key]] <- seq_len(nrow(x))
   out <- merge(x = x, y = y, by = by, all.x = TRUE, sort = FALSE)
   out <- out[, !duplicated(colnames(out)), drop = FALSE]
-  is_na_col <- vapply(out, all_is_na, FUN.VALUE = logical(1))
+  is_na_col <- vlapply(out, function(x) {
+    all(is.na(x))
+  })
   out <- out[, !is_na_col, drop = FALSE]
   out <- out[order(out[[key]]),, drop = FALSE] # nolint
   out[[key]] <- NULL
   out
-}
-
-all_is_na <- function(x) {
-  all(is.na(x))
 }
 
 upstream_trace_vars <- function(target, plan, graph) {
@@ -998,7 +996,9 @@ dsl_combine_join_plan <- function(plan, transform, old_cols) {
   out <- out[, keep, drop = FALSE]
   keep <- !vapply(out, anyNA, FUN.VALUE = logical(1))
   out <- out[, keep, drop = FALSE]
-  keep <- vapply(out, num_unique, FUN.VALUE = integer(1)) == 1L
+  keep <- viapply(out, function(x) {
+    length(unique(x))
+  }) == 1L
   utils::head(out[, keep, drop = FALSE], n = 1)
 }
 
@@ -1104,7 +1104,8 @@ find_old_groupings.map <- function(transform, plan) {
   blocks <- lapply(blocks, function(x) {
     as.list(x[complete_cases(x),, drop = FALSE]) # nolint
   })
-  out <- do.call(c, set_names(blocks, NULL))
+  names(blocks) <- NULL
+  out <- do.call(c, blocks)
   out <- select_nonempty(lapply(out, na_omit))
   min_length <- min(vapply(out, length, FUN.VALUE = integer(1)))
   out <- as.data.frame(

@@ -214,7 +214,9 @@ sankey_render_webshot <- function(file, graph, selfcontained) {
   file <- path.expand(file)
   if (is_image_filename(file)) {
     assert_pkg("webshot")
-    url <- file.path(random_tempdir(), "tmp.html")
+    dir <- tempfile()
+    dir.create(dir)
+    url <- file.path(dir, "tmp.html")
     networkD3::saveNetwork(
       network = graph,
       file = url,
