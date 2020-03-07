@@ -1,11 +1,15 @@
 logger <- function(verbose, file = NULL) {
   verbose <- as.integer(verbose)
-  progress <- NULL
+  progress_bar <- NULL
   if (.pkg_envir$has_progress) {
     progress_bar <- progress::progress_bar$new(
       format = "targets [:bar] :percent",
       show_after = 0
     )
+  } else if (verbose == 2L) {
+     # Covered if we run tests without the progress package.
+     # Part of https://github.com/ropensci/drake/blob/master/inst/testing/cran-checklist.md # nolint
+    cli_msg("Install the progress package to see a progress bar.")
   }
   out <- refclass_logger$new(
     verbose = verbose,

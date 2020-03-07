@@ -60,7 +60,7 @@
 #' @section Cache locking:
 #' When `make()` runs, it locks the cache so other processes cannot modify it.
 #' Same goes for [outdated()], [vis_drake_graph()], and similar functions
-#' when `make_imports = TRUE`. This is a safety measure to prevent simulatenous
+#' when `make_imports = TRUE`. This is a safety measure to prevent simultaneous
 #' processes from corrupting the cache. If you get an error saying that the
 #' cache is locked, either set `make_imports = FALSE` or manually force
 #' unlock it with `drake_cache()$unlock()`.
