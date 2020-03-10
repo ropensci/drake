@@ -626,7 +626,7 @@ but most workflows should stick with the default \code{lock_envir = TRUE}.
 
 When \code{make()} runs, it locks the cache so other processes cannot modify it.
 Same goes for \code{\link[=outdated]{outdated()}}, \code{\link[=vis_drake_graph]{vis_drake_graph()}}, and similar functions
-when \code{make_imports = TRUE}. This is a safety measure to prevent simulatenous
+when \code{make_imports = TRUE}. This is a safety measure to prevent simultaneous
 processes from corrupting the cache. If you get an error saying that the
 cache is locked, either set \code{make_imports = FALSE} or manually force
 unlock it with \code{drake_cache()$unlock()}.

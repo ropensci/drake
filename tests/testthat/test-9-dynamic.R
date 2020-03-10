@@ -2101,3 +2101,19 @@ test_with_dir("v6: names and values of cross() subtargets agree (#1204)", {
   expect_equal(sort(justbuilt(config)), sort(c("combo", "letters")))
   expect_equal(readd(combo), c("1b", "2b", "1a", "2a"))
 })
+
+test_with_dir("conflict between formats & upstream dynamic (#1210)", {
+  skip_if_not_installed("qs")
+  plan <- drake_plan(
+    numbers = target(
+      seq_len(2),
+      format = "qs"
+    ),
+    again = target(
+      numbers,
+      dynamic = map(numbers)
+    )
+  )
+  make(plan)
+  expect_equal(sort(readd(again)), sort(seq_len(2)))
+})

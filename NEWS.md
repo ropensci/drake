@@ -7,6 +7,7 @@
 * Stop trying to remove `file_out()` files in `clean()`, even when `garbage_collection` is `TRUE` (#521, @the-Hull).
 * Fix `keep_going = TRUE` for formatted targets (#1206).
 * Use the correct variable names in logger helper (`progress_bar` instead of `progress`) so that `drake` works without the `progress` package (#1208, @mbaccou).
+* Avoid conflict between formats and upstream dynamic targets (#1210, @psadil).
 
 ## New features
 

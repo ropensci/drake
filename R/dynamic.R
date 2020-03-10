@@ -394,6 +394,7 @@ as_dynamic <- function(x) {
 }
 
 dynamic_subvalue <- function(value, index) {
+  value <- undecorate_format_value(value)
   vec_slice(x = value, i = index)
 }
 
