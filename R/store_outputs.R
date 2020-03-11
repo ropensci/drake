@@ -44,6 +44,18 @@ decorate_format_value.drake_format_file <- function(value, target, config) { # n
   value
 }
 
+undecorate_format_value <- function(value) {
+  UseMethod("undecorate_format_value")
+}
+
+undecorate_format_value.default <- function(value) { # nolint
+  value
+}
+
+undecorate_format_value.drake_format <- function(value) { # nolint
+  value$value
+}
+
 store_triggers <- function(target, meta, config) {
   if (is_subtarget(target, config)) {
     return()
@@ -210,7 +222,7 @@ finalize_meta <- function(target, value, meta, hash, config) {
     log_time(target, meta, config)
   }
   meta$hash <- hash
-  meta$size_vec <- NROW(value)
+  meta$size_vec <- NROW(undecorate_format_value(value))
   if (is_dynamic(target, config)) {
     meta$subtargets <- config$spec[[target]]$subtargets
   }
