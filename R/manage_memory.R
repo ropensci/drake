@@ -329,6 +329,7 @@ load_dynamic_subdep_impl.default <- function( # nolint
 
 load_static_subdep <- function(dep, index, config) {
   value <- get(dep, envir = config$envir_targets, inherits = FALSE)
+  assert_dynamic_grouping_var(dep, value)
   value <- dynamic_subvalue(value, index)
   assign(
     x = dep,
@@ -336,6 +337,12 @@ load_static_subdep <- function(dep, index, config) {
     envir = config$envir_subtargets,
     inherits = FALSE
   )
+}
+
+assert_dynamic_grouping_var <- function(dep, value) {
+  if (!length(value)) {
+    stop0("dynamic grouping variable ", dep, " needs more than 0 elements.")
+  }
 }
 
 sync_envir_dynamic <- function(target, config) {

@@ -20,6 +20,8 @@
 
 * Show an empty progress bar just before targets start to build when `verbose` is `2` (#1203, @kendonB).
 * Deprecate the `jobs` argument of `clean()`.
+* Show an informative error message for empty dynamic grouping variables (#1212, @kendonB).
+
 
 # Version 7.11.0
 

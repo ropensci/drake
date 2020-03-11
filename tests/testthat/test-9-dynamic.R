@@ -2101,3 +2101,15 @@ test_with_dir("v6: names and values of cross() subtargets agree (#1204)", {
   expect_equal(sort(justbuilt(config)), sort(c("combo", "letters")))
   expect_equal(readd(combo), c("1b", "2b", "1a", "2a"))
 })
+
+test_with_dir("empty dynamic grouping variable error msg (#1212)", {
+  skip_on_cran()
+  plan <- drake_plan(
+    empty = numeric(),
+    downstream = target(1, dynamic = map(empty))
+  )
+  expect_error(
+    make(plan),
+    regexp = "dynamic grouping variable empty needs more than 0 elements"
+  )
+})
