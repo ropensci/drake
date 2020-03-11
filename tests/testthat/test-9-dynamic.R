@@ -2106,7 +2106,7 @@ test_with_dir("conflict between formats & upstream dynamic (#1210)", {
   skip_if_not_installed("qs")
   plan <- drake_plan(
     numbers = target(
-      seq_len(2),
+      seq_len(5),
       format = "qs"
     ),
     again = target(
@@ -2115,5 +2115,5 @@ test_with_dir("conflict between formats & upstream dynamic (#1210)", {
     )
   )
   make(plan)
-  expect_equal(sort(readd(again)), sort(seq_len(2)))
+  expect_equal(sort(readd(again)), sort(seq_len(5)))
 })
