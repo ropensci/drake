@@ -151,7 +151,13 @@ dynamic_progress_namespace <- function(target, meta, config) {
 }
 
 dynamic_progress_key <- function(target, meta, config) {
-  command <- ifelse(
+  x <- dynamic_progress_prekey(target, meta, config)
+  x <- paste(as.character(x), collapse = "|")
+  digest_murmur32(x, serialize = FALSE)
+}
+
+dynamic_progress_prekey <- function(target, meta, config) {
+ command <- ifelse(
     meta$trigger$command,
     meta$command,
     NA_character_
@@ -188,19 +194,17 @@ dynamic_progress_key <- function(target, meta, config) {
     NA_character_,
     config$cache$digest(meta$trigger$value)
   )
-  x <- c(
-    command,
-    depend,
-    input_file_hash,
-    output_file_hash,
-    seed,
-    format,
-    condition,
-    mode,
-    change_hash
+  list(
+    command = command,
+    depend = depend,
+    input_file_hash = input_file_hash,
+    output_file_hash = output_file_hash,
+    seed = seed,
+    format = format,
+    condition = condition,
+    mode = mode,
+    change_hash = change_hash
   )
-  x <- paste(x, collapse = "|")
-  digest_murmur32(x, serialize = FALSE)
 }
 
 dynamic_progress_ns_pfx <- function(target) {

@@ -2169,6 +2169,136 @@ test_with_dir("parent not finalized, sub-targets stay up to date (#1209)", {
   make(plan)
   expect_equal(length(justbuilt(config)), 4L)
   expect_true(all(jb2 %in% justbuilt(config)))
-  make(plan)
+})
+
+test_with_dir("un-finalized sub-targets and cmd trigger (#1209)", {
+  skip_on_cran()
+  plan <- drake_plan(
+    numbers = seq(0L, 2L),
+    result = target(stopifnot(numbers <= 1L), dynamic = map(numbers))
+  )
+  config <- drake_config(plan)
+  expect_error(make(plan))
+  expect_equal(length(justbuilt(config)), 3L)
+  # trigger activation
+  plan <- drake_plan(
+    numbers = seq(0L, 2L),
+    result = target(stopifnot(numbers <= 1.1), dynamic = map(numbers))
+  )
+  expect_error(make(plan))
+  expect_equal(length(justbuilt(config)), 2L)
+  # change of trigger
+  expect_error(make(plan, trigger = trigger(command = FALSE)))
+  expect_equal(length(justbuilt(config)), 2L)
+  expect_error(make(plan, trigger = trigger(command = FALSE)))
   expect_equal(length(justbuilt(config)), 0L)
+  # trigger suppression
+  plan <- drake_plan(
+    numbers = seq(0L, 2L),
+    result = target(stopifnot(numbers <= 999L), dynamic = map(numbers))
+  )
+  make(plan, trigger = trigger(command = FALSE))
+  expect_equal(length(justbuilt(config)), 2L)
+  expect_true("result" %in% justbuilt(config))
+})
+
+test_with_dir("un-finalized sub-targets, seed trigger (#1209)", {
+  skip_on_cran()
+  # trigger suppression
+  plan <- drake_plan(
+    numbers = seq(0L, 2L),
+    result = target(stopifnot(numbers <= 1L), dynamic = map(numbers))
+  )
+  config <- drake_config(plan)
+  expect_error(make(plan))
+  expect_error(make(plan, trigger = trigger(seed = FALSE)))
+  expect_equal(length(justbuilt(config)), 2L)
+  expect_error(make(plan))
+  # trigger activation
+  plan <- drake_plan(
+    numbers = seq(0L, 2L),
+    result = target(
+      stopifnot(numbers <= 1L),
+      dynamic = map(numbers),
+      seed = -9999
+    )
+  )
+  expect_error(make(plan))
+  expect_equal(length(justbuilt(config)), 2L)
+})
+
+test_with_dir("un-finalized sub-targets, format trigger (#1209)", {
+  skip_on_cran()
+  skip_if_not_installed("qs")
+  # trigger suppression
+  plan <- drake_plan(
+    numbers = seq(0L, 2L),
+    result = target(stopifnot(numbers <= 1L), dynamic = map(numbers))
+  )
+  config <- drake_config(plan)
+  expect_error(make(plan))
+  expect_error(make(plan, trigger = trigger(seed = FALSE)))
+  expect_equal(length(justbuilt(config)), 2L)
+  # trigger activation
+  expect_error(make(plan))
+  plan <- drake_plan(
+    numbers = seq(0L, 2L),
+    result = target(
+      stopifnot(numbers <= 1L),
+      dynamic = map(numbers),
+      format = "qs"
+    )
+  )
+  expect_error(make(plan))
+  expect_equal(length(justbuilt(config)), 2L)
+})
+
+test_with_dir("dynamic_progress_prekey() default (#1209)", {
+  skip_on_cran()
+  z <- 1
+  nums <- seq(0L, 2L)
+  plan <- drake_plan(
+    result = target(
+      stopifnot(nums + z <= 1L),
+      dynamic = map(nums)
+    )
+  )
+  config <- drake_config(plan)
+  meta <- drake_meta_("result", config)
+  x <- dynamic_progress_prekey("result", meta, config)
+  expect_true(is.na(x$change_hash))
+  x$change_hash <- "blank"
+  expect_false(any(is.na(x)))
+  chr <- nchar(as.character(x))
+  expect_equal(sum(chr < 1L), 2L)
+})
+
+test_with_dir("dynamic_progress_prekey() special (#1209)", {
+  skip_on_cran()
+  skip_if_not_installed("fst")
+  numbers <- seq(0L, 2L)
+  y2 <- 123
+  z <- 1
+  file.create("x")
+  file.create("y")
+  plan <- drake_plan(
+    result = target({
+      file_in("x")
+      stopifnot(numbers + z <= 1L)
+      },
+      trigger = trigger(
+        condition = x + 1,
+        mode = "blacklist",
+        change = y2
+      ),
+      format = "fst",
+      dynamic = map(numbers)
+    )
+  )
+  config <- drake_config(plan)
+  meta <- drake_meta_("result", config)
+  x <- dynamic_progress_prekey("result", meta, config)
+  expect_false(any(is.na(x)))
+  chr <- nchar(as.character(x))
+  expect_equal(sum(chr < 1L), 1L)
 })
