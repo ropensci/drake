@@ -2273,6 +2273,32 @@ test_with_dir("dynamic_progress_prekey() default (#1209)", {
   expect_equal(sum(chr < 1L), 2L)
 })
 
+test_with_dir("dynamic_progress_prekey() suppressed (#1209)", {
+  skip_on_cran()
+  z <- 1
+  nums <- seq(0L, 2L)
+  plan <- drake_plan(
+    result = target(
+      stopifnot(nums + z <= 1L),
+      dynamic = map(nums),
+      trigger = trigger(
+        command = FALSE,
+        depend = FALSE,
+        file = FALSE,
+        seed = FALSE,
+        format = FALSE
+      )
+    )
+  )
+  config <- drake_config(plan)
+  meta <- drake_meta_("result", config)
+  x <- dynamic_progress_prekey("result", meta, config)
+  ns <- setdiff(names(x), c("mode", "condition"))
+  for (n in ns) {
+    expect_true(is.na(x[[n]]))
+  }
+})
+
 test_with_dir("dynamic_progress_prekey() special (#1209)", {
   skip_on_cran()
   skip_if_not_installed("fst")
