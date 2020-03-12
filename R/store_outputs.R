@@ -12,11 +12,7 @@ store_outputs <- function(target, value, meta, config) {
     meta = meta,
     config = config
   )
-  set_progress(
-    target = target,
-    value = "done",
-    config = config
-  )
+  finalize_progress(target, config)
 }
 
 decorate_format_value <- function(value, target, config) {
@@ -347,4 +343,25 @@ microtime <- function() {
 
 proc_time <- function() {
   unclass(proc.time())
+}
+
+# GitHub issue 1209
+finalize_progress <- function(target, config) {
+  set_progress(target = target, value = "done", config = config)
+  if (is_dynamic(target, config)) {
+    finalize_progress_dynamic(target, config)
+  }
+  if (is_subtarget(target, config)) {
+    finalize_progress_subtarget(target, config)
+  }
+}
+
+finalize_progress_dynamic <- function(target, config) {
+  config$cache$clear_dynamic_progress(target)
+}
+
+finalize_progress_subtarget <- function(target, config) {
+  parent <- config$spec[[target]]$subtarget_parent
+  namespace <- config$meta[[parent]]$dynamic_progress_namespace
+  config$cache$inc_dynamic_progress(target, namespace)
 }

@@ -2143,3 +2143,30 @@ test_with_dir("drake_build() and drake_debug() are static only (#1214)", {
     regexp = "does not support dynamic targets"
   )
 })
+
+test_with_dir("parent not finalized, sub-targets stay up to date (#1209)", {
+  skip_on_cran()
+  plan <- drake_plan(
+    numbers = seq(0L, 2L),
+    result = target(stopifnot(numbers <= 1L), dynamic = map(numbers))
+  )
+  expect_error(make(plan))
+  config <- drake_config(plan)
+  jb <- justbuilt(config)
+  expect_equal(length(jb), 3L)
+  namespace <- drake_meta_("result", config)$dynamic_progress_namespace
+  jb2 <- config$cache$list(namespace = namespace)
+  expect_equal(sort(setdiff(jb, "numbers")), sort(jb2))
+  expect_error(make(plan))
+  config <- drake_config(plan)
+  expect_equal(length(justbuilt(config)), 0L)
+  jb2 <- config$cache$list(namespace = namespace)
+  expect_equal(sort(setdiff(jb, "numbers")), sort(jb2))
+  plan <- drake_plan(
+    numbers = seq(0L, 2L),
+    result = target(stopifnot(numbers <= 999L), dynamic = map(numbers))
+  )
+  make(plan)
+  expect_equal(length(justbuilt(config)), 4L)
+  expect_true(all(jb2 %in% justbuilt(config)))
+})
