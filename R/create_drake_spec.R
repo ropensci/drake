@@ -184,7 +184,7 @@ cds_prepare_spec <- function(args, spec) {
   cds_assert_trace(spec$dynamic, spec)
   spec$command_standardized <- cds_standardize_command(spec$command)
   if (inherits(spec$dynamic, "dynamic")) {
-    dynamic_command <- cds_std_dyn_cmd(spec$dynamic)
+    dynamic_command <- cds_std_dyn_cmd(spec$dynamic, spec$deps_dynamic_trace)
     spec$command_standardized <- paste(
       spec$command_standardized,
       dynamic_command
@@ -386,7 +386,7 @@ cds_standardize_command <- function(x) {
   safe_deparse(x, backtick = TRUE)
 }
 
-cds_std_dyn_cmd <- function(x) {
+cds_std_dyn_cmd <- function(x, trace) {
   transform <- class(x)
   vars <- sort(all.vars(x))
   by <- as.character(x$.by)

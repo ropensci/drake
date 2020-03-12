@@ -3,6 +3,7 @@
 ## Bug fixes
 
 * **Ensure up-to-date sub-targets are skipped even if the dynamic parent does not get a chance to finalize (#1209, #1211, @psadil, @kendonB).**
+* Add a trace argument to `cds_std_dyn_cmd()`. This one might invalidate people's dynamic targets, but it is important.
 * Restrict static transforms so they only use the upstream part of the plan (#1199, #1200, @bart1).
 * Correctly match the names and values of dynamic `cross()` sub-targets (#1204, @psadil). Expansion order is the same, but names are correctly matched now.
 * Stop trying to remove `file_out()` files in `clean()`, even when `garbage_collection` is `TRUE` (#521, @the-Hull).
