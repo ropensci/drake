@@ -2,7 +2,7 @@
 
 ## Bug fixes
 
-* **Ensure up-to-date sub-targets are skipped even if the dynamic parent does not get a chance to finalize (#1209, @psadil, @kendonB).**
+* **Ensure up-to-date sub-targets are skipped even if the dynamic parent does not get a chance to finalize (#1209, #1211, @psadil, @kendonB).**
 * Restrict static transforms so they only use the upstream part of the plan (#1199, #1200, @bart1).
 * Correctly match the names and values of dynamic `cross()` sub-targets (#1204, @psadil). Expansion order is the same, but names are correctly matched now.
 * Stop trying to remove `file_out()` files in `clean()`, even when `garbage_collection` is `TRUE` (#521, @the-Hull).
