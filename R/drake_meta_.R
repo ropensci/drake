@@ -146,28 +146,10 @@ drake_meta_impl.dynamic <- function(target, config) {
 # GitHub issue 1209
 dynamic_progress_namespace <- function(target, meta, config) {
   prefix <- dynamic_progress_ns_pfx(target)
-  key <- dynamic_progress_ns_key(target, meta, config)
+  key <- recovery_key(target, meta, config)
+  # Use murmur32 to avoid long file names on Windows.
+  key <- digest_murmur32(key, serialize = FALSE)
   paste0(prefix, key)
-}
-
-# Needs to be different from the recovery key.
-dynamic_progress_ns_key <- function(target, meta, config) {
-  change_hash <- ifelse(
-    is.null(meta$trigger$value),
-    NA_character_,
-    config$cache$digest(meta$trigger$value)
-  )
-  x <- c(
-    meta$command,
-    meta$dependency_hash,
-    meta$input_file_hash,
-    meta$output_file_hash,
-    meta$format,
-    as.character(meta$seed),
-    change_hash
-  )
-  x <- paste(x, collapse = "|")
-  digest_murmur32(x, serialize = FALSE)
 }
 
 dynamic_progress_ns_pfx <- function(target) {
