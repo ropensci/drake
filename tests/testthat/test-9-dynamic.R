@@ -2169,4 +2169,6 @@ test_with_dir("parent not finalized, sub-targets stay up to date (#1209)", {
   make(plan)
   expect_equal(length(justbuilt(config)), 4L)
   expect_true(all(jb2 %in% justbuilt(config)))
+  make(plan)
+  expect_equal(length(justbuilt(config)), 0L)
 })

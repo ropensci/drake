@@ -146,10 +146,61 @@ drake_meta_impl.dynamic <- function(target, config) {
 # GitHub issue 1209
 dynamic_progress_namespace <- function(target, meta, config) {
   prefix <- dynamic_progress_ns_pfx(target)
-  key <- recovery_key(target, meta, config)
-  # Use murmur32 to avoid long file names on Windows.
-  key <- digest_murmur32(key, serialize = FALSE)
+  key <- dynamic_progress_key(target, meta, config)
   paste0(prefix, key)
+}
+
+dynamic_progress_key <- function(target, meta, config) {
+  command <- ifelse(
+    meta$trigger$command,
+    meta$command,
+    NA_character_
+  )
+  depend <- ifelse(
+    meta$trigger$depend,
+    meta$dependency_hash,
+    NA_character_
+  )
+  input_file_hash <- ifelse(
+    meta$trigger$file,
+    meta$input_file_hash,
+    NA_character_
+  )
+  output_file_hash <- ifelse(
+    meta$trigger$file,
+    meta$output_file_hash,
+    NA_character_
+  )
+  seed <- ifelse(
+    meta$trigger$seed,
+    as.character(meta$seed),
+    NA_character_
+  )
+  format <- ifelse(
+    meta$trigger$format,
+    meta$format,
+    NA_character_
+  )
+  condition <- safe_deparse(meta$trigger$condition, backtick = TRUE)
+  mode <- meta$trigger$mode
+  change_hash <- ifelse(
+    is.null(meta$trigger$value),
+    NA_character_,
+    config$cache$digest(meta$trigger$value)
+  )
+  x <- c(
+    command,
+    depend,
+    input_file_hash,
+    output_file_hash,
+    seed,
+    format,
+    condition,
+    mode,
+    change_hash
+  )
+  x <- paste(x, collapse = "|")
+  digest_murmur32(x, serialize = FALSE)
 }
 
 dynamic_progress_ns_pfx <- function(target) {
