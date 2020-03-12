@@ -269,12 +269,6 @@ finalize_triggers <- function(target, meta, config) {
   if (is.null(meta$command)) {
     meta$command <- spec$command_standardized
   }
-  if (is.null(meta$dependency_hash)) {
-    meta$dependency_hash <- static_dependency_hash(target, config)
-  }
-  if (is.null(meta$input_file_hash)) {
-    meta$input_file_hash <- input_file_hash(target = target, config = config)
-  }
   if (length(file_out) || is.null(file_out)) {
     meta$output_file_hash <- output_file_hash(
       target = target,
