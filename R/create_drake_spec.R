@@ -390,6 +390,9 @@ cds_std_dyn_cmd <- function(x) {
   transform <- class(x)
   vars <- sort(all.vars(x))
   by <- as.character(x$.by)
+  # TODO: the mention of trace is a bug, but fixing it
+  # will invalidate everyone's sub-targets. Wait to fix it
+  # until drake 8.0.0.
   paste(c(transform, vars, by, trace), collapse = " ")
 }
 

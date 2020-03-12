@@ -139,6 +139,21 @@ refclass_decorated_storr <- methods::setRefClass(
         hash = .self$ht_keys[[value]]
       )
     },
+    inc_dynamic_progress = function(subtarget, namespace) {
+      .self$driver$set_hash(
+        key = subtarget,
+        namespace = namespace,
+        hash = .self$ht_keys[["done"]]
+      )
+    },
+    clear_dynamic_progress = function(target) {
+      prefix <- dynamic_progress_ns_pfx(target)
+      namespaces <- .self$list_namespaces()
+      namespaces <- grep(pattern = prefix, x = namespaces, value = TRUE)
+      for (namespace in namespaces) {
+        .self$clear(namespace = namespace)
+      }
+    },
     get_progress = function(targets) {
       retrieve_progress(targets = targets, cache = .self)
     },
