@@ -2129,3 +2129,17 @@ test_with_dir("empty dynamic grouping variable error msg (#1212)", {
     regexp = "dynamic grouping variable empty needs more than 0 elements"
   )
 })
+
+test_with_dir("drake_build() and drake_debug() are static only (#1214)", {
+  skip_on_cran()
+  plan <- drake_plan(x = 1, y = target(x, dynamic = map(x)))
+  make(plan)
+  expect_error(
+    drake_build(plan = plan, target = "y"),
+    regexp = "does not support dynamic targets"
+  )
+  expect_error(
+    drake_debug(plan = plan, target = "y"),
+    regexp = "does not support dynamic targets"
+  )
+})

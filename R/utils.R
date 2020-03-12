@@ -84,6 +84,16 @@ assert_pkg <- function(pkg, version = NULL, install = "install.packages") {
   invisible()
 }
 
+assert_static <- function(target, config, function_name) {
+  if (is_dynamic(target, config)) {
+    stop0(
+      "function ",
+      function_name,
+      " does not support dynamic targets."
+    )
+  }
+}
+
 vcapply <- function(X, FUN, ...) {
   vapply(X, FUN, FUN.VALUE = character(1), ...)
 }
