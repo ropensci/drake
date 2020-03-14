@@ -251,7 +251,7 @@ drake_with_call_stack_8a6af5 <- function(target, config) {
   capture_calls <- function(e) {
     calls <- vcapply(sys.calls(), safe_deparse)
     top_index <- min(which(grepl("^eval\\(expr = tidy_expr_8a6af5", calls)))
-    top <- sys.frame(top_index)
+    top <- sys.frame(top_index + 7)
     bottom <- sys.frame(sys.nframe() - 2)
     e$calls <- rlang::trace_back(top = top, bottom = bottom)
     e <- mention_pure_functions(e)
