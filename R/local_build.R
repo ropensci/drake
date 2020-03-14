@@ -551,13 +551,13 @@ handle_build_messages <- function(target, meta, config) {
 
 handle_build_error <- function(target, meta, config) {
   config$logger$target(target, "fail")
-  store_failure(target = target, meta = meta, config = config)
   if (is_subtarget(target, config)) {
     parent <- config$spec[[target]]$subtarget_parent
     meta$subtarget <- target
     meta$subtarget_index <- which(target == config$spec[[parent]]$subtargets)
     store_failure(target = parent, meta = meta, config = config)
   }
+  store_failure(target = target, meta = meta, config = config)
   if (!config$keep_going) {
     log_failure(target, meta, config)
   }
@@ -600,7 +600,14 @@ store_failure <- function(target, meta, config) {
     value = "failed",
     config = config
   )
-  fields <- c("messages", "warnings", "error", "subtarget", "seed")
+  fields <- c(
+    "messages",
+    "warnings",
+    "error",
+    "seed",
+    "subtarget",
+    "subtarget_index"
+  )
   fields <- intersect(fields, names(meta))
   meta <- meta[fields]
   config$cache$set(
