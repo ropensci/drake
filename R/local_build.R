@@ -555,6 +555,7 @@ handle_build_error <- function(target, meta, config) {
   if (is_subtarget(target, config)) {
     parent <- config$spec[[target]]$subtarget_parent
     meta$subtarget <- target
+    meta$subtarget_index <- which(target == config$spec[[parent]]$subtargets)
     store_failure(target = parent, meta = meta, config = config)
   }
   if (!config$keep_going) {
