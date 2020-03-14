@@ -26,7 +26,7 @@
 * Deprecate the `jobs` argument of `clean()`.
 * Show an informative error message for empty dynamic grouping variables (#1212, @kendonB).
 * Throw error messages if users supply dynamic targets to `drake_build()` or `drake_debug()` (#1214, @kendonB).
-
+* Log the sub-target name and index of the failing sub-target in the metadata of the sub-target and its parent (#1214, @kendonB).
 
 # Version 7.11.0
 
