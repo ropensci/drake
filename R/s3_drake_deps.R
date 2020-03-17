@@ -98,6 +98,6 @@ validate_drake_deps <- function(x) {
 
 #' @export
 print.drake_deps <- function(x, ...) {
-  message("drake_deps")
-  msg_str(x)
+  cat("drake_deps\n")
+  str0(x)
 }

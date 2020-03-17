@@ -71,6 +71,6 @@ validate_drake_triggers <- function(x) {
 
 #' @export
 print.drake_triggers <- function(x, ...) {
-  message("drake_triggers")
-  msg_str(x)
+  cat("drake_triggers\n")
+  str0(x)
 }

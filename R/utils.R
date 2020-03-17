@@ -147,14 +147,13 @@ min_str <- function(x) {
   for (index in seq_along(x)) {
     name <- names(x)[index]
     spaces <- paste(rep(" ", n_spaces[index]), collapse = "")
-    message(" $", name, ":", spaces, class(x[[name]]))
+    class <- paste0(class(x[[name]]), collapse = " ")
+    cat(" $ ", name, ": ", spaces, class, "\n", sep = "")
   }
 }
 
-msg_str <- function(x) {
-  out <- utils::capture.output(utils::str(unclass(x), no.list = TRUE))
-  lapply(out, message)
-  invisible()
+str0 <- function(x) {
+  utils::str(x, give.attr = FALSE, no.list = TRUE)
 }
 
 hard_wrap <- Vectorize(

@@ -723,7 +723,7 @@ drake_config2 <- drake_config_parent(n = 2L)
 
 #' @export
 print.drake_config <- function(x, ...) {
-  cat("a configured drake workflow\n")
+  cat("drake_config\n")
   min_str(x)
 }
 

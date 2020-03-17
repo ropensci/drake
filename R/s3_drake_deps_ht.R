@@ -77,6 +77,6 @@ validate_drake_deps_ht <- function(x) {
 
 #' @export
 print.drake_deps_ht <- function(x, ...) {
-  message("drake_deps_ht")
-  msg_str(x)
+  cat("drake_deps_ht\n")
+  str0(x)
 }

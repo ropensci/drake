@@ -2,20 +2,23 @@ drake_context("interactive")
 
 test_with_dir("print.drake_deps()", {
   skip_on_cran()
-  expect_silent(x <- drake_deps(quote(x)))
-  print(x) # check by hand
+  x <- drake_deps(quote(x)) # print by hand
+  m <- utils::capture.output(print(x))
+  expect_true(any(grepl("drake_deps", m)))
 })
 
 test_with_dir("print.drake_deps_ht()", {
   skip_on_cran()
-  expect_silent(x <- drake_deps_ht(quote(x)))
-  print(x) # check by hand
+  x <- drake_deps_ht(quote(x)) # print by hand
+  m <- utils::capture.output(print(x))
+  expect_true(any(grepl("drake_deps_ht", m)))
 })
 
 test_with_dir("print.drake_triggers()", {
   skip_on_cran()
-  expect_silent(x <- trigger())
-  print(x) # check by hand
+  x <- trigger() # print by hand
+  m <- utils::capture.output(print(x))
+  expect_true(any(grepl("drake_triggers", m)))
 })
 
 test_with_dir("drake spec print method", {
@@ -35,7 +38,7 @@ test_with_dir("drake_config() print method", {
   skip_on_cran()
   x <- drake_config(drake_plan(y = 1)) # print by hand
   m <- utils::capture.output(print(x))
-  expect_true(any(grepl("configured drake workflow", m)))
+  expect_true(any(grepl("drake_config", m)))
 })
 
 test_with_dir("drake_graph_info() print method", {
