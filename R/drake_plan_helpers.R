@@ -5,6 +5,7 @@
 #' @export
 #' @inheritSection drake_plan Columns
 #' @inheritSection drake_plan Keywords
+#' @inheritSection drake_plan Formats
 #' @seealso [drake_plan()], [make()]
 #' @return A one-row workflow plan data frame with the named
 #' arguments as columns.

@@ -30,10 +30,8 @@ Use the function \code{\link[=drake_plan]{drake_plan()}} to generate workflow pl
 data frames.}
 
 \item{targets}{Character vector, names of targets to build.
-Dependencies are built too. Together, the \code{plan} and
-\code{targets} comprise the workflow network
-(i.e. the \code{graph} argument).
-Changing either will change the network.}
+Dependencies are built too. You may supply static and/or whole
+dynamic targets, but no sub-targets.}
 
 \item{envir}{Environment to use. Defaults to the current
 workspace, so you should not need to worry about this

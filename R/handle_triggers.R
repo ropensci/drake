@@ -120,11 +120,11 @@ recovery_key_impl.subtarget <- function(target, meta, config) {
 }
 
 recovery_key_impl.default <- function(target, meta, config, ...) {
-  if (is.null(meta$trigger$value)) {
-    change_hash <- NA_character_
-  } else {
-    change_hash <- config$cache$digest(meta$trigger$value)
-  }
+  change_hash <- ifelse(
+    is.null(meta$trigger$value),
+    NA_character_,
+    config$cache$digest(meta$trigger$value)
+  )
   x <- c(
     meta$command,
     meta$dependency_hash,

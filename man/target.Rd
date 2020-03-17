@@ -108,6 +108,58 @@ Intended for advanced custom memory management.
 }
 }
 
+\section{Formats}{
+
+Specialized target formats increase efficiency and flexibility.
+Some allow you to save specialized objects like \code{keras} models,
+while others increase the speed while conserving storage and memory.
+You can declare target-specific formats in the plan
+(e.g. \code{drake_plan(x = target(big_data_frame, format = "fst"))})
+or supply a global default \code{format} for all targets in \code{make()}.
+Either way, most formats have specialized installation requirements
+(e.g. R packages) that are not installed with \code{drake} by default.
+You will need to install them separately yourself.
+Available formats:
+\itemize{
+\item \code{"file"}: Dynamic files. To use this format, simply create
+local files and directories yourself and then return
+a character vector of paths as the target's value.
+Then, \code{drake} will watch for changes to those files in
+subsequent calls to \code{make()}. This is a more flexible
+alternative to \code{file_in()} and \code{file_out()}, and it is
+compatible with dynamic branching.
+See \url{https://github.com/ropensci/drake/pull/1178} for an example.
+\item \code{"fst"}: save big data frames fast. Requires the \code{fst} package.
+Note: this format strips non-data-frame attributes such as the
+\item \code{"fst_tbl"}: Like \code{"fst"}, but for \code{tibble} objects.
+Requires the \code{fst} and \code{tibble} packages.
+Strips away non-data-frame non-tibble attributes.
+\item \code{"fst_dt"}: Like \code{"fst"} format, but for \code{data.table} objects.
+Requires the \code{fst} and \code{data.table} packages.
+Strips away non-data-frame non-data-table attributes.
+\item \code{"diskframe"}:
+Stores \code{disk.frame} objects, which could potentially be
+larger than memory. Requires the \code{fst} and \code{disk.frame} packages.
+Coerces objects to \code{disk.frame}s.
+Note: \code{disk.frame} objects get moved to the \code{drake} cache
+(a subfolder of \verb{.drake/} for most workflows).
+To ensure this data transfer is fast, it is best to
+save your \code{disk.frame} objects to the same physical storage
+drive as the \code{drake} cache,
+\code{as.disk.frame(your_dataset, outdir = drake_tempfile())}.
+\item \code{"keras"}: save Keras models as HDF5 files.
+Requires the \code{keras} package.
+\item \code{"qs"}: save any R object that can be properly serialized
+with the \code{qs} package. Requires the \code{qs} package.
+Uses \code{qsave()} and \code{qread()}.
+Uses the default settings in \code{qs} version 0.20.2.
+\item \code{"rds"}: save any R object that can be properly serialized.
+Requires R version >= 3.5.0 due to ALTREP.
+Note: the \code{"rds"} format uses gzip compression, which is slow.
+\code{"qs"} is a superior format.
+}
+}
+
 \examples{
 # Use target() to create your own custom columns in a drake plan.
 # See ?triggers for more on triggers.

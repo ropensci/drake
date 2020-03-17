@@ -30,10 +30,8 @@
 #'   data frames.
 #'
 #' @param targets Character vector, names of targets to build.
-#'   Dependencies are built too. Together, the `plan` and
-#'   `targets` comprise the workflow network
-#'   (i.e. the `graph` argument).
-#'   Changing either will change the network.
+#'   Dependencies are built too. You may supply static and/or whole
+#'   dynamic targets, but no sub-targets.
 #'
 #' @param envir Environment to use. Defaults to the current
 #'   workspace, so you should not need to worry about this

@@ -218,6 +218,10 @@ register_subtargets <- function(target, static_ok, dynamic_ok, config) {
   if (static_ok) {
     subtargets_build <- filter_subtargets(target, subtargets_all, config)
   }
+  namespace <- config$meta[[target]]$dynamic_progress_namespace
+  already_done <- config$cache$list(namespace = namespace)
+  already_done <- intersect(already_done, ht_list(config$ht_target_exists))
+  subtargets_build <- setdiff(subtargets_build, already_done)
   if (length(subtargets_all)) {
     register_in_graph(target, subtargets_all, config)
     register_in_spec(target, subtargets_all, config)
