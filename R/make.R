@@ -297,25 +297,16 @@ init_config_tmp <- function(config) {
 }
 
 process_targets <- function(config) {
-  if (is.character(config$parallelism)) {
-    run_native_backend(config)
-  } else {
-    run_external_backend(config)
-  }
+  run_backend(config)
   config$logger$terminate_progress()
   invisible()
 }
 
-run_native_backend <- function(config) {
-  parallelism <- match.arg(
-    config$parallelism,
-    c("loop", "clustermq", "future")
-  )
+run_backend <- function(config) {
   order <- igraph::gorder(config$envir_graph$graph)
   if (order) {
     config$logger$set_progress_total(order)
     config$logger$progress(0L)
-    class(config) <- c(class(config), parallelism)
     drake_backend(config)
   } else {
     config$logger$up_to_date()
@@ -323,12 +314,23 @@ run_native_backend <- function(config) {
 }
 
 drake_backend <- function(config) {
-  UseMethod("drake_backend")
+  if (identical(config$parallelism, "loop")) {
+    drake_backend_loop(config)
+  } else if (identical(config$parallelism, "clustermq")) {
+    drake_backend_clustermq(config)
+  } else if (identical(config$parallelism, "future")) {
+    drake_backend_future(config)
+  } else {
+    drake_backend_bad(config)
+  }
 }
 
-run_external_backend <- function(config) {
-  warn0("Custom drake schedulers are experimental.")
-  config$parallelism(config = config)
+drake_backend_bad <- function(config) {
+  if (!is.character(config$parallelism)) {
+    warn0("Custom drake parallel backends are deprecated. Using \"loop\".")
+  }
+  warn0("Illegal drake backend. Running without parallelism.")
+  drake_backend_loop(config)
 }
 
 outdated_subgraph <- function(config) {

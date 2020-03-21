@@ -1,4 +1,4 @@
-drake_backend.future <- function(config) {
+drake_backend_future <- function(config) {
   assert_pkg("future")
   config$queue <- priority_queue(config)
   config$workers <- initialize_workers(config)

@@ -586,7 +586,11 @@ drake_config <- function(
   deprecate_arg(makefile_path, "makefile_path")
   deprecate_arg(layout, "layout", "spec") # 2019-12-15
   deprecate_arg(console_log_file, "console_log_file", "log_make") # 2020-02-08
-  session_info <- resolve_session_info(session_info)
+  # 2020-03-21
+  if (!is.character(parallelism)) {
+    warn0("Custom parallel backends in drake are deprecated. Using \"loop\".")
+    parallelism <- "loop"
+  }
   memory_strategy <- match.arg(memory_strategy, choices = memory_strategies())
   if (memory_strategy == "memory") {
     memory_strategy <- "preclean"
@@ -597,6 +601,7 @@ drake_config <- function(
     )
   }
   force(envir)
+  session_info <- resolve_session_info(session_info)
   plan <- sanitize_plan(plan, envir = envir)
   plan_checks(plan)
   targets <- sanitize_targets(targets, plan)

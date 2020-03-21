@@ -193,33 +193,19 @@ test_with_dir("drake_pmap", {
   expect_error(drake_pmap(list(x, y, z), sum))
 })
 
-test_with_dir("parallelism can be a scheduler function", {
+test_with_dir("deprecate custom scheduler functions", {
   skip_on_cran()
   plan <- drake_plan(x = file.create("x"))
-  build_ <- function(target, config) {
-    tidy_expr <- eval(
-      expr = config$spec[[target]]$command_build,
-      envir = config$envir_targets
-    )
-    eval(expr = tidy_expr, envir = config$envir_targets)
-  }
-  loop_ <- function(config) {
-    targets <- igraph::topo_sort(config$graph)$name
-    for (target in targets) {
-      config$envir_targets[[target]] <- build_(
-        target = target,
-        config = config
-      )
-    }
-    invisible()
-  }
-  config <- drake_config(plan, parallelism = loop_)
   expect_warning(
-    make_impl(config = config),
-    regexp = "Custom drake schedulers are experimental"
+    config <- drake_config(plan, parallelism = identity),
+    regexp = "deprecated"
+  )
+  expect_warning(
+    make(plan, parallelism = identity),
+    regexp = "deprecated"
   )
   expect_true(file.exists("x"))
-  expect_false(config$cache$exists("x"))
+  expect_true(config$cache$exists("x"))
 })
 
 test_with_dir("caching arg and column", {
