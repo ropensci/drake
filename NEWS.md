@@ -28,7 +28,8 @@
 * Throw error messages if users supply dynamic targets to `drake_build()` or `drake_debug()` (#1214, @kendonB).
 * Log the sub-target name and index of the failing sub-target in the metadata of the sub-target and its parent (#1214, @kendonB).
 * Shorten the call stack in error metadata.
-* Deprecate and remove custom schedulers.
+* Deprecate and remove custom schedulers (#1222).
+* Deprecate `hasty_build` (#1222).
 * Migrate constant runtime parameters to `config$settings` (#965).
 
 
