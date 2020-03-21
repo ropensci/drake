@@ -29,6 +29,7 @@
 * Log the sub-target name and index of the failing sub-target in the metadata of the sub-target and its parent (#1214, @kendonB).
 * Shorten the call stack in error metadata.
 * Deprecate and remove custom schedulers.
+* Migrate constant runtime parameters to `config$settings` (#965).
 
 
 # Version 7.11.0

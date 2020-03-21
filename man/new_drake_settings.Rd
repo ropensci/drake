@@ -5,7 +5,6 @@
 \title{\code{drake_settings} constructor}
 \usage{
 new_drake_settings(
-  caching = NULL,
   curl_handles = NULL,
   garbage_collection = NULL,
   jobs = NULL,

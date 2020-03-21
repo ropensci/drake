@@ -630,9 +630,9 @@ rehash_url <- function(url, config) {
     stop0("no internet. Cannot check url: ", url) # nocov
   }
   # Find the longest name of the handle that matches the url.
-  choices <- names(config$curl_handles)
+  choices <- names(config$settings$curl_handles)
   name <- longest_match(choices = choices, against = url) %||% NA_character_
-  handle <- config$curl_handles[[name]] %|||% curl::new_handle()
+  handle <- config$settings$curl_handles[[name]] %|||% curl::new_handle()
   # Do not download the whole URL.
   handle <- curl::handle_setopt(handle, nobody = TRUE)
   req <- curl::curl_fetch_memory(url, handle = handle)

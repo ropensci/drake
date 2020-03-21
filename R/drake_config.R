@@ -656,7 +656,7 @@ drake_config <- function(
   meta <- new.env(parent = emptyenv())
   meta_old <- new.env(parent = emptyenv())
   settings <- new_drake_settings(
-
+    curl_handles = curl_handles
   )
   out <- list(
     envir = envir,
@@ -701,7 +701,6 @@ drake_config <- function(
     force = force,
     recover = recover,
     recoverable = recoverable,
-    curl_handles = curl_handles,
     ht_dynamic_deps = ht_dynamic_deps,
     ht_is_dynamic = ht_is_dynamic,
     ht_is_subtarget = ht_is_subtarget, # Gets replaced in make()
@@ -709,7 +708,8 @@ drake_config <- function(
     log_build_times = log_build_times,
     format = format,
     formats = formats,
-    lock_cache = lock_cache
+    lock_cache = lock_cache,
+    settings = settings
   )
   class(out) <- c("drake_config", "drake")
   config_checks(out)

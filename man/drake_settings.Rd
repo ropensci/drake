@@ -5,7 +5,6 @@
 \title{\code{drake_settings} helper}
 \usage{
 drake_settings(
-  caching = "master",
   curl_handles = list(),
   garbage_collection = FALSE,
   jobs = 1L,
