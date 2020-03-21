@@ -20,6 +20,7 @@ drake_settings <- function(
   parallelism = "loop",
   recover = TRUE,
   recoverable = TRUE,
+  seed = 0L,
   session_info = TRUE,
   skip_imports = FALSE,
   skip_safety_checks = FALSE,
@@ -42,6 +43,7 @@ drake_settings <- function(
     parallelism = parallelism,
     recover = recover,
     recoverable = recoverable,
+    seed = seed,
     session_info = session_info,
     skip_imports = skip_imports,
     skip_safety_checks = skip_safety_checks,
@@ -55,6 +57,7 @@ drake_settings <- function(
 #' @keywords internal
 #' @description List of class `drake_settings`.
 #' @return A `drake_settings` object.
+#' @inheritParams drake_config
 #' @examples
 #' if (FALSE) { # stronger than roxygen dontrun
 #' new_drake_settings()
@@ -73,6 +76,7 @@ new_drake_settings <- function(
   parallelism = NULL,
   recover = NULL,
   recoverable = NULL,
+  seed = NULL,
   session_info = NULL,
   skip_imports = NULL,
   skip_safety_checks = NULL,
@@ -94,6 +98,7 @@ new_drake_settings <- function(
     parallelism = parallelism,
     recover = recover,
     recoverable = recoverable,
+    seed = seed,
     session_info = session_info,
     skip_imports = skip_imports,
     skip_safety_checks = skip_safety_checks,
@@ -128,6 +133,7 @@ val_drake_settings_lengths <- function(x) {
   stopifnot(length(x$parallelism) == 1L)
   stopifnot(length(x$recover) == 1L)
   stopifnot(length(x$recoverable) == 1L)
+  stopifnot(length(x$seed) == 1L)
   stopifnot(length(x$session_info) == 1L)
   stopifnot(length(x$skip_imports) == 1L)
   stopifnot(length(x$skip_safety_checks) == 1L)
@@ -148,6 +154,7 @@ val_drake_settings_types <- function(x) {
   stopifnot(is.character(x$parallelism))
   stopifnot(is.logical(x$recover))
   stopifnot(is.logical(x$recoverable))
+  stopifnot(is.numeric(x$seed))
   stopifnot(is.logical(x$session_info))
   stopifnot(is.logical(x$skip_imports))
   stopifnot(is.logical(x$skip_safety_checks))
