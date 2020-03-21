@@ -18,6 +18,7 @@ drake_settings(
   parallelism = "loop",
   recover = TRUE,
   recoverable = TRUE,
+  seed = 0L,
   session_info = TRUE,
   skip_imports = FALSE,
   skip_safety_checks = FALSE,

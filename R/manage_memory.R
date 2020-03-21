@@ -27,7 +27,7 @@ manage_memory <- function(target, config, downstream = NULL, jobs = 1) {
     jobs = jobs
   )
   sync_envir_dynamic(target, config)
-  if (identical(config$garbage_collection, TRUE)) {
+  if (config$settings$garbage_collection) {
     gc()
   }
   invisible()

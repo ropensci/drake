@@ -442,7 +442,7 @@ clear_make_memory <- function(config) {
     remove(list = names(config[[key]]), envir = config[[key]])
   }
   config$cache$flush_cache()
-  if (config$garbage_collection) {
+  if (config$settings$garbage_collection) {
     gc()
   }
 }

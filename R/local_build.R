@@ -47,7 +47,7 @@ announce_dynamic <- function(target, config) {
 }
 
 try_build <- function(target, meta, config) {
-  if (identical(config$garbage_collection, TRUE)) {
+  if (config$settings$garbage_collection) {
     on.exit(gc())
   }
   if (is_dynamic(target, config)) {

@@ -647,7 +647,8 @@ drake_config <- function(
   meta <- new.env(parent = emptyenv())
   meta_old <- new.env(parent = emptyenv())
   settings <- new_drake_settings(
-    curl_handles = curl_handles
+    curl_handles = curl_handles,
+    garbage_collection = garbage_collection
   )
   out <- list(
     envir = envir,
@@ -684,7 +685,6 @@ drake_config <- function(
     caching = caching,
     keep_going = keep_going,
     memory_strategy = memory_strategy,
-    garbage_collection = garbage_collection,
     template = template,
     sleep = sleep,
     lock_envir = lock_envir,
