@@ -7,7 +7,6 @@
 #' drake_settings()
 #' }
 drake_settings <- function(
-  caching = "master",
   curl_handles = list(),
   garbage_collection = FALSE,
   jobs = 1L,
@@ -29,8 +28,7 @@ drake_settings <- function(
   template = list()
 ) {
   sleep <- `environment<-`(sleep, new.env(parent = globalenv()))
-  out <- new_drake_settings(
-    caching = caching,
+  new_drake_settings(
     curl_handles = curl_handles,
     garbage_collection = garbage_collection,
     jobs = jobs,
@@ -62,7 +60,6 @@ drake_settings <- function(
 #' new_drake_settings()
 #' }
 new_drake_settings <- function(
-  caching = NULL,
   curl_handles = NULL,
   garbage_collection = NULL,
   jobs = NULL,
@@ -84,7 +81,6 @@ new_drake_settings <- function(
   template = NULL
 ) {
   out <- list(
-    caching = caching,
     curl_handles = curl_handles,
     garbage_collection = garbage_collection,
     jobs = jobs,
@@ -121,7 +117,6 @@ validate_drake_settings <- function(x) {
 }
 
 val_drake_settings_lengths <- function(x) {
-  stopifnot(length(x$caching) == 1L)
   stopifnot(length(x$garbage_collection) == 1L)
   stopifnot(length(x$jobs) == 1L)
   stopifnot(length(x$jobs_preprocess) == 1L)
@@ -140,7 +135,6 @@ val_drake_settings_lengths <- function(x) {
 }
 
 val_drake_settings_types <- function(x) {
-  stopifnot(is.character(x$caching))
   stopifnot(is.list(x$curl_handles))
   stopifnot(is.logical(x$garbage_collection))
   stopifnot(is.numeric(x$jobs))
@@ -163,7 +157,6 @@ val_drake_settings_types <- function(x) {
 }
 
 val_drake_settings_values <- function(x) {
-  stopifnot(x$caching %in% c("master", "worker"))
   stopifnot(x$jobs >= 1L)
   stopifnot(x$jobs_preprocess >= 1L)
   vals <- c("eager", "promise", "bind")

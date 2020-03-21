@@ -655,6 +655,9 @@ drake_config <- function(
   envir_graph <- new.env(parent = emptyenv())
   meta <- new.env(parent = emptyenv())
   meta_old <- new.env(parent = emptyenv())
+  settings <- new_drake_settings(
+
+  )
   out <- list(
     envir = envir,
     envir_graph = envir_graph,
