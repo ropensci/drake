@@ -654,6 +654,7 @@ drake_config <- function(
     keep_going = keep_going,
     lazy_load = lazy_load,
     lib_loc = lib_loc,
+    lock_cache = lock_cache,
     lock_envir = lock_envir
   )
   out <- list(
@@ -698,7 +699,6 @@ drake_config <- function(
     log_build_times = log_build_times,
     format = format,
     formats = formats,
-    lock_cache = lock_cache,
     settings = settings
   )
   class(out) <- c("drake_config", "drake")

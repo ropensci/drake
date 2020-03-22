@@ -247,7 +247,7 @@ make_impl <- function(config) {
   config$logger$disk("begin make()")
   on.exit(config$logger$disk("end make()"), add = TRUE)
   runtime_checks(config = config)
-  if (config$lock_cache) {
+  if (config$settings$lock_cache) {
     config$cache$lock()
     on.exit(config$cache$unlock(), add = TRUE)
   }

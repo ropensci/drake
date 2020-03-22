@@ -77,7 +77,7 @@ recoverable_impl <- function(
   do_prework = TRUE
 ) {
   assert_config(config)
-  if (make_imports && config$lock_cache) {
+  if (make_imports && config$settings$lock_cache) {
     config$cache$lock()
     on.exit(config$cache$unlock(), add = TRUE)
   }
@@ -195,7 +195,7 @@ outdated_impl <- function(
     config$logger$file <- NULL
     config <- init_config_tmp(config)
   }
-  if (make_imports && config$lock_cache) {
+  if (make_imports && config$settings$lock_cache) {
     config$cache$lock()
     on.exit(config$cache$unlock(), add = TRUE)
   }
