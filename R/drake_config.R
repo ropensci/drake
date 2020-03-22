@@ -655,7 +655,8 @@ drake_config <- function(
     lazy_load = lazy_load,
     lib_loc = lib_loc,
     lock_cache = lock_cache,
-    lock_envir = lock_envir
+    lock_envir = lock_envir,
+    memory_strategy = memory_strategy
   )
   out <- list(
     envir = envir,
@@ -686,7 +687,6 @@ drake_config <- function(
     session_info = session_info,
     cache_log_file = cache_log_file,
     caching = caching,
-    memory_strategy = memory_strategy,
     template = template,
     sleep = sleep,
     force = force,

@@ -463,7 +463,7 @@ assign_to_envir <- function(target, value, config) {
   }
   memory_strategy <- config$spec[[target]]$memory_strategy
   if (is.null(memory_strategy) || is.na(memory_strategy)) {
-    memory_strategy <- config$memory_strategy
+    memory_strategy <- config$settings$memory_strategy
   }
   skip_memory <- memory_strategy %in% c("autoclean", "unload", "none")
   if (skip_memory) {
