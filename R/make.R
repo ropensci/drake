@@ -255,7 +255,10 @@ make_impl <- function(config) {
   if (config$log_progress) {
     config$cache$clear(namespace = "progress")
   }
-  drake_set_session_info(cache = config$cache, full = config$session_info)
+  drake_set_session_info(
+    cache = config$cache,
+    full = config$settings$session_info
+  )
   do_prework(config = config, verbose_packages = config$logger$verbose)
   if (!config$skip_imports) {
     process_imports(config)

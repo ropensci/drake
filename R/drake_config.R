@@ -660,7 +660,8 @@ drake_config <- function(
     parallelism = parallelism,
     recover = recover,
     recoverable = recoverable,
-    seed = seed
+    seed = seed,
+    session_info = session_info
   )
   out <- list(
     envir = envir,
@@ -686,7 +687,6 @@ drake_config <- function(
     skip_imports = skip_imports,
     skip_safety_checks = skip_safety_checks,
     log_progress = log_progress,
-    session_info = session_info,
     cache_log_file = cache_log_file,
     caching = caching,
     template = template,

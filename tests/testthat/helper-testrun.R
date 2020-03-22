@@ -14,7 +14,7 @@ testrun <- function(config) {
       command = config$command,
       cache = config$cache,
       lazy_load = config$settings$lazy_load,
-      session_info = config$session_info,
+      session_info = config$settings$session_info,
       fetch_cache = config$fetch_cache,
       caching = config$caching,
       lock_envir = !any(grepl("staged", config$settings$parallelism))
@@ -36,7 +36,7 @@ testconfig <- function(config) {
     command = config$command,
     cache = config$cache,
     lazy_load = config$settings$lazy_load,
-    session_info = config$session_info,
+    session_info = config$settings$session_info,
     fetch_cache = config$fetch_cache,
     caching = config$caching,
     lock_envir = !any(grepl("staged", config$settings$parallelism))

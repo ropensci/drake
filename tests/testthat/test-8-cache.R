@@ -268,7 +268,7 @@ test_with_dir("cache functions work from various working directories", {
       envir <- environment()
     }
 
-    config$session_info <- TRUE
+    config$settings$session_info <- TRUE
     testrun(config)
 
     # drake_cache_log() # nolint
