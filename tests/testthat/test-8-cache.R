@@ -843,7 +843,7 @@ test_with_dir("try_build() does not need to access cache", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- drake_config(drake_plan(x = 1), lock_envir = FALSE)
   meta <- drake_meta_(target = "x", config = config)
-  config$cache <- config$cache_log_file <- NULL
+  config$cache <- config$settings$cache_log_file <- NULL
   build <- try_build(target = "x", meta = meta, config = config)
   expect_equal(1, build$value)
   expect_error(drake_build_impl(target = "x", config = config))

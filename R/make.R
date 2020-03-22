@@ -272,7 +272,7 @@ make_impl <- function(config) {
     process_targets(config)
   }
   drake_cache_log_file_(
-    file = config$cache_log_file,
+    file = config$settings$cache_log_file,
     cache = config$cache,
     jobs = config$settings$jobs_preprocess
   )

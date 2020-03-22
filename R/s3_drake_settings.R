@@ -7,6 +7,7 @@
 #' drake_settings()
 #' }
 drake_settings <- function(
+  cache_log_file = NULL,
   curl_handles = list(),
   garbage_collection = FALSE,
   jobs = 1L,
@@ -16,6 +17,7 @@ drake_settings <- function(
   lib_loc = character(0),
   lock_cache = TRUE,
   lock_envir = TRUE,
+  log_build_times = TRUE,
   log_progress = TRUE,
   memory_strategy = "speed",
   parallelism = "loop",
@@ -31,6 +33,7 @@ drake_settings <- function(
 ) {
   sleep <- `environment<-`(sleep, new.env(parent = globalenv()))
   new_drake_settings(
+    cache_log_file = cache_log_file,
     curl_handles = curl_handles,
     garbage_collection = garbage_collection,
     jobs = jobs,
@@ -40,6 +43,7 @@ drake_settings <- function(
     lib_loc = lib_loc,
     lock_cache = lock_cache,
     lock_envir = lock_envir,
+    log_build_times = log_build_times,
     log_progress = log_progress,
     memory_strategy = memory_strategy,
     parallelism = parallelism,
@@ -65,6 +69,7 @@ drake_settings <- function(
 #' new_drake_settings()
 #' }
 new_drake_settings <- function(
+  cache_log_file = NULL,
   curl_handles = NULL,
   garbage_collection = NULL,
   jobs = NULL,
@@ -74,6 +79,7 @@ new_drake_settings <- function(
   lib_loc = NULL,
   lock_envir = NULL,
   lock_cache = NULL,
+  log_build_times = NULL,
   log_progress = NULL,
   memory_strategy = NULL,
   parallelism = NULL,
@@ -88,6 +94,7 @@ new_drake_settings <- function(
   template = NULL
 ) {
   out <- list(
+    cache_log_file = cache_log_file,
     curl_handles = curl_handles,
     garbage_collection = garbage_collection,
     jobs = jobs,
@@ -97,6 +104,7 @@ new_drake_settings <- function(
     lib_loc = lib_loc,
     lock_cache = lock_cache,
     lock_envir = lock_envir,
+    log_build_times = log_build_times,
     log_progress = log_progress,
     memory_strategy = memory_strategy,
     parallelism = parallelism,
@@ -133,6 +141,8 @@ val_drake_settings_lengths <- function(x) {
   stopifnot(length(x$lazy_load) == 1L)
   stopifnot(length(x$lock_cache) == 1L)
   stopifnot(length(x$lock_envir) == 1L)
+  stopifnot(length(x$log_build_times) == 1L)
+  stopifnot(length(x$log_progress) == 1L)
   stopifnot(length(x$memory_strategy) == 1L)
   stopifnot(length(x$parallelism) == 1L)
   stopifnot(length(x$recover) == 1L)
@@ -154,6 +164,8 @@ val_drake_settings_types <- function(x) {
   stopifnot(is.character(x$lib_loc))
   stopifnot(is.logical(x$lock_cache))
   stopifnot(is.logical(x$lock_envir))
+  stopifnot(is.logical(x$log_build_times))
+  stopifnot(is.logical(x$log_progress))
   stopifnot(is.character(x$memory_strategy))
   stopifnot(is.character(x$parallelism))
   stopifnot(is.logical(x$recover))

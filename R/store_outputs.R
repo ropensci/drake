@@ -252,7 +252,7 @@ decorate_format_meta.default <- function(value, target, meta, config) {
 }
 
 finalize_times <- function(target, meta, config) {
-  if (config$log_build_times) {
+  if (config$settings$log_build_times) {
     meta$time_command <- runtime_entry(meta$time_command, target)
     meta$time_build <- runtime_entry(proc_time() - meta$time_start, target)
   } else {

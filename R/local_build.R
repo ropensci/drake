@@ -168,7 +168,7 @@ get_seed <- function() {
 # https://github.com/arendsee/rmonad/blob/14bf2ef95c81be5307e295e8458ef8fb2b074dee/R/to-monad.R#L68 # nolint
 with_handling <- function(target, meta, config) {
   warnings <- messages <- NULL
-  if (config$log_build_times) {
+  if (config$settings$log_build_times) {
     start <- proc_time()
   }
   withCallingHandlers(
@@ -187,7 +187,7 @@ with_handling <- function(target, meta, config) {
       invokeRestart("muffleMessage")
     }
   )
-  if (config$log_build_times) {
+  if (config$settings$log_build_times) {
     meta$time_command <- proc_time() - start
   }
   meta$warnings <- warnings

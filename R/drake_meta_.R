@@ -285,7 +285,7 @@ decorate_trigger_format_meta.file <- function(target, meta, config) { # nolint
 }
 
 drake_meta_start <- function(config) {
-  if (config$log_build_times) {
+  if (config$settings$log_build_times) {
     proc_time()
   }
 }

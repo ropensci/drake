@@ -5,6 +5,7 @@
 \title{\code{drake_settings} helper}
 \usage{
 drake_settings(
+  cache_log_file = NULL,
   curl_handles = list(),
   garbage_collection = FALSE,
   jobs = 1L,
@@ -14,6 +15,8 @@ drake_settings(
   lib_loc = character(0),
   lock_cache = TRUE,
   lock_envir = TRUE,
+  log_build_times = TRUE,
+  log_progress = TRUE,
   memory_strategy = "speed",
   parallelism = "loop",
   recover = TRUE,

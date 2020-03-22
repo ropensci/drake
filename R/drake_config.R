@@ -647,6 +647,7 @@ drake_config <- function(
   meta <- new.env(parent = emptyenv())
   meta_old <- new.env(parent = emptyenv())
   settings <- new_drake_settings(
+    cache_log_file = cache_log_file,
     curl_handles = curl_handles,
     garbage_collection = garbage_collection,
     jobs = jobs,
@@ -656,6 +657,7 @@ drake_config <- function(
     lib_loc = lib_loc,
     lock_cache = lock_cache,
     lock_envir = lock_envir,
+    log_build_times = log_build_times,
     log_progress = log_progress,
     memory_strategy = memory_strategy,
     parallelism = parallelism,
@@ -689,13 +691,11 @@ drake_config <- function(
     cpu = cpu,
     elapsed = elapsed,
     retries = retries,
-    cache_log_file = cache_log_file,
     caching = caching,
     ht_dynamic_deps = ht_dynamic_deps,
     ht_is_dynamic = ht_is_dynamic,
     ht_is_subtarget = ht_is_subtarget, # Gets replaced in make()
     max_expand = max_expand,
-    log_build_times = log_build_times,
     format = format,
     formats = formats,
     settings = settings

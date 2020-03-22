@@ -5,6 +5,7 @@
 \title{\code{drake_settings} constructor}
 \usage{
 new_drake_settings(
+  cache_log_file = NULL,
   curl_handles = NULL,
   garbage_collection = NULL,
   jobs = NULL,
@@ -14,6 +15,8 @@ new_drake_settings(
   lib_loc = NULL,
   lock_envir = NULL,
   lock_cache = NULL,
+  log_build_times = NULL,
+  log_progress = NULL,
   memory_strategy = NULL,
   parallelism = NULL,
   recover = NULL,
@@ -28,6 +31,17 @@ new_drake_settings(
 )
 }
 \arguments{
+\item{cache_log_file}{Name of the CSV cache log file to write.
+If \code{TRUE}, the default file name is used (\code{drake_cache.CSV}).
+If \code{NULL}, no file is written.
+If activated, this option writes a flat text file
+to represent the state of the cache
+(fingerprints of all the targets and imports).
+If you put the log file under version control, your commit history
+will give you an easy representation of how your results change
+over time as the rest of your project changes. Hopefully,
+this is a step in the right direction for data reproducibility.}
+
 \item{curl_handles}{A named list of curl handles. Each value is an
 object from \code{curl::new_handle()}, and each name is a URL
 (and should start with "http", "https", or "ftp").
@@ -113,6 +127,17 @@ and you will need to manually unlock it with
 \code{drake::drake_cache("xyz")$unlock()}. Repeatedly unlocking the cache
 by hand is annoying, and \code{lock_cache = FALSE} prevents the cache
 from locking in the first place.}
+
+\item{log_build_times}{Logical, whether to record build_times for targets.
+Mac users may notice a 20\% speedup in \code{make()}
+with \code{build_times = FALSE}.}
+
+\item{log_progress}{Logical, whether to log the progress
+of individual targets as they are being built. Progress logging
+creates extra files in the cache (usually the \verb{.drake/} folder)
+and slows down \code{make()} a little.
+If you need to reduce or limit the number of files in the cache,
+call \code{make(log_progress = FALSE, recover = FALSE)}.}
 
 \item{memory_strategy}{Character scalar, name of the
 strategy \code{drake} uses to load/unload a target's dependencies in memory.

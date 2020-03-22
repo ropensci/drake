@@ -117,7 +117,7 @@ read_trace <- function(
 
 dynamic_build <- function(target, meta, config) {
   subtargets <- config$spec[[target]]$subtargets
-  if (config$log_build_times) {
+  if (config$settings$log_build_times) {
     meta$time_command <- proc_time() - meta$time_start
   }
   value <- config$cache$mget_hash(subtargets)
