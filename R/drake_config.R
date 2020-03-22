@@ -604,6 +604,7 @@ drake_config <- function(
   if (length(formats)) {
     formats <- na_omit(formats)
   }
+  check_formats(formats)
   sleep <- `environment<-`(sleep, new.env(parent = globalenv()))
   if (is.null(cache)) {
     cache <- new_cache()
@@ -672,33 +673,36 @@ drake_config <- function(
     template = template
   )
   out <- list(
-    envir = envir,
-    envir_graph = envir_graph,
-    envir_targets = envir_targets,
-    envir_dynamic = envir_dynamic,
-    envir_loaded = envir_loaded,
-    envir_subtargets = envir_subtargets,
     cache = cache,
     logger = logger,
     packages = packages,
     prework = prework,
+    settings = settings,
     spec = spec,
+    # Data clump of metadata
     meta = meta,
     meta_old = meta_old,
+    # Data clump of graphs
+    envir_graph = envir_graph,
     graph = graph,
-    trigger = trigger,
-    timeout = timeout,
-    cpu = cpu,
-    elapsed = elapsed,
-    retries = retries,
-    caching = caching,
+    # Data clump of environments for memory management
+    envir = envir,
+    envir_targets = envir_targets,
+    envir_dynamic = envir_dynamic,
+    envir_loaded = envir_loaded,
+    envir_subtargets = envir_subtargets,
+    # Data clump of hash tables
     ht_dynamic_deps = ht_dynamic_deps,
     ht_is_dynamic = ht_is_dynamic,
     ht_is_subtarget = ht_is_subtarget, # Gets replaced in make()
-    max_expand = max_expand,
+    # All this should go in individual target specs
+    caching = caching,
+    cpu = cpu,
+    elapsed = elapsed,
     format = format,
-    formats = formats,
-    settings = settings
+    max_expand = max_expand,
+    retries = retries,
+    trigger = trigger
   )
   class(out) <- c("drake_config", "drake")
   config_checks(out)

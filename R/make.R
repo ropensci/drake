@@ -494,7 +494,6 @@ runtime_checks <- function(config) {
   missing_input_files(config = config)
   subdirectory_warning(config = config)
   assert_outside_cache(config = config)
-  check_formats(config$formats)
 }
 
 check_formats <- function(formats) {
