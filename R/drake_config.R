@@ -648,7 +648,9 @@ drake_config <- function(
   meta_old <- new.env(parent = emptyenv())
   settings <- new_drake_settings(
     curl_handles = curl_handles,
-    garbage_collection = garbage_collection
+    garbage_collection = garbage_collection,
+    jobs = jobs,
+    jobs_preprocess = jobs_preprocess
   )
   out <- list(
     envir = envir,
@@ -659,8 +661,6 @@ drake_config <- function(
     envir_subtargets = envir_subtargets,
     cache = cache,
     parallelism = parallelism,
-    jobs = jobs,
-    jobs_preprocess = jobs_preprocess,
     logger = logger,
     packages = packages,
     lib_loc = lib_loc,
@@ -877,8 +877,8 @@ config_checks <- function(config) {
   check_case_sensitivity(config)
   check_drake_graph(graph = config$graph)
   cache_vers_stop(config$cache)
-  check_parallelism(config$parallelism, config$jobs)
-  check_jobs(config$jobs)
+  check_parallelism(config$parallelism, config$settings$jobs)
+  check_jobs(config$settings$jobs)
 }
 
 check_case_sensitivity <- function(config) {

@@ -332,7 +332,7 @@ check_trigger_subtarget_format_file <- function( # nolint
   out <- lightly_parallelize(
     X = subtargets,
     FUN = check_trigger_subtarget_format_file_impl,
-    jobs = config$jobs_preprocess,
+    jobs = config$settings$jobs_preprocess,
     parent = parent,
     config = config
   )

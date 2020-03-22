@@ -112,13 +112,13 @@ test_with_dir("make(..., skip_imports = TRUE) works", {
   plan <- dbug_plan()
   make(
     plan, parallelism = con$parallelism,
-    envir = con$envir, jobs = con$jobs,
+    envir = con$envir, jobs = con$settings$jobs,
     skip_imports = TRUE,
     session_info = FALSE
   )
   con <- drake_config(
     plan, parallelism = con$parallelism,
-    envir = con$envir, jobs = con$jobs,
+    envir = con$envir, jobs = con$settings$jobs,
     skip_imports = TRUE,
     session_info = FALSE
   )
@@ -135,12 +135,12 @@ test_with_dir("make(..., skip_imports = TRUE) works", {
   clean(list = plan$target)
   make(
     plan, parallelism = con$parallelism,
-    envir = con$envir, jobs = con$jobs,
+    envir = con$envir, jobs = con$settings$jobs,
     skip_imports = TRUE, session_info = FALSE
   )
   con <- drake_config(
     plan, parallelism = con$parallelism,
-    envir = con$envir, jobs = con$jobs,
+    envir = con$envir, jobs = con$settings$jobs,
     skip_imports = TRUE, session_info = FALSE
   )
   out <- outdated_impl(con)

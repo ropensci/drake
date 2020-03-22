@@ -268,7 +268,7 @@ filter_subtargets <- function(target, subtargets, config) {
   recovered <- lightly_parallelize(
     subtargets,
     recover_subtarget,
-    jobs = config$jobs_preprocess,
+    jobs = config$settings$jobs_preprocess,
     config = config,
     parent = target
   )

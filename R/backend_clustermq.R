@@ -2,14 +2,14 @@ drake_backend_clustermq <- function(config) {
   assert_pkg("clustermq", version = "0.8.8")
   config$queue <- priority_queue(
     config = config,
-    jobs = config$jobs_preprocess
+    jobs = config$settings$jobs_preprocess
   )
   cmq_local_master(config)
   if (config$queue$empty()) {
     return()
   }
   config$workers <- clustermq::workers(
-    n_jobs = config$jobs,
+    n_jobs = config$settings$jobs,
     template = config$template
   )
   config$logger$disk("set common data")

@@ -36,7 +36,7 @@ test_with_dir("check_parallelism()", {
 test_with_dir("parallel imports", {
   skip_on_cran()
   config <- dbug()
-  config$jobs_preprocess <- 2
+  config$settings$jobs_preprocess <- 2
   process_imports(config)
   process_imports_parLapply(config)
   expect_true("a" %in% cached(targets_only = FALSE))
@@ -66,7 +66,7 @@ test_with_dir("checksum functionality", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   config$parallelism <- "loop"
-  config$jobs <- 1
+  config$settings$jobs <- 1
   config$cache <- decorate_storr(storr::storr_environment())
   testrun(config)
   checksum <- get_checksum(target = "combined", value = 1, config = config)

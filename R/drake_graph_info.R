@@ -279,14 +279,14 @@ get_raw_node_category_data <- function(config) {
     f = function(x) {
       is.function(get_import_from_memory(x, config = config))
     },
-    jobs = config$jobs_preprocess
+    jobs = config$settings$jobs_preprocess
   )
   config$missing <- parallel_filter(
     x = config$import_names,
     f = function(x) {
       missing_import(x, config = config)
     },
-    jobs = config$jobs_preprocess
+    jobs = config$settings$jobs_preprocess
   )
   config
 }

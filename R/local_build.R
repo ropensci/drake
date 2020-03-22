@@ -8,7 +8,7 @@ local_build <- function(target, config, downstream) {
     target,
     config,
     downstream = downstream,
-    jobs = config$jobs_preprocess
+    jobs = config$settings$jobs_preprocess
   )
   build <- try_build(target, meta, config)
   conclude_build(build, config)

@@ -271,7 +271,7 @@ make_impl <- function(config) {
   drake_cache_log_file_(
     file = config$cache_log_file,
     cache = config$cache,
-    jobs = config$jobs_preprocess
+    jobs = config$settings$jobs_preprocess
   )
   clear_make_memory(config)
   invisible()
@@ -554,7 +554,7 @@ missing_input_files <- function(config) {
   files <- parallel_filter(
     all_imports(config),
     f = is_encoded_path,
-    jobs = config$jobs_preprocess
+    jobs = config$settings$jobs_preprocess
   )
   files <- config$cache$decode_path(x = files)
   missing_files <- files[!file_dep_exists(files)]
