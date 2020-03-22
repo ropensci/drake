@@ -651,7 +651,8 @@ drake_config <- function(
     garbage_collection = garbage_collection,
     jobs = jobs,
     jobs_preprocess = jobs_preprocess,
-    keep_going = keep_going
+    keep_going = keep_going,
+    lazy_load = lazy_load
   )
   out <- list(
     envir = envir,
@@ -680,7 +681,6 @@ drake_config <- function(
     skip_imports = skip_imports,
     skip_safety_checks = skip_safety_checks,
     log_progress = log_progress,
-    lazy_load = lazy_load,
     session_info = session_info,
     cache_log_file = cache_log_file,
     caching = caching,

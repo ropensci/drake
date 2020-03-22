@@ -142,7 +142,7 @@ try_load_deps <- function(targets, config, jobs = 1) {
   if (!length(targets)) {
     return()
   }
-  if (config$lazy_load == "eager") {
+  if (config$settings$lazy_load == "eager") {
     config$logger$disk("load", targets)
   }
   lapply(
@@ -165,7 +165,7 @@ try_load_dep_impl <- function(target, config) {
     envir = config$envir_targets,
     cache = config$cache,
     verbose = FALSE,
-    lazy = config$lazy_load
+    lazy = config$settings$lazy_load
   )
 }
 

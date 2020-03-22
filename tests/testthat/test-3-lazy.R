@@ -4,7 +4,7 @@ test_with_dir("no overt errors lazy load for the debug example", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   config$verbose <- FALSE
-  config$lazy_load <- TRUE
+  config$settings$lazy_load <- TRUE
   if ("parLapply" %in% tail(config$parallelism, 1)) {
     config$settings$jobs <- 1
   }

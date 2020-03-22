@@ -469,7 +469,7 @@ assign_to_envir <- function(target, value, config) {
   if (skip_memory) {
     return()
   }
-  do_assign <- identical(config$lazy_load, "eager") &&
+  do_assign <- identical(config$settings$lazy_load, "eager") &&
     !is_encoded_path(target) &&
     !is_imported(target, config)
   if (do_assign) {
