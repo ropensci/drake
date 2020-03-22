@@ -5,7 +5,7 @@ test_with_dir("no overt errors lazy load for the debug example", {
   config <- dbug()
   config$verbose <- FALSE
   config$settings$lazy_load <- TRUE
-  if ("parLapply" %in% tail(config$parallelism, 1)) {
+  if ("parLapply" %in% tail(config$settings$parallelism, 1)) {
     config$settings$jobs <- 1
   }
   expect_equal(sort(outdated_impl(config)), sort(config$plan$target))

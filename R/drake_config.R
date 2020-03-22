@@ -656,7 +656,8 @@ drake_config <- function(
     lib_loc = lib_loc,
     lock_cache = lock_cache,
     lock_envir = lock_envir,
-    memory_strategy = memory_strategy
+    memory_strategy = memory_strategy,
+    parallelism = parallelism
   )
   out <- list(
     envir = envir,
@@ -666,7 +667,6 @@ drake_config <- function(
     envir_loaded = envir_loaded,
     envir_subtargets = envir_subtargets,
     cache = cache,
-    parallelism = parallelism,
     logger = logger,
     packages = packages,
     prework = prework,
@@ -877,7 +877,7 @@ config_checks <- function(config) {
   check_case_sensitivity(config)
   check_drake_graph(graph = config$graph)
   cache_vers_stop(config$cache)
-  check_parallelism(config$parallelism, config$settings$jobs)
+  check_parallelism(config$settings$parallelism, config$settings$jobs)
   check_jobs(config$settings$jobs)
 }
 

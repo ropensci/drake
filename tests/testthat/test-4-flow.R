@@ -111,13 +111,13 @@ test_with_dir("make(..., skip_imports = TRUE) works", {
   con <- dbug()
   plan <- dbug_plan()
   make(
-    plan, parallelism = con$parallelism,
+    plan, parallelism = con$settings$parallelism,
     envir = con$envir, jobs = con$settings$jobs,
     skip_imports = TRUE,
     session_info = FALSE
   )
   con <- drake_config(
-    plan, parallelism = con$parallelism,
+    plan, parallelism = con$settings$parallelism,
     envir = con$envir, jobs = con$settings$jobs,
     skip_imports = TRUE,
     session_info = FALSE
@@ -134,12 +134,12 @@ test_with_dir("make(..., skip_imports = TRUE) works", {
   make(plan, envir = con$envir, session_info = FALSE)
   clean(list = plan$target)
   make(
-    plan, parallelism = con$parallelism,
+    plan, parallelism = con$settings$parallelism,
     envir = con$envir, jobs = con$settings$jobs,
     skip_imports = TRUE, session_info = FALSE
   )
   con <- drake_config(
-    plan, parallelism = con$parallelism,
+    plan, parallelism = con$settings$parallelism,
     envir = con$envir, jobs = con$settings$jobs,
     skip_imports = TRUE, session_info = FALSE
   )

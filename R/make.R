@@ -260,7 +260,7 @@ make_impl <- function(config) {
   if (!config$skip_imports) {
     process_imports(config)
   }
-  if (is.character(config$parallelism)) {
+  if (is.character(config$settings$parallelism)) {
     config$envir_graph <- new.env(parent = emptyenv())
     config$envir_graph$graph <- outdated_subgraph(config)
   }
@@ -314,11 +314,11 @@ run_backend <- function(config) {
 }
 
 drake_backend <- function(config) {
-  if (identical(config$parallelism, "loop")) {
+  if (identical(config$settings$parallelism, "loop")) {
     drake_backend_loop(config)
-  } else if (identical(config$parallelism, "clustermq")) {
+  } else if (identical(config$settings$parallelism, "clustermq")) {
     drake_backend_clustermq(config)
-  } else if (identical(config$parallelism, "future")) {
+  } else if (identical(config$settings$parallelism, "future")) {
     drake_backend_future(config)
   } else {
     drake_backend_bad(config)
@@ -326,7 +326,7 @@ drake_backend <- function(config) {
 }
 
 drake_backend_bad <- function(config) {
-  if (!is.character(config$parallelism)) {
+  if (!is.character(config$settings$parallelism)) {
     warn0("Custom drake parallel backends are deprecated. Using \"loop\".")
   }
   warn0("Illegal drake backend. Running without parallelism.")

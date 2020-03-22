@@ -65,7 +65,7 @@ test_with_dir("lightly_parallelize_atomic() is correct", {
 test_with_dir("checksum functionality", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
-  config$parallelism <- "loop"
+  config$settings$parallelism <- "loop"
   config$settings$jobs <- 1
   config$cache <- decorate_storr(storr::storr_environment())
   testrun(config)

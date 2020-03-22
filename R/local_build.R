@@ -579,7 +579,7 @@ log_failure <- function(target, meta, config) {
 }
 
 delayed_relay <- function(config) {
-  config$parallelism == "clustermq"
+  config$settings$parallelism == "clustermq"
 }
 
 # From withr https://github.com/r-lib/withr, copyright RStudio, GPL (>=2)
