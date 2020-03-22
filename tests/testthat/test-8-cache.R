@@ -81,7 +81,7 @@ test_with_dir("dependency profile", {
   expect_false(any(deps_profile_impl(target = a, config = config)$changed))
   b <- 2
   expect_false(any(deps_profile_impl(target = a, config = config)$changed))
-  config$skip_targets <- TRUE
+  config$settings$skip_targets <- TRUE
   make_impl(config = config)
   dp <- deps_profile_impl(target = a, config = config)
   expect_true(as.logical(dp[dp$name == "depend", "changed"]))
@@ -268,7 +268,7 @@ test_with_dir("cache functions work from various working directories", {
       envir <- environment()
     }
 
-    config$session_info <- TRUE
+    config$settings$session_info <- TRUE
     testrun(config)
 
     # drake_cache_log() # nolint
@@ -315,7 +315,7 @@ test_with_dir("cache functions work from various working directories", {
     n1 <- nrow(bt)
 
     # find stuff in current directory session, progress
-    expect_equal(read_drake_seed(), config$seed)
+    expect_equal(read_drake_seed(), config$settings$seed)
     expect_true(is.list(drake_get_session_info()))
     expect_true(all(progress()$progress == "done"))
     expect_false(any("running" %in% progress()))
@@ -843,7 +843,7 @@ test_with_dir("try_build() does not need to access cache", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- drake_config(drake_plan(x = 1), lock_envir = FALSE)
   meta <- drake_meta_(target = "x", config = config)
-  config$cache <- config$cache_log_file <- NULL
+  config$cache <- config$settings$cache_log_file <- NULL
   build <- try_build(target = "x", meta = meta, config = config)
   expect_equal(1, build$value)
   expect_error(drake_build_impl(target = "x", config = config))

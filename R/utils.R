@@ -54,14 +54,6 @@ error_na <- function(e) {
   NA_character_
 }
 
-assert_character <- function(x) {
-  stopifnot(is.character(x))
-}
-
-assert_environment <- function(x) {
-  stopifnot(is.environment(x))
-}
-
 assert_pkg <- function(pkg, version = NULL, install = "install.packages") {
   if (!requireNamespace(pkg, quietly = TRUE)) {
     stop0(

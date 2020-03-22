@@ -81,19 +81,12 @@ new_drake_deps <- function(
 validate_drake_deps <- function(x) {
   stopifnot(inherits(x, "drake_deps"))
   stopifnot(inherits(x, "drake"))
-  lapply(x, assert_character)
   out_fields <- names(x)
-  exp_fields <- c(
-    "globals",
-    "namespaced",
-    "strings",
-    "loadd",
-    "readd",
-    "file_in",
-    "file_out",
-    "knitr_in"
-  )
-  stopifnot(identical(out_fields, exp_fields))
+  exp_fields <- names(formals(new_drake_deps))
+  for (field in exp_fields) {
+    stopifnot(is.character(x[[field]]))
+  }
+  stopifnot(identical(sort(out_fields), sort(exp_fields)))
 }
 
 #' @export

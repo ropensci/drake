@@ -36,7 +36,7 @@ test_with_dir("check_parallelism()", {
 test_with_dir("parallel imports", {
   skip_on_cran()
   config <- dbug()
-  config$jobs_preprocess <- 2
+  config$settings$jobs_preprocess <- 2
   process_imports(config)
   process_imports_parLapply(config)
   expect_true("a" %in% cached(targets_only = FALSE))
@@ -65,8 +65,8 @@ test_with_dir("lightly_parallelize_atomic() is correct", {
 test_with_dir("checksum functionality", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
-  config$parallelism <- "loop"
-  config$jobs <- 1
+  config$settings$parallelism <- "loop"
+  config$settings$jobs <- 1
   config$cache <- decorate_storr(storr::storr_environment())
   testrun(config)
   checksum <- get_checksum(target = "combined", value = 1, config = config)
@@ -193,33 +193,19 @@ test_with_dir("drake_pmap", {
   expect_error(drake_pmap(list(x, y, z), sum))
 })
 
-test_with_dir("parallelism can be a scheduler function", {
+test_with_dir("deprecate custom scheduler functions", {
   skip_on_cran()
   plan <- drake_plan(x = file.create("x"))
-  build_ <- function(target, config) {
-    tidy_expr <- eval(
-      expr = config$spec[[target]]$command_build,
-      envir = config$envir_targets
-    )
-    eval(expr = tidy_expr, envir = config$envir_targets)
-  }
-  loop_ <- function(config) {
-    targets <- igraph::topo_sort(config$graph)$name
-    for (target in targets) {
-      config$envir_targets[[target]] <- build_(
-        target = target,
-        config = config
-      )
-    }
-    invisible()
-  }
-  config <- drake_config(plan, parallelism = loop_)
   expect_warning(
-    make_impl(config = config),
-    regexp = "Custom drake schedulers are experimental"
+    config <- drake_config(plan, parallelism = identity),
+    regexp = "deprecated"
+  )
+  expect_warning(
+    make(plan, parallelism = identity),
+    regexp = "deprecated"
   )
   expect_true(file.exists("x"))
-  expect_false(config$cache$exists("x"))
+  expect_true(config$cache$exists("x"))
 })
 
 test_with_dir("caching arg and column", {
@@ -278,4 +264,14 @@ test_with_dir("custom caching column and future", {
   )
   make(plan, parallelism = "future", jobs = 1)
   expect_true(all(plan$target %in% cached()))
+})
+
+test_with_dir("illegal hpc backend (#1222)", {
+  plan <- drake_plan(x = 1)
+  config <- drake_config(plan)
+  config$settings$parallelism <- "illegal"
+  expect_warning(
+    make_impl(config),
+    regexp = "Illegal drake backend"
+  )
 })

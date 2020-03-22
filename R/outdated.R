@@ -77,7 +77,7 @@ recoverable_impl <- function(
   do_prework = TRUE
 ) {
   assert_config(config)
-  if (make_imports && config$lock_cache) {
+  if (make_imports && config$settings$lock_cache) {
     config$cache$lock()
     on.exit(config$cache$unlock(), add = TRUE)
   }
@@ -195,7 +195,7 @@ outdated_impl <- function(
     config$logger$file <- NULL
     config <- init_config_tmp(config)
   }
-  if (make_imports && config$lock_cache) {
+  if (make_imports && config$settings$lock_cache) {
     config$cache$lock()
     on.exit(config$cache$unlock(), add = TRUE)
   }
@@ -230,7 +230,7 @@ stage_outdated <- function(envir, config) {
   do_build <- lightly_parallelize(
     X = new_leaves,
     FUN = is_outdated,
-    jobs = config$jobs_preprocess,
+    jobs = config$settings$jobs_preprocess,
     config = config
   )
   do_build <- unlist(do_build)
@@ -247,7 +247,7 @@ is_outdated <- function(target, config) {
     return(TRUE)
   }
   class(target) <- ifelse(is_dynamic(target, config), "dynamic", "static")
-  config$jobs_preprocess <- 1
+  config$settings$jobs_preprocess <- 1
   is_outdated_impl(target, config)
 }
 
@@ -305,7 +305,7 @@ missed_impl <- function(config) {
   is_missing <- lightly_parallelize(
     X = imports,
     FUN = missing_import,
-    jobs = config$jobs_preprocess,
+    jobs = config$settings$jobs_preprocess,
     config = config
   )
   is_missing <- as.logical(is_missing)

@@ -285,7 +285,7 @@ decorate_trigger_format_meta.file <- function(target, meta, config) { # nolint
 }
 
 drake_meta_start <- function(config) {
-  if (config$log_build_times) {
+  if (config$settings$log_build_times) {
     proc_time()
   }
 }
@@ -325,7 +325,7 @@ target_exists_fast <- function(target, config) {
 resolve_target_seed <- function(target, config) {
   seed <- config$spec[[target]]$seed
   if (is.null(seed) || is.na(seed)) {
-    seed <- seed_from_basic_types(config$seed, target)
+    seed <- seed_from_basic_types(config$settings$seed, target)
   }
   as.integer(seed)
 }
@@ -630,9 +630,9 @@ rehash_url <- function(url, config) {
     stop0("no internet. Cannot check url: ", url) # nocov
   }
   # Find the longest name of the handle that matches the url.
-  choices <- names(config$curl_handles)
+  choices <- names(config$settings$curl_handles)
   name <- longest_match(choices = choices, against = url) %||% NA_character_
-  handle <- config$curl_handles[[name]] %|||% curl::new_handle()
+  handle <- config$settings$curl_handles[[name]] %|||% curl::new_handle()
   # Do not download the whole URL.
   handle <- curl::handle_setopt(handle, nobody = TRUE)
   req <- curl::curl_fetch_memory(url, handle = handle)

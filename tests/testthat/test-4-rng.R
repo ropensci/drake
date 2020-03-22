@@ -78,7 +78,7 @@ test_with_dir("Random targets are reproducible", {
     session_info = FALSE
   )
 
-  expect_identical(con$seed, con2$seed)
+  expect_identical(con$settings$seed, con2$settings$seed)
   expect_identical(readd(x), old_x)
   expect_identical(readd(y), old_y)
   expect_identical(readd(z), old_z)
@@ -107,7 +107,7 @@ test_with_dir("Random targets are reproducible", {
     session_info = FALSE
   )
   expect_equal(justbuilt(con3), "y")
-  expect_true(identical(con$seed, con3$seed))
+  expect_true(identical(con$settings$seed, con3$settings$seed))
   expect_true(identical(readd(y), old_y))
   expect_true(identical(readd(my), old_my))
 
@@ -118,7 +118,7 @@ test_with_dir("Random targets are reproducible", {
   make(
     data,
     envir = env,
-    seed = con2$seed,
+    seed = con2$settings$seed,
     parallelism = parallelism,
     jobs = jobs,
     verbose = 0L,
@@ -127,14 +127,14 @@ test_with_dir("Random targets are reproducible", {
   con4 <- drake_config(
     data,
     envir = env,
-    seed = con2$seed,
+    seed = con2$settings$seed,
     parallelism = parallelism,
     jobs = jobs,
     verbose = 0L,
     session_info = FALSE
   )
   expect_equal(justbuilt(con4), "y")
-  expect_true(identical(con4$seed, con$seed))
+  expect_true(identical(con4$settings$seed, con$settings$seed))
   expect_true(identical(readd(y), old_y))
   expect_true(identical(readd(my), old_my))
 
@@ -145,7 +145,7 @@ test_with_dir("Random targets are reproducible", {
   make(
     data,
     envir = env,
-    seed = con2$seed + 1,
+    seed = con2$settings$seed + 1,
     parallelism = parallelism,
     jobs = jobs,
     verbose = 0L,
@@ -154,14 +154,14 @@ test_with_dir("Random targets are reproducible", {
   con5 <- drake_config(
     data,
     envir = env,
-    seed = con2$seed + 1,
+    seed = con2$settings$seed + 1,
     parallelism = parallelism,
     jobs = jobs,
     verbose = 0L,
     session_info = FALSE
   )
   expect_equal(sort(justbuilt(con5)), sort(data$target))
-  expect_false(identical(con$seed, con5$seed))
+  expect_false(identical(con$settings$seed, con5$settings$seed))
   expect_false(identical(readd(x), old_x))
   expect_false(identical(readd(y), old_y))
   expect_false(identical(readd(z), old_z))
@@ -173,7 +173,7 @@ test_with_dir("Random targets are reproducible", {
   make(
     data,
     envir = env,
-    seed = con2$seed + 2,
+    seed = con2$settings$seed + 2,
     parallelism = parallelism,
     jobs = jobs,
     verbose = 0L,
@@ -190,8 +190,8 @@ test_with_dir("Random targets are reproducible", {
     session_info = FALSE
   )
   expect_equal(justbuilt(con5), character(0))
-  expect_equal(con2$seed + 2, read_drake_seed())
-  expect_true(con2$seed + 2 > 1L)
+  expect_equal(con2$settings$seed + 2, read_drake_seed())
+  expect_true(con2$settings$seed + 2 > 1L)
 })
 
 test_with_dir("custom seeds (#947)", {

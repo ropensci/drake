@@ -247,31 +247,34 @@ make_impl <- function(config) {
   config$logger$disk("begin make()")
   on.exit(config$logger$disk("end make()"), add = TRUE)
   runtime_checks(config = config)
-  if (config$lock_cache) {
+  if (config$settings$lock_cache) {
     config$cache$lock()
     on.exit(config$cache$unlock(), add = TRUE)
   }
   config <- prep_config_for_make(config)
-  if (config$log_progress) {
+  if (config$settings$log_progress) {
     config$cache$clear(namespace = "progress")
   }
-  drake_set_session_info(cache = config$cache, full = config$session_info)
+  drake_set_session_info(
+    cache = config$cache,
+    full = config$settings$session_info
+  )
   do_prework(config = config, verbose_packages = config$logger$verbose)
-  if (!config$skip_imports) {
+  if (!config$settings$skip_imports) {
     process_imports(config)
   }
-  if (is.character(config$parallelism)) {
+  if (is.character(config$settings$parallelism)) {
     config$envir_graph <- new.env(parent = emptyenv())
     config$envir_graph$graph <- outdated_subgraph(config)
   }
   r_make_message(force = FALSE)
-  if (!config$skip_targets) {
+  if (!config$settings$skip_targets) {
     process_targets(config)
   }
   drake_cache_log_file_(
-    file = config$cache_log_file,
+    file = config$settings$cache_log_file,
     cache = config$cache,
-    jobs = config$jobs_preprocess
+    jobs = config$settings$jobs_preprocess
   )
   clear_make_memory(config)
   invisible()
@@ -292,30 +295,22 @@ init_config_tmp <- function(config) {
   config$cache$reset_memo_hash()
   config$meta <- new.env(hash = TRUE, parent = emptyenv())
   config$meta_old <- new.env(hash = TRUE, parent = emptyenv())
-  config$cache$set(key = "seed", value = config$seed, namespace = "session")
+  seed <- config$settings$seed
+  config$cache$set(key = "seed", value = seed, namespace = "session")
   config
 }
 
 process_targets <- function(config) {
-  if (is.character(config$parallelism)) {
-    run_native_backend(config)
-  } else {
-    run_external_backend(config)
-  }
+  run_backend(config)
   config$logger$terminate_progress()
   invisible()
 }
 
-run_native_backend <- function(config) {
-  parallelism <- match.arg(
-    config$parallelism,
-    c("loop", "clustermq", "future")
-  )
+run_backend <- function(config) {
   order <- igraph::gorder(config$envir_graph$graph)
   if (order) {
     config$logger$set_progress_total(order)
     config$logger$progress(0L)
-    class(config) <- c(class(config), parallelism)
     drake_backend(config)
   } else {
     config$logger$up_to_date()
@@ -323,12 +318,23 @@ run_native_backend <- function(config) {
 }
 
 drake_backend <- function(config) {
-  UseMethod("drake_backend")
+  if (identical(config$settings$parallelism, "loop")) {
+    drake_backend_loop(config)
+  } else if (identical(config$settings$parallelism, "clustermq")) {
+    drake_backend_clustermq(config)
+  } else if (identical(config$settings$parallelism, "future")) {
+    drake_backend_future(config)
+  } else {
+    drake_backend_bad(config)
+  }
 }
 
-run_external_backend <- function(config) {
-  warn0("Custom drake schedulers are experimental.")
-  config$parallelism(config = config)
+drake_backend_bad <- function(config) {
+  if (!is.character(config$settings$parallelism)) {
+    warn0("Custom drake parallel backends are deprecated. Using \"loop\".")
+  }
+  warn0("Illegal drake backend. Running without parallelism.")
+  drake_backend_loop(config)
 }
 
 outdated_subgraph <- function(config) {
@@ -398,7 +404,7 @@ do_prework <- function(config, verbose_packages) {
     expr <- as.call(c(
       quote(require),
       package = package,
-      lib.loc = as.call(c(quote(c), config$lib_loc)),
+      lib.loc = as.call(c(quote(c), config$settings$lib_loc)),
       quietly = TRUE,
       character.only = TRUE
     ))
@@ -440,7 +446,7 @@ clear_make_memory <- function(config) {
     remove(list = names(config[[key]]), envir = config[[key]])
   }
   config$cache$flush_cache()
-  if (config$garbage_collection) {
+  if (config$settings$garbage_collection) {
     gc()
   }
 }
@@ -483,13 +489,12 @@ drake_cache_log_file_ <- function(
 
 runtime_checks <- function(config) {
   assert_config(config)
-  if (identical(config$skip_safety_checks, TRUE)) {
+  if (identical(config$settings$skip_safety_checks, TRUE)) {
     return(invisible())
   }
   missing_input_files(config = config)
   subdirectory_warning(config = config)
   assert_outside_cache(config = config)
-  check_formats(config$formats)
 }
 
 check_formats <- function(formats) {
@@ -552,7 +557,7 @@ missing_input_files <- function(config) {
   files <- parallel_filter(
     all_imports(config),
     f = is_encoded_path,
-    jobs = config$jobs_preprocess
+    jobs = config$settings$jobs_preprocess
   )
   files <- config$cache$decode_path(x = files)
   missing_files <- files[!file_dep_exists(files)]

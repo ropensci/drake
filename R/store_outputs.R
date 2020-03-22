@@ -193,7 +193,7 @@ store_meta <- function(target, value, meta, hash, config) {
   if (is_target && is_history(config$cache$history)) {
     config$cache$history$push(title = target, message = meta_hash)
   }
-  if (is_target && config$recoverable) {
+  if (is_target && config$settings$recoverable) {
     store_recovery(target, meta, meta_hash, config)
   }
 }
@@ -252,7 +252,7 @@ decorate_format_meta.default <- function(value, target, meta, config) {
 }
 
 finalize_times <- function(target, meta, config) {
-  if (config$log_build_times) {
+  if (config$settings$log_build_times) {
     meta$time_command <- runtime_entry(meta$time_command, target)
     meta$time_build <- runtime_entry(proc_time() - meta$time_start, target)
   } else {

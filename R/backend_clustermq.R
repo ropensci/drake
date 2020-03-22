@@ -1,16 +1,16 @@
-drake_backend.clustermq <- function(config) {
+drake_backend_clustermq <- function(config) {
   assert_pkg("clustermq", version = "0.8.8")
   config$queue <- priority_queue(
     config = config,
-    jobs = config$jobs_preprocess
+    jobs = config$settings$jobs_preprocess
   )
   cmq_local_master(config)
   if (config$queue$empty()) {
     return()
   }
   config$workers <- clustermq::workers(
-    n_jobs = config$jobs,
-    template = config$template
+    n_jobs = config$settings$jobs,
+    template = config$settings$template
   )
   config$logger$disk("set common data")
   cmq_set_common_data(config)
@@ -54,7 +54,7 @@ cmq_set_common_data <- function(config) {
     const = list(),
     rettype = list(),
     pkgs = character(0),
-    common_seed = config$seed,
+    common_seed = config$settings$seed,
     token = "set_common_data_token"
   )
 }

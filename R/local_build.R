@@ -8,7 +8,7 @@ local_build <- function(target, config, downstream) {
     target,
     config,
     downstream = downstream,
-    jobs = config$jobs_preprocess
+    jobs = config$settings$jobs_preprocess
   )
   build <- try_build(target, meta, config)
   conclude_build(build, config)
@@ -47,7 +47,7 @@ announce_dynamic <- function(target, config) {
 }
 
 try_build <- function(target, meta, config) {
-  if (identical(config$garbage_collection, TRUE)) {
+  if (config$settings$garbage_collection) {
     on.exit(gc())
   }
   if (is_dynamic(target, config)) {
@@ -168,7 +168,7 @@ get_seed <- function() {
 # https://github.com/arendsee/rmonad/blob/14bf2ef95c81be5307e295e8458ef8fb2b074dee/R/to-monad.R#L68 # nolint
 with_handling <- function(target, meta, config) {
   warnings <- messages <- NULL
-  if (config$log_build_times) {
+  if (config$settings$log_build_times) {
     start <- proc_time()
   }
   withCallingHandlers(
@@ -187,7 +187,7 @@ with_handling <- function(target, meta, config) {
       invokeRestart("muffleMessage")
     }
   )
-  if (config$log_build_times) {
+  if (config$settings$log_build_times) {
     meta$time_command <- proc_time() - start
   }
   meta$warnings <- warnings
@@ -258,7 +258,7 @@ drake_with_call_stack_8a6af5 <- function(target, config) {
     signalCondition(e)
   }
   expr <- config$spec[[target]]$command_build
-  if (config$lock_envir) {
+  if (config$settings$lock_envir) {
     on.exit(unlock_environment(config$envir))
     block_envir_lock(config)
     lock_environment(config$envir)
@@ -278,7 +278,7 @@ block_envir_lock <- function(config) {
   i <- 1
   # Lock the environment only while running the command.
   while (environmentIsLocked(config$envir)) {
-    Sys.sleep(config$sleep(max(0L, i))) # nocov
+    Sys.sleep(config$settings$sleep(max(0L, i))) # nocov
     i <- i + 1 # nocov
   }
 }
@@ -463,13 +463,13 @@ assign_to_envir <- function(target, value, config) {
   }
   memory_strategy <- config$spec[[target]]$memory_strategy
   if (is.null(memory_strategy) || is.na(memory_strategy)) {
-    memory_strategy <- config$memory_strategy
+    memory_strategy <- config$settings$memory_strategy
   }
   skip_memory <- memory_strategy %in% c("autoclean", "unload", "none")
   if (skip_memory) {
     return()
   }
-  do_assign <- identical(config$lazy_load, "eager") &&
+  do_assign <- identical(config$settings$lazy_load, "eager") &&
     !is_encoded_path(target) &&
     !is_imported(target, config)
   if (do_assign) {
@@ -558,7 +558,7 @@ handle_build_error <- function(target, meta, config) {
     store_failure(target = parent, meta = meta, config = config)
   }
   store_failure(target = target, meta = meta, config = config)
-  if (!config$keep_going) {
+  if (!config$settings$keep_going) {
     log_failure(target, meta, config)
   }
 }
@@ -579,7 +579,7 @@ log_failure <- function(target, meta, config) {
 }
 
 delayed_relay <- function(config) {
-  config$parallelism == "clustermq"
+  config$settings$parallelism == "clustermq"
 }
 
 # From withr https://github.com/r-lib/withr, copyright RStudio, GPL (>=2)
@@ -620,7 +620,7 @@ store_failure <- function(target, meta, config) {
 
 set_progress <- function(target, value, config) {
   skip_progress <- !identical(config$running_make, TRUE) ||
-    !config$log_progress ||
+    !config$settings$log_progress ||
     (config$spec[[target]]$imported %||% FALSE)
   if (skip_progress) {
     return()

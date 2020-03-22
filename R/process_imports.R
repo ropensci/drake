@@ -1,5 +1,5 @@
 process_imports <- function(config) {
-  if (on_windows() && config$jobs_preprocess > 1L) {
+  if (on_windows() && config$settings$jobs_preprocess > 1L) {
     process_imports_parLapply(config) # nocov
   } else {
     process_imports_mclapply(config)
@@ -73,7 +73,7 @@ process_imports_mclapply <- function(config) {
       X = imports,
       FUN = drake::process_import,
       config = config,
-      jobs = config$jobs_preprocess
+      jobs = config$settings$jobs_preprocess
     )
     imports_graph <- delete_vertices(imports_graph, v = imports)
   }
@@ -83,10 +83,10 @@ process_imports_mclapply <- function(config) {
 process_imports_parLapply <- function(config) { # nolint
   config$logger$disk(
     "load parallel socket cluster with",
-    config$jobs_preprocess,
+    config$settings$jobs_preprocess,
     "workers"
   )
-  config$cluster <- parallel::makePSOCKcluster(config$jobs_preprocess)
+  config$cluster <- parallel::makePSOCKcluster(config$settings$jobs_preprocess)
   on.exit(parallel::stopCluster(cl = config$cluster))
   parallel::clusterExport(
     cl = config$cluster, varlist = "config",
