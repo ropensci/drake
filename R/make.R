@@ -252,7 +252,7 @@ make_impl <- function(config) {
     on.exit(config$cache$unlock(), add = TRUE)
   }
   config <- prep_config_for_make(config)
-  if (config$log_progress) {
+  if (config$settings$log_progress) {
     config$cache$clear(namespace = "progress")
   }
   drake_set_session_info(

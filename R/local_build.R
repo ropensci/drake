@@ -620,7 +620,7 @@ store_failure <- function(target, meta, config) {
 
 set_progress <- function(target, value, config) {
   skip_progress <- !identical(config$running_make, TRUE) ||
-    !config$log_progress ||
+    !config$settings$log_progress ||
     (config$spec[[target]]$imported %||% FALSE)
   if (skip_progress) {
     return()
