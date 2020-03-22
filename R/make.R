@@ -260,7 +260,7 @@ make_impl <- function(config) {
     full = config$settings$session_info
   )
   do_prework(config = config, verbose_packages = config$logger$verbose)
-  if (!config$skip_imports) {
+  if (!config$settings$skip_imports) {
     process_imports(config)
   }
   if (is.character(config$settings$parallelism)) {
@@ -268,7 +268,7 @@ make_impl <- function(config) {
     config$envir_graph$graph <- outdated_subgraph(config)
   }
   r_make_message(force = FALSE)
-  if (!config$skip_targets) {
+  if (!config$settings$skip_targets) {
     process_targets(config)
   }
   drake_cache_log_file_(
@@ -488,7 +488,7 @@ drake_cache_log_file_ <- function(
 
 runtime_checks <- function(config) {
   assert_config(config)
-  if (identical(config$skip_safety_checks, TRUE)) {
+  if (identical(config$settings$skip_safety_checks, TRUE)) {
     return(invisible())
   }
   missing_input_files(config = config)

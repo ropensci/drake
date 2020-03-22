@@ -938,8 +938,8 @@ make_imports <- function(config) {
       "make_imports() in drake is deprecated. Use make()."
     )
   )
-  config$skip_imports <- FALSE
-  config$skip_targets <- TRUE
+  config$settings$skip_imports <- FALSE
+  config$settings$skip_targets <- TRUE
   make_impl(config = config)
 }
 
@@ -959,8 +959,8 @@ make_targets <- function(config) {
       "make_targets() in drake is deprecated. Use make()."
     )
   )
-  config$skip_imports <- TRUE
-  config$skip_targets <- FALSE
+  config$settings$skip_imports <- TRUE
+  config$settings$skip_targets <- FALSE
   make_impl(config = config)
 }
 

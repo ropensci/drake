@@ -180,7 +180,7 @@ wait_checksum <- function(
     if (criterion(target, value, checksum, config)) {
       return()
     } else {
-      sleep <- config$sleep(max(0L, i))
+      sleep <- config$settings$sleep(max(0L, i))
       Sys.sleep(sleep)
       time_left <- time_left - sleep
     }

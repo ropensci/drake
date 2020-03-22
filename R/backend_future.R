@@ -34,7 +34,7 @@ ft_check_target <- function(target, id, config) {
 }
 
 ft_no_target <- function(config) {
-  Sys.sleep(config$sleep(max(0L, config$sleeps$count)))
+  Sys.sleep(config$settings$sleep(max(0L, config$sleeps$count)))
   config$sleeps$count <- config$sleeps$count + 1L
 }
 

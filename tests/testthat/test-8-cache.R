@@ -81,7 +81,7 @@ test_with_dir("dependency profile", {
   expect_false(any(deps_profile_impl(target = a, config = config)$changed))
   b <- 2
   expect_false(any(deps_profile_impl(target = a, config = config)$changed))
-  config$skip_targets <- TRUE
+  config$settings$skip_targets <- TRUE
   make_impl(config = config)
   dp <- deps_profile_impl(target = a, config = config)
   expect_true(as.logical(dp[dp$name == "depend", "changed"]))

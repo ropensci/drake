@@ -661,7 +661,11 @@ drake_config <- function(
     recover = recover,
     recoverable = recoverable,
     seed = seed,
-    session_info = session_info
+    session_info = session_info,
+    skip_imports = skip_imports,
+    skip_safety_checks = skip_safety_checks,
+    skip_targets = skip_targets,
+    sleep = sleep
   )
   out <- list(
     envir = envir,
@@ -683,15 +687,10 @@ drake_config <- function(
     cpu = cpu,
     elapsed = elapsed,
     retries = retries,
-    skip_targets = skip_targets,
-    skip_imports = skip_imports,
-    skip_safety_checks = skip_safety_checks,
     log_progress = log_progress,
     cache_log_file = cache_log_file,
     caching = caching,
     template = template,
-    sleep = sleep,
-    force = force,
     ht_dynamic_deps = ht_dynamic_deps,
     ht_is_dynamic = ht_is_dynamic,
     ht_is_subtarget = ht_is_subtarget, # Gets replaced in make()
@@ -871,7 +870,7 @@ plan_check_bad_symbols <- function(plan) {
 }
 
 config_checks <- function(config) {
-  if (identical(config$skip_safety_checks, TRUE)) {
+  if (identical(config$settings$skip_safety_checks, TRUE)) {
     return(invisible())
   }
   check_case_sensitivity(config)

@@ -278,7 +278,7 @@ block_envir_lock <- function(config) {
   i <- 1
   # Lock the environment only while running the command.
   while (environmentIsLocked(config$envir)) {
-    Sys.sleep(config$sleep(max(0L, i))) # nocov
+    Sys.sleep(config$settings$sleep(max(0L, i))) # nocov
     i <- i + 1 # nocov
   }
 }
