@@ -558,7 +558,7 @@ handle_build_error <- function(target, meta, config) {
     store_failure(target = parent, meta = meta, config = config)
   }
   store_failure(target = target, meta = meta, config = config)
-  if (!config$keep_going) {
+  if (!config$settings$keep_going) {
     log_failure(target, meta, config)
   }
 }

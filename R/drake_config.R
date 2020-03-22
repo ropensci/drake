@@ -650,7 +650,8 @@ drake_config <- function(
     curl_handles = curl_handles,
     garbage_collection = garbage_collection,
     jobs = jobs,
-    jobs_preprocess = jobs_preprocess
+    jobs_preprocess = jobs_preprocess,
+    keep_going = keep_going
   )
   out <- list(
     envir = envir,
@@ -683,7 +684,6 @@ drake_config <- function(
     session_info = session_info,
     cache_log_file = cache_log_file,
     caching = caching,
-    keep_going = keep_going,
     memory_strategy = memory_strategy,
     template = template,
     sleep = sleep,
