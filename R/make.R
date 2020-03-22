@@ -295,7 +295,8 @@ init_config_tmp <- function(config) {
   config$cache$reset_memo_hash()
   config$meta <- new.env(hash = TRUE, parent = emptyenv())
   config$meta_old <- new.env(hash = TRUE, parent = emptyenv())
-  config$cache$set(key = "seed", value = config$settings$seed, namespace = "session")
+  seed <- config$settings$seed
+  config$cache$set(key = "seed", value = seed, namespace = "session")
   config
 }
 
