@@ -657,7 +657,10 @@ drake_config <- function(
     lock_cache = lock_cache,
     lock_envir = lock_envir,
     memory_strategy = memory_strategy,
-    parallelism = parallelism
+    parallelism = parallelism,
+    recover = recover,
+    recoverable = recoverable,
+    seed = seed
   )
   out <- list(
     envir = envir,
@@ -674,7 +677,6 @@ drake_config <- function(
     meta = meta,
     meta_old = meta_old,
     graph = graph,
-    seed = seed,
     trigger = trigger,
     timeout = timeout,
     cpu = cpu,
@@ -690,8 +692,6 @@ drake_config <- function(
     template = template,
     sleep = sleep,
     force = force,
-    recover = recover,
-    recoverable = recoverable,
     ht_dynamic_deps = ht_dynamic_deps,
     ht_is_dynamic = ht_is_dynamic,
     ht_is_subtarget = ht_is_subtarget, # Gets replaced in make()

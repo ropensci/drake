@@ -262,7 +262,7 @@ filter_subtargets <- function(target, subtargets, config) {
   ht_set(config$ht_is_subtarget, subtargets)
   index <- check_subtarget_triggers(target, subtargets, config)
   subtargets <- subtargets[index]
-  if (!config$recover || !length(subtargets)) {
+  if (!config$settings$recover || !length(subtargets)) {
     return(subtargets)
   }
   recovered <- lightly_parallelize(
@@ -327,7 +327,7 @@ register_subtarget_spec <- function(
   mem_deps <- all.vars(spec$dynamic)
   spec$dynamic <- NULL
   spec$deps_build$memory <- unique(c(spec$deps_build$memory, mem_deps))
-  spec$seed <- seed_from_basic_types(config$seed, spec$seed, subtarget)
+  spec$seed <- seed_from_basic_types(config$settings$seed, spec$seed, subtarget)
   spec <- register_dynamic_subdeps(dynamic, spec, index, parent, config)
   assign(
     x = subtarget,

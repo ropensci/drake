@@ -325,7 +325,7 @@ target_exists_fast <- function(target, config) {
 resolve_target_seed <- function(target, config) {
   seed <- config$spec[[target]]$seed
   if (is.null(seed) || is.na(seed)) {
-    seed <- seed_from_basic_types(config$seed, target)
+    seed <- seed_from_basic_types(config$settings$seed, target)
   }
   as.integer(seed)
 }

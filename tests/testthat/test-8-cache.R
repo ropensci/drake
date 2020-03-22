@@ -315,7 +315,7 @@ test_with_dir("cache functions work from various working directories", {
     n1 <- nrow(bt)
 
     # find stuff in current directory session, progress
-    expect_equal(read_drake_seed(), config$seed)
+    expect_equal(read_drake_seed(), config$settings$seed)
     expect_true(is.list(drake_get_session_info()))
     expect_true(all(progress()$progress == "done"))
     expect_false(any("running" %in% progress()))

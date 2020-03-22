@@ -54,7 +54,7 @@ cmq_set_common_data <- function(config) {
     const = list(),
     rettype = list(),
     pkgs = character(0),
-    common_seed = config$seed,
+    common_seed = config$settings$seed,
     token = "set_common_data_token"
   )
 }

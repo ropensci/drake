@@ -45,7 +45,7 @@ handle_triggers_impl.static <- function(target, meta, config) { # nolint
 }
 
 recover_target <- function(target, meta, config) {
-  if (!config$recover) {
+  if (!config$settings$recover) {
     return(FALSE)
   }
   key <- recovery_key_impl(target = target, meta = meta, config = config)

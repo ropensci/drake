@@ -193,7 +193,7 @@ store_meta <- function(target, value, meta, hash, config) {
   if (is_target && is_history(config$cache$history)) {
     config$cache$history$push(title = target, message = meta_hash)
   }
-  if (is_target && config$recoverable) {
+  if (is_target && config$settings$recoverable) {
     store_recovery(target, meta, meta_hash, config)
   }
 }
