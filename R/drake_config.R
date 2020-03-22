@@ -653,7 +653,8 @@ drake_config <- function(
     jobs_preprocess = jobs_preprocess,
     keep_going = keep_going,
     lazy_load = lazy_load,
-    lib_loc = lib_loc
+    lib_loc = lib_loc,
+    lock_envir = lock_envir
   )
   out <- list(
     envir = envir,
@@ -687,7 +688,6 @@ drake_config <- function(
     memory_strategy = memory_strategy,
     template = template,
     sleep = sleep,
-    lock_envir = lock_envir,
     force = force,
     recover = recover,
     recoverable = recoverable,

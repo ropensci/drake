@@ -258,7 +258,7 @@ drake_with_call_stack_8a6af5 <- function(target, config) {
     signalCondition(e)
   }
   expr <- config$spec[[target]]$command_build
-  if (config$lock_envir) {
+  if (config$settings$lock_envir) {
     on.exit(unlock_environment(config$envir))
     block_envir_lock(config)
     lock_environment(config$envir)
