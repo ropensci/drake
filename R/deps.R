@@ -148,10 +148,12 @@ display_deps_list <- function(x) {
     return(weak_tibble(name = character(0), type = character(0)))
   }
   x$memory <- NULL
+  x <- select_nonempty(x)
   out <- lapply(names(x), function(n) {
     weak_tibble(name = x[[n]], type = n)
   })
-  do.call(rbind, out)
+  do.call(rbind, out) %|||%
+    weak_tibble(name = character(0), type = character(0))
 }
 
 #' @title Find out why a target is out of date.
