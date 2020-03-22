@@ -28,7 +28,7 @@ test_with_dir("loading targets at cursor works under a real conditions", {
   target_list <- list(
     target1 = "value",
     zarget_2_ = "value",
-    .target.3. = "value",
+    .target.3_ = "value",
     TARGET = "value"
   )
   target_names <- names(target_list)
@@ -194,7 +194,7 @@ test_with_dir("graceful handling of no symbol at cursor.", {
 
   expect_message(
     result <- rs_addin_loadd(whitespace_context),
-    "Couldn't find an object name at cursor position."
+    "Could not find object name at cursor position"
   )
   expect_null(result)
 
@@ -229,7 +229,7 @@ test_with_dir("graceful handling of no symbol at cursor.", {
 
   expect_message(
     result <- rs_addin_loadd(after_symbol_context),
-    "Couldn't find an object name at cursor position."
+    "Could not find object name at cursor position"
   )
   expect_null(result)
 })

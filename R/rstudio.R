@@ -53,6 +53,9 @@ rs_addin_r_vis_drake_graph <- function(r_args = list(), .print = TRUE) {
 #' current cursor location from the cache into the global environment.
 #' This is convenient during pipeline development when building off
 #' established targets.
+#' @details If you are using a non-standard `drake` cache,
+#'   you must supply it to the `"rstudio_drake_cache"` global option,
+#'   e.g. `options(rstudio_drake_cache = storr::storr_rds("my_cache"))`.
 #' @param context an RStudio document context.
 #'   Read from the active document if not supplied.
 #'   This is used for testing purposes.
@@ -66,12 +69,13 @@ rs_addin_loadd <- function(context = NULL) {
   if (is.null(target)) {
     return()
   }
-  cache <- drake_cache()
-  message(
-    "Loading target ",
-    shQuote(target),
-    " into global evironment.\nCache: ",
-    shQuote(cache$path)
+  cache <- getOption("rstudio_drake_cache") %||% drake_cache()
+  cache <- decorate_storr(cache)
+  cli_msg(
+    "Loading target",
+    target,
+    "into global evironment from cache",
+    cache$path
   )
   loadd(
     list = target,
@@ -99,7 +103,10 @@ rs_get_symbol_at_cursor <- function(context) {
       cursor_column <= match_ends
   )
   if (length(match_index) == 0) {
-    message("Couldn't find an object name at cursor position.")
+    cli_msg(
+      "Could not find object name at cursor position.",
+      cli_sym = cli::col_red(cli::symbol$cross)
+    )
     return(NULL)
   }
   substr(

@@ -292,6 +292,13 @@ loadd <- function(
   invisible()
 }
 
+# TODO: should be a validate method.
+assert_cache <- function(cache) {
+  if (is.null(cache)) {
+    stop0("cannot find drake cache.")
+  }
+}
+
 load_subtargets <- function(target, cache, envir, subtargets, subtarget_list) {
   hashes <- get(target, envir = envir, inherits = FALSE)
   load_targets_impl(hashes, target, cache, envir, subtargets, subtarget_list)
@@ -378,10 +385,7 @@ loadd_handle_empty_targets <- function(targets, cache, ...) {
 
 loadd_use_tidyselect <- function(tidyselect, deps) {
   if (tidyselect && deps) {
-    message(
-      "Disabling `tidyselect` in `loadd()` because `deps` is `TRUE`. ",
-      "For details, see the `deps` argument in the `loadd()` help file."
-    )
+    cli_msg("Disabled tidyselect in loadd() because deps is TRUE.")
     return(FALSE)
   }
   tidyselect
@@ -392,10 +396,8 @@ loadd_use_deps <- function(targets, config, deps) {
     return(targets)
   }
   if (is.null(config)) {
-    stop(
-      "In `loadd(deps = TRUE)`, you must supply a `drake_config()` ",
-      "object to the `config` argument.",
-      call. = FALSE
+    stop0(
+      "loadd(deps = TRUE) needs a drake_config() object in config."
     )
   }
   assert_config(config)
@@ -424,7 +426,7 @@ loadd_handle_replace <- function(targets, envir, replace) {
 loadd_any_targets <- function(targets, deps, verbose) {
   if (!length(targets) && !deps) {
     if (verbose) {
-      message("No targets to load in loadd().")
+      cli_msg("No targets to load in loadd().")
     }
     return(FALSE)
   }
@@ -458,7 +460,7 @@ parse_lazy_arg <- function(lazy) {
 #' plan <- drake_plan(x = sample.int(15))
 #' cache <- storr::storr_environment() # custom in-memory cache
 #' make(plan, cache = cache)
-#' config <- drake_config(plan, cache = cache)
+#' config <- drake_config(plan, cache = cache, history = FALSE)
 #' show_source(x, config)
 #' })
 #' }
@@ -468,14 +470,20 @@ show_source <- function(target, config, character_only = FALSE) {
   }
   cache <- config$cache
   meta <- diagnose(target = target, cache = cache, character_only = TRUE)
-  prefix <- ifelse(is_encoded_path(target), "File ", "Target ")
+  prefix <- ifelse(is_encoded_path(target), "File", "Target")
   if (meta$imported) {
-    message(prefix, target, " was imported.")
+    cli_msg(prefix, target, "was imported.")
   } else {
     command <- gsub("^\\{\n ", "", meta$command)
     command <- gsub(" \n\\}$", "", command)
-    message(
-      prefix, target, " was built from command:\n  ", target, " = ", command)
+    cli_msg(
+      prefix,
+      target,
+      "was built from command:\n  ",
+      target,
+      " = ",
+      command
+    )
   }
 }
 
@@ -630,11 +638,10 @@ cached <- function(
   }
   targets <- c(list, match.call(expand.dots = FALSE)$...)
   if (length(targets)) {
-    warning(
+    warn0(
       "The `...` and `list` arguments of `cached()` are deprecated.",
       "`cached()` no longer accepts target names. It just lists ",
-      "the targets in the cache.",
-      call. = FALSE
+      "the targets in the cache."
     )
   }
   targets <- cache$list(namespace = namespace)
@@ -880,10 +887,9 @@ find_cache <- function(
   directory = NULL
 ) {
   if (!is.null(directory)) {
-    warning(
+    warn0(
       "Argument `directory` of find_cache() is deprecated. ",
-      "use `dir` instead.",
-      call. = FALSE
+      "use `dir` instead."
     )
   }
   dir <- dir %|||% basename(default_cache_path())
@@ -995,14 +1001,14 @@ drake_fetch_rds <- function(path) {
 cache_vers_stop <- function(cache) {
   msg <- cache_vers_check(cache)
   if (length(msg)) {
-    stop(msg, call. = FALSE)
+    stop0(msg)
   }
 }
 
 cache_vers_warn <- function(cache) {
   msg <- cache_vers_check(cache)
   if (length(msg)) {
-    warning(msg, call. = FALSE)
+    warn0(msg)
   }
 }
 
@@ -1254,7 +1260,7 @@ single_cache_log <- function(key, cache) {
 #' # Get the error log, an object of class "error".
 #' error <- diagnose(my_target)$error # See also warnings and messages.
 #' str(error) # See what's inside the error log.
-#' error$calls # View the traceback. (See the traceback() function).
+#' error$calls # View the traceback. (See the rlang::trace_back() function).
 #' })
 #' }
 diagnose <- function(
@@ -1280,19 +1286,15 @@ diagnose <- function(
   if (!cache$exists(key = target, namespace = "meta")) {
     stop("No metadata for target ", target, ".")
   }
-  cache$get(
-    key = target,
-    namespace = "meta"
-  )
+  cache$get(key = target, namespace = "meta")
 }
 
 #' @title List running targets.
 #' \lifecycle{maturing}
 #' @description List the targets that either
-#'   (1) are currently being built during a call to [make()], or
-#'   (2) if [make()] was interrupted, the targets that were running
-#'     at the time.
-#' @seealso [failed()], [make()]
+#'   1. Are currently being built during a call to [make()], or
+#'   2. Were in progress when [make()] was interrupted.
+#' @seealso [done()], [failed()], [cancelled()], [make()]
 #' @export
 #' @return A character vector of target names.
 #' @inheritParams cached
@@ -1326,10 +1328,8 @@ running <- function(
 
 #' @title List failed targets.
 #' \lifecycle{maturing}
-#' @description Together, functions `failed()` and
-#' [diagnose()] should eliminate the strict need
-#' for ordinary error messages printed to the console.
-#' @seealso [running()], [make()]
+#' @description List the targets that quit in error during [make()].
+#' @seealso [done()], [running()], [cancelled()], [make()]
 #' @export
 #' @return A character vector of target names.
 #' @inheritParams cached
@@ -1366,6 +1366,48 @@ failed <- function(
   }
   prog <- progress(path = path, search = search, cache = cache)
   prog$target[prog$progress == "failed"]
+}
+
+#' @title List done targets.
+#' \lifecycle{maturing}
+#' @description List the targets that completed in the current or
+#'   previous call to [make()].
+#' @seealso [running()], [failed()], [cancelled()], [make()]
+#' @export
+#' @return A character vector of target names.
+#' @inheritParams cached
+#' @examples
+#' \dontrun{
+#' isolate_example("contain side effects", {
+#' plan <- drake_plan(x = 1, y = x)
+#' make(plan)
+#' done()
+#' })
+#' }
+done <- function(cache = drake::drake_cache(path = path), path = NULL) {
+  prog <- progress(path = path, cache = cache)
+  prog$target[prog$progress == "done"]
+}
+
+#' @title List cancelled targets.
+#' \lifecycle{maturing}
+#' @description List the targets that were cancelled in the current or
+#'   previous call to [make()] using [cancel()] or [cancel_if()].
+#' @seealso [running()], [failed()], [done()], [make()]
+#' @export
+#' @return A character vector of target names.
+#' @inheritParams cached
+#' @examples
+#' \dontrun{
+#' isolate_example("contain side effects", {
+#' plan <- drake_plan(x = 1, y = cancel_if(x > 0))
+#' make(plan)
+#' cancelled()
+#' })
+#' }
+cancelled <- function(cache = drake::drake_cache(path = path), path = NULL) {
+  prog <- progress(path = path, cache = cache)
+  prog$target[prog$progress == "cancelled"]
 }
 
 #' @title Get the build progress of your targets
@@ -1430,10 +1472,9 @@ progress <- function(
   }
   cache <- decorate_storr(cache)
   if (!is.null(no_imported_objects)) {
-    warning(
-      "Argument `no_imported_objects` of progress() is deprecated. ",
-      "Only targets are returned now.",
-      call. = FALSE
+    warn0(
+      "Argument no_imported_objects of progress() is deprecated. ",
+      "Only targets are returned now."
     )
   }
   targets <- c(as.character(match.call(expand.dots = FALSE)$...), list)

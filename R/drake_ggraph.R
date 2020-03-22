@@ -85,8 +85,6 @@ drake_ggraph_impl <- function(
     clusters = clusters,
     show_output_files = show_output_files
   )
-  config$logger$minor("begin drake_ggraph()")
-  on.exit(config$logger$minor("end drake_ggraph()"), add = TRUE)
   if (is.null(main)) {
     main <- graph_info$default_title
   }

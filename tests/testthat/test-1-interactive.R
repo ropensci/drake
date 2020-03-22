@@ -1,24 +1,31 @@
 drake_context("interactive")
 
-test_with_dir("code analysis print method", {
+test_with_dir("print.drake_deps()", {
   skip_on_cran()
-  x <- analyze_code(quote(x)) # print by hand
+  x <- drake_deps(quote(x)) # print by hand
   m <- utils::capture.output(print(x))
-  expect_true(any(grepl("code analysis results list", m)))
+  expect_true(any(grepl("drake_deps", m)))
 })
 
-test_with_dir("drake_config() print method", {
+test_with_dir("print.drake_deps_ht()", {
   skip_on_cran()
-  x <- drake_config(drake_plan(y = 1)) # print by hand
+  x <- drake_deps_ht(quote(x)) # print by hand
   m <- utils::capture.output(print(x))
-  expect_true(any(grepl("configured drake workflow", m)))
+  expect_true(any(grepl("drake_deps_ht", m)))
 })
 
-test_with_dir("trigger() print method", {
+test_with_dir("print.drake_settings()", {
+  skip_on_cran()
+  x <- drake_settings() # print by hand
+  m <- utils::capture.output(print(x))
+  expect_true(any(grepl("drake_settings", m)))
+})
+
+test_with_dir("print.drake_triggers()", {
   skip_on_cran()
   x <- trigger() # print by hand
   m <- utils::capture.output(print(x))
-  expect_true(any(grepl("list of triggers", m)))
+  expect_true(any(grepl("drake_triggers", m)))
 })
 
 test_with_dir("drake spec print method", {
@@ -34,8 +41,16 @@ test_with_dir("drake spec print method", {
   expect_true(any(grepl("specification of target x", m2)))
 })
 
+test_with_dir("drake_config() print method", {
+  skip_on_cran()
+  x <- drake_config(drake_plan(y = 1)) # print by hand
+  m <- utils::capture.output(print(x))
+  expect_true(any(grepl("drake_config", m)))
+})
+
 test_with_dir("drake_graph_info() print method", {
   skip_on_cran()
+  skip_if_not_installed("visNetwork")
   x <- drake_graph_info(drake_plan(y = 1)) # print by hand
   m <- utils::capture.output(print(x))
   expect_true(any(grepl("drake graph", m)))
@@ -55,26 +70,28 @@ test_with_dir("logger", {
   # testthat suppresses messages,
   # so we need to inspect the console output manually.
   files <- list.files()
-  x <- logger(verbose = 0L, file = NULL)
-  x$major("abc") # Should be empty.
-  x$minor("abc") # Should be empty.
-  x <- logger(verbose = 1L, file = NULL)
-  x$major("abc") # Should show "abc".
-  x$minor("abc") # Should be empty.
-  x <- logger(verbose = 2L, file = NULL)
-  x$major("abc") # Should show "abc".
-  x$minor("abc") # Should show the spinner.
+  x <- refclass_logger$new(verbose = 0L, file = NULL)
+  x$disk("abc") # Should be empty.
+  x <- refclass_logger$new(verbose = 1L, file = NULL)
+  x$disk("abc") # Should be empty.
+  x <- refclass_logger$new(verbose = 2L, file = NULL)
+  x$disk("abc") # Should be empty.
   expect_equal(files, list.files())
+  x$term("abc", "def") # Should say "abc def"
   for (verbose in c(0L, 1L, 2L)) {
     tmp <- tempfile()
-    x <- logger(verbose = 0L, file = tmp)
+    x <- refclass_logger$new(verbose = verbose, file = tmp)
     expect_equal(x$file, tmp)
     expect_false(file.exists(tmp))
-    x$major("abc")
+    x$disk("abc")
     expect_equal(length(readLines(tmp)), 1L)
-    x$minor("abc")
+    x$target("abc", "target") # Should say "target abc"
     expect_equal(length(readLines(tmp)), 2L)
   }
+  # Retries need a special test since the logger is muted
+  # in those tests.
+  plan <- drake_plan(x = target(stop(1), retries = 3))
+  expect_error(make(plan, verbose = 1L))
 })
 
 if (FALSE) {
@@ -112,17 +129,40 @@ test_with_dir("time stamps and large files", {
   )
   file.append(file_large, file_csv)
   plan <- drake_plan(x = file_in(!!file_large))
-  cache <- storr::storr_rds(tempfile())
+  cache <- storr::storr_rds(file.path(tempfile(), "cache"))
   config <- drake_config(plan, cache = cache)
-  make(plan, cache = cache, console_log_file = log1) # should be a little slow
+  make(plan, cache = cache, log_make = log1) # should be a little slow
   expect_equal(justbuilt(config), "x")
-  make(plan, cache = cache, console_log_file = log2) # should be quick
+  make(plan, cache = cache, log_make = log2) # should be quick
   expect_equal(justbuilt(config), character(0))
   tmp <- file.append(file_large, file_csv)
-  make(plan, cache = cache, console_log_file = log3) # should be a little slow
+  make(plan, cache = cache, log_make = log3) # should be a little slow
   expect_equal(justbuilt(config), "x")
   system2("touch", file_large)
-  make(plan, cache = cache, console_log_file = log4) # should be a little slow
+  make(plan, cache = cache, log_make = log4) # should be a little slow
+  expect_equal(justbuilt(config), character(0))
+  # Now, compare the times stamps on the logs.
+  # Make sure the imported file takes a long time to process the first time
+  # but is instantaneous the second time.
+  # The third time, the file changed, so the processing time
+  # should be longer. Likewise for the fourth time because
+  # the file was touched.
+  message(paste(readLines(log1), collapse = "\n"))
+  message(paste(readLines(log2), collapse = "\n"))
+  message(paste(readLines(log3), collapse = "\n"))
+  message(paste(readLines(log4), collapse = "\n"))
+  # New plan: dynamic files.
+  plan <- drake_plan(x = target(file_large, format = "file"))
+  # Same as before.
+  make(plan, cache = cache, log_make = log1) # should be a little slow
+  expect_equal(justbuilt(config), "x")
+  make(plan, cache = cache, log_make = log2) # should be quick
+  expect_equal(justbuilt(config), character(0))
+  tmp <- file.append(file_large, file_csv)
+  make(plan, cache = cache, log_make = log3) # should be a little slow
+  expect_equal(justbuilt(config), "x")
+  system2("touch", file_large)
+  make(plan, cache = cache, log_make = log4) # should be a little slow
   expect_equal(justbuilt(config), character(0))
   # Now, compare the times stamps on the logs.
   # Make sure the imported file takes a long time to process the first time
@@ -383,6 +423,58 @@ test_with_dir("Output from the callr RStudio addins", {
   skip_if_not_installed("visNetwork")
   graph <- rs_addin_r_vis_drake_graph(r_args) # Should show a graph.
   expect_true(inherits(graph, "visNetwork"))
+})
+
+test_with_dir("progress bars", {
+  skip_on_cran()
+  # Needs visual inspection at every step
+  plan <- drake_plan(
+    x = target(
+      Sys.sleep(.1),
+      transform = map(y = !!seq_len(40))
+    )
+  )
+  make(plan, verbose = 2)
+  plan <- drake_plan(
+    x = target(
+      Sys.sleep(.1),
+      transform = map(y = !!seq_len(40))
+    ),
+    w = seq_len(40),
+    z = target(
+      Sys.sleep(.1),
+      dynamic = map(y = w)
+    )
+  )
+  make(plan, verbose = 2)
+  clean()
+  make(plan, verbose = 2, parallelism = "future")
+  skip_on_os("windows")
+  clean()
+  options(clustermq.scheduler = "multicore")
+  make(plan, verbose = 2, parallelism = "clustermq")
+})
+
+test_with_dir("dynamic branching + format file checksums (#1168)", {
+  write_lines <- function(files, ...) {
+    for (file in files) {
+      writeLines(c(file, "stuff"), file)
+    }
+    files
+  }
+  plan <- drake_plan(
+    x = c("a", "b"),
+    y = target(
+      write_lines(x),
+      format = "file",
+      dynamic = map(x)
+    )
+  )
+  # Need to walk through this function manually.
+  debug(format_file_checksum_impl.file)
+  # Browse in a sub-target of y.
+  # Make sure nonempty hashes are returned from the function.
+  make(plan, parallelism = "future")
 })
 
 }

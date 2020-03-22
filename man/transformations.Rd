@@ -93,8 +93,6 @@ Transformation function usage:
 
 \section{Dynamic branching}{
 
-Dynamic branching is not yet implemented,
-but this is what it usage will look like.
 \itemize{
 \item \code{map(..., .trace)}
 \item \code{cross(..., .trace)}

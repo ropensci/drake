@@ -74,8 +74,6 @@ predict_runtime_impl <- function(
   default_time = 0,
   warn = TRUE
 ) {
-  config$logger$minor("begin predict_runtime()")
-  on.exit(config$logger$minor("end predict_runtime()"), add = TRUE)
   worker_prediction_info(
     config = config,
     targets = targets_predict,
@@ -187,8 +185,6 @@ predict_workers_impl <- function(
   default_time = 0,
   warn = TRUE
 ) {
-  config$logger$minor("begin predict_workers()")
-  on.exit(config$logger$minor("end predict_workers()"), add = TRUE)
   worker_prediction_info(
     config,
     targets = targets_predict,
@@ -214,6 +210,7 @@ worker_prediction_info <- function(
   warn = TRUE
 ) {
   assert_config(config)
+  config$logger$file <- NULL
   deprecate_targets_only(targets_only) # 2019-01-03 # nolint
   assumptions <- timing_assumptions(
     config = config,
@@ -334,13 +331,9 @@ timing_assumptions <- function(
   untimed <- setdiff(vertices, times$target)
   untimed <- setdiff(untimed, names(known_times))
   if (length(untimed)) {
-    warning(
-      "Some targets were never actually timed, ",
-      "And no hypothetical time was specified in `known_times`. ",
-      "Assuming a runtime of ",
-      default_time, " for these targets:\n",
-      multiline_message(untimed),
-      call. = FALSE
+    warn0(
+      "No known_times set. Assuming ", default_time, " runtime for:\n",
+      multiline_message(untimed)
     )
   }
   keep_known_times <- intersect(names(known_times), vertices)

@@ -78,15 +78,15 @@ test_with_dir("File functions handle input", {
     file_out(1, "x", "y"), c("1", "x", "y")
   )
 
-  out <- analyze_code(quote(file_in(c("file1", "file2"))))
-  out <- decode_deps_list(out)
+  out <- drake_deps(quote(file_in(c("file1", "file2"))))
+  out <- select_nonempty(decode_deps_list(out))
   expect_equal(length(out), 1L)
   out <- sort(out$file_in)
   exp <- sort(c("file1", "file2"))
   expect_equal(out, exp)
 
-  out <- analyze_code(quote(file_out(c("file1", "file2"))))
-  out <- decode_deps_list(out)
+  out <- drake_deps(quote(file_out(c("file1", "file2"))))
+  out <- select_nonempty(decode_deps_list(out))
   expect_equal(length(out), 1L)
   out <- sort(out$file_out)
   exp <- sort(c("file1", "file2"))
@@ -201,7 +201,7 @@ test_with_dir("plans can start with bad symbols", {
   x <- weak_tibble(
     target = c("a'x'", "b'x'", "_a", "a^-.*"),
     command = 1)
-  y <- drake_config(x)
+  y <- expect_warning(drake_config(x), regexp = "trailing dot")
   out <- sort(c("a.x_", "b.x_", "X_a", "a..._"))
   expect_true(all(out %in% names(y$spec)))
 })
@@ -359,18 +359,21 @@ test_with_dir("bind_plans() with unequal list columns (#1136)", {
 
 test_with_dir("spaces in target names are replaced only when appropriate", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  pl <- drake_plan(
-    a_.b.....x..y. = {
-      b
-      x
-      y
-    },
-    a_.a..x. = {
-      a
-      x
-    },
-    drake_target_1_.b.....x..y. = file_out("{b  \n  x; y}"),
-    drake_target_1_.a..x. = file_out("{a; x}")
+  expect_warning(
+    pl <- drake_plan(
+      a_.b.....x..y. = {
+        b
+        x
+        y
+      },
+      a_.a..x. = {
+        a
+        x
+      },
+      drake_target_1_.b.....x..y. = file_out("{b  \n  x; y}"),
+      drake_target_1_.a..x. = file_out("{a; x}")
+    ),
+    regexp = "trailing dot"
   )
   expect_equal(
     sort(pl$target),
@@ -595,7 +598,7 @@ test_with_dir("case sensitivity", {
       cache = storr::storr_environment(),
       session_info = FALSE
     ),
-    regexp = "case insensitive"
+    regexp = "when converting to lowercase"
   )
 })
 
@@ -738,11 +741,15 @@ test_with_dir("cancel in incorrect context (#1131)", {
 
 test_with_dir("convert_trailing_dot() (#1147)", {
   expect_equal(
-    convert_trailing_dot(c("numeric_ids_.1.", "numeric_ids_.2.")),
+    expect_warning(
+      convert_trailing_dot(c("numeric_ids_.1.", "numeric_ids_.2."))
+    ),
     c("numeric_ids_.1_", "numeric_ids_.2_")
   )
   expect_equal(
-    convert_trailing_dot(c("numeric_ids_.1._", "numeric_ids_.2.")),
+    expect_warning(
+      convert_trailing_dot(c("numeric_ids_.1._", "numeric_ids_.2."))
+    ),
     c("numeric_ids_.1._", "numeric_ids_.2_")
   )
   expect_equal(convert_trailing_dot(letters), letters)
@@ -751,18 +758,28 @@ test_with_dir("convert_trailing_dot() (#1147)", {
 test_with_dir("convert_trailing_dot() in plans (#1147)", {
   n <- seq_len(2)
   ids <- rlang::syms(as.character(n))
-  plan <- drake_plan(
-    numeric_ids = target(
-      rnorm(n),
-      transform = map(
-        n = !!n,
-        ids = !!ids,
-        .id = ids
+  expect_warning(
+    plan <- drake_plan(
+      numeric_ids = target(
+        rnorm(n),
+        transform = map(
+          n = !!n,
+          ids = !!ids,
+          .id = ids
+        )
       )
-    )
+    ),
+    regexp = "trailing dot"
   )
   expect_equal(
     plan$target,
     c("numeric_ids_.1_", "numeric_ids_.2_")
+  )
+})
+
+test_with_dir("trailing dots in imports (#1147)", {
+  expect_warning(
+    assert_no_trailing_dot("x.", force = TRUE),
+    regexp = "imports must not end with dots on Windows"
   )
 })

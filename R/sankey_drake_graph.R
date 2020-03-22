@@ -93,8 +93,6 @@ sankey_drake_graph_impl <- function(
     clusters = clusters,
     show_output_files = show_output_files
   )
-  config$logger$minor("begin sankey_drake_graph()")
-  on.exit(config$logger$minor("end sankey_drake_graph()"), add = TRUE)
   render_sankey_drake_graph(
     graph_info,
     file = file,
@@ -216,7 +214,9 @@ sankey_render_webshot <- function(file, graph, selfcontained) {
   file <- path.expand(file)
   if (is_image_filename(file)) {
     assert_pkg("webshot")
-    url <- file.path(random_tempdir(), "tmp.html")
+    dir <- tempfile()
+    dir.create(dir)
+    url <- file.path(dir, "tmp.html")
     networkD3::saveNetwork(
       network = graph,
       file = url,

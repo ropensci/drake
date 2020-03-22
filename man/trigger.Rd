@@ -24,7 +24,9 @@ trigger(
 non-file dependency changes.}
 
 \item{file}{Logical, whether to rebuild the target
-if a \code{\link[=file_in]{file_in()}}/\code{\link[=file_out]{file_out()}}/\code{\link[=knitr_in]{knitr_in()}} file changes.}
+if a \code{\link[=file_in]{file_in()}}/\code{\link[=file_out]{file_out()}}/\code{\link[=knitr_in]{knitr_in()}} file changes.
+Also applies to external data tracked with
+\code{target(format = "file")}.}
 
 \item{seed}{Logical, whether to rebuild the target
 if the seed changes. Only makes a difference if you set
@@ -32,7 +34,9 @@ a custom \code{seed} column in your \code{\link[=drake_plan]{drake_plan()}} at s
 in your workflow.}
 
 \item{format}{Logical, whether to rebuild the target if the
-specialized data format changes. See
+choice of specialized data format changes: for example,
+if you use \code{target(format = "qs")} one instance and
+\code{target(format = "fst")} the next. See
 \url{https://books.ropensci.org/drake/plans.html#special-data-formats-for-targets} # nolint
 for details on formats.}
 

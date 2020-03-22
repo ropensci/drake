@@ -4,9 +4,9 @@ test_with_dir("no overt errors lazy load for the debug example", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
   config$verbose <- FALSE
-  config$lazy_load <- TRUE
-  if ("parLapply" %in% tail(config$parallelism, 1)) {
-    config$jobs <- 1
+  config$settings$lazy_load <- TRUE
+  if ("parLapply" %in% tail(config$settings$parallelism, 1)) {
+    config$settings$jobs <- 1
   }
   expect_equal(sort(outdated_impl(config)), sort(config$plan$target))
 
@@ -60,7 +60,8 @@ test_with_dir("lazy loading is actually lazy", {
   config$ht_dynamic <- ht_new()
   config$envir_graph <- ht_new()
   config$envir_graph$graph <- config$graph
-  drake_backend.loop(config)
+  config$logger$set_progress_total(igraph::gorder(config$graph))
+  drake_backend_loop(config)
   loaded <- ls(envir = config$envir_targets)
   expect_true(all(lazily_loaded %in% loaded))
   expect_false(any(eagerly_loaded %in% loaded))

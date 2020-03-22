@@ -50,15 +50,11 @@ drake_build_impl <- function(
   character_only = FALSE,
   replace = FALSE
 ) {
-  config$logger$minor("begin drake_build()", target = target)
-  on.exit(
-    config$logger$minor("end drake_build()", target = target),
-    add = TRUE
-  )
   deprecate_arg(meta)
   if (!character_only) {
     target <- as.character(substitute(target))
   }
+  assert_static(target, config, "drake_build()")
   deps <- deps_memory(targets = target, config = config)
   for (dep in deps) {
     if (replace || !exists(dep, envir = config$envir_targets)) {
@@ -124,11 +120,7 @@ drake_debug_impl <- function(
   # Tested in tests/testthat/test-always-skipped.R.
   # nocov start
   if (is.null(config)) {
-    stop(
-      "In `drake_debug()`, you must supply a `drake_config()` ",
-      "object to the `config` argument.",
-      call. = FALSE
-    )
+    stop0("drake_debug() needs a drake_config() in config.")
   }
   if (!character_only) {
     target <- as.character(substitute(target))
@@ -136,8 +128,9 @@ drake_debug_impl <- function(
   if (!length(target)) {
     target <- utils::head(drake::failed(cache = config$cache), n = 1)
   }
+  assert_static(target, config, "drake_debug()")
   if (verbose) {
-    message("Building target `", target, "` in debug mode.")
+    cli_msg("Building target", target, "in debug mode.")
   }
   deps <- deps_memory(targets = target, config = config)
   for (dep in deps) {

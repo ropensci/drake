@@ -8,7 +8,7 @@ local_build <- function(target, config, downstream) {
     target,
     config,
     downstream = downstream,
-    jobs = config$jobs_preprocess
+    jobs = config$settings$jobs_preprocess
   )
   build <- try_build(target, meta, config)
   conclude_build(build, config)
@@ -28,13 +28,8 @@ announce_static <- function(target, config) {
     value = "running",
     config = config
   )
-  color <- ifelse(is_subtarget(target, config), "subtarget", "target")
-  config$logger$major(
-    color,
-    target,
-    target = target,
-    color = color
-  )
+  action <- ifelse(is_subtarget(target, config), "subtarget", "target")
+  config$logger$target(target, action)
 }
 
 announce_dynamic <- function(target, config) {
@@ -43,21 +38,16 @@ announce_dynamic <- function(target, config) {
     value = "running",
     config = config
   )
-  msg <- ifelse(
+  action <- ifelse(
     is_registered_dynamic(target, config),
-    "aggregate",
+    "finalize",
     "dynamic"
   )
-  config$logger$major(
-    msg,
-    target,
-    target = target,
-    color = "dynamic"
-  )
+  config$logger$target(target, action)
 }
 
 try_build <- function(target, meta, config) {
-  if (identical(config$garbage_collection, TRUE)) {
+  if (config$settings$garbage_collection) {
     on.exit(gc())
   }
   if (is_dynamic(target, config)) {
@@ -72,15 +62,7 @@ try_build <- function(target, meta, config) {
   max_retries <- as.integer(max_retries)
   while (retries <= max_retries) {
     if (retries > 0L) {
-      config$logger$major(
-        "retry",
-        target,
-        retries,
-        "of",
-        max_retries,
-        target = target,
-        color = "retry"
-      )
+      config$logger$target(target, "retry")
     }
     build <- with_seed_timeout(
       target = target,
@@ -186,60 +168,79 @@ get_seed <- function() {
 # https://github.com/arendsee/rmonad/blob/14bf2ef95c81be5307e295e8458ef8fb2b074dee/R/to-monad.R#L68 # nolint
 with_handling <- function(target, meta, config) {
   warnings <- messages <- NULL
-  if (config$log_build_times) {
+  if (config$settings$log_build_times) {
     start <- proc_time()
   }
   withCallingHandlers(
     value <- drake_with_call_stack_8a6af5(target = target, config = config),
     warning = function(w) {
-      config$logger$minor(paste("Warning:", w$message), target = target)
+      config$logger$disk(paste("Warning:", w$message), target = target)
       warnings <<- c(warnings, w$message)
+      warning(as_immediate_condition(w))
       invokeRestart("muffleWarning")
     },
     message = function(m) {
       msg <- gsub(pattern = "\n$", replacement = "", x = m$message)
-      config$logger$minor(msg, target = target)
+      config$logger$disk(msg, target = target)
       messages <<- c(messages, msg)
+      message(as_immediate_condition(m))
       invokeRestart("muffleMessage")
     }
   )
-  if (config$log_build_times) {
+  if (config$settings$log_build_times) {
     meta$time_command <- proc_time() - start
   }
-  meta$warnings <- prepend_fork_advice(warnings)
+  meta$warnings <- warnings
   meta$messages <- messages
   if (inherits(value, "error")) {
-    value$message <- prepend_fork_advice(value$message)
     meta$error <- value
   }
-  list(
-    target = target,
-    meta = meta,
-    value = value
-  )
+  if (failed_fork(warnings)) {
+    throw_fork_warning(config)
+    meta <- prepend_fork_advice(meta)
+  }
+  list(target = target, meta = meta, value = value)
 }
 
-prepend_fork_advice <- function(msg) {
+as_immediate_condition <- function(x) {
+  class(x) <- c(class(x), "immediateCondition")
+  x
+}
+
+throw_fork_warning <- function(config) {
+  if (!delayed_relay(config)) {
+    warn0(fork_advice())
+  }
+}
+
+prepend_fork_advice <- function(meta) {
+  meta$warnings <- c(meta$warnings, fork_advice())
+  if (inherits(meta$error, "error")) {
+    meta$error$message <- c(meta$error$message, fork_advice())
+  }
+  meta
+}
+
+failed_fork <- function(msg) {
   if (!length(msg)) {
-    return(msg)
+    return(FALSE)
   }
   # Loop so we can use fixed = TRUE, which is fast. # nolint
-  fork_error <- sum(vapply(
+  sum(vapply(
     c("parallel", "core"),
     function(pattern) any(grepl(pattern, msg, fixed = TRUE)),
     FUN.VALUE = logical(1)
   ))
-  if (!fork_error) {
-    return(msg)
-  }
-  out <- paste(
+}
+
+fork_advice <- function(msg) {
+  paste(
     "\n Having problems with parallel::mclapply(),",
     "future::future(), or furrr::future_map() in drake?",
     "Try one of the workarounds at",
     "https://books.ropensci.org/drake/hpc.html#parallel-computing-within-targets", # nolint
     "or https://github.com/ropensci/drake/issues/675. \n\n"
   )
-  c(out, msg)
 }
 
 # Taken directly from the `evaluate::try_capture_stack()`.
@@ -248,20 +249,24 @@ prepend_fork_advice <- function(msg) {
 drake_with_call_stack_8a6af5 <- function(target, config) {
   frame <- sys.nframe()
   capture_calls <- function(e) {
+    calls <- vcapply(sys.calls(), safe_deparse)
+    top_index <- min(which(grepl("^eval\\(expr = tidy_expr_8a6af5", calls)))
+    top <- sys.frame(top_index + 7)
+    bottom <- sys.frame(sys.nframe() - 2)
+    e$calls <- rlang::trace_back(top = top, bottom = bottom)
     e <- mention_pure_functions(e)
-    e$calls <- head(sys.calls()[-seq_len(frame + 7)], -2)
     signalCondition(e)
   }
   expr <- config$spec[[target]]$command_build
-  if (config$lock_envir) {
+  if (config$settings$lock_envir) {
     on.exit(unlock_environment(config$envir))
     block_envir_lock(config)
     lock_environment(config$envir)
   }
-  tidy_expr <- eval(expr = expr, envir = config$envir_subtargets)
+  tidy_expr_8a6af5 <- eval(expr = expr, envir = config$envir_subtargets)
   tryCatch(
     withCallingHandlers(
-      eval(expr = tidy_expr, envir = config$envir_subtargets),
+      eval(expr = tidy_expr_8a6af5, envir = config$envir_subtargets),
       error = capture_calls
     ),
     error = identity,
@@ -273,7 +278,7 @@ block_envir_lock <- function(config) {
   i <- 1
   # Lock the environment only while running the command.
   while (environmentIsLocked(config$envir)) {
-    Sys.sleep(config$sleep(max(0L, i))) # nocov
+    Sys.sleep(config$settings$sleep(max(0L, i))) # nocov
     i <- i + 1 # nocov
   }
 }
@@ -286,10 +291,10 @@ lock_environment <- function(envir) {
 
 unlock_environment <- function(envir) {
   if (is.null(envir)) {
-    stop("use of NULL environment is defunct")
+    stop0("use of NULL environment is defunct")
   }
   if (!inherits(envir, "environment")) {
-    stop("not an environment")
+    stop0("not an environment")
   }
   .Call(Cunlock_environment, envir)
   lapply(
@@ -334,7 +339,7 @@ conclude_build_impl <- function(value, target, meta, config) {
 
 conclude_build_impl.drake_cancel <- function(value, target, meta, config) { # nolint
   config$cache$set_progress(target = target, value = "cancelled")
-  config$logger$major("cancel", target, target = target, color = "cancel")
+  config$logger$target(target, "cancel")
 }
 
 conclude_build_impl.default <- function(value, target, meta, config) {
@@ -350,11 +355,12 @@ assign_format <- function(target, value, config) {
   drop_format <- is.null(format) ||
     is.na(format) ||
     is.null(value) ||
-    (is_dynamic(target, config) && !is_subtarget(target, config))
+    (is_dynamic(target, config) && !is_subtarget(target, config)) ||
+    inherits(value, "error")
   if (drop_format) {
     return(value)
   }
-  config$logger$minor("format", format, target = target)
+  config$logger$disk("format", format, target = target)
   out <- list(value = value)
   class(out) <- c(paste0("drake_format_", format), "drake_format")
   sanitize_format(x = out, target = target, config = config)
@@ -376,8 +382,8 @@ sanitize_format.drake_format_fst <- function(x, target, config) { # nolint
       safe_deparse(class(x$value), backtick = TRUE),
       " to a plain data frame."
     )
-    warning(msg, call. = FALSE)
-    config$logger$minor(msg, target = target)
+    warn0(msg)
+    config$logger$disk(msg, target = target)
   }
   x$value <- as.data.frame(x$value)
   x
@@ -392,8 +398,8 @@ sanitize_format.drake_format_fst_tbl <- function(x, target, config) { # nolint
       safe_deparse(class(x$value), backtick = TRUE),
       " to a tibble."
     )
-    warning(msg, call. = FALSE)
-    config$logger$minor(msg, target = target)
+    warn0(msg)
+    config$logger$disk(msg, target = target)
   }
   x$value <- tibble::as_tibble(x$value)
   x
@@ -408,8 +414,8 @@ sanitize_format.drake_format_fst_dt <- function(x, target, config) { # nolint
       safe_deparse(class(x$value), backtick = TRUE),
       " to a data.table object."
     )
-    warning(msg, call. = FALSE)
-    config$logger$minor(msg, target = target)
+    warn0(msg)
+    config$logger$disk(msg, target = target)
   }
   x$value <- data.table::as.data.table(x$value)
   x
@@ -427,12 +433,26 @@ sanitize_format.drake_format_diskframe <- function(x, target, config) { # nolint
       "on the same drive as drake's cache ",
       "(say, with as.disk.frame(outdir = drake_tempfile()))."
     )
-    warning(msg, call. = FALSE)
-    config$logger$minor(msg, target = target)
+    warn0(msg)
+    config$logger$disk(msg, target = target)
     x$value <- disk.frame::as.disk.frame(
       df = x$value,
       outdir = config$cache$file_tmp()
     )
+  }
+  x
+}
+
+sanitize_format.drake_format_file <- function(x, target, config) { # nolint
+  if (!is.character(x$value)) {
+    msg <- paste0(
+      "You selected the \"file\" format for target ", target,
+      ", so the return value must be a character vector. ",
+      "coercing to character."
+    )
+    config$logger$disk("Error:", msg, target = target)
+    warn0(msg)
+    x$value <- as.character(x$value)
   }
   x
 }
@@ -443,13 +463,13 @@ assign_to_envir <- function(target, value, config) {
   }
   memory_strategy <- config$spec[[target]]$memory_strategy
   if (is.null(memory_strategy) || is.na(memory_strategy)) {
-    memory_strategy <- config$memory_strategy
+    memory_strategy <- config$settings$memory_strategy
   }
   skip_memory <- memory_strategy %in% c("autoclean", "unload", "none")
   if (skip_memory) {
     return()
   }
-  do_assign <- identical(config$lazy_load, "eager") &&
+  do_assign <- identical(config$settings$lazy_load, "eager") &&
     !is_encoded_path(target) &&
     !is_imported(target, config)
   if (do_assign) {
@@ -493,53 +513,73 @@ assert_output_files <- function(target, meta, config) {
       target, ":\n",
       multiline_message(missing_files)
     )
-    config$logger$minor(paste("Warning:", msg))
-    warning(msg, call. = FALSE)
+    config$logger$disk(paste("Warning:", msg))
+    warn0(msg)
   }
 }
 
 handle_build_exceptions <- function(target, meta, config) {
-  if (length(meta$warnings) && config$logger$verbose) {
-    warn_opt <- max(1, getOption("warn"))
-    with_options(
-      new = list(warn = warn_opt),
-      warning(
-        "target ", target, " warnings:\n",
-        multiline_message(meta$warnings),
-        call. = FALSE
-      )
-    )
+  relay <- delayed_relay(config)
+  if (length(meta$warnings) && config$logger$verbose && relay) {
+    handle_build_warnings(target, meta, config)
   }
-  if (length(meta$messages) && config$logger$verbose) {
-    message(
-      "Target ", target, " messages:\n",
-      multiline_message(meta$messages)
-    )
+  if (length(meta$messages) && config$logger$verbose && relay) {
+    handle_build_messages(target, meta, config)
   }
   if (inherits(meta$error, "error")) {
-    config$logger$major(
-      "fail",
-      target,
-      target = target,
-      color = "fail"
-    )
-    store_failure(target = target, meta = meta, config = config)
-    if (is_subtarget(target, config)) {
-      parent <- config$spec[[target]]$subtarget_parent
-      meta$subtarget <- target
-      store_failure(target = parent, meta = meta, config = config)
-    }
-    if (!config$keep_going) {
-      msg <- paste0(
-        "target `", target, "` failed. Call `drake::diagnose(", target,
-        ")` for details. Error message:\n  ",
-        meta$error$message
-      )
-      config$logger$minor(msg)
-      unlock_environment(config$envir)
-      stop(msg, call. = FALSE)
-    }
+    handle_build_error(target, meta, config)
   }
+}
+
+handle_build_warnings <- function(target, meta, config) {
+  warn_opt <- max(1, getOption("warn"))
+  with_options(
+    new = list(warn = warn_opt),
+    warn0(
+      "target ", target, " warnings:\n",
+      multiline_message(meta$warnings)
+    )
+  )
+}
+
+handle_build_messages <- function(target, meta, config) {
+  cli_msg(
+    "target", target, "messages:\n",
+    multiline_message(meta$messages, indent = " ")
+  )
+}
+
+handle_build_error <- function(target, meta, config) {
+  config$logger$target(target, "fail")
+  if (is_subtarget(target, config)) {
+    parent <- config$spec[[target]]$subtarget_parent
+    meta$subtarget <- target
+    meta$subtarget_index <- which(target == config$spec[[parent]]$subtargets)
+    store_failure(target = parent, meta = meta, config = config)
+  }
+  store_failure(target = target, meta = meta, config = config)
+  if (!config$settings$keep_going) {
+    log_failure(target, meta, config)
+  }
+}
+
+log_failure <- function(target, meta, config) {
+  msg1 <- paste0("target ", target, " failed.")
+  diag <- paste0("diagnose(", target, ")error")
+  message <- paste(meta$error$message, collapse = "\n")
+  trace <- utils::capture.output(print(meta$error$calls))[-1]
+  trace <- paste0(" ", trace)
+  trace <- paste(trace, collapse = "\n")
+  msg2 <- paste0(diag, "$message:\n  ", message)
+  msg3 <- paste0(diag, "$calls:\n", trace)
+  msg <- paste(c(msg1, msg2, msg3), collapse = "\n")
+  config$logger$disk(msg)
+  unlock_environment(config$envir)
+  stop0(msg)
+}
+
+delayed_relay <- function(config) {
+  config$settings$parallelism == "clustermq"
 }
 
 # From withr https://github.com/r-lib/withr, copyright RStudio, GPL (>=2)
@@ -560,7 +600,14 @@ store_failure <- function(target, meta, config) {
     value = "failed",
     config = config
   )
-  fields <- c("messages", "warnings", "error", "subtarget")
+  fields <- c(
+    "messages",
+    "warnings",
+    "error",
+    "seed",
+    "subtarget",
+    "subtarget_index"
+  )
   fields <- intersect(fields, names(meta))
   meta <- meta[fields]
   config$cache$set(
@@ -573,7 +620,7 @@ store_failure <- function(target, meta, config) {
 
 set_progress <- function(target, value, config) {
   skip_progress <- !identical(config$running_make, TRUE) ||
-    !config$log_progress ||
+    !config$settings$log_progress ||
     (config$spec[[target]]$imported %||% FALSE)
   if (skip_progress) {
     return()

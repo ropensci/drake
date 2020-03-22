@@ -4,6 +4,6 @@
 #$ -o <%= log.file %> # log file
 #$ -V                 # Use environment variables.
 #$ -N <%= job.name %> # job name
-# module load R       # Uncomment if R is an environment module.
-Rscript -e 'batchtools::doJobCollection("<%= uri %>")'
-exit 0
+## module load R      # Uncomment and adjust if R is an environment module.
+Rscript -e 'batchtools::doJobCollection("<%= uri %>")' # Leave alone.
+exit 0 # Leave alone.

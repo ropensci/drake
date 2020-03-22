@@ -5,6 +5,7 @@
 #' @export
 #' @inheritSection drake_plan Columns
 #' @inheritSection drake_plan Keywords
+#' @inheritSection drake_plan Formats
 #' @seealso [drake_plan()], [make()]
 #' @return A one-row workflow plan data frame with the named
 #' arguments as columns.
@@ -60,11 +61,10 @@ target <- function(
 ) {
   if (!nzchar(Sys.getenv("drake_target_silent"))) {
     # 2019-12-05
-    stop(
+    stop0(
       "target() in drake is not a standalone user-side function. ",
       "It must be called from inside drake_plan(). Details: ",
-      "https://books.ropensci.org/drake/static.html",
-      call. = FALSE
+      "https://books.ropensci.org/drake/static.html"
     )
   }
   call <- match.call(expand.dots = FALSE)
@@ -122,12 +122,16 @@ target <- function(
 #'   non-file dependency changes.
 #' @param file Logical, whether to rebuild the target
 #'   if a [file_in()]/[file_out()]/[knitr_in()] file changes.
+#'   Also applies to external data tracked with
+#'   `target(format = "file")`.
 #' @param seed Logical, whether to rebuild the target
 #'   if the seed changes. Only makes a difference if you set
 #'   a custom `seed` column in your [drake_plan()] at some point
 #'   in your workflow.
 #' @param format Logical, whether to rebuild the target if the
-#'   specialized data format changes. See
+#'   choice of specialized data format changes: for example,
+#'   if you use `target(format = "qs")` one instance and
+#'   `target(format = "fst")` the next. See
 #'   <https://books.ropensci.org/drake/plans.html#special-data-formats-for-targets> # nolint
 #'   for details on formats.
 #' @param condition R code (expression or language object)
@@ -196,24 +200,19 @@ trigger <- function(
   depend <- as.logical(depend)
   file <- as.logical(file)
   format <- as.logical(format)
-  out <- list(
+  condition <- rlang::quo_squash(rlang::enquo(condition))
+  change <- rlang::quo_squash(rlang::enquo(change))
+  mode <- match.arg(mode)
+  new_drake_triggers(
     command = command,
     depend = depend,
     file = file,
     seed = seed,
     format = format,
-    condition = rlang::quo_squash(rlang::enquo(condition)),
-    change = rlang::quo_squash(rlang::enquo(change)),
-    mode = match.arg(mode)
+    condition = condition,
+    change = change,
+    mode = mode
   )
-  class(out) <- c("drake_triggers", "drake")
-  out
-}
-
-#' @export
-print.drake_triggers <- function(x, ...) {
-  cat("a list of triggers for a drake target\n")
-  utils::str(x, no.list = TRUE)
 }
 
 #' @title Declare input files and directories.
@@ -678,11 +677,10 @@ envir_call <- function() {
 }
 
 envir_call_error <- function() {
-  stop(
+  stop0(
     "Could not find the environment where drake builds targets. ",
     "Functions drake_envir(), id_chr(), cancel(), and cancel_if() ",
-    "can only be invoked through make().",
-    call. = FALSE
+    "can only be invoked through make()."
   )
 }
 

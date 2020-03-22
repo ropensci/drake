@@ -1,6 +1,6 @@
 Package: drake
 Title: A Pipeline Toolkit for Reproducible Computation at Scale
-Version: 7.10.0.9000
+Version: 7.11.0.9000
 Authors@R: c(
   person(
     given = c("William", "Michael"),
@@ -105,7 +105,7 @@ Depends:
   R (>= 3.3.0)
 Imports:
   base64url,
-  digest,
+  digest (>= 0.6.21),
   igraph,
   methods,
   parallel,
@@ -136,6 +136,7 @@ Suggests:
   lubridate,
   networkD3,
   prettycode,
+  progress (>= 1.2.2),
   qs (>= 0.20.2),
   Rcpp,
   rmarkdown,
@@ -152,4 +153,4 @@ Suggests:
 Encoding: UTF-8
 Language: en-US
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.0.2
+RoxygenNote: 7.0.2.9000

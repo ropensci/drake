@@ -112,9 +112,8 @@ configure_cache <- function(
   long_hash_algo <- match.arg(long_hash_algo,
                               choices = available_hash_algos())
   if (log_progress) {
-    warning(
-      "The `log_progress` argument of `configure_cache()` is deprecated.",
-      call. = FALSE
+    warn0(
+      "The `log_progress` argument of `configure_cache()` is deprecated."
     )
   }
   short_exists <- cache$exists(key = "short_hash_algo", namespace = "config")
@@ -224,9 +223,8 @@ default_short_hash_algo <- function(cache = NULL) {
 # 2018-10-27 # nolint
 deprecate_force <- function(force) {
   if (!identical(force, FALSE)) {
-    warning(
-      "Argument `force` is deprecated in small drake utility functions.",
-      call. = FALSE
+    warn0(
+      "Argument `force` is deprecated in small drake utility functions."
     )
   }
 }
@@ -389,12 +387,11 @@ deprecate_hash_algo_args <- function(
   long_hash_algo = NULL
 ) {
   if (!is.null(short_hash_algo) || !is.null(long_hash_algo)) {
-    warning(
+    warn0(
       "The long_hash_algo and short_hash_algo arguments to drake functions ",
       "are deprecated. drake now uses only one hash algorithm, ",
       "which you can set ",
-      "with the hash_algorithm argument in new_cache().",
-      call. = FALSE
+      "with the hash_algorithm argument in new_cache()."
     )
   }
 }
@@ -485,11 +482,10 @@ convert_old_trigger <- function(x) {
   if (!is.character(x)) {
     return(x)
   }
-  warning(
+  warn0(
     "The old trigger interface in drake is deprecated. ",
     "See the trigger() function (singular) ",
-    "to learn about the new trigger interface.",
-    call. = FALSE
+    "to learn about the new trigger interface."
   )
   if (identical(x, "any")) {
     "trigger()"
@@ -511,20 +507,18 @@ convert_old_trigger <- function(x) {
 # See ...drake/pull/608#pullrequestreview-182943763
 deprecate_fetch_cache <- function(fetch_cache) {
   if (!is.null(fetch_cache)) {
-    warning(
-      "Argument `fetch_cache` is deprecated.",
-      call. = FALSE
+    warn0(
+      "Argument `fetch_cache` is deprecated."
     ) # 2018-12-08 # nolint
   }
 }
 
 deprecate_targets_only <- function(targets_only) {
   if (!is.null(targets_only)) {
-    warning(
+    warn0(
       "Argument `targets_only` is deprecated. ",
       "build_times(), graph visualizations, and runtime predictions ",
-      "now always focus only on the targets (ignoring the imports).",
-      call. = FALSE
+      "now always focus only on the targets (ignoring the imports)."
     ) # build times, vis, and predictions: 2019-01-03 # nolint
   }
 }
@@ -571,7 +565,7 @@ load_main_example <- function(
   )$value
   for (file in c("report.Rmd", "raw_data.xlsx")) {
     if (file.exists(file) & overwrite) {
-      warning("Overwriting file ", file, call. = FALSE)
+      warn0("Overwriting file ", file)
     }
     file.copy(
       from = file.path(dir, "main", file),
@@ -944,8 +938,8 @@ make_imports <- function(config) {
       "make_imports() in drake is deprecated. Use make()."
     )
   )
-  config$skip_imports <- FALSE
-  config$skip_targets <- TRUE
+  config$settings$skip_imports <- FALSE
+  config$settings$skip_targets <- TRUE
   make_impl(config = config)
 }
 
@@ -965,8 +959,8 @@ make_targets <- function(config) {
       "make_targets() in drake is deprecated. Use make()."
     )
   )
-  config$skip_imports <- TRUE
-  config$skip_targets <- FALSE
+  config$settings$skip_imports <- TRUE
+  config$settings$skip_targets <- FALSE
   make_impl(config = config)
 }
 
@@ -1590,12 +1584,11 @@ plan_summaries <- function(
 with_analyses_only <- function(plan) {
   has_analysis <- grepl(analysis_wildcard_(), plan$command, fixed = TRUE)
   if (any(!has_analysis)) {
-    warning(
+    warn0(
       "removing ",
       sum(has_analysis),
       " rows with no 'analysis__' wildcard in the command.",
-      "Use plan_analyses() for these.",
-      call. = FALSE
+      "Use plan_analyses() for these."
     )
   }
   return(plan[has_analysis, ])
@@ -1914,17 +1907,15 @@ evaluate_single_wildcard <- function(
     return(plan)
   }
   if ("target" %in% columns) {
-    stop(
-      "'target' cannot be in the `columns` argument of evaluate_plan().",
-      call = FALSE
+    stop0(
+      "'target' cannot be in the `columns` argument of evaluate_plan()."
     )
   }
   missing_cols <- setdiff(columns, colnames(plan))
   if (length(missing_cols)) {
-    stop(
+    stop0(
       "some columns you selected for evaluate_plan() are not in the plan:\n",
-      multiline_message(missing_cols),
-      call. = FALSE
+      multiline_message(missing_cols)
     )
   }
   values <- as.character(values)
@@ -1997,21 +1988,19 @@ check_wildcard_rules <- function(rules) {
   for (i in seq_along(wildcards)) {
     matches <- grep(wildcards[i], all_values, fixed = TRUE, value = TRUE)
     if (length(matches)) {
-      stop(
+      stop0(
         "No wildcard name can match the name of any replacement value. ",
         "Conflicts: \"", wildcards[i], "\" with:\n",
-        multiline_message(paste0("\"", matches, "\"")),
-        call. = FALSE
+        multiline_message(paste0("\"", matches, "\""))
       )
     }
     matches <- grep(wildcards[i], wildcards[-i], fixed = TRUE, value = TRUE)
     if (length(matches)) {
-      stop(
+      stop0(
         "The name of a wildcard cannot be a substring ",
         "of any other wildcard name. ",
         "Conflicts: \"", wildcards[i], "\" with:\n",
-        multiline_message(paste0("\"", matches, "\"")),
-        call. = FALSE
+        multiline_message(paste0("\"", matches, "\""))
       )
     }
   }
@@ -2498,11 +2487,10 @@ get_cache <- function(
 # 2019-05-25 # nolint
 deprecate_search <- function(search) {
   if (!is.null(search)) {
-    warning(
+    warn0(
       "Argument ",
       shQuote("search"),
-      " is deprecated in drake functions.",
-      call. = FALSE
+      " is deprecated in drake functions."
     )
   }
 }
@@ -2510,9 +2498,8 @@ deprecate_search <- function(search) {
 # 2019-09-11 # nolint
 deprecate_verbose <- function(verbose) {
   if (!identical(verbose, NULL)) {
-    warning(
-      "Argument `verbose` is deprecated some minor drake utility functions.",
-      call. = FALSE
+    warn0(
+      "Argument `verbose` is deprecated some minor drake utility functions."
     )
   }
 }
@@ -2520,10 +2507,9 @@ deprecate_verbose <- function(verbose) {
 # 2019-09-11 # nolint
 deprecate_console_log_file <- function(console_log_file) {
   if (!identical(console_log_file, NULL)) {
-    warning(
+    warn0(
       "Argument `console_log_file` ",
-      "is deprecated some minor drake utility functions.",
-      call. = FALSE
+      "is deprecated some minor drake utility functions."
     )
   }
 }
@@ -2536,7 +2522,7 @@ deprecate_arg <- function(value, name, alt = NULL) {
   if (!is.null(alt)) {
     msg <- paste(msg, "Use", alt, "instead.")
   }
-  warning(msg, call. = FALSE)
+  warn0(msg)
 }
 
 #' @title Deprecated, get a trace of a dynamic target's value.

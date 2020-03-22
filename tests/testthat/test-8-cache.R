@@ -39,11 +39,11 @@ test_with_dir("clean() removes the correct files", {
   clean(cache = cache, garbage_collection = TRUE)
   expect_true(file.exists("a.txt"))
   expect_true(file.exists("b.txt"))
-  expect_false(file.exists("d.rds"))
+  expect_true(file.exists("d.rds"))
   expect_true(dir.exists("abc"))
-  expect_false(dir.exists("xyz"))
+  expect_true(dir.exists("xyz"))
   expect_true(file.exists("abc/c.txt"))
-  expect_false(file.exists("xyz/e.txt"))
+  expect_true(file.exists("xyz/e.txt"))
 })
 
 test_with_dir("drake_version", {
@@ -81,7 +81,7 @@ test_with_dir("dependency profile", {
   expect_false(any(deps_profile_impl(target = a, config = config)$changed))
   b <- 2
   expect_false(any(deps_profile_impl(target = a, config = config)$changed))
-  config$skip_targets <- TRUE
+  config$settings$skip_targets <- TRUE
   make_impl(config = config)
   dp <- deps_profile_impl(target = a, config = config)
   expect_true(as.logical(dp[dp$name == "depend", "changed"]))
@@ -268,7 +268,7 @@ test_with_dir("cache functions work from various working directories", {
       envir <- environment()
     }
 
-    config$session_info <- TRUE
+    config$settings$session_info <- TRUE
     testrun(config)
 
     # drake_cache_log() # nolint
@@ -315,7 +315,7 @@ test_with_dir("cache functions work from various working directories", {
     n1 <- nrow(bt)
 
     # find stuff in current directory session, progress
-    expect_equal(read_drake_seed(), config$seed)
+    expect_equal(read_drake_seed(), config$settings$seed)
     expect_true(is.list(drake_get_session_info()))
     expect_true(all(progress()$progress == "done"))
     expect_false(any("running" %in% progress()))
@@ -402,7 +402,7 @@ test_with_dir("cache functions work from various working directories", {
 
     # clean
     expect_true(all(config$plan$target %in% cached()))
-    clean(final, jobs = 2, garbage_collection = TRUE)
+    clean(final, garbage_collection = TRUE)
     targs <- setdiff(config$plan$target, "final")
     expect_true(all(targs %in% cached()))
     drake_gc()
@@ -411,7 +411,7 @@ test_with_dir("cache functions work from various working directories", {
     prog <- progress()
     expect_true("final" %in% prog$target)
 
-    clean(final, jobs = 2, garbage_collection = TRUE, purge = TRUE)
+    clean(final, garbage_collection = TRUE, purge = TRUE)
     prog <- progress()
     expect_false("final" %in% prog$target)
 
@@ -574,7 +574,7 @@ test_with_dir("loadd(x, deps = TRUE) when x is not cached", {
   expect_equal(e$x, "abc")
   expect_message(
     loadd(y, envir = e, config = config, deps = TRUE, tidyselect = TRUE),
-    regexp = "Disabling"
+    regexp = "Disabled"
   )
 })
 
@@ -586,7 +586,7 @@ test_with_dir("clean: garbage_collection and destroy", {
   expect_true(file.exists("abc"))
   clean(garbage_collection = TRUE, destroy = TRUE)
   expect_false(file.exists(".drake"))
-  expect_false(file.exists("abc"))
+  expect_true(file.exists("abc"))
 })
 
 test_with_dir("fancy cache features, bad paths", {
@@ -749,7 +749,8 @@ test_with_dir("arbitrary storr in-memory cache", {
     cache = cache,
     parallelism = parallelism,
     jobs = jobs,
-    verbose = 0L
+    verbose = 0L,
+    session_info = TRUE
   )
   con <- drake_config(
     my_plan,
@@ -842,7 +843,7 @@ test_with_dir("try_build() does not need to access cache", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- drake_config(drake_plan(x = 1), lock_envir = FALSE)
   meta <- drake_meta_(target = "x", config = config)
-  config$cache <- config$cache_log_file <- NULL
+  config$cache <- config$settings$cache_log_file <- NULL
   build <- try_build(target = "x", meta = meta, config = config)
   expect_equal(1, build$value)
   expect_error(drake_build_impl(target = "x", config = config))
@@ -940,4 +941,18 @@ test_with_dir("suppress cache locking (#1081)", {
   expect_equal(justbuilt(config), "x")
   expect_equal(outdated_impl(config), character(0))
   expect_equal(recoverable_impl(config), character(0))
+})
+
+test_with_dir("done() (#1205)", {
+  skip_on_cran()
+  plan <- drake_plan(x = 1, y = x)
+  make(plan)
+  expect_equal(sort(done()), sort(c("x", "y")))
+})
+
+test_with_dir("cancelled() (#1205)", {
+  skip_on_cran()
+  plan <- drake_plan(x = 1, y = cancel_if(x > 0))
+  make(plan)
+  expect_equal(cancelled(), "y")
 })

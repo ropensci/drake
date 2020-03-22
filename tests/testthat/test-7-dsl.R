@@ -7,7 +7,7 @@ test_with_dir("nothing to transform", {
 })
 
 test_with_dir("empty transforms", {
-  expect_warning(
+  expect_error(
     out <- drake_plan(
       a = target(x, transform = cross()),
       b = target(y, transform = combine()),
@@ -15,28 +15,23 @@ test_with_dir("empty transforms", {
     ),
     regexp = "grouping variable"
   )
-  equivalent_plans(out, drake_plan())
-  expect_warning(
+  expect_error(
     out <- drake_plan(a = target(x, transform = cross())),
     regexp = "grouping variable"
   )
-  expect_warning(
+  expect_error(
     out <- drake_plan(b = target(y, transform = combine())),
     regexp = "grouping variable"
   )
-  expect_warning(
+  expect_error(
     out <- drake_plan(c = target(z, transform = map())),
     regexp = "grouping variable"
   )
-})
-
-test_with_dir("more empty transforms", {
   x_vals <- NULL
-  expect_warning(
+  expect_error(
     out <- drake_plan(a = target(x, transform = map(x = !!x_vals))),
     regexp = "grouping variable"
   )
-  equivalent_plans(out, drake_plan())
 })
 
 test_with_dir("1 grouping level", {
@@ -282,7 +277,7 @@ test_with_dir("2 new maps", {
 })
 
 test_with_dir("groups and command symbols are undefined", {
-  expect_warning(
+  expect_error(
     out <- drake_plan(
       small = simulate(48),
       large = simulate(64),
@@ -292,11 +287,6 @@ test_with_dir("groups and command symbols are undefined", {
     ),
     regexp = "grouping variable"
   )
-  exp <- drake_plan(
-    small = simulate(48),
-    large = simulate(64)
-  )
-  equivalent_plans(out, exp)
 })
 
 test_with_dir("command symbols are for combine() but the plan has them", {
@@ -1898,7 +1888,7 @@ test_with_dir("empty grids", {
     stringsAsFactors = FALSE
   )
   grid$v <- rlang::syms(grid$v)
-  expect_warning(
+  expect_error(
     out <- drake_plan(
       a = target(
         1 + f(x, y, z, w, v),
@@ -1911,7 +1901,6 @@ test_with_dir("empty grids", {
     ),
     regexp = "grouping variable"
   )
-  equivalent_plans(out, drake_plan())
 })
 
 test_with_dir("grid for GitHub issue 697", {
@@ -2024,7 +2013,7 @@ test_with_dir("combine() with complicated calls", {
 })
 
 test_with_dir("invalid splitting var", {
-  expect_warning(
+  expect_error(
     out <- drake_plan(
       data = target(x, transform = map(x = c(1, 2)), nothing = NA),
       results = target(
@@ -2034,12 +2023,6 @@ test_with_dir("invalid splitting var", {
     ),
     regexp = "grouping variable"
   )
-  out <- out[, c("target", "command")]
-  exp <- drake_plan(
-    data_1 = 1,
-    data_2 = 2
-  )
-  equivalent_plans(out, exp)
 })
 
 test_with_dir("uneven combinations", {
@@ -3092,6 +3075,130 @@ test_with_dir("NAs removed from old grouping vars grid (#1010)", {
     dataTrainList_a3_dd = list2(a_data_dd_a3, data_dd_a3),
     dataTestList_7_dd = list(a_data_dd_7, data_dd_7),
     dataTestList_a3_dd = list(a_data_dd_a3, data_dd_a3)
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("static transforms use only upstream part of plan (#1199)", {
+  skip_on_cran()
+  radars <- c("radar1", "radar2")
+  seasons <- c("season1", "season2")
+  months <- c(1, 2)
+  radar_seasons <- expand.grid(
+    radar = radars,
+    season = seasons,
+    stringsAsFactors = FALSE
+  )
+  out <- drake_plan(
+    data = target(
+      get_data(radar, month),
+      transform = cross(radar = !!radars, month = !!months)
+    ),
+    to_cross = target(
+      list(data),
+      transform = combine(data, .by = radar)
+    ),
+    problem = target(
+      list(to_cross, season),
+      transform = cross(to_cross, season = !!seasons)
+    ),
+    separate = target(
+      list(radar, season),
+      transform = map(.data = !!radar_seasons)
+    ),
+    trace = TRUE
+  )
+  exp <- drake_plan(
+    data_radar1_1 = target(
+      command = get_data("radar1", 1),
+      radar = "\"radar1\"",
+      month = "1",
+      data = "data_radar1_1"
+    ),
+    data_radar2_1 = target(
+      command = get_data("radar2", 1),
+      radar = "\"radar2\"",
+      month = "1",
+      data = "data_radar2_1"
+    ),
+    data_radar1_2 = target(
+      command = get_data("radar1", 2),
+      radar = "\"radar1\"",
+      month = "2",
+      data = "data_radar1_2"
+    ),
+    data_radar2_2 = target(
+      command = get_data("radar2", 2),
+      radar = "\"radar2\"",
+      month = "2",
+      data = "data_radar2_2"
+    ),
+    problem_season1_to_cross_radar1 = target(
+      command = list(to_cross_radar1, "season1"),
+      radar = "\"radar1\"",
+      season = "\"season1\"",
+      separate = "separate_radar1_season1",
+      to_cross = "to_cross_radar1",
+      problem = "problem_season1_to_cross_radar1"
+    ),
+    problem_season2_to_cross_radar1 = target(
+      command = list(to_cross_radar1, "season2"),
+      radar = "\"radar1\"",
+      season = "\"season2\"",
+      separate = "separate_radar1_season2",
+      to_cross = "to_cross_radar1",
+      problem = "problem_season2_to_cross_radar1"
+    ),
+    problem_season1_to_cross_radar2 = target(
+      command = list(to_cross_radar2, "season1"),
+      radar = "\"radar1\"",
+      season = "\"season1\"",
+      separate = "separate_radar1_season1",
+      to_cross = "to_cross_radar2",
+      problem = "problem_season1_to_cross_radar2"
+    ),
+    problem_season2_to_cross_radar2 = target(
+      command = list(to_cross_radar2, "season2"),
+      radar = "\"radar1\"",
+      season = "\"season2\"",
+      separate = "separate_radar1_season2",
+      to_cross = "to_cross_radar2",
+      problem = "problem_season2_to_cross_radar2"
+    ),
+    separate_radar1_season1 = target(
+      command = list("radar1", "season1"),
+      radar = "\"radar1\"",
+      season = "\"season1\"",
+      separate = "separate_radar1_season1"
+    ),
+    separate_radar2_season1 = target(
+      command = list("radar2", "season1"),
+      radar = "\"radar2\"",
+      season = "\"season1\"",
+      separate = "separate_radar2_season1"
+    ),
+    separate_radar1_season2 = target(
+      command = list("radar1", "season2"),
+      radar = "\"radar1\"",
+      season = "\"season2\"",
+      separate = "separate_radar1_season2"
+    ),
+    separate_radar2_season2 = target(
+      command = list("radar2", "season2"),
+      radar = "\"radar2\"",
+      season = "\"season2\"",
+      separate = "separate_radar2_season2"
+    ),
+    to_cross_radar1 = target(
+      command = list(data_radar1_1, data_radar1_2),
+      radar = "\"radar1\"",
+      to_cross = "to_cross_radar1"
+    ),
+    to_cross_radar2 = target(
+      command = list(data_radar2_1, data_radar2_2),
+      radar = "\"radar2\"",
+      to_cross = "to_cross_radar2"
+    )
   )
   equivalent_plans(out, exp)
 })

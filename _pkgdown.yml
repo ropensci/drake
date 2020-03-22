@@ -151,7 +151,9 @@ reference:
   contents:
   - '`progress`'
   - '`running`'
+  - '`done`'
   - '`failed`'
+  - '`cancelled`'
 - title: R packages as drake workflows
   contents:
   - '`expose_imports`'

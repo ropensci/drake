@@ -4,10 +4,14 @@ test_with_dir("clustermq parallelism for CRAN", {
   skip_if_not_installed("clustermq")
   skip_on_os("windows")
   options(clustermq.scheduler = "multicore")
-  plan <- drake_plan(x = 1)
+  plan <- drake_plan(x = {
+    # Test relaying.
+    message("message")
+    warning("warning")
+  })
   for (caching in c("master", "worker")) {
     clean()
-    make(plan, parallelism = "clustermq", caching = caching)
+    suppressWarnings(make(plan, parallelism = "clustermq", caching = caching))
     config <- drake_config(plan)
     expect_equal(justbuilt(config), "x")
   }

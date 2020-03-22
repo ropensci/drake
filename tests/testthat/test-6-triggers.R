@@ -2,12 +2,13 @@ drake_context("triggers")
 
 test_with_dir("empty triggers return logical", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_identical(trigger_depend("x", list(), list()), FALSE)
-  expect_identical(trigger_command("x", list(), list()), FALSE)
-  expect_identical(trigger_file("x", list(), list(), list()), FALSE)
-  expect_identical(trigger_format("x", NULL, NULL, list()), FALSE)
-  expect_identical(trigger_condition("x", list(), list()), FALSE)
-  expect_identical(trigger_change("x", list(), list()), FALSE)
+  config <- drake_config(drake_plan(x = 1))
+  expect_identical(trigger_depend("x", list(), config), FALSE)
+  expect_identical(trigger_command("x", list(), config), FALSE)
+  expect_identical(trigger_file("x", list(), config), FALSE)
+  expect_identical(trigger_format("x", NULL, config), FALSE)
+  expect_identical(trigger_condition("x", list(), config), FALSE)
+  expect_identical(trigger_change("x", list(), config), FALSE)
 })
 
 test_with_dir("triggers can be expressions", {

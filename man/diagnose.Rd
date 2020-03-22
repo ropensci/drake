@@ -72,7 +72,7 @@ diagnose()
 # Get the error log, an object of class "error".
 error <- diagnose(my_target)$error # See also warnings and messages.
 str(error) # See what's inside the error log.
-error$calls # View the traceback. (See the traceback() function).
+error$calls # View the traceback. (See the rlang::trace_back() function).
 })
 }
 }

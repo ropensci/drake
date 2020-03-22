@@ -55,7 +55,9 @@
 #'   (the `seed` argument to [make()] and [drake_config()])
 #'   and the target names, but you can overwrite these automatic seeds.
 #'   `NA` entries default back to `drake`'s automatic seeds.
-#'
+#' - `max_expand`: for dynamic branching only. Same as the `max_expand`
+#'   argument of [make()], but on a target-by-target basis.
+#'   Limits the number of sub-targets created for a given target.
 #' @section Formats:
 #'   Specialized target formats increase efficiency and flexibility.
 #'   Some allow you to save specialized objects like `keras` models,
@@ -67,6 +69,14 @@
 #'   (e.g. R packages) that are not installed with `drake` by default.
 #'   You will need to install them separately yourself.
 #'   Available formats:
+#'   - `"file"`: Dynamic files. To use this format, simply create
+#'     local files and directories yourself and then return
+#'     a character vector of paths as the target's value.
+#'     Then, `drake` will watch for changes to those files in
+#'     subsequent calls to `make()`. This is a more flexible
+#'     alternative to `file_in()` and `file_out()`, and it is
+#'     compatible with dynamic branching.
+#'     See <https://github.com/ropensci/drake/pull/1178> for an example.
 #'   - `"fst"`: save big data frames fast. Requires the `fst` package.
 #'     Note: this format strips non-data-frame attributes such as the
 #'   - `"fst_tbl"`: Like `"fst"`, but for `tibble` objects.
@@ -402,6 +412,9 @@ sanitize_plan <- function(
 # https://github.com/ropensci/drake/issues/1147
 convert_trailing_dot <- function(x) {
   index <- grepl("\\.$", x)
+  if (any(index)) {
+    warn0("removed trailing dot from some target names.")
+  }
   x[index] <- gsub("\\.$", "_", x[index])
   x
 }
@@ -409,10 +422,9 @@ convert_trailing_dot <- function(x) {
 assert_unique_targets <- function(plan) {
   dups <- duplicated(plan$target)
   if (any(dups)) {
-    stop(
+    stop0(
       "duplicated target names:\n",
-      multiline_message(plan$target[dups]),
-      call. = FALSE
+      multiline_message(plan$target[dups])
     )
   }
   plan
@@ -464,13 +476,12 @@ warn_arrows <- function(dots) {
     }
   )
   if (length(offending_commands)) {
-    warning(
+    warn0(
       "Use `=` instead of `<-` or `->` ",
       "to assign targets to commands in `drake_plan()`. ",
       "For example, write `drake_plan(a = 1)` instead of ",
       "`drake_plan(a <- 1)`. Arrows were used to declare these commands:\n",
-      multiline_message(offending_commands),
-      call. = FALSE
+      multiline_message(offending_commands)
     )
   }
 }

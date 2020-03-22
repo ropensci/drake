@@ -22,4 +22,9 @@ current cursor location from the cache into the global environment.
 This is convenient during pipeline development when building off
 established targets.
 }
+\details{
+If you are using a non-standard \code{drake} cache,
+you must supply it to the \code{"rstudio_drake_cache"} global option,
+e.g. \code{options(rstudio_drake_cache = storr::storr_rds("my_cache"))}.
+}
 \keyword{internal}

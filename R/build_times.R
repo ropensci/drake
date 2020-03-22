@@ -96,10 +96,9 @@ keep_build_time <- function(meta) {
 }
 
 error_tibble_times <- function(e) {
-  stop(
-    "Failed converting a data frame of times to a tibble. ",
-    "Please install version 1.2.1 or greater of the pillar package.",
-    call. = FALSE
+  stop0(
+    "Cannot convert a data frame of times to a tibble. ",
+    "Install pillar version 1.2.1 or greater."
   )
 }
 

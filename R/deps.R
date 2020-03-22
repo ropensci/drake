@@ -86,17 +86,12 @@ deps_target_impl <- function(
   config,
   character_only = FALSE
 ) {
-  config$logger$minor("begin deps_target()", target = target)
-  on.exit(
-    config$logger$minor("end deps_target()", target = target),
-    add = TRUE
-  )
   if (!character_only) {
     target <- as.character(substitute(target))
   }
   out <- config$spec[[target]]$deps_build
   out <- decode_deps_list(out)
-  out <- display_deps_list(select_nonempty(out))
+  out <- display_deps_list(out)
   out$hash <- config$cache$mget_hash(out$name)
   out
 }
@@ -127,12 +122,13 @@ get_deps_knitr <- function(target) {
   if (!length(target)) {
     return(list())
   }
-  out <- new_code_analysis_results()
+  out <- new_drake_deps_ht()
   if (is_encoded_path(target)) {
     target <- redecode_path(target)
   }
-  analyze_knitr_file(target, out, allowed_globals = NULL)
-  list_code_analysis_results(out)
+  analyze_knitr_file(target, out, restrict = NULL)
+  out <- lapply(out, ht_list)
+  do.call(new_drake_deps, out)
 }
 
 decode_deps_list <- function(x) {
@@ -258,7 +254,7 @@ deps_profile_impl <- function(
       paste(spec$command_standardized, collapse = ""),
       serialize = FALSE
     ),
-    dependency_hash(target, config),
+    static_dependency_hash(target, config),
     input_file_hash(target, config),
     output_file_hash(target, config),
     resolve_target_seed(target, config)
@@ -304,7 +300,7 @@ tracked <- function(config) {
       out <- unlist(out)
       c(out, target)
     },
-    jobs = config$jobs_preprocess
+    jobs = config$settings$jobs_preprocess
   )
   config$cache$display_keys(clean_dependency_list(out))
 }
@@ -314,9 +310,6 @@ clean_dependency_list <- function(x) {
 }
 
 clean_nested_char_list <- function(x) {
-  if (!length(x)) {
-    return(character(0))
-  }
   x <- unlist(x)
   x <- unname(x)
   x <- as.character(x)

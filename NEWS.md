@@ -1,12 +1,70 @@
-# Version 7.10.0.9000
+# Version 7.11.0.9001
+
+## Bug fixes
+
+* **Ensure up-to-date sub-targets are skipped even if the dynamic parent does not get a chance to finalize (#1209, #1211, @psadil, @kendonB).**
+* Add a trace argument to `cds_std_dyn_cmd()`. This one might invalidate people's dynamic targets, but it is important.
+* Restrict static transforms so they only use the upstream part of the plan (#1199, #1200, @bart1).
+* Correctly match the names and values of dynamic `cross()` sub-targets (#1204, @psadil). Expansion order is the same, but names are correctly matched now.
+* Stop trying to remove `file_out()` files in `clean()`, even when `garbage_collection` is `TRUE` (#521, @the-Hull).
+* Fix `keep_going = TRUE` for formatted targets (#1206).
+* Use the correct variable names in logger helper (`progress_bar` instead of `progress`) so that `drake` works without the `progress` package (#1208, @mbaccou).
+* Avoid conflict between formats and upstream dynamic targets (#1210, @psadil).
+* Always compute trigger metadata up front because recovery keys need it.
+
+## New features
+
+* Add new functions `done()` and `cancelled()` (#1205).
+
+## Speedups
+
+* Avoid reading build times of dynamic sub-targets in `drake_graph_info()` (#1207).
+
+## Enhancements
+
+* Show an empty progress bar just before targets start to build when `verbose` is `2` (#1203, @kendonB).
+* Deprecate the `jobs` argument of `clean()`.
+* Show an informative error message for empty dynamic grouping variables (#1212, @kendonB).
+* Throw error messages if users supply dynamic targets to `drake_build()` or `drake_debug()` (#1214, @kendonB).
+* Log the sub-target name and index of the failing sub-target in the metadata of the sub-target and its parent (#1214, @kendonB).
+* Shorten the call stack in error metadata.
+* Deprecate and remove custom schedulers (#1222).
+* Deprecate `hasty_build` (#1222).
+* Migrate constant runtime parameters to `config$settings` (#965).
+
+
+# Version 7.11.0
 
 ## Bug fixes
 
 * Sanitize internal S3 classes for target storage (#1159, @rsangole).
+* Bump `digest` version to require 0.6.21 (#1166, @boshek)
+* Actually store output file sizes in metadata.
+* Use the `depend` trigger to toggle invalidation from dynamic-only dependencies, including the `max_expand` argument of `make()`.
+* Repair `session_info` argument parsing (and reduce calls to `utils::sessionInfo()` in tests).
+* Ensure compatibility with `tibble` 3.0.0.
+
+## New features
+
+* Allow dynamic files with `target(format = "file")` (#1168, #1127).
+* Implement dynamic `max_expand` on a target-by-target basis via `target()` (#1175, @kendonB).
 
 ## Enhancements
 
-* Assert dependencies of formats at the very beginning of `make()`, not in `drake_config()` (#1156). 
+* Assert dependencies of formats at the very beginning of `make()`, not in `drake_config()` (#1156).
+* In `make(verbose = 2)`, remove the spinner and use a progress bar to track how many targets are done so far.
+* Reduce logging of utility functions.
+* Improve the aesthetics of console messages using `cli` (optional package).
+* Deprecate `console_log_file` in favor of `log_make` as an argument to `make()` and `drake_config()`.
+* Immediately relay warnings and messages in `"loop"` and `"future"` parallel backends (#400).
+* Warn when converting trailing dots (#1147).
+* Warn about imports with trailing dots on Windows (#1147).
+* Allow user-defined caches for the `loadd()` RStudio addin through the new `rstudio_drake_cache` global option (#1169, @joelnitta).
+* Change dynamic target finalization message to "finalize" instead of "aggregate" (#1176, @kendonB).
+* Describe the limits of `recoverable()`, e.g. dynamic branching + dynamic files.
+* Throw an error instead of a warning in `drake_plan()` if a grouping variable is undefined or invalid (#1182, @kendonB).
+* Rigorous S3 framework for static code analysis objects of type `drake_deps` and `drake_deps_ht` (#1183).
+* Use `rlang::trace_back()` to make `diagnose()$error$calls` nicer (#1198).
 
 # Version 7.10.0
 

@@ -6,18 +6,18 @@ testrun <- function(config) {
       targets = config$targets,
       envir = config$envir,
       verbose = config$logger$verbose,
-      parallelism = config$parallelism,
-      jobs = config$jobs,
+      parallelism = config$settings$parallelism,
+      jobs = config$settings$jobs,
       packages = config$packages,
       prework = config$prework,
       prepend = config$prepend,
       command = config$command,
       cache = config$cache,
-      lazy_load = config$lazy_load,
-      session_info = config$session_info,
+      lazy_load = config$settings$lazy_load,
+      session_info = config$settings$session_info,
       fetch_cache = config$fetch_cache,
       caching = config$caching,
-      lock_envir = !any(grepl("staged", config$parallelism))
+      lock_envir = !any(grepl("staged", config$settings$parallelism))
     )
   )
 }
@@ -28,18 +28,18 @@ testconfig <- function(config) {
     targets = config$targets,
     envir = config$envir,
     verbose = config$logger$verbose,
-    parallelism = config$parallelism,
-    jobs = config$jobs,
+    parallelism = config$settings$parallelism,
+    jobs = config$settings$jobs,
     packages = config$packages,
     prework = config$prework,
     prepend = config$prepend,
     command = config$command,
     cache = config$cache,
-    lazy_load = config$lazy_load,
-    session_info = config$session_info,
+    lazy_load = config$settings$lazy_load,
+    session_info = config$settings$session_info,
     fetch_cache = config$fetch_cache,
     caching = config$caching,
-    lock_envir = !any(grepl("staged", config$parallelism))
+    lock_envir = !any(grepl("staged", config$settings$parallelism))
   )
   out$plan <- config$plan
   out$targets <- config$targets

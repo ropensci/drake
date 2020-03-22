@@ -1146,13 +1146,17 @@ test_with_dir("dynamic parent recovery", {
     y = target(file.create(x), dynamic = map(x))
   )
   config <- drake_config(plan)
-  config$ht_is_subtarget <- ht_new()
+  config <- init_config_tmp(config)
+  r <- recoverable(plan)
+  expect_equal(r, character(0))
   make(plan)
   files <- letters[seq_len(4)]
   expect_true(all(file.exists(files)))
   unlink(files)
   expect_false(any(file.exists(files)))
   clean(list = c("y", subtargets(y)))
+  r <- recoverable(plan)
+  expect_equal(r, "y")
   make(plan, recover = TRUE)
   expect_false(any(file.exists(files)))
   expect_equal(outdated_impl(config), character(0))
@@ -1190,7 +1194,7 @@ test_with_dir("failed dynamic data recovery", {
   unlink(files)
   expect_false(any(file.exists(files)))
   config$cache$del(subtargets(y)[1])
-  config$cache$del(subtargets(y)[1], namespace = "recover")
+  config$cache$clear(namespace = "recover")
   make(plan, recover = TRUE)
   expect_true(file.exists("a"))
 })
@@ -1682,6 +1686,7 @@ test_with_dir("cache_planned() and cache_unplanned() (#1110)", {
 
 test_with_dir("visualization labels for dynamic targets", {
   skip_on_cran()
+  skip_if_not_installed("visNetwork")
   plan <- drake_plan(
     x = seq_len(2),
     y = target(x, dynamic = map(x))
@@ -1736,4 +1741,590 @@ test_with_dir("log dynamic target as failed if a sub-target fails (#1158)", {
   )
   expect_error(make(plan))
   expect_true("y" %in% failed())
+})
+
+test_with_dir("target-specific max_expand (#1175)", {
+  skip_on_cran()
+  x <- seq_len(4)
+  plan <- drake_plan(
+    y = target(x, dynamic = map(x), max_expand = 2)
+  )
+  config <- drake_config(plan)
+  make_impl(config)
+  old_sub <- subtargets(y)
+  expect_equal(length(subtargets(y)), 2)
+  expect_equal(sort(justbuilt(config)), c("y", subtargets(y)))
+  # change max_expand
+  plan <- drake_plan(
+    y = target(x, dynamic = map(x), max_expand = 1)
+  )
+  config <- drake_config(plan)
+  make_impl(config)
+  expect_equal(length(subtargets(y)), 1)
+  expect_equal(justbuilt(config), "y")
+  # remove max_expand
+  plan <- drake_plan(
+    y = target(x, dynamic = map(x))
+  )
+  config <- drake_config(plan)
+  make_impl(config)
+  expect_equal(length(subtargets(y)), 4)
+  new_sub <- setdiff(subtargets(y), old_sub)
+  expect_equal(sort(justbuilt(config)), c("y", new_sub))
+  # max_expand is NA for a target
+  clean()
+  plan <- drake_plan(
+    x = seq_len(4),
+    y = target(x, dynamic = map(x)),
+    z = target(y, dynamic = map(y), max_expand = 2)
+  )
+  config <- drake_config(plan)
+  make_impl(config)
+  expect_equal(length(subtargets(y)), 4)
+  expect_equal(length(subtargets(z)), 2)
+  exp <- sort(c("x", "y", "z", subtargets(y), subtargets(z)))
+  expect_equal(sort(justbuilt(config)), exp)
+})
+
+test_with_dir("dynamic files + dynamic branching (#1168)", {
+  skip_on_cran()
+  write_lines <- function(files, ...) {
+    for (file in files) {
+      writeLines(c(file, "stuff"), file)
+    }
+    files
+  }
+  plan <- drake_plan(
+    w = c("a", "b"),
+    x = target(
+      write_lines(w),
+      dynamic = map(w),
+      format = "file"
+    ),
+    y = target(
+      write_lines(paste0(x, x)),
+      dynamic = map(x),
+      format = "file"
+    ),
+    z = y
+  )
+  # initial state
+  config <- drake_config(plan, history = FALSE)
+  expect_equal(sort(outdated_impl(config)), sort(c("w", "x", "y", "z")))
+  make_impl(config)
+  expect_equal(
+    sort(justbuilt(config)),
+    sort(c("w", "x", "y", "z", subtargets(x), subtargets(y)))
+  )
+  # Should be up to date.
+  expect_equal(outdated_impl(config), character(0))
+  make_impl(config)
+  expect_equal(justbuilt(config), character(0))
+  # file format internals
+  expect_identical(readd(x), c("a", "b"))
+  key <- subtargets(x)[1]
+  expect_identical(config$cache$get(key), "a")
+  hash <- config$cache$get_hash(key)
+  expect_identical(config$cache$get_value(hash), "a")
+  expect_false("history" %in% list.files(".drake/drake"))
+  val <- config$cache$storr$get(key)
+  val2 <- config$cache$storr$get_value(hash)
+  expect_identical(val, val2)
+  expect_equal(val$value, "a")
+  expect_true(is.character(val$hash))
+  expect_equal(length(val$hash), 1)
+  expect_true(inherits(val, "drake_format_file"))
+  expect_true(inherits(val, "drake_format"))
+  # validated state
+  expect_equal(outdated_impl(config), character(0))
+  make_impl(config)
+  expect_equal(justbuilt(config), character(0))
+  # write the same content to an x file
+  write_lines("b")
+  expect_equal(outdated_impl(config), character(0))
+  make_impl(config)
+  expect_equal(justbuilt(config), character(0))
+  # corrupt an x file
+  writeLines("123", "b")
+  expect_equal(readLines("b"), "123")
+  expect_equal(sort(outdated_impl(config)), sort(c("x", "y", "z")))
+  make_impl(config)
+  expect_equal(
+    sort(justbuilt(config)),
+    sort(c("x", subtargets(x)[2]))
+  )
+  expect_equal(readLines("b"), c("b", "stuff"))
+  # remove an x file
+  unlink("b")
+  expect_false(file.exists("b"))
+  expect_equal(sort(outdated_impl(config)), sort(c("x", "y", "z")))
+  make_impl(config)
+  expect_equal(
+    sort(justbuilt(config)),
+    sort(c("x", subtargets(x)[2]))
+  )
+  expect_equal(readLines("b"), c("b", "stuff"))
+  # corrupt x and y files
+  writeLines("123", "b")
+  writeLines("123", "aa")
+  expect_equal(readLines("b"), "123")
+  expect_equal(readLines("aa"), "123")
+  expect_equal(sort(outdated_impl(config)), sort(c("x", "y", "z")))
+  make_impl(config)
+  expect_equal(
+    sort(justbuilt(config)),
+    sort(c("x", "y", subtargets(x)[2], subtargets(y)[1]))
+  )
+  expect_equal(readLines("b"), c("b", "stuff"))
+  expect_equal(readLines("bb"), c("bb", "stuff"))
+  # change the expected file content
+  write_lines <- function(files, ...) {
+    for (file in files) {
+      writeLines(c(file, "new stuff"), file)
+    }
+    files
+  }
+  expect_equal(sort(outdated_impl(config)), sort(c("x", "y", "z")))
+  make_impl(config)
+  expect_equal(
+    sort(justbuilt(config)),
+    sort(c("x", "y", "z", subtargets(x), subtargets(y)))
+  )
+  expect_equal(readLines("b"), c("b", "new stuff"))
+})
+
+test_with_dir("data recovery + dynamic files + dynamic files (#1168)", {
+  skip_on_cran()
+  write_lines <- function(files, ...) {
+    for (file in files) {
+      writeLines(c(file, "stuff"), file)
+    }
+    files
+  }
+  f <- function() {
+    write_lines("no_recover")
+    write_lines("b")
+  }
+  y <- 1
+  plan <- drake_plan(
+    x = target(f(), format = "file", dynamic = map(y))
+  )
+  make(plan)
+  r <- recoverable(plan)
+  expect_equal(r, character(0))
+  # Should be up to date.
+  config <- drake_config(plan)
+  expect_equal(outdated_impl(config), character(0))
+  make_impl(config)
+  expect_equal(justbuilt(config), character(0))
+  r <- recoverable(plan)
+  expect_equal(r, character(0))
+  # Clean, remove output file, and fail to recover.
+  unlink("no_recover")
+  clean()
+  unlink(c("no_recover", "b"))
+  r <- recoverable(plan)
+  expect_equal(r, character(0))
+  make(plan, recover = TRUE)
+  expect_equal(sort(justbuilt(config)), sort(c("x", subtargets(x))))
+  expect_true(file.exists("no_recover"))
+  expect_true(file.exists("b"))
+  # Set up to restore file and recover old target.
+  write_lines <- function(files, ...) {
+    for (file in files) {
+      writeLines(c(file, "stuff2"), file)
+    }
+    files
+  }
+  unlink("no_recover")
+  make(plan)
+  expect_equal(sort(justbuilt(config)), sort(c("x", subtargets(x))))
+  expect_true(file.exists("no_recover"))
+  expect_true(file.exists("b"))
+  expect_equal(outdated_impl(config), character(0))
+  make(plan)
+  expect_equal(justbuilt(config), character(0))
+  # Restore file and recover old target.
+  write_lines <- function(files, ...) {
+    for (file in files) {
+      writeLines(c(file, "stuff"), file)
+    }
+    files
+  }
+  unlink("no_recover")
+  write_lines("b")
+  r <- recoverable(plan)
+  expect_equal(r, "x")
+  make(plan, recover = TRUE)
+  expect_equal(sort(justbuilt(config)), sort(c("x", subtargets(x))))
+  expect_false(file.exists("no_recover"))
+  expect_true(file.exists("b"))
+  expect_equal(outdated_impl(config), character(0))
+})
+
+test_with_dir("names and values of cross() subtargets agree (#1204)", {
+  skip_on_cran()
+  plan <- drake_plan(
+    numbers = c(1, 2),
+    letters = c("a", "b"),
+    combo = target(
+      paste0(numbers, letters),
+      dynamic = cross(numbers, letters)
+    )
+  )
+  make(plan)
+  plan <- drake_plan(
+    numbers = c(1),
+    letters = c("a", "b"),
+    combo = target(
+      paste0(numbers, letters),
+      dynamic = cross(numbers, letters)
+    )
+  )
+  make(plan)
+  expect_equal(readd(combo), c("1a", "1b"))
+})
+
+test_with_dir("v2: names and values of cross() subtargets agree (#1204)", {
+  skip_on_cran()
+  plan <- drake_plan(
+    numbers = c(1, 2),
+    letters = c("a", "b"),
+    combo = target(
+      paste0(numbers, letters),
+      dynamic = cross(numbers, letters)
+    )
+  )
+  make(plan)
+  plan <- drake_plan(
+    numbers = c(2),
+    letters = c("a", "b"),
+    combo = target(
+      paste0(numbers, letters),
+      dynamic = cross(numbers, letters)
+    )
+  )
+  make(plan)
+  expect_equal(readd(combo), c("2a", "2b"))
+})
+
+test_with_dir("v3: names and values of cross() subtargets agree (#1204)", {
+  skip_on_cran()
+  plan <- drake_plan(
+    numbers = c(1, 2),
+    letters = c("a", "b"),
+    combo = target(
+      paste0(numbers, letters),
+      dynamic = cross(numbers, letters)
+    )
+  )
+  make(plan)
+  plan <- drake_plan(
+    numbers = c(1, 2),
+    letters = c("b"),
+    combo = target(
+      paste0(numbers, letters),
+      dynamic = cross(numbers, letters)
+    )
+  )
+  make(plan)
+  expect_equal(readd(combo), c("1b", "2b"))
+})
+
+test_with_dir("v4: names and values of cross() subtargets agree (#1204)", {
+  skip_on_cran()
+  plan <- drake_plan(
+    numbers = c(1, 2),
+    letters = c("a", "b"),
+    combo = target(
+      paste0(numbers, letters),
+      dynamic = cross(numbers, letters)
+    )
+  )
+  make(plan)
+  plan <- drake_plan(
+    numbers = c(1, 2),
+    letters = c("a"),
+    combo = target(
+      paste0(numbers, letters),
+      dynamic = cross(numbers, letters)
+    )
+  )
+  make(plan)
+  expect_equal(readd(combo), c("1a", "2a"))
+})
+
+test_with_dir("v5: names and values of cross() subtargets agree (#1204)", {
+  skip_on_cran()
+  plan <- drake_plan(
+    numbers = c(1, 2),
+    letters = c("a", "b"),
+    combo = target(
+      paste0(numbers, letters),
+      dynamic = cross(numbers, letters)
+    )
+  )
+  make(plan)
+  plan <- drake_plan(
+    numbers = c(1, 2),
+    letters = c("b", "a"),
+    combo = target(
+      paste0(numbers, letters),
+      dynamic = cross(numbers, letters)
+    )
+  )
+  make(plan)
+  expect_equal(readd(combo), c("1b", "1a", "2b", "2a"))
+})
+
+test_with_dir("v6: names and values of cross() subtargets agree (#1204)", {
+  skip_on_cran()
+  plan <- drake_plan(
+    numbers = c(1, 2),
+    letters = c("a", "b"),
+    combo = target(
+      paste0(numbers, letters),
+      dynamic = cross(numbers, letters)
+    )
+  )
+  make(plan)
+  plan <- drake_plan(
+    numbers = c(1, 2),
+    letters = c("b", "a"),
+    combo = target(
+      paste0(numbers, letters),
+      dynamic = cross(letters, numbers)
+    )
+  )
+  config <- drake_config(plan)
+  make(plan)
+  expect_equal(sort(justbuilt(config)), sort(c("combo", "letters")))
+  expect_equal(readd(combo), c("1b", "2b", "1a", "2a"))
+})
+
+test_with_dir("conflict between formats & upstream dynamic (#1210)", {
+  skip_if_not_installed("qs")
+  plan <- drake_plan(
+    numbers = target(
+      seq_len(5),
+      format = "qs"
+    ),
+    again = target(
+      numbers,
+      dynamic = map(numbers)
+    )
+  )
+  make(plan)
+  expect_equal(sort(readd(again)), sort(seq_len(5)))
+})
+
+test_with_dir("empty dynamic grouping variable error msg (#1212)", {
+  skip_on_cran()
+  plan <- drake_plan(
+    empty = numeric(),
+    downstream = target(1, dynamic = map(empty))
+  )
+  expect_error(
+    make(plan),
+    regexp = "dynamic grouping variable empty needs more than 0 elements"
+  )
+})
+
+test_with_dir("drake_build() and drake_debug() are static only (#1214)", {
+  skip_on_cran()
+  plan <- drake_plan(x = 1, y = target(x, dynamic = map(x)))
+  make(plan)
+  expect_error(
+    drake_build(plan = plan, target = "y"),
+    regexp = "does not support dynamic targets"
+  )
+  expect_error(
+    drake_debug(plan = plan, target = "y"),
+    regexp = "does not support dynamic targets"
+  )
+})
+
+test_with_dir("parent not finalized, sub-targets stay up to date (#1209)", {
+  skip_on_cran()
+  plan <- drake_plan(
+    numbers = seq(0L, 2L),
+    result = target(stopifnot(numbers <= 1L), dynamic = map(numbers))
+  )
+  expect_error(make(plan))
+  config <- drake_config(plan)
+  jb <- justbuilt(config)
+  expect_equal(length(jb), 3L)
+  namespace <- drake_meta_("result", config)$dynamic_progress_namespace
+  jb2 <- config$cache$list(namespace = namespace)
+  expect_equal(sort(setdiff(jb, "numbers")), sort(jb2))
+  expect_error(make(plan))
+  config <- drake_config(plan)
+  expect_equal(length(justbuilt(config)), 0L)
+  jb2 <- config$cache$list(namespace = namespace)
+  expect_equal(sort(setdiff(jb, "numbers")), sort(jb2))
+  plan <- drake_plan(
+    numbers = seq(0L, 2L),
+    result = target(stopifnot(numbers <= 999L), dynamic = map(numbers))
+  )
+  make(plan)
+  expect_equal(length(justbuilt(config)), 4L)
+  expect_true(all(jb2 %in% justbuilt(config)))
+})
+
+test_with_dir("un-finalized sub-targets and cmd trigger (#1209)", {
+  skip_on_cran()
+  plan <- drake_plan(
+    numbers = seq(0L, 2L),
+    result = target(stopifnot(numbers <= 1L), dynamic = map(numbers))
+  )
+  config <- drake_config(plan)
+  expect_error(make(plan))
+  expect_equal(length(justbuilt(config)), 3L)
+  # trigger activation
+  plan <- drake_plan(
+    numbers = seq(0L, 2L),
+    result = target(stopifnot(numbers <= 1.1), dynamic = map(numbers))
+  )
+  expect_error(make(plan))
+  expect_equal(length(justbuilt(config)), 2L)
+  # change of trigger
+  expect_error(make(plan, trigger = trigger(command = FALSE)))
+  expect_equal(length(justbuilt(config)), 2L)
+  expect_error(make(plan, trigger = trigger(command = FALSE)))
+  expect_equal(length(justbuilt(config)), 0L)
+  # trigger suppression
+  plan <- drake_plan(
+    numbers = seq(0L, 2L),
+    result = target(stopifnot(numbers <= 999L), dynamic = map(numbers))
+  )
+  make(plan, trigger = trigger(command = FALSE))
+  expect_equal(length(justbuilt(config)), 2L)
+  expect_true("result" %in% justbuilt(config))
+})
+
+test_with_dir("un-finalized sub-targets, seed trigger (#1209)", {
+  skip_on_cran()
+  # trigger suppression
+  plan <- drake_plan(
+    numbers = seq(0L, 2L),
+    result = target(stopifnot(numbers <= 1L), dynamic = map(numbers))
+  )
+  config <- drake_config(plan)
+  expect_error(make(plan))
+  expect_error(make(plan, trigger = trigger(seed = FALSE)))
+  expect_equal(length(justbuilt(config)), 2L)
+  expect_error(make(plan))
+  # trigger activation
+  plan <- drake_plan(
+    numbers = seq(0L, 2L),
+    result = target(
+      stopifnot(numbers <= 1L),
+      dynamic = map(numbers),
+      seed = -9999
+    )
+  )
+  expect_error(make(plan))
+  expect_equal(length(justbuilt(config)), 2L)
+})
+
+test_with_dir("un-finalized sub-targets, format trigger (#1209)", {
+  skip_on_cran()
+  skip_if_not_installed("qs")
+  # trigger suppression
+  plan <- drake_plan(
+    numbers = seq(0L, 2L),
+    result = target(stopifnot(numbers <= 1L), dynamic = map(numbers))
+  )
+  config <- drake_config(plan)
+  expect_error(make(plan))
+  expect_error(make(plan, trigger = trigger(seed = FALSE)))
+  expect_equal(length(justbuilt(config)), 2L)
+  # trigger activation
+  expect_error(make(plan))
+  plan <- drake_plan(
+    numbers = seq(0L, 2L),
+    result = target(
+      stopifnot(numbers <= 1L),
+      dynamic = map(numbers),
+      format = "qs"
+    )
+  )
+  expect_error(make(plan))
+  expect_equal(length(justbuilt(config)), 2L)
+})
+
+test_with_dir("dynamic_progress_prekey() default (#1209)", {
+  skip_on_cran()
+  z <- 1
+  nums <- seq(0L, 2L)
+  plan <- drake_plan(
+    result = target(
+      stopifnot(nums + z <= 1L),
+      dynamic = map(nums)
+    )
+  )
+  config <- drake_config(plan)
+  meta <- drake_meta_("result", config)
+  x <- dynamic_progress_prekey("result", meta, config)
+  expect_true(is.na(x$change_hash))
+  x$change_hash <- "blank"
+  expect_false(any(is.na(x)))
+  chr <- nchar(as.character(x))
+  expect_equal(sum(chr < 1L), 2L)
+})
+
+test_with_dir("dynamic_progress_prekey() suppressed (#1209)", {
+  skip_on_cran()
+  z <- 1
+  nums <- seq(0L, 2L)
+  plan <- drake_plan(
+    result = target(
+      stopifnot(nums + z <= 1L),
+      dynamic = map(nums),
+      trigger = trigger(
+        command = FALSE,
+        depend = FALSE,
+        file = FALSE,
+        seed = FALSE,
+        format = FALSE
+      )
+    )
+  )
+  config <- drake_config(plan)
+  meta <- drake_meta_("result", config)
+  x <- dynamic_progress_prekey("result", meta, config)
+  ns <- setdiff(names(x), c("mode", "condition"))
+  for (n in ns) {
+    expect_true(is.na(x[[n]]))
+  }
+})
+
+test_with_dir("dynamic_progress_prekey() special (#1209)", {
+  skip_on_cran()
+  skip_if_not_installed("fst")
+  numbers <- seq(0L, 2L)
+  y2 <- 123
+  z <- 1
+  file.create("x")
+  file.create("y")
+  plan <- drake_plan(
+    result = target({
+      file_in("x")
+      stopifnot(numbers + z <= 1L)
+      },
+      trigger = trigger(
+        condition = x + 1,
+        mode = "blacklist",
+        change = y2
+      ),
+      format = "fst",
+      dynamic = map(numbers)
+    )
+  )
+  config <- drake_config(plan)
+  meta <- drake_meta_("result", config)
+  x <- dynamic_progress_prekey("result", meta, config)
+  expect_false(any(is.na(x)))
+  chr <- nchar(as.character(x))
+  expect_equal(sum(chr < 1L), 1L)
 })

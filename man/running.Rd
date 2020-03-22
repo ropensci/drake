@@ -28,9 +28,10 @@ A character vector of target names.
 }
 \description{
 List the targets that either
-(1) are currently being built during a call to \code{\link[=make]{make()}}, or
-(2) if \code{\link[=make]{make()}} was interrupted, the targets that were running
-at the time.
+\enumerate{
+\item Are currently being built during a call to \code{\link[=make]{make()}}, or
+\item Were in progress when \code{\link[=make]{make()}} was interrupted.
+}
 }
 \examples{
 \dontrun{
@@ -51,5 +52,5 @@ running() # Everything should be done.
 }
 }
 \seealso{
-\code{\link[=failed]{failed()}}, \code{\link[=make]{make()}}
+\code{\link[=done]{done()}}, \code{\link[=failed]{failed()}}, \code{\link[=cancelled]{cancelled()}}, \code{\link[=make]{make()}}
 }

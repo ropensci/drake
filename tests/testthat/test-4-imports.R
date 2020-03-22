@@ -128,11 +128,14 @@ test_with_dir("expose_imports() works", {
 test_with_dir("target conflicts with current import or another target", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   config <- dbug()
-  config$plan <- rbind(config$plan, data.frame(target = "f",
-                                               command = "1+1"))
-  expect_message(drake_config(plan = config$plan,
-                            envir = config$envir),
-                 regexp = "unload")
+  config$plan <- rbind(
+    config$plan,
+    data.frame(target = "f", command = "1+1")
+  )
+  expect_message(
+    drake_config(plan = config$plan, envir = config$envir),
+    regexp = "unload"
+  )
   config$plan$target <- "repeated"
   expect_error(drake_config(plan = config$plan))
 })

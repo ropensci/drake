@@ -1,18 +1,18 @@
-drake_backend.clustermq <- function(config) {
+drake_backend_clustermq <- function(config) {
   assert_pkg("clustermq", version = "0.8.8")
   config$queue <- priority_queue(
     config = config,
-    jobs = config$jobs_preprocess
+    jobs = config$settings$jobs_preprocess
   )
   cmq_local_master(config)
   if (config$queue$empty()) {
     return()
   }
   config$workers <- clustermq::workers(
-    n_jobs = config$jobs,
-    template = config$template
+    n_jobs = config$settings$jobs,
+    template = config$settings$template
   )
-  config$logger$minor("set common data")
+  config$logger$disk("set common data")
   cmq_set_common_data(config)
   config$counter <- new.env(parent = emptyenv())
   config$counter$remaining <- config$queue$size()
@@ -54,14 +54,14 @@ cmq_set_common_data <- function(config) {
     const = list(),
     rettype = list(),
     pkgs = character(0),
-    common_seed = config$seed,
+    common_seed = config$settings$seed,
     token = "set_common_data_token"
   )
 }
 
 cmq_master <- function(config) {
   on.exit(config$workers$finalize())
-  config$logger$minor("begin scheduling targets")
+  config$logger$disk("begin scheduling targets")
   while (config$counter$remaining > 0) {
     cmq_master_iter(config)
   }
@@ -74,7 +74,7 @@ cmq_master_iter <- function(config) {
   msg <- config$workers$receive_data()
   cmq_conclude_build(msg = msg, config = config)
   if (!identical(msg$token, "set_common_data_token")) {
-    config$logger$minor("sending common data")
+    config$logger$disk("sending common data")
     config$workers$send_common_data()
   } else if (!config$queue$empty()) {
     cmq_next_target(config)
@@ -89,26 +89,27 @@ cmq_conclude_build <- function(msg, config) {
     return()
   }
   if (inherits(build, "try-error")) {
-    stop(attr(build, "condition")$message, call. = FALSE) # nocov
+    stop0(attr(build, "condition")$message) # nocov
   }
-  cmq_conclude_target(target = build$target, config = config)
   caching <- hpc_caching(build$target, config)
   if (identical(caching, "worker")) {
     wait_checksum(
       target = build$target,
+      value = build$value,
       checksum = build$checksum,
       config = config
     )
-    return()
   } else {
     build <- unserialize_build(build)
+    wait_outfile_checksum(
+      target = build$target,
+      value = build$value,
+      checksum = build$checksum,
+      config = config
+    )
+    conclude_build(build = build, config = config)
   }
-  wait_outfile_checksum(
-    target = build$target,
-    checksum = build$checksum,
-    config = config
-  )
-  conclude_build(build = build, config = config)
+  cmq_conclude_target(target = build$target, config = config)
 }
 
 cmq_next_target <- function(config) {
@@ -141,14 +142,14 @@ cmq_send_target <- function(target, config) {
     deps <- cmq_deps_list(target, config)
   }
   spec <- hpc_spec(target, config)
-  ht_is_subtarget <- config$ht_is_subtarget
+  config_tmp <- get_hpc_config_tmp(config)
   config$workers$send_call(
     expr = drake::cmq_build(
       target = target,
       meta = meta,
       deps = deps,
       spec = spec,
-      ht_is_subtarget = ht_is_subtarget,
+      config_tmp = config_tmp,
       config = config
     ),
     env = list(
@@ -156,7 +157,7 @@ cmq_send_target <- function(target, config) {
       meta = meta,
       deps = deps,
       spec = spec,
-      ht_is_subtarget = ht_is_subtarget
+      config_tmp = config_tmp
     )
   )
 }
@@ -203,12 +204,12 @@ cmq_deps_list <- function(target, config) {
 #' @param meta List of metadata.
 #' @param deps Named list of target dependencies.
 #' @param spec Internal, part of the full `config$spec`.
-#' @param ht_is_subtarget Internal, part of `config`
+#' @param config_tmp Internal, extra parts of `config` that the workers need.
 #' @param config A [drake_config()] list.
-cmq_build <- function(target, meta, deps, spec, ht_is_subtarget, config) {
-  config$logger$minor("build on an hpc worker", target = target)
+cmq_build <- function(target, meta, deps, spec, config_tmp, config) {
+  config$logger$disk("build on an hpc worker", target = target)
   config$spec <- spec
-  config$ht_is_subtarget <- ht_is_subtarget
+  config <- restore_hpc_config_tmp(config_tmp, config)
   do_prework(config = config, verbose_packages = FALSE)
   caching <- hpc_caching(target, config)
   if (identical(caching, "master")) {
@@ -218,13 +219,15 @@ cmq_build <- function(target, meta, deps, spec, ht_is_subtarget, config) {
   }
   build <- try_build(target = target, meta = meta, config = config)
   if (identical(caching, "master")) {
-    build$checksum <- get_outfile_checksum(target, config)
+    build$checksum <- get_outfile_checksum(target, build$value, config)
     build <- classify_build(build, config)
     build <- serialize_build(build)
     return(build)
   }
   conclude_build(build = build, config = config)
-  list(target = target, checksum = get_checksum(target, config))
+  checksum <- get_checksum(target, build$value, config)
+  value <- hpc_worker_build_value(target, build$value, config)
+  list(target = target, value = value, checksum = checksum)
 }
 
 cmq_assign_deps <- function(deps, config) {
@@ -255,7 +258,7 @@ cmq_assign_deps <- function(deps, config) {
 }
 
 cmq_local_build <- function(target, config) {
-  config$logger$minor("build locally", target = target)
+  config$logger$disk("build locally", target = target)
   local_build(target, config, downstream = NULL)
   cmq_conclude_target(target = target, config = config)
 }
@@ -263,4 +266,5 @@ cmq_local_build <- function(target, config) {
 cmq_conclude_target <- function(target, config) {
   decrease_revdep_keys(queue = config$queue, target = target, config = config)
   config$counter$remaining <- config$counter$remaining - 1L
+  config$logger$progress()
 }

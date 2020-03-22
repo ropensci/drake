@@ -1,3 +1,12 @@
+all_targets <- function(config) {
+  out <- V(config$graph)$name[!V(config$graph)$imported]
+  out[!is_encoded_path(out)]
+}
+
+all_imports <- function(config) {
+  V(config$graph)$name[V(config$graph)$imported]
+}
+
 deps_graph <- function(targets, graph, reverse = FALSE) {
   if (!length(targets)) {
     return(character(0))
@@ -14,6 +23,15 @@ downstream_nodes <- function(graph, from) {
     graph = graph,
     vertices = from,
     mode = "out",
+    order = igraph::gorder(graph)
+  )
+}
+
+upstream_nodes <- function(graph, from) {
+  nbhd_vertices(
+    graph = graph,
+    vertices = from,
+    mode = "in",
     order = igraph::gorder(graph)
   )
 }

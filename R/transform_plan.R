@@ -28,8 +28,6 @@
 #'   - `cross(..., .data, .id, .tag_in, .tag_out)`
 #'   - `combine(..., .by, .id, .tag_in, .tag_out)`
 #' @section Dynamic branching:
-#'   Dynamic branching is not yet implemented,
-#'   but this is what it usage will look like.
 #'   - `map(..., .trace)`
 #'   - `cross(..., .trace)`
 #'   - `group(..., .by, .trace)`
@@ -279,17 +277,25 @@ transform_plan_ <- function(
   plan$transform <- lapply(plan$transform, parse_transform)
   graph <- dsl_graph(plan)
   order <- igraph::topo_sort(graph)$name
+  subplans <- split(plan, f = plan$target)
   for (target in order) {
-    index <- which(target == plan$target)
-    rows <- transform_row(index, plan, graph, max_expand)
-    plan <- sub_in_plan(plan, rows, index)
-    old_cols(plan) <- old_cols
+    upstream_plan <- dsl_upstream_plan(target, graph, subplans)
+    index <- which(target == upstream_plan$target)
+    old_cols(upstream_plan) <- old_cols
+    subplans[[target]] <- transform_row(index, upstream_plan, graph, max_expand)
   }
+  plan <- drake_bind_rows(subplans)
+  old_cols(plan) <- old_cols
   plan <- dsl_trace(plan = plan, trace = trace)
   old_cols(plan) <- plan$transform <- NULL
   plan <- dsl_tidy_eval(plan = plan, tidy_eval = tidy_eval, envir = envir)
   plan <- dsl_sanitize(plan = plan, sanitize = sanitize, envir = envir)
   plan
+}
+
+dsl_upstream_plan <- function(target, graph, subplans) {
+  upstream_targets <- upstream_nodes(graph, target)
+  drake_bind_rows(subplans[upstream_targets])
 }
 
 dsl_trace <- function(plan, trace) {
@@ -313,15 +319,6 @@ dsl_sanitize <- function(plan, sanitize, envir) {
   if (sanitize) {
     plan <- sanitize_plan(plan, envir = envir)
   }
-  plan
-}
-
-sub_in_plan <- function(plan, rows, index) {
-  plan <- drake_bind_rows(
-    plan[seq_len(index - 1), ],
-    rows,
-    plan[-seq_len(index), ]
-  )
   plan
 }
 
@@ -441,10 +438,9 @@ check_drake_slice_args <- function(slices, index, margin) {
   if (sclr) {
     return()
   }
-  stop(
-    "In drake_slice, arguments margin, slices, ",
-    "and index must each have length 1.",
-    call. = FALSE
+  stop0(
+    "In drake_slice(), arguments margin, slices, ",
+    "and index must each have length 1."
   )
 }
 
@@ -568,10 +564,9 @@ assert_good_transform.map <-
   assert_good_transform.combine <- function(...) NULL
 
 assert_good_transform.default <- function(transform, target) {
-  stop(
+  stop0(
     "invalid transform: ", lang(transform),
-    ". Expected: one of map(), cross(), or combine()",
-    call. = FALSE
+    ". Expected: one of map(), cross(), or combine()."
   )
 }
 
@@ -606,9 +601,6 @@ transform_row <- function(index, plan, graph, max_expand) {
   )
   check_group_names(new_cols, old_cols(plan))
   out <- dsl_transform(transform, target, row, plan, graph, max_expand)
-  if (is.null(out)) {
-    return()
-  }
   out[[target]] <- out$target
   for (col in tag_in(transform)) {
     out[[col]] <- target
@@ -622,11 +614,9 @@ transform_row <- function(index, plan, graph, max_expand) {
 check_group_names <- function(groups, protect) {
   groups <- intersect(groups, protect)
   if (length(groups)) {
-    stop(
-      "variables in `target(transform = ...)` ",
-      "cannot also be custom column names in the plan:\n",
-      multiline_message(groups),
-      call. = FALSE
+    stop0(
+      "grouping variables cannot also be custom column names in the plan:\n",
+      multiline_message(groups)
     )
   }
 }
@@ -646,8 +636,7 @@ dsl_transform.map <- dsl_transform.cross <- function(
   groupings <- groupings(transform)
   grid <- dsl_grid(transform, groupings)
   if (any(dim(grid) < 1L)) {
-    warn_empty_transform(target)
-    return(grid)
+    error_nonempty_transform(target)
   }
   grid <- dsl_map_join_plan(
     grid = grid,
@@ -728,19 +717,17 @@ dsl_left_outer_join <- function(x, y) {
   # Just a precaution. We should actually be okay by now.
   y <- y[!duplicated(y[, by, drop = FALSE]),, drop = FALSE] # nolint
   # Need to recover the original row order
-  key <- random_string(exclude = c(colnames(x), colnames(y)))
+  key <- basename(tempfile(fileext = "drake_transform_plan_col"))
   x[[key]] <- seq_len(nrow(x))
   out <- merge(x = x, y = y, by = by, all.x = TRUE, sort = FALSE)
   out <- out[, !duplicated(colnames(out)), drop = FALSE]
-  is_na_col <- vapply(out, all_is_na, FUN.VALUE = logical(1))
+  is_na_col <- vlapply(out, function(x) {
+    all(is.na(x))
+  })
   out <- out[, !is_na_col, drop = FALSE]
   out <- out[order(out[[key]]),, drop = FALSE] # nolint
   out[[key]] <- NULL
   out
-}
-
-all_is_na <- function(x) {
-  all(is.na(x))
 }
 
 upstream_trace_vars <- function(target, plan, graph) {
@@ -773,13 +760,11 @@ seq_max_expand <- function(n, max_expand) {
 dsl_transform.combine <- function(transform, target, row, plan, graph, ...) {
   plan <- valid_splitting_plan(plan, transform)
   if (!nrow(plan)) {
-    warn_empty_transform(target)
-    return()
+    error_nonempty_transform(target)
   }
   out <- dsl_commands_combine(transform = transform, row = row, plan = plan)
   if (!nrow(out)) {
-    warn_empty_transform(target)
-    return()
+    error_nonempty_transform(target)
   }
   out$target <- new_target_names(
     target,
@@ -802,14 +787,11 @@ dsl_commands_combine <- function(transform, row, plan) {
   )
 }
 
-warn_empty_transform <- function(target) {
-  warning(
-    "A grouping variable for target ", shQuote(target),
-    " is either undefined or improperly invoked. Transformation skipped ",
-    "and target deleted. To read about grouping variables and ",
-    "their limitations, please visit ",
-    "https://books.ropensci.org/drake/static.html#grouping-variables",
-    call. = FALSE
+error_nonempty_transform <- function(target) {
+  stop0(
+    "A grouping variable for target ", target,
+    " is either undefined or improperly invoked. Details: ",
+    "https://books.ropensci.org/drake/static.html#grouping-variables"
   )
 }
 
@@ -1014,7 +996,9 @@ dsl_combine_join_plan <- function(plan, transform, old_cols) {
   out <- out[, keep, drop = FALSE]
   keep <- !vapply(out, anyNA, FUN.VALUE = logical(1))
   out <- out[, keep, drop = FALSE]
-  keep <- vapply(out, num_unique, FUN.VALUE = integer(1)) == 1L
+  keep <- viapply(out, function(x) {
+    length(unique(x))
+  }) == 1L
   utils::head(out[, keep, drop = FALSE], n = 1)
 }
 
@@ -1067,13 +1051,12 @@ dsl_grid.map <- function(transform, groupings) {
 }
 
 map_grid_error <- function(transform, groupings) {
-  stop(
+  stop0(
     "Failed to make a grid of grouping variables for map().\n",
     "Grouping variables in map() must have suitable lengths ",
     "for coercion to a data frame.\n",
     "Possibly uneven groupings detected in ", char(transform), ":\n",
-    multiline_message(groupings),
-    call. = FALSE
+    multiline_message(groupings)
   )
 }
 
@@ -1121,7 +1104,8 @@ find_old_groupings.map <- function(transform, plan) {
   blocks <- lapply(blocks, function(x) {
     as.list(x[complete_cases(x),, drop = FALSE]) # nolint
   })
-  out <- do.call(c, set_names(blocks, NULL))
+  names(blocks) <- NULL
+  out <- do.call(c, blocks)
   out <- select_nonempty(lapply(out, na_omit))
   min_length <- min(vapply(out, length, FUN.VALUE = integer(1)))
   out <- as.data.frame(

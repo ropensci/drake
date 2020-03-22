@@ -143,7 +143,7 @@ test_with_dir("drake_config() memoizes against knitr files (#887)", {
       cache = cache,
       session_info = FALSE
     ),
-    regexp = "does not exist"
+    regexp = "Could not open"
   )
 })
 
@@ -221,14 +221,20 @@ test_with_dir("bad URL", {
     session_info = FALSE,
     log_progress = TRUE
   )
+  tryCatch(
+    mem <- curl::curl_fetch_memory("http://httpbin.org/basic-auth/user/passwd"),
+    error = function(e) {
+      skip("test URL unreachable")
+    }
+  )
   expect_error(
     make_impl(config = config),
-    "could not access url|resolve host"
+    "could not access url|resolve host|HTTP code 407"
   )
   expect_equal(justbuilt(config), character(0))
   expect_error(
     make_impl(config = config),
-    "could not access url|resolve host"
+    "could not access url|resolve host|HTTP code 407"
   )
   expect_equal(justbuilt(config), character(0))
 })
@@ -240,6 +246,12 @@ test_with_dir("authentication", {
   plan <- drake_plan(x = file_in("http://httpbin.org/basic-auth/user/passwd"))
   expect_error(make(plan), regexp = "could not access url")
   handles <- list(`http://httpbin.org/basic-auth` = curl::new_handle())
+  tryCatch(
+    mem <- curl::curl_fetch_memory("http://httpbin.org/basic-auth/user/passwd"),
+    error = function(e) {
+      skip("test URL unreachable")
+    }
+  )
   expect_error(
     make(plan, curl_handles = handles),
     regexp = "could not access url"
@@ -257,7 +269,7 @@ test_with_dir("authentication", {
   )
   expect_error(
     make(plan, curl_handles = handles),
-    regexp = "no ETag or Last-Modified for url"
+    regexp = "no ETag or Last-Modified for url|code 407|could not access url"
   )
 })
 
@@ -528,7 +540,7 @@ test_with_dir("bad knitr report", {
       cache = storr::storr_environment(),
       verbose = 0L
     ),
-    regexp = "dependencies could not be extracted"
+    regexp = "Could not parse"
   )
 })
 

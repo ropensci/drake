@@ -9,11 +9,11 @@ test_with_dir("stress test storage hash", {
     cache = storr::storr_environment()
   )
   make_impl(config = con)
-  # Can debug storage_hash() to make sure hashing is skipped
+  # Can debug static_storage_hash() to make sure hashing is skipped
   # at the appropriate times.
   for (file in file_store(c("report.Rmd"))) {
-    expect_true(is.character(storage_hash(file, config = con, 0)))
-    expect_true(is.character(storage_hash(file, config = con, Inf)))
+    expect_true(is.character(static_storage_hash(file, config = con, 0)))
+    expect_true(is.character(static_storage_hash(file, config = con, Inf)))
   }
 })
 
@@ -28,18 +28,18 @@ test_with_dir("same with a directory", {
     cache = storr::storr_environment()
   )
   make_impl(config = con)
-  # Can debug storage_hash() to make sure hashing is skipped
+  # Can debug static_storage_hash() to make sure hashing is skipped
   # at the appropriate times.
   for (file in file_store("dir")) {
-    expect_true(is.character(storage_hash(file, config = con, 0)))
-    expect_true(is.character(storage_hash(file, config = con, Inf)))
+    expect_true(is.character(static_storage_hash(file, config = con, 0)))
+    expect_true(is.character(static_storage_hash(file, config = con, Inf)))
   }
 })
 
 test_with_dir("hashing decisions", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   expect_true(
-    should_rehash_storage(
+    should_rehash_local(
       new_mtime = 0,
       old_mtime = 0,
       old_size = 0,
@@ -49,7 +49,7 @@ test_with_dir("hashing decisions", {
   )
   for (i in c(0, 1)) {
     expect_false(
-      should_rehash_storage(
+      should_rehash_local(
         new_mtime = 0,
         old_mtime = i,
         old_size = 0,
@@ -58,7 +58,7 @@ test_with_dir("hashing decisions", {
       )
     )
     expect_true(
-      should_rehash_storage(
+      should_rehash_local(
         new_mtime = 0,
         old_mtime = i,
         old_size = 0,
@@ -69,7 +69,7 @@ test_with_dir("hashing decisions", {
   }
   for (s in c(-Inf, Inf)) {
     expect_true(
-      should_rehash_storage(
+      should_rehash_local(
         new_mtime = 1,
         old_mtime = 0,
         old_size = 0,
@@ -78,7 +78,7 @@ test_with_dir("hashing decisions", {
       )
     )
     expect_true(
-      should_rehash_storage(
+      should_rehash_local(
         new_mtime = 0,
         old_mtime = 0,
         old_size = 1,
@@ -87,7 +87,7 @@ test_with_dir("hashing decisions", {
       )
     )
     expect_true(
-      should_rehash_storage(
+      should_rehash_local(
         new_mtime = 0,
         old_mtime = 0,
         old_size = 0,
@@ -101,8 +101,12 @@ test_with_dir("hashing decisions", {
 test_with_dir("storage hash of a non-existent path", {
   expect_false(file.exists("asdf"))
   config <- drake_config(drake_plan(x = 1))
-  expect_true(is.na(storage_hash("asdf", config = config)))
-  expect_true(is.na(rehash_storage("asdf", config = config)))
-  expect_true(is.na(storage_hash(reencode_path("asdf"), config = config)))
-  expect_true(is.na(rehash_storage(reencode_path("asdf"), config = config)))
+  expect_true(is.na(static_storage_hash("asdf", config = config)))
+  expect_true(is.na(rehash_static_storage("asdf", config = config)))
+  expect_true(
+    is.na(static_storage_hash(reencode_path("asdf"), config = config))
+  )
+  expect_true(
+    is.na(rehash_static_storage(reencode_path("asdf"), config = config))
+  )
 })

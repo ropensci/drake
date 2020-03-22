@@ -159,10 +159,9 @@ load_mtcars_example <- function(
   force(envir)
   deprecate_force(force)
   if (!is.null(report_file)) {
-    warning(
+    warn0(
       "The `report_file` argument of load_mtcars_example() ",
-      "is deprecated and will be removed in a future release.",
-      call. = FALSE
+      "is deprecated and will be removed in a future release."
     )
   }
   if (is.null(report_file)) {
@@ -170,7 +169,7 @@ load_mtcars_example <- function(
   }
   populate_mtcars_example_envir(envir = envir)
   if (file.exists(report_file) && overwrite) {
-    warning("Overwriting file ", report_file, call. = FALSE)
+    warn0("Overwriting file ", report_file)
   }
   report_path <- system.file(
     file.path("rmarkdown", "examples", "mtcars", "report.Rmd"),

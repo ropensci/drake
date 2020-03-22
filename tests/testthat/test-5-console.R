@@ -26,15 +26,15 @@ test_with_dir("console to file", {
   tmp <- capture.output({
       make(
         my_plan, cache = cache, verbose = 1L, session_info = FALSE,
-        console_log_file = "log.txt"
+        log_make = "log.txt"
       )
       make(
         my_plan, cache = cache, verbose = 1L, session_info = FALSE,
-        console_log_file = "log.txt"
+        log_make = "log.txt"
       )
       make(
         my_plan, cache = cache, verbose = 1L, session_info = FALSE,
-        trigger = trigger(condition = TRUE), console_log_file = "log.txt"
+        trigger = trigger(condition = TRUE), log_make = "log.txt"
       )
     },
     type = "message"
@@ -71,7 +71,7 @@ test_with_dir("drake_warning() and drake_error()", {
   expect_true(any(grepl("some_error", as.character(unlist(o$error$calls)))))
   expect_false(file.exists("log.txt"))
   expect_error(expect_warning(make(
-    plan, console_log_file = "log.txt",
+    plan, log_make = "log.txt",
     cache = storr::storr_environment(),
     session_info = FALSE
   )))
@@ -103,14 +103,35 @@ test_with_dir("show_source()", {
   expect_true(is.numeric(y))
 })
 
-test_with_dir("spinner (or lack thereof) does not break things", {
+test_with_dir("progress bar does not break things", {
   skip_on_cran()
-  config <- drake_config(
-    drake_plan(a = 1, b = a),
-    verbose = 2L,
-    cache = storr::storr_environment(),
-    session_info = FALSE
+  plan <- drake_plan(
+    x = target(
+      1,
+      transform = map(y = !!seq_len(2))
+    )
   )
-  make_impl(config = config)
-  expect_equal(config$logger$verbose, 2L)
+  make(plan, verbose = 2)
+  plan <- drake_plan(
+    x = target(
+      1,
+      transform = map(y = !!seq_len(2))
+    ),
+    w = seq_len(2),
+    z = target(
+      1,
+      dynamic = map(y = w)
+    )
+  )
+  make(plan, verbose = 2)
+  clean()
+  skip_if_not_installed("future")
+  make(plan, verbose = 2, parallelism = "future")
+  skip_on_os("windows")
+  clean()
+  options(clustermq.scheduler = "multicore")
+  make(plan, verbose = 2, parallelism = "clustermq")
+  if ("package:clustermq" %in% search()) {
+    detach("package:clustermq", unload = TRUE) # nolint
+  }
 })

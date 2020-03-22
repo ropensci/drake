@@ -875,3 +875,399 @@ test_with_dir("global rds format + target qs (#1124)", {
   expect_true(nchar(ref) < 100)
   expect_false(is.list(ref))
 })
+
+test_with_dir("file format with flat files and static targets (#1168)", {
+  skip_on_cran()
+  write_lines <- function(files, ...) {
+    for (file in files) {
+      writeLines(c(file, "stuff"), file)
+    }
+    files
+  }
+  plan <- drake_plan(
+    w = 1,
+    x = target(
+      write_lines(c("a", "b")),
+      format = "file"
+    ),
+    y = target(
+      write_lines(c("c", "d"), x),
+      format = "file"
+    ),
+    z = y
+  )
+  # initial state
+  config <- drake_config(plan, history = FALSE)
+  expect_equal(sort(outdated_impl(config)), sort(c("w", "x", "y", "z")))
+  make_impl(config)
+  expect_equal(sort(justbuilt(config)), sort(c("w", "x", "y", "z")))
+  # file format internals
+  expect_identical(readd(x), c("a", "b"))
+  expect_identical(config$cache$get("x"), c("a", "b"))
+  hash <- config$cache$get_hash("x")
+  expect_identical(config$cache$get_value(hash), c("a", "b"))
+  expect_false("history" %in% list.files(".drake/drake"))
+  val <- config$cache$storr$get("x")
+  val2 <- config$cache$storr$get_value(hash)
+  expect_identical(val, val2)
+  expect_equal(val$value, c("a", "b"))
+  expect_true(is.character(val$hash))
+  expect_equal(length(val$hash), 2)
+  expect_true(inherits(val, "drake_format_file"))
+  expect_true(inherits(val, "drake_format"))
+  # validated state
+  expect_equal(outdated_impl(config), character(0))
+  make_impl(config)
+  expect_equal(justbuilt(config), character(0))
+  # write the same content to an x file
+  write_lines("b")
+  expect_equal(outdated_impl(config), character(0))
+  make_impl(config)
+  expect_equal(justbuilt(config), character(0))
+  # corrupt an x file
+  writeLines("123", "b")
+  expect_equal(readLines("b"), "123")
+  expect_equal(sort(outdated_impl(config)), sort(c("x", "y", "z")))
+  make_impl(config)
+  expect_equal(justbuilt(config), "x")
+  expect_equal(readLines("b"), c("b", "stuff"))
+  # remove an x file
+  unlink("b")
+  expect_false(file.exists("b"))
+  expect_equal(sort(outdated_impl(config)), sort(c("x", "y", "z")))
+  make_impl(config)
+  expect_equal(justbuilt(config), "x")
+  expect_equal(readLines("b"), c("b", "stuff"))
+  # corrupt x and y files
+  writeLines("123", "b")
+  writeLines("123", "c")
+  expect_equal(readLines("b"), "123")
+  expect_equal(readLines("c"), "123")
+  expect_equal(sort(outdated_impl(config)), sort(c("x", "y", "z")))
+  make_impl(config)
+  expect_equal(justbuilt(config), c("x", "y"))
+  expect_equal(readLines("b"), c("b", "stuff"))
+  expect_equal(readLines("c"), c("c", "stuff"))
+  # change the expected file content
+  write_lines <- function(files, ...) {
+    for (file in files) {
+      writeLines(c(file, "new stuff"), file)
+    }
+    files
+  }
+  expect_equal(sort(outdated_impl(config)), sort(c("x", "y", "z")))
+  make_impl(config)
+  expect_equal(justbuilt(config), c("x", "y", "z"))
+  expect_equal(readLines("b"), c("b", "new stuff"))
+  # same with a shorter plan
+  clean(destroy = TRUE)
+  plan <- drake_plan(
+    x = target(
+      write_lines(c("a", "b")),
+      format = "file"
+    ),
+    y = readLines(x[1])
+  )
+  make(plan)
+  write_lines <- function(files, ...) {
+    for (file in files) {
+      writeLines(c(file, "newer stuff"), file)
+    }
+    files
+  }
+  config <- drake_config(plan)
+  make(plan)
+  expect_equal(sort(justbuilt(config)), sort(c("x", "y")))
+  expect_equal(readd(y), c("a", "newer stuff"))
+})
+
+test_with_dir("file format with directories and static targets (#1168)", {
+  skip_on_cran()
+  write_lines <- function(files, ...) {
+    for (file in files) {
+      if (!dir.exists(file)) {
+        dir.create(file)
+      }
+      writeLines(c(file, "stuff"), file.path(file, "x"))
+      writeLines(c(file, "stuff"), file.path(file, "y"))
+    }
+    files
+  }
+  plan <- drake_plan(
+    w = 1,
+    x = target(
+      write_lines(c("a", "b")),
+      format = "file"
+    ),
+    y = target(
+      write_lines(c("c", "d"), x),
+      format = "file"
+    ),
+    z = y
+  )
+  # initial state
+  config <- drake_config(plan, history = FALSE)
+  expect_equal(sort(outdated_impl(config)), sort(c("w", "x", "y", "z")))
+  make_impl(config)
+  expect_equal(sort(justbuilt(config)), sort(c("w", "x", "y", "z")))
+  # file format internals
+  expect_identical(readd(x), c("a", "b"))
+  expect_identical(config$cache$get("x"), c("a", "b"))
+  hash <- config$cache$get_hash("x")
+  expect_identical(config$cache$get_value(hash), c("a", "b"))
+  expect_false("history" %in% list.files(".drake/drake"))
+  val <- config$cache$storr$get("x")
+  val2 <- config$cache$storr$get_value(hash)
+  expect_identical(val, val2)
+  expect_equal(val$value, c("a", "b"))
+  expect_true(is.character(val$hash))
+  expect_equal(length(val$hash), 2)
+  expect_true(inherits(val, "drake_format_file"))
+  expect_true(inherits(val, "drake_format"))
+  # validated state
+  expect_equal(outdated_impl(config), character(0))
+  make_impl(config)
+  expect_equal(justbuilt(config), character(0))
+  # write the same content to an x file
+  write_lines("b")
+  expect_equal(outdated_impl(config), character(0))
+  make_impl(config)
+  expect_equal(justbuilt(config), character(0))
+  # corrupt an x file
+  writeLines("123", file.path("b", "y"))
+  expect_equal(readLines(file.path("b", "y")), "123")
+  expect_equal(sort(outdated_impl(config)), sort(c("x", "y", "z")))
+  make_impl(config)
+  expect_equal(justbuilt(config), "x")
+  expect_equal(readLines(file.path("b", "y")), c("b", "stuff"))
+  # corrupt x and y files
+  writeLines("123", file.path("b", "y"))
+  writeLines("123", file.path("c", "y"))
+  expect_equal(readLines(file.path("b", "y")), "123")
+  expect_equal(readLines(file.path("c", "y")), "123")
+  expect_equal(sort(outdated_impl(config)), sort(c("x", "y", "z")))
+  make_impl(config)
+  expect_equal(justbuilt(config), c("x", "y"))
+  expect_equal(readLines(file.path("b", "y")), c("b", "stuff"))
+  expect_equal(readLines(file.path("c", "y")), c("c", "stuff"))
+  # change the expected file content
+  write_lines <- function(files, ...) {
+    for (file in files) {
+      if (!dir.exists(file)) {
+        dir.create(file)
+      }
+      writeLines(c(file, "new stuff"), file.path(file, "x"))
+      writeLines(c(file, "new stuff"), file.path(file, "y"))
+    }
+    files
+  }
+  expect_equal(sort(outdated_impl(config)), sort(c("x", "y", "z")))
+  make_impl(config)
+  expect_equal(justbuilt(config), c("x", "y", "z"))
+  expect_equal(readLines(file.path("b", "y")), c("b", "new stuff"))
+})
+
+test_with_dir("bad file format value", {
+  f <- function() {
+    writeLines("1", "1")
+    1
+  }
+  plan <- drake_plan(x = target(f(), format = "file"))
+  expect_warning(make(plan), regexp = "character")
+})
+
+test_with_dir("file trigger and dynamic files (#1168)", {
+  skip_on_cran()
+  write_lines <- function(files, ...) {
+    for (file in files) {
+      writeLines(c(file, "stuff"), file)
+    }
+    files
+  }
+  plan <- drake_plan(
+    x = target(
+      write_lines(c("a", "b")),
+      format = "file"
+    )
+  )
+  make(plan)
+  unlink(c("a", "b"))
+  config <- drake_config(plan)
+  make(plan, trigger = trigger(file = FALSE))
+  expect_equal(justbuilt(config), character(0))
+})
+
+test_with_dir("data recovery and dynamic files (#1168)", {
+  skip_on_cran()
+  write_lines <- function(files, ...) {
+    for (file in files) {
+      writeLines(c(file, "stuff"), file)
+    }
+    files
+  }
+  f <- function() {
+    write_lines("no_recover")
+    write_lines("b")
+  }
+  plan <- drake_plan(
+    x = target(f(), format = "file")
+  )
+  make(plan)
+  unlink("no_recover")
+  config <- drake_config(plan)
+  # Clean, remove output file, and fail to recover.
+  clean()
+  unlink(c("no_recover", "b"))
+  r <- recoverable(plan)
+  expect_equal(r, character(0))
+  make(plan, recover = TRUE)
+  expect_equal(justbuilt(config), "x")
+  expect_true(file.exists("no_recover"))
+  expect_true(file.exists("b"))
+  # Set up to restore file and recover old target.
+  write_lines <- function(files, ...) {
+    for (file in files) {
+      writeLines(c(file, "stuff2"), file)
+    }
+    files
+  }
+  unlink("no_recover")
+  make(plan)
+  expect_equal(justbuilt(config), "x")
+  expect_true(file.exists("no_recover"))
+  expect_true(file.exists("b"))
+  expect_equal(outdated_impl(config), character(0))
+  make(plan)
+  expect_equal(justbuilt(config), character(0))
+  # Restore file and recover old target.
+  write_lines <- function(files, ...) {
+    for (file in files) {
+      writeLines(c(file, "stuff"), file)
+    }
+    files
+  }
+  unlink("no_recover")
+  write_lines("b")
+  r <- recoverable(plan)
+  expect_equal(r, "x")
+  make(plan, recover = TRUE)
+  expect_equal(justbuilt(config), "x")
+  expect_false(file.exists("no_recover"))
+  expect_true(file.exists("b"))
+  expect_equal(outdated_impl(config), character(0))
+})
+
+test_with_dir("format file hpc checksums (#1168)", {
+  skip_on_cran()
+  skip_if_not_installed("future")
+  write_lines <- function(files, ...) {
+    for (file in files) {
+      writeLines(c(file, "stuff"), file)
+    }
+    files
+  }
+  plan <- drake_plan(
+    x = target(
+      write_lines(c("a", "b")),
+      format = "file"
+    )
+  )
+  make(plan, parallelism = "future")
+  config <- drake_config(plan)
+  out <- format_file_checksum("x", readd(x), config)
+  expect_equal(length(out), 2L)
+  expect_equal(nchar(out), c(16L, 16L))
+  clean(destroy = TRUE)
+  make(plan, parallelism = "future", caching = "worker")
+  skip_if_not_installed("clustermq")
+  skip_on_os("windows")
+  options(clustermq.scheduler = "multicore")
+  for (caching in c("master", "worker")) {
+    clean(destroy = TRUE)
+    make(plan, parallelism = "clustermq", caching = caching)
+    config <- drake_config(plan)
+    expect_equal(justbuilt(config), "x")
+  }
+  if ("package:clustermq" %in% search()) {
+    detach("package:clustermq", unload = TRUE) # nolint
+  }
+})
+
+test_with_dir("missing format file (#1168)", {
+  skip_on_cran()
+  plan <- drake_plan(x = target(c("a", "b"), format = "file"))
+  expect_warning(make(plan), regexp = "missing dynamic files")
+  out <- drake_cache()$storr$get("x")$hash
+  exp <- rep(NA_character_, 2L)
+  expect_equal(out, exp)
+})
+
+test_with_dir("empty format file (#1168)", {
+  skip_on_cran()
+  plan <- drake_plan(x = target(character(0), format = "file"))
+  make(plan)
+  out <- drake_cache()$storr$get("x")
+  expect_equal(out$value, character(0))
+  expect_equal(out$hash, character(0))
+  expect_true(inherits(out, "drake_format_file"))
+  expect_true(inherits(out, "drake_format"))
+})
+
+test_with_dir("non-character format file (#1168)", {
+  skip_on_cran()
+  plan <- drake_plan(x = target(1, format = "file"))
+  expect_warning(make(plan), regexp = "coercing")
+})
+
+test_with_dir("mix of dynamic files and dirs (#1168)", {
+  skip_on_cran()
+  write_file <- function() {
+    writeLines("stuff", "x")
+    "x"
+  }
+  write_dir <- function() {
+    if (!file.exists("y")) {
+      dir.create("y")
+    }
+    writeLines("stuff", file.path("y", "z"))
+    "y"
+  }
+  write_stuff <- function() {
+    c(write_file(), write_dir())
+  }
+  plan <- drake_plan(
+    x = target(write_stuff(), format = "file"),
+    y = x
+  )
+  make(plan)
+  config <- drake_config(plan)
+  make(plan)
+  expect_equal(justbuilt(config), character(0))
+  write_file <- function() {
+    writeLines("stuff2", "x")
+    "x"
+  }
+  make(plan)
+  expect_equal(sort(justbuilt(config)), sort(c("x", "y")))
+  write_dir <- function() {
+    if (!file.exists("y")) {
+      dir.create("y")
+    }
+    writeLines("stuff2", file.path("y", "z"))
+    "y"
+  }
+  make(plan)
+  expect_equal(sort(justbuilt(config)), sort(c("x", "y")))
+})
+
+test_with_dir("keep_going for formatted targets (#1206)", {
+  skip_if_not_installed("fst")
+  plan <- drake_plan(
+    x = target(stop(123), format = "fst"),
+    y = target(stop(123), format = "fst")
+  )
+  make(plan, keep_going = TRUE)
+  expect_equal(sort(failed()), sort(c("x", "y")))
+  expect_true(inherits(diagnose(x)$error, "simpleError"))
+  expect_true(inherits(diagnose(y)$error, "simpleError"))
+})

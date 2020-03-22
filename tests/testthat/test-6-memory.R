@@ -118,7 +118,7 @@ test_with_dir("a close look at the memory strategies", {
   expect_equal(sort(deps), sort(ls(config$envir_targets)))
 
   # speed
-  config$memory_strategy <- "speed"
+  config$settings$memory_strategy <- "speed"
   clear_envir_targets("", config)
   expect_equal(ls(config$envir_targets), character(0))
   lapply(c("x", "y", "z"), function(x) {
@@ -148,7 +148,7 @@ test_with_dir("a close look at the memory strategies", {
 
   # autoclean and preclean
   for (strategy in c("preclean", "autoclean")) {
-    config$memory_strategy <- strategy
+    config$settings$memory_strategy <- strategy
     rm(list = names(config$envir_targets), envir = config$envir_targets)
     config$envir_loaded$targets <- character(0)
 
@@ -186,7 +186,7 @@ test_with_dir("a close look at the memory strategies", {
     assign_to_envir("x", "value", config)
     e <- exists("x", envir = config$envir_targets, inherits = FALSE)
     e2 <- "x" %in% config$envir_loaded$targets
-    expect_equal(e, config$memory_strategy == "preclean")
+    expect_equal(e, config$settings$memory_strategy == "preclean")
     expect_equal(e, e2)
     if (e) {
       rm(list = "x", envir = config$envir_targets)
@@ -195,12 +195,12 @@ test_with_dir("a close look at the memory strategies", {
   }
 
   # none
-  config$memory_strategy <- "none"
+  config$settings$memory_strategy <- "none"
   manage_memory("final1", config)
   expect_equal(sort(deps), sort(ls(config$envir_targets)))
 
   # unload
-  config$memory_strategy <- "unload"
+  config$settings$memory_strategy <- "unload"
   manage_memory("s", config)
   expect_equal(ls(config$envir_targets), character(0))
 })
@@ -378,4 +378,28 @@ test_with_dir("drake_envir(\"imports\") (#882)", {
   plan <- drake_plan(x = ls(drake_envir("imports")))
   make(plan)
   expect_true("a" %in% readd(x))
+})
+
+test_with_dir("centralized metadata (#1177)", {
+  plan <- drake_plan(x = 1)
+  make(plan)
+  config <- drake_config(plan)
+  expect_error(drake_meta_("x", config, spec = NA))
+  expect_false(exists("x", envir = config$meta))
+  meta1 <- drake_meta_("x", config)
+  expect_true(exists("x", envir = config$meta))
+  meta2 <- drake_meta_("x", config)
+  expect_equal(meta1, meta2)
+})
+
+test_with_dir("centralized old metadata (#1177)", {
+  plan <- drake_plan(x = 1)
+  make(plan)
+  config <- drake_config(plan)
+  expect_error(drake_meta_old("x", config = NA))
+  expect_false(exists("x", envir = config$meta_old))
+  meta1 <- drake_meta_old("x", config)
+  expect_true(exists("x", envir = config$meta_old))
+  meta2 <- drake_meta_old("x", config)
+  expect_equal(meta1, meta2)
 })

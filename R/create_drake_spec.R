@@ -43,7 +43,7 @@ create_drake_spec <- function(
 
 # https://github.com/ropensci/drake/issues/887 # nolint
 cds_set_knitr_files <- function(args, spec) {
-  args$logger$minor("set knitr files")
+  args$logger$disk("set knitr files")
   knitr_files <- lightly_parallelize(
     X = spec,
     FUN = function(x) {
@@ -60,7 +60,7 @@ cds_set_knitr_files <- function(args, spec) {
 }
 
 cds_get_knitr_hash <- function(args, spec) {
-  args$logger$minor("get knitr hash")
+  args$logger$disk("get knitr hash")
   if (!args$cache$exists(key = "knitr", namespace = "memoize")) {
     out <- args$cache$digest("", serialize = FALSE)
     return(out)
@@ -68,7 +68,7 @@ cds_get_knitr_hash <- function(args, spec) {
   knitr_files <- args$cache$safe_get(key = "knitr", namespace = "memoize")
   knitr_hashes <- lightly_parallelize(
     X = knitr_files,
-    FUN = storage_hash,
+    FUN = static_storage_hash,
     jobs = args$jobs,
     config = args
   )
@@ -88,7 +88,7 @@ cds_imports_kernel <- function(args, imports) {
 }
 
 cds_prepare_imports <- function(args) {
-  args$logger$minor("analyze environment")
+  args$logger$disk("analyze environment")
   imports <- as.list(args$envir)
   cds_unload_conflicts(
     imports = names(imports),
@@ -103,18 +103,13 @@ cds_prepare_imports <- function(args) {
 cds_unload_conflicts <- function(imports, targets, envir, logger) {
   common <- intersect(imports, targets)
   if (length(common)) {
-    logger$major(
-      "unload",
-      "targets from environment:\n",
-      multiline_message(common),
-      sep = ""
-    )
+    logger$term("unloading", length(common), "targets from environment")
   }
   remove(list = common, envir = envir)
 }
 
 cds_analyze_imports <- function(args, imports) {
-  args$logger$minor("analyze imports")
+  args$logger$disk("analyze imports")
   names <-  names(imports)
   out <- lightly_parallelize(
     X = seq_along(imports),
@@ -136,14 +131,14 @@ cdl_analyze_import <- function(index, imports, names, args) {
     deps_build = cds_import_dependencies(
       expr = imports[[index]],
       exclude = name,
-      allowed_globals = args$ht_imports
+      restrict = args$ht_imports
     )
   )
   as_drake_spec(spec)
 }
 
 cds_analyze_commands <- function(args) {
-  args$logger$minor("analyze commands")
+  args$logger$disk("analyze commands")
   args$plan$imported <- FALSE
   if ("trigger" %in% colnames(args$plan)) {
     args$plan$trigger <- lapply(
@@ -156,11 +151,11 @@ cds_analyze_commands <- function(args) {
   names(spec) <- args$plan$target
   args$default_condition_deps <- cds_import_dependencies(
     args$trigger$condition,
-    allowed_globals = args$ht_globals
+    restrict = args$ht_globals
   )
   args$default_change_deps <- cds_import_dependencies(
     args$trigger$change,
-    allowed_globals = args$ht_globals
+    restrict = args$ht_globals
   )
   out <- lightly_parallelize(
     X = spec,
@@ -178,7 +173,7 @@ cds_prepare_spec <- function(args, spec) {
   spec$deps_build <- cds_command_dependencies(
     command = spec$command,
     exclude = spec$target,
-    allowed_globals = args$ht_globals
+    restrict = args$ht_globals
   )
   spec$deps_dynamic <- cds_dynamic_deps(
     spec$dynamic,
@@ -208,12 +203,12 @@ cds_prepare_spec <- function(args, spec) {
     spec$deps_condition <- cds_import_dependencies(
       spec$trigger$condition,
       exclude = spec$target,
-      allowed_globals = args$ht_globals
+      restrict = args$ht_globals
     )
     spec$deps_change <- cds_import_dependencies(
       spec$trigger$change,
       exclude = spec$target,
-      allowed_globals = args$ht_globals
+      restrict = args$ht_globals
     )
   }
   cds_no_dynamic_triggers(spec)
@@ -232,10 +227,9 @@ cds_prepare_spec <- function(args, spec) {
 
 cds_exclude_dynamic_file_out <- function(spec) {
   if (length(spec$deps_build$file_out)) {
-    stop(
+    stop0(
       "file_out() in dynamic targets is illegal. Target: ",
-      spec$target,
-      call. = FALSE
+      spec$target
     )
   }
 }
@@ -270,41 +264,29 @@ cds_no_dynamic_triggers_impl <- function(target, deps_dynamic, deps_trigger) {
   if (!length(common)) {
     return()
   }
-  stop(
+  stop0(
     "Dynamic grouping variables are forbidden in the condition ",
-    "and change triggers. For target ", target, ", found dynamic ",
-    "grouping variables:\n", multiline_message(common),
-    call. = FALSE
+    "and change triggers. Found dynamic grouping variables for target ",
+    target, ":\n", multiline_message(common)
   )
 }
 
 cds_import_dependencies <- function(
-  expr, exclude = character(0), allowed_globals = NULL
+  expr, exclude = character(0), restrict = NULL
 ) {
-  deps <- analyze_code(
-    expr = expr,
-    exclude = exclude,
-    allowed_globals = allowed_globals
-  )
-  deps$file_out <- deps$strings <- NULL
-  select_nonempty(deps)
+  deps <- drake_deps(expr = expr, exclude = exclude, restrict = restrict)
+  deps$file_out <- deps$strings <- character(0)
+  deps
 }
 
 cds_command_dependencies <- function(
   command,
   exclude = character(0),
-  allowed_globals = NULL
+  restrict = NULL
 ) {
-  if (!length(command)) {
-    return()
-  }
-  deps <- analyze_code(
-    command,
-    exclude = exclude,
-    allowed_globals = allowed_globals
-  )
-  deps$strings <- NULL
-  select_nonempty(deps)
+  deps <- drake_deps(command, exclude = exclude, restrict = restrict)
+  deps$strings <- character(0)
+  deps
 }
 
 cds_dynamic_deps <- function(dynamic, target, args) {
@@ -315,10 +297,9 @@ cds_dynamic_deps.dynamic <- function(dynamic, target, args) {
   dynamic$.trace <- NULL
   out <- ht_filter(args$ht_globals, all.vars(dynamic))
   if (!length(out)) {
-    stop(
+    stop0(
       "no admissible grouping variables for dynamic target ",
-      target,
-      call. = FALSE
+      target
     )
   }
   out
@@ -349,15 +330,14 @@ cds_assert_trace.group <- function(dynamic, spec) {
   if (!length(bad)) {
     return()
   }
-  stop(
+  stop0(
     "in dynamic group(), ",
     "the only legal dynamic trace variable ",
     "is the one you select with `.by`. ",
     "illegal dynamic trace variables for target ",
     spec$target,
     ":\n",
-    multiline_message(bad),
-    call. = FALSE
+    multiline_message(bad)
   )
 }
 
@@ -366,7 +346,7 @@ cds_assert_trace.dynamic <- function(dynamic, spec) {
   if (!length(bad)) {
     return()
   }
-  stop(
+  stop0(
     "in map() and cross(), ",
     "all dynamic trace variables must be ",
     "existing grouping variables, e.g. map(x, .trace = x) ",
@@ -374,8 +354,7 @@ cds_assert_trace.dynamic <- function(dynamic, spec) {
     "illegal dynamic trace variables for target ",
     spec$target,
     ":\n",
-    multiline_message(bad),
-    call. = FALSE
+    multiline_message(bad)
   )
 }
 
@@ -411,6 +390,9 @@ cds_std_dyn_cmd <- function(x) {
   transform <- class(x)
   vars <- sort(all.vars(x))
   by <- as.character(x$.by)
+  # TODO: the mention of trace is a bug, but fixing it
+  # will invalidate everyone's sub-targets. Wait to fix it
+  # until drake 8.0.0.
   paste(c(transform, vars, by, trace), collapse = " ")
 }
 

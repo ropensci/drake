@@ -166,8 +166,6 @@ drake_graph_info_impl <- function(
 ) {
   assert_pkg("visNetwork")
   assert_config(config)
-  config$logger$minor("begin drake_graph_info()")
-  on.exit(config$logger$minor("end drake_graph_info()"), add = TRUE)
   if (!length(V(config$graph)$name)) {
     return(null_graph())
   }
@@ -281,14 +279,14 @@ get_raw_node_category_data <- function(config) {
     f = function(x) {
       is.function(get_import_from_memory(x, config = config))
     },
-    jobs = config$jobs_preprocess
+    jobs = config$settings$jobs_preprocess
   )
   config$missing <- parallel_filter(
     x = config$import_names,
     f = function(x) {
       missing_import(x, config = config)
     },
-    jobs = config$jobs_preprocess
+    jobs = config$settings$jobs_preprocess
   )
   config
 }
@@ -598,6 +596,16 @@ node_color <- Vectorize(function(x) {
 },
 "x", USE.NAMES = FALSE)
 
+col2hex <- function(cname) {
+  assert_pkg("grDevices")
+  col_mat <- grDevices::col2rgb(cname)
+  grDevices::rgb(
+    red = col_mat[1, ] / 255,
+    green = col_mat[2, ] / 255,
+    blue = col_mat[3, ] / 255
+  )
+}
+
 node_shape <- Vectorize(function(x) {
   switch(
     x,
@@ -613,6 +621,7 @@ node_shape <- Vectorize(function(x) {
 
 append_build_times <- function(config) {
   time_data <- build_times(
+    list = all_targets(config),
     digits = config$digits,
     cache = config$cache,
     type = config$build_times
@@ -626,10 +635,10 @@ append_build_times <- function(config) {
   time_labels <- as.character(time_data$elapsed)
   if (any(time_data$dynamic)) {
     time_labels[time_data$dynamic] <- paste0(
-      time_labels[time_data$dynamic],
-      " total\n(",
       time_data$subtargets[time_data$dynamic],
-      " sub-targets)"
+      " sub-targets\n",
+      time_labels[time_data$dynamic],
+      " elapsed\n(time depends on jobs)"
     )
   }
   names(time_labels) <- time_data$target
@@ -649,11 +658,7 @@ aggregate_dynamic_times <- function(time_data, config) {
   for (i in dynamic) {
     target <- time_data$target[i]
     meta <- config$cache$get(target, namespace = "meta")
-    subtargets <- intersect(meta$subtargets, time_data$target)
-    subtime <- sum(time_data$elapsed[time_data$target %in% subtargets]) %||% 0
-    dyntime <- time_data$elapsed[i] %||% 0L
-    time_data$elapsed[i] <- lubridate::dseconds(dyntime + subtime)
-    time_data$subtargets[i] <- time_data$subtargets[i] + length(subtargets)
+    time_data$subtargets[i] <- length(meta$subtargets)
   }
   time_data
 }
@@ -734,6 +739,14 @@ style_hover_text <- function(x) {
   x <- gsub(pattern = "\n", replacement = "<br>", x = x)
   paste0(x, collapse = "<br>")
 }
+
+crop_text <- Vectorize(function(x, width = getOption("width")) {
+  if (nchar(x) > width) {
+    x <- paste0(substr(x, 1, width - 3), "...")
+  }
+  x
+},
+"x", USE.NAMES = FALSE)
 
 hover_lines <- 10
 hover_width <- 49

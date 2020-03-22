@@ -113,8 +113,6 @@ vis_drake_graph_impl <- function(
     hover = hover,
     on_select_col = on_select_col
   )
-  config$logger$minor("begin vis_drake_graph()")
-  on.exit(config$logger$minor("end vis_drake_graph()"), add = TRUE)
   if (is.null(main)) {
     main <- graph_info$default_title
   }
@@ -330,7 +328,9 @@ vis_render_webshot <- function(graph, file, selfcontained) {
   file <- path.expand(file)
   if (is_image_filename(file)) {
     assert_pkg("webshot")
-    url <- file.path(random_tempdir(), "tmp.html")
+    dir <- tempfile()
+    dir.create(dir)
+    url <- file.path(dir, "tmp.html")
     visNetwork::visSave(graph = graph, file = url, selfcontained = FALSE)
     webshot::webshot(url = url, file = file)
   } else {

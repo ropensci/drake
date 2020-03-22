@@ -110,6 +110,19 @@ hpc_config <- function(config) {
   config
 }
 
+get_hpc_config_tmp <- function(config) {
+  list(
+    ht_is_subtarget = config$ht_is_subtarget,
+    ht_subtarget_parents = config$ht_subtarget_parents
+  )
+}
+
+restore_hpc_config_tmp <- function(tmp, config) {
+  config$ht_is_subtarget <- tmp$ht_is_subtarget
+  config$ht_subtarget_parents <- tmp$ht_subtarget_parents
+  config
+}
+
 hpc_spec <- function(target, config) {
   class(target) <- ifelse(is_subtarget(target, config), "subtarget", "target")
   hpc_spec_impl(target, config)
@@ -136,9 +149,16 @@ hpc_spec_impl.default <- function(target, config) {
   spec
 }
 
-wait_outfile_checksum <- function(target, checksum, config, timeout = 300) {
+wait_outfile_checksum <- function(
+  target,
+  value,
+  checksum,
+  config,
+  timeout = 300
+) {
   wait_checksum(
     target = target,
+    value = value,
     checksum = checksum,
     config = config,
     timeout = timeout,
@@ -148,6 +168,7 @@ wait_outfile_checksum <- function(target, checksum, config, timeout = 300) {
 
 wait_checksum <- function(
   target,
+  value,
   checksum,
   config,
   timeout = 300,
@@ -156,10 +177,10 @@ wait_checksum <- function(
   i <- 0
   time_left <- timeout
   while (time_left > 0) {
-    if (criterion(target, checksum, config)) {
+    if (criterion(target, value, checksum, config)) {
       return()
     } else {
-      sleep <- config$sleep(max(0L, i))
+      sleep <- config$settings$sleep(max(0L, i))
       Sys.sleep(sleep)
       time_left <- time_left - sleep
     }
@@ -170,11 +191,11 @@ wait_checksum <- function(
     "network file system. Checksum verification timed out after about ",
     timeout, " seconds."
   )
-  config$logger$minor(paste("Error:", msg))
-  stop(msg, call. = FALSE)
+  config$logger$disk(paste("Error:", msg))
+  stop0(msg)
 }
 
-is_good_checksum <- function(target, checksum, config) {
+is_good_checksum <- function(target, value, checksum, config) {
   # Not actually reached, but may come in handy later.
   # nocov start
   if (!length(checksum)) {
@@ -185,7 +206,7 @@ is_good_checksum <- function(target, checksum, config) {
     return(TRUE) # covered with parallel processes # nocov
   }
   # nocov end
-  local_checksum <- get_checksum(target = target, config = config)
+  local_checksum <- get_checksum(target, value, config)
   if (!identical(local_checksum, checksum)) {
     return(FALSE)
   }
@@ -197,14 +218,20 @@ is_good_checksum <- function(target, checksum, config) {
     )
   )
   format <- config$spec[[target]]$format
-  if (!is.null(format) && !is.na(format)) {
+  if (!is.null(format) && !is.na(format) && !is_external_format(format)) {
     format_file <- config$cache$file_return_key(target)
     out <- out && file.exists(format_file)
   }
   out
 }
 
-is_good_outfile_checksum <- function(target, checksum, config) {
+is_external_format <- function(format) {
+  format %in% c(
+    "file"
+  )
+}
+
+is_good_outfile_checksum <- function(target, value, checksum, config) {
   if (!length(checksum)) {
     warn_no_checksum(target = target, config = config)
     return(TRUE)
@@ -212,38 +239,60 @@ is_good_outfile_checksum <- function(target, checksum, config) {
   if (identical("failed", config$cache$get_progress(target))) {
     return(TRUE) # covered with parallel processes # nocov
   }
-  identical(checksum, get_outfile_checksum(target = target, config = config))
+  identical(checksum, get_outfile_checksum(target, value, config))
 }
 
-get_checksum <- function(target, config) {
+get_checksum <- function(target, value, config) {
   paste(
     config$cache$safe_get_hash(
       key = target,
       namespace = config$cache$default_namespace
     ),
     config$cache$safe_get_hash(key = target, namespace = "meta"),
-    get_outfile_checksum(target, config),
+    get_outfile_checksum(target, value, config),
     sep = " "
   )
 }
 
-get_outfile_checksum <- function(target, config) {
+get_outfile_checksum <- function(target, value, config) {
   deps <- config$spec[[target]]$deps_build
   files <- sort(unique(as.character(deps$file_out)))
   out <- vapply(
     X = files,
-    FUN = rehash_storage,
+    FUN = rehash_static_storage,
     FUN.VALUE = character(1),
     config = config
   )
+  out <- c(out, format_file_checksum(target, value, config))
   out <- paste(out, collapse = "")
   config$cache$digest(out, serialize = FALSE)
 }
 
+format_file_checksum <- function(target, value, config) {
+  class(target) <- config$spec[[target]]$format
+  format_file_checksum_impl(target, value, config)
+}
+
+format_file_checksum_impl <- function(target, value, config) {
+  UseMethod("format_file_checksum_impl")
+}
+
+format_file_checksum_impl.default <- function(target, value, config) { # nolint
+  force(value)
+  character(0)
+}
+
+format_file_checksum_impl.file <- function(target, value, config) { # nolint
+  hash <- rep(NA_character_, length(value))
+  index <- file.exists(value)
+  hash[index] <- rehash_local(value[index], config)
+  hash
+}
+
 warn_no_checksum <- function(target, config) {
   msg <- paste0("No checksum available for target ", target, ".")
-  config$logger$minor(paste("Warning:", msg))
-  warning(msg, call. = FALSE)
+  config$logger$disk(paste("Warning:", msg))
+  warn0(msg)
 }
 
 # Simple version of purrr::pmap for use in drake
@@ -267,7 +316,8 @@ drake_pmap <- function(.l, .f, jobs = 1, ...) {
       listi <- lapply(.l, function(x) x[[i]])
       do.call(.f, args = c(listi, ...), quote = TRUE)
     },
-    jobs = jobs)
+    jobs = jobs
+  )
 }
 
 parallel_filter <- function(x, f, jobs = 1, ...) {
@@ -353,4 +403,12 @@ unserialize_build.drake_build_keras <- function(build) { # nolint
 
 unserialize_build.default <- function(build) {
   build
+}
+
+hpc_worker_build_value <- function(target, value, config) {
+  format <- config$spec[[target]]$format %||NA% "none"
+  if (format == "file") {
+    return(value)
+  }
+  NULL
 }

@@ -3,7 +3,6 @@
 #' @description Only shows the most upstream updated targets.
 #'   Whether downstream targets are recoverable depends on
 #'   the eventual values of the upstream targets in the next [make()].
-#'   Does not show dynamic sub-targets.
 #' @section Recovery:
 #'  `make(recover = TRUE, recoverable = TRUE)`
 #'   powers automated data recovery.
@@ -77,15 +76,12 @@ recoverable_impl <- function(
   make_imports = TRUE,
   do_prework = TRUE
 ) {
-  config$logger$minor("begin recoverable()")
-  on.exit(config$logger$minor("end recoverable()"), add = TRUE)
   assert_config(config)
-  if (make_imports && config$lock_cache) {
+  if (make_imports && config$settings$lock_cache) {
     config$cache$lock()
     on.exit(config$cache$unlock(), add = TRUE)
   }
-  config$ht_is_subtarget <- ht_new()
-  config$ht_target_exists <- ht_target_exists(config)
+  config <- init_config_tmp(config)
   if (do_prework) {
     do_prework(config = config, verbose_packages = config$logger$verbose)
   }
@@ -113,8 +109,37 @@ is_recoverable <- function(target, config) {
   meta_hash <- config$cache$get_hash(key, namespace = "recover")
   recovery_meta <- config$cache$driver$get_object(meta_hash)
   value_hash <- recovery_meta$hash
-  config$cache$exists_object(meta_hash) &&
+  exists_data <- config$cache$exists_object(meta_hash) &&
     config$cache$exists_object(value_hash)
+  if (!exists_data) {
+    return(FALSE) # nocov # Should not happen, just to be safe...
+  }
+  meta_old <- drake_meta_old(target, config)
+  on.exit(config$meta_old[[target]] <- meta_old)
+  config$meta_old[[target]] <- recovery_meta
+  meta <- subsume_old_meta(target, meta, config)
+  if (any_subtargetlike_triggers(target, meta, config)) {
+    return(FALSE)
+  }
+  if (!is_dynamic(target, config)) {
+    return(TRUE)
+  }
+  all_subtargets_recoverable(target, recovery_meta, config)
+}
+
+all_subtargets_recoverable <- function(target, recovery_meta, config) {
+  subtargets <- recovery_meta$subtargets
+  preregister_subtargets(target, subtargets = subtargets, config)
+  ht_set(config$ht_is_subtarget, subtargets)
+  is_outdated <- check_subtarget_triggers(target, subtargets, config)
+  will_recover <- rep(FALSE, length(subtargets))
+  will_recover[is_outdated] <- vapply(
+    subtargets[is_outdated],
+    is_recoverable,
+    FUN.VALUE = logical(1),
+    config = config
+  )
+  all(!is_outdated | will_recover)
 }
 
 #' @title List the targets that are out of date.
@@ -165,15 +190,15 @@ outdated_impl <- function(
   make_imports = TRUE,
   do_prework = TRUE
 ) {
-  config$logger$minor("begin outdated()")
-  on.exit(config$logger$minor("end outdated()"), add = TRUE)
   assert_config(config)
-  if (make_imports && config$lock_cache) {
+  if (!identical(config$running_make, TRUE)) {
+    config$logger$file <- NULL
+    config <- init_config_tmp(config)
+  }
+  if (make_imports && config$settings$lock_cache) {
     config$cache$lock()
     on.exit(config$cache$unlock(), add = TRUE)
   }
-  config$ht_is_subtarget <- ht_new()
-  config$ht_target_exists <- ht_target_exists(config)
   if (do_prework) {
     do_prework(config = config, verbose_packages = config$logger$verbose)
   }
@@ -181,7 +206,6 @@ outdated_impl <- function(
     process_imports(config = config)
   }
   from <- first_outdated(config = config)
-  config$logger$minor("find downstream outdated targets")
   to <- downstream_nodes(config$graph, from)
   out <- sort(unique(as.character(c(from, to))))
   out[!is_encoded_path(out)]
@@ -202,12 +226,11 @@ first_outdated <- function(config) {
 }
 
 stage_outdated <- function(envir, config) {
-  config$logger$minor("find more outdated targets")
   new_leaves <- setdiff(leaf_nodes(envir$graph), envir$outdated)
   do_build <- lightly_parallelize(
     X = new_leaves,
     FUN = is_outdated,
-    jobs = config$jobs_preprocess,
+    jobs = config$settings$jobs_preprocess,
     config = config
   )
   do_build <- unlist(do_build)
@@ -223,18 +246,30 @@ is_outdated <- function(target, config) {
   if (target_missing(target, config)) {
     return(TRUE)
   }
-  meta <- drake_meta_(target, config)
-  meta_old <- config$cache$get(key = target, namespace = "meta")
-  any_static_triggers(target, meta, meta_old, config) ||
-    check_trigger_dynamic(target, meta, meta_old, config) ||
-    missing_subtargets(target, meta_old, config)
+  class(target) <- ifelse(is_dynamic(target, config), "dynamic", "static")
+  config$settings$jobs_preprocess <- 1
+  is_outdated_impl(target, config)
 }
 
-missing_subtargets <- function(target, meta, config) {
-  if (!is_dynamic(target, config)) {
-    return(FALSE)
-  }
-  any(target_missing(meta$subtargets, config))
+is_outdated_impl <- function(target, config) {
+  UseMethod("is_outdated_impl")
+}
+
+is_outdated_impl.static <- function(target, config) {
+  target <- unclass(target)
+  meta <- drake_meta_(target, config)
+  any_static_triggers(target, meta, config) ||
+    any_subtargetlike_triggers(target, meta, config)
+}
+
+is_outdated_impl.dynamic <- function(target, config) {
+  target <- unclass(target)
+  meta <- drake_meta_(target, config)
+  meta_old <- drake_meta_old(target, config)
+  preregister_subtargets(target, subtargets = meta_old$subtargets, config)
+  any_static_triggers(target, meta, config) ||
+    check_trigger_dynamic(target, meta, config) ||
+    any_subtarget_triggers(target, meta_old$subtargets, config)
 }
 
 #' @title Report any import objects required by your drake_plan
@@ -265,14 +300,12 @@ missed <- function(..., config = NULL) {
 #' @description Not a user-side function.
 #' @param config A [drake_config()] object.
 missed_impl <- function(config) {
-  config$logger$minor("begin missed()")
-  on.exit(config$logger$minor("end missed()"), add = TRUE)
   assert_config(config)
   imports <- all_imports(config)
   is_missing <- lightly_parallelize(
     X = imports,
     FUN = missing_import,
-    jobs = config$jobs_preprocess,
+    jobs = config$settings$jobs_preprocess,
     config = config
   )
   is_missing <- as.logical(is_missing)
