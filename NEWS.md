@@ -11,6 +11,8 @@
 * Use the correct variable names in logger helper (`progress_bar` instead of `progress`) so that `drake` works without the `progress` package (#1208, @mbaccou).
 * Avoid conflict between formats and upstream dynamic targets (#1210, @psadil).
 * Always compute trigger metadata up front because recovery keys need it.
+* Deprecate and remove hasty mode and custom parallel backends (#1222).
+* Compartmentalize fixed runtime parameters in `config$settings` (#965).
 
 ## New features
 
