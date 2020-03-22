@@ -265,3 +265,13 @@ test_with_dir("custom caching column and future", {
   make(plan, parallelism = "future", jobs = 1)
   expect_true(all(plan$target %in% cached()))
 })
+
+test_with_dir("illegal hpc backend (#1222)", {
+  plan <- drake_plan(x = 1)
+  config <- drake_config(plan)
+  config$settings$parallelism <- "illegal"
+  expect_warning(
+    make_impl(config),
+    regexp = "Illegal drake backend"
+  )
+})

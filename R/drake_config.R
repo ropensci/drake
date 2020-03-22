@@ -665,7 +665,8 @@ drake_config <- function(
     skip_imports = skip_imports,
     skip_safety_checks = skip_safety_checks,
     skip_targets = skip_targets,
-    sleep = sleep
+    sleep = sleep,
+    template = template
   )
   out <- list(
     envir = envir,
@@ -690,7 +691,6 @@ drake_config <- function(
     log_progress = log_progress,
     cache_log_file = cache_log_file,
     caching = caching,
-    template = template,
     ht_dynamic_deps = ht_dynamic_deps,
     ht_is_dynamic = ht_is_dynamic,
     ht_is_subtarget = ht_is_subtarget, # Gets replaced in make()

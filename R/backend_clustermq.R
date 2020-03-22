@@ -10,7 +10,7 @@ drake_backend_clustermq <- function(config) {
   }
   config$workers <- clustermq::workers(
     n_jobs = config$settings$jobs,
-    template = config$template
+    template = config$settings$template
   )
   config$logger$disk("set common data")
   cmq_set_common_data(config)

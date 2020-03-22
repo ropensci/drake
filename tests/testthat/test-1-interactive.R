@@ -14,6 +14,13 @@ test_with_dir("print.drake_deps_ht()", {
   expect_true(any(grepl("drake_deps_ht", m)))
 })
 
+test_with_dir("print.drake_settings()", {
+  skip_on_cran()
+  x <- drake_settings() # print by hand
+  m <- utils::capture.output(print(x))
+  expect_true(any(grepl("drake_settings", m)))
+})
+
 test_with_dir("print.drake_triggers()", {
   skip_on_cran()
   x <- trigger() # print by hand
