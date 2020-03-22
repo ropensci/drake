@@ -652,7 +652,8 @@ drake_config <- function(
     jobs = jobs,
     jobs_preprocess = jobs_preprocess,
     keep_going = keep_going,
-    lazy_load = lazy_load
+    lazy_load = lazy_load,
+    lib_loc = lib_loc
   )
   out <- list(
     envir = envir,
@@ -665,7 +666,6 @@ drake_config <- function(
     parallelism = parallelism,
     logger = logger,
     packages = packages,
-    lib_loc = lib_loc,
     prework = prework,
     spec = spec,
     meta = meta,
