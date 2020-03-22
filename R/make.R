@@ -263,10 +263,8 @@ make_impl <- function(config) {
   if (!config$settings$skip_imports) {
     process_imports(config)
   }
-  if (is.character(config$settings$parallelism)) {
-    config$envir_graph <- new.env(parent = emptyenv())
-    config$envir_graph$graph <- outdated_subgraph(config)
-  }
+  config$envir_graph <- new.env(parent = emptyenv())
+  config$envir_graph$graph <- outdated_subgraph(config)
   r_make_message(force = FALSE)
   if (!config$settings$skip_targets) {
     process_targets(config)
