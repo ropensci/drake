@@ -151,7 +151,7 @@ refclass_decorated_storr <- methods::setRefClass(
       namespaces <- .self$list_namespaces()
       namespaces <- grep(pattern = prefix, x = namespaces, value = TRUE)
       for (namespace in namespaces) {
-        .self$clear(namespace = namespace)
+        clear_namespace_folder(.self, namespace)
       }
     },
     get_progress = function(targets) {
@@ -770,6 +770,17 @@ import_target_formatted <- function(target, from, to) {
       to = to$file_return_key(target),
       warn = FALSE
     )
+  }
+}
+
+# TODO: simplify to just clear when
+# https://github.com/richfitz/storr/pull/122 is merged.
+clear_namespace_folder <- function(cache, namespace) {
+  if (inherits(cache$driver, "driver_rds")) {
+    path <- file.path(cache$path, "keys", namespace)
+    unlink(path, recursive = TRUE)
+  } else {
+    cache$clear(namespace = namespace)
   }
 }
 
