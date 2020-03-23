@@ -27,8 +27,20 @@ A one-row workflow plan data frame with the named
 arguments as columns.
 }
 \description{
-Must be called inside \code{\link[=drake_plan]{drake_plan()}}.
-Invalid otherwise.
+The \code{target()} function is a way to
+configure individual targets in a \code{drake} plan.
+Its most common use is to invoke static branching
+and dynamic branching, and it can also set the values
+of custom columns such as \code{format}, \code{elapsed}, \code{retries},
+and \code{max_expand}. Details are at
+\url{https://books.ropensci.org/drake/plans.html#special-columns}.
+Note: \code{drake_plan(my_target = my_command())}
+is equivalent to
+\verb{drake_plan(my_target = target(my_command())}.
+}
+\details{
+\code{target()} must be called inside \code{\link[=drake_plan]{drake_plan()}}.
+It is invalid otherwise.
 }
 \section{Columns}{
 

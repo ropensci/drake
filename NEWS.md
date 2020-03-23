@@ -36,6 +36,7 @@
 * Warn the user if `file_in()`/`file_out()`/`knitr_in()` files are not literal strings (#1229).
 * Prohibit `file_out()` and `knitr_in()` in imported functions (#1229).
 * Prohibit `knitr_in()` in dynamic branching (#1229).
+* Improve the help file of `target()`.
 
 
 # Version 7.11.0

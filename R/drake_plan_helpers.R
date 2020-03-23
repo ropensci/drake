@@ -1,7 +1,17 @@
 #' @title Customize a target in [drake_plan()].
 #' \lifecycle{maturing}
-#' @description Must be called inside [drake_plan()].
-#'   Invalid otherwise.
+#' @description The `target()` function is a way to
+#'   configure individual targets in a `drake` plan.
+#'   Its most common use is to invoke static branching
+#'   and dynamic branching, and it can also set the values
+#'   of custom columns such as `format`, `elapsed`, `retries`,
+#'   and `max_expand`. Details are at
+#'   <https://books.ropensci.org/drake/plans.html#special-columns>.
+#'   Note: `drake_plan(my_target = my_command())`
+#'   is equivalent to
+#'   `drake_plan(my_target = target(my_command())`.
+#' @details `target()` must be called inside [drake_plan()].
+#'   It is invalid otherwise.
 #' @export
 #' @inheritSection drake_plan Columns
 #' @inheritSection drake_plan Keywords
