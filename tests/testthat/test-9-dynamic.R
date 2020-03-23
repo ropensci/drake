@@ -2341,6 +2341,7 @@ test_with_dir("dynamic_progress_prekey() special (#1209)", {
 })
 
 test_with_dir("ad hoc RDS storr namespace folders are removed (#1209)", {
+  skip_on_cran()
   plan <- drake_plan(x = 1:2, y = target(stopifnot(x < 1.5), dynamic = map(x)))
   cache <- storr::storr_rds(tempfile())
   expect_error(make(plan, cache = cache))
@@ -2358,6 +2359,7 @@ test_with_dir("ad hoc RDS storr namespace folders are removed (#1209)", {
 })
 
 test_with_dir("ad hoc namespaces and non-RDS storrs (#1209)", {
+  skip_on_cran()
   plan <- drake_plan(x = 1:2, y = target(stopifnot(x < 1.5), dynamic = map(x)))
   cache <- storr::storr_environment()
   expect_error(make(plan, cache = cache))
