@@ -579,7 +579,10 @@ test_with_dir("deps_knitr() works", {
     deps_knitr(reencode_path("report.Rmd"))$name)))
   expect_true(!nrow(x))
   load_mtcars_example()
-  w <- deps_code("funct(knitr_in(report.Rmd))")
+  expect_warning(
+    w <- deps_code("funct(knitr_in(report.Rmd))"),
+    regexp = "must be literal strings"
+  )
   x <- deps_knitr("report.Rmd")
   real_deps <- c(
     "small", "coef_regression2_small", "large"

@@ -478,10 +478,13 @@ test_with_dir("deps_code() and deps_target_impl()", {
     botched = read.csv(file_in(nothing)),
     meta = read.table(file_in("file_in"))
   )
-  config <- drake_config(
-    my_plan,
-    session_info = FALSE,
-    cache = storr::storr_environment()
+  expect_warning(
+    config <- drake_config(
+      my_plan,
+      session_info = FALSE,
+      cache = storr::storr_environment()
+    ),
+    regexp = "must be literal strings"
   )
   expect_equal(deps_code(my_plan$command[[1]])$name, "some_object")
   expect_equal(
@@ -491,9 +494,12 @@ test_with_dir("deps_code() and deps_target_impl()", {
     sort(deps_code(my_plan$command[[3]])$name),
     sort(c("f", "g", "w", "x", "y", "z"))
   )
-  expect_equal(
-    sort(deps_code(my_plan$command[[4]])$name),
-    sort(c("read.csv"))
+  expect_warning(
+    expect_equal(
+      sort(deps_code(my_plan$command[[4]])$name),
+      sort(c("read.csv"))
+    ),
+    regexp = "must be literal strings"
   )
   expect_equal(
     sort(deps_code(my_plan$command[[5]])$name),
@@ -1061,4 +1067,14 @@ test_with_dir("$<-() and @<-() (#1144)", {
     g(x)$y <- 1
   }
   expect_equal(sort(deps_code(f)$name), sort(c("g", "x")))
+})
+
+test_with_dir("nonliteral file_in() (#1229)", {
+  expect_silent(
+    x <- deps_code(quote(file_in(c("file1", "file2"))))
+  )
+  expect_warning(
+    x <- deps_code(quote(file_in(paste("file1", "file2")))),
+    regexp = "must be literal strings"
+  )
 })

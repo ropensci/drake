@@ -92,6 +92,7 @@ analyze_arrow <- function(expr, results, locals, restrict) {
 }
 
 analyze_knitr_in <- function(expr, results, restrict) {
+  warn_nonliteral_paths(expr)
   expr <- ignore_ignore(expr)
   files <- analyze_strings(expr[-1])
   lapply(
@@ -104,6 +105,7 @@ analyze_knitr_in <- function(expr, results, restrict) {
 }
 
 analyze_file_in <- function(expr, results) {
+  warn_nonliteral_paths(expr)
   expr <- ignore_ignore(expr)
   x <- analyze_strings(expr[-1])
   x <- file.path(x)
@@ -112,11 +114,31 @@ analyze_file_in <- function(expr, results) {
 }
 
 analyze_file_out <- function(expr, results) {
+  warn_nonliteral_paths(expr)
   expr <- ignore_ignore(expr)
   x <- analyze_strings(expr[-1])
   x <- file.path(x)
   x <- reencode_path(x)
   ht_set(results$file_out, x)
+}
+
+warn_nonliteral_paths <- function(expr) {
+  syms <- all.vars(expr, functions = TRUE)
+  syms <- unique(syms)
+  ignore_these <- c("drake", "::", ":::", "c", "list")
+  syms <- setdiff(syms, c(drake_symbols, ignore_these))
+  if (!length(syms)) {
+    return()
+  }
+  str <- safe_deparse(expr)
+  warn0(
+    "Detected ", str,
+    ". File paths in file_in(), file_out(), and knitr_in() ",
+    "must be literal strings, not variables. For example, ",
+    "file_in(\"file1.csv\", \"file2.csv\") is legal, but ",
+    "file_in(paste0(filename_variable, \".csv\")) is not. ",
+    "Details: https://books.ropensci.org/drake/plans.html#static-files"
+  )
 }
 
 analyze_knitr_file <- function(file, results, restrict) {

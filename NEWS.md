@@ -33,6 +33,7 @@
 * Deprecate and remove custom schedulers (#1222).
 * Deprecate `hasty_build` (#1222).
 * Migrate constant runtime parameters to `config$settings` (#965).
+* Warn the user if `file_in()`/`file_out()`/`knitr_in()` files are not literal strings (#1229).
 
 
 # Version 7.11.0
