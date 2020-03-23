@@ -778,10 +778,11 @@ import_target_formatted <- function(target, from, to) {
 clear_namespace_folder <- function(cache, namespace) {
   if (inherits(cache$driver, "driver_rds")) {
     path <- file.path(cache$path, "keys", namespace)
-    unlink(path, recursive = TRUE)
-  } else {
-    cache$clear(namespace = namespace)
+    if (file.exists(path)) {
+      unlink(path, recursive = TRUE)
+    }
   }
+  cache$clear(namespace = namespace)
 }
 
 # Should be used as sparingly as possible.
