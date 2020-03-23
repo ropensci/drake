@@ -25,7 +25,7 @@ test_with_dir("busy function", {
     f2 <- "local"
     lm(f1 ~ f2 + f3)
     file_in("x", "y")
-    drake::file_out(c("w", "z"))
+    drake::file_in(c("w", "z"))
     base::c(got, basevar)
     quote(quoted)
     Quote(quoted2)
@@ -33,8 +33,7 @@ test_with_dir("busy function", {
   }
   out <- drake_deps(f)
   out <- select_nonempty(decode_deps_list(out))
-  expect_equal(sort(out$file_in), sort(c("x", "y")))
-  expect_equal(sort(out$file_out), sort(c("w", "z")))
+  expect_equal(sort(out$file_in), sort(c("w", "x", "y", "z")))
   str <- sort(
     c("iter3", "iter4", "local", paste0("string", 1:3), "sa1", "sa2")
   )
@@ -396,7 +395,7 @@ test_with_dir("bad target names", {
   expect_error(drake_config(plan), "cannot be target names")
 })
 
-test_with_dir("file_out() and knitr_in(): commands vs imports", {
+test_with_dir("file_in() and file_out() and knitr_in(): commands vs imports", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("knitr")
   cmd <- quote({
@@ -404,8 +403,6 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
   })
   f <- function() {
     file_in("x")
-    file_out("y")
-    knitr_in("report.Rmd")
   }
   file.create("x")
   file.create("y")
@@ -415,13 +412,17 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
     mustWork = TRUE
   )
   file.copy(
-    from = path, to = file.path(getwd(), "report.Rmd"), overwrite = TRUE)
+    from = path,
+    to = file.path(getwd(), "report.Rmd"),
+    overwrite = TRUE
+  )
   x <- cds_command_dependencies(cmd)
   x <- select_nonempty(decode_deps_list(x))
   x0 <- list(
     file_in = "x", file_out = "y", loadd = "large",
     readd = c("small", "coef_regression2_small"),
-    knitr_in = "report.Rmd")
+    knitr_in = "report.Rmd"
+  )
   expect_equal(length(x), length(x0))
   for (i in names(x)) {
     expect_equal(sort(x[[i]]), sort(x0[[i]]))
@@ -429,10 +430,7 @@ test_with_dir("file_out() and knitr_in(): commands vs imports", {
   y <- cds_import_dependencies(f)
   y <- select_nonempty(decode_deps_list(y))
   y0 <- list(
-    file_in = "x",
-    knitr_in = "report.Rmd",
-    loadd = "large",
-    readd = c("small", "coef_regression2_small")
+    file_in = "x"
   )
   expect_equal(length(y), length(y0))
   for (i in names(y)) {
@@ -1076,5 +1074,16 @@ test_with_dir("nonliteral file_in() (#1229)", {
   expect_warning(
     x <- deps_code(quote(file_in(paste("file1", "file2")))),
     regexp = "must be literal strings"
+  )
+})
+
+test_with_dir("no file_out() or knitr_in() in imported fns (#1229)", {
+  expect_error(
+    deps_code(function(x) file_out("abc")),
+    regexp = "file_out"
+  )
+  expect_error(
+    suppressWarnings(deps_code(function(x) knitr_in("abc"))),
+    regexp = "knitr_in"
   )
 })

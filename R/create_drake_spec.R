@@ -189,7 +189,8 @@ cds_prepare_spec <- function(args, spec) {
       spec$command_standardized,
       dynamic_command
     )
-    cds_exclude_dynamic_file_out(spec)
+    cds_exclude_dynamic_file_dsl(spec, field = "file_out")
+    cds_exclude_dynamic_file_dsl(spec, field = "knitr_in")
   }
   spec$command_build <- cds_preprocess_command(
     spec$command,
@@ -225,10 +226,11 @@ cds_prepare_spec <- function(args, spec) {
   as_drake_spec(spec)
 }
 
-cds_exclude_dynamic_file_out <- function(spec) {
-  if (length(spec$deps_build$file_out)) {
+cds_exclude_dynamic_file_dsl <- function(spec, field) {
+  if (length(spec$deps_build[[field]])) {
     stop0(
-      "file_out() in dynamic targets is illegal. Target: ",
+      field,
+      "() in dynamic targets is illegal. Target: ",
       spec$target
     )
   }

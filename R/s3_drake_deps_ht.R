@@ -21,7 +21,27 @@ drake_deps_ht <- function(expr, exclude = character(0), restrict = NULL) {
   locals <- ht_new_from_list(ignored_symbols_list)
   ht_set(locals, exclude)
   walk_code(expr, results, locals, restrict)
+  if (is.function(expr)) {
+    assert_good_function_deps(results)
+  }
   results
+}
+
+assert_good_function_deps <- function(results) {
+  assert_not_in_fn(results, field = "file_out")
+  assert_not_in_fn(results, field = "knitr_in")
+}
+
+assert_not_in_fn <- function(results, field) {
+  files <- ht_list(results[[field]])
+  if (!length(files)) {
+    return()
+  }
+  stop0(
+    field,
+    "() files in imported functions are illegal. Detected files:\n",
+    multiline_message(redecode_path(files))
+  )
 }
 
 #' @title `drake_deps_ht` constructor

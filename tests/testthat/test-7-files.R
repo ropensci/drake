@@ -458,8 +458,8 @@ test_with_dir("imported files in imported functions", {
   scenario <- get_testing_scenario()
   envir <- eval(parse(text = scenario$envir))
   envir <- dbug_envir(envir)
-  eval(parse(text = "j <- function(x) {
-      knitr_in(\"report.Rmd\")
+  eval(
+    parse(text = "j <- function(x) {
       file_in(\"a.rds\", \"b.rds\")
       x + 2 + c + readRDS(file_in(\"c.rds\"))
     }"),
@@ -478,7 +478,7 @@ test_with_dir("imported files in imported functions", {
     testrun(config)
     expect_equal(sort(justbuilt(config)), sort(c("nextone", "yourinput")))
   }
-  write("new content", file = "report.Rmd", append = TRUE)
+  saveRDS(129837, file = "a.rds")
   testrun(config)
   expect_equal(sort(justbuilt(config)), sort(c("nextone", "yourinput")))
   saveRDS(2, "c.rds")
