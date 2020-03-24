@@ -339,6 +339,7 @@ test_with_dir("bind_plans()", {
 })
 
 test_with_dir("bind_plans() with unequal list columns (#1136)", {
+  skip_on_cran()
   plan1 <- drake_plan(
     data_raw = read_data()
   )
@@ -585,6 +586,7 @@ test_with_dir("stringsAsFactors can be TRUE", {
 })
 
 test_with_dir("case sensitivity", {
+  skip_on_cran()
   plan <- drake_plan(
     a = 1,
     b = 2,
@@ -637,6 +639,7 @@ test_with_dir("Trailing slashes in file paths on Windows", {
 })
 
 test_with_dir("supplied a plan instead of a config", {
+  skip_on_cran()
   skip_if_not_installed("visNetwork")
   plan <- drake_plan(x = 1)
   expect_error(vis_drake_graph_impl(plan), regexp = "must be a drake_config")
@@ -665,6 +668,7 @@ test_with_dir("id_chr()", {
 })
 
 test_with_dir("cancel() (#1131)", {
+  skip_on_cran()
   f <- function(x) {
     cancel()
     "x"
@@ -694,6 +698,7 @@ test_with_dir("cancel() (#1131)", {
 })
 
 test_with_dir("cancel_if(TRUE) (#1131)", {
+  skip_on_cran()
   f <- function(x) {
     cancel_if(TRUE)
     "x"
@@ -722,6 +727,7 @@ test_with_dir("cancel_if(TRUE) (#1131)", {
 })
 
 test_with_dir("cancel_if(condition) (#1131)", {
+  skip_on_cran()
   f <- function(x) {
     cancel_if(x > 1)
     "x"
@@ -732,11 +738,13 @@ test_with_dir("cancel_if(condition) (#1131)", {
 })
 
 test_with_dir("cancel_if(bad condition) (#1131)", {
+  skip_on_cran()
   plan <- drake_plan(x = cancel_if(1:2))
   expect_error(make(plan), regexp = "length 1 in cancel_if")
 })
 
 test_with_dir("cancel in incorrect context (#1131)", {
+  skip_on_cran()
   expect_error(cancel(), regexp = "where drake builds targets")
   expect_error(cancel_if(TRUE), regexp = "where drake builds targets")
 })
