@@ -1,12 +1,14 @@
 drake_context("dsl")
 
 test_with_dir("nothing to transform", {
+  skip_on_cran()
   exp <- drake_plan(a = 1)
   out <- transform_plan(exp)
   equivalent_plans(out, exp)
 })
 
 test_with_dir("empty transforms", {
+  skip_on_cran()
   expect_error(
     out <- drake_plan(
       a = target(x, transform = cross()),
@@ -58,6 +60,7 @@ test_with_dir("empty grouping levels", {
 })
 
 test_with_dir("bad transform", {
+  skip_on_cran()
   expect_error(
     drake_plan(x = target(1, transform = 132)),
     regexp = "invalid transform"
@@ -74,6 +77,7 @@ test_with_dir("simple expansion", {
 })
 
 test_with_dir("replicates", {
+  skip_on_cran()
   out <- drake_plan(
     trace = TRUE,
     a = target(x, transform = map(x = c(1, 1))),
@@ -133,6 +137,7 @@ test_with_dir("single tag_in", {
 })
 
 test_with_dir("multiple tag_in", {
+  skip_on_cran()
   out <- drake_plan(
     x = target(
       y,
@@ -161,6 +166,7 @@ test_with_dir("multiple tag_in", {
 })
 
 test_with_dir("single tag_out", {
+  skip_on_cran()
   out <- drake_plan(
     x = target(
       y,
@@ -187,6 +193,7 @@ test_with_dir("single tag_out", {
 })
 
 test_with_dir("multiple tag_out", {
+  skip_on_cran()
   out <- drake_plan(
     x = target(
       y,
@@ -249,6 +256,7 @@ test_with_dir("all new crossings", {
 })
 
 test_with_dir("1 new map", {
+  skip_on_cran()
   out <- drake_plan(
     analysis = target(
       analyze_data(source),
@@ -277,6 +285,7 @@ test_with_dir("2 new maps", {
 })
 
 test_with_dir("groups and command symbols are undefined", {
+  skip_on_cran()
   expect_error(
     out <- drake_plan(
       small = simulate(48),
@@ -290,6 +299,7 @@ test_with_dir("groups and command symbols are undefined", {
 })
 
 test_with_dir("command symbols are for combine() but the plan has them", {
+  skip_on_cran()
   out <- drake_plan(
     data = target(x, transform = map(x = c(1, 2))),
     nope = target(x, transform = map(x = c(1, 2))),
@@ -306,6 +316,7 @@ test_with_dir("command symbols are for combine() but the plan has them", {
 })
 
 test_with_dir("combine different groups together", {
+  skip_on_cran()
   out <- drake_plan(
     data_group1 = target(
       sim_data(mean = x, sd = y),
@@ -528,6 +539,7 @@ test_with_dir("more map", {
 })
 
 test_with_dir("map on mtcars-like workflow", {
+  skip_on_cran()
   out <- drake_plan(
     data = target(
       simulate(nrows),
@@ -582,6 +594,7 @@ test_with_dir("map on mtcars-like workflow", {
 })
 
 test_with_dir("map with unequal columns", {
+  skip_on_cran()
   expect_error(
     drake_plan(
       small = simulate(48),
@@ -596,6 +609,7 @@ test_with_dir("map with unequal columns", {
 })
 
 test_with_dir("map with an indicator column", {
+  skip_on_cran()
   out <- drake_plan(
     small = simulate(48),
     large = simulate(64),
@@ -897,6 +911,7 @@ test_with_dir("combine() and tags", {
 })
 
 test_with_dir("can disable transformations in dsl", {
+  skip_on_cran()
   out <- drake_plan(
     small = simulate(48),
     large = simulate(64),
@@ -922,6 +937,7 @@ test_with_dir("can disable transformations in dsl", {
 })
 
 test_with_dir("dsl with differently typed group levels", {
+  skip_on_cran()
   plan1 <- drake_plan(
     analysis = target(
       analyze_data(source),
@@ -990,6 +1006,7 @@ test_with_dir("dsl with differently typed group levels", {
 })
 
 test_with_dir("tidy eval in the DSL", {
+  skip_on_cran()
   h <- function(x) {
     x
   }
@@ -1058,6 +1075,7 @@ test_with_dir("resource column is not a language object (#942)", {
 })
 
 test_with_dir("dsl: exact same plan as mtcars", {
+  skip_on_cran()
   skip_if_not_installed("knitr")
   out <- drake_plan(
     report = knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE),
@@ -1085,6 +1103,7 @@ test_with_dir("dsl: exact same plan as mtcars", {
 })
 
 test_with_dir("dsl: no NA levels in combine()", {
+  skip_on_cran()
   out <- drake_plan(
     data_sim = target(
       sim_data(mean = x, sd = y),
@@ -1881,6 +1900,7 @@ test_with_dir("grids", {
 })
 
 test_with_dir("empty grids", {
+  skip_on_cran()
   grid <- data.frame(
     z = c(5, 6),
     w = c("7", "8"),
@@ -1973,6 +1993,7 @@ test_with_dir("grid for GitHub issue 710", {
 })
 
 test_with_dir("combine() with symbols instead of calls", {
+  skip_on_cran()
   out <- drake_plan(
     data = target(
       get_data(param),
@@ -1993,6 +2014,7 @@ test_with_dir("combine() with symbols instead of calls", {
 })
 
 test_with_dir("combine() with complicated calls", {
+  skip_on_cran()
   out <- drake_plan(
     data = target(
       get_data(param),
@@ -2013,6 +2035,7 @@ test_with_dir("combine() with complicated calls", {
 })
 
 test_with_dir("invalid splitting var", {
+  skip_on_cran()
   expect_error(
     out <- drake_plan(
       data = target(x, transform = map(x = c(1, 2)), nothing = NA),
@@ -2026,6 +2049,7 @@ test_with_dir("invalid splitting var", {
 })
 
 test_with_dir("uneven combinations", {
+  skip_on_cran()
   out <- drake_plan(
     data1 = target(
       sim_data1(mean = x, sd = y, skew = z),
@@ -2225,6 +2249,7 @@ test_with_dir("max_expand with a .data grid for cross()", {
 })
 
 test_with_dir("basic splitting", {
+  skip_on_cran()
   out <- drake_plan(
     large_data = get_data(),
     slice_analysis = target(
@@ -2399,6 +2424,7 @@ test_with_dir("transform_plan() on its own", {
 })
 
 test_with_dir("splice_args()", {
+  skip_on_cran()
   out <- splice_args(
     quote(1 + g(f(h(y), z), z)),
     list(y = list(1, 2), z = list(4, quote(x)))
@@ -2441,6 +2467,7 @@ test_with_dir("make_unique()", {
 })
 
 test_with_dir("slice_indices", {
+  skip_on_cran()
   all_slices <- function(length, slices) {
     lapply(seq_len(slices), slice_indices, length = length, slices = slices)
   }
@@ -2475,6 +2502,7 @@ test_with_dir("slice_indices edge cases", {
 })
 
 test_with_dir("drake_slice edge cases", {
+  skip_on_cran()
   expect_error(
     drake_slice(mtcars, margin = 1:2),
     regexp = "must each have length 1"
@@ -2482,12 +2510,14 @@ test_with_dir("drake_slice edge cases", {
 })
 
 test_with_dir("drake_slice on a vector", {
+  skip_on_cran()
   expect_equal(drake_slice(letters, slices = 3, index = 1), letters[1:9])
   expect_equal(drake_slice(letters, slices = 3, index = 2), letters[10:18])
   expect_equal(drake_slice(letters, slices = 3, index = 3), letters[19:26])
 })
 
 test_with_dir("drake_slice on a list", {
+  skip_on_cran()
   x <- as.list(letters)
   expect_equal(drake_slice(x, slices = 3, index = 1), x[1:9])
   expect_equal(drake_slice(x, slices = 3, index = 2), x[10:18])
@@ -2495,6 +2525,7 @@ test_with_dir("drake_slice on a list", {
 })
 
 test_with_dir("drake_slice on arrays", {
+  skip_on_cran()
   skip_if_not_installed("abind")
   for (ndim in 1:4) {
     dim <- seq(from = 8, length.out = ndim)
@@ -2517,6 +2548,7 @@ test_with_dir("drake_slice on arrays", {
 })
 
 test_with_dir("drake_slice on a data frame", {
+  skip_on_cran()
   lst <- lapply(
     seq_len(4),
     function(i) {
@@ -2528,6 +2560,7 @@ test_with_dir("drake_slice on a data frame", {
 })
 
 test_with_dir("drake_slice and drop", {
+  skip_on_cran()
   x <- matrix(seq_len(20), nrow = 5)
   out <- drake_slice(x, slices = 3, margin = 2, index = 2)
   expect_equal(out, matrix(11:15, ncol = 1))

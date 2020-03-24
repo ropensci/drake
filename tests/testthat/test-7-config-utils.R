@@ -13,6 +13,7 @@ test_with_dir("drake_config_parent() (#1118)", {
 })
 
 test_with_dir("outdated(plan) (#1118)", {
+  skip_on_cran()
   a <- "x"
   plan <- drake_plan(x = a, y = a)
   make(plan)
