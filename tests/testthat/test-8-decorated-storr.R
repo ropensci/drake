@@ -1,6 +1,7 @@
 drake_context("decorated storr")
 
 test_with_dir("encoding empty keys", {
+  skip_on_cran()
   x <- character(0)
   expect_equal(reencode_path(x), x)
   expect_equal(redecode_path(x), x)
@@ -9,6 +10,7 @@ test_with_dir("encoding empty keys", {
 })
 
 test_with_dir("empty keys with decorated storr", {
+  skip_on_cran()
   cache <- new_cache()
   x <- character(0)
   expect_equal(cache$encode_path(x), x)
@@ -18,6 +20,7 @@ test_with_dir("empty keys with decorated storr", {
 })
 
 test_with_dir("drake_tempfile()", {
+  skip_on_cran()
   expect_error(drake_tempfile())
   cache <- new_cache()
   x <- drake_tempfile(cache = cache)
@@ -26,6 +29,7 @@ test_with_dir("drake_tempfile()", {
 })
 
 test_with_dir("key encoding for paths and namespaced functions", {
+  skip_on_cran()
   x <- c("myfunny:::variablename", "relative/path\na\\m//e")
   expect_false(all(is_encoded_path(x)))
   expect_false(all(is_encoded_namespaced(x)))
@@ -48,6 +52,7 @@ test_with_dir("key encoding for paths and namespaced functions", {
 })
 
 test_with_dir("deco storr: key encoding for paths and namespaced fns", {
+  skip_on_cran()
   cache <- new_cache()
 
   x <- c("myfunny:::variablename", "relative/path\na\\m//e")
@@ -72,6 +77,7 @@ test_with_dir("deco storr: key encoding for paths and namespaced fns", {
 })
 
 test_with_dir("memoization encoding in decorated storr", {
+  skip_on_cran()
   cache <- new_cache()
   x <- c("myfunny:::variablename", "relative/path\na\\m//e")
   expect_false(all(is_encoded_path(x)))
@@ -98,12 +104,14 @@ test_with_dir("memoization encoding in decorated storr", {
 })
 
 test_with_dir("redisplay keys", {
+  skip_on_cran()
   expect_true(grepl("url", redisplay_keys(reencode_path("https://url"))))
   expect_true(grepl("file", redisplay_keys(reencode_path("123"))))
   expect_true(grepl("::", redisplay_keys(reencode_namespaced("pkg::fn"))))
 })
 
 test_with_dir("decorated storr: redisplay paths", {
+  skip_on_cran()
   cache <- new_cache()
   cache$encode_path("https://url")
   expect_true(grepl("url", cache$display_keys(reencode_path("https://url"))))
@@ -119,6 +127,7 @@ test_with_dir("file_store quotes properly", {
 })
 
 test_with_dir("run through non-encoder decorated storr methods", {
+  skip_on_cran()
   x <- drake_config(drake_plan(x = 1))$cache
   x$archive_export(tempfile())
   x$archive_import(tempfile())
@@ -439,6 +448,7 @@ test_with_dir("fst_tbl format forces tibbles (#1154)", {
 })
 
 test_with_dir("fst_dt", {
+  skip_on_cran()
   skip_if_not_installed("data.table")
   skip_if_not_installed("fst")
   plan <- drake_plan(
@@ -1068,6 +1078,7 @@ test_with_dir("file format with directories and static targets (#1168)", {
 })
 
 test_with_dir("bad file format value", {
+  skip_on_cran()
   f <- function() {
     writeLines("1", "1")
     1
@@ -1261,6 +1272,7 @@ test_with_dir("mix of dynamic files and dirs (#1168)", {
 })
 
 test_with_dir("keep_going for formatted targets (#1206)", {
+  skip_on_cran()
   skip_if_not_installed("fst")
   plan <- drake_plan(
     x = target(stop(123), format = "fst"),

@@ -28,6 +28,7 @@ test_with_dir("responses to imported file", {
 })
 
 test_with_dir("same with an imported directory", {
+  skip_on_cran()
   scenario <- get_testing_scenario()
   envir <- eval(parse(text = scenario$envir))
   envir <- dbug_envir(envir)
@@ -454,6 +455,7 @@ test_with_dir("same with a directory", {
 
 
 test_with_dir("imported files in imported functions", {
+  skip_on_cran()
   skip_if_not_installed("knitr")
   scenario <- get_testing_scenario()
   envir <- eval(parse(text = scenario$envir))

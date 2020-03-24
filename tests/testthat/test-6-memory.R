@@ -19,6 +19,7 @@ test_with_dir("manage_memory() warns if loading missing deps", {
 })
 
 test_with_dir("garbage collection", {
+  skip_on_cran()
   plan <- drake_plan(x = "x", y = "y")
   make(plan, garbage_collection = TRUE)
   expect_equal(readd(y), "y")
@@ -224,6 +225,7 @@ test_with_dir("primary memory strategies actually build everything", {
 })
 
 test_with_dir("The unload and none strategies do not hold on to targets", {
+  skip_on_cran()
   for (mem in c("none", "unload")) {
     plan <- drake_plan(target84d2fe31 = 1, target167ff309 = target84d2fe31)
     expect_error(make(plan, memory_strategy = mem), regexp = "not found")
@@ -245,6 +247,7 @@ test_with_dir("The unload and none strategies do not hold on to targets", {
 })
 
 test_with_dir("different memory strategies for each targret", {
+  skip_on_cran()
   plan <- drake_plan(
     targetx84d2fe31 = 1,
     targetx167ff309 = target(targetx84d2fe31, memory_strategy = "speed"),
@@ -255,6 +258,7 @@ test_with_dir("different memory strategies for each targret", {
 })
 
 test_with_dir("drake_envir() and memory strategies", {
+  skip_on_cran()
   plan <- drake_plan(
     targety84d2fe31 = {
       i <- 1
@@ -374,6 +378,7 @@ test_with_dir("drake_envir() in wrong context", {
 })
 
 test_with_dir("drake_envir(\"imports\") (#882)", {
+  skip_on_cran()
   a <- 1
   plan <- drake_plan(x = ls(drake_envir("imports")))
   make(plan)
@@ -381,6 +386,7 @@ test_with_dir("drake_envir(\"imports\") (#882)", {
 })
 
 test_with_dir("centralized metadata (#1177)", {
+  skip_on_cran()
   plan <- drake_plan(x = 1)
   make(plan)
   config <- drake_config(plan)
@@ -393,6 +399,7 @@ test_with_dir("centralized metadata (#1177)", {
 })
 
 test_with_dir("centralized old metadata (#1177)", {
+  skip_on_cran()
   plan <- drake_plan(x = 1)
   make(plan)
   config <- drake_config(plan)
