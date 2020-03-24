@@ -1,4 +1,4 @@
-# Version 7.11.0.9001
+# Version 7.12.0
 
 ## Bug fixes
 
