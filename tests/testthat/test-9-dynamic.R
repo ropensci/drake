@@ -81,6 +81,7 @@ test_with_dir("dynamic sub-target indices", {
 })
 
 test_with_dir("dynamic subvalues", {
+  skip_on_cran()
   expect_equal(dynamic_subvalue(letters, 2), "b")
   expect_equal(dynamic_subvalue(letters, c(2, 4)), c("b", "d"))
   m <- mtcars
@@ -95,6 +96,7 @@ test_with_dir("dynamic subvalues", {
 })
 
 test_with_dir("empty dynamic transform", {
+  skip_on_cran()
   plan <- drake_plan(x = target("x", dynamic = map()))
   expect_error(make(plan), regexp = "no admissible grouping variables")
 })
@@ -407,6 +409,7 @@ test_with_dir("dynamic cross values", {
 })
 
 test_with_dir("dynamic cross flow", {
+  skip_on_cran()
   scenario <- get_testing_scenario()
   envir <- eval(parse(text = scenario$envir))
   parallelism <- scenario$parallelism
@@ -728,6 +731,7 @@ test_with_dir("insert .by piece by piece", {
 })
 
 test_with_dir("dynamic group flow with by", {
+  skip_on_cran()
   scenario <- get_testing_scenario()
   envir <- eval(parse(text = scenario$envir))
   suppressWarnings(rm(
@@ -1482,6 +1486,7 @@ test_with_dir("dynamic cross trace (#1052)", {
 })
 
 test_with_dir("dynamic group trace (#1052)", {
+  skip_on_cran()
   plan <- drake_plan(
     w = LETTERS[seq_len(3)],
     x = letters[seq_len(2)],
@@ -1702,6 +1707,7 @@ test_with_dir("visualization labels for dynamic targets", {
 })
 
 test_with_dir("non-vector sub-targets (#1138)", {
+  skip_on_cran()
   f <- function(...) {
     lm(cyl ~ mpg, data = mtcars)
   }
@@ -1719,6 +1725,7 @@ test_with_dir("non-vector sub-targets (#1138)", {
 })
 
 test_with_dir("no dynamic file_out() (#1141)", {
+  skip_on_cran()
   write_file <- function(x, dir) {
     dir <- file.path(dir, x)
     writeLines("lines", dir)
@@ -1735,6 +1742,7 @@ test_with_dir("no dynamic file_out() (#1141)", {
 })
 
 test_with_dir("no dynamic knitr_in() (#1229)", {
+  skip_on_cran()
   plan <- drake_plan(
     index = c(1L, 2L, 3L, 4L),
     write_files = target(
@@ -1746,6 +1754,7 @@ test_with_dir("no dynamic knitr_in() (#1229)", {
 })
 
 test_with_dir("log dynamic target as failed if a sub-target fails (#1158)", {
+  skip_on_cran()
   plan <- drake_plan(
     x = seq_len(2),
     y = target(stop(x), dynamic = map(x))
@@ -2114,6 +2123,7 @@ test_with_dir("v6: names and values of cross() subtargets agree (#1204)", {
 })
 
 test_with_dir("conflict between formats & upstream dynamic (#1210)", {
+  skip_on_cran()
   skip_if_not_installed("qs")
   plan <- drake_plan(
     numbers = target(
