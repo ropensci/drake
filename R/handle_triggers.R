@@ -317,6 +317,7 @@ check_subtarget_triggers <- function(target, subtargets, config) {
       config
     )
   }
+  out[is.na(out)] <- TRUE
   if (any(out)) {
     config$logger$disk("trigger subtarget (special)", target = target)
   }
