@@ -1,5 +1,5 @@
 #' @title Build/process a single target or import.
-#' \lifecycle{maturing}
+#' \lifecycle{questioning}
 #' @description Not valid for dynamic branching.
 #' @export
 #' @seealso [drake_debug()]
@@ -73,7 +73,7 @@ drake_build_impl <- function(
 body(drake_build) <- config_util_body(drake_build_impl)
 
 #' @title Run a single target's command in debug mode.'
-#' \lifecycle{maturing}
+#' \lifecycle{questioning}
 #' @description Not valid for dynamic branching.
 #'   `drake_debug()` loads a target's dependencies
 #'   and then runs its command in debug mode (see `browser()`,

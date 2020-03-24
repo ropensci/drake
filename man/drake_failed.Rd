@@ -13,8 +13,6 @@ If supplied, \code{path} is ignored.}
 
 \item{path}{Path to a \code{drake} cache
 (usually a hidden \verb{.drake/} folder) or \code{NULL}.}
-
-\item{upstream_only}{Deprecated.}
 }
 \value{
 A character vector of target names.

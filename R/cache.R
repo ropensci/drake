@@ -1331,7 +1331,6 @@ drake_running <- function(
 #' @export
 #' @return A character vector of target names.
 #' @inheritParams cached
-#' @param upstream_only Deprecated.
 #' @examples
 #' \dontrun{
 #' isolate_example("contain side effects", {
@@ -1362,7 +1361,8 @@ drake_failed <- function(
 #' \lifecycle{maturing}
 #' @description List the targets that completed in the current or
 #'   previous call to [make()].
-#' @seealso [running()], [failed()], [cancelled()], [make()]
+#' @seealso [drake_running()], [drake_failed()], [drake_cancelled()],
+#'   [drake_progress()], [make()]
 #' @export
 #' @return A character vector of target names.
 #' @inheritParams cached

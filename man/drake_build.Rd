@@ -3,7 +3,7 @@
 \name{drake_build}
 \alias{drake_build}
 \title{Build/process a single target or import.
-\lifecycle{maturing}}
+\lifecycle{questioning}}
 \usage{
 drake_build(
   target,

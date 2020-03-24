@@ -3,7 +3,7 @@
 \name{drake_debug}
 \alias{drake_debug}
 \title{Run a single target's command in debug mode.'
-\lifecycle{maturing}}
+\lifecycle{questioning}}
 \usage{
 drake_debug(
   target = NULL,
