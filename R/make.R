@@ -4,8 +4,6 @@
 #' of the drake package. It runs all the steps of your
 #' workflow in the correct order, skipping any work
 #' that is already up to date.
-#' See <https://github.com/ropensci/drake/blob/master/README.md#documentation>
-#' for an overview of the documentation.
 #' @section Interactive mode:
 #' In interactive sessions, consider [r_make()], [r_outdated()], etc.
 #' rather than [make()], [outdated()], etc. The `r_*()` `drake` functions

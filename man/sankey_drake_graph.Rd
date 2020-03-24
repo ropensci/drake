@@ -122,9 +122,7 @@ To save time for repeated plotting,
 this function is divided into
 \code{\link[=drake_graph_info]{drake_graph_info()}} and \code{\link[=render_sankey_drake_graph]{render_sankey_drake_graph()}}.
 A legend is unfortunately unavailable
-for the graph itself
-(\url{https://github.com/christophergandrud/networkD3/issues/240})
-but you can see what all the colors mean with
+for the graph itself, but you can see what all the colors mean with
 \code{visNetwork::visNetwork(drake::legend_nodes())}.
 }
 \examples{

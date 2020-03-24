@@ -44,9 +44,7 @@ A \code{visNetwork} graph.
 This function is called inside
 \code{\link[=sankey_drake_graph]{sankey_drake_graph()}}, which typical users
 call more often. A legend is unfortunately unavailable
-for the graph itself
-(\url{https://github.com/christophergandrud/networkD3/issues/240})
-but you can see what all the colors mean with
+for the graph itself, but you can see what all the colors mean with
 \code{visNetwork::visNetwork(drake::legend_nodes())}.
 }
 \examples{
