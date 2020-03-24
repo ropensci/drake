@@ -1534,6 +1534,8 @@ test_with_dir("config arg of make() (#1118)", {
 
 test_with_dir("progress(), running(), and failed()", {
   skip_on_cran()
+  expect_warning(prg <- progress(x), regexp = "deprecated")
+  expect_equal(nrow(prg), 0L)
   plan <- drake_plan(x = stop())
   expect_error(make(plan))
   expect_warning(prg <- progress(x), regexp = "deprecated")
