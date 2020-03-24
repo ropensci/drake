@@ -29,6 +29,7 @@ test_with_dir("edge_cases", {
 })
 
 test_with_dir("basic history", {
+  skip_on_cran()
   skip_if_not_installed("knitr")
   skip_if_not_installed("txtq")
   # Iterate.
@@ -129,7 +130,6 @@ test_with_dir("complicated history commands", {
 })
 
 test_with_dir("file history", {
-  skip_on_cran()
   skip_on_cran()
   skip_if_not_installed("knitr")
   skip_if_not_installed("txtq")
