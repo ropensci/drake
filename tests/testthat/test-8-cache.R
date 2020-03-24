@@ -1,6 +1,7 @@
 drake_context("cache")
 
 test_with_dir("clean() removes the correct files", {
+  skip_on_cran()
   skip_if_not_installed("knitr")
   cache <- storr::storr_environment()
   writeLines("123", "a.txt")
@@ -113,6 +114,7 @@ test_with_dir("dependency profile", {
 })
 
 test_with_dir("deps_profile_impl() on imports (#1134)", {
+  skip_on_cran()
   f <- function(x) {
     x
   }
@@ -434,6 +436,7 @@ test_with_dir("cache functions work from various working directories", {
 })
 
 test_with_dir("memo_expr() works without a cache", {
+  skip_on_cran()
   x <- "x"
   expect_equal(memo_expr(x, cache = NULL), x)
 })
@@ -866,6 +869,7 @@ test_with_dir("drake_running()", {
 })
 
 test_with_dir("need a storr for a decorated storr", {
+  skip_on_cran()
   expect_error(decorate_storr(123), regexp = "not a storr")
 })
 

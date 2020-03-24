@@ -1,6 +1,7 @@
 drake_context("recovery")
 
 test_with_dir("recovery (#945)", {
+  skip_on_cran()
   test_recovery <- function(parallelism, caching) {
     clean(destroy = TRUE)
     plan <- drake_plan(

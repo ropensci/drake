@@ -19,6 +19,7 @@ test_with_dir("examples are listed and written", {
 })
 
 test_with_dir("mtcars example works", {
+  skip_on_cran()
   skip_if_not_installed("knitr")
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
