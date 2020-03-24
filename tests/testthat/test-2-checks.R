@@ -57,7 +57,7 @@ test_with_dir(".onLoad() warns correctly and .onAttach() works", {
 
 test_with_dir("warnings and messages are caught", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  expect_equal(nrow(progress()), 0)
+  expect_equal(nrow(drake_progress()), 0)
   f <- function(x) {
     warning("my first warn")
     message("my first mess")

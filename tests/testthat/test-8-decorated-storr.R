@@ -1267,7 +1267,7 @@ test_with_dir("keep_going for formatted targets (#1206)", {
     y = target(stop(123), format = "fst")
   )
   make(plan, keep_going = TRUE)
-  expect_equal(sort(failed()), sort(c("x", "y")))
+  expect_equal(sort(drake_failed()), sort(c("x", "y")))
   expect_true(inherits(diagnose(x)$error, "simpleError"))
   expect_true(inherits(diagnose(y)$error, "simpleError"))
 })

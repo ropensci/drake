@@ -171,11 +171,13 @@ test_with_dir("drake_plan() trims outer whitespace in target names", {
 
 test_with_dir("make() trims outer whitespace in target names", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
-  x <- weak_tibble(target = c("a\n", "  b", "c ", "\t  d   "),
-                  command = 1)
+  x <- weak_tibble(
+    target = c("a\n", "  b", "c ", "\t  d   "),
+    command = 1
+  )
   expect_silent(make(x, verbose = 0L, session_info = FALSE))
   expect_equal(sort(cached()), letters[1:4])
-  prog <- progress()
+  prog <- drake_progress()
   expect_equal(sort(prog$target), letters[1:4])
   expect_true(all(prog$progress == "done"))
   expect_warning({
@@ -670,7 +672,7 @@ test_with_dir("cancel() (#1131)", {
   g <- function(x) f(x)
   plan <- drake_plan(y = g(1))
   make(plan)
-  expect_equal(progress()$progress, "cancelled")
+  expect_equal(drake_progress()$progress, "cancelled")
   expect_error(suppressWarnings(readd(y)))
   config <- drake_config(plan)
   expect_equal(justbuilt(config), character(0))

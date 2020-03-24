@@ -257,8 +257,8 @@ test_with_dir("cache functions work from various working directories", {
   }
   with_dir(scratch, {
     expect_equal(nrow(build_times()), 0)
-    expect_equal(nrow(progress()), 0)
-    expect_false(any("in progress" %in% progress()))
+    expect_equal(nrow(drake_progress()), 0)
+    expect_false(any("in progress" %in% drake_progress()))
     expect_error(readd())
     config <- dbug()
     using_global <- identical(config$envir, globalenv())
@@ -317,12 +317,12 @@ test_with_dir("cache functions work from various working directories", {
     # find stuff in current directory session, progress
     expect_equal(read_drake_seed(), config$settings$seed)
     expect_true(is.list(drake_get_session_info()))
-    expect_true(all(progress()$progress == "done"))
-    expect_false(any("running" %in% progress()))
-    expect_equal(sort(progress()$target), sort(config$plan$target))
+    expect_true(all(drake_progress()$progress == "done"))
+    expect_false(any("running" %in% drake_progress()))
+    expect_equal(sort(drake_progress()$target), sort(config$plan$target))
     exp <- weak_tibble(target = "final", progress = "done")
-    expect_equal(progress(final), exp)
-    expect_equal(progress(list = "final"), exp)
+    expect_equal(drake_progress(final), exp)
+    expect_equal(drake_progress(list = "final"), exp)
 
     # cached, diagnose, rescue
     expect_true(length(diagnose()) > length(config$plan$target))
@@ -365,10 +365,10 @@ test_with_dir("cache functions work from various working directories", {
   with_dir(s, {
     # progress, session
     expect_true(is.list(drake_get_session_info()))
-    prog <- progress()
+    prog <- drake_progress()
     expect_equal(sort(prog$target), sort(config$plan$target))
     expect_true(all(prog$progress == "done"))
-    prog2 <- progress(nothing)
+    prog2 <- drake_progress(nothing)
     expect_equal(prog, prog2)
 
     # cached and diagnose
@@ -408,18 +408,18 @@ test_with_dir("cache functions work from various working directories", {
     drake_gc()
 
     # Test purging
-    prog <- progress()
+    prog <- drake_progress()
     expect_true("final" %in% prog$target)
 
     clean(final, garbage_collection = TRUE, purge = TRUE)
-    prog <- progress()
+    prog <- drake_progress()
     expect_false("final" %in% prog$target)
 
     # progress is erased with cache rescue
     rescue_cache(targets = "final")
-    expect_true(nrow(progress()) > 0L)
+    expect_true(nrow(drake_progress()) > 0L)
     rescue_cache(garbage_collection = FALSE)
-    expect_equal(nrow(progress()), 0L)
+    expect_equal(nrow(drake_progress()), 0L)
     rescue_cache(garbage_collection = TRUE)
 
     # More cleaning checks
@@ -507,7 +507,7 @@ test_with_dir("selection and filtering in progress", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   plan <- drake_plan(x_a = TRUE, y_b = x_a, x_c = stop(y_b))
   expect_error(make(plan))
-  out <- progress(x_a, y_b, x_c, d)
+  out <- drake_progress(x_a, y_b, x_c, d)
   exp <- weak_tibble(
     target = c("x_a", "y_b", "x_c"),
     progress = c("done", "done", "failed")
@@ -529,12 +529,12 @@ test_with_dir("selection and filtering in progress", {
     target = c("x_a", "x_c"),
     progress = c("done", "failed")
   )
-  expect_equivalent(progress(progress = c("done", "failed")), exp1)
-  expect_equivalent(progress(progress = "done"), exp2)
-  expect_equivalent(progress(progress = "failed"), exp3)
-  expect_error(progress(progress = "stuck"), "should be one of")
+  expect_equivalent(drake_progress(progress = c("done", "failed")), exp1)
+  expect_equivalent(drake_progress(progress = "done"), exp2)
+  expect_equivalent(drake_progress(progress = "failed"), exp3)
+  expect_error(drake_progress(progress = "stuck"), "should be one of")
   skip_if_not_installed("tidyselect")
-  expect_equivalent(progress(tidyselect::starts_with("x_")), exp4)
+  expect_equivalent(drake_progress(tidyselect::starts_with("x_")), exp4)
   cache <- drake_cache()
   expect_equal(cache$get_progress("12345"), "none")
 })
@@ -793,9 +793,9 @@ test_with_dir("arbitrary storr in-memory cache", {
   expect_equal(length(o1), 6)
   expect_false(file.exists(cached_data))
 
-  p1 <- progress(verbose = 0L)
+  p1 <- drake_progress(verbose = 0L)
   unlink(default_cache_path(), recursive = TRUE)
-  p2 <- progress(cache = cache, verbose = 0L)
+  p2 <- drake_progress(cache = cache, verbose = 0L)
   expect_true(nrow(p2) > nrow(p1))
   expect_false(file.exists(cached_data))
 
@@ -849,12 +849,12 @@ test_with_dir("try_build() does not need to access cache", {
   expect_error(drake_build_impl(target = "x", config = config))
 })
 
-test_with_dir("running()", {
+test_with_dir("drake_running()", {
   skip_on_cran()
   plan <- drake_plan(a = 1)
   cache <- storr::storr_environment()
   make(plan, session_info = FALSE, cache = cache)
-  expect_equal(running(cache = cache), character(0))
+  expect_equal(drake_running(cache = cache), character(0))
   config <- drake_config(plan, cache = cache, log_progress = TRUE)
   config$running_make <- TRUE
   set_progress(
@@ -862,7 +862,7 @@ test_with_dir("running()", {
     value = "running",
     config = config
   )
-  expect_equal(running(cache = cache), "a")
+  expect_equal(drake_running(cache = cache), "a")
 })
 
 test_with_dir("need a storr for a decorated storr", {
@@ -943,16 +943,16 @@ test_with_dir("suppress cache locking (#1081)", {
   expect_equal(recoverable_impl(config), character(0))
 })
 
-test_with_dir("done() (#1205)", {
+test_with_dir("drake_done() (#1205)", {
   skip_on_cran()
   plan <- drake_plan(x = 1, y = x)
   make(plan)
-  expect_equal(sort(done()), sort(c("x", "y")))
+  expect_equal(sort(drake_done()), sort(c("x", "y")))
 })
 
-test_with_dir("cancelled() (#1205)", {
+test_with_dir("drake_cancelled() (#1205)", {
   skip_on_cran()
   plan <- drake_plan(x = 1, y = cancel_if(x > 0))
   make(plan)
-  expect_equal(cancelled(), "y")
+  expect_equal(drake_cancelled(), "y")
 })

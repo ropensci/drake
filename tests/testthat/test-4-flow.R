@@ -9,7 +9,7 @@ test_with_dir("scratch build with custom filesystem cache.", {
     hash_algorithm = "murmur32"
   )
   expect_error(drake_get_session_info(cache = cache))
-  expect_true(nrow(progress(cache = cache)) == 0)
+  expect_true(nrow(drake_progress(cache = cache)) == 0)
   expect_equal(config$cache$list(), character(0))
 
   testrun(config)
@@ -205,7 +205,7 @@ test_with_dir("can keep going", {
   )
   expect_equal(sort(cached(targets_only = FALSE)),
                sort(c("a2", "a3", "b2", "b3", "b4", "fail", "succeed")))
-  expect_equal(sort(failed()), sort(c("a1", "a4", "b1")))
+  expect_equal(sort(drake_failed()), sort(c("a1", "a4", "b1")))
 })
 
 test_with_dir("failed targets do not become up to date", {

@@ -16,7 +16,7 @@
 
 ## New features
 
-* Add new functions `done()` and `cancelled()` (#1205).
+* Add new functions `drake_done()` and `drake_cancelled()` (#1205).
 
 ## Speedups
 
@@ -37,7 +37,7 @@
 * Prohibit `file_out()` and `knitr_in()` in imported functions (#1229).
 * Prohibit `knitr_in()` in dynamic branching (#1229).
 * Improve the help file of `target()`.
-
+* Deprecate and rename progress functions to avoid potential name conflicts (`progress()` => `drake_progress()`, `running()` => `drake_running()`, `failed()` => `drake_failed()`) (#1205).
 
 # Version 7.11.0
 

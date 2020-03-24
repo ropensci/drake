@@ -1392,7 +1392,7 @@ in_progress <- function(
     package = "drake",
     msg = "in_progress() in drake is deprecated. Use running() instead."
   )
-  running(path, search, cache, verbose)
+  drake_running(path = path, cache = cache)
 }
 
 #' @title Load or create a drake cache
@@ -2545,4 +2545,143 @@ get_trace <- function(trace, value) {
     )
   )
   attr(value, "dynamic_trace")[[trace]]
+}
+
+#' @title List running targets.
+#' \lifecycle{deprecated}
+#' @description Deprecated on 2020-03-23. Use [drake_running()] instead.
+#' @export
+#' @keywords internal
+#' @return A character vector of target names.
+#' @inheritParams cached
+running <- function(
+  path = NULL,
+  search = NULL,
+  cache = drake::drake_cache(path = path),
+  verbose = 1L
+) {
+  .Deprecated(
+    new = "drake_running",
+    package = "drake",
+    msg = paste(
+      "running() is deprecated. Use drake_running() instead."
+    )
+  )
+  deprecate_search(search)
+  prog <- drake_progress(path = path, search = search, cache = cache)
+  prog$target[prog$progress == "running"]
+}
+
+#' @title List failed targets.
+#' \lifecycle{deprecated}
+#' @description Deprecated on 2020-03-23. Use [drake_failed()] instead.
+#' @export
+#' @keywords internal
+#' @return A character vector of target names.
+#' @inheritParams cached
+#' @param upstream_only Deprecated.
+failed <- function(
+  path = NULL,
+  search = NULL,
+  cache = drake::drake_cache(path = path),
+  verbose = 1L,
+  upstream_only = NULL
+) {
+  .Deprecated(
+    new = "drake_failed",
+    package = "drake",
+    msg = paste(
+      "failed() is deprecated. Use drake_failed() instead."
+    )
+  )
+  deprecate_search(search)
+  if (!is.null(upstream_only)) {
+    warning("argument upstream_only is deprecated.")
+  }
+  prog <- drake_progress(path = path, search = search, cache = cache)
+  prog$target[prog$progress == "failed"]
+}
+
+#' @title Get the build progress of your targets
+#' \lifecycle{deprecated}
+#' @description Deprecated on 2020-03-23. Use [drake_progress()] instead.
+#' @export
+#' @keywords internal
+#'
+#' @return The build progress of each target reached by
+#'   the current [make()] so far.
+#'
+#' @inheritParams cached
+#'
+#' @param ... Objects to load from the cache, as names (unquoted)
+#'   or character strings (quoted). If the `tidyselect` package is installed,
+#'   you can also supply `dplyr`-style `tidyselect`
+#'   commands such as `starts_with()`, `ends_with()`, and `one_of()`.
+#'
+#' @param list Character vector naming objects to be loaded from the
+#'   cache. Similar to the `list` argument of [remove()].
+#'
+#' @param no_imported_objects Logical, whether to only return information
+#'   about imported files and targets with commands (i.e. whether to ignore
+#'   imported objects that are not files).
+#'
+#' @param jobs Number of jobs/workers for parallel processing.
+#'
+#' @param progress Character vector for filtering the build progress results.
+#'   Defaults to `NULL` (no filtering) to report progress of all objects.
+#'   Supported filters are `"done"`, `"running"`, and `"failed"`.
+progress <- function(
+  ...,
+  list = character(0),
+  no_imported_objects = NULL,
+  path = NULL,
+  search = NULL,
+  cache = drake::drake_cache(path = path),
+  verbose = 1L,
+  jobs = 1,
+  progress = NULL
+) {
+  .Deprecated(
+    new = "drake_progress",
+    package = "drake",
+    msg = paste(
+      "progress() is deprecated. Use drake_progress() instead."
+    )
+  )
+  deprecate_search(search)
+  if (is.null(cache)) {
+    return(weak_tibble(target = character(0), progress = character(0)))
+  }
+  cache <- decorate_storr(cache)
+  if (!is.null(no_imported_objects)) {
+    warn0(
+      "Argument no_imported_objects of progress() is deprecated. ",
+      "Only targets are returned now."
+    )
+  }
+  targets <- c(as.character(match.call(expand.dots = FALSE)$...), list)
+  if (requireNamespace("tidyselect", quietly = TRUE)) {
+    targets <- drake_tidyselect_cache(
+      ...,
+      list = list,
+      cache = cache,
+      namespaces = "meta"
+    )
+  }
+  if (!length(targets)) {
+    targets <- cache$list(namespace = "progress")
+  }
+  progress_results <- cache$get_progress(targets)
+  out <- weak_tibble(target = targets, progress = progress_results)
+  rownames(out) <- NULL
+  if (is.null(progress)) {
+    # to enforce consistent behavior with and without tidyselect:
+    return(out[out$progress != "none",, drop = FALSE]) # nolint
+  }
+  progress <- match.arg(
+    progress,
+    choices = c("done", "running", "cancelled", "failed"),
+    several.ok = TRUE
+  )
+  out[out$progress %in% progress,, drop = FALSE] # nolint
 }

@@ -227,7 +227,7 @@ test_with_dir("The unload and none strategies do not hold on to targets", {
   for (mem in c("none", "unload")) {
     plan <- drake_plan(target84d2fe31 = 1, target167ff309 = target84d2fe31)
     expect_error(make(plan, memory_strategy = mem), regexp = "not found")
-    expect_equal(failed(), "target167ff309")
+    expect_equal(drake_failed(), "target167ff309")
     clean()
     plan <- drake_plan(
       target84d2fe31 = 1,
@@ -251,7 +251,7 @@ test_with_dir("different memory strategies for each targret", {
     targetx523e1fba = target(targetx167ff309, memory_strategy = "unload")
   )
   expect_error(make(plan), regexp = "not found")
-  expect_equal(failed(), "targetx523e1fba")
+  expect_equal(drake_failed(), "targetx523e1fba")
 })
 
 test_with_dir("drake_envir() and memory strategies", {

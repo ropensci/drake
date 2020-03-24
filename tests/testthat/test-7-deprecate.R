@@ -1531,3 +1531,19 @@ test_with_dir("config arg of make() (#1118)", {
     regexp = "deprecated"
   )
 })
+
+test_with_dir("progress(), running(), and failed()", {
+  skip_on_cran()
+  plan <- drake_plan(x = stop())
+  expect_error(make(plan))
+  expect_warning(prg <- progress(x), regexp = "deprecated")
+  expect_warning(prg <- progress(progress = "done"), regexp = "deprecated")
+  expect_warning(prg <- progress(), regexp = "deprecated")
+  expect_warning(run <- running(), regexp = "deprecated")
+  expect_warning(fld <- failed(), regexp = "deprecated")
+  expect_true(is.data.frame(prg))
+  expect_equal(prg$target, "x")
+  expect_equal(prg$progress, "failed")
+  expect_equal(run, character(0))
+  expect_equal(fld, "x")
+})

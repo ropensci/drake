@@ -1,5 +1,5 @@
 justbuilt <- function(config) {
-  sort(progress(progress = "done", cache = config$cache)$target)
+  sort(drake_progress(progress = "done", cache = config$cache)$target)
 }
 
 nobuild <- function(config) {

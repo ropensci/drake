@@ -1751,7 +1751,7 @@ test_with_dir("log dynamic target as failed if a sub-target fails (#1158)", {
     y = target(stop(x), dynamic = map(x))
   )
   expect_error(make(plan))
-  expect_true("y" %in% failed())
+  expect_true("y" %in% drake_failed())
 })
 
 test_with_dir("target-specific max_expand (#1175)", {

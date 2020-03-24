@@ -149,11 +149,11 @@ reference:
   - '`rescue_cache`'
 - title: Progress
   contents:
-  - '`progress`'
-  - '`running`'
-  - '`done`'
-  - '`failed`'
-  - '`cancelled`'
+  - '`drake_progress`'
+  - '`drake_running`'
+  - '`drake_done`'
+  - '`drake_failed`'
+  - '`drake_cancelled`'
 - title: R packages as drake workflows
   contents:
   - '`expose_imports`'

@@ -1294,7 +1294,8 @@ diagnose <- function(
 #' @description List the targets that either
 #'   1. Are currently being built during a call to [make()], or
 #'   2. Were in progress when [make()] was interrupted.
-#' @seealso [done()], [failed()], [cancelled()], [make()]
+#' @seealso [drake_done()], [drake_failed()], [drake_cancelled()],
+#'   [drake_progress()], [make()]
 #' @export
 #' @return A character vector of target names.
 #' @inheritParams cached
@@ -1315,21 +1316,18 @@ diagnose <- function(
 #' }
 #' })
 #' }
-running <- function(
-  path = NULL,
-  search = NULL,
+drake_running <- function(
   cache = drake::drake_cache(path = path),
-  verbose = 1L
+  path = NULL
 ) {
-  deprecate_search(search)
-  prog <- progress(path = path, search = search, cache = cache)
-  prog$target[prog$progress == "running"]
+  drake_progress_field(cache = cache, path = path, field = "running")
 }
 
 #' @title List failed targets.
 #' \lifecycle{maturing}
 #' @description List the targets that quit in error during [make()].
-#' @seealso [done()], [running()], [cancelled()], [make()]
+#' @seealso [drake_done()], [drake_running()], [drake_cancelled()],
+#'   [drake_progress()], [make()]
 #' @export
 #' @return A character vector of target names.
 #' @inheritParams cached
@@ -1345,7 +1343,7 @@ running <- function(
 #'   make(bad_plan, cache = cache, history = FALSE),
 #'   silent = TRUE
 #' ) # error
-#' failed(cache = cache) # "x"
+#' drake_failed(cache = cache) # "x"
 #' e <- diagnose(x, cache = cache) # Retrieve the cached error log of x.
 #' names(e)
 #' e$error
@@ -1353,19 +1351,11 @@ running <- function(
 #' }
 #' })
 #' }
-failed <- function(
-  path = NULL,
-  search = NULL,
+drake_failed <- function(
   cache = drake::drake_cache(path = path),
-  verbose = 1L,
-  upstream_only = NULL
+  path = NULL
 ) {
-  deprecate_search(search)
-  if (!is.null(upstream_only)) {
-    warning("argument upstream_only is deprecated.")
-  }
-  prog <- progress(path = path, search = search, cache = cache)
-  prog$target[prog$progress == "failed"]
+  drake_progress_field(cache = cache, path = path, field = "failed")
 }
 
 #' @title List done targets.
@@ -1381,12 +1371,11 @@ failed <- function(
 #' isolate_example("contain side effects", {
 #' plan <- drake_plan(x = 1, y = x)
 #' make(plan)
-#' done()
+#' drake_done()
 #' })
 #' }
-done <- function(cache = drake::drake_cache(path = path), path = NULL) {
-  prog <- progress(path = path, cache = cache)
-  prog$target[prog$progress == "done"]
+drake_done <- function(cache = drake::drake_cache(path = path), path = NULL) {
+  drake_progress_field(cache = cache, path = path, field = "done")
 }
 
 #' @title List cancelled targets.
@@ -1402,12 +1391,19 @@ done <- function(cache = drake::drake_cache(path = path), path = NULL) {
 #' isolate_example("contain side effects", {
 #' plan <- drake_plan(x = 1, y = cancel_if(x > 0))
 #' make(plan)
-#' cancelled()
+#' drake_cancelled()
 #' })
 #' }
-cancelled <- function(cache = drake::drake_cache(path = path), path = NULL) {
-  prog <- progress(path = path, cache = cache)
-  prog$target[prog$progress == "cancelled"]
+drake_cancelled <- function(
+  cache = drake::drake_cache(path = path),
+  path = NULL
+) {
+  drake_progress_field(cache = cache, path = path, field = "cancelled")
+}
+
+drake_progress_field <- function(cache, path, field) {
+  prog <- drake_progress(path = path, cache = cache)
+  prog$target[prog$progress == field]
 }
 
 #' @title Get the build progress of your targets
@@ -1432,12 +1428,6 @@ cancelled <- function(cache = drake::drake_cache(path = path), path = NULL) {
 #' @param list Character vector naming objects to be loaded from the
 #'   cache. Similar to the `list` argument of [remove()].
 #'
-#' @param no_imported_objects Logical, whether to only return information
-#'   about imported files and targets with commands (i.e. whether to ignore
-#'   imported objects that are not files).
-#'
-#' @param jobs Number of jobs/workers for parallel processing.
-#'
 #' @param progress Character vector for filtering the build progress results.
 #'   Defaults to `NULL` (no filtering) to report progress of all objects.
 #'   Supported filters are `"done"`, `"running"`, and `"failed"`.
@@ -1455,28 +1445,17 @@ cancelled <- function(cache = drake::drake_cache(path = path), path = NULL) {
 #' }
 #' })
 #' }
-progress <- function(
+drake_progress <- function(
   ...,
   list = character(0),
-  no_imported_objects = NULL,
-  path = NULL,
-  search = NULL,
   cache = drake::drake_cache(path = path),
-  verbose = 1L,
-  jobs = 1,
+  path = NULL,
   progress = NULL
 ) {
-  deprecate_search(search)
   if (is.null(cache)) {
     return(weak_tibble(target = character(0), progress = character(0)))
   }
   cache <- decorate_storr(cache)
-  if (!is.null(no_imported_objects)) {
-    warn0(
-      "Argument no_imported_objects of progress() is deprecated. ",
-      "Only targets are returned now."
-    )
-  }
   targets <- c(as.character(match.call(expand.dots = FALSE)$...), list)
   if (requireNamespace("tidyselect", quietly = TRUE)) {
     targets <- drake_tidyselect_cache(
