@@ -641,8 +641,8 @@ the available functions. Here are the most important ones.
   - `recoverable()`: Which targets can we salvage using `make(recover =
     TRUE)` (experimental).
   - `outdated()`: see which targets will be built in the next `make()`.
-  - `deps()`: check the dependencies of a command or function.
-  - `failed()`: list the targets that failed to build in the last
+  - `deps_code()`: check the dependencies of a command or function.
+  - `drake_failed()`: list the targets that failed to build in the last
     `make()`.
   - `diagnose()`: return the full context of a build, including errors,
     warnings, and messages.
