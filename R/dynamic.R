@@ -538,7 +538,7 @@ subtarget_hashes.cross <- function(dynamic, target, hashes, config) {
   deps <- all.vars(dynamic)
   hashes <- hashes[deps]
   hashes <- expand.grid(rev(hashes))
-  hashes <- hashes[, sort(colnames(hashes))]
+  hashes <- hashes[, sort(colnames(hashes)), drop = FALSE]
   apply(hashes, 1, paste, collapse = " ")
 }
 

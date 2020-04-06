@@ -1,5 +1,8 @@
 # Version 7.12.0.9000
 
+## Bug fixes
+
+* Repair `subtarget_hashes.cross()` for crosses on a single grouping variable.
 
 # Version 7.12.0
 
