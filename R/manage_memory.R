@@ -300,7 +300,7 @@ load_dynamic_subdep_impl.group <- function( # nolint
   config
 ) {
   subdeps <- config$cache$get(dep, namespace = "meta")$subtargets[index]
-  value <- config$cache$mget(subdeps, use_cache = FALSE)
+  value <- lapply(subdeps, config$cache$get, use_cache = FALSE)
   value <- do.call(safe_vec_c, value)
   assign(
     x = dep,

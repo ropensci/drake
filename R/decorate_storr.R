@@ -257,8 +257,10 @@ refclass_decorated_storr <- methods::setRefClass(
     list = function(...) .self$storr$list(...),
     list_hashes = function(...) .self$storr$list_hashes(...),
     list_namespaces = function(...) .self$storr$list_namespaces(...),
+    # Does not respect drake's decorated wrapper.
     mget = function(...) .self$storr$mget(...),
     mget_hash = function(...) .self$storr$mget_hash(...),
+    # Does not respect drake's decorated wrapper.
     mget_value = function(...) .self$storr$mget_value(...),
     mset = function(...) .self$storr$mset(...),
     mset_by_value = function(...) .self$storr$mset_by_value(...),

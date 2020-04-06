@@ -2384,3 +2384,22 @@ test_with_dir("ad hoc namespaces and non-RDS storrs (#1209)", {
   keys <- cache$list(ns)
   expect_equal(length(keys), 0)
 })
+
+test_with_dir("dynamic group() + specialized formats (#1236)", {
+  skip_if_not_installed("qs")
+  plan <- drake_plan(
+    a = c(1, 2, 3),
+    dts = target(
+      list(a = a, b = 4),
+      dynamic = map(a),
+      format = "qs"
+    ),
+    final = target(
+      list(dts),
+      dynamic = group(dts),
+      format = "qs"
+    )
+  )
+  make(plan)
+  expect_true(is.list(readd(final)))
+})
