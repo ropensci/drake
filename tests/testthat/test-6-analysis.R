@@ -1087,3 +1087,21 @@ test_with_dir("no file_out() or knitr_in() in imported fns (#1229)", {
     regexp = "knitr_in"
   )
 })
+
+test_with_dir("ignore deps of drake_plan() calls inside functions (#1237)", {
+  f <- function() {
+    y <- x + 1
+    drake_plan(
+      report = rmarkdown::render(
+        input = knitr_in("report.Rmd"),
+        output_file = file_out("report.md"),
+        output_dir = ".",
+        quiet = TRUE
+      )
+    )
+  }
+  expect_true(grepl("file_out", standardize_imported_function(f)))
+  expect_true(grepl("knitr_in", standardize_imported_function(f)))
+  expect_silent(out <- deps_code(f))
+  expect_equal(out$name, "x")
+})

@@ -5,6 +5,10 @@
 * Repair `subtarget_hashes.cross()` for crosses on a single grouping variable.
 * Repair dynamic `group()` used with specialized formats (#1236, @adamaltmejd).
 
+## Enhancements
+
+* Do not analyze dependencies of calls to `drake_plan()` (#1237, @januz).
+
 
 # Version 7.12.0
 

@@ -550,7 +550,12 @@ loadd_fns <- pair_text(drake_prefix, "loadd")
 readd_fns <- pair_text(drake_prefix, "readd")
 target_fns <- pair_text(drake_prefix, "target")
 trigger_fns <- pair_text(drake_prefix, "trigger")
-no_deps_fns <- c(ignore_fns, pair_text(drake_prefix, "no_deps"))
+drake_plan_fns <- pair_text(drake_prefix, "drake_plan")
+no_deps_fns <- c(
+  pair_text(drake_prefix, "no_deps"),
+  ignore_fns,
+  drake_plan_fns
+)
 file_fns <- c(file_in_fns, file_out_fns, knitr_in_fns)
 drake_symbols <- sort(
   c(
