@@ -8,7 +8,7 @@
 ## Enhancements
 
 * Do not analyze dependencies of calls to `drake_plan()` (#1237, @januz).
-
+* Error message for locked cache gives paste-able error message in Windows (#1243, @billdenney).
 
 # Version 7.12.0
 

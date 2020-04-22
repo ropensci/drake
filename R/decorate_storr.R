@@ -232,7 +232,7 @@ refclass_decorated_storr <- methods::setRefClass(
         "drake's cache is locked.\nRead ",
         "https://docs.ropensci.org/drake/reference/make.html#cache-locking\n",
         "or force unlock the cache with drake::drake_cache(\"",
-        .self$path,
+        normalizePath(.self$path, winslash="/"),
         "\")$unlock()"
       )
     },
