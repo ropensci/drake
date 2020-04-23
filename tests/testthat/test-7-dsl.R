@@ -547,11 +547,11 @@ test_with_dir("map on mtcars-like workflow", {
     ),
     reg = target(
       reg_fun(data),
-     transform = cross(reg_fun = c(reg1, reg2), data)
+      transform = cross(reg_fun = c(reg1, reg2), data)
     ),
     summ = target(
       sum_fun(data, reg),
-     transform = cross(sum_fun = c(coef, resid), reg)
+      transform = cross(sum_fun = c(coef, resid), reg)
     ),
     winners = target(
       min(summ),
@@ -1445,8 +1445,8 @@ test_with_dir("gh #696", {
       system2(
         "split",
         c(paste0("-n r/", !!n),
-        !!from,
-        !!stem)
+          !!from,
+          !!stem)
       )
     })
     out <- quo_squash(out)
@@ -3303,4 +3303,16 @@ test_with_dir("User-defined splot() names (#1240)", {
     results = rbind(a, b, c, d)
   )
   equivalent_plans(out, exp)
+})
+
+test_with_dir("custom names of bad length (#1240)", {
+  expect_error(
+    drake_plan(
+      x = target(
+        f(x),
+        transform = map(x = !!seq_len(2), .names = "a")
+      )
+    ),
+    regexp = "same length"
+  )
 })
