@@ -226,10 +226,10 @@ where
 
 Transformation function usage:
 \itemize{
-\item \code{map(..., .data, .id, .tag_in, .tag_out)}
+\item \code{map(..., .data, .names, .id, .tag_in, .tag_out)}
 \item \code{split(..., slices, margin = 1L, drop = FALSE, .tag_in, .tag_out)}
-\item \code{cross(..., .data, .id, .tag_in, .tag_out)}
-\item \code{combine(..., .by, .id, .tag_in, .tag_out)}
+\item \code{cross(..., .data, .names, .id, .tag_in, .tag_out)}
+\item \code{combine(..., .by, .names, .id, .tag_in, .tag_out)}
 }
 }
 

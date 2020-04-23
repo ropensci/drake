@@ -18,6 +18,9 @@ with no values supplied, and they must be the names of targets.}
 \item{.data}{A data frame of new grouping variables with
 grouping variable names as column names and values as elements.}
 
+\item{.names}{Literal character vector of names for the targets.
+Must be the same length as the targets generated.}
+
 \item{.id}{Symbol or vector of symbols naming grouping variables
 to incorporate into target names. Useful for creating short target
 names. Set \code{.id = FALSE} to use integer indices as target name suffixes.}
@@ -84,10 +87,10 @@ where
 
 Transformation function usage:
 \itemize{
-\item \code{map(..., .data, .id, .tag_in, .tag_out)}
+\item \code{map(..., .data, .names, .id, .tag_in, .tag_out)}
 \item \code{split(..., slices, margin = 1L, drop = FALSE, .tag_in, .tag_out)}
-\item \code{cross(..., .data, .id, .tag_in, .tag_out)}
-\item \code{combine(..., .by, .id, .tag_in, .tag_out)}
+\item \code{cross(..., .data, .names, .id, .tag_in, .tag_out)}
+\item \code{combine(..., .by, .names, .id, .tag_in, .tag_out)}
 }
 }
 

@@ -23,10 +23,10 @@
 #'   - `<call>` is a call to one of the transformation functions.
 #'
 #'   Transformation function usage:
-#'   - `map(..., .data, .id, .tag_in, .tag_out)`
-#'   - `split(..., slices, margin = 1L, drop = FALSE, .tag_in, .tag_out)`
-#'   - `cross(..., .data, .id, .tag_in, .tag_out)`
-#'   - `combine(..., .by, .id, .tag_in, .tag_out)`
+#'   - `map(..., .data, .names, .id, .tag_in, .tag_out)`
+#'   - `split(..., slices, margin = 1L, drop = FALSE, .names, .tag_in, .tag_out)` # nolint
+#'   - `cross(..., .data, .names, .id, .tag_in, .tag_out)`
+#'   - `combine(..., .by, .names, .id, .tag_in, .tag_out)`
 #' @section Dynamic branching:
 #'   - `map(..., .trace)`
 #'   - `cross(..., .trace)`
@@ -53,6 +53,8 @@
 #'   with no values supplied, and they must be the names of targets.
 #' @param .data A data frame of new grouping variables with
 #'   grouping variable names as column names and values as elements.
+#' @param .names Literal character vector of names for the targets.
+#'   Must be the same length as the targets generated.
 #' @param .id Symbol or vector of symbols naming grouping variables
 #'   to incorporate into target names. Useful for creating short target
 #'   names. Set `.id = FALSE` to use integer indices as target name suffixes.
@@ -546,6 +548,7 @@ parse_transform <- function(transform, target) {
   transform <- structure(
     transform,
     id = dsl_id(transform),
+    .names = dsl_names(transform),
     tag_in = tag_in(transform),
     tag_out = tag_out(transform)
   )
@@ -680,8 +683,15 @@ dsl_map_new_targets <- function(
 ) {
   sub_cols <- intersect(colnames(grid), group_names(transform))
   new_target_names <- new_target_names(
-    target, grid, cols = sub_cols, id = dsl_id(transform)
+    target,
+    grid,
+    cols = sub_cols,
+    id = dsl_id(transform),
+    names = dsl_names(transform)
   )
+  if (length(new_target_names) != nrow(grid)) {
+    stop0("target names must be the same length as the number of new targets.")
+  }
   out <- data.frame(target = new_target_names, stringsAsFactors = FALSE)
   grid$.id_chr <- sprintf("\"%s\"", new_target_names)
   for (col in setdiff(old_cols(plan), c("target", "transform"))) {
@@ -770,7 +780,8 @@ dsl_transform.combine <- function(transform, target, row, plan, graph, ...) {
     target,
     out,
     cols = dsl_by(transform),
-    id = dsl_id(transform)
+    id = dsl_id(transform),
+    names = dsl_names(transform)
   )
   out <- id_chr_sub(plan = out, cols = old_cols(plan), .id_chr = out$target)
   out
@@ -873,7 +884,10 @@ dsl_sym <- function(x) {
   tryCatch(parse(text = x)[[1]], error = function(e) as.symbol(x))
 }
 
-new_target_names <- function(target, grid, cols, id) {
+new_target_names <- function(target, grid, cols, id, names) {
+  if (!is.null(names)) {
+    return(names)
+  }
   if (is.character(id)) {
     cols <- intersect(id, colnames(grid))
   }
@@ -1169,7 +1183,7 @@ data_arg_groupings <- function(data_arg) {
   })
 }
 
-dsl_all_special <- c(".id", ".tag_in", ".tag_out")
+dsl_all_special <- c(".id", ".names", ".tag_in", ".tag_out")
 
 new_groupings.cross <- new_groupings.map
 
@@ -1216,6 +1230,15 @@ dsl_id.transform <- function(transform) {
     return(out)
   }
   all.vars(out, functions = FALSE) %||% TRUE
+}
+
+dsl_names <- function(...) UseMethod("dsl_names")
+
+dsl_names.transform <- function(transform) {
+  if (!is.null(attr(transform, ".names"))) {
+    return(attr(transform, ".names"))
+  }
+  eval(lang(transform)[[".names"]])
 }
 
 tag_in <- function(...) UseMethod("tag_in")

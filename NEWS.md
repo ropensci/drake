@@ -5,6 +5,10 @@
 * Repair `subtarget_hashes.cross()` for crosses on a single grouping variable.
 * Repair dynamic `group()` used with specialized formats (#1236, @adamaltmejd).
 
+## New features
+
+* Allow user-defined target names in static branching with the `.names` argument (#1240, @maciejmotyka, @januz).
+
 ## Enhancements
 
 * Do not analyze dependencies of calls to `drake_plan()` (#1237, @januz).

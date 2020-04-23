@@ -3235,3 +3235,72 @@ test_with_dir("static transforms use only upstream part of plan (#1199)", {
   )
   equivalent_plans(out, exp)
 })
+
+test_with_dir("custom names (#1240)", {
+  out <- drake_plan(
+    x = target(
+      f(x),
+      transform = map(x = !!seq_len(2), .names = c("a", "b"))
+    ),
+    y = target(
+      f(w, x),
+      transform = cross(
+        w = !!seq_len(2),
+        x,
+        .names = c("aa", "ab", "ba", "bb")
+      )
+    ),
+    z = target(
+      g(y),
+      transform = map(y)
+    ),
+    final = target(
+      h(z),
+      transform = combine(z, .by = x, .names = c("final1", "final2"))
+    )
+  )
+  exp <- drake_plan(
+    final1 = h(z_aa, z_ab),
+    final2 = h(z_ba, z_bb),
+    a = f(1L),
+    b = f(2L),
+    aa = f(1L, a),
+    ab = f(2L, a),
+    ba = f(1L, b),
+    bb = f(2L, b),
+    z_aa = g(aa),
+    z_ab = g(ab),
+    z_ba = g(ba),
+    z_bb = g(bb)
+  )
+  equivalent_plans(out, exp)
+})
+
+test_with_dir("User-defined splot() names (#1240)", {
+  skip_on_cran()
+  out <- drake_plan(
+    large_data = get_data(),
+    slice_analysis = target(
+      large_data %>%
+        analyze(),
+      transform = split(large_data, slices = 4, .names = letters[seq_len(4)])
+    ),
+    results = target(
+      rbind(slice_analysis),
+      transform = combine(slice_analysis)
+    )
+  )
+  exp <- drake_plan(
+    large_data = get_data(),
+    a = drake_slice(
+      data = large_data, slices = 4, index = 1) %>% analyze(),
+    b = drake_slice(
+      data = large_data, slices = 4, index = 2) %>% analyze(),
+    c = drake_slice(
+      data = large_data, slices = 4, index = 3) %>% analyze(),
+    d = drake_slice(
+      data = large_data, slices = 4, index = 4) %>% analyze(),
+    results = rbind(a, b, c, d)
+  )
+  equivalent_plans(out, exp)
+})
