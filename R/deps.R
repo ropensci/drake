@@ -239,13 +239,20 @@ deps_profile_impl <- function(
   if (!length(meta$seed)) {
     meta$seed <- NA_integer_
   }
-  old_values <- meta[c(
+  fields <- c(
     "command",
     "dependency_hash",
     "input_file_hash",
     "output_file_hash",
     "seed"
-  )]
+  )
+  old_values <- lapply(
+    fields,
+    function(field) {
+      meta[[field]] %||% NA
+    }
+  )
+  names(old_values) <- fields
   old_values <- unlist(old_values)
   old_values <- unname(old_values)
   elt <- paste(old_values[1], collapse = "")
@@ -255,11 +262,11 @@ deps_profile_impl <- function(
     config$cache$digest(
       paste(spec$command_standardized, collapse = ""),
       serialize = FALSE
-    ),
-    static_dependency_hash(target, config),
-    input_file_hash(target, config),
-    output_file_hash(target, config),
-    resolve_target_seed(target, config)
+    ) %||% NA,
+    static_dependency_hash(target, config) %||% NA,
+    input_file_hash(target, config) %||% NA,
+    output_file_hash(target, config) %||% NA,
+    resolve_target_seed(target, config) %||% NA
   )
   out <- weak_tibble(
     name = c("command", "depend", "file_in", "file_out", "seed"),
