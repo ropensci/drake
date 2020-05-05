@@ -458,18 +458,18 @@ history
 #> # A tibble: 12 x 10
 #>    target  current built  exists hash  command    seed runtime quiet output_file
 #>    <chr>   <lgl>   <chr>  <lgl>  <chr> <chr>     <int>   <dbl> <lgl> <chr>      
-#>  1 data    TRUE    2020-… TRUE   e580… "raw_da… 1.29e9 0.00100 NA    <NA>       
-#>  2 data    TRUE    2020-… TRUE   e580… "raw_da… 1.29e9 0.001   NA    <NA>       
-#>  3 fit     TRUE    2020-… TRUE   66b5… "lm(Sep… 1.11e9 0.0220  NA    <NA>       
-#>  4 fit     TRUE    2020-… TRUE   66b5… "lm(Sep… 1.11e9 0.001   NA    <NA>       
-#>  5 hist    FALSE   2020-… TRUE   b15c… "create… 2.10e8 0.019   NA    <NA>       
+#>  1 data    TRUE    2020-… TRUE   e580… "raw_da… 1.29e9 0.001   NA    <NA>       
+#>  2 data    TRUE    2020-… TRUE   e580… "raw_da… 1.29e9 0       NA    <NA>       
+#>  3 fit     TRUE    2020-… TRUE   66b5… "lm(Sep… 1.11e9 0.008   NA    <NA>       
+#>  4 fit     TRUE    2020-… TRUE   66b5… "lm(Sep… 1.11e9 0.00100 NA    <NA>       
+#>  5 hist    FALSE   2020-… TRUE   b15c… "create… 2.10e8 0.009   NA    <NA>       
 #>  6 hist    TRUE    2020-… TRUE   667b… "create… 2.10e8 0.003   NA    <NA>       
-#>  7 hist    TRUE    2020-… TRUE   667b… "create… 2.10e8 0.006   NA    <NA>       
-#>  8 raw_da… TRUE    2020-… TRUE   6317… "readxl… 1.20e9 0.015   NA    <NA>       
-#>  9 raw_da… TRUE    2020-… TRUE   6317… "readxl… 1.20e9 0.027   NA    <NA>       
-#> 10 report  TRUE    2020-… TRUE   b1b7… "rmarkd… 1.30e9 1.16    TRUE  report.html
-#> 11 report  TRUE    2020-… TRUE   b1b7… "rmarkd… 1.30e9 0.745   TRUE  report.html
-#> 12 report  TRUE    2020-… TRUE   b1b7… "rmarkd… 1.30e9 1.11    TRUE  report.html
+#>  7 hist    TRUE    2020-… TRUE   667b… "create… 2.10e8 0.008   NA    <NA>       
+#>  8 raw_da… TRUE    2020-… TRUE   6317… "readxl… 1.20e9 0.01    NA    <NA>       
+#>  9 raw_da… TRUE    2020-… TRUE   6317… "readxl… 1.20e9 0.008   NA    <NA>       
+#> 10 report  TRUE    2020-… TRUE   a7ad… "rmarkd… 1.30e9 1.00    TRUE  report.html
+#> 11 report  TRUE    2020-… TRUE   a7ad… "rmarkd… 1.30e9 0.748   TRUE  report.html
+#> 12 report  TRUE    2020-… TRUE   a7ad… "rmarkd… 1.30e9 0.648   TRUE  report.html
 ```
 
 Remarks:
@@ -554,7 +554,7 @@ make(plan, recover = TRUE)
 
 # When was the raw data *really* first built?
 diagnose(raw_data)$date
-#> [1] "2020-05-05 07:11:16.733385 -0400 GMT"
+#> [1] "2020-05-05 07:34:19.383062 -0400 GMT"
 ```
 
 ### Renaming
@@ -722,9 +722,9 @@ the available functions. Here are the most important ones.
 
 ## Core concepts
 
-The following resources explain what `drake` can do and how it works. The
-[`learndrake`](https://github.com/wlandau/learndrake) workshop devotes
-particular attention to `drake`’s mental model.
+The following resources explain what `drake` can do and how it works.
+The [`learndrake`](https://github.com/wlandau/learndrake) workshop
+devotes particular attention to `drake`’s mental model.
 
   - The [user manual](https://books.ropensci.org/drake/)
   - [`drakeplanner`](https://github.com/wlandau/drakeplanner), an
@@ -738,13 +738,13 @@ particular attention to `drake`’s mental model.
     [README](https://github.com/wlandau/learndrake/blob/master/README.md)
     for instructions and links.
 
-## Applied projects
+## In practice
 
   - [Miles McBain](https://github.com/MilesMcBain)’s [excellent blog
     post](https://milesmcbain.xyz/the-drake-post/) explains the
-    practical issues {drake} solves for most projects, how to set up a
-    project as quickly and painlessly as possible, and how to overcome common
-    obstacles.
+    motivating factors and practical issues {drake} solves for most
+    projects, how to set up a project as quickly and painlessly as
+    possible, and how to overcome common obstacles.
   - Miles’ [`dflow`](https://github.com/MilesMcBain/dflow) package
     generates the file structure for a boilerplate `drake` project. It
     is a more thorough alternative to `drake::use_drake()`.
