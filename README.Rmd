@@ -471,7 +471,7 @@ The [reference section](https://docs.ropensci.org/drake/reference/index.html) li
 
 ## Core concepts
 
-The following resources explain what `drake` does an how it works. The [`learndrake`](https://github.com/wlandau/learndrake) workshop devotes particular attention to `drake`'s mental model.
+The following resources explain what `drake` can do and how it works. The [`learndrake`](https://github.com/wlandau/learndrake) workshop devotes particular attention to `drake`'s mental model.
 
 - The [user manual](https://books.ropensci.org/drake/)
 - [`drakeplanner`](https://github.com/wlandau/drakeplanner), an R/Shiny app to help learn `drake` and create new projects. Run locally with `drakeplanner::drakeplanner()` or access it at <https://wlandau.shinyapps.io/drakeplanner>.

@@ -722,7 +722,7 @@ the available functions. Here are the most important ones.
 
 ## Core concepts
 
-The following resources explain what `drake` does an how it works. The
+The following resources explain what `drake` can do and how it works. The
 [`learndrake`](https://github.com/wlandau/learndrake) workshop devotes
 particular attention to `drake`’s mental model.
 
