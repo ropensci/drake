@@ -479,7 +479,7 @@ The following resources explain what `drake` can do and how it works. The [`lear
 
 ## Applied projects
 
-- [Miles McBain](https://github.com/MilesMcBain)'s [excellent blog post](https://milesmcbain.xyz/the-drake-post/) explains the practical issues {drake} solves for most projects, how to set up a project as quickly and painlessly as possible, and overcome common obstacles.
+- [Miles McBain](https://github.com/MilesMcBain)'s [excellent blog post](https://milesmcbain.xyz/the-drake-post/) explains the practical issues {drake} solves for most projects, how to set up a project as quickly and painlessly as possible, and how to overcome common obstacles.
 - Miles' [`dflow`](https://github.com/MilesMcBain/dflow) package generates the file structure for a boilerplate `drake` project. It is a more thorough alternative to `drake::use_drake()`.
 - `drake` is heavily function-oriented by design, and Miles' [`fnmate`](https://github.com/MilesMcBain/fnmate) package automatically generates boilerplate code and docstrings for functions you mention in `drake` plans.
 

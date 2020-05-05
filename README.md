@@ -743,7 +743,7 @@ particular attention to `drake`’s mental model.
   - [Miles McBain](https://github.com/MilesMcBain)’s [excellent blog
     post](https://milesmcbain.xyz/the-drake-post/) explains the
     practical issues {drake} solves for most projects, how to set up a
-    project as quickly and painlessly as possible, and overcome common
+    project as quickly and painlessly as possible, and how to overcome common
     obstacles.
   - Miles’ [`dflow`](https://github.com/MilesMcBain/dflow) package
     generates the file structure for a boilerplate `drake` project. It
