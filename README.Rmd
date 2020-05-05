@@ -258,7 +258,7 @@ make(plan)
 outdated(plan)
 ```
 
-With everything already up to date, you have **tangible evidence** of reproducibility. Even though you did not re-create the results, you know the results are re-creatable. They **faithfully show** what the code is producing. Given the right [package environment](https://rstudio.github.io/packrat/) and [system configuration](https://stat.ethz.ch/R-manual/R-devel/library/utils/html/sessionInfo.html), you have everything you need to reproduce all the output by yourself.
+With everything already up to date, you have **tangible evidence** of reproducibility. Even though you did not re-create the results, you know the results are recreatable. They **faithfully show** what the code is producing. Given the right [package environment](https://rstudio.github.io/packrat/) and [system configuration](https://stat.ethz.ch/R-manual/R-devel/library/utils/html/sessionInfo.html), you have everything you need to reproduce all the output by yourself.
 
 ## Ease
 
@@ -469,17 +469,32 @@ The [reference section](https://docs.ropensci.org/drake/reference/index.html) li
 
 # Documentation
 
+## Core concepts
+
+The following resources explain what `drake` does an how it works. The [`learndrake`](https://github.com/wlandau/learndrake) workshop devotes particular attention to `drake`'s mental model.
+
 - The [user manual](https://books.ropensci.org/drake/)
-- The [reference website](https://docs.ropensci.org/drake/).
-- The [official repository of example code](https://github.com/wlandau/drake-examples). Download an example workflow from here with `drake_example()`.
 - [`drakeplanner`](https://github.com/wlandau/drakeplanner), an R/Shiny app to help learn `drake` and create new projects. Run locally with `drakeplanner::drakeplanner()` or access it at <https://wlandau.shinyapps.io/drakeplanner>.
 - [`learndrake`](https://github.com/wlandau/learndrake), an R package for teaching an extended `drake` workshop. It contains notebooks, slides, Shiny apps, the latter two of which are publicly deployed. See the [README](https://github.com/wlandau/learndrake/blob/master/README.md) for instructions and links.
+
+## Applied projects
+
+- [Miles McBain](https://github.com/MilesMcBain)'s [excellent blog post](https://milesmcbain.xyz/the-drake-post/) explains the practical issues {drake} solves for most projects, how to set up a project as quickly and painlessly as possible, and overcome common obstacles.
+- Miles' [`dflow`](https://github.com/MilesMcBain/dflow) package generates the file structure for a boilerplate `drake` project. It is a more thorough alternative to `drake::use_drake()`.
+- `drake` is heavily function-oriented by design, and Miles' [`fnmate`](https://github.com/MilesMcBain/fnmate) package automatically generates boilerplate code and docstrings for functions you mention in `drake` plans.
+
+## Reference
+
+- The [reference website](https://docs.ropensci.org/drake/).
+- The [official repository of example code](https://github.com/wlandau/drake-examples). Download an example workflow from here with `drake_example()`.
 - Presentations and workshops by [Will Landau](https://github.com/wlandau), [Kirill Müller](https://github.com/krlmlr), [Amanda Dobbyn](https://github.com/aedobbyn), [Karthik Ram](http://github.com/karthik), [Sina Rüeger](https://github.com/sinarueeger), [Christine Stawitz](https://github.com/cstawitz), and others. See specific links at <https://books.ropensci.org/drake/index.html#presentations>
 - The [FAQ page](https://books.ropensci.org/drake/faq.html), which links to [appropriately-labeled issues on GitHub](https://github.com/ropensci/drake/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22frequently+asked+question%22+).
 
 ## Use cases
 
-The official [rOpenSci use cases](https://ropensci.org/usecases/) and [associated discussion threads](https://discuss.ropensci.org/c/usecases) describe applications of `drake` in action. Here are some more applications of `drake` in real-world projects.
+The official [rOpenSci use cases](https://discuss.ropensci.org/c/usecases) and [associated discussion threads](https://discuss.ropensci.org/c/usecases) describe applications of `drake` in the real world. Many of these use cases are linked from the [`drake` tag on the rOpenSci discussion forum](https://discuss.ropensci.org/tag/drake).
+
+Here are some additional applications of `drake` in real-world projects.
 
 - [efcaguab/demografia-del-voto](https://github.com/efcaguab/demografia-del-voto)
 - [efcaguab/great-white-shark-nsw](https://github.com/efcaguab/great-white-shark-nsw)
@@ -529,7 +544,7 @@ Whereas [GNU Make](https://www.gnu.org/software/make/) is language-agnostic, `dr
 
 ### Remake
 
-[remake](https://github.com/richfitz/remake) itself is no longer maintained, but its founding design goals and principles live on through [drake](https://github.com/ropensci/drake). In fact, [drake](https://github.com/ropensci/drake) is a direct reimagining of [remake](https://github.com/richfitz/remake) with enhanced scalability, reproducibility, high-performance computing, visualization, and documentation.
+[remake](https://github.com/richfitz/remake) itself is no longer maintained, but its founding design goals and principles live on through [drake](https://github.com/ropensci/drake). In fact, [drake](https://github.com/ropensci/drake) is a direct re-imagining of [remake](https://github.com/richfitz/remake) with enhanced scalability, reproducibility, high-performance computing, visualization, and documentation.
 
 ### Factual's Drake
 

@@ -2,80 +2,155 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 <center>
+
 <img src="https://docs.ropensci.org/drake/reference/figures/infographic.svg" alt="infographic" align="center" style = "border: none; float: center;">
+
 </center>
+
 <table class="table">
+
 <thead>
+
 <tr class="header">
+
 <th align="left">
+
 Usage
+
 </th>
+
 <th align="left">
+
 Release
+
 </th>
+
 <th align="left">
+
 Development
+
 </th>
+
 </tr>
+
 </thead>
+
 <tbody>
+
 <tr class="odd">
+
 <td align="left">
+
 <a href="https://www.gnu.org/licenses/gpl-3.0.en.html"><img src="https://img.shields.io/badge/licence-GPL--3-blue.svg" alt="Licence"></a>
+
 </td>
+
 <td align="left">
+
 <a href="https://cran.r-project.org/package=drake"><img src="https://www.r-pkg.org/badges/version/drake" alt="CRAN"></a>
+
 </td>
+
 <td align="left">
+
 <a href="https://travis-ci.org/ropensci/drake"><img src="https://travis-ci.org/ropensci/drake.svg?branch=master" alt="Travis"></a>
+
 </td>
+
 </tr>
+
 <tr class="even">
+
 <td align="left">
+
 <a href="https://cran.r-project.org/"><img src="https://img.shields.io/badge/R%3E%3D-3.3.0-blue.svg" alt="minimal R version"></a>
+
 </td>
+
 <td align="left">
+
 <a href="https://cran.r-project.org/web/checks/check_results_drake.html"><img src="https://cranchecks.info/badges/summary/drake" alt="cran-checks"></a>
+
 </td>
+
 <td align="left">
+
 <a href="https://ci.appveyor.com/project/ropensci/drake"><img src="https://ci.appveyor.com/api/projects/status/4ypc9xnmqt70j94e?svg=true&amp;branch=master" alt="AppVeyor"></a>
+
 </td>
+
 </tr>
+
 <tr class="odd">
+
 <td align="left">
+
 <a href="https://CRAN.R-project.org/package=drake"><img src="https://tinyverse.netlify.com/badge/drake"></a>
+
 </td>
+
 <td align="left">
+
 <a href="https://github.com/ropensci/onboarding/issues/156"><img src="https://badges.ropensci.org/156_status.svg" alt="rOpenSci"></a>
+
 </td>
+
 <td align="left">
+
 <a href="https://codecov.io/github/ropensci/drake?branch=master"><img src="https://codecov.io/github/ropensci/drake/coverage.svg?branch=master" alt="Codecov"></a>
+
 </td>
+
 </tr>
+
 <tr class="even">
+
 <td align="left">
+
 <a href="https://CRAN.R-project.org/package=drake"><img src="https://cranlogs.r-pkg.org/badges/drake" alt="downloads"></a>
+
 </td>
+
 <td align="left">
+
 <a href="https://doi.org/10.21105/joss.00550"><img src="https://joss.theoj.org/papers/10.21105/joss.00550/status.svg" alt="JOSS"></a>
+
 </td>
+
 <td align="left">
+
 <a href="https://bestpractices.coreinfrastructure.org/projects/2135"><img src="https://bestpractices.coreinfrastructure.org/projects/2135/badge"></a>
+
 </td>
+
 </tr>
+
 <tr class="odd">
+
 <td align="left">
+
 <a href="https://saythanks.io/to/drake-r-package-feedback"><img src="https://img.shields.io/badge/Say-Thanks-blue.svg" alt="SayThanks"></a>
+
 </td>
+
 <td align="left">
+
 <a href="https://zenodo.org/badge/latestdoi/82609103"><img src="https://zenodo.org/badge/82609103.svg" alt="Zenodo"></a>
+
 </td>
+
 <td align="left">
+
 <a href="https://www.repostatus.org/#active"><img src="https://www.repostatus.org/badges/latest/active.svg" alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed." /></a>
+
 </td>
+
 </tr>
+
 </tbody>
+
 </table>
+
 <br>
 
 # The drake R package <img src="https://docs.ropensci.org/drake/reference/figures/logo.svg" align="right" alt="logo" width="120" height = "139" style = "border: none; float: right;">
@@ -136,8 +211,7 @@ loop](https://en.wikipedia.org/wiki/Sisyphus):
 3.  Discover an issue.
 4.  Rerun from scratch.
 
-For projects with long runtimes, people tend to get stuck.
-<br>
+For projects with long runtimes, people tend to get stuck. <br>
 
 <center>
 
@@ -199,7 +273,7 @@ plan <- drake_plan(
 plan
 #> # A tibble: 5 x 2
 #>   target   command                                                              
-#>   <chr>    <expr>                                                               
+#>   <chr>    <expr_lst>                                                           
 #> 1 raw_data readxl::read_excel(file_in("raw_data.xlsx"))                        …
 #> 2 data     raw_data %>% mutate(Species = forcats::fct_inorder(Species))        …
 #> 3 hist     create_plot(data)                                                   …
@@ -213,11 +287,11 @@ of `plan`.
 
 ``` r
 make(plan)
-#> target raw_data
-#> target data
-#> target fit
-#> target hist
-#> target report
+#> ▶ target raw_data
+#> ▶ target data
+#> ▶ target fit
+#> ▶ target hist
+#> ▶ target report
 ```
 
 Except for files like `report.html`, your output is stored in a hidden
@@ -263,8 +337,7 @@ create_plot <- function(data) {
 }
 ```
 
-`drake` knows which results are
-affected.
+`drake` knows which results are affected.
 
 ``` r
 vis_drake_graph(plan) # Interactive graph: zoom, drag, etc.
@@ -277,8 +350,8 @@ wasting time on the data or model.
 
 ``` r
 make(plan)
-#> target hist
-#> target report
+#> ▶ target hist
+#> ▶ target report
 ```
 
 ``` r
@@ -313,9 +386,8 @@ quick and easy to find out.
 
 ``` r
 make(plan)
-#> unload targets from environment:
-#>    hist
-#> All targets are already up to date.
+#> ℹ unloading 1 targets from environment
+#> ✓ All targets are already up to date.
 
 outdated(plan)
 #> character(0)
@@ -323,7 +395,7 @@ outdated(plan)
 
 With everything already up to date, you have **tangible evidence** of
 reproducibility. Even though you did not re-create the results, you know
-the results are re-creatable. They **faithfully show** what the code is
+the results are recreatable. They **faithfully show** what the code is
 producing. Given the right [package
 environment](https://rstudio.github.io/packrat/) and [system
 configuration](https://stat.ethz.ch/R-manual/R-devel/library/utils/html/sessionInfo.html),
@@ -337,11 +409,11 @@ more confidence. Starting over from scratch is trivially easy.
 ``` r
 clean()    # Remove the original author's results.
 make(plan) # Independently re-create the results from the code and input data.
-#> target raw_data
-#> target data
-#> target fit
-#> target hist
-#> target report
+#> ▶ target raw_data
+#> ▶ target data
+#> ▶ target fit
+#> ▶ target hist
+#> ▶ target report
 ```
 
 ## Big data efficiency
@@ -386,18 +458,18 @@ history
 #> # A tibble: 12 x 10
 #>    target  current built  exists hash  command    seed runtime quiet output_file
 #>    <chr>   <lgl>   <chr>  <lgl>  <chr> <chr>     <int>   <dbl> <lgl> <chr>      
-#>  1 data    TRUE    2019-… TRUE   e580… "raw_da… 1.29e9 0.002   NA    <NA>       
-#>  2 data    TRUE    2019-… TRUE   e580… "raw_da… 1.29e9 0.001   NA    <NA>       
-#>  3 fit     TRUE    2019-… TRUE   486f… "lm(Sep… 1.11e9 0.00500 NA    <NA>       
-#>  4 fit     TRUE    2019-… TRUE   486f… "lm(Sep… 1.11e9 0.00200 NA    <NA>       
-#>  5 hist    FALSE   2019-… TRUE   22a2… "create… 2.10e8 0.011   NA    <NA>       
-#>  6 hist    TRUE    2019-… TRUE   6909… "create… 2.10e8 0.00700 NA    <NA>       
-#>  7 hist    TRUE    2019-… TRUE   6909… "create… 2.10e8 0.00900 NA    <NA>       
-#>  8 raw_da… TRUE    2019-… TRUE   6317… "readxl… 1.20e9 0.0110  NA    <NA>       
-#>  9 raw_da… TRUE    2019-… TRUE   6317… "readxl… 1.20e9 0.008   NA    <NA>       
-#> 10 report  TRUE    2019-… TRUE   5251… "rmarkd… 1.30e9 0.969   TRUE  report.html
-#> 11 report  TRUE    2019-… TRUE   5251… "rmarkd… 1.30e9 0.592   TRUE  report.html
-#> 12 report  TRUE    2019-… TRUE   5251… "rmarkd… 1.30e9 0.619   TRUE  report.html
+#>  1 data    TRUE    2020-… TRUE   e580… "raw_da… 1.29e9 0.00100 NA    <NA>       
+#>  2 data    TRUE    2020-… TRUE   e580… "raw_da… 1.29e9 0.001   NA    <NA>       
+#>  3 fit     TRUE    2020-… TRUE   66b5… "lm(Sep… 1.11e9 0.0220  NA    <NA>       
+#>  4 fit     TRUE    2020-… TRUE   66b5… "lm(Sep… 1.11e9 0.001   NA    <NA>       
+#>  5 hist    FALSE   2020-… TRUE   b15c… "create… 2.10e8 0.019   NA    <NA>       
+#>  6 hist    TRUE    2020-… TRUE   667b… "create… 2.10e8 0.003   NA    <NA>       
+#>  7 hist    TRUE    2020-… TRUE   667b… "create… 2.10e8 0.006   NA    <NA>       
+#>  8 raw_da… TRUE    2020-… TRUE   6317… "readxl… 1.20e9 0.015   NA    <NA>       
+#>  9 raw_da… TRUE    2020-… TRUE   6317… "readxl… 1.20e9 0.027   NA    <NA>       
+#> 10 report  TRUE    2020-… TRUE   b1b7… "rmarkd… 1.30e9 1.16    TRUE  report.html
+#> 11 report  TRUE    2020-… TRUE   b1b7… "rmarkd… 1.30e9 0.745   TRUE  report.html
+#> 12 report  TRUE    2020-… TRUE   b1b7… "rmarkd… 1.30e9 1.11    TRUE  report.html
 ```
 
 Remarks:
@@ -438,8 +510,8 @@ create_plot <- function(data) {
 
 # The report still needs to run in order to restore report.html.
 make(plan, recover = TRUE)
-#> recover hist
-#> target report
+#> ✓ recover hist
+#> ▶ target report
 
 readd(hist) # old histogram
 #> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
@@ -474,15 +546,15 @@ clean()
 
 # Nope! You need clean(garbage_collection = TRUE) to delete stuff.
 make(plan, recover = TRUE)
-#> recover raw_data
-#> recover data
-#> recover fit
-#> recover hist
-#> recover report
+#> ✓ recover raw_data
+#> ✓ recover data
+#> ✓ recover fit
+#> ✓ recover hist
+#> ✓ recover report
 
 # When was the raw data *really* first built?
 diagnose(raw_data)$date
-#> [1] "2019-12-25 00:15:19.668259 -0500 GMT"
+#> [1] "2020-05-05 07:11:16.733385 -0400 GMT"
 ```
 
 ### Renaming
@@ -519,10 +591,10 @@ plan <- drake_plan(
 )
 
 make(plan, recover = TRUE)
-#> recover iris_data
-#> target fit
-#> target hist
-#> target report
+#> ✓ recover iris_data
+#> ▶ target fit
+#> ▶ target hist
+#> ▶ target report
 ```
 
 ## Independent replication
@@ -582,8 +654,7 @@ make(plan, parallelism = "clustermq", jobs = 4)
 # With Docker
 
 `drake` and Docker are compatible and complementary. Here are some
-examples that run `drake` inside a Docker
-    image.
+examples that run `drake` inside a Docker image.
 
   - [`drake-gitlab-docker-example`](https://gitlab.com/ecohealthalliance/drake-gitlab-docker-example):
     A small pedagogical example workflow that leverages `drake`, Docker,
@@ -649,11 +720,13 @@ the available functions. Here are the most important ones.
 
 # Documentation
 
+## Core concepts
+
+The following resources explain what `drake` does an how it works. The
+[`learndrake`](https://github.com/wlandau/learndrake) workshop devotes
+particular attention to `drake`’s mental model.
+
   - The [user manual](https://books.ropensci.org/drake/)
-  - The [reference website](https://docs.ropensci.org/drake/).
-  - The [official repository of example
-    code](https://github.com/wlandau/drake-examples). Download an
-    example workflow from here with `drake_example()`.
   - [`drakeplanner`](https://github.com/wlandau/drakeplanner), an
     R/Shiny app to help learn `drake` and create new projects. Run
     locally with `drakeplanner::drakeplanner()` or access it at
@@ -664,6 +737,28 @@ the available functions. Here are the most important ones.
     See the
     [README](https://github.com/wlandau/learndrake/blob/master/README.md)
     for instructions and links.
+
+## Applied projects
+
+  - [Miles McBain](https://github.com/MilesMcBain)’s [excellent blog
+    post](https://milesmcbain.xyz/the-drake-post/) explains the
+    practical issues {drake} solves for most projects, how to set up a
+    project as quickly and painlessly as possible, and overcome common
+    obstacles.
+  - Miles’ [`dflow`](https://github.com/MilesMcBain/dflow) package
+    generates the file structure for a boilerplate `drake` project. It
+    is a more thorough alternative to `drake::use_drake()`.
+  - `drake` is heavily function-oriented by design, and Miles’
+    [`fnmate`](https://github.com/MilesMcBain/fnmate) package
+    automatically generates boilerplate code and docstrings for
+    functions you mention in `drake` plans.
+
+## Reference
+
+  - The [reference website](https://docs.ropensci.org/drake/).
+  - The [official repository of example
+    code](https://github.com/wlandau/drake-examples). Download an
+    example workflow from here with `drake_example()`.
   - Presentations and workshops by [Will
     Landau](https://github.com/wlandau), [Kirill
     Müller](https://github.com/krlmlr), [Amanda
@@ -678,11 +773,14 @@ the available functions. Here are the most important ones.
 
 ## Use cases
 
-The official [rOpenSci use cases](https://ropensci.org/usecases/) and
-[associated discussion threads](https://discuss.ropensci.org/c/usecases)
-describe applications of `drake` in action. Here are some more
-applications of `drake` in real-world
-    projects.
+The official [rOpenSci use
+cases](https://discuss.ropensci.org/c/usecases) and [associated
+discussion threads](https://discuss.ropensci.org/c/usecases) describe
+applications of `drake` in the real world. Many of these use cases are
+linked from the [`drake` tag on the rOpenSci discussion
+forum](https://discuss.ropensci.org/tag/drake).
+
+Here are some additional applications of `drake` in real-world projects.
 
   - [efcaguab/demografia-del-voto](https://github.com/efcaguab/demografia-del-voto)
   - [efcaguab/great-white-shark-nsw](https://github.com/efcaguab/great-white-shark-nsw)
@@ -784,7 +882,7 @@ language-agnostic, `drake` is fundamentally designed for R.
 [remake](https://github.com/richfitz/remake) itself is no longer
 maintained, but its founding design goals and principles live on through
 [drake](https://github.com/ropensci/drake). In fact,
-[drake](https://github.com/ropensci/drake) is a direct reimagining of
+[drake](https://github.com/ropensci/drake) is a direct re-imagining of
 [remake](https://github.com/richfitz/remake) with enhanced scalability,
 reproducibility, high-performance computing, visualization, and
 documentation.
