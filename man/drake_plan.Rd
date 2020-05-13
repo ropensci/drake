@@ -227,7 +227,7 @@ where
 Transformation function usage:
 \itemize{
 \item \code{map(..., .data, .names, .id, .tag_in, .tag_out)}
-\item \code{split(..., slices, margin = 1L, drop = FALSE, .tag_in, .tag_out)}
+\item \code{split(..., slices, margin = 1L, drop = FALSE, .names, .tag_in, .tag_out)} # nolint
 \item \code{cross(..., .data, .names, .id, .tag_in, .tag_out)}
 \item \code{combine(..., .by, .names, .id, .tag_in, .tag_out)}
 }

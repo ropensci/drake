@@ -13,6 +13,7 @@
 
 * Do not analyze dependencies of calls to `drake_plan()` (#1237, @januz).
 * Error message for locked cache gives paste-able error message in Windows (#1243, @billdenney).
+* Prevent stack traces from accidentally storing large amounts of data (#1253, @sclewis23).
 
 # Version 7.12.0
 

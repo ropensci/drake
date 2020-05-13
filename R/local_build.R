@@ -253,7 +253,7 @@ drake_with_call_stack_8a6af5 <- function(target, config) {
     top_index <- min(which(grepl("^eval\\(expr = tidy_expr_8a6af5", calls)))
     top <- sys.frame(top_index + 7)
     bottom <- sys.frame(sys.nframe() - 2)
-    e$calls <- rlang::trace_back(top = top, bottom = bottom)
+    e$calls <- reparse_traceback(rlang::trace_back(top = top, bottom = bottom))
     e <- mention_pure_functions(e)
     signalCondition(e)
   }
@@ -272,6 +272,16 @@ drake_with_call_stack_8a6af5 <- function(target, config) {
     error = identity,
     drake_cancel = cancellation
   )
+}
+
+# Prevents tracebacks from storing tons of data.
+reparse_traceback <- function(traceback) {
+  for (index in seq_along(traceback$calls)) {
+    call <- traceback$calls[[index]]
+    call <- safe_parse(safe_deparse(call))
+    traceback$calls[[index]] <- call
+  }
+  traceback
 }
 
 block_envir_lock <- function(config) {
