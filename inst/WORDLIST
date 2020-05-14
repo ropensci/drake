@@ -42,6 +42,7 @@ coef
 coercible
 config
 connectedness
+coolmlproject
 cpu
 cranlogs
 CRAN
@@ -62,6 +63,7 @@ docstring
 Dobbyn
 dplyr
 DSL
+drakepkg
 drakeplanner
 DropBox
 dt
@@ -204,6 +206,7 @@ RL
 rmarkdown
 Rmd
 RMSPE
+rodrigues
 ropensci
 rOpenSci
 RStudio

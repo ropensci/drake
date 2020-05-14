@@ -504,6 +504,12 @@ Here are some additional applications of `drake` in real-world projects.
 - [sol-eng/tensorflow-w-r](https://github.com/sol-eng/tensorflow-w-r)
 - [tiernanmartin/home-and-hope](https://github.com/tiernanmartin/home-and-hope)
 
+## `drake` projects as R packages
+
+Some folks like to structure their `drake` workflows as R packages. Examples are below. In your own analysis packages, be sure to call `drake::expose_imports(yourPackage)` so `drake` can watch you package's functions for changes and rebuild downstream targets accordingly.
+
+- [b-rodrigues/coolmlproject](https://github.com/b-rodrigues/coolmlproject)
+- [tiernanmartin/drakepkg](https://github.com/tiernanmartin/drakepkg)
 
 # Help and troubleshooting
 
