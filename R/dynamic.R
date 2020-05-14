@@ -557,6 +557,7 @@ subtarget_deps <- function(dynamic, target, index, config) {
   UseMethod("subtarget_deps")
 }
 
+#' @export
 subtarget_deps.map <- function(dynamic, target, index, config) {
   vars <- all.vars(dynamic)
   out <- as.list(rep(as.integer(index), length(vars)))
@@ -564,6 +565,7 @@ subtarget_deps.map <- function(dynamic, target, index, config) {
   out
 }
 
+#' @export
 subtarget_deps.cross <- function(dynamic, target, index, config) {
   vars <- all.vars(dynamic)
   size <- unlist(lapply(vars, get_dynamic_size, config = config))
@@ -581,6 +583,7 @@ grid_index <- function(index, size) {
   (inc %% size) + 1L
 }
 
+#' @export
 subtarget_deps.group <- function(
   dynamic,
   target,

@@ -3,7 +3,7 @@
 \name{type_sum.expr_list}
 \alias{type_sum.expr_list}
 \title{Type summary printing
-\lifecycle{stable}}
+\lifecycle{questioning}}
 \usage{
 type_sum.expr_list(x)
 }
