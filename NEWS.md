@@ -4,6 +4,7 @@
 
 * Repair `subtarget_hashes.cross()` for crosses on a single grouping variable.
 * Repair dynamic `group()` used with specialized formats (#1236, @adamaltmejd).
+* Enforce `tidyselect` >= 1.0.0.
 
 ## New features
 

@@ -145,7 +145,7 @@ Suggests:
   styler (>= 1.2.0),
   testthat (>= 2.1.0),
   tibble,
-  tidyselect (>= 0.2.4),
+  tidyselect (>= 1.0.0),
   txtplot,
   usethis,
   visNetwork,
