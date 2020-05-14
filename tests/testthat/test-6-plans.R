@@ -793,3 +793,7 @@ test_with_dir("trailing dots in imports (#1147)", {
     regexp = "imports must not end with dots on Windows"
   )
 })
+
+test_with_dir("type_sum() S3 method for printing language columns", {
+  expect_equal(type_sum.expr_list("123"), "expr")
+})
