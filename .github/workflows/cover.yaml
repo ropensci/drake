@@ -54,6 +54,7 @@ jobs:
         run: |
           install.packages(c("remotes", "covr"))
           remotes::install_deps(dependencies = TRUE)
+          install.packages(".", type = "source", repos = NULL)
         shell: Rscript {0}
 
       - name: Test coverage
