@@ -39,5 +39,8 @@ jobs:
         shell: Rscript {0}
 
       - name: Lint
-        run: lintr::lint_package()
+        run: |
+          out <- lintr::lint_package()
+          print(out)
+          if (length(out)) stop("lints found")
         shell: Rscript {0}
