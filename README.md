@@ -53,7 +53,7 @@ Development
 
 <td align="left">
 
-<a href="https://travis-ci.org/ropensci/drake"><img src="https://travis-ci.org/ropensci/drake.svg?branch=master" alt="Travis"></a>
+<a href="https://github.com/ropensci/drake/actions?query=workflow%3Acheck"><img src="https://github.com/ropensci/drake/workflows/check/badge.svg" alt="check"></a>
 
 </td>
 
@@ -75,7 +75,7 @@ Development
 
 <td align="left">
 
-<a href="https://ci.appveyor.com/project/ropensci/drake"><img src="https://ci.appveyor.com/api/projects/status/4ypc9xnmqt70j94e?svg=true&amp;branch=master" alt="AppVeyor"></a>
+<a href="https://github.com/ropensci/drake/actions?query=workflow%3Alint"><img src="https://github.com/ropensci/drake/workflows/lint/badge.svg" alt="lint"></a>
 
 </td>
 
