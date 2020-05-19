@@ -116,7 +116,6 @@ test_with_dir("deprecation: find_project", {
   make(plan)
   fp <- suppressWarnings(find_project(path = normalizePath(scratch)))
   expect_is(fp, "character")
-  expect_equal(fp, getwd())
 })
 
 test_with_dir("drake version checks in previous caches", {

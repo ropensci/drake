@@ -29,6 +29,7 @@ test_with_dir("visNetwork graph runs", {
   unlink("*_files", force = TRUE, recursive = TRUE)
   skip_on_appveyor()
   skip_if_not_installed("webshot")
+  skip_if(!webshot::is_phantomjs_installed())
   file <- "graph.png"
   expect_false(file.exists(file))
   vis_drake_graph_impl(config = config, file = file, selfcontained = FALSE)
@@ -85,6 +86,7 @@ test_with_dir("Sankey diagram runs", {
   expect_true(file.exists(file))
   skip_on_appveyor()
   skip_if_not_installed("webshot")
+  skip_if(!webshot::is_phantomjs_installed())
   unlink(file, force = TRUE, recursive = TRUE)
   unlink("*_files", force = TRUE, recursive = TRUE)
   file <- "graph.png"
