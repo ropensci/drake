@@ -1,5 +1,8 @@
 # Version 7.12.1.9000
 
+## Bug fixes
+
+* Double-check that all expected sub-targets are done before finalizing dynamic targets (#1260).
 
 # Version 7.12.1
 

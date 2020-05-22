@@ -243,12 +243,17 @@ is_good_outfile_checksum <- function(target, value, checksum, config) {
 }
 
 get_checksum <- function(target, value, config) {
+  parent <- config$spec[[target]]$subtarget_parent
   paste(
     config$cache$safe_get_hash(
       key = target,
       namespace = config$cache$default_namespace
     ),
     config$cache$safe_get_hash(key = target, namespace = "meta"),
+    config$cache$safe_get_hash(
+      key = target,
+      namespace = config$meta[[parent]]$dynamic_progress_namespace
+    ),
     get_outfile_checksum(target, value, config),
     sep = " "
   )

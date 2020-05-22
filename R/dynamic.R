@@ -123,7 +123,29 @@ dynamic_build <- function(target, meta, config) {
   value <- config$cache$mget_hash(subtargets)
   value <- append_trace(target, value, config)
   class(value) <- "drake_dynamic"
+  assert_subtargets_done(target, meta, config)
   list(target = target, meta = meta, value = value)
+}
+
+# Needed in some HPC use cases where some workers
+# are awkwardly terminated
+assert_subtargets_done <- function(target, meta, config) {
+  namespace <- config$meta[[target]]$dynamic_progress_namespace
+  done_subtargets <- sort(config$cache$list(namespace = namespace))
+  expected_subtargets <- sort(config$spec[[target]]$subtargets_build)
+  unfinished_subtargets <- setdiff(expected_subtargets, done_subtargets)
+  if (length(unfinished_subtargets)) {
+    # Cannot cover because a reproducible example of the motivating problem
+    # cannot be fully automated.
+    #nocov start
+    stop0(
+      "cannot finalize ",
+      target,
+      ". Some sub-targets are unfinished:\n",
+      multiline_message(unfinished_subtargets)
+    )
+    # nocov end
+  }
 }
 
 append_trace <- function(target, value, config) {
@@ -222,6 +244,7 @@ register_subtargets <- function(target, static_ok, dynamic_ok, config) {
   already_done <- config$cache$list(namespace = namespace)
   already_done <- intersect(already_done, ht_list(config$ht_target_exists))
   subtargets_build <- setdiff(subtargets_build, already_done)
+  config$spec[[target]]$subtargets_build <- subtargets_build
   if (length(subtargets_all)) {
     register_in_graph(target, subtargets_all, config)
     register_in_spec(target, subtargets_all, config)
