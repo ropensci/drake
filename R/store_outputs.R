@@ -17,7 +17,7 @@ store_outputs <- function(target, value, meta, config) {
 }
 
 # #1260
-invalidate_old_unused_subtargets <- function(target, config) {
+invalidate_old_unused_subtargets <- function(target, config) { # nolint
   if (!is_dynamic(target, config)) {
     return()
   }
@@ -25,7 +25,8 @@ invalidate_old_unused_subtargets <- function(target, config) {
     return()
   }
   old_subtargets <- config$cache$get(target, namespace = "meta")$subtargets
-  invalid_subtargets <- setdiff(old_subtargets, config$spec[[target]]$subtargets)
+  current_subtargets <- config$spec[[target]]$subtargets
+  invalid_subtargets <- setdiff(old_subtargets, current_subtargets)
   config$cache$del(invalid_subtargets)
 }
 

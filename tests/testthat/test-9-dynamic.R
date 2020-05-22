@@ -2429,3 +2429,29 @@ test_with_dir("forget invalidated sub-targets (#1260)", {
   make(plan)
   expect_equal(readd(y), f(seq_len(5)))
 })
+
+test_with_dir("same with recovery enabled (#1260)", {
+  skip_on_cran()
+  f <- function(x) {
+    x
+  }
+  plan <- drake_plan(
+    x = seq_len(5),
+    y = target(f(x), dynamic = map(x))
+  )
+  make(plan, recover = TRUE)
+  f <- function(x) {
+    x ^ 2
+  }
+  plan <- drake_plan(
+    x = seq_len(3),
+    y = target(f(x), dynamic = map(x))
+  )
+  make(plan, recover = TRUE)
+  plan <- drake_plan(
+    x = seq_len(5),
+    y = target(f(x), dynamic = map(x))
+  )
+  make(plan, recover = TRUE)
+  expect_equal(readd(y), f(seq_len(5)))
+})
