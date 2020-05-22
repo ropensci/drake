@@ -3,6 +3,7 @@ store_outputs <- function(target, value, meta, config) {
     return()
   }
   config$logger$disk("store", target = target)
+  invalidate_old_unused_subtargets(target, config)
   store_triggers(target, meta, config)
   meta$name <- target
   value <- decorate_format_value(value, target, config)
@@ -13,6 +14,20 @@ store_outputs <- function(target, value, meta, config) {
     config = config
   )
   finalize_progress(target, config)
+}
+
+# #1260
+invalidate_old_unused_subtargets <- function(target, config) { # nolint
+  if (!is_dynamic(target, config)) {
+    return()
+  }
+  if (!config$cache$exists(target, namespace = "meta")) {
+    return()
+  }
+  old_subtargets <- config$cache$get(target, namespace = "meta")$subtargets
+  current_subtargets <- config$spec[[target]]$subtargets
+  invalid_subtargets <- setdiff(old_subtargets, current_subtargets)
+  config$cache$del(invalid_subtargets)
 }
 
 decorate_format_value <- function(value, target, config) {

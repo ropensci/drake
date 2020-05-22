@@ -846,7 +846,7 @@ test_with_dir("dynamic group flow with by", {
   )
   # One of the z sub-targets has the same dynamic sub-dependency hash
   # as a previous build.
-  exp <- c("w", "z", subtargets(z)[2])
+  exp <- c("w", "z", subtargets(z)[seq_len(2)])
   expect_equal(sort(justbuilt(config)), sort(exp))
   out <- lapply(subtargets(z), readd, character_only = TRUE)
   exp <- list(3, c(2, 4), c(5, 12))
@@ -1780,6 +1780,7 @@ test_with_dir("target-specific max_expand (#1175)", {
   )
   config <- drake_config(plan)
   make_impl(config)
+  old_sub <- subtargets(y)
   expect_equal(length(subtargets(y)), 1)
   expect_equal(justbuilt(config), "y")
   # remove max_expand
@@ -1790,7 +1791,7 @@ test_with_dir("target-specific max_expand (#1175)", {
   make_impl(config)
   expect_equal(length(subtargets(y)), 4)
   new_sub <- setdiff(subtargets(y), old_sub)
-  expect_equal(sort(justbuilt(config)), c("y", new_sub))
+  expect_equal(sort(justbuilt(config)), sort(c("y", new_sub)))
   # max_expand is NA for a target
   clean()
   plan <- drake_plan(
@@ -2402,4 +2403,56 @@ test_with_dir("dynamic group() + specialized formats (#1236)", {
   )
   make(plan)
   expect_true(is.list(readd(final)))
+})
+
+test_with_dir("forget invalidated sub-targets (#1260)", {
+  skip_on_cran()
+  f <- function(x) {
+    x
+  }
+  plan <- drake_plan(
+    x = seq_len(5),
+    y = target(f(x), dynamic = map(x))
+  )
+  make(plan)
+  f <- function(x) {
+    x ^ 2
+  }
+  plan <- drake_plan(
+    x = seq_len(3),
+    y = target(f(x), dynamic = map(x))
+  )
+  make(plan)
+  plan <- drake_plan(
+    x = seq_len(5),
+    y = target(f(x), dynamic = map(x))
+  )
+  make(plan)
+  expect_equal(readd(y), f(seq_len(5)))
+})
+
+test_with_dir("same with recovery enabled (#1260)", {
+  skip_on_cran()
+  f <- function(x) {
+    x
+  }
+  plan <- drake_plan(
+    x = seq_len(5),
+    y = target(f(x), dynamic = map(x))
+  )
+  make(plan, recover = TRUE)
+  f <- function(x) {
+    x ^ 2
+  }
+  plan <- drake_plan(
+    x = seq_len(3),
+    y = target(f(x), dynamic = map(x))
+  )
+  make(plan, recover = TRUE)
+  plan <- drake_plan(
+    x = seq_len(5),
+    y = target(f(x), dynamic = map(x))
+  )
+  make(plan, recover = TRUE)
+  expect_equal(readd(y), f(seq_len(5)))
 })
