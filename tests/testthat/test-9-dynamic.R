@@ -2403,3 +2403,28 @@ test_with_dir("dynamic group() + specialized formats (#1236)", {
   make(plan)
   expect_true(is.list(readd(final)))
 })
+
+test_with_dir("forget invalidated sub-targets (#1260)", {
+  f <- function(x) {
+    x
+  }
+  plan <- drake_plan(
+    x = seq_len(5),
+    y = target(f(x), dynamic = map(x))
+  )
+  make(plan)
+  f <- function(x) {
+    x ^ 2
+  }
+  plan <- drake_plan(
+    x = seq_len(3),
+    y = target(f(x), dynamic = map(x))
+  )
+  make(plan)
+  plan <- drake_plan(
+    x = seq_len(5),
+    y = target(f(x), dynamic = map(x))
+  )
+  make(plan)
+  expect_equal(readd(y), f(seq_len(5)))
+})

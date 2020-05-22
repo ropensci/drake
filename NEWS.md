@@ -2,7 +2,7 @@
 
 ## Bug fixes
 
-* Double-check that all expected sub-targets are done before finalizing dynamic targets (#1260).
+* Invalidate old sub-targets when finalizing a dynamic target (#1260, @richardbayes).
 
 # Version 7.12.1
 
