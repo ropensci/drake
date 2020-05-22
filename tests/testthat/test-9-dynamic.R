@@ -2405,6 +2405,7 @@ test_with_dir("dynamic group() + specialized formats (#1236)", {
 })
 
 test_with_dir("forget invalidated sub-targets (#1260)", {
+  skip_on_cran()
   f <- function(x) {
     x
   }
