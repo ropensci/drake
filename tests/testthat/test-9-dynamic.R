@@ -846,7 +846,7 @@ test_with_dir("dynamic group flow with by", {
   )
   # One of the z sub-targets has the same dynamic sub-dependency hash
   # as a previous build.
-  exp <- c("w", "z", subtargets(z)[2])
+  exp <- c("w", "z", subtargets(z)[seq_len(2)])
   expect_equal(sort(justbuilt(config)), sort(exp))
   out <- lapply(subtargets(z), readd, character_only = TRUE)
   exp <- list(3, c(2, 4), c(5, 12))
@@ -1780,6 +1780,7 @@ test_with_dir("target-specific max_expand (#1175)", {
   )
   config <- drake_config(plan)
   make_impl(config)
+  old_sub <- subtargets(y)
   expect_equal(length(subtargets(y)), 1)
   expect_equal(justbuilt(config), "y")
   # remove max_expand
@@ -1790,7 +1791,7 @@ test_with_dir("target-specific max_expand (#1175)", {
   make_impl(config)
   expect_equal(length(subtargets(y)), 4)
   new_sub <- setdiff(subtargets(y), old_sub)
-  expect_equal(sort(justbuilt(config)), c("y", new_sub))
+  expect_equal(sort(justbuilt(config)), sort(c("y", new_sub)))
   # max_expand is NA for a target
   clean()
   plan <- drake_plan(
