@@ -979,24 +979,32 @@ splice_args <- function(x, replacements) {
 # From https://stackoverflow.com/a/54623901/3704549
 splice_inner <- function(x, replacements) {
   if (is.call(x)) {
-    as.call(
-      do.call(
-        "c",
-        lapply(as.list(x), splice_inner, replacements),
-        quote = TRUE
-      )
-    )
+    splice_call(x, replacements)
   } else if (is.name(x)) {
-    nm <- direct_deparse(
-      x,
-      control = deparse_control_default,
-      backtick = FALSE
-    )
-    if (nm %in% names(replacements)) {
-      return(replacements[[nm]])
-    } else {
-      list(x)
-    }
+    splice_name(x, replacements)
+  } else {
+    list(x)
+  }
+}
+
+splice_call <- function(x, replacements) {
+  args <- lapply(as.list(x), splice_inner, replacements = replacements)
+  use_names <- args$use.names
+  recursive <- args$recursive
+  args <- do.call("c", args, quote = TRUE)
+  args$use.names <- unlist(use_names)
+  args$recursive <- unlist(recursive)
+  as.call(args)
+}
+
+splice_name <- function(x, replacements) {
+  nm <- direct_deparse(
+    x,
+    control = deparse_control_default,
+    backtick = FALSE
+  )
+  if (nm %in% names(replacements)) {
+    replacements[[nm]]
   } else {
     list(x)
   }

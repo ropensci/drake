@@ -3316,3 +3316,22 @@ test_with_dir("custom names of bad length (#1240)", {
     regexp = "same length"
   )
 })
+
+test_with_dir("splicing confusion with formal arguments of c() (#1262)", {
+  out <- drake_plan(
+    a = target(
+      lapply(seq_len(b), sqrt),
+      transform = map(b = c(1, 2))
+    ),
+    d = target(
+      unlist(a, use.names = FALSE),
+      transform = combine(a)
+    )
+  )
+  exp <- drake_plan(
+    a_1 = lapply(seq_len(1), sqrt),
+    a_2 = lapply(seq_len(2), sqrt),
+    d = unlist(a_1, a_2, use.names = FALSE)
+  )
+  equivalent_plans(out, exp)
+})
