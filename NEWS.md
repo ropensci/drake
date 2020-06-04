@@ -1,5 +1,8 @@
 # Version 7.12.2.9000
 
+## Enhancements
+
+* Set `use_cache` to `FALSE` more often (#1257, @Plebejer).
 
 # Version 7.12.2
 
