@@ -1,5 +1,8 @@
 # Version 7.12.2.9000
 
+## Bug fixes
+
+* `cached_planned()` and `cached_unplanned()` now work with non-standard cache locations (#1268).
 
 # Version 7.12.2
 
