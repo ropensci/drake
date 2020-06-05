@@ -519,9 +519,9 @@ assert_equal_branches <- function(target, deps, hashes) {
 }
 
 read_dynamic_hashes <- function(target, config) {
-  meta <- config$cache$get(target, namespace = "meta")
+  meta <- config$cache$get(target, namespace = "meta", use_cache = FALSE)
   if (is.null(meta$dynamic_hashes)) {
-    value <- config$cache$get(target)
+    value <- config$cache$get(target, use_cache = FALSE)
     meta$dynamic_hashes <- dynamic_hashes(value, meta$size_vec, config)
   }
   meta$dynamic_hashes
@@ -607,7 +607,11 @@ get_dynamic_size <- function(target, config) {
   if (ht_exists(config$ht_dynamic_size, target)) {
     return(ht_get(config$ht_dynamic_size, target))
   }
-  size <- config$cache$get(target, namespace = "meta")$size_vec
+  size <- config$cache$get(
+    target,
+    namespace = "meta",
+    use_cache = FALSE
+  )$size_vec
   stopifnot(size > 0L)
   ht_set(config$ht_dynamic_size, x = target, value = size)
   size

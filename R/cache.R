@@ -355,7 +355,7 @@ get_subtargets.drake_dynamic <- function(
   }
   out <- lapply(hashes, cache$get_value, use_cache = FALSE)
   if (subtarget_list) {
-    keys <- cache$get(target, namespace = "meta")$subtargets
+    keys <- cache$get(target, namespace = "meta", use_cache = FALSE)$subtargets
     if (!is.null(subtargets)) {
       keys <- keys[subtargets]
     }

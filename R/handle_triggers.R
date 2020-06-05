@@ -52,7 +52,10 @@ recover_target <- function(target, meta, config) {
   if (!config$cache$exists(key, namespace = "recover")) {
     return(FALSE)
   }
-  meta_hash <- config$cache$get_hash(key, namespace = "recover")
+  meta_hash <- config$cache$get_hash(
+    key,
+    namespace = "recover"
+  )
   recovery_meta <- config$cache$driver$get_object(meta_hash)
   value_hash <- recovery_meta$hash
   exists_data <- config$cache$exists_object(meta_hash) &&
@@ -470,7 +473,11 @@ trigger_change <- function(target, meta, config) {
   if (!config$cache$exists(key = target, namespace = "change")) {
     return(TRUE) # nocov
   }
-  old_value <- config$cache$get(key = target, namespace = "change")
+  old_value <- config$cache$get(
+    key = target,
+    namespace = "change",
+    use_cache = FALSE
+  )
   !identical(old_value, meta$trigger$value)
 }
 
