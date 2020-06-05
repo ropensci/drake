@@ -978,6 +978,6 @@ test_with_dir("cached_(un)planned() with custom cache location (#1268)", {
   expect_equal(cached_planned(plan, cache = test_cache), "x")
   expect_equal(cached_unplanned(plan, cache = test_cache), "w")
   expect_equal(sort(cached(cache = test_cache)), sort(c("w", "x")))
-  clean(list = cached_unplanned(plan, cache = test_cache))
-  expect_equal(sort(cached(cache = test_cache)), sort(c("w", "x")))
+  clean(list = cached_unplanned(plan, cache = test_cache), cache = test_cache)
+  expect_equal(cached(cache = test_cache), "x")
 })
