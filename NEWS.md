@@ -1,7 +1,8 @@
 # Version 7.12.2.9000
 
-## Enhancements
+## Bug fixes
 
+* `cached_planned()` and `cached_unplanned()` now work with non-standard cache locations (#1268, @Plebejer).
 * Set `use_cache` to `FALSE` more often (#1257, @Plebejer).
 
 # Version 7.12.2

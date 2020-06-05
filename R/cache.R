@@ -690,7 +690,9 @@ cached_planned <- function(
   namespace <- namespace %|||% cache$default_namespace
   cached <- cache$list(namespace = namespace)
   targets <- intersect(plan$target, cached)
-  subtargets <- unlist(lapply(targets, subtargets, character_only = TRUE))
+  subtargets <- unlist(
+    lapply(targets, subtargets, character_only = TRUE, cache = cache)
+  )
   planned <- c(targets, subtargets)
   intersect(cached, planned)
 }
@@ -737,7 +739,9 @@ cached_unplanned <- function(
   namespace <- namespace %|||% cache$default_namespace
   cached <- cache$list(namespace = namespace)
   targets <- intersect(plan$target, cached)
-  subtargets <- unlist(lapply(targets, subtargets, character_only = TRUE))
+  subtargets <- unlist(
+    lapply(targets, subtargets, character_only = TRUE, cache = cache)
+  )
   planned <- c(targets, subtargets)
   setdiff(cached, planned)
 }
