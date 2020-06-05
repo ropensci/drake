@@ -963,15 +963,13 @@ test_with_dir("drake_cancelled() (#1205)", {
 
 test_with_dir("cached_(un)planned() with custom cache location (#1268)", {
   skip_on_cran()
-  path_cache <- file.path(tempdir(), ".drake")
+  path_cache <- tempfile()
   test_cache <- new_cache(path_cache)
   plan <- drake_plan(w = 1)
   make(plan, cache = test_cache)
   expect_equal(cached_planned(plan, cache = test_cache), "w")
   expect_equal(cached_unplanned(plan, cache = test_cache), character(0))
-  plan <- drake_plan(
-    x = 2
-  )
+  plan <- drake_plan(x = 2)
   expect_equal(cached_planned(plan, cache = test_cache), character(0))
   expect_equal(cached_unplanned(plan, cache = test_cache), "w")
   make(plan, cache = test_cache)
