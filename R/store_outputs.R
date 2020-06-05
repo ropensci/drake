@@ -24,7 +24,11 @@ invalidate_old_unused_subtargets <- function(target, config) { # nolint
   if (!config$cache$exists(target, namespace = "meta")) {
     return()
   }
-  old_subtargets <- config$cache$get(target, namespace = "meta")$subtargets
+  old_subtargets <- config$cache$get(
+    target,
+    namespace = "meta",
+    use_cache = FALSE
+  )$subtargets
   current_subtargets <- config$spec[[target]]$subtargets
   invalid_subtargets <- setdiff(old_subtargets, current_subtargets)
   config$cache$del(invalid_subtargets)

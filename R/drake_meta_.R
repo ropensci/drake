@@ -26,7 +26,11 @@ set_drake_meta <- function(target, config) {
 
 set_drake_meta_old <- function(target, config) {
   if (target_exists(target, config)) {
-    meta_old <- config$cache$get(key = target, namespace = "meta")
+    meta_old <- config$cache$get(
+      key = target,
+      namespace = "meta",
+      use_cache = FALSE
+    )
     config$meta_old[[target]] <- meta_old
   }
 }
