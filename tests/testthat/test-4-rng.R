@@ -1,8 +1,8 @@
 drake_context("rng")
 
 test_with_dir("seed_from_basic_types", {
-  set.seed(0)
-  seed <- .Random.seed # nolint
+  x <- sample.int(1)
+  seed <- get(".Random.seed", envir = globalenv()) # nolint
   s1 <- seed_from_basic_types(seed, "abc")
   s2 <- seed_from_basic_types(seed, "abc")
   s3 <- seed_from_basic_types(seed, "xyz")
@@ -31,7 +31,8 @@ test_with_dir("Random targets are reproducible", {
     mz = mean(z)
   )
   # Should not change the session's seed
-  seed0 <- .Random.seed # nolint
+  x <- sample.int(1)
+  seed <- get(".Random.seed", envir = globalenv())
   make(
     data,
     envir = env,
