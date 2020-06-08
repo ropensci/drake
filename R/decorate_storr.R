@@ -34,7 +34,7 @@ new_digest_function <- function(hash_algorithm) {
     if (serialize) {
       suppressWarnings(inner_digest(list(object), serialize = TRUE, ...))
     } else {
-      inner_digest(object, serialize = FALSE, ...)
+      suppressWarnings(inner_digest(object, serialize = FALSE, ...))
     }
   }
 }

@@ -13,7 +13,7 @@ drake_backend_clustermq <- function(config) {
     template = config$settings$template
   )
   config$logger$disk("set common data")
-  cmq_set_common_data(config)
+  suppressWarnings(cmq_set_common_data(config))
   config$counter <- new.env(parent = emptyenv())
   config$counter$remaining <- config$queue$size()
   cmq_master(config)
