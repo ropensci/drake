@@ -4,6 +4,7 @@
 
 * `cached_planned()` and `cached_unplanned()` now work with non-standard cache locations (#1268, @Plebejer).
 * Set `use_cache` to `FALSE` more often (#1257, @Plebejer).
+* Use namespaced function calls in mtcars example instead of loading packages.
 
 # Version 7.12.2
 
