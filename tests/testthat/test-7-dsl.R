@@ -1078,7 +1078,11 @@ test_with_dir("dsl: exact same plan as mtcars", {
   skip_on_cran()
   skip_if_not_installed("knitr")
   out <- drake_plan(
-    report = knit(knitr_in("report.Rmd"), file_out("report.md"), quiet = TRUE),
+    report = knitr::knit(
+      drake::knitr_in("report.Rmd"),
+      drake::file_out("report.md"),
+      quiet = TRUE
+    ),
     small = simulate(48),
     large = simulate(64),
     regression1 = target(

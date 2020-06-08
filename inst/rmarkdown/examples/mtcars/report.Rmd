@@ -16,16 +16,15 @@ head(mtcars)
 Here, `wt` is weight in tons, and `mpg` is fuel efficiency in miles per gallon. We want to figure out if there is an association between `wt` and `mpg`. The `mtcars` dataset itself only has 32 rows, so we generated two larger bootstrapped datasets. We called them `small` and `large`.
 
 ```{r load_datasets}
-library(drake)
-head(readd(small)) # 48 rows
-loadd(large)       # 64 rows
+head(drake::readd(small)) # 48 rows
+drake::loadd(large)       # 64 rows
 head(large)
 ```
 
 Then, we fit a couple regression models to the `small` and `large` to try to detect an association between `wt` and `mpg`. Here are the coefficients and p-values from one of the model fits.
 
 ```{r load_coef}
-readd(coef_regression2_small)
+drake::readd(coef_regression2_small)
 ```
 
 Since the p-value on `x2` is so small, there may be an association between weight and fuel efficiency after all.

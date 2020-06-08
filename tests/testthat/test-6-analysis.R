@@ -597,9 +597,14 @@ test_with_dir("deps_target_impl()", {
   d1 <- as.data.frame(d1[order(d1$name), ])
   d2 <- data.frame(
     name = c(
-      "coef_regression2_small", "large", "report.md", "report.Rmd", "small"
+      "coef_regression2_small",
+      "knitr::knit",
+      "large",
+      "report.md",
+      "report.Rmd",
+      "small"
     ),
-    type = c("readd", "loadd", "file_out", "knitr_in", "readd"),
+    type = c("readd", "namespaced", "loadd", "file_out", "knitr_in", "readd"),
     stringsAsFactors = FALSE
   )
   d2 <- d2[order(d2$name), ]
