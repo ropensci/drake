@@ -111,17 +111,7 @@ For projects in R, the `drake` package can help. It [analyzes your workflow](htt
 
 # Videos
 
-Visit the [first page of the manual](https://books.ropensci.org/drake/) to watch a 6-minute introduction.
-
-<center>
-<a href="https://books.ropensci.org/drake/">
-<img src="https://docs.ropensci.org/drake/reference/figures/video.png" alt="video" align="center" style = "border: none; float: center;">
-</a>
-</center>
-<br>
-<br>
-
-The [rOpenSci Community Call from 2019-09-24](https://ropensci.org/commcalls/2019-09-24/) is a much longer presentation on `drake` (20 min talk, 35 min Q&A). Visit the [call's page](https://ropensci.org/commcalls/2019-09-24/) for links to additional resources, and [chime in here](https://github.com/ropensci-org/community-calls) to propose and vote for ideas for new Community Call topics and speakers.
+The [rOpenSci Community Call from 2019-09-24](https://ropensci.org/commcalls/2019-09-24/) is a thorough introduction to `drake` (20 min talk, 35 min Q&A). Visit the [call's page](https://ropensci.org/commcalls/2019-09-24/) for links to additional resources, and [chime in here](https://github.com/ropensci-org/community-calls) to propose and vote for ideas for new Community Call topics and speakers.
 
 <center>
 <a href="https://ropensci.org/commcalls/2019-09-24/">
