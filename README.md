@@ -136,17 +136,8 @@ loop](https://en.wikipedia.org/wiki/Sisyphus):
 3.  Discover an issue.
 4.  Rerun from scratch.
 
-For projects with long runtimes, people tend to get stuck. <br>
-
-<center>
-
-<img src="https://docs.ropensci.org/drake/reference/figures/tweet.png" alt="tweet" align="center" style = "border: none; float: center;">
-
-</center>
-
-<br>
-
-But with `drake`, you can automatically
+For projects with long runtimes, this process gets tedious. But with
+`drake`, you can automatically
 
 1.  Launch the parts that changed since last time.
 2.  Skip the rest.
@@ -262,7 +253,8 @@ create_plot <- function(data) {
 }
 ```
 
-`drake` knows which results are affected.
+`drake` knows which results are
+affected.
 
 ``` r
 vis_drake_graph(plan) # Interactive graph: zoom, drag, etc.
@@ -312,7 +304,7 @@ quick and easy to find out.
 ``` r
 make(plan)
 #> ℹ unloading 1 targets from environment
-#> ✓ All targets are already up to date.
+#> ✔ All targets are already up to date.
 
 outdated(plan)
 #> character(0)
@@ -333,6 +325,7 @@ more confidence. Starting over from scratch is trivially easy.
 
 ``` r
 clean()    # Remove the original author's results.
+#> ℹ Undo clean() with recover = TRUE in make().
 make(plan) # Independently re-create the results from the code and input data.
 #> ▶ target raw_data
 #> ▶ target data
@@ -383,18 +376,18 @@ history
 #> # A tibble: 12 x 10
 #>    target  current built  exists hash  command    seed runtime quiet output_file
 #>    <chr>   <lgl>   <chr>  <lgl>  <chr> <chr>     <int>   <dbl> <lgl> <chr>      
-#>  1 data    TRUE    2020-… TRUE   e580… "raw_da… 1.29e9 0.001   NA    <NA>       
-#>  2 data    TRUE    2020-… TRUE   e580… "raw_da… 1.29e9 0       NA    <NA>       
-#>  3 fit     TRUE    2020-… TRUE   66b5… "lm(Sep… 1.11e9 0.008   NA    <NA>       
-#>  4 fit     TRUE    2020-… TRUE   66b5… "lm(Sep… 1.11e9 0.00100 NA    <NA>       
-#>  5 hist    FALSE   2020-… TRUE   b15c… "create… 2.10e8 0.009   NA    <NA>       
-#>  6 hist    TRUE    2020-… TRUE   667b… "create… 2.10e8 0.003   NA    <NA>       
-#>  7 hist    TRUE    2020-… TRUE   667b… "create… 2.10e8 0.008   NA    <NA>       
-#>  8 raw_da… TRUE    2020-… TRUE   6317… "readxl… 1.20e9 0.01    NA    <NA>       
-#>  9 raw_da… TRUE    2020-… TRUE   6317… "readxl… 1.20e9 0.008   NA    <NA>       
-#> 10 report  TRUE    2020-… TRUE   a7ad… "rmarkd… 1.30e9 1.00    TRUE  report.html
-#> 11 report  TRUE    2020-… TRUE   a7ad… "rmarkd… 1.30e9 0.748   TRUE  report.html
-#> 12 report  TRUE    2020-… TRUE   a7ad… "rmarkd… 1.30e9 0.648   TRUE  report.html
+#>  1 data    TRUE    2020-… TRUE   6109… "raw_da… 1.29e9 0.01    NA    <NA>       
+#>  2 data    TRUE    2020-… TRUE   6109… "raw_da… 1.29e9 0.00400 NA    <NA>       
+#>  3 fit     TRUE    2020-… TRUE   9f77… "lm(Sep… 1.11e9 0.004   NA    <NA>       
+#>  4 fit     TRUE    2020-… TRUE   9f77… "lm(Sep… 1.11e9 0.001   NA    <NA>       
+#>  5 hist    FALSE   2020-… TRUE   5da4… "create… 2.10e8 0.0100  NA    <NA>       
+#>  6 hist    TRUE    2020-… TRUE   b002… "create… 2.10e8 0.00400 NA    <NA>       
+#>  7 hist    TRUE    2020-… TRUE   b002… "create… 2.10e8 0.005   NA    <NA>       
+#>  8 raw_da… TRUE    2020-… TRUE   6317… "readxl… 1.20e9 0.0140  NA    <NA>       
+#>  9 raw_da… TRUE    2020-… TRUE   6317… "readxl… 1.20e9 0.011   NA    <NA>       
+#> 10 report  TRUE    2020-… TRUE   7f1b… "rmarkd… 1.30e9 1.19    TRUE  report.html
+#> 11 report  TRUE    2020-… TRUE   7f1b… "rmarkd… 1.30e9 0.429   TRUE  report.html
+#> 12 report  TRUE    2020-… TRUE   7f1b… "rmarkd… 1.30e9 0.421   TRUE  report.html
 ```
 
 Remarks:
@@ -435,7 +428,7 @@ create_plot <- function(data) {
 
 # The report still needs to run in order to restore report.html.
 make(plan, recover = TRUE)
-#> ✓ recover hist
+#> ✔ recover hist
 #> ▶ target report
 
 readd(hist) # old histogram
@@ -471,15 +464,15 @@ clean()
 
 # Nope! You need clean(garbage_collection = TRUE) to delete stuff.
 make(plan, recover = TRUE)
-#> ✓ recover raw_data
-#> ✓ recover data
-#> ✓ recover fit
-#> ✓ recover hist
-#> ✓ recover report
+#> ✔ recover raw_data
+#> ✔ recover data
+#> ✔ recover fit
+#> ✔ recover hist
+#> ✔ recover report
 
 # When was the raw data *really* first built?
 diagnose(raw_data)$date
-#> [1] "2020-05-05 07:34:19.383062 -0400 GMT"
+#> [1] "2020-06-16 09:09:29.353945 -0400 GMT"
 ```
 
 ### Renaming
@@ -516,7 +509,7 @@ plan <- drake_plan(
 )
 
 make(plan, recover = TRUE)
-#> ✓ recover iris_data
+#> ✔ recover iris_data
 #> ▶ target fit
 #> ▶ target hist
 #> ▶ target report
@@ -579,7 +572,8 @@ make(plan, parallelism = "clustermq", jobs = 4)
 # With Docker
 
 `drake` and Docker are compatible and complementary. Here are some
-examples that run `drake` inside a Docker image.
+examples that run `drake` inside a Docker
+    image.
 
   - [`drake-gitlab-docker-example`](https://gitlab.com/ecohealthalliance/drake-gitlab-docker-example):
     A small pedagogical example workflow that leverages `drake`, Docker,
@@ -705,7 +699,8 @@ applications of `drake` in the real world. Many of these use cases are
 linked from the [`drake` tag on the rOpenSci discussion
 forum](https://discuss.ropensci.org/tag/drake).
 
-Here are some additional applications of `drake` in real-world projects.
+Here are some additional applications of `drake` in real-world
+    projects.
 
   - [efcaguab/demografia-del-voto](https://github.com/efcaguab/demografia-del-voto)
   - [efcaguab/great-white-shark-nsw](https://github.com/efcaguab/great-white-shark-nsw)
@@ -717,10 +712,14 @@ Here are some additional applications of `drake` in real-world projects.
 
 ## `drake` projects as R packages
 
-Some folks like to structure their `drake` workflows as R packages. Examples are below. In your own analysis packages, be sure to call `drake::expose_imports(yourPackage)` so `drake` can watch you package's functions for changes and rebuild downstream targets accordingly.
+Some folks like to structure their `drake` workflows as R packages.
+Examples are below. In your own analysis packages, be sure to call
+`drake::expose_imports(yourPackage)` so `drake` can watch you package’s
+functions for changes and rebuild downstream targets
+    accordingly.
 
-- [b-rodrigues/coolmlproject](https://github.com/b-rodrigues/coolmlproject)
-- [tiernanmartin/drakepkg](https://github.com/tiernanmartin/drakepkg)
+  - [b-rodrigues/coolmlproject](https://github.com/b-rodrigues/coolmlproject)
+  - [tiernanmartin/drakepkg](https://github.com/tiernanmartin/drakepkg)
 
 # Help and troubleshooting
 
