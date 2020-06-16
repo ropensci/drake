@@ -2,155 +2,80 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 <center>
-
 <img src="https://docs.ropensci.org/drake/reference/figures/infographic.svg" alt="infographic" align="center" style = "border: none; float: center;">
-
 </center>
-
 <table class="table">
-
 <thead>
-
 <tr class="header">
-
 <th align="left">
-
 Usage
-
 </th>
-
 <th align="left">
-
 Release
-
 </th>
-
 <th align="left">
-
 Development
-
 </th>
-
 </tr>
-
 </thead>
-
 <tbody>
-
 <tr class="odd">
-
 <td align="left">
-
 <a href="https://www.gnu.org/licenses/gpl-3.0.en.html"><img src="https://img.shields.io/badge/licence-GPL--3-blue.svg" alt="Licence"></a>
-
 </td>
-
 <td align="left">
-
 <a href="https://cran.r-project.org/package=drake"><img src="https://www.r-pkg.org/badges/version/drake" alt="CRAN"></a>
-
 </td>
-
 <td align="left">
-
 <a href="https://github.com/ropensci/drake/actions?query=workflow%3Acheck"><img src="https://github.com/ropensci/drake/workflows/check/badge.svg" alt="check"></a>
-
 </td>
-
 </tr>
-
 <tr class="even">
-
 <td align="left">
-
 <a href="https://cran.r-project.org/"><img src="https://img.shields.io/badge/R%3E%3D-3.3.0-blue.svg" alt="minimal R version"></a>
-
 </td>
-
 <td align="left">
-
 <a href="https://cran.r-project.org/web/checks/check_results_drake.html"><img src="https://cranchecks.info/badges/summary/drake" alt="cran-checks"></a>
-
 </td>
-
 <td align="left">
-
 <a href="https://github.com/ropensci/drake/actions?query=workflow%3Alint"><img src="https://github.com/ropensci/drake/workflows/lint/badge.svg" alt="lint"></a>
-
 </td>
-
 </tr>
-
 <tr class="odd">
-
 <td align="left">
-
 <a href="https://CRAN.R-project.org/package=drake"><img src="https://tinyverse.netlify.com/badge/drake"></a>
-
 </td>
-
 <td align="left">
-
 <a href="https://github.com/ropensci/onboarding/issues/156"><img src="https://badges.ropensci.org/156_status.svg" alt="rOpenSci"></a>
-
 </td>
-
 <td align="left">
-
 <a href="https://codecov.io/github/ropensci/drake?branch=master"><img src="https://codecov.io/github/ropensci/drake/coverage.svg?branch=master" alt="Codecov"></a>
-
 </td>
-
 </tr>
-
 <tr class="even">
-
 <td align="left">
-
 <a href="https://CRAN.R-project.org/package=drake"><img src="https://cranlogs.r-pkg.org/badges/drake" alt="downloads"></a>
-
 </td>
-
 <td align="left">
-
 <a href="https://doi.org/10.21105/joss.00550"><img src="https://joss.theoj.org/papers/10.21105/joss.00550/status.svg" alt="JOSS"></a>
-
 </td>
-
 <td align="left">
-
 <a href="https://bestpractices.coreinfrastructure.org/projects/2135"><img src="https://bestpractices.coreinfrastructure.org/projects/2135/badge"></a>
-
 </td>
-
 </tr>
-
 <tr class="odd">
-
 <td align="left">
-
 <a href="https://saythanks.io/to/drake-r-package-feedback"><img src="https://img.shields.io/badge/Say-Thanks-blue.svg" alt="SayThanks"></a>
-
 </td>
-
 <td align="left">
-
 <a href="https://zenodo.org/badge/latestdoi/82609103"><img src="https://zenodo.org/badge/82609103.svg" alt="Zenodo"></a>
-
 </td>
-
 <td align="left">
-
 <a href="https://www.repostatus.org/#active"><img src="https://www.repostatus.org/badges/latest/active.svg" alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed." /></a>
-
 </td>
-
 </tr>
-
 </tbody>
-
 </table>
-
 <br>
 
 # The drake R package <img src="https://docs.ropensci.org/drake/reference/figures/logo.svg" align="right" alt="logo" width="120" height = "139" style = "border: none; float: right;">
@@ -212,14 +137,21 @@ To set up a project, load your packages,
 library(drake)
 library(dplyr)
 library(ggplot2)
+library(tidyr)
+#> 
+#> Attaching package: 'tidyr'
+#> The following objects are masked from 'package:drake':
+#> 
+#>     expand, gather
 ```
 
 load your custom functions,
 
 ``` r
 create_plot <- function(data) {
-  ggplot(data, aes(x = Petal.Width, fill = Species)) +
-    geom_histogram()
+  ggplot(data) +
+    geom_histogram(aes(x = Ozone)) +
+    theme_gray(24)
 }
 ```
 
@@ -239,23 +171,24 @@ and plan what you are going to do.
 plan <- drake_plan(
   raw_data = readxl::read_excel(file_in("raw_data.xlsx")),
   data = raw_data %>%
-    mutate(Species = forcats::fct_inorder(Species)),
+    mutate(Ozone = replace_na(Ozone, mean(Ozone, na.rm = TRUE))),
   hist = create_plot(data),
-  fit = lm(Sepal.Width ~ Petal.Width + Species, data),
+  fit = lm(Ozone ~ Wind + Temp, data),
   report = rmarkdown::render(
     knitr_in("report.Rmd"),
     output_file = file_out("report.html"),
     quiet = TRUE
   )
 )
+
 plan
 #> # A tibble: 5 x 2
 #>   target   command                                                              
 #>   <chr>    <expr_lst>                                                           
 #> 1 raw_data readxl::read_excel(file_in("raw_data.xlsx"))                        …
-#> 2 data     raw_data %>% mutate(Species = forcats::fct_inorder(Species))        …
+#> 2 data     raw_data %>% mutate(Ozone = replace_na(Ozone, mean(Ozone, na.rm = TR…
 #> 3 hist     create_plot(data)                                                   …
-#> 4 fit      lm(Sepal.Width ~ Petal.Width + Species, data)                       …
+#> 4 fit      lm(Ozone ~ Wind + Temp, data)                                       …
 #> 5 report   rmarkdown::render(knitr_in("report.Rmd"), output_file = file_out("re…
 ```
 
@@ -277,20 +210,20 @@ Except for files like `report.html`, your output is stored in a hidden
 
 ``` r
 readd(data) # See also loadd().
-#> # A tibble: 150 x 5
-#>    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
-#>           <dbl>       <dbl>        <dbl>       <dbl> <fct>  
-#>  1          5.1         3.5          1.4         0.2 setosa 
-#>  2          4.9         3            1.4         0.2 setosa 
-#>  3          4.7         3.2          1.3         0.2 setosa 
-#>  4          4.6         3.1          1.5         0.2 setosa 
-#>  5          5           3.6          1.4         0.2 setosa 
-#>  6          5.4         3.9          1.7         0.4 setosa 
-#>  7          4.6         3.4          1.4         0.3 setosa 
-#>  8          5           3.4          1.5         0.2 setosa 
-#>  9          4.4         2.9          1.4         0.2 setosa 
-#> 10          4.9         3.1          1.5         0.1 setosa 
-#> # … with 140 more rows
+#> # A tibble: 153 x 6
+#>    Ozone Solar.R  Wind  Temp Month   Day
+#>    <dbl>   <dbl> <dbl> <dbl> <dbl> <dbl>
+#>  1  41       190   7.4    67     5     1
+#>  2  36       118   8      72     5     2
+#>  3  12       149  12.6    74     5     3
+#>  4  18       313  11.5    62     5     4
+#>  5  42.1      NA  14.3    56     5     5
+#>  6  28        NA  14.9    66     5     6
+#>  7  23       299   8.6    65     5     7
+#>  8  19        99  13.8    59     5     8
+#>  9   8        19  20.1    61     5     9
+#> 10  42.1     194   8.6    69     5    10
+#> # … with 143 more rows
 ```
 
 You may look back on your work and see room for improvement, but it’s
@@ -309,9 +242,9 @@ So let’s fix the plotting function.
 
 ``` r
 create_plot <- function(data) {
-  ggplot(data, aes(x = Petal.Width, fill = Species)) +
-    geom_histogram(binwidth = 0.25) +
-    theme_gray(20)
+  ggplot(data) +
+    geom_histogram(aes(x = Ozone), binwidth = 10) +
+    theme_gray(24)
 }
 ```
 
@@ -435,21 +368,22 @@ arguments you used in your function calls, and how to get the data back.
 ``` r
 history <- drake_history(analyze = TRUE)
 history
-#> # A tibble: 12 x 10
-#>    target  current built  exists hash  command    seed runtime quiet output_file
-#>    <chr>   <lgl>   <chr>  <lgl>  <chr> <chr>     <int>   <dbl> <lgl> <chr>      
-#>  1 data    TRUE    2020-… TRUE   6109… "raw_da… 1.29e9 0.0110  NA    <NA>       
-#>  2 data    TRUE    2020-… TRUE   6109… "raw_da… 1.29e9 0.003   NA    <NA>       
-#>  3 fit     TRUE    2020-… TRUE   9f77… "lm(Sep… 1.11e9 0.00400 NA    <NA>       
-#>  4 fit     TRUE    2020-… TRUE   9f77… "lm(Sep… 1.11e9 0.002   NA    <NA>       
-#>  5 hist    FALSE   2020-… TRUE   5da4… "create… 2.10e8 0.008   NA    <NA>       
-#>  6 hist    TRUE    2020-… TRUE   b002… "create… 2.10e8 0.00400 NA    <NA>       
-#>  7 hist    TRUE    2020-… TRUE   b002… "create… 2.10e8 0.005   NA    <NA>       
-#>  8 raw_da… TRUE    2020-… TRUE   6317… "readxl… 1.20e9 0.015   NA    <NA>       
-#>  9 raw_da… TRUE    2020-… TRUE   6317… "readxl… 1.20e9 0.0140  NA    <NA>       
-#> 10 report  TRUE    2020-… TRUE   5f53… "rmarkd… 1.30e9 0.688   TRUE  report.html
-#> 11 report  TRUE    2020-… TRUE   5f53… "rmarkd… 1.30e9 0.422   TRUE  report.html
-#> 12 report  TRUE    2020-… TRUE   5f53… "rmarkd… 1.30e9 0.415   TRUE  report.html
+#> # A tibble: 12 x 11
+#>    target current built exists hash  command   seed runtime na.rm quiet
+#>    <chr>  <lgl>   <chr> <lgl>  <chr> <chr>    <int>   <dbl> <lgl> <lgl>
+#>  1 data   TRUE    2020… TRUE   11e2… "raw_d… 1.29e9   0.01  TRUE  NA   
+#>  2 data   TRUE    2020… TRUE   11e2… "raw_d… 1.29e9   0.003 TRUE  NA   
+#>  3 fit    TRUE    2020… TRUE   3c87… "lm(Oz… 1.11e9   0.003 NA    NA   
+#>  4 fit    TRUE    2020… TRUE   3c87… "lm(Oz… 1.11e9   0.001 NA    NA   
+#>  5 hist   FALSE   2020… TRUE   d205… "creat… 2.10e8   0.016 NA    NA   
+#>  6 hist   TRUE    2020… TRUE   8015… "creat… 2.10e8   0.003 NA    NA   
+#>  7 hist   TRUE    2020… TRUE   8015… "creat… 2.10e8   0.009 NA    NA   
+#>  8 raw_d… TRUE    2020… TRUE   855d… "readx… 1.20e9   0.015 NA    NA   
+#>  9 raw_d… TRUE    2020… TRUE   855d… "readx… 1.20e9   0.011 NA    NA   
+#> 10 report TRUE    2020… TRUE   2be3… "rmark… 1.30e9   0.709 NA    TRUE 
+#> 11 report TRUE    2020… TRUE   2be3… "rmark… 1.30e9   0.352 NA    TRUE 
+#> 12 report TRUE    2020… TRUE   2be3… "rmark… 1.30e9   0.339 NA    TRUE 
+#> # … with 1 more variable: output_file <chr>
 ```
 
 Remarks:
@@ -475,107 +409,6 @@ cache$get_value(hash)
 ```
 
 ![](man/figures/unnamed-chunk-18-1.png)<!-- -->
-
-## Reproducible data recovery and renaming
-
-Remember how we made that change to our histogram? What if we want to
-change it back? If we revert `create_plot()`, `make(plan, recover =
-TRUE)` restores the original plot.
-
-``` r
-create_plot <- function(data) {
-  ggplot(data, aes(x = Petal.Width, fill = Species)) +
-    geom_histogram()
-}
-
-# The report still needs to run in order to restore report.html.
-make(plan, recover = TRUE)
-#> ✔ recover hist
-#> ▶ target report
-
-readd(hist) # old histogram
-#> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-```
-
-![](man/figures/unnamed-chunk-19-1.png)<!-- -->
-
-`drake`’s data recovery feature is another way to avoid rerunning
-commands. It is useful if:
-
-  - You want to revert to your old code.
-  - You accidentally `clean()` a target and want to get it back.
-  - You want to rename an expensive target.
-
-In version 7.5.2 and above, `make(recover = TRUE)` can salvage the
-values of old targets. Before building a target, `drake` checks if you
-have ever built something else with the same command, dependencies,
-seed, etc. that you have right now. If appropriate, `drake` assigns the
-old value to the new target instead of rerunning the command.
-
-Caveats:
-
-1.  This feature is still experimental.
-2.  Recovery may not be a good idea if your external dependencies have
-    changed a lot over time (R version, package environment, etc.).
-
-### Undoing `clean()`
-
-``` r
-# Is the data really gone?
-clean()
-
-# Nope! You need clean(garbage_collection = TRUE) to delete stuff.
-make(plan, recover = TRUE)
-#> ✔ recover raw_data
-#> ✔ recover data
-#> ✔ recover fit
-#> ✔ recover hist
-#> ✔ recover report
-
-# When was the raw data *really* first built?
-diagnose(raw_data)$date
-#> [1] "2020-06-16 09:14:33.676848 -0400 GMT"
-```
-
-### Renaming
-
-You can use recovery to rename a target. The trick is to supply the
-random number generator seed that `drake` used with the old target name.
-Also, renaming a target unavoidably invalidates downstream targets.
-
-``` r
-# Get the old seed.
-old_seed <- diagnose(data)$seed
-
-# Now rename the data and supply the old seed.
-plan <- drake_plan(
-  raw_data = readxl::read_excel(file_in("raw_data.xlsx")),
-  
-  # Previously just named "data".
-  iris_data = target(
-    raw_data %>%
-      mutate(Species = forcats::fct_inorder(Species)),
-    seed = !!old_seed
-  ),
-
-  # `iris_data` will be recovered from `data`,
-  # but `hist` and `fit` have changed commands,
-  # so they will build from scratch.
-  hist = create_plot(iris_data),
-  fit = lm(Sepal.Width ~ Petal.Width + Species, iris_data),
-  report = rmarkdown::render(
-    knitr_in("report.Rmd"),
-    output_file = file_out("report.html"),
-    quiet = TRUE
-  )
-)
-
-make(plan, recover = TRUE)
-#> ✔ recover iris_data
-#> ▶ target fit
-#> ▶ target hist
-#> ▶ target report
-```
 
 ## Independent replication
 

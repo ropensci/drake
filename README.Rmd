@@ -142,14 +142,16 @@ To set up a project, load your packages,
 library(drake)
 library(dplyr)
 library(ggplot2)
+library(tidyr)
 ```
 
 load your custom functions,
 
 ```{r}
 create_plot <- function(data) {
-  ggplot(data, aes(x = Petal.Width, fill = Species)) +
-    geom_histogram()
+  ggplot(data) +
+    geom_histogram(aes(x = Ozone)) +
+    theme_gray(24)
 }
 ```
 
@@ -167,15 +169,16 @@ and plan what you are going to do.
 plan <- drake_plan(
   raw_data = readxl::read_excel(file_in("raw_data.xlsx")),
   data = raw_data %>%
-    mutate(Species = forcats::fct_inorder(Species)),
+    mutate(Ozone = replace_na(Ozone, mean(Ozone, na.rm = TRUE))),
   hist = create_plot(data),
-  fit = lm(Sepal.Width ~ Petal.Width + Species, data),
+  fit = lm(Ozone ~ Wind + Temp, data),
   report = rmarkdown::render(
     knitr_in("report.Rmd"),
     output_file = file_out("report.html"),
     quiet = TRUE
   )
 )
+
 plan
 ```
 
@@ -201,9 +204,9 @@ So let's fix the plotting function.
 
 ```{r}
 create_plot <- function(data) {
-  ggplot(data, aes(x = Petal.Width, fill = Species)) +
-    geom_histogram(binwidth = 0.25) +
-    theme_gray(20)
+  ggplot(data) +
+    geom_histogram(aes(x = Ozone), binwidth = 10) +
+    theme_gray(24)
 }
 ```
 
@@ -302,82 +305,6 @@ hash <- history %>%
   head(n = 1)
 cache <- drake_cache()
 cache$get_value(hash)
-```
-
-## Reproducible data recovery and renaming
-
-Remember how we made that change to our histogram? What if we want to change it back? If we revert `create_plot()`, `make(plan, recover = TRUE)` restores the original plot.
-
-```{r}
-create_plot <- function(data) {
-  ggplot(data, aes(x = Petal.Width, fill = Species)) +
-    geom_histogram()
-}
-
-# The report still needs to run in order to restore report.html.
-make(plan, recover = TRUE)
-
-readd(hist) # old histogram
-```
-
-`drake`'s data recovery feature is another way to avoid rerunning commands. It is useful if:
-
-- You want to revert to your old code.
-- You accidentally `clean()` a target and want to get it back.
-- You want to rename an expensive target.
-
-In version 7.5.2 and above, `make(recover = TRUE)` can salvage the values of old targets. Before building a target, `drake` checks if you have ever built something else with the same command, dependencies, seed, etc. that you have right now. If appropriate, `drake` assigns the old value to the new target instead of rerunning the command.
-
-Caveats:
-
-1. This feature is still experimental.
-2. Recovery may not be a good idea if your external dependencies have changed a lot over time (R version, package environment, etc.).
-
-### Undoing `clean()`
-
-```{r}
-# Is the data really gone?
-clean()
-
-# Nope! You need clean(garbage_collection = TRUE) to delete stuff.
-make(plan, recover = TRUE)
-
-# When was the raw data *really* first built?
-diagnose(raw_data)$date
-```
-
-### Renaming
-
-You can use recovery to rename a target. The trick is to supply the random number generator seed that `drake` used with the old target name. Also, renaming a target unavoidably invalidates downstream targets.
-
-```{r}
-# Get the old seed.
-old_seed <- diagnose(data)$seed
-
-# Now rename the data and supply the old seed.
-plan <- drake_plan(
-  raw_data = readxl::read_excel(file_in("raw_data.xlsx")),
-  
-  # Previously just named "data".
-  iris_data = target(
-    raw_data %>%
-      mutate(Species = forcats::fct_inorder(Species)),
-    seed = !!old_seed
-  ),
-
-  # `iris_data` will be recovered from `data`,
-  # but `hist` and `fit` have changed commands,
-  # so they will build from scratch.
-  hist = create_plot(iris_data),
-  fit = lm(Sepal.Width ~ Petal.Width + Species, iris_data),
-  report = rmarkdown::render(
-    knitr_in("report.Rmd"),
-    output_file = file_out("report.html"),
-    quiet = TRUE
-  )
-)
-
-make(plan, recover = TRUE)
 ```
 
 ## Independent replication
