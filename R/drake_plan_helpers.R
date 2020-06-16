@@ -275,7 +275,7 @@ trigger <- function(
 #' plan <- drake::drake_plan(
 #'   data = target(
 #'     write.csv(data, file_out(paste0(.id_chr, ".csv"))),
-#'     transform = map(data = c(iris, mtcars))
+#'     transform = map(data = c(airquality, mtcars))
 #'   )
 #' )
 #' plan
@@ -343,7 +343,7 @@ file_in <- function(...) {
 #' plan <- drake::drake_plan(
 #'   data = target(
 #'     write.csv(data, file_out(paste0(.id_chr, ".csv"))),
-#'     transform = map(data = c(iris, mtcars))
+#'     transform = map(data = c(airquality, mtcars))
 #'   )
 #' )
 #'
@@ -747,7 +747,7 @@ bind_plans <- function(...) {
 #'   raw_data = read_excel(file_in("raw_data.xlsx")),
 #'   data = raw_data,
 #'   hist = create_plot(data),
-#'   fit = lm(Sepal.Width ~ Petal.Width + Species, data)
+#'   fit = lm(Ozone ~ Temp + Wind, data)
 #' )
 #' file <- tempfile()
 #' # Turn the plan into an R script a the given file path.
@@ -802,7 +802,7 @@ node_plan <- function(node) {
 #'   raw_data = read_excel(file_in("raw_data.xlsx")),
 #'   data = raw_data,
 #'   hist = create_plot(data),
-#'   fit = lm(Sepal.Width ~ Petal.Width + Species, data)
+#'   fit = lm(Ozone ~ Temp + Wind, data)
 #' )
 #' file <- tempfile()
 #' # Turn the plan into an R script a the given file path.
@@ -838,7 +838,7 @@ plan_to_code <- function(plan, con = stdout()) {
 #'   raw_data = read_excel(file_in("raw_data.xlsx")),
 #'   data = raw_data,
 #'   hist = create_plot(data),
-#'   fit = lm(Sepal.Width ~ Petal.Width + Species, data)
+#'   fit = lm(Ozone ~ Temp + Wind, data)
 #' )
 #' file <- tempfile()
 #' # Turn the plan into an R notebook a the given file path.

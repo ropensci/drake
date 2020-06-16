@@ -5,6 +5,7 @@
 * `cached_planned()` and `cached_unplanned()` now work with non-standard cache locations (#1268, @Plebejer).
 * Set `use_cache` to `FALSE` more often (#1257, @Plebejer).
 * Use namespaced function calls in mtcars example instead of loading packages.
+* Replace the `iris` dataset with the `airquality` dataset in all documentation, examples, and tests (#1271).
 
 # Version 7.12.2
 

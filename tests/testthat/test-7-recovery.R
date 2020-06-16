@@ -95,14 +95,14 @@ test_with_dir("recovery (#945)", {
 test_with_dir("rename a target", {
   skip_on_cran()
   plan <- drake_plan(
-    raw_data = iris,
+    raw_data = mtcars,
     data = {
-      raw_data$Species <- as.factor(raw_data$Species)
+      raw_data$cyl <- as.factor(raw_data$cyl)
       file.create("x")
       raw_data
     },
-    summ = mean(data$Sepal.Width),
-    fit = lm(Sepal.Width ~ Petal.Width + Species, data)
+    summ = mean(data$mpg),
+    fit = lm(mpg ~ wt + cyl, data)
   )
   plan$seed <- seq_len(nrow(plan))
   cache <- storr::storr_environment()
@@ -110,14 +110,14 @@ test_with_dir("rename a target", {
   clean()
   unlink("x")
   plan <- drake_plan(
-    raw_data = iris,
-    iris_data = {
-      raw_data$Species <- as.factor(raw_data$Species)
+    raw_data = mtcars,
+    data = {
+      raw_data$cyl <- as.factor(raw_data$cyl)
       file.create("x")
       raw_data
     },
-    summ = mean(iris_data$Sepal.Width),
-    fit = lm(Sepal.Width ~ Petal.Width + Species, iris_data)
+    summ = mean(data$mpg),
+    fit = lm(mpg ~ wt + cyl, data)
   )
   plan$seed <- seq_len(nrow(plan))
   make(plan, recover = TRUE, cache = cache, session_info = FALSE)

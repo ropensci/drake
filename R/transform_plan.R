@@ -406,10 +406,10 @@ convert_split_to_map <- function(target, command, transform) {
 #' \dontrun{
 #' isolate_example("contain side effects", {
 #' plan <- drake_plan(
-#'   large_data = iris,
+#'   large_data = mtcars,
 #'   data_split = target(
-#'     drake_slice(large_data, slices = 50, index = i),
-#'     transform = map(i = !!seq_len(50))
+#'     drake_slice(large_data, slices = 32, index = i),
+#'     transform = map(i = !!seq_len(32))
 #'   )
 #' )
 #' plan

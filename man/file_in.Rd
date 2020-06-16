@@ -85,7 +85,7 @@ file.exists("mtcars.csv")
 plan <- drake::drake_plan(
   data = target(
     write.csv(data, file_out(paste0(.id_chr, ".csv"))),
-    transform = map(data = c(iris, mtcars))
+    transform = map(data = c(airquality, mtcars))
   )
 )
 plan

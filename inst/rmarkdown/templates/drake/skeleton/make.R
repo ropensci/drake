@@ -7,9 +7,9 @@ pkgconfig::set_config("drake::strings_in_dots" = "literals") # For convenience
 # Your custom code is a bunch of functions.
 
 create_plot <- function(data) {
-  ggplot(data, aes(x = Petal.Width, fill = Species)) +
-    geom_histogram(binwidth = 0.25) +
-    theme_gray(20)
+  ggplot(data) +
+    geom_histogram(aes(x = Ozone), binwidth = 10) +
+    theme_gray(24)
 }
 
 # The workflow plan data frame outlines what you are going to do.
@@ -17,11 +17,10 @@ create_plot <- function(data) {
 plan <- drake_plan(
   raw_data = readxl::read_excel(file_in("raw_data.xlsx")),
   data = raw_data %>%
-    mutate(Species = forcats::fct_inorder(Species)) %>%
-    select(-X__1),
+    mutate(Ozone = replace_na(Ozone, mean(Ozone, na.rm = TRUE))),
   hist = create_plot(data),
-  fit = lm(Sepal.Width ~ Petal.Width + Species, data),
-  rmarkdown::render(
+  fit = lm(Ozone ~ Wind + Temp, data),
+  report = rmarkdown::render(
     knitr_in("report.Rmd"),
     output_file = file_out("report.html"),
     quiet = TRUE
