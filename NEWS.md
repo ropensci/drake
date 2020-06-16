@@ -6,6 +6,7 @@
 * Set `use_cache` to `FALSE` more often (#1257, @Plebejer).
 * Use namespaced function calls in mtcars example instead of loading packages.
 * Replace the `iris` dataset with the `airquality` dataset in all documentation, examples, and tests (#1271).
+* Assign functions created with `code_to_function()` to the proper environment (#1275, @robitalec).
 
 # Version 7.12.2
 

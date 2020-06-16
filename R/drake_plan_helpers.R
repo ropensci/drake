@@ -1051,6 +1051,7 @@ is_trigger_call <- function(expr) {
 #' [code_to_plan()], [plan_to_code()], [plan_to_notebook()]
 #' @return A function to be input into the drake plan
 #' @param path Character vector, path to script.
+#' @param envir Environment of the created function.
 #' @export
 #' @examples
 #' \dontrun{
@@ -1127,7 +1128,8 @@ is_trigger_call <- function(expr) {
 #' }
 #' })
 #' }
-code_to_function <- function(path) {
+code_to_function <- function(path, envir = parent.frame()) {
+  force(envir)
   lines <- readLines(path)
   if (any(grepl(knitr_pattern, lines))) {
     lines <- get_tangled_text(path)
@@ -1139,7 +1141,7 @@ code_to_function <- function(path) {
     "}"
   )
   text <- paste(lines, sep = "\n")
-  func <- eval(safe_parse(text))
+  func <- eval(safe_parse(text), envir = envir)
   func
 }
 
