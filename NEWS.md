@@ -7,7 +7,7 @@
 * Use namespaced function calls in mtcars example instead of loading packages.
 * Replace the `iris` dataset with the `airquality` dataset in all documentation, examples, and tests (#1271).
 * Assign functions created with `code_to_function()` to the proper environment (#1275, @robitalec).
-* Store tracebacks as character vectors to prevent accidental storage of data in the environment (#1276, @billdenney).
+* Store tracebacks as character vectors and restrict the contents of error objects to try to prevent accidental storage of large data from the environment (#1276, @billdenney).
 
 # Version 7.12.2
 

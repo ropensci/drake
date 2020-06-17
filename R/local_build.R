@@ -269,8 +269,19 @@ drake_with_call_stack_8a6af5 <- function(target, config) {
       eval(expr = tidy_expr_8a6af5, envir = config$envir_subtargets),
       error = capture_calls
     ),
-    error = identity,
+    error = downsize_error,
     drake_cancel = cancellation
+  )
+}
+
+downsize_error <- function(error) {
+  structure(
+    list(
+      message = as.character(error$message),
+      call = safe_deparse(error$call),
+      calls = as.character(error$calls)
+    ),
+    class = c("simpleError", "error", "condition")
   )
 }
 
