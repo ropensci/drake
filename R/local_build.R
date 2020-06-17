@@ -281,7 +281,7 @@ downsize_error <- function(error) {
       call = safe_deparse(error$call),
       calls = as.character(error$calls)
     ),
-    class = c("simpleError", "error", "condition")
+    class = class(error)
   )
 }
 
