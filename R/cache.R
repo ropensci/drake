@@ -1507,26 +1507,6 @@ memo_expr <- function(expr, cache, ...) {
   value
 }
 
-drake_tidyselect_cache <- function(
-  ...,
-  list = character(0),
-  cache,
-  namespaces = cache$default_namespace
-) {
-  suppressPackageStartupMessages(
-    suppressWarnings(
-      eval(parse(text = "require('tidyselect', quietly = TRUE)"))
-    )
-  )
-  out <- tidyselect::vars_select(
-    .vars = list_multiple_namespaces(cache = cache, namespaces = namespaces),
-    ...,
-    .strict = FALSE
-  )
-  out <- unname(out)
-  c(out, list)
-}
-
 list_multiple_namespaces <- function(cache, namespaces, jobs = 1) {
   out <- lightly_parallelize(
     X = namespaces,
@@ -1550,3 +1530,41 @@ old_meta <- function(key, cache) {
 meta_elt <- function(field, meta) {
   meta[[field]] %|||% NA_character_
 }
+
+drake_tidyselect_cache <- function(
+  ...,
+  list = character(0),
+  cache,
+  namespaces = cache$default_namespace
+) {
+  out <- tidyselect::vars_select(
+    .vars = list_multiple_namespaces(cache = cache, namespaces = namespaces),
+    ...,
+    .strict = FALSE
+  )
+  out <- unname(out)
+  c(out, list)
+}
+
+# Borrowed from dplyr source under the MIT license.
+#' @aliases tar_tidyselect
+#' @export
+tidyselect::all_of
+#' @export
+tidyselect::any_of
+#' @export
+tidyselect::contains
+#' @export
+tidyselect::ends_with
+#' @export
+tidyselect::everything
+#' @export
+tidyselect::last_col
+#' @export
+tidyselect::matches
+#' @export
+tidyselect::num_range
+#' @export
+tidyselect::one_of
+#' @export
+tidyselect::starts_with

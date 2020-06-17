@@ -55,6 +55,8 @@
 #' @importFrom parallel mclapply
 #' @importFrom rlang dots_list enquo eval_tidy expr quo_squash quos trace_back
 #' @importFrom storr storr_environment storr_rds
+#' @importFrom tidyselect all_of any_of contains ends_with everything
+#'   last_col matches num_range one_of starts_with
 #' @importFrom txtq txtq
 #' @importFrom utils capture.output compareVersion head menu packageVersion
 #'   read.csv sessionInfo str type.convert unzip write.table
