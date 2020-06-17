@@ -253,7 +253,7 @@ drake_with_call_stack_8a6af5 <- function(target, config) {
     top_index <- min(which(grepl("^eval\\(expr = tidy_expr_8a6af5", calls)))
     top <- sys.frame(top_index + 7)
     bottom <- sys.frame(sys.nframe() - 2)
-    e$calls <- reparse_traceback(rlang::trace_back(top = top, bottom = bottom))
+    e$calls <- deparse_traceback(rlang::trace_back(top = top, bottom = bottom))
     e <- mention_pure_functions(e)
     signalCondition(e)
   }
@@ -275,13 +275,8 @@ drake_with_call_stack_8a6af5 <- function(target, config) {
 }
 
 # Prevents tracebacks from storing tons of data.
-reparse_traceback <- function(traceback) {
-  for (index in seq_along(traceback$calls)) {
-    call <- traceback$calls[[index]]
-    call <- safe_parse(safe_deparse(call))
-    traceback$calls[[index]] <- call
-  }
-  traceback
+deparse_traceback <- function(traceback) {
+  vcapply(traceback$calls, safe_deparse)
 }
 
 block_envir_lock <- function(config) {
@@ -575,11 +570,9 @@ handle_build_error <- function(target, meta, config) {
 
 log_failure <- function(target, meta, config) {
   msg1 <- paste0("target ", target, " failed.")
-  diag <- paste0("diagnose(", target, ")error")
+  diag <- paste0("diagnose(", target, ")$error")
   message <- paste(meta$error$message, collapse = "\n")
-  trace <- utils::capture.output(print(meta$error$calls))[-1]
-  trace <- paste0(" ", trace)
-  trace <- paste(trace, collapse = "\n")
+  trace <- paste(paste0("  ", meta$error$calls), collapse = "\n")
   msg2 <- paste0(diag, "$message:\n  ", message)
   msg3 <- paste0(diag, "$calls:\n", trace)
   msg <- paste(c(msg1, msg2, msg3), collapse = "\n")
