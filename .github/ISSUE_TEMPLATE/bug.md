@@ -10,6 +10,7 @@ assignees: wlandau
 
 - [ ] Read and abide by `drake`'s [code of conduct](https://github.com/ropensci/drake/blob/master/CODE_OF_CONDUCT.md).
 - [ ] Search for duplicates among the [existing issues](https://github.com/ropensci/drake/issues), both open and closed.
+- [ ] I am reasonably sure this is a genuine bug in `drake` and most likely not a user error. (If you run into an error and do not know the cause, please submit a "Trouble" issue instead.)
 - [ ] Advanced users: verify that the bug still persists in the current development version (i.e. `remotes::install_github("ropensci/drake")`) and mention the [SHA-1 hash](https://git-scm.com/book/en/v1/Getting-Started-Git-Basics#Git-Has-Integrity) of the [Git commit you install](https://github.com/ropensci/drake/commits/master).
 
 ## Description
