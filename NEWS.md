@@ -10,6 +10,7 @@
 * Store tracebacks as character vectors and restrict the contents of error objects to try to prevent accidental storage of large data from the environment (#1276, @billdenney).
 * Strongly depend on `tidyselect` (#1274, @dernst).
 
+
 # Version 7.12.2
 
 ## Bug fixes
