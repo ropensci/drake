@@ -2,6 +2,7 @@
 ^build_site.R$
 ^pkgdown$
 ^\.DS_Store
+^_drake\.R$
 ^\.drake$
 ^\.drake_history$
 ^\.future$

@@ -3,7 +3,7 @@
 \name{make}
 \alias{make}
 \title{Run your project (build the outdated targets).
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 make(
   plan,

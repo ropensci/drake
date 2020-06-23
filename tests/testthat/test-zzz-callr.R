@@ -226,3 +226,21 @@ test_with_dir("errors keep their informative messages (#969)", {
     class = "callr_error"
   )
 })
+
+test_with_dir("drake_script() can generate an example script", {
+  drake_script()
+  expect_true(length(readLines("_drake.R")) > 0L)
+})
+
+test_with_dir("drake_script() can generate a single symbol", {
+  drake_script(x)
+  expect_equal(readLines("_drake.R"), "x")
+})
+
+test_with_dir("drake_script() can generate multiple lines", {
+  drake_script({
+    x
+    y
+  })
+  expect_equal(readLines("_drake.R"), c("x", "y"))
+})

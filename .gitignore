@@ -18,6 +18,7 @@ Thumbs.db
 *.synctex.gz
 *.toc
 *.vrb
+_drake.R
 .drake
 .drake_history
 .DS_Store

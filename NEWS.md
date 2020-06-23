@@ -11,6 +11,10 @@
 * Strongly depend on `tidyselect` (#1274, @dernst).
 * Avoid `txtq` lockfiles (#1232, #1239, #1280, @danwwilson, @pydupont, @mattwarkentin).
 
+## New features
+
+* Add a new `drake_script()` function to write `_drake.R` files for `r_make()` (#1282).
+
 # Version 7.12.2
 
 ## Bug fixes
