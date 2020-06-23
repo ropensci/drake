@@ -1,13 +1,20 @@
 #' @title Run your project (build the outdated targets).
-#' \lifecycle{maturing}
+#' \lifecycle{stable}
 #' @description This is the central, most important function
 #' of the drake package. It runs all the steps of your
 #' workflow in the correct order, skipping any work
-#' that is already up to date.
+#' that is already up to date. Because of how `make()`
+#' tracks global functions and objects as dependencies of targets,
+#' please restart your R session so the pipeline runs
+#' in a clean reproducible environment.
 #' @section Interactive mode:
 #' In interactive sessions, consider [r_make()], [r_outdated()], etc.
 #' rather than [make()], [outdated()], etc. The `r_*()` `drake` functions
 #' are more reproducible when the session is interactive.
+#' If you do run `make()` interactively, please restart your R session
+#' beforehand so your functions and global objects get loaded into
+#' a clean reproducible environment. This prevents targets
+#' from getting invalidated unexpectedly.
 #'
 #' A serious drake workflow should be consistent and reliable,
 #' ideally with the help of a master R script.
