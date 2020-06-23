@@ -182,10 +182,10 @@ plan <- drake_plan(
 plan
 ```
 
-So far, we have just been setting the stage. Use `make()` to do the real work. Targets are built in the correct order regardless of the row order of `plan`.
+So far, we have just been setting the stage. Use `make()` or [`r_make()`](https://books.ropensci.org/drake/projects.html#safer-interactivity) to do the real work. Targets are built in the correct order regardless of the row order of `plan`.
 
 ```{r}
-make(plan)
+make(plan) # See also r_make().
 ```
 
 Except for files like `report.html`, your output is stored in a hidden `.drake/` folder. Reading it back is easy.
@@ -213,7 +213,7 @@ create_plot <- function(data) {
 `drake` knows which results are affected.
 
 ```{r, eval = FALSE}
-vis_drake_graph(plan) # Interactive graph: zoom, drag, etc.
+vis_drake_graph(plan) # See also r_vis_drake_graph().
 ```
 
 <img src="https://docs.ropensci.org/drake/reference/figures/graph.png" alt="hist1" align="center" style = "border: none; float: center;" width = "600px">
@@ -221,7 +221,7 @@ vis_drake_graph(plan) # Interactive graph: zoom, drag, etc.
 The next `make()` just builds `hist` and `report.html`. No point in wasting time on the data or model.
 
 ```{r}
-make(plan)
+make(plan) # See also r_make().
 ```
 
 ```{r}
@@ -238,9 +238,9 @@ The R community emphasizes reproducibility. Traditional themes include [scientif
 Suppose you are reviewing someone else's data analysis project for reproducibility. You scrutinize it carefully, checking that the datasets are available and the documentation is thorough. But could you re-create the results without the help of the original author? With `drake`, it is quick and easy to find out.
 
 ```{r}
-make(plan)
+make(plan) # See also r_make().
 
-outdated(plan)
+outdated(plan) # See also r_outdated().
 ```
 
 With everything already up to date, you have **tangible evidence** of reproducibility. Even though you did not re-create the results, you know the results are recreatable. They **faithfully show** what the code is producing. Given the right [package environment](https://rstudio.github.io/packrat/) and [system configuration](https://stat.ethz.ch/R-manual/R-devel/library/utils/html/sessionInfo.html), you have everything you need to reproduce all the output by yourself.
