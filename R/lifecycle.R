@@ -12,8 +12,8 @@ lifecycle_img <- function(stage, url) {
   switch(
     stage,
     # nolint start
-    stable = ,
-    stable = ,
+    experimental = ,
+    maturing = ,
     stable = ,
     questioning = ,
     retired = ,
