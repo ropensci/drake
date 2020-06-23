@@ -3,7 +3,7 @@
 \name{recoverable}
 \alias{recoverable}
 \title{List the most upstream \emph{recoverable} outdated targets.
-\lifecycle{experimental}}
+\lifecycle{stable}}
 \usage{
 recoverable(..., make_imports = TRUE, do_prework = TRUE, config = NULL)
 }
@@ -32,13 +32,9 @@ the eventual values of the upstream targets in the next \code{\link[=make]{make(
 \code{make(recover = TRUE, recoverable = TRUE)}
 powers automated data recovery.
 The default of \code{recover} is \code{FALSE} because
-\enumerate{
-\item Automated data recovery is still experimental.
-\item It has reproducibility issues.
-Targets recovered from the distant past may have been generated
+targets recovered from the distant past may have been generated
 with earlier versions of R and earlier package environments
 that no longer exist.
-}
 
 How it works: if \code{recover} is \code{TRUE},
 \code{drake} tries to salvage old target values from the cache

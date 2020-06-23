@@ -4,7 +4,7 @@
 \alias{predict_workers}
 \title{Predict the load balancing of the next call to \code{make()}
 for non-staged parallel backends.
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 predict_workers(
   ...,

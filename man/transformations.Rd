@@ -7,7 +7,7 @@
 \alias{cross}
 \alias{combine}
 \alias{group}
-\title{Transformations in \code{drake_plan()}. \lifecycle{maturing}}
+\title{Transformations in \code{drake_plan()}. \lifecycle{stable}}
 \arguments{
 \item{...}{Grouping variables. New grouping variables must be
 supplied with their names and values, existing grouping variables

@@ -3,7 +3,7 @@
 \name{drake_get_session_info}
 \alias{drake_get_session_info}
 \title{Session info of the last call to \code{\link[=make]{make()}}.
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 drake_get_session_info(
   path = NULL,

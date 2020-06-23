@@ -1,5 +1,5 @@
 #' @title Download the files of an example `drake` project.
-#' \lifecycle{maturing}
+#' \lifecycle{stable}
 #' @description The `drake_example()` function downloads a
 #'   folder from <https://github.com/wlandau/drake-examples>.
 #'   By default, it creates a new folder with the example name
@@ -98,7 +98,7 @@ drake_examples <- function(quiet = TRUE) {
 }
 
 #' @title Load the mtcars example.
-#' \lifecycle{maturing}
+#' \lifecycle{stable}
 #' @description Is there an association between
 #' the weight and the fuel efficiency of cars?
 #' To find out, we use the mtcars example from `drake_example("mtcars")`.

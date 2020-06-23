@@ -3,7 +3,7 @@
 \name{drake_running}
 \alias{drake_running}
 \title{List running targets.
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 drake_running(cache = drake::drake_cache(path = path), path = NULL)
 }

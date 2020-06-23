@@ -3,7 +3,7 @@
 \name{drake_config}
 \alias{drake_config}
 \title{Ending of _drake.R for r_make() and friends
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 drake_config(
   plan,
@@ -436,7 +436,7 @@ Must be \code{TRUE} for \code{\link[=drake_history]{drake_history()}} to work la
 \item{recover}{Logical, whether to activate automated data recovery.
 The default is \code{FALSE} because
 \enumerate{
-\item Automated data recovery is still experimental.
+\item Automated data recovery is still stable.
 \item It has reproducibility issues.
 Targets recovered from the distant past may have been generated
 with earlier versions of R and earlier package environments
@@ -570,13 +570,9 @@ powers \code{\link[=r_make]{r_make()}}, \code{\link[=r_outdated]{r_outdated()}},
 \code{make(recover = TRUE, recoverable = TRUE)}
 powers automated data recovery.
 The default of \code{recover} is \code{FALSE} because
-\enumerate{
-\item Automated data recovery is still experimental.
-\item It has reproducibility issues.
-Targets recovered from the distant past may have been generated
+targets recovered from the distant past may have been generated
 with earlier versions of R and earlier package environments
 that no longer exist.
-}
 
 How it works: if \code{recover} is \code{TRUE},
 \code{drake} tries to salvage old target values from the cache

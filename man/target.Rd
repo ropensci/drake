@@ -3,7 +3,7 @@
 \name{target}
 \alias{target}
 \title{Customize a target in \code{\link[=drake_plan]{drake_plan()}}.
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 target(command = NULL, transform = NULL, dynamic = NULL, ...)
 }

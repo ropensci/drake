@@ -1,5 +1,5 @@
 #' @title Launch a drake function in a fresh new R process
-#' \lifecycle{maturing}
+#' \lifecycle{stable}
 #' @description The `r_*()` functions, such as `r_make()`,
 #'   enhance reproducibility by launching a `drake` function in
 #'   a separate R process.

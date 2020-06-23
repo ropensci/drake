@@ -3,7 +3,7 @@
 \name{code_to_function}
 \alias{code_to_function}
 \title{Turn a script into a function.
-\lifecycle{experimental}}
+\lifecycle{stable}}
 \usage{
 code_to_function(path, envir = parent.frame())
 }

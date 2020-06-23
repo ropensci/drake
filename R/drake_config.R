@@ -1,5 +1,5 @@
 #' @title Ending of _drake.R for r_make() and friends
-#' \lifecycle{maturing}
+#' \lifecycle{stable}
 #' @description Call this function inside the `_drake.R`
 #'   script for [r_make()] and friends.
 #'   All non-deprecated function arguments are the same
@@ -391,7 +391,7 @@
 #' @param recover Logical, whether to activate automated data recovery.
 #'   The default is `FALSE` because
 #'
-#'   1. Automated data recovery is still experimental.
+#'   1. Automated data recovery is still stable.
 #'   2. It has reproducibility issues.
 #'   Targets recovered from the distant past may have been generated
 #'   with earlier versions of R and earlier package environments

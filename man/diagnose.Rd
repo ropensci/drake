@@ -3,7 +3,7 @@
 \name{diagnose}
 \alias{diagnose}
 \title{Get diagnostic metadata on a target.
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 diagnose(
   target = NULL,

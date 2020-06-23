@@ -1,4 +1,4 @@
-#' @title List sub-targets \lifecycle{experimental}
+#' @title List sub-targets \lifecycle{stable}
 #' @description List the sub-targets of a dynamic target.
 #' @export
 #' @seealso [get_trace()], [read_trace()]
@@ -41,7 +41,7 @@ subtargets <- function(
 }
 
 #' @title Read a trace of a dynamic target.
-#' \lifecycle{experimental}
+#' \lifecycle{stable}
 #' @export
 #' @seealso [get_trace()], [subtargets()]
 #' @description Read a target's dynamic trace from the cache.

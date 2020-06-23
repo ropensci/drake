@@ -196,7 +196,7 @@ cmq_deps_list <- function(target, config) {
 }
 
 #' @title Build a target using the clustermq backend
-#' \lifecycle{maturing}
+#' \lifecycle{stable}
 #' @description For internal use only
 #' @export
 #' @keywords internal

@@ -3,7 +3,7 @@
 \name{load_mtcars_example}
 \alias{load_mtcars_example}
 \title{Load the mtcars example.
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 load_mtcars_example(
   envir = parent.frame(),

@@ -15,7 +15,7 @@
 \alias{r_predict_runtime}
 \alias{r_predict_workers}
 \title{Launch a drake function in a fresh new R process
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 r_make(source = NULL, r_fn = NULL, r_args = list())
 
@@ -117,13 +117,9 @@ with the \code{config} argument from step 2.
 \code{make(recover = TRUE, recoverable = TRUE)}
 powers automated data recovery.
 The default of \code{recover} is \code{FALSE} because
-\enumerate{
-\item Automated data recovery is still experimental.
-\item It has reproducibility issues.
-Targets recovered from the distant past may have been generated
+targets recovered from the distant past may have been generated
 with earlier versions of R and earlier package environments
 that no longer exist.
-}
 
 How it works: if \code{recover} is \code{TRUE},
 \code{drake} tries to salvage old target values from the cache

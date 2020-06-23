@@ -3,7 +3,7 @@
 \name{drake_cache_log}
 \alias{drake_cache_log}
 \title{Get the state of the cache.
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 drake_cache_log(
   path = NULL,

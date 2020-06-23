@@ -3,7 +3,7 @@
 \name{drake_done}
 \alias{drake_done}
 \title{List done targets.
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 drake_done(cache = drake::drake_cache(path = path), path = NULL)
 }

@@ -3,7 +3,7 @@
 \name{cmq_build}
 \alias{cmq_build}
 \title{Build a target using the clustermq backend
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 cmq_build(target, meta, deps, spec, config_tmp, config)
 }

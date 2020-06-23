@@ -3,7 +3,7 @@
 \name{cached_planned}
 \alias{cached_planned}
 \title{List targets in both the plan and the cache.
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 cached_planned(
   plan,

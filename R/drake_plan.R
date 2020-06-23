@@ -1,6 +1,6 @@
 #' @title Create a drake plan
 #'   for the `plan` argument of [make()].
-#' \lifecycle{maturing}
+#' \lifecycle{stable}
 #'
 #' @description A `drake` plan is a data frame with columns
 #'   `"target"` and `"command"`. Each target is an R object

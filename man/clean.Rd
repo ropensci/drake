@@ -3,7 +3,7 @@
 \name{clean}
 \alias{clean}
 \title{Invalidate and deregister targets.
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 clean(
   ...,

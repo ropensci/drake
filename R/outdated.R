@@ -1,5 +1,5 @@
 #' @title List the most upstream *recoverable* outdated targets.
-#' \lifecycle{experimental}
+#' \lifecycle{stable}
 #' @description Only shows the most upstream updated targets.
 #'   Whether downstream targets are recoverable depends on
 #'   the eventual values of the upstream targets in the next [make()].
@@ -7,10 +7,7 @@
 #'  `make(recover = TRUE, recoverable = TRUE)`
 #'   powers automated data recovery.
 #'   The default of `recover` is `FALSE` because
-#'
-#'   1. Automated data recovery is still experimental.
-#'   2. It has reproducibility issues.
-#'   Targets recovered from the distant past may have been generated
+#'   targets recovered from the distant past may have been generated
 #'   with earlier versions of R and earlier package environments
 #'   that no longer exist.
 #'

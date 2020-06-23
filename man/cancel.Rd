@@ -2,7 +2,7 @@
 % Please edit documentation in R/drake_plan_helpers.R
 \name{cancel}
 \alias{cancel}
-\title{Cancel a target mid-build \lifecycle{experimental}}
+\title{Cancel a target mid-build \lifecycle{stable}}
 \usage{
 cancel(allow_missing = TRUE)
 }

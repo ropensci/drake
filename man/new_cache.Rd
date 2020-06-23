@@ -3,7 +3,7 @@
 \name{new_cache}
 \alias{new_cache}
 \title{Make a new \code{drake} cache.
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 new_cache(
   path = NULL,

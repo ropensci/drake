@@ -3,7 +3,7 @@
 \name{transform_plan}
 \alias{transform_plan}
 \title{Transform a plan
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 transform_plan(
   plan,

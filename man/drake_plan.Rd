@@ -4,7 +4,7 @@
 \alias{drake_plan}
 \title{Create a drake plan
 for the \code{plan} argument of \code{\link[=make]{make()}}.
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 drake_plan(
   ...,

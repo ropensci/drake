@@ -3,7 +3,7 @@
 \name{drake_history}
 \alias{drake_history}
 \title{History and provenance
-\lifecycle{experimental}}
+\lifecycle{stable}}
 \usage{
 drake_history(cache = NULL, history = NULL, analyze = TRUE, verbose = NULL)
 }

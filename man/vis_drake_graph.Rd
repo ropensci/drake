@@ -4,7 +4,7 @@
 \alias{vis_drake_graph}
 \title{Show an interactive visual network representation
 of your drake project.
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 vis_drake_graph(
   ...,

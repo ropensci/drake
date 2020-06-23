@@ -3,7 +3,7 @@
 \name{drake_tempfile}
 \alias{drake_tempfile}
 \title{drake tempfile
-\lifecycle{experimental}}
+\lifecycle{stable}}
 \usage{
 drake_tempfile(path = NULL, cache = drake::drake_cache(path = path))
 }

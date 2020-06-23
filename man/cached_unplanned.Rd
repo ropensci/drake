@@ -3,7 +3,7 @@
 \name{cached_unplanned}
 \alias{cached_unplanned}
 \title{List targets in the cache but not the plan.
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 cached_unplanned(
   plan,

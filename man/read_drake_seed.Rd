@@ -3,7 +3,7 @@
 \name{read_drake_seed}
 \alias{read_drake_seed}
 \title{Read the pseudo-random number generator seed of the project.
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 read_drake_seed(path = NULL, search = NULL, cache = NULL, verbose = NULL)
 }

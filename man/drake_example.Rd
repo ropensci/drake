@@ -3,7 +3,7 @@
 \name{drake_example}
 \alias{drake_example}
 \title{Download the files of an example \code{drake} project.
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 drake_example(
   example = "main",

@@ -3,7 +3,7 @@
 \name{drake_cancelled}
 \alias{drake_cancelled}
 \title{List cancelled targets.
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 drake_cancelled(cache = drake::drake_cache(path = path), path = NULL)
 }

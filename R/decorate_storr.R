@@ -504,7 +504,7 @@ dcst_set_move_tmp <- function(key, value, tmp, .self) {
 }
 
 #' @title drake tempfile
-#' \lifecycle{experimental}
+#' \lifecycle{stable}
 #' @description Create the path to a temporary file inside drake's cache.
 #' @details This function is just like the `tempfile()` function in base R
 #'   except that the path points to a special location inside `drake`'s cache.

@@ -4,7 +4,7 @@
 \alias{readd}
 \alias{loadd}
 \title{Read and return a drake target/import from the cache.
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 readd(
   target,

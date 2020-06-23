@@ -1,5 +1,5 @@
 #' @title Customize a target in [drake_plan()].
-#' \lifecycle{maturing}
+#' \lifecycle{stable}
 #' @description The `target()` function is a way to
 #'   configure individual targets in a `drake` plan.
 #'   Its most common use is to invoke static branching
@@ -521,7 +521,7 @@ no_deps <- function(x = NULL) {
 }
 
 #' @title Cancel a target mid-build under some condition
-#'   \lifecycle{experimental}
+#'   \lifecycle{stable}
 #' @description Cancel a target mid-build if some logical condition is met.
 #'   Upon cancellation, `drake` halts the current target and moves to the
 #'   next one. The target's previous value and metadata, if they exist,
@@ -556,7 +556,7 @@ cancel_if <- function(condition, allow_missing = TRUE) {
   cancel(allow_missing = allow_missing)
 }
 
-#' @title Cancel a target mid-build \lifecycle{experimental}
+#' @title Cancel a target mid-build \lifecycle{stable}
 #' @description Cancel a target mid-build.
 #'   Upon cancellation, `drake` halts the current target and moves to the
 #'   next one. The target's previous value and metadata, if they exist,
@@ -598,7 +598,7 @@ cancellation <- function(...) {
   )
 }
 
-#' @title Name of the current target \lifecycle{maturing}
+#' @title Name of the current target \lifecycle{stable}
 #' @export
 #' @description `id_chr()` gives you the name of the current target
 #'   while [make()] is running. For static branching in [drake_plan()],
@@ -1033,7 +1033,7 @@ is_trigger_call <- function(expr) {
 }
 
 #' @title Turn a script into a function.
-#' \lifecycle{experimental}
+#' \lifecycle{stable}
 #' @description `code_to_function()` is a quick (and very dirty) way to
 #'   retrofit drake to an existing script-based project. It parses
 #'   individual `\*.R/\*.RMD` files into functions so they can be added

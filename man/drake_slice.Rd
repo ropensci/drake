@@ -3,7 +3,7 @@
 \name{drake_slice}
 \alias{drake_slice}
 \title{Take a strategic subset of a dataset.
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 drake_slice(data, slices, index, margin = 1L, drop = FALSE)
 }

@@ -3,7 +3,7 @@
 \name{drake_failed}
 \alias{drake_failed}
 \title{List failed targets.
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 drake_failed(cache = drake::drake_cache(path = path), path = NULL)
 }

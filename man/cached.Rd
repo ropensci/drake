@@ -3,7 +3,7 @@
 \name{cached}
 \alias{cached}
 \title{List targets in the cache.
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 cached(
   ...,

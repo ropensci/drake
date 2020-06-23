@@ -3,7 +3,7 @@
 \name{build_times}
 \alias{build_times}
 \title{See the time it took to build each target.
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 build_times(
   ...,

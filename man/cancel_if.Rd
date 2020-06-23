@@ -3,7 +3,7 @@
 \name{cancel_if}
 \alias{cancel_if}
 \title{Cancel a target mid-build under some condition
-\lifecycle{experimental}}
+\lifecycle{stable}}
 \usage{
 cancel_if(condition, allow_missing = TRUE)
 }

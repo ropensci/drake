@@ -3,7 +3,7 @@
 \name{which_clean}
 \alias{which_clean}
 \title{Which targets will \code{clean()} invalidate?
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 which_clean(
   ...,

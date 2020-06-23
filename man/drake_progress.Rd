@@ -3,7 +3,7 @@
 \name{drake_progress}
 \alias{drake_progress}
 \title{Get the build progress of your targets
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 drake_progress(
   ...,

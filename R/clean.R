@@ -1,5 +1,5 @@
 #' @title Invalidate and deregister targets.
-#' \lifecycle{maturing}
+#' \lifecycle{stable}
 #' @description Force targets to be out of date and remove target names
 #'   from the data in the cache. Be careful and run [which_clean()] before
 #'   [clean()]. That way, you know beforehand which targets will be
@@ -148,7 +148,7 @@ clean_cleanup <- function(cache, garbage_collection) {
 }
 
 #' @title Which targets will `clean()` invalidate?
-#' \lifecycle{maturing}
+#' \lifecycle{stable}
 #' @description `which_clean()` is a safety check for `clean()`.
 #'   It shows you the targets that `clean()` will
 #'   invalidate (or remove if `garbage_collection` is `TRUE`).
@@ -253,7 +253,7 @@ abort_gc <- function(path) {
 }
 
 #' @title Do garbage collection on the drake cache.
-#' \lifecycle{maturing}
+#' \lifecycle{stable}
 #' @description Garbage collection removes obsolete target values
 #' from the cache.
 #' @details Caution: garbage collection *actually* removes data

@@ -4,7 +4,7 @@
 \alias{predict_runtime}
 \title{Predict the elapsed runtime of the next call to \code{make()}
 for non-staged parallel backends.
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 predict_runtime(
   ...,

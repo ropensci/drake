@@ -3,7 +3,7 @@
 \name{drake_gc}
 \alias{drake_gc}
 \title{Do garbage collection on the drake cache.
-\lifecycle{maturing}}
+\lifecycle{stable}}
 \usage{
 drake_gc(
   path = NULL,

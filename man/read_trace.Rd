@@ -3,7 +3,7 @@
 \name{read_trace}
 \alias{read_trace}
 \title{Read a trace of a dynamic target.
-\lifecycle{experimental}}
+\lifecycle{stable}}
 \usage{
 read_trace(
   trace,

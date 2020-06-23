@@ -214,7 +214,7 @@ whenever \code{drake}'s unexported core functions are updated.
 \item{recover}{Logical, whether to activate automated data recovery.
 The default is \code{FALSE} because
 \enumerate{
-\item Automated data recovery is still experimental.
+\item Automated data recovery is still stable.
 \item It has reproducibility issues.
 Targets recovered from the distant past may have been generated
 with earlier versions of R and earlier package environments
