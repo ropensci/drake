@@ -194,3 +194,10 @@ test_with_dir("txtq present but emtpy", {
   cache <- new_cache()
   expect_error(drake_history(history = q), "no history")
 })
+
+test_with_dir("no txtq lock file", {
+  make(drake_plan(x = 1))
+  dir <- file.path(default_cache_path(), "drake", "history")
+  expect_true(file.exists(dir))
+  expect_false(file.exists(file.path(dir, "lock")))
+})
