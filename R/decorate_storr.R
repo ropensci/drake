@@ -728,7 +728,7 @@ default_history_path <- function(cache_path) {
 
 history_queue <- function(history_path) {
   dir_create(history_path)
-  txtq::txtq(history_path)
+  txtq::txtq(history_path, use_lock_file = FALSE)
 }
 
 is_history <- function(history) {

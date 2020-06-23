@@ -112,7 +112,7 @@ Imports:
   rlang (>= 0.2.0),
   storr (>= 1.1.0),
   tidyselect (>= 1.0.0),
-  txtq (>= 0.1.3),
+  txtq (>= 0.2.1),
   utils,
   vctrs (>= 0.2.0)
 Suggests:
@@ -150,6 +150,8 @@ Suggests:
   usethis,
   visNetwork,
   webshot
+Remotes:
+  wlandau/txtq
 Encoding: UTF-8
 Language: en-US
 Roxygen: list(markdown = TRUE)

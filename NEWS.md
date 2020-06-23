@@ -9,7 +9,7 @@
 * Assign functions created with `code_to_function()` to the proper environment (#1275, @robitalec).
 * Store tracebacks as character vectors and restrict the contents of error objects to try to prevent accidental storage of large data from the environment (#1276, @billdenney).
 * Strongly depend on `tidyselect` (#1274, @dernst).
-
+* Avoid `txtq` lockfiles (#1232, #1239, #1280, @danwwilson, @pydupont, @mattwarkentin).
 
 # Version 7.12.2
 
