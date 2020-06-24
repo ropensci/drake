@@ -17,7 +17,7 @@
 
 ## Enhancements
 
-* Document a pitfall in `expose_imports()` (#1286, @mvarewyck).
+* Deprecate `expose_imports()` in favor of `make(envir = getNamespace("yourPackage")` (#1286, @mvarewyck).
 
 # Version 7.12.2
 

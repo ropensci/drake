@@ -155,6 +155,3 @@ reference:
   - '`drake_done`'
   - '`drake_failed`'
   - '`drake_cancelled`'
-- title: R packages as drake workflows
-  contents:
-  - '`expose_imports`'
