@@ -5,8 +5,15 @@
 #'   objects from a package into your environment. That way,
 #'   `drake` scans them for dependencies and watches for when
 #'   they change.
-#' @details Thanks to [Jasper Clarkberg](https://github.com/dapperjapper)
-#'   for the idea that makes this function work.
+#'   Thanks to [Jasper Clarkberg](https://github.com/dapperjapper)
+#'   for the implementation idea.
+#' @details
+#'   `expose_imports()` puts functions from your custom package
+#'   into a non-package environment. That means `@import` and `@importFrom`
+#'   functions will no longer be found if you are not using
+#'   namespaced calls (e.g. `pkg::fun()`). Please
+#'   read <https://github.com/ropensci/drake/issues/1286>
+#'   for details.
 #' @export
 #' @return The environment that the exposed imports are loaded into.
 #'   Defaults to your R workspace.

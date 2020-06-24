@@ -15,6 +15,10 @@
 
 * Add a new `drake_script()` function to write `_drake.R` files for `r_make()` (#1282).
 
+## Enhancements
+
+* Document a pitfall in `expose_imports()` (#1286, @mvarewyck).
+
 # Version 7.12.2
 
 ## Bug fixes

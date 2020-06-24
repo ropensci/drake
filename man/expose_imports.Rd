@@ -35,10 +35,16 @@ from packages. Use \code{expose_imports()} to bring the functions and
 objects from a package into your environment. That way,
 \code{drake} scans them for dependencies and watches for when
 they change.
+Thanks to \href{https://github.com/dapperjapper}{Jasper Clarkberg}
+for the implementation idea.
 }
 \details{
-Thanks to \href{https://github.com/dapperjapper}{Jasper Clarkberg}
-for the idea that makes this function work.
+\code{expose_imports()} puts functions from your custom package
+into a non-package environment. That means \verb{@import} and \verb{@importFrom}
+functions will no longer be found if you are not using
+namespaced calls (e.g. \code{pkg::fun()}). Please
+read \url{https://github.com/ropensci/drake/issues/1286}
+for details.
 }
 \examples{
 # nolint start
