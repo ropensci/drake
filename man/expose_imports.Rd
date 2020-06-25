@@ -2,7 +2,8 @@
 % Please edit documentation in R/deprecated.R
 \name{expose_imports}
 \alias{expose_imports}
-\title{Deprecated: expose package functions and objects for analysis with drake
+\title{Deprecated: expose package functions and objects for
+analysis with drake.
 \lifecycle{deprecated}}
 \usage{
 expose_imports(

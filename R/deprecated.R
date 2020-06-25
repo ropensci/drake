@@ -2686,7 +2686,8 @@ progress <- function(
   out[out$progress %in% progress,, drop = FALSE] # nolint
 }
 
-#' @title Deprecated: expose package functions and objects for analysis with drake
+#' @title Deprecated: expose package functions and objects for
+#'   analysis with drake.
 #' \lifecycle{deprecated}
 #' @description Deprecated on 2020-06-24.
 #' @keywords internal
