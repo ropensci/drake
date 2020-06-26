@@ -18,6 +18,7 @@
 ## Enhancements
 
 * Deprecate `expose_imports()` in favor of `make(envir = getNamespace("yourPackage")` (#1286, @mvarewyck).
+* Suppress the message recommending `r_make()` if `getOption("drake_r_make_message")` is `FALSE` (#1238, @januz).
 
 # Version 7.12.2
 

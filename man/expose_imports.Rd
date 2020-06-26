@@ -37,7 +37,7 @@ Deprecated on 2020-06-24.
 Deprecated. This function assigns the objects and functions
 from the package environment to the user's environment (usually global)
 so \code{drake} can watch them for changes. This used to be the standard
-way to make \code{drake} compatible with workflows implememented as custom
+way to make \code{drake} compatible with workflows implemented as custom
 analysis packages. Now, the recommendation is to supply
 \code{getNamespace("yourPackage")} to the \code{envir} argument of \code{\link[=make]{make()}}
 and friends. Read \url{https://github.com/ropensci/drake/issues/1286},

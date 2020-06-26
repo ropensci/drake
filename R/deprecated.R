@@ -2694,7 +2694,7 @@ progress <- function(
 #' @details Deprecated. This function assigns the objects and functions
 #'   from the package environment to the user's environment (usually global)
 #'   so `drake` can watch them for changes. This used to be the standard
-#'   way to make `drake` compatible with workflows implememented as custom
+#'   way to make `drake` compatible with workflows implemented as custom
 #'   analysis packages. Now, the recommendation is to supply
 #'   `getNamespace("yourPackage")` to the `envir` argument of [make()]
 #'   and friends. Read <https://github.com/ropensci/drake/issues/1286>,
