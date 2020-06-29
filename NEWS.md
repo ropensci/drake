@@ -1,3 +1,7 @@
+# Version 7.12.4
+
+* Fix a CRAN warning about docs.
+
 # Version 7.12.3
 
 ## Bug fixes

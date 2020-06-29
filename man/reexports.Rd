@@ -17,10 +17,5 @@
 \title{Objects exported from other packages}
 \keyword{internal}
 \description{
-These objects are imported from other packages. Follow the links
-below to see their documentation.
-
-\describe{
-  \item{tidyselect}{\code{\link[tidyselect]{all_of}}, \code{\link[tidyselect]{any_of}}, \code{\link[tidyselect]{contains}}, \code{\link[tidyselect]{ends_with}}, \code{\link[tidyselect]{everything}}, \code{\link[tidyselect]{last_col}}, \code{\link[tidyselect]{matches}}, \code{\link[tidyselect]{num_range}}, \code{\link[tidyselect]{one_of}}, \code{\link[tidyselect]{starts_with}}}
-}}
-
+These objects are imported from the tidyselect package.
+}
