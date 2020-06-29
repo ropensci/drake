@@ -188,8 +188,7 @@ body(vis_drake_graph) <- config_util_body(vis_drake_graph_impl)
 #'
 #' @param collapse Logical, whether to allow nodes to collapse
 #'   if you double click on them.
-#'   Analogous to `visNetwork::visOptions(collapse = TRUE)` or
-#'   `visNetwork::visOptions(collapse = TRUE)`.
+#'   Analogous to `visNetwork::visOptions(collapse = TRUE)`.
 #' @param on_select defines node selection event handling.
 #'   Either a string of valid JavaScript that may be passed to
 #'   `visNetwork::visEvents()`, or one of the following:
