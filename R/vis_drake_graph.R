@@ -243,7 +243,7 @@ render_drake_graph <- function(
     navigationButtons = navigationButtons,
     ...
   )
-  out <- adjust_visnetwork_layout(graph = out, graph_info = graph_info)
+  out <- visNetwork::visHierarchicalLayout(graph = out, direction = "LR")
   out <- vis_add_on_select(graph = out, on_select = on_select)
   vis_render_webshot(graph = out, file = file, selfcontained = selfcontained)
 }
@@ -263,6 +263,10 @@ initialize_vis_network <- function(
     ...
   )
   out <- visNetwork::visNodes(out, physics = FALSE)
+  out <- visNetwork::visEdges(
+    out,
+    smooth = list(type = "cubicBezier", forceDirection = "horizontal")
+  )
   if (collapse) {
     out <- visNetwork::visOptions(out, collapse = TRUE)
   }
@@ -278,26 +282,6 @@ initialize_vis_network <- function(
     out <- visNetwork::visInteraction(out, navigationButtons = TRUE) # nolint
   }
   out
-}
-
-adjust_visnetwork_layout <- function(graph, graph_info) {
-  sugiyama <- nrow(graph_info$edges) &&
-    nrow(graph_info$nodes) > 10 &&
-    abs(diff(range(graph_info$nodes$x))) > 0.1 &&
-    abs(diff(range(graph_info$nodes$x))) > 0.1
-  if (sugiyama) {
-    graph <- visNetwork::visIgraphLayout(
-      graph = graph,
-      physics = FALSE,
-      randomSeed = 2017,
-      layout = "layout_with_sugiyama"
-    )
-  } else {
-    graph <- visNetwork::visHierarchicalLayout(graph, direction = "LR")
-  }
-  graph$x$nodes$x <- graph_info$nodes$x
-  graph$x$nodes$y <- graph_info$nodes$y
-  graph
 }
 
 vis_add_on_select <- function(graph, on_select) {

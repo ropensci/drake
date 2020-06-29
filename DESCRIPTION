@@ -148,7 +148,7 @@ Suggests:
   tibble,
   txtplot,
   usethis,
-  visNetwork,
+  visNetwork (>= 2.0.9),
   webshot
 Encoding: UTF-8
 Language: en-US

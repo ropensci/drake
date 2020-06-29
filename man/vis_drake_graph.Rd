@@ -150,8 +150,7 @@ that you specify in the \code{group} argument to \code{drake_graph_info()}.}
 
 \item{collapse}{Logical, whether to allow nodes to collapse
 if you double click on them.
-Analogous to \code{visNetwork::visOptions(collapse = TRUE)} or
-\code{visNetwork::visOptions(collapse = TRUE)}.}
+Analogous to \code{visNetwork::visOptions(collapse = TRUE)}.}
 
 \item{on_select_col}{Optional string corresponding to the column name
 in the plan that should provide data for the \code{on_select} event.}

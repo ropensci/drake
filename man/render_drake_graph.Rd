@@ -65,8 +65,7 @@ To remove the legend entirely, set \code{ncol_legend} to \code{NULL} or \code{0}
 
 \item{collapse}{Logical, whether to allow nodes to collapse
 if you double click on them.
-Analogous to \code{visNetwork::visOptions(collapse = TRUE)} or
-\code{visNetwork::visOptions(collapse = TRUE)}.}
+Analogous to \code{visNetwork::visOptions(collapse = TRUE)}.}
 
 \item{on_select}{defines node selection event handling.
 Either a string of valid JavaScript that may be passed to

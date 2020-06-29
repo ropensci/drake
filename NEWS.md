@@ -19,6 +19,7 @@
 
 * Deprecate `expose_imports()` in favor of `make(envir = getNamespace("yourPackage")` (#1286, @mvarewyck).
 * Suppress the message recommending `r_make()` if `getOption("drake_r_make_message")` is `FALSE` (#1238, @januz).
+* Improve the appearance of the `visNetwork` graph by using the hierarchical layout with `visEdges(smooth = list(type = "cubicBezier", forceDirection = TRUE))` (#1289, @mstr3336).
 
 # Version 7.12.2
 
