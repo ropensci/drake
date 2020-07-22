@@ -1,3 +1,9 @@
+# Version 7.12.4.9000
+
+## Bug fixes
+
+* Sanitize empty symbols in language columns (#1299, @odaniel1).
+
 # Version 7.12.4
 
 * Fix a CRAN warning about docs.
