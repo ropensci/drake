@@ -612,6 +612,11 @@ test_with_dir("Strings stay strings, not symbols", {
   expect_silent(make(x, verbose = 0L, session_info = FALSE))
 })
 
+test_with_dir("missing symbols get replaced (#1299)", {
+  plan <- drake_plan(x = NULL)
+  expect_silent(make(plan, verbose = 0L, session_info = FALSE))
+})
+
 test_with_dir("Trailing slashes in file paths on Windows", {
   skip_on_cran()
   skip_if_not_installed("knitr")

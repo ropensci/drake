@@ -540,8 +540,16 @@ parse_lang_cols <- function(plan) {
     if (!is.list(plan[[col]])) {
       plan[[col]] <- lapply(plan[[col]], safe_parse)
     }
+    plan[[col]] <- lapply(plan[[col]], replace_missing_symbol)
   }
   plan
+}
+
+replace_missing_symbol <- function(x) {
+  if (identical(x, substitute())) {
+    x <- expression(NULL)
+  }
+  x
 }
 
 complete_target_names <- function(commands_list) {
