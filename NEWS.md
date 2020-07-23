@@ -3,6 +3,7 @@
 ## Bug fixes
 
 * Sanitize empty symbols in language columns (#1299, @odaniel1).
+* Handle cases where `NROW()` throws an error (#1300, `julian-tagell` on Stack Overflow).
 
 # Version 7.12.4
 

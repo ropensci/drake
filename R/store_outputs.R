@@ -237,7 +237,7 @@ finalize_meta <- function(target, value, meta, hash, config) {
     log_time(target, meta, config)
   }
   meta$hash <- hash
-  meta$size_vec <- NROW(undecorate_format_value(value))
+  meta$size_vec <- safe_nrow(undecorate_format_value(value))
   if (is_dynamic(target, config)) {
     meta$subtargets <- config$spec[[target]]$subtargets
   }
@@ -246,6 +246,10 @@ finalize_meta <- function(target, value, meta, hash, config) {
   }
   meta <- decorate_format_meta(value, target, meta, config)
   meta
+}
+
+safe_nrow <- function(x) {
+  tryCatch(NROW(x), error = function(e) length(x))
 }
 
 decorate_format_meta <- function(value, target, meta, config) {
