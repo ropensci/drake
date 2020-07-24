@@ -1,9 +1,10 @@
 #' @title Show an interactive visual network representation
 #'   of your drake project.
 #' \lifecycle{stable}
-#' @description To save time for repeated plotting,
-#' this function is divided into
-#' [drake_graph_info()] and [render_drake_graph()].
+#' @description It is good practice to visualize the dependency graph
+#'   before running the targets.
+#' @details For enhanced interactivity in the graph, see the `mandrake`
+#'   package: <https://mstr3336.github.io/mandrake/>.
 #' @export
 #' @seealso [render_drake_graph()], [sankey_drake_graph()],
 #'   [drake_ggraph()], [text_drake_graph()]
@@ -140,6 +141,8 @@ body(vis_drake_graph) <- config_util_body(vis_drake_graph_impl)
 #' @description This function is called inside
 #' [vis_drake_graph()], which typical users
 #' call more often.
+#' @details For enhanced interactivity in the graph, see the `mandrake`
+#'   package: <https://mstr3336.github.io/mandrake/>.
 #' @export
 #' @seealso [vis_drake_graph()], [sankey_drake_graph()],
 #'   [drake_ggraph()]

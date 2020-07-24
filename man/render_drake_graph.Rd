@@ -84,6 +84,10 @@ This function is called inside
 \code{\link[=vis_drake_graph]{vis_drake_graph()}}, which typical users
 call more often.
 }
+\details{
+For enhanced interactivity in the graph, see the \code{mandrake}
+package: \url{https://mstr3336.github.io/mandrake/}.
+}
 \examples{
 \dontrun{
 isolate_example("Quarantine side effects.", {

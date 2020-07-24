@@ -168,9 +168,12 @@ opening the link specified by the \code{on_select_col} given to
 A \code{visNetwork} graph.
 }
 \description{
-To save time for repeated plotting,
-this function is divided into
-\code{\link[=drake_graph_info]{drake_graph_info()}} and \code{\link[=render_drake_graph]{render_drake_graph()}}.
+It is good practice to visualize the dependency graph
+before running the targets.
+}
+\details{
+For enhanced interactivity in the graph, see the \code{mandrake}
+package: \url{https://mstr3336.github.io/mandrake/}.
 }
 \examples{
 \dontrun{
