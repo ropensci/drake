@@ -369,6 +369,7 @@ dynamic_pad_revdep_keys <- function(target, config) {
 register_dynamic_subdeps <- function(dynamic, spec, index, parent, config) {
   index_deps <- subtarget_deps(dynamic, parent, index, config)
   for (dep in spec$deps_dynamic) {
+    assert_legal_branching_format(parent, dep, config)
     if (is_dynamic(dep, config)) {
       subdeps <- config$spec[[dep]]$subtargets[index_deps[[dep]]]
       spec$deps_build$memory <- c(spec$deps_build$memory, subdeps)
@@ -376,6 +377,16 @@ register_dynamic_subdeps <- function(dynamic, spec, index, parent, config) {
     }
   }
   spec
+}
+
+assert_legal_branching_format <- function(parent, dep, config) {
+  if (!is_dynamic(dep, config) & config$spec[[dep]]$format == "file") {
+    stop0(
+      "Illegal dynamic branching of target `", parent, "` over `", dep, "`. ",
+      "If `", parent, "` dynamically branches over the dynamic file target `",
+      dep, "`, then `", dep, "` must also use dynamic branching."
+    )
+  }
 }
 
 is_dynamic <- function(target, config) {

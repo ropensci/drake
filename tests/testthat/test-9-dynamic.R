@@ -2456,3 +2456,13 @@ test_with_dir("same with recovery enabled (#1260)", {
   make(plan, recover = TRUE)
   expect_equal(readd(y), f(seq_len(5)))
 })
+
+test_with_dir("no branching over non-branching dynamic files (#1302)", {
+  writeLines("a", "a")
+  writeLines("b", "b")
+  plan <- drake::drake_plan(
+    path = target(c("a", "b"), format = "file"),
+    data = target(path, dynamic = map(path))
+  )
+  expect_error(make(plan), regexp = "dynamic branching")
+})
