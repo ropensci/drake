@@ -248,6 +248,8 @@ render_drake_graph <- function(
   )
   out <- visNetwork::visHierarchicalLayout(graph = out, direction = "LR")
   out <- vis_add_on_select(graph = out, on_select = on_select)
+  out$x$nodes$x <- graph_info$nodes$x
+  out$x$nodes$y <- graph_info$nodes$y
   vis_render_webshot(graph = out, file = file, selfcontained = selfcontained)
 }
 

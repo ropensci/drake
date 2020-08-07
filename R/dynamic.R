@@ -380,7 +380,9 @@ register_dynamic_subdeps <- function(dynamic, spec, index, parent, config) {
 }
 
 assert_legal_branching_format <- function(parent, dep, config) {
-  if (!is_dynamic(dep, config) & config$spec[[dep]]$format == "file") {
+  bad_dep <- !is_dynamic(dep, config) &&
+    identical(config$spec[[dep]]$format, "file")
+  if (bad_dep) {
     stop0(
       "Illegal dynamic branching of target `", parent, "` over `", dep, "`. ",
       "If `", parent, "` dynamically branches over the dynamic file target `",
