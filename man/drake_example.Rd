@@ -3,7 +3,7 @@
 \name{drake_example}
 \alias{drake_example}
 \title{Download the files of an example \code{drake} project.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 drake_example(
   example = "main",

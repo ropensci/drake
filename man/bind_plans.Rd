@@ -3,7 +3,7 @@
 \name{bind_plans}
 \alias{bind_plans}
 \title{Row-bind together drake plans
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 bind_plans(...)
 }

@@ -3,7 +3,7 @@
 \name{file_store}
 \alias{file_store}
 \title{Show a file's encoded representation in the cache
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 file_store(x)
 }

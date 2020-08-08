@@ -3,7 +3,7 @@
 \name{Makefile_recipe}
 \alias{Makefile_recipe}
 \title{Default Makefile recipe
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 Makefile_recipe(
   recipe_command = drake::default_recipe_command(),

@@ -3,7 +3,7 @@
 \name{debug_and_run}
 \alias{debug_and_run}
 \title{Run a function in debug mode.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 debug_and_run(f)
 }

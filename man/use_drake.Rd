@@ -3,7 +3,7 @@
 \name{use_drake}
 \alias{use_drake}
 \title{Use drake in a project
-\lifecycle{questioning}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#questioning'><img src='figures/lifecycle-questioning.svg' alt='Questioning lifecycle'></a>}}{\strong{Questioning}}}
 \usage{
 use_drake(open = interactive())
 }

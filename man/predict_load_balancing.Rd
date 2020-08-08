@@ -3,7 +3,7 @@
 \name{predict_load_balancing}
 \alias{predict_load_balancing}
 \title{Predict parallel computing behavior
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 predict_load_balancing(
   config,

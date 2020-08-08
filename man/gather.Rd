@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{gather}
 \alias{gather}
-\title{gather \lifecycle{defunct}}
+\title{gather \ifelse{html}{\figure{lifecycle-defunct.svg}{options: alt='Defunct lifecycle'}}{\strong{Defunct}}}
 \usage{
 gather(...)
 }

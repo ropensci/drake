@@ -3,7 +3,7 @@
 \name{process_import}
 \alias{process_import}
 \title{Process an imported data object
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 process_import(import, config)
 }

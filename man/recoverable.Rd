@@ -3,7 +3,7 @@
 \name{recoverable}
 \alias{recoverable}
 \title{List the most upstream \emph{recoverable} outdated targets.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 recoverable(..., make_imports = TRUE, do_prework = TRUE, config = NULL)
 }

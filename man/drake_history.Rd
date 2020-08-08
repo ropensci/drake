@@ -3,7 +3,7 @@
 \name{drake_history}
 \alias{drake_history}
 \title{History and provenance
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 drake_history(cache = NULL, history = NULL, analyze = TRUE, verbose = NULL)
 }

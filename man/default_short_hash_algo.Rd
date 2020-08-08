@@ -3,7 +3,7 @@
 \name{default_short_hash_algo}
 \alias{default_short_hash_algo}
 \title{Return the default short hash algorithm for \code{make()}.
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 default_short_hash_algo(cache = NULL)
 }

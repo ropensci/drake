@@ -1,5 +1,5 @@
 #' @title RStudio addin for r_make()
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description Call [r_make()] in an RStudio addin.
 #' @return Nothing.
 #' @inheritParams r_make
@@ -10,7 +10,7 @@ rs_addin_r_make <- function(r_args = list()) {
 }
 
 #' @title RStudio addin for r_outdated()
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description Call [r_outdated()] in an RStudio addin.
 #' @return A character vector of outdated targets.
 #' @inheritParams r_make
@@ -28,7 +28,7 @@ rs_addin_r_outdated <- function(r_args = list(), .print = TRUE) {
 }
 
 #' @title RStudio addin for r_vis_drake_graph()
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description Call [r_vis_drake_graph()] in an RStudio addin.
 #' @return A `visNetwork` graph.
 #' @inheritParams r_make
@@ -47,7 +47,7 @@ rs_addin_r_vis_drake_graph <- function(r_args = list(), .print = TRUE) {
 }
 
 #' @title Loadd target at cursor into global environment
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description This function provides an RStudio addin that will
 #' load the target at the
 #' current cursor location from the cache into the global environment.

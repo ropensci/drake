@@ -3,7 +3,7 @@
 \name{cancel_if}
 \alias{cancel_if}
 \title{Cancel a target mid-build under some condition
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}})`}
 \usage{
 cancel_if(condition, allow_missing = TRUE)
 }

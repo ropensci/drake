@@ -2,7 +2,7 @@
 % Please edit documentation in R/drake_plan_helpers.R
 \name{id_chr}
 \alias{id_chr}
-\title{Name of the current target \lifecycle{stable}}
+\title{Name of the current target \ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 id_chr()
 }

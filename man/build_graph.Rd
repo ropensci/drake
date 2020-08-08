@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{build_graph}
 \alias{build_graph}
-\title{build_graph \lifecycle{defunct}}
+\title{build_graph \ifelse{html}{\figure{lifecycle-defunct.svg}{options: alt='Defunct lifecycle'}}{\strong{Defunct}}}
 \usage{
 build_graph(...)
 }

@@ -3,7 +3,7 @@
 \name{parallelism_choices}
 \alias{parallelism_choices}
 \title{Names of old parallel backends
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 parallelism_choices(distributed_only = FALSE)
 }

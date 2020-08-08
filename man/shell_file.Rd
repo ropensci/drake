@@ -3,7 +3,7 @@
 \name{shell_file}
 \alias{shell_file}
 \title{Shell file for Makefile parallelism
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 shell_file(path = "shell.sh", overwrite = FALSE)
 }

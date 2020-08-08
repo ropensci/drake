@@ -4,7 +4,7 @@
 \alias{drake_plan}
 \title{Create a drake plan
 for the \code{plan} argument of \code{\link[=make]{make()}}.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 drake_plan(
   ...,

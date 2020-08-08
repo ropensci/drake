@@ -3,7 +3,7 @@
 \name{deps_profile}
 \alias{deps_profile}
 \title{Find out why a target is out of date.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 deps_profile(target, ..., character_only = FALSE, config = NULL)
 }

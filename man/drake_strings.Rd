@@ -3,7 +3,7 @@
 \name{drake_strings}
 \alias{drake_strings}
 \title{Turn valid expressions into character strings.
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 drake_strings(...)
 }

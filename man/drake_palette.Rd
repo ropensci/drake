@@ -3,7 +3,7 @@
 \name{drake_palette}
 \alias{drake_palette}
 \title{Show drake's color palette.
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 drake_palette()
 }

@@ -3,7 +3,7 @@
 \name{default_recipe_command}
 \alias{default_recipe_command}
 \title{Default Makefile recipe command
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 default_recipe_command()
 }

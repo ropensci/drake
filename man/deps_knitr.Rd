@@ -3,7 +3,7 @@
 \name{deps_knitr}
 \alias{deps_knitr}
 \title{Find the drake dependencies of a dynamic knitr report target.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 deps_knitr(path)
 }

@@ -3,7 +3,7 @@
 \name{short_hash}
 \alias{short_hash}
 \title{\code{drake} now only uses one hash algorithm per cache.
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 short_hash(cache = drake::get_cache(verbose = verbose), verbose = 1L)
 }

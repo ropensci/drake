@@ -3,7 +3,7 @@
 \name{expand_plan}
 \alias{expand_plan}
 \title{Deprecated: create replicates of targets.
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 expand_plan(plan, values = NULL, rename = TRUE, sep = "_", sanitize = TRUE)
 }

@@ -504,7 +504,7 @@ dcst_set_move_tmp <- function(key, value, tmp, .self) {
 }
 
 #' @title drake tempfile
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description Create the path to a temporary file inside drake's cache.
 #' @details This function is just like the `tempfile()` function in base R
 #'   except that the path points to a special location inside `drake`'s cache.
@@ -541,7 +541,7 @@ drake_tempfile <- function(
 }
 
 #' @title Show a file's encoded representation in the cache
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description This function simply wraps literal double quotes around
 #' the argument `x` so `drake` knows it is the name of a file.
 #' Use when you are calling functions like `deps_code()`: for example,

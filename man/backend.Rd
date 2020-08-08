@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{backend}
 \alias{backend}
-\title{backend \lifecycle{defunct}}
+\title{backend \ifelse{html}{\figure{lifecycle-defunct.svg}{options: alt='Defunct lifecycle'}}{\strong{Defunct}}}
 \usage{
 backend(...)
 }

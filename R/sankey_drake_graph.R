@@ -1,5 +1,5 @@
 #' @title Show a Sankey graph of your drake project.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description To save time for repeated plotting,
 #' this function is divided into
 #' [drake_graph_info()] and [render_sankey_drake_graph()].
@@ -101,7 +101,7 @@ sankey_drake_graph_impl <- function(
 body(sankey_drake_graph) <- config_util_body(sankey_drake_graph_impl)
 
 #' @title Render a Sankey diagram from [drake_graph_info()].
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description This function is called inside
 #' [sankey_drake_graph()], which typical users
 #' call more often. A legend is unfortunately unavailable

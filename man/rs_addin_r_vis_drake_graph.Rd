@@ -3,7 +3,7 @@
 \name{rs_addin_r_vis_drake_graph}
 \alias{rs_addin_r_vis_drake_graph}
 \title{RStudio addin for r_vis_drake_graph()
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 rs_addin_r_vis_drake_graph(r_args = list(), .print = TRUE)
 }

@@ -3,7 +3,7 @@
 \name{make_with_config}
 \alias{make_with_config}
 \title{Apply make() with a pre-computed config object
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 make_with_config(config)
 }

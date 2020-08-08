@@ -3,7 +3,7 @@
 \name{plan_analyses}
 \alias{plan_analyses}
 \title{Specialized wildcard for analyses
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 plan_analyses(plan, datasets, sep = "_")
 }

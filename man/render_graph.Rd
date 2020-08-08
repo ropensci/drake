@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{render_graph}
 \alias{render_graph}
-\title{render_graph \lifecycle{defunct}}
+\title{render_graph \ifelse{html}{\figure{lifecycle-defunct.svg}{options: alt='Defunct lifecycle'}}{\strong{Defunct}}}
 \usage{
 render_graph(...)
 }

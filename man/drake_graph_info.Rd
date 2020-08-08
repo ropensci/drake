@@ -3,7 +3,7 @@
 \name{drake_graph_info}
 \alias{drake_graph_info}
 \title{Prepare the workflow graph for visualization
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 drake_graph_info(
   ...,

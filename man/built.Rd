@@ -3,7 +3,7 @@
 \name{built}
 \alias{built}
 \title{List all the built targets (non-imports) in the cache.
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 built(
   path = getwd(),

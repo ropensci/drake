@@ -3,7 +3,7 @@
 \name{get_trace}
 \alias{get_trace}
 \title{Deprecated, get a trace of a dynamic target's value.
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 get_trace(trace, value)
 }

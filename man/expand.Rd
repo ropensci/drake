@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{expand}
 \alias{expand}
-\title{expand \lifecycle{defunct}}
+\title{expand \ifelse{html}{\figure{lifecycle-defunct.svg}{options: alt='Defunct lifecycle'}}{\strong{Defunct}}}
 \usage{
 expand(...)
 }

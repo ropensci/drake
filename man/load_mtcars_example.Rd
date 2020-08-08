@@ -3,7 +3,7 @@
 \name{load_mtcars_example}
 \alias{load_mtcars_example}
 \title{Load the mtcars example.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 load_mtcars_example(
   envir = parent.frame(),

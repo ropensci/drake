@@ -3,7 +3,7 @@
 \name{default_long_hash_algo}
 \alias{default_long_hash_algo}
 \title{Return the default long hash algorithm for \code{make()}.
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 default_long_hash_algo(cache = NULL)
 }

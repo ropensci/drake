@@ -1,5 +1,5 @@
 #' @title List the available hash algorithms for drake caches.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @export
 #' @keywords internal
 #' @description Deprecated on 2018-12-12.
@@ -14,7 +14,7 @@ available_hash_algos <- function() {
 }
 
 #' @title Function `build_drake_graph`
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Use [drake_config()] instead.
 #' @details Deprecated on 2018-11-02.
 #' @export
@@ -52,7 +52,7 @@ build_drake_graph <- function(
 }
 
 #' @title Configure the hash algorithms, etc. of a drake cache.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @export
 #' @keywords internal
 #' @description The purpose of this function is
@@ -152,7 +152,7 @@ init_common_values <- function(cache) {
 }
 
 #' @title Return the default long hash algorithm for `make()`.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @export
 #' @keywords internal
 #' @description Deprecated. drake now only uses one hash algorithm per cache.
@@ -185,7 +185,7 @@ default_long_hash_algo <- function(cache = NULL) {
 }
 
 #' @title Return the default short hash algorithm for `make()`.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @export
 #' @keywords internal
 #' @description Deprecated. drake now only uses one hash algorithm per cache.
@@ -230,7 +230,7 @@ deprecate_force <- function(force) {
 }
 
 #' @title See the dependencies of a target
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Use [deps_target()] (singular) instead.
 #' @details Deprecated on 2018-08-30.
 #' @export
@@ -257,7 +257,7 @@ deps_targets <- function(
 }
 
 #' @title Get a template file for execution on a cluster.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated. Use [drake_hpc_template_file()] instead.
 #' @details Deprecated on 2018-06-27.
 #' @export
@@ -281,7 +281,7 @@ drake_batchtools_tmpl_file <- function(
 }
 
 #' @title Session info of the last call to [make()].
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated. Use [drake_get_session_info()] instead.
 #' @details Deprecated on 2018-12-06.
 #' @export
@@ -309,7 +309,7 @@ drake_session <- function(
 }
 
 #' @title `drake` now has just one hash algorithm per cache.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @export
 #' @keywords internal
 #' @description Deprecated on 2018-12-12
@@ -334,7 +334,7 @@ long_hash <- function(
 
 #' @title Deprecated: render a `ggraph`/`ggplot2` representation
 #'   of your drake project.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Use [render_drake_ggraph()] instead.
 #' @details Deprecated on 2018-07-25.
 #' @export
@@ -358,7 +358,7 @@ render_static_drake_graph <- function(
 }
 
 #' @title `drake` now only uses one hash algorithm per cache.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @export
 #' @keywords internal
 #' @description Deprecated on 2018-12-12.
@@ -398,7 +398,7 @@ deprecate_hash_algo_args <- function(
 
 #' @title Deprecated: show a `ggraph`/`ggplot2` representation
 #'   of your drake project.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Use [drake_ggraph()] instead.
 #' @details Deprecated on 2018-07-25.
 #' @export
@@ -449,7 +449,7 @@ static_drake_graph <- function(
 }
 
 #' @title List the old drake triggers.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @export
 #' @keywords internal
 #' @description Triggers are target-level rules
@@ -524,7 +524,7 @@ deprecate_targets_only <- function(targets_only) {
 }
 
 #' @title Load the main example.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description The main example lives at
 #' <https://github.com/wlandau/drake-examples/tree/master/main>.
 #' Use `drake_example("main")` to download its code.
@@ -577,7 +577,7 @@ load_main_example <- function(
 }
 
 #' @title Deprecated: clean the main example from `drake_example("main")`
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description This function deletes files. Use at your own risk.
 #'   Destroys the `.drake/` cache and the `report.Rmd` file
 #'   in the current working directory. Your working directory
@@ -600,7 +600,7 @@ clean_main_example <- function() {
 }
 
 #' @title Default verbosity
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-01-01
 #' @export
 #' @keywords internal
@@ -615,7 +615,7 @@ default_verbose <- function() {
 }
 
 #' @title Put quotes around each element of a character vector.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-01-01
 #' @export
 #' @keywords internal
@@ -642,7 +642,7 @@ drake_quotes <- function(x = NULL, single = FALSE) {
 
 #' @title Remove leading and trailing
 #'   escaped quotes from character strings.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-01-01
 #' @export
 #' @keywords internal
@@ -660,7 +660,7 @@ drake_unquote <- function(x = NULL) {
 }
 
 #' @title Turn valid expressions into character strings.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-01-01
 #' @export
 #' @keywords internal
@@ -680,7 +680,7 @@ drake_strings <- function(...) {
 }
 
 #' @title List all the built targets (non-imports) in the cache.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-01-08.
 #' @details Targets are listed in the workflow plan
 #' data frame (see [drake_plan()].
@@ -720,7 +720,7 @@ built <- function(
 
 #' @title Search up the file system
 #'   for the nearest root path of a drake project.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-01-08.
 #' @details Only works if the cache is a file system
 #' in a folder named `.drake` (default).
@@ -748,7 +748,7 @@ find_project <- function(path = getwd()) {
 }
 
 #' @title Default arguments of Makefile parallelism
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description 2019-01-03
 #' @export
 #' @keywords internal
@@ -772,7 +772,7 @@ default_Makefile_args <- function(jobs, verbose) {
 }
 
 #' @title Default Makefile command
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description 2019-01-03
 #' @keywords internal
 #' @return A character scalar
@@ -790,7 +790,7 @@ default_Makefile_command <- function() {
 }
 
 #' @title Default Makefile recipe
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @export
 #' @keywords internal
 #' @description 2019-01-03
@@ -815,7 +815,7 @@ Makefile_recipe <- function( # nolint
 }
 
 #' @title Default Makefile recipe command
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @export
 #' @keywords internal
 #' @description 2019-01-02
@@ -833,7 +833,7 @@ default_recipe_command <- function() {
 }
 
 #' @title Default Makefile recipe wildcard
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @export
 #' @keywords internal
 #' @description 2019-01-02
@@ -851,7 +851,7 @@ r_recipe_wildcard <- function() {
 }
 
 #' @title Names of old parallel backends
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description 2019-01-03
 #' @export
 #' @keywords internal
@@ -883,7 +883,7 @@ parallelism_choices <- function(distributed_only = FALSE) {
 }
 
 #' @title Shell file for Makefile parallelism
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description 2019-01-03
 #' @export
 #' @keywords internal
@@ -906,7 +906,7 @@ shell_file <- function(
 }
 
 #' @title Default parallel backend
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description 2019-01-02
 #' @export
 #' @keywords internal
@@ -923,7 +923,7 @@ default_parallelism <- function() {
 }
 
 #' @title Just process the imports
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-01-04
 #' @export
 #' @keywords internal
@@ -944,7 +944,7 @@ make_imports <- function(config) {
 }
 
 #' @title Just make the targets
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-01-04
 #' @export
 #' @keywords internal
@@ -965,7 +965,7 @@ make_targets <- function(config) {
 }
 
 #' @title Apply make() with a pre-computed config object
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-01-04
 #' @export
 #' @keywords internal
@@ -984,7 +984,7 @@ make_with_config <- function(config) {
 }
 
 #' @title Read a config object from the cache
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description drake no longer stores the config object,
 #'   the plan, etc. in the cache during `make()`. This change
 #'   improves speed.
@@ -1014,7 +1014,7 @@ read_drake_config <- function(
 }
 
 #' @title Read a workflow graph from the cache
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description drake no longer stores the config object,
 #'   the plan, etc. in the cache during `make()`. This change
 #'   improves speed.
@@ -1042,7 +1042,7 @@ read_drake_graph <- function(
 }
 
 #' @title Read the plan from the cache
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description drake no longer stores the config object,
 #'   the plan, etc. in the cache during `make()`. This change
 #'   improves speed.
@@ -1070,7 +1070,7 @@ read_drake_plan <- function(
 }
 
 #' @title List all the imports in the drake cache.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-01-08.
 #' @details An import is a non-target object processed
 #' by [make()]. Targets in the workflow
@@ -1117,7 +1117,7 @@ imported <- function(
 }
 
 #' @title Prune the graph
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @export
 #' @keywords internal
 #' @description 2019-01-08
@@ -1143,7 +1143,7 @@ prune_drake_graph <- function(
 
 #' @title Show the analysis wildcard
 #'   used in [plan_summaries()].
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-01-12.
 #' @details Used to generate workflow plan data frames.
 #' @export
@@ -1161,7 +1161,7 @@ analysis_wildcard <- function() {
 
 #' @title Return the file path where the cache is stored,
 #' if applicable.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @export
 #' @keywords internal
 #' @description Deprecated on 2019-01-12.
@@ -1179,7 +1179,7 @@ cache_path <- function(cache = NULL) {
 }
 
 #' @title List all the `storr` cache namespaces used by drake.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-01-12.
 #' @return A character vector of `storr` namespaces used for drake.
 #' @details Ordinary users do not need to worry about this function.
@@ -1208,7 +1208,7 @@ cache_namespaces <- function(
 }
 
 #' @title Check a workflow plan data frame for obvious errors.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-01-12.
 #' @details Possible obvious errors include circular dependencies and
 #' missing input files.
@@ -1250,7 +1250,7 @@ check_plan <- function(
 
 #' @title Show the dataset wildcard
 #'   used in [plan_analyses()] and [plan_summaries()].
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @details Used to generate workflow plan data frames.
 #' @description Deprecated on 2019-01-12.
 #' @export
@@ -1269,7 +1269,7 @@ dataset_wildcard <- function() {
 
 #' @title Compute the initial pre-build metadata
 #'   of a target or import.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-01-12.
 #' @details The metadata helps determine if the
 #' target is up to date or outdated. The metadata of imports
@@ -1303,7 +1303,7 @@ drake_meta <- function(target, config) {
 }
 
 #' @title Show drake's color palette.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-01-12.
 #' @export
 #' @keywords internal
@@ -1352,7 +1352,7 @@ drake_palette_ <- function() {
 }
 
 #' @title Output a random tip about drake.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-01-12.
 #' @details Tips are usually related to news and usage.
 #' @export
@@ -1368,7 +1368,7 @@ drake_tip <- function() {
 }
 
 #' @title List the targets in progress
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-01-13.
 #' @details Similar to [progress()].
 #' @seealso [diagnose()], [drake_get_session_info()],
@@ -1396,7 +1396,7 @@ in_progress <- function(
 }
 
 #' @title Load or create a drake cache
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-01-13.
 #' @export
 #' @keywords internal
@@ -1433,7 +1433,7 @@ recover_cache <- function(
 }
 
 #' @title Storr namespaces for targets
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-01-13.
 #' @export
 #' @keywords internal
@@ -1455,7 +1455,7 @@ target_namespaces <- function(
 }
 
 #' @title Specialized wildcard for analyses
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Use [drake_plan()] instead.
 #'   See <https://books.ropensci.org/drake/plans.html#large-plans>
 #'   for details.
@@ -1493,7 +1493,7 @@ plan_analyses <- function(plan, datasets, sep = "_") {
 }
 
 #' @title Specialized wildcard for summaries
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Use [drake_plan()] with transformations instead. See
 #'   <https://books.ropensci.org/drake/plans.html#large-plans>
 #'   for details.
@@ -1606,7 +1606,7 @@ dataset_wildcard_ <- function() {
 }
 
 #' @title Auxiliary storr namespaces
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description 2019-02-13
 #' @export
 #' @keywords internal
@@ -1626,7 +1626,7 @@ cleaned_namespaces <- function(
 }
 
 #' @title Dependencies of a knitr report
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @export
 #' @keywords internal
 #' @description Deprecated on 2019-02-14
@@ -1644,7 +1644,7 @@ knitr_deps <- function(target) {
 }
 
 #' @title States of the dependencies of a target
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-02-14.
 #' @return A data frame of the old hashes and
 #'   new hashes of the data frame, along with
@@ -1677,7 +1677,7 @@ dependency_profile <- function(
 }
 
 #' @title Predict parallel computing behavior
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-02-14.
 #' @export
 #' @keywords internal
@@ -1715,7 +1715,7 @@ predict_load_balancing <- function(
 }
 
 #' @title Get the cache at the exact file path specified.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @export
 #' @keywords internal
 #' @description This function does not apply to
@@ -1745,7 +1745,7 @@ this_cache <- function(
 
 #' @title Generate a flat text log file to represent the state of
 #'   the cache.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-03-09.
 #' @details Calling this function to create a log file and later calling
 #'   `make()` makes the log file out of date. Therefore, we recommend using
@@ -1784,7 +1784,7 @@ drake_cache_log_file <- function(
 
 #' @title Use wildcard templating to create a
 #'   workflow plan data frame from a template data frame.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-05-16. Use [drake_plan()]
 #'   transformations instead. See
 #'   <https://books.ropensci.org/drake/plans.html#large-plans>
@@ -2007,7 +2007,7 @@ check_wildcard_rules <- function(rules) {
 }
 
 #' @title Deprecated: create replicates of targets.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-05-16. Use [drake_plan()]
 #'   transformations instead. See
 #'   <https://books.ropensci.org/drake/plans.html#large-plans>
@@ -2059,7 +2059,7 @@ expand_plan <- function(
 }
 
 #' @title Create a plan that maps a function to a grid of arguments.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-05-16. Use [drake_plan()]
 #'   transformations instead. See
 #'   <https://books.ropensci.org/drake/plans.html#large-plans>
@@ -2136,7 +2136,7 @@ map_plan <- function(
 }
 
 #' @title Combine targets
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-05-16. Use [drake_plan()]
 #'   transformations instead. See
 #'   <https://books.ropensci.org/drake/plans.html#large-plans>
@@ -2183,7 +2183,7 @@ gather_plan <- function(
 }
 
 #' @title Gather multiple groupings of targets
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-05-16. Use [drake_plan()]
 #'   transformations instead. See
 #'   <https://books.ropensci.org/drake/plans.html#large-plans>
@@ -2259,7 +2259,7 @@ gather_by <- function(
 }
 
 #' @title Write commands to reduce several targets down to one.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-05-16. Use [drake_plan()]
 #'   transformations instead. See
 #'   <https://books.ropensci.org/drake/plans.html#large-plans>
@@ -2333,7 +2333,7 @@ reduce_plan <- function(
 }
 
 #' @title Reduce multiple groupings of targets
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-05-16. Use [drake_plan()]
 #'   transformations instead. See
 #'   <https://books.ropensci.org/drake/plans.html#large-plans>
@@ -2438,7 +2438,7 @@ reduction_pairs <- function(x, pairs = NULL, base_name = "reduced_") {
 }
 
 #' @title The default cache of a `drake` project.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Use [drake_cache()] instead.
 #' @details Deprecated on 2019-05-25.
 #' @keywords internal
@@ -2526,7 +2526,7 @@ deprecate_arg <- function(value, name, alt = NULL) {
 }
 
 #' @title Deprecated, get a trace of a dynamic target's value.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @export
 #' @keywords internal
 #' @description Deprecated on 2019-12-10. Use [read_trace()] instead.
@@ -2548,7 +2548,7 @@ get_trace <- function(trace, value) {
 }
 
 #' @title List running targets.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2020-03-23. Use [drake_running()] instead.
 #' @export
 #' @keywords internal
@@ -2573,7 +2573,7 @@ running <- function(
 }
 
 #' @title List failed targets.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2020-03-23. Use [drake_failed()] instead.
 #' @export
 #' @keywords internal
@@ -2603,7 +2603,7 @@ failed <- function(
 }
 
 #' @title Get the build progress of your targets
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2020-03-23. Use [drake_progress()] instead.
 #' @export
 #' @keywords internal
@@ -2688,7 +2688,7 @@ progress <- function(
 
 #' @title Deprecated: expose package functions and objects for
 #'   analysis with drake.
-#' \lifecycle{deprecated}
+#' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2020-06-24.
 #' @keywords internal
 #' @details Deprecated. This function assigns the objects and functions

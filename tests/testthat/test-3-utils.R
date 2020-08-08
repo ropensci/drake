@@ -84,25 +84,6 @@ test_with_dir("isolate_example()", {
   expect_false(file.exists("abc"))
 })
 
-test_with_dir("lifecycle", {
-  skip_on_cran()
-  stages <- c(
-    "experimental",
-    "maturing",
-    "stable",
-    "questioning",
-    "retired",
-    "archived",
-    "soft-deprecated",
-    "deprecated",
-    "defunct"
-  )
-  for (stage in stages) {
-    expect_true(is.character(lifecycle(stage)))
-  }
-  expect_error(lifecycle("not-a-stage"), regexp = "Unknown lifecycle stage")
-})
-
 test_with_dir("text wrapping", {
   skip_on_cran()
   x <- paste(letters, collapse = "")

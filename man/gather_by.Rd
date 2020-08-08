@@ -3,7 +3,7 @@
 \name{gather_by}
 \alias{gather_by}
 \title{Gather multiple groupings of targets
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 gather_by(
   plan,

@@ -3,7 +3,7 @@
 \name{prune_drake_graph}
 \alias{prune_drake_graph}
 \title{Prune the graph
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 prune_drake_graph(graph, to = igraph::V(graph)$name, jobs = 1)
 }

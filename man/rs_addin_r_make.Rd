@@ -3,7 +3,7 @@
 \name{rs_addin_r_make}
 \alias{rs_addin_r_make}
 \title{RStudio addin for r_make()
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 rs_addin_r_make(r_args = list())
 }

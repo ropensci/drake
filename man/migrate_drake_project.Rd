@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{migrate_drake_project}
 \alias{migrate_drake_project}
-\title{migrate_drake_project \lifecycle{defunct}}
+\title{migrate_drake_project \ifelse{html}{\figure{lifecycle-defunct.svg}{options: alt='Defunct lifecycle'}}{\strong{Defunct}}}
 \usage{
 migrate_drake_project(...)
 }

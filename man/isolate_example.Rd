@@ -3,7 +3,7 @@
 \name{isolate_example}
 \alias{isolate_example}
 \title{Isolate the side effects of an example.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 isolate_example(desc, code)
 }

@@ -3,7 +3,7 @@
 \name{clean_mtcars_example}
 \alias{clean_mtcars_example}
 \title{Clean the mtcars example from \code{drake_example("mtcars")}
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 clean_mtcars_example()
 }

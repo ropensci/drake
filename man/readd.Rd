@@ -4,7 +4,7 @@
 \alias{readd}
 \alias{loadd}
 \title{Read and return a drake target/import from the cache.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 readd(
   target,

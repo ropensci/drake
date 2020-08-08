@@ -3,7 +3,7 @@
 \name{imported}
 \alias{imported}
 \title{List all the imports in the drake cache.
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 imported(
   files_only = FALSE,

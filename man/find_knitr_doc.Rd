@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{find_knitr_doc}
 \alias{find_knitr_doc}
-\title{find_knitr_doc \lifecycle{defunct}}
+\title{find_knitr_doc \ifelse{html}{\figure{lifecycle-defunct.svg}{options: alt='Defunct lifecycle'}}{\strong{Defunct}}}
 \usage{
 find_knitr_doc(...)
 }

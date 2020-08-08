@@ -3,7 +3,7 @@
 \name{read_drake_plan}
 \alias{read_drake_plan}
 \title{Read the plan from the cache
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 read_drake_plan(path = getwd(), search = TRUE, cache = NULL, verbose = 1L)
 }

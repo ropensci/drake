@@ -4,7 +4,7 @@
 \alias{vis_drake_graph}
 \title{Show an interactive visual network representation
 of your drake project.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 vis_drake_graph(
   ...,

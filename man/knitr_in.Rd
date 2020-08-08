@@ -4,7 +4,7 @@
 \alias{knitr_in}
 \title{Declare \code{knitr}/\code{rmarkdown} source files
 as dependencies.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 knitr_in(...)
 }

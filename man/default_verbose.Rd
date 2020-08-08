@@ -3,7 +3,7 @@
 \name{default_verbose}
 \alias{default_verbose}
 \title{Default verbosity
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 default_verbose()
 }

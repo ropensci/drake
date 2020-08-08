@@ -1,5 +1,5 @@
 #' @title Prepare the workflow graph for visualization
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description With the returned data frames,
 #' you can plot your own custom `visNetwork` graph.
 #' @export
@@ -364,7 +364,7 @@ get_cluster_grouping <- function(config, group) {
 }
 
 #' @title Return the default title for graph visualizations
-#' \lifecycle{soft-deprecated}
+#' `r lifecycle::badge("soft-deprecated")`
 #' @description For internal use only.
 #' @export
 #' @keywords internal
@@ -403,7 +403,7 @@ filter_legend_nodes <- function(legend_nodes, all_nodes) {
 
 #' @title Create the nodes data frame used in the legend
 #'   of the graph visualizations.
-#' \lifecycle{soft-deprecated}
+#' `r lifecycle::badge("soft-deprecated")`
 #' @export
 #' @description Output a `visNetwork`-friendly
 #' data frame of nodes. It tells you what

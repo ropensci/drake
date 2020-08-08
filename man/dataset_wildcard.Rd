@@ -4,7 +4,7 @@
 \alias{dataset_wildcard}
 \title{Show the dataset wildcard
 used in \code{\link[=plan_analyses]{plan_analyses()}} and \code{\link[=plan_summaries]{plan_summaries()}}.
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 dataset_wildcard()
 }

@@ -7,7 +7,7 @@ process_imports <- function(config) {
 }
 
 #' @title Process an imported data object
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description For internal use only. Not a user-side function.
 #' @export
 #' @keywords internal

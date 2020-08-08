@@ -3,7 +3,7 @@
 \name{drake_tempfile}
 \alias{drake_tempfile}
 \title{drake tempfile
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 drake_tempfile(path = NULL, cache = drake::drake_cache(path = path))
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{doc_of_function_call}
 \alias{doc_of_function_call}
-\title{doc_of_function_call \lifecycle{defunct}}
+\title{doc_of_function_call \ifelse{html}{\figure{lifecycle-defunct.svg}{options: alt='Defunct lifecycle'}}{\strong{Defunct}}}
 \usage{
 doc_of_function_call(...)
 }

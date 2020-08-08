@@ -3,7 +3,7 @@
 \name{this_cache}
 \alias{this_cache}
 \title{Get the cache at the exact file path specified.
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 this_cache(
   path = NULL,

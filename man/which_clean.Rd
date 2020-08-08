@@ -3,7 +3,7 @@
 \name{which_clean}
 \alias{which_clean}
 \title{Which targets will \code{clean()} invalidate?
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 which_clean(
   ...,

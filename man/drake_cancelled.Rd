@@ -3,7 +3,7 @@
 \name{drake_cancelled}
 \alias{drake_cancelled}
 \title{List cancelled targets.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 drake_cancelled(cache = drake::drake_cache(path = path), path = NULL)
 }

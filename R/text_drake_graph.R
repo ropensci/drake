@@ -1,5 +1,5 @@
 #' @title Show a workflow graph as text in your terminal window.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description This is a low-tech version of [vis_drake_graph()]
 #'   and friends. It is designed for when you do not have access
 #'   to the usual graphics devices for viewing visuals in an interactive
@@ -96,7 +96,7 @@ body(text_drake_graph) <- config_util_body(text_drake_graph_impl)
 
 #' @title Show a workflow graph as text in your terminal window
 #'   using [drake_graph_info()] output.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description This function is called inside
 #' [text_drake_graph()], which typical users
 #' call more often. See `?text_drake_graph` for details.

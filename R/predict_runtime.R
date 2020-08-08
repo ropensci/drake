@@ -1,6 +1,6 @@
 #' @title Predict the elapsed runtime of the next call to `make()`
 #'   for non-staged parallel backends.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description Take the past recorded runtimes times from
 #'   [build_times()] and use them to predict how the targets
 #'   will be distributed among the available workers in the
@@ -90,7 +90,7 @@ body(predict_runtime) <- config_util_body(predict_runtime_impl)
 
 #' @title Predict the load balancing of the next call to `make()`
 #'   for non-staged parallel backends.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description Take the past recorded runtimes times from
 #'   [build_times()] and use them to predict how the targets
 #'   will be distributed among the available workers in the

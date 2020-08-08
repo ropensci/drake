@@ -3,7 +3,7 @@
 \name{show_source}
 \alias{show_source}
 \title{Show how a target/import was produced.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 show_source(target, config, character_only = FALSE)
 }

@@ -3,7 +3,7 @@
 \name{build_times}
 \alias{build_times}
 \title{See the time it took to build each target.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 build_times(
   ...,

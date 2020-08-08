@@ -3,7 +3,7 @@
 \name{drake_get_session_info}
 \alias{drake_get_session_info}
 \title{Session info of the last call to \code{\link[=make]{make()}}.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 drake_get_session_info(
   path = NULL,

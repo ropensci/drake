@@ -3,7 +3,7 @@
 \name{file_out}
 \alias{file_out}
 \title{Declare output files and directories.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 file_out(...)
 }

@@ -3,7 +3,7 @@
 \name{reduce_plan}
 \alias{reduce_plan}
 \title{Write commands to reduce several targets down to one.
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 reduce_plan(
   plan = NULL,

@@ -3,7 +3,7 @@
 \name{cmq_build}
 \alias{cmq_build}
 \title{Build a target using the clustermq backend
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 cmq_build(target, meta, deps, spec, config_tmp, config)
 }

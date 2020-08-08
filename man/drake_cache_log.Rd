@@ -3,7 +3,7 @@
 \name{drake_cache_log}
 \alias{drake_cache_log}
 \title{Get the state of the cache.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 drake_cache_log(
   path = NULL,

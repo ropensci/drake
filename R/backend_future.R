@@ -146,7 +146,7 @@ future_globals <- function(
 }
 
 #' @title Task passed to individual futures in the `"future"` backend
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description For internal use only. Only exported to make available
 #' to futures.
 #' @keywords internal

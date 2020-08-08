@@ -3,7 +3,7 @@
 \name{manage_memory}
 \alias{manage_memory}
 \title{Manage the in-memory dependencies of a target.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 manage_memory(target, config, downstream = NULL, jobs = 1)
 }

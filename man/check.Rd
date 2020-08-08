@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{check}
 \alias{check}
-\title{check \lifecycle{defunct}}
+\title{check \ifelse{html}{\figure{lifecycle-defunct.svg}{options: alt='Defunct lifecycle'}}{\strong{Defunct}}}
 \usage{
 check(...)
 }

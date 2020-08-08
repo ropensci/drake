@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{rate_limiting_times}
 \alias{rate_limiting_times}
-\title{rate_limiting_times \lifecycle{defunct}}
+\title{rate_limiting_times \ifelse{html}{\figure{lifecycle-defunct.svg}{options: alt='Defunct lifecycle'}}{\strong{Defunct}}}
 \usage{
 rate_limiting_times(...)
 }

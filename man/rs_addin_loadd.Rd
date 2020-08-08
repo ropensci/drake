@@ -3,7 +3,7 @@
 \name{rs_addin_loadd}
 \alias{rs_addin_loadd}
 \title{Loadd target at cursor into global environment
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 rs_addin_loadd(context = NULL)
 }

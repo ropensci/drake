@@ -3,7 +3,7 @@
 \name{long_hash}
 \alias{long_hash}
 \title{\code{drake} now has just one hash algorithm per cache.
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 long_hash(cache = drake::get_cache(verbose = verbose), verbose = 1L)
 }

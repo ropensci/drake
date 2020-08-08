@@ -3,7 +3,7 @@
 \name{plan_summaries}
 \alias{plan_summaries}
 \title{Specialized wildcard for summaries
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 plan_summaries(
   plan,

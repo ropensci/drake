@@ -2,7 +2,7 @@
 % Please edit documentation in R/dynamic.R
 \name{subtargets}
 \alias{subtargets}
-\title{List sub-targets \lifecycle{stable}}
+\title{List sub-targets \ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 subtargets(
   target = NULL,

@@ -4,7 +4,7 @@
 \alias{rescue_cache}
 \title{Try to repair a drake cache that is prone
 to throwing \code{storr}-related errors.
-\lifecycle{questioning}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#questioning'><img src='figures/lifecycle-questioning.svg' alt='Questioning lifecycle'></a>}}{\strong{Questioning}}}
 \usage{
 rescue_cache(
   targets = NULL,

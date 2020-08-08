@@ -4,7 +4,7 @@
 \alias{expose_imports}
 \title{Deprecated: expose package functions and objects for
 analysis with drake.
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 expose_imports(
   package,

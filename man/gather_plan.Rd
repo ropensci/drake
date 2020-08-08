@@ -3,7 +3,7 @@
 \name{gather_plan}
 \alias{gather_plan}
 \title{Combine targets
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 gather_plan(plan = NULL, target = "target", gather = "list", append = FALSE)
 }

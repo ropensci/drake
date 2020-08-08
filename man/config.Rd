@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{config}
 \alias{config}
-\title{config \lifecycle{defunct}}
+\title{config \ifelse{html}{\figure{lifecycle-defunct.svg}{options: alt='Defunct lifecycle'}}{\strong{Defunct}}}
 \usage{
 config(...)
 }

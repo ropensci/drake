@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{max_useful_jobs}
 \alias{max_useful_jobs}
-\title{max_useful_jobs \lifecycle{defunct}}
+\title{max_useful_jobs \ifelse{html}{\figure{lifecycle-defunct.svg}{options: alt='Defunct lifecycle'}}{\strong{Defunct}}}
 \usage{
 max_useful_jobs(...)
 }

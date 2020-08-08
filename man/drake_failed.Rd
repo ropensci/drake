@@ -3,7 +3,7 @@
 \name{drake_failed}
 \alias{drake_failed}
 \title{List failed targets.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 drake_failed(cache = drake::drake_cache(path = path), path = NULL)
 }

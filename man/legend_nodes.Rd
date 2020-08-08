@@ -4,7 +4,7 @@
 \alias{legend_nodes}
 \title{Create the nodes data frame used in the legend
 of the graph visualizations.
-\lifecycle{soft-deprecated}}
+\ifelse{html}{\figure{lifecycle-soft-deprecated.svg}{options: alt='Soft-deprecated lifecycle'}}{\strong{Soft-deprecated}}}
 \usage{
 legend_nodes(font_size = 20)
 }

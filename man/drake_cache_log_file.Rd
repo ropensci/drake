@@ -4,7 +4,7 @@
 \alias{drake_cache_log_file}
 \title{Generate a flat text log file to represent the state of
 the cache.
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 drake_cache_log_file(
   file = "drake_cache.log",

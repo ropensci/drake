@@ -3,7 +3,7 @@
 \name{load_main_example}
 \alias{load_main_example}
 \title{Load the main example.
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 load_main_example(
   envir = parent.frame(),

@@ -3,7 +3,7 @@
 \name{target}
 \alias{target}
 \title{Customize a target in \code{\link[=drake_plan]{drake_plan()}}.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 target(command = NULL, transform = NULL, dynamic = NULL, ...)
 }

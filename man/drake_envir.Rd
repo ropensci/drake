@@ -3,7 +3,7 @@
 \name{drake_envir}
 \alias{drake_envir}
 \title{Get the environment where drake builds targets
-\lifecycle{questioning}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#questioning'><img src='figures/lifecycle-questioning.svg' alt='Questioning lifecycle'></a>}}{\strong{Questioning}}}
 \usage{
 drake_envir(which = c("targets", "dynamic", "subtargets", "imports"))
 }

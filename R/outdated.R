@@ -1,5 +1,5 @@
 #' @title List the most upstream *recoverable* outdated targets.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description Only shows the most upstream updated targets.
 #'   Whether downstream targets are recoverable depends on
 #'   the eventual values of the upstream targets in the next [make()].
@@ -140,7 +140,7 @@ all_subtargets_recoverable <- function(target, recovery_meta, config) {
 }
 
 #' @title List the targets that are out of date.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description Outdated targets will be rebuilt in the next
 #'   [make()]. `outdated()` does not show dynamic sub-targets.
 #' @export
@@ -271,7 +271,7 @@ is_outdated_impl.dynamic <- function(target, config) {
 
 #' @title Report any import objects required by your drake_plan
 #'   plan but missing from your workspace or file system.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description Checks your workspace/environment and
 #' file system.
 #' @export

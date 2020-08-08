@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{summaries}
 \alias{summaries}
-\title{summaries \lifecycle{defunct}}
+\title{summaries \ifelse{html}{\figure{lifecycle-defunct.svg}{options: alt='Defunct lifecycle'}}{\strong{Defunct}}}
 \usage{
 summaries(...)
 }

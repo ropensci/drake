@@ -3,7 +3,7 @@
 \name{r_recipe_wildcard}
 \alias{r_recipe_wildcard}
 \title{Default Makefile recipe wildcard
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 r_recipe_wildcard()
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{deps}
 \alias{deps}
-\title{deps \lifecycle{defunct}}
+\title{deps \ifelse{html}{\figure{lifecycle-defunct.svg}{options: alt='Defunct lifecycle'}}{\strong{Defunct}}}
 \usage{
 deps(...)
 }

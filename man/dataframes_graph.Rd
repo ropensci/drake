@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{dataframes_graph}
 \alias{dataframes_graph}
-\title{dataframes_graph \lifecycle{defunct}}
+\title{dataframes_graph \ifelse{html}{\figure{lifecycle-defunct.svg}{options: alt='Defunct lifecycle'}}{\strong{Defunct}}}
 \usage{
 dataframes_graph(...)
 }

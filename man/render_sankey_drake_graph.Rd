@@ -3,7 +3,7 @@
 \name{render_sankey_drake_graph}
 \alias{render_sankey_drake_graph}
 \title{Render a Sankey diagram from \code{\link[=drake_graph_info]{drake_graph_info()}}.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 render_sankey_drake_graph(
   graph_info,

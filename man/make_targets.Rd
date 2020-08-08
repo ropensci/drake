@@ -3,7 +3,7 @@
 \name{make_targets}
 \alias{make_targets}
 \title{Just make the targets
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 make_targets(config)
 }

@@ -3,7 +3,7 @@
 \name{drake_config}
 \alias{drake_config}
 \title{Ending of _drake.R for r_make() and friends
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 drake_config(
   plan,

@@ -3,7 +3,7 @@
 \name{drake_running}
 \alias{drake_running}
 \title{List running targets.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 drake_running(cache = drake::drake_cache(path = path), path = NULL)
 }

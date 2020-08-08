@@ -1,5 +1,5 @@
 #' @title Run your project (build the outdated targets).
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description This is the central, most important function
 #' of the drake package. It runs all the steps of your
 #' workflow in the correct order, skipping any work
@@ -374,7 +374,7 @@ drake_set_session_info <- function(
 
 #' @title Do the prework in the `prework`
 #'   argument to [make()].
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @export
 #' @keywords internal
 #' @description For internal use only.

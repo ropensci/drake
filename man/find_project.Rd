@@ -4,7 +4,7 @@
 \alias{find_project}
 \title{Search up the file system
 for the nearest root path of a drake project.
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 find_project(path = getwd())
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{read_graph}
 \alias{read_graph}
-\title{read_graph \lifecycle{defunct}}
+\title{read_graph \ifelse{html}{\figure{lifecycle-defunct.svg}{options: alt='Defunct lifecycle'}}{\strong{Defunct}}}
 \usage{
 read_graph(...)
 }

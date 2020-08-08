@@ -3,7 +3,7 @@
 \name{drake_tip}
 \alias{drake_tip}
 \title{Output a random tip about drake.
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 drake_tip()
 }

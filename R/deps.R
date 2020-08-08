@@ -1,5 +1,5 @@
 #' @title List the dependencies of a function or command
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description Functions are assumed to be imported,
 #'   and language/text are assumed to be commands in a plan.
 #' @seealso [deps_target()], [deps_knitr()]
@@ -44,7 +44,7 @@ deps_code <- function(x) {
 }
 
 #' @title List the dependencies of a target
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description Intended for debugging and checking your project.
 #'   The dependency structure of the components of your analysis
 #'   decides which targets are built and when.
@@ -99,7 +99,7 @@ deps_target_impl <- function(
 body(deps_target) <- config_util_body(deps_target_impl)
 
 #' @title Find the drake dependencies of a dynamic knitr report target.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @export
 #' @seealso [deps_code()], [deps_target()]
 #' @description Dependencies in `knitr` reports are marked
@@ -157,7 +157,7 @@ display_deps_list <- function(x) {
 }
 
 #' @title Find out why a target is out of date.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description The dependency profile can give you
 #'   a hint as to why a target is out of date.
 #'   It can tell you if
@@ -283,7 +283,7 @@ deps_profile_impl <- function(
 body(deps_profile) <- config_util_body(deps_profile_impl)
 
 #' @title List the targets and imports that are reproducibly tracked.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description List all the spec
 #' in your project's dependency network.
 #' @export

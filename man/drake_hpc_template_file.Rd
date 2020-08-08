@@ -4,7 +4,7 @@
 \alias{drake_hpc_template_file}
 \title{Write a template file for deploying
 work to a cluster / job scheduler.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 drake_hpc_template_file(
   file = drake::drake_hpc_template_files(),

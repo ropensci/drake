@@ -2,7 +2,7 @@
 % Please edit documentation in R/drake_plan_helpers.R
 \name{cancel}
 \alias{cancel}
-\title{Cancel a target mid-build \lifecycle{stable}}
+\title{Cancel a target mid-build \ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 cancel(allow_missing = TRUE)
 }

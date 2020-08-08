@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{plan_drake}
 \alias{plan_drake}
-\title{plan_drake \lifecycle{defunct}}
+\title{plan_drake \ifelse{html}{\figure{lifecycle-defunct.svg}{options: alt='Defunct lifecycle'}}{\strong{Defunct}}}
 \usage{
 plan_drake(...)
 }

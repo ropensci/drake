@@ -3,7 +3,7 @@
 \name{in_progress}
 \alias{in_progress}
 \title{List the targets in progress
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 in_progress(
   path = getwd(),

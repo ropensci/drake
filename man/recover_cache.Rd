@@ -3,7 +3,7 @@
 \name{recover_cache}
 \alias{recover_cache}
 \title{Load or create a drake cache
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 recover_cache(
   path = NULL,

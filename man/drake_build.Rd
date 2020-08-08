@@ -3,7 +3,7 @@
 \name{drake_build}
 \alias{drake_build}
 \title{Build/process a single target or import.
-\lifecycle{questioning}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#questioning'><img src='figures/lifecycle-questioning.svg' alt='Questioning lifecycle'></a>}}{\strong{Questioning}}}
 \usage{
 drake_build(
   target,

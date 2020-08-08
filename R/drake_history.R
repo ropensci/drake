@@ -1,5 +1,5 @@
 #' @title History and provenance
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description See the history and provenance of your targets:
 #'   what you ran, when you ran it, the function arguments
 #'   you used, and how to get old data back.

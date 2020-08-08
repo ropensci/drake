@@ -3,7 +3,7 @@
 \name{trigger}
 \alias{trigger}
 \title{Customize the decision rules for rebuilding targets
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 trigger(
   command = TRUE,

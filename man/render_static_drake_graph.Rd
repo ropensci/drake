@@ -4,7 +4,7 @@
 \alias{render_static_drake_graph}
 \title{Deprecated: render a \code{ggraph}/\code{ggplot2} representation
 of your drake project.
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 render_static_drake_graph(graph_info, main = graph_info$default_title)
 }

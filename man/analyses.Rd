@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{analyses}
 \alias{analyses}
-\title{analyses \lifecycle{defunct}}
+\title{analyses \ifelse{html}{\figure{lifecycle-defunct.svg}{options: alt='Defunct lifecycle'}}{\strong{Defunct}}}
 \usage{
 analyses(...)
 }

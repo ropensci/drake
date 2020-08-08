@@ -4,7 +4,7 @@
 \alias{analysis_wildcard}
 \title{Show the analysis wildcard
 used in \code{\link[=plan_summaries]{plan_summaries()}}.
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 analysis_wildcard()
 }

@@ -4,7 +4,7 @@
 \alias{cache_path}
 \title{Return the file path where the cache is stored,
 if applicable.
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 cache_path(cache = NULL)
 }

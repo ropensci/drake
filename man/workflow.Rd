@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{workflow}
 \alias{workflow}
-\title{workflow \lifecycle{defunct}}
+\title{workflow \ifelse{html}{\figure{lifecycle-defunct.svg}{options: alt='Defunct lifecycle'}}{\strong{Defunct}}}
 \usage{
 workflow(...)
 }

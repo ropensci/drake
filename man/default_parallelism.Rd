@@ -3,7 +3,7 @@
 \name{default_parallelism}
 \alias{default_parallelism}
 \title{Default parallel backend
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 default_parallelism()
 }

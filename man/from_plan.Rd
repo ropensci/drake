@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{from_plan}
 \alias{from_plan}
-\title{from_plan \lifecycle{defunct}}
+\title{from_plan \ifelse{html}{\figure{lifecycle-defunct.svg}{options: alt='Defunct lifecycle'}}{\strong{Defunct}}}
 \usage{
 from_plan(column)
 }

@@ -3,7 +3,7 @@
 \name{diagnose}
 \alias{diagnose}
 \title{Get diagnostic metadata on a target.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 diagnose(
   target = NULL,

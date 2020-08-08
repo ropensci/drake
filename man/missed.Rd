@@ -4,7 +4,7 @@
 \alias{missed}
 \title{Report any import objects required by your drake_plan
 plan but missing from your workspace or file system.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 missed(..., config = NULL)
 }

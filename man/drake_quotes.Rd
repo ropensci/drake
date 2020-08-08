@@ -3,7 +3,7 @@
 \name{drake_quotes}
 \alias{drake_quotes}
 \title{Put quotes around each element of a character vector.
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 drake_quotes(x = NULL, single = FALSE)
 }

@@ -3,7 +3,7 @@
 \name{running}
 \alias{running}
 \title{List running targets.
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 running(
   path = NULL,

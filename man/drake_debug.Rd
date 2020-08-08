@@ -3,7 +3,7 @@
 \name{drake_debug}
 \alias{drake_debug}
 \title{Run a single target's command in debug mode.'
-\lifecycle{questioning}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#questioning'><img src='figures/lifecycle-questioning.svg' alt='Questioning lifecycle'></a>}}{\strong{Questioning}}}
 \usage{
 drake_debug(
   target = NULL,

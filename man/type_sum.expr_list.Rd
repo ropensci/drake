@@ -3,7 +3,7 @@
 \name{type_sum.expr_list}
 \alias{type_sum.expr_list}
 \title{Type summary printing
-\lifecycle{questioning}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#questioning'><img src='figures/lifecycle-questioning.svg' alt='Questioning lifecycle'></a>}}{\strong{Questioning}}}
 \usage{
 type_sum.expr_list(x)
 }

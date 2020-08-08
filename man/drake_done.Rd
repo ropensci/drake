@@ -3,7 +3,7 @@
 \name{drake_done}
 \alias{drake_done}
 \title{List done targets.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 drake_done(cache = drake::drake_cache(path = path), path = NULL)
 }

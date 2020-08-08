@@ -3,7 +3,7 @@
 \name{tracked}
 \alias{tracked}
 \title{List the targets and imports that are reproducibly tracked.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 tracked(config)
 }

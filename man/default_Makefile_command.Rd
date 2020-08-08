@@ -3,7 +3,7 @@
 \name{default_Makefile_command}
 \alias{default_Makefile_command}
 \title{Default Makefile command
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 default_Makefile_command()
 }

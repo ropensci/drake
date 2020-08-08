@@ -3,7 +3,7 @@
 \name{make_imports}
 \alias{make_imports}
 \title{Just process the imports
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 make_imports(config)
 }

@@ -1,6 +1,6 @@
 #' @title Write a template file for deploying
 #'   work to a cluster / job scheduler.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description See the example files from
 #'  [drake_examples()] and [drake_example()]
 #'   for example usage.
@@ -49,7 +49,7 @@ drake_hpc_template_file <- function(
 
 #' @title List the available example template files for deploying
 #'   work to a cluster / job scheduler.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description See the example files from
 #'  [drake_examples()] and [drake_example()]
 #'   for example usage.

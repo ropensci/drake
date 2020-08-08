@@ -3,7 +3,7 @@
 \name{available_hash_algos}
 \alias{available_hash_algos}
 \title{List the available hash algorithms for drake caches.
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 available_hash_algos()
 }

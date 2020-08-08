@@ -3,7 +3,7 @@
 \name{code_to_function}
 \alias{code_to_function}
 \title{Turn a script into a function.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 code_to_function(path, envir = parent.frame())
 }

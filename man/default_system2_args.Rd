@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{default_system2_args}
 \alias{default_system2_args}
-\title{default_system2_args \lifecycle{defunct}}
+\title{default_system2_args \ifelse{html}{\figure{lifecycle-defunct.svg}{options: alt='Defunct lifecycle'}}{\strong{Defunct}}}
 \usage{
 default_system2_args(...)
 }

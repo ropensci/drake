@@ -3,7 +3,7 @@
 \name{read_trace}
 \alias{read_trace}
 \title{Read a trace of a dynamic target.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 read_trace(
   trace,

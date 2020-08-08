@@ -1,5 +1,5 @@
 #' @title Visualize the workflow with `ggraph`/`ggplot2`
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description This function requires packages `ggplot2` and `ggraph`.
 #'   Install them with `install.packages(c("ggplot2", "ggraph"))`.
 #' @export
@@ -100,7 +100,7 @@ body(drake_ggraph) <- config_util_body(drake_ggraph_impl)
 
 #' @title Visualize the workflow with `ggplot2`/`ggraph` using
 #'   [drake_graph_info()] output.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description This function requires packages `ggplot2` and `ggraph`.
 #'   Install them with `install.packages(c("ggplot2", "ggraph"))`.
 #' @export

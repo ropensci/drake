@@ -4,7 +4,7 @@
 \alias{drake_meta}
 \title{Compute the initial pre-build metadata
 of a target or import.
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 drake_meta(target, config)
 }

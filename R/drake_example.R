@@ -1,5 +1,5 @@
 #' @title Download the files of an example `drake` project.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description The `drake_example()` function downloads a
 #'   folder from <https://github.com/wlandau/drake-examples>.
 #'   By default, it creates a new folder with the example name
@@ -60,7 +60,7 @@ drake_example <- function(
 }
 
 #' @title List the names of all the drake examples.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description You can find the code files of the examples at
 #'   <https://github.com/wlandau/drake-examples>.
 #'   The `drake_examples()` function downloads the list of examples
@@ -98,7 +98,7 @@ drake_examples <- function(quiet = TRUE) {
 }
 
 #' @title Load the mtcars example.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description Is there an association between
 #' the weight and the fuel efficiency of cars?
 #' To find out, we use the mtcars example from `drake_example("mtcars")`.
@@ -246,7 +246,7 @@ mtcars_plan <- function() {
 }
 
 #' @title Clean the mtcars example from `drake_example("mtcars")`
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description This function deletes files. Use at your own risk.
 #'   Destroys the `.drake/` cache and the `report.Rmd` file
 #'   in the current working directory. Your working directory

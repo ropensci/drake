@@ -3,7 +3,7 @@
 \name{cached_unplanned}
 \alias{cached_unplanned}
 \title{List targets in the cache but not the plan.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 cached_unplanned(
   plan,

@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{parallel_stages}
 \alias{parallel_stages}
-\title{parallel_stages \lifecycle{defunct}}
+\title{parallel_stages \ifelse{html}{\figure{lifecycle-defunct.svg}{options: alt='Defunct lifecycle'}}{\strong{Defunct}}}
 \usage{
 parallel_stages(...)
 }

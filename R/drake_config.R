@@ -1,5 +1,5 @@
 #' @title Ending of _drake.R for r_make() and friends
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description Call this function inside the `_drake.R`
 #'   script for [r_make()] and friends.
 #'   All non-deprecated function arguments are the same

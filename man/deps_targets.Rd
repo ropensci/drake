@@ -3,7 +3,7 @@
 \name{deps_targets}
 \alias{deps_targets}
 \title{See the dependencies of a target
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 deps_targets(targets, config, reverse = FALSE)
 }

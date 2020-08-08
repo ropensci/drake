@@ -1,5 +1,5 @@
 #' @title Customize a target in [drake_plan()].
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description The `target()` function is a way to
 #'   configure individual targets in a `drake` plan.
 #'   Its most common use is to invoke static branching
@@ -98,7 +98,7 @@ target <- function(
 }
 
 #' @title Customize the decision rules for rebuilding targets
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description  Use this function inside a target's command
 #'   in your [drake_plan()] or the `trigger` argument to
 #'   [make()] or [drake_config()].
@@ -226,7 +226,7 @@ trigger <- function(
 }
 
 #' @title Declare input files and directories.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description `file_in()` marks individual files
 #'   (and whole directories) that your targets depend on.
 #' @section URLs:
@@ -308,7 +308,7 @@ file_in <- function(...) {
 }
 
 #' @title Declare output files and directories.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description `file_out()` marks individual files
 #'   (and whole directories) that your targets create.
 #' @export
@@ -376,7 +376,7 @@ file_out <- file_in
 
 #' @title Declare `knitr`/`rmarkdown` source files
 #'   as dependencies.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description `knitr_in()` marks individual `knitr`/R Markdown
 #'   reports as dependencies. In `drake`, these reports are pieces
 #'   of the pipeline. R Markdown is a great tool for *displaying*
@@ -420,7 +420,7 @@ file_out <- file_in
 knitr_in <- file_in
 
 #' @title Ignore code
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description Ignore sections of commands and imported functions.
 #' @details In user-defined functions and [drake_plan()] commands, you can
 #' wrap code chunks in `ignore()` to
@@ -474,7 +474,7 @@ ignore <- function(x = NULL) {
 }
 
 #' @title Suppress dependency detection.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description Tell `drake` to not search for dependencies in a chunk of code.
 #' @details `no_deps()` is similar to [ignore()], but it still lets `drake`
 #'   track meaningful changes to the code itself.
@@ -521,7 +521,7 @@ no_deps <- function(x = NULL) {
 }
 
 #' @title Cancel a target mid-build under some condition
-#'   \lifecycle{stable}
+#'   `r lifecycle::badge("stable")`
 #' @description Cancel a target mid-build if some logical condition is met.
 #'   Upon cancellation, `drake` halts the current target and moves to the
 #'   next one. The target's previous value and metadata, if they exist,
@@ -556,7 +556,7 @@ cancel_if <- function(condition, allow_missing = TRUE) {
   cancel(allow_missing = allow_missing)
 }
 
-#' @title Cancel a target mid-build \lifecycle{stable}
+#' @title Cancel a target mid-build `r lifecycle::badge("stable")`
 #' @description Cancel a target mid-build.
 #'   Upon cancellation, `drake` halts the current target and moves to the
 #'   next one. The target's previous value and metadata, if they exist,
@@ -598,7 +598,7 @@ cancellation <- function(...) {
   )
 }
 
-#' @title Name of the current target \lifecycle{stable}
+#' @title Name of the current target `r lifecycle::badge("stable")`
 #' @export
 #' @description `id_chr()` gives you the name of the current target
 #'   while [make()] is running. For static branching in [drake_plan()],
@@ -631,7 +631,7 @@ id_chr <- function() {
 }
 
 #' @title Get the environment where drake builds targets
-#' \lifecycle{questioning}
+#' `r lifecycle::badge("questioning")`
 #' @description Call this function inside the commands in your plan
 #'   to get the environment where `drake` builds targets.
 #'   Advanced users can use it to strategically remove targets from memory
@@ -695,7 +695,7 @@ envir_call_error <- function() {
 }
 
 #' @title Row-bind together drake plans
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description Combine drake plans together in a way that
 #'   correctly fills in missing entries.
 #' @export
@@ -722,7 +722,7 @@ bind_plans <- function(...) {
 
 #' @title Turn an R script file or `knitr` / R Markdown report
 #'   into a `drake` plan.
-#' \lifecycle{questioning}
+#' `r lifecycle::badge("questioning")`
 #' @export
 #' @seealso [drake_plan()], [make()], [plan_to_code()],
 #'   [plan_to_notebook()]
@@ -779,7 +779,7 @@ node_plan <- function(node) {
 }
 
 #' @title Turn a `drake` plan into a plain R script file.
-#' \lifecycle{questioning}
+#' `r lifecycle::badge("questioning")`
 #' @export
 #' @seealso [drake_plan()], [make()], [code_to_plan()],
 #'   [plan_to_notebook()]
@@ -816,7 +816,7 @@ plan_to_code <- function(plan, con = stdout()) {
 }
 
 #' @title Turn a `drake` plan into an R notebook.
-#' \lifecycle{questioning}
+#' `r lifecycle::badge("questioning")`
 #' @export
 #' @seealso [drake_plan()], [make()], [code_to_plan()],
 #'   [plan_to_code()]
@@ -891,7 +891,7 @@ plan_to_text <- function(plan) {
 }
 
 #' @title Show the code required to produce a given `drake` plan
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description You supply a plan, and [drake_plan_source()]
 #'   supplies code to generate that plan. If you have the
 #'   [`prettycode` package](https://github.com/r-lib/prettycode),
@@ -1033,7 +1033,7 @@ is_trigger_call <- function(expr) {
 }
 
 #' @title Turn a script into a function.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description `code_to_function()` is a quick (and very dirty) way to
 #'   retrofit drake to an existing script-based project. It parses
 #'   individual `\*.R/\*.RMD` files into functions so they can be added

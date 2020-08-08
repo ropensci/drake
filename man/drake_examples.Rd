@@ -3,7 +3,7 @@
 \name{drake_examples}
 \alias{drake_examples}
 \title{List the names of all the drake examples.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 drake_examples(quiet = TRUE)
 }

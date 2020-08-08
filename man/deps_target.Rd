@@ -3,7 +3,7 @@
 \name{deps_target}
 \alias{deps_target}
 \title{List the dependencies of a target
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 deps_target(target, ..., character_only = FALSE, config = NULL)
 }

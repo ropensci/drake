@@ -3,7 +3,7 @@
 \name{failed}
 \alias{failed}
 \title{List failed targets.
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 failed(
   path = NULL,

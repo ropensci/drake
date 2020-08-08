@@ -1,5 +1,5 @@
 #' @title See the time it took to build each target.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description Applies to targets in your plan, not imports or files.
 #' @details Times for dynamic targets
 #'   (<https://books.ropensci.org/drake/dynamic.html>)

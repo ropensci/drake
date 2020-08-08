@@ -1,5 +1,5 @@
 #' @title Read and return a drake target/import from the cache.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description [readd()] returns an object from the cache,
 #' and [loadd()] loads one or more objects from the cache
 #' into your environment or session. These objects are usually
@@ -125,7 +125,7 @@ readd <- function(
 }
 
 #' @title Load one or more targets or imports from the drake cache.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @rdname readd
 #' @seealso [cached()], [drake_plan()], [make()]
 #' @export
@@ -444,7 +444,7 @@ parse_lazy_arg <- function(lazy) {
 }
 
 #' @title Show how a target/import was produced.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description Show the command that produced a target
 #'   or indicate that the object or file was imported.
 #' @export
@@ -488,7 +488,7 @@ show_source <- function(target, config, character_only = FALSE) {
 }
 
 #' @title Read the pseudo-random number generator seed of the project.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description When a project is created with [make()]
 #' or [drake_config()], the project's pseudo-random number generator
 #' seed is cached. Then, unless the cache is destroyed,
@@ -561,7 +561,7 @@ read_drake_seed <- function(
 }
 
 #' @title List targets in the cache.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description Tip: read/load a cached item with [readd()]
 #'   or [loadd()].
 #' @seealso [cached_planned()], [cached_unplanned()],
@@ -652,7 +652,7 @@ cached <- function(
 }
 
 #' @title List targets in both the plan and the cache.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description Includes dynamic sub-targets as well.
 #'   See examples for details.
 #' @seealso [cached()], [cached_unplanned]
@@ -698,7 +698,7 @@ cached_planned <- function(
 }
 
 #' @title List targets in the cache but not the plan.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description Includes dynamic sub-targets as well.
 #'   See examples for details.
 #' @seealso [cached()], [cached_planned]
@@ -770,7 +770,7 @@ is_imported_cache <- Vectorize(function(target, cache) {
 "target", SIMPLIFY = TRUE)
 
 #' @title Get the cache of a `drake` project.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description [make()] saves the values of your targets so
 #'   you rarely need to think about output files. By default,
 #'   the cache is a hidden folder called `.drake/`.
@@ -862,7 +862,7 @@ drake_cache <- function(
 }
 
 #' @title Search up the file system for the nearest drake cache.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description Only works if the cache is a file system in a
 #' hidden folder named `.drake/` (default).
 #' @seealso [drake_plan()], [make()],
@@ -908,7 +908,7 @@ find_cache <- function(
 }
 
 #' @title  Make a new `drake` cache.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description Uses the [storr_rds()] function
 #' from the `storr` package.
 #' @export
@@ -1059,7 +1059,7 @@ drake_cache_version <- function(cache) {
 }
 
 #' @title Session info of the last call to [make()].
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description By default, session info is saved
 #' during [make()] to ensure reproducibility.
 #' Your loaded packages and their versions are recorded, for example.
@@ -1093,7 +1093,7 @@ drake_get_session_info <- function(
 }
 
 #' @title Get the state of the cache.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description Get the fingerprints of all the targets in a data frame.
 #' This functionality is like
 #' `make(..., cache_log_file = TRUE)`,
@@ -1213,7 +1213,7 @@ single_cache_log <- function(key, cache) {
 }
 
 #' @title Get diagnostic metadata on a target.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description Diagnostics include errors, warnings,
 #'   messages, runtimes, and other context/metadata from when a
 #'   target was built or an import was processed.
@@ -1294,7 +1294,7 @@ diagnose <- function(
 }
 
 #' @title List running targets.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description List the targets that either
 #'   1. Are currently being built during a call to [make()], or
 #'   2. Were in progress when [make()] was interrupted.
@@ -1328,7 +1328,7 @@ drake_running <- function(
 }
 
 #' @title List failed targets.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description List the targets that quit in error during [make()].
 #' @seealso [drake_done()], [drake_running()], [drake_cancelled()],
 #'   [drake_progress()], [make()]
@@ -1362,7 +1362,7 @@ drake_failed <- function(
 }
 
 #' @title List done targets.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description List the targets that completed in the current or
 #'   previous call to [make()].
 #' @seealso [drake_running()], [drake_failed()], [drake_cancelled()],
@@ -1383,7 +1383,7 @@ drake_done <- function(cache = drake::drake_cache(path = path), path = NULL) {
 }
 
 #' @title List cancelled targets.
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description List the targets that were cancelled in the current or
 #'   previous call to [make()] using [cancel()] or [cancel_if()].
 #' @seealso [running()], [failed()], [done()], [make()]
@@ -1411,7 +1411,7 @@ drake_progress_field <- function(cache, path, field) {
 }
 
 #' @title Get the build progress of your targets
-#' \lifecycle{stable}
+#' `r lifecycle::badge("stable")`
 #' @description Objects that drake imported, built, or attempted
 #' to build are listed as `"done"` or `"running"`.
 #' Skipped objects are not listed.

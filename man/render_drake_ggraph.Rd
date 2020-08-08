@@ -4,7 +4,7 @@
 \alias{render_drake_ggraph}
 \title{Visualize the workflow with \code{ggplot2}/\code{ggraph} using
 \code{\link[=drake_graph_info]{drake_graph_info()}} output.
-\lifecycle{stable}}
+\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
 \usage{
 render_drake_ggraph(
   graph_info,

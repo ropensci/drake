@@ -3,7 +3,7 @@
 \name{configure_cache}
 \alias{configure_cache}
 \title{Configure the hash algorithms, etc. of a drake cache.
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 configure_cache(
   cache = drake::get_cache(verbose = verbose),

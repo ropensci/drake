@@ -3,7 +3,7 @@
 \name{reduce_by}
 \alias{reduce_by}
 \title{Reduce multiple groupings of targets
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 reduce_by(
   plan,

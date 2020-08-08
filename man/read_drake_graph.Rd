@@ -3,7 +3,7 @@
 \name{read_drake_graph}
 \alias{read_drake_graph}
 \title{Read a workflow graph from the cache
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 read_drake_graph(path = getwd(), search = TRUE, cache = NULL, verbose = 1L)
 }

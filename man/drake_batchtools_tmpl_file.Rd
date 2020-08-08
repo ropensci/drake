@@ -3,7 +3,7 @@
 \name{drake_batchtools_tmpl_file}
 \alias{drake_batchtools_tmpl_file}
 \title{Get a template file for execution on a cluster.
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 drake_batchtools_tmpl_file(
   example = drake::drake_hpc_template_files(),

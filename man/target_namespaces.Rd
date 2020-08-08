@@ -3,7 +3,7 @@
 \name{target_namespaces}
 \alias{target_namespaces}
 \title{Storr namespaces for targets
-\lifecycle{deprecated}}
+\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
 \usage{
 target_namespaces(default = storr::storr_environment()$default_namespace)
 }
