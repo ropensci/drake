@@ -9,6 +9,7 @@
 ## Enhancements
 
 * Transition to updated `lifecycle` that does not require badges to be in `man/figures`.
+* Improve error message for empty dynamic grouping variables (#1308, @saadaslam).
 
 # Version 7.12.4
 

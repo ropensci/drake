@@ -101,6 +101,12 @@ test_with_dir("empty dynamic transform", {
   expect_error(make(plan), regexp = "no admissible grouping variables")
 })
 
+test_with_dir("assert_dynamic_size() (#1308)", {
+  expect_silent(assert_dynamic_size("x", 1L))
+  expect_error(assert_dynamic_size("x", 0L), regexp = "because NROW")
+})
+
+
 test_with_dir("invalidating a subtarget invalidates the parent", {
   skip_on_cran()
   plan <- drake_plan(

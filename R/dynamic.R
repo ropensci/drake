@@ -625,9 +625,18 @@ get_dynamic_size <- function(target, config) {
     namespace = "meta",
     use_cache = FALSE
   )$size_vec
-  stopifnot(size > 0L)
+  assert_dynamic_size(target, size)
   ht_set(config$ht_dynamic_size, x = target, value = size)
   size
+}
+
+assert_dynamic_size <- function(target, size) {
+  if (size < 1L) {
+    stop0(
+      "cannot dynamically branch over ", target, " because NROW(",
+      target, ") is 0."
+    )
+  }
 }
 
 get_dynamic_by <- function(target, config) {
