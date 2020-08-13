@@ -29,7 +29,8 @@ drake_settings <- function(
   skip_safety_checks = FALSE,
   skip_targets = FALSE,
   sleep = function(i) 0.01,
-  template = list()
+  template = list(),
+  log_worker = FALSE
 ) {
   sleep <- `environment<-`(sleep, new.env(parent = globalenv()))
   new_drake_settings(
@@ -55,7 +56,8 @@ drake_settings <- function(
     skip_safety_checks = skip_safety_checks,
     skip_targets = skip_targets,
     sleep = sleep,
-    template = template
+    template = template,
+    log_worker = log_worker
   )
 }
 
@@ -91,7 +93,8 @@ new_drake_settings <- function(
   skip_safety_checks = NULL,
   skip_targets = NULL,
   sleep = NULL,
-  template = NULL
+  template = NULL,
+  log_worker = NULL
 ) {
   out <- list(
     cache_log_file = cache_log_file,
@@ -116,7 +119,8 @@ new_drake_settings <- function(
     skip_safety_checks = skip_safety_checks,
     skip_targets = skip_targets,
     sleep = sleep,
-    template = template
+    template = template,
+    log_worker = log_worker
   )
   class(out) <- c("drake_settings", "drake")
   out
@@ -152,6 +156,7 @@ val_drake_settings_lengths <- function(x) {
   stopifnot(length(x$skip_imports) == 1L)
   stopifnot(length(x$skip_safety_checks) == 1L)
   stopifnot(length(x$skip_targets) == 1L)
+  stopifnot(length(x$log_worker) == 1L)
 }
 
 val_drake_settings_types <- function(x) {
@@ -177,6 +182,7 @@ val_drake_settings_types <- function(x) {
   stopifnot(is.logical(x$skip_targets))
   stopifnot(is.function(x$sleep))
   stopifnot(is.list(x$template))
+  stopifnot(is.logical(x$log_worker))
 }
 
 val_drake_settings_values <- function(x) {

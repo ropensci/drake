@@ -27,7 +27,8 @@ drake_settings(
   skip_safety_checks = FALSE,
   skip_targets = FALSE,
   sleep = function(i) 0.01,
-  template = list()
+  template = list(),
+  log_worker = FALSE
 )
 }
 \value{

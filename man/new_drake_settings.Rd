@@ -27,7 +27,8 @@ new_drake_settings(
   skip_safety_checks = NULL,
   skip_targets = NULL,
   sleep = NULL,
-  template = NULL
+  template = NULL,
+  log_worker = NULL
 )
 }
 \arguments{
@@ -345,6 +346,10 @@ For more information, see the \code{clustermq} package:
 \url{https://github.com/mschubert/clustermq}.
 Some template placeholders such as \code{{{ job_name }}} and \code{{{ n_jobs }}}
 cannot be set this way.}
+
+\item{log_worker}{Logical, same as the \code{log_worker} argument of
+\code{clustermq::workers()} and \code{clustermq::Q()}. Only relevant
+if \code{parallelism} is \code{"clustermq"}.}
 }
 \value{
 A \code{drake_settings} object.
