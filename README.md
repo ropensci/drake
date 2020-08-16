@@ -99,7 +99,7 @@ and data, which increases your ability to trust your research.
 
 <center>
 <a href="https://www.youtube.com/embed/jU1Zv21GvT4">
-<img src="https://docs.ropensci.org/drake/reference/figures/workflowing.png" alt="commcall" align="center" style = "border: none; float: center;">
+<img src="https://docs.ropensci.org/drake/reference/figures/workflowing.png" alt="workflowing" align="center" style = "border: none; float: center;">
 </a>
 </center>
 
