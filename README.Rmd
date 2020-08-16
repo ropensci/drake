@@ -109,16 +109,31 @@ Data analysis can be slow. A round of scientific computation can take several mi
 
 For projects in R, the `drake` package can help. It [analyzes your workflow](https://books.ropensci.org/drake/plans.html), skips steps with up-to-date results, and orchestrates the rest with [optional distributed computing](https://books.ropensci.org/drake/hpc.html). At the end, `drake` provides evidence that your results match the underlying code and data, which increases your ability to trust your research.
 
-# Videos
+# Video
 
-The [rOpenSci Community Call from 2019-09-24](https://ropensci.org/commcalls/2019-09-24/) is a thorough introduction to `drake` (20 min talk, 35 min Q&A). Visit the [call's page](https://ropensci.org/commcalls/2019-09-24/) for links to additional resources, and [chime in here](https://github.com/ropensci-org/community-calls) to propose and vote for ideas for new Community Call topics and speakers.
+
+## That Feeling of Workflowing (Miles McBain)
+
+<center>
+<a href="https://www.youtube.com/embed/jU1Zv21GvT4">
+<img src="https://docs.ropensci.org/drake/reference/figures/workflowing.png" alt="commcall" align="center" style = "border: none; float: center;">
+</a>
+</center>
+
+(By [Miles McBain](https://github.com/MilesMcBain); [venue](https://nyhackr.org/index.html),
+[resources](https://github.com/MilesMcBain/nycr_meetup_talk))
+
+## rOpenSci Community Call
 
 <center>
 <a href="https://ropensci.org/commcalls/2019-09-24/">
 <img src="https://docs.ropensci.org/drake/reference/figures/commcall.png" alt="commcall" align="center" style = "border: none; float: center;">
 </a>
 </center>
-<br>
+
+([resources](https://ropensci.org/commcalls/2019-09-24/))
+
+
 
 # What gets done stays done.
 
