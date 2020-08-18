@@ -93,15 +93,20 @@ computing](https://books.ropensci.org/drake/hpc.html). At the end,
 `drake` provides evidence that your results match the underlying code
 and data, which increases your ability to trust your research.
 
-# Videos
+# Video
 
-The [rOpenSci Community Call
-from 2019-09-24](https://ropensci.org/commcalls/2019-09-24/) is a
-thorough introduction to `drake` (20 min talk, 35 min Q\&A). Visit the
-[call’s page](https://ropensci.org/commcalls/2019-09-24/) for links to
-additional resources, and [chime in
-here](https://github.com/ropensci-org/community-calls) to propose and
-vote for ideas for new Community Call topics and speakers.
+## That Feeling of Workflowing
+
+<center>
+<a href="https://www.youtube.com/embed/jU1Zv21GvT4">
+<img src="https://docs.ropensci.org/drake/reference/figures/workflowing.png" alt="workflowing" align="center" style = "border: none; float: center;">
+</a>
+</center>
+
+(By [Miles McBain](https://github.com/MilesMcBain); [venue](https://nyhackr.org/index.html),
+[resources](https://github.com/MilesMcBain/nycr_meetup_talk))
+
+## rOpenSci Community Call
 
 <center>
 
@@ -111,7 +116,7 @@ vote for ideas for new Community Call topics and speakers.
 
 </center>
 
-<br>
+([resources](https://ropensci.org/commcalls/2019-09-24/))
 
 # What gets done stays done.
 
@@ -184,7 +189,7 @@ plan <- drake_plan(
 plan
 #> # A tibble: 5 x 2
 #>   target   command                                                              
-#>   <chr>    <expr>                                                               
+#>   <chr>    <expr_lst>                                                           
 #> 1 raw_data readxl::read_excel(file_in("raw_data.xlsx"))                        …
 #> 2 data     raw_data %>% mutate(Ozone = replace_na(Ozone, mean(Ozone, na.rm = TR…
 #> 3 hist     create_plot(data)                                                   …
@@ -371,18 +376,18 @@ history
 #> # A tibble: 12 x 11
 #>    target current built exists hash  command   seed runtime na.rm quiet
 #>    <chr>  <lgl>   <chr> <lgl>  <chr> <chr>    <int>   <dbl> <lgl> <lgl>
-#>  1 data   TRUE    2020… TRUE   11e2… "raw_d… 1.29e9 0.0160  TRUE  NA   
+#>  1 data   TRUE    2020… TRUE   11e2… "raw_d… 1.29e9 0.013   TRUE  NA   
 #>  2 data   TRUE    2020… TRUE   11e2… "raw_d… 1.29e9 0.004   TRUE  NA   
-#>  3 fit    TRUE    2020… TRUE   3c87… "lm(Oz… 1.11e9 0.00300 NA    NA   
-#>  4 fit    TRUE    2020… TRUE   3c87… "lm(Oz… 1.11e9 0.00100 NA    NA   
-#>  5 hist   FALSE   2020… TRUE   82b9… "creat… 2.10e8 0.012   NA    NA   
-#>  6 hist   TRUE    2020… TRUE   2170… "creat… 2.10e8 0.004   NA    NA   
-#>  7 hist   TRUE    2020… TRUE   2170… "creat… 2.10e8 0.007   NA    NA   
-#>  8 raw_d… TRUE    2020… TRUE   855d… "readx… 1.20e9 0.00900 NA    NA   
-#>  9 raw_d… TRUE    2020… TRUE   855d… "readx… 1.20e9 0.008   NA    NA   
-#> 10 report TRUE    2020… TRUE   c09a… "rmark… 1.30e9 0.655   NA    TRUE 
-#> 11 report TRUE    2020… TRUE   c09a… "rmark… 1.30e9 0.400   NA    TRUE 
-#> 12 report TRUE    2020… TRUE   c09a… "rmark… 1.30e9 0.405   NA    TRUE 
+#>  3 fit    TRUE    2020… TRUE   3c87… "lm(Oz… 1.11e9 0.004   NA    NA   
+#>  4 fit    TRUE    2020… TRUE   3c87… "lm(Oz… 1.11e9 0.00200 NA    NA   
+#>  5 hist   FALSE   2020… TRUE   88ae… "creat… 2.10e8 0.0120  NA    NA   
+#>  6 hist   TRUE    2020… TRUE   0304… "creat… 2.10e8 0.005   NA    NA   
+#>  7 hist   TRUE    2020… TRUE   0304… "creat… 2.10e8 0.007   NA    NA   
+#>  8 raw_d… TRUE    2020… TRUE   855d… "readx… 1.20e9 0.016   NA    NA   
+#>  9 raw_d… TRUE    2020… TRUE   855d… "readx… 1.20e9 0.013   NA    NA   
+#> 10 report TRUE    2020… TRUE   d78a… "rmark… 1.30e9 0.628   NA    TRUE 
+#> 11 report TRUE    2020… TRUE   d78a… "rmark… 1.30e9 0.406   NA    TRUE 
+#> 12 report TRUE    2020… TRUE   d78a… "rmark… 1.30e9 0.375   NA    TRUE 
 #> # … with 1 more variable: output_file <chr>
 ```
 
