@@ -1,6 +1,5 @@
 - [ ] **Skip enough tests on CRAN to keep CRAN check time under 10 minutes**.
-- [ ] AppVeyor.
-- [ ] Travis.
+- [ ] Continuous integration.
 - [ ] Spelling.
 - [ ] Manual tests.
   - [ ] `tests/testthat/test-interactive.R`
