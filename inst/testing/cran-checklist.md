@@ -13,5 +13,4 @@
 - [ ] HPC test suite on SGE.
 - [ ] `tests/scenarios` on Mac, Linux, and Windows
 - [ ] Update the version in the `DESCRIPTION` and in `NEWS.md`.
-- [ ] AppVeyor and Travis on the GitHub release.
 - [ ] Win Builder on gz file release.
