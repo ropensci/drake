@@ -2,7 +2,11 @@ drake_defunct <- function(...) {
   .Defunct(
     new = "",
     package = "drake",
-    msg = paste0("function ", match.call()[[1]], "() in drake is defunct.")
+    msg = paste0(
+      "function ",
+      deparse(match.call()[[1]]),
+      "() in drake is defunct."
+    )
   )
 }
 
