@@ -4,7 +4,7 @@ drake_defunct <- function(...) {
     package = "drake",
     msg = paste0(
       "function ",
-      deparse(match.call()[[1]]),
+      safe_deparse(match.call()[[1]]),
       "() in drake is defunct."
     )
   )
