@@ -1,6 +1,8 @@
 # Version 7.12.5.9000
 
+## Bug fixes
 
+* Fix defunct functions error message when using namespace (#1310, @malcolmbarrett)
 
 # Version 7.12.5
 

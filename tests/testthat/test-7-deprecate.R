@@ -12,6 +12,7 @@ test_with_dir("defunct functions", {
       regexp = "drake_defunct"
     )
     expect_error(analyses(), regexp = "analyses")
+    expect_error(drake::analyses(), regexp = "drake::analyses")
     expect_error(from_plan(), regexp = "defunct")
   })
 })
