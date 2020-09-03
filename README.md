@@ -626,9 +626,7 @@ functions for changes and rebuild downstream targets
 The following resources document many known issues and challenges.
 
   - [Frequently-asked
-    questions](https://github.com/ropensci/drake/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22frequently+asked+question%22+).
-  - [Cautionary notes and edge
-    cases](https://books.ropensci.org/drake/caution.html)
+    questions](https://github.com/ropensci/drake/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22type:+faq%22+).
   - [Debugging and testing drake
     projects](https://books.ropensci.org/drake/debugging.html)
   - [Other known issues](https://github.com/ropensci/drake/issues)
