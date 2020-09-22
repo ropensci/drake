@@ -497,6 +497,5 @@ trigger_format_file <- function(target, meta, config) {
   meta_old <- drake_meta_old(target, config)
   hash_new <- meta$format_file_hash
   hash_old <- meta_old$format_file_hash
-  length(hash_new) != length(hash_old) ||
-    any(hash_new != hash_old)
+  !identical(hash_new, hash_old)
 }

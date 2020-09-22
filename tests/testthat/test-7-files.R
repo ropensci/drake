@@ -244,6 +244,13 @@ test_with_dir("authentication", {
   skip_on_cran()
   skip_if_offline()
   skip_if_not_installed("curl")
+  url <- "http://httpbin.org/basic-auth/user/passwd" # nolint
+  tryCatch(
+    mem <- curl::curl_fetch_memory(url),
+    error = function(e) {
+      skip("test URL unreachable")
+    }
+  )
   plan <- drake_plan(x = file_in("http://httpbin.org/basic-auth/user/passwd"))
   expect_error(make(plan), regexp = "could not access url")
   handles <- list(`http://httpbin.org/basic-auth` = curl::new_handle())

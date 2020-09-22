@@ -364,6 +364,15 @@ test_with_dir("main example", {
   if (!curl::has_internet()) {
     skip("no internet connection")
   }
+  skip_if_offline()
+  skip_if_not_installed("curl")
+  url <- "https://wlandau.github.io/drake-examples/main.zip" # nolint
+  tryCatch(
+    mem <- curl::curl_fetch_memory(url),
+    error = function(e) {
+      skip("test URL unreachable")
+    }
+  )
   skip_if_not_installed("ggplot2")
   for (file in c("raw_data.xlsx", "report.Rmd")) {
     expect_false(file.exists(file))

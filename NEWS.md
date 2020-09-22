@@ -4,6 +4,7 @@
 
 * Fix defunct functions error message when using namespace (#1310, @malcolmbarrett).
 * Preserve names of list elements in `.data` in DSL (#1323, @shirdekel).
+* Use `identical()` to compare file hashes (#1324, @shirdekel).
 
 # Version 7.12.5
 
