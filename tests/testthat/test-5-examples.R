@@ -7,6 +7,13 @@ test_with_dir("examples are listed and written", {
   if (!curl::has_internet()) {
     skip("no internet connection")
   }
+  url <- "https://wlandau.github.io/drake-examples/examples.md" # nolint
+  tryCatch(
+    mem <- curl::curl_fetch_memory(url),
+    error = function(e) {
+      skip("test URL unreachable")
+    }
+  )
   x <- drake_examples()
   expect_true(is.character(x) & length(x) > 0)
   example <- "main"
