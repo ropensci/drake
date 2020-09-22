@@ -173,7 +173,7 @@ before running the targets.
 }
 \details{
 For enhanced interactivity in the graph, see the \code{mandrake}
-package: \url{https://mstr3336.github.io/mandrake/}.
+package: \url{https://github.com/matthewstrasiotto/mandrake}.
 }
 \examples{
 \dontrun{

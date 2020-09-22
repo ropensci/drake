@@ -4,7 +4,7 @@
 #' @description It is good practice to visualize the dependency graph
 #'   before running the targets.
 #' @details For enhanced interactivity in the graph, see the `mandrake`
-#'   package: <https://mstr3336.github.io/mandrake/>.
+#'   package: <https://github.com/matthewstrasiotto/mandrake>.
 #' @export
 #' @seealso [render_drake_graph()], [sankey_drake_graph()],
 #'   [drake_ggraph()], [text_drake_graph()]
@@ -142,7 +142,7 @@ body(vis_drake_graph) <- config_util_body(vis_drake_graph_impl)
 #' [vis_drake_graph()], which typical users
 #' call more often.
 #' @details For enhanced interactivity in the graph, see the `mandrake`
-#'   package: <https://mstr3336.github.io/mandrake/>.
+#'   package: <https://github.com/matthewstrasiotto/mandrake>.
 #' @export
 #' @seealso [vis_drake_graph()], [sankey_drake_graph()],
 #'   [drake_ggraph()]
