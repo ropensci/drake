@@ -1187,7 +1187,7 @@ data_arg_groupings <- function(data_arg) {
   }
   lapply(data_arg, function(x) {
     x <- factor_to_character(x)
-    vapply(x, safe_deparse, FUN.VALUE = character(1), backtick = TRUE)
+    vapply(x, long_deparse, FUN.VALUE = character(1))
   })
 }
 

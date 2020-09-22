@@ -2,7 +2,8 @@
 
 ## Bug fixes
 
-* Fix defunct functions error message when using namespace (#1310, @malcolmbarrett)
+* Fix defunct functions error message when using namespace (#1310, @malcolmbarrett).
+* Preserve names of list elements in `.data` in DSL (#1323, @shirdekel).
 
 # Version 7.12.5
 
