@@ -180,3 +180,8 @@ test_with_dir("Start off with non-HPC targets, then go to HPC targets.", {
     detach("package:clustermq", unload = TRUE) # nolint
   }
 })
+
+test_with_dir("clustermq warnings (worker caching)", {
+  build <- list(target = "x", warnings = "y")
+  expect_warning(cmq_report_warnings(build))
+})
