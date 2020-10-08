@@ -74,7 +74,7 @@ rs_addin_loadd <- function(context = NULL) {
   cli_msg(
     "Loading target",
     target,
-    "into global evironment from cache",
+    "into global environment from cache",
     cache$path
   )
   loadd(
