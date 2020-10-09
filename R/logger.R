@@ -95,8 +95,14 @@ drake_log_file <- function(..., target = character(0), file) {
     "|",
     ...
   )
-  write(x = msg, file = file, append = TRUE)
+  write(x = sanitize_message(msg), file = file, append = TRUE)
   invisible()
+}
+
+sanitize_message <- function(x) {
+  x <- gsub("\t", " ", x)
+  x <- gsub("[^[:alnum:] \\.,_]", "", x)
+  paste(x, collapse = " ")
 }
 
 cli_msg <- function(..., cli_sym = cli::col_blue(cli::symbol$info)) {

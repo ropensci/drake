@@ -157,6 +157,7 @@ cmq_send_target <- function(target, config) {
   }
   spec <- hpc_spec(target, config)
   config_tmp <- get_hpc_config_tmp(config)
+  config$logger$disk("build on an hpc worker", target = target)
   config$workers$send_call(
     expr = drake::cmq_build(
       target = target,
@@ -221,7 +222,6 @@ cmq_deps_list <- function(target, config) {
 #' @param config_tmp Internal, extra parts of `config` that the workers need.
 #' @param config A [drake_config()] list.
 cmq_build <- function(target, meta, deps, spec, config_tmp, config) {
-  config$logger$disk("build on an hpc worker", target = target)
   config$spec <- spec
   config <- restore_hpc_config_tmp(config_tmp, config)
   do_prework(config = config, verbose_packages = FALSE)

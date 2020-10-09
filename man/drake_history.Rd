@@ -66,10 +66,10 @@ See the "Provenance" section for more details.
 If \code{analyze} is \code{TRUE}, \code{drake}
 scans your \code{\link[=drake_plan]{drake_plan()}} commands
 for function arguments and mentions them in the history.
-A function argument shows up if and only if
-1. It has length 1.
+A function argument shows up if and only if:
+1. It has length 1. \cr
 2. It is atomic, i.e. a base type: logical, integer,
-real, complex, character, or raw.
+real, complex, character, or raw. \cr
 3. It is explicitly named in the function call,
 For example, \code{x} is detected as \code{1} in
 \code{fn(list(x = 1))} but not \code{f(list(1))}.
@@ -78,7 +78,7 @@ and \code{\link[=knitr_in]{knitr_in()}}. For example, \code{filename} is detecte
 as \code{"my_file.csv"} in
 \code{process_data(filename = file_in("my_file.csv"))}.
 NB: in \code{process_data(filename = file_in("a", "b"))}
-\code{filename} is not detected because the value must be atomic.
+\code{filename} is not detected because the value must be atomic. \cr
 }
 
 \examples{
