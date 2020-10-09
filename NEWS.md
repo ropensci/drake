@@ -8,6 +8,10 @@
 * Set `seed = TRUE` in `future::future()`.
 * Manually relay warnings when `parallelism = "clustermq"` and `caching = "worker"` (@richardbayes).
 
+## Enhancements
+
+* Make logs more machine-readable by sanitizing messages and preventing race conditions (#1331, @Plebejer).
+
 # Version 7.12.5
 
 ## Bug fixes
