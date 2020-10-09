@@ -47,10 +47,10 @@ isolate_example("Quarantine side effects.", {
 if (suppressWarnings(require("knitr"))) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 make(my_plan) # Run the project, build the targets.
-# Watch the changing progress() as make() is running.
-progress() # List all the targets reached so far.
-progress(small, large) # Just see the progress of some targets.
-progress(list = c("small", "large")) # Same as above.
+# Watch the changing drake_progress() as make() is running.
+drake_progress() # List all the targets reached so far.
+drake_progress(small, large) # Just see the progress of some targets.
+drake_progress(list = c("small", "large")) # Same as above.
 }
 })
 }

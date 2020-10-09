@@ -30,13 +30,13 @@ isolate_example("Quarantine side effects.", {
 if (suppressWarnings(require("knitr"))) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 make(my_plan) # Run the project, build the targets.
-running() # Everything should be done.
+drake_running() # Everything should be done.
 # nolint start
 # Run make() in one R session...
 # slow_plan <- drake_plan(x = Sys.sleep(2))
 # make(slow_plan)
 # and see the progress in another session.
-# running()
+# drake_running()
 # nolint end
 }
 })

@@ -31,5 +31,5 @@ drake_cancelled()
 }
 }
 \seealso{
-\code{\link[=running]{running()}}, \code{\link[=failed]{failed()}}, \code{\link[=done]{done()}}, \code{\link[=make]{make()}}
+\code{\link[=drake_running]{drake_running()}}, \code{\link[=drake_failed]{drake_failed()}}, \code{\link[=make]{make()}}
 }

@@ -64,7 +64,7 @@ bad_plan <- drake_plan(my_target = f())
 # Running the project should generate an error
 # when trying to build 'my_target'.
 try(make(bad_plan), silent = FALSE)
-failed() # List the failed targets from the last make() (my_target).
+drake_failed() # List the failed targets from the last make() (my_target).
 # List targets that failed at one point or another
 # over the course of the project (my_target).
 # drake keeps all the error logs.
@@ -77,6 +77,6 @@ error$calls # View the traceback. (See the rlang::trace_back() function).
 }
 }
 \seealso{
-\code{\link[=failed]{failed()}}, \code{\link[=progress]{progress()}},
+\code{\link[=drake_failed]{drake_failed()}}, \code{\link[=drake_progress]{drake_progress()}},
 \code{\link[=readd]{readd()}}, \code{\link[=drake_plan]{drake_plan()}}, \code{\link[=make]{make()}}
 }

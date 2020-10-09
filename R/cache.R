@@ -1227,7 +1227,7 @@ single_cache_log <- function(key, cache) {
 #'   and all the other metadata correspond to the last build that completed
 #'   without an error.
 #' @seealso
-#'   [failed()], [progress()],
+#'   [drake_failed()], [drake_progress()],
 #'   [readd()], [drake_plan()], [make()]
 #' @export
 #' @return Either a character vector of target names or an object
@@ -1256,7 +1256,7 @@ single_cache_log <- function(key, cache) {
 #' # Running the project should generate an error
 #' # when trying to build 'my_target'.
 #' try(make(bad_plan), silent = FALSE)
-#' failed() # List the failed targets from the last make() (my_target).
+#' drake_failed() # List the failed targets from the last make() (my_target).
 #' # List targets that failed at one point or another
 #' # over the course of the project (my_target).
 #' # drake keeps all the error logs.
@@ -1309,13 +1309,13 @@ diagnose <- function(
 #' if (suppressWarnings(require("knitr"))) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Run the project, build the targets.
-#' running() # Everything should be done.
+#' drake_running() # Everything should be done.
 #' # nolint start
 #' # Run make() in one R session...
 #' # slow_plan <- drake_plan(x = Sys.sleep(2))
 #' # make(slow_plan)
 #' # and see the progress in another session.
-#' # running()
+#' # drake_running()
 #' # nolint end
 #' }
 #' })
@@ -1386,7 +1386,7 @@ drake_done <- function(cache = drake::drake_cache(path = path), path = NULL) {
 #' `r lifecycle::badge("stable")`
 #' @description List the targets that were cancelled in the current or
 #'   previous call to [make()] using [cancel()] or [cancel_if()].
-#' @seealso [running()], [failed()], [done()], [make()]
+#' @seealso [drake_running()], [drake_failed()], [make()]
 #' @export
 #' @return A character vector of target names.
 #' @inheritParams cached
@@ -1442,10 +1442,10 @@ drake_progress_field <- function(cache, path, field) {
 #' if (suppressWarnings(require("knitr"))) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' make(my_plan) # Run the project, build the targets.
-#' # Watch the changing progress() as make() is running.
-#' progress() # List all the targets reached so far.
-#' progress(small, large) # Just see the progress of some targets.
-#' progress(list = c("small", "large")) # Same as above.
+#' # Watch the changing drake_progress() as make() is running.
+#' drake_progress() # List all the targets reached so far.
+#' drake_progress(small, large) # Just see the progress of some targets.
+#' drake_progress(list = c("small", "large")) # Same as above.
 #' }
 #' })
 #' }

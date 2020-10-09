@@ -571,7 +571,7 @@ drake_tempfile <- function(
 #' config <- drake_config(my_plan)
 #' deps_profile(
 #'   file_store("report.Rmd"),
-#'   config = config,
+#'   plan = my_plan,
 #'   character_only = TRUE
 #' )
 #' }
