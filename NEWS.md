@@ -1,3 +1,9 @@
+# Version 7.12.6.9000
+
+## Enhancements
+
+* Deprecate `caching = "master"` in favor of `caching = "main"`.
+
 # Version 7.12.6
 
 ## Bug fixes
