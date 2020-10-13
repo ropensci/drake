@@ -8,7 +8,7 @@ assignees: wlandau
 
 ## Prework
 
-- [ ] Read and abide by `drake`'s [code of conduct](https://github.com/ropensci/drake/blob/master/CODE_OF_CONDUCT.md).
+- [ ] Read and abide by `drake`'s [code of conduct](https://github.com/ropensci/drake/blob/main/CODE_OF_CONDUCT.md).
 - [ ] Search for duplicates among the [existing issues](https://github.com/ropensci/drake/issues), both open and closed.
 
 ## Proposal
