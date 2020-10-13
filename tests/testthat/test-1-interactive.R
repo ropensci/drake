@@ -249,11 +249,11 @@ test_with_dir("drake_debug()", {
   }
 })
 
-test_with_dir("clustermq error messages get back to master", {
+test_with_dir("clustermq error messages get back to main", {
   skip_on_cran()
   plan <- drake_plan(a = stop(123))
   options(clustermq.scheduler = "multicore")
-  for (caching in c("worker", "master")) {
+  for (caching in c("worker", "main")) {
     expect_error(
       make(
         plan,

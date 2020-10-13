@@ -39,7 +39,7 @@ make(
   session_info = NULL,
   cache_log_file = NULL,
   seed = NULL,
-  caching = "master",
+  caching = "main",
   keep_going = FALSE,
   session = NULL,
   pruning_strategy = NULL,
@@ -292,10 +292,10 @@ seed from the project's cache (usually the \verb{.drake/} folder).
 To reset the random number generator seed for a project,
 use \code{clean(destroy = TRUE)}.}
 
-\item{caching}{Character string, either \code{"master"} or \code{"worker"}.
+\item{caching}{Character string, either \code{"main"} or \code{"worker"}.
 \itemize{
-\item \code{"master"}: Targets are built by remote workers and sent back to
-the master process. Then, the master process saves them to the
+\item \code{"main"}: Targets are built by remote workers and sent back to
+the main process. Then, the main process saves them to the
 cache (\code{config$cache}, usually a file system \code{storr}).
 Appropriate if remote workers do not have access to the file system
 of the calling R session. Targets are cached one at a time,
@@ -342,12 +342,12 @@ To conserve memory, \code{drake} assigns a brand new closure to
 except from loaded packages.
 
 For parallel processing, \code{drake} uses
-a central master process to check what the parallel
+a central main process to check what the parallel
 workers are doing, and for the affected high-performance
 computing workflows, wait for data to arrive over a network.
-In between loop iterations, the master process sleeps to avoid throttling.
+In between loop iterations, the main process sleeps to avoid throttling.
 The \code{sleep} argument to \code{make()} and \code{drake_config()}
-allows you to customize how much time the master process spends
+allows you to customize how much time the main process spends
 sleeping.
 
 The \code{sleep} argument is a function that takes an argument
@@ -574,11 +574,11 @@ a clean reproducible environment. This prevents targets
 from getting invalidated unexpectedly.
 
 A serious drake workflow should be consistent and reliable,
-ideally with the help of a master R script.
+ideally with the help of a main R script.
 This script should begin in a fresh R session,
 load your packages and functions in a dependable manner,
 and then run \code{make()}. Example:
-\url{https://github.com/wlandau/drake-examples/tree/master/gsp}.
+\url{https://github.com/wlandau/drake-examples/tree/main/gsp}.
 Batch mode, especially within a container, is particularly helpful.
 
 Interactive R sessions are still useful,

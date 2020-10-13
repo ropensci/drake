@@ -28,7 +28,7 @@ without too much fuss.
 isolate_example("Quarantine side effects.", {
 if (suppressWarnings(require("knitr"))) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
-# Create a master internal configuration list with prework.
+# Create a main internal configuration list with prework.
 con <- drake_config(my_plan, prework = c("library(knitr)", "x <- 1"))
 # Do the prework. Usually done at the beginning of `make()`,
 # and for distributed computing backends like "future_lapply",

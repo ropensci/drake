@@ -231,9 +231,9 @@
 #'   To reset the random number generator seed for a project,
 #'   use `clean(destroy = TRUE)`.
 #'
-#' @param caching Character string, either `"master"` or `"worker"`.
-#'   - `"master"`: Targets are built by remote workers and sent back to
-#'     the master process. Then, the master process saves them to the
+#' @param caching Character string, either `"main"` or `"worker"`.
+#'   - `"main"`: Targets are built by remote workers and sent back to
+#'     the main process. Then, the main process saves them to the
 #'     cache (`config$cache`, usually a file system `storr`).
 #'     Appropriate if remote workers do not have access to the file system
 #'     of the calling R session. Targets are cached one at a time,
@@ -345,12 +345,12 @@
 #'   except from loaded packages.
 #'
 #'   For parallel processing, `drake` uses
-#'   a central master process to check what the parallel
+#'   a central main process to check what the parallel
 #'   workers are doing, and for the affected high-performance
 #'   computing workflows, wait for data to arrive over a network.
-#'   In between loop iterations, the master process sleeps to avoid throttling.
+#'   In between loop iterations, the main process sleeps to avoid throttling.
 #'   The `sleep` argument to `make()` and `drake_config()`
-#'   allows you to customize how much time the master process spends
+#'   allows you to customize how much time the main process spends
 #'   sleeping.
 #'
 #'   The `sleep` argument is a function that takes an argument
@@ -537,7 +537,7 @@ drake_config <- function(
   session_info = NULL,
   cache_log_file = NULL,
   seed = NULL,
-  caching = c("master", "worker"),
+  caching = c("main", "master", "worker"),
   keep_going = FALSE,
   session = NULL,
   pruning_strategy = NULL,
@@ -582,6 +582,13 @@ drake_config <- function(
   deprecate_arg(makefile_path, "makefile_path")
   deprecate_arg(layout, "layout", "spec") # 2019-12-15
   deprecate_arg(console_log_file, "console_log_file", "log_make") # 2020-02-08
+  if (identical(caching, "master")) {
+    caching <- "main"
+    warn0(
+      "caching = \"master\" is deprecated. ",
+      "Use caching = \"main\" instead."
+    )
+  }
   # 2020-03-21
   if (!is.character(parallelism)) {
     warn0("Custom parallel backends in drake are deprecated. Using \"loop\".")

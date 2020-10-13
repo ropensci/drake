@@ -74,7 +74,7 @@ Development
 <a href="https://github.com/ropensci/onboarding/issues/156"><img src="https://badges.ropensci.org/156_status.svg" alt="rOpenSci"></a>
 </td>
 <td align="left">
-<a href="https://codecov.io/github/ropensci/drake?branch=master"><img src="https://codecov.io/github/ropensci/drake/coverage.svg?branch=master" alt="Codecov"></a>
+<a href="https://codecov.io/github/ropensci/drake?branch=main"><img src="https://codecov.io/github/ropensci/drake/coverage.svg?branch=main" alt="Codecov"></a>
 </td>
 </tr>
 <tr class="even">
@@ -358,7 +358,7 @@ make(plan, parallelism = "clustermq", jobs = 4)
 - [`drake-gitlab-docker-example`](https://gitlab.com/ecohealthalliance/drake-gitlab-docker-example): A small pedagogical example workflow that leverages `drake`, Docker, GitLab, and continuous integration in a reproducible analysis pipeline. Created by [Noam Ross](https://www.noamross.net/).
 - [`pleurosoriopsis`](https://github.com/joelnitta/pleurosoriopsis): The workflow that supports [Ebihara *et al.* 2019. "Growth Dynamics of the Independent Gametophytes of *Pleurorosiopsis makinoi* (Polypodiaceae)" *Bulletin of the National Science Museum Series B (Botany)* 45:77-86.](https://www.kahaku.go.jp/research/publication/botany.html). Created by [Joel Nitta](https://github.com/joelnitta).
 
-Alternatively, it is possible to run `drake` outside Docker and use the [`future`](https://github.com/HenrikBengtsson/future) package to send targets to a Docker image. `drake`'s [`Docker-psock`](https://github.com/wlandau/drake-examples/tree/master/Docker-psock) example demonstrates how. Download the code with `drake_example("Docker-psock")`.
+Alternatively, it is possible to run `drake` outside Docker and use the [`future`](https://github.com/HenrikBengtsson/future) package to send targets to a Docker image. `drake`'s [`Docker-psock`](https://github.com/wlandau/drake-examples/tree/main/Docker-psock) example demonstrates how. Download the code with `drake_example("Docker-psock")`.
 
 # Installation
 
@@ -399,7 +399,7 @@ The following resources explain what `drake` can do and how it works. The [`lear
 
 - The [user manual](https://books.ropensci.org/drake/)
 - [`drakeplanner`](https://github.com/wlandau/drakeplanner), an R/Shiny app to help learn `drake` and create new projects. Run locally with `drakeplanner::drakeplanner()` or access it at <https://wlandau.shinyapps.io/drakeplanner>.
-- [`learndrake`](https://github.com/wlandau/learndrake), an R package for teaching an extended `drake` workshop. It contains notebooks, slides, Shiny apps, the latter two of which are publicly deployed. See the [README](https://github.com/wlandau/learndrake/blob/master/README.md) for instructions and links.
+- [`learndrake`](https://github.com/wlandau/learndrake), an R package for teaching an extended `drake` workshop. It contains notebooks, slides, Shiny apps, the latter two of which are publicly deployed. See the [README](https://github.com/wlandau/learndrake/blob/main/README.md) for instructions and links.
 
 ## In practice
 
@@ -449,7 +449,7 @@ The GitHub issue tracker is mainly intended for bug reports and feature requests
 
 # Contributing
 
-Development is a community effort, and we encourage participation. Please read [CONTRIBUTING.md](https://github.com/ropensci/drake/blob/master/CONTRIBUTING.md) for details.
+Development is a community effort, and we encourage participation. Please read [CONTRIBUTING.md](https://github.com/ropensci/drake/blob/main/CONTRIBUTING.md) for details.
 
 # Similar work
 
@@ -461,14 +461,14 @@ Development is a community effort, and we encourage participation. Please read [
 
 The original idea of a time-saving reproducible build system extends back at least as far as [GNU Make](https://www.gnu.org/software/make/), which still aids the work of [data scientists](http://blog.kaggle.com/2012/10/15/make-for-data-scientists/) as well as the original user base of complied language programmers. In fact, the name "drake" stands for "Data Frames in R for Make". [Make](https://kbroman.org/minimal_make/) is used widely in reproducible research. Below are some examples from [Karl Broman's website](https://kbroman.org/minimal_make/).
 
-- Bostock, Mike (2013). "A map of flowlines from NHDPlus." https://github.com/mbostock/us-rivers. Powered by the Makefile at https://github.com/mbostock/us-rivers/blob/master/Makefile.
-- Broman, Karl W (2012). "Halotype Probabilities in Advanced Intercross Populations." *G3* 2(2), 199-202.Powered by the `Makefile` at https://github.com/kbroman/ailProbPaper/blob/master/Makefile.
-- Broman, Karl W (2012). "Genotype Probabilities at Intermediate Generations in the Construction of Recombinant Inbred Lines." *Genetics 190(2), 403-412. Powered by the Makefile at https://github.com/kbroman/preCCProbPaper/blob/master/Makefile.
-- Broman, Karl W and Kim, Sungjin and Sen, Saunak and Ane, Cecile and Payseur, Bret A (2012). "Mapping Quantitative Trait Loci onto a Phylogenetic Tree." *Genetics* 192(2), 267-279. Powered by the `Makefile` at https://github.com/kbroman/phyloQTLpaper/blob/master/Makefile.
+- Bostock, Mike (2013). "A map of flowlines from NHDPlus." https://github.com/mbostock/us-rivers. Powered by the Makefile at https://github.com/mbostock/us-rivers/blob/main/Makefile.
+- Broman, Karl W (2012). "Halotype Probabilities in Advanced Intercross Populations." *G3* 2(2), 199-202.Powered by the `Makefile` at https://github.com/kbroman/ailProbPaper/blob/main/Makefile.
+- Broman, Karl W (2012). "Genotype Probabilities at Intermediate Generations in the Construction of Recombinant Inbred Lines." *Genetics 190(2), 403-412. Powered by the Makefile at https://github.com/kbroman/preCCProbPaper/blob/main/Makefile.
+- Broman, Karl W and Kim, Sungjin and Sen, Saunak and Ane, Cecile and Payseur, Bret A (2012). "Mapping Quantitative Trait Loci onto a Phylogenetic Tree." *Genetics* 192(2), 267-279. Powered by the `Makefile` at https://github.com/kbroman/phyloQTLpaper/blob/main/Makefile.
 
 Whereas [GNU Make](https://www.gnu.org/software/make/) is language-agnostic, `drake` is fundamentally designed for R.
 
-- Instead of a [Makefile](https://github.com/kbroman/preCCProbPaper/blob/master/Makefile), `drake` supports an R-friendly [domain-specific language](https://books.ropensci.org/drake/plans.html#large-plans) for declaring targets.
+- Instead of a [Makefile](https://github.com/kbroman/preCCProbPaper/blob/main/Makefile), `drake` supports an R-friendly [domain-specific language](https://books.ropensci.org/drake/plans.html#large-plans) for declaring targets.
 - Targets in [GNU Make](https://www.gnu.org/software/make/) are files, whereas targets in `drake` are arbitrary variables in memory. (`drake` does have opt-in support for files via `file_out()`, `file_in()`, and `knitr_in()`.) `drake` caches these objects in its own [storage system](https://github.com/richfitz/storr) so R users rarely have to think about output files.
 
 ### Remake
@@ -497,7 +497,7 @@ Memoization saves time for small projects, but it arguably does not go far enoug
 
 `drake` and [knitr](https://yihui.name/knitr/) are symbiotic. `drake`'s job is to manage large computation and orchestrate the demanding tasks of a complex data analysis pipeline. [knitr](https://yihui.name/knitr/)'s job is to communicate those expensive results after `drake` computes them. [knitr](https://yihui.name/knitr/) / [R Markdown](https://rmarkdown.rstudio.com/) reports are small pieces of an overarching `drake` pipeline. They should focus on communication, and they should do as little computation as possible. 
 
-To insert a [knitr](https://yihui.name/knitr/) report in a `drake` pipeline, use the `knitr_in()` function inside your [`drake` plan](https://books.ropensci.org/drake/plans.html), and use `loadd()` and `readd()` to refer to targets in the report itself. See an [example here](https://github.com/wlandau/drake-examples/tree/master/main).
+To insert a [knitr](https://yihui.name/knitr/) report in a `drake` pipeline, use the `knitr_in()` function inside your [`drake` plan](https://books.ropensci.org/drake/plans.html), and use `loadd()` and `readd()` to refer to targets in the report itself. See an [example here](https://github.com/wlandau/drake-examples/tree/main/main).
 
 ### Version control
 
@@ -530,6 +530,6 @@ Many thanks to [Julia Lowndes](https://github.com/jules32), [Ben Marwick](https:
 - [Kirill M&uuml;ller](https://github.com/krlmlr)
 - [Michael Schubert](https://github.com/mschubert)
 
-Credit for images is [attributed here](https://github.com/ropensci/drake/blob/master/man/figures/image-credit.md).
+Credit for images is [attributed here](https://github.com/ropensci/drake/blob/main/man/figures/image-credit.md).
 
 [![ropensci_footer](https://ropensci.org/public_images/github_footer.png)](https://ropensci.org)

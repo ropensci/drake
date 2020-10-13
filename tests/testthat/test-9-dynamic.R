@@ -1358,7 +1358,7 @@ test_with_dir("dynamic hpc", {
     clean(destroy = TRUE)
   }
   for (parallelism in c("clustermq", "future")) {
-    for (caching in c("master", "worker")) {
+    for (caching in c("main", "worker")) {
       hpc_tests(envir, parallelism, caching)
     }
   }

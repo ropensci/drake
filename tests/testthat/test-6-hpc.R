@@ -212,21 +212,21 @@ test_with_dir("caching arg and column", {
   skip_on_cran()
   plan <- drake_plan(
     x = 1,
-    y = target(x, caching = "master"),
+    y = target(x, caching = "main"),
     z = target(y, caching = "worker")
   )
-  config <- drake_config(plan, caching = "master")
-  expect_equal(hpc_caching("x", config), "master")
-  expect_equal(hpc_caching("y", config), "master")
+  config <- drake_config(plan, caching = "main")
+  expect_equal(hpc_caching("x", config), "main")
+  expect_equal(hpc_caching("y", config), "main")
   expect_equal(hpc_caching("z", config), "worker")
   config <- drake_config(plan, caching = "worker")
   expect_equal(hpc_caching("x", config), "worker")
-  expect_equal(hpc_caching("y", config), "master")
+  expect_equal(hpc_caching("y", config), "main")
   expect_equal(hpc_caching("z", config), "worker")
   p2 <- drake_plan(x = 1, y = 2)
-  config <- drake_config(p2, caching = "master")
-  expect_equal(hpc_caching("x", config), "master")
-  expect_equal(hpc_caching("y", config), "master")
+  config <- drake_config(p2, caching = "main")
+  expect_equal(hpc_caching("x", config), "main")
+  expect_equal(hpc_caching("y", config), "main")
   config <- drake_config(p2, caching = "worker")
   expect_equal(hpc_caching("x", config), "worker")
   expect_equal(hpc_caching("y", config), "worker")
@@ -242,7 +242,7 @@ test_with_dir("custom caching column and clustermq", {
   options(clustermq.scheduler = "multicore")
   plan <- drake_plan(
     x = 1,
-    y = target(x, caching = "master"),
+    y = target(x, caching = "main"),
     z = target(y, caching = "worker")
   )
   make(plan, parallelism = "clustermq", jobs = 1)
@@ -259,7 +259,7 @@ test_with_dir("custom caching column and future", {
   future::plan(future::multicore)
   plan <- drake_plan(
     x = 1,
-    y = target(x, caching = "master"),
+    y = target(x, caching = "main"),
     z = target(y, caching = "worker")
   )
   make(plan, parallelism = "future", jobs = 1)

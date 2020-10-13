@@ -4,7 +4,7 @@ drake_backend_clustermq <- function(config) {
     config = config,
     jobs = config$settings$jobs_preprocess
   )
-  cmq_local_master(config)
+  cmq_local_main(config)
   if (config$queue$empty()) {
     return()
   }
@@ -17,17 +17,17 @@ drake_backend_clustermq <- function(config) {
   suppressWarnings(cmq_set_common_data(config))
   config$counter <- new.env(parent = emptyenv())
   config$counter$remaining <- config$queue$size()
-  cmq_master(config)
+  cmq_main(config)
 }
 
-cmq_local_master <- function(config) {
+cmq_local_main <- function(config) {
   continue <- TRUE
   while (!config$queue$empty() && continue) {
-    continue <- cmq_local_master_iter(config)
+    continue <- cmq_local_main_iter(config)
   }
 }
 
-cmq_local_master_iter <- function(config) {
+cmq_local_main_iter <- function(config) {
   target <- config$queue$peek0()
   if (no_hpc(target, config)) {
     config$queue$pop0()
@@ -60,18 +60,18 @@ cmq_set_common_data <- function(config) {
   )
 }
 
-cmq_master <- function(config) {
+cmq_main <- function(config) {
   on.exit(config$workers$finalize())
   config$logger$disk("begin scheduling targets")
   while (config$counter$remaining > 0) {
-    cmq_master_iter(config)
+    cmq_main_iter(config)
   }
   if (config$workers$cleanup()) {
     on.exit()
   }
 }
 
-cmq_master_iter <- function(config) {
+cmq_main_iter <- function(config) {
   msg <- config$workers$receive_data()
   cmq_conclude_build(msg = msg, config = config)
   if (!identical(msg$token, "set_common_data_token")) {
@@ -151,7 +151,7 @@ cmq_send_target <- function(target, config) {
   announce_build(target = target, config = config)
   caching <- hpc_caching(target, config)
   deps <- NULL
-  if (identical(caching, "master")) {
+  if (identical(caching, "main")) {
     manage_memory(target = target, config = config, jobs = 1)
     deps <- cmq_deps_list(target, config)
   }
@@ -226,13 +226,13 @@ cmq_build <- function(target, meta, deps, spec, config_tmp, config) {
   config <- restore_hpc_config_tmp(config_tmp, config)
   do_prework(config = config, verbose_packages = FALSE)
   caching <- hpc_caching(target, config)
-  if (identical(caching, "master")) {
+  if (identical(caching, "main")) {
     cmq_assign_deps(deps, config)
   } else {
     manage_memory(target = target, config = config, jobs = 1)
   }
   build <- try_build(target = target, meta = meta, config = config)
-  if (identical(caching, "master")) {
+  if (identical(caching, "main")) {
     build$checksum <- get_outfile_checksum(target, build$value, config)
     build <- classify_build(build, config)
     build <- serialize_build(build)

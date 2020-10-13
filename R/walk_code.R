@@ -357,7 +357,7 @@ get_tangled_frags <- function(file) {
   })
 }
 
-# From https://github.com/duncantl/CodeDepends/blob/master/R/sweave.R#L15
+# From https://github.com/duncantl/CodeDepends/blob/3e2e53f5794eea169117bd1b2f96801b813b22fd/R/sweave.R#L15 # nolint
 get_tangled_text <- function(doc) {
   assert_pkg("knitr")
   id <- make.names(tempfile(), unique = FALSE, allow_ = TRUE)

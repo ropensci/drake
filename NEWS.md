@@ -318,7 +318,7 @@ These changes invalidate some targets in some workflows, but they are necessary 
 ## Bug fixes
 
 - Remove README.md from CRAN altogether. Also remove all links from the news and vignette. The links trigger too many CRAN notes, which made the automated checks too brittle.
-- Serialize formats that need serialization (like "keras") before sending the data from HPC workers to the master process (#989).
+- Serialize formats that need serialization (like "keras") before sending the data from HPC workers to the main process (#989).
 - Check for custom-formatted files when checking checksums.
 - Force fst-formatted targets to plain data frames. Same goes for the new "fst_dt" format.
 - Change the meaning and behavior of `max_expand` in `drake_plan()`. `max_expand` is now the maximum number of targets produced by `map()`, `split()`, and `cross()`. For `cross()`, this reduces the number of targets (less cumbersome) and makes the subsample of targets more representative of the complete grid. It also. ensures consistent target naming when `.id` is `FALSE` (#1002). Note: `max_expand` is not for production workflows anyway, so this change does not break anything important. Unfortunately, we do lose the speed boost in `drake_plan()` originally due to `max_expand`, but `drake_plan()` is still fast, so that is not so bad.
@@ -329,7 +329,7 @@ These changes invalidate some targets in some workflows, but they are necessary 
 ## New features
 
 - Add a new "fst_dt" format for `fst`-powered saving of `data.table` objects.
-- Support a custom "caching" column of the plan to select master vs worker caching for each target individually (#988).
+- Support a custom "caching" column of the plan to select main vs worker caching for each target individually (#988).
 - Make `transform` a formal argument of `target()` so that users do not have to type "transform =" all the time in `drake_plan()` (#993).
 - Migrate the documentation website from `ropensci.github.io/drake` to `docs.ropensci.org/drake`.
 
@@ -676,8 +676,8 @@ Version 6.2.1 is a hotfix to address the failing automated CRAN checks for 6.2.0
 - Add a new `plan_to_code()` function to turn `drake` plans into generic R scripts. New users can use this function to better understand the relationship between plans and code, and unsatisfied customers can use it to disentangle their projects from `drake` altogether. Similarly, `plan_to_notebook()` generates an R notebook from a `drake` plan.
 - Add a new `drake_debug()` function to run a target's command in debug mode. Analogous to `drake_build()`.
 - Add a `mode` argument to `trigger()` to control how the `condition` trigger factors into the decision to build or skip a target. See the `?trigger` for details.
-- Add a new `sleep` argument to `make()` and `drake_config()` to help the master process consume fewer resources during parallel processing.
-- Enable the `caching` argument for the `"clustermq"` and `"clustermq_staged"` parallel backends. Now, `make(parallelism = "clustermq", caching = "master")` will do all the caching with the master process, and `make(parallelism = "clustermq", caching = "worker")` will do all the caching with the workers. The same is true for `parallelism = "clustermq_staged"`.
+- Add a new `sleep` argument to `make()` and `drake_config()` to help the main process consume fewer resources during parallel processing.
+- Enable the `caching` argument for the `"clustermq"` and `"clustermq_staged"` parallel backends. Now, `make(parallelism = "clustermq", caching = "main")` will do all the caching with the main process, and `make(parallelism = "clustermq", caching = "worker")` will do all the caching with the workers. The same is true for `parallelism = "clustermq_staged"`.
 - Add a new `append` argument to `gather_plan()`, `gather_by()`, `reduce_plan()`, and `reduce_by()`. The `append` argument control whether the output includes the original `plan` in addition to the newly generated rows.
 - Add new functions `load_main_example()`, `clean_main_example()`, and `clean_mtcars_example()`.
 - Add a `filter` argument to `gather_by()` and `reduce_by()` in order to restrict what we gather even when `append` is `TRUE`.
@@ -697,7 +697,7 @@ Version 6.2.1 is a hotfix to address the failing automated CRAN checks for 6.2.0
 
 - Stop earlier in `make_targets()` if all the targets are already up to date.
 - Improve the documentation of the `seed` argument in `make()` and `drake_config()`.
-- Set the default `caching` argument of `make()` and `drake_config()` to `"master"` rather than `"worker"`. The default option should be the lower-overhead option for small workflows. Users have the option to make a different set of tradeoffs for larger workflows.
+- Set the default `caching` argument of `make()` and `drake_config()` to `"main"` rather than `"worker"`. The default option should be the lower-overhead option for small workflows. Users have the option to make a different set of tradeoffs for larger workflows.
 - Allow the `condition` trigger to evaluate to non-logical values as long as those values can be coerced to logicals.
 - Require that the `condition` trigger evaluate to a vector of length 1.
 - Keep non-standard columns in `drake_plan_source()`.
@@ -796,7 +796,7 @@ to tell the user if the command, a dependency, an input file, or an output file 
 
 # Version 5.2.0
 
-- Sequester staged parallelism in backends "mclapply_staged" and "parLapply_staged". For the other `lapply`-like backends, `drake` uses persistent workers and a master process. In the case of `"future_lapply"` parallelism, the master process is a separate background process called by `Rscript`.
+- Sequester staged parallelism in backends "mclapply_staged" and "parLapply_staged". For the other `lapply`-like backends, `drake` uses persistent workers and a main process. In the case of `"future_lapply"` parallelism, the main process is a separate background process called by `Rscript`.
 - Remove the appearance of staged parallelism from single-job `make()`'s.
 (Previously, there were "check" messages and a call to `staged_parallelism()`.)
 - Remove some remnants of staged parallelism internals.
@@ -835,7 +835,7 @@ to tell the user if the command, a dependency, an input file, or an output file 
 - Fix an elusive `R CMD check` error from building the pdf manual with LaTeX.
 - In `drake_plan()`, allow users to customize target-level columns using `target()` inside the commands.
 - Add a new `bind_plans()` function to concatenate the rows of drake plans and then sanitize the aggregate plan.
-- Add an optional `session` argument to tell `make()` to build targets in a separate, isolated master R session. For example, `make(session = callr::r_vanilla)`.
+- Add an optional `session` argument to tell `make()` to build targets in a separate, isolated main R session. For example, `make(session = callr::r_vanilla)`.
 
 # Version 5.1.0
 

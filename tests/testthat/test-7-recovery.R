@@ -79,7 +79,7 @@ test_with_dir("recovery (#945)", {
   skip_if_not_installed("clustermq")
   skip_if_not_installed("future")
   for (parallelism in c("loop", "clustermq", "future")) {
-    for (caching in c("master", "worker")) {
+    for (caching in c("main", "worker")) {
       if (parallelism == "loop" && caching == "worker") {
         next
       }

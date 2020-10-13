@@ -4,7 +4,7 @@
 #'   in your data analysis project. For details, read
 #'   <https://books.ropensci.org/drake/projects.html>
 #' @details Files written:
-#'   1. `make.R`: a suggested master R script for batch mode.
+#'   1. `make.R`: a suggested main R script for batch mode.
 #'   2. `_drake.R`: a configuration R script for
 #'     the [`r_*()`](https://docs.ropensci.org/drake/reference/r_make.html) functions documented at # nolint
 #'     <https://books.ropensci.org/drake/projects.html#safer-interactivity>. # nolint

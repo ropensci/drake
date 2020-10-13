@@ -58,7 +58,7 @@ test_with_dir("equals analysis", {
   }
 })
 
-# https://github.com/cran/codetools/blob/master/tests/tests.R # nolint
+# https://github.com/cran/codetools/blob/main/tests/tests.R # nolint
 test_with_dir("local variable tests from the codetools package", {
   find_locals <- function(expr) {
     if (!is.function(expr) && !is.language(expr)) {

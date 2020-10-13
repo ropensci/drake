@@ -104,7 +104,7 @@ for details.
 \item \code{caching}: overrides the \code{caching} argument of \code{\link[=make]{make()}} for each target
 individually. Possible values:
 \itemize{
-\item "master": tell the master process to store the target in the cache.
+\item "main": tell the main process to store the target in the cache.
 \item "worker": tell the HPC worker to store the target in the cache.
 \item NA: default to the \code{caching} argument of \code{\link[=make]{make()}}.
 }

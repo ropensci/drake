@@ -30,7 +30,7 @@ A \code{\link[=drake_config]{drake_config()}} configuration list.
 }
 \description{
 The main example lives at
-\url{https://github.com/wlandau/drake-examples/tree/master/main}.
+\url{https://github.com/wlandau/drake-examples/tree/main/main}.
 Use \code{drake_example("main")} to download its code.
 This function also writes/overwrites
 the files \code{report.Rmd} and \code{raw_data.xlsx}.

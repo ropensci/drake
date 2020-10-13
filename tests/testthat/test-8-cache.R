@@ -441,7 +441,7 @@ test_with_dir("memo_expr() works without a cache", {
   expect_equal(memo_expr(x, cache = NULL), x)
 })
 
-test_with_dir("master caching, environment caches and parallelism", {
+test_with_dir("main caching, environment caches and parallelism", {
   skip_on_cran()
   skip_if_not_installed("knitr")
   skip_if_not_installed("future")
@@ -455,14 +455,14 @@ test_with_dir("master caching, environment caches and parallelism", {
   make(
     my_plan,
     cache = cache,
-    caching = "master",
+    caching = "main",
     parallelism = "future",
     jobs = 2
   )
   config <- drake_config(
     my_plan,
     cache = cache,
-    caching = "master",
+    caching = "main",
     parallelism = "future",
     jobs = 2
   )

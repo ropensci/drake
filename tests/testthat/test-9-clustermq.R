@@ -9,7 +9,7 @@ test_with_dir("clustermq parallelism for CRAN", {
     message("message")
     warning("warning")
   })
-  for (caching in c("master", "worker")) {
+  for (caching in c("main", "worker")) {
     clean()
     suppressWarnings(make(plan, parallelism = "clustermq", caching = caching))
     config <- drake_config(plan)
@@ -34,7 +34,7 @@ test_with_dir("clustermq parallelism", {
   load_mtcars_example(envir = e)
   e$my_plan$hpc <- e$my_plan$target != "regression1_large"
   parallelism <- "clustermq"
-  for (caching in c("master", "worker")) {
+  for (caching in c("main", "worker")) {
     clean(destroy = TRUE)
     config <- drake_config(e$my_plan, envir = e)
     expect_equal(length(outdated_impl(config)), nrow(e$my_plan))

@@ -9,7 +9,7 @@ logger <- function(verbose, file = NULL) {
   # nocov start
   } else if (verbose == 2L) {
      # Covered if we run tests without the progress package.
-     # Part of https://github.com/ropensci/drake/blob/master/inst/testing/cran-checklist.md # nolint
+     # Part of https://github.com/ropensci/drake/blob/main/inst/testing/cran-checklist.md # nolint
     cli_msg(
       "Install the progress package to see a progress bar when verbose = 2."
     )

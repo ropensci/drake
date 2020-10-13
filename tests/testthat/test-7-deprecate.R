@@ -1587,3 +1587,13 @@ test_with_dir("expose_imports() works", {
   make_impl(config = config)
   expect_is(readd(x), "character")
 })
+
+test_with_dir("move to caching = \"main\" at the top level", {
+  plan <- drake_plan(x = 1)
+  expect_warning(make(plan, caching = "master"), message = "deprecated")
+})
+
+test_with_dir("move to caching = \"main\" at the target level", {
+  plan <- drake_plan(x = target(1, caching = "master"))
+  expect_warning(make(plan), message = "deprecated")
+})

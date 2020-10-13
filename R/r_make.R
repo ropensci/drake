@@ -19,7 +19,7 @@
 #'     all the same arguments as [make()] (e.g. `plan` and `targets`).
 #'   3. In that same session, run [outdated()]
 #'     with the `config` argument from step 2.
-#'   4. Return the result back to master process
+#'   4. Return the result back to main process
 #'     (e.g. your interactive R session).
 #' @export
 #' @seealso [make()]

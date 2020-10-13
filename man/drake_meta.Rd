@@ -12,7 +12,7 @@ drake_meta(target, config)
 \item{target}{Character scalar, name of the target
 to get metadata.}
 
-\item{config}{Master internal configuration list produced
+\item{config}{Top-level internal configuration list produced
 by \code{\link[=drake_config]{drake_config()}}.}
 }
 \value{

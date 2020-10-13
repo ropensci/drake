@@ -3,7 +3,7 @@ drake_context("future")
 test_with_dir("future parallelism for CRAN", {
   skip_if_not_installed("future")
   plan <- drake_plan(x = 1)
-  for (caching in c("master", "worker")) {
+  for (caching in c("main", "worker")) {
     clean()
     make(plan, parallelism = "future", caching = caching)
     config <- drake_config(plan)
@@ -20,7 +20,7 @@ test_with_dir("future package functionality", {
   load_mtcars_example(envir = e)
   e$my_plan$hpc <- e$my_plan$target != "regression1_large"
   backends <- rep("future", 2)
-  caching <- c("master", "worker")
+  caching <- c("main", "worker")
   for (i in seq_along(backends)) {
     clean(destroy = TRUE)
     make(
@@ -113,7 +113,7 @@ test_with_dir("future package functionality", {
 test_with_dir("can gracefully conclude a crashed worker", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   skip_if_not_installed("future")
-  for (caching in c("master", "worker")) {
+  for (caching in c("main", "worker")) {
     con <- dbug()
     con$envir_graph$graph <- con$graph
     con$caching <- caching

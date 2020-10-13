@@ -80,7 +80,7 @@ ft_decide_worker <- function(target, protect, config) {
 
 ft_launch_worker <- function(target, meta, protect, config) {
   caching <- hpc_caching(target, config)
-  if (identical(caching, "master")) {
+  if (identical(caching, "main")) {
     manage_memory(target = target, config = config, downstream = protect)
   }
   DRAKE_GLOBALS__ <- NULL # Avoid name conflicts with other globals.
@@ -176,7 +176,7 @@ future_build <- function(
   }
   do_prework(config = config, verbose_packages = FALSE)
   build <- try_build(target = target, meta = meta, config = config)
-  if (identical(caching, "master")) {
+  if (identical(caching, "main")) {
     build$checksum <- get_outfile_checksum(target, build$value, config)
     build <- classify_build(build, config)
     build <- serialize_build(build)
@@ -281,7 +281,7 @@ resolve_worker_value <- function(worker, config) {
           config = config
         )
       }
-      # For `caching = "master"`, we need to conclude the build
+      # For `caching = "main"`, we need to conclude the build
       # and store the value and metadata.
       list(
         target = target,

@@ -91,7 +91,7 @@ build_drake_graph <- function(
 #' @param init_common_values Logical, whether to set the initial `drake`
 #'   version in the cache and other common values.
 #'   Not always a thread safe operation, so should only be `TRUE`
-#'   on the master process
+#'   on the main process
 configure_cache <- function(
   cache = drake::get_cache(verbose = verbose),
   short_hash_algo = drake::default_short_hash_algo(cache = cache),
@@ -526,7 +526,7 @@ deprecate_targets_only <- function(targets_only) {
 #' @title Load the main example.
 #' `r lifecycle::badge("deprecated")`
 #' @description The main example lives at
-#' <https://github.com/wlandau/drake-examples/tree/master/main>.
+#' <https://github.com/wlandau/drake-examples/tree/main/main>.
 #' Use `drake_example("main")` to download its code.
 #' This function also writes/overwrites
 #' the files `report.Rmd` and `raw_data.xlsx`.
@@ -1291,7 +1291,7 @@ dataset_wildcard <- function() {
 #'   `drake:::store_outputs()`.
 #' @param target Character scalar, name of the target
 #'   to get metadata.
-#' @param config Master internal configuration list produced
+#' @param config Top-level internal configuration list produced
 #'   by [drake_config()].
 drake_meta <- function(target, config) {
   .Deprecated(

@@ -1193,7 +1193,7 @@ test_with_dir("format file hpc checksums (#1168)", {
   skip_if_not_installed("clustermq")
   skip_on_os("windows")
   options(clustermq.scheduler = "multicore")
-  for (caching in c("master", "worker")) {
+  for (caching in c("main", "worker")) {
     clean(destroy = TRUE)
     make(plan, parallelism = "clustermq", caching = caching)
     config <- drake_config(plan)

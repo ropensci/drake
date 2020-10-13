@@ -46,7 +46,7 @@ the hash algorithms in the cache with any user-specified ones.}
 \item{init_common_values}{Logical, whether to set the initial \code{drake}
 version in the cache and other common values.
 Not always a thread safe operation, so should only be \code{TRUE}
-on the master process}
+on the main process}
 }
 \value{
 A drake/storr cache.

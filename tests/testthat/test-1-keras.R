@@ -91,7 +91,7 @@ test_with_dir("keras + clustermq", {
     plan,
     packages = "keras",
     parallelism = "clustermq",
-    caching = "master"
+    caching = "main"
   )
   out <- readd(x)
   expect_true(inherits(out, "keras.engine.training.Model"))

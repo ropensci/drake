@@ -49,7 +49,7 @@ Development
 <a href="https://github.com/ropensci/onboarding/issues/156"><img src="https://badges.ropensci.org/156_status.svg" alt="rOpenSci"></a>
 </td>
 <td align="left">
-<a href="https://codecov.io/github/ropensci/drake?branch=master"><img src="https://codecov.io/github/ropensci/drake/coverage.svg?branch=master" alt="Codecov"></a>
+<a href="https://codecov.io/github/ropensci/drake?branch=main"><img src="https://codecov.io/github/ropensci/drake/coverage.svg?branch=main" alt="Codecov"></a>
 </td>
 </tr>
 <tr class="even">
@@ -490,7 +490,7 @@ examples that run `drake` inside a Docker
 Alternatively, it is possible to run `drake` outside Docker and use the
 [`future`](https://github.com/HenrikBengtsson/future) package to send
 targets to a Docker image. `drake`’s
-[`Docker-psock`](https://github.com/wlandau/drake-examples/tree/master/Docker-psock)
+[`Docker-psock`](https://github.com/wlandau/drake-examples/tree/main/Docker-psock)
 example demonstrates how. Download the code with
 `drake_example("Docker-psock")`.
 
@@ -554,7 +554,7 @@ devotes particular attention to `drake`’s mental model.
     for teaching an extended `drake` workshop. It contains notebooks,
     slides, Shiny apps, the latter two of which are publicly deployed.
     See the
-    [README](https://github.com/wlandau/learndrake/blob/master/README.md)
+    [README](https://github.com/wlandau/learndrake/blob/main/README.md)
     for instructions and links.
 
 ## In practice
@@ -647,7 +647,7 @@ tag](https://stackoverflow.com/tags/drake-r-package).
 
 Development is a community effort, and we encourage participation.
 Please read
-[CONTRIBUTING.md](https://github.com/ropensci/drake/blob/master/CONTRIBUTING.md)
+[CONTRIBUTING.md](https://github.com/ropensci/drake/blob/main/CONTRIBUTING.md)
 for details.
 
 # Similar work
@@ -676,26 +676,26 @@ website](https://kbroman.org/minimal_make/).
 
   - Bostock, Mike (2013). “A map of flowlines from NHDPlus.”
     <https://github.com/mbostock/us-rivers>. Powered by the Makefile at
-    <https://github.com/mbostock/us-rivers/blob/master/Makefile>.
+    <https://github.com/mbostock/us-rivers/blob/main/Makefile>.
   - Broman, Karl W (2012). “Halotype Probabilities in Advanced
     Intercross Populations.” *G3* 2(2), 199-202.Powered by the
     `Makefile` at
-    <https://github.com/kbroman/ailProbPaper/blob/master/Makefile>.
+    <https://github.com/kbroman/ailProbPaper/blob/main/Makefile>.
   - Broman, Karl W (2012). “Genotype Probabilities at Intermediate
     Generations in the Construction of Recombinant Inbred Lines.”
     \*Genetics 190(2), 403-412. Powered by the Makefile at
-    <https://github.com/kbroman/preCCProbPaper/blob/master/Makefile>.
+    <https://github.com/kbroman/preCCProbPaper/blob/main/Makefile>.
   - Broman, Karl W and Kim, Sungjin and Sen, Saunak and Ane, Cecile and
     Payseur, Bret A (2012). “Mapping Quantitative Trait Loci onto a
     Phylogenetic Tree.” *Genetics* 192(2), 267-279. Powered by the
     `Makefile` at
-    <https://github.com/kbroman/phyloQTLpaper/blob/master/Makefile>.
+    <https://github.com/kbroman/phyloQTLpaper/blob/main/Makefile>.
 
 Whereas [GNU Make](https://www.gnu.org/software/make/) is
 language-agnostic, `drake` is fundamentally designed for R.
 
   - Instead of a
-    [Makefile](https://github.com/kbroman/preCCProbPaper/blob/master/Makefile),
+    [Makefile](https://github.com/kbroman/preCCProbPaper/blob/main/Makefile),
     `drake` supports an R-friendly [domain-specific
     language](https://books.ropensci.org/drake/plans.html#large-plans)
     for declaring targets.
@@ -778,7 +778,7 @@ To insert a [knitr](https://yihui.name/knitr/) report in a `drake`
 pipeline, use the `knitr_in()` function inside your [`drake`
 plan](https://books.ropensci.org/drake/plans.html), and use `loadd()`
 and `readd()` to refer to targets in the report itself. See an [example
-here](https://github.com/wlandau/drake-examples/tree/master/main).
+here](https://github.com/wlandau/drake-examples/tree/main/main).
 
 ### Version control
 
@@ -845,6 +845,6 @@ early in development.
   - [Michael Schubert](https://github.com/mschubert)
 
 Credit for images is [attributed
-here](https://github.com/ropensci/drake/blob/master/man/figures/image-credit.md).
+here](https://github.com/ropensci/drake/blob/main/man/figures/image-credit.md).
 
 [![ropensci\_footer](https://ropensci.org/public_images/github_footer.png)](https://ropensci.org)

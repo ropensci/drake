@@ -108,7 +108,7 @@ is the preprocessing step of \code{\link[=make]{make()}}, and it accepts
 all the same arguments as \code{\link[=make]{make()}} (e.g. \code{plan} and \code{targets}).
 \item In that same session, run \code{\link[=outdated]{outdated()}}
 with the \code{config} argument from step 2.
-\item Return the result back to master process
+\item Return the result back to main process
 (e.g. your interactive R session).
 }
 }

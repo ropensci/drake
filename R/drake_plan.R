@@ -42,7 +42,7 @@
 #'   for details.
 #' - `caching`: overrides the `caching` argument of [make()] for each target
 #'   individually. Possible values:
-#'   - "master": tell the master process to store the target in the cache.
+#'   - "main": tell the main process to store the target in the cache.
 #'   - "worker": tell the HPC worker to store the target in the cache.
 #'   - NA: default to the `caching` argument of [make()].
 #' - `elapsed` and `cpu`: number of seconds to wait for the target to build

@@ -17,11 +17,11 @@
 #' from getting invalidated unexpectedly.
 #'
 #' A serious drake workflow should be consistent and reliable,
-#' ideally with the help of a master R script.
+#' ideally with the help of a main R script.
 #' This script should begin in a fresh R session,
 #' load your packages and functions in a dependable manner,
 #' and then run `make()`. Example:
-#' <https://github.com/wlandau/drake-examples/tree/master/gsp>.
+#' <https://github.com/wlandau/drake-examples/tree/main/gsp>.
 #' Batch mode, especially within a container, is particularly helpful.
 #'
 #' Interactive R sessions are still useful,
@@ -155,7 +155,7 @@ make <- function(
   session_info = NULL,
   cache_log_file = NULL,
   seed = NULL,
-  caching = "master",
+  caching = "main",
   keep_going = FALSE,
   session = NULL,
   pruning_strategy = NULL,
@@ -392,7 +392,7 @@ drake_set_session_info <- function(
 #' isolate_example("Quarantine side effects.", {
 #' if (suppressWarnings(require("knitr"))) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
-#' # Create a master internal configuration list with prework.
+#' # Create a main internal configuration list with prework.
 #' con <- drake_config(my_plan, prework = c("library(knitr)", "x <- 1"))
 #' # Do the prework. Usually done at the beginning of `make()`,
 #' # and for distributed computing backends like "future_lapply",

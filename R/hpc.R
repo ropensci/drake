@@ -92,7 +92,14 @@ hpc_caching <- function(target, config) {
   if (is.null(out) || is.na(out)) {
     out <- config$caching
   }
-  match.arg(out, choices = c("master", "worker"))
+  if (identical(out, "master")) {
+    warn0(
+      "caching = \"master\" is deprecated. ",
+      "Use caching = \"main\" instead."
+    )
+    out <- "main"
+  }
+  match.arg(out, choices = c("main", "worker"))
 }
 
 hpc_config <- function(config) {

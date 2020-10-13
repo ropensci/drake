@@ -74,7 +74,7 @@ diagnose(small)$date
 # rename targets without having to build them again.
 # For an example, see
 # the "Reproducible data recovery and renaming" section of
-# https://github.com/ropensci/drake/blob/master/README.md.
+# https://github.com/ropensci/drake/blob/main/README.md.
 }
 })
 }
