@@ -384,6 +384,14 @@ sanitize_plan <- function(
   allow_duplicated_targets = FALSE,
   envir = parent.frame()
 ) {
+  is_plan <- is.data.frame(plan) &&
+    all(c("target", "command") %in% colnames(plan))
+  if (!is_plan) {
+    stop0(
+      "the drake plan must be a data frame that contains ",
+      "columns `target` and `command`."
+    )
+  }
   if (nrow(plan) < 1L) {
     return(plan)
   }

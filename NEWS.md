@@ -3,6 +3,7 @@
 ## Enhancements
 
 * Deprecate `caching = "master"` in favor of `caching = "main"`.
+* Improve the error message when a valid plan is not supplied (#1334, @robitalec).
 
 # Version 7.12.6
 
