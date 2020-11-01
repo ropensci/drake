@@ -73,7 +73,7 @@ test_with_dir("test_with_dir() evaluates inside the testing envir", {
   expect_true("some_outside_object" %in% ls())
 })
 
-test_with_dir("test_scenarios()", {
+test_with_dir("test_scenarios()", capture.output(suppressMessages({
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   old_scenario <- getOption(test_option_name)
   wd <- getwd()
@@ -85,7 +85,7 @@ test_with_dir("test_scenarios()", {
   file <- file.path(subdir, "test-small.R")
 
   writeLines(
-    text = "cat('logged scenario', getOption('drake_test_scenario'), ' ')",
+    text = "write(getOption('drake_test_scenario'), 'log.txt', append = TRUE)",
     con = file
   )
 
@@ -95,11 +95,9 @@ test_with_dir("test_scenarios()", {
   never_skip <- function(...) {
     FALSE
   }
-  log <- capture.output(
-    test_scenarios(
-      unit_test_dir = subdir,
-      skip_criterion = never_skip
-    )
+  test_scenarios(
+    unit_test_dir = subdir,
+    skip_criterion = never_skip
   )
 
   expect_false("some_nested_object" %in% ls())
@@ -108,26 +106,9 @@ test_with_dir("test_scenarios()", {
   expect_equal(old_scenario, getOption(test_option_name))
 
   # Check if we tested with all the options
-  loggings <- grepl("logged scenario", log, fixed = TRUE)
-  expect_true(any(loggings))
-  log <- log[loggings]
-  log <- gsub("logged scenario ", "", log)
-  log <- gsub(" .*", "", log)
+  log <- readLines(file.path("subdir", "log.txt"))
   expect_equal(sort(log), sort(testing_scenario_names()))
-
-  log <- evaluate_promise(
-    test_scenarios(
-      unit_test_dir = subdir,
-      skip_criterion = always_skip
-    ),
-    print = TRUE
-  )
-  log <- c(log$output, log$messages)
-
-  loggings <- grepl("logged scenario", log, fixed = TRUE)
-  expect_false(any(loggings))
-  expect_true(any(grepl("skip", log, fixed = TRUE)))
-})
+})))
 
 test_with_dir("unit_test_files works", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).

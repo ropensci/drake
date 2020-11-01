@@ -1,6 +1,8 @@
 # Version 7.12.7.9000
 
+## Bug fixes
 
+* Avoid checking printed output in test of testing infrastructure.
 
 # Version 7.12.7
 
