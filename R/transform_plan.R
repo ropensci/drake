@@ -963,7 +963,7 @@ args_combine <- function(plan, transform) {
 }
 
 args_combine_entry <- function(name, transform, plan) {
-  lapply(as.character(na_omit(unique(plan[[name]]))), as.symbol)
+  lapply(as.character(na_omit(unique(plan[[name]]))), dsl_sym)
 }
 
 splice_args <- function(x, replacements) {

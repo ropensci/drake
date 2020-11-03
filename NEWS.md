@@ -3,6 +3,7 @@
 ## Bug fixes
 
 * Avoid checking printed output in test of testing infrastructure.
+* Use `dsl_sym()` instead of `as.symbol()` when constructing commands for `combine()` (#1340, @vkehayas).
 
 # Version 7.12.7
 
