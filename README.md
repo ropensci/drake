@@ -95,15 +95,18 @@ and data, which increases your ability to trust your research.
 
 # Video
 
-## That Feeling of Workflowing
+## That Feeling of Workflowing (Miles McBain)
 
 <center>
+
 <a href="https://www.youtube.com/embed/jU1Zv21GvT4">
 <img src="https://docs.ropensci.org/drake/reference/figures/workflowing.png" alt="workflowing" align="center" style = "border: none; float: center;">
 </a>
+
 </center>
 
-(By [Miles McBain](https://github.com/MilesMcBain); [venue](https://nyhackr.org/index.html),
+(By [Miles McBain](https://github.com/MilesMcBain);
+[venue](https://nyhackr.org/index.html),
 [resources](https://github.com/MilesMcBain/nycr_meetup_talk))
 
 ## rOpenSci Community Call
@@ -254,8 +257,7 @@ create_plot <- function(data) {
 }
 ```
 
-`drake` knows which results are
-affected.
+`drake` knows which results are affected.
 
 ``` r
 vis_drake_graph(plan) # See also r_vis_drake_graph().
@@ -376,18 +378,18 @@ history
 #> # A tibble: 12 x 11
 #>    target current built exists hash  command   seed runtime na.rm quiet
 #>    <chr>  <lgl>   <chr> <lgl>  <chr> <chr>    <int>   <dbl> <lgl> <lgl>
-#>  1 data   TRUE    2020… TRUE   11e2… "raw_d… 1.29e9 0.013   TRUE  NA   
-#>  2 data   TRUE    2020… TRUE   11e2… "raw_d… 1.29e9 0.004   TRUE  NA   
-#>  3 fit    TRUE    2020… TRUE   3c87… "lm(Oz… 1.11e9 0.004   NA    NA   
-#>  4 fit    TRUE    2020… TRUE   3c87… "lm(Oz… 1.11e9 0.00200 NA    NA   
-#>  5 hist   FALSE   2020… TRUE   88ae… "creat… 2.10e8 0.0120  NA    NA   
-#>  6 hist   TRUE    2020… TRUE   0304… "creat… 2.10e8 0.005   NA    NA   
-#>  7 hist   TRUE    2020… TRUE   0304… "creat… 2.10e8 0.007   NA    NA   
-#>  8 raw_d… TRUE    2020… TRUE   855d… "readx… 1.20e9 0.016   NA    NA   
-#>  9 raw_d… TRUE    2020… TRUE   855d… "readx… 1.20e9 0.013   NA    NA   
-#> 10 report TRUE    2020… TRUE   d78a… "rmark… 1.30e9 0.628   NA    TRUE 
-#> 11 report TRUE    2020… TRUE   d78a… "rmark… 1.30e9 0.406   NA    TRUE 
-#> 12 report TRUE    2020… TRUE   d78a… "rmark… 1.30e9 0.375   NA    TRUE 
+#>  1 data   TRUE    2020… TRUE   11e2… "raw_d… 1.29e9 0.011   TRUE  NA   
+#>  2 data   TRUE    2020… TRUE   11e2… "raw_d… 1.29e9 0.00400 TRUE  NA   
+#>  3 fit    TRUE    2020… TRUE   3c87… "lm(Oz… 1.11e9 0.006   NA    NA   
+#>  4 fit    TRUE    2020… TRUE   3c87… "lm(Oz… 1.11e9 0.002   NA    NA   
+#>  5 hist   FALSE   2020… TRUE   88ae… "creat… 2.10e8 0.011   NA    NA   
+#>  6 hist   TRUE    2020… TRUE   0304… "creat… 2.10e8 0.003   NA    NA   
+#>  7 hist   TRUE    2020… TRUE   0304… "creat… 2.10e8 0.009   NA    NA   
+#>  8 raw_d… TRUE    2020… TRUE   855d… "readx… 1.20e9 0.02    NA    NA   
+#>  9 raw_d… TRUE    2020… TRUE   855d… "readx… 1.20e9 0.0330  NA    NA   
+#> 10 report TRUE    2020… TRUE   5504… "rmark… 1.30e9 1.31    NA    TRUE 
+#> 11 report TRUE    2020… TRUE   5504… "rmark… 1.30e9 0.413   NA    TRUE 
+#> 12 report TRUE    2020… TRUE   5504… "rmark… 1.30e9 0.475   NA    TRUE 
 #> # … with 1 more variable: output_file <chr>
 ```
 
@@ -472,8 +474,7 @@ make(plan, parallelism = "clustermq", jobs = 4)
 # With Docker
 
 `drake` and Docker are compatible and complementary. Here are some
-examples that run `drake` inside a Docker
-    image.
+examples that run `drake` inside a Docker image.
 
   - [`drake-gitlab-docker-example`](https://gitlab.com/ecohealthalliance/drake-gitlab-docker-example):
     A small pedagogical example workflow that leverages `drake`, Docker,
@@ -599,8 +600,7 @@ applications of `drake` in the real world. Many of these use cases are
 linked from the [`drake` tag on the rOpenSci discussion
 forum](https://discuss.ropensci.org/tag/drake).
 
-Here are some additional applications of `drake` in real-world
-    projects.
+Here are some additional applications of `drake` in real-world projects.
 
   - [efcaguab/demografia-del-voto](https://github.com/efcaguab/demografia-del-voto)
   - [efcaguab/great-white-shark-nsw](https://github.com/efcaguab/great-white-shark-nsw)
@@ -615,8 +615,7 @@ Here are some additional applications of `drake` in real-world
 Some folks like to structure their `drake` workflows as R packages.
 Examples are below. In your own analysis packages, be sure to call
 `drake::expose_imports(yourPackage)` so `drake` can watch you package’s
-functions for changes and rebuild downstream targets
-    accordingly.
+functions for changes and rebuild downstream targets accordingly.
 
   - [b-rodrigues/coolmlproject](https://github.com/b-rodrigues/coolmlproject)
   - [tiernanmartin/drakepkg](https://github.com/tiernanmartin/drakepkg)
@@ -626,7 +625,7 @@ functions for changes and rebuild downstream targets
 The following resources document many known issues and challenges.
 
   - [Frequently-asked
-    questions](https://github.com/ropensci/drake/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22type:+faq%22+).
+    questions](https://github.com/ropensci/drake/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22frequently+asked+question%22+).
   - [Debugging and testing drake
     projects](https://books.ropensci.org/drake/debugging.html)
   - [Other known issues](https://github.com/ropensci/drake/issues)
@@ -817,6 +816,31 @@ discoverability. For an example of
 working together, see [this machine learning
 project](https://github.com/pat-s/2019-feature-selection) by [Patrick
 Schratz](https://github.com/pat-s).
+
+# Citation
+
+``` r
+citation("drake")
+#> 
+#> To cite drake in publications use:
+#> 
+#>   William Michael Landau, (2018). The drake R package: a pipeline
+#>   toolkit for reproducibility and high-performance computing. Journal
+#>   of Open Source Software, 3(21), 550,
+#>   https://doi.org/10.21105/joss.00550
+#> 
+#> A BibTeX entry for LaTeX users is
+#> 
+#>   @Article{,
+#>     title = {The drake R package: a pipeline toolkit for reproducibility and high-performance computing},
+#>     author = {William Michael Landau},
+#>     journal = {Journal of Open Source Software},
+#>     year = {2018},
+#>     volume = {3},
+#>     number = {21},
+#>     url = {https://doi.org/10.21105/joss.00550},
+#>   }
+```
 
 # Acknowledgements
 
