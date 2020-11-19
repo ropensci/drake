@@ -18,6 +18,7 @@ render_drake_graph(
   ncol_legend = 1,
   collapse = TRUE,
   on_select = NULL,
+  level_separation = NULL,
   ...
 )
 }
@@ -74,6 +75,12 @@ Either a string of valid JavaScript that may be passed to
 opening the link specified by the \code{on_select_col} given to
 \code{drake_graph_info()}. \code{NULL}/\code{FALSE} disables the behavior.}
 
+\item{level_separation}{Numeric, \code{levelSeparation} argument to
+\code{visNetwork::visHierarchicalLayout()}. Controls the distance
+between hierarchical levels. Consider setting if the
+aspect ratio of the graph is far from 1.
+Defaults to 150 through \code{visNetwork}.}
+
 \item{...}{Arguments passed to \code{visNetwork()}.}
 }
 \value{
@@ -94,7 +101,7 @@ isolate_example("Quarantine side effects.", {
 if (suppressWarnings(require("knitr"))) {
 load_mtcars_example() # Get the code with drake_example("mtcars").
 if (requireNamespace("visNetwork", quietly = TRUE)) {
-# Instead of jumpting right to vis_drake_graph(), get the data frames
+# Instead of jumping right to vis_drake_graph(), get the data frames
 # of nodes, edges, and legend nodes.
 vis_drake_graph(my_plan) # Jump straight to the interactive graph.
 # Get the node and edge info that vis_drake_graph() just plotted:

@@ -58,6 +58,7 @@ vis_drake_graph <- function(
   collapse = TRUE,
   on_select_col = NULL,
   on_select = NULL,
+  level_separation = NULL,
   config = NULL
 ) {
 }
@@ -92,7 +93,8 @@ vis_drake_graph_impl <- function(
   show_output_files = TRUE,
   collapse = TRUE,
   on_select_col = NULL,
-  on_select = NULL
+  on_select = NULL,
+  level_separation = NULL
 ) {
   assert_pkg("visNetwork")
   graph_info <- drake_graph_info_impl(
@@ -129,7 +131,8 @@ vis_drake_graph_impl <- function(
     ncol_legend = ncol_legend,
     full_legend = full_legend,
     collapse = collapse,
-    on_select = on_select
+    on_select = on_select,
+    level_separation = level_separation
   )
 }
 
@@ -192,12 +195,20 @@ body(vis_drake_graph) <- config_util_body(vis_drake_graph_impl)
 #' @param collapse Logical, whether to allow nodes to collapse
 #'   if you double click on them.
 #'   Analogous to `visNetwork::visOptions(collapse = TRUE)`.
+#'
 #' @param on_select defines node selection event handling.
 #'   Either a string of valid JavaScript that may be passed to
 #'   `visNetwork::visEvents()`, or one of the following:
 #'   `TRUE`, `NULL`/`FALSE`. If `TRUE` , enables the default behavior of
 #'   opening the link specified by the `on_select_col` given to
 #'   `drake_graph_info()`. `NULL`/`FALSE` disables the behavior.
+#'
+#' @param level_separation Numeric, `levelSeparation` argument to
+#'   `visNetwork::visHierarchicalLayout()`. Controls the distance
+#'   between hierarchical levels. Consider setting if the
+#'   aspect ratio of the graph is far from 1.
+#'   Defaults to 150 through `visNetwork`.
+#'
 #' @param ... Arguments passed to `visNetwork()`.
 #'
 #' @examples
@@ -206,7 +217,7 @@ body(vis_drake_graph) <- config_util_body(vis_drake_graph_impl)
 #' if (suppressWarnings(require("knitr"))) {
 #' load_mtcars_example() # Get the code with drake_example("mtcars").
 #' if (requireNamespace("visNetwork", quietly = TRUE)) {
-#' # Instead of jumpting right to vis_drake_graph(), get the data frames
+#' # Instead of jumping right to vis_drake_graph(), get the data frames
 #' # of nodes, edges, and legend nodes.
 #' vis_drake_graph(my_plan) # Jump straight to the interactive graph.
 #' # Get the node and edge info that vis_drake_graph() just plotted:
@@ -230,6 +241,7 @@ render_drake_graph <- function(
   ncol_legend = 1,
   collapse = TRUE,
   on_select = NULL,
+  level_separation = NULL,
   ...
 ) {
   assert_pkg("visNetwork")
@@ -246,7 +258,11 @@ render_drake_graph <- function(
     navigationButtons = navigationButtons,
     ...
   )
-  out <- visNetwork::visHierarchicalLayout(graph = out, direction = "LR")
+  out <- visNetwork::visHierarchicalLayout(
+    graph = out,
+    direction = "LR",
+    levelSeparation = level_separation
+  )
   out <- vis_add_on_select(graph = out, on_select = on_select)
   out$x$nodes$x <- graph_info$nodes$x
   out$x$nodes$y <- graph_info$nodes$y

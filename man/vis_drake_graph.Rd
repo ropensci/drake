@@ -33,6 +33,7 @@ vis_drake_graph(
   collapse = TRUE,
   on_select_col = NULL,
   on_select = NULL,
+  level_separation = NULL,
   config = NULL
 )
 }
@@ -161,6 +162,12 @@ Either a string of valid JavaScript that may be passed to
 \code{TRUE}, \code{NULL}/\code{FALSE}. If \code{TRUE} , enables the default behavior of
 opening the link specified by the \code{on_select_col} given to
 \code{drake_graph_info()}. \code{NULL}/\code{FALSE} disables the behavior.}
+
+\item{level_separation}{Numeric, \code{levelSeparation} argument to
+\code{visNetwork::visHierarchicalLayout()}. Controls the distance
+between hierarchical levels. Consider setting if the
+aspect ratio of the graph is far from 1.
+Defaults to 150 through \code{visNetwork}.}
 
 \item{config}{Deprecated.}
 }

@@ -30,7 +30,8 @@ vis_drake_graph_impl(
   show_output_files = TRUE,
   collapse = TRUE,
   on_select_col = NULL,
-  on_select = NULL
+  on_select = NULL,
+  level_separation = NULL
 )
 }
 \arguments{

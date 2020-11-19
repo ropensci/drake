@@ -5,6 +5,10 @@
 * Avoid checking printed output in test of testing infrastructure.
 * Use `dsl_sym()` instead of `as.symbol()` when constructing commands for `combine()` (#1340, @vkehayas).
 
+## New features
+
+* Add a new `level_separation` argument to `vis_drake_graph()` and `render_drake_graph()` to control the aspect ratio of `visNetwork` graphs (#1303, @matthewstrasiotto, @matthiasgomolka, @robitalec).
+
 # Version 7.12.7
 
 ## Enhancements
