@@ -76,9 +76,9 @@ test_with_dir("recovery (#945)", {
     expect_equal(recoverable_impl(config), character(0))
   }
 
-  skip_if_not_installed("clustermq")
   skip_if_not_installed("future")
-  for (parallelism in c("loop", "clustermq", "future")) {
+  options(clustermq.scheduler = "multicore")
+  for (parallelism in c("loop", "future")) {
     for (caching in c("main", "worker")) {
       if (parallelism == "loop" && caching == "worker") {
         next

@@ -429,6 +429,7 @@ test_with_dir("cache functions work from various working directories", {
     expect_equal(cached(), character(0))
     x <- file.path(scratch, cache_dir)
     expect_true(file.exists(x))
+
     clean(destroy = TRUE)
     expect_false(file.exists(x))
     expect_silent(drake_gc()) # Cache does not exist
@@ -439,34 +440,6 @@ test_with_dir("memo_expr() works without a cache", {
   skip_on_cran()
   x <- "x"
   expect_equal(memo_expr(x, cache = NULL), x)
-})
-
-test_with_dir("main caching, environment caches and parallelism", {
-  skip_on_cran()
-  skip_if_not_installed("knitr")
-  skip_if_not_installed("future")
-  skip_on_os("windows")
-  if (!grepl("loop", get_testing_scenario_name())) {
-    skip("avoid conflicts with other hpc scenarios")
-  }
-  load_mtcars_example()
-  future::plan(future::multicore)
-  cache <- storr::storr_environment() # not thread-safe
-  make(
-    my_plan,
-    cache = cache,
-    caching = "main",
-    parallelism = "future",
-    jobs = 2
-  )
-  config <- drake_config(
-    my_plan,
-    cache = cache,
-    caching = "main",
-    parallelism = "future",
-    jobs = 2
-  )
-  expect_true("report" %in% justbuilt(config))
 })
 
 test_with_dir("run make() from subdir", {

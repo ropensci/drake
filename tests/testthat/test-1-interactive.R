@@ -95,7 +95,6 @@ test_with_dir("logger", {
 })
 
 if (FALSE) {
-
 test_with_dir("imported online file with no internet", {
   # Disconnect from the internet.
   plan <- drake_plan(
@@ -103,7 +102,9 @@ test_with_dir("imported online file with no internet", {
   )
   expect_error(make(plan), regexp = "no internet. Cannot check url")
 })
+}
 
+if (FALSE) {
 test_with_dir("time stamps and large files", {
   skip_on_cran()
   # Reconnect to the internet.
@@ -178,7 +179,9 @@ test_with_dir("time stamps and large files", {
   files <- c(dir_csv, file_zip, file_csv, file_large)
   unlink(files, recursive = TRUE, force = TRUE)
 })
+}
 
+if (FALSE) {
 test_with_dir("use_drake()", {
   skip_on_cran()
   # Load drake with library(drake)
@@ -201,7 +204,9 @@ test_with_dir("use_drake()", {
   model <- readd(model)
   expect_true(inherits(model, "summary.lm"))
 })
+}
 
+if (FALSE) {
 test_with_dir("can keep going in parallel", {
   skip_on_cran() # CRAN gets whitelist tests only (check time limits).
   plan <- drake_plan(
@@ -218,7 +223,9 @@ test_with_dir("can keep going in parallel", {
   expect_error(readd(a))
   expect_error(readd(b))
 })
+}
 
+if (FALSE) {
 test_with_dir("drake_debug()", {
   skip_on_cran()
   load_mtcars_example()
@@ -248,7 +255,9 @@ test_with_dir("drake_debug()", {
     expect_true(inherits(out, "lm"))
   }
 })
+}
 
+if (FALSE) {
 test_with_dir("clustermq error messages get back to main", {
   skip_on_cran()
   plan <- drake_plan(a = stop(123))
@@ -264,7 +273,9 @@ test_with_dir("clustermq error messages get back to main", {
     )
   }
 })
+}
 
+if (FALSE) {
 test_with_dir("forks + lock_envir = informative warning msg", {
   skip_on_cran()
   # Don't run this test for real because (1) we would have to add
@@ -278,7 +289,9 @@ test_with_dir("forks + lock_envir = informative warning msg", {
     regexp = regexp
   )
 })
+}
 
+if (FALSE) {
 test_with_dir("clean() in interactive mode", {
   skip_on_cran()
   # Must run this test in a fresh new interactive session.
@@ -307,7 +320,9 @@ test_with_dir("clean() in interactive mode", {
   clean(garbage_collection = TRUE) # No menu.
   expect_equal(sort(cached()), character(0))
 })
+}
 
+if (FALSE) {
 test_with_dir("rescue_cache() in interactive mode", {
   skip_on_cran()
   # Must run this test in a fresh new interactive session.
@@ -326,7 +341,9 @@ test_with_dir("rescue_cache() in interactive mode", {
   rescue_cache(garbage_collection = TRUE) # Select 1.
   expect_equal(sort(cached()), character(0))
 })
+}
 
+if (FALSE) {
 test_with_dir("recovery ad in clean()", {
   skip_on_cran()
   # Must run this test in a fresh new interactive session.
@@ -345,7 +362,9 @@ test_with_dir("recovery ad in clean()", {
   .pkg_envir$drake_clean_recovery_msg <- NULL
   expect_message(clean(garbage_collection = FALSE), regexp = "recover")
 })
+}
 
+if (FALSE) {
 test_with_dir("r_make() + clustermq", {
   skip_on_cran()
   skip_on_os("windows")
@@ -367,8 +386,10 @@ test_with_dir("r_make() + clustermq", {
   expect_true(is.data.frame(readd(small)))
   expect_equal(r_outdated(), character(0))
 })
+}
 
 # Needs to run outside the RStudio IDE to fork processes.
+if (FALSE) {
 test_with_dir("r_make() + multicore future", {
   skip_on_cran()
   skip_on_os("windows")
@@ -390,7 +411,9 @@ test_with_dir("r_make() + multicore future", {
   expect_true(is.data.frame(readd(small)))
   expect_equal(r_outdated(), character(0))
 })
+}
 
+if (FALSE) {
 test_with_dir("Output from the callr RStudio addins", {
   skip_on_cran()
   skip_if_not_installed("callr")
@@ -414,7 +437,9 @@ test_with_dir("Output from the callr RStudio addins", {
   graph <- rs_addin_r_vis_drake_graph(r_args) # Should show a graph.
   expect_true(inherits(graph, "visNetwork"))
 })
+}
 
+if (FALSE) {
 test_with_dir("progress bars", {
   skip_on_cran()
   # Needs visual inspection at every step
@@ -444,7 +469,9 @@ test_with_dir("progress bars", {
   options(clustermq.scheduler = "multicore")
   make(plan, verbose = 2, parallelism = "clustermq")
 })
+}
 
+if (FALSE) {
 test_with_dir("dynamic branching + format file checksums (#1168)", {
   write_lines <- function(files, ...) {
     for (file in files) {
@@ -466,5 +493,34 @@ test_with_dir("dynamic branching + format file checksums (#1168)", {
   # Make sure nonempty hashes are returned from the function.
   make(plan, parallelism = "future")
 })
+}
 
+if (FALSE) {
+test_with_dir("main caching, environment caches and parallelism", {
+  skip_on_cran()
+  skip_if_not_installed("knitr")
+  skip_if_not_installed("future")
+  skip_on_os("windows")
+  if (!grepl("loop", get_testing_scenario_name())) {
+    skip("avoid conflicts with other hpc scenarios")
+  }
+  load_mtcars_example()
+  future::plan(future::multisession, workers = 2)
+  cache <- storr::storr_environment() # not thread-safe
+  make(
+    my_plan,
+    cache = cache,
+    caching = "main",
+    parallelism = "future",
+    jobs = 2
+  )
+  config <- drake_config(
+    my_plan,
+    cache = cache,
+    caching = "main",
+    parallelism = "future",
+    jobs = 2
+  )
+  expect_true("report" %in% justbuilt(config))
+})
 }
