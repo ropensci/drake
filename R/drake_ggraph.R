@@ -152,8 +152,9 @@ render_drake_ggraph <- function(
   shapes <- gsub("dot", "circle", shapes)
   shapes <- gsub("star", "asterisk", shapes)
   layout <- ggraph::create_layout(graph, layout = "sugiyama")
-  layout$x <- graph_info$nodes$x
-  layout$y <- graph_info$nodes$y
+  # We do want to modify the coordinates to force a hierarchical layout.
+  suppressWarnings(layout$x <- graph_info$nodes$x)
+  suppressWarnings(layout$y <- graph_info$nodes$y)
   layout$label <- paste0("\n\n", layout$label)
   status <- type <- label <- node1.name <- node2.name <- NULL
   alpha <- ifelse(transparency, 0.5, 1L)
