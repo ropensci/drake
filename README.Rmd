@@ -71,7 +71,7 @@ Development
 <a href="https://CRAN.R-project.org/package=drake"><img src="https://tinyverse.netlify.com/badge/drake"></a>
 </td>
 <td align="left">
-<a href="https://github.com/ropensci/onboarding/issues/156"><img src="https://badges.ropensci.org/156_status.svg" alt="rOpenSci"></a>
+<a href="https://github.com/ropensci/software-review/issues/156"><img src="https://badges.ropensci.org/156_status.svg" alt="rOpenSci"></a>
 </td>
 <td align="left">
 <a href="https://codecov.io/github/ropensci/drake?branch=main"><img src="https://codecov.io/github/ropensci/drake/coverage.svg?branch=main" alt="Codecov"></a>
@@ -96,7 +96,7 @@ Development
 <a href="https://zenodo.org/badge/latestdoi/82609103"><img src="https://zenodo.org/badge/82609103.svg" alt="Zenodo"></a>
 </td>
 <td align="left">
-<a href="https://www.repostatus.org/#active"><img src="https://www.repostatus.org/badges/latest/active.svg" alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed." /></a>
+<a href="https://www.tidyverse.org/lifecycle/#stable"><img src="https://img.shields.io/badge/lifecycle-stable-green.svg" alt='Stable lifecycle'></a>
 </td>
 </tr>
 </tbody>
@@ -411,7 +411,7 @@ The following resources explain what `drake` can do and how it works. The [`lear
 
 - The [reference website](https://docs.ropensci.org/drake/).
 - The [official repository of example code](https://github.com/wlandau/drake-examples). Download an example workflow from here with `drake_example()`.
-- Presentations and workshops by [Will Landau](https://github.com/wlandau), [Kirill Müller](https://github.com/krlmlr), [Amanda Dobbyn](https://github.com/aedobbyn), [Karthik Ram](http://github.com/karthik), [Sina Rüeger](https://github.com/sinarueeger), [Christine Stawitz](https://github.com/cstawitz), and others. See specific links at <https://books.ropensci.org/drake/index.html#presentations>
+- Presentations and workshops by [Will Landau](https://github.com/wlandau), [Kirill Müller](https://github.com/krlmlr), [Amanda Dobbyn](https://github.com/aedobbyn), [Karthik Ram](https://github.com/karthik), [Sina Rüeger](https://github.com/sinarueeger), [Christine Stawitz](https://github.com/cstawitz), and others. See specific links at <https://books.ropensci.org/drake/index.html#presentations>
 - The [FAQ page](https://books.ropensci.org/drake/faq.html), which links to [appropriately-labeled issues on GitHub](https://github.com/ropensci/drake/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22frequently+asked+question%22+).
 
 ## Use cases
@@ -461,14 +461,14 @@ Development is a community effort, and we encourage participation. Please read [
 
 The original idea of a time-saving reproducible build system extends back at least as far as [GNU Make](https://www.gnu.org/software/make/), which still aids the work of [data scientists](http://blog.kaggle.com/2012/10/15/make-for-data-scientists/) as well as the original user base of complied language programmers. In fact, the name "drake" stands for "Data Frames in R for Make". [Make](https://kbroman.org/minimal_make/) is used widely in reproducible research. Below are some examples from [Karl Broman's website](https://kbroman.org/minimal_make/).
 
-- Bostock, Mike (2013). "A map of flowlines from NHDPlus." https://github.com/mbostock/us-rivers. Powered by the Makefile at https://github.com/mbostock/us-rivers/blob/main/Makefile.
-- Broman, Karl W (2012). "Halotype Probabilities in Advanced Intercross Populations." *G3* 2(2), 199-202.Powered by the `Makefile` at https://github.com/kbroman/ailProbPaper/blob/main/Makefile.
-- Broman, Karl W (2012). "Genotype Probabilities at Intermediate Generations in the Construction of Recombinant Inbred Lines." *Genetics 190(2), 403-412. Powered by the Makefile at https://github.com/kbroman/preCCProbPaper/blob/main/Makefile.
-- Broman, Karl W and Kim, Sungjin and Sen, Saunak and Ane, Cecile and Payseur, Bret A (2012). "Mapping Quantitative Trait Loci onto a Phylogenetic Tree." *Genetics* 192(2), 267-279. Powered by the `Makefile` at https://github.com/kbroman/phyloQTLpaper/blob/main/Makefile.
+- Bostock, Mike (2013). "A map of flowlines from NHDPlus." https://github.com/mbostock/us-rivers. Powered by the Makefile at https://github.com/mbostock/us-rivers/blob/master/Makefile.
+- Broman, Karl W (2012). "Halotype Probabilities in Advanced Intercross Populations." *G3* 2(2), 199-202.Powered by the `Makefile` at https://github.com/kbroman/ailProbPaper/blob/master/Makefile.
+- Broman, Karl W (2012). "Genotype Probabilities at Intermediate Generations in the Construction of Recombinant Inbred Lines." *Genetics 190(2), 403-412. Powered by the Makefile at https://github.com/kbroman/preCCProbPaper/blob/master/Makefile.
+- Broman, Karl W and Kim, Sungjin and Sen, Saunak and Ane, Cecile and Payseur, Bret A (2012). "Mapping Quantitative Trait Loci onto a Phylogenetic Tree." *Genetics* 192(2), 267-279. Powered by the `Makefile` at https://github.com/kbroman/phyloQTLpaper/blob/master/Makefile.
 
 Whereas [GNU Make](https://www.gnu.org/software/make/) is language-agnostic, `drake` is fundamentally designed for R.
 
-- Instead of a [Makefile](https://github.com/kbroman/preCCProbPaper/blob/main/Makefile), `drake` supports an R-friendly [domain-specific language](https://books.ropensci.org/drake/plans.html#large-plans) for declaring targets.
+- Instead of a [Makefile](https://github.com/kbroman/preCCProbPaper/blob/master/Makefile), `drake` supports an R-friendly [domain-specific language](https://books.ropensci.org/drake/plans.html#large-plans) for declaring targets.
 - Targets in [GNU Make](https://www.gnu.org/software/make/) are files, whereas targets in `drake` are arbitrary variables in memory. (`drake` does have opt-in support for files via `file_out()`, `file_in()`, and `knitr_in()`.) `drake` caches these objects in its own [storage system](https://github.com/richfitz/storr) so R users rarely have to think about output files.
 
 ### Remake
@@ -503,7 +503,7 @@ To insert a [knitr](https://yihui.name/knitr/) report in a `drake` pipeline, use
 
 `drake` is not a version control tool. However, it is fully compatible with [`git`](https://git-scm.com/), [`svn`](https://en.wikipedia.org/wiki/Apache_Subversion), and similar software. In fact, it is good practice to use [`git`](https://git-scm.com/) alongside `drake` for reproducible workflows.
 
-However, data poses a challenge. The datasets created by `make()` can get large and numerous, and it is not recommended to put the `.drake/` cache or the `.drake_history/` logs under version control. Instead, it is recommended to use a data storage solution such as [DropBox](https://www.dropbox.com/) or [OSF](https://osf.io/ka7jv/wiki/home/).
+However, data poses a challenge. The datasets created by `make()` can get large and numerous, and it is not recommended to put the `.drake/` cache or the `.drake_history/` logs under version control. Instead, it is recommended to use a data storage solution such as [DropBox](https://www.dropbox.com) or [OSF](https://osf.io/ka7jv/wiki/home/).
 
 ### Containerization and R package environments
 
@@ -523,7 +523,7 @@ citation("drake")
 
 Special thanks to [Jarad Niemi](https://www.jarad.me/), my advisor from [graduate school](https://stat.iastate.edu/), for first introducing me to the idea of [Makefiles](https://www.gnu.org/software/make/) for research. He originally set me down the path that led to `drake`.
 
-Many thanks to [Julia Lowndes](https://github.com/jules32), [Ben Marwick](https://github.com/benmarwick), and [Peter Slaughter](https://github.com/gothub) for [reviewing drake for rOpenSci](https://github.com/ropensci/onboarding/issues/156), and to [Maëlle Salmon](https://github.com/maelle) for such active involvement as the editor. Thanks also to the following people for contributing early in development.
+Many thanks to [Julia Lowndes](https://github.com/jules32), [Ben Marwick](https://github.com/benmarwick), and [Peter Slaughter](https://github.com/gothub) for [reviewing drake for rOpenSci](https://github.com/ropensci/software-review/issues/156), and to [Maëlle Salmon](https://github.com/maelle) for such active involvement as the editor. Thanks also to the following people for contributing early in development.
 
 - [Alex Axthelm](https://github.com/AlexAxthelm)
 - [Chan-Yub Park](https://github.com/mrchypark)

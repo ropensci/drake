@@ -46,7 +46,7 @@ Development
 <a href="https://CRAN.R-project.org/package=drake"><img src="https://tinyverse.netlify.com/badge/drake"></a>
 </td>
 <td align="left">
-<a href="https://github.com/ropensci/onboarding/issues/156"><img src="https://badges.ropensci.org/156_status.svg" alt="rOpenSci"></a>
+<a href="https://github.com/ropensci/software-review/issues/156"><img src="https://badges.ropensci.org/156_status.svg" alt="rOpenSci"></a>
 </td>
 <td align="left">
 <a href="https://codecov.io/github/ropensci/drake?branch=main"><img src="https://codecov.io/github/ropensci/drake/coverage.svg?branch=main" alt="Codecov"></a>
@@ -71,7 +71,7 @@ Development
 <a href="https://zenodo.org/badge/latestdoi/82609103"><img src="https://zenodo.org/badge/82609103.svg" alt="Zenodo"></a>
 </td>
 <td align="left">
-<a href="https://www.repostatus.org/#active"><img src="https://www.repostatus.org/badges/latest/active.svg" alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed." /></a>
+<a href="https://www.tidyverse.org/lifecycle/#stable"><img src="https://img.shields.io/badge/lifecycle-stable-green.svg" alt='Stable lifecycle'></a>
 </td>
 </tr>
 </tbody>
@@ -583,7 +583,7 @@ devotes particular attention to `drake`’s mental model.
     Landau](https://github.com/wlandau), [Kirill
     Müller](https://github.com/krlmlr), [Amanda
     Dobbyn](https://github.com/aedobbyn), [Karthik
-    Ram](http://github.com/karthik), [Sina
+    Ram](https://github.com/karthik), [Sina
     Rüeger](https://github.com/sinarueeger), [Christine
     Stawitz](https://github.com/cstawitz), and others. See specific
     links at <https://books.ropensci.org/drake/index.html#presentations>
@@ -675,26 +675,26 @@ website](https://kbroman.org/minimal_make/).
 
   - Bostock, Mike (2013). “A map of flowlines from NHDPlus.”
     <https://github.com/mbostock/us-rivers>. Powered by the Makefile at
-    <https://github.com/mbostock/us-rivers/blob/main/Makefile>.
+    <https://github.com/mbostock/us-rivers/blob/master/Makefile>.
   - Broman, Karl W (2012). “Halotype Probabilities in Advanced
     Intercross Populations.” *G3* 2(2), 199-202.Powered by the
     `Makefile` at
-    <https://github.com/kbroman/ailProbPaper/blob/main/Makefile>.
+    <https://github.com/kbroman/ailProbPaper/blob/master/Makefile>.
   - Broman, Karl W (2012). “Genotype Probabilities at Intermediate
     Generations in the Construction of Recombinant Inbred Lines.”
     \*Genetics 190(2), 403-412. Powered by the Makefile at
-    <https://github.com/kbroman/preCCProbPaper/blob/main/Makefile>.
+    <https://github.com/kbroman/preCCProbPaper/blob/master/Makefile>.
   - Broman, Karl W and Kim, Sungjin and Sen, Saunak and Ane, Cecile and
     Payseur, Bret A (2012). “Mapping Quantitative Trait Loci onto a
     Phylogenetic Tree.” *Genetics* 192(2), 267-279. Powered by the
     `Makefile` at
-    <https://github.com/kbroman/phyloQTLpaper/blob/main/Makefile>.
+    <https://github.com/kbroman/phyloQTLpaper/blob/master/Makefile>.
 
 Whereas [GNU Make](https://www.gnu.org/software/make/) is
 language-agnostic, `drake` is fundamentally designed for R.
 
   - Instead of a
-    [Makefile](https://github.com/kbroman/preCCProbPaper/blob/main/Makefile),
+    [Makefile](https://github.com/kbroman/preCCProbPaper/blob/master/Makefile),
     `drake` supports an R-friendly [domain-specific
     language](https://books.ropensci.org/drake/plans.html#large-plans)
     for declaring targets.
@@ -792,7 +792,7 @@ However, data poses a challenge. The datasets created by `make()` can
 get large and numerous, and it is not recommended to put the `.drake/`
 cache or the `.drake_history/` logs under version control. Instead, it
 is recommended to use a data storage solution such as
-[DropBox](https://www.dropbox.com/) or
+[DropBox](https://www.dropbox.com) or
 [OSF](https://osf.io/ka7jv/wiki/home/).
 
 ### Containerization and R package environments
@@ -852,7 +852,7 @@ research. He originally set me down the path that led to `drake`.
 Many thanks to [Julia Lowndes](https://github.com/jules32), [Ben
 Marwick](https://github.com/benmarwick), and [Peter
 Slaughter](https://github.com/gothub) for [reviewing drake for
-rOpenSci](https://github.com/ropensci/onboarding/issues/156), and to
+rOpenSci](https://github.com/ropensci/software-review/issues/156), and to
 [Maëlle Salmon](https://github.com/maelle) for such active involvement
 as the editor. Thanks also to the following people for contributing
 early in development.
