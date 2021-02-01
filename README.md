@@ -78,6 +78,10 @@ Development
 </table>
 <br>
 
+# Consider targets
+
+The [`targets`](https://docs.ropensci.org/targets) R package is the long-term successor of `drake`, and it is more robust and easier to use. Please visit <https://books.ropensci.org/targets/drake.html> for full context and advice on transitioning.
+
 # The drake R package <img src="https://docs.ropensci.org/drake/reference/figures/logo.svg" align="right" alt="logo" width="120" height = "139" style = "border: none; float: right;">
 
 Data analysis can be slow. A round of scientific computation can take
