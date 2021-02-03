@@ -4,7 +4,7 @@
 
 # Version 7.13.1
 
-* Add a NOTICE file to more explicitly credit code included from other open source projects. (Previously `drake` just had comments in the source with links to the various projects.)
+* Add files `NOTICE` and `inst/NOTICE` to more explicitly credit code included from other open source projects. (Previously `drake` just had comments in the source with links to the various projects.)
 
 # Version 7.13.0
 

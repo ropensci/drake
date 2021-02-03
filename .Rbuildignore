@@ -23,6 +23,7 @@
 ^README\.md$
 ^README\.Rmd$
 ^LICENSE$
+^NOTICE$
 vignettes/.*\.html
 vignettes/.*\.md
 vignettes/.*\.log
