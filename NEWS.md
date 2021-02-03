@@ -1,4 +1,8 @@
-# Version 7.13.0.9000
+# Version 7.13.1.9000
+
+
+
+# Version 7.13.1
 
 * Add a NOTICE file to more explicitly credit code included from other open source projects. (Previously `drake` just had comments in the source with links to the various projects.)
 
