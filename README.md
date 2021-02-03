@@ -65,7 +65,6 @@ Development
 </tr>
 <tr class="odd">
 <td align="left">
-<a href="https://saythanks.io/to/drake-r-package-feedback"><img src="https://img.shields.io/badge/Say-Thanks-blue.svg" alt="SayThanks"></a>
 </td>
 <td align="left">
 <a href="https://zenodo.org/badge/latestdoi/82609103"><img src="https://zenodo.org/badge/82609103.svg" alt="Zenodo"></a>
@@ -80,7 +79,7 @@ Development
 
 # Consider targets
 
-The [`targets`](https://docs.ropensci.org/targets) R package is the long-term successor of `drake`, and it is more robust and easier to use. Please visit <https://books.ropensci.org/targets/drake.html> for full context and advice on transitioning.
+The [`targets`](https://docs.ropensci.org/targets/) R package is the long-term successor of `drake`, and it is more robust and easier to use. Please visit <https://books.ropensci.org/targets/drake.html> for full context and advice on transitioning.
 
 # The drake R package <img src="https://docs.ropensci.org/drake/reference/figures/logo.svg" align="right" alt="logo" width="120" height = "139" style = "border: none; float: right;">
 
@@ -796,8 +795,7 @@ However, data poses a challenge. The datasets created by `make()` can
 get large and numerous, and it is not recommended to put the `.drake/`
 cache or the `.drake_history/` logs under version control. Instead, it
 is recommended to use a data storage solution such as
-[DropBox](https://www.dropbox.com) or
-[OSF](https://osf.io/ka7jv/wiki/home/).
+DropBox or [OSF](https://osf.io/ka7jv/wiki/home/).
 
 ### Containerization and R package environments
 
