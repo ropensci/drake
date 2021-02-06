@@ -70,7 +70,7 @@ Development
 <a href="https://zenodo.org/badge/latestdoi/82609103"><img src="https://zenodo.org/badge/82609103.svg" alt="Zenodo"></a>
 </td>
 <td align="left">
-<a href="https://www.tidyverse.org/lifecycle/#stable"><img src="https://img.shields.io/badge/lifecycle-stable-green.svg" alt='Stable lifecycle'></a>
+<a href="https://www.tidyverse.org/lifecycle/#superseded"><img src="https://img.shields.io/badge/lifecycle-superseded-blue.svg" alt='superseded lifecycle'></a>
 </td>
 </tr>
 </tbody>
@@ -79,7 +79,7 @@ Development
 
 # Consider targets
 
-The [`targets`](https://docs.ropensci.org/targets/) R package is the long-term successor of `drake`, and it is more robust and easier to use. Please visit <https://books.ropensci.org/targets/drake.html> for full context and advice on transitioning.
+`drake` is [superseded](https://www.tidyverse.org/lifecycle/#superseded). The [`targets`](https://docs.ropensci.org/targets/) R package is the long-term successor of `drake`, and it is more robust and easier to use. Please visit <https://books.ropensci.org/targets/drake.html> for full context and advice on transitioning.
 
 # The drake R package <img src="https://docs.ropensci.org/drake/reference/figures/logo.svg" align="right" alt="logo" width="120" height = "139" style = "border: none; float: right;">
 
