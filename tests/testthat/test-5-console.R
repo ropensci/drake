@@ -5,7 +5,7 @@ test_with_dir("crop_lines() crops lines", {
 })
 
 test_with_dir("multiline message cap", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   n <- 100
   x1 <- "aldksjf"
   x2 <- rep(x1, n)
@@ -18,7 +18,7 @@ test_with_dir("multiline message cap", {
 })
 
 test_with_dir("console to file", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   skip_if_not_installed("knitr")
   load_mtcars_example()
   cache <- storr::storr_environment()
@@ -44,7 +44,7 @@ test_with_dir("console to file", {
 })
 
 test_with_dir("drake_warning() and drake_error()", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   plan <- drake_plan(
     x = {
       message("some_message")
@@ -82,7 +82,7 @@ test_with_dir("drake_warning() and drake_error()", {
 })
 
 test_with_dir("show_source()", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   plan <- drake_plan(x = base::sqrt(15))
   cache <- storr::storr_environment()
   make(plan, cache = cache, session_info = FALSE)

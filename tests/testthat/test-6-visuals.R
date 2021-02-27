@@ -39,7 +39,7 @@ test_with_dir("visNetwork graph runs", {
 })
 
 test_with_dir("visNetwork dep graph does not fail if input file is binary", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   skip_if_not_installed("datasets")
   skip_if_not_installed("lubridate")
   skip_if_not_installed("visNetwork")
@@ -98,7 +98,7 @@ test_with_dir("Sankey diagram runs", {
 })
 
 test_with_dir("colors and shapes", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   expect_is(node_color("target"), "character")
   expect_is(node_color("import"), "character")
   expect_is(node_color("not found"), "character")
@@ -111,7 +111,7 @@ test_with_dir("colors and shapes", {
 })
 
 test_with_dir("shapes", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   expect_is(node_shape("target"), "character")
   expect_is(node_shape("import"), "character")
   expect_is(node_shape("not found"), "character")

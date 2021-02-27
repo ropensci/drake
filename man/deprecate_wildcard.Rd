@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{deprecate_wildcard}
 \alias{deprecate_wildcard}
-\title{deprecate_wildcard \ifelse{html}{\figure{lifecycle-defunct.svg}{options: alt='Defunct lifecycle'}}{\strong{Defunct}}}
+\title{deprecate_wildcard \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}}
 \usage{
 deprecate_wildcard(...)
 }

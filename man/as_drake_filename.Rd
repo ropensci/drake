@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{as_drake_filename}
 \alias{as_drake_filename}
-\title{as_drake_filename \ifelse{html}{\figure{lifecycle-defunct.svg}{options: alt='Defunct lifecycle'}}{\strong{Defunct}}}
+\title{as_drake_filename \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}}
 \usage{
 as_drake_filename(...)
 }

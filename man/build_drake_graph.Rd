@@ -3,7 +3,7 @@
 \name{build_drake_graph}
 \alias{build_drake_graph}
 \title{Function \code{build_drake_graph}
-\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}}
 \usage{
 build_drake_graph(
   plan,

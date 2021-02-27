@@ -2,6 +2,7 @@ drake_context("lock")
 
 test_with_dir("lock_environment()", {
   skip_on_cran()
+  skip_if_not_installed("tibble")
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
   jobs <- scenario$jobs

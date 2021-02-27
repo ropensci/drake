@@ -1,7 +1,7 @@
 drake_context("prework")
 
 test_with_dir("packages are loaded and prework is run", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   skip_if_not_installed("abind")
   on.exit(options(test_drake_option_12345 = NULL))
 

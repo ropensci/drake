@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{workplan}
 \alias{workplan}
-\title{workplan \ifelse{html}{\figure{lifecycle-defunct.svg}{options: alt='Defunct lifecycle'}}{\strong{Defunct}}}
+\title{workplan \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}}
 \usage{
 workplan(...)
 }

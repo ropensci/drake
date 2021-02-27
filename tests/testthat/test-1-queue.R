@@ -1,7 +1,7 @@
 drake_context("queue")
 
 test_with_dir("empty queue", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   config <- drake_config(drake_plan(x = 1))
   config$envir_graph <- ht_new()
   config$envir_graph$graph <- igraph::make_empty_graph()
@@ -11,7 +11,7 @@ test_with_dir("empty queue", {
 })
 
 test_with_dir("the priority queue works", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   targets <- c("foo", "bar", "baz", "Bob", "Amy", "Joe", "soup", "spren")
   ndeps <- c(8, 2, 3, 7, 4, 1, 7, 5)
   priorities <- c(rep(2, 4), rep(1, 4))

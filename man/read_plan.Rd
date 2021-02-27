@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{read_plan}
 \alias{read_plan}
-\title{read_plan \ifelse{html}{\figure{lifecycle-defunct.svg}{options: alt='Defunct lifecycle'}}{\strong{Defunct}}}
+\title{read_plan \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}}
 \usage{
 read_plan(...)
 }

@@ -72,7 +72,7 @@ test_with_dir("weak_tibble", {
 })
 
 test_with_dir("error handlers", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   expect_equal(error_na(1), NA_character_)
   expect_false(error_false(1))
   expect_error(error_tibble_times(123))

@@ -16,7 +16,7 @@ test_with_dir("seed_from_basic_types", {
 })
 
 test_with_dir("Random targets are reproducible", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   scenario <- get_testing_scenario()
   env <- eval(parse(text = scenario$envir))
   parallelism <- scenario$parallelism

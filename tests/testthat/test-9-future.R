@@ -111,7 +111,7 @@ test_with_dir("future package functionality", {
 })
 
 test_with_dir("can gracefully conclude a crashed worker", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   skip_if_not_installed("future")
   for (caching in c("main", "worker")) {
     con <- dbug()

@@ -69,7 +69,7 @@ test_with_dir("drake_version", {
 })
 
 test_with_dir("dependency profile", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   skip_if_not_installed("knitr")
   b <- 1
   plan <- drake_plan(a = b)
@@ -126,7 +126,7 @@ test_with_dir("deps_profile_impl() on imports (#1134)", {
 })
 
 test_with_dir("Missing cache", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   s <- storr::storr_rds("s")
   unlink(s$path, recursive = TRUE)
   expect_equal(cached(), character(0))
@@ -135,7 +135,7 @@ test_with_dir("Missing cache", {
 })
 
 test_with_dir("Cache namespaces", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   y <- target_namespaces_()
   z <- cleaned_namespaces_()
   expect_true(all(z %in% y))
@@ -143,13 +143,13 @@ test_with_dir("Cache namespaces", {
 })
 
 test_with_dir("clean() works if there is no cache already", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   clean(list = "no_cache")
   expect_false(file.exists(default_cache_path()))
 })
 
 test_with_dir("can exclude bad targets from loadd()", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   plan <- drake_plan(a = TRUE)
   make(plan)
   e <- new.env(parent = emptyenv())
@@ -160,7 +160,7 @@ test_with_dir("can exclude bad targets from loadd()", {
 })
 
 test_with_dir("bad/corrupt caches, no progress, no seed", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   expect_null(drake_fetch_rds("sldkfjlke"))
   expect_warning(new_cache(type = "nope"))
   x <- drake_plan(a = 1)
@@ -180,7 +180,7 @@ test_with_dir("bad/corrupt caches, no progress, no seed", {
 })
 
 test_with_dir("non-existent caches", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   expect_equal(0, nrow(drake_cache_log()))
   expect_equal(find_cache(), NULL)
   expect_error(loadd(list = "nothing"))
@@ -198,7 +198,7 @@ test_with_dir("drake_gc() and mangled keys", {
 })
 
 test_with_dir("try to rescue non-existent stuff", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   expect_null(rescue_cache())
   cache <- storr_rds("dummy_cache")
   expect_silent(rescue_del(key = "no_key", cache = cache, namespace = "none"))
@@ -480,7 +480,7 @@ test_with_dir("loadd() does not load imports", {
 })
 
 test_with_dir("selection and filtering in progress", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   plan <- drake_plan(x_a = TRUE, y_b = x_a, x_c = stop(y_b))
   expect_error(make(plan))
   out <- drake_progress(x_a, y_b, x_c, d)
@@ -516,7 +516,7 @@ test_with_dir("selection and filtering in progress", {
 })
 
 test_with_dir("make() writes a cache log file", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   plan <- drake_plan(a = TRUE, b = TRUE)
   expect_false(file.exists("log.txt"))
   make(plan, cache_log_file = "log.txt")
@@ -566,13 +566,13 @@ test_with_dir("clean: garbage_collection and destroy", {
 })
 
 test_with_dir("fancy cache features, bad paths", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   saveRDS(1, file = "exists")
   suppressWarnings(expect_error(x <- new_cache("exists")))
 })
 
 test_with_dir("Pick the hash", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   x <- new_cache("new", hash_algorithm = "murmur32")
   expect_true(file.exists("new"))
   y <- storr::storr_rds(path = "new")
@@ -585,7 +585,7 @@ test_with_dir("Pick the hash", {
 })
 
 test_with_dir("totally off the default cache", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   saveRDS("stuff", file = "some_file")
   con <- dbug()
   unlink(default_cache_path(), recursive = TRUE)
@@ -607,7 +607,7 @@ test_with_dir("totally off the default cache", {
 })
 
 test_with_dir("use two differnt file system caches", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   saveRDS("stuff", file = "some_file")
   targ <- "DRAKE_TEST_target"
   my_plan <- data.frame(
@@ -692,7 +692,7 @@ test_with_dir("use two differnt file system caches", {
 })
 
 test_with_dir("storr_environment is usable", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   x <- decorate_storr(storr_environment(hash_algorithm = "murmur32"))
   expect_false(file.exists(default_cache_path()))
   expect_equal(x$hash_algorithm, "murmur32")
@@ -709,7 +709,7 @@ test_with_dir("storr_environment is usable", {
 })
 
 test_with_dir("arbitrary storr in-memory cache", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   skip_if_not_installed("lubridate")
   expect_false(file.exists(default_cache_path()))
   parallelism <- "loop"
@@ -787,7 +787,7 @@ test_with_dir("arbitrary storr in-memory cache", {
 })
 
 test_with_dir("clean a nonexistent cache", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   clean(list = "no_cache")
   expect_false(file.exists(default_cache_path()))
 })
@@ -803,7 +803,7 @@ test_with_dir("make() from inside the cache", {
 })
 
 test_with_dir("cache log files, gc, and make()", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   x <- drake_plan(a = 1)
   make(x, session_info = FALSE, garbage_collection = TRUE)
   expect_false(file.exists("drake_cache.csv"))
@@ -816,7 +816,7 @@ test_with_dir("cache log files, gc, and make()", {
 })
 
 test_with_dir("try_build() does not need to access cache", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   config <- drake_config(drake_plan(x = 1), lock_envir = FALSE)
   meta <- drake_meta_(target = "x", config = config)
   config$cache <- config$settings$cache_log_file <- NULL

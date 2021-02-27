@@ -7,7 +7,7 @@
 \alias{cross}
 \alias{combine}
 \alias{group}
-\title{Transformations in \code{drake_plan()}. \ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
+\title{Transformations in \code{drake_plan()}. \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}}
 \arguments{
 \item{...}{Grouping variables. New grouping variables must be
 supplied with their names and values, existing grouping variables

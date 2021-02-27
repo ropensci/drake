@@ -3,7 +3,7 @@
 \name{dependency_profile}
 \alias{dependency_profile}
 \title{States of the dependencies of a target
-\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}}
 \usage{
 dependency_profile(target, config, character_only = FALSE)
 }

@@ -3,7 +3,7 @@
 \name{default_graph_title}
 \alias{default_graph_title}
 \title{Return the default title for graph visualizations
-\ifelse{html}{\figure{lifecycle-soft-deprecated.svg}{options: alt='Soft-deprecated lifecycle'}}{\strong{Soft-deprecated}}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#soft-deprecated}{\figure{lifecycle-soft-deprecated.svg}{options: alt='[Soft-deprecated]'}}}{\strong{[Soft-deprecated]}}}
 \usage{
 default_graph_title()
 }

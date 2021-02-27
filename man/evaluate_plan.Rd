@@ -4,7 +4,7 @@
 \alias{evaluate_plan}
 \title{Use wildcard templating to create a
 workflow plan data frame from a template data frame.
-\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}}
 \usage{
 evaluate_plan(
   plan,

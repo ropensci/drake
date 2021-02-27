@@ -362,13 +362,13 @@ test_with_dir("user-defined S3 (#959)", {
 })
 
 test_with_dir("unparsable commands are handled correctly", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   x <- "bluh$"
   expect_error(deps_code(x))
 })
 
 test_with_dir("bad target names", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   expect_equal(
     sort(deps_code("sqrt(x + y + .)")$name),
     sort(c("sqrt", "x", "y"))
@@ -396,7 +396,7 @@ test_with_dir("bad target names", {
 })
 
 test_with_dir("file_in() and file_out() and knitr_in(): commands vs imports", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   skip_if_not_installed("knitr")
   cmd <- quote({
     file_in("x"); file_out("y"); knitr_in("report.Rmd")
@@ -449,7 +449,7 @@ test_with_dir("file_in() and file_out() and knitr_in(): commands vs imports", {
 })
 
 test_with_dir("deps_code() and deps_target_impl()", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   expect_equal(nrow(deps_code("")), 0)
   expect_equal(length(select_nonempty(cds_command_dependencies(NA))), 0)
   expect_equal(length(select_nonempty(cds_command_dependencies(NULL))), 0)
@@ -521,7 +521,7 @@ test_with_dir("deps_code() and deps_target_impl()", {
 })
 
 test_with_dir("tracked() works", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   config <- dbug()
   x <- sort(tracked(config))
   y <- sort(c(
@@ -535,7 +535,7 @@ test_with_dir("tracked() works", {
 })
 
 test_with_dir("missing input files", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   config <- dbug()
   expect_silent(tmp <- missing_input_files(config))
   unlink("input.rds", force = TRUE)
@@ -547,7 +547,7 @@ test_with_dir("missing input files", {
 })
 
 test_with_dir("Vectorized nested functions work", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   e <- new.env(parent = globalenv())
   eval(parse(text = "f <- Vectorize(function(x) g(x), \"x\")"), envir = e)
   eval(parse(text = "g <- function(x) x + y"), envir = e)
@@ -589,7 +589,7 @@ test_with_dir("Vectorized nested functions work", {
 })
 
 test_with_dir("deps_target_impl()", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   skip_if_not_installed("knitr")
   load_mtcars_example()
   config <- drake_config(my_plan, cache = storr::storr_environment())
@@ -635,7 +635,7 @@ test_with_dir("self-referential commands and imports", {
 })
 
 test_with_dir("ignore() suppresses updates", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   cache <- storr::storr_environment()
   envir <- new.env(parent = globalenv())
   envir$arg <- 4
@@ -681,7 +681,7 @@ test_with_dir("ignore() suppresses updates", {
 })
 
 test_with_dir("ignore() works on its own", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   expect_equal(ignore(), NULL)
   expect_equal(ignore(1234), 1234)
   expect_identical(ignore_ignore(digest::digest), digest::digest)
@@ -698,7 +698,7 @@ test_with_dir("Standardized commands have no attributes", {
 })
 
 test_with_dir("Can standardize commands", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   expect_true(is.character(cds_standardize_command(parse(text = ""))))
   expect_identical(
     cds_standardize_command(parse(text = "f(x +2) + 2")),
@@ -756,7 +756,7 @@ test_with_dir("Can standardize commands", {
 })
 
 test_with_dir("standardized commands with ignore()", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   expect_equal(
     cds_standardize_command(
       parse(text = "f(     sqrt( ignore(fun(arg) + 7) + 123))")
@@ -808,7 +808,7 @@ test_with_dir("standardized commands with ignore()", {
 })
 
 test_with_dir("Can standardize commands from expr or lang", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   x <- parse(text = "f(x +2) + 2")
   y <- cds_standardize_command(x)
   z <- cds_standardize_command(x)
@@ -820,7 +820,7 @@ test_with_dir("Can standardize commands from expr or lang", {
 })
 
 test_with_dir("ignore() in imported functions", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   f <- function(x) {
     (sqrt( ignore(sqrt(x) + 7) + 123)) # nolint
   }
@@ -936,7 +936,7 @@ test_with_dir("no_deps() in a function", {
 })
 
 test_with_dir("function_dependencies() works on :: and :::", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   expect_false("g" %in% ls())
   crazy <- function(x, y) {
     z <- g(x) + y
@@ -984,7 +984,7 @@ test_with_dir("function_dependencies() works on :: and :::", {
 })
 
 test_with_dir("namespaced drake_plan works", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   scenarios <- get_testing_scenario()
   envir <- dbug()$envir
   rm(list = ls(envir), envir = envir)

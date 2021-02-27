@@ -1,14 +1,14 @@
 drake_context("checks")
 
 test_with_dir("top-level checks", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   config <- list()
   expect_error(config_checks(config))
   expect_error(plan_checks(data.frame(x = 1, y = 2)), "columns")
 })
 
 test_with_dir("config and make without safety checks", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   x <- drake_plan(
     file = readRDS(file_in("my_file.rds"))
   )
@@ -19,7 +19,7 @@ test_with_dir("config and make without safety checks", {
 })
 
 test_with_dir("config_checks() via make()", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   config <- dbug()
   y <- data.frame(x = 1, y = 2)
   suppressWarnings(
@@ -43,7 +43,8 @@ test_with_dir("config_checks() via make()", {
 })
 
 test_with_dir(".onLoad() warns correctly and .onAttach() works", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
+  skip_if_not_installed("tibble")
   f <- ".RData"
   expect_false(file.exists(f))
   expect_silent(drake:::.onLoad())
@@ -56,7 +57,8 @@ test_with_dir(".onLoad() warns correctly and .onAttach() works", {
 })
 
 test_with_dir("warnings and messages are caught", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
+  skip_if_not_installed("tibble")
   expect_equal(nrow(drake_progress()), 0)
   f <- function(x) {
     warning("my first warn")

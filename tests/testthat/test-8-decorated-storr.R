@@ -122,7 +122,7 @@ test_with_dir("decorated storr: redisplay paths", {
 })
 
 test_with_dir("file_store quotes properly", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   expect_equal(file_store("x"), reencode_path("x"))
 })
 

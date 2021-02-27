@@ -30,6 +30,7 @@ test_with_dir("hash tables work", {
 })
 
 test_with_dir("hash-table-based memoization", {
+  skip_if_not_installed("tibble")
   f <- function(x) {
     file.create(x)
     x

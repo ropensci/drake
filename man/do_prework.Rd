@@ -4,7 +4,7 @@
 \alias{do_prework}
 \title{Do the prework in the \code{prework}
 argument to \code{\link[=make]{make()}}.
-\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}}
 \usage{
 do_prework(config, verbose_packages)
 }

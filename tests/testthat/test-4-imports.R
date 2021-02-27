@@ -95,7 +95,7 @@ test_with_dir("add a new import", {
 # Target/import conflicts are unpredictable. A warning should
 # be enough.
 test_with_dir("target conflicts with current import or another target", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   config <- dbug()
   config$plan <- rbind(
     config$plan,
@@ -110,7 +110,7 @@ test_with_dir("target conflicts with current import or another target", {
 })
 
 test_with_dir("target conflicts with previous import", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   config <- dbug()
   testrun(config)
   config$plan$command[[2]] <- quote(g(1 + 1))

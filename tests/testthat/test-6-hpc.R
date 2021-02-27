@@ -9,20 +9,20 @@ test_with_dir("example template files", {
 })
 
 test_with_dir("safe_jobs()", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   expect_equal(safe_jobs(1:3), 1)
   expect_true(is.numeric(safe_jobs(1)))
 })
 
 test_with_dir("check_jobs()", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   expect_error(check_jobs(NULL), regexp = "length")
   expect_error(check_jobs(-1), regexp = "jobs > 0")
   expect_error(check_jobs(c(1, 1)), regexp = "of length 1")
 })
 
 test_with_dir("check_parallelism()", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   expect_error(check_parallelism(character(0), 1), regexp = "length")
   expect_error(check_parallelism(-1, 1), regexp = "character")
   expect_error(
@@ -46,7 +46,7 @@ test_with_dir("parallel imports", {
 })
 
 test_with_dir("lightly_parallelize_atomic() is correct", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   with_seed(seed = 2017, code = {
     x <- sample(LETTERS[1:3], size = 1e3, replace = TRUE)
     append <- function(x) {
@@ -63,7 +63,7 @@ test_with_dir("lightly_parallelize_atomic() is correct", {
 })
 
 test_with_dir("checksum functionality", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   config <- dbug()
   config$settings$parallelism <- "loop"
   config$settings$jobs <- 1

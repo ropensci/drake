@@ -3,7 +3,7 @@
 \name{knitr_deps}
 \alias{knitr_deps}
 \title{Dependencies of a knitr report
-\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}}
 \usage{
 knitr_deps(target)
 }

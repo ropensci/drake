@@ -1,7 +1,7 @@
 drake_context("graph")
 
 test_with_dir("Recursive functions are okay", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   factorial <- function(n) {
     if (n == 0) {
       1
@@ -20,7 +20,7 @@ test_with_dir("empty deps_graph()", {
 })
 
 test_with_dir("null graph", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   skip_if_not_installed("lubridate")
   skip_if_not_installed("visNetwork")
   config <- drake_config(drake_plan(x = 1))
@@ -30,7 +30,7 @@ test_with_dir("null graph", {
 })
 
 test_with_dir("lang cluster cols", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   skip_if_not_installed("lubridate")
   skip_if_not_installed("visNetwork")
   plan <- drake_plan(x = target(1, transform = g(f(x))), transform = FALSE)
@@ -40,7 +40,7 @@ test_with_dir("lang cluster cols", {
 })
 
 test_with_dir("circular non-DAG drake_plans quit in error", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   x <- drake_plan(a = b, b = c, c = a)
   expect_error(
     make(x, verbose = 0L, session_info = FALSE),
@@ -57,7 +57,7 @@ test_with_dir("circular non-DAG drake_plans quit in error", {
 })
 
 test_with_dir("Supplied graph disagrees with the workflow plan", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   con <- dbug()
   con2 <- drake_config(drake_plan(a = 1), verbose = 0L)
   expect_warning(
@@ -72,7 +72,7 @@ test_with_dir("Supplied graph disagrees with the workflow plan", {
 })
 
 test_with_dir("we can generate different visNetwork dependency graphs", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   skip_if_not_installed("lubridate")
   skip_if_not_installed("visNetwork")
   load_mtcars_example()

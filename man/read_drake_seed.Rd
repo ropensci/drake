@@ -3,7 +3,7 @@
 \name{read_drake_seed}
 \alias{read_drake_seed}
 \title{Read the pseudo-random number generator seed of the project.
-\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}}
 \usage{
 read_drake_seed(path = NULL, search = NULL, cache = NULL, verbose = NULL)
 }

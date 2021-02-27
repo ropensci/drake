@@ -1,7 +1,7 @@
 drake_context("drake_build")
 
 test_with_dir("drake_build() works as expected", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
   pl <- drake_plan(a = 1, b = a)

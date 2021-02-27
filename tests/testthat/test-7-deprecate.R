@@ -23,14 +23,14 @@ test_with_dir("deprecation: target()", {
 })
 
 test_with_dir("deprecation: fetch_cache", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   dp <- drake_plan(x = 1)
   expect_warning(make(dp, fetch_cache = ""), regexp = "deprecated")
   expect_warning(drake_config(dp, fetch_cache = ""), regexp = "deprecated")
 })
 
 test_with_dir("deprecation: deps_targets() and knitr_deps()", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   config <- drake_config(
     drake_plan(x = 1),
     cache = storr::storr_environment(),
@@ -52,7 +52,7 @@ test_with_dir("deprecation: deps_targets() and knitr_deps()", {
 })
 
 test_with_dir("deprecation: cache functions", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   plan <- drake_plan(x = 1)
   expect_error(expect_warning(tmp <- read_drake_meta()))
   expect_silent(make(plan, verbose = 0L, session_info = FALSE))
@@ -120,7 +120,7 @@ test_with_dir("deprecation: find_project", {
 })
 
 test_with_dir("drake version checks in previous caches", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   # We need to be able to set the drake version
   # to check back compatibility.
   plan <- drake_plan(x = 1)
@@ -138,7 +138,7 @@ test_with_dir("drake version checks in previous caches", {
 })
 
 test_with_dir("deprecated graphing functions", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   pl <- drake_plan(a = 1, b = 2)
   expect_warning(build_drake_graph(pl))
   con <- drake_config(plan = pl)
@@ -156,7 +156,7 @@ test_with_dir("deprecated graphing functions", {
 })
 
 test_with_dir("deprecate misc utilities", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   skip_if_not_installed("lubridate")
   skip_if_not_installed("visNetwork")
   expect_warning(drake_unquote("x"))
@@ -197,7 +197,7 @@ test_with_dir("deprecate misc utilities", {
 })
 
 test_with_dir("deprecated arguments", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   expect_warning(
     pl <- drake_plan(a = 1, b = a, tidy_evaluation = TRUE),
     regexp = "deprecated"
@@ -234,7 +234,7 @@ test_with_dir("example template files (deprecated)", {
 })
 
 test_with_dir("force with a non-back-compatible cache", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   expect_equal(cache_vers_check(NULL), character(0))
   expect_null(drake_cache())
   expect_true(
@@ -361,6 +361,8 @@ test_with_dir("main example", {
   skip_on_cran()
   skip_if_not_installed("curl")
   skip_if_not_installed("downloader")
+  skip_if_not_installed("tibble")
+  skip_if_not_installed("tidyr")
   if (!curl::has_internet()) {
     skip("no internet connection")
   }
@@ -407,7 +409,7 @@ test_with_dir("deprecated check_plan()", {
 })
 
 test_with_dir("deprecated cache_ and target_namespaces() etc.", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   x <- suppressWarnings(cache_namespaces())
   y <- suppressWarnings(target_namespaces())
   expect_true(all(y %in% x))
@@ -1027,7 +1029,7 @@ test_with_dir("'columns' argument to evaluate_plan()", suppressWarnings({
 }))
 
 test_with_dir("issue 187 on Github (from Kendon Bell)", suppressWarnings({
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   test <- drake_plan(test = run_it(wc__))
   out <- evaluate_plan(test, rules = list(wc__ = list(1:4, 5:8, 9:12)))
   out2 <- weak_tibble(
@@ -1038,7 +1040,7 @@ test_with_dir("issue 187 on Github (from Kendon Bell)", suppressWarnings({
 }))
 
 test_with_dir("conflicts in wildcard names/values", suppressWarnings({
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   plan <- drake_plan(a = 1, b = 2)
   rules1 <- list(plant = 1:2, seed = 3:4, plantseed = 5:6)
   rules2 <- list(
@@ -1166,7 +1168,7 @@ test_with_dir("gather_plan()", suppressWarnings({
 }))
 
 test_with_dir("reduce_plan()", suppressWarnings({
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   # Non-pairwise reduce
   x_plan <- evaluate_plan(
     drake_plan(x = VALUE),
@@ -1555,7 +1557,7 @@ test_with_dir("progress(), running(), and failed()", {
 })
 
 test_with_dir("expose_imports() works", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   scenario <- get_testing_scenario()
   envir <- eval(parse(text = scenario$envir))
   evalq(

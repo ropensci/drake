@@ -3,7 +3,7 @@
 \name{default_Makefile_args}
 \alias{default_Makefile_args}
 \title{Default arguments of Makefile parallelism
-\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}}
 \usage{
 default_Makefile_args(jobs, verbose)
 }

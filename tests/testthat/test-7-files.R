@@ -498,7 +498,7 @@ test_with_dir("imported files in imported functions", {
 })
 
 test_with_dir("codeless knitr report", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   skip_if_not_installed("knitr")
   file <- "codeless.Rmd"
   path <- system.file(
@@ -526,7 +526,7 @@ test_with_dir("codeless knitr report", {
 })
 
 test_with_dir("bad knitr report", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   file <- "bad.Rmd"
   path <- system.file(
     file.path("testing", "knitr", file),
@@ -554,13 +554,13 @@ test_with_dir("bad knitr report", {
 })
 
 test_with_dir("empty cases", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   expect_equal(get_tangled_frags(NULL), character(0))
   expect_silent(tmp <- analyze_knitr_file(NULL, NULL))
 })
 
 test_with_dir("deps_knitr() works", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   skip_if_not_installed("knitr")
   expect_true(!nrow(deps_knitr(character(0))))
   files <- system.file(
@@ -601,7 +601,7 @@ test_with_dir("deps_knitr() works", {
 })
 
 test_with_dir("knitr file deps from commands and functions", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   skip_if_not_installed("knitr")
   load_mtcars_example()
   expect_equal(

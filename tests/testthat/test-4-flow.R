@@ -86,7 +86,7 @@ test_with_dir("scratch build with custom filesystem cache.", {
 })
 
 test_with_dir("clean in full build.", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   config <- dbug()
   make_impl(config)
   expect_true("final" %in% config$cache$list())
@@ -100,14 +100,14 @@ test_with_dir("clean in full build.", {
 })
 
 test_with_dir("make() with skip_targets", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   expect_silent(make(drake_plan(x = 1), skip_targets = TRUE,
     verbose = 0L, session_info = FALSE))
   expect_false("x" %in% cached())
 })
 
 test_with_dir("make(..., skip_imports = TRUE) works", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   con <- dbug()
   plan <- dbug_plan()
   make(
@@ -148,7 +148,7 @@ test_with_dir("make(..., skip_imports = TRUE) works", {
 })
 
 test_with_dir("skip everything", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   f <- function(x) {
     x
   }
@@ -170,7 +170,7 @@ test_with_dir("skip everything", {
 })
 
 test_with_dir("can keep going", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
   parallelism <- scenario$parallelism
@@ -209,7 +209,7 @@ test_with_dir("can keep going", {
 })
 
 test_with_dir("failed targets do not become up to date", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   fail <- FALSE
   plan <- drake_plan(
     d = 3,
@@ -236,7 +236,7 @@ test_with_dir("failed targets do not become up to date", {
 })
 
 test_with_dir("true targets can be functions", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   generator <- function() return(function(x) {
     x + 1
   })
@@ -250,7 +250,7 @@ test_with_dir("true targets can be functions", {
 })
 
 test_with_dir("targets can be partially specified", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   config <- dbug()
   config$targets <- "drake_target_1"
   testrun(config)

@@ -1,7 +1,7 @@
 drake_context("triggers")
 
 test_with_dir("empty triggers return logical", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   config <- drake_config(drake_plan(x = 1))
   expect_identical(trigger_depend("x", list(), config), FALSE)
   expect_identical(trigger_command("x", list(), config), FALSE)
@@ -12,7 +12,7 @@ test_with_dir("empty triggers return logical", {
 })
 
 test_with_dir("triggers can be expressions", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   plan <- drake_plan(x = target(1, trigger = 123))
   plan$trigger[[1]] <- expression(trigger(condition = TRUE))
   for (i in 1:3) {
@@ -48,7 +48,7 @@ test_with_dir("bad condition trigger", {
 })
 
 test_with_dir("triggers in plan override make(trigger = whatever)", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   saveRDS(1, "file.rds")
   plan <- drake_plan(
     x = readRDS(file_in("file.rds")),
@@ -69,7 +69,7 @@ test_with_dir("triggers in plan override make(trigger = whatever)", {
 })
 
 test_with_dir("change trigger on a fresh build", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   saveRDS(1, "file.rds")
   plan <- drake_plan(
     x = target(1 + 1, trigger = trigger(
@@ -93,7 +93,7 @@ test_with_dir("change trigger on a fresh build", {
 })
 
 test_with_dir("trigger() function works", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   x <- 1
   y <- trigger(
     command = TRUE,
@@ -118,7 +118,7 @@ test_with_dir("trigger() function works", {
 })
 
 test_with_dir("can detect trigger deps without reacting to them", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   skip_if_not_installed("knitr")
   writeLines("123", "knitr.Rmd")
   saveRDS(0, "file.rds")
@@ -161,7 +161,7 @@ test_with_dir("can detect trigger deps without reacting to them", {
 })
 
 test_with_dir("same, but with global trigger", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   skip_if_not_installed("knitr")
   writeLines("123", "knitr.Rmd")
   saveRDS(0, "file.rds")
@@ -200,7 +200,7 @@ test_with_dir("same, but with global trigger", {
 })
 
 test_with_dir("trigger does not block out command deps", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   skip_if_not_installed("knitr")
   writeLines("123", "knitr.Rmd")
   saveRDS(0, "file.rds")
@@ -259,7 +259,7 @@ test_with_dir("trigger does not block out command deps", {
 })
 
 test_with_dir("same, but with global change trigger", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   skip_if_not_installed("knitr")
   writeLines("123", "knitr.Rmd")
   saveRDS(0, "file.rds")

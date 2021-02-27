@@ -3,7 +3,7 @@
 \name{map_plan}
 \alias{map_plan}
 \title{Create a plan that maps a function to a grid of arguments.
-\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}}
 \usage{
 map_plan(args, fun, id = "id", character_only = FALSE, trace = FALSE)
 }

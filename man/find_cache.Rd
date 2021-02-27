@@ -3,7 +3,7 @@
 \name{find_cache}
 \alias{find_cache}
 \title{Search up the file system for the nearest drake cache.
-\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}}
 \usage{
 find_cache(path = getwd(), dir = NULL, directory = NULL)
 }

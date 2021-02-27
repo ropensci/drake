@@ -3,7 +3,7 @@
 \name{cache_namespaces}
 \alias{cache_namespaces}
 \title{List all the \code{storr} cache namespaces used by drake.
-\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}}
 \usage{
 cache_namespaces(default = storr::storr_environment()$default_namespace)
 }

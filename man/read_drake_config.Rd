@@ -3,7 +3,7 @@
 \name{read_drake_config}
 \alias{read_drake_config}
 \title{Read a config object from the cache
-\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}}
 \usage{
 read_drake_config(
   path = getwd(),

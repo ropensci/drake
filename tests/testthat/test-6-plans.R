@@ -29,7 +29,7 @@ test_with_dir("duplicated target names", {
 })
 
 test_with_dir("warn about <- and -> in drake_plan()", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   expect_silent(tmp <- drake_plan())
   expect_silent(tmp <- drake_plan(a = 1, b = 2))
   expect_silent(
@@ -67,7 +67,7 @@ test_with_dir("warn about <- and -> in drake_plan()", {
 })
 
 test_with_dir("File functions handle input", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   expect_equal(
     file_in(1, "x", "y"), c("1", "x", "y")
   )
@@ -94,7 +94,7 @@ test_with_dir("File functions handle input", {
 })
 
 test_with_dir("edge cases for plans", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   # empty plan
   equivalent_plans(drake_plan(), empty_plan())
   # no target names
@@ -140,7 +140,7 @@ test_with_dir("edge cases for plans", {
 })
 
 test_with_dir("plan set 2", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   for (tidy_eval in c(TRUE, FALSE)) {
     x <- drake_plan(
       a = c,
@@ -158,7 +158,7 @@ test_with_dir("plan set 2", {
 })
 
 test_with_dir("drake_plan() trims outer whitespace in target names", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   for (tidy_eval in c(TRUE, FALSE)) {
     x <- sanitize_plan(weak_tibble(
       target = c(" a", "b \t\n"),
@@ -170,7 +170,7 @@ test_with_dir("drake_plan() trims outer whitespace in target names", {
 })
 
 test_with_dir("make() trims outer whitespace in target names", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   x <- weak_tibble(
     target = c("a\n", "  b", "c ", "\t  d   "),
     command = 1
@@ -199,7 +199,7 @@ test_with_dir("make() trims outer whitespace in target names", {
 })
 
 test_with_dir("plans can start with bad symbols", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   x <- weak_tibble(
     target = c("a'x'", "b'x'", "_a", "a^-.*"),
     command = 1)
@@ -209,7 +209,7 @@ test_with_dir("plans can start with bad symbols", {
 })
 
 test_with_dir("can use semicolons for multi-line commands", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   plan <- drake_plan(
     x = {a <- 1; a}, # nolint
     y = {
@@ -224,7 +224,7 @@ test_with_dir("can use semicolons for multi-line commands", {
 })
 
 test_with_dir("can use braces for multi-line commands", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   small_plan <- drake_plan(
     small_target = {
       local_object <- 1 + 1
@@ -239,7 +239,7 @@ test_with_dir("can use braces for multi-line commands", {
 })
 
 test_with_dir("custom column interface", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   tidyvar <- 2
   x <- drake_plan(x = target(
     stop(!!tidyvar), worker = !!tidyvar, cpu = 4, custom = list(123), c2 = 5)
@@ -283,7 +283,7 @@ test_with_dir("custom column interface", {
 })
 
 test_with_dir("bind_plans()", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   plan1 <- drake_plan(a = 1, b = 2)
   plan2 <- drake_plan(c = 3, d = 4)
   plan3 <- drake_plan(e = 5, f = 6)
@@ -361,7 +361,7 @@ test_with_dir("bind_plans() with unequal list columns (#1136)", {
 })
 
 test_with_dir("spaces in target names are replaced only when appropriate", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   expect_warning(
     pl <- drake_plan(
       a_.b.....x..y. = {
@@ -527,7 +527,7 @@ test_with_dir("handle weird missing symbols", {
 
 # From Kendon Bell: https://github.com/ropensci/drake/issues/200
 test_with_dir("drake_plan does tidy eval", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   my_variable <- 5
   plan1 <- drake_plan(a = !!my_variable)
   plan2 <- weak_tibble(target = "a", command = "5")
@@ -536,7 +536,7 @@ test_with_dir("drake_plan does tidy eval", {
 
 # From Alex Axthelm: https://github.com/ropensci/drake/issues/200
 test_with_dir("drake_plan tidy eval can be customized and disabled", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   my_variable <- 5
   plan1 <- drake_plan(
     a = !!my_variable,
@@ -562,7 +562,7 @@ test_with_dir("drake_plan tidy eval can be customized and disabled", {
 
 # From Kendon Bell: https://github.com/ropensci/drake/issues/200
 test_with_dir("make() does tidy eval in commands", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   plan <- drake_plan(
     little_b = "b",
     letter = !!little_b,
@@ -573,7 +573,7 @@ test_with_dir("make() does tidy eval in commands", {
 })
 
 test_with_dir("stringsAsFactors can be TRUE", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   f <- function(x) {
     return(x)
   }
@@ -607,7 +607,7 @@ test_with_dir("case sensitivity", {
 })
 
 test_with_dir("Strings stay strings, not symbols", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   expect_silent(x <- drake_plan(a = "A"))
   expect_silent(make(x, verbose = 0L, session_info = FALSE))
 })

@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{as_file}
 \alias{as_file}
-\title{as_file \ifelse{html}{\figure{lifecycle-defunct.svg}{options: alt='Defunct lifecycle'}}{\strong{Defunct}}}
+\title{as_file \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}}
 \usage{
 as_file(...)
 }

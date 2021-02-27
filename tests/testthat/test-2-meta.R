@@ -1,7 +1,8 @@
 drake_context("meta")
 
 test_with_dir("stress test storage hash", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
+  skip_if_not_installed("tibble")
   skip_if_not_installed("knitr")
   load_mtcars_example()
   con <- drake_config(
@@ -18,7 +19,8 @@ test_with_dir("stress test storage hash", {
 })
 
 test_with_dir("same with a directory", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
+  skip_if_not_installed("tibble")
   dir.create("dir")
   writeLines("123", "dir/a.txt")
   writeLines("456", "dir/b.txt")
@@ -37,7 +39,8 @@ test_with_dir("same with a directory", {
 })
 
 test_with_dir("hashing decisions", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
+  skip_if_not_installed("tibble")
   expect_true(
     should_rehash_local(
       new_mtime = 0,
@@ -99,6 +102,7 @@ test_with_dir("hashing decisions", {
 })
 
 test_with_dir("storage hash of a non-existent path", {
+  skip_if_not_installed("tibble")
   expect_false(file.exists("asdf"))
   config <- drake_config(drake_plan(x = 1))
   expect_true(is.na(static_storage_hash("asdf", config = config)))

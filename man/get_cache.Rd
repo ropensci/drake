@@ -3,7 +3,7 @@
 \name{get_cache}
 \alias{get_cache}
 \title{The default cache of a \code{drake} project.
-\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}}
 \usage{
 get_cache(
   path = getwd(),

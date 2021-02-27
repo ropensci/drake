@@ -1,7 +1,8 @@
 drake_context("testing")
 
 test_with_dir("test_with_dir() clears out files", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
+  skip_if_not_installed("tibble")
   for (i in 1:10) {
     expect_silent(
       test_with_dir("test", {
@@ -15,7 +16,7 @@ test_with_dir("test_with_dir() clears out files", {
 })
 
 test_with_dir("set_testing_scenario", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   original <- get_testing_scenario_name()
   original_opt <- getOption(test_option_name)
   with_all_options <- function(code) {
@@ -47,7 +48,7 @@ test_with_dir("set_testing_scenario", {
 })
 
 test_with_dir("testing utils", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   expect_true(is.character(this_os()))
   scenario <- default_testing_scenario
   expect_true(is.data.frame(get_testing_scenario()))
@@ -61,7 +62,7 @@ test_with_dir("testing utils", {
 })
 
 test_with_dir("test_with_dir() evaluates inside the testing envir", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   some_outside_object <- 4
   test_with_dir("nested test", {
     skip_on_cran()
@@ -74,7 +75,7 @@ test_with_dir("test_with_dir() evaluates inside the testing envir", {
 })
 
 test_with_dir("test_scenarios()", capture.output(suppressMessages({
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   old_scenario <- getOption(test_option_name)
   wd <- getwd()
   some_outside_object <- 4
@@ -111,7 +112,7 @@ test_with_dir("test_scenarios()", capture.output(suppressMessages({
 })))
 
 test_with_dir("unit_test_files works", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
 
   # Find package root
   path <- system.file("DESCRIPTION", package = "drake")

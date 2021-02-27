@@ -3,7 +3,7 @@
 \name{clean_main_example}
 \alias{clean_main_example}
 \title{Deprecated: clean the main example from \code{drake_example("main")}
-\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}}
 \usage{
 clean_main_example()
 }

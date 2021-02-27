@@ -4,7 +4,7 @@
 \alias{drake_unquote}
 \title{Remove leading and trailing
 escaped quotes from character strings.
-\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}}
 \usage{
 drake_unquote(x = NULL)
 }

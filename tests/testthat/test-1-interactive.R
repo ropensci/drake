@@ -66,6 +66,7 @@ test_with_dir("drake_meta_() print method", {
 })
 
 test_with_dir("logger", {
+  skip_if_not_installed("tibble")
   skip_on_cran()
   # testthat suppresses messages,
   # so we need to inspect the console output manually.
@@ -208,7 +209,7 @@ test_with_dir("use_drake()", {
 
 if (FALSE) {
 test_with_dir("can keep going in parallel", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   plan <- drake_plan(
     a = stop(123),
     b = a + 1

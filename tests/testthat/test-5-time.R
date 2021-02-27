@@ -1,7 +1,7 @@
 drake_context("time")
 
 test_with_dir("can ignore a bad time", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   skip_if_not_installed("lubridate")
   x <- drake_plan(a = 1, b = 2)
   make(x, verbose = 0L)
@@ -14,7 +14,7 @@ test_with_dir("can ignore a bad time", {
 })
 
 test_with_dir("proc_time runtimes can be fetched", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   skip_if_not_installed("lubridate")
   cache <- new_cache("cache")
   t <- system.time({
@@ -28,7 +28,7 @@ test_with_dir("proc_time runtimes can be fetched", {
 })
 
 test_with_dir("build times works if no targets are built", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   skip_if_not_installed("lubridate")
   expect_equal(cached(), character(0))
   expect_equal(nrow(build_times()), 0)
@@ -39,7 +39,7 @@ test_with_dir("build times works if no targets are built", {
 })
 
 test_with_dir("build time the same after superfluous make", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   skip_if_not_installed("lubridate")
   x <- drake_plan(y = Sys.sleep(0.25))
   make(x, verbose = 0L, session_info = FALSE)
@@ -57,7 +57,7 @@ test_with_dir("build time the same after superfluous make", {
 })
 
 test_with_dir("runtime predictions", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   skip_if_not_installed("lubridate")
   con <- dbug()
   expect_warning(p0 <- as.numeric(predict_runtime_impl(con)))

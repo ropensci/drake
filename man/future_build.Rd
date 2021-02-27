@@ -3,7 +3,7 @@
 \name{future_build}
 \alias{future_build}
 \title{Task passed to individual futures in the \code{"future"} backend
-\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#stable'><img src='figures/lifecycle-stable.svg' alt='Stable lifecycle'></a>}}{\strong{Stable}}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}}
 \usage{
 future_build(target, meta, config, spec, config_tmp, protect)
 }

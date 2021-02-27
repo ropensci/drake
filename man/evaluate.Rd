@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{evaluate}
 \alias{evaluate}
-\title{evaluate \ifelse{html}{\figure{lifecycle-defunct.svg}{options: alt='Defunct lifecycle'}}{\strong{Defunct}}}
+\title{evaluate \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}}
 \usage{
 evaluate(...)
 }

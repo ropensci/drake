@@ -1,7 +1,7 @@
 drake_context("memory")
 
 test_with_dir("manage_memory() warns if loading missing deps", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   con <- drake_config(
     drake_plan(a = 1, b = a),
     memory_strategy = "lookahead",
@@ -207,7 +207,7 @@ test_with_dir("a close look at the memory strategies", {
 })
 
 test_with_dir("primary memory strategies actually build everything", {
-  skip_on_cran() # CRAN gets whitelist tests only (check time limits).
+  skip_on_cran() # CRAN gets essential tests only (check time limits).
   skip_if_not_installed("knitr")
   for (memory_strategy in c("speed", "autoclean", "preclean", "lookahead")) {
     envir <- new.env(parent = globalenv())

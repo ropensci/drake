@@ -2,7 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{load_basic_example}
 \alias{load_basic_example}
-\title{load_basic_example \ifelse{html}{\figure{lifecycle-defunct.svg}{options: alt='Defunct lifecycle'}}{\strong{Defunct}}}
+\title{load_basic_example \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}}}
 \usage{
 load_basic_example(...)
 }

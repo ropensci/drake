@@ -3,7 +3,7 @@
 \name{drake_session}
 \alias{drake_session}
 \title{Session info of the last call to \code{\link[=make]{make()}}.
-\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}}
 \usage{
 drake_session(
   path = getwd(),

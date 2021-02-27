@@ -4,7 +4,7 @@
 \alias{code_to_plan}
 \title{Turn an R script file or \code{knitr} / R Markdown report
 into a \code{drake} plan.
-\ifelse{html}{\out{<a href='https://www.tidyverse.org/lifecycle/#questioning'><img src='figures/lifecycle-questioning.svg' alt='Questioning lifecycle'></a>}}{\strong{Questioning}}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#questioning}{\figure{lifecycle-questioning.svg}{options: alt='[Questioning]'}}}{\strong{[Questioning]}}}
 \usage{
 code_to_plan(path)
 }

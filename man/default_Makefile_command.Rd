@@ -3,7 +3,7 @@
 \name{default_Makefile_command}
 \alias{default_Makefile_command}
 \title{Default Makefile command
-\ifelse{html}{\figure{lifecycle-deprecated.svg}{options: alt='Deprecated lifecycle'}}{\strong{Deprecated}}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}}
 \usage{
 default_Makefile_command()
 }
