@@ -1,38 +1,52 @@
 #!/bin/bash
 # From https://github.com/mllg/batchtools/blob/master/inst/templates/
 
+#!/bin/bash
+
+## Job Resource Interface Definition
+##
+## ntasks [integer(1)]:       Number of required tasks,
+##                            Set larger than 1 if you want to further parallelize
+##                            with MPI within your job.
+## ncpus [integer(1)]:        Number of required cpus per task,
+##                            Set larger than 1 if you want to further parallelize
+##                            with multicore/parallel within each task.
+## walltime [integer(1)]:     Walltime for this job, in seconds.
+##                            Must be at least 60 seconds for Slurm to work properly.
+## memory   [integer(1)]:     Memory in megabytes for each cpu.
+##                            Must be at least 100 (when I tried lower values my
+##                            jobs did not start at all).
+##
+## Default resources can be set in your .batchtools.conf.R by defining the variable
+## 'default.resources' as a named list.
+
 <%
-log.file = normalizePath(log.file, winslash = "/", mustWork = FALSE)
-if (!"ncpus" %in% names(resources)) {
-  resources$ncpus = 1
-}
-if (!"walltime" %in% names(resources)) {
-  resources$walltime = 48 * 3600
-}
+# relative paths are not handled well by Slurm
+log.file = fs::path_expand(log.file)
 -%>
+
 
 #SBATCH --job-name=<%= job.name %>
 #SBATCH --output=<%= log.file %>
 #SBATCH --error=<%= log.file %>
-#SBATCH --ntasks=1
-
-<%= if (!is.null(resources$walltime)) { %>
 #SBATCH --time=<%= ceiling(resources$walltime / 60) %>
-<%= } %>
-
-<%= if (!is.null(resources$ncpus)) { %>
+#SBATCH --ntasks=1
 #SBATCH --cpus-per-task=<%= resources$ncpus %>
-<%= } %>
-
-<%= if (!is.null(resources$memory)) { %>
 #SBATCH --mem-per-cpu=<%= resources$memory %>
-<%= } %>
-
+<%= if (!is.null(resources$partition)) sprintf(paste0("#SBATCH --partition='", resources$partition, "'")) %>
 <%= if (array.jobs) sprintf("#SBATCH --array=1-%i", nrow(jobs)) else "" %>
 
 ## Initialize work environment like
 ## source /etc/profile
-source /etc/profile
+## module add ...
 
-# module load R # Uncomment if R is an environment module.
+## Export value of DEBUGME environemnt var to slave
+export DEBUGME=<%= Sys.getenv("DEBUGME") %>
+
+<%= sprintf("export OMP_NUM_THREADS=%i", resources$omp.threads) -%>
+<%= sprintf("export OPENBLAS_NUM_THREADS=%i", resources$blas.threads) -%>
+<%= sprintf("export MKL_NUM_THREADS=%i", resources$blas.threads) -%>
+
+## Run R:
+## we merge R output with stdout from SLURM, which gets then logged via --output option
 Rscript -e 'batchtools::doJobCollection("<%= uri %>")'
