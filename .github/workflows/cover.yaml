@@ -49,7 +49,7 @@ jobs:
       - name: Install dependencies
         run: |
           install.packages(c("remotes", "covr"))
-          remotes::install_deps(dependencies = TRUE)
+          remotes::install_deps(dependencies = TRUE, type = "source")
           install.packages(".", type = "source", repos = NULL)
         shell: Rscript {0}
 
