@@ -1,7 +1,5 @@
 #!/bin/bash
-# From https://github.com/mllg/batchtools/blob/master/inst/templates/
-
-#!/bin/bash
+# From https://github.com/mllg/batchtools/blob/master/inst/templates/, borrowed under LGPL-3.
 
 ## Job Resource Interface Definition
 ##
@@ -22,30 +20,25 @@
 
 <%
 # relative paths are not handled well by Slurm
-log.file = fs::path_expand(log.file)
+log.file = path.expand(log.file)
 -%>
 
 
 #SBATCH --job-name=<%= job.name %>
 #SBATCH --output=<%= log.file %>
 #SBATCH --error=<%= log.file %>
-#SBATCH --time=<%= ceiling(resources$walltime / 60) %>
 #SBATCH --ntasks=1
+
+## Remove any of these flags that you have not defined
+## resources for or that do not apply to you:
+
+#SBATCH --time=<%= ceiling(resources$walltime / 60) %>
 #SBATCH --cpus-per-task=<%= resources$ncpus %>
 #SBATCH --mem-per-cpu=<%= resources$memory %>
-<%= if (!is.null(resources$partition)) sprintf(paste0("#SBATCH --partition='", resources$partition, "'")) %>
-<%= if (array.jobs) sprintf("#SBATCH --array=1-%i", nrow(jobs)) else "" %>
 
 ## Initialize work environment like
 ## source /etc/profile
 ## module add ...
-
-## Export value of DEBUGME environemnt var to slave
-export DEBUGME=<%= Sys.getenv("DEBUGME") %>
-
-<%= sprintf("export OMP_NUM_THREADS=%i", resources$omp.threads) -%>
-<%= sprintf("export OPENBLAS_NUM_THREADS=%i", resources$blas.threads) -%>
-<%= sprintf("export MKL_NUM_THREADS=%i", resources$blas.threads) -%>
 
 ## Run R:
 ## we merge R output with stdout from SLURM, which gets then logged via --output option
