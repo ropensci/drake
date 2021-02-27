@@ -1,6 +1,6 @@
 # Version 7.13.1.9000
 
-
+* Update SLURM `batchtools` template file can be brewed (#1359, @pat-s).
 
 # Version 7.13.1
 
