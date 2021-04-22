@@ -1,6 +1,7 @@
-# Version 7.13.1.9000
+# Version 7.13.2
 
 * Update SLURM `batchtools` template file can be brewed (#1359, @pat-s).
+* Change start-up message to tip about `targets`.
 
 # Version 7.13.1
 

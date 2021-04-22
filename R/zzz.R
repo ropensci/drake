@@ -1,5 +1,5 @@
 .onAttach <- function(libname, pkgname) {
-  verbose <- interactive() && (sample.int(n = 10, size = 1) < 1.5)
+  verbose <- interactive()
   f <- ifelse(verbose, invisible, suppressPackageStartupMessages)
   f(drake_tip_message())
   invisible()
@@ -12,24 +12,14 @@ drake_tip_message <- function() {
 drake_tip_ <- function() {
   tips <- list(
     c(
-      "Interfaces to create large drake plans:",
-      "https://books.ropensci.org/drake/dynamic.html, ",
-      "https://books.ropensci.org/drake/static.html"
-    ),
-    c(
-      "Use diagnose() to retrieve",
-      "errors, warnings, messages, commands, runtimes, etc."
-    ),
-    "Use drake_example() to download a small drake example workflow.",
-    c(
-      "Reference website: https://docs.ropensci.org/drake",
-      "User manual: https://books.ropensci.org/drake"
-    ),
-    "drake quickstart: run load_mtcars_example() then make(my_plan)"
+      "{drake} is superseded: https://books.ropensci.org/targets/drake.html",
+      "Consider {targets} instead: https://docs.ropensci.org/targets/",
+      "Effective 2021-01-21"
+    )
   )
   if (requireNamespace("cli", quietly = TRUE)) {
     tips <- lapply(tips, function(x) {
-      paste(cli::col_blue(cli::symbol$info), x)
+      paste(cli::col_blue(cli::symbol$bullet), x)
     })
   }
   tips <- soft_wrap(tips)
