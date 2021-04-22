@@ -11,18 +11,18 @@
   "relatedLink": [
     "https://docs.ropensci.org/drake",
     "https://books.ropensci.org/drake/",
-    "https://CRAN.R-project.org/package=drake"
+    "https://CRAN.R-project.org/package=drake",
+    "https://docs.ropensci.org/drake/"
   ],
   "issueTracker": "https://github.com/ropensci/drake/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "7.12.1.9000",
+  "version": "7.13.2",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
-    "version": "4.0.0",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.0.0 (2020-04-24)",
+  "runtimePlatform": "R version 4.0.5 (2021-03-31)",
   "provider": {
     "@id": "https://cran.r-project.org",
     "@type": "Organization",
@@ -259,6 +259,7 @@
       "@type": "SoftwareApplication",
       "identifier": "future",
       "name": "future",
+      "version": ">= 1.3.0",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
@@ -463,19 +464,6 @@
     },
     {
       "@type": "SoftwareApplication",
-      "identifier": "tidyselect",
-      "name": "tidyselect",
-      "version": ">= 1.0.0",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=tidyselect"
-    },
-    {
-      "@type": "SoftwareApplication",
       "identifier": "txtplot",
       "name": "txtplot",
       "provider": {
@@ -502,6 +490,7 @@
       "@type": "SoftwareApplication",
       "identifier": "visNetwork",
       "name": "visNetwork",
+      "version": ">= 2.0.9",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
@@ -605,9 +594,22 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "tidyselect",
+      "name": "tidyselect",
+      "version": ">= 1.0.0",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=tidyselect"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "txtq",
       "name": "txtq",
-      "version": ">= 0.1.3",
+      "version": ">= 0.2.3",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
@@ -635,19 +637,15 @@
       "sameAs": "https://CRAN.R-project.org/package=vctrs"
     }
   ],
-  "releaseNotes": "https://github.com/ropensci/drake/blob/main/NEWS.md",
+  "releaseNotes": "https://github.com/ropensci/drake/blob/master/NEWS.md",
   "readme": "https://github.com/ropensci/drake/blob/main/README.md",
-  "fileSize": "1128.413KB",
-  "contIntegration": [
-    "https://travis-ci.org/ropensci/drake",
-    "https://ci.appveyor.com/project/ropensci/drake",
-    "https://codecov.io/github/ropensci/drake?branch=main"
-  ],
-  "developmentStatus": "https://www.repostatus.org/#active",
+  "fileSize": "2962.292KB",
+  "contIntegration": "https://codecov.io/github/ropensci/drake?branch=main",
+  "developmentStatus": "https://www.tidyverse.org/lifecycle/#superseded",
   "review": {
     "@type": "Review",
-    "url": "https://github.com/ropensci/onboarding/issues/156",
-    "provider": "http://ropensci.org"
+    "url": "https://github.com/ropensci/software-review/issues/156",
+    "provider": "https://ropensci.org"
   },
   "keywords": [
     "reproducibility",
