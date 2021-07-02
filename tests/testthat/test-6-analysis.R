@@ -1110,3 +1110,7 @@ test_with_dir("ignore deps of drake_plan() calls inside functions (#1237)", {
   expect_silent(out <- deps_code(f))
   expect_equal(out$name, "x")
 })
+
+test_with_dir("error analyzing malformed code (#1371)", {
+  expect_error(make(drake_plan(bar = scale_y_log10() + mod <- list())))
+})
