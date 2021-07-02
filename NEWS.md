@@ -1,5 +1,6 @@
 # Version 7.13.2.9000
 
+* Improve error messages from static code analysis of malformed code (#1371, @billdenney).
 
 # Version 7.13.2
 

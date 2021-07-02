@@ -7,6 +7,21 @@
 #' @param restrict An environment,
 #'   a hash table for whitelisting global symbols.
 walk_code <- function(expr, results, locals, restrict) {
+  tryCatch(
+    try_walk_code(expr, results, locals, restrict),
+    error = function(e) {
+      stop(
+        paste0(conditionMessage(e), collapse = " "),
+        "\nMalformed code:\n",
+        safe_deparse(expr, collapse = " "),
+        "\n",
+        call. = FALSE
+      )
+    }
+  )
+}
+
+try_walk_code <- function(expr, results, locals, restrict) {
   if (!length(expr)) {
     return()
   } else if (is.function(expr)) {
