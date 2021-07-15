@@ -806,3 +806,19 @@ test_with_dir("type_sum() S3 method for printing language columns", {
 test_with_dir("illegal plan error message (#1334)", {
   expect_error(make(plan = function(x) x), regexp = "drake plan")
 })
+
+test_with_dir("coerce to language with sanitize_command() (#1372)", {
+  skip_on_cran()
+  library(drake)
+  a <- c()
+  b <- list(1L)
+  plan <- drake_plan(
+    x = !!a,
+    y = !!b,
+    z = !!mtcars
+  )
+  make(plan)
+  expect_equal(readd(x), NULL)
+  expect_equal(readd(y), list(1L))
+  expect_equal(readd(z), mtcars)
+})

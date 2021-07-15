@@ -414,7 +414,18 @@ sanitize_plan <- function(
   plan <- arrange_plan_cols(plan)
   plan <- eval_non_lang_cols(plan, envir = envir)
   plan <- parse_lang_cols(plan)
+  plan$command <- lapply(plan$command, sanitize_command)
   as_drake_plan(plan)
+}
+
+sanitize_command <- function(command) {
+  if (!is.language(command)) {
+    command <- safe_parse(deparse(command))
+  }
+  if (is.null(command)) {
+    command <- quote(c())
+  }
+  command
 }
 
 # https://github.com/ropensci/drake/issues/1147
