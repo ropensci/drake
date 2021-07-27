@@ -2,6 +2,7 @@
 
 * Improve error messages from static code analysis of malformed code (#1371, @billdenney).
 * Handle invalid language objects in commands (#1372, @gorgitko).
+* Do not lock namespaces (#1373, @gorgitko).
 
 # Version 7.13.2
 

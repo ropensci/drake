@@ -118,7 +118,8 @@ non-hidden variables in your environment/workspace/R session.
 This is extremely important for ensuring the purity of your functions
 and the reproducibility/credibility/trust you can place in your project.
 \code{lock_envir} will be set to a default of \code{TRUE} in \code{drake} version
-7.0.0 and higher.}
+7.0.0 and higher. Namespaces are never locked, e.g.
+if \code{envir} is \code{getNamespace("packagename")}.}
 
 \item{lock_cache}{Logical, whether to lock the cache before running \code{make()}
 etc. It is usually recommended to keep cache locking on.

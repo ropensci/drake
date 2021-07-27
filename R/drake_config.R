@@ -380,7 +380,8 @@
 #'   This is extremely important for ensuring the purity of your functions
 #'   and the reproducibility/credibility/trust you can place in your project.
 #'   `lock_envir` will be set to a default of `TRUE` in `drake` version
-#'   7.0.0 and higher.
+#'   7.0.0 and higher. Namespaces are never locked, e.g.
+#'   if `envir` is `getNamespace("packagename")`.
 #'
 #' @param history Logical, whether to record the build history
 #'   of your targets. You can also supply a
