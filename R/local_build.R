@@ -287,7 +287,7 @@ downsize_error <- function(error) {
 
 # Prevents tracebacks from storing tons of data.
 deparse_traceback <- function(traceback) {
-  vcapply(traceback$calls, safe_deparse)
+  vcapply(traceback$call %|||% traceback$calls, safe_deparse)
 }
 
 block_envir_lock <- function(config) {

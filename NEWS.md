@@ -3,6 +3,7 @@
 * Improve error messages from static code analysis of malformed code (#1371, @billdenney).
 * Handle invalid language objects in commands (#1372, @gorgitko).
 * Do not lock namespaces (#1373, @gorgitko).
+* Compatibility with `rlang` PR 1255.
 
 # Version 7.13.2
 
