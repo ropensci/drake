@@ -70,7 +70,7 @@ Development
 <a href="https://zenodo.org/badge/latestdoi/82609103"><img src="https://zenodo.org/badge/82609103.svg" alt="Zenodo"></a>
 </td>
 <td align="left">
-<a href="https://www.tidyverse.org/lifecycle/#superseded"><img src="https://img.shields.io/badge/lifecycle-superseded-blue.svg" alt='superseded lifecycle'></a>
+<a href="https://lifecycle.r-lib.org/articles/stages.html"><img src="https://img.shields.io/badge/lifecycle-superseded-blue.svg" alt='superseded lifecycle'></a>
 </td>
 </tr>
 </tbody>
@@ -79,7 +79,7 @@ Development
 
 # drake is superseded. Consider targets instead.
 
-As of 2021-01-21, `drake` is [superseded](https://www.tidyverse.org/lifecycle/#superseded). The [`targets`](https://docs.ropensci.org/targets/) R package is the long-term successor of `drake`, and it is more robust and easier to use. Please visit <https://books.ropensci.org/targets/drake.html> for full context and advice on transitioning.
+As of 2021-01-21, `drake` is [superseded](https://lifecycle.r-lib.org/articles/stages.html). The [`targets`](https://docs.ropensci.org/targets/) R package is the long-term successor of `drake`, and it is more robust and easier to use. Please visit <https://books.ropensci.org/targets/drake.html> for full context and advice on transitioning.
 
 # The drake R package <img src="https://docs.ropensci.org/drake/reference/figures/logo.svg" align="right" alt="logo" width="120" height = "139" style = "border: none; float: right;">
 
@@ -289,7 +289,7 @@ hist
 The R community emphasizes reproducibility. Traditional themes include
 [scientific
 replicability](https://en.wikipedia.org/wiki/Replication_crisis),
-literate programming with [knitr](https://yihui.name/knitr/), and
+literate programming with [knitr](https://yihui.org/knitr/), and
 version control with
 [git](https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control).
 But internal consistency is important too. Reproducibility carries the
@@ -344,7 +344,7 @@ make(plan) # Independently re-create the results from the code and input data.
 Select specialized data formats to increase speed and reduce memory
 consumption. In version 7.5.2.9000 and above, the available formats are
 [“fst”](https://github.com/fstpackage/fst) for data frames (example
-below) and “keras” for [Keras](https://keras.rstudio.com/) models
+below) and “keras” for [Keras](https://tensorflow.rstudio.com/) models
 ([example here](https://books.ropensci.org/drake/churn.html#plan)).
 
 ``` r
@@ -546,7 +546,7 @@ the available functions. Here are the most important ones.
 ## Core concepts
 
 The following resources explain what `drake` can do and how it works.
-The [`learndrake`](https://github.com/wlandau/learndrake) workshop
+The workshop at `https://github.com/wlandau/learndrake`
 devotes particular attention to `drake`’s mental model.
 
   - The [user manual](https://books.ropensci.org/drake/)
@@ -554,11 +554,10 @@ devotes particular attention to `drake`’s mental model.
     R/Shiny app to help learn `drake` and create new projects. Run
     locally with `drakeplanner::drakeplanner()` or access it at
     <https://wlandau.shinyapps.io/drakeplanner>.
-  - [`learndrake`](https://github.com/wlandau/learndrake), an R package
+  - ``https://github.com/wlandau/learndrake`, an R package
     for teaching an extended `drake` workshop. It contains notebooks,
     slides, Shiny apps, the latter two of which are publicly deployed.
-    See the
-    [README](https://github.com/wlandau/learndrake/blob/main/README.md)
+    See `https://github.com/wlandau/learndrake/blob/main/README.md`
     for instructions and links.
 
 ## In practice
@@ -597,8 +596,8 @@ devotes particular attention to `drake`’s mental model.
 ## Use cases
 
 The official [rOpenSci use
-cases](https://discuss.ropensci.org/c/usecases) and [associated
-discussion threads](https://discuss.ropensci.org/c/usecases) describe
+cases](https://discuss.ropensci.org/c/usecases/10) and [associated
+discussion threads](https://discuss.ropensci.org/c/usecases/10) describe
 applications of `drake` in the real world. Many of these use cases are
 linked from the [`drake` tag on the rOpenSci discussion
 forum](https://discuss.ropensci.org/tag/drake).
@@ -656,7 +655,7 @@ for details.
 
 `drake` enhances reproducibility and high-performance computing, but not
 in all respects. [Literate programming](https://rmarkdown.rstudio.com/),
-[local library managers](https://rstudio.github.io/packrat),
+[local library managers](https://rstudio.github.io/packrat/),
 [containerization](https://www.docker.com/), and [strict session
 managers](https://github.com/tidyverse/reprex) offer more robust
 solutions in their respective domains. And for the problems `drake`
@@ -759,24 +758,24 @@ does not.
 of narrating code in plain vernacular. The goal is to communicate the
 research process clearly, transparently, and reproducibly. Whereas
 commented code is still mostly code, literate
-[knitr](https://yihui.name/knitr/) / [R
+[knitr](https://yihui.org/knitr/) / [R
 Markdown](https://rmarkdown.rstudio.com/) reports can become websites,
 presentation slides, lecture notes, serious scientific manuscripts, and
 even books.
 
 ### knitr and R Markdown
 
-`drake` and [knitr](https://yihui.name/knitr/) are symbiotic. `drake`’s
+`drake` and [knitr](https://yihui.org/knitr/) are symbiotic. `drake`’s
 job is to manage large computation and orchestrate the demanding tasks
 of a complex data analysis pipeline.
-[knitr](https://yihui.name/knitr/)’s job is to communicate those
+[knitr](https://yihui.org/knitr/)’s job is to communicate those
 expensive results after `drake` computes them.
-[knitr](https://yihui.name/knitr/) / [R
+[knitr](https://yihui.org/knitr/) / [R
 Markdown](https://rmarkdown.rstudio.com/) reports are small pieces of an
 overarching `drake` pipeline. They should focus on communication, and
 they should do as little computation as possible.
 
-To insert a [knitr](https://yihui.name/knitr/) report in a `drake`
+To insert a [knitr](https://yihui.org/knitr/) report in a `drake`
 pipeline, use the `knitr_in()` function inside your [`drake`
 plan](https://books.ropensci.org/drake/plans.html), and use `loadd()`
 and `readd()` to refer to targets in the report itself. See an [example
@@ -809,12 +808,12 @@ data analysis projects. `drake` is fully compatible with these tools.
 
 ### workflowr
 
-The [`workflowr`](https://github.com/jdblischak/workflowr) package is a
+The `workflowr` package is a
 project manager that focuses on literate programming, sharing over the
 web, file organization, and version control. Its brand of
 reproducibility is all about transparency, communication, and
 discoverability. For an example of
-[`workflowr`](https://github.com/jdblischak/workflowr) and `drake`
+`workflowr` and `drake`
 working together, see [this machine learning
 project](https://github.com/pat-s/2019-feature-selection) by [Patrick
 Schratz](https://github.com/pat-s).
@@ -847,7 +846,7 @@ citation("drake")
 # Acknowledgements
 
 Special thanks to [Jarad Niemi](https://www.jarad.me/), my advisor from
-[graduate school](https://stat.iastate.edu/), for first introducing me
+[graduate school](https://www.stat.iastate.edu/), for first introducing me
 to the idea of [Makefiles](https://www.gnu.org/software/make/) for
 research. He originally set me down the path that led to `drake`.
 

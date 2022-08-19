@@ -3,7 +3,7 @@
 \name{cancel_if}
 \alias{cancel_if}
 \title{Cancel a target mid-build under some condition
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}})`}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}}
 \usage{
 cancel_if(condition, allow_missing = TRUE)
 }

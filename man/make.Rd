@@ -591,7 +591,9 @@ a function or data object in your environment.
 \section{Self-invalidation}{
 
 It is possible to construct a workflow that tries to invalidate itself.
-Example:\if{html}{\out{<div class="r">}}\preformatted{plan <- drake_plan(
+Example:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{plan <- drake_plan(
   x = \{
     data(mtcars)
     mtcars$mpg

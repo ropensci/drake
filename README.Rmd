@@ -95,7 +95,7 @@ Development
 <a href="https://zenodo.org/badge/latestdoi/82609103"><img src="https://zenodo.org/badge/82609103.svg" alt="Zenodo"></a>
 </td>
 <td align="left">
-<a href="https://www.tidyverse.org/lifecycle/#superseded"><img src="https://img.shields.io/badge/lifecycle-superseded-blue.svg" alt='superseded lifecycle'></a>
+<a href="https://lifecycle.r-lib.org/articles/stages.html"><img src="https://img.shields.io/badge/lifecycle-superseded-blue.svg" alt='superseded lifecycle'></a>
 </td>
 </tr>
 </tbody>
@@ -249,7 +249,7 @@ hist
 
 # Reproducibility with confidence
 
-The R community emphasizes reproducibility. Traditional themes include [scientific replicability](https://en.wikipedia.org/wiki/Replication_crisis), literate programming with [knitr](https://yihui.name/knitr/), and version control with [git](https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control). But internal consistency is important too. Reproducibility carries the promise that your output matches the code and data you say you used. With the exception of [non-default triggers](https://books.ropensci.org/drake/triggers.html) and [hasty mode](https://books.ropensci.org/drake/hpc.html#hasty-mode), `drake` strives to keep this promise.
+The R community emphasizes reproducibility. Traditional themes include [scientific replicability](https://en.wikipedia.org/wiki/Replication_crisis), literate programming with [knitr](https://yihui.org/knitr/), and version control with [git](https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control). But internal consistency is important too. Reproducibility carries the promise that your output matches the code and data you say you used. With the exception of [non-default triggers](https://books.ropensci.org/drake/triggers.html) and [hasty mode](https://books.ropensci.org/drake/hpc.html#hasty-mode), `drake` strives to keep this promise.
 
 ## Evidence
 
@@ -274,7 +274,7 @@ make(plan) # Independently re-create the results from the code and input data.
 
 ## Big data efficiency
 
-Select specialized data formats to increase speed and reduce memory consumption. In version 7.5.2.9000 and above, the available formats are ["fst"](https://github.com/fstpackage/fst) for data frames (example below) and "keras" for [Keras](https://keras.rstudio.com/) models ([example here](https://books.ropensci.org/drake/churn.html#plan)).
+Select specialized data formats to increase speed and reduce memory consumption. In version 7.5.2.9000 and above, the available formats are ["fst"](https://github.com/fstpackage/fst) for data frames (example below) and "keras" for [Keras](https://tensorflow.rstudio.com/) models ([example here](https://books.ropensci.org/drake/churn.html#plan)).
 
 ```{r, eval = FALSE}
 library(drake)
@@ -398,11 +398,11 @@ The [reference section](https://docs.ropensci.org/drake/reference/index.html) li
 
 ## Core concepts
 
-The following resources explain what `drake` can do and how it works. The [`learndrake`](https://github.com/wlandau/learndrake) workshop devotes particular attention to `drake`'s mental model.
+The following resources explain what `drake` can do and how it works. The workshop at `https://github.com/wlandau/learndrake` workshop devotes particular attention to `drake`'s mental model.
 
 - The [user manual](https://books.ropensci.org/drake/)
 - [`drakeplanner`](https://github.com/wlandau/drakeplanner), an R/Shiny app to help learn `drake` and create new projects. Run locally with `drakeplanner::drakeplanner()` or access it at <https://wlandau.shinyapps.io/drakeplanner>.
-- [`learndrake`](https://github.com/wlandau/learndrake), an R package for teaching an extended `drake` workshop. It contains notebooks, slides, Shiny apps, the latter two of which are publicly deployed. See the [README](https://github.com/wlandau/learndrake/blob/main/README.md) for instructions and links.
+- `https://github.com/wlandau/learndrake`, an R package for teaching an extended `drake` workshop. It contains notebooks, slides, Shiny apps, the latter two of which are publicly deployed. See the `README` at `https://github.com/wlandau/learndrake/blob/main/README.md` for instructions and links.
 
 ## In practice
 
@@ -419,7 +419,7 @@ The following resources explain what `drake` can do and how it works. The [`lear
 
 ## Use cases
 
-The official [rOpenSci use cases](https://discuss.ropensci.org/c/usecases) and [associated discussion threads](https://discuss.ropensci.org/c/usecases) describe applications of `drake` in the real world. Many of these use cases are linked from the [`drake` tag on the rOpenSci discussion forum](https://discuss.ropensci.org/tag/drake).
+The official [rOpenSci use cases](https://discuss.ropensci.org/c/usecases/10) and [associated discussion threads](https://discuss.ropensci.org/c/usecases/10) describe applications of `drake` in the real world. Many of these use cases are linked from the [`drake` tag on the rOpenSci discussion forum](https://discuss.ropensci.org/tag/drake).
 
 Here are some additional applications of `drake` in real-world projects.
 
@@ -456,7 +456,7 @@ Development is a community effort, and we encourage participation. Please read [
 
 # Similar work
 
-`drake` enhances reproducibility and high-performance computing, but not in all respects. [Literate programming](https://rmarkdown.rstudio.com/), [local library managers](https://rstudio.github.io/packrat), [containerization](https://www.docker.com/), and [strict session managers](https://github.com/tidyverse/reprex) offer more robust solutions in their respective domains. And for the problems `drake` *does* solve, it stands on the shoulders of the giants that came before.
+`drake` enhances reproducibility and high-performance computing, but not in all respects. [Literate programming](https://rmarkdown.rstudio.com/), [local library managers](https://rstudio.github.io/packrat/), [containerization](https://www.docker.com/), and [strict session managers](https://github.com/tidyverse/reprex) offer more robust solutions in their respective domains. And for the problems `drake` *does* solve, it stands on the shoulders of the giants that came before.
 
 ## Pipeline tools
 
@@ -494,13 +494,13 @@ Memoization saves time for small projects, but it arguably does not go far enoug
 
 ## Literate programming
 
-[Literate programming](https://rmarkdown.rstudio.com/) is the practice of narrating code in plain vernacular. The goal is to communicate the research process clearly, transparently, and reproducibly. Whereas commented code is still mostly code, literate [knitr](https://yihui.name/knitr/) / [R Markdown](https://rmarkdown.rstudio.com/) reports can become websites, presentation slides, lecture notes, serious scientific manuscripts, and even books.
+[Literate programming](https://rmarkdown.rstudio.com/) is the practice of narrating code in plain vernacular. The goal is to communicate the research process clearly, transparently, and reproducibly. Whereas commented code is still mostly code, literate [knitr](https://yihui.org/knitr/) / [R Markdown](https://rmarkdown.rstudio.com/) reports can become websites, presentation slides, lecture notes, serious scientific manuscripts, and even books.
 
 ### knitr and R Markdown
 
-`drake` and [knitr](https://yihui.name/knitr/) are symbiotic. `drake`'s job is to manage large computation and orchestrate the demanding tasks of a complex data analysis pipeline. [knitr](https://yihui.name/knitr/)'s job is to communicate those expensive results after `drake` computes them. [knitr](https://yihui.name/knitr/) / [R Markdown](https://rmarkdown.rstudio.com/) reports are small pieces of an overarching `drake` pipeline. They should focus on communication, and they should do as little computation as possible. 
+`drake` and [knitr](https://yihui.org/knitr/) are symbiotic. `drake`'s job is to manage large computation and orchestrate the demanding tasks of a complex data analysis pipeline. [knitr](https://yihui.org/knitr/)'s job is to communicate those expensive results after `drake` computes them. [knitr](https://yihui.org/knitr/) / [R Markdown](https://rmarkdown.rstudio.com/) reports are small pieces of an overarching `drake` pipeline. They should focus on communication, and they should do as little computation as possible. 
 
-To insert a [knitr](https://yihui.name/knitr/) report in a `drake` pipeline, use the `knitr_in()` function inside your [`drake` plan](https://books.ropensci.org/drake/plans.html), and use `loadd()` and `readd()` to refer to targets in the report itself. See an [example here](https://github.com/wlandau/drake-examples/tree/main/main).
+To insert a [knitr](https://yihui.org/knitr/) report in a `drake` pipeline, use the `knitr_in()` function inside your [`drake` plan](https://books.ropensci.org/drake/plans.html), and use `loadd()` and `readd()` to refer to targets in the report itself. See an [example here](https://github.com/wlandau/drake-examples/tree/main/main).
 
 ### Version control
 
@@ -514,7 +514,7 @@ However, data poses a challenge. The datasets created by `make()` can get large 
 
 ### workflowr
 
-The [`workflowr`](https://github.com/jdblischak/workflowr) package is a project manager that focuses on literate programming, sharing over the web, file organization, and version control. Its brand of reproducibility is all about transparency, communication, and discoverability. For an example of [`workflowr`](https://github.com/jdblischak/workflowr) and `drake` working together, see [this machine learning project](https://github.com/pat-s/2019-feature-selection) by [Patrick Schratz](https://github.com/pat-s).
+The `workflowr` package is a project manager that focuses on literate programming, sharing over the web, file organization, and version control. Its brand of reproducibility is all about transparency, communication, and discoverability. For an example of `workflowr` and `drake` working together, see [this machine learning project](https://github.com/pat-s/2019-feature-selection) by [Patrick Schratz](https://github.com/pat-s).
 
 # Citation
 
@@ -524,7 +524,7 @@ citation("drake")
 
 # Acknowledgements
 
-Special thanks to [Jarad Niemi](https://www.jarad.me/), my advisor from [graduate school](https://stat.iastate.edu/), for first introducing me to the idea of [Makefiles](https://www.gnu.org/software/make/) for research. He originally set me down the path that led to `drake`.
+Special thanks to [Jarad Niemi](https://www.jarad.me/), my advisor from [graduate school](https://www.stat.iastate.edu/), for first introducing me to the idea of [Makefiles](https://www.gnu.org/software/make/) for research. He originally set me down the path that led to `drake`.
 
 Many thanks to [Julia Lowndes](https://github.com/jules32), [Ben Marwick](https://github.com/benmarwick), and [Peter Slaughter](https://github.com/gothub) for [reviewing drake for rOpenSci](https://github.com/ropensci/software-review/issues/156), and to [Maëlle Salmon](https://github.com/maelle) for such active involvement as the editor. Thanks also to the following people for contributing early in development.
 

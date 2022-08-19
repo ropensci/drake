@@ -98,6 +98,7 @@ test_with_dir("No hpc targets? No workers.", {
   }
   options(clustermq.scheduler = "multicore")
   plan <- drake_plan(x = target(1L, hpc = FALSE), y = target(x, hpc = FALSE))
+  cache <- storr::storr_environment()
   drake:::with_options(
     list(clustermq.scheduler = "does_not_exist"),
     make(
@@ -105,9 +106,10 @@ test_with_dir("No hpc targets? No workers.", {
       parallelism = "clustermq",
       jobs = 2,
       session_info = FALSE,
-      cache = storr::storr_environment()
+      cache = cache
     )
   )
+  expect_equal(readd(x, cache = cache), 1L)
   if ("package:clustermq" %in% search()) {
     detach("package:clustermq", unload = TRUE) # nolint
   }

@@ -131,6 +131,7 @@ test_with_dir("progress bar does not break things", {
   clean()
   options(clustermq.scheduler = "multicore")
   make(plan, verbose = 2, parallelism = "clustermq")
+  expect_equal(readd(w), seq_len(2))
   if ("package:clustermq" %in% search()) {
     detach("package:clustermq", unload = TRUE) # nolint
   }

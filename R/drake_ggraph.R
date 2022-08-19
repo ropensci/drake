@@ -141,7 +141,8 @@ render_drake_ggraph <- function(
   assert_pkg("ggplot2")
   assert_pkg("ggraph")
   graph <- igraph::graph_from_data_frame(
-    d = graph_info$edges,
+    d = graph_info$edges %||%
+      data.frame(from = character(0), to = character(0)),
     directed = TRUE,
     vertices = graph_info$nodes
   )

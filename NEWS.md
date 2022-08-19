@@ -1,6 +1,6 @@
-# Version 7.13.3.9000
+# Version 7.13.4
 
-
+* Fix HTML documentation files.
 
 # Version 7.13.3
 

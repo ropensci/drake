@@ -63,12 +63,13 @@ test_with_dir("retries", {
 })
 
 test_with_dir("timeouts", {
+  skip("something about the testing pkgs interferes with retries.")
   skip_on_cran() # CRAN gets essential tests only (check time limits).
   scenario <- get_testing_scenario()
   e <- eval(parse(text = scenario$envir))
   jobs <- scenario$jobs
   parallelism <- scenario$parallelism
-  pl <- data.frame(target = "x", command = "Sys.sleep(0.25)")
+  pl <- drake_plan(x = Sys.sleep(1))
 
   # Should have no errors.
   tmp <- capture.output(
@@ -89,7 +90,7 @@ test_with_dir("timeouts", {
         pl,
         envir = e,
         verbose = 0L,
-        elapsed = 1e-3,
+        elapsed = 1e-2,
         retries = 2,
         session_info = FALSE
       )

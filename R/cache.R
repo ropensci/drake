@@ -907,8 +907,7 @@ find_cache <- function(
   file.path(path, dir)
 }
 
-#' @title  Make a new `drake` cache.
-#' `r lifecycle::badge("stable")`
+#' @title  Make a new `drake` cache. `r lifecycle::badge("stable")`
 #' @description Uses the [storr_rds()] function
 #' from the `storr` package.
 #' @export

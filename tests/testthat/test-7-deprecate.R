@@ -1527,6 +1527,7 @@ test_with_dir("deprecated decorated storr methods", {
   skip_on_cran()
   cache <- new_cache()
   expect_silent(cache$reset_ht_hash())
+  expect_equal(1, 1)
 })
 
 test_with_dir("config arg of make() (#1118)", {
