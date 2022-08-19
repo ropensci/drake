@@ -45,10 +45,10 @@ f(readd(target14) + var)
 f(readd(target15) + var) # deliberate repeat
 f(g(drake::readd(target16) + var))
 f(readd(target = "target17", character_only = TRUE) + var)
-g <- function(){
+g <- function() {
   f(drake:::loadd(target18, character_only = IGNORE_THIS) + var)
 }
-function(){
+function() {
   f(drake:::loadd(target18, character_only = IGNORE_THIS) + var)
 }
 readd("\"file1\"")

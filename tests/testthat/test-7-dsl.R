@@ -119,7 +119,7 @@ test_with_dir("single tag_in", {
         .tag_in = single
       )
     ),
-    trace = T
+    trace = TRUE
   )
   exp <- drake_plan(
     x_1 = target(
@@ -146,7 +146,7 @@ test_with_dir("multiple tag_in", {
         .tag_in = c(one, second)
       )
     ),
-    trace = T
+    trace = TRUE
   )
   exp <- drake_plan(
     x_1 = target(
@@ -175,7 +175,7 @@ test_with_dir("single tag_out", {
         .tag_out = single
       )
     ),
-    trace = T
+    trace = TRUE
   )
   exp <- drake_plan(
     x_1 = target(
@@ -202,7 +202,7 @@ test_with_dir("multiple tag_out", {
         .tag_out = c(one, second)
       )
     ),
-    trace = T
+    trace = TRUE
   )
   exp <- drake_plan(
     x_1 = target(

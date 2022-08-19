@@ -48,7 +48,7 @@ test_with_dir("warn about <- and -> in drake_plan()", {
   )
   expect_silent(
     tmp <- drake_plan(
-      a = 1 -> x,
+      a = 1 -> x, # nolint
       b = 2
     )
   )
@@ -57,11 +57,11 @@ test_with_dir("warn about <- and -> in drake_plan()", {
     regexp = "to assign targets to commands"
   )
   expect_warning(
-    tmp <- drake_plan(a = 1, b -> 2),
+    tmp <- drake_plan(a = 1, b -> 2), # nolint
     regexp = "to assign targets to commands"
   )
   expect_warning(
-    tmp <- drake_plan(a <- 1, b -> 2),
+    tmp <- drake_plan(a <- 1, b -> 2), # nolint
     regexp = "to assign targets to commands"
   )
 })

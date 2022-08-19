@@ -237,9 +237,13 @@ test_with_dir("failed targets do not become up to date", {
 
 test_with_dir("true targets can be functions", {
   skip_on_cran() # CRAN gets essential tests only (check time limits).
-  generator <- function() return(function(x) {
-    x + 1
-  })
+  generator <- function() {
+    return(
+      function(x) {
+        x + 1
+      }
+    )
+  }
   plan <- drake_plan(myfunction = generator(), output = myfunction(1))
   make(plan, verbose = 0L, session_info = FALSE)
   config <- drake_config(plan, verbose = 0L, session_info = FALSE)

@@ -1,5 +1,6 @@
 drake_context("analysis")
 
+# nolint start
 test_with_dir("busy function", {
   f <- function(a = 1, b = k(i), nineteen, string_args = c("sa1", "sa2")) {
     for (iter in 1:10) {
@@ -49,6 +50,7 @@ test_with_dir("busy function", {
   str <- sort(c(str, "w", "x", "y", "z"))
   expect_equal(sort(analyze_strings(f)), str)
 })
+# nolint end
 
 test_with_dir("equals analysis", {
   for (text in c("z = g(a * b)", "function(x) {z = g(a * b)}")) {
@@ -143,7 +145,7 @@ test_with_dir("solitary codetools globals tests", {
   }
   expect_equivalent(drake_deps(f), new_drake_deps())
   f <- function() {
-    x <- 1; y <- 2
+    x <- 1; y <- 2 # nolint
   }
   out <- as.character(drake_deps(f)$globals)
   expect_equal(out, character(0))
@@ -398,9 +400,11 @@ test_with_dir("bad target names", {
 test_with_dir("file_in() and file_out() and knitr_in(): commands vs imports", {
   skip_on_cran() # CRAN gets essential tests only (check time limits).
   skip_if_not_installed("knitr")
+  # nolint start
   cmd <- quote({
     file_in("x"); file_out("y"); knitr_in("report.Rmd")
   })
+  # nolint end
   f <- function() {
     file_in("x")
   }

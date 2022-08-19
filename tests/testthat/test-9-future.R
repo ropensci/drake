@@ -93,7 +93,7 @@ test_with_dir("future package functionality", {
   for (i in 1:2) {
     e$my_plan$command[[2]] <- as.call(
       c(quote(identity), quote({
-        Sys.sleep(2); simulate(48)
+        Sys.sleep(2); simulate(48) # nolint
       }))
     )
     future::plan(future::multisession)

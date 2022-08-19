@@ -460,8 +460,7 @@ make_assignment_fn_impl <- function(fun) {
   if (is_correctly_namespaced) {
     fun[[3]] <- as.name(paste0(as.character(fun[[3]]), "<-"))
     fun
-  }
-  else {
+  } else {
     stop0("bad function in complex assignments: ", dsq(fun))
   }
 }
@@ -475,8 +474,7 @@ evalseq <- function(e) {
     v <- evalseq(e[[2]])
     e[[2]] <- codetools_tmp
     c(v, list(e))
-  }
-  else {
+  } else {
     list(e)
   }
 }

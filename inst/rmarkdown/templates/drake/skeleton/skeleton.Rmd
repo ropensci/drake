@@ -13,7 +13,7 @@ tryCatch({
   print(fit)
   readd(hist)
 },
-error = function(e){
+error = function(e) {
   stop("please read the instructions in the R Markdown file.")
 })
 ```
