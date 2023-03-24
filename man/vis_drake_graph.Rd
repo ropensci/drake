@@ -180,7 +180,7 @@ before running the targets.
 }
 \details{
 For enhanced interactivity in the graph, see the \code{mandrake}
-package: \url{https://github.com/matthewstrasiotto/mandrake}.
+package.
 }
 \examples{
 \dontrun{
