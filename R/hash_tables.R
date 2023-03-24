@@ -30,7 +30,7 @@ ht_exists <- function(ht, x) {
 }
 
 ht_del <- function(ht, x) {
-  remove(list = x, envir = ht, inherits = FALSE)
+  remove(list = as.character(x), envir = ht, inherits = FALSE)
 }
 
 ht_list <- function(ht) {
@@ -38,7 +38,7 @@ ht_list <- function(ht) {
 }
 
 ht_clear <- function(ht) {
-  rm(list = names(ht), envir = ht)
+  rm(list = as.character(names(ht)), envir = ht)
 }
 
 ht_clone <- function(ht) {

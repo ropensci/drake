@@ -105,7 +105,7 @@ cds_unload_conflicts <- function(imports, targets, envir, logger) {
   if (length(common)) {
     logger$term("unloading", length(common), "targets from environment")
   }
-  remove(list = common, envir = envir)
+  remove(list = as.character(common), envir = envir)
 }
 
 cds_analyze_imports <- function(args, imports) {

@@ -324,7 +324,7 @@ load_targets_impl.drake_dynamic <- function( # nolint
   subtarget_list
 ) {
   value <- get_subtargets(hashes, target, cache, subtargets, subtarget_list)
-  rm(list = target, envir = envir, inherits = FALSE)
+  rm(list = as.character(target), envir = envir, inherits = FALSE)
   assign(target, value, envir = envir, inherits = FALSE)
 }
 

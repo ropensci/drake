@@ -1,3 +1,7 @@
+# Version 7.13.5
+
+* Always pass a character vector to `rm()` and `remove()`.
+
 # Version 7.13.4
 
 * Fix HTML documentation files.

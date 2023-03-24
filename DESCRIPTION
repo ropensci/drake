@@ -1,6 +1,6 @@
 Package: drake
 Title: A Pipeline Toolkit for Reproducible Computation at Scale
-Version: 7.13.4
+Version: 7.13.5
 Authors@R: c(
   person(
     given = c("William", "Michael"),
@@ -153,4 +153,4 @@ Suggests:
 Encoding: UTF-8
 Language: en-US
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3

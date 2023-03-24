@@ -448,7 +448,10 @@ clear_make_memory <- function(config) {
     "meta_old"
   )
   for (key in envirs) {
-    remove(list = names(config[[key]]), envir = config[[key]])
+    remove(
+      list = as.character(names(config[[key]])),
+      envir = config[[key]]
+    )
   }
   config$cache$flush_cache()
   if (config$settings$garbage_collection) {

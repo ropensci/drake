@@ -118,14 +118,14 @@ configure_cache <- function(
   }
   short_exists <- cache$exists(key = "short_hash_algo", namespace = "config")
   long_exists <- cache$exists(key = "long_hash_algo", namespace = "config")
-  if (overwrite_hash_algos | !short_exists) {
+  if (overwrite_hash_algos || !short_exists) {
     cache$set(
       key = "short_hash_algo",
       value = short_hash_algo,
       namespace = "config"
     )
   }
-  if (overwrite_hash_algos | !long_exists) {
+  if (overwrite_hash_algos || !long_exists) {
     cache$set(
       key = "long_hash_algo",
       value = long_hash_algo,
@@ -564,7 +564,7 @@ load_main_example <- function(
     local = TRUE
   )$value
   for (file in c("report.Rmd", "raw_data.xlsx")) {
-    if (file.exists(file) & overwrite) {
+    if (file.exists(file) && overwrite) {
       warn0("Overwriting file ", file)
     }
     file.copy(

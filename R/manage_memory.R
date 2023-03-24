@@ -92,7 +92,11 @@ discard_targets <- function(discard_these, target, config) {
     return()
   }
   config$logger$disk("unload", discard_these, target = target)
-  rm(list = discard_these, envir = config$envir_targets, inherits = FALSE)
+  rm(
+    list = as.character(discard_these),
+    envir = config$envir_targets,
+    inherits = FALSE
+  )
   config$envir_loaded$targets <- setdiff(
     config$envir_loaded$targets,
     discard_these
@@ -108,7 +112,11 @@ discard_dynamic <- function(discard_these, config) {
     inherits = FALSE
   )
   whole_dynamic <- discard_these[index]
-  rm(list = whole_dynamic, envir = config$envir_dynamic, inherits = FALSE)
+  rm(
+    list = as.character(whole_dynamic),
+    envir = config$envir_dynamic,
+    inherits = FALSE
+  )
   config$envir_loaded$dynamic <- setdiff(
     config$envir_loaded$dynamic,
     whole_dynamic
@@ -116,14 +124,23 @@ discard_dynamic <- function(discard_these, config) {
 }
 
 clear_envir_subtargets <- function(target, config) {
-  rm(list = config$envir_loaded$subtargets, envir = config$envir_subtargets)
+  rm(
+    list = as.character(config$envir_loaded$subtargets),
+    envir = config$envir_subtargets
+  )
   config$envir_loaded$subtargets <- character(0)
 }
 
 clear_envir_targets <- function(target, config) {
   config$logger$disk("clear target envir", target = target)
-  rm(list = config$envir_loaded$targets, envir = config$envir_targets)
-  rm(list = config$envir_loaded$dynamic, envir = config$envir_dynamic)
+  rm(
+    list = as.character(config$envir_loaded$targets),
+    envir = config$envir_targets
+  )
+  rm(
+    list = as.character(config$envir_loaded$dynamic),
+    envir = config$envir_dynamic
+  )
   config$envir_loaded$targets <- character(0)
   config$envir_loaded$dynamic <- character(0)
 }
@@ -209,7 +226,7 @@ load_target_impl.bind <- function(target, cache, namespace, envir, verbose) {
   # Allow active bindings to overwrite existing variables.
   if (exists(x = target, envir = envir, inherits = FALSE)) {
     cli_msg("Replacing", target, "with an active binding.")
-    remove(list = target, envir = envir)
+    remove(list = as.character(target), envir = envir)
   }
   bindr::populate_env(
     env = envir,
