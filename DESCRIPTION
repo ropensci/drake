@@ -25,7 +25,7 @@ Authors@R: c(
     given = "Kirill",
     family = "Müller",
     role = "ctb",
-    email = "krlmlr+r@mailbox.org"
+    email = "kirill@cynkra.com"
   ),
   person(
     given = "Ben",
