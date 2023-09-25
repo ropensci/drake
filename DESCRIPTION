@@ -1,6 +1,6 @@
 Package: drake
 Title: A Pipeline Toolkit for Reproducible Computation at Scale
-Version: 7.13.5.9000
+Version: 7.13.6
 Authors@R: c(
   person(
     given = c("William", "Michael"),
@@ -120,7 +120,7 @@ Suggests:
   bindr,
   callr,
   cli (>= 1.1.0),
-  clustermq (>= 0.8.8),
+  clustermq (>= 0.9.0),
   crayon,
   curl (>= 2.7),
   data.table,

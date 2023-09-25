@@ -49,43 +49,28 @@ cmq_set_common_data <- function(config) {
     export <- as.list(config$envir, all.names = TRUE) # nocov
   }
   export$config <- hpc_config(config)
-  config$workers$set_common_data(
-    export = export,
-    fun = identity,
-    const = list(),
-    rettype = list(),
-    pkgs = character(0),
-    common_seed = config$settings$seed,
-    token = "set_common_data_token"
-  )
+  do.call(what = config$workers$env, args = export)
 }
 
 cmq_main <- function(config) {
-  on.exit(config$workers$finalize())
+  on.exit(config$workers$cleanup())
   config$logger$disk("begin scheduling targets")
   while (config$counter$remaining > 0) {
     cmq_main_iter(config)
   }
-  if (config$workers$cleanup()) {
-    on.exit()
-  }
 }
 
 cmq_main_iter <- function(config) {
-  msg <- config$workers$receive_data()
-  cmq_conclude_build(msg = msg, config = config)
-  if (!identical(msg$token, "set_common_data_token")) {
-    config$logger$disk("sending common data")
-    config$workers$send_common_data()
-  } else if (!config$queue$empty()) {
+  build <- config$workers$recv()
+  cmq_conclude_build(build = build, config = config)
+  if (!config$queue$empty()) {
     cmq_next_target(config)
   } else {
-    config$workers$send_shutdown_worker()
+    config$workers$send_shutdown()
   }
 }
 
-cmq_conclude_build <- function(msg, config) {
-  build <- msg$result
+cmq_conclude_build <- function(build, config) {
   if (is.null(build)) {
     return()
   }
@@ -158,8 +143,8 @@ cmq_send_target <- function(target, config) {
   spec <- hpc_spec(target, config)
   config_tmp <- get_hpc_config_tmp(config)
   config$logger$disk("build on an hpc worker", target = target)
-  config$workers$send_call(
-    expr = drake::cmq_build(
+  config$workers$send(
+    cmd = drake::cmq_build(
       target = target,
       meta = meta,
       deps = deps,
@@ -167,13 +152,11 @@ cmq_send_target <- function(target, config) {
       config_tmp = config_tmp,
       config = config
     ),
-    env = list(
-      target = target,
-      meta = meta,
-      deps = deps,
-      spec = spec,
-      config_tmp = config_tmp
-    )
+    target = target,
+    meta = meta,
+    deps = deps,
+    spec = spec,
+    config_tmp = config_tmp
   )
 }
 

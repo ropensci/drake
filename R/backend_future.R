@@ -115,12 +115,12 @@ ft_launch_worker <- function(target, meta, protect, config) {
 }
 
 future_globals <- function(
-  target,
-  meta,
-  config,
-  spec,
-  config_tmp,
-  protect
+    target,
+    meta,
+    config,
+    spec,
+    config_tmp,
+    protect
 ) {
   globals <- list(
     DRAKE_GLOBALS__ = list(
@@ -161,12 +161,12 @@ future_globals <- function(
 #' @param protect Names of targets that still need their
 #' dependencies available in memory.
 future_build <- function(
-  target,
-  meta,
-  config,
-  spec,
-  config_tmp,
-  protect
+    target,
+    meta,
+    config,
+    spec,
+    config_tmp,
+    protect
 ) {
   config$spec <- spec
   config <- restore_hpc_config_tmp(config_tmp, config)
