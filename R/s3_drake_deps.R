@@ -47,9 +47,6 @@ drake_deps_impl <- function(expr, exclude = character(0), restrict = NULL) {
 #' @param file_in Literal static file paths enclosed in [file_in()].
 #' @param file_out Literal static file paths enclosed in [file_out()].
 #' @param knitr_in Literal static file paths enclosed in [knitr_in()].
-#' @param restrict Optional character vector of allowable names of globals.
-#'   If `NULL`, all global symbols are detectable. If a character vector,
-#'   only the variables in `restrict` will count as global variables.
 #' @examples
 #' if (FALSE) { # stronger than roxygen dontrun
 #' new_drake_deps()

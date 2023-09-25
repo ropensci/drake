@@ -10,7 +10,7 @@ isolate_example(desc, code)
 \arguments{
 \item{desc}{Character, description of the example.}
 
-\item{...}{Code to run.}
+\item{code}{Code to run.}
 }
 \value{
 Nothing.

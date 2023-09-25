@@ -344,7 +344,7 @@ weak_tibble <- function(..., .force_df = FALSE) {
 #' @keywords internal
 #' @return Nothing.
 #' @param desc Character, description of the example.
-#' @param ... Code to run.
+#' @param code Code to run.
 isolate_example <- function(desc, code) {
   new <- tempfile()
   dir.create(new)
