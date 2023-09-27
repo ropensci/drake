@@ -560,11 +560,11 @@ parse_transform <- function(transform, target) {
   )
 }
 
-assert_good_transform <- function(...) UseMethod("assert_good_transform")
+assert_good_transform <- function(transform, target) UseMethod("assert_good_transform")
 
 assert_good_transform.map <-
   assert_good_transform.cross <-
-  assert_good_transform.combine <- function(...) NULL
+  assert_good_transform.combine <- function(transform, target) NULL
 
 assert_good_transform.default <- function(transform, target) {
   stop0(
@@ -573,7 +573,7 @@ assert_good_transform.default <- function(transform, target) {
   )
 }
 
-interpret_transform <- function(...) UseMethod("interpret_transform")
+interpret_transform <- function(transform) UseMethod("interpret_transform")
 
 interpret_transform.map <- function(transform) {
   structure(
@@ -584,7 +584,7 @@ interpret_transform.map <- function(transform) {
 
 interpret_transform.cross <- interpret_transform.map
 
-interpret_transform.combine <- function(transform, ...) {
+interpret_transform.combine <- function(transform) {
   structure(
     transform,
     combine = dsl_combine(transform),
@@ -624,7 +624,15 @@ check_group_names <- function(groups, protect) {
   }
 }
 
-dsl_transform <- function(...) {
+dsl_transform <- function(
+  transform,
+  target,
+  row,
+  plan,
+  graph,
+  max_expand,
+  ...
+) {
   UseMethod("dsl_transform")
 }
 
@@ -634,7 +642,8 @@ dsl_transform.map <- dsl_transform.cross <- function(
   row,
   plan,
   graph,
-  max_expand
+  max_expand,
+  ...
 ) {
   groupings <- groupings(transform)
   grid <- dsl_grid(transform, groupings)
@@ -1042,7 +1051,7 @@ dsl_deps.combine <- function(transform) {
   )
 }
 
-dsl_revdeps <- function(...) UseMethod("dsl_revdeps")
+dsl_revdeps <- function(transform) UseMethod("dsl_revdeps")
 
 dsl_revdeps.map <- function(transform) {
   attr(transform, "revdeps") %|||% c(
@@ -1061,7 +1070,7 @@ dsl_revdeps.combine <- function(transform) {
   )
 }
 
-dsl_grid <- function(...) UseMethod("dsl_grid")
+dsl_grid <- function(transform, groupings) UseMethod("dsl_grid")
 
 dsl_grid.map <- function(transform, groupings) {
   tryCatch(
@@ -1086,7 +1095,7 @@ dsl_grid.cross <- function(transform, groupings) {
   do.call(expand.grid, c(groupings, stringsAsFactors = FALSE))
 }
 
-groupings <- function(...) {
+groupings <- function(transform) {
   UseMethod("groupings")
 }
 
@@ -1094,9 +1103,9 @@ groupings.map <- groupings.cross <- function(transform) {
   c(new_groupings(transform), old_groupings(transform))
 }
 
-groupings.combine <- function(...) character(0)
+groupings.combine <- function(transform) character(0)
 
-old_groupings <- function(...) UseMethod("old_groupings")
+old_groupings <- function(transform, plan = NULL) UseMethod("old_groupings")
 
 old_groupings.map <- old_groupings.cross <- function(transform, plan = NULL) {
   attr(transform, "old_groupings") %|||%
@@ -1108,7 +1117,7 @@ set_old_groupings <- function(transform, plan) {
   transform
 }
 
-find_old_groupings <- function(...) UseMethod("find_old_groupings")
+find_old_groupings <- function(transform, plan) UseMethod("find_old_groupings")
 
 find_old_groupings.map <- function(transform, plan) {
   group_names <- as.character(unnamed(lang(transform))[-1])
@@ -1165,7 +1174,7 @@ na_omit <- function(x) {
 
 find_old_groupings.combine <- function(transform, plan) NULL
 
-new_groupings <- function(...) UseMethod("new_groupings")
+new_groupings <- function(transform) UseMethod("new_groupings")
 
 new_groupings.map <- function(transform) {
   attr <- attr(transform, "new_groupings")
@@ -1213,21 +1222,21 @@ long_deparse <- function(x, collapse = "\n") {
   out
 }
 
-dsl_combine <- function(...) UseMethod("dsl_combine")
+dsl_combine <- function(transform) UseMethod("dsl_combine")
 
 dsl_combine.combine <- function(transform) {
   attr(transform, "combine") %|||%
     as.character(unnamed(lang(transform))[-1])
 }
 
-dsl_by <- function(...) UseMethod("dsl_by")
+dsl_by <- function(transform) UseMethod("dsl_by")
 
 dsl_by.combine <- function(transform) {
   attr(transform, "by") %|||%
     all.vars(lang(transform)[[".by"]], functions = FALSE)
 }
 
-dsl_id <- function(...) UseMethod("dsl_id")
+dsl_id <- function(transform) UseMethod("dsl_id")
 
 dsl_id.transform <- function(transform) {
   if (!is.null(attr(transform, "id"))) {
@@ -1240,7 +1249,7 @@ dsl_id.transform <- function(transform) {
   all.vars(out, functions = FALSE) %||% TRUE
 }
 
-dsl_names <- function(...) UseMethod("dsl_names")
+dsl_names <- function(transform) UseMethod("dsl_names")
 
 dsl_names.transform <- function(transform) {
   if (!is.null(attr(transform, ".names"))) {
@@ -1249,25 +1258,25 @@ dsl_names.transform <- function(transform) {
   eval(lang(transform)[[".names"]])
 }
 
-tag_in <- function(...) UseMethod("tag_in")
+tag_in <- function(transform) UseMethod("tag_in")
 
 tag_in.transform <- function(transform) {
   attr(transform, "tag_in") %|||%
     all.vars(lang(transform)[[".tag_in"]], functions = FALSE)
 }
 
-tag_out <- function(...) UseMethod("tag_out")
+tag_out <- function(transform) UseMethod("tag_out")
 
 tag_out.transform <- function(transform) {
   attr(transform, "tag_out") %|||%
     all.vars(lang(transform)[[".tag_out"]], functions = FALSE)
 }
 
-lang <- function(...) UseMethod("lang")
+lang <- function(x) UseMethod("lang")
 
 lang.command <- lang.transform <- function(x) x[[1]]
 
-char <- function(...) UseMethod("char")
+char <- function(x) UseMethod("char")
 
 char.transform <- function(x) safe_deparse(lang(x), backtick = TRUE)
 
