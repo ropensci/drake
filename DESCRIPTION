@@ -120,7 +120,7 @@ Suggests:
   bindr,
   callr,
   cli (>= 1.1.0),
-  clustermq (>= 0.9.0),
+  clustermq (>= 0.9.1),
   crayon,
   curl (>= 2.7),
   data.table,
