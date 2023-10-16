@@ -1190,7 +1190,7 @@ test_with_dir("format file hpc checksums (#1168)", {
   expect_equal(nchar(out), c(16L, 16L))
   clean(destroy = TRUE)
   make(plan, parallelism = "future", caching = "worker")
-  skip_if_not_installed("clustermq")
+  skip_if_not_installed("clustermq", minimum_version = "0.9.1")
   skip_on_os("windows")
   options(clustermq.scheduler = "multicore")
   for (caching in c("main", "worker")) {

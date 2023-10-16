@@ -1,7 +1,7 @@
 drake_context("clustermq")
 
 test_with_dir("clustermq parallelism for CRAN", {
-  skip_if_not_installed("clustermq")
+  skip_if_not_installed("clustermq", minimum_version = "0.9.1")
   skip_on_os("windows")
   options(clustermq.scheduler = "multicore")
   plan <- drake_plan(x = {
@@ -22,7 +22,7 @@ test_with_dir("clustermq parallelism for CRAN", {
 
 test_with_dir("clustermq parallelism", {
   skip_on_cran()
-  skip_if_not_installed("clustermq")
+  skip_if_not_installed("clustermq", minimum_version = "0.9.1")
   skip_on_os("windows")
   if ("package:clustermq" %in% search()) {
     detach("package:clustermq", unload = TRUE) # nolint
@@ -91,7 +91,7 @@ test_with_dir("clustermq parallelism", {
 
 test_with_dir("No hpc targets? No workers.", {
   skip_on_cran()
-  skip_if_not_installed("clustermq")
+  skip_if_not_installed("clustermq", minimum_version = "0.9.1")
   skip_on_os("windows")
   if ("package:clustermq" %in% search()) {
     detach("package:clustermq", unload = TRUE) # nolint
@@ -117,7 +117,7 @@ test_with_dir("No hpc targets? No workers.", {
 
 test_with_dir("All hpc targets up to date? No workers.", {
   skip_on_cran()
-  skip_if_not_installed("clustermq")
+  skip_if_not_installed("clustermq", minimum_version = "0.9.1")
   skip_on_os("windows")
   if ("package:clustermq" %in% search()) {
     detach("package:clustermq", unload = TRUE) # nolint
@@ -153,7 +153,7 @@ test_with_dir("All hpc targets up to date? No workers.", {
 
 test_with_dir("Start off with non-HPC targets, then go to HPC targets.", {
   skip_on_cran()
-  skip_if_not_installed("clustermq")
+  skip_if_not_installed("clustermq", minimum_version = "0.9.1")
   skip_on_os("windows")
   if ("package:clustermq" %in% search()) {
     detach("package:clustermq", unload = TRUE) # nolint

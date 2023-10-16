@@ -234,7 +234,7 @@ test_with_dir("caching arg and column", {
 
 test_with_dir("custom caching column and clustermq", {
   skip_on_cran()
-  skip_if_not_installed("clustermq")
+  skip_if_not_installed("clustermq", minimum_version = "0.9.1")
   skip_on_os("windows")
   if ("package:clustermq" %in% search()) {
     detach("package:clustermq", unload = TRUE) # nolint

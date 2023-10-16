@@ -52,7 +52,7 @@ test_with_dir("custom keras format", {
 
 test_with_dir("keras + clustermq", {
   skip_on_cran()
-  skip_if_not_installed("clustermq")
+  skip_if_not_installed("clustermq", minimum_version = "0.9.1")
   skip_if_not_installed("keras")
   skip_on_os("windows")
   if ("package:clustermq" %in% search()) {
