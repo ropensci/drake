@@ -40,7 +40,7 @@ Some methods and objects are new or overwritten. Here
 are the ones relevant to users.
 \itemize{
 \item \code{history}: \code{drake}'s history (which powers \code{\link[=drake_history]{drake_history()}})
-is a \href{https://github.com/wlandau/txtq}{\code{txtq}}. Access it
+is a \code{txtq}. Access it
 with \code{drake_cache()$history}.
 \item \code{import()}: The \code{import()} method is a function that can import
 targets, function dependencies, etc. from one decorated \code{storr}

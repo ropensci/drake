@@ -40,8 +40,8 @@ so \code{drake} can watch them for changes. This used to be the standard
 way to make \code{drake} compatible with workflows implemented as custom
 analysis packages. Now, the recommendation is to supply
 \code{getNamespace("yourPackage")} to the \code{envir} argument of \code{\link[=make]{make()}}
-and friends. Read \url{https://github.com/ropensci/drake/issues/1286},
-especially \url{https://github.com/ropensci/drake/issues/1286#issuecomment-649088321}, # nolint
+and friends. Read \verb{https://github.com/ropensci/drake/issues/1286},
+especially \verb{https://github.com/ropensci/drake/issues/1286#issuecomment-649088321}, # nolint
 for details.
 }
 \examples{

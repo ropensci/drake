@@ -6,7 +6,7 @@
 #'   and dynamic branching, and it can also set the values
 #'   of custom columns such as `format`, `elapsed`, `retries`,
 #'   and `max_expand`. Details are at
-#'   <https://books.ropensci.org/drake/plans.html#special-columns>.
+#'   `https://books.ropensci.org/drake/plans.html#special-columns`.
 #'   Note: `drake_plan(my_target = my_command())`
 #'   is equivalent to
 #'   `drake_plan(my_target = target(my_command())`.
@@ -22,10 +22,10 @@
 #' @param command The command to build the target.
 #' @param transform A call to [map()], [split()], [cross()], or [combine()]
 #'   to apply a *static* transformation. Details:
-#'   <https://books.ropensci.org/drake/static.html>
+#'   `https://books.ropensci.org/drake/static.html`
 #' @param dynamic A call to [map()], [cross()], or [group()]
 #'   to apply a *dynamic* transformation. Details:
-#'   <https://books.ropensci.org/drake/dynamic.html>
+#'   `https://books.ropensci.org/drake/dynamic.html`
 #' @param ... Optional columns of the plan for a given target.
 #'   See the Columns section of this help file for a selection
 #'   of special columns that `drake` understands.
@@ -104,7 +104,7 @@ target <- function(
 #'   [make()] or [drake_config()].
 #'   For details, see the chapter on triggers
 #'   in the user manual:
-#'   <https://books.ropensci.org/drake/triggers.html>
+#'   `https://books.ropensci.org/drake/triggers.html`
 #' @details
 #'   A target always builds if it has not been built before.
 #'   Triggers allow you to customize the conditions
@@ -142,7 +142,7 @@ target <- function(
 #'   choice of specialized data format changes: for example,
 #'   if you use `target(format = "qs")` one instance and
 #'   `target(format = "fst")` the next. See
-#'   <https://books.ropensci.org/drake/plans.html#special-data-formats-for-targets> # nolint
+#'   `https://books.ropensci.org/drake/plans.html#special-data-formats-for-targets` # nolint
 #'   for details on formats.
 #' @param condition R code (expression or language object)
 #'   that returns a logical. The target will rebuild
@@ -894,7 +894,7 @@ plan_to_text <- function(plan) {
 #' `r lifecycle::badge("stable")`
 #' @description You supply a plan, and [drake_plan_source()]
 #'   supplies code to generate that plan. If you have the
-#'   [`prettycode` package](https://github.com/r-lib/prettycode),
+#'   `prettycode` package,
 #'   installed, you also get nice syntax highlighting in the console
 #'   when you print it.
 #' @export

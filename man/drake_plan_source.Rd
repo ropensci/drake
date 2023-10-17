@@ -17,7 +17,7 @@ is a call to \code{\link[=drake_plan]{drake_plan()}} that produces the plan you 
 \description{
 You supply a plan, and \code{\link[=drake_plan_source]{drake_plan_source()}}
 supplies code to generate that plan. If you have the
-\href{https://github.com/r-lib/prettycode}{\code{prettycode} package},
+\code{prettycode} package,
 installed, you also get nice syntax highlighting in the console
 when you print it.
 }

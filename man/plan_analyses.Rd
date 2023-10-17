@@ -26,7 +26,7 @@ An evaluated workflow plan data frame of analysis targets.
 }
 \description{
 Use \code{\link[=drake_plan]{drake_plan()}} instead.
-See \url{https://books.ropensci.org/drake/plans.html#large-plans}
+See \verb{https://books.ropensci.org/drake/plans.html#large-plans}
 for details.
 }
 \details{

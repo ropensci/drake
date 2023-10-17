@@ -61,7 +61,7 @@ of targets with transformations such as
 }
 \details{
 For details, see
-\url{https://books.ropensci.org/drake/plans.html#large-plans}.
+\verb{https://books.ropensci.org/drake/plans.html#large-plans}.
 }
 \section{Transformations}{
 
@@ -69,7 +69,7 @@ For details, see
 Your code will look something like
 \verb{drake_plan(y = target(f(x), transform = map(x = c(1, 2, 3)))}
 You can read about this interface at
-\url{https://books.ropensci.org/drake/plans.html#large-plans}. # nolint
+\verb{https://books.ropensci.org/drake/plans.html#large-plans}. # nolint
 }
 
 \section{Static branching}{

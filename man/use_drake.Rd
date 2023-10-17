@@ -13,15 +13,15 @@ use_drake(open = interactive())
 \description{
 Add top-level R script files to use \code{drake}
 in your data analysis project. For details, read
-\url{https://books.ropensci.org/drake/projects.html}
+\verb{https://books.ropensci.org/drake/projects.html}
 }
 \details{
 Files written:
 \enumerate{
 \item \code{make.R}: a suggested main R script for batch mode.
 \item \verb{_drake.R}: a configuration R script for
-the \href{https://docs.ropensci.org/drake/reference/r_make.html}{\verb{r_*()}} functions documented at # nolint
-\url{https://books.ropensci.org/drake/projects.html#safer-interactivity}. # nolint
+the \verb{r_*()} functions documented at # nolint
+\verb{https://books.ropensci.org/drake/projects.html#safer-interactivity}. # nolint
 Remarks:
 }
 \itemize{
@@ -30,7 +30,7 @@ You can call it whatever you want.
 \item Other supporting scripts, such as \code{R/packages.R},
 \code{R/functions.R}, and \code{R/plan.R}, are not included.
 \item You can find examples at
-\url{https://github.com/wlandau/drake-examples}
+\verb{https://github.com/wlandau/drake-examples}
 and download examples with \code{\link[=drake_example]{drake_example()}}
 (e.g. \code{drake_example("main")}).
 }

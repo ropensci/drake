@@ -41,7 +41,7 @@ Not valid for dynamic branching.
 and then runs its command in debug mode (see \code{browser()},
 \code{debug()}, and \code{debugonce()}). This function does not
 store the target's value in the cache
-(see \url{https://github.com/ropensci/drake/issues/587}).
+(see \verb{https://github.com/ropensci/drake/issues/587}).
 }
 \examples{
 \dontrun{

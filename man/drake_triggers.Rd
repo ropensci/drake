@@ -36,7 +36,7 @@ in your workflow.}
 choice of specialized data format changes: for example,
 if you use \code{target(format = "qs")} one instance and
 \code{target(format = "fst")} the next. See
-\url{https://books.ropensci.org/drake/plans.html#special-data-formats-for-targets} # nolint
+\verb{https://books.ropensci.org/drake/plans.html#special-data-formats-for-targets} # nolint
 for details on formats.}
 
 \item{condition}{R code (expression or language object)

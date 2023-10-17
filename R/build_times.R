@@ -2,7 +2,7 @@
 #' `r lifecycle::badge("stable")`
 #' @description Applies to targets in your plan, not imports or files.
 #' @details Times for dynamic targets
-#'   (<https://books.ropensci.org/drake/dynamic.html>)
+#'   (`https://books.ropensci.org/drake/dynamic.html`)
 #'   only reflect the time it takes
 #'   to post-process the sub-targets (typically very fast)
 #'   and exclude the time it takes to build the sub-targets themselves.

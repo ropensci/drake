@@ -1,18 +1,18 @@
 #' @title Download the files of an example `drake` project.
 #' `r lifecycle::badge("stable")`
 #' @description The `drake_example()` function downloads a
-#'   folder from <https://github.com/wlandau/drake-examples>.
+#'   folder from `https://github.com/wlandau/drake-examples`.
 #'   By default, it creates a new folder with the example name
 #'   in your current working directory. After the files are written,
 #'   have a look at the enclosed `README` file.
 #'   Other instructions are available in the files at
-#'   <https://github.com/wlandau/drake-examples>.
+#'   `https://github.com/wlandau/drake-examples`.
 #' @seealso [drake_examples()], [make()]
 #' @export
 #' @return `NULL`
 #' @param example Name of the example.
 #'   The possible values are the names of the folders at
-#'   <https://github.com/wlandau/drake-examples>.
+#'   `https://github.com/wlandau/drake-examples`.
 #' @param to Character scalar,
 #'   the folder containing the code files for the example.
 #'   passed to the `exdir` argument of `utils::unzip()`.
@@ -62,9 +62,9 @@ drake_example <- function(
 #' @title List the names of all the drake examples.
 #' `r lifecycle::badge("stable")`
 #' @description You can find the code files of the examples at
-#'   <https://github.com/wlandau/drake-examples>.
+#'   `https://github.com/wlandau/drake-examples`.
 #'   The `drake_examples()` function downloads the list of examples
-#'   from <https://wlandau.github.io/drake-examples/examples.md>,
+#'   from `https://wlandau.github.io/drake-examples/examples.md`,
 #'   so you need an internet connection.
 #' @export
 #' @seealso [drake_example()], [make()]

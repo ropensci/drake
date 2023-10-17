@@ -160,7 +160,7 @@ When you call \code{\link[=make]{make()}} to run your project,
 You may want to inspect the targets afterwards, possibly in an
 interactive R session. However, the files in the \code{.drake} folder
 are organized in a special format created by the
-\href{https://github.com/richfitz/storr}{\code{storr}} package,
+\code{storr} package,
 which is not exactly human-readable.
 To retrieve a target for manual viewing, use \code{\link[=readd]{readd()}}.
 To load one or more targets into your session, use \code{\link[=loadd]{loadd()}}.

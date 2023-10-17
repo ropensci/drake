@@ -71,7 +71,7 @@ a target is built during \code{\link[=make]{make()}}.}
 You can experiment with \code{\link[=predict_runtime]{predict_runtime()}}
 to help decide on an appropriate number of jobs.
 For details, visit
-\url{https://books.ropensci.org/drake/time.html}.}
+\verb{https://books.ropensci.org/drake/time.html}.}
 
 \item{jobs_preprocess}{Number of parallel jobs for processing the imports
 and doing other preprocessing tasks.}
@@ -81,7 +81,7 @@ if targets fail.}
 
 \item{lazy_load}{An old feature, currently being questioned.
 For the current recommendations on memory management, see
-\url{https://books.ropensci.org/drake/memory.html#memory-strategies}.
+\verb{https://books.ropensci.org/drake/memory.html#memory-strategies}.
 The \code{lazy_load} argument is either a character vector or a logical.
 For dynamic targets, the behavior is always \code{"eager"} (see below).
 So the \code{lazy_load} argument is for static targets only.
@@ -194,9 +194,8 @@ Also see the \code{garbage_collection} argument of \code{make()} and
 \code{drake_config()}.}
 
 \item{parallelism}{Character scalar, type of parallelism to use.
-For detailed explanations, see the
-\href{https://books.ropensci.org/drake/hpc.html}{high-performance computing chapter} # nolint
-of the user manual.
+For detailed explanations, see
+\verb{https://books.ropensci.org/drake/hpc.html}.
 
 You could also supply your own scheduler function
 if you want to experiment or aggressively optimize.
@@ -344,7 +343,7 @@ Same as the \code{template} argument of \code{clustermq::Q()} and
 Enabled for \code{clustermq} only (\code{make(parallelism = "clustermq")}),
 not \code{future} or \code{batchtools} so far.
 For more information, see the \code{clustermq} package:
-\url{https://github.com/mschubert/clustermq}.
+\verb{https://github.com/mschubert/clustermq}.
 Some template placeholders such as \code{{{ job_name }}} and \code{{{ n_jobs }}}
 cannot be set this way.}
 

@@ -108,9 +108,8 @@ See also \code{\link[=drake_cache]{drake_cache()}}.}
 \item{fetch_cache}{Deprecated.}
 
 \item{parallelism}{Character scalar, type of parallelism to use.
-For detailed explanations, see the
-\href{https://books.ropensci.org/drake/hpc.html}{high-performance computing chapter} # nolint
-of the user manual.
+For detailed explanations, see
+\verb{https://books.ropensci.org/drake/hpc.html}.
 
 You could also supply your own scheduler function
 if you want to experiment or aggressively optimize.
@@ -131,7 +130,7 @@ whenever \code{drake}'s unexported core functions are updated.
 You can experiment with \code{\link[=predict_runtime]{predict_runtime()}}
 to help decide on an appropriate number of jobs.
 For details, visit
-\url{https://books.ropensci.org/drake/time.html}.}
+\verb{https://books.ropensci.org/drake/time.html}.}
 
 \item{jobs_preprocess}{Number of parallel jobs for processing the imports
 and doing other preprocessing tasks.}
@@ -220,7 +219,7 @@ on your workflow. Use at your own peril.}
 
 \item{lazy_load}{An old feature, currently being questioned.
 For the current recommendations on memory management, see
-\url{https://books.ropensci.org/drake/memory.html#memory-strategies}.
+\verb{https://books.ropensci.org/drake/memory.html#memory-strategies}.
 The \code{lazy_load} argument is either a character vector or a logical.
 For dynamic targets, the behavior is always \code{"eager"} (see below).
 So the \code{lazy_load} argument is for static targets only.
@@ -330,7 +329,7 @@ Same as the \code{template} argument of \code{clustermq::Q()} and
 Enabled for \code{clustermq} only (\code{make(parallelism = "clustermq")}),
 not \code{future} or \code{batchtools} so far.
 For more information, see the \code{clustermq} package:
-\url{https://github.com/mschubert/clustermq}.
+\verb{https://github.com/mschubert/clustermq}.
 Some template placeholders such as \code{{{ job_name }}} and \code{{{ n_jobs }}}
 cannot be set this way.}
 
@@ -434,7 +433,7 @@ if \code{envir} is \code{getNamespace("packagename")}.}
 
 \item{history}{Logical, whether to record the build history
 of your targets. You can also supply a
-\href{https://github.com/wlandau/txtq}{\code{txtq}}, which is
+\code{txtq}, which is
 how \code{drake} records history.
 Must be \code{TRUE} for \code{\link[=drake_history]{drake_history()}} to work later.}
 
@@ -523,7 +522,7 @@ with \code{build_times = FALSE}.}
 \item{format}{Character, an optional custom storage format for targets
 without an explicit \code{target(format = ...)} in the plan. Details
 about formats:
-\url{https://books.ropensci.org/drake/plans.html#special-data-formats-for-targets} # nolint}
+\verb{https://books.ropensci.org/drake/plans.html#special-data-formats-for-targets} # nolint}
 
 \item{lock_cache}{Logical, whether to lock the cache before running \code{make()}
 etc. It is usually recommended to keep cache locking on.
@@ -579,7 +578,7 @@ ideally with the help of a main R script.
 This script should begin in a fresh R session,
 load your packages and functions in a dependable manner,
 and then run \code{make()}. Example:
-\url{https://github.com/wlandau/drake-examples/tree/main/gsp}.
+\verb{https://github.com/wlandau/drake-examples/tree/main/gsp}.
 Batch mode, especially within a container, is particularly helpful.
 
 Interactive R sessions are still useful,
@@ -612,15 +611,15 @@ prior to \code{make()}, not in any functions or commands that get called
 during \code{make()} itself.
 
 For each target that is still problematic  (e.g.
-\url{https://github.com/rstudio/gt/issues/297})
+\verb{https://github.com/rstudio/gt/issues/297})
 you can safely run the command in its own special \code{callr::r()} process.
-Example: \url{https://github.com/rstudio/gt/issues/297#issuecomment-497778735}. # nolint
+Example: \verb{https://github.com/rstudio/gt/issues/297#issuecomment-497778735}. # nolint
 
 If that fails, you can run \code{make(plan, lock_envir = FALSE)}
 to suppress environment-locking for all targets.
 However, this is not usually recommended.
 There are legitimate use cases for \code{lock_envir = FALSE}
-(example: \url{https://books.ropensci.org/drake/hpc.html#parallel-computing-within-targets}) # nolint
+(example: \verb{https://books.ropensci.org/drake/hpc.html#parallel-computing-within-targets}) # nolint
 but most workflows should stick with the default \code{lock_envir = TRUE}.
 }
 

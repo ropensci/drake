@@ -12,11 +12,11 @@ target(command = NULL, transform = NULL, dynamic = NULL, ...)
 
 \item{transform}{A call to \code{\link[=map]{map()}}, \code{\link[=split]{split()}}, \code{\link[=cross]{cross()}}, or \code{\link[=combine]{combine()}}
 to apply a \emph{static} transformation. Details:
-\url{https://books.ropensci.org/drake/static.html}}
+\verb{https://books.ropensci.org/drake/static.html}}
 
 \item{dynamic}{A call to \code{\link[=map]{map()}}, \code{\link[=cross]{cross()}}, or \code{\link[=group]{group()}}
 to apply a \emph{dynamic} transformation. Details:
-\url{https://books.ropensci.org/drake/dynamic.html}}
+\verb{https://books.ropensci.org/drake/dynamic.html}}
 
 \item{...}{Optional columns of the plan for a given target.
 See the Columns section of this help file for a selection
@@ -33,7 +33,7 @@ Its most common use is to invoke static branching
 and dynamic branching, and it can also set the values
 of custom columns such as \code{format}, \code{elapsed}, \code{retries},
 and \code{max_expand}. Details are at
-\url{https://books.ropensci.org/drake/plans.html#special-columns}.
+\verb{https://books.ropensci.org/drake/plans.html#special-columns}.
 Note: \code{drake_plan(my_target = my_command())}
 is equivalent to
 \verb{drake_plan(my_target = target(my_command())}.
@@ -57,19 +57,19 @@ but \code{drake} looks for them at various points in the workflow.
 \itemize{
 \item \code{transform}: a call to \code{\link[=map]{map()}}, \code{\link[=split]{split()}}, \code{\link[=cross]{cross()}}, or
 \code{\link[=combine]{combine()}} to create and manipulate large collections of targets.
-Details: (\url{https://books.ropensci.org/drake/plans.html#large-plans}). # nolint
+Details: (\verb{https://books.ropensci.org/drake/plans.html#large-plans}). # nolint
 \item \code{format}: set a storage format to save big targets more efficiently.
 See the "Formats" section of this help file for more details.
 \item \code{trigger}: rule to decide whether a target needs to run.
 It is recommended that you define this one with \code{target()}.
-Details: \url{https://books.ropensci.org/drake/triggers.html}.
+Details: \verb{https://books.ropensci.org/drake/triggers.html}.
 \item \code{hpc}: logical values (\code{TRUE}/\code{FALSE}/\code{NA}) whether to send each target
 to parallel workers.
-Visit \url{https://books.ropensci.org/drake/hpc.html#selectivity}
+Visit \verb{https://books.ropensci.org/drake/hpc.html#selectivity}
 to learn more.
 \item \code{resources}: target-specific lists of resources for a computing cluster.
 See
-\url{https://books.ropensci.org/drake/hpc.html#advanced-options}
+\verb{https://books.ropensci.org/drake/hpc.html#advanced-options}
 for details.
 \item \code{caching}: overrides the \code{caching} argument of \code{\link[=make]{make()}} for each target
 individually. Possible values:
@@ -102,8 +102,8 @@ with its own help file.
 \itemize{
 \item \code{\link[=target]{target()}}: give the target more than just a command.
 Using \code{\link[=target]{target()}}, you can apply a transformation
-(examples: \url{https://books.ropensci.org/drake/plans.html#large-plans}), # nolint
-supply a trigger (\url{https://books.ropensci.org/drake/triggers.html}), # nolint
+(examples: \verb{https://books.ropensci.org/drake/plans.html#large-plans}), # nolint
+supply a trigger (\verb{https://books.ropensci.org/drake/triggers.html}), # nolint
 or set any number of custom columns.
 \item \code{\link[=file_in]{file_in()}}: declare an input file dependency.
 \item \code{\link[=file_out]{file_out()}}: declare an output file to be produced
@@ -140,7 +140,7 @@ Then, \code{drake} will watch for changes to those files in
 subsequent calls to \code{make()}. This is a more flexible
 alternative to \code{file_in()} and \code{file_out()}, and it is
 compatible with dynamic branching.
-See \url{https://github.com/ropensci/drake/pull/1178} for an example.
+See \verb{https://github.com/ropensci/drake/pull/1178} for an example.
 \item \code{"fst"}: save big data frames fast. Requires the \code{fst} package.
 Note: this format strips non-data-frame attributes such as the
 \item \code{"fst_tbl"}: Like \code{"fst"}, but for \code{tibble} objects.

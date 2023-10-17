@@ -28,7 +28,7 @@ An expanded workflow plan data frame (with replicated targets).
 \description{
 Deprecated on 2019-05-16. Use \code{\link[=drake_plan]{drake_plan()}}
 transformations instead. See
-\url{https://books.ropensci.org/drake/plans.html#large-plans}
+\verb{https://books.ropensci.org/drake/plans.html#large-plans}
 for the details.
 }
 \details{

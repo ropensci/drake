@@ -526,7 +526,7 @@ deprecate_targets_only <- function(targets_only) {
 #' @title Load the main example.
 #' `r lifecycle::badge("deprecated")`
 #' @description The main example lives at
-#' <https://github.com/wlandau/drake-examples/tree/main/main>.
+#' `https://github.com/wlandau/drake-examples/tree/main/main`.
 #' Use `drake_example("main")` to download its code.
 #' This function also writes/overwrites
 #' the files `report.Rmd` and `raw_data.xlsx`.
@@ -1457,7 +1457,7 @@ target_namespaces <- function(
 #' @title Specialized wildcard for analyses
 #' `r lifecycle::badge("deprecated")`
 #' @description Use [drake_plan()] instead.
-#'   See <https://books.ropensci.org/drake/plans.html#large-plans>
+#'   See `https://books.ropensci.org/drake/plans.html#large-plans`
 #'   for details.
 #' @details 2019-01-13
 #' @export
@@ -1495,7 +1495,7 @@ plan_analyses <- function(plan, datasets, sep = "_") {
 #' @title Specialized wildcard for summaries
 #' `r lifecycle::badge("deprecated")`
 #' @description Use [drake_plan()] with transformations instead. See
-#'   <https://books.ropensci.org/drake/plans.html#large-plans>
+#'   `https://books.ropensci.org/drake/plans.html#large-plans`
 #'   for details.
 #' @details 2019-01-13
 #' @export
@@ -1787,7 +1787,7 @@ drake_cache_log_file <- function(
 #' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-05-16. Use [drake_plan()]
 #'   transformations instead. See
-#'   <https://books.ropensci.org/drake/plans.html#large-plans>
+#'   `https://books.ropensci.org/drake/plans.html#large-plans`
 #'   for the details.
 #'
 #' @details The commands in workflow plan data frames can have
@@ -2010,7 +2010,7 @@ check_wildcard_rules <- function(rules) {
 #' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-05-16. Use [drake_plan()]
 #'   transformations instead. See
-#'   <https://books.ropensci.org/drake/plans.html#large-plans>
+#'   `https://books.ropensci.org/drake/plans.html#large-plans`
 #'   for the details.
 #'
 #' @details Duplicates the rows of a workflow plan data frame.
@@ -2062,7 +2062,7 @@ expand_plan <- function(
 #' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-05-16. Use [drake_plan()]
 #'   transformations instead. See
-#'   <https://books.ropensci.org/drake/plans.html#large-plans>
+#'   `https://books.ropensci.org/drake/plans.html#large-plans`
 #'   for the details.
 #' @details `map_plan()` is like `base::Map()`:
 #'   it takes a function name and a grid of arguments, and
@@ -2139,7 +2139,7 @@ map_plan <- function(
 #' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-05-16. Use [drake_plan()]
 #'   transformations instead. See
-#'   <https://books.ropensci.org/drake/plans.html#large-plans>
+#'   `https://books.ropensci.org/drake/plans.html#large-plans`
 #'   for the details.
 #' @details Creates a new workflow plan to aggregate
 #'   existing targets in the supplied plan.
@@ -2186,7 +2186,7 @@ gather_plan <- function(
 #' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-05-16. Use [drake_plan()]
 #'   transformations instead. See
-#'   <https://books.ropensci.org/drake/plans.html#large-plans>
+#'   `https://books.ropensci.org/drake/plans.html#large-plans`
 #'   for the details.
 #' @details Perform several calls to `gather_plan()`
 #'   based on groupings from columns in the plan,
@@ -2262,7 +2262,7 @@ gather_by <- function(
 #' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-05-16. Use [drake_plan()]
 #'   transformations instead. See
-#'   <https://books.ropensci.org/drake/plans.html#large-plans>
+#'   `https://books.ropensci.org/drake/plans.html#large-plans`
 #'   for the details.
 #' @details Creates a new workflow plan data frame with the
 #'   commands to do a reduction (i.e. to repeatedly apply a binary
@@ -2336,7 +2336,7 @@ reduce_plan <- function(
 #' `r lifecycle::badge("deprecated")`
 #' @description Deprecated on 2019-05-16. Use [drake_plan()]
 #'   transformations instead. See
-#'   <https://books.ropensci.org/drake/plans.html#large-plans>
+#'   `https://books.ropensci.org/drake/plans.html#large-plans`
 #'   for the details.
 #' @details Perform several calls to `reduce_plan()`
 #'   based on groupings from columns in the plan,
@@ -2697,8 +2697,8 @@ progress <- function(
 #'   way to make `drake` compatible with workflows implemented as custom
 #'   analysis packages. Now, the recommendation is to supply
 #'   `getNamespace("yourPackage")` to the `envir` argument of [make()]
-#'   and friends. Read <https://github.com/ropensci/drake/issues/1286>,
-#'   especially <https://github.com/ropensci/drake/issues/1286#issuecomment-649088321>, # nolint
+#'   and friends. Read `https://github.com/ropensci/drake/issues/1286`,
+#'   especially `https://github.com/ropensci/drake/issues/1286#issuecomment-649088321`, # nolint
 #'   for details.
 #' @export
 #' @return The environment that the exposed imports are loaded into.

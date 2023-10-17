@@ -7,7 +7,7 @@
 \title{drake: A pipeline toolkit for reproducible computation at scale.}
 \description{
 drake is a pipeline toolkit
-(\url{https://github.com/pditommaso/awesome-pipeline})
+(\verb{https://github.com/pditommaso/awesome-pipeline})
 and a scalable, R-focused solution for reproducibility
 and high-performance computing.
 }
@@ -49,7 +49,7 @@ readd(mean_mpg_by_cyl)
 }
 }
 \references{
-\url{https://github.com/ropensci/drake}
+\verb{https://github.com/ropensci/drake}
 }
 \author{
 William Michael Landau \email{will.landau@gmail.com}

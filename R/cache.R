@@ -15,7 +15,7 @@
 #'   You may want to inspect the targets afterwards, possibly in an
 #'   interactive R session. However, the files in the `.drake` folder
 #'   are organized in a special format created by the
-#'   [`storr`](https://github.com/richfitz/storr) package,
+#'   `storr` package,
 #'   which is not exactly human-readable.
 #'   To retrieve a target for manual viewing, use [readd()].
 #'   To load one or more targets into your session, use [loadd()].
@@ -784,7 +784,7 @@ is_imported_cache <- Vectorize(function(target, cache) {
 #'   Some methods and objects are new or overwritten. Here
 #'   are the ones relevant to users.
 #'   - `history`: `drake`'s history (which powers [drake_history()])
-#'     is a [`txtq`](https://github.com/wlandau/txtq). Access it
+#'     is a `txtq`. Access it
 #'     with `drake_cache()$history`.
 #'   - `import()`: The `import()` method is a function that can import
 #'     targets, function dependencies, etc. from one decorated `storr`

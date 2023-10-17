@@ -54,9 +54,8 @@
 #'   in `plan` and just import objects and files.
 #'
 #' @param parallelism Character scalar, type of parallelism to use.
-#'   For detailed explanations, see the
-#'   [high-performance computing chapter](https://books.ropensci.org/drake/hpc.html) # nolint
-#'   of the user manual.
+#'   For detailed explanations, see
+#'   `https://books.ropensci.org/drake/hpc.html`.
 #'
 #'   You could also supply your own scheduler function
 #'   if you want to experiment or aggressively optimize.
@@ -75,7 +74,7 @@
 #'   You can experiment with [predict_runtime()]
 #'   to help decide on an appropriate number of jobs.
 #'   For details, visit
-#'   <https://books.ropensci.org/drake/time.html>.
+#'   `https://books.ropensci.org/drake/time.html`.
 #'
 #' @param jobs_preprocess Number of parallel jobs for processing the imports
 #'   and doing other preprocessing tasks.
@@ -161,7 +160,7 @@
 #'
 #' @param lazy_load An old feature, currently being questioned.
 #'   For the current recommendations on memory management, see
-#'   <https://books.ropensci.org/drake/memory.html#memory-strategies>.
+#'   `https://books.ropensci.org/drake/memory.html#memory-strategies`.
 #'   The `lazy_load` argument is either a character vector or a logical.
 #'   For dynamic targets, the behavior is always `"eager"` (see below).
 #'   So the `lazy_load` argument is for static targets only.
@@ -333,7 +332,7 @@
 #'   Enabled for `clustermq` only (`make(parallelism = "clustermq")`),
 #'   not `future` or `batchtools` so far.
 #'   For more information, see the `clustermq` package:
-#'   <https://github.com/mschubert/clustermq>.
+#'   `https://github.com/mschubert/clustermq`.
 #'   Some template placeholders such as `{{ job_name }}` and `{{ n_jobs }}`
 #'   cannot be set this way.
 #'
@@ -385,7 +384,7 @@
 #'
 #' @param history Logical, whether to record the build history
 #'   of your targets. You can also supply a
-#'   [`txtq`](https://github.com/wlandau/txtq), which is
+#'   `txtq`, which is
 #'   how `drake` records history.
 #'   Must be `TRUE` for [drake_history()] to work later.
 #'
@@ -471,7 +470,7 @@
 #' @param format Character, an optional custom storage format for targets
 #'   without an explicit `target(format = ...)` in the plan. Details
 #'   about formats:
-#'   <https://books.ropensci.org/drake/plans.html#special-data-formats-for-targets> # nolint
+#'   `https://books.ropensci.org/drake/plans.html#special-data-formats-for-targets` # nolint
 #'
 #' @param lock_cache Logical, whether to lock the cache before running `make()`
 #'   etc. It is usually recommended to keep cache locking on.

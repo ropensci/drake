@@ -9,7 +9,7 @@
 #'
 #' @details Besides `"target"` and `"command"`, [drake_plan()]
 #'   understands a special set of optional columns. For details, visit
-#'   <https://books.ropensci.org/drake/plans.html#special-custom-columns-in-your-plan> # nolint
+#'   `https://books.ropensci.org/drake/plans.html#special-custom-columns-in-your-plan` # nolint
 #'
 #' @seealso make, drake_config, transform_plan, map, split, cross, combine
 #'
@@ -26,19 +26,19 @@
 #' but `drake` looks for them at various points in the workflow.
 #' - `transform`: a call to [map()], [split()], [cross()], or
 #'   [combine()] to create and manipulate large collections of targets.
-#'   Details: (<https://books.ropensci.org/drake/plans.html#large-plans>). # nolint
+#'   Details: (`https://books.ropensci.org/drake/plans.html#large-plans`). # nolint
 #' - `format`: set a storage format to save big targets more efficiently.
 #'   See the "Formats" section of this help file for more details.
 #' - `trigger`: rule to decide whether a target needs to run.
 #'   It is recommended that you define this one with `target()`.
-#'   Details: <https://books.ropensci.org/drake/triggers.html>.
+#'   Details: `https://books.ropensci.org/drake/triggers.html`.
 #' - `hpc`: logical values (`TRUE`/`FALSE`/`NA`) whether to send each target
 #'   to parallel workers.
-#'   Visit <https://books.ropensci.org/drake/hpc.html#selectivity>
+#'   Visit `https://books.ropensci.org/drake/hpc.html#selectivity`
 #'   to learn more.
 #' - `resources`: target-specific lists of resources for a computing cluster.
 #'   See
-#'   <https://books.ropensci.org/drake/hpc.html#advanced-options>
+#'   `https://books.ropensci.org/drake/hpc.html#advanced-options`
 #'   for details.
 #' - `caching`: overrides the `caching` argument of [make()] for each target
 #'   individually. Possible values:
@@ -76,7 +76,7 @@
 #'     subsequent calls to `make()`. This is a more flexible
 #'     alternative to `file_in()` and `file_out()`, and it is
 #'     compatible with dynamic branching.
-#'     See <https://github.com/ropensci/drake/pull/1178> for an example.
+#'     See `https://github.com/ropensci/drake/pull/1178` for an example.
 #'   - `"fst"`: save big data frames fast. Requires the `fst` package.
 #'     Note: this format strips non-data-frame attributes such as the
 #'   - `"fst_tbl"`: Like `"fst"`, but for `tibble` objects.
@@ -112,8 +112,8 @@
 #' with its own help file.
 #' - [target()]: give the target more than just a command.
 #'   Using [target()], you can apply a transformation
-#'   (examples: <https://books.ropensci.org/drake/plans.html#large-plans>), # nolint
-#'   supply a trigger (<https://books.ropensci.org/drake/triggers.html>), # nolint
+#'   (examples: `https://books.ropensci.org/drake/plans.html#large-plans`), # nolint
+#'   supply a trigger (`https://books.ropensci.org/drake/triggers.html`), # nolint
 #'   or set any number of custom columns.
 #' - [file_in()]: declare an input file dependency.
 #' - [file_out()]: declare an output file to be produced
@@ -190,7 +190,7 @@
 #'
 #' # Use transformations to generate large plans.
 #' # Read more at
-#' # <https://books.ropensci.org/drake/plans.html#create-large-plans-the-easy-way>. # nolint
+#' # `https://books.ropensci.org/drake/plans.html#create-large-plans-the-easy-way`. # nolint
 #' drake_plan(
 #'   data = target(
 #'     simulate(nrows),

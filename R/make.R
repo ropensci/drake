@@ -21,7 +21,7 @@
 #' This script should begin in a fresh R session,
 #' load your packages and functions in a dependable manner,
 #' and then run `make()`. Example:
-#' <https://github.com/wlandau/drake-examples/tree/main/gsp>.
+#' `https://github.com/wlandau/drake-examples/tree/main/gsp`.
 #' Batch mode, especially within a container, is particularly helpful.
 #'
 #' Interactive R sessions are still useful,
@@ -51,15 +51,15 @@
 #' during `make()` itself.
 #'
 #' For each target that is still problematic  (e.g.
-#' <https://github.com/rstudio/gt/issues/297>)
+#' `https://github.com/rstudio/gt/issues/297`)
 #' you can safely run the command in its own special `callr::r()` process.
-#' Example: <https://github.com/rstudio/gt/issues/297#issuecomment-497778735>. # nolint
+#' Example: `https://github.com/rstudio/gt/issues/297#issuecomment-497778735`. # nolint
 #'
 #' If that fails, you can run `make(plan, lock_envir = FALSE)`
 #' to suppress environment-locking for all targets.
 #' However, this is not usually recommended.
 #' There are legitimate use cases for `lock_envir = FALSE`
-#' (example: <https://books.ropensci.org/drake/hpc.html#parallel-computing-within-targets>) # nolint
+#' (example: `https://books.ropensci.org/drake/hpc.html#parallel-computing-within-targets`) # nolint
 #' but most workflows should stick with the default `lock_envir = TRUE`.
 #'
 #' @section Cache locking:

@@ -70,7 +70,7 @@ R code to produce it.
 \details{
 Besides \code{"target"} and \code{"command"}, \code{\link[=drake_plan]{drake_plan()}}
 understands a special set of optional columns. For details, visit
-\url{https://books.ropensci.org/drake/plans.html#special-custom-columns-in-your-plan} # nolint
+\verb{https://books.ropensci.org/drake/plans.html#special-custom-columns-in-your-plan} # nolint
 }
 \section{Columns}{
 
@@ -87,19 +87,19 @@ but \code{drake} looks for them at various points in the workflow.
 \itemize{
 \item \code{transform}: a call to \code{\link[=map]{map()}}, \code{\link[=split]{split()}}, \code{\link[=cross]{cross()}}, or
 \code{\link[=combine]{combine()}} to create and manipulate large collections of targets.
-Details: (\url{https://books.ropensci.org/drake/plans.html#large-plans}). # nolint
+Details: (\verb{https://books.ropensci.org/drake/plans.html#large-plans}). # nolint
 \item \code{format}: set a storage format to save big targets more efficiently.
 See the "Formats" section of this help file for more details.
 \item \code{trigger}: rule to decide whether a target needs to run.
 It is recommended that you define this one with \code{target()}.
-Details: \url{https://books.ropensci.org/drake/triggers.html}.
+Details: \verb{https://books.ropensci.org/drake/triggers.html}.
 \item \code{hpc}: logical values (\code{TRUE}/\code{FALSE}/\code{NA}) whether to send each target
 to parallel workers.
-Visit \url{https://books.ropensci.org/drake/hpc.html#selectivity}
+Visit \verb{https://books.ropensci.org/drake/hpc.html#selectivity}
 to learn more.
 \item \code{resources}: target-specific lists of resources for a computing cluster.
 See
-\url{https://books.ropensci.org/drake/hpc.html#advanced-options}
+\verb{https://books.ropensci.org/drake/hpc.html#advanced-options}
 for details.
 \item \code{caching}: overrides the \code{caching} argument of \code{\link[=make]{make()}} for each target
 individually. Possible values:
@@ -144,7 +144,7 @@ Then, \code{drake} will watch for changes to those files in
 subsequent calls to \code{make()}. This is a more flexible
 alternative to \code{file_in()} and \code{file_out()}, and it is
 compatible with dynamic branching.
-See \url{https://github.com/ropensci/drake/pull/1178} for an example.
+See \verb{https://github.com/ropensci/drake/pull/1178} for an example.
 \item \code{"fst"}: save big data frames fast. Requires the \code{fst} package.
 Note: this format strips non-data-frame attributes such as the
 \item \code{"fst_tbl"}: Like \code{"fst"}, but for \code{tibble} objects.
@@ -184,8 +184,8 @@ with its own help file.
 \itemize{
 \item \code{\link[=target]{target()}}: give the target more than just a command.
 Using \code{\link[=target]{target()}}, you can apply a transformation
-(examples: \url{https://books.ropensci.org/drake/plans.html#large-plans}), # nolint
-supply a trigger (\url{https://books.ropensci.org/drake/triggers.html}), # nolint
+(examples: \verb{https://books.ropensci.org/drake/plans.html#large-plans}), # nolint
+supply a trigger (\verb{https://books.ropensci.org/drake/triggers.html}), # nolint
 or set any number of custom columns.
 \item \code{\link[=file_in]{file_in()}}: declare an input file dependency.
 \item \code{\link[=file_out]{file_out()}}: declare an output file to be produced
@@ -208,7 +208,7 @@ Intended for advanced custom memory management.
 Your code will look something like
 \verb{drake_plan(y = target(f(x), transform = map(x = c(1, 2, 3)))}
 You can read about this interface at
-\url{https://books.ropensci.org/drake/plans.html#large-plans}. # nolint
+\verb{https://books.ropensci.org/drake/plans.html#large-plans}. # nolint
 }
 
 \section{Static branching}{
@@ -302,7 +302,7 @@ plan <- drake_plan(
 
 # Use transformations to generate large plans.
 # Read more at
-# <https://books.ropensci.org/drake/plans.html#create-large-plans-the-easy-way>. # nolint
+# `https://books.ropensci.org/drake/plans.html#create-large-plans-the-easy-way`. # nolint
 drake_plan(
   data = target(
     simulate(nrows),

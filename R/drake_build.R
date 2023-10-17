@@ -79,7 +79,7 @@ body(drake_build) <- config_util_body(drake_build_impl)
 #'   and then runs its command in debug mode (see `browser()`,
 #'   `debug()`, and `debugonce()`). This function does not
 #'   store the target's value in the cache
-#'   (see <https://github.com/ropensci/drake/issues/587>).
+#'   (see `https://github.com/ropensci/drake/issues/587`).
 #' @export
 #' @seealso [drake_build()]
 #' @return The value of the target right after it is built.

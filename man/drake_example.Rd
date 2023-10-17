@@ -16,7 +16,7 @@ drake_example(
 \arguments{
 \item{example}{Name of the example.
 The possible values are the names of the folders at
-\url{https://github.com/wlandau/drake-examples}.}
+\verb{https://github.com/wlandau/drake-examples}.}
 
 \item{to}{Character scalar,
 the folder containing the code files for the example.
@@ -36,12 +36,12 @@ to download quietly or print progress.}
 }
 \description{
 The \code{drake_example()} function downloads a
-folder from \url{https://github.com/wlandau/drake-examples}.
+folder from \verb{https://github.com/wlandau/drake-examples}.
 By default, it creates a new folder with the example name
 in your current working directory. After the files are written,
 have a look at the enclosed \code{README} file.
 Other instructions are available in the files at
-\url{https://github.com/wlandau/drake-examples}.
+\verb{https://github.com/wlandau/drake-examples}.
 }
 \examples{
 \dontrun{

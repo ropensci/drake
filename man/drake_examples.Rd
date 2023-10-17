@@ -17,9 +17,9 @@ Names of all the drake examples.
 }
 \description{
 You can find the code files of the examples at
-\url{https://github.com/wlandau/drake-examples}.
+\verb{https://github.com/wlandau/drake-examples}.
 The \code{drake_examples()} function downloads the list of examples
-from \url{https://wlandau.github.io/drake-examples/examples.md},
+from \verb{https://wlandau.github.io/drake-examples/examples.md},
 so you need an internet connection.
 }
 \examples{

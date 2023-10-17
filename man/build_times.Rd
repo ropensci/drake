@@ -55,7 +55,7 @@ Applies to targets in your plan, not imports or files.
 }
 \details{
 Times for dynamic targets
-(\url{https://books.ropensci.org/drake/dynamic.html})
+(\verb{https://books.ropensci.org/drake/dynamic.html})
 only reflect the time it takes
 to post-process the sub-targets (typically very fast)
 and exclude the time it takes to build the sub-targets themselves.

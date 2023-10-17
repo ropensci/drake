@@ -13,7 +13,7 @@ See also \code{\link[=drake_cache]{drake_cache()}}.}
 
 \item{history}{Logical, whether to record the build history
 of your targets. You can also supply a
-\href{https://github.com/wlandau/txtq}{\code{txtq}}, which is
+\code{txtq}, which is
 how \code{drake} records history.
 Must be \code{TRUE} for \code{\link[=drake_history]{drake_history()}} to work later.}
 
