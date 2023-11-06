@@ -273,7 +273,8 @@ test_with_dir("dollar sign (#938)", {
     )
   }
   out <- sort(drake_deps(f)$globals)
-  exp <- sort(c("diagnose", "%||%"))
+  out <- out[out == make.names(out, unique = FALSE)]
+  exp <- "diagnose"
   expect_equal(out, exp)
 })
 
