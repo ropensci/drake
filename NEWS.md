@@ -1,3 +1,7 @@
+# Version 7.13.8
+
+* Fix CRAN note.
+
 # Version 7.13.7
 
 * Fix test for CRAN.

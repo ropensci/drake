@@ -1,6 +1,6 @@
 Package: drake
 Title: A Pipeline Toolkit for Reproducible Computation at Scale
-Version: 7.13.7
+Version: 7.13.8
 Authors@R: c(
   person(
     given = c("William", "Michael"),
@@ -150,6 +150,8 @@ Suggests:
   usethis,
   visNetwork (>= 2.0.9),
   webshot
+Additional_repositories:
+  https://mschubert.r-universe.dev
 Encoding: UTF-8
 Language: en-US
 Roxygen: list(markdown = TRUE)
