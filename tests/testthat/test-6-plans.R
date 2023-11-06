@@ -70,6 +70,7 @@ test_with_dir("warn about <- and -> in drake_plan()", {
 
 test_with_dir("File functions handle input", {
   skip_on_cran() # CRAN gets essential tests only (check time limits).
+  skip_if_not_installed("styler")
   expect_equal(
     file_in(1, "x", "y"), c("1", "x", "y")
   )
@@ -470,6 +471,7 @@ test_with_dir("plan_to_code()", {
 
 test_with_dir("plan_to_notebook()", {
   skip_on_cran()
+  skip_if_not_installed("styler")
   skip_if_not_installed("knitr")
   skip_if_not_installed("tibble")
   expect_false(file.exists("report.md"))
@@ -556,6 +558,7 @@ test_with_dir("drake_plan does tidy eval", {
 # From Alex Axthelm: https://github.com/ropensci/drake/issues/200
 test_with_dir("drake_plan tidy eval can be customized and disabled", {
   skip_on_cran() # CRAN gets essential tests only (check time limits).
+  skip_if_not_installed("styler")
   my_variable <- 5
   plan1 <- drake_plan(
     a = !!my_variable,
@@ -608,6 +611,7 @@ test_with_dir("stringsAsFactors can be TRUE", {
 
 test_with_dir("case sensitivity", {
   skip_on_cran()
+  skip_if_not_installed("styler")
   plan <- drake_plan(
     a = 1,
     b = 2,
@@ -635,6 +639,7 @@ test_with_dir("Strings stay strings, not symbols", {
 })
 
 test_with_dir("missing symbols get replaced (#1299)", {
+  skip_if_not_installed("styler")
   plan <- drake_plan(x = NULL)
   expect_silent(make(plan, verbose = 0L, session_info = FALSE))
 })

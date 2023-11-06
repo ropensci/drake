@@ -1598,6 +1598,7 @@ test_with_dir("move to caching = \"main\" at the top level", {
 })
 
 test_with_dir("move to caching = \"main\" at the target level", {
+  skip_if_not_installed("future")
   plan <- drake_plan(x = target(1, caching = "master"))
   expect_warning(
     make(plan, caching = "worker", parallelism = "future"),
