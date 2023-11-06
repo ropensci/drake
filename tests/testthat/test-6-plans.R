@@ -9,6 +9,7 @@ test_with_dir("drake_plan_source() in empty commands", {
 })
 
 test_with_dir("duplicated target names", {
+  skip_if_not_installed("styler")
   expect_error(
     drake_plan(
       a = 1,
@@ -30,6 +31,7 @@ test_with_dir("duplicated target names", {
 
 test_with_dir("warn about <- and -> in drake_plan()", {
   skip_on_cran() # CRAN gets essential tests only (check time limits).
+  skip_if_not_installed("styler")
   expect_silent(tmp <- drake_plan())
   expect_silent(tmp <- drake_plan(a = 1, b = 2))
   expect_silent(
@@ -95,6 +97,7 @@ test_with_dir("File functions handle input", {
 
 test_with_dir("edge cases for plans", {
   skip_on_cran() # CRAN gets essential tests only (check time limits).
+  skip_if_not_installed("styler")
   # empty plan
   equivalent_plans(drake_plan(), empty_plan())
   # no target names
@@ -141,6 +144,7 @@ test_with_dir("edge cases for plans", {
 
 test_with_dir("plan set 2", {
   skip_on_cran() # CRAN gets essential tests only (check time limits).
+  skip_if_not_installed("styler")
   for (tidy_eval in c(TRUE, FALSE)) {
     x <- drake_plan(
       a = c,
@@ -159,6 +163,7 @@ test_with_dir("plan set 2", {
 
 test_with_dir("drake_plan() trims outer whitespace in target names", {
   skip_on_cran() # CRAN gets essential tests only (check time limits).
+  skip_if_not_installed("styler")
   for (tidy_eval in c(TRUE, FALSE)) {
     x <- sanitize_plan(weak_tibble(
       target = c(" a", "b \t\n"),
@@ -171,6 +176,7 @@ test_with_dir("drake_plan() trims outer whitespace in target names", {
 
 test_with_dir("make() trims outer whitespace in target names", {
   skip_on_cran() # CRAN gets essential tests only (check time limits).
+  skip_if_not_installed("styler")
   x <- weak_tibble(
     target = c("a\n", "  b", "c ", "\t  d   "),
     command = 1
@@ -200,6 +206,7 @@ test_with_dir("make() trims outer whitespace in target names", {
 
 test_with_dir("plans can start with bad symbols", {
   skip_on_cran() # CRAN gets essential tests only (check time limits).
+  skip_if_not_installed("styler")
   x <- weak_tibble(
     target = c("a'x'", "b'x'", "_a", "a^-.*"),
     command = 1)
@@ -210,6 +217,7 @@ test_with_dir("plans can start with bad symbols", {
 
 test_with_dir("can use semicolons for multi-line commands", {
   skip_on_cran() # CRAN gets essential tests only (check time limits).
+  skip_if_not_installed("styler")
   plan <- drake_plan(
     x = {a <- 1; a}, # nolint
     y = {
@@ -225,6 +233,7 @@ test_with_dir("can use semicolons for multi-line commands", {
 
 test_with_dir("can use braces for multi-line commands", {
   skip_on_cran() # CRAN gets essential tests only (check time limits).
+  skip_if_not_installed("styler")
   small_plan <- drake_plan(
     small_target = {
       local_object <- 1 + 1
@@ -240,6 +249,7 @@ test_with_dir("can use braces for multi-line commands", {
 
 test_with_dir("custom column interface", {
   skip_on_cran() # CRAN gets essential tests only (check time limits).
+  skip_if_not_installed("styler")
   tidyvar <- 2
   x <- drake_plan(x = target(
     stop(!!tidyvar), worker = !!tidyvar, cpu = 4, custom = list(123), c2 = 5)
@@ -284,6 +294,7 @@ test_with_dir("custom column interface", {
 
 test_with_dir("bind_plans()", {
   skip_on_cran() # CRAN gets essential tests only (check time limits).
+  skip_if_not_installed("styler")
   plan1 <- drake_plan(a = 1, b = 2)
   plan2 <- drake_plan(c = 3, d = 4)
   plan3 <- drake_plan(e = 5, f = 6)
@@ -340,6 +351,7 @@ test_with_dir("bind_plans()", {
 
 test_with_dir("bind_plans() with unequal list columns (#1136)", {
   skip_on_cran()
+  skip_if_not_installed("styler")
   plan1 <- drake_plan(
     data_raw = read_data()
   )
@@ -362,6 +374,7 @@ test_with_dir("bind_plans() with unequal list columns (#1136)", {
 
 test_with_dir("spaces in target names are replaced only when appropriate", {
   skip_on_cran() # CRAN gets essential tests only (check time limits).
+  skip_if_not_installed("styler")
   expect_warning(
     pl <- drake_plan(
       a_.b.....x..y. = {
@@ -432,6 +445,7 @@ test_with_dir("drake_plan_source()", {
 
 test_with_dir("code_to_plan(), one target", {
   skip_on_cran()
+  skip_if_not_installed("styler")
   writeLines("a <- 1", "script.R")
   plan <- code_to_plan("script.R")
   equivalent_plans(plan, weak_tibble(target = "a", command = "1"))
@@ -439,6 +453,7 @@ test_with_dir("code_to_plan(), one target", {
 
 test_with_dir("plan_to_code()", {
   skip_on_cran()
+  skip_if_not_installed("styler")
   skip_if_not_installed("knitr")
   skip_if_not_installed("tibble")
   expect_false(file.exists("report.md"))
@@ -471,6 +486,7 @@ test_with_dir("plan_to_notebook()", {
 
 test_with_dir("commands and triggers can be character strings too", {
   skip_on_cran()
+  skip_if_not_installed("styler")
   config <- dbug()
   config$plan <- deparse_lang_cols(config$plan)
   for (col in colnames(config$plan)) {
@@ -491,6 +507,7 @@ test_with_dir("commands and triggers can be character strings too", {
 
 test_with_dir("printing large plans", {
   skip_on_cran()
+  skip_if_not_installed("styler")
   skip_if_not_installed("tibble")
   tmp <- capture.output({
     z <- seq_len(1e3)
@@ -518,6 +535,7 @@ test_with_dir("drake_plan_source() with character columns", {
 })
 
 test_with_dir("handle weird missing symbols", {
+  skip_if_not_installed("styler")
   out <- drake_plan(
     ,a = 1,,b=f(x),,, # nolint
   )
@@ -528,6 +546,7 @@ test_with_dir("handle weird missing symbols", {
 # From Kendon Bell: https://github.com/ropensci/drake/issues/200
 test_with_dir("drake_plan does tidy eval", {
   skip_on_cran() # CRAN gets essential tests only (check time limits).
+  skip_if_not_installed("styler")
   my_variable <- 5
   plan1 <- drake_plan(a = !!my_variable)
   plan2 <- weak_tibble(target = "a", command = "5")
@@ -563,6 +582,7 @@ test_with_dir("drake_plan tidy eval can be customized and disabled", {
 # From Kendon Bell: https://github.com/ropensci/drake/issues/200
 test_with_dir("make() does tidy eval in commands", {
   skip_on_cran() # CRAN gets essential tests only (check time limits).
+  skip_if_not_installed("styler")
   plan <- drake_plan(
     little_b = "b",
     letter = !!little_b,
@@ -574,6 +594,7 @@ test_with_dir("make() does tidy eval in commands", {
 
 test_with_dir("stringsAsFactors can be TRUE", {
   skip_on_cran() # CRAN gets essential tests only (check time limits).
+  skip_if_not_installed("styler")
   f <- function(x) {
     return(x)
   }
@@ -608,6 +629,7 @@ test_with_dir("case sensitivity", {
 
 test_with_dir("Strings stay strings, not symbols", {
   skip_on_cran() # CRAN gets essential tests only (check time limits).
+  skip_if_not_installed("styler")
   expect_silent(x <- drake_plan(a = "A"))
   expect_silent(make(x, verbose = 0L, session_info = FALSE))
 })
@@ -619,6 +641,7 @@ test_with_dir("missing symbols get replaced (#1299)", {
 
 test_with_dir("Trailing slashes in file paths on Windows", {
   skip_on_cran()
+  skip_if_not_installed("styler")
   skip_if_not_installed("knitr")
   dir.create("in")
   dir.create("knitr")
@@ -645,6 +668,7 @@ test_with_dir("Trailing slashes in file paths on Windows", {
 
 test_with_dir("supplied a plan instead of a config", {
   skip_on_cran()
+  skip_if_not_installed("styler")
   skip_if_not_installed("visNetwork")
   plan <- drake_plan(x = 1)
   expect_error(vis_drake_graph_impl(plan), regexp = "must be a drake_config")
@@ -652,6 +676,7 @@ test_with_dir("supplied a plan instead of a config", {
 
 test_with_dir("warning when file_out() files not produced", {
   skip_on_cran()
+  skip_if_not_installed("styler")
   plan <- drake_plan(
     x = {
       file.create(file_out("a"))
@@ -666,6 +691,7 @@ test_with_dir("warning when file_out() files not produced", {
 
 test_with_dir("id_chr()", {
   skip_on_cran()
+  skip_if_not_installed("styler")
   expect_error(id_chr(), regexp = "environment where drake builds targets")
   plan <- drake_plan(x = id_chr())
   make(plan)
@@ -674,6 +700,7 @@ test_with_dir("id_chr()", {
 
 test_with_dir("cancel() (#1131)", {
   skip_on_cran()
+  skip_if_not_installed("styler")
   f <- function(x) {
     cancel()
     "x"
@@ -704,6 +731,7 @@ test_with_dir("cancel() (#1131)", {
 
 test_with_dir("cancel_if(TRUE) (#1131)", {
   skip_on_cran()
+  skip_if_not_installed("styler")
   f <- function(x) {
     cancel_if(TRUE)
     "x"
@@ -733,6 +761,7 @@ test_with_dir("cancel_if(TRUE) (#1131)", {
 
 test_with_dir("cancel_if(condition) (#1131)", {
   skip_on_cran()
+  skip_if_not_installed("styler")
   f <- function(x) {
     cancel_if(x > 1)
     "x"
@@ -744,17 +773,20 @@ test_with_dir("cancel_if(condition) (#1131)", {
 
 test_with_dir("cancel_if(bad condition) (#1131)", {
   skip_on_cran()
+  skip_if_not_installed("styler")
   plan <- drake_plan(x = cancel_if(1:2))
   expect_error(make(plan), regexp = "length 1 in cancel_if")
 })
 
 test_with_dir("cancel in incorrect context (#1131)", {
   skip_on_cran()
+  skip_if_not_installed("styler")
   expect_error(cancel(), regexp = "where drake builds targets")
   expect_error(cancel_if(TRUE), regexp = "where drake builds targets")
 })
 
 test_with_dir("convert_trailing_dot() (#1147)", {
+  skip_if_not_installed("styler")
   expect_equal(
     expect_warning(
       convert_trailing_dot(c("numeric_ids_.1.", "numeric_ids_.2."))
@@ -771,6 +803,7 @@ test_with_dir("convert_trailing_dot() (#1147)", {
 })
 
 test_with_dir("convert_trailing_dot() in plans (#1147)", {
+  skip_if_not_installed("styler")
   n <- seq_len(2)
   ids <- rlang::syms(as.character(n))
   expect_warning(
@@ -793,6 +826,7 @@ test_with_dir("convert_trailing_dot() in plans (#1147)", {
 })
 
 test_with_dir("trailing dots in imports (#1147)", {
+  skip_if_not_installed("styler")
   expect_warning(
     assert_no_trailing_dot("x.", force = TRUE),
     regexp = "imports must not end with dots on Windows"
@@ -800,14 +834,17 @@ test_with_dir("trailing dots in imports (#1147)", {
 })
 
 test_with_dir("type_sum() S3 method for printing language columns", {
+  skip_if_not_installed("styler")
   expect_equal(type_sum.expr_list("123"), "expr")
 })
 
 test_with_dir("illegal plan error message (#1334)", {
+  skip_if_not_installed("styler")
   expect_error(make(plan = function(x) x), regexp = "drake plan")
 })
 
 test_with_dir("coerce to language with sanitize_command() (#1372)", {
+  skip_if_not_installed("styler")
   skip_on_cran()
   library(drake)
   a <- c()
