@@ -150,8 +150,6 @@ Suggests:
   usethis,
   visNetwork (>= 2.0.9),
   webshot
-Additional_repositories:
-  https://mschubert.r-universe.dev
 Encoding: UTF-8
 Language: en-US
 Roxygen: list(markdown = TRUE)
