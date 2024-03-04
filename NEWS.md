@@ -1,3 +1,7 @@
+# Version 7.13.9
+
+* Avoid `is.R()`.
+
 # Version 7.13.8
 
 * Fix CRAN note.

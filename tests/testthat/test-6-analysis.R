@@ -119,14 +119,14 @@ test_with_dir("solitary codetools globals tests", {
   out <- drake_deps(quote(local(x <- 1, e)))$globals
   expect_equal(sort(out), sort(c("local", "e")))
   f <- function() {
-    if (is.R()) {
+    if (g()) {
       x
     } else {
       y
     }
   }
   out <- drake_deps(f)$globals
-  expect_equal(sort(out), sort(c("if", "is.R", "x", "y")))
+  expect_equal(sort(out), sort(c("if", "g", "x", "y")))
   f <- function() {
     if (FALSE) {
       x
