@@ -30,8 +30,7 @@ test_with_dir("future package functionality", {
       caching = caching[i],
       jobs = 1,
       verbose = 0L,
-      session_info = FALSE,
-      lock_envir = TRUE
+      session_info = FALSE
     )
     config <- drake_config(
       e$my_plan,
@@ -40,8 +39,7 @@ test_with_dir("future package functionality", {
       caching = caching[i],
       jobs = 1,
       verbose = 0L,
-      session_info = FALSE,
-      lock_envir = TRUE
+      session_info = FALSE
     )
     expect_equal(
       outdated_impl(config),
@@ -57,8 +55,7 @@ test_with_dir("future package functionality", {
       caching = caching[i],
       jobs = 1,
       verbose = 0L,
-      session_info = FALSE,
-      lock_envir = TRUE
+      session_info = FALSE
     )
     expect_equal(justbuilt(config), "small")
   }
@@ -72,8 +69,7 @@ test_with_dir("future package functionality", {
       caching = caching[i],
       jobs = 1,
       verbose = 0L,
-      session_info = FALSE,
-      lock_envir = TRUE
+      session_info = FALSE
     )
     config <- drake_config(
       e$my_plan,
@@ -82,8 +78,7 @@ test_with_dir("future package functionality", {
       caching = caching[i],
       jobs = 1,
       verbose = 0L,
-      session_info = FALSE,
-      lock_envir = TRUE
+      session_info = FALSE
     )
     nobuild(config)
   }

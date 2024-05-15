@@ -53,7 +53,7 @@
 #' For each target that is still problematic  (e.g.
 #' `https://github.com/rstudio/gt/issues/297`)
 #' you can safely run the command in its own special `callr::r()` process.
-#' Example: `https://github.com/rstudio/gt/issues/297#issuecomment-497778735`. # nolin
+#' Example: `https://github.com/rstudio/gt/issues/297#issuecomment-497778735`. # nolint
 #' @section Cache locking:
 #' When `make()` runs, it locks the cache so other processes cannot modify it.
 #' Same goes for [outdated()], [vis_drake_graph()], and similar functions
@@ -397,7 +397,7 @@ drake_set_session_info <- function(
 #' })
 #' }
 do_prework <- function(config, verbose_packages) {
-  for (package in union(c("methods", "drake"), config$packages)) {
+  for (package in base::union(c("methods", "drake"), config$packages)) {
     expr <- as.call(c(
       quote(require),
       package = package,

@@ -53,7 +53,7 @@ make(
   memory_strategy = "speed",
   layout = NULL,
   spec = NULL,
-  lock_envir = TRUE,
+  lock_envir = NULL,
   history = TRUE,
   recover = FALSE,
   recoverable = TRUE,
@@ -606,14 +606,7 @@ during \code{make()} itself.
 For each target that is still problematic  (e.g.
 \verb{https://github.com/rstudio/gt/issues/297})
 you can safely run the command in its own special \code{callr::r()} process.
-Example: \verb{https://github.com/rstudio/gt/issues/297#issuecomment-497778735}. # nolint
-
-If that fails, you can run \code{make(plan, lock_envir = FALSE)}
-to suppress environment-locking for all targets.
-However, this is not usually recommended.
-There are legitimate use cases for \code{lock_envir = FALSE}
-(example: \verb{https://books.ropensci.org/drake/hpc.html#parallel-computing-within-targets}) # nolint
-but most workflows should stick with the default \code{lock_envir = TRUE}.
+Example: \verb{https://github.com/rstudio/gt/issues/297#issuecomment-497778735}. # nolin
 }
 
 \section{Cache locking}{

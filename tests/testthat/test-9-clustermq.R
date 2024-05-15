@@ -45,8 +45,7 @@ test_with_dir("clustermq parallelism", {
       caching = caching,
       envir = e,
       verbose = 1L,
-      garbage_collection = TRUE,
-      lock_envir = TRUE
+      garbage_collection = TRUE
     )
     expect_equal(outdated_impl(config), character(0))
     make(
@@ -55,8 +54,7 @@ test_with_dir("clustermq parallelism", {
       jobs = jobs,
       caching = caching,
       envir = e,
-      verbose = 1L,
-      lock_envir = TRUE
+      verbose = 1L
     )
     expect_equal(justbuilt(config), character(0))
     e$my_plan$command[[2]] <- as.call(
@@ -68,8 +66,7 @@ test_with_dir("clustermq parallelism", {
       jobs = jobs,
       caching = caching,
       envir = e,
-      verbose = 1L,
-      lock_envir = TRUE
+      verbose = 1L
     )
     expect_equal(justbuilt(config), "small")
     clean(small, cache = config$cache)
@@ -79,8 +76,7 @@ test_with_dir("clustermq parallelism", {
       jobs = jobs,
       caching = caching,
       envir = e,
-      verbose = 1L,
-      lock_envir = TRUE
+      verbose = 1L
     )
     expect_equal(justbuilt(config), "small")
   }
@@ -172,8 +168,7 @@ test_with_dir("Start off with non-HPC targets, then go to HPC targets.", {
     jobs = jobs,
     envir = e,
     verbose = 1L,
-    garbage_collection = TRUE,
-    lock_envir = TRUE
+    garbage_collection = TRUE
   )
   config <- drake_config(e$my_plan, envir = e)
   expect_equal(sort(justbuilt(config)), sort(e$my_plan$target))

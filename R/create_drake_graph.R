@@ -92,7 +92,7 @@ cdg_transitive_edges <- function(vertex, edges, args) {
 cdg_finalize_graph <- function(edges, targets, args) {
   args$logger$disk("finalize graph edges")
   file_out <- edges$to[edges$from %in% targets & is_encoded_path(edges$to)]
-  to <- union(targets, file_out)
+  to <- base::union(targets, file_out)
   args$logger$disk("create igraph")
   graph <- igraph::graph_from_data_frame(edges)
   args$logger$disk("trim neighborhoods")

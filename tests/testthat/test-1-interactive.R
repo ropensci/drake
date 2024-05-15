@@ -277,22 +277,6 @@ test_with_dir("clustermq error messages get back to main", {
 }
 
 if (FALSE) {
-test_with_dir("forks + lock_envir = informative warning msg", {
-  skip_on_cran()
-  # Don't run this test for real because (1) we would have to add
-  # furrr to "Suggests" and (2) at some point, base R may be patched
-  # so forking in the parallel package does not give this warning anyway.
-  # Also, it needs to run outside the RStudio IDE so we can fork processes.
-  regexp <- "workaround"
-  plan <- drake_plan(x = parallel::mclapply(1:2, identity, mc.cores = 2))
-  expect_warning(
-    make(plan, envir = globalenv(), lock_envir = TRUE),
-    regexp = regexp
-  )
-})
-}
-
-if (FALSE) {
 test_with_dir("clean() in interactive mode", {
   skip_on_cran()
   # Must run this test in a fresh new interactive session.

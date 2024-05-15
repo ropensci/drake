@@ -48,7 +48,7 @@
 #' @importFrom igraph adjacent_vertices as_ids components delete_vertices
 #'   degree gorder graph_from_adjacency_matrix igraph_opt igraph_options
 #'   induced_subgraph is_dag make_empty_graph make_ego_graph set_vertex_attr
-#'   simplify topo_sort V vertex_attr
+#'   simplify topo_sort union V vertex_attr
 #' @importFrom methods new setRefClass
 #' @importFrom parallel mclapply
 #' @importFrom rlang dots_list enquo eval_tidy expr quo_squash quos trace_back

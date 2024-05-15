@@ -817,7 +817,7 @@ test_with_dir("cache log files, gc, and make()", {
 
 test_with_dir("try_build() does not need to access cache", {
   skip_on_cran() # CRAN gets essential tests only (check time limits).
-  config <- drake_config(drake_plan(x = 1), lock_envir = FALSE)
+  config <- drake_config(drake_plan(x = 1))
   meta <- drake_meta_(target = "x", config = config)
   config$cache <- config$settings$cache_log_file <- NULL
   build <- try_build(target = "x", meta = meta, config = config)

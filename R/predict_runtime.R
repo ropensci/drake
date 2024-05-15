@@ -299,7 +299,7 @@ register_subtargets_graph2 <- function(target, subtargets, config) {
     name = "imported",
     value = FALSE
   )
-  config$graph <- igraph::graph.union(config$graph, subgraph)
+  config$graph <- igraph::union(config$graph, subgraph)
   config
 }
 

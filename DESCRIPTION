@@ -106,7 +106,7 @@ Depends:
 Imports:
   base64url,
   digest (>= 0.6.21),
-  igraph,
+  igraph (>= 2.0.0),
   methods,
   parallel,
   rlang (>= 0.2.0),

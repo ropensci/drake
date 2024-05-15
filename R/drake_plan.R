@@ -358,7 +358,7 @@ drake_bind_rows <- function(...) {
   flatten_df_list(args, df_env = df_env)
   dfs <- df_env$dfs
   cols <- lapply(dfs, colnames)
-  cols <- Reduce(f = union, x = cols)
+  cols <- Reduce(f = base::union, x = cols)
   dfs <- lapply(dfs, fill_cols, cols = cols)
   do.call(rbind, dfs)
 }

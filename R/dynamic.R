@@ -297,7 +297,7 @@ register_in_graph <- function(target, subtargets, config) {
     name = "imported",
     value = FALSE
   )
-  config$envir_graph$graph <- igraph::graph.union(
+  config$envir_graph$graph <- igraph::union(
     config$envir_graph$graph,
     subgraph
   )
