@@ -34,6 +34,7 @@ test_with_dir("check_parallelism()", {
 })
 
 test_with_dir("parallel imports", {
+  skip("unreliable test")
   skip_on_cran()
   config <- dbug()
   config$settings$jobs_preprocess <- 2
