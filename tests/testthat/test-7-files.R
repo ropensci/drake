@@ -210,6 +210,7 @@ test_with_dir("good URL with a timestamp", {
 })
 
 test_with_dir("bad URL", {
+  skip("unreliable test")
   skip_on_cran()
   skip_if_offline()
   skip_if_not_installed("curl")

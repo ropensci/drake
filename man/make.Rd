@@ -606,7 +606,7 @@ during \code{make()} itself.
 For each target that is still problematic  (e.g.
 \verb{https://github.com/rstudio/gt/issues/297})
 you can safely run the command in its own special \code{callr::r()} process.
-Example: \verb{https://github.com/rstudio/gt/issues/297#issuecomment-497778735}. # nolin
+Example: \verb{https://github.com/rstudio/gt/issues/297#issuecomment-497778735}. # nolint
 }
 
 \section{Cache locking}{
