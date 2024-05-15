@@ -53,15 +53,7 @@
 #' For each target that is still problematic  (e.g.
 #' `https://github.com/rstudio/gt/issues/297`)
 #' you can safely run the command in its own special `callr::r()` process.
-#' Example: `https://github.com/rstudio/gt/issues/297#issuecomment-497778735`. # nolint
-#'
-#' If that fails, you can run `make(plan, lock_envir = FALSE)`
-#' to suppress environment-locking for all targets.
-#' However, this is not usually recommended.
-#' There are legitimate use cases for `lock_envir = FALSE`
-#' (example: `https://books.ropensci.org/drake/hpc.html#parallel-computing-within-targets`) # nolint
-#' but most workflows should stick with the default `lock_envir = TRUE`.
-#'
+#' Example: `https://github.com/rstudio/gt/issues/297#issuecomment-497778735`. # nolin
 #' @section Cache locking:
 #' When `make()` runs, it locks the cache so other processes cannot modify it.
 #' Same goes for [outdated()], [vis_drake_graph()], and similar functions
@@ -169,7 +161,7 @@ make <- function(
   memory_strategy = "speed",
   layout = NULL,
   spec = NULL,
-  lock_envir = TRUE,
+  lock_envir = NULL,
   history = TRUE,
   recover = FALSE,
   recoverable = TRUE,

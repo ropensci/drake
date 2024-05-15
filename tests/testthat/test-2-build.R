@@ -8,8 +8,7 @@ test_with_dir("drake_build() works as expected", {
   con <- drake_config(
     plan = pl,
     session_info = FALSE,
-    envir = e,
-    lock_envir = TRUE
+    envir = e
   )
   # can run before any make()
   o <- drake_build_impl(
