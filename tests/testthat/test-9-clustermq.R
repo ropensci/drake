@@ -1,6 +1,7 @@
 drake_context("clustermq")
 
 test_with_dir("clustermq parallelism for CRAN", {
+  skip_on_cran()
   skip_if_not_installed("clustermq", minimum_version = "0.9.1")
   skip_on_os("windows")
   options(clustermq.scheduler = "multicore")
@@ -179,6 +180,7 @@ test_with_dir("Start off with non-HPC targets, then go to HPC targets.", {
 })
 
 test_with_dir("clustermq warnings (worker caching)", {
+  skip_on_cran()
   build <- list(target = "x", warnings = "y")
   expect_warning(cmq_report_warnings(build))
 })
