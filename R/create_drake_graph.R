@@ -7,18 +7,8 @@ create_drake_graph <- function(
   logger
 ) {
   args <- list(plan = plan, jobs = jobs, logger = logger, cache = cache)
-  edges <- memo_expr(
-    cdg_create_edges(args, spec),
-    cache,
-    plan,
-    spec
-  )
-  memo_expr(
-    cdg_finalize_graph(edges, targets, args),
-    cache,
-    edges,
-    targets
-  )
+  edges <- cdg_create_edges(args, spec)
+  cdg_finalize_graph(edges, targets, args)
 }
 
 cdg_create_edges <- function(args, spec) {

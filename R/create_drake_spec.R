@@ -21,21 +21,9 @@ create_drake_spec <- function(
   )
   imports <- cds_prepare_imports(args)
   imports_kernel <- cds_imports_kernel(args, imports)
-  import_spec <- memo_expr(
-    cds_analyze_imports(args, imports),
-    args$cache,
-    imports_kernel
-  )
+  import_spec <- cds_analyze_imports(args, imports)
   knitr_hash <- cds_get_knitr_hash(args)
-  command_spec <- memo_expr(
-    cds_analyze_commands(args),
-    args$cache,
-    args$plan,
-    args$trigger,
-    import_spec,
-    imports_kernel,
-    knitr_hash
-  )
+  command_spec <- cds_analyze_commands(args)
   cds_set_knitr_files(args = args, spec = command_spec)
   out <- c(import_spec, command_spec)
   list2env(out, parent = emptyenv(), hash = TRUE)

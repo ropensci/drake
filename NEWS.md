@@ -2,6 +2,7 @@
 
 * Remove environment locking, c.f. https://github.com/r-lib/rlang/issues/1705.
 * Export S3 methods.
+* Avoid `memo_expr()` because it causes errors on R-devel.
 
 # Version 7.13.9
 
