@@ -72,6 +72,7 @@ drake_meta_impl <- function(target, config) {
   UseMethod("drake_meta_impl")
 }
 
+#' @export
 drake_meta_impl.imported_file <- function(target, config) { # nolint
   spec <- config$spec[[target]]
   meta <- list(
@@ -91,6 +92,7 @@ drake_meta_impl.imported_file <- function(target, config) { # nolint
   meta
 }
 
+#' @export
 drake_meta_impl.imported_object <- function(target, config) { # nolint
   spec <- config$spec[[target]]
   meta <- list(
@@ -108,6 +110,7 @@ drake_meta_impl.imported_object <- function(target, config) { # nolint
   meta
 }
 
+#' @export
 drake_meta_impl.subtarget <- function(target, config) {
   parent_spec <- config$spec[[subtarget_parent(target, config)]]
   list(
@@ -123,6 +126,7 @@ drake_meta_impl.subtarget <- function(target, config) {
   )
 }
 
+#' @export
 drake_meta_impl.dynamic <- function(target, config) {
   spec <- config$spec[[target]]
   meta <- list(
@@ -215,6 +219,7 @@ dynamic_progress_ns_pfx <- function(target) {
   paste0("dyn-", target, "-")
 }
 
+#' @export
 drake_meta_impl.static <- function(target, config) {
   spec <- config$spec[[target]]
   meta <- list(
@@ -258,10 +263,12 @@ decorate_trigger_format_meta <- function(target, meta, config) {
   UseMethod("decorate_trigger_format_meta")
 }
 
+#' @export
 decorate_trigger_format_meta.default <- function(target, meta, config) { # nolint
   meta
 }
 
+#' @export
 decorate_trigger_format_meta.file <- function(target, meta, config) { # nolint
   meta_old <- config$meta_old[[target]]
   if (is.null(meta_old) || !meta$trigger$file) {

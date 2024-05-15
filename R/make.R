@@ -521,39 +521,48 @@ assert_format_impl <- function(format) {
   UseMethod("assert_format_impl")
 }
 
+#' @export
 assert_format_impl.fst <- function(format) {
   assert_pkg("fst")
 }
 
+#' @export
 assert_format_impl.fst_tbl <- function(format) {
   assert_pkg("fst")
   assert_pkg("tibble")
 }
 
+#' @export
 assert_format_impl.fst_dt <- function(format) {
   assert_pkg("fst")
   assert_pkg("data.table")
 }
 
+#' @export
 assert_format_impl.diskframe <- function(format) {
   assert_pkg("disk.frame")
 }
 
+#' @export
 assert_format_impl.keras <- function(format) {
   assert_pkg("keras") # nocov
 }
 
+#' @export
 assert_format_impl.qs <- function(format) {
   assert_pkg("qs")
 }
 
+#' @export
 assert_format_impl.rds <- function(format) {
   stopifnot(getRversion() >= "3.5.0")
 }
 
+#' @export
 assert_format_impl.file <- function(format) {
 }
 
+#' @export
 assert_format_impl.default <- function(format) {
   stop0(
     "illegal format ", format, ". Read ",

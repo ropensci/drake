@@ -289,15 +289,18 @@ dcst_get_ <- function(value, key, .self) {
   UseMethod("dcst_get_")
 }
 
+#' @export
 dcst_get_.default <- function(value, key, .self) {
   value
 }
 
+#' @export
 dcst_get_.drake_format_fst <- function(value, key, .self) {
   assert_pkg("fst")
   fst::read_fst(.self$file_return_key(key))
 }
 
+#' @export
 dcst_get_.drake_format_fst_tbl <- function(value, key, .self) {
   assert_pkg("fst")
   assert_pkg("tibble")
@@ -305,18 +308,21 @@ dcst_get_.drake_format_fst_tbl <- function(value, key, .self) {
   tibble::as_tibble(out)
 }
 
+#' @export
 dcst_get_.drake_format_fst_dt <- function(value, key, .self) { # nolint
   assert_pkg("data.table")
   assert_pkg("fst")
   fst::read_fst(.self$file_return_key(key), as.data.table = TRUE)
 }
 
+#' @export
 dcst_get_.drake_format_diskframe <- function(value, key, .self) { # nolint
   assert_pkg("disk.frame")
   assert_pkg("fst")
   disk.frame::disk.frame(.self$file_return_key(key), backend = "fst")
 }
 
+#' @export
 dcst_get_.drake_format_qs <- function(value, key, .self) { # nolint
   assert_pkg("qs")
   qs::qread(
@@ -329,16 +335,19 @@ dcst_get_.drake_format_qs <- function(value, key, .self) { # nolint
 
 # Requires Python Keras and TensorFlow to test. Tested in test-keras.R.
 # nocov start
+#' @export
 dcst_get_.drake_format_keras <- function(value, key, .self) {
   assert_pkg("keras")
   keras::load_model_hdf5(.self$file_return_key(key))
 }
 # nocov end
 
+#' @export
 dcst_get_.drake_format_rds <- function(value, key, .self) {
   readRDS(.self$file_return_key(key))
 }
 
+#' @export
 dcst_get_.drake_format_file <- function(value, key, .self) {
   value$value
 }
@@ -352,15 +361,18 @@ dcst_get_value_ <- function(value, hash, .self) {
   UseMethod("dcst_get_value_")
 }
 
+#' @export
 dcst_get_value_.default <- function(value, hash, .self) {
   value
 }
 
+#' @export
 dcst_get_value_.drake_format_fst <- function(value, hash, .self) { # nolint
   assert_pkg("fst")
   fst::read_fst(.self$file_return_hash(hash))
 }
 
+#' @export
 dcst_get_value_.drake_format_fst_tbl <- function(value, hash, .self) { # nolint
   assert_pkg("fst")
   assert_pkg("tibble")
@@ -368,18 +380,21 @@ dcst_get_value_.drake_format_fst_tbl <- function(value, hash, .self) { # nolint
   tibble::as_tibble(out)
 }
 
+#' @export
 dcst_get_value_.drake_format_fst_dt <- function(value, hash, .self) { # nolint
   assert_pkg("data.table")
   assert_pkg("fst")
   fst::read_fst(.self$file_return_hash(hash), as.data.table = TRUE)
 }
 
+#' @export
 dcst_get_value_.drake_format_diskframe <- function(value, hash, .self) { # nolint
   assert_pkg("disk.frame")
   assert_pkg("fst")
   disk.frame::disk.frame(.self$file_return_hash(hash), backend = "fst")
 }
 
+#' @export
 dcst_get_value_.drake_format_qs <- function(value, hash, .self) { # nolint
   assert_pkg("qs")
   qs::qread(
@@ -392,16 +407,19 @@ dcst_get_value_.drake_format_qs <- function(value, hash, .self) { # nolint
 
 # Requires Python Keras and TensorFlow to test. Tested in test-keras.R.
 # nocov start
+#' @export
 dcst_get_value_.drake_format_keras <- function(value, hash, .self) { # nolint
   assert_pkg("keras")
   keras::load_model_hdf5(.self$file_return_hash(hash))
 }
 # nocov end
 
+#' @export
 dcst_get_value_.drake_format_rds <- function(value, hash, .self) { # nolint
   readRDS(.self$file_return_hash(hash))
 }
 
+#' @export
 dcst_get_value_.drake_format_file <- function(value, hash, .self) { # nolint
   value$value
 }
@@ -410,10 +428,12 @@ dcst_set <- function(value, key, ..., .self) {
   UseMethod("dcst_set")
 }
 
+#' @export
 dcst_set.default <- function(value, key, ..., .self) {
   suppressWarnings(.self$storr$set(key = key, value = value, ...))
 }
 
+#' @export
 dcst_set.drake_format_fst <- function(value, key, ..., .self) {
   assert_pkg("fst")
   .self$assert_dirs()
@@ -423,8 +443,10 @@ dcst_set.drake_format_fst <- function(value, key, ..., .self) {
   dcst_set_move_tmp(key = key, value = value, tmp = tmp, .self = .self)
 }
 
+#' @export
 dcst_set.drake_format_fst_tbl <- dcst_set.drake_format_fst
 
+#' @export
 dcst_set.drake_format_fst_dt <- function(value, key, ..., .self) {
   assert_pkg("data.table")
   assert_pkg("fst")
@@ -435,6 +457,7 @@ dcst_set.drake_format_fst_dt <- function(value, key, ..., .self) {
   dcst_set_move_tmp(key = key, value = value, tmp = tmp, .self = .self)
 }
 
+#' @export
 dcst_set.drake_format_diskframe <- function(value, key, ..., .self) { # nolint
   assert_pkg("disk.frame")
   assert_pkg("fst")
@@ -444,6 +467,7 @@ dcst_set.drake_format_diskframe <- function(value, key, ..., .self) { # nolint
   dcst_set_move_tmp(key = key, value = value, tmp = tmp, .self = .self)
 }
 
+#' @export
 dcst_set.drake_format_qs <- function(value, key, ..., .self) { # nolint
   assert_pkg("qs")
   .self$assert_dirs()
@@ -463,6 +487,7 @@ dcst_set.drake_format_qs <- function(value, key, ..., .self) { # nolint
 
 # Requires Python Keras and TensorFlow to test. Tested in test-test-keras.R
 # nocov start
+#' @export
 dcst_set.drake_format_keras <- function(value, key, ..., .self) {
   assert_pkg("keras")
   .self$assert_dirs()
@@ -473,6 +498,7 @@ dcst_set.drake_format_keras <- function(value, key, ..., .self) {
 }
 # nocov end
 
+#' @export
 dcst_set.drake_format_rds <- function(value, key, ..., .self) {
   .self$assert_dirs()
   stopifnot(getRversion() >= "3.5.0") # for ALTREP

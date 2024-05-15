@@ -121,48 +121,56 @@ target_msg <- function(target) {
   }
 }
 
+#' @export
 target_msg.finalize <- function(target) {
   symbol <- cli::col_green(cli::symbol$stop)
   msg <- paste(symbol, "finalize", target)
   message(msg)
 }
 
+#' @export
 target_msg.cancel <- function(target) {
   symbol <- cli::col_yellow(cli::symbol$stop)
   msg <- paste(symbol, "cancel", target)
   message(msg)
 }
 
+#' @export
 target_msg.dynamic <- function(target) {
   symbol <- cli::col_green(cli::symbol$play)
   msg <- paste(symbol, "dynamic", target)
   message(msg)
 }
 
+#' @export
 target_msg.fail <- function(target) {
   symbol <- cli::col_red(cli::symbol$cross)
   msg <- paste(symbol, "fail", target)
   message(msg)
 }
 
+#' @export
 target_msg.recover <- function(target) {
   symbol <- cli::col_green(cli::symbol$tick)
   msg <- paste(symbol, "recover", target)
   message(msg)
 }
 
+#' @export
 target_msg.retry <- function(target) {
   symbol <- cli::col_yellow(cli::symbol$warning)
   msg <- paste(symbol, "retry", target)
   message(msg)
 }
 
+#' @export
 target_msg.subtarget <- function(target) {
   symbol <- cli::col_green(cli::symbol$pointer)
   msg <- paste(symbol, "subtarget", target)
   message(msg)
 }
 
+#' @export
 target_msg.target <- function(target) {
   symbol <- cli::col_green(cli::symbol$play)
   msg <- paste(symbol, "target", target)

@@ -20,14 +20,17 @@ handle_triggers_impl <- function(target, meta, config) {
   UseMethod("handle_triggers_impl")
 }
 
+#' @export
 handle_triggers_impl.subtarget <- function(target, meta, config) { # nolint
   FALSE
 }
 
+#' @export
 handle_triggers_impl.dynamic_registered <- function(target, meta, config) { # nolint
   FALSE
 }
 
+#' @export
 handle_triggers_impl.dynamic_unregistered <- function(target, meta, config) { # nolint
   target <- unclass(target)
   static_ok <- !any_static_triggers(target, meta, config) ||
@@ -37,6 +40,7 @@ handle_triggers_impl.dynamic_unregistered <- function(target, meta, config) { # 
   TRUE
 }
 
+#' @export
 handle_triggers_impl.static <- function(target, meta, config) { # nolint
   target <- unclass(target)
   any_triggers <- any_static_triggers(target, meta, config) ||
@@ -113,6 +117,7 @@ recovery_key_impl <- function(target, meta, config) {
   UseMethod("recovery_key_impl")
 }
 
+#' @export
 recovery_key_impl.subtarget <- function(target, meta, config) {
   parent <- subtarget_parent(target, config)
   parent_meta <- drake_meta_(parent, config)
@@ -122,6 +127,7 @@ recovery_key_impl.subtarget <- function(target, meta, config) {
   config$cache$digest(x, serialize = FALSE)
 }
 
+#' @export
 recovery_key_impl.default <- function(target, meta, config, ...) {
   change_hash <- ifelse(
     is.null(meta$trigger$value),

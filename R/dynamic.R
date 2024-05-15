@@ -151,6 +151,7 @@ get_trace_impl <- function(dynamic, value, spec, config) {
   UseMethod("get_trace_impl")
 }
 
+#' @export
 get_trace_impl.map <- function(dynamic, value, spec, config) {
   trace <- lapply(
     spec$deps_dynamic_trace,
@@ -163,6 +164,7 @@ get_trace_impl.map <- function(dynamic, value, spec, config) {
   trace
 }
 
+#' @export
 get_trace_impl.cross <- function(dynamic, value, spec, config) {
   size <- lapply(
     spec$deps_dynamic,
@@ -187,6 +189,7 @@ get_trace_impl.cross <- function(dynamic, value, spec, config) {
   trace
 }
 
+#' @export
 get_trace_impl.group <- function(dynamic, value, spec, config) {
   by_key <- which_by(dynamic)
   by_value <- get(by_key, envir = config$envir_targets, inherits = FALSE)
@@ -203,10 +206,12 @@ chr_dynamic_impl <- function(x) {
   UseMethod("chr_dynamic_impl")
 }
 
+#' @export
 chr_dynamic_impl.drake_dynamic <- function(x) {
   as.character(x)
 }
 
+#' @export
 chr_dynamic_impl.default <- function(x) {
   x
 }
@@ -427,12 +432,15 @@ match_dynamic_call_impl <- function(dynamic) {
   UseMethod("match_dynamic_call_impl")
 }
 
+#' @export
 match_dynamic_call_impl.map <- function(dynamic) {
   match.call(definition = def_map, call = dynamic)
 }
 
+#' @export
 match_dynamic_call_impl.cross <- match_dynamic_call_impl.map
 
+#' @export
 match_dynamic_call_impl.combine <- function(dynamic) { # nolint
   stop0(
     "Dynamic combine() does not exist. ",
@@ -441,6 +449,7 @@ match_dynamic_call_impl.combine <- function(dynamic) { # nolint
   )
 }
 
+#' @export
 match_dynamic_call_impl.group <- function(dynamic) {
   match.call(definition = def_group, call = dynamic)
 }
@@ -483,6 +492,7 @@ dynamic_hash_list <- function(dynamic, target, config) {
   UseMethod("dynamic_hash_list")
 }
 
+#' @export
 dynamic_hash_list.map <- function(dynamic, target, config) {
   deps <- sort(config$spec[[target]]$deps_dynamic)
   hashes <- lapply(deps, read_dynamic_hashes, config = config)
@@ -491,6 +501,7 @@ dynamic_hash_list.map <- function(dynamic, target, config) {
   hashes
 }
 
+#' @export
 dynamic_hash_list.cross <- function(dynamic, target, config) {
   deps <- config$spec[[target]]$deps_dynamic
   hashes <- lapply(deps, read_dynamic_hashes, config = config)
@@ -498,6 +509,7 @@ dynamic_hash_list.cross <- function(dynamic, target, config) {
   hashes
 }
 
+#' @export
 dynamic_hash_list.group <- function(dynamic, target, config) {
   deps <- sort(which_vars(dynamic))
   out <- lapply(deps, read_dynamic_hashes, config = config)
@@ -544,10 +556,12 @@ subtarget_hashes <- function(dynamic, target, hashes, config) {
   UseMethod("subtarget_hashes")
 }
 
+#' @export
 subtarget_hashes.map <- function(dynamic, target, hashes, config) {
   do.call(paste, hashes)
 }
 
+#' @export
 subtarget_hashes.cross <- function(dynamic, target, hashes, config) {
   deps <- all.vars(dynamic)
   hashes <- hashes[deps]
@@ -556,6 +570,7 @@ subtarget_hashes.cross <- function(dynamic, target, hashes, config) {
   apply(hashes, 1, paste, collapse = " ")
 }
 
+#' @export
 subtarget_hashes.group <- function(dynamic, target, hashes, config) {
   if (is.null(hashes[["_by"]])) {
     return(lapply(hashes, paste, collapse = " "))

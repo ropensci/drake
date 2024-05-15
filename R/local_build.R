@@ -259,9 +259,7 @@ drake_with_call_stack_8a6af5 <- function(target, config) {
   }
   expr <- config$spec[[target]]$command_build
   if (config$settings$lock_envir && !isNamespace(config$envir)) {
-    on.exit(unlock_environment(config$envir))
-    block_envir_lock(config)
-    lock_environment(config$envir)
+    message("Environment locking is not supported in drake >= 7.13.10")
   }
   tidy_expr_8a6af5 <- eval(expr = expr, envir = config$envir_subtargets)
   tryCatch(
@@ -288,37 +286,6 @@ downsize_error <- function(error) {
 # Prevents tracebacks from storing tons of data.
 deparse_traceback <- function(traceback) {
   vcapply(traceback$call %|||% traceback$calls, safe_deparse)
-}
-
-block_envir_lock <- function(config) {
-  i <- 1
-  # Lock the environment only while running the command.
-  while (environmentIsLocked(config$envir)) {
-    Sys.sleep(config$settings$sleep(max(0L, i))) # nocov
-    i <- i + 1 # nocov
-  }
-}
-
-lock_environment <- function(envir) {
-  lockEnvironment(envir, bindings = FALSE)
-  lapply(X = unhidden_names(envir), FUN = lockBinding, env = envir)
-  invisible()
-}
-
-unlock_environment <- function(envir) {
-  if (is.null(envir)) {
-    stop0("use of NULL environment is defunct")
-  }
-  if (!inherits(envir, "environment")) {
-    stop0("not an environment")
-  }
-  .Call(Cunlock_environment, envir)
-  lapply(
-    X = unhidden_names(envir),
-    FUN = unlockBinding,
-    env = envir
-  )
-  stopifnot(!environmentIsLocked(envir))
 }
 
 unhidden_names <- function(envir) {
@@ -353,11 +320,13 @@ conclude_build_impl <- function(value, target, meta, config) {
   UseMethod("conclude_build_impl")
 }
 
+#' @export
 conclude_build_impl.drake_cancel <- function(value, target, meta, config) { # nolint
   config$cache$set_progress(target = target, value = "cancelled")
   config$logger$target(target, "cancel")
 }
 
+#' @export
 conclude_build_impl.default <- function(value, target, meta, config) {
   assert_output_files(target = target, meta = meta, config = config)
   handle_build_exceptions(target = target, meta = meta, config = config)
@@ -386,10 +355,12 @@ sanitize_format <- function(x, target, config) {
   UseMethod("sanitize_format")
 }
 
+#' @export
 sanitize_format.default <- function(x, target, config) {
   x
 }
 
+#' @export
 sanitize_format.drake_format_fst <- function(x, target, config) { # nolint
   if (!identical(class(x$value), "data.frame")) {
     msg <- paste0(
@@ -405,6 +376,7 @@ sanitize_format.drake_format_fst <- function(x, target, config) { # nolint
   x
 }
 
+#' @export
 sanitize_format.drake_format_fst_tbl <- function(x, target, config) { # nolint
   assert_pkg("tibble")
   if (!inherits(x$value, "tbl_df")) {
@@ -421,6 +393,7 @@ sanitize_format.drake_format_fst_tbl <- function(x, target, config) { # nolint
   x
 }
 
+#' @export
 sanitize_format.drake_format_fst_dt <- function(x, target, config) { # nolint
   assert_pkg("data.table")
   if (!inherits(x$value, "data.table")) {
@@ -437,6 +410,7 @@ sanitize_format.drake_format_fst_dt <- function(x, target, config) { # nolint
   x
 }
 
+#' @export
 sanitize_format.drake_format_diskframe <- function(x, target, config) { # nolint
   assert_pkg("disk.frame")
   if (!inherits(x$value, "disk.frame")) {
@@ -459,6 +433,7 @@ sanitize_format.drake_format_diskframe <- function(x, target, config) { # nolint
   x
 }
 
+#' @export
 sanitize_format.drake_format_file <- function(x, target, config) { # nolint
   if (!is.character(x$value)) {
     msg <- paste0(
@@ -503,14 +478,17 @@ value_format <- function(value, target, config) {
   UseMethod("value_format")
 }
 
+#' @export
 value_format.drake_format_diskframe <- function(value, target, config) { # nolint
   config$cache$get(target)
 }
 
+#' @export
 value_format.drake_format <- function(value, target, config) {
   value$value
 }
 
+#' @export
 value_format.default <- function(value, target, config) {
   value
 }
@@ -588,7 +566,6 @@ log_failure <- function(target, meta, config) {
   msg3 <- paste0(diag, "$calls:\n", trace)
   msg <- paste(c(msg1, msg2, msg3), collapse = "\n")
   config$logger$disk(msg)
-  unlock_environment(config$envir)
   stop0(msg)
 }
 

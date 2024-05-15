@@ -315,6 +315,7 @@ load_targets_impl <- function(
   UseMethod("load_targets_impl")
 }
 
+#' @export
 load_targets_impl.drake_dynamic <- function( # nolint
   hashes,
   target,
@@ -328,6 +329,7 @@ load_targets_impl.drake_dynamic <- function( # nolint
   assign(target, value, envir = envir, inherits = FALSE)
 }
 
+#' @export
 load_targets_impl.default <- function(
   hashes,
   target,
@@ -343,6 +345,7 @@ get_subtargets <- function(hashes, target, cache, subtargets, subtarget_list) {
   UseMethod("get_subtargets")
 }
 
+#' @export
 get_subtargets.drake_dynamic <- function(
   hashes,
   target,
@@ -366,6 +369,7 @@ get_subtargets.drake_dynamic <- function(
   out
 }
 
+#' @export
 get_subtargets.default <- function(
   hashes,
   target,

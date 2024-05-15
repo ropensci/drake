@@ -252,6 +252,7 @@ is_outdated_impl <- function(target, config) {
   UseMethod("is_outdated_impl")
 }
 
+#' @export
 is_outdated_impl.static <- function(target, config) {
   target <- unclass(target)
   meta <- drake_meta_(target, config)
@@ -259,6 +260,7 @@ is_outdated_impl.static <- function(target, config) {
     any_subtargetlike_triggers(target, meta, config)
 }
 
+#' @export
 is_outdated_impl.dynamic <- function(target, config) {
   target <- unclass(target)
   meta <- drake_meta_(target, config)

@@ -372,15 +372,8 @@
 #'
 #' @param layout Deprecated.
 #'
-#' @param lock_envir Logical, whether to lock `config$envir` during `make()`.
-#'   If `TRUE`, `make()` quits in error whenever a command in your
-#'   `drake` plan (or `prework`) tries to add, remove, or modify
-#'   non-hidden variables in your environment/workspace/R session.
-#'   This is extremely important for ensuring the purity of your functions
-#'   and the reproducibility/credibility/trust you can place in your project.
-#'   `lock_envir` will be set to a default of `TRUE` in `drake` version
-#'   7.0.0 and higher. Namespaces are never locked, e.g.
-#'   if `envir` is `getNamespace("packagename")`.
+#' @param lock_envir Deprecated in `drake >= 7.13.10`. Environments
+#'   are no longer locked.
 #'
 #' @param history Logical, whether to record the build history
 #'   of your targets. You can also supply a
@@ -551,7 +544,7 @@ drake_config <- function(
   memory_strategy = "speed",
   spec = NULL,
   layout = NULL,
-  lock_envir = TRUE,
+  lock_envir = NULL,
   history = TRUE,
   recover = FALSE,
   recoverable = TRUE,
@@ -582,6 +575,10 @@ drake_config <- function(
   deprecate_arg(makefile_path, "makefile_path")
   deprecate_arg(layout, "layout", "spec") # 2019-12-15
   deprecate_arg(console_log_file, "console_log_file", "log_make") # 2020-02-08
+  deprecate_arg(lock_envir, "lock_envir")
+  if (is.null(lock_envir)) {
+    lock_envir <- FALSE
+  }
   if (identical(caching, "master")) {
     caching <- "main"
     warn0(

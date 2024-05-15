@@ -1,3 +1,8 @@
+# Version 7.13.10
+
+* Remove environment locking, c.f. https://github.com/r-lib/rlang/issues/1705.
+* Export S3 methods.
+
 # Version 7.13.9
 
 * Avoid `is.R()`.

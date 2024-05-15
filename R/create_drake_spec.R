@@ -295,6 +295,7 @@ cds_dynamic_deps <- function(dynamic, target, args) {
   UseMethod("cds_dynamic_deps")
 }
 
+#' @export
 cds_dynamic_deps.dynamic <- function(dynamic, target, args) {
   dynamic$.trace <- NULL
   out <- ht_filter(args$ht_globals, all.vars(dynamic))
@@ -307,6 +308,7 @@ cds_dynamic_deps.dynamic <- function(dynamic, target, args) {
   out
 }
 
+#' @export
 cds_dynamic_deps.default <- function(dynamic, target, args) {
   character(0)
 }
@@ -315,10 +317,12 @@ cds_dynamic_trace <- function(dynamic, args) {
   UseMethod("cds_dynamic_trace")
 }
 
+#' @export
 cds_dynamic_trace.dynamic <- function(dynamic, args) {
   all.vars(dynamic$.trace)
 }
 
+#' @export
 cds_dynamic_trace.default <- function(dynamic, args) {
   character(0)
 }
@@ -327,6 +331,7 @@ cds_assert_trace <- function(dynamic, spec) {
   UseMethod("cds_assert_trace")
 }
 
+#' @export
 cds_assert_trace.group <- function(dynamic, spec) {
   bad <- setdiff(spec$deps_dynamic_trace, spec$deps_dynamic)
   if (!length(bad)) {
@@ -343,6 +348,7 @@ cds_assert_trace.group <- function(dynamic, spec) {
   )
 }
 
+#' @export
 cds_assert_trace.dynamic <- function(dynamic, spec) {
   bad <- setdiff(spec$deps_dynamic_trace, spec$deps_dynamic)
   if (!length(bad)) {
@@ -360,6 +366,7 @@ cds_assert_trace.dynamic <- function(dynamic, spec) {
   )
 }
 
+#' @export
 cds_assert_trace.default <- function(dynamic, spec) {
   character(0)
 }

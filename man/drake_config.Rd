@@ -52,7 +52,7 @@ drake_config(
   memory_strategy = "speed",
   spec = NULL,
   layout = NULL,
-  lock_envir = TRUE,
+  lock_envir = NULL,
   history = TRUE,
   recover = FALSE,
   recoverable = TRUE,
@@ -418,15 +418,8 @@ Also see the \code{garbage_collection} argument of \code{make()} and
 
 \item{layout}{Deprecated.}
 
-\item{lock_envir}{Logical, whether to lock \code{config$envir} during \code{make()}.
-If \code{TRUE}, \code{make()} quits in error whenever a command in your
-\code{drake} plan (or \code{prework}) tries to add, remove, or modify
-non-hidden variables in your environment/workspace/R session.
-This is extremely important for ensuring the purity of your functions
-and the reproducibility/credibility/trust you can place in your project.
-\code{lock_envir} will be set to a default of \code{TRUE} in \code{drake} version
-7.0.0 and higher. Namespaces are never locked, e.g.
-if \code{envir} is \code{getNamespace("packagename")}.}
+\item{lock_envir}{Deprecated in \verb{drake >= 7.13.10}. Environments
+are no longer locked.}
 
 \item{history}{Logical, whether to record the build history
 of your targets. You can also supply a

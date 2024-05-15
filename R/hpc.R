@@ -139,6 +139,7 @@ hpc_spec_impl <- function(target, config) {
   UseMethod("hpc_spec_impl")
 }
 
+#' @export
 hpc_spec_impl.subtarget <- function(target, config) {
   spec <- new.env(parent = emptyenv())
   parent <- config$spec[[target]]$subtarget_parent
@@ -150,6 +151,7 @@ hpc_spec_impl.subtarget <- function(target, config) {
   spec
 }
 
+#' @export
 hpc_spec_impl.default <- function(target, config) {
   spec <- new.env(parent = emptyenv())
   assign(target, config$spec[[target]], envir = spec, inherits = FALSE)
@@ -284,11 +286,13 @@ format_file_checksum_impl <- function(target, value, config) {
   UseMethod("format_file_checksum_impl")
 }
 
+#' @export
 format_file_checksum_impl.default <- function(target, value, config) { # nolint
   force(value)
   character(0)
 }
 
+#' @export
 format_file_checksum_impl.file <- function(target, value, config) { # nolint
   hash <- rep(NA_character_, length(value))
   index <- file.exists(value)
@@ -384,6 +388,7 @@ serialize_build <- function(build) {
 
 # Requires Python Keras and TensorFlow to test. Tested in test-keras.R.
 # nocov start
+#' @export
 serialize_build.drake_build_keras <- function(build) { # nolint
   assert_pkg("keras")
   build$value <- keras::serialize_model(build$value)
@@ -391,6 +396,7 @@ serialize_build.drake_build_keras <- function(build) { # nolint
 }
 # nocov end
 
+#' @export
 serialize_build.default <- function(build) {
   build
 }
@@ -401,6 +407,7 @@ unserialize_build <- function(build) {
 
 # Requires Python Keras and TensorFlow to test. Tested in test-keras.R.
 # nocov start
+#' @export
 unserialize_build.drake_build_keras <- function(build) { # nolint
   assert_pkg("keras")
   build$value <- keras::unserialize_model(build$value)
@@ -408,6 +415,7 @@ unserialize_build.drake_build_keras <- function(build) { # nolint
 }
 # nocov end
 
+#' @export
 unserialize_build.default <- function(build) {
   build
 }

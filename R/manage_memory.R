@@ -37,6 +37,7 @@ manage_deps <- function(target, config, downstream, jobs) {
   UseMethod("manage_deps")
 }
 
+#' @export
 manage_deps.speed <- function(target, config, downstream, jobs) {
   already_loaded <- config$envir_loaded$targets
   memory_deps <- deps_memory(targets = target, config = config)
@@ -47,6 +48,7 @@ manage_deps.speed <- function(target, config, downstream, jobs) {
   load_subtarget_subdeps(target, config)
 }
 
+#' @export
 manage_deps.autoclean <- function(target, config, downstream, jobs) {
   already_loaded <- config$envir_loaded$targets
   memory_deps <- deps_memory(targets = target, config = config)
@@ -59,8 +61,10 @@ manage_deps.autoclean <- function(target, config, downstream, jobs) {
   load_subtarget_subdeps(target, config)
 }
 
+#' @export
 manage_deps.preclean <- manage_deps.autoclean
 
+#' @export
 manage_deps.lookahead <- function(target, config, downstream, jobs) {
   downstream <- downstream %||% downstream_nodes(
     config$envir_graph$graph,
@@ -79,10 +83,12 @@ manage_deps.lookahead <- function(target, config, downstream, jobs) {
   load_subtarget_subdeps(target, config)
 }
 
+#' @export
 manage_deps.unload <- function(target, config, downstream, jobs) {
   clear_envir_targets(target = target, config = config)
 }
 
+#' @export
 manage_deps.none <- function(target, config, downstream, jobs) {
   return()
 }
@@ -195,6 +201,7 @@ load_target_impl <- function(target, cache, namespace, envir, verbose) {
   UseMethod("load_target_impl")
 }
 
+#' @export
 load_target_impl.eager <- function(target, cache, namespace, envir, verbose) {
   value <- cache$get(
     key = target,
@@ -207,6 +214,7 @@ load_target_impl.eager <- function(target, cache, namespace, envir, verbose) {
   invisible()
 }
 
+#' @export
 load_target_impl.promise <- function(target, cache, namespace, envir, verbose) {
   eval_env <- environment()
   delayedAssign(
@@ -221,6 +229,7 @@ load_target_impl.promise <- function(target, cache, namespace, envir, verbose) {
   )
 }
 
+#' @export
 load_target_impl.bind <- function(target, cache, namespace, envir, verbose) {
   assert_pkg("bindr")
   # Allow active bindings to overwrite existing variables.
@@ -309,6 +318,7 @@ load_dynamic_subdep_impl <- function(dynamic, parent, dep, index, config) {
   UseMethod("load_dynamic_subdep_impl")
 }
 
+#' @export
 load_dynamic_subdep_impl.group <- function( # nolint
   dynamic,
   parent,
@@ -331,6 +341,7 @@ load_dynamic_subdep_impl.group <- function( # nolint
   )
 }
 
+#' @export
 load_dynamic_subdep_impl.default <- function( # nolint
   dynamic,
   parent,

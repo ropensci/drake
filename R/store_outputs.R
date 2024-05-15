@@ -38,10 +38,12 @@ decorate_format_value <- function(value, target, config) {
   UseMethod("decorate_format_value")
 }
 
+#' @export
 decorate_format_value.default <- function(value, target, config) {
   value
 }
 
+#' @export
 decorate_format_value.drake_format_file <- function(value, target, config) { # nolint
   path <- value$value
   hash <- rep(NA_character_, length(path))
@@ -63,10 +65,12 @@ undecorate_format_value <- function(value) {
   UseMethod("undecorate_format_value")
 }
 
+#' @export
 undecorate_format_value.default <- function(value) { # nolint
   value
 }
 
+#' @export
 undecorate_format_value.drake_format <- function(value) { # nolint
   value$value
 }
@@ -137,6 +141,7 @@ store_item_impl <- function(target, value, meta, config) {
   UseMethod("store_item_impl")
 }
 
+#' @export
 store_item_impl.drake_static_storage <- function( # nolint
   target,
   value = NULL,
@@ -156,6 +161,7 @@ store_item_impl.drake_static_storage <- function( # nolint
   )
 }
 
+#' @export
 store_item_impl.drake_function <- function(target, value, meta, config) { # nolint
   if (meta$imported) {
     value <- standardize_imported_function(value)
@@ -180,10 +186,12 @@ standardize_deparsed_function <- function(str) {
   gsub("<pointer: 0x[0-9a-zA-Z]*>", "", str)
 }
 
+#' @export
 store_item_impl.drake_storr <- function(target, value, meta, config) {
   store_object(target, value = "storr", meta, config)
 }
 
+#' @export
 store_item_impl.drake_object <- function(target, value, meta, config) {
   store_object(target, value, meta, config)
 }
@@ -256,6 +264,7 @@ decorate_format_meta <- function(value, target, meta, config) {
   UseMethod("decorate_format_meta")
 }
 
+#' @export
 decorate_format_meta.drake_format_file <- function( # nolint
   value,
   target,
@@ -270,6 +279,7 @@ decorate_format_meta.drake_format_file <- function( # nolint
   meta
 }
 
+#' @export
 decorate_format_meta.default <- function(value, target, meta, config) {
   meta
 }
@@ -305,6 +315,7 @@ dynamic_hashes <- function(value, size, config) {
   UseMethod("dynamic_hashes")
 }
 
+#' @export
 dynamic_hashes.drake_dynamic <- function(value, size, config) {
   vapply(
     seq_len(size),
@@ -316,6 +327,7 @@ dynamic_hashes.drake_dynamic <- function(value, size, config) {
   )
 }
 
+#' @export
 dynamic_hashes.default <- function(value, size, config) {
   vapply(
     seq_len(size),
