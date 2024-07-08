@@ -2,22 +2,16 @@ destination: docs/
 template:
   package: rotemplate
 navbar:
-  title: drake
-  type: default
-  left:
-  - icon: fa-home fa-lg
-    href: index.html
-  - text: Functions
-    href: reference/index.html
-  - text: Full manual
-    href: https://books.ropensci.org/drake/
-  - text: FAQ
-    href: https://books.ropensci.org/drake/faq.html
-  - text: News
-    href: news/index.html
-  right:
-  - icon: fa-github fa-lg
-    href: https://github.com/ropensci/drake
+  components:
+    manual:
+      text: Full manual
+      href: https://books.ropensci.org/drake/
+    faq:
+      text: FAQ
+      href: https://books.ropensci.org/drake/faq.html
+  structure:
+    left: [home, reference, manual, faq, news]
+    right: [search, github]
 articles:
 - title: Vignettes
   contents:
