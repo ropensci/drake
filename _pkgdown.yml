@@ -11,7 +11,7 @@ navbar:
       href: https://books.ropensci.org/drake/faq.html
   structure:
     left: [home, reference, manual, faq, news]
-    right: [search, github]
+    right: [search, github, lightswitch]
 articles:
 - title: Vignettes
   contents:
