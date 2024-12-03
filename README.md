@@ -48,9 +48,6 @@ Development
 <td align="left">
 <a href="https://github.com/ropensci/software-review/issues/156"><img src="https://badges.ropensci.org/156_status.svg" alt="rOpenSci"></a>
 </td>
-<td align="left">
-<a href="https://codecov.io/github/ropensci/drake?branch=main"><img src="https://codecov.io/github/ropensci/drake/coverage.svg?branch=main" alt="Codecov"></a>
-</td>
 </tr>
 <tr class="even">
 <td align="left">
@@ -492,7 +489,7 @@ examples that run `drake` inside a Docker image.
     Created by [Joel Nitta](https://github.com/joelnitta).
 
 Alternatively, it is possible to run `drake` outside Docker and use the
-[`future`](https://github.com/HenrikBengtsson/future) package to send
+[`future`](https://github.com/futureverse/future) package to send
 targets to a Docker image. `drake`’s
 [`Docker-psock`](https://github.com/wlandau/drake-examples/tree/main/Docker-psock)
 example demonstrates how. Download the code with
@@ -864,7 +861,7 @@ early in development.
   - [Eric Nantz](https://github.com/rpodcast)
   - [Henrik Bengtsson](https://github.com/HenrikBengtsson)
   - [Ian Watson](https://github.com/IanAWatson)
-  - [Jasper Clarkberg](https://github.com/dapperjapper)
+  - Jasper Clarkberg
   - [Kendon Bell](https://github.com/kendonB)
   - [Kirill Müller](https://github.com/krlmlr)
   - [Michael Schubert](https://github.com/mschubert)

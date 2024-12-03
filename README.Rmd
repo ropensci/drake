@@ -73,9 +73,6 @@ Development
 <td align="left">
 <a href="https://github.com/ropensci/software-review/issues/156"><img src="https://badges.ropensci.org/156_status.svg" alt="rOpenSci"></a>
 </td>
-<td align="left">
-<a href="https://codecov.io/github/ropensci/drake?branch=main"><img src="https://codecov.io/github/ropensci/drake/coverage.svg?branch=main" alt="Codecov"></a>
-</td>
 </tr>
 <tr class="even">
 <td align="left">
@@ -361,7 +358,7 @@ make(plan, parallelism = "clustermq", jobs = 4)
 - [`drake-gitlab-docker-example`](https://gitlab.com/ecohealthalliance/drake-gitlab-docker-example): A small pedagogical example workflow that leverages `drake`, Docker, GitLab, and continuous integration in a reproducible analysis pipeline. Created by [Noam Ross](https://www.noamross.net/).
 - [`pleurosoriopsis`](https://github.com/joelnitta/pleurosoriopsis): The workflow that supports [Ebihara *et al.* 2019. "Growth Dynamics of the Independent Gametophytes of *Pleurorosiopsis makinoi* (Polypodiaceae)" *Bulletin of the National Science Museum Series B (Botany)* 45:77-86.](https://www.kahaku.go.jp/research/publication/botany.html). Created by [Joel Nitta](https://github.com/joelnitta).
 
-Alternatively, it is possible to run `drake` outside Docker and use the [`future`](https://github.com/HenrikBengtsson/future) package to send targets to a Docker image. `drake`'s [`Docker-psock`](https://github.com/wlandau/drake-examples/tree/main/Docker-psock) example demonstrates how. Download the code with `drake_example("Docker-psock")`.
+Alternatively, it is possible to run `drake` outside Docker and use the [`future`](https://github.com/futureverse/future) package to send targets to a Docker image. `drake`'s [`Docker-psock`](https://github.com/wlandau/drake-examples/tree/main/Docker-psock) example demonstrates how. Download the code with `drake_example("Docker-psock")`.
 
 # Installation
 
@@ -534,7 +531,7 @@ Many thanks to [Julia Lowndes](https://github.com/jules32), [Ben Marwick](https:
 - [Eric Nantz](https://github.com/rpodcast)
 - [Henrik Bengtsson](https://github.com/HenrikBengtsson)
 - [Ian Watson](https://github.com/IanAWatson)
-- [Jasper Clarkberg](https://github.com/dapperjapper)
+- Jasper Clarkberg
 - [Kendon Bell](https://github.com/kendonB)
 - [Kirill M&uuml;ller](https://github.com/krlmlr)
 - [Michael Schubert](https://github.com/mschubert)

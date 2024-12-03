@@ -66,18 +66,29 @@ drake_adjacent_vertices <- function(graph, v, mode) {
   index <- adjacent_vertices(graph = graph, v = v, mode = mode)
   index <- unlist(index, use.names = FALSE)
   index <- unique(index)
-  if (is.null(igraph_version_offset$offset)) {
-    igraph_version_offset$offset <- as.integer(
-      utils::compareVersion(
-        a = as.character(packageVersion("igraph")),
-        b = "2.1.2"
-      ) < 0L
-    )
-  }
-  igraph::V(graph)$name[index + igraph_version_offset$offset]
+  igraph::V(graph)$name[index + get_igraph_offset()]
 }
 
-igraph_version_offset <- new.env(parent = emptyenv())
+get_igraph_offset <- function() {
+  if (!is.null(igraph_offset$offset)) {
+    return(igraph_offset$offset)
+  }
+  opt <- igraph::igraph_opt("return.vs.es")
+  on.exit(igraph::igraph_options(return.vs.es = opt))
+  igraph::igraph_options(return.vs.es = FALSE)
+  test_graph <- igraph::make_graph(edges = c("a", "b"))
+  adjacent <- igraph::adjacent_vertices(
+    graph = test_graph,
+    v = "a",
+    mode = "out"
+  )
+  adjacent <- as.integer(adjacent)
+  offset <- 2L - adjacent
+  igraph_offset$offset <- offset
+  offset
+}
+
+igraph_offset <- new.env(parent = emptyenv())
 
 subset_graph <- function(graph, subset) {
   if (!length(subset)) {
