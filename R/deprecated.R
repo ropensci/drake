@@ -1402,7 +1402,7 @@ in_progress <- function(
 #' @keywords internal
 #' @seealso [new_cache()], [get_cache()]
 #' @details Does not work with
-#' in-memory caches such as [storr_environment()].
+#' in-memory caches such as [storr::storr_environment()].
 #' @return A drake/storr cache.
 #' @inheritParams cached
 #' @inheritParams new_cache

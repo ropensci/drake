@@ -41,7 +41,7 @@ Use \code{hash_algorithm} instead.}
 A newly created drake cache as a storr object.
 }
 \description{
-Uses the \code{\link[=storr_rds]{storr_rds()}} function
+Uses the \code{\link[storr:storr_rds]{storr::storr_rds()}} function
 from the \code{storr} package.
 }
 \examples{

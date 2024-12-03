@@ -912,7 +912,7 @@ find_cache <- function(
 }
 
 #' @title  Make a new `drake` cache. `r lifecycle::badge("stable")`
-#' @description Uses the [storr_rds()] function
+#' @description Uses the [storr::storr_rds()] function
 #' from the `storr` package.
 #' @export
 #' @return A newly created drake cache as a storr object.

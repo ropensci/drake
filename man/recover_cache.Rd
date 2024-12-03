@@ -46,7 +46,7 @@ Deprecated on 2019-01-13.
 }
 \details{
 Does not work with
-in-memory caches such as \code{\link[=storr_environment]{storr_environment()}}.
+in-memory caches such as \code{\link[storr:storr_environment]{storr::storr_environment()}}.
 }
 \seealso{
 \code{\link[=new_cache]{new_cache()}}, \code{\link[=get_cache]{get_cache()}}
