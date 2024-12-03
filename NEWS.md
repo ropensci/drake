@@ -1,3 +1,7 @@
+# Version 7.13.11
+
+* Compatibility with `igraph` >= 2.1.2.
+
 # Version 7.13.10
 
 * Remove environment locking, c.f. https://github.com/r-lib/rlang/issues/1705.
